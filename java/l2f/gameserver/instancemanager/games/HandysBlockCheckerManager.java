@@ -455,8 +455,7 @@ public final class HandysBlockCheckerManager
 		}
 
 		@Override
-		public void runImpl() throws Exception
-		{
+		public void runImpl() {
 			_registrationPenalty.remove(objectId);
 		}
 	}

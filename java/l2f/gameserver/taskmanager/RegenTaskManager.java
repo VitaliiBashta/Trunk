@@ -4,28 +4,24 @@ import l2f.commons.threading.RunnableImpl;
 import l2f.commons.threading.SteppingRunnableQueueManager;
 import l2f.gameserver.ThreadPoolManager;
 
-public class RegenTaskManager extends SteppingRunnableQueueManager
-{
-	private static final RegenTaskManager _instance = new RegenTaskManager();
-	private RegenTaskManager()
-	{
-		super(1000L);
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 1000L, 1000L);
+public class RegenTaskManager extends SteppingRunnableQueueManager {
+    private static final RegenTaskManager _instance = new RegenTaskManager();
 
-		// Очистка каждые 10 секунд
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl()
-		{
-			@Override
-			public void runImpl()
-			{
-				RegenTaskManager.this.purge();
-			}
+    private RegenTaskManager() {
+        super(1000L);
+        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 1000L, 1000L);
 
-		}, 10000L, 10000L);
-	}
+        // Очистка каждые 10 секунд
+        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+            @Override
+            public void runImpl() {
+                RegenTaskManager.this.purge();
+            }
 
-	public static final RegenTaskManager getInstance()
-	{
-		return _instance;
-	}
+        }, 10000L, 10000L);
+    }
+
+    public static final RegenTaskManager getInstance() {
+        return _instance;
+    }
 }

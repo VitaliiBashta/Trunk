@@ -1,6 +1,5 @@
 package l2f.gameserver;
 
-import jonelo.sugar.util.Base64;
 import l2f.commons.dbutils.DbUtils;
 import l2f.gameserver.database.DatabaseFactory;
 import l2f.gameserver.model.Player;
@@ -36,9 +35,6 @@ public class SecondaryPasswordAuth {
     private boolean _authed;
     // private static final String BAN_ACCOUNT = "UPDATE accounts SET banExpires=? WHERE login=?";
 
-    /**
-     * @param activeClient
-     */
     public SecondaryPasswordAuth(GameClient activeClient) {
         _activeClient = activeClient;
         _password = null;
@@ -89,47 +85,31 @@ public class SecondaryPasswordAuth {
 
         password = cryptPassword(password);
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(INSERT_PASSWORD);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(INSERT_PASSWORD)) {
             statement.setString(1, _activeClient.getLogin());
             statement.setString(2, VAR_PWD);
             statement.setString(3, password);
             statement.execute();
-            statement.close();
         } catch (SQLException e) {
             LOG.error("Error while writing password", e);
             return false;
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
         _password = password;
         return true;
     }
 
-    public boolean insertWrongAttempt(int attempts) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(INSERT_ATTEMPT);
+    private void insertWrongAttempt(int attempts) {
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(INSERT_ATTEMPT)) {
             statement.setString(1, _activeClient.getLogin());
             statement.setString(2, VAR_WTE);
             statement.setString(3, Integer.toString(attempts));
             statement.setString(4, Integer.toString(attempts));
             statement.execute();
-            statement.close();
         } catch (SQLException e) {
             LOG.error("Error while writing wrong attempts", e);
-            return false;
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
-        return true;
     }
 
     public boolean changePassword(String oldPassword, String newPassword) {
@@ -149,22 +129,15 @@ public class SecondaryPasswordAuth {
 
         newPassword = cryptPassword(newPassword);
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(UPDATE_PASSWORD);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(UPDATE_PASSWORD)) {
             statement.setString(1, newPassword);
             statement.setString(2, _activeClient.getLogin());
             statement.setString(3, VAR_PWD);
             statement.execute();
-            statement.close();
         } catch (SQLException e) {
             LOG.error("Error while reading password", e);
             return false;
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
         _password = newPassword;
         _authed = false;
@@ -176,16 +149,9 @@ public class SecondaryPasswordAuth {
 
         if (!password.equals(_password)) {
             _wrongAttempts++;
-            if (_wrongAttempts < Config.SECOND_AUTH_MAX_ATTEMPTS) {
                 _activeClient.sendPacket(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_WRONG, _wrongAttempts));
                 insertWrongAttempt(_wrongAttempts);
-            } else {
-                if (Config.SECOND_AUTH_BAN_ACC)
-                    banAccount(_activeClient.getActiveChar());
-                Log.add(_activeClient.getLogin() + " - (" + _activeClient.getIpAddr() + ") has inputted the wrong password " + _wrongAttempts + " times in row.", "banned_accounts");
-                insertWrongAttempt(0);
-                _activeClient.close(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_BAN, Config.SECOND_AUTH_MAX_ATTEMPTS));
-            }
+
             return false;
         }
         if (!skipAuth) {
@@ -196,28 +162,13 @@ public class SecondaryPasswordAuth {
         return true;
     }
 
-    private void banAccount(Player player) {
-        long banTime = Config.SECOND_AUTH_BAN_TIME;
-
-        try {
-            player.setAccessLevel(-100);
-            ban(player, banTime);
-            player.kick();
-        } catch (RuntimeException e) {
-            LOG.error("Error while banning account", e);
-        }
-    }
-
     private void ban(Player actor, long time) {
         long date = Calendar.getInstance().getTimeInMillis();
         long endban = date / 1000 + time * 60;
         String msg = "Secondary Password Auth ban Player" + actor.getName() + " on " + time + " sec";
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("INSERT INTO bans (account_name, obj_id, baned, unban, reason, GM, endban) VALUES(?,?,?,?,?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("INSERT INTO bans (account_name, obj_id, baned, unban, reason, GM, endban) VALUES(?,?,?,?,?,?,?)")) {
             statement.setString(1, actor.getAccountName());
             statement.setInt(2, actor.getObjectId());
             statement.setString(3, "SU");
@@ -228,13 +179,11 @@ public class SecondaryPasswordAuth {
             statement.execute();
         } catch (SQLException e) {
             LOG.error("Could not store bans data:", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     public boolean passwordExist() {
-        return _password == null ? false : true;
+        return _password != null;
     }
 
     public void openDialog() {
@@ -253,7 +202,7 @@ public class SecondaryPasswordAuth {
             MessageDigest md = MessageDigest.getInstance("SHA");
             byte[] raw = password.getBytes("UTF-8");
             byte[] hash = md.digest(raw);
-            return Base64.encodeBytes(hash);
+            return java.util.Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException e) {
             LOG.error("[SecondaryPasswordAuth]Unsupported Algorythm", e);
         } catch (UnsupportedEncodingException e) {
@@ -268,29 +217,6 @@ public class SecondaryPasswordAuth {
 
         if (password.length() < 6 || password.length() > 8)
             return false;
-
-        if (Config.SECOND_AUTH_STRONG_PASS) {
-            for (int i = 0; i < password.length() - 1; i++) {
-                char curCh = password.charAt(i);
-                char nxtCh = password.charAt(i + 1);
-
-                if (curCh + 1 == nxtCh)
-                    return false;
-                else if (curCh - 1 == nxtCh)
-                    return false;
-                else if (curCh == nxtCh)
-                    return false;
-            }
-            for (int i = 0; i < password.length() - 2; i++) {
-                String toChk = password.substring(i + 1);
-                StringBuffer chkEr = new StringBuffer(password.substring(i, i + 2));
-
-                if (toChk.contains(chkEr))
-                    return false;
-                else if (toChk.contains(chkEr.reverse()))
-                    return false;
-            }
-        }
         _wrongAttempts = 0;
         return true;
     }

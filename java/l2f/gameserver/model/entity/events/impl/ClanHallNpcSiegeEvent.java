@@ -8,62 +8,53 @@ import l2f.gameserver.network.serverpackets.PlaySound;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 
-public class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject>
-{
-	public ClanHallNpcSiegeEvent(MultiValueSet<String> set)
-	{
-		super(set);
-	}
+public class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
+    public ClanHallNpcSiegeEvent(MultiValueSet<String> set) {
+        super(set);
+    }
 
-	@Override
-	public void startEvent()
-	{
-		_oldOwner = getResidence().getOwner();
+    @Override
+    public void startEvent() {
+        _oldOwner = getResidence().getOwner();
 
-		broadcastInZone(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()));
+        broadcastInZone(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()));
 
-		super.startEvent();
-	}
+        super.startEvent();
+    }
 
-	@Override
-	public void stopEvent(boolean step)
-	{
-		Clan newOwner = getResidence().getOwner();
-		if (newOwner != null)
-		{
-			if (_oldOwner != newOwner)
-			{
-				newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
+    @Override
+    public void stopEvent(boolean step) {
+        Clan newOwner = getResidence().getOwner();
+        if (newOwner != null) {
+            if (_oldOwner != newOwner) {
+                newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
 
-				newOwner.incReputation(1700, false, toString());
+                newOwner.incReputation(1700, false, toString());
 
-				if (_oldOwner != null)
-					_oldOwner.incReputation(-1700, false, toString());
-			}
+                if (_oldOwner != null)
+                    _oldOwner.incReputation(-1700, false, toString());
+            }
 
-			broadcastInZone(new SystemMessage2(SystemMsg.S1_CLAN_HAS_DEFEATED_S2).addString(newOwner.getName()).addResidenceName(getResidence()));
-			broadcastInZone(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_IS_FINISHED).addResidenceName(getResidence()));
-		}
-		else
-			broadcastInZone(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()));
+            broadcastInZone(new SystemMessage2(SystemMsg.S1_CLAN_HAS_DEFEATED_S2).addString(newOwner.getName()).addResidenceName(getResidence()));
+            broadcastInZone(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_IS_FINISHED).addResidenceName(getResidence()));
+        } else
+            broadcastInZone(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()));
 
-		super.stopEvent(step);
+        super.stopEvent(step);
 
-		_oldOwner = null;
-	}
+        _oldOwner = null;
+    }
 
-	@Override
-	public void processStep(Clan clan)
-	{
-		if (clan != null)
-			getResidence().changeOwner(clan);
+    @Override
+    public void processStep(Clan clan) {
+        if (clan != null)
+            getResidence().changeOwner(clan);
 
-		stopEvent(true);
-	}
+        stopEvent(true);
+    }
 
-	@Override
-	public void loadSiegeClans()
-	{
-		//
-	}
+    @Override
+    public void loadSiegeClans() {
+        //
+    }
 }

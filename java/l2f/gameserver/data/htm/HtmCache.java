@@ -1,25 +1,21 @@
 package l2f.gameserver.data.htm;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import l2f.commons.crypt.CryptUtil;
+import l2f.commons.lang.StringUtils;
 import l2f.gameserver.Config;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.scripts.Functions;
+import l2f.gameserver.utils.Files;
 import l2f.gameserver.utils.Language;
 import l2f.gameserver.utils.Strings;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 public class HtmCache {
     public static final int DISABLED = 0;
@@ -88,10 +84,8 @@ public class HtmCache {
         }
     }
 
-    @SuppressWarnings("unused")
     private String getContent(File file, String encoding) throws IOException {
         InputStream stream = CryptUtil.decryptOnDemand(new ByteArrayInputStream(FileUtils.readFileToString(file, encoding).getBytes()));
-        @SuppressWarnings("resource")
         FileInputStream _stream = new FileInputStream(file);
         StringBuilder builder = new StringBuilder();
         if ((byte) _stream.read() == 0x00) {
@@ -103,13 +97,11 @@ public class HtmCache {
             }
             return builder.toString();
         }
-
         return FileUtils.readFileToString(file, "UTF-8");
     }
 
-    public void putContent(Language lang, File f, final String rootPath) throws IOException {
+    private void putContent(Language lang, File f, final String rootPath) throws IOException {
         String content = FileUtils.readFileToString(f, "UTF-8");
-        //String content = getContent(f, "UTF-8");
 
         String path = f.getAbsolutePath().substring(rootPath.length()).replace("\\", "/");
 

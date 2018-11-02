@@ -184,8 +184,7 @@ public final class NaiaCoreManager
 	private static class ClearCore extends RunnableImpl
 	{
 		@Override
-		public void runImpl() throws Exception
-		{
+		public void runImpl() {
 			int[] spores = {
 					fireSpore,
 					waterSpore,

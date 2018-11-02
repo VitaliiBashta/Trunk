@@ -6,7 +6,6 @@ import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.tables.SkillTable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

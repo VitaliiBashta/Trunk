@@ -1,47 +1,42 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.templates.StatsSet;
 
-public class Disablers extends Skill
-{
-	private final boolean _skillInterrupt;
-	private final int _staticTime;
+import java.util.List;
 
-	public Disablers(StatsSet set)
-	{
-		super(set);
-		_skillInterrupt = set.getBool("skillInterrupt", false);
-		_staticTime = set.getInteger("staticTime", 0)*1000;
-	}
+public class Disablers extends Skill {
+    private final boolean _skillInterrupt;
+    private final int _staticTime;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		Creature realTarget;
-		boolean reflected;
+    public Disablers(StatsSet set) {
+        super(set);
+        _skillInterrupt = set.getBool("skillInterrupt", false);
+        _staticTime = set.getInteger("staticTime", 0) * 1000;
+    }
 
-		for (Creature target : targets)
-			if (target != null)
-			{
-				reflected = target.checkReflectSkill(activeChar, this);
-				realTarget = reflected ? activeChar : target;
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        Creature realTarget;
+        boolean reflected;
 
-				if (_skillInterrupt)
-				{
-					if (realTarget.getCastingSkill() != null && !realTarget.getCastingSkill().isMagic() && !realTarget.isRaid())
-						realTarget.abortCast(false, true);
-					if (!realTarget.isRaid())
-						realTarget.abortAttack(true, true);
-				}
+        for (Creature target : targets)
+            if (target != null) {
+                reflected = target.checkReflectSkill(activeChar, this);
+                realTarget = reflected ? activeChar : target;
 
-				getEffects(activeChar, target, getActivateRate() > 0, false, _staticTime, 1, reflected);
-			}
+                if (_skillInterrupt) {
+                    if (realTarget.getCastingSkill() != null && !realTarget.getCastingSkill().isMagic() && !realTarget.isRaid())
+                        realTarget.abortCast(false, true);
+                    if (!realTarget.isRaid())
+                        realTarget.abortAttack(true, true);
+                }
 
-		if (isSSPossible())
-			activeChar.unChargeShots(isMagic());
-	}
+                getEffects(activeChar, target, getActivateRate() > 0, false, _staticTime, 1, reflected);
+            }
+
+        if (isSSPossible())
+            activeChar.unChargeShots(isMagic());
+    }
 }

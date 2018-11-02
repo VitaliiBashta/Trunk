@@ -1,20 +1,19 @@
 package l2f.commons.geometry;
 
-public interface Shape
-{
-	public boolean isInside(int x, int y);
+public interface Shape {
+    boolean isInside(int x, int y);
 
-	public boolean isInside(int x, int y, int z);
+    boolean isInside(int x, int y, int z);
 
-	public int getXmax();
+    int getXmax();
 
-	public int getXmin();
+    int getXmin();
 
-	public int getYmax();
+    int getYmax();
 
-	public int getYmin();
+    int getYmin();
 
-	public int getZmax();
+    int getZmax();
 
-	public int getZmin();
+    int getZmin();
 }

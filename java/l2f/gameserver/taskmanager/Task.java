@@ -1,22 +1,20 @@
 package l2f.gameserver.taskmanager;
 
-import java.util.concurrent.ScheduledFuture;
-
 import l2f.gameserver.taskmanager.TaskManager.ExecutedTask;
 
-public abstract class Task
-{
-	public abstract void initializate();
+import java.util.concurrent.ScheduledFuture;
 
-	public ScheduledFuture<?> launchSpecial(ExecutedTask instance)
-	{
-		return null;
-	}
+public abstract class Task {
+    public abstract void initializate();
 
-	public abstract String getName();
+    public ScheduledFuture<?> launchSpecial(ExecutedTask instance) {
+        return null;
+    }
 
-	public abstract void onTimeElapsed(ExecutedTask task);
+    public abstract String getName();
 
-	public void onDestroy()
-	{}
+    public abstract void onTimeElapsed(ExecutedTask task);
+
+    public void onDestroy() {
+    }
 }

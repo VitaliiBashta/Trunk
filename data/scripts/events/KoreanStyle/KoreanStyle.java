@@ -10,8 +10,7 @@ import l2f.gameserver.utils.Location;
 
 import java.util.List;
 
-public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener, OnCurrentHpDamageListener*/ 
-{
+public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener, OnCurrentHpDamageListener*/ {
 
 	/*private static final Logger _log = LoggerFactory.getLogger(KoreanStyle.class);
 	private static List<String> _alreadyUsed = new ArrayList<String>();
@@ -102,15 +101,13 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 	{
 		//onReload();
 	}*/
-	
-	@SuppressWarnings("unused")
-	private static boolean isActive() 
-	{
-		return false;
-	}
 
-	public void activateEvent()
-	{
+    @SuppressWarnings("unused")
+    private static boolean isActive() {
+        return false;
+    }
+
+    public void activateEvent() {
 		/*Player player = getSelf();
 		if (!player.getPlayerAccess().IsEventGm)
 			return;
@@ -129,10 +126,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		}
 
 		show("admin/events/events.htm", player);*/
-	}
+    }
 
-	public void deactivateEvent()
-	{
+    public void deactivateEvent() {
 		/*Player player = getSelf();
 		if (!player.getPlayerAccess().IsEventGm)
 			return;
@@ -154,14 +150,13 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		_active = false;
 
 		show("admin/events/events.htm", player);*/
-	}
+    }
 
-	public static boolean isRunned() {
-		return false;//_isRegistrationActive || _status > 0;
-	}
+    public static boolean isRunned() {
+        return false;//_isRegistrationActive || _status > 0;
+    }
 
-	public void start()
-	{
+    public void start() {
 		/*if(!_active)
 			return;
 		Player player = getSelf();
@@ -204,23 +199,20 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 
 		executeTask("events.KoreanStyle.KoreanStyle", "question", new Object[0], 10000);
 		executeTask("events.KoreanStyle.KoreanStyle", "announce", new Object[0], 60000);*/
-	}
+    }
 
-	public static void sayToAll(String address, String[] replacements)
-	{
-		//Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
-	}
+    public static void sayToAll(String address, String[] replacements) {
+        //Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
+    }
 
-	public static void question()
-	{
+    public static void question() {
 		/*for(Player player : GameObjectsStorage.getAllPlayersForIterate())
 			if (player != null && !player.isDead() && player.getLevel() >= _minLevel && player.getLevel() <= _maxLevel && player.getReflection().isDefault() 
 			&& !player.isInOlympiadMode() && !player.isInObserverMode() && !_alreadyUsed.contains(player.getHWID()))
 				player.scriptRequest(new CustomMessage("scripts.events.KoreanStyle.AskPlayer", player).toString(), "events.KoreanStyle.KoreanStyle:addPlayer", new Object[0]);*/
-	}
+    }
 
-	public static void announce()
-	{
+    public static void announce() {
 		/*if(!_active)
 			return;
 		if (_time_to_start > 1) {
@@ -252,10 +244,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				executeTask("events.KoreanStyle.KoreanStyle", "prepare", new Object[0], 5000);
 			}
 		}*/
-	}
+    }
 
-	public void addPlayer()
-	{
+    public void addPlayer() {
 		/*Player player = getSelf();
 		if (player == null || !checkPlayer(player, true) || !checkDualBox(player))
 			return;
@@ -294,10 +285,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		}
 		else
 			_log.info("WTF??? Command id 0 in KoreanStyle...");*/
-	}
+    }
 
-	public static boolean checkPlayer(Player player, boolean first)
-	{
+    public static boolean checkPlayer(Player player, boolean first) {
 		/*if(first && (!_isRegistrationActive || player.isDead())) {
 			show(new CustomMessage("scripts.events.Late", player), player);
 			return false;
@@ -364,11 +354,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			return false;
 		}
 		return true;*/
-		return false;
-	}
+        return false;
+    }
 
-	public static void prepare()
-	{
+    public static void prepare() {
 		/*cleanPlayers();
 		clearArena();
 		executeTask("events.KoreanStyle.KoreanStyle", "ressurectPlayers", new Object[0], 1000);
@@ -379,10 +368,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		executeTask("events.KoreanStyle.KoreanStyle", "go", new Object[0], 20000);
 
 		sayToAll("scripts.events.KoreanStyle.AnnounceFinalCountdown", null);*/
-	}
+    }
 
-	public static void go()
-	{
+    public static void go() {
 		/*_status = 2;
 		getNewFighters();
 		clearArena();
@@ -390,10 +378,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		for (Zone z : _reflection.getZones())
 			z.setType(ZoneType.battle_zone);
 		ThreadPoolManager.getInstance().schedule(new CheckActiveTask(), 5100);*/
-	}
+    }
 
-	public static void endBattle(boolean blueIsWinner)
-	{
+    public static void endBattle(boolean blueIsWinner) {
 		/*if(_status == 0)
 			return;
 		_status = 0;
@@ -460,26 +447,23 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		_myZone = null;
 		_active = false;
 		playerSpawnCoord.clear();*/
-	}
+    }
 
-	public static void end()
-	{
+    public static void end() {
 		/*executeTask("events.KoreanStyle.KoreanStyle", "ressurectPlayers", new Object[0], 1000);
 		executeTask("events.KoreanStyle.KoreanStyle", "healPlayers", new Object[0], 2000);
 		executeTask("events.KoreanStyle.KoreanStyle", "teleportPlayers", new Object[0], 3000);
 		executeTask("events.KoreanStyle.KoreanStyle", "autoContinue", new Object[0], 10000);*/
-	}
+    }
 
-	public static void autoContinue()
-	{
+    public static void autoContinue() {
 		/*live_list1.clear();
 		live_list2.clear();
 		players_list1.clear();
 		players_list2.clear();*/
-	}
+    }
 
-	public static void giveItemsToWinner(boolean team1, boolean team2, double rate)
-	{
+    public static void giveItemsToWinner(boolean team1, boolean team2, double rate) {
 		/*if(team1)
 			for (Player player : getPlayers(players_list1))
 				for (int i = 0; i < rewards.length; i++)	
@@ -488,10 +472,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			for (Player player : getPlayers(players_list2))
 				for (int i = 0; i < rewards.length; i++)
 					addItem(player, rewards[i][0], Math.round(rewards[i][1] * rate), "koreanStyle");*/
-	}
+    }
 
-	public static void teleportPlayersToColiseum() 
-	{
+    public static void teleportPlayersToColiseum() {
 		/*String instanceId = Rnd.get(Config.EVENT_KOREAN_REFLECTIONS);
 		StatsSet params;
 		Location leftCorner = null;
@@ -590,10 +573,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			
 			index++;	
 		}*/
-	}
+    }
 
-	public static void teleportPlayers()
-	{
+    public static void teleportPlayers() {
 		/*for(Player player : getPlayers(players_list1)) {
 			if (player == null || !playerRestoreCoord.containsKey(player.getObjectId()))
 				continue;
@@ -609,10 +591,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		playerRestoreCoord.clear();
 		
 		_reflection.collapse();*/
-	}
+    }
 
-	public static void paralyzePlayers()
-	{
+    public static void paralyzePlayers() {
 		/*for(Player player : getPlayers(players_list1))
 		{
 			if (player == null)
@@ -641,20 +622,18 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				player.getPet().doDecay();
 			}
 		}*/
-	}
-	
-	@SuppressWarnings("unused")
-	private static void sitDown(Player player)
-	{
+    }
+
+    @SuppressWarnings("unused")
+    private static void sitDown(Player player) {
 		/*player.broadcastPacket(new ChangeWaitType(player, ChangeWaitType.WT_SITTING));
 		
 		player.setSitting(true);
 		player.sittingTaskLaunched = true;
 		ThreadPoolManager.getInstance().schedule(new EndSitDownTask(player), 2500);*/
-	}
-	
-	public static void ressurectPlayers()
-	{
+    }
+
+    public static void ressurectPlayers() {
 		/*for(Player player : getPlayers(players_list1))
 			if (player.isDead())
 			{
@@ -673,10 +652,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				player.setCurrentMp(player.getMaxMp());
 				player.broadcastPacket(new Revive(player));
 			}*/
-	}
+    }
 
-	public static void healPlayers()
-	{
+    public static void healPlayers() {
 		/*for(Player player : getPlayers(players_list1))
 		{
 			player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
@@ -687,20 +665,18 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
 			player.setCurrentCp(player.getMaxCp());
 		}*/
-	}
+    }
 
-	public static void cleanPlayers()
-	{
+    public static void cleanPlayers() {
 		/*for(Player player : getPlayers(players_list1))
 			if (!checkPlayer(player, false))
 				removePlayer(player);
 		for (Player player : getPlayers(players_list2))
 			if (!checkPlayer(player, false))
 				removePlayer(player);*/
-	}
+    }
 
-	public static void getNewFighters()
-	{
+    public static void getNewFighters() {
 		/*startFightTime = System.currentTimeMillis();
 		List<Integer> toDelete = new ArrayList<Integer>();
 		Player redFighter = null;
@@ -770,11 +746,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				if (!player.equals(_blueFighter))
 					player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Korean Style", _redFighter.getName()+" VS "+_blueFighter.getName()+"!"));
 		}*/
-	}
-	
-	@SuppressWarnings("unused")
-	private static Player prepareFighter(int objId)
-	{
+    }
+
+    @SuppressWarnings("unused")
+    private static Player prepareFighter(int objId) {
 		/*layer player = GameObjectsStorage.getPlayer(objId);
 		if (player == null)
 			return null;
@@ -803,11 +778,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		if (player.getTeam() == TeamType.RED)
 			player.teleToLocation(getPoint(params.getString("RightCenter")));
 		return player;*/
-		return null;
-	}
+        return null;
+    }
 
-	public static void removeAura()
-	{
+    public static void removeAura() {
 		/*for(Integer objId : players_list1)
 		{
 			Player player = GameObjectsStorage.getPlayer(objId);
@@ -824,10 +798,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				player.getPet().setTeam(TeamType.NONE);
 			player.setIsInTvT(false);
 		}*/
-	}
+    }
 
-	public static void clearArena()
-	{
+    public static void clearArena() {
 		/*if(_myZone == null)
 			return;
 		
@@ -836,11 +809,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			if (player != null && !live_list1.contains(player.getObjectId()) && !live_list2.contains(player.getObjectId()))
 				player.teleToLocation(147451, 46728, -3410, ReflectionManager.DEFAULT);
 		}*/
-	}
+    }
 
-	//@Override
-	public void onDeath(Creature self, Creature killer)
-	{
+    //@Override
+    public void onDeath(Creature self, Creature killer) {
 		/*if(_status > 1 && self.isPlayer() && (live_list1.contains(self.getObjectId()) || live_list2.contains(self.getObjectId()))) 
 		{
 			if (killer != null && killer.isPlayable())
@@ -857,20 +829,18 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			_pScore.remove((Integer)self.getPlayer().getObjectId());
 			//self.getPlayer().setIsInTvT(false);
 		}*/
-		
-	}
 
-	public static void buffPlayer(Player player) 
-	{
+    }
+
+    public static void buffPlayer(Player player) {
 		/*if(player.isMageClass())
 			mageBuff(player);
 		else
 			fighterBuff(player);*/
-	}
-	
-	//@Override
-	public void onTeleport(Player player, int x, int y, int z, Reflection reflection)
-	{
+    }
+
+    //@Override
+    public void onTeleport(Player player, int x, int y, int z, Reflection reflection) {
 		/*if(_myZone == null)
 			return;
 		if (_myZone.checkIfInZone(x, y, z, reflection))
@@ -881,10 +851,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			removePlayer(player);
 			checkLive
 			*/
-	}
+    }
 
-	//@Override
-	public void onPlayerExit(Player player) {
+    //@Override
+    public void onPlayerExit(Player player) {
 		/*if(player.getTeam() == TeamType.NONE)
 			return;
 
@@ -904,11 +874,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			removePlayer(player);
 			getNewFighters();
 		}*/
-	}
+    }
 
-	@SuppressWarnings("unused")
-	private static void removePlayer(Player player)
-	{
+    @SuppressWarnings("unused")
+    private static void removePlayer(Player player) {
 		/*if(player != null)
 		{
 			_reflection.removeObject(player);
@@ -928,11 +897,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				
 			player.setTeam(TeamType.NONE);
 		}*/
-	}
+    }
 
-	@SuppressWarnings("unused")
-	private static List<Player> getPlayers(List<Integer> list)
-	{
+    @SuppressWarnings("unused")
+    private static List<Player> getPlayers(List<Integer> list) {
 		/*List<Player> result = new ArrayList<Player>();
 		for (Integer objId : list)
 		{
@@ -941,11 +909,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				result.add(player);
 		}
 		return result;*/
-		return null;
-	}
-	
-	public static void buffPlayers()
-	{
+        return null;
+    }
+
+    public static void buffPlayers() {
 
 		/*for(Player player : getPlayers(players_list1)) {
 			if (player.isMageClass())
@@ -960,10 +927,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			else
 				fighterBuff(player);
 		}*/
-	}
-	
-	public static void mageBuff(Player player)
-	{
+    }
+
+    public static void mageBuff(Player player) {
 		/*for(int i = 0; i < mage_buffs.length; i++) 
 		{
 			buff = SkillTable.getInstance().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
@@ -973,10 +939,10 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		}
 		player.setCurrentHp(player.getMaxHp(), true);	
 		player.setCurrentMp(player.getMaxMp());
-		player.setCurrentCp(player.getMaxCp());		*/	
-	}
-	
-	public static void fighterBuff(Player player) {
+		player.setCurrentCp(player.getMaxCp());		*/
+    }
+
+    public static void fighterBuff(Player player) {
 		/*for(int i = 0; i < fighter_buffs.length; i++) 
 		{
 			buff = SkillTable.getInstance().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
@@ -986,12 +952,11 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		}
 		player.setCurrentHp(player.getMaxHp(), true);	
 		player.setCurrentMp(player.getMaxMp());
-		player.setCurrentCp(player.getMaxCp());		*/	
-	}
-	
-	@SuppressWarnings("unused")
-	private static boolean checkDualBox(Player player)
-	{
+		player.setCurrentCp(player.getMaxCp());		*/
+    }
+
+    @SuppressWarnings("unused")
+    private static boolean checkDualBox(Player player) {
 		/*if("IP".equalsIgnoreCase(Config.EVENT_KOREAN_CHECK_WINDOW_METHOD)) {
 			if (boxes.containsValue(player.getIP())) {
 				show(new CustomMessage("scripts.events.KoreanStyle.CancelledBox", player), player);
@@ -1005,18 +970,16 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				return false;
 			}
 		}*/
-		return true;
-	}
-	
-	@SuppressWarnings("unused")
-	private static long startFightTime = 0;
-	
-	public static class CheckActiveTask extends RunnableImpl
-	{
-		
-		@Override
-		public void runImpl()
-		{
+        return true;
+    }
+
+    @SuppressWarnings("unused")
+    private static long startFightTime = 0;
+
+    public static class CheckActiveTask extends RunnableImpl {
+
+        @Override
+        public void runImpl() {
 			/*if(!_active || _status != 2)
 				return;
 
@@ -1037,15 +1000,13 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			
 
 			ThreadPoolManager.getInstance().schedule(this, 5100);*/
-		}
-	}
-	
-	public class StartTask extends RunnableImpl
-	{
-		
-		@Override
-		public void runImpl()
-		{
+        }
+    }
+
+    public class StartTask extends RunnableImpl {
+
+        @Override
+        public void runImpl() {
 			/*if(!_active)
 				return;
 
@@ -1062,12 +1023,11 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				}
 
 			start();*/
-		}
-	}
-	
-	@SuppressWarnings("unused")
-	private static Location getPoint(String s)
-	{
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private static Location getPoint(String s) {
 		/*String[] locs = s.split(", ");
 		Integer x = Integer.parseInt(locs[0]);
 		Integer y = Integer.parseInt(locs[1]);
@@ -1075,12 +1035,11 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		Integer h = locs.length > 3 ? Integer.parseInt(locs[3]) : 0;
 		Location loc = new Location(x, y, z, h);
 		return loc;*/
-		return null;
-	}
+        return null;
+    }
 
-	//@Override
-	public void onCurrentHpDamage(Creature actor, double damage, Creature attacker, Skill skill)
-	{
+    //@Override
+    public void onCurrentHpDamage(Creature actor, double damage, Creature attacker, Skill skill) {
 		/*if(actor.isPlayable() && actor.getReflection() == _reflection)
 		{
 			if (actor.getPlayer().isSitting())
@@ -1089,5 +1048,5 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				actor.setCurrentHp(actor.getMaxHp(), false);
 			}
 		}*/
-	}
+    }
 }

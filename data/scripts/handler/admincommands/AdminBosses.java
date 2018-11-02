@@ -11,70 +11,60 @@ import l2f.gameserver.scripts.ScriptFile;
 
 import java.util.Calendar;
 
-public class AdminBosses implements IAdminCommandHandler, ScriptFile
-{
-	private static enum Commands
-	{
-		admin_epics_respawn
-	}
+public class AdminBosses implements IAdminCommandHandler, ScriptFile {
+    private static enum Commands {
+        admin_epics_respawn
+    }
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, final Player activeChar)
-	{
-		Commands command = (Commands) comm;
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, final Player activeChar) {
+        Commands command = (Commands) comm;
 
-		if (!activeChar.getPlayerAccess().CanEditNPC)
-			return false;
+        if (!activeChar.getPlayerAccess().CanEditNPC)
+            return false;
 
-		switch (command)
-		{
-			case admin_epics_respawn:
-				getEpicsRespawn(activeChar);
-				break;
-		}
-		
-		return true;
-	}
-	
-	private static void getEpicsRespawn(Player activeChar)
-	{
-		activeChar.sendMessage("Antharas: " + convertRespawnDate(AntharasManager.getState().getRespawnDate()));
-		activeChar.sendMessage("Valakas: " + convertRespawnDate(ValakasManager.getState().getRespawnDate()));
-		activeChar.sendMessage("Baium: " + convertRespawnDate(BaiumManager.getState().getRespawnDate()));
-		activeChar.sendMessage("Beleth: " + convertRespawnDate(ServerVariables.getLong("BelethKillTime", 0L)));
-	}
-	
-	private static String convertRespawnDate(long date)
-	{
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(date);
-		
-		return c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH)+1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
-	}
+        switch (command) {
+            case admin_epics_respawn:
+                getEpicsRespawn(activeChar);
+                break;
+        }
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public Enum[] getAdminCommandEnum()
-	{
-		return Commands.values();
-	}
+        return true;
+    }
 
-	@Override
-	public void onLoad()
-	{
-		AdminCommandHandler.getInstance().registerAdminCommandHandler(this);
-	}
+    private static void getEpicsRespawn(Player activeChar) {
+        activeChar.sendMessage("Antharas: " + convertRespawnDate(AntharasManager.getState().getRespawnDate()));
+        activeChar.sendMessage("Valakas: " + convertRespawnDate(ValakasManager.getState().getRespawnDate()));
+        activeChar.sendMessage("Baium: " + convertRespawnDate(BaiumManager.getState().getRespawnDate()));
+        activeChar.sendMessage("Beleth: " + convertRespawnDate(ServerVariables.getLong("BelethKillTime", 0L)));
+    }
 
-	@Override
-	public void onReload()
-	{
+    private static String convertRespawnDate(long date) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(date);
 
-	}
+        return c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+    }
 
-	@Override
-	public void onShutdown()
-	{
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Enum[] getAdminCommandEnum() {
+        return Commands.values();
+    }
 
-	}
+    @Override
+    public void onLoad() {
+        AdminCommandHandler.getInstance().registerAdminCommandHandler(this);
+    }
+
+    @Override
+    public void onReload() {
+
+    }
+
+    @Override
+    public void onShutdown() {
+
+    }
 }

@@ -2,343 +2,295 @@ package l2f.commons.collections;
 
 import java.util.HashMap;
 
-public class MultiValueSet<T> extends HashMap<T, Object>
-{
-	private static final long serialVersionUID = 8071544899414292397L;
+public class MultiValueSet<T> extends HashMap<T, Object> {
+    private static final long serialVersionUID = 8071544899414292397L;
 
-	public MultiValueSet()
-	{
-		super();
-	}
+    public MultiValueSet() {
+        super();
+    }
 
-	public MultiValueSet(int size)
-	{
-		super(size);
-	}
+    public MultiValueSet(int size) {
+        super(size);
+    }
 
-	public MultiValueSet(MultiValueSet<T> set)
-	{
-		super(set);
-	}
+    public MultiValueSet(MultiValueSet<T> set) {
+        super(set);
+    }
 
-	public void set(T key, Object value)
-	{
-		put(key, value);
-	}
+    public void set(T key, Object value) {
+        put(key, value);
+    }
 
-	public void set(T key, String value)
-	{
-		put(key, value);
-	}
+    public void set(T key, String value) {
+        put(key, value);
+    }
 
-	public void set(T key, boolean value)
-	{
-		put(key, value ? Boolean.TRUE : Boolean.FALSE);
-	}
+    public void set(T key, boolean value) {
+        put(key, value ? Boolean.TRUE : Boolean.FALSE);
+    }
 
-	public void set(T key, int value)
-	{
-		put(key, Integer.valueOf(value));
-	}
+    public void set(T key, int value) {
+        put(key, Integer.valueOf(value));
+    }
 
-	public void set(T key, int[] value)
-	{
-		put(key, value);
-	}
+    public void set(T key, int[] value) {
+        put(key, value);
+    }
 
-	public void set(T key, long value)
-	{
-		put(key, Long.valueOf(value));
-	}
+    public void set(T key, long value) {
+        put(key, Long.valueOf(value));
+    }
 
-	public void set(T key, double value)
-	{
-		put(key, Double.valueOf(value));
-	}
+    public void set(T key, double value) {
+        put(key, Double.valueOf(value));
+    }
 
-	public void set(T key, Enum<?> value)
-	{
-		put(key, value);
-	}
+    public void set(T key, Enum<?> value) {
+        put(key, value);
+    }
 
-	public void unset(T key)
-	{
-		remove(key);
-	}
+    public void unset(T key) {
+        remove(key);
+    }
 
-	public boolean isSet(T key)
-	{
-		return get(key) != null;
-	}
+    public boolean isSet(T key) {
+        return get(key) != null;
+    }
 
-	@Override
-	public MultiValueSet<T> clone()
-	{
-		return new MultiValueSet<>(this);
-	}
+    @Override
+    public MultiValueSet<T> clone() {
+        return new MultiValueSet<>(this);
+    }
 
-	public boolean getBool(T key)
-	{
-		Object val = get(key);
+    public boolean getBool(T key) {
+        Object val = get(key);
 
-		if (val instanceof Number)
-			return ((Number) val).intValue() != 0;
-		if (val instanceof String)
-			return Boolean.parseBoolean((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue();
+        if (val instanceof Number)
+            return ((Number) val).intValue() != 0;
+        if (val instanceof String)
+            return Boolean.parseBoolean((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue();
 
-		throw new IllegalArgumentException("Boolean value required, but found: " + val + "!");
-	}
+        throw new IllegalArgumentException("Boolean value required, but found: " + val + "!");
+    }
 
-	public boolean getBool(T key, boolean defaultValue)
-	{
-		Object val = get(key);
+    public boolean getBool(T key, boolean defaultValue) {
+        Object val = get(key);
 
-		if (val instanceof Number)
-			return ((Number) val).intValue() != 0;
-		if (val instanceof String)
-			return Boolean.parseBoolean((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue();
+        if (val instanceof Number)
+            return ((Number) val).intValue() != 0;
+        if (val instanceof String)
+            return Boolean.parseBoolean((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue();
 
-		return defaultValue;
-	}
+        return defaultValue;
+    }
 
-	public int getInteger(T key)
-	{
-		Object val = get(key);
+    public int getInteger(T key) {
+        Object val = get(key);
 
-		if (val instanceof Number)
-			return ((Number) val).intValue();
-		if (val instanceof String)
-			return Integer.parseInt((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue() ? 1 : 0;
+        if (val instanceof Number)
+            return ((Number) val).intValue();
+        if (val instanceof String)
+            return Integer.parseInt((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue() ? 1 : 0;
 
-		throw new IllegalArgumentException("Integer value required, but found: " + val + "!");
-	}
+        throw new IllegalArgumentException("Integer value required, but found: " + val + "!");
+    }
 
-	public int getInteger(T key, int defaultValue)
-	{
-		Object val = get(key);
+    public int getInteger(T key, int defaultValue) {
+        Object val = get(key);
 
-		if (val instanceof Number)
-			return ((Number) val).intValue();
-		if (val instanceof String)
-			return Integer.parseInt((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue() ? 1 : 0;
+        if (val instanceof Number)
+            return ((Number) val).intValue();
+        if (val instanceof String)
+            return Integer.parseInt((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue() ? 1 : 0;
 
-		return defaultValue;
-	}
+        return defaultValue;
+    }
 
-	public int[] getIntegerArray(T key)
-	{
-		Object val = get(key);
+    public int[] getIntegerArray(T key) {
+        Object val = get(key);
 
-		if (val instanceof int[])
-			return (int[]) val;
-		if (val instanceof Number)
-			return new int[] { ((Number) val).intValue() };
-		if (val instanceof String)
-		{
-			String[] vals = ((String) val).split(";");
+        if (val instanceof int[])
+            return (int[]) val;
+        if (val instanceof Number)
+            return new int[]{((Number) val).intValue()};
+        if (val instanceof String) {
+            String[] vals = ((String) val).split(";");
 
-			int[] result = new int[vals.length];
+            int[] result = new int[vals.length];
 
-			int i = 0;
-			for (String v : vals)
-				result[i++] = Integer.parseInt(v);
+            int i = 0;
+            for (String v : vals)
+                result[i++] = Integer.parseInt(v);
 
-			return result;
-		}
+            return result;
+        }
 
-		throw new IllegalArgumentException("Integer array required, but found: " + val + "!");
-	}
+        throw new IllegalArgumentException("Integer array required, but found: " + val + "!");
+    }
 
-	public int[] getIntegerArray(T key, int[] defaultArray)
-	{
-		try
-		{
-			return getIntegerArray(key);
-		}
-		catch (IllegalArgumentException e)
-		{
-			return defaultArray;
-		}
-	}
+    public int[] getIntegerArray(T key, int[] defaultArray) {
+        try {
+            return getIntegerArray(key);
+        } catch (IllegalArgumentException e) {
+            return defaultArray;
+        }
+    }
 
-	public long getLong(T key)
-	{
-		Object val = get(key);
+    public long getLong(T key) {
+        Object val = get(key);
 
-		if (val instanceof Number)
-			return ((Number) val).longValue();
-		if (val instanceof String)
-			return Long.parseLong((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue() ? 1L : 0L;
+        if (val instanceof Number)
+            return ((Number) val).longValue();
+        if (val instanceof String)
+            return Long.parseLong((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue() ? 1L : 0L;
 
-		throw new IllegalArgumentException("Long value required, but found: " + val + "!");
-	}
+        throw new IllegalArgumentException("Long value required, but found: " + val + "!");
+    }
 
-	public long getLong(T key, long defaultValue)
-	{
-		Object val = get(key);
+    public long getLong(T key, long defaultValue) {
+        Object val = get(key);
 
-		if (val instanceof Number)
-			return ((Number) val).longValue();
-		if (val instanceof String)
-			return Long.parseLong((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue() ? 1L : 0L;
+        if (val instanceof Number)
+            return ((Number) val).longValue();
+        if (val instanceof String)
+            return Long.parseLong((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue() ? 1L : 0L;
 
-		return defaultValue;
-	}
-	
-	public float getFloat(String key)
-	{
-		Object val = get(key);
-		if (val == null)
-		{
-			throw new IllegalArgumentException("Float value required, but not specified");
-		}
-		if (val instanceof Number)
-		{
-			return ((Number) val).floatValue();
-		}
-		try
-		{
-			return (float) Double.parseDouble((String) val);
-		}
-		catch (Exception e)
-		{
-			throw new IllegalArgumentException("Float value required, but found: " + val);
-		}
-	}
-	
-	public float getFloat(final String key, final float defaultValue)
-	{
-		final Object val = get(key);
-		
-		if (val instanceof Number)
-			return ((Number) val).floatValue();
-		if (val instanceof String)
-			return Float.parseFloat((String) val);
-		if (val instanceof Boolean)
-			return (Boolean) val ? 1 : 0;
-	 		
-		return defaultValue;
-	}
+        return defaultValue;
+    }
 
-	public double getDouble(T key)
-	{
-		Object val = get(key);
+    public float getFloat(String key) {
+        Object val = get(key);
+        if (val == null) {
+            throw new IllegalArgumentException("Float value required, but not specified");
+        }
+        if (val instanceof Number) {
+            return ((Number) val).floatValue();
+        }
+        try {
+            return (float) Double.parseDouble((String) val);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Float value required, but found: " + val);
+        }
+    }
 
-		if (val instanceof Number)
-			return ((Number) val).doubleValue();
-		if (val instanceof String)
-			return Double.parseDouble((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue() ? 1. : 0.;
+    public float getFloat(final String key, final float defaultValue) {
+        final Object val = get(key);
 
-		throw new IllegalArgumentException("Double value required, but found: " + val + "!");
-	}
+        if (val instanceof Number)
+            return ((Number) val).floatValue();
+        if (val instanceof String)
+            return Float.parseFloat((String) val);
+        if (val instanceof Boolean)
+            return (Boolean) val ? 1 : 0;
 
-	public double getDouble(T key, double defaultValue)
-	{
-		Object val = get(key);
+        return defaultValue;
+    }
 
-		if (val instanceof Number)
-			return ((Number) val).doubleValue();
-		if (val instanceof String)
-			return Double.parseDouble((String) val);
-		if (val instanceof Boolean)
-			return ((Boolean) val).booleanValue() ? 1. : 0.;
+    public double getDouble(T key) {
+        Object val = get(key);
 
-		return defaultValue;
-	}
+        if (val instanceof Number)
+            return ((Number) val).doubleValue();
+        if (val instanceof String)
+            return Double.parseDouble((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue() ? 1. : 0.;
 
-	public String getString(T key)
-	{
-		Object val = get(key);
+        throw new IllegalArgumentException("Double value required, but found: " + val + "!");
+    }
 
-		if (val != null)
-			return String.valueOf(val);
+    public double getDouble(T key, double defaultValue) {
+        Object val = get(key);
 
-		throw new IllegalArgumentException("String value required, but not specified!");
-	}
+        if (val instanceof Number)
+            return ((Number) val).doubleValue();
+        if (val instanceof String)
+            return Double.parseDouble((String) val);
+        if (val instanceof Boolean)
+            return ((Boolean) val).booleanValue() ? 1. : 0.;
 
-	public String getString(T key, String defaultValue)
-	{
-		Object val = get(key);
+        return defaultValue;
+    }
 
-		if (val != null)
-			return String.valueOf(val);
+    public String getString(T key) {
+        Object val = get(key);
 
-		return defaultValue;
-	}
+        if (val != null)
+            return String.valueOf(val);
 
-	public Object getObject(T key)
-	{
-		return get(key);
-	}
+        throw new IllegalArgumentException("String value required, but not specified!");
+    }
 
-	public Object getObject(T key, Object defaultValue)
-	{
-		Object val = get(key);
+    public String getString(T key, String defaultValue) {
+        Object val = get(key);
 
-		if (val != null)
-			return val;
+        if (val != null)
+            return String.valueOf(val);
 
-		return defaultValue;
-	}
-	
-	public short getShort(String key)
-	{
-		Object val = get(key);
-		if (val == null)
-		{
-			throw new IllegalArgumentException("Short value required, but not specified");
-		}
-		if (val instanceof Number)
-		{
-			return ((Number) val).shortValue();
-		}
-		try
-		{
-			return Short.parseShort((String) val);
-		}
-		catch (Exception e)
-		{
-			throw new IllegalArgumentException("Short value required, but found: " + val);
-		}
-	}
+        return defaultValue;
+    }
 
-	@SuppressWarnings("unchecked")
-	public <E extends Enum<E>> E getEnum(T name, Class<E> enumClass)
-	{
-		Object val = get(name);
+    public Object getObject(T key) {
+        return get(key);
+    }
 
-		if (val != null && enumClass.isInstance(val))
-			return (E) val;
-		if (val instanceof String)
-			return Enum.valueOf(enumClass, (String) val);
+    public Object getObject(T key, Object defaultValue) {
+        Object val = get(key);
 
-		throw new IllegalArgumentException("Enum value of type " + enumClass.getName() + "required, but found: " + val + "!");
-	}
+        if (val != null)
+            return val;
 
-	@SuppressWarnings("unchecked")
-	public <E extends Enum<E>> E getEnum(T name, Class<E> enumClass, E defaultValue)
-	{
-		Object val = get(name);
+        return defaultValue;
+    }
 
-		if (val != null && enumClass.isInstance(val))
-			return (E) val;
-		if (val instanceof String)
-			return Enum.valueOf(enumClass, (String) val);
+    public short getShort(String key) {
+        Object val = get(key);
+        if (val == null) {
+            throw new IllegalArgumentException("Short value required, but not specified");
+        }
+        if (val instanceof Number) {
+            return ((Number) val).shortValue();
+        }
+        try {
+            return Short.parseShort((String) val);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Short value required, but found: " + val);
+        }
+    }
 
-		return defaultValue;
-	}
+    @SuppressWarnings("unchecked")
+    public <E extends Enum<E>> E getEnum(T name, Class<E> enumClass) {
+        Object val = get(name);
+
+        if (val != null && enumClass.isInstance(val))
+            return (E) val;
+        if (val instanceof String)
+            return Enum.valueOf(enumClass, (String) val);
+
+        throw new IllegalArgumentException("Enum value of type " + enumClass.getName() + "required, but found: " + val + "!");
+    }
+
+    @SuppressWarnings("unchecked")
+    public <E extends Enum<E>> E getEnum(T name, Class<E> enumClass, E defaultValue) {
+        Object val = get(name);
+
+        if (val != null && enumClass.isInstance(val))
+            return (E) val;
+        if (val instanceof String)
+            return Enum.valueOf(enumClass, (String) val);
+
+        return defaultValue;
+    }
 }

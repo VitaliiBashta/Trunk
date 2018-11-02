@@ -1,394 +1,336 @@
 package l2f.gameserver.templates;
 
-import java.util.List;
-import java.util.Map;
-
 import l2f.commons.time.cron.SchedulingPattern;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.model.Territory;
 import l2f.gameserver.templates.spawn.SpawnTemplate;
 import l2f.gameserver.utils.Location;
+//import org.napile.primitive.maps.IntObjectMap;
 
-import org.napile.primitive.maps.IntObjectMap;
+import java.util.List;
+import java.util.Map;
 
-public class InstantZone
-{
-	private final int _id;
-	private final String _name;
-	private final SchedulingPattern _resetReuse;
-	private final int _sharedReuseGroup;
-	private final int _timelimit;
-	private final int _minLevel;
-	private final int _maxLevel;
-	private final int _minParty;
-	private final int _maxParty;
-	private final boolean _onPartyDismiss;
-	private final int _timer;
-	private final List<Location> _teleportCoords;
-	private final Location _returnCoords;
-	private final int _mapx;
-	private final int _mapy;
-	private final IntObjectMap<DoorInfo> _doors;
-	private final Map<String, ZoneInfo> _zones;
-	private final Map<String, SpawnInfo2> _spawns;
-	private final List<SpawnInfo> _spawnsInfo;
-	private final int _collapseIfEmpty;
-	private final int _maxChannels;
-	private final int _removedItemId;
-	private final int _removedItemCount;
-	private final boolean _removedItemNecessity;
-	private final int _giveItemId;
-	private final int _givedItemCount;
-	private final int _requiredQuestId;
-	private final boolean _setReuseUponEntry;
-	private final StatsSet _addParams;
-	private final InstantZoneEntryType _entryType;
-	private boolean _dispelBuffs;
-	public InstantZone(int id, String name, SchedulingPattern resetReuse, int sharedReuseGroup, int timelimit, boolean dispelBuffs, int minLevel, int maxLevel, int minParty, int maxParty, int timer, boolean onPartyDismiss, List<Location> tele, Location ret, int mapx, int mapy, IntObjectMap<DoorInfo> doors, Map<String, ZoneInfo> zones,  Map<String, SpawnInfo2> spawns, List<SpawnInfo> spawnsInfo, int collapseIfEmpty, int maxChannels, int removedItemId, int removedItemCount, boolean removedItemNecessity, int giveItemId, int givedItemCount, int requiredQuestId, boolean setReuseUponEntry, StatsSet params)
-	{
-		_id = id;
-		_name = name;
-		_resetReuse = resetReuse;
-		_sharedReuseGroup = sharedReuseGroup;
-		_timelimit = timelimit;
-		_dispelBuffs = dispelBuffs;
-		_minLevel = minLevel;
-		_maxLevel = maxLevel;
-		_teleportCoords = tele;
-		_returnCoords = ret;
-		_minParty = minParty;
-		_maxParty = maxParty;
-		_onPartyDismiss = onPartyDismiss;
-		_timer = timer;
-		_mapx = mapx;
-		_mapy = mapy;
-		_doors = doors;
-		_zones = zones;
-		_spawnsInfo = spawnsInfo;
-		_spawns = spawns;
-		_collapseIfEmpty = collapseIfEmpty;
-		_maxChannels = maxChannels;
-		_removedItemId = removedItemId;
-		_removedItemCount = removedItemCount;
-		_removedItemNecessity = removedItemNecessity;
-		_giveItemId = giveItemId;
-		_givedItemCount = givedItemCount;
-		_requiredQuestId = requiredQuestId;
-		_setReuseUponEntry = setReuseUponEntry;
-		_addParams = params;
+public class InstantZone {
+    private final int _id;
+    private final String _name;
+    private final SchedulingPattern _resetReuse;
+    private final int _sharedReuseGroup;
+    private final int _timelimit;
+    private final int _minLevel;
+    private final int _maxLevel;
+    private final int _minParty;
+    private final int _maxParty;
+    private final boolean _onPartyDismiss;
+    private final int _timer;
+    private final List<Location> _teleportCoords;
+    private final Location _returnCoords;
+    private final int _mapx;
+    private final int _mapy;
+    private final Map<Integer,DoorInfo> _doors;
+    private final Map<String, ZoneInfo> _zones;
+    private final Map<String, SpawnInfo2> _spawns;
+    private final List<SpawnInfo> _spawnsInfo;
+    private final int _collapseIfEmpty;
+    private final int _maxChannels;
+    private final int _removedItemId;
+    private final int _removedItemCount;
+    private final boolean _removedItemNecessity;
+    private final int _giveItemId;
+    private final int _givedItemCount;
+    private final int _requiredQuestId;
+    private final boolean _setReuseUponEntry;
+    private final StatsSet _addParams;
+    private final InstantZoneEntryType _entryType;
+    private boolean _dispelBuffs;
 
-		if (getMinParty() == 1)
-			_entryType = InstantZoneEntryType.SOLO;
-		else if (getMinParty() > 1 && getMaxParty() <= 9)
-			_entryType = InstantZoneEntryType.PARTY;
-		else if (getMaxParty() > 9)
-			_entryType = InstantZoneEntryType.COMMAND_CHANNEL;
-		else
-			throw new IllegalArgumentException("Invalid type?: " + _name);
-	}
+    public InstantZone(int id, String name, SchedulingPattern resetReuse, int sharedReuseGroup, int timelimit, boolean dispelBuffs, int minLevel, int maxLevel, int minParty, int maxParty, int timer, boolean onPartyDismiss, List<Location> tele, Location ret, int mapx, int mapy, Map<Integer,DoorInfo> doors, Map<String, ZoneInfo> zones, Map<String, SpawnInfo2> spawns, List<SpawnInfo> spawnsInfo, int collapseIfEmpty, int maxChannels, int removedItemId, int removedItemCount, boolean removedItemNecessity, int giveItemId, int givedItemCount, int requiredQuestId, boolean setReuseUponEntry, StatsSet params) {
+        _id = id;
+        _name = name;
+        _resetReuse = resetReuse;
+        _sharedReuseGroup = sharedReuseGroup;
+        _timelimit = timelimit;
+        _dispelBuffs = dispelBuffs;
+        _minLevel = minLevel;
+        _maxLevel = maxLevel;
+        _teleportCoords = tele;
+        _returnCoords = ret;
+        _minParty = minParty;
+        _maxParty = maxParty;
+        _onPartyDismiss = onPartyDismiss;
+        _timer = timer;
+        _mapx = mapx;
+        _mapy = mapy;
+        _doors = doors;
+        _zones = zones;
+        _spawnsInfo = spawnsInfo;
+        _spawns = spawns;
+        _collapseIfEmpty = collapseIfEmpty;
+        _maxChannels = maxChannels;
+        _removedItemId = removedItemId;
+        _removedItemCount = removedItemCount;
+        _removedItemNecessity = removedItemNecessity;
+        _giveItemId = giveItemId;
+        _givedItemCount = givedItemCount;
+        _requiredQuestId = requiredQuestId;
+        _setReuseUponEntry = setReuseUponEntry;
+        _addParams = params;
 
-	public int getId()
-	{
-		return _id;
-	}
+        if (getMinParty() == 1)
+            _entryType = InstantZoneEntryType.SOLO;
+        else if (getMinParty() > 1 && getMaxParty() <= 9)
+            _entryType = InstantZoneEntryType.PARTY;
+        else if (getMaxParty() > 9)
+            _entryType = InstantZoneEntryType.COMMAND_CHANNEL;
+        else
+            throw new IllegalArgumentException("Invalid type?: " + _name);
+    }
 
-	public String getName()
-	{
-		return _name;
-	}
+    public int getId() {
+        return _id;
+    }
 
-	public SchedulingPattern getResetReuse()
-	{
-		return _resetReuse;
-	}
+    public String getName() {
+        return _name;
+    }
 
-	public boolean isDispelBuffs()
-	{
-		return _dispelBuffs;
-	}
+    public SchedulingPattern getResetReuse() {
+        return _resetReuse;
+    }
 
-	public int getTimelimit()
-	{
-		return _timelimit;
-	}
+    public boolean isDispelBuffs() {
+        return _dispelBuffs;
+    }
 
-	public int getMinLevel()
-	{
-		return _minLevel;
-	}
+    public int getTimelimit() {
+        return _timelimit;
+    }
 
-	public int getMaxLevel()
-	{
-		return _maxLevel;
-	}
+    public int getMinLevel() {
+        return _minLevel;
+    }
 
-	public int getMinParty()
-	{
-		return _minParty;
-	}
+    public int getMaxLevel() {
+        return _maxLevel;
+    }
 
-	public int getMaxParty()
-	{
-		return _maxParty;
-	}
+    public int getMinParty() {
+        return _minParty;
+    }
 
-	public int getTimerOnCollapse()
-	{
-		return _timer;
-	}
+    public int getMaxParty() {
+        return _maxParty;
+    }
 
-	public boolean isCollapseOnPartyDismiss()
-	{
-		return _onPartyDismiss;
-	}
+    public int getTimerOnCollapse() {
+        return _timer;
+    }
 
-	public Location getTeleportCoord()
-	{
-		if (_teleportCoords == null || _teleportCoords.size() == 0)
-			return null;
-		if (_teleportCoords.size() == 1)   // fast hack?
-			return _teleportCoords.get(0);
-		return _teleportCoords.get(Rnd.get(_teleportCoords.size()));
-	}
+    public boolean isCollapseOnPartyDismiss() {
+        return _onPartyDismiss;
+    }
 
-	public Location getReturnCoords()
-	{
-		return _returnCoords;
-	}
+    public Location getTeleportCoord() {
+        if (_teleportCoords == null || _teleportCoords.size() == 0)
+            return null;
+        if (_teleportCoords.size() == 1)   // fast hack?
+            return _teleportCoords.get(0);
+        return _teleportCoords.get(Rnd.get(_teleportCoords.size()));
+    }
 
-	public int getMapX()
-	{
-		return _mapx;
-	}
+    public Location getReturnCoords() {
+        return _returnCoords;
+    }
 
-	public int getMapY()
-	{
-		return _mapy;
-	}
+    public int getMapX() {
+        return _mapx;
+    }
 
-	public List<SpawnInfo> getSpawnsInfo()
-	{
-		return _spawnsInfo;
-	}
+    public int getMapY() {
+        return _mapy;
+    }
 
-	public int getSharedReuseGroup()
-	{
-		return _sharedReuseGroup;
-	}
+    public List<SpawnInfo> getSpawnsInfo() {
+        return _spawnsInfo;
+    }
 
-	public int getCollapseIfEmpty()
-	{
-		return _collapseIfEmpty;
-	}
+    public int getSharedReuseGroup() {
+        return _sharedReuseGroup;
+    }
 
-	public int getRemovedItemId()
-	{
-		return _removedItemId;
-	}
+    public int getCollapseIfEmpty() {
+        return _collapseIfEmpty;
+    }
 
-	public int getRemovedItemCount()
-	{
-		return _removedItemCount;
-	}
+    public int getRemovedItemId() {
+        return _removedItemId;
+    }
 
-	public boolean getRemovedItemNecessity()
-	{
-		return _removedItemNecessity;
-	}
+    public int getRemovedItemCount() {
+        return _removedItemCount;
+    }
 
-	public int getGiveItemId()
-	{
-		return _giveItemId;
-	}
+    public boolean getRemovedItemNecessity() {
+        return _removedItemNecessity;
+    }
 
-	public int getGiveItemCount()
-	{
-		return _givedItemCount;
-	}
+    public int getGiveItemId() {
+        return _giveItemId;
+    }
 
-	public int getRequiredQuestId()
-	{
-		return _requiredQuestId;
-	}
+    public int getGiveItemCount() {
+        return _givedItemCount;
+    }
 
-	public boolean getSetReuseUponEntry()
-	{
-		return _setReuseUponEntry;
-	}
+    public int getRequiredQuestId() {
+        return _requiredQuestId;
+    }
 
-	public int getMaxChannels()
-	{
-		return _maxChannels;
-	}
+    public boolean getSetReuseUponEntry() {
+        return _setReuseUponEntry;
+    }
 
-	public InstantZoneEntryType getEntryType()
-	{
-		return _entryType;
-	}
+    public int getMaxChannels() {
+        return _maxChannels;
+    }
 
-	public IntObjectMap<DoorInfo> getDoors()
-	{
-		return _doors;
-	}
+    public InstantZoneEntryType getEntryType() {
+        return _entryType;
+    }
 
-	public Map<String, ZoneInfo> getZones()
-	{
-		return _zones;
-	}
+    public Map<Integer,DoorInfo> getDoors() {
+        return _doors;
+    }
 
-	public List<Location> getTeleportCoords()
-	{
-		return _teleportCoords;
-	}
+    public Map<String, ZoneInfo> getZones() {
+        return _zones;
+    }
 
-	public Map<String, SpawnInfo2> getSpawns()
-	{
-		return _spawns;
-	}
+    public List<Location> getTeleportCoords() {
+        return _teleportCoords;
+    }
 
-	public StatsSet getAddParams()
-	{
-		return _addParams;
-	}
+    public Map<String, SpawnInfo2> getSpawns() {
+        return _spawns;
+    }
 
-	public static class DoorInfo
-	{
-		private final DoorTemplate _template;
-		private final boolean _opened;
-		private final boolean _invul;
+    public StatsSet getAddParams() {
+        return _addParams;
+    }
 
-		public DoorInfo(DoorTemplate template, boolean opened, boolean invul)
-		{
-			_template = template;
-			_opened = opened;
-			_invul = invul;
-		}
+    public static class DoorInfo {
+        private final DoorTemplate _template;
+        private final boolean _opened;
+        private final boolean _invul;
 
-		public DoorTemplate getTemplate()
-		{
-			return _template;
-		}
+        public DoorInfo(DoorTemplate template, boolean opened, boolean invul) {
+            _template = template;
+            _opened = opened;
+            _invul = invul;
+        }
 
-		public boolean isOpened()
-		{
-			return _opened;
-		}
+        public DoorTemplate getTemplate() {
+            return _template;
+        }
 
-		public boolean isInvul()
-		{
-			return _invul;
-		}
-	}
+        public boolean isOpened() {
+            return _opened;
+        }
 
-	public static class ZoneInfo
-	{
-		private final ZoneTemplate _template;
-		private final boolean _active;
+        public boolean isInvul() {
+            return _invul;
+        }
+    }
 
-		public ZoneInfo(ZoneTemplate template, boolean opened)
-		{
-			_template = template;
-			_active = opened;
-		}
+    public static class ZoneInfo {
+        private final ZoneTemplate _template;
+        private final boolean _active;
 
-		public ZoneTemplate getTemplate()
-		{
-			return _template;
-		}
+        public ZoneInfo(ZoneTemplate template, boolean opened) {
+            _template = template;
+            _active = opened;
+        }
 
-		public boolean isActive()
-		{
-			return _active;
-		}
-	}
+        public ZoneTemplate getTemplate() {
+            return _template;
+        }
 
-	public static class SpawnInfo2
-	{
-		private List<SpawnTemplate> _template;
-		private boolean _spawned;
+        public boolean isActive() {
+            return _active;
+        }
+    }
 
-		public SpawnInfo2(List<SpawnTemplate> template, boolean spawned)
-		{
-			_template = template;
-			_spawned = spawned;
-		}
+    public static class SpawnInfo2 {
+        private List<SpawnTemplate> _template;
+        private boolean _spawned;
 
-		public List<SpawnTemplate> getTemplates()
-		{
-			return _template;
-		}
+        public SpawnInfo2(List<SpawnTemplate> template, boolean spawned) {
+            _template = template;
+            _spawned = spawned;
+        }
 
-		public boolean isSpawned()
-		{
-			return _spawned;
-		}
-	}
+        public List<SpawnTemplate> getTemplates() {
+            return _template;
+        }
 
-	//@Deprecated
-	public static class SpawnInfo
-	{
-		private final int _spawnType;
-		private final int _npcId;
-		private final int _count;
-		private final int _respawn;
-		private final int _respawnRnd;
-		private final List<Location> _coords;
-		private final Territory _territory;
+        public boolean isSpawned() {
+            return _spawned;
+        }
+    }
 
-		public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, Territory territory)
-		{
-			this(spawnType, npcId, count, respawn, respawnRnd, null, territory);
-		}
+    //@Deprecated
+    public static class SpawnInfo {
+        private final int _spawnType;
+        private final int _npcId;
+        private final int _count;
+        private final int _respawn;
+        private final int _respawnRnd;
+        private final List<Location> _coords;
+        private final Territory _territory;
 
-		public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, List<Location> coords)
-		{
-			this(spawnType, npcId, count, respawn, respawnRnd, coords, null);
-		}
+        public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, Territory territory) {
+            this(spawnType, npcId, count, respawn, respawnRnd, null, territory);
+        }
 
-		public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, List<Location> coords, Territory territory)
-		{
-			_spawnType = spawnType;
-			_npcId = npcId;
-			_count = count;
-			_respawn = respawn;
-			_respawnRnd = respawnRnd;
-			_coords = coords;
-			_territory = territory;
-		}
+        public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, List<Location> coords) {
+            this(spawnType, npcId, count, respawn, respawnRnd, coords, null);
+        }
 
-		public int getSpawnType()
-		{
-			return _spawnType;
-		}
+        public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, List<Location> coords, Territory territory) {
+            _spawnType = spawnType;
+            _npcId = npcId;
+            _count = count;
+            _respawn = respawn;
+            _respawnRnd = respawnRnd;
+            _coords = coords;
+            _territory = territory;
+        }
 
-		public int getNpcId()
-		{
-			return _npcId;
-		}
+        public int getSpawnType() {
+            return _spawnType;
+        }
 
-		public int getCount()
-		{
-			return _count;
-		}
+        public int getNpcId() {
+            return _npcId;
+        }
 
-		public int getRespawnDelay()
-		{
-			return _respawn;
-		}
+        public int getCount() {
+            return _count;
+        }
 
-		public int getRespawnRnd()
-		{
-			return _respawnRnd;
-		}
+        public int getRespawnDelay() {
+            return _respawn;
+        }
 
-		public List<Location> getCoords()
-		{
-			return _coords;
-		}
+        public int getRespawnRnd() {
+            return _respawnRnd;
+        }
 
-		public Territory getLoc()
-		{
-			return _territory;
-		}
-	}
+        public List<Location> getCoords() {
+            return _coords;
+        }
+
+        public Territory getLoc() {
+            return _territory;
+        }
+    }
 }

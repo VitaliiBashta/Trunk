@@ -10,13 +10,10 @@ import l2f.gameserver.model.entity.Reflection;
 import l2f.gameserver.scripts.Functions;
 import l2f.gameserver.scripts.ScriptFile;
 
-public class DionArena extends Functions implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener
-{
-	private static class DionArenaImpl extends ArenaTemplate
-	{
-		@Override
-		protected void onLoad()
-		{
+public class DionArena extends Functions implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener {
+    private static class DionArenaImpl extends ArenaTemplate {
+        @Override
+        protected void onLoad() {
 			/*_managerId = 20230001;
 			_className = "DionArena";
 			_status = 0;
@@ -46,65 +43,56 @@ public class DionArena extends Functions implements ScriptFile, OnDeathListener,
 			_team2points.add(new Location(12459, 183941, -3563));
 			_team2points.add(new Location(12253, 183941, -3563));
 			_team2points.add(new Location(12053, 183941, -3563));*/
-		}
+        }
 
-		@Override
-		protected void onReload()
-		{
+        @Override
+        protected void onReload() {
 			/*if(_status > 0)
 				template_stop();
 			_zone.removeListener(_zoneListener);*/
-		}
-	}
+        }
+    }
 
-	private static ArenaTemplate _instance = new DionArenaImpl();
+    private static ArenaTemplate _instance = new DionArenaImpl();
 
-	public static ArenaTemplate getInstance()
-	{
-		if (_instance == null)
-			_instance = new DionArenaImpl();
-		return _instance;
-	}
+    public static ArenaTemplate getInstance() {
+        if (_instance == null)
+            _instance = new DionArenaImpl();
+        return _instance;
+    }
 
-	@Override
-	public void onLoad()
-	{
-		getInstance().onLoad();
-		CharListenerList.addGlobal(this);
-	}
+    @Override
+    public void onLoad() {
+        getInstance().onLoad();
+        CharListenerList.addGlobal(this);
+    }
 
-	@Override
-	public void onReload()
-	{
-		//getInstance().onReload();
-		//_instance = null;
-	}
+    @Override
+    public void onReload() {
+        //getInstance().onReload();
+        //_instance = null;
+    }
 
-	@Override
-	public void onShutdown()
-	{
-	}
+    @Override
+    public void onShutdown() {
+    }
 
-	@Override
-	public void onDeath(Creature cha, Creature killer)
-	{
-		//getInstance().onDeath(cha, killer);
-	}
+    @Override
+    public void onDeath(Creature cha, Creature killer) {
+        //getInstance().onDeath(cha, killer);
+    }
 
-	@Override
-	public void onPlayerExit(Player player)
-	{
-		getInstance().onPlayerExit(player);
-	}
+    @Override
+    public void onPlayerExit(Player player) {
+        getInstance().onPlayerExit(player);
+    }
 
-	@Override
-	public void onTeleport(Player player, int x, int y, int z, Reflection reflection)
-	{
-		getInstance().onTeleport(player);
-	}
+    @Override
+    public void onTeleport(Player player, int x, int y, int z, Reflection reflection) {
+        getInstance().onTeleport(player);
+    }
 
-	public String DialogAppend_20230001(Integer val)
-	{
+    public String DialogAppend_20230001(Integer val) {
 		/*if(val == 0)
 		{
 			Player player = getSelf();
@@ -112,66 +100,54 @@ public class DionArena extends Functions implements ScriptFile, OnDeathListener,
 				return HtmCache.getInstance().getNotNull("scripts/events/arena/20230001.htm", player) + HtmCache.getInstance().getNotNull("scripts/events/arena/20230001-4.htm", player);
 			return HtmCache.getInstance().getNotNull("scripts/events/arena/20230001.htm", player);
 		}*/
-		return "";
-	}
+        return "";
+    }
 
-	public String DialogAppend_20230002(Integer val)
-	{
-		return "";//DialogAppend_20230001(val);
-	}
+    public String DialogAppend_20230002(Integer val) {
+        return "";//DialogAppend_20230001(val);
+    }
 
-	public void create1()
-	{
-		//getInstance().template_create1(getSelf());
-	}
+    public void create1() {
+        //getInstance().template_create1(getSelf());
+    }
 
-	public void create2()
-	{
-		//getInstance().template_create2(getSelf());
-	}
+    public void create2() {
+        //getInstance().template_create2(getSelf());
+    }
 
-	public void register()
-	{
-		//getInstance().template_register(getSelf());
-	}
+    public void register() {
+        //getInstance().template_register(getSelf());
+    }
 
-	public void check1(String[] var)
-	{
-		//getInstance().template_check1(getSelf(), var);
-	}
+    public void check1(String[] var) {
+        //getInstance().template_check1(getSelf(), var);
+    }
 
-	public void check2(String[] var)
-	{
-		//getInstance().template_check2(getSelf(), var);
-	}
+    public void check2(String[] var) {
+        //getInstance().template_check2(getSelf(), var);
+    }
 
-	public void register_check(String[] var)
-	{
-		//getInstance().template_register_check(getSelf(), var);
-	}
+    public void register_check(String[] var) {
+        //getInstance().template_register_check(getSelf(), var);
+    }
 
-	public void stop()
-	{
-		//getInstance().template_stop();
-	}
+    public void stop() {
+        //getInstance().template_stop();
+    }
 
-	public void announce()
-	{
-		//getInstance().template_announce();
-	}
+    public void announce() {
+        //getInstance().template_announce();
+    }
 
-	public void prepare()
-	{
-		//getInstance().template_prepare();
-	}
+    public void prepare() {
+        //getInstance().template_prepare();
+    }
 
-	public void start()
-	{
-		//getInstance().template_start();
-	}
+    public void start() {
+        //getInstance().template_start();
+    }
 
-	public static void timeOut()
-	{
-		//getInstance().template_timeOut();
-	}
+    public static void timeOut() {
+        //getInstance().template_timeOut();
+    }
 }

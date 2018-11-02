@@ -1,8 +1,5 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.util.Rnd;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Effect;
@@ -14,83 +11,75 @@ import l2f.gameserver.stats.Stats;
 import l2f.gameserver.stats.funcs.FuncTemplate;
 import l2f.gameserver.templates.StatsSet;
 
-public class NegateStats extends Skill
-{
-	private final List<Stats> _negateStats;
-	private final boolean _negateOffensive;
-	private final int _negateCount;
+import java.util.ArrayList;
+import java.util.List;
 
-	public NegateStats(StatsSet set)
-	{
-		super(set);
+public class NegateStats extends Skill {
+    private final List<Stats> _negateStats;
+    private final boolean _negateOffensive;
+    private final int _negateCount;
 
-		String[] negateStats = set.getString("negateStats", "").split(" ");
-		_negateStats = new ArrayList<Stats>(negateStats.length);
-		for (String stat : negateStats)
-			if (!stat.isEmpty())
-				_negateStats.add(Stats.valueOfXml(stat));
+    public NegateStats(StatsSet set) {
+        super(set);
 
-		_negateOffensive = set.getBool("negateDebuffs", false);
-		_negateCount = set.getInteger("negateCount", 0);
-	}
+        String[] negateStats = set.getString("negateStats", "").split(" ");
+        _negateStats = new ArrayList<Stats>(negateStats.length);
+        for (String stat : negateStats)
+            if (!stat.isEmpty())
+                _negateStats.add(Stats.valueOfXml(stat));
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		for (Creature target : targets)
-			if (target != null)
-			{
-				if (!_negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate()))
-				{
-					activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(getId(), getLevel()));
-					continue;
-				}
+        _negateOffensive = set.getBool("negateDebuffs", false);
+        _negateCount = set.getInteger("negateCount", 0);
+    }
 
-				int count = 0;
-				List<Effect> effects = target.getEffectList().getAllEffects();
-				for (Stats stat : _negateStats)
-					for (Effect e : effects)
-					{
-						Skill skill = e.getSkill();
-						// Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
-						if (!skill.isOffensive() && skill.getMagicLevel() > getMagicLevel() && Rnd.chance(skill.getMagicLevel() - getMagicLevel()))
-						{
-							count++;
-							continue;
-						}
-						if (skill.isOffensive() == _negateOffensive && containsStat(e, stat) && skill.isCancelable())
-						{
-							target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getDisplayLevel()));
-							e.exit();
-							count++;
-						}
-						if (_negateCount > 0 && count >= _negateCount)
-							break;
-					}
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        for (Creature target : targets)
+            if (target != null) {
+                if (!_negateOffensive && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(getId(), getLevel()));
+                    continue;
+                }
 
-				getEffects(activeChar, target, getActivateRate() > 0, false);
-			}
+                int count = 0;
+                List<Effect> effects = target.getEffectList().getAllEffects();
+                for (Stats stat : _negateStats)
+                    for (Effect e : effects) {
+                        Skill skill = e.getSkill();
+                        // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
+                        if (!skill.isOffensive() && skill.getMagicLevel() > getMagicLevel() && Rnd.chance(skill.getMagicLevel() - getMagicLevel())) {
+                            count++;
+                            continue;
+                        }
+                        if (skill.isOffensive() == _negateOffensive && containsStat(e, stat) && skill.isCancelable()) {
+                            target.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getDisplayLevel()));
+                            e.exit();
+                            count++;
+                        }
+                        if (_negateCount > 0 && count >= _negateCount)
+                            break;
+                    }
 
-		if (isSSPossible())
-			activeChar.unChargeShots(isMagic());
-	}
+                getEffects(activeChar, target, getActivateRate() > 0, false);
+            }
 
-	private boolean containsStat(Effect e, Stats stat)
-	{
-		for (FuncTemplate ft : e.getTemplate().getAttachedFuncs())
-			if (ft._stat == stat)
-				return true;
-		return false;
-	}
-	
-	@Override
-	public boolean isOffensive()
-	{
-		return !_negateOffensive;
-	}
+        if (isSSPossible())
+            activeChar.unChargeShots(isMagic());
+    }
 
-	public List<Stats> getNegateStats()
-	{
-		return _negateStats;
-	}
+    private boolean containsStat(Effect e, Stats stat) {
+        for (FuncTemplate ft : e.getTemplate().getAttachedFuncs())
+            if (ft._stat == stat)
+                return true;
+        return false;
+    }
+
+    @Override
+    public boolean isOffensive() {
+        return !_negateOffensive;
+    }
+
+    public List<Stats> getNegateStats() {
+        return _negateStats;
+    }
 }

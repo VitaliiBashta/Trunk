@@ -1,8 +1,5 @@
 package l2f.gameserver.model.entity.events.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.collections.MultiValueSet;
 import l2f.gameserver.Config;
 import l2f.gameserver.data.BoatHolder;
@@ -18,150 +15,130 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.utils.Location;
 import l2f.gameserver.utils.MapUtils;
 
-public class BoatWayEvent extends GlobalEvent
-{
-	public static final String BOAT_POINTS = "boat_points";
+import java.util.ArrayList;
+import java.util.List;
 
-	private final int _ticketId;
-	private final Location _returnLoc;
-	private final Boat _boat;
+public class BoatWayEvent extends GlobalEvent {
+    public static final String BOAT_POINTS = "boat_points";
 
-	public BoatWayEvent(ClanAirShip boat)
-	{
-		super(boat.getObjectId(), "ClanAirShip");
-		_ticketId = 0;
-		_boat = boat;
-		_returnLoc = null;
-	}
+    private final int _ticketId;
+    private final Location _returnLoc;
+    private final Boat _boat;
 
-	public BoatWayEvent(MultiValueSet<String> set)
-	{
-		super(set);
-		_ticketId = set.getInteger("ticketId", 0);
-		_returnLoc = Location.parseLoc(set.getString("return_point"));
-		String className = set.getString("class", null);
-		if (className != null)
-		{
-			_boat = BoatHolder.getInstance().initBoat(getName(), className);
-			Location loc = Location.parseLoc(set.getString("spawn_point"));
-			_boat.setLoc(loc, true);
-			_boat.setHeading(loc.h);
-		}
-		else
-		{
-			_boat = BoatHolder.getInstance().getBoat(getName());
-		}
-		_boat.setWay(className != null ? 1 : 0, this);
-	}
+    public BoatWayEvent(ClanAirShip boat) {
+        super(boat.getObjectId(), "ClanAirShip");
+        _ticketId = 0;
+        _boat = boat;
+        _returnLoc = null;
+    }
 
-	@Override
-	public void initEvent()
-	{}
+    public BoatWayEvent(MultiValueSet<String> set) {
+        super(set);
+        _ticketId = set.getInteger("ticketId", 0);
+        _returnLoc = Location.parseLoc(set.getString("return_point"));
+        String className = set.getString("class", null);
+        if (className != null) {
+            _boat = BoatHolder.getInstance().initBoat(getName(), className);
+            Location loc = Location.parseLoc(set.getString("spawn_point"));
+            _boat.setLoc(loc, true);
+            _boat.setHeading(loc.h);
+        } else {
+            _boat = BoatHolder.getInstance().getBoat(getName());
+        }
+        _boat.setWay(className != null ? 1 : 0, this);
+    }
 
-	@Override
-	public void startEvent()
-	{
-		L2GameServerPacket startPacket = _boat.startPacket();
-		for (Player player : _boat.getPlayers())
-		{
-			if (_ticketId > 0)
-			{
-				if (player.consumeItem(_ticketId, 1))
-				{
-					if (startPacket != null)
-						player.sendPacket(startPacket);
-				}
-				else
-				{
-					player.sendPacket(SystemMsg.YOU_DO_NOT_POSSESS_THE_CORRECT_TICKET_TO_BOARD_THE_BOAT);
-					_boat.oustPlayer(player, _returnLoc, true);
-				}
-			}
-			else
-			{
-				if (startPacket != null)
-					player.sendPacket(startPacket);
-			}
-		}
+    @Override
+    public void initEvent() {
+    }
 
-		moveNext();
-	}
+    @Override
+    public void startEvent() {
+        L2GameServerPacket startPacket = _boat.startPacket();
+        for (Player player : _boat.getPlayers()) {
+            if (_ticketId > 0) {
+                if (player.consumeItem(_ticketId, 1)) {
+                    if (startPacket != null)
+                        player.sendPacket(startPacket);
+                } else {
+                    player.sendPacket(SystemMsg.YOU_DO_NOT_POSSESS_THE_CORRECT_TICKET_TO_BOARD_THE_BOAT);
+                    _boat.oustPlayer(player, _returnLoc, true);
+                }
+            } else {
+                if (startPacket != null)
+                    player.sendPacket(startPacket);
+            }
+        }
 
-	public void moveNext()
-	{
-		List<BoatPoint> points = getObjects(BOAT_POINTS);
+        moveNext();
+    }
 
-		if (_boat.getRunState() >= points.size())
-		{
-			_boat.trajetEnded(true);
-			return;
-		}
+    public void moveNext() {
+        List<BoatPoint> points = getObjects(BOAT_POINTS);
 
-		final BoatPoint bp = points.get(_boat.getRunState());
+        if (_boat.getRunState() >= points.size()) {
+            _boat.trajetEnded(true);
+            return;
+        }
 
-		if (bp.getSpeed1() >= 0)
-			_boat.setMoveSpeed(bp.getSpeed1());
-		if (bp.getSpeed2() >= 0)
-			_boat.setRotationSpeed(bp.getSpeed2());
+        final BoatPoint bp = points.get(_boat.getRunState());
 
-		if (_boat.getRunState() == 0)
-			_boat.broadcastCharInfo();
+        if (bp.getSpeed1() >= 0)
+            _boat.setMoveSpeed(bp.getSpeed1());
+        if (bp.getSpeed2() >= 0)
+            _boat.setRotationSpeed(bp.getSpeed2());
 
-		_boat.setRunState(_boat.getRunState() + 1);
+        if (_boat.getRunState() == 0)
+            _boat.broadcastCharInfo();
 
-		if (bp.isTeleport())
-			_boat.teleportShip(bp.getX(), bp.getY(), bp.getZ());
-		else
-			_boat.moveToLocation(bp.getX(), bp.getY(), bp.getZ(), 0, false);
-	}
+        _boat.setRunState(_boat.getRunState() + 1);
 
-	@Override
-	public void reCalcNextTime(boolean onInit)
-	{
-		registerActions();
-	}
+        if (bp.isTeleport())
+            _boat.teleportShip(bp.getX(), bp.getY(), bp.getZ());
+        else
+            _boat.moveToLocation(bp.getX(), bp.getY(), bp.getZ(), 0, false);
+    }
 
-	@Override
-	protected long startTimeMillis()
-	{
-		return System.currentTimeMillis();
-	}
+    @Override
+    public void reCalcNextTime(boolean onInit) {
+        registerActions();
+    }
 
-	@Override
-	public List<Player> broadcastPlayers(int range)
-	{
-		if (range <= 0)
-		{
-			List<Player> list = new ArrayList<Player>();
+    @Override
+    protected long startTimeMillis() {
+        return System.currentTimeMillis();
+    }
 
-			int rx = MapUtils.regionX(_boat.getX());
-			int ry = MapUtils.regionY(_boat.getY());
-			int offset = Config.SHOUT_OFFSET;
+    @Override
+    public List<Player> broadcastPlayers(int range) {
+        if (range <= 0) {
+            List<Player> list = new ArrayList<Player>();
 
-			for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			{
-				if (player.getReflection() != _boat.getReflection())
-					continue;
+            int rx = MapUtils.regionX(_boat.getX());
+            int ry = MapUtils.regionY(_boat.getY());
+            int offset = Config.SHOUT_OFFSET;
 
-				int tx = MapUtils.regionX(player);
-				int ty = MapUtils.regionY(player);
+            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+                if (player.getReflection() != _boat.getReflection())
+                    continue;
 
-				if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
-					list.add(player);
-			}
+                int tx = MapUtils.regionX(player);
+                int ty = MapUtils.regionY(player);
 
-			return list;
-		}
-		else
-			return World.getAroundPlayers(_boat, range, Math.max(range / 2, 200));
-	}
+                if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
+                    list.add(player);
+            }
 
-	@Override
-	protected void printInfo()
-	{}
+            return list;
+        } else
+            return World.getAroundPlayers(_boat, range, Math.max(range / 2, 200));
+    }
 
-	public Location getReturnLoc()
-	{
-		return _returnLoc;
-	}
+    @Override
+    protected void printInfo() {
+    }
+
+    public Location getReturnLoc() {
+        return _returnLoc;
+    }
 }

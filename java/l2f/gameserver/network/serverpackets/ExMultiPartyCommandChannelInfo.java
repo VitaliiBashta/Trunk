@@ -1,60 +1,53 @@
 package l2f.gameserver.network.serverpackets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.gameserver.model.CommandChannel;
 import l2f.gameserver.model.Party;
 import l2f.gameserver.model.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class ExMultiPartyCommandChannelInfo extends L2GameServerPacket
-{
-	private String ChannelLeaderName;
-	private int MemberCount;
-	private List<ChannelPartyInfo> parties;
 
-	public ExMultiPartyCommandChannelInfo(CommandChannel channel)
-	{
-		ChannelLeaderName = channel.getLeader().getName();
-		MemberCount = channel.size();
+public class ExMultiPartyCommandChannelInfo extends L2GameServerPacket {
+    private String ChannelLeaderName;
+    private int MemberCount;
+    private List<ChannelPartyInfo> parties;
 
-		parties = new ArrayList<ChannelPartyInfo>();
-		for (Party party : channel.getParties())
-		{
-			Player leader = party.getLeader();
-			if (leader != null)
-				parties.add(new ChannelPartyInfo(leader.getName(), leader.getObjectId(), party.size()));
-		}
-	}
+    public ExMultiPartyCommandChannelInfo(CommandChannel channel) {
+        ChannelLeaderName = channel.getLeader().getName();
+        MemberCount = channel.size();
 
-	@Override
-	protected void writeImpl()
-	{
-		writeEx(0x31);
-		writeS(ChannelLeaderName); // имя лидера CC
-		writeD(0); // Looting type?
-		writeD(MemberCount); // общее число человек в СС
-		writeD(parties.size()); // общее число партий в СС
+        parties = new ArrayList<ChannelPartyInfo>();
+        for (Party party : channel.getParties()) {
+            Player leader = party.getLeader();
+            if (leader != null)
+                parties.add(new ChannelPartyInfo(leader.getName(), leader.getObjectId(), party.size()));
+        }
+    }
 
-		for (ChannelPartyInfo party : parties)
-		{
-			writeS(party.Leader_name); // имя лидера партии
-			writeD(party.Leader_obj_id); // ObjId пати лидера
-			writeD(party.MemberCount); // количество мемберов в пати
-		}
-	}
+    @Override
+    protected void writeImpl() {
+        writeEx(0x31);
+        writeS(ChannelLeaderName); // имя лидера CC
+        writeD(0); // Looting type?
+        writeD(MemberCount); // общее число человек в СС
+        writeD(parties.size()); // общее число партий в СС
 
-	static class ChannelPartyInfo
-	{
-		public String Leader_name;
-		public int Leader_obj_id, MemberCount;
+        for (ChannelPartyInfo party : parties) {
+            writeS(party.Leader_name); // имя лидера партии
+            writeD(party.Leader_obj_id); // ObjId пати лидера
+            writeD(party.MemberCount); // количество мемберов в пати
+        }
+    }
 
-		public ChannelPartyInfo(String _Leader_name, int _Leader_obj_id, int _MemberCount)
-		{
-			Leader_name = _Leader_name;
-			Leader_obj_id = _Leader_obj_id;
-			MemberCount = _MemberCount;
-		}
-	}
+    static class ChannelPartyInfo {
+        public String Leader_name;
+        public int Leader_obj_id, MemberCount;
+
+        public ChannelPartyInfo(String _Leader_name, int _Leader_obj_id, int _MemberCount) {
+            Leader_name = _Leader_name;
+            Leader_obj_id = _Leader_obj_id;
+            MemberCount = _MemberCount;
+        }
+    }
 }

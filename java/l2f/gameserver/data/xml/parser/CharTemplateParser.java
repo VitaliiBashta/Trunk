@@ -12,68 +12,61 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CharTemplateParser extends AbstractFileParser<CharTemplateHolder>
-{
-	private static final CharTemplateParser _instance = new CharTemplateParser();
+public class CharTemplateParser extends AbstractFileParser<CharTemplateHolder> {
+    private static final CharTemplateParser _instance = new CharTemplateParser();
 
-	protected CharTemplateParser() {
-		super(CharTemplateHolder.getInstance());
-	}
+    protected CharTemplateParser() {
+        super(CharTemplateHolder.getInstance());
+    }
 
-	public static CharTemplateParser getInstance()
-	{
-		return _instance;
-	}
+    public static CharTemplateParser getInstance() {
+        return _instance;
+    }
 
-	@Override
-	public File getXMLFile() {
-		return new File(Config.DATAPACK_ROOT, "data/char_templates.xml");
-	}
+    @Override
+    public File getXMLFile() {
+        return new File(Config.DATAPACK_ROOT, "data/char_templates.xml");
+    }
 
-	@Override
-	public String getDTDFileName() {
-		return "char_templates.dtd";
-	}
+    @Override
+    public String getDTDFileName() {
+        return "char_templates.dtd";
+    }
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	protected void readData(Element rootElement) throws Exception
-	{
-		for (Iterator interator = rootElement.elementIterator(); interator.hasNext();)
-		{
-			List<CreateItem> items = new ArrayList<CreateItem>();
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void readData(Element rootElement) {
+        for (Iterator interator = rootElement.elementIterator(); interator.hasNext(); ) {
+            List<CreateItem> items = new ArrayList<CreateItem>();
 
-			Element element = (org.dom4j.Element) interator.next();
-			StatsSet set = new StatsSet();
+            Element element = (org.dom4j.Element) interator.next();
+            StatsSet set = new StatsSet();
 
-			int classId = Integer.parseInt(element.attributeValue("id"));
-			String name = element.attributeValue("name");
-			set.set("name", name);
+            int classId = Integer.parseInt(element.attributeValue("id"));
+            String name = element.attributeValue("name");
+            set.set("name", name);
 
-			for (Iterator template = element.elementIterator(); template.hasNext();)
-			{
-				Element templat = (org.dom4j.Element) template.next();
-				if (templat.getName().equalsIgnoreCase("set"))
-					set.set(templat.attributeValue("name"), templat.attributeValue("value"));
-				else if (templat.getName().equalsIgnoreCase("item"))
-					try {
-						int itemId = Integer.parseInt(templat.attributeValue("id"));
-						int count = Integer.parseInt(templat.attributeValue("count"));
-						boolean equipable = false;
-						int shortcat = -1;
-						if (templat.attributeValue("equipable")!=null)
-							equipable = Boolean.parseBoolean(templat.attributeValue("equipable"));
-						if (templat.attributeValue("shortcut")!=null)
-							shortcat = Integer.parseInt(templat.attributeValue("shortcut"));
-						items.add(new CreateItem(itemId, count, equipable, shortcat));
-					}
-					catch (NumberFormatException e)
-					{
-						_log.error("Error parsing char_template, add item for classId " + set.get("classId") + ": ", e);
-					}
-			}
+            for (Iterator template = element.elementIterator(); template.hasNext(); ) {
+                Element templat = (org.dom4j.Element) template.next();
+                if (templat.getName().equalsIgnoreCase("set"))
+                    set.set(templat.attributeValue("name"), templat.attributeValue("value"));
+                else if (templat.getName().equalsIgnoreCase("item"))
+                    try {
+                        int itemId = Integer.parseInt(templat.attributeValue("id"));
+                        int count = Integer.parseInt(templat.attributeValue("count"));
+                        boolean equipable = false;
+                        int shortcat = -1;
+                        if (templat.attributeValue("equipable") != null)
+                            equipable = Boolean.parseBoolean(templat.attributeValue("equipable"));
+                        if (templat.attributeValue("shortcut") != null)
+                            shortcat = Integer.parseInt(templat.attributeValue("shortcut"));
+                        items.add(new CreateItem(itemId, count, equipable, shortcat));
+                    } catch (NumberFormatException e) {
+                        _log.error("Error parsing char_template, add item for classId " + set.get("classId") + ": ", e);
+                    }
+            }
 
-			getHolder().addTemplate(classId, set, items);
-		}
-	}
+            getHolder().addTemplate(classId, set, items);
+        }
+    }
 }

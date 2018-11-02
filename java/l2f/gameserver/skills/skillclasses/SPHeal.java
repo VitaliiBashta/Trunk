@@ -1,39 +1,34 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.templates.StatsSet;
 
-public class SPHeal extends Skill
-{
-	public SPHeal(StatsSet set)
-	{
-		super(set);
-	}
+import java.util.List;
 
-	@Override
-	public boolean checkCondition(final Creature activeChar, final Creature target, boolean forceUse, boolean dontMove, boolean first)
-	{
-		if (!activeChar.isPlayer())
-			return false;
+public class SPHeal extends Skill {
+    public SPHeal(StatsSet set) {
+        super(set);
+    }
 
-		return super.checkCondition(activeChar, target, forceUse, dontMove, first);
-	}
+    @Override
+    public boolean checkCondition(final Creature activeChar, final Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!activeChar.isPlayer())
+            return false;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		for (Creature target : targets)
-			if (target != null)
-			{
-				target.getPlayer().addExpAndSp(0, (long) _power);
+        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+    }
 
-				getEffects(activeChar, target, getActivateRate() > 0, false);
-			}
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        for (Creature target : targets)
+            if (target != null) {
+                target.getPlayer().addExpAndSp(0, (long) _power);
 
-		if (isSSPossible())
-			activeChar.unChargeShots(isMagic());
-	}
+                getEffects(activeChar, target, getActivateRate() > 0, false);
+            }
+
+        if (isSSPossible())
+            activeChar.unChargeShots(isMagic());
+    }
 }

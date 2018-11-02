@@ -1,5 +1,6 @@
 package l2f.gameserver.model.reward;
 
+import l2f.commons.lang.StringUtils;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
 import l2f.gameserver.data.xml.holder.NpcHolder;
@@ -9,7 +10,6 @@ import l2f.gameserver.model.base.Experience;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.templates.item.ItemTemplate;
 import l2f.gameserver.templates.npc.NpcTemplate;
-import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,359 +17,313 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Michał on 04.12.13.
- */
-public class CalculateRewardChances
-{
-	public static final double CORRECT_CHANCE_TRIES = 10000.0;
-	private static final Map<Integer, Integer[]> droplistsCountCache = new HashMap<>();
-	private static final Map<String, String> correctedChances = new HashMap<>();
+public class CalculateRewardChances {
+    public static final double CORRECT_CHANCE_TRIES = 10000.0;
+    private static final Map<Integer, Integer[]> droplistsCountCache = new HashMap<>();
+    private static final Map<String, String> correctedChances = new HashMap<>();
 
-	public static List<NpcTemplate> getNpcsContainingString(CharSequence name)
-	{
-		List<NpcTemplate> templates = new ArrayList<>();
+    public static List<NpcTemplate> getNpcsContainingString(String name) {
+        List<NpcTemplate> templates = new ArrayList<>();
 
-		for (NpcTemplate template : NpcHolder.getInstance().getAll())
-			if (templateExists(template) && StringUtils.containsIgnoreCase(template.getName(), name))
-				if (isDroppingAnything(template))
-					templates.add(template);
+        for (NpcTemplate template : NpcHolder.getInstance().getAll())
+            if (templateExists(template) && StringUtils.containsIgnoreCase(template.getName(), name))
+                if (isDroppingAnything(template))
+                    templates.add(template);
 
-		return templates;
-	}
-	
-	public static int getDroplistsCountByItemId(int itemId, boolean drop)
-	{
-		if (droplistsCountCache.containsKey(itemId))
-			if (drop)
-				return droplistsCountCache.get(itemId)[0].intValue();
-			else
-				return droplistsCountCache.get(itemId)[1].intValue();
+        return templates;
+    }
 
-		int dropCount = 0;
-		int spoilCount = 0;
-		for (NpcTemplate template : NpcHolder.getInstance().getAll())
-			if (templateExists(template))
-			{
-				for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
-					for (RewardGroup group : rewardEntry.getValue())
-						for (RewardData data : group.getItems())
-							if (data.getItem().getItemId() == itemId)
-								if (rewardEntry.getKey() == RewardType.SWEEP)
-									spoilCount++;
-								else
-									dropCount++;
-			}
+    public static int getDroplistsCountByItemId(int itemId, boolean drop) {
+        if (droplistsCountCache.containsKey(itemId))
+            if (drop)
+                return droplistsCountCache.get(itemId)[0].intValue();
+            else
+                return droplistsCountCache.get(itemId)[1].intValue();
 
-		droplistsCountCache.put(itemId, new Integer[] {dropCount, spoilCount});
+        int dropCount = 0;
+        int spoilCount = 0;
+        for (NpcTemplate template : NpcHolder.getInstance().getAll())
+            if (templateExists(template)) {
+                for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
+                    for (RewardGroup group : rewardEntry.getValue())
+                        for (RewardData data : group.getItems())
+                            if (data.getItem().getItemId() == itemId)
+                                if (rewardEntry.getKey() == RewardType.SWEEP)
+                                    spoilCount++;
+                                else
+                                    dropCount++;
+            }
 
-		if (drop)
-			return dropCount;
-		else
-			return spoilCount;
-	}
-	
-	private static boolean templateExists(NpcTemplate template)
-	{
-		if (template == null)
-			return false;
-		if (SpawnManager.getInstance().getSpawnedCountByNpc(template.getNpcId()) == 0)
-			return false;
-		return true;
-	}
+        droplistsCountCache.put(itemId, new Integer[]{dropCount, spoilCount});
 
-	public static boolean isItemDroppable(int itemId)
-	{
-		if (!droplistsCountCache.containsKey(itemId))
-			getDroplistsCountByItemId(itemId, true);
+        if (drop)
+            return dropCount;
+        else
+            return spoilCount;
+    }
 
-		return droplistsCountCache.get(itemId)[0].intValue() > 0 || droplistsCountCache.get(itemId)[1].intValue() > 0;
-	}
-	
-	public static List<ItemTemplate> getDroppableItems()
-	{
-		List<ItemTemplate> items = new ArrayList<>();
-		for (NpcTemplate template : NpcHolder.getInstance().getAll())
-			if (templateExists(template))
-			{
-				for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
-					for (RewardGroup group : rewardEntry.getValue())
-						for (RewardData data : group.getItems())
-							if (!items.contains(data.getItem()))
-								items.add(data.getItem());
-			}
-		return items;
-	}
+    private static boolean templateExists(NpcTemplate template) {
+        if (template == null)
+            return false;
+        if (SpawnManager.getInstance().getSpawnedCountByNpc(template.getNpcId()) == 0)
+            return false;
+        return true;
+    }
 
-	/**
-	 * Key: 0 - Drop, 1 - Spoil
-	 * @param itemId
-	 * @return
-	 */
-	public static List<NpcTemplateDrops> getNpcsByDropOrSpoil(int itemId)
-	{
-		List<NpcTemplateDrops> templates = new ArrayList<>();
-		for (NpcTemplate template : NpcHolder.getInstance().getAll())
-		{
-			if (template == null)
-				continue;
-			if (SpawnManager.getInstance().getSpawnedCountByNpc(template.getNpcId()) == 0)
-				continue;
-			
-			boolean[] dropSpoil = templateContainsItemId(template, itemId);
+    public static boolean isItemDroppable(int itemId) {
+        if (!droplistsCountCache.containsKey(itemId))
+            getDroplistsCountByItemId(itemId, true);
 
-			if (dropSpoil[0])
-				templates.add(new NpcTemplateDrops(template, true));
-			if (dropSpoil[1])
-				templates.add(new NpcTemplateDrops(template, false));
-		}
-		return templates;
-	}
+        return droplistsCountCache.get(itemId)[0].intValue() > 0 || droplistsCountCache.get(itemId)[1].intValue() > 0;
+    }
 
-	private static boolean[] templateContainsItemId(NpcTemplate template, int itemId)
-	{
-		boolean[] dropSpoil = {false, false};
-		for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
-		{
-			if (rewardListContainsItemId(rewardEntry.getValue(), itemId))
-			{
-				if (rewardEntry.getKey() == RewardType.SWEEP)
-					dropSpoil[1] = true;
-				else
-					dropSpoil[0] = true;
-			}
-		}
-		return dropSpoil;
-	}
+    public static List<ItemTemplate> getDroppableItems() {
+        List<ItemTemplate> items = new ArrayList<>();
+        for (NpcTemplate template : NpcHolder.getInstance().getAll())
+            if (templateExists(template)) {
+                for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
+                    for (RewardGroup group : rewardEntry.getValue())
+                        for (RewardData data : group.getItems())
+                            if (!items.contains(data.getItem()))
+                                items.add(data.getItem());
+            }
+        return items;
+    }
 
-	private static boolean rewardListContainsItemId(RewardList list, int itemId)
-	{
-		for (RewardGroup group : list)
-			for (RewardData reward : group.getItems())
-				if (reward.getItemId() == itemId)
-				{
-					return true;
-				}
-		return false;
-	}
-	
-	private static boolean isDroppingAnything(NpcTemplate template)
-	{
-		for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
-			for (RewardGroup group : rewardEntry.getValue())
-				if (!group.getItems().isEmpty())
-					return true;
-		return false;
-	}
-	
-	public static List<RewardData> getDrops(NpcTemplate template, boolean drop, boolean spoil)
-	{
-		List<RewardData> allRewards = new ArrayList<>();
-		if (template == null)
-			return allRewards;
+    /**
+     * Key: 0 - Drop, 1 - Spoil
+     *
+     * @param itemId
+     * @return
+     */
+    public static List<NpcTemplateDrops> getNpcsByDropOrSpoil(int itemId) {
+        List<NpcTemplateDrops> templates = new ArrayList<>();
+        for (NpcTemplate template : NpcHolder.getInstance().getAll()) {
+            if (template == null)
+                continue;
+            if (SpawnManager.getInstance().getSpawnedCountByNpc(template.getNpcId()) == 0)
+                continue;
 
-		for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
-		{
-			if (rewardEntry.getKey() == RewardType.SWEEP && !spoil)
-				continue;
-			if (rewardEntry.getKey() != RewardType.SWEEP && !drop)
-				continue;
-			for (RewardGroup group : rewardEntry.getValue())
-				for (RewardData reward : group.getItems())
-					allRewards.add(reward);
-		}
-		return allRewards;
-	}
-	
-	public static String getDropChance(Player player, NpcTemplate npc, boolean dropNoSpoil, int itemId)
-	{
-		TypeGroupData info = getGroupAndData(npc, dropNoSpoil, itemId);
+            boolean[] dropSpoil = templateContainsItemId(template, itemId);
 
-		if (info == null)
-			return "0";
+            if (dropSpoil[0])
+                templates.add(new NpcTemplateDrops(template, true));
+            if (dropSpoil[1])
+                templates.add(new NpcTemplateDrops(template, false));
+        }
+        return templates;
+    }
 
-		double mod = Experience.penaltyModifier((long) NpcInstance.calculateLevelDiffForDrop(npc.level,
-				player.getLevel(), false), 9.0);
-		double baseRate = 1.0;
-		double playerRate = 1.0;
-		if (info.type == RewardType.SWEEP)
-		{
-			baseRate = Config.RATE_DROP_SPOIL;
-			playerRate = player.getRateSpoil();
-		}
-		else if (info.type == RewardType.RATED_GROUPED)
-		{
-			if (info.group.isAdena())
-			{
-				return getAdenaChance(info, mod);
-			}
-			if (npc.isRaid)
-			{
-				return getItemChance(info, mod, Config.RATE_DROP_RAIDBOSS, 1.0);
-			}
-			baseRate = Config.RATE_DROP_ITEMS;
-			playerRate = player.getRateItems();
-		}
+    private static boolean[] templateContainsItemId(NpcTemplate template, int itemId) {
+        boolean[] dropSpoil = {false, false};
+        for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet()) {
+            if (rewardListContainsItemId(rewardEntry.getValue(), itemId)) {
+                if (rewardEntry.getKey() == RewardType.SWEEP)
+                    dropSpoil[1] = true;
+                else
+                    dropSpoil[0] = true;
+            }
+        }
+        return dropSpoil;
+    }
 
-		return getItemChance(info, mod, baseRate, playerRate);
-	}
+    private static boolean rewardListContainsItemId(RewardList list, int itemId) {
+        for (RewardGroup group : list)
+            for (RewardData reward : group.getItems())
+                if (reward.getItemId() == itemId) {
+                    return true;
+                }
+        return false;
+    }
 
-	private static String getAdenaChance(TypeGroupData info, double mod)
-	{
-		if (mod <= 0)
-			return "0";
+    private static boolean isDroppingAnything(NpcTemplate template) {
+        for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
+            for (RewardGroup group : rewardEntry.getValue())
+                if (!group.getItems().isEmpty())
+                    return true;
+        return false;
+    }
 
-		double groupChance = info.group.getChance();
-		if (mod > 10)
-		{
-			groupChance = (double) RewardList.MAX_CHANCE;
-		}
+    public static List<RewardData> getDrops(NpcTemplate template, boolean drop, boolean spoil) {
+        List<RewardData> allRewards = new ArrayList<>();
+        if (template == null)
+            return allRewards;
 
-		double itemChance = info.data.getChance();
+        for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet()) {
+            if (rewardEntry.getKey() == RewardType.SWEEP && !spoil)
+                continue;
+            if (rewardEntry.getKey() != RewardType.SWEEP && !drop)
+                continue;
+            for (RewardGroup group : rewardEntry.getValue())
+                for (RewardData reward : group.getItems())
+                    allRewards.add(reward);
+        }
+        return allRewards;
+    }
 
-		groupChance /= (double) RewardList.MAX_CHANCE;
-		itemChance /= (double) RewardList.MAX_CHANCE;
-		double finalChance = groupChance*itemChance;
-		return String.valueOf(finalChance*100);
-	}
+    public static String getDropChance(Player player, NpcTemplate npc, boolean dropNoSpoil, int itemId) {
+        TypeGroupData info = getGroupAndData(npc, dropNoSpoil, itemId);
 
-	private static String getItemChance(TypeGroupData info, double mod, double baseRate, double playerRate)
-	{
-		if (mod <= 0.0)
-			return "0";
+        if (info == null)
+            return "0";
 
-		double rate;
-		if (info.group.notRate())
-			rate = Math.min(mod, 1.0);
-		else
-			rate = baseRate * playerRate * mod;
+        double mod = Experience.penaltyModifier((long) NpcInstance.calculateLevelDiffForDrop(npc.level,
+                player.getLevel(), false), 9.0);
+        double baseRate = 1.0;
+        double playerRate = 1.0;
+        if (info.type == RewardType.SWEEP) {
+            baseRate = Config.RATE_DROP_SPOIL;
+            playerRate = player.getRateSpoil();
+        } else if (info.type == RewardType.RATED_GROUPED) {
+            if (info.group.isAdena()) {
+                return getAdenaChance(info, mod);
+            }
+            if (npc.isRaid) {
+                return getItemChance(info, mod, Config.RATE_DROP_RAIDBOSS, 1.0);
+            }
+            baseRate = Config.RATE_DROP_ITEMS;
+            playerRate = player.getRateItems();
+        }
 
-		double mult = Math.ceil(rate);
+        return getItemChance(info, mod, baseRate, playerRate);
+    }
 
-		BigDecimal totalChance = BigDecimal.valueOf(0.0);
-		for (double n = 0.0; n < mult; n++)
-		{
-			BigDecimal groupChance = BigDecimal.valueOf(info.group.getChance() * Math.min(rate - n, 1.0));
-			BigDecimal itemChance = BigDecimal.valueOf(info.data.getChance());
-			groupChance = groupChance.divide(BigDecimal.valueOf((long) RewardList.MAX_CHANCE));
-			itemChance = itemChance.divide(BigDecimal.valueOf((long) RewardList.MAX_CHANCE));
-			totalChance = totalChance.add(groupChance.multiply(itemChance));
-		}
-		String totalChanceString = totalChance.multiply(BigDecimal.valueOf(100.0)).toString();
+    private static String getAdenaChance(TypeGroupData info, double mod) {
+        if (mod <= 0)
+            return "0";
 
-		return getCorrectedChance(totalChanceString, info.group.getChance()/10000.0, info.data.getChance()/10000.0, mult);
-	}
+        double groupChance = info.group.getChance();
+        if (mod > 10) {
+            groupChance = (double) RewardList.MAX_CHANCE;
+        }
 
-	private static String getCorrectedChance(String totalChanceString, double groupChance, double itemChance,
-	                                         double mult)
-	{
-		Comparable<BigDecimal> totalChance = new BigDecimal(totalChanceString);
-		if (totalChance.compareTo(BigDecimal.valueOf(5.0)) < 0)
-			return totalChance.toString();
+        double itemChance = info.data.getChance();
 
-		if (correctedChances.containsKey(totalChanceString))
-			return correctedChances.get(totalChanceString);
+        groupChance /= (double) RewardList.MAX_CHANCE;
+        itemChance /= (double) RewardList.MAX_CHANCE;
+        double finalChance = groupChance * itemChance;
+        return String.valueOf(finalChance * 100);
+    }
 
-		double totalPassed = 0.0;
-		double x;
-		for (double i = 0.0;i<CORRECT_CHANCE_TRIES;i++)
-		{
-			for (x = 0.0; x <mult;x++)
-			{
-				if (Rnd.chance(groupChance))
-					if (Rnd.chance(itemChance))
-					{
-						totalPassed++;
-						break;
-					}
-			}
-		}
-		String finalValue = String.valueOf(totalPassed / (CORRECT_CHANCE_TRIES / 100.0));
-		correctedChances.put(totalChanceString, finalValue);
-		return finalValue;
-	}
-	
-	public static long[] getDropCounts(Player player, NpcTemplate npc, boolean dropNoSpoil, int itemId)
-	{
-		TypeGroupData info = getGroupAndData(npc, dropNoSpoil, itemId);
+    private static String getItemChance(TypeGroupData info, double mod, double baseRate, double playerRate) {
+        if (mod <= 0.0)
+            return "0";
 
-		if (info == null)
-			return new long[] {0L, 0L};
+        double rate;
+        if (info.group.notRate())
+            rate = Math.min(mod, 1.0);
+        else
+            rate = baseRate * playerRate * mod;
 
-		double mod = Experience.penaltyModifier((long) NpcInstance.calculateLevelDiffForDrop(npc.level, player.getLevel(), false), 9.0);
-		double baseRate = 1.0;
-		double playerRate = 1.0;
-		if (info.type == RewardType.SWEEP)
-		{
-			baseRate = Config.RATE_DROP_SPOIL;
-			playerRate = player.getRateSpoil();
-		}
-		else if (info.type == RewardType.RATED_GROUPED)
-		{
-			if (info.group.isAdena())
-			{
-				baseRate = Config.RATE_DROP_ADENA;
-				playerRate = player.getRateAdena();
-			}
-			else
-			{
-				baseRate = Config.RATE_DROP_ITEMS;
-				playerRate = player.getRateItems();
-			}
-		}
-		double imult;
-		if (info.data.notRate() && itemId != ItemTemplate.ITEM_ID_ADENA)
-			imult = 1.0;
-		else
-			imult = baseRate * playerRate * mod;
+        double mult = Math.ceil(rate);
 
-		long minDrop = info.data.getMinDrop();
-		if (itemId == ItemTemplate.ITEM_ID_ADENA)
-			minDrop *= (long) imult;
-		long maxDrop = (long) ((double) info.data.getMaxDrop() * Math.ceil(imult));
-		return new long[] {minDrop, maxDrop};
-	}
+        BigDecimal totalChance = BigDecimal.valueOf(0.0);
+        for (double n = 0.0; n < mult; n++) {
+            BigDecimal groupChance = BigDecimal.valueOf(info.group.getChance() * Math.min(rate - n, 1.0));
+            BigDecimal itemChance = BigDecimal.valueOf(info.data.getChance());
+            groupChance = groupChance.divide(BigDecimal.valueOf((long) RewardList.MAX_CHANCE));
+            itemChance = itemChance.divide(BigDecimal.valueOf((long) RewardList.MAX_CHANCE));
+            totalChance = totalChance.add(groupChance.multiply(itemChance));
+        }
+        String totalChanceString = totalChance.multiply(BigDecimal.valueOf(100.0)).toString();
 
-	private static TypeGroupData getGroupAndData(NpcTemplate npc, boolean dropNoSpoil, int itemId)
-	{
-		for (Map.Entry<RewardType, RewardList> rewardEntry : npc.getRewards().entrySet())
-		{
-			if (rewardEntry.getKey() == RewardType.SWEEP && dropNoSpoil)
-				continue;
-			if (rewardEntry.getKey() != RewardType.SWEEP && !dropNoSpoil)
-				continue;
+        return getCorrectedChance(totalChanceString, info.group.getChance() / 10000.0, info.data.getChance() / 10000.0, mult);
+    }
 
-			for (RewardGroup group : rewardEntry.getValue())
-				for (RewardData reward : group.getItems())
-					if (reward.getItemId() == itemId)
-					{
-						return new TypeGroupData(rewardEntry.getKey(), group, reward);
-					}
-		}
-		return null;
-	}
+    private static String getCorrectedChance(String totalChanceString, double groupChance, double itemChance,
+                                             double mult) {
+        Comparable<BigDecimal> totalChance = new BigDecimal(totalChanceString);
+        if (totalChance.compareTo(BigDecimal.valueOf(5.0)) < 0)
+            return totalChance.toString();
 
-	public static class NpcTemplateDrops
-	{
-		public NpcTemplate template;
-		public boolean dropNoSpoil;
-		private NpcTemplateDrops(NpcTemplate template, boolean dropNoSpoil)
-		{
-			this.template = template;
-			this.dropNoSpoil = dropNoSpoil;
-		}
-	}
+        if (correctedChances.containsKey(totalChanceString))
+            return correctedChances.get(totalChanceString);
 
-	private static class TypeGroupData
-	{
-		private final RewardType type;
-		private final RewardGroup group;
-		private final RewardData data;
-		private TypeGroupData(RewardType type, RewardGroup group, RewardData data)
-		{
-			this.type = type;
-			this.group = group;
-			this.data = data;
-		}
-	}
+        double totalPassed = 0.0;
+        double x;
+        for (double i = 0.0; i < CORRECT_CHANCE_TRIES; i++) {
+            for (x = 0.0; x < mult; x++) {
+                if (Rnd.chance(groupChance))
+                    if (Rnd.chance(itemChance)) {
+                        totalPassed++;
+                        break;
+                    }
+            }
+        }
+        String finalValue = String.valueOf(totalPassed / (CORRECT_CHANCE_TRIES / 100.0));
+        correctedChances.put(totalChanceString, finalValue);
+        return finalValue;
+    }
+
+    public static long[] getDropCounts(Player player, NpcTemplate npc, boolean dropNoSpoil, int itemId) {
+        TypeGroupData info = getGroupAndData(npc, dropNoSpoil, itemId);
+
+        if (info == null)
+            return new long[]{0L, 0L};
+
+        double mod = Experience.penaltyModifier((long) NpcInstance.calculateLevelDiffForDrop(npc.level, player.getLevel(), false), 9.0);
+        double baseRate = 1.0;
+        double playerRate = 1.0;
+        if (info.type == RewardType.SWEEP) {
+            baseRate = Config.RATE_DROP_SPOIL;
+            playerRate = player.getRateSpoil();
+        } else if (info.type == RewardType.RATED_GROUPED) {
+            if (info.group.isAdena()) {
+                baseRate = Config.RATE_DROP_ADENA;
+                playerRate = player.getRateAdena();
+            } else {
+                baseRate = Config.RATE_DROP_ITEMS;
+                playerRate = player.getRateItems();
+            }
+        }
+        double imult;
+        if (info.data.notRate() && itemId != ItemTemplate.ITEM_ID_ADENA)
+            imult = 1.0;
+        else
+            imult = baseRate * playerRate * mod;
+
+        long minDrop = info.data.getMinDrop();
+        if (itemId == ItemTemplate.ITEM_ID_ADENA)
+            minDrop *= (long) imult;
+        long maxDrop = (long) ((double) info.data.getMaxDrop() * Math.ceil(imult));
+        return new long[]{minDrop, maxDrop};
+    }
+
+    private static TypeGroupData getGroupAndData(NpcTemplate npc, boolean dropNoSpoil, int itemId) {
+        for (Map.Entry<RewardType, RewardList> rewardEntry : npc.getRewards().entrySet()) {
+            if (rewardEntry.getKey() == RewardType.SWEEP && dropNoSpoil)
+                continue;
+            if (rewardEntry.getKey() != RewardType.SWEEP && !dropNoSpoil)
+                continue;
+
+            for (RewardGroup group : rewardEntry.getValue())
+                for (RewardData reward : group.getItems())
+                    if (reward.getItemId() == itemId) {
+                        return new TypeGroupData(rewardEntry.getKey(), group, reward);
+                    }
+        }
+        return null;
+    }
+
+    public static class NpcTemplateDrops {
+        public NpcTemplate template;
+        public boolean dropNoSpoil;
+
+        private NpcTemplateDrops(NpcTemplate template, boolean dropNoSpoil) {
+            this.template = template;
+            this.dropNoSpoil = dropNoSpoil;
+        }
+    }
+
+    private static class TypeGroupData {
+        private final RewardType type;
+        private final RewardGroup group;
+        private final RewardData data;
+
+        private TypeGroupData(RewardType type, RewardGroup group, RewardData data) {
+            this.type = type;
+            this.group = group;
+            this.data = data;
+        }
+    }
 }

@@ -1,8 +1,5 @@
 package l2f.gameserver.data.xml.parser;
 
-import java.io.File;
-import java.util.Iterator;
-
 import l2f.commons.data.xml.AbstractDirParser;
 import l2f.commons.geometry.Polygon;
 import l2f.gameserver.Config;
@@ -10,143 +7,131 @@ import l2f.gameserver.data.xml.holder.DoorHolder;
 import l2f.gameserver.templates.DoorTemplate;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.utils.Location;
-
 import org.dom4j.Element;
 
-public final class DoorParser extends AbstractDirParser<DoorHolder>
-{
-	private static final DoorParser _instance = new DoorParser();
+import java.io.File;
+import java.util.Iterator;
 
-	protected DoorParser()
-	{
-		super(DoorHolder.getInstance());
-	}
+public final class DoorParser extends AbstractDirParser<DoorHolder> {
+    private static final DoorParser _instance = new DoorParser();
 
-	public static DoorParser getInstance()
-	{
-		return _instance;
-	}
+    protected DoorParser() {
+        super(DoorHolder.getInstance());
+    }
 
-	@Override
-	public File getXMLDir()
-	{
-		return new File(Config.DATAPACK_ROOT, "data/doors/");
-	}
+    public static DoorParser getInstance() {
+        return _instance;
+    }
 
-	@Override
-	public boolean isIgnored(File f)
-	{
-		return false;
-	}
+    @Override
+    public File getXMLDir() {
+        return new File(Config.DATAPACK_ROOT, "data/doors/");
+    }
 
-	@Override
-	public String getDTDFileName()
-	{
-		return "doors.dtd";
-	}
+    @Override
+    public boolean isIgnored(File f) {
+        return false;
+    }
 
-	private StatsSet initBaseStats()
-	{
-		StatsSet baseDat = new StatsSet();
-		baseDat.set("level", 0);
-		baseDat.set("baseSTR", 0);
-		baseDat.set("baseCON", 0);
-		baseDat.set("baseDEX", 0);
-		baseDat.set("baseINT", 0);
-		baseDat.set("baseWIT", 0);
-		baseDat.set("baseMEN", 0);
-		baseDat.set("baseShldDef", 0);
-		baseDat.set("baseShldRate", 0);
-		baseDat.set("baseAccCombat", 38);
-		baseDat.set("baseEvasRate", 38);
-		baseDat.set("baseCritRate", 38);
-		baseDat.set("baseAtkRange", 0);
-		baseDat.set("baseMpMax", 0);
-		baseDat.set("baseCpMax", 0);
-		baseDat.set("basePAtk", 0);
-		baseDat.set("baseMAtk", 0);
-		baseDat.set("basePAtkSpd", 0);
-		baseDat.set("baseMAtkSpd", 0);
-		baseDat.set("baseWalkSpd", 0);
-		baseDat.set("baseRunSpd", 0);
-		baseDat.set("baseHpReg", 0);
-		baseDat.set("baseCpReg", 0);
-		baseDat.set("baseMpReg", 0);
+    @Override
+    public String getDTDFileName() {
+        return "doors.dtd";
+    }
 
-		return baseDat;
-	}
+    private StatsSet initBaseStats() {
+        StatsSet baseDat = new StatsSet();
+        baseDat.set("level", 0);
+        baseDat.set("baseSTR", 0);
+        baseDat.set("baseCON", 0);
+        baseDat.set("baseDEX", 0);
+        baseDat.set("baseINT", 0);
+        baseDat.set("baseWIT", 0);
+        baseDat.set("baseMEN", 0);
+        baseDat.set("baseShldDef", 0);
+        baseDat.set("baseShldRate", 0);
+        baseDat.set("baseAccCombat", 38);
+        baseDat.set("baseEvasRate", 38);
+        baseDat.set("baseCritRate", 38);
+        baseDat.set("baseAtkRange", 0);
+        baseDat.set("baseMpMax", 0);
+        baseDat.set("baseCpMax", 0);
+        baseDat.set("basePAtk", 0);
+        baseDat.set("baseMAtk", 0);
+        baseDat.set("basePAtkSpd", 0);
+        baseDat.set("baseMAtkSpd", 0);
+        baseDat.set("baseWalkSpd", 0);
+        baseDat.set("baseRunSpd", 0);
+        baseDat.set("baseHpReg", 0);
+        baseDat.set("baseCpReg", 0);
+        baseDat.set("baseMpReg", 0);
 
-	@Override
-	protected void readData(Element rootElement) throws Exception
-	{
-		for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext();)
-		{
-			Element doorElement = iterator.next();
+        return baseDat;
+    }
 
-			if ("door".equals(doorElement.getName()))
-			{
-				StatsSet doorSet = initBaseStats();
-				StatsSet aiParams = null;
+    @Override
+    protected void readData(Element rootElement) {
+        for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
+            Element doorElement = iterator.next();
 
-				doorSet.set("door_type", doorElement.attributeValue("type"));
+            if ("door".equals(doorElement.getName())) {
+                StatsSet doorSet = initBaseStats();
+                StatsSet aiParams = null;
 
-				Element posElement = doorElement.element("pos");
-				Location doorPos;
-				int x = Integer.parseInt(posElement.attributeValue("x"));
-				int y = Integer.parseInt(posElement.attributeValue("y"));
-				int z = Integer.parseInt(posElement.attributeValue("z"));
-				doorSet.set("pos", doorPos = new Location(x, y, z));
+                doorSet.set("door_type", doorElement.attributeValue("type"));
 
-				Polygon shape = new Polygon();
-				int minz = 0, maxz = 0;
+                Element posElement = doorElement.element("pos");
+                Location doorPos;
+                int x = Integer.parseInt(posElement.attributeValue("x"));
+                int y = Integer.parseInt(posElement.attributeValue("y"));
+                int z = Integer.parseInt(posElement.attributeValue("z"));
+                doorSet.set("pos", doorPos = new Location(x, y, z));
 
-				Element shapeElement = doorElement.element("shape");
-				minz = Integer.parseInt(shapeElement.attributeValue("minz"));
-				maxz = Integer.parseInt(shapeElement.attributeValue("maxz"));
-				shape.add(Integer.parseInt(shapeElement.attributeValue("ax")), Integer.parseInt(shapeElement.attributeValue("ay")));
-				shape.add(Integer.parseInt(shapeElement.attributeValue("bx")), Integer.parseInt(shapeElement.attributeValue("by")));
-				shape.add(Integer.parseInt(shapeElement.attributeValue("cx")), Integer.parseInt(shapeElement.attributeValue("cy")));
-				shape.add(Integer.parseInt(shapeElement.attributeValue("dx")), Integer.parseInt(shapeElement.attributeValue("dy")));
-				shape.setZmin(minz);
-				shape.setZmax(maxz);
-				doorSet.set("shape", shape);
+                Polygon shape = new Polygon();
+                int minz = 0, maxz = 0;
 
-				doorPos.setZ(minz + 32); //фактическая координата двери в мире
+                Element shapeElement = doorElement.element("shape");
+                minz = Integer.parseInt(shapeElement.attributeValue("minz"));
+                maxz = Integer.parseInt(shapeElement.attributeValue("maxz"));
+                shape.add(Integer.parseInt(shapeElement.attributeValue("ax")), Integer.parseInt(shapeElement.attributeValue("ay")));
+                shape.add(Integer.parseInt(shapeElement.attributeValue("bx")), Integer.parseInt(shapeElement.attributeValue("by")));
+                shape.add(Integer.parseInt(shapeElement.attributeValue("cx")), Integer.parseInt(shapeElement.attributeValue("cy")));
+                shape.add(Integer.parseInt(shapeElement.attributeValue("dx")), Integer.parseInt(shapeElement.attributeValue("dy")));
+                shape.setZmin(minz);
+                shape.setZmax(maxz);
+                doorSet.set("shape", shape);
 
-				for (Iterator<Element> i = doorElement.elementIterator(); i.hasNext();)
-				{
-					Element n = i.next();
-					if ("set".equals(n.getName()))
-						doorSet.set(n.attributeValue("name"), n.attributeValue("value"));
-					else if ("ai_params".equals(n.getName()))
-					{
-						if (aiParams == null)
-						{
-							aiParams = new StatsSet();
-							doorSet.set("ai_params", aiParams);
-						}
+                doorPos.setZ(minz + 32); //фактическая координата двери в мире
 
-						for (Iterator<Element> aiParamsIterator = n.elementIterator(); aiParamsIterator.hasNext();)
-						{
-							Element aiParamElement = aiParamsIterator.next();
+                for (Iterator<Element> i = doorElement.elementIterator(); i.hasNext(); ) {
+                    Element n = i.next();
+                    if ("set".equals(n.getName()))
+                        doorSet.set(n.attributeValue("name"), n.attributeValue("value"));
+                    else if ("ai_params".equals(n.getName())) {
+                        if (aiParams == null) {
+                            aiParams = new StatsSet();
+                            doorSet.set("ai_params", aiParams);
+                        }
 
-							aiParams.set(aiParamElement.attributeValue("name"), aiParamElement.attributeValue("value"));
-						}
-					}
-				}
+                        for (Iterator<Element> aiParamsIterator = n.elementIterator(); aiParamsIterator.hasNext(); ) {
+                            Element aiParamElement = aiParamsIterator.next();
 
-				doorSet.set("uid", doorElement.attributeValue("id"));
-				doorSet.set("name", doorElement.attributeValue("name"));
-				doorSet.set("baseHpMax", doorElement.attributeValue("hp"));
-				doorSet.set("basePDef", doorElement.attributeValue("pdef"));
-				doorSet.set("baseMDef", doorElement.attributeValue("mdef"));
+                            aiParams.set(aiParamElement.attributeValue("name"), aiParamElement.attributeValue("value"));
+                        }
+                    }
+                }
 
-				doorSet.set("collision_height", maxz - minz & 0xfff0);
-				doorSet.set("collision_radius", Math.max(50, Math.min(doorPos.x - shape.getXmin(), doorPos.y - shape.getYmin())));
+                doorSet.set("uid", doorElement.attributeValue("id"));
+                doorSet.set("name", doorElement.attributeValue("name"));
+                doorSet.set("baseHpMax", doorElement.attributeValue("hp"));
+                doorSet.set("basePDef", doorElement.attributeValue("pdef"));
+                doorSet.set("baseMDef", doorElement.attributeValue("mdef"));
 
-				DoorTemplate template = new DoorTemplate(doorSet);
-				getHolder().addTemplate(template);
-			}
-		}
-	}
+                doorSet.set("collision_height", maxz - minz & 0xfff0);
+                doorSet.set("collision_radius", Math.max(50, Math.min(doorPos.x - shape.getXmin(), doorPos.y - shape.getYmin())));
+
+                DoorTemplate template = new DoorTemplate(doorSet);
+                getHolder().addTemplate(template);
+            }
+        }
+    }
 }

@@ -15,8 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPlayerExitListener
-{
+public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPlayerExitListener {
         /*private static Logger _log = Logger.getLogger(CtF.class.getName());
  
         private static ScheduledFuture<?> _startTask;
@@ -71,11 +70,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
        
         private static Location blueFlagLoc = new Location(150760, 45848, -3408);
         private static Location redFlagLoc = new Location(148232, 47688, -3408);*/
- 
- 
-        @Override
-		public void onLoad()
-        {
+
+
+    @Override
+    public void onLoad() {
                 /*CharListenerList.addGlobal(this);
                
                 _zones.put("[colosseum_battle]", ReflectionUtils.getZone("[colosseum_battle]").getTemplate());
@@ -138,35 +136,32 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         }
  
                 _log.info("Loaded Event: CtF [" + _active + "]");*/
-        }
- 
-        @Override
-		public void onReload()
-        {
+    }
+
+    @Override
+    public void onReload() {
                 /*_zone.removeListener(_zoneListener);
                 _redBaseZone.removeListener(_redBaseZoneListener);
                 _blueBaseZone.removeListener(_blueBaseZoneListener);
                 if(_startTask != null)
                         _startTask.cancel(true);*/
-        }
- 
-        @Override
-		public void onShutdown() {
-               // onReload();
-        }
- 
-        @SuppressWarnings("unused")
-		private static boolean  _active = false;
- 
-        @SuppressWarnings("unused")
-		private static boolean isActive()
-        {
-             /*   return _active;*/
-	        return false;
-        }
- 
-        public void activateEvent()
-        {
+    }
+
+    @Override
+    public void onShutdown() {
+        // onReload();
+    }
+
+    @SuppressWarnings("unused")
+    private static boolean _active = false;
+
+    @SuppressWarnings("unused")
+    private static boolean isActive() {
+        /*   return _active;*/
+        return false;
+    }
+
+    public void activateEvent() {
                /* Player player = (Player) getSelf();
                 if(!player.getPlayerAccess().IsEventGm)
                         return;
@@ -187,10 +182,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 _active = true;
  
                 show("admin/events/events.htm", player);*/
-        }
- 
-        public void deactivateEvent()
-        {
+    }
+
+    public void deactivateEvent() {
                /* Player player = (Player) getSelf();
                 if(!player.getPlayerAccess().IsEventGm)
                         return;
@@ -212,44 +206,41 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 _active = false;
  
                 show("admin/events/events.htm", player);*/
-        }
- 
-        public boolean isRunned() {
-              //  return _isRegistrationActive || _status > 0;
-	        return false;
-        }
- 
-        public String DialogAppend_31225(Integer val) {
+    }
+
+    public boolean isRunned() {
+        //  return _isRegistrationActive || _status > 0;
+        return false;
+    }
+
+    public String DialogAppend_31225(Integer val) {
                /* if(val == 0) {
                         Player player = (Player) getSelf();
                         return HtmCache.getInstance().getNotNull("events/ctf/31225.html", player);
                 }*/
-                return "";
-        }
- 
-        public String DialogAppend_35423(Integer val)
-        {
+        return "";
+    }
+
+    public String DialogAppend_35423(Integer val) {
                 /*Player player = (Player) getSelf();
                 if(player.getTeam() != TeamType.BLUE)
                         return "";
                 if(val == 0)
                         return HtmCache.getInstance().getNotNull("events/ctf/35423.html", player).replaceAll("n1", "" + Rnd.get(100, 999)).replaceAll("n2", "" + Rnd.get(100, 999));*/
-                return "";
-        }
- 
-        // Blue flag
-        public String DialogAppend_35426(Integer val)
-        {
+        return "";
+    }
+
+    // Blue flag
+    public String DialogAppend_35426(Integer val) {
                 /*Player player = (Player) getSelf();
                 if(player.getTeam() != TeamType.RED)
                         return "";
                 if(val == 0)
                         return HtmCache.getInstance().getNotNull("events/ctf/35426.html", player).replaceAll("n1", "" + Rnd.get(100, 999)).replaceAll("n2", "" + Rnd.get(100, 999));*/
-                return "";
-        }
- 
-        public void capture(String[] var)
-        {
+        return "";
+    }
+
+    public void capture(String[] var) {
                 /*Player player = (Player) getSelf();
                 if(var.length != 4)
                 {
@@ -306,10 +297,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
  
                 if(player.isInvisible())
                         player.getEffectList().stopAllSkillEffects(EffectType.Invisible);*/
-        }
- 
-        public static int getMinLevelForCategory(int category)
-        {
+    }
+
+    public static int getMinLevelForCategory(int category) {
               /*  switch (category)
                 {
                         case 1:
@@ -325,11 +315,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         case 6:
                                 return 76;
                 }*/
-                return 0;
-        }
- 
-        public static int getMaxLevelForCategory(int category)
-        {
+        return 0;
+    }
+
+    public static int getMaxLevelForCategory(int category) {
                /* switch (category)
                 {
                         case 1:
@@ -345,11 +334,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         case 6:
                                 return 85;
                 }*/
-                return 0;
-        }
- 
-        public static int getCategory(int level)
-        {
+        return 0;
+    }
+
+    public static int getCategory(int level) {
                /* if(level >= 20 && level <= 29)
                         return 1;
                 else if(level >= 30 && level <= 39)
@@ -362,11 +350,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         return 5;
                 else if(level >= 76)
                         return 6;*/
-                return 0;
-        }
- 
-        public void start(String[] var)
-        {
+        return 0;
+    }
+
+    public void start(String[] var) {
                 /*if(isRunned())
                 {
                         _log.info("CtF: start task already running!");
@@ -436,20 +423,19 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 executeTask("events.CtF.CtF", "question", new Object[0], 10000);
                 executeTask("events.CtF.CtF", "announce", new Object[0], 60000);
                 _log.info("CtF: start event [" + _category + "-" + _autoContinue + "]");*/
-        }
- 
-        public static void sayToAll(String address, String[] replacements) {
-               // Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
-        }
- 
-        public static void question() {
+    }
+
+    public static void sayToAll(String address, String[] replacements) {
+        // Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
+    }
+
+    public static void question() {
                 /*for(Player player : GameObjectsStorage.getAllPlayersForIterate())
                         if(player != null && !player.isDead() && player.getLevel() >= _minLevel && player.getLevel() <= _maxLevel && player.getReflection().isDefault() && !player.isInOlympiadMode() && !player.isInObserverMode())
                                 player.scriptRequest(new CustomMessage("scripts.events.CtF.AskPlayer", player).toString(), "events.CtF.CtF:addPlayer", new Object[0]);*/
-        }
- 
-        public static void announce()
-        {
+    }
+
+    public static void announce() {
                 /*if(players_list1.isEmpty() || players_list2.isEmpty())
                 {
                         sayToAll("scripts.events.CtF.AnnounceEventCancelled", null);
@@ -473,10 +459,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         sayToAll("scripts.events.CtF.AnnounceEventStarting", null);
                         executeTask("events.CtF.CtF", "prepare", new Object[0], 5000);
                 }*/
-        }
- 
-        public void addPlayer()
-        {
+    }
+
+    public void addPlayer() {
                /* Player player = (Player) getSelf();
                 if(player == null || !checkPlayer(player, true) || !checkDualBox(player))
                         return;
@@ -517,21 +502,19 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 }
                 else
                         _log.info("WTF??? Command id 0 in CtF...");*/
-        }
- 
-        @SuppressWarnings("unused")
-		private static boolean checkCountTeam(int team)
-        {
+    }
+
+    @SuppressWarnings("unused")
+    private static boolean checkCountTeam(int team) {
                 /*if(team == 1 && players_list1.size() >= Config.EVENT_CtFMaxPlayerInTeam)
                         return false;
                 else if(team == 2 && players_list2.size() >= Config.EVENT_CtFMaxPlayerInTeam)
                         return false;*/
- 
-                return true;
-        }
- 
-        public static boolean checkPlayer(Player player, boolean first)
-        {
+
+        return true;
+    }
+
+    public static boolean checkPlayer(Player player, boolean first) {
                 /*if(first && !_isRegistrationActive)
                 {
                         show(new CustomMessage("scripts.events.Late", player), player);
@@ -599,12 +582,11 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         show(new CustomMessage("scripts.events.CtF.CancelledTeleport", player), player);
                         return false;
                 }*/
- 
-                return true;
-        }
- 
-        public static void prepare()
-        {
+
+        return true;
+    }
+
+    public static void prepare() {
                /* closeColiseumDoors();
  
                 cleanPlayers();
@@ -622,24 +604,21 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 executeTask("events.CtF.CtF", "go", new Object[0], 60000);
  
                 sayToAll("scripts.events.CtF.AnnounceFinalCountdown", null);*/
-        }
- 
-        public static void go()
-        {
+    }
+
+    public static void go() {
                /* _status = 2;
                 upParalyzePlayers();
                 clearArena();
                 sayToAll("scripts.events.CtF.AnnounceFight", null);
                 _endTask = executeTask("events.CtF.CtF", "endOfTime", new Object[0], 300000);*/
-        }
- 
-        public static void endOfTime()
-        {
-                //endBattle(3); // ничья
-        }
- 
-        public static void endBattle(int win)
-        {
+    }
+
+    public static void endOfTime() {
+        //endBattle(3); // ничья
+    }
+
+    public static void endBattle(int win) {
                 /*if(_endTask != null)
                 {
                         _endTask.cancel(false);
@@ -684,18 +663,16 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 sayToAll("scripts.events.CtF.AnnounceEnd", null);
                 executeTask("events.CtF.CtF", "end", new Object[0], 30000);
                 _isRegistrationActive = false;*/
-        }
- 
-        public static void end()
-        {
+    }
+
+    public static void end() {
                 /*executeTask("events.CtF.CtF", "ressurectPlayers", new Object[0], 1000);
                 executeTask("events.CtF.CtF", "healPlayers", new Object[0], 2000);
                 executeTask("events.CtF.CtF", "teleportPlayersToSavedCoords", new Object[0], 3000);
                 executeTask("events.CtF.CtF", "autoContinue", new Object[0], 10000);*/
-        }
- 
-        public void autoContinue()
-        {
+    }
+
+    public void autoContinue() {
                /* players_list1.clear();
                 players_list2.clear();
  
@@ -711,9 +688,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 else
                         // если нет, то пробуем зашедулить по времени из конфигов
                         scheduleEventStart();*/
-        }
-       
-        public void scheduleEventStart() {
+    }
+
+    public void scheduleEventStart() {
                 /*try {
                         Calendar currentTime = Calendar.getInstance();
                         Calendar nextStartTime = null;
@@ -746,10 +723,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 } catch (Exception e) {
                         _log.info("CtF: Error figuring out a start time. Check CtFEventInterval in config file.");
                 }*/
-        }
-               
-        public static void giveItemsToWinner(boolean team1, boolean team2, double rate)
-        {
+    }
+
+    public static void giveItemsToWinner(boolean team1, boolean team2, double rate) {
                 /*if(team1)
                         for(Player player : getPlayers(players_list1))
                                 for(int i = 0; i < rewards.length; i++)
@@ -758,10 +734,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         for(Player player : getPlayers(players_list2))
                                 for(int i = 0; i < rewards.length; i++)
                                         addItem(player, rewards[i][0], Math.round((Config.EVENT_CtFrate ? player.getLevel() : 1) * rewards[i][1] * rate));*/
-        }
- 
- 
-        public static void teleportPlayersToColiseum() {
+    }
+
+
+    public static void teleportPlayersToColiseum() {
                 /*for(Player player : getPlayers(players_list1))
                 {
                         unRide(player);
@@ -796,11 +772,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                         player.getPet().getEffectList().stopAllEffects();
                         }
                 }*/
-        }
- 
- 
-        public static void paralyzePlayers()
-        {
+    }
+
+
+    public static void paralyzePlayers() {
                 /*for(Player player : getPlayers(players_list1))
                 {
                         if(player == null)
@@ -834,10 +809,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 player.getPet().startAbnormalEffect(AbnormalEffect.ROOT);
                         }
                 }*/
-        }
- 
-        public static void upParalyzePlayers()
-        {
+    }
+
+    public static void upParalyzePlayers() {
                 /*for(Player player : getPlayers(players_list1))
                 {
                         if(player.isRooted()) {
@@ -865,10 +839,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 player.getPet().stopAbnormalEffect(AbnormalEffect.ROOT);
                         }
                 }*/
-        }
- 
-        public static void ressurectPlayers()
-        {
+    }
+
+    public static void ressurectPlayers() {
                 /*for(Player player : getPlayers(players_list1))
                         if(player.isDead())
                         {
@@ -887,10 +860,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 player.setCurrentMp(player.getMaxMp());
                                 player.broadcastPacket(new Revive(player));
                         }*/
-        }
- 
-        public static void healPlayers()
-        {
+    }
+
+    public static void healPlayers() {
                 /*for(Player player : getPlayers(players_list1))
                 {
                         player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
@@ -901,10 +873,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
                         player.setCurrentCp(player.getMaxCp());
                 }*/
-        }
- 
-        public static void cleanPlayers()
-        {
+    }
+
+    public static void cleanPlayers() {
                 /*for(Player player : getPlayers(players_list1))
                         if(!checkPlayer(player, false))
                                 removePlayer(player);
@@ -915,21 +886,19 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 removePlayer(player);
                         else
                                 player.setTeam(TeamType.RED);*/
-        }
- 
-        public static void removeAura()
-        {
+    }
+
+    public static void removeAura() {
                 /*for(Player player : getPlayers(players_list1))
                         player.setTeam(TeamType.NONE);
                 for(Player player : getPlayers(players_list2))
                         player.setTeam(TeamType.NONE);*/
-        }
- 
-        /**
-         * чистим арену от мусора
-         */
-        public static void clearArena()
-        {
+    }
+
+    /**
+     * чистим арену от мусора
+     */
+    public static void clearArena() {
                /* for(GameObject obj : _zone.getObjects())
                         if(obj != null)
                         {
@@ -937,10 +906,9 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 if(player != null && !players_list1.contains(player.getStoredId()) && !players_list2.contains(player.getStoredId()))
                                         player.teleToLocation(147451, 46728, -3410, _reflection);
                         }*/
-        }
- 
-        public static void resurrectAtBase(Player player)
-        {
+    }
+
+    public static void resurrectAtBase(Player player) {
                /* if(player.getTeam() == TeamType.NONE)
                         return;
                 if(player.isDead())
@@ -955,32 +923,28 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         player.teleToLocation(Territory.getRandomLoc(team1spawn), _reflection);
                 else if(player.getTeam() == TeamType.RED)
                         player.teleToLocation(Territory.getRandomLoc(team2spawn), _reflection);*/
-        }
- 
-        public static Location OnEscape(Player player)
-        {
+    }
+
+    public static Location OnEscape(Player player) {
                 /*if(_status > 1 && player != null && player.getTeam() != TeamType.NONE && (players_list1.contains(player.getStoredId()) || players_list2.contains(player.getStoredId())))
                         removePlayer(player);*/
-                return null;
-        }
- 
- 
-        @SuppressWarnings("unused")
-		private static class ZoneListener implements OnZoneEnterLeaveListener
-        {
-                @Override
-                public void onZoneEnter(Zone zone, Creature cha)
-                {
+        return null;
+    }
+
+
+    @SuppressWarnings("unused")
+    private static class ZoneListener implements OnZoneEnterLeaveListener {
+        @Override
+        public void onZoneEnter(Zone zone, Creature cha) {
                         /*if(cha == null)
                                 return;
                         Player player = cha.getPlayer();
                         if(_status > 0 && player != null && !players_list1.contains(player.getStoredId()) && !players_list2.contains(player.getStoredId()))
                                 player.teleToLocation(147451, 46728, -3410, ReflectionManager.DEFAULT);*/
-                }
- 
-                @Override
-                public void onZoneLeave(Zone zone, Creature cha)
-                {
+        }
+
+        @Override
+        public void onZoneLeave(Zone zone, Creature cha) {
                         /*if(cha == null)
                                 return;
                         Player player = cha.getPlayer();
@@ -993,52 +957,49 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 int z = cha.getZ();
                                 player.teleToLocation(x, y, z, _reflection);
                         }*/
-                }
         }
- 
-        @SuppressWarnings("unused")
-		private static class RedBaseZoneListener implements OnZoneEnterLeaveListener {
- 
-                @Override
-                public void onZoneEnter(Zone zone, Creature actor) {
+    }
+
+    @SuppressWarnings("unused")
+    private static class RedBaseZoneListener implements OnZoneEnterLeaveListener {
+
+        @Override
+        public void onZoneEnter(Zone zone, Creature actor) {
                        /* if(actor == null)
                                 return;
                         Player player = actor.getPlayer();
                         if(_status > 0 && player != null && players_list2.contains(player.getStoredId()) && player.isTerritoryFlagEquipped())
                                 endBattle(1);*/
-                       
-                }
- 
-                @Override
-                public void onZoneLeave(Zone zone, Creature actor) {
-                }
- 
+
         }
- 
-        @SuppressWarnings("unused")
-		private static class BlueBaseZoneListener implements OnZoneEnterLeaveListener
-        {
-                @Override
-                public void onZoneEnter(Zone zone, Creature actor) {
+
+        @Override
+        public void onZoneLeave(Zone zone, Creature actor) {
+        }
+
+    }
+
+    @SuppressWarnings("unused")
+    private static class BlueBaseZoneListener implements OnZoneEnterLeaveListener {
+        @Override
+        public void onZoneEnter(Zone zone, Creature actor) {
                         /*if(actor == null)
                                 return;
                         Player player = actor.getPlayer();
                         if(_status > 0 && player != null && players_list1.contains(player.getStoredId()) && player.isTerritoryFlagEquipped())
                                 endBattle(2);*/
-                }
- 
-                @Override
-                public void onZoneLeave(Zone zone, Creature actor) {                   
-                }
- 
         }
- 
- 
-        @SuppressWarnings("unused")
-		private static void removePlayer(Player player)
-        {
-                if(player != null)
-                {
+
+        @Override
+        public void onZoneLeave(Zone zone, Creature actor) {
+        }
+
+    }
+
+
+    @SuppressWarnings("unused")
+    private static void removePlayer(Player player) {
+        if (player != null) {
                        /* players_list1.remove(player.getStoredId());
                         players_list2.remove(player.getStoredId());
                         player.setTeam(TeamType.NONE);
@@ -1046,12 +1007,11 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                        
                         if(!Config.EVENT_CtFAllowMultiReg)
                                 boxes.remove(player.getStoredId());*/
-                }
         }
- 
-        @SuppressWarnings("unused")
-		private static void addFlag(Player player, int flagId)
-        {
+    }
+
+    @SuppressWarnings("unused")
+    private static void addFlag(Player player, int flagId) {
                 /*ItemInstance item = ItemFunctions.createItem(flagId);
                 item.setCustomType1(77);
                 item.setCustomFlags(ItemInstance.FLAG_NO_DESTROY | ItemInstance.FLAG_NO_TRADE | ItemInstance.FLAG_NO_DROP | ItemInstance.FLAG_NO_TRANSFER);
@@ -1059,20 +1019,18 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 player.getInventory().equipItem(item);
                 player.sendChanges();
                 player.sendPacket(Msg.YOU_VE_ACQUIRED_THE_WARD_MOVE_QUICKLY_TO_YOUR_FORCES__OUTPOST);*/
-        }
- 
-        @SuppressWarnings("unused")
-		private static void removeFlags()
-        {
+    }
+
+    @SuppressWarnings("unused")
+    private static void removeFlags() {
                /* for(Player player : getPlayers(players_list1))
                         removeFlag(player);
                 for(Player player : getPlayers(players_list2))
                         removeFlag(player);*/
-        }
- 
-        @SuppressWarnings("unused")
-		private static void removeFlag(Player player)
-        {
+    }
+
+    @SuppressWarnings("unused")
+    private static void removeFlag(Player player) {
                 /*if(player != null && player.isTerritoryFlagEquipped())
                 {
                         ItemInstance flag = player.getActiveWeaponInstance();
@@ -1083,11 +1041,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 player.broadcastUserInfo(true);
                         }
                 }*/
-        }
- 
-        @SuppressWarnings("unused")
-		private static void dropFlag(Player player)
-        {
+    }
+
+    @SuppressWarnings("unused")
+    private static void dropFlag(Player player) {
                /* if(player != null && player.isTerritoryFlagEquipped())
                 {
                         ItemInstance flag = player.getActiveWeaponInstance();
@@ -1110,11 +1067,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 }
                         }
                 }*/
-        }
- 
-        @SuppressWarnings("unused")
-		private static List<Player> getPlayers(List<Long> list)
-        {
+    }
+
+    @SuppressWarnings("unused")
+    private static List<Player> getPlayers(List<Long> list) {
                /* List<Player> result = new ArrayList<Player>();
                 for(Long storeId : list)
                 {
@@ -1123,34 +1079,32 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 result.add(player);
                 }
                 return result;*/
-	            return Collections.emptyList();
-        }
- 
-        @SuppressWarnings("unused")
-		private static void openColiseumDoors()
-        {
+        return Collections.emptyList();
+    }
+
+    @SuppressWarnings("unused")
+    private static void openColiseumDoors() {
                /* for(DoorInstance door : _reflection.getDoors())
                         door.openMe();*/
-        }
- 
-        @SuppressWarnings("unused")
-		private static void closeColiseumDoors()
-        {
+    }
+
+    @SuppressWarnings("unused")
+    private static void closeColiseumDoors() {
                 /*for(DoorInstance door : _reflection.getDoors())
                         door.closeMe();*/
-        }
- 
-        @Override
-        public void onDeath(Creature self, Creature killer) {
+    }
+
+    @Override
+    public void onDeath(Creature self, Creature killer) {
                /* if(_status > 1 && self != null && self.isPlayer() && self.getTeam() != TeamType.NONE && (players_list1.contains(self.getStoredId()) || players_list2.contains(self.getStoredId())))
                 {
                         dropFlag((Player) self);
                         executeTask("events.CtF.CtF", "resurrectAtBase", new Object[] { (Player) self }, 10 * 1000);
                 }*/
-        }
- 
-        @Override
-        public void onPlayerExit(Player player) {
+    }
+
+    @Override
+    public void onPlayerExit(Player player) {
                /* if(player == null || player.getTeam() == TeamType.NONE)
                         return;
  
@@ -1173,16 +1127,16 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
  
                 // Вышел или вылетел во время эвента
                 OnEscape(player);*/
-        }
-       
-        public static void mageBuff(Player player) {
+    }
+
+    public static void mageBuff(Player player) {
                /* for(int i = 0; i < mage_buffs.length; i++) {
                         buff = SkillTable.getInstance().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
                         buff.getEffects(player, player, false, false);
                 }*/
-        }
-       
-        public static void fighterBuff(Player player) {
+    }
+
+    public static void fighterBuff(Player player) {
                /* for(int i = 0; i < fighter_buffs.length; i++) {
                         buff = SkillTable.getInstance().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
 /*                      for(EffectTemplate et : buff.getEffectTemplates()) {
@@ -1193,10 +1147,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         }*/
                /*         buff.getEffects(player, player, false, false);
                 }*/
-        }
-       
-        @SuppressWarnings("unused")
-		private static boolean checkDualBox(Player player) {
+    }
+
+    @SuppressWarnings("unused")
+    private static boolean checkDualBox(Player player) {
                 /*if(!Config.EVENT_CtFAllowMultiReg)
                 {
                         if("IP".equalsIgnoreCase(Config.EVENT_CtFCheckWindowMethod)) {
@@ -1213,10 +1167,10 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 }
                         }
                 }*/
-                return true;
-        }
-       
-        public static void buffPlayers() {
+        return true;
+    }
+
+    public static void buffPlayers() {
  
                /* for(Player player : getPlayers(players_list1)) {
                         if(player.isMageClass())
@@ -1231,20 +1185,19 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         else
                                 fighterBuff(player);
                 }*/
-        }
-       
-        public static void buffPlayer(Player player) {
+    }
+
+    public static void buffPlayer(Player player) {
                       /*  if(player.isMageClass())
                                 mageBuff(player);
                         else
                                 fighterBuff(player);*/
-        }
-       
-        public class StartTask extends RunnableImpl {
-               
-                @Override
-                public void runImpl()
-                {
+    }
+
+    public class StartTask extends RunnableImpl {
+
+        @Override
+        public void runImpl() {
                         /*if(!_active)
                                 return;
  
@@ -1263,13 +1216,13 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 start(new String[]{ "1", "1"});
                         else
                                 start(new String[] {"-1", "-1"});*/
-                }
         }
-       
-        public static void teleportPlayersToSavedCoords() {
+    }
+
+    public static void teleportPlayersToSavedCoords() {
                 /*for(Player player : getPlayers(players_list1))
                         player.teleToLocation(_savedCoord.get(player.getStoredId()), ReflectionManager.DEFAULT);
                 for(Player player : getPlayers(players_list2))
                         player.teleToLocation(_savedCoord.get(player.getStoredId()), ReflectionManager.DEFAULT);*/
-        }
+    }
 }

@@ -1,8 +1,5 @@
 package events.TheFlowOfTheHorror;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ai.CtrlIntention;
 import l2f.gameserver.ai.Fighter;
@@ -11,79 +8,72 @@ import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.utils.Location;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class MonstersAI extends Fighter
-{
-	private List<Location> _points = new ArrayList<Location>();
-	private int current_point = -1;
 
-	public void setPoints(List<Location> points)
-	{
-		_points = points;
-	}
+public class MonstersAI extends Fighter {
+    private List<Location> _points = new ArrayList<Location>();
+    private int current_point = -1;
 
-	public MonstersAI(NpcInstance actor)
-	{
-		super(actor);
-		AI_TASK_ATTACK_DELAY = 500;
-		MAX_PURSUE_RANGE = 30000;
-	}
+    public void setPoints(List<Location> points) {
+        _points = points;
+    }
 
-	@Override
-	public int getMaxAttackTimeout()
-	{
-		return Integer.MAX_VALUE;
-	}
+    public MonstersAI(NpcInstance actor) {
+        super(actor);
+        AI_TASK_ATTACK_DELAY = 500;
+        MAX_PURSUE_RANGE = 30000;
+    }
 
-	@Override
-	public boolean isGlobalAI()
-	{
-		return true;
-	}
+    @Override
+    public int getMaxAttackTimeout() {
+        return Integer.MAX_VALUE;
+    }
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
-		if (actor == null || actor.isDead())
-			return true;
+    @Override
+    public boolean isGlobalAI() {
+        return true;
+    }
 
-		if (_def_think)
-		{
-			doTask();
-			return true;
-		}
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
+        if (actor == null || actor.isDead())
+            return true;
 
-		if (current_point > -1 || Rnd.chance(5))
-		{
-			if (current_point >= _points.size() - 1)
-			{
-				Creature target = GameObjectsStorage.getByNpcId(30754);
-				if (target != null && !target.isDead())
-				{
-					clearTasks();
-					// TODO actor.addDamageHate(target, 0, 1000);
-					setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
-					return true;
-				}
-				return true;
-			}
+        if (_def_think) {
+            doTask();
+            return true;
+        }
 
-			current_point++;
+        if (current_point > -1 || Rnd.chance(5)) {
+            if (current_point >= _points.size() - 1) {
+                Creature target = GameObjectsStorage.getByNpcId(30754);
+                if (target != null && !target.isDead()) {
+                    clearTasks();
+                    // TODO actor.addDamageHate(target, 0, 1000);
+                    setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+                    return true;
+                }
+                return true;
+            }
 
-			actor.setRunning();
+            current_point++;
 
-			clearTasks();
+            actor.setRunning();
 
-			// Добавить новое задание
-			addTaskMove(_points.get(current_point), true);
-			doTask();
-			return true;
-		}
+            clearTasks();
 
-		if (randomAnimation())
-			return true;
+            // Добавить новое задание
+            addTaskMove(_points.get(current_point), true);
+            doTask();
+            return true;
+        }
 
-		return false;
-	}
+        if (randomAnimation())
+            return true;
+
+        return false;
+    }
 }

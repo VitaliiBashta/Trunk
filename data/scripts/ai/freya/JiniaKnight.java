@@ -1,49 +1,44 @@
 package ai.freya;
 
-import java.util.List;
-
 import l2f.gameserver.ai.CtrlEvent;
 import l2f.gameserver.ai.Fighter;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.instances.NpcInstance;
 
-public class JiniaKnight extends Fighter
-{
-	public JiniaKnight(NpcInstance actor)
-	{
-		super(actor);
-	}
+import java.util.List;
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
-		if (actor.isDead())
-			return false;
+public class JiniaKnight extends Fighter {
+    public JiniaKnight(NpcInstance actor) {
+        super(actor);
+    }
 
-		List<NpcInstance> around = actor.getAroundNpc(4000, 300);
-		if (around != null && !around.isEmpty())
-			for (NpcInstance npc : around)
-				if (npc.getNpcId() == 22767)
-					actor.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, npc, 300);
-		return true;
-	}
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
+        if (actor.isDead())
+            return false;
 
-	@Override
-	protected void onEvtAttacked(Creature attacker, int damage)
-	{
-		if (attacker == null || attacker.isPlayable())
-			return;
+        List<NpcInstance> around = actor.getAroundNpc(4000, 300);
+        if (around != null && !around.isEmpty())
+            for (NpcInstance npc : around)
+                if (npc.getNpcId() == 22767)
+                    actor.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, npc, 300);
+        return true;
+    }
 
-		super.onEvtAttacked(attacker, damage);
-	}
+    @Override
+    protected void onEvtAttacked(Creature attacker, int damage) {
+        if (attacker == null || attacker.isPlayable())
+            return;
 
-	@Override
-	protected boolean checkAggression(Creature target, boolean avoidAttack)
-	{
-		if (target.isPlayable())
-			return false;
+        super.onEvtAttacked(attacker, damage);
+    }
 
-		return super.checkAggression(target, avoidAttack);
-	}
+    @Override
+    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+        if (target.isPlayable())
+            return false;
+
+        return super.checkAggression(target, avoidAttack);
+    }
 }

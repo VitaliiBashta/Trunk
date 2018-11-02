@@ -1,62 +1,52 @@
 package l2f.gameserver.data.xml.holder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.data.xml.AbstractHolder;
 import l2f.gameserver.model.DressArmorData;
 
-public final class DressArmorHolder extends AbstractHolder
-{
-	private static final DressArmorHolder _instance = new DressArmorHolder();
-	private final List<DressArmorData> _dress = new ArrayList<DressArmorData>();
+import java.util.ArrayList;
+import java.util.List;
 
-	public static DressArmorHolder getInstance()
-	{
-		return _instance;
-	}
+public final class DressArmorHolder extends AbstractHolder {
+    private static final DressArmorHolder _instance = new DressArmorHolder();
+    private final List<DressArmorData> _dress = new ArrayList<DressArmorData>();
 
-	public void addDress(DressArmorData armorset)
-	{
-		_dress.add(armorset);
-	}
+    public static DressArmorHolder getInstance() {
+        return _instance;
+    }
 
-	public List<DressArmorData> getAllDress()
-	{
-		return _dress;
-	}
+    public void addDress(DressArmorData armorset) {
+        _dress.add(armorset);
+    }
 
-	public DressArmorData getArmor(int id)
-	{
-		for(DressArmorData dress : _dress)
-		{
-			if (dress.getId() == id)
-				return dress;
-		}
+    public List<DressArmorData> getAllDress() {
+        return _dress;
+    }
 
-		return null;
-	}
+    public DressArmorData getArmor(int id) {
+        for (DressArmorData dress : _dress) {
+            if (dress.getId() == id)
+                return dress;
+        }
 
-	public DressArmorData getArmorByPartId(int partId)
-	{
-		for(DressArmorData dress : _dress)
-		{
-			if (dress.getChest() == partId || dress.getLegs() == partId || dress.getGloves() == partId || dress.getFeet() == partId)
-				return dress;
-		}
+        return null;
+    }
 
-		return null;
-	}
+    public DressArmorData getArmorByPartId(int partId) {
+        for (DressArmorData dress : _dress) {
+            if (dress.getChest() == partId || dress.getLegs() == partId || dress.getGloves() == partId || dress.getFeet() == partId)
+                return dress;
+        }
 
-	@Override
-	public int size()
-	{
-		return _dress.size();
-	}
+        return null;
+    }
 
-	@Override
-	public void clear()
-	{
-		_dress.clear();
-	}
+    @Override
+    public int size() {
+        return _dress.size();
+    }
+
+    @Override
+    public void clear() {
+        _dress.clear();
+    }
 }

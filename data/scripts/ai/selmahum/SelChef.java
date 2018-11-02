@@ -1,82 +1,72 @@
 package ai.selmahum;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ai.Fighter;
 import l2f.gameserver.geodata.GeoEngine;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.utils.Location;
 
-public class SelChef extends Fighter
-{
-	private Location targetLoc;
-	private long wait_timeout = 0;
+import java.util.ArrayList;
+import java.util.List;
 
-	public SelChef(NpcInstance actor)
-	{
-		super(actor);
-		MAX_PURSUE_RANGE = Integer.MAX_VALUE;
-	}
+public class SelChef extends Fighter {
+    private Location targetLoc;
+    private long wait_timeout = 0;
 
-	@Override
-	protected void onEvtSpawn()
-	{
-		super.onEvtSpawn();
-		getActor().getMinionList().spawnMinions();
-	}
+    public SelChef(NpcInstance actor) {
+        super(actor);
+        MAX_PURSUE_RANGE = Integer.MAX_VALUE;
+    }
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
-		if (actor.isDead())
-			return true;
+    @Override
+    protected void onEvtSpawn() {
+        super.onEvtSpawn();
+        getActor().getMinionList().spawnMinions();
+    }
 
-		if (_def_think)
-		{
-			doTask();
-			return true;
-		}
-		if (System.currentTimeMillis() > wait_timeout)
-		{
-			wait_timeout = System.currentTimeMillis() + 2000;
-			actor.setWalking();
-			targetLoc = findFirePlace(actor);
-			addTaskMove(targetLoc, true);
-			doTask();
-			return true;
-		}
-		return false;
-	}
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
+        if (actor.isDead())
+            return true;
 
-	private Location findFirePlace(NpcInstance actor)
-	{
-		Location loc = new Location();
-		List<NpcInstance> list = new ArrayList<NpcInstance>();
-		for (NpcInstance npc : actor.getAroundNpc(3000, 600))
-		{
-			if (npc.getNpcId() == 18927 && GeoEngine.canSeeTarget(actor, npc, false))
-				list.add(npc);
-		}
+        if (_def_think) {
+            doTask();
+            return true;
+        }
+        if (System.currentTimeMillis() > wait_timeout) {
+            wait_timeout = System.currentTimeMillis() + 2000;
+            actor.setWalking();
+            targetLoc = findFirePlace(actor);
+            addTaskMove(targetLoc, true);
+            doTask();
+            return true;
+        }
+        return false;
+    }
 
-		if (!list.isEmpty())
-			loc = list.get(Rnd.get(list.size())).getLoc();
-		else
-			loc = Location.findPointToStay(actor, 1000, 1500);
-		return loc;
-	}
+    private Location findFirePlace(NpcInstance actor) {
+        Location loc = new Location();
+        List<NpcInstance> list = new ArrayList<NpcInstance>();
+        for (NpcInstance npc : actor.getAroundNpc(3000, 600)) {
+            if (npc.getNpcId() == 18927 && GeoEngine.canSeeTarget(actor, npc, false))
+                list.add(npc);
+        }
 
-	@Override
-	protected boolean maybeMoveToHome()
-	{
-		return false;
-	}
+        if (!list.isEmpty())
+            loc = list.get(Rnd.get(list.size())).getLoc();
+        else
+            loc = Location.findPointToStay(actor, 1000, 1500);
+        return loc;
+    }
 
-	@Override
-	public boolean isGlobalAI()
-	{
-		return true;
-	}
+    @Override
+    protected boolean maybeMoveToHome() {
+        return false;
+    }
+
+    @Override
+    public boolean isGlobalAI() {
+        return true;
+    }
 }

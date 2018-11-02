@@ -1,6 +1,5 @@
 package ai;
 
-import java.util.Collection;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ai.CtrlEvent;
 import l2f.gameserver.ai.Fighter;
@@ -9,6 +8,8 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.network.serverpackets.components.NpcString;
 import l2f.gameserver.scripts.Functions;
+
+import java.util.Collection;
 
 /**
  * Guardian Waterspirit (22659).
@@ -19,8 +20,8 @@ public class GuardianWaterspirit extends Fighter {
     private NpcInstance mob = null;
     private boolean _firstTimeAttacked = true;
     public static final NpcString[] MsgText = {
-        NpcString.AH_AH_FROM_THE_MAGIC_FORCE_NO_MORE_I_WILL_BE_FREED,
-        NpcString.EVEN_THE_MAGIC_FORCE_BINDS_YOU_YOU_WILL_NEVER_BE_FORGIVEN};
+            NpcString.AH_AH_FROM_THE_MAGIC_FORCE_NO_MORE_I_WILL_BE_FREED,
+            NpcString.EVEN_THE_MAGIC_FORCE_BINDS_YOU_YOU_WILL_NEVER_BE_FORGIVEN};
 
     public GuardianWaterspirit(NpcInstance actor) {
         super(actor);

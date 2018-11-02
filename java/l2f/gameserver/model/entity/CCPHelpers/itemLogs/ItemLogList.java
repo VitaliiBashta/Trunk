@@ -1,276 +1,215 @@
 package l2f.gameserver.model.entity.CCPHelpers.itemLogs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import l2f.gameserver.Config;
 import l2f.gameserver.database.DatabaseFactory;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.utils.BatchStatement;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ItemLogList
-{
-	public static final SingleItemLog[] EMPTY_ITEM_LOGS = new SingleItemLog[0];
-	private static final Logger LOG = LoggerFactory.getLogger(ItemLogList.class);
-	private final Map<Integer, List<ItemActionLog>> _logLists;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-	public ItemLogList()
-	{
-		this._logLists = new ConcurrentHashMap<>();
-	}
+public class ItemLogList {
+    public static final SingleItemLog[] EMPTY_ITEM_LOGS = new SingleItemLog[0];
+    private static final Logger LOG = LoggerFactory.getLogger(ItemLogList.class);
+    private final Map<Integer, List<ItemActionLog>> _logLists;
 
-	private static int getSmallestLogId(Set<Integer> set)
-	{
-		int smallest = Integer.MAX_VALUE;
-		for (int i : set)
-		{
-			if (i < smallest)
-			{
-				smallest = i;
-			}
-		}
+    public ItemLogList() {
+        this._logLists = new ConcurrentHashMap<>();
+    }
 
-		return smallest;
-	}
+    private static int getSmallestLogId(Set<Integer> set) {
+        int smallest = Integer.MAX_VALUE;
+        for (int i : set) {
+            if (i < smallest) {
+                smallest = i;
+            }
+        }
 
-	public static ItemLogList getInstance()
-	{
-		return ItemLogListHolder.instance;
-	}
+        return smallest;
+    }
 
-	public List<ItemActionLog> getLogs(Player player)
-	{
-		if (!Config.ENABLE_PLAYER_ITEM_LOGS)
-		{
-			return new ArrayList<>();
-		}
-		List<ItemActionLog> list = _logLists.get(Integer.valueOf(player.getObjectId()));
-		if (list == null)
-			return new ArrayList<>();
-		return list;
-	}
+    public static ItemLogList getInstance() {
+        return ItemLogListHolder.instance;
+    }
 
-	public void addLogs(ItemActionLog logs)
-	{
-		if (!Config.ENABLE_PLAYER_ITEM_LOGS)
-		{
-			return;
-		}
-		Integer playerObjectId = Integer.valueOf(logs.getPlayerObjectId());
-		List<ItemActionLog> list;
-		if (this._logLists.containsKey(playerObjectId))
-		{
-			list = this._logLists.get(playerObjectId);
-		}
-		else
-		{
-			list = new CopyOnWriteArrayList<>();
-			this._logLists.put(playerObjectId, list);
-		}
+    public List<ItemActionLog> getLogs(Player player) {
+        if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
+            return new ArrayList<>();
+        }
+        List<ItemActionLog> list = _logLists.get(Integer.valueOf(player.getObjectId()));
+        if (list == null)
+            return new ArrayList<>();
+        return list;
+    }
 
-		list.add(logs);
-	}
+    public void addLogs(ItemActionLog logs) {
+        if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
+            return;
+        }
+        Integer playerObjectId = Integer.valueOf(logs.getPlayerObjectId());
+        List<ItemActionLog> list;
+        if (this._logLists.containsKey(playerObjectId)) {
+            list = this._logLists.get(playerObjectId);
+        } else {
+            list = new CopyOnWriteArrayList<>();
+            this._logLists.put(playerObjectId, list);
+        }
 
-	public void fillReceiver(int itemObjectId, String playerName)
-	{
-		if (!Config.ENABLE_PLAYER_ITEM_LOGS)
-		{
-			return;
-		}
-		for (List<ItemActionLog> logList : this._logLists.values())
-		{
-			for (ItemActionLog log : logList)
-			{
-				if (!log.getActionType().isReceiverKnown())
-				{
-					for (SingleItemLog item : log.getItemsLost())
-					{
-						if ((item.getItemObjectId() != itemObjectId) || ((item.getReceiverName() != null) && (!item.getReceiverName().isEmpty())))
-							continue;
-						item.setReceiverName(playerName);
-						return;
-					}
-				}
-			}
-		}
-	}
+        list.add(logs);
+    }
 
-	public void loadAllLogs()
-	{
-		if (!Config.ENABLE_PLAYER_ITEM_LOGS)
-		{
-			return;
-		}
-		ItemLogHandler.getInstance().loadLastActionId();
+    public void fillReceiver(int itemObjectId, String playerName) {
+        if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
+            return;
+        }
+        for (List<ItemActionLog> logList : this._logLists.values()) {
+            for (ItemActionLog log : logList) {
+                if (!log.getActionType().isReceiverKnown()) {
+                    for (SingleItemLog item : log.getItemsLost()) {
+                        if ((item.getItemObjectId() != itemObjectId) || ((item.getReceiverName() != null) && (!item.getReceiverName().isEmpty())))
+                            continue;
+                        item.setReceiverName(playerName);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
-		Map<Integer, ItemActionLog> logsById = new HashMap<>();
-		long logsSince = System.currentTimeMillis() - Config.PLAYER_ITEM_LOGS_MAX_TIME;
+    public void loadAllLogs() {
+        if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
+            return;
+        }
+        ItemLogHandler.getInstance().loadLastActionId();
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection())
-		{
-			try (PreparedStatement statement = con.prepareStatement("SELECT * FROM logs WHERE time > ? ORDER BY time ASC"))
-			{
-				statement.setLong(1, logsSince);
-				try (ResultSet rset = statement.executeQuery())
-				{
-					while (rset.next())
-					{
-						int logId = rset.getInt("log_id");
-						int playerObjectId = rset.getInt("player_object_id");
-						ItemActionType actionType = ItemActionType.valueOf(rset.getString("action_type"));
-						long time = rset.getLong("time");
+        Map<Integer, ItemActionLog> logsById = new HashMap<>();
+        long logsSince = System.currentTimeMillis() - Config.PLAYER_ITEM_LOGS_MAX_TIME;
 
-						List<ItemActionLog> logs = this._logLists.get(Integer.valueOf(playerObjectId));
-						if (logs == null)
-						{
-							logs = new ArrayList<>();
-							this._logLists.put(Integer.valueOf(playerObjectId), logs);
-						}
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement("SELECT * FROM logs WHERE time > ? ORDER BY time ASC")) {
+                statement.setLong(1, logsSince);
+                try (ResultSet rset = statement.executeQuery()) {
+                    while (rset.next()) {
+                        int logId = rset.getInt("log_id");
+                        int playerObjectId = rset.getInt("player_object_id");
+                        ItemActionType actionType = ItemActionType.valueOf(rset.getString("action_type"));
+                        long time = rset.getLong("time");
 
-						ItemActionLog log = new ItemActionLog(logId, playerObjectId, actionType, time, EMPTY_ITEM_LOGS, EMPTY_ITEM_LOGS, true);
-						logs.add(log);
-						logsById.put(Integer.valueOf(logId), log);
-					}
-				}
-			}
-			catch (SQLException e)
-			{
-				LOG.error("ItemLogList.loadAllLogs():", e);
-			}
+                        List<ItemActionLog> logs = this._logLists.get(Integer.valueOf(playerObjectId));
+                        if (logs == null) {
+                            logs = new ArrayList<>();
+                            this._logLists.put(Integer.valueOf(playerObjectId), logs);
+                        }
 
-			int smallestLogId = getSmallestLogId(logsById.keySet());
+                        ItemActionLog log = new ItemActionLog(logId, playerObjectId, actionType, time, EMPTY_ITEM_LOGS, EMPTY_ITEM_LOGS, true);
+                        logs.add(log);
+                        logsById.put(Integer.valueOf(logId), log);
+                    }
+                }
+            } catch (SQLException e) {
+                LOG.error("ItemLogList.loadAllLogs():", e);
+            }
 
-			try (PreparedStatement statement = con.prepareStatement("SELECT * FROM logs_items WHERE log_id >= ?"))
-			{
-				statement.setInt(1, smallestLogId);
-				try (ResultSet rset = statement.executeQuery())
-				{
-					while (rset.next())
-					{
-						ItemActionLog log = logsById.get(Integer.valueOf(rset.getInt("log_id")));
-						if (log != null)
-						{
-							int itemObjectId = rset.getInt("item_object_id");
-							int itemTemplateId = rset.getInt("item_template_id");
-							long itemCount = rset.getLong("item_count");
-							int itemEnchantLevel = rset.getInt("item_enchant_level");
-							String receiverName = rset.getString("receiver_name");
+            int smallestLogId = getSmallestLogId(logsById.keySet());
 
-							SingleItemLog itemLog = new SingleItemLog(itemTemplateId, itemCount, itemEnchantLevel, itemObjectId, receiverName);
+            try (PreparedStatement statement = con.prepareStatement("SELECT * FROM logs_items WHERE log_id >= ?")) {
+                statement.setInt(1, smallestLogId);
+                try (ResultSet rset = statement.executeQuery()) {
+                    while (rset.next()) {
+                        ItemActionLog log = logsById.get(Integer.valueOf(rset.getInt("log_id")));
+                        if (log != null) {
+                            int itemObjectId = rset.getInt("item_object_id");
+                            int itemTemplateId = rset.getInt("item_template_id");
+                            long itemCount = rset.getLong("item_count");
+                            int itemEnchantLevel = rset.getInt("item_enchant_level");
+                            String receiverName = rset.getString("receiver_name");
 
-							log.addItemLog(itemLog, rset.getInt("lost") == 1);
-						}
-					}
-				}
-			}
-			catch (SQLException e)
-			{
-				LOG.error("ItemLogList.loadAllLogs():", e);
-			}
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
+                            SingleItemLog itemLog = new SingleItemLog(itemTemplateId, itemCount, itemEnchantLevel, itemObjectId, receiverName);
 
-	public void saveAllLogs()
-	{
-		if (!Config.ENABLE_PLAYER_ITEM_LOGS)
-		{
-			return;
-		}
+                            log.addItemLog(itemLog, rset.getInt("lost") == 1);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                LOG.error("ItemLogList.loadAllLogs():", e);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection())
-		{
-			LOG.info("Saving Logs");
+    public void saveAllLogs() {
+        if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
+            return;
+        }
 
-			try (PreparedStatement statement = BatchStatement.createPreparedStatement(con, "INSERT INTO `logs` VALUES (?, ?, ?, ?);"))
-			{
-				for (List<ItemActionLog> list : this._logLists.values())
-				{
-					for (ItemActionLog log : list)
-					{
-						if (!log.isSavedInDatabase())
-						{
-							statement.setInt(1, log.getActionId());
-							statement.setInt(2, log.getPlayerObjectId());
-							statement.setString(3, log.getActionType().toString());
-							statement.setLong(4, log.getTime());
-							statement.addBatch();
-						}
-					}
-				}
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            LOG.info("Saving Logs");
 
-				statement.executeBatch();
-				con.commit();
-			}
-			catch (Exception e)
-			{
-				LOG.error("Failed to save all Item Logs: ", e);
-			}
+            try (PreparedStatement statement = BatchStatement.createPreparedStatement(con, "INSERT INTO `logs` VALUES (?, ?, ?, ?);")) {
+                for (List<ItemActionLog> list : this._logLists.values()) {
+                    for (ItemActionLog log : list) {
+                        if (!log.isSavedInDatabase()) {
+                            statement.setInt(1, log.getActionId());
+                            statement.setInt(2, log.getPlayerObjectId());
+                            statement.setString(3, log.getActionType().toString());
+                            statement.setLong(4, log.getTime());
+                            statement.addBatch();
+                        }
+                    }
+                }
 
-			LOG.info("Saving Logs_Items");
+                statement.executeBatch();
+                con.commit();
+            } catch (Exception e) {
+                LOG.error("Failed to save all Item Logs: ", e);
+            }
 
-			try (PreparedStatement statement = BatchStatement.createPreparedStatement(con, "INSERT INTO `logs_items` VALUES (?, ?, ?, ?, ?, ?, ?);"))
-			{
-				for (List<ItemActionLog> list : this._logLists.values())
-				{
-					for (ItemActionLog log : list)
-					{
-						if (!log.isSavedInDatabase())
-						{
-							for (int i = 0; i < 2; i++)
-							{
-								boolean isLostItem = i == 1;
-								SingleItemLog[] items = isLostItem ? log.getItemsLost() : log.getItemsReceived();
+            LOG.info("Saving Logs_Items");
 
-								for (SingleItemLog item : items)
-								{
-									statement.setInt(1, log.getActionId());
-									statement.setInt(2, item.getItemObjectId());
-									statement.setInt(3, item.getItemTemplateId());
-									statement.setLong(4, item.getItemCount());
-									statement.setInt(5, item.getItemEnchantLevel());
-									statement.setInt(6, isLostItem ? 1 : 0);
-									statement.setString(7, item.getReceiverName() == null ? "" : item.getReceiverName());
-									statement.addBatch();
-								}
-							}
-						}
-					}
-				}
+            try (PreparedStatement statement = BatchStatement.createPreparedStatement(con, "INSERT INTO `logs_items` VALUES (?, ?, ?, ?, ?, ?, ?);")) {
+                for (List<ItemActionLog> list : this._logLists.values()) {
+                    for (ItemActionLog log : list) {
+                        if (!log.isSavedInDatabase()) {
+                            for (int i = 0; i < 2; i++) {
+                                boolean isLostItem = i == 1;
+                                SingleItemLog[] items = isLostItem ? log.getItemsLost() : log.getItemsReceived();
 
-				statement.executeBatch();
-				con.commit();
-			}
-			catch (SQLException e)
-			{
-				LOG.error("Failed to save all Single Item Logs: ", e);
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+                                for (SingleItemLog item : items) {
+                                    statement.setInt(1, log.getActionId());
+                                    statement.setInt(2, item.getItemObjectId());
+                                    statement.setInt(3, item.getItemTemplateId());
+                                    statement.setLong(4, item.getItemCount());
+                                    statement.setInt(5, item.getItemEnchantLevel());
+                                    statement.setInt(6, isLostItem ? 1 : 0);
+                                    statement.setString(7, item.getReceiverName() == null ? "" : item.getReceiverName());
+                                    statement.addBatch();
+                                }
+                            }
+                        }
+                    }
+                }
 
-		LOG.info("Logs Saved!");
-	}
+                statement.executeBatch();
+                con.commit();
+            } catch (SQLException e) {
+                LOG.error("Failed to save all Single Item Logs: ", e);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	private static class ItemLogListHolder
-	{
-		private static final ItemLogList instance = new ItemLogList();
-	}
+        LOG.info("Logs Saved!");
+    }
+
+    private static class ItemLogListHolder {
+        private static final ItemLogList instance = new ItemLogList();
+    }
 }

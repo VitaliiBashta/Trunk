@@ -1,7 +1,5 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
@@ -11,46 +9,42 @@ import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.StatsSet;
 
-public class ClanGate extends Skill
-{
-	public ClanGate(StatsSet set)
-	{
-		super(set);
-	}
+import java.util.List;
 
-	@Override
-	public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first)
-	{
-		if (!activeChar.isPlayer())
-			return false;
+public class ClanGate extends Skill {
+    public ClanGate(StatsSet set) {
+        super(set);
+    }
 
-		Player player = (Player) activeChar;
-		if (!player.isClanLeader())
-		{
-			player.sendPacket(SystemMsg.ONLY_THE_CLAN_LEADER_IS_ENABLED);
-			return false;
-		}
+    @Override
+    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!activeChar.isPlayer())
+            return false;
 
-		SystemMessage msg = Call.canSummonHere(player);
-		if (msg != null)
-		{
-			activeChar.sendPacket(msg);
-			return false;
-		}
+        Player player = (Player) activeChar;
+        if (!player.isClanLeader()) {
+            player.sendPacket(SystemMsg.ONLY_THE_CLAN_LEADER_IS_ENABLED);
+            return false;
+        }
 
-		return super.checkCondition(activeChar, target, forceUse, dontMove, first);
-	}
+        SystemMessage msg = Call.canSummonHere(player);
+        if (msg != null) {
+            activeChar.sendPacket(msg);
+            return false;
+        }
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		if (!activeChar.isPlayer())
-			return;
+        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+    }
 
-		Player player = (Player) activeChar;
-		Clan clan = player.getClan();
-		clan.broadcastToOtherOnlineMembers(new SystemMessage2(SystemMsg.COURT_MAGICIAN__THE_PORTAL_HAS_BEEN_CREATED), player);
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        if (!activeChar.isPlayer())
+            return;
 
-		getEffects(activeChar, activeChar, getActivateRate() > 0, true);
-	}
+        Player player = (Player) activeChar;
+        Clan clan = player.getClan();
+        clan.broadcastToOtherOnlineMembers(new SystemMessage2(SystemMsg.COURT_MAGICIAN__THE_PORTAL_HAS_BEEN_CREATED), player);
+
+        getEffects(activeChar, activeChar, getActivateRate() > 0, true);
+    }
 }

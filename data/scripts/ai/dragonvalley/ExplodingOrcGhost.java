@@ -8,35 +8,30 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.tables.SkillTable;
 
 /**
- * @author L2Mythras 
- * 
- * AI mob 22818. 
+ * @author L2Mythras
+ * <p>
+ * AI mob 22818.
  * After spawn explode after 3 seconds damage.
  */
-public class ExplodingOrcGhost extends Fighter 
-{
+public class ExplodingOrcGhost extends Fighter {
 
     private Skill SELF_DESTRUCTION = SkillTable.getInstance().getInfo(6850, 1);
 
-    public ExplodingOrcGhost(NpcInstance actor)
-    {
+    public ExplodingOrcGhost(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtSpawn()
-    {
+    protected void onEvtSpawn() {
         ThreadPoolManager.getInstance().schedule(new StartSelfDestructionTimer(getActor()), 3000L);
         super.onEvtSpawn();
     }
 
-    private class StartSelfDestructionTimer extends RunnableImpl
-    {
+    private class StartSelfDestructionTimer extends RunnableImpl {
 
         private NpcInstance _npc;
 
-        public StartSelfDestructionTimer(NpcInstance npc)
-        {
+        public StartSelfDestructionTimer(NpcInstance npc) {
             _npc = npc;
         }
 

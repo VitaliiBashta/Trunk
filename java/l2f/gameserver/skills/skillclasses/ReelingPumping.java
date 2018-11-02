@@ -1,7 +1,5 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Fishing;
 import l2f.gameserver.model.Player;
@@ -10,55 +8,52 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.templates.item.WeaponTemplate;
 
-public class ReelingPumping extends Skill
-{
+import java.util.List;
 
-	public ReelingPumping(StatsSet set)
-	{
-		super(set);
-	}
+public class ReelingPumping extends Skill {
 
-	@Override
-	public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first)
-	{
-		if (!((Player) activeChar).isFishing())
-		{
-			activeChar.sendPacket(getSkillType() == SkillType.PUMPING ? SystemMsg.YOU_MAY_ONLY_USE_THE_PUMPING_SKILL_WHILE_YOU_ARE_FISHING : SystemMsg.YOU_MAY_ONLY_USE_THE_REELING_SKILL_WHILE_YOU_ARE_FISHING);
-			activeChar.sendActionFailed();
-			return false;
-		}
-		return super.checkCondition(activeChar, target, forceUse, dontMove, first);
-	}
+    public ReelingPumping(StatsSet set) {
+        super(set);
+    }
 
-	@Override
-	public void useSkill(Creature caster, List<Creature> targets)
-	{
-		if (caster == null || !caster.isPlayer())
-			return;
+    @Override
+    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!((Player) activeChar).isFishing()) {
+            activeChar.sendPacket(getSkillType() == SkillType.PUMPING ? SystemMsg.YOU_MAY_ONLY_USE_THE_PUMPING_SKILL_WHILE_YOU_ARE_FISHING : SystemMsg.YOU_MAY_ONLY_USE_THE_REELING_SKILL_WHILE_YOU_ARE_FISHING);
+            activeChar.sendActionFailed();
+            return false;
+        }
+        return super.checkCondition(activeChar, target, forceUse, dontMove, first);
+    }
 
-		Player player = caster.getPlayer();
-		Fishing fishing = player.getFishing();
-		if (fishing == null || !fishing.isInCombat())
-			return;
+    @Override
+    public void useSkill(Creature caster, List<Creature> targets) {
+        if (caster == null || !caster.isPlayer())
+            return;
 
-		WeaponTemplate weaponItem = player.getActiveWeaponItem();
-		int SS = player.getChargedFishShot() ? 2 : 1;
-		int pen = 0;
-		double gradebonus = 1 + weaponItem.getCrystalType().ordinal() * 0.1;
-		int dmg = (int) (getPower() * gradebonus * SS);
+        Player player = caster.getPlayer();
+        Fishing fishing = player.getFishing();
+        if (fishing == null || !fishing.isInCombat())
+            return;
 
-		if (player.getSkillLevel(1315) < getLevel() - 2) // 1315 - Fish Expertise
-		{
-			// Penalty
-			player.sendPacket(SystemMsg.DUE_TO_YOUR_REELING_ANDOR_PUMPING_SKILL_BEING_THREE_OR_MORE_LEVELS_HIGHER_THAN_YOUR_FISHING_SKILL_A_50_DAMAGE_PENALTY_WILL_BE_APPLIED);
-			pen = 50;
-			int penatlydmg = dmg - pen;
-			dmg = penatlydmg;
-		}
+        WeaponTemplate weaponItem = player.getActiveWeaponItem();
+        int SS = player.getChargedFishShot() ? 2 : 1;
+        int pen = 0;
+        double gradebonus = 1 + weaponItem.getCrystalType().ordinal() * 0.1;
+        int dmg = (int) (getPower() * gradebonus * SS);
 
-		if (SS == 2)
-			player.unChargeFishShot();
+        if (player.getSkillLevel(1315) < getLevel() - 2) // 1315 - Fish Expertise
+        {
+            // Penalty
+            player.sendPacket(SystemMsg.DUE_TO_YOUR_REELING_ANDOR_PUMPING_SKILL_BEING_THREE_OR_MORE_LEVELS_HIGHER_THAN_YOUR_FISHING_SKILL_A_50_DAMAGE_PENALTY_WILL_BE_APPLIED);
+            pen = 50;
+            int penatlydmg = dmg - pen;
+            dmg = penatlydmg;
+        }
 
-		fishing.useFishingSkill(dmg, pen, getSkillType());
-	}
+        if (SS == 2)
+            player.unChargeFishShot();
+
+        fishing.useFishingSkill(dmg, pen, getSkillType());
+    }
 }

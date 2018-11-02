@@ -1,3 +1,0 @@
-Config loaded succesfully!
-Testing Database connection... [Success]
-Service started!

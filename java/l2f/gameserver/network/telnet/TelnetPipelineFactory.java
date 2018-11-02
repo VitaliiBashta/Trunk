@@ -1,11 +1,6 @@
 package l2f.gameserver.network.telnet;
 
-import static org.jboss.netty.channel.Channels.pipeline;
-
-import java.nio.charset.Charset;
-
 import l2f.gameserver.Config;
-
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
@@ -14,29 +9,30 @@ import org.jboss.netty.handler.codec.frame.Delimiters;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
-public class TelnetPipelineFactory implements ChannelPipelineFactory
-{
-	private final ChannelHandler handler;
+import java.nio.charset.Charset;
 
-	public TelnetPipelineFactory(ChannelHandler handler)
-	{
-		this.handler = handler;
-	}
+import static org.jboss.netty.channel.Channels.pipeline;
 
-	@Override
-	public ChannelPipeline getPipeline() throws Exception
-	{
-		// Create a default pipeline implementation.
-		ChannelPipeline pipeline = pipeline();
+public class TelnetPipelineFactory implements ChannelPipelineFactory {
+    private final ChannelHandler handler;
 
-		// Add the text line codec combination first,
-		pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
-		pipeline.addLast("decoder", new StringDecoder(Charset.forName(Config.TELNET_DEFAULT_ENCODING)));
-		pipeline.addLast("encoder", new StringEncoder(Charset.forName(Config.TELNET_DEFAULT_ENCODING)));
+    public TelnetPipelineFactory(ChannelHandler handler) {
+        this.handler = handler;
+    }
 
-		// and then business logic.
-		pipeline.addLast("handler", handler);
+    @Override
+    public ChannelPipeline getPipeline() {
+        // Create a default pipeline implementation.
+        ChannelPipeline pipeline = pipeline();
 
-		return pipeline;
-	}
+        // Add the text line codec combination first,
+        pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
+        pipeline.addLast("decoder", new StringDecoder(Charset.forName(Config.TELNET_DEFAULT_ENCODING)));
+        pipeline.addLast("encoder", new StringEncoder(Charset.forName(Config.TELNET_DEFAULT_ENCODING)));
+
+        // and then business logic.
+        pipeline.addLast("handler", handler);
+
+        return pipeline;
+    }
 }

@@ -168,8 +168,7 @@ public final class NaiaTowerManager
 	private class GroupTowerTimer extends RunnableImpl
 	{
 		@Override
-		public void runImpl() throws Exception
-		{
+		public void runImpl() {
 			ThreadPoolManager.getInstance().schedule(new GroupTowerTimer(), 30 * 1000L);
 			if (!_groupList.isEmpty() && !_groupTimer.isEmpty())
 				for (int i : _groupTimer.keySet())

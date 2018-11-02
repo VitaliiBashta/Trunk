@@ -1,7 +1,5 @@
 package l2f.gameserver.model.instances;
 
-import java.util.StringTokenizer;
-
 import l2f.gameserver.Config;
 import l2f.gameserver.cache.Msg;
 import l2f.gameserver.data.htm.HtmCache;
@@ -19,164 +17,140 @@ import l2f.gameserver.network.serverpackets.ShopPreviewList;
 import l2f.gameserver.templates.mapregion.DomainArea;
 import l2f.gameserver.templates.npc.NpcTemplate;
 import l2f.gameserver.utils.Location;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MerchantInstance extends NpcInstance
-{
-	private static final Logger _log = LoggerFactory.getLogger(MerchantInstance.class);
+import java.util.StringTokenizer;
 
-	public MerchantInstance(int objectId, NpcTemplate template)
-	{
-		super(objectId, template);
-	}
+public class MerchantInstance extends NpcInstance {
+    private static final Logger _log = LoggerFactory.getLogger(MerchantInstance.class);
 
-	@Override
-	public String getHtmlPath(int npcId, int val, Player player)
-	{
-		String pom;
-		if (val == 0)
-			pom = "" + npcId;
-		else
-			pom = npcId + "-" + val;
+    public MerchantInstance(int objectId, NpcTemplate template) {
+        super(objectId, template);
+    }
 
-		if (getTemplate().getHtmRoot() != null)
-			return getTemplate().getHtmRoot() + pom + ".htm";
+    @Override
+    public String getHtmlPath(int npcId, int val, Player player) {
+        String pom;
+        if (val == 0)
+            pom = "" + npcId;
+        else
+            pom = npcId + "-" + val;
 
-		String temp = "merchant/" + pom + ".htm";
-		if (HtmCache.getInstance().getNullable(temp, player) != null)
-			return temp;
+        if (getTemplate().getHtmRoot() != null)
+            return getTemplate().getHtmRoot() + pom + ".htm";
 
-		temp = "teleporter/" + pom + ".htm";
-		if (HtmCache.getInstance().getNullable(temp, player) != null)
-			return temp;
+        String temp = "merchant/" + pom + ".htm";
+        if (HtmCache.getInstance().getNullable(temp, player) != null)
+            return temp;
 
-		temp = "petmanager/" + pom + ".htm";
-		if (HtmCache.getInstance().getNullable(temp, player) != null)
-			return temp;
+        temp = "teleporter/" + pom + ".htm";
+        if (HtmCache.getInstance().getNullable(temp, player) != null)
+            return temp;
 
-		return "default/" + pom + ".htm";
-	}
+        temp = "petmanager/" + pom + ".htm";
+        if (HtmCache.getInstance().getNullable(temp, player) != null)
+            return temp;
 
-	private void showWearWindow(Player player, int val)
-	{
-		if (!player.getPlayerAccess().UseShop)
-			return;
+        return "default/" + pom + ".htm";
+    }
 
-		NpcTradeList list = BuyListHolder.getInstance().getBuyList(val);
+    private void showWearWindow(Player player, int val) {
+        if (!player.getPlayerAccess().UseShop)
+            return;
 
-		if (list != null)
-		{
-			ShopPreviewList bl = new ShopPreviewList(list, player);
-			player.sendPacket(bl);
-		}
-		else
-		{
-			_log.warn("no buylist with id:" + val);
-			player.sendActionFailed();
-		}
-	}
+        NpcTradeList list = BuyListHolder.getInstance().getBuyList(val);
 
-	protected void showShopWindow(Player player, int listId, boolean tax)
-	{
-		if (!player.getPlayerAccess().UseShop)
-			return;
+        if (list != null) {
+            ShopPreviewList bl = new ShopPreviewList(list, player);
+            player.sendPacket(bl);
+        } else {
+            _log.warn("no buylist with id:" + val);
+            player.sendActionFailed();
+        }
+    }
 
-		double taxRate = 0;
+    protected void showShopWindow(Player player, int listId, boolean tax) {
+        if (!player.getPlayerAccess().UseShop)
+            return;
 
-		if (tax)
-		{
-			Castle castle = getCastle(player);
-			if (castle != null)
-				taxRate = castle.getTaxRate();
-		}
+        double taxRate = 0;
 
-		NpcTradeList list = BuyListHolder.getInstance().getBuyList(listId);
-		if (list == null || list.getNpcId() == getNpcId())
-			player.sendPacket(new ExBuySellList.BuyList(list, player, taxRate), new ExBuySellList.SellRefundList(player, false));
-		else
-		{
-			_log.warn("[L2MerchantInstance] possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
-			_log.warn("buylist id:" + listId + " / list_npc = " + list.getNpcId() + " / npc = " + getNpcId());
-		}
-	}
+        if (tax) {
+            Castle castle = getCastle(player);
+            if (castle != null)
+                taxRate = castle.getTaxRate();
+        }
 
-	protected void showShopWindow(Player player)
-	{
-		showShopWindow(player, 0, false);
-	}
+        NpcTradeList list = BuyListHolder.getInstance().getBuyList(listId);
+        if (list == null || list.getNpcId() == getNpcId())
+            player.sendPacket(new ExBuySellList.BuyList(list, player, taxRate), new ExBuySellList.SellRefundList(player, false));
+        else {
+            _log.warn("[L2MerchantInstance] possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
+            _log.warn("buylist id:" + listId + " / list_npc = " + list.getNpcId() + " / npc = " + getNpcId());
+        }
+    }
 
-	@Override
-	public void onBypassFeedback(Player player, String command)
-	{
-		if (!canBypassCheck(player, this))
-			return;
+    protected void showShopWindow(Player player) {
+        showShopWindow(player, 0, false);
+    }
 
-		StringTokenizer st = new StringTokenizer(command, " ");
-		String actualCommand = st.nextToken(); // Get actual command
+    @Override
+    public void onBypassFeedback(Player player, String command) {
+        if (!canBypassCheck(player, this))
+            return;
 
-		if (actualCommand.equalsIgnoreCase("Buy") || actualCommand.equalsIgnoreCase("Sell"))
-		{
-			int val = 0;
-			if (st.countTokens() > 0)
-				val = Integer.parseInt(st.nextToken());
-			showShopWindow(player, val, true);
-		}
-		else if (actualCommand.equalsIgnoreCase("Wear"))
-		{
-			if (st.countTokens() < 1)
-				return;
-			int val = Integer.parseInt(st.nextToken());
-			showWearWindow(player, val);
-		}
-		else if (actualCommand.equalsIgnoreCase("Multisell"))
-		{
-			if (st.countTokens() < 1)
-				return;
-			int val = Integer.parseInt(st.nextToken());
-			Castle castle = getCastle(player);
-			MultiSellHolder.getInstance().SeparateAndSend(val, player, castle != null ? castle.getTaxRate() : 0);
-		}
-		else if (actualCommand.equalsIgnoreCase("ReceivePremium"))
-		{
-			if (player.getPremiumItemList().isEmpty())
-			{
-				player.sendPacket(Msg.THERE_ARE_NO_MORE_VITAMIN_ITEMS_TO_BE_FOUND);
-				return;
-			}
+        StringTokenizer st = new StringTokenizer(command, " ");
+        String actualCommand = st.nextToken(); // Get actual command
 
-			player.sendPacket(new ExGetPremiumItemList(player));
-		}
-		else
-			super.onBypassFeedback(player, command);
-	}
+        if (actualCommand.equalsIgnoreCase("Buy") || actualCommand.equalsIgnoreCase("Sell")) {
+            int val = 0;
+            if (st.countTokens() > 0)
+                val = Integer.parseInt(st.nextToken());
+            showShopWindow(player, val, true);
+        } else if (actualCommand.equalsIgnoreCase("Wear")) {
+            if (st.countTokens() < 1)
+                return;
+            int val = Integer.parseInt(st.nextToken());
+            showWearWindow(player, val);
+        } else if (actualCommand.equalsIgnoreCase("Multisell")) {
+            if (st.countTokens() < 1)
+                return;
+            int val = Integer.parseInt(st.nextToken());
+            Castle castle = getCastle(player);
+            MultiSellHolder.getInstance().SeparateAndSend(val, player, castle != null ? castle.getTaxRate() : 0);
+        } else if (actualCommand.equalsIgnoreCase("ReceivePremium")) {
+            if (player.getPremiumItemList().isEmpty()) {
+                player.sendPacket(Msg.THERE_ARE_NO_MORE_VITAMIN_ITEMS_TO_BE_FOUND);
+                return;
+            }
 
-	@Override
-	public Castle getCastle(Player player)
-	{
-		if (Config.SERVICES_OFFSHORE_NO_CASTLE_TAX || (getReflection() == ReflectionManager.PARNASSUS && Config.SERVICES_PARNASSUS_NOTAX))
-			return null;
-		if (getReflection() == ReflectionManager.GIRAN_HARBOR || getReflection() == ReflectionManager.PARNASSUS)
-		{
-			String var = player.getVar("backCoords");
-			if (var != null && !var.isEmpty())
-			{
-				Location loc = Location.parseLoc(var);
+            player.sendPacket(new ExGetPremiumItemList(player));
+        } else
+            super.onBypassFeedback(player, command);
+    }
 
-				DomainArea domain = MapRegionManager.getInstance().getRegionData(DomainArea.class, loc);
-				if (domain != null)
-					return ResidenceHolder.getInstance().getResidence(Castle.class, domain.getId());
-			}
+    @Override
+    public Castle getCastle(Player player) {
+        if (Config.SERVICES_OFFSHORE_NO_CASTLE_TAX || (getReflection() == ReflectionManager.PARNASSUS && Config.SERVICES_PARNASSUS_NOTAX))
+            return null;
+        if (getReflection() == ReflectionManager.GIRAN_HARBOR || getReflection() == ReflectionManager.PARNASSUS) {
+            String var = player.getVar("backCoords");
+            if (var != null && !var.isEmpty()) {
+                Location loc = Location.parseLoc(var);
 
-			return super.getCastle();
-		}
-		return super.getCastle(player);
-	}
+                DomainArea domain = MapRegionManager.getInstance().getRegionData(DomainArea.class, loc);
+                if (domain != null)
+                    return ResidenceHolder.getInstance().getResidence(Castle.class, domain.getId());
+            }
 
-	@Override
-	public boolean isMerchantNpc()
-	{
-		return true;
-	}
+            return super.getCastle();
+        }
+        return super.getCastle(player);
+    }
+
+    @Override
+    public boolean isMerchantNpc() {
+        return true;
+    }
 }

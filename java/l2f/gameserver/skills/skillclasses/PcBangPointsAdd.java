@@ -1,35 +1,30 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.templates.StatsSet;
 
-public class PcBangPointsAdd extends Skill
-{
-	public PcBangPointsAdd(StatsSet set)
-	{
-		super(set);
-	}
+import java.util.List;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		int points = (int) _power;
+public class PcBangPointsAdd extends Skill {
+    public PcBangPointsAdd(StatsSet set) {
+        super(set);
+    }
 
-		for (Creature target : targets)
-		{
-			if (target.isPlayer())
-			{
-				Player player = target.getPlayer();
-				player.addPcBangPoints(points, false);
-			}
-			getEffects(activeChar, target, getActivateRate() > 0, false);
-		}
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        int points = (int) _power;
 
-		if (isSSPossible())
-			activeChar.unChargeShots(isMagic());
-	}
+        for (Creature target : targets) {
+            if (target.isPlayer()) {
+                Player player = target.getPlayer();
+                player.addPcBangPoints(points, false);
+            }
+            getEffects(activeChar, target, getActivateRate() > 0, false);
+        }
+
+        if (isSSPossible())
+            activeChar.unChargeShots(isMagic());
+    }
 }

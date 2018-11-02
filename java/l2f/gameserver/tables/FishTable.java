@@ -15,149 +15,132 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FishTable
-{
-	private static final Logger _log = LoggerFactory.getLogger(FishTable.class);
+public class FishTable {
+    private static final Logger _log = LoggerFactory.getLogger(FishTable.class);
 
-	private static final FishTable _instance = new FishTable();
-	private TIntObjectHashMap<List<FishTemplate>> _fishes;
-	private TIntObjectHashMap<List<RewardData>> _fishRewards;
-	private FishTable()
-	{
-		load();
-	}
+    private static final FishTable _instance = new FishTable();
+    private TIntObjectHashMap<List<FishTemplate>> _fishes;
+    private TIntObjectHashMap<List<RewardData>> _fishRewards;
 
-	public static final FishTable getInstance()
-	{
-		return _instance;
-	}
+    private FishTable() {
+        load();
+    }
 
-	public void reload()
-	{
-		load();
-	}
+    public static final FishTable getInstance() {
+        return _instance;
+    }
 
-	private void load()
-	{
-		_fishes = new TIntObjectHashMap<List<FishTemplate>>();
-		_fishRewards = new TIntObjectHashMap<List<RewardData>>();
+    public void reload() {
+        load();
+    }
 
-		int count = 0;
-		Connection con = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		try
-		{
-			con = DatabaseFactory.getInstance().getConnection();
-			statement = con.prepareStatement("SELECT id, level, name, hp, hpregen, fish_type, fish_group, fish_guts, guts_check_time, wait_time, combat_time FROM fish ORDER BY id");
-			resultSet = statement.executeQuery();
+    private void load() {
+        _fishes = new TIntObjectHashMap<List<FishTemplate>>();
+        _fishRewards = new TIntObjectHashMap<List<RewardData>>();
 
-			FishTemplate fish;
-			List<FishTemplate> fishes;
-			while (resultSet.next())
-			{
-				int id = resultSet.getInt("id");
-				int lvl = resultSet.getInt("level");
-				String name = resultSet.getString("name");
-				int hp = resultSet.getInt("hp");
-				int hpreg = resultSet.getInt("hpregen");
-				int type = resultSet.getInt("fish_type");
-				int group = resultSet.getInt("fish_group");
-				int fish_guts = resultSet.getInt("fish_guts");
-				int guts_check_time = resultSet.getInt("guts_check_time");
-				int wait_time = resultSet.getInt("wait_time");
-				int combat_time = resultSet.getInt("combat_time");
+        int count = 0;
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            con = DatabaseFactory.getInstance().getConnection();
+            statement = con.prepareStatement("SELECT id, level, name, hp, hpregen, fish_type, fish_group, fish_guts, guts_check_time, wait_time, combat_time FROM fish ORDER BY id");
+            resultSet = statement.executeQuery();
 
-				fish = new FishTemplate(id, lvl, name, hp, hpreg, type, group, fish_guts, guts_check_time, wait_time, combat_time);
-				if ((fishes = _fishes.get(group)) == null)
-					_fishes.put(group, fishes = new ArrayList<FishTemplate>());
-				fishes.add(fish);
-				count++;
-			}
+            FishTemplate fish;
+            List<FishTemplate> fishes;
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int lvl = resultSet.getInt("level");
+                String name = resultSet.getString("name");
+                int hp = resultSet.getInt("hp");
+                int hpreg = resultSet.getInt("hpregen");
+                int type = resultSet.getInt("fish_type");
+                int group = resultSet.getInt("fish_group");
+                int fish_guts = resultSet.getInt("fish_guts");
+                int guts_check_time = resultSet.getInt("guts_check_time");
+                int wait_time = resultSet.getInt("wait_time");
+                int combat_time = resultSet.getInt("combat_time");
 
-			DbUtils.close(statement, resultSet);
+                fish = new FishTemplate(id, lvl, name, hp, hpreg, type, group, fish_guts, guts_check_time, wait_time, combat_time);
+                if ((fishes = _fishes.get(group)) == null)
+                    _fishes.put(group, fishes = new ArrayList<FishTemplate>());
+                fishes.add(fish);
+                count++;
+            }
 
-			_log.info("FishTable: Loaded " + count + " fishes.");
+            DbUtils.close(statement, resultSet);
 
-			count = 0;
+            _log.info("FishTable: Loaded " + count + " fishes.");
 
-			statement = con.prepareStatement("SELECT fishid, rewardid, min, max, chance FROM fishreward ORDER BY fishid");
-			resultSet = statement.executeQuery();
+            count = 0;
 
-			RewardData reward;
-			List<RewardData> rewards;
-			while (resultSet.next())
-			{
-				int fishid = resultSet.getInt("fishid");
-				int rewardid = resultSet.getInt("rewardid");
-				int mindrop = resultSet.getInt("min");
-				int maxdrop = resultSet.getInt("max");
-				int chance = resultSet.getInt("chance");
+            statement = con.prepareStatement("SELECT fishid, rewardid, min, max, chance FROM fishreward ORDER BY fishid");
+            resultSet = statement.executeQuery();
 
-				reward = new RewardData(rewardid, mindrop, maxdrop, chance * 10000.);
-				if ((rewards = _fishRewards.get(fishid)) == null)
-					_fishRewards.put(fishid, rewards = new ArrayList<RewardData>());
+            RewardData reward;
+            List<RewardData> rewards;
+            while (resultSet.next()) {
+                int fishid = resultSet.getInt("fishid");
+                int rewardid = resultSet.getInt("rewardid");
+                int mindrop = resultSet.getInt("min");
+                int maxdrop = resultSet.getInt("max");
+                int chance = resultSet.getInt("chance");
 
-				rewards.add(reward);
-				count++;
-			}
+                reward = new RewardData(rewardid, mindrop, maxdrop, chance * 10000.);
+                if ((rewards = _fishRewards.get(fishid)) == null)
+                    _fishRewards.put(fishid, rewards = new ArrayList<RewardData>());
 
-			_log.info("FishTable: Loaded " + count + " fish rewards.");
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while loading Fishes", e);
-		}
-		finally
-		{
-			DbUtils.closeQuietly(con, statement, resultSet);
-		}
-	}
+                rewards.add(reward);
+                count++;
+            }
 
-	public int[] getFishIds()
-	{
-		return _fishRewards.keys();
-	}
+            _log.info("FishTable: Loaded " + count + " fish rewards.");
+        } catch (SQLException e) {
+            _log.error("Error while loading Fishes", e);
+        } finally {
+            DbUtils.closeQuietly(con, statement, resultSet);
+        }
+    }
 
-	public List<FishTemplate> getFish(int group, int type, int lvl)
-	{
-		List<FishTemplate> result = new ArrayList<FishTemplate>();
+    public int[] getFishIds() {
+        return _fishRewards.keys();
+    }
 
-		List<FishTemplate> fishs = _fishes.get(group);
-		if (fishs == null)
-		{
-			_log.warn("No fishes defined for group : " + group + "!");
-			return null;
-		}
+    public List<FishTemplate> getFish(int group, int type, int lvl) {
+        List<FishTemplate> result = new ArrayList<FishTemplate>();
 
-		for (FishTemplate f : fishs)
-		{
-			if (f.getType() != type)
-				continue;
-			if (f.getLevel() != lvl)
-				continue;
+        List<FishTemplate> fishs = _fishes.get(group);
+        if (fishs == null) {
+            _log.warn("No fishes defined for group : " + group + "!");
+            return null;
+        }
 
-			result.add(f);
-		}
+        for (FishTemplate f : fishs) {
+            if (f.getType() != type)
+                continue;
+            if (f.getLevel() != lvl)
+                continue;
 
-		if (result.isEmpty())
-			_log.warn("No fishes for group : " + group + " type: " + type + " level: " + lvl + "!");
+            result.add(f);
+        }
 
-		return result;
-	}
+        if (result.isEmpty())
+            _log.warn("No fishes for group : " + group + " type: " + type + " level: " + lvl + "!");
 
-	public List<RewardData> getFishReward(int fishid)
-	{
-		List<RewardData> result = _fishRewards.get(fishid);
-		if (_fishRewards == null)
-		{
-			_log.warn("No fish rewards defined for fish id: " + fishid + "!");
-			return null;
-		}
+        return result;
+    }
 
-		if (result.isEmpty())
-			_log.warn("No fish rewards for fish id: " + fishid + "!");
+    public List<RewardData> getFishReward(int fishid) {
+        List<RewardData> result = _fishRewards.get(fishid);
+        if (_fishRewards == null) {
+            _log.warn("No fish rewards defined for fish id: " + fishid + "!");
+            return null;
+        }
 
-		return result;
-	}
+        if (result.isEmpty())
+            _log.warn("No fish rewards for fish id: " + fishid + "!");
+
+        return result;
+    }
 }

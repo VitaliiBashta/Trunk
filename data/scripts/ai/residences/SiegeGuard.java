@@ -1,224 +1,192 @@
 package ai.residences;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
 import l2f.gameserver.ai.CtrlIntention;
 import l2f.gameserver.ai.Fighter;
 import l2f.gameserver.geodata.GeoEngine;
-import l2f.gameserver.model.AggroList;
-import l2f.gameserver.model.Creature;
-import l2f.gameserver.model.Playable;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.model.World;
+import l2f.gameserver.model.*;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.utils.Location;
 import npc.model.residences.SiegeGuardInstance;
 
-public abstract class SiegeGuard extends Fighter
-{
-	public SiegeGuard(NpcInstance actor)
-	{
-		super(actor);
-		MAX_PURSUE_RANGE = 1000;
-	}
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-	@Override
-	public SiegeGuardInstance getActor()
-	{
-		return (SiegeGuardInstance) super.getActor();
-	}
+public abstract class SiegeGuard extends Fighter {
+    public SiegeGuard(NpcInstance actor) {
+        super(actor);
+        MAX_PURSUE_RANGE = 1000;
+    }
 
-	@Override
-	public int getMaxPathfindFails()
-	{
-		return Integer.MAX_VALUE;
-	}
+    @Override
+    public SiegeGuardInstance getActor() {
+        return (SiegeGuardInstance) super.getActor();
+    }
 
-	@Override
-	public int getMaxAttackTimeout()
-	{
-		return 0;
-	}
+    @Override
+    public int getMaxPathfindFails() {
+        return Integer.MAX_VALUE;
+    }
 
-	@Override
-	protected boolean randomWalk()
-	{
-		return false;
-	}
+    @Override
+    public int getMaxAttackTimeout() {
+        return 0;
+    }
 
-	@Override
-	protected boolean randomAnimation()
-	{
-		return false;
-	}
+    @Override
+    protected boolean randomWalk() {
+        return false;
+    }
 
-	@Override
-	public boolean canSeeInSilentMove(Playable target)
-	{
-		// Осадные гварды могут видеть игроков в режиме Silent Move с вероятностью 10%
-		return !target.isSilentMoving() || Rnd.chance(10);
-	}
+    @Override
+    protected boolean randomAnimation() {
+        return false;
+    }
 
-	@Override
-	protected boolean checkAggression(Creature target, boolean avoidAttack)
-	{
-		NpcInstance actor = getActor();
-		if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE || !isGlobalAggro())
-			return false;
-		if (target.isAlikeDead() || target.isInvul())
-			return false;
+    @Override
+    public boolean canSeeInSilentMove(Playable target) {
+        // Осадные гварды могут видеть игроков в режиме Silent Move с вероятностью 10%
+        return !target.isSilentMoving() || Rnd.chance(10);
+    }
 
-		if (target.isPlayable())
-		{
-			if (!canSeeInSilentMove((Playable) target))
-				return false;
-			if (!canSeeInHide((Playable) target))
-				return false;
-			if (target.isPlayer() && ((Player) target).isGM() && target.isInvisible())
-				return false;
-			if (target.isPlayer() && !target.getPlayer().isActive())
-				return false;
-			if (actor.isMonster() && target.isInZonePeace())
-				return false;
-		}
+    @Override
+    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+        NpcInstance actor = getActor();
+        if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE || !isGlobalAggro())
+            return false;
+        if (target.isAlikeDead() || target.isInvul())
+            return false;
 
-		AggroList.AggroInfo ai = actor.getAggroList().get(target);
-		if (ai != null && ai.hate > 0)
-		{
-			if (!target.isInRangeZ(actor.getSpawnedLoc(), MAX_PURSUE_RANGE))
-				return false;
-		}
-		else if (!target.isInRangeZ(actor.getSpawnedLoc(), 600))
-			return false;
+        if (target.isPlayable()) {
+            if (!canSeeInSilentMove((Playable) target))
+                return false;
+            if (!canSeeInHide((Playable) target))
+                return false;
+            if (target.isPlayer() && ((Player) target).isGM() && target.isInvisible())
+                return false;
+            if (target.isPlayer() && !target.getPlayer().isActive())
+                return false;
+            if (actor.isMonster() && target.isInZonePeace())
+                return false;
+        }
 
-		if (!canAttackCharacter(target))
-			return false;
-		if (!GeoEngine.canSeeTarget(actor, target, false))
-			return false;
+        AggroList.AggroInfo ai = actor.getAggroList().get(target);
+        if (ai != null && ai.hate > 0) {
+            if (!target.isInRangeZ(actor.getSpawnedLoc(), MAX_PURSUE_RANGE))
+                return false;
+        } else if (!target.isInRangeZ(actor.getSpawnedLoc(), 600))
+            return false;
 
-		if (!avoidAttack)
-		{
-			actor.getAggroList().addDamageHate(target, 0, 2);
+        if (!canAttackCharacter(target))
+            return false;
+        if (!GeoEngine.canSeeTarget(actor, target, false))
+            return false;
 
-			if ((target.isSummon() || target.isPet()))
-				actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
+        if (!avoidAttack) {
+            actor.getAggroList().addDamageHate(target, 0, 2);
 
-			startRunningTask(AI_TASK_ATTACK_DELAY);
-			setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
-		}
+            if ((target.isSummon() || target.isPet()))
+                actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
 
-		return true;
-	}
+            startRunningTask(AI_TASK_ATTACK_DELAY);
+            setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+        }
 
-	@Override
-	protected boolean isGlobalAggro()
-	{
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	protected void onEvtAggression(Creature target, int aggro)
-	{
-		SiegeGuardInstance actor = getActor();
-		if (actor.isDead())
-			return;
-		if (target == null || !actor.isAutoAttackable(target))
-			return;
-		super.onEvtAggression(target, aggro);
-	}
+    @Override
+    protected boolean isGlobalAggro() {
+        return true;
+    }
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
-		if (actor.isActionsDisabled())
-			return true;
+    @Override
+    protected void onEvtAggression(Creature target, int aggro) {
+        SiegeGuardInstance actor = getActor();
+        if (actor.isDead())
+            return;
+        if (target == null || !actor.isAutoAttackable(target))
+            return;
+        super.onEvtAggression(target, aggro);
+    }
 
-		if (_def_think)
-		{
-			if (doTask())
-				clearTasks();
-			return true;
-		}
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
+        if (actor.isActionsDisabled())
+            return true;
 
-		long now = System.currentTimeMillis();
-		if (now - _checkAggroTimestamp > Config.AGGRO_CHECK_INTERVAL)
-		{
-			_checkAggroTimestamp = now;
+        if (_def_think) {
+            if (doTask())
+                clearTasks();
+            return true;
+        }
 
-			final List<Creature> knowns = World.getAroundCharacters(actor);
-			final List<Creature> aggroList = new ArrayList<>();
+        long now = System.currentTimeMillis();
+        if (now - _checkAggroTimestamp > Config.AGGRO_CHECK_INTERVAL) {
+            _checkAggroTimestamp = now;
 
-			for (Creature cha : knowns)
-			{
-				if (checkAggression(cha, true))
-					aggroList.add(cha);
-			}
+            final List<Creature> knowns = World.getAroundCharacters(actor);
+            final List<Creature> aggroList = new ArrayList<>();
 
-			if (!aggroList.isEmpty())
-			{
-				Collections.sort(aggroList, _nearestTargetComparator);
+            for (Creature cha : knowns) {
+                if (checkAggression(cha, true))
+                    aggroList.add(cha);
+            }
 
-				for (Creature cha : aggroList)
-				{
-					if (cha != null && !cha.isDead())
-					{
-						if (checkAggression(cha, false))
-							return true;
-					}
-				}
-			}
-		}
+            if (!aggroList.isEmpty()) {
+                Collections.sort(aggroList, _nearestTargetComparator);
 
-		Location sloc = actor.getSpawnedLoc();
-		// Проверка на расстояние до точки спауна
-		if (!actor.isInRange(sloc, 250))
-		{
-			teleportHome();
-			return true;
-		}
+                for (Creature cha : aggroList) {
+                    if (cha != null && !cha.isDead()) {
+                        if (checkAggression(cha, false))
+                            return true;
+                    }
+                }
+            }
+        }
 
-		return false;
-	}
+        Location sloc = actor.getSpawnedLoc();
+        // Проверка на расстояние до точки спауна
+        if (!actor.isInRange(sloc, 250)) {
+            teleportHome();
+            return true;
+        }
 
-	@Override
-	protected Creature prepareTarget()
-	{
-		SiegeGuardInstance actor = getActor();
-		if (actor.isDead())
-			return null;
+        return false;
+    }
 
-		// Новая цель исходя из агрессивности
-		List<Creature> hateList = actor.getAggroList().getHateList();
-		Creature hated = null;
-		for (Creature cha : hateList)
-		{
-			//Не подходит, очищаем хейт
-			if (!checkTarget(cha, MAX_PURSUE_RANGE))
-			{
-				actor.getAggroList().remove(cha, true);
-				continue;
-			}
-			hated = cha;
-			break;
-		}
+    @Override
+    protected Creature prepareTarget() {
+        SiegeGuardInstance actor = getActor();
+        if (actor.isDead())
+            return null;
 
-		if (hated != null)
-		{
-			setAttackTarget(hated);
-			return hated;
-		}
+        // Новая цель исходя из агрессивности
+        List<Creature> hateList = actor.getAggroList().getHateList();
+        Creature hated = null;
+        for (Creature cha : hateList) {
+            //Не подходит, очищаем хейт
+            if (!checkTarget(cha, MAX_PURSUE_RANGE)) {
+                actor.getAggroList().remove(cha, true);
+                continue;
+            }
+            hated = cha;
+            break;
+        }
 
-		return null;
-	}
+        if (hated != null) {
+            setAttackTarget(hated);
+            return hated;
+        }
 
-	@Override
-	protected boolean canAttackCharacter(Creature target)
-	{
-		return getActor().isAutoAttackable(target);
-	}
+        return null;
+    }
+
+    @Override
+    protected boolean canAttackCharacter(Creature target) {
+        return getActor().isAutoAttackable(target);
+    }
 }

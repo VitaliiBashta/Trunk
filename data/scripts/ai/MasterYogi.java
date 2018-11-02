@@ -1,78 +1,68 @@
 package ai;
 
-import java.util.List;
-
 import l2f.gameserver.ai.DefaultAI;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.scripts.Functions;
 
+import java.util.List;
 
-public class MasterYogi extends DefaultAI
-{
-	private long wait_timeout1 = 0;
-	private long wait_timeout2 = 0;
-	private int range = 0;
 
-	public MasterYogi(NpcInstance actor)
-	{
-		super(actor);
-	}
+public class MasterYogi extends DefaultAI {
+    private long wait_timeout1 = 0;
+    private long wait_timeout2 = 0;
+    private int range = 0;
 
-	@Override
-	public boolean isGlobalAI()
-	{
-		return true;
-	}
+    public MasterYogi(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
+    @Override
+    public boolean isGlobalAI() {
+        return true;
+    }
 
-		//Calculate the radius at which NPCs will talk
-		if (range <= 0)
-		{
-			List<NpcInstance> around = actor.getAroundNpc(6000, 300);
-			if (around != null && !around.isEmpty())
-			{
-				double distance;
-				for (NpcInstance npc : around)
-					if (npc.getNpcId() == 32599)
-					{
-						distance = actor.getDistance(npc) * 0.50;
-						if (range > 0 && distance < range || range == 0)
-							range = (int) distance;
-					}
-			}
-			else
-				range = 3000;
-		}
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
 
-		if (System.currentTimeMillis() > wait_timeout1)
-		{
-			wait_timeout1 = System.currentTimeMillis() + 998988;
-			Functions.npcSayInRangeCustomMessage(actor, range, "scripts.ai.MasterYogi.Hey");
-			return true;
-		}
-		if (System.currentTimeMillis() > wait_timeout2)
-		{
-			wait_timeout2 = System.currentTimeMillis() + 1010009;
-			Functions.npcSayInRangeCustomMessage(actor, range, "scripts.ai.MasterYogi.Hohoho");
-			return true;
-		}
+        //Calculate the radius at which NPCs will talk
+        if (range <= 0) {
+            List<NpcInstance> around = actor.getAroundNpc(6000, 300);
+            if (around != null && !around.isEmpty()) {
+                double distance;
+                for (NpcInstance npc : around)
+                    if (npc.getNpcId() == 32599) {
+                        distance = actor.getDistance(npc) * 0.50;
+                        if (range > 0 && distance < range || range == 0)
+                            range = (int) distance;
+                    }
+            } else
+                range = 3000;
+        }
 
-		if (randomAnimation())
-			return true;
+        if (System.currentTimeMillis() > wait_timeout1) {
+            wait_timeout1 = System.currentTimeMillis() + 998988;
+            Functions.npcSayInRangeCustomMessage(actor, range, "scripts.ai.MasterYogi.Hey");
+            return true;
+        }
+        if (System.currentTimeMillis() > wait_timeout2) {
+            wait_timeout2 = System.currentTimeMillis() + 1010009;
+            Functions.npcSayInRangeCustomMessage(actor, range, "scripts.ai.MasterYogi.Hohoho");
+            return true;
+        }
 
-		return false;
-	}
+        if (randomAnimation())
+            return true;
 
-	@Override
-	protected void onEvtAttacked(Creature attacker, int damage)
-	{}
+        return false;
+    }
 
-	@Override
-	protected void onEvtAggression(Creature target, int aggro)
-	{}
+    @Override
+    protected void onEvtAttacked(Creature attacker, int damage) {
+    }
+
+    @Override
+    protected void onEvtAggression(Creature target, int aggro) {
+    }
 }

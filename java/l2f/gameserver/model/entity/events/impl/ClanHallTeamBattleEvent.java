@@ -1,7 +1,5 @@
 package l2f.gameserver.model.entity.events.impl;
 
-import java.util.List;
-
 import l2f.commons.collections.CollectionUtils;
 import l2f.commons.collections.MultiValueSet;
 import l2f.gameserver.dao.SiegeClanDAO;
@@ -19,211 +17,189 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.tables.ClanTable;
 import l2f.gameserver.utils.Location;
 
-public class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiegeClanObject>
-{
-	public static final String TRYOUT_PART					=	"tryout_part";
-	public static final String CHALLENGER_RESTART_POINTS	=	"challenger_restart_points";
-	public static final String FIRST_DOORS					=	"first_doors";
-	public static final String SECOND_DOORS					=	"second_doors";
-	public static final String NEXT_STEP					=	"next_step";
+import java.util.List;
 
-	public ClanHallTeamBattleEvent(MultiValueSet<String> set)
-	{
-		super(set);
-	}
+public class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiegeClanObject> {
+    public static final String TRYOUT_PART = "tryout_part";
+    public static final String CHALLENGER_RESTART_POINTS = "challenger_restart_points";
+    public static final String FIRST_DOORS = "first_doors";
+    public static final String SECOND_DOORS = "second_doors";
+    public static final String NEXT_STEP = "next_step";
 
-	@Override
-	public void startEvent()
-	{
-		_oldOwner = getResidence().getOwner();
+    public ClanHallTeamBattleEvent(MultiValueSet<String> set) {
+        super(set);
+    }
 
-		List<CTBSiegeClanObject> attackers = getObjects(ATTACKERS);
-		if (attackers.isEmpty())
-		{
-			if (_oldOwner == null)
-				broadcastInZone2(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_BEEN_CANCELED_DUE_TO_LACK_OF_INTEREST).addResidenceName(getResidence()));
-			else
-				broadcastInZone2(new SystemMessage2(SystemMsg.S1S_SIEGE_WAS_CANCELED_BECAUSE_THERE_WERE_NO_CLANS_THAT_PARTICIPATED).addResidenceName(getResidence()));
+    @Override
+    public void startEvent() {
+        _oldOwner = getResidence().getOwner();
 
-			reCalcNextTime(false);
-			return;
-		}
+        List<CTBSiegeClanObject> attackers = getObjects(ATTACKERS);
+        if (attackers.isEmpty()) {
+            if (_oldOwner == null)
+                broadcastInZone2(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_BEEN_CANCELED_DUE_TO_LACK_OF_INTEREST).addResidenceName(getResidence()));
+            else
+                broadcastInZone2(new SystemMessage2(SystemMsg.S1S_SIEGE_WAS_CANCELED_BECAUSE_THERE_WERE_NO_CLANS_THAT_PARTICIPATED).addResidenceName(getResidence()));
 
-		if (_oldOwner != null)
-			addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, _oldOwner, 0));
+            reCalcNextTime(false);
+            return;
+        }
 
-		SiegeClanDAO.getInstance().delete(getResidence());
-		SiegePlayerDAO.getInstance().delete(getResidence());
+        if (_oldOwner != null)
+            addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, _oldOwner, 0));
 
-		List<CTBTeamObject> teams = getObjects(TRYOUT_PART);
-		for (int i = 0; i < 5; i++)
-		{
-			CTBTeamObject team = teams.get(i);
+        SiegeClanDAO.getInstance().delete(getResidence());
+        SiegePlayerDAO.getInstance().delete(getResidence());
 
-			team.setSiegeClan(CollectionUtils.safeGet(attackers, i));
-		}
+        List<CTBTeamObject> teams = getObjects(TRYOUT_PART);
+        for (int i = 0; i < 5; i++) {
+            CTBTeamObject team = teams.get(i);
 
-		broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
-		broadcastTo(SystemMsg.THE_TRYOUTS_ARE_ABOUT_TO_BEGIN, ATTACKERS);
+            team.setSiegeClan(CollectionUtils.safeGet(attackers, i));
+        }
 
-		super.startEvent();
-	}
+        broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
+        broadcastTo(SystemMsg.THE_TRYOUTS_ARE_ABOUT_TO_BEGIN, ATTACKERS);
 
-	public void nextStep()
-	{
-		broadcastTo(SystemMsg.THE_TRYOUTS_HAVE_BEGUN, ATTACKERS, DEFENDERS);
+        super.startEvent();
+    }
 
-		updateParticles(true, ATTACKERS, DEFENDERS);
-	}
+    public void nextStep() {
+        broadcastTo(SystemMsg.THE_TRYOUTS_HAVE_BEGUN, ATTACKERS, DEFENDERS);
 
-	public void processStep(CTBTeamObject team)
-	{
-		if (team.getSiegeClan() != null)
-		{
-			CTBSiegeClanObject object = team.getSiegeClan();
+        updateParticles(true, ATTACKERS, DEFENDERS);
+    }
 
-			object.setEvent(false, this);
+    public void processStep(CTBTeamObject team) {
+        if (team.getSiegeClan() != null) {
+            CTBSiegeClanObject object = team.getSiegeClan();
 
-			teleportPlayers(SPECTATORS);
-		}
+            object.setEvent(false, this);
 
-		team.despawnObject(this);
+            teleportPlayers(SPECTATORS);
+        }
 
-		List<CTBTeamObject> teams = getObjects(TRYOUT_PART);
+        team.despawnObject(this);
 
-		boolean hasWinner = false;
-		CTBTeamObject winnerTeam = null;
+        List<CTBTeamObject> teams = getObjects(TRYOUT_PART);
 
-		for (CTBTeamObject t : teams)
-		{
-			if (t.isParticle())
-			{
-				hasWinner = winnerTeam == null;  // если зайдет второй раз то скажет что нету виннера
+        boolean hasWinner = false;
+        CTBTeamObject winnerTeam = null;
 
-				winnerTeam =  t;
-			}
-		}
+        for (CTBTeamObject t : teams) {
+            if (t.isParticle()) {
+                hasWinner = winnerTeam == null;  // если зайдет второй раз то скажет что нету виннера
 
-		if (!hasWinner)
-			return;
+                winnerTeam = t;
+            }
+        }
 
-		SiegeClanObject clan = winnerTeam.getSiegeClan();
-		if (clan != null)
-			getResidence().changeOwner(clan.getClan());
+        if (!hasWinner)
+            return;
 
-		stopEvent(true);
-	}
+        SiegeClanObject clan = winnerTeam.getSiegeClan();
+        if (clan != null)
+            getResidence().changeOwner(clan.getClan());
 
-	@Override
-	public void announce(int val)
-	{
-		int minute = val / 60;
-		if (minute > 0)
-			broadcastTo(new SystemMessage2(SystemMsg.THE_CONTEST_WILL_BEGIN_IN_S1_MINUTES).addInteger(minute), ATTACKERS, DEFENDERS);
-		else
-			broadcastTo(new SystemMessage2(SystemMsg.THE_PRELIMINARY_MATCH_WILL_BEGIN_IN_S1_SECONDS).addInteger(val), ATTACKERS, DEFENDERS);
-	}
+        stopEvent(true);
+    }
 
-	@Override
-	public void stopEvent(boolean step)
-	{
-		Clan newOwner = getResidence().getOwner();
-		if (newOwner != null)
-		{
-			if (_oldOwner != newOwner)
-			{
-				newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
+    @Override
+    public void announce(int val) {
+        int minute = val / 60;
+        if (minute > 0)
+            broadcastTo(new SystemMessage2(SystemMsg.THE_CONTEST_WILL_BEGIN_IN_S1_MINUTES).addInteger(minute), ATTACKERS, DEFENDERS);
+        else
+            broadcastTo(new SystemMessage2(SystemMsg.THE_PRELIMINARY_MATCH_WILL_BEGIN_IN_S1_SECONDS).addInteger(val), ATTACKERS, DEFENDERS);
+    }
 
-				newOwner.incReputation(1700, false, toString());
-			}
+    @Override
+    public void stopEvent(boolean step) {
+        Clan newOwner = getResidence().getOwner();
+        if (newOwner != null) {
+            if (_oldOwner != newOwner) {
+                newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
 
-			broadcastTo(new SystemMessage2(SystemMsg.S1_CLAN_HAS_DEFEATED_S2).addString(newOwner.getName()).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
-			broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_IS_FINISHED).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
-		}
-		else
-			broadcastTo(new SystemMessage2(SystemMsg.THE_PRELIMINARY_MATCH_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()), ATTACKERS);
+                newOwner.incReputation(1700, false, toString());
+            }
 
-		updateParticles(false, ATTACKERS, DEFENDERS);
+            broadcastTo(new SystemMessage2(SystemMsg.S1_CLAN_HAS_DEFEATED_S2).addString(newOwner.getName()).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
+            broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_IS_FINISHED).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
+        } else
+            broadcastTo(new SystemMessage2(SystemMsg.THE_PRELIMINARY_MATCH_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()), ATTACKERS);
 
-		removeObjects(DEFENDERS);
-		removeObjects(ATTACKERS);
+        updateParticles(false, ATTACKERS, DEFENDERS);
 
-		super.stopEvent(step);
+        removeObjects(DEFENDERS);
+        removeObjects(ATTACKERS);
 
-		_oldOwner = null;
-	}
+        super.stopEvent(step);
 
-	@Override
-	public void loadSiegeClans()
-	{
-		List<SiegeClanObject> siegeClanObjectList = SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS);
-		addObjects(ATTACKERS, siegeClanObjectList);
+        _oldOwner = null;
+    }
 
-		List<CTBSiegeClanObject> objects = getObjects(ATTACKERS);
-		for (CTBSiegeClanObject clan : objects)
-			clan.select(getResidence());
-	}
+    @Override
+    public void loadSiegeClans() {
+        List<SiegeClanObject> siegeClanObjectList = SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS);
+        addObjects(ATTACKERS, siegeClanObjectList);
 
-	@Override
-	public CTBSiegeClanObject newSiegeClan(String type, int clanId, long i, long date)
-	{
-		Clan clan = ClanTable.getInstance().getClan(clanId);
-		return clan == null ? null : new CTBSiegeClanObject(type, clan, i, date);
-	}
+        List<CTBSiegeClanObject> objects = getObjects(ATTACKERS);
+        for (CTBSiegeClanObject clan : objects)
+            clan.select(getResidence());
+    }
 
-	@Override
-	public boolean isParticle(Player player)
-	{
-		if (!isInProgress() || player.getClan() == null)
-			return false;
-		CTBSiegeClanObject object = getSiegeClan(ATTACKERS, player.getClan());
-		return object != null && object.getPlayers().contains(player.getObjectId());
-	}
+    @Override
+    public CTBSiegeClanObject newSiegeClan(String type, int clanId, long i, long date) {
+        Clan clan = ClanTable.getInstance().getClan(clanId);
+        return clan == null ? null : new CTBSiegeClanObject(type, clan, i, date);
+    }
 
-	@Override
-	public Location getRestartLoc(Player player, RestartType type)
-	{
-		if (!checkIfInZone(player))
-			return null;
+    @Override
+    public boolean isParticle(Player player) {
+        if (!isInProgress() || player.getClan() == null)
+            return false;
+        CTBSiegeClanObject object = getSiegeClan(ATTACKERS, player.getClan());
+        return object != null && object.getPlayers().contains(player.getObjectId());
+    }
 
-		SiegeClanObject attackerClan = getSiegeClan(ATTACKERS, player.getClan());
+    @Override
+    public Location getRestartLoc(Player player, RestartType type) {
+        if (!checkIfInZone(player))
+            return null;
 
-		Location loc = null;
-		switch (type)
-		{
-			case TO_VILLAGE:
-				if (attackerClan != null && checkIfInZone(player))
-				{
-					List<SiegeClanObject> objectList = getObjects(ATTACKERS);
-					List<Location> teleportList = getObjects(CHALLENGER_RESTART_POINTS);
+        SiegeClanObject attackerClan = getSiegeClan(ATTACKERS, player.getClan());
 
-					int index = objectList.indexOf(attackerClan);
+        Location loc = null;
+        switch (type) {
+            case TO_VILLAGE:
+                if (attackerClan != null && checkIfInZone(player)) {
+                    List<SiegeClanObject> objectList = getObjects(ATTACKERS);
+                    List<Location> teleportList = getObjects(CHALLENGER_RESTART_POINTS);
 
-					loc = teleportList.get(index);
-				}
-				break;
-		}
-		return loc;
-	}
+                    int index = objectList.indexOf(attackerClan);
 
-	@Override
-	public void action(String name, boolean start)
-	{
-		if (name.equalsIgnoreCase(NEXT_STEP))
-			nextStep();
-		else
-			super.action(name, start);
-	}
+                    loc = teleportList.get(index);
+                }
+                break;
+        }
+        return loc;
+    }
 
-	@Override
-	public int getUserRelation(Player thisPlayer, int result)
-	{
-		return result;
-	}
+    @Override
+    public void action(String name, boolean start) {
+        if (name.equalsIgnoreCase(NEXT_STEP))
+            nextStep();
+        else
+            super.action(name, start);
+    }
 
-	@Override
-	public int getRelation(Player thisPlayer, Player targetPlayer, int result)
-	{
-		return result;
-	}
+    @Override
+    public int getUserRelation(Player thisPlayer, int result) {
+        return result;
+    }
+
+    @Override
+    public int getRelation(Player thisPlayer, Player targetPlayer, int result) {
+        return result;
+    }
 }

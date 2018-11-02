@@ -1,11 +1,11 @@
 package l2f.commons.util;
 
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.random.RandomGenerator;
+
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.commons.math.random.MersenneTwister;
-import org.apache.commons.math.random.RandomGenerator;
 
 public class Rnd {
     private static final Random random = new Random();

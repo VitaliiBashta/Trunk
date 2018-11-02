@@ -12,12 +12,10 @@ import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class BasicDataSource
-        implements DataSource {
+public class BasicDataSource        implements DataSource {
     private final PoolingDataSource _source;
     private final ObjectPool _connectionPool;
 
@@ -53,19 +51,22 @@ public class BasicDataSource
         _source = dataSource;
     }
 
-    public Connection getConnection(Connection con) throws SQLException {
-        if ((con == null) || (con.isClosed())) {
-            return _source.getConnection();
+    public Connection getConnection(Connection con) {
+        try {
+            if ((con == null) || (con.isClosed())) {
+                return _source.getConnection();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return con;
-//        return (((con == null) || (con.isClosed())) ? (con = _source.getConnection()) : con);
     }
 
-    public int getBusyConnectionCount() throws SQLException {
+    public int getBusyConnectionCount() {
         return this._connectionPool.getNumActive();
     }
 
-    public int getIdleConnectionCount() throws SQLException {
+    public int getIdleConnectionCount() {
         return this._connectionPool.getNumIdle();
     }
 
@@ -74,37 +75,37 @@ public class BasicDataSource
     }
 
     @Override
-    public PrintWriter getLogWriter() throws SQLException {
+    public PrintWriter getLogWriter() {
         return _source.getLogWriter();
     }
 
     @Override
-    public void setLogWriter(PrintWriter out) throws SQLException {
+    public void setLogWriter(PrintWriter out) {
         _source.setLogWriter(out);
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
+    public int getLoginTimeout() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
+    public void setLoginTimeout(int seconds) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+    public Logger getParentLogger() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
+    public <T> T unwrap(Class<T> iface) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) {
         return false;
     }
 
@@ -114,7 +115,7 @@ public class BasicDataSource
     }
 
     @Override
-    public Connection getConnection(String username, String password) throws SQLException {
+    public Connection getConnection(String username, String password) {
         throw new UnsupportedOperationException();
     }
 }

@@ -1,11 +1,5 @@
 package l2f.gameserver.model.matching;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import l2f.gameserver.instancemanager.MatchingRoomManager;
 import l2f.gameserver.listener.actor.player.OnPlayerPartyInviteListener;
 import l2f.gameserver.listener.actor.player.OnPlayerPartyLeaveListener;
@@ -17,305 +11,275 @@ import l2f.gameserver.network.serverpackets.components.IStaticPacket;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.utils.Util;
 
-public abstract class MatchingRoom implements PlayerGroup
-{
-	public static int PARTY_MATCHING = 0;
-	public static int CC_MATCHING = 1;
-	//
-	public static int WAIT_PLAYER = 0;
-	public static int ROOM_MASTER = 1;
-	public static int PARTY_MEMBER = 2;
-	public static int UNION_LEADER = 3;
-	public static int UNION_PARTY = 4;
-	public static int WAIT_PARTY = 5;
-	public static int WAIT_NORMAL = 6;
-	protected final Player _leader;
-	private final int _id;
-	private final PartyListenerImpl _listener = new PartyListenerImpl();
-	protected List<Player> _members = new CopyOnWriteArrayList<Player>();
-	private int _minLevel;
-	private int _maxLevel;
-	private int _maxMemberSize;
-	private int _lootType;
-	private String _topic;
-	public MatchingRoom(Player leader, int minLevel, int maxLevel, int maxMemberSize, int lootType, String topic)
-	{
-		_leader = leader;
-		_id = MatchingRoomManager.getInstance().addMatchingRoom(this);
-		_minLevel = minLevel;
-		_maxLevel = maxLevel;
-		_maxMemberSize = maxMemberSize;
-		_lootType = lootType;
-		_topic = topic;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-		addMember0(leader, null);
-	}
+public abstract class MatchingRoom implements PlayerGroup {
+    public static int PARTY_MATCHING = 0;
+    public static int CC_MATCHING = 1;
+    //
+    public static int WAIT_PLAYER = 0;
+    public static int ROOM_MASTER = 1;
+    public static int PARTY_MEMBER = 2;
+    public static int UNION_LEADER = 3;
+    public static int UNION_PARTY = 4;
+    public static int WAIT_PARTY = 5;
+    public static int WAIT_NORMAL = 6;
+    protected final Player _leader;
+    private final int _id;
+    private final PartyListenerImpl _listener = new PartyListenerImpl();
+    protected List<Player> _members = new CopyOnWriteArrayList<Player>();
+    private int _minLevel;
+    private int _maxLevel;
+    private int _maxMemberSize;
+    private int _lootType;
+    private String _topic;
 
-	//===============================================================================================================================================
-	//                                                            Add/Remove Member
-	//===============================================================================================================================================
-	public boolean addMember(Player player)
-	{
-		if (_members.contains(player))
-			return true;
+    public MatchingRoom(Player leader, int minLevel, int maxLevel, int maxMemberSize, int lootType, String topic) {
+        _leader = leader;
+        _id = MatchingRoomManager.getInstance().addMatchingRoom(this);
+        _minLevel = minLevel;
+        _maxLevel = maxLevel;
+        _maxMemberSize = maxMemberSize;
+        _lootType = lootType;
+        _topic = topic;
 
-		if (player.getLevel() < getMinLevel() || player.getLevel() > getMaxLevel() || getPlayers().size() >= getMaxMembersSize())
-		{
-			player.sendPacket(notValidMessage());
-			return false;
-		}
+        addMember0(leader, null);
+    }
 
-		return addMember0(player, new SystemMessage2(enterMessage()).addName(player));
-	}
+    //===============================================================================================================================================
+    //                                                            Add/Remove Member
+    //===============================================================================================================================================
+    public boolean addMember(Player player) {
+        if (_members.contains(player))
+            return true;
 
-	private boolean addMember0(Player player, L2GameServerPacket p)
-	{
-		if (!_members.isEmpty())
-			player.addListener(_listener);
+        if (player.getLevel() < getMinLevel() || player.getLevel() > getMaxLevel() || getPlayers().size() >= getMaxMembersSize()) {
+            player.sendPacket(notValidMessage());
+            return false;
+        }
 
-		_members.add(player);
+        return addMember0(player, new SystemMessage2(enterMessage()).addName(player));
+    }
 
-		player.setMatchingRoom(this);
+    private boolean addMember0(Player player, L2GameServerPacket p) {
+        if (!_members.isEmpty())
+            player.addListener(_listener);
 
-		for (Player $member : this)
-			if ($member != player)
-				$member.sendPacket(p, addMemberPacket($member, player));
+        _members.add(player);
 
-		MatchingRoomManager.getInstance().removeFromWaitingList(player);
-		player.sendPacket(infoRoomPacket(), membersPacket(player));
-		player.sendChanges();
-		return true;
-	}
+        player.setMatchingRoom(this);
 
-	public void removeMember(Player member, boolean oust)
-	{
-		if (!_members.remove(member))
-			return;
+        for (Player $member : this)
+            if ($member != player)
+                $member.sendPacket(p, addMemberPacket($member, player));
 
-		member.removeListener(_listener);
-		member.setMatchingRoom(null);
-		if (_members.isEmpty())
-			disband();
-		else
-		{
-			L2GameServerPacket infoPacket = infoRoomPacket();
-			SystemMsg exitMessage0 = exitMessage(true, oust);
-			L2GameServerPacket exitMessage = exitMessage0 != null ? new SystemMessage2(exitMessage0).addName(member) : null;
-			for (Player player : this)
-				player.sendPacket(infoPacket, removeMemberPacket(player, member), exitMessage);
-		}
+        MatchingRoomManager.getInstance().removeFromWaitingList(player);
+        player.sendPacket(infoRoomPacket(), membersPacket(player));
+        player.sendChanges();
+        return true;
+    }
 
-		member.sendPacket(closeRoomPacket(), exitMessage(false, oust));
-		MatchingRoomManager.getInstance().addToWaitingList(member);
-		member.sendChanges();
-	}
+    public void removeMember(Player member, boolean oust) {
+        if (!_members.remove(member))
+            return;
 
-	public void broadcastPlayerUpdate(Player player)
-	{
-		for (Player $member : MatchingRoom.this)
-			$member.sendPacket(updateMemberPacket($member, player));
-	}
+        member.removeListener(_listener);
+        member.setMatchingRoom(null);
+        if (_members.isEmpty())
+            disband();
+        else {
+            L2GameServerPacket infoPacket = infoRoomPacket();
+            SystemMsg exitMessage0 = exitMessage(true, oust);
+            L2GameServerPacket exitMessage = exitMessage0 != null ? new SystemMessage2(exitMessage0).addName(member) : null;
+            for (Player player : this)
+                player.sendPacket(infoPacket, removeMemberPacket(player, member), exitMessage);
+        }
 
-	public void disband()
-	{
-		for (Player player : this)
-		{
-			player.removeListener(_listener);
-			player.sendPacket(closeRoomMessage());
-			player.sendPacket(closeRoomPacket());
-			player.setMatchingRoom(null);
-			player.sendChanges();
+        member.sendPacket(closeRoomPacket(), exitMessage(false, oust));
+        MatchingRoomManager.getInstance().addToWaitingList(member);
+        member.sendChanges();
+    }
 
-			MatchingRoomManager.getInstance().addToWaitingList(player);
-		}
+    public void broadcastPlayerUpdate(Player player) {
+        for (Player $member : MatchingRoom.this)
+            $member.sendPacket(updateMemberPacket($member, player));
+    }
 
-		_members.clear();
+    public void disband() {
+        for (Player player : this) {
+            player.removeListener(_listener);
+            player.sendPacket(closeRoomMessage());
+            player.sendPacket(closeRoomPacket());
+            player.setMatchingRoom(null);
+            player.sendChanges();
 
-		MatchingRoomManager.getInstance().removeMatchingRoom(this);
-	}
+            MatchingRoomManager.getInstance().addToWaitingList(player);
+        }
 
-	//===============================================================================================================================================
-	//                                                            Abstracts
-	//===============================================================================================================================================
-	public abstract SystemMsg notValidMessage();
+        _members.clear();
 
-	public abstract SystemMsg enterMessage();
+        MatchingRoomManager.getInstance().removeMatchingRoom(this);
+    }
 
-	public abstract SystemMsg exitMessage(boolean toOthers, boolean kick);
+    //===============================================================================================================================================
+    //                                                            Abstracts
+    //===============================================================================================================================================
+    public abstract SystemMsg notValidMessage();
 
-	public abstract SystemMsg closeRoomMessage();
+    public abstract SystemMsg enterMessage();
 
-	public abstract L2GameServerPacket closeRoomPacket();
+    public abstract SystemMsg exitMessage(boolean toOthers, boolean kick);
 
-	public abstract L2GameServerPacket infoRoomPacket();
+    public abstract SystemMsg closeRoomMessage();
 
-	public abstract L2GameServerPacket addMemberPacket(Player $member, Player active);
+    public abstract L2GameServerPacket closeRoomPacket();
 
-	public abstract L2GameServerPacket removeMemberPacket(Player $member, Player active);
+    public abstract L2GameServerPacket infoRoomPacket();
 
-	public abstract L2GameServerPacket updateMemberPacket(Player $member, Player active);
+    public abstract L2GameServerPacket addMemberPacket(Player $member, Player active);
 
-	public abstract L2GameServerPacket membersPacket(Player active);
+    public abstract L2GameServerPacket removeMemberPacket(Player $member, Player active);
 
-	public abstract int getType();
+    public abstract L2GameServerPacket updateMemberPacket(Player $member, Player active);
 
-	public abstract int getMemberType(Player member);
+    public abstract L2GameServerPacket membersPacket(Player active);
 
-	//===============================================================================================================================================
-	//                                                            Broadcast
-	//===============================================================================================================================================
-	@Override
-	public void sendPacket(IStaticPacket... arg)
-	{
-		for (Player player : this)
-			player.sendPacket(arg);
-	}
+    public abstract int getType();
 
-	@Override
-	public void sendMessage(String message)
-	{
-		for(Player member : _members)
-			member.sendMessage(message);
-	}
-	
-	@Override
-	public void sendChatMessage(int objectId, int messageType, String charName, String text)
-	{
-		for(Player member : _members)
-			member.sendChatMessage(objectId, messageType, charName, text);
-	}
+    public abstract int getMemberType(Player member);
 
-	//===============================================================================================================================================
-	//                                                            Getters
-	//===============================================================================================================================================
-	public int getId()
-	{
-		return _id;
-	}
-	
-	public int getMinLevel()
-	{
-		return _minLevel;
-	}
+    //===============================================================================================================================================
+    //                                                            Broadcast
+    //===============================================================================================================================================
+    @Override
+    public void sendPacket(IStaticPacket... arg) {
+        for (Player player : this)
+            player.sendPacket(arg);
+    }
 
-	//===============================================================================================================================================
-	//                                                            Setters
-	//===============================================================================================================================================
-	public void setMinLevel(int minLevel)
-	{
-		_minLevel = minLevel;
-	}
+    @Override
+    public void sendMessage(String message) {
+        for (Player member : _members)
+            member.sendMessage(message);
+    }
 
-	public int getMaxLevel()
-	{
-		return _maxLevel;
-	}
+    @Override
+    public void sendChatMessage(int objectId, int messageType, String charName, String text) {
+        for (Player member : _members)
+            member.sendChatMessage(objectId, messageType, charName, text);
+    }
 
-	public void setMaxLevel(int maxLevel)
-	{
-		_maxLevel = maxLevel;
-	}
+    //===============================================================================================================================================
+    //                                                            Getters
+    //===============================================================================================================================================
+    public int getId() {
+        return _id;
+    }
 
-	public String getTopic()
-	{
-		return _topic;
-	}
+    public int getMinLevel() {
+        return _minLevel;
+    }
 
-	public void setTopic(String topic)
-	{
-		_topic = topic;
-	}
+    //===============================================================================================================================================
+    //                                                            Setters
+    //===============================================================================================================================================
+    public void setMinLevel(int minLevel) {
+        _minLevel = minLevel;
+    }
 
-	public int getMaxMembersSize()
-	{
-		return _maxMemberSize;
-	}
+    public int getMaxLevel() {
+        return _maxLevel;
+    }
 
-	public int getLocationId()
-	{
-		return MatchingRoomManager.getInstance().getLocation(_leader);
-	}
+    public void setMaxLevel(int maxLevel) {
+        _maxLevel = maxLevel;
+    }
 
-	public Collection<Player> getPlayers()
-	{
-		return _members;
-	}
-	
-	public int getLootType()
-	{
-		return _lootType;
-	}
+    public String getTopic() {
+        return _topic;
+    }
 
-	public void setLootType(int lootType)
-	{
-		_lootType = lootType;
-	}
-	
-	@Override
-	public Iterator<Player> iterator()
-	{
-		return _members.iterator();
-	}
+    public void setTopic(String topic) {
+        _topic = topic;
+    }
 
-	@Override
-	public int size()
-	{
-		return _members.size();
-	}
+    public int getMaxMembersSize() {
+        return _maxMemberSize;
+    }
 
-	@Override
-	public Player getLeader()
-	{
-		return _leader;
-	}
+    public int getLocationId() {
+        return MatchingRoomManager.getInstance().getLocation(_leader);
+    }
 
-	@Override
-	public boolean isLeader(Player player)
-	{
-		return _leader == player;
-	}
+    public Collection<Player> getPlayers() {
+        return _members;
+    }
 
-	@Override
-	public List<Player> getMembers(Player ... excluded)
-	{
-		if (excluded != null && excluded.length > 0)
-		{
-			List<Player> members = new ArrayList<Player>();
-			for (Player member : _members)
-			{
-				if (!Util.arrayContains(excluded, member))
-					members.add(member);
-			}
+    public int getLootType() {
+        return _lootType;
+    }
 
-			return members;
-		}
+    public void setLootType(int lootType) {
+        _lootType = lootType;
+    }
 
-		return _members;
-	}
+    @Override
+    public Iterator<Player> iterator() {
+        return _members.iterator();
+    }
 
-	@Override
-	public boolean containsMember(Player player)
-	{
-		return _members.contains(player);
-	}
+    @Override
+    public int size() {
+        return _members.size();
+    }
 
-	public void setMaxMemberSize(int maxMemberSize)
-	{
-		_maxMemberSize = maxMemberSize;
-	}
+    @Override
+    public Player getLeader() {
+        return _leader;
+    }
 
-	private class PartyListenerImpl implements OnPlayerPartyInviteListener, OnPlayerPartyLeaveListener
-	{
-		@Override
-		public void onPartyInvite(Player player)
-		{
-			broadcastPlayerUpdate(player);
-		}
+    @Override
+    public boolean isLeader(Player player) {
+        return _leader == player;
+    }
 
-		@Override
-		public void onPartyLeave(Player player)
-		{
-			broadcastPlayerUpdate(player);
-		}
-	}
+    @Override
+    public List<Player> getMembers(Player... excluded) {
+        if (excluded != null && excluded.length > 0) {
+            List<Player> members = new ArrayList<Player>();
+            for (Player member : _members) {
+                if (!Util.arrayContains(excluded, member))
+                    members.add(member);
+            }
+
+            return members;
+        }
+
+        return _members;
+    }
+
+    @Override
+    public boolean containsMember(Player player) {
+        return _members.contains(player);
+    }
+
+    public void setMaxMemberSize(int maxMemberSize) {
+        _maxMemberSize = maxMemberSize;
+    }
+
+    private class PartyListenerImpl implements OnPlayerPartyInviteListener, OnPlayerPartyLeaveListener {
+        @Override
+        public void onPartyInvite(Player player) {
+            broadcastPlayerUpdate(player);
+        }
+
+        @Override
+        public void onPartyLeave(Player player) {
+            broadcastPlayerUpdate(player);
+        }
+    }
 }

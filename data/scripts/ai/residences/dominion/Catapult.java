@@ -14,171 +14,144 @@ import l2f.gameserver.model.quest.Quest;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.components.NpcString;
-
-import org.napile.primitive.maps.IntObjectMap;
-import org.napile.primitive.maps.impl.HashIntObjectMap;
-
 import quests._729_ProtectTheTerritoryCatapult;
 
-/**
- * @author VISTALL
- * @date 3:35/23.06.2011
- */
-public class Catapult extends DefaultAI
-{
-	private static final IntObjectMap<NpcString[]> MESSAGES = new HashIntObjectMap<NpcString[]>(9);
+import java.util.HashMap;
+import java.util.Map;
 
-	static
-	{
-		MESSAGES.put(81, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_GLUDIO, NpcString.THE_CATAPULT_OF_GLUDIO_HAS_BEEN_DESTROYED});
-		MESSAGES.put(82, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_DION, NpcString.THE_CATAPULT_OF_DION_HAS_BEEN_DESTROYED});
-		MESSAGES.put(83, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_GIRAN, NpcString.THE_CATAPULT_OF_GIRAN_HAS_BEEN_DESTROYED});
-		MESSAGES.put(84, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_OREN, NpcString.THE_CATAPULT_OF_OREN_HAS_BEEN_DESTROYED});
-		MESSAGES.put(85, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_ADEN, NpcString.THE_CATAPULT_OF_ADEN_HAS_BEEN_DESTROYED});
-		MESSAGES.put(86, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_INNADRIL, NpcString.THE_CATAPULT_OF_INNADRIL_HAS_BEEN_DESTROYED});
-		MESSAGES.put(87, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_GODDARD, NpcString.THE_CATAPULT_OF_GODDARD_HAS_BEEN_DESTROYED});
-		MESSAGES.put(88, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_RUNE, NpcString.THE_CATAPULT_OF_RUNE_HAS_BEEN_DESTROYED});
-		MESSAGES.put(89, new NpcString[] {NpcString.PROTECT_THE_CATAPULT_OF_SCHUTTGART, NpcString.THE_CATAPULT_OF_SCHUTTGART_HAS_BEEN_DESTROYED});
-	}
+public class Catapult extends DefaultAI {
+    private static final Map<Integer,NpcString[]> MESSAGES = new HashMap<>(9);
 
-	private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener
-	{
-		@Override
-		public void onPlayerEnter(Player player)
-		{
-			NpcInstance actor = getActor();
-			DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-			if (siegeEvent == null)
-				return;
+    static {
+        MESSAGES.put(81, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GLUDIO, NpcString.THE_CATAPULT_OF_GLUDIO_HAS_BEEN_DESTROYED});
+        MESSAGES.put(82, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_DION, NpcString.THE_CATAPULT_OF_DION_HAS_BEEN_DESTROYED});
+        MESSAGES.put(83, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GIRAN, NpcString.THE_CATAPULT_OF_GIRAN_HAS_BEEN_DESTROYED});
+        MESSAGES.put(84, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_OREN, NpcString.THE_CATAPULT_OF_OREN_HAS_BEEN_DESTROYED});
+        MESSAGES.put(85, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_ADEN, NpcString.THE_CATAPULT_OF_ADEN_HAS_BEEN_DESTROYED});
+        MESSAGES.put(86, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_INNADRIL, NpcString.THE_CATAPULT_OF_INNADRIL_HAS_BEEN_DESTROYED});
+        MESSAGES.put(87, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GODDARD, NpcString.THE_CATAPULT_OF_GODDARD_HAS_BEEN_DESTROYED});
+        MESSAGES.put(88, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_RUNE, NpcString.THE_CATAPULT_OF_RUNE_HAS_BEEN_DESTROYED});
+        MESSAGES.put(89, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_SCHUTTGART, NpcString.THE_CATAPULT_OF_SCHUTTGART_HAS_BEEN_DESTROYED});
+    }
 
-			if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
-				return;
+    private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {
+        @Override
+        public void onPlayerEnter(Player player) {
+            NpcInstance actor = getActor();
+            DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+            if (siegeEvent == null)
+                return;
 
-			Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
+            if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
+                return;
 
-			QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-			questState.setCond(1, false);
-			questState.setStateAndNotSave(Quest.STARTED);
-		}
-	}
+            Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
 
-	private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
+            QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
+            questState.setCond(1, false);
+            questState.setStateAndNotSave(Quest.STARTED);
+        }
+    }
 
-	public Catapult(NpcInstance actor)
-	{
-		super(actor);
-	}
+    private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
 
-		@Override
-	public boolean thinkActive()
-	{
-		return false;
-	}
+    public Catapult(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	public  void onEvtAttacked(Creature attacker, int dam)
-	{
-		NpcInstance actor = getActor();
+    @Override
+    public boolean thinkActive() {
+        return false;
+    }
 
-		DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-		if (siegeEvent == null)
-			return;
+    @Override
+    public void onEvtAttacked(Creature attacker, int dam) {
+        NpcInstance actor = getActor();
 
-		boolean first = actor.getParameter("dominion_first_attack", true);
-		if (first)
-		{
-			actor.setParameter("dominion_first_attack", false);
-			NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
-			Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
-			for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			{
-				if (player.getEvent(DominionSiegeEvent.class) == siegeEvent)
-				{
-					player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+        DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+        if (siegeEvent == null)
+            return;
 
-					QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
-					if (questState == null)
-					{
-						questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-						questState.setCond(1, false);
-						questState.setStateAndNotSave(Quest.STARTED);
-					}
-				}
-			}
-		}
-	}
+        boolean first = actor.getParameter("dominion_first_attack", true);
+        if (first) {
+            actor.setParameter("dominion_first_attack", false);
+            NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
+            Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
+            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+                if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
+                    player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 
-	@Override
-	public  void onEvtAggression(Creature attacker, int d)
-	{
-		//
-	}
+                    QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
+                    if (questState == null) {
+                        questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
+                        questState.setCond(1, false);
+                        questState.setStateAndNotSave(Quest.STARTED);
+                    }
+                }
+            }
+        }
+    }
 
-	@Override
-	public void onEvtDead(Creature killer)
-	{
-		NpcInstance actor = getActor();
-		super.onEvtDead(killer);
-		DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-		if (siegeEvent == null)
-			return;
+    @Override
+    public void onEvtAggression(Creature attacker, int d) {
+        //
+    }
 
-		NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
-		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-		{
-			if (player.getEvent(DominionSiegeEvent.class) == siegeEvent)
-			{
-				player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+    @Override
+    public void onEvtDead(Creature killer) {
+        NpcInstance actor = getActor();
+        super.onEvtDead(killer);
+        DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+        if (siegeEvent == null)
+            return;
 
-				QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
-				if (questState != null)
-					questState.abortQuest();
-			}
-		}
+        NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
+        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
+                player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 
-		siegeEvent.doorAction(DominionSiegeEvent.CATAPULT_DOORS, true);
+                QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
+                if (questState != null)
+                    questState.abortQuest();
+            }
+        }
 
-		Player player = killer.getPlayer();
-		if (player == null)
-			return;
+        siegeEvent.doorAction(DominionSiegeEvent.CATAPULT_DOORS, true);
 
-		if (player.getParty() == null)
-		{
-			DominionSiegeEvent siegeEvent2 = player.getEvent(DominionSiegeEvent.class);
-			if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
-				return;
-			siegeEvent2.addReward(player, DominionSiegeEvent.STATIC_BADGES, 15);
-		}
-		else
-		{
-			for (Player $member : player.getParty())
-			{
-				if ($member.isInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE))
-				{
-					DominionSiegeEvent siegeEvent2 = $member.getEvent(DominionSiegeEvent.class);
-					if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
-						continue;
-					siegeEvent2.addReward($member, DominionSiegeEvent.STATIC_BADGES, 15);
-				}
-			}
-		}
-	}
+        Player player = killer.getPlayer();
+        if (player == null)
+            return;
 
-	@Override
-	public void onEvtSpawn()
-	{
-		super.onEvtSpawn();
+        if (player.getParty() == null) {
+            DominionSiegeEvent siegeEvent2 = player.getEvent(DominionSiegeEvent.class);
+            if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
+                return;
+            siegeEvent2.addReward(player, DominionSiegeEvent.STATIC_BADGES, 15);
+        } else {
+            for (Player $member : player.getParty()) {
+                if ($member.isInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
+                    DominionSiegeEvent siegeEvent2 = $member.getEvent(DominionSiegeEvent.class);
+                    if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
+                        continue;
+                    siegeEvent2.addReward($member, DominionSiegeEvent.STATIC_BADGES, 15);
+                }
+            }
+        }
+    }
 
-		getActor().setParameter("dominion_first_attack", true);
+    @Override
+    public void onEvtSpawn() {
+        super.onEvtSpawn();
 
-		PlayerListenerList.addGlobal(_listener);
-	}
+        getActor().setParameter("dominion_first_attack", true);
 
-	@Override
-	public void onEvtDeSpawn()
-	{
-		super.onEvtDeSpawn();
+        PlayerListenerList.addGlobal(_listener);
+    }
 
-		PlayerListenerList.removeGlobal(_listener);
-	}
+    @Override
+    public void onEvtDeSpawn() {
+        super.onEvtDeSpawn();
+
+        PlayerListenerList.removeGlobal(_listener);
+    }
 }

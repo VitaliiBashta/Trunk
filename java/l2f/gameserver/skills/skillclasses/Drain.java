@@ -1,7 +1,5 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.model.instances.NpcInstance;
@@ -10,88 +8,83 @@ import l2f.gameserver.stats.Formulas.AttackInfo;
 import l2f.gameserver.stats.Stats;
 import l2f.gameserver.templates.StatsSet;
 
-public class Drain extends Skill
-{
-	private double _absorbAbs;
+import java.util.List;
 
-	public Drain(StatsSet set)
-	{
-		super(set);
-		_absorbAbs = set.getDouble("absorbAbs", 0.f);
-	}
+public class Drain extends Skill {
+    private double _absorbAbs;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		int sps = isSSPossible() ? activeChar.getChargedSpiritShot() : 0;
-		boolean ss = isSSPossible() && activeChar.getChargedSoulShot();
-		Creature realTarget;
-		boolean reflected;
-		final boolean corpseSkill = _targetType == SkillTargetType.TARGET_CORPSE;
+    public Drain(StatsSet set) {
+        super(set);
+        _absorbAbs = set.getDouble("absorbAbs", 0.f);
+    }
 
-		for (Creature target : targets)
-			if (target != null)
-			{
-				reflected = !corpseSkill && target.checkReflectSkill(activeChar, this);
-				realTarget = reflected ? activeChar : target;
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        int sps = isSSPossible() ? activeChar.getChargedSpiritShot() : 0;
+        boolean ss = isSSPossible() && activeChar.getChargedSoulShot();
+        Creature realTarget;
+        boolean reflected;
+        final boolean corpseSkill = _targetType == SkillTargetType.TARGET_CORPSE;
 
-				if (getPower() > 0 || _absorbAbs > 0) // Если == 0 значит скилл "отключен"
-				{
-					if (realTarget.isDead() && !corpseSkill)
-						continue;
+        for (Creature target : targets)
+            if (target != null) {
+                reflected = !corpseSkill && target.checkReflectSkill(activeChar, this);
+                realTarget = reflected ? activeChar : target;
 
-					double hp = 0.;
-					double targetHp = realTarget.getCurrentHp();
+                if (getPower() > 0 || _absorbAbs > 0) // Если == 0 значит скилл "отключен"
+                {
+                    if (realTarget.isDead() && !corpseSkill)
+                        continue;
 
-					if (!corpseSkill)
-					{
-						double damage;
-						if (isMagic())
-							damage = Formulas.calcMagicDam(activeChar, realTarget, this, sps);
-						else
-						{
-							AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
-							damage = info.damage;
+                    double hp = 0.;
+                    double targetHp = realTarget.getCurrentHp();
 
-							if (info.lethal_dmg > 0)
-								realTarget.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
-						}
-						double targetCP = realTarget.getCurrentCp();
+                    if (!corpseSkill) {
+                        double damage;
+                        if (isMagic())
+                            damage = Formulas.calcMagicDam(activeChar, realTarget, this, sps);
+                        else {
+                            AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
+                            damage = info.damage;
 
-						// Нельзя восстанавливать HP из CP
-						if (damage > targetCP || !realTarget.isPlayer())
-							hp = (damage - targetCP) * _absorbPart;
+                            if (info.lethal_dmg > 0)
+                                realTarget.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
+                        }
+                        double targetCP = realTarget.getCurrentCp();
 
-						realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
-						if (!reflected)
-							realTarget.doCounterAttack(this, activeChar, false);
-					}
+                        // Нельзя восстанавливать HP из CP
+                        if (damage > targetCP || !realTarget.isPlayer())
+                            hp = (damage - targetCP) * _absorbPart;
 
-					if (_absorbAbs == 0 && _absorbPart == 0)
-						continue;
+                        realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
+                        if (!reflected)
+                            realTarget.doCounterAttack(this, activeChar, false);
+                    }
 
-					hp += _absorbAbs;
+                    if (_absorbAbs == 0 && _absorbPart == 0)
+                        continue;
 
-					// Нельзя восстановить больше hp, чем есть у цели.
-					if (hp > targetHp && !corpseSkill)
-						hp = targetHp;
+                    hp += _absorbAbs;
 
-					double addToHp = Math.max(0, Math.min(hp, activeChar.calcStat(Stats.HP_LIMIT, null, null) * activeChar.getMaxHp() / 100. - activeChar.getCurrentHp()));
+                    // Нельзя восстановить больше hp, чем есть у цели.
+                    if (hp > targetHp && !corpseSkill)
+                        hp = targetHp;
 
-					if (addToHp > 0 && !activeChar.isHealBlocked())
-						activeChar.setCurrentHp(activeChar.getCurrentHp() + addToHp, false);
+                    double addToHp = Math.max(0, Math.min(hp, activeChar.calcStat(Stats.HP_LIMIT, null, null) * activeChar.getMaxHp() / 100. - activeChar.getCurrentHp()));
 
-					if (realTarget.isDead() && corpseSkill && realTarget.isNpc())
-					{
-						activeChar.getAI().setAttackTarget(null);
-						((NpcInstance) realTarget).endDecayTask();
-					}
-				}
+                    if (addToHp > 0 && !activeChar.isHealBlocked())
+                        activeChar.setCurrentHp(activeChar.getCurrentHp() + addToHp, false);
 
-				getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
-			}
+                    if (realTarget.isDead() && corpseSkill && realTarget.isNpc()) {
+                        activeChar.getAI().setAttackTarget(null);
+                        ((NpcInstance) realTarget).endDecayTask();
+                    }
+                }
 
-		if (isMagic() ? sps != 0 : ss)
-			activeChar.unChargeShots(isMagic());
-	}
+                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+            }
+
+        if (isMagic() ? sps != 0 : ss)
+            activeChar.unChargeShots(isMagic());
+    }
 }

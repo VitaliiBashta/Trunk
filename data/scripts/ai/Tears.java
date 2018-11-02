@@ -22,174 +22,157 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * @author Diamond
  */
-public class Tears extends DefaultAI
-{
-	private class DeSpawnTask extends RunnableImpl
-	{
-		@Override
-		public void runImpl()
-		{
-			for (NpcInstance npc : spawns)
-				if (npc != null)
-					npc.deleteMe();
-			spawns.clear();
-			despawnTask = null;
-		}
-	}
+public class Tears extends DefaultAI {
+    private class DeSpawnTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            for (NpcInstance npc : spawns)
+                if (npc != null)
+                    npc.deleteMe();
+            spawns.clear();
+            despawnTask = null;
+        }
+    }
 
-	private class SpawnMobsTask extends RunnableImpl
-	{
-		@Override
-		public void runImpl()
-		{
-			spawnMobs();
-			spawnTask = null;
-		}
-	}
-	
-	private static final Logger LOG = LoggerFactory.getLogger(Tears.class);
+    private class SpawnMobsTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            spawnMobs();
+            spawnTask = null;
+        }
+    }
 
-	final Skill Invincible;
-	final Skill Freezing;
+    private static final Logger LOG = LoggerFactory.getLogger(Tears.class);
 
-	private static final int Water_Dragon_Scale = 2369;
-	private static final int Tears_Copy = 25535;
+    final Skill Invincible;
+    final Skill Freezing;
 
-	ScheduledFuture<?> spawnTask;
-	ScheduledFuture<?> despawnTask;
+    private static final int Water_Dragon_Scale = 2369;
+    private static final int Tears_Copy = 25535;
 
-	List<NpcInstance> spawns = new ArrayList<NpcInstance>();
+    ScheduledFuture<?> spawnTask;
+    ScheduledFuture<?> despawnTask;
 
-	private boolean _isUsedInvincible = false;
+    List<NpcInstance> spawns = new ArrayList<NpcInstance>();
 
-	private int _scale_count = 0;
-	private long _last_scale_time = 0;
+    private boolean _isUsedInvincible = false;
 
-	public Tears(NpcInstance actor)
-	{
-		super(actor);
+    private int _scale_count = 0;
+    private long _last_scale_time = 0;
 
-		TIntObjectHashMap<Skill> skills = getActor().getTemplate().getSkills();
+    public Tears(NpcInstance actor) {
+        super(actor);
 
-		Invincible = skills.get(5420);
-		Freezing = skills.get(5238);
-	}
+        TIntObjectHashMap<Skill> skills = getActor().getTemplate().getSkills();
 
-	@Override
-	protected void onEvtSeeSpell(Skill skill, Creature caster)
-	{
-		NpcInstance actor = getActor();
-		if (actor.isDead() || skill == null || caster == null)
-			return;
+        Invincible = skills.get(5420);
+        Freezing = skills.get(5238);
+    }
 
-		if (System.currentTimeMillis() - _last_scale_time > 5000)
-			_scale_count = 0;
+    @Override
+    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+        NpcInstance actor = getActor();
+        if (actor.isDead() || skill == null || caster == null)
+            return;
 
-		if (skill.getId() == Water_Dragon_Scale)
-		{
-			_scale_count++;
-			_last_scale_time = System.currentTimeMillis();
-		}
+        if (System.currentTimeMillis() - _last_scale_time > 5000)
+            _scale_count = 0;
 
-		Player player = caster.getPlayer();
-		if (player == null)
-			return;
+        if (skill.getId() == Water_Dragon_Scale) {
+            _scale_count++;
+            _last_scale_time = System.currentTimeMillis();
+        }
 
-		int count = 1;
-		Party party = player.getParty();
-		if (party != null)
-			count = party.size();
+        Player player = caster.getPlayer();
+        if (player == null)
+            return;
 
-		// Снимаем неуязвимость
-		if (_scale_count >= count)
-		{
-			_scale_count = 0;
-			actor.getEffectList().stopEffect(Invincible);
-		}
-	}
+        int count = 1;
+        Party party = player.getParty();
+        if (party != null)
+            count = party.size();
 
-	@Override
-	protected boolean createNewTask()
-	{
-		clearTasks();
-		Creature target;
-		if ((target = prepareTarget()) == null)
-			return false;
+        // Снимаем неуязвимость
+        if (_scale_count >= count) {
+            _scale_count = 0;
+            actor.getEffectList().stopEffect(Invincible);
+        }
+    }
 
-		NpcInstance actor = getActor();
-		if (actor.isDead())
-			return false;
+    @Override
+    protected boolean createNewTask() {
+        clearTasks();
+        Creature target;
+        if ((target = prepareTarget()) == null)
+            return false;
 
-		double distance = actor.getDistance(target);
-		double actor_hp_precent = actor.getCurrentHpPercents();
-		int rnd_per = Rnd.get(100);
+        NpcInstance actor = getActor();
+        if (actor.isDead())
+            return false;
 
-		if (actor_hp_precent < 15 && !_isUsedInvincible)
-		{
-			_isUsedInvincible = true;
-			addTaskBuff(actor, Invincible);
-			Functions.npcSay(actor, "Prepare for death!");
-			return true;
-		}
+        double distance = actor.getDistance(target);
+        double actor_hp_precent = actor.getCurrentHpPercents();
+        int rnd_per = Rnd.get(100);
 
-		if (rnd_per < 5 && spawnTask == null && despawnTask == null)
-		{
-			actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5441, 1, 3000, 0));
-			spawnTask = ThreadPoolManager.getInstance().schedule(new SpawnMobsTask(), 3000);
-			return true;
-		}
+        if (actor_hp_precent < 15 && !_isUsedInvincible) {
+            _isUsedInvincible = true;
+            addTaskBuff(actor, Invincible);
+            Functions.npcSay(actor, "Prepare for death!");
+            return true;
+        }
 
-		if (!actor.isAMuted() && rnd_per < 75)
-			return chooseTaskAndTargets(null, target, distance);
+        if (rnd_per < 5 && spawnTask == null && despawnTask == null) {
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5441, 1, 3000, 0));
+            spawnTask = ThreadPoolManager.getInstance().schedule(new SpawnMobsTask(), 3000);
+            return true;
+        }
 
-		return chooseTaskAndTargets(Freezing, target, distance);
-	}
+        if (!actor.isAMuted() && rnd_per < 75)
+            return chooseTaskAndTargets(null, target, distance);
 
-	private void spawnMobs()
-	{
-		NpcInstance actor = getActor();
+        return chooseTaskAndTargets(Freezing, target, distance);
+    }
 
-		Location pos;
-		Creature hated;
+    private void spawnMobs() {
+        NpcInstance actor = getActor();
 
-		// Спавним 9 копий
-		for (int i = 0; i < 9; i++)
-			try
-			{
-				pos = Location.findPointToStay(144298, 154420, -11854, 300, 320, actor.getGeoIndex());
-				SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(Tears_Copy));
-				sp.setLoc(pos);
-				sp.setReflection(actor.getReflection());
-				NpcInstance copy = sp.doSpawn(true);
-				spawns.add(copy);
+        Location pos;
+        Creature hated;
 
-				// Атакуем случайную цель
-				hated = actor.getAggroList().getRandomHated();
-				if (hated != null)
-					copy.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, hated, Rnd.get(1, 100));
-			}
-			catch (RuntimeException e)
-			{
-				LOG.error("Error while spawning Copies of Tears", e);
-			}
+        // Спавним 9 копий
+        for (int i = 0; i < 9; i++)
+            try {
+                pos = Location.findPointToStay(144298, 154420, -11854, 300, 320, actor.getGeoIndex());
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(Tears_Copy));
+                sp.setLoc(pos);
+                sp.setReflection(actor.getReflection());
+                NpcInstance copy = sp.doSpawn(true);
+                spawns.add(copy);
 
-		// Прячемся среди них
-		pos = Location.findPointToStay(144298, 154420, -11854, 300, 320, actor.getReflectionId());
-		actor.teleToLocation(pos);
+                // Атакуем случайную цель
+                hated = actor.getAggroList().getRandomHated();
+                if (hated != null)
+                    copy.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, hated, Rnd.get(1, 100));
+            } catch (RuntimeException e) {
+                LOG.error("Error while spawning Copies of Tears", e);
+            }
 
-		// Атакуем случайную цель
-		hated = actor.getAggroList().getRandomHated();
-		if (hated != null)
-			actor.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, hated, Rnd.get(1, 100));
+        // Прячемся среди них
+        pos = Location.findPointToStay(144298, 154420, -11854, 300, 320, actor.getReflectionId());
+        actor.teleToLocation(pos);
 
-		if (despawnTask != null)
-			despawnTask.cancel(false);
-		despawnTask = ThreadPoolManager.getInstance().schedule(new DeSpawnTask(), 30000);
-	}
+        // Атакуем случайную цель
+        hated = actor.getAggroList().getRandomHated();
+        if (hated != null)
+            actor.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, hated, Rnd.get(1, 100));
 
-	@Override
-	protected boolean randomWalk()
-	{
-		return false;
-	}
+        if (despawnTask != null)
+            despawnTask.cancel(false);
+        despawnTask = ThreadPoolManager.getInstance().schedule(new DeSpawnTask(), 30000);
+    }
+
+    @Override
+    protected boolean randomWalk() {
+        return false;
+    }
 }

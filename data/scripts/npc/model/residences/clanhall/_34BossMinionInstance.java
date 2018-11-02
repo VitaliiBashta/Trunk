@@ -10,27 +10,24 @@ import npc.model.residences.SiegeGuardInstance;
  * @author VISTALL
  * @date 17:50/13.05.2011
  */
-public abstract class _34BossMinionInstance extends SiegeGuardInstance implements _34SiegeGuard
-{
-	public _34BossMinionInstance(int objectId, NpcTemplate template)
-	{
-		super(objectId, template);
-	}
+public abstract class _34BossMinionInstance extends SiegeGuardInstance implements _34SiegeGuard {
+    public _34BossMinionInstance(int objectId, NpcTemplate template) {
+        super(objectId, template);
+    }
 
-	@Override
-	public void onDeath(Creature killer)
-	{
-		setCurrentHp(1, true);
-	}
+    @Override
+    public void onDeath(Creature killer) {
+        setCurrentHp(1, true);
+    }
 
-	@Override
-	public void onSpawn()
-	{
-		super.onSpawn();
+    @Override
+    public void onSpawn() {
+        super.onSpawn();
 
-		Functions.npcShout(this, spawnChatSay());
-	}
+        Functions.npcShout(this, spawnChatSay());
+    }
 
-	public abstract NpcString spawnChatSay();
-	public abstract NpcString teleChatSay();
+    public abstract NpcString spawnChatSay();
+
+    public abstract NpcString teleChatSay();
 }

@@ -12,40 +12,37 @@ import l2f.gameserver.model.items.ItemInstance;
  * 60 f2 ff ff 		z
  * 01 00 00 00 		show item count
  * 7a 00 00 00      count                                         .
- *
+ * <p>
  * format  dddddddd
  */
-public class SpawnItem extends L2GameServerPacket
-{
-	private int _objectId;
-	private int _itemId;
-	private int _x, _y, _z;
-	private int _stackable;
-	private long _count;
+public class SpawnItem extends L2GameServerPacket {
+    private int _objectId;
+    private int _itemId;
+    private int _x, _y, _z;
+    private int _stackable;
+    private long _count;
 
-	public SpawnItem(ItemInstance item)
-	{
-		_objectId = item.getObjectId();
-		_itemId = item.getItemId();
-		_x = item.getX();
-		_y = item.getY();
-		_z = item.getZ();
-		_stackable = item.isStackable() ? 0x01 : 0x00;
-		_count = item.getCount();
-	}
+    public SpawnItem(ItemInstance item) {
+        _objectId = item.getObjectId();
+        _itemId = item.getItemId();
+        _x = item.getX();
+        _y = item.getY();
+        _z = item.getZ();
+        _stackable = item.isStackable() ? 0x01 : 0x00;
+        _count = item.getCount();
+    }
 
-	@Override
-	protected final void writeImpl()
-	{
-		writeC(0x05);
-		writeD(_objectId);
-		writeD(_itemId);
+    @Override
+    protected final void writeImpl() {
+        writeC(0x05);
+        writeD(_objectId);
+        writeD(_itemId);
 
-		writeD(_x);
-		writeD(_y);
-		writeD(_z + Config.CLIENT_Z_SHIFT);
-		writeD(_stackable);
-		writeQ(_count);
-		writeD(0x00); //c2
-	}
+        writeD(_x);
+        writeD(_y);
+        writeD(_z + Config.CLIENT_Z_SHIFT);
+        writeD(_stackable);
+        writeQ(_count);
+        writeD(0x00); //c2
+    }
 }

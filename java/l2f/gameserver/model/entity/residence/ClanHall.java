@@ -1,8 +1,5 @@
 package l2f.gameserver.model.entity.residence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
 import l2f.commons.dbutils.DbUtils;
 import l2f.gameserver.dao.ClanDataDAO;
 import l2f.gameserver.dao.ClanHallDAO;
@@ -20,269 +17,228 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.DoorTemplate;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.templates.item.ItemTemplate;
-
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClanHall extends Residence
-{
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
-	private static final Logger _log = LoggerFactory.getLogger(ClanHall.class);
+public final class ClanHall extends Residence {
+    private static final long serialVersionUID = 1L;
 
-	private static final int REWARD_CYCLE = 168; // 1 week - 7 days - 168 hours
-	private final int _grade;
-	private final long _rentalFee;
-	private final long _minBid;
-	private final long _deposit;
-	private int _auctionLength;
-	private long _auctionMinBid;
-	private String _auctionDescription = StringUtils.EMPTY;
+    private static final Logger _log = LoggerFactory.getLogger(ClanHall.class);
 
-	public ClanHall(StatsSet set)
-	{
-		super(set);
-		_grade = set.getInteger("grade", 0);
-		_rentalFee = set.getInteger("rental_fee", 0);
-		_minBid = set.getInteger("min_bid", 0);
-		_deposit = set.getInteger("deposit", 0);
-	}
+    private static final int REWARD_CYCLE = 168; // 1 week - 7 days - 168 hours
+    private final int _grade;
+    private final long _rentalFee;
+    private final long _minBid;
+    private final long _deposit;
+    private int _auctionLength;
+    private long _auctionMinBid;
+    private String _auctionDescription = "";
 
-	@Override
-	public void init()
-	{
-		initZone();
-		initEvent();
+    public ClanHall(StatsSet set) {
+        super(set);
+        _grade = set.getInteger("grade", 0);
+        _rentalFee = set.getInteger("rental_fee", 0);
+        _minBid = set.getInteger("min_bid", 0);
+        _deposit = set.getInteger("deposit", 0);
+    }
 
-		// Alexander - Add a listener to get zone enter events
-		//getZone().addListener(new ZoneListener());
+    @Override
+    public void init() {
+        initZone();
+        initEvent();
 
-		loadData();
-		loadFunctions();
-		rewardSkills();
+        // Alexander - Add a listener to get zone enter events
+        //getZone().addListener(new ZoneListener());
 
-		// если это Аукционный КХ, и есть овнер, и КХ, непродается
-		if ((getSiegeEvent().getClass() == ClanHallAuctionEvent.class) && (_owner != null) && (getAuctionLength() == 0))
-		{
-			startCycleTask();
-		}
-	}
+        loadData();
+        loadFunctions();
+        rewardSkills();
 
-	@Override
-	public void changeOwner(Clan clan)
-	{
-		Clan oldOwner = getOwner();
+        // если это Аукционный КХ, и есть овнер, и КХ, непродается
+        if ((getSiegeEvent().getClass() == ClanHallAuctionEvent.class) && (_owner != null) && (getAuctionLength() == 0)) {
+            startCycleTask();
+        }
+    }
 
-		if ((oldOwner != null) && ((clan == null) || (clan.getClanId() != oldOwner.getClanId())))
-		{
-			removeSkills();
-			oldOwner.setHasHideout(0);
+    @Override
+    public void changeOwner(Clan clan) {
+        Clan oldOwner = getOwner();
 
-			cancelCycleTask();
-		}
+        if ((oldOwner != null) && ((clan == null) || (clan.getClanId() != oldOwner.getClanId()))) {
+            removeSkills();
+            oldOwner.setHasHideout(0);
 
-		updateOwnerInDB(clan);
-		rewardSkills();
+            cancelCycleTask();
+        }
 
-		update();
+        updateOwnerInDB(clan);
+        rewardSkills();
 
-		if ((clan == null) && (getSiegeEvent().getClass() == ClanHallAuctionEvent.class))
-		{
-			getSiegeEvent().reCalcNextTime(false);
-		}
-	}
+        update();
 
-	@Override
-	public ResidenceType getType()
-	{
-		return ResidenceType.ClanHall;
-	}
+        if ((clan == null) && (getSiegeEvent().getClass() == ClanHallAuctionEvent.class)) {
+            getSiegeEvent().reCalcNextTime(false);
+        }
+    }
 
-	@Override
-	protected void loadData()
-	{
-		_owner = ClanDataDAO.getInstance().getOwner(this);
+    @Override
+    public ResidenceType getType() {
+        return ResidenceType.ClanHall;
+    }
 
-		ClanHallDAO.getInstance().select(this);
-	}
+    @Override
+    protected void loadData() {
+        _owner = ClanDataDAO.getInstance().getOwner(this);
 
-	private void updateOwnerInDB(Clan clan)
-	{
-		_owner = clan;
+        ClanHallDAO.getInstance().select(this);
+    }
 
-		Connection con = null;
-		PreparedStatement statement = null;
-		try
-		{
-			con = DatabaseFactory.getInstance().getConnection();
-			statement = con.prepareStatement("UPDATE clan_data SET hasHideout=0 WHERE hasHideout=?");
-			statement.setInt(1, getId());
-			statement.execute();
-			DbUtils.close(statement);
+    private void updateOwnerInDB(Clan clan) {
+        _owner = clan;
 
-			statement = con.prepareStatement("UPDATE clan_data SET hasHideout=? WHERE clan_id=?");
-			statement.setInt(1, getId());
-			statement.setInt(2, getOwnerId());
-			statement.execute();
-			DbUtils.close(statement);
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = DatabaseFactory.getInstance().getConnection();
+            statement = con.prepareStatement("UPDATE clan_data SET hasHideout=0 WHERE hasHideout=?");
+            statement.setInt(1, getId());
+            statement.execute();
+            DbUtils.close(statement);
 
-			statement = con.prepareStatement("DELETE FROM residence_functions WHERE id=?");
-			statement.setInt(1, getId());
-			statement.execute();
-			DbUtils.close(statement);
+            statement = con.prepareStatement("UPDATE clan_data SET hasHideout=? WHERE clan_id=?");
+            statement.setInt(1, getId());
+            statement.setInt(2, getOwnerId());
+            statement.execute();
+            DbUtils.close(statement);
 
-			// Announce to clan memebers
-			if (clan != null)
-			{
-				clan.setHasHideout(getId()); // Set has hideout flag for new owner
-				clan.broadcastClanStatus(false, true, false);
-			}
-		}
-		catch (Exception e)
-		{
-			_log.warn("Exception: updateOwnerInDB(L2Clan clan): " + e, e);
-		}
-		finally
-		{
-			DbUtils.closeQuietly(con, statement);
-		}
-	}
+            statement = con.prepareStatement("DELETE FROM residence_functions WHERE id=?");
+            statement.setInt(1, getId());
+            statement.execute();
+            DbUtils.close(statement);
 
-	public int getGrade()
-	{
-		return _grade;
-	}
+            // Announce to clan memebers
+            if (clan != null) {
+                clan.setHasHideout(getId()); // Set has hideout flag for new owner
+                clan.broadcastClanStatus(false, true, false);
+            }
+        } catch (Exception e) {
+            _log.warn("Exception: updateOwnerInDB(L2Clan clan): " + e, e);
+        } finally {
+            DbUtils.closeQuietly(con, statement);
+        }
+    }
 
-	@Override
-	public void update()
-	{
-		ClanHallDAO.getInstance().update(this);
-	}
+    public int getGrade() {
+        return _grade;
+    }
 
-	public int getAuctionLength()
-	{
-		return _auctionLength;
-	}
+    @Override
+    public void update() {
+        ClanHallDAO.getInstance().update(this);
+    }
 
-	public void setAuctionLength(int auctionLength)
-	{
-		_auctionLength = auctionLength;
-	}
+    public int getAuctionLength() {
+        return _auctionLength;
+    }
 
-	public String getAuctionDescription()
-	{
-		return _auctionDescription;
-	}
+    public void setAuctionLength(int auctionLength) {
+        _auctionLength = auctionLength;
+    }
 
-	public void setAuctionDescription(String auctionDescription)
-	{
-		_auctionDescription = auctionDescription == null ? StringUtils.EMPTY : auctionDescription;
-	}
+    public String getAuctionDescription() {
+        return _auctionDescription;
+    }
 
-	public long getAuctionMinBid()
-	{
-		return _auctionMinBid;
-	}
+    public void setAuctionDescription(String auctionDescription) {
+        _auctionDescription = auctionDescription == null ? "" : auctionDescription;
+    }
 
-	public void setAuctionMinBid(long auctionMinBid)
-	{
-		_auctionMinBid = auctionMinBid;
-	}
+    public long getAuctionMinBid() {
+        return _auctionMinBid;
+    }
 
-	public long getRentalFee()
-	{
-		return _rentalFee;
-	}
+    public void setAuctionMinBid(long auctionMinBid) {
+        _auctionMinBid = auctionMinBid;
+    }
 
-	public long getBaseMinBid()
-	{
-		return _minBid;
-	}
+    public long getRentalFee() {
+        return _rentalFee;
+    }
 
-	public long getDeposit()
-	{
-		return _deposit;
-	}
+    public long getBaseMinBid() {
+        return _minBid;
+    }
 
-	@Override
-	public void chanceCycle()
-	{
-		super.chanceCycle();
+    public long getDeposit() {
+        return _deposit;
+    }
 
-		setPaidCycle(getPaidCycle() + 1);
-		if (getPaidCycle() >= REWARD_CYCLE)
-		{
-			if (_owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > _rentalFee)
-			{
-				_owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, _rentalFee, "Clan Hall Cycle");
-				setPaidCycle(0);
-			}
-			else
-			{
-				UnitMember member = _owner.getLeader();
+    @Override
+    public void chanceCycle() {
+        super.chanceCycle();
 
-				if (member.isOnline())
-				{
-					member.getPlayer().sendPacket(SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED);
-				}
-				else
-				{
-					PlayerMessageStack.getInstance().mailto(member.getObjectId(), SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED.packet(null));
-				}
+        setPaidCycle(getPaidCycle() + 1);
+        if (getPaidCycle() >= REWARD_CYCLE) {
+            if (_owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > _rentalFee) {
+                _owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, _rentalFee, "Clan Hall Cycle");
+                setPaidCycle(0);
+            } else {
+                UnitMember member = _owner.getLeader();
 
-				changeOwner(null);
-			}
-		}
-	}
+                if (member.isOnline()) {
+                    member.getPlayer().sendPacket(SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED);
+                } else {
+                    PlayerMessageStack.getInstance().mailto(member.getObjectId(), SystemMsg.THE_CLAN_HALL_FEE_IS_ONE_WEEK_OVERDUE_THEREFORE_THE_CLAN_HALL_OWNERSHIP_HAS_BEEN_REVOKED.packet(null));
+                }
 
-	/**
-	 * Alexander
-	 * @return Returns true if all clan hall doors are closed
-	 */
-	private final boolean isDoorsClosed()
-	{
-		for (DoorTemplate door : DoorHolder.getInstance().getDoors().values())
-		{
-			if (door != null && door.getAIParams().getInteger("residence_id", 0) == getId() && door.isOpened())
-				return false;
-		}
+                changeOwner(null);
+            }
+        }
+    }
 
-		return true;
-	}
+    /**
+     * Alexander
+     *
+     * @return Returns true if all clan hall doors are closed
+     */
+    private final boolean isDoorsClosed() {
+        for (DoorTemplate door : DoorHolder.getInstance().getDoors().values()) {
+            if (door != null && door.getAIParams().getInteger("residence_id", 0) == getId() && door.isOpened())
+                return false;
+        }
 
-	// Alexander - Listener to control players that enter the clan hall, when doors are closed
-	private class ZoneListener implements OnZoneEnterLeaveListener
-	{
-		@Override
-		public void onZoneEnter(Zone zone, Creature actor)
-		{
-			if (!actor.isPlayer())
-				return;
+        return true;
+    }
 
-			// No gms
-			if (actor.getAccessLevel() > 0)
-				return;
+    // Alexander - Listener to control players that enter the clan hall, when doors are closed
+    private class ZoneListener implements OnZoneEnterLeaveListener {
+        @Override
+        public void onZoneEnter(Zone zone, Creature actor) {
+            if (!actor.isPlayer())
+                return;
 
-			Player player = actor.getPlayer();
+            // No gms
+            if (actor.getAccessLevel() > 0)
+                return;
 
-			// Clan Hall owner
-			if (player.getClanId() == getOwnerId())
-				return;
+            Player player = actor.getPlayer();
 
-			// Doors opened
-			if (!isDoorsClosed())
-				return;
+            // Clan Hall owner
+            if (player.getClanId() == getOwnerId())
+                return;
 
-			player.teleToLocation(getBanishPoint());
-		}
+            // Doors opened
+            if (!isDoorsClosed())
+                return;
 
-		@Override
-		public void onZoneLeave(Zone zone, Creature actor)
-		{
-		}
-	}
+            player.teleToLocation(getBanishPoint());
+        }
+
+        @Override
+        public void onZoneLeave(Zone zone, Creature actor) {
+        }
+    }
 }

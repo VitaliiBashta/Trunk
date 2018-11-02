@@ -1,332 +1,283 @@
 package l2f.loginserver.gameservercon;
 
+import l2f.loginserver.ThreadPoolManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.channels.ClosedSelectorException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
-import l2f.loginserver.ThreadPoolManager;
+public class GameServerCommunication extends Thread {
+    private static final Logger _log = LoggerFactory.getLogger(GameServerCommunication.class);
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+    private static final GameServerCommunication instance = new GameServerCommunication();
 
-public class GameServerCommunication extends Thread
-{
-	private static final Logger _log = LoggerFactory.getLogger(GameServerCommunication.class);
+    private final ByteBuffer writeBuffer = ByteBuffer.allocate(64 * 1024).order(ByteOrder.LITTLE_ENDIAN);
 
-	private static final GameServerCommunication instance = new GameServerCommunication();
+    private Selector selector;
 
-	private final ByteBuffer writeBuffer = ByteBuffer.allocate(64 * 1024).order(ByteOrder.LITTLE_ENDIAN);
+    private boolean shutdown;
 
-	private Selector selector;
+    private GameServerCommunication() {
 
-	private boolean shutdown;
+    }
 
-	private GameServerCommunication()
-	{
+    public static GameServerCommunication getInstance() {
+        return instance;
+    }
 
-	}
+    public void openServerSocket(InetAddress address, int tcpPort) throws IOException {
+        selector = Selector.open();
 
-	public static GameServerCommunication getInstance()
-	{
-		return instance;
-	}
+        ServerSocketChannel selectable = ServerSocketChannel.open();
+        selectable.configureBlocking(false);
 
-	public void openServerSocket(InetAddress address, int tcpPort) throws IOException
-	{
-		selector = Selector.open();
+        selectable.socket().bind(address == null ? new InetSocketAddress(tcpPort) : new InetSocketAddress(address, tcpPort));
+        selectable.register(selector, selectable.validOps());
+    }
 
-		ServerSocketChannel selectable = ServerSocketChannel.open();
-		selectable.configureBlocking(false);
+    @Override
+    public void run() {
+        Set<SelectionKey> keys;
+        Iterator<SelectionKey> iterator;
+        SelectionKey key = null;
+        int opts;
 
-		selectable.socket().bind(address == null ? new InetSocketAddress(tcpPort) : new InetSocketAddress(address, tcpPort));
-		selectable.register(selector, selectable.validOps());
-	}
+        while (!isShutdown())
+            try {
+                selector.select();
+                keys = selector.selectedKeys();
+                iterator = keys.iterator();
 
-	@Override
-	public void run()
-	{
-		Set<SelectionKey> keys;
-		Iterator<SelectionKey> iterator;
-		SelectionKey key = null;
-		int opts;
+                while (iterator.hasNext()) {
+                    key = iterator.next();
+                    iterator.remove();
 
-		while (!isShutdown())
-			try
-			{
-				selector.select();
-				keys = selector.selectedKeys();
-				iterator = keys.iterator();
+                    if (!key.isValid()) {
+                        close(key);
+                        continue;
+                    }
 
-				while (iterator.hasNext())
-				{
-					key = iterator.next();
-					iterator.remove();
+                    opts = key.readyOps();
 
-					if (!key.isValid())
-					{
-						close(key);
-						continue;
-					}
+                    switch (opts) {
+                        case SelectionKey.OP_CONNECT:
+                            close(key);
+                            break;
+                        case SelectionKey.OP_ACCEPT:
+                            accept(key);
+                            break;
+                        case SelectionKey.OP_WRITE:
+                            write(key);
+                            break;
+                        case SelectionKey.OP_READ:
+                            read(key);
+                            break;
+                        case SelectionKey.OP_READ | SelectionKey.OP_WRITE:
+                            write(key);
+                            read(key);
+                            break;
+                    }
+                }
+            } catch (ClosedSelectorException e) {
+                _log.error("Selector " + selector + " closed!");
+                return;
+            } catch (IOException e) {
+                _log.error("Gameserver I/O error: " + e.getMessage());
+                close(key);
+            } catch (Exception e) {
+                _log.error("", e);
+            }
+    }
 
-					opts = key.readyOps();
+    public void accept(SelectionKey key) throws IOException {
+        ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+        SocketChannel sc;
+        SelectionKey clientKey;
 
-					switch (opts)
-					{
-						case SelectionKey.OP_CONNECT:
-							close(key);
-							break;
-						case SelectionKey.OP_ACCEPT:
-							accept(key);
-							break;
-						case SelectionKey.OP_WRITE:
-							write(key);
-							break;
-						case SelectionKey.OP_READ:
-							read(key);
-							break;
-						case SelectionKey.OP_READ | SelectionKey.OP_WRITE:
-							write(key);
-							read(key);
-							break;
-					}
-				}
-			}
-			catch (ClosedSelectorException e)
-			{
-				_log.error("Selector " + selector + " closed!");
-				return;
-			}
-			catch (IOException e)
-			{
-				_log.error("Gameserver I/O error: " + e.getMessage());
-				close(key);
-			}
-			catch (Exception e)
-			{
-				_log.error("", e);
-			}
-	}
+        sc = ssc.accept();
+        sc.configureBlocking(false);
+        clientKey = sc.register(selector, SelectionKey.OP_READ);
 
-	public void accept(SelectionKey key) throws IOException
-	{
-		ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
-		SocketChannel sc;
-		SelectionKey clientKey;
+        GameServerConnection conn;
+        clientKey.attach(conn = new GameServerConnection(clientKey));
+        conn.setGameServer(new GameServer(conn));
+    }
 
-		sc = ssc.accept();
-		sc.configureBlocking(false);
-		clientKey = sc.register(selector, SelectionKey.OP_READ);
+    public void read(SelectionKey key) throws IOException {
+        SocketChannel channel = (SocketChannel) key.channel();
+        GameServerConnection conn = (GameServerConnection) key.attachment();
+        GameServer gs = conn.getGameServer();
+        ByteBuffer buf = conn.getReadBuffer();
 
-		GameServerConnection conn;
-		clientKey.attach(conn = new GameServerConnection(clientKey));
-		conn.setGameServer(new GameServer(conn));
-	}
+        int count;
 
-	public void read(SelectionKey key) throws IOException
-	{
-		SocketChannel channel = (SocketChannel) key.channel();
-		GameServerConnection conn = (GameServerConnection) key.attachment();
-		GameServer gs = conn.getGameServer();
-		ByteBuffer buf = conn.getReadBuffer();
+        count = channel.read(buf);
 
-		int count;
-		
-		count = channel.read(buf);
+        if (count == -1) {
+            close(key);
+            return;
+        } else if (count == 0)
+            return;
 
-		if (count == -1)
-		{
-			close(key);
-			return;
-		}
-		else if (count == 0)
-			return;
+        buf.flip();
 
-		buf.flip();
+        while (tryReadPacket(key, gs, buf)) ;
+    }
 
-		while (tryReadPacket(key, gs, buf));
-	}
+    protected boolean tryReadPacket(SelectionKey key, GameServer gs, ByteBuffer buf) throws IOException {
+        int pos = buf.position();
+        // проверяем, хватает ли нам байт для чтения заголовка и не пустого тела пакета
+        if (buf.remaining() > 2) {
+            // получаем ожидаемый размер пакета
+            int size = buf.getShort() & 0xffff;
 
-	protected boolean tryReadPacket(SelectionKey key, GameServer gs, ByteBuffer buf) throws IOException
-	{
-		int pos = buf.position();
-		// проверяем, хватает ли нам байт для чтения заголовка и не пустого тела пакета
-		if (buf.remaining() > 2)
-		{
-			// получаем ожидаемый размер пакета
-			int size = buf.getShort() & 0xffff;
+            // проверяем корректность размера
+            if (size <= 2) {
+                throw new IOException("Incorrect packet size: <= 2");
+            }
 
-			// проверяем корректность размера
-			if (size <= 2)
-			{
-				throw new IOException("Incorrect packet size: <= 2");
-			}
+            //ожидаемый размер тела пакета
+            size -= 2;
 
-			//ожидаемый размер тела пакета
-			size -= 2;
+            // проверяем, хватает ли байт на чтение тела
+            if (size <= buf.remaining()) {
+                //  apply limit
+                int limit = buf.limit();
+                buf.limit(pos + size + 2);
 
-			// проверяем, хватает ли байт на чтение тела
-			if (size <= buf.remaining())
-			{
-				//  apply limit
-				int limit = buf.limit();
-				buf.limit(pos + size + 2);
+                ReceivablePacket rp = PacketHandler.handlePacket(gs, buf);
 
-				ReceivablePacket rp = PacketHandler.handlePacket(gs, buf);
+                if (rp != null) {
+                    rp.setByteBuffer(buf);
+                    rp.setClient(gs);
 
-				if (rp != null)
-				{
-					rp.setByteBuffer(buf);
-					rp.setClient(gs);
+                    if (rp.read())
+                        ThreadPoolManager.getInstance().execute(rp);
 
-					if (rp.read())
-						ThreadPoolManager.getInstance().execute(rp);
+                    rp.setByteBuffer(null);
+                }
 
-					rp.setByteBuffer(null);
-				}
+                buf.limit(limit);
+                buf.position(pos + size + 2);
 
-				buf.limit(limit);
-				buf.position(pos + size + 2);
+                // закончили чтение из буфера, почистим
+                if (!buf.hasRemaining()) {
+                    buf.clear();
+                    return false;
+                }
 
-				// закончили чтение из буфера, почистим
-				if (!buf.hasRemaining())
-				{
-					buf.clear();
-					return false;
-				}
+                return true;
+            }
 
-				return true;
-			}
+            // не хватает данных на чтение тела пакета, сбрасываем позицию
+            buf.position(pos);
+        }
 
-			// не хватает данных на чтение тела пакета, сбрасываем позицию
-			buf.position(pos);
-		}
+        buf.compact();
 
-		buf.compact();
+        return false;
+    }
 
-		return false;
-	}
+    public void write(SelectionKey key) throws IOException {
+        GameServerConnection conn = (GameServerConnection) key.attachment();
+        GameServer gs = conn.getGameServer();
+        SocketChannel channel = (SocketChannel) key.channel();
+        ByteBuffer buf = getWriteBuffer();
 
-	public void write(SelectionKey key) throws IOException
-	{
-		GameServerConnection conn = (GameServerConnection) key.attachment();
-		GameServer gs = conn.getGameServer();
-		SocketChannel channel = (SocketChannel) key.channel();
-		ByteBuffer buf = getWriteBuffer();
+        conn.disableWriteInterest();
 
-		conn.disableWriteInterest();
-		
-		Queue<SendablePacket> sendQueue = conn.sendQueue;
-		Lock sendLock = conn.sendLock;
-		
-		boolean done;
-		
-		sendLock.lock();
-		try
-		{
-			int i = 0;
-			SendablePacket sp;
-			while (i++ < 64 && (sp = sendQueue.poll()) != null)
-			{
-				int headerPos = buf.position();
-				buf.position(headerPos + 2);
+        Queue<SendablePacket> sendQueue = conn.sendQueue;
+        Lock sendLock = conn.sendLock;
 
-				sp.setByteBuffer(buf);
-				sp.setClient(gs);
+        boolean done;
 
-				// write content to buffer
-				sp.write();
+        sendLock.lock();
+        try {
+            int i = 0;
+            SendablePacket sp;
+            while (i++ < 64 && (sp = sendQueue.poll()) != null) {
+                int headerPos = buf.position();
+                buf.position(headerPos + 2);
 
-				// size (incl header)
-				int dataSize = buf.position() - headerPos - 2;
-				if (dataSize == 0)
-				{
-					buf.position(headerPos);
-					continue;
-				}
+                sp.setByteBuffer(buf);
+                sp.setClient(gs);
 
-				// prepend header
-				buf.position(headerPos);
-				buf.putShort((short) (dataSize + 2));
-				buf.position(headerPos + dataSize + 2);
-			}
-			
-			done = sendQueue.isEmpty();
-			if (done)
-				conn.disableWriteInterest();
-		}
-		finally
-		{
-			sendLock.unlock();
-		}
+                // write content to buffer
+                sp.write();
 
-		buf.flip();
+                // size (incl header)
+                int dataSize = buf.position() - headerPos - 2;
+                if (dataSize == 0) {
+                    buf.position(headerPos);
+                    continue;
+                }
 
-		channel.write(buf);
+                // prepend header
+                buf.position(headerPos);
+                buf.putShort((short) (dataSize + 2));
+                buf.position(headerPos + dataSize + 2);
+            }
 
-		if (buf.remaining() > 0)
-		{
-			buf.compact();
-			done = false;
-		}
-		else
-			buf.clear();
-		
-		if (!done)
-		{
-			if (conn.enableWriteInterest())
-				selector.wakeup();
-		}		
-	}
+            done = sendQueue.isEmpty();
+            if (done)
+                conn.disableWriteInterest();
+        } finally {
+            sendLock.unlock();
+        }
 
-	private ByteBuffer getWriteBuffer()
-	{
-		return writeBuffer;
-	}
+        buf.flip();
 
-	public void close(SelectionKey key)
-	{
-		if (key == null)
-			return;
-		
-		try
-		{
-			try
-			{
-				GameServerConnection conn = (GameServerConnection) key.attachment();
-				if (conn != null)
-					conn.onDisconnection();
-			}
-			finally
-			{
-				key.channel().close();
-				key.cancel();
-			}
-		}
-		catch (IOException e)
-		{
-			_log.error("", e);
-		}
-	}
+        channel.write(buf);
 
-	public boolean isShutdown()
-	{
-		return shutdown;
-	}
+        if (buf.remaining() > 0) {
+            buf.compact();
+            done = false;
+        } else
+            buf.clear();
 
-	public void setShutdown(boolean shutdown)
-	{
-		this.shutdown = shutdown;
-	}
+        if (!done) {
+            if (conn.enableWriteInterest())
+                selector.wakeup();
+        }
+    }
+
+    private ByteBuffer getWriteBuffer() {
+        return writeBuffer;
+    }
+
+    public void close(SelectionKey key) {
+        if (key == null)
+            return;
+
+        try {
+            try {
+                GameServerConnection conn = (GameServerConnection) key.attachment();
+                if (conn != null)
+                    conn.onDisconnection();
+            } finally {
+                key.channel().close();
+                key.cancel();
+            }
+        } catch (IOException e) {
+            _log.error("", e);
+        }
+    }
+
+    public boolean isShutdown() {
+        return shutdown;
+    }
+
+    public void setShutdown(boolean shutdown) {
+        this.shutdown = shutdown;
+    }
 
 }

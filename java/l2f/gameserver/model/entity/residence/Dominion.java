@@ -14,165 +14,139 @@ import l2f.gameserver.model.pledge.Clan;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.StatsSet;
-import org.napile.primitive.sets.IntSet;
-import org.napile.primitive.sets.impl.TreeIntSet;
 
-public class Dominion extends Residence
-{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private IntSet _flags = new TreeIntSet();
-	private Castle _castle;
-	private int _lordObjectId;
+import java.util.Set;
+import java.util.TreeSet;
+//import org.napile.primitive.sets.IntSet;
+//import org.napile.primitive.sets.impl.TreeIntSet;
 
-	public Dominion(StatsSet set)
-	{
-		super(set);
-	}
+public final class Dominion extends Residence {
+    private static final long serialVersionUID = 1L;
+    private Set<Integer> _flags = new TreeSet<>();
+    private Castle _castle;
+    private int _lordObjectId;
 
-	@Override
-	public void init()
-	{
-		initEvent();
+    public Dominion(StatsSet set) {
+        super(set);
+    }
 
-		_castle = ResidenceHolder.getInstance().getResidence(Castle.class, getId() - 80);
-		_castle.setDominion(this);
+    @Override
+    public void init() {
+        initEvent();
 
-		loadData();
+        _castle = ResidenceHolder.getInstance().getResidence(Castle.class, getId() - 80);
+        _castle.setDominion(this);
 
-		_siegeDate.setTimeInMillis(0);
-		if (getOwner() != null)
-		{
-			DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
-			runnerEvent.registerDominion(this);
-		}
-	}
+        loadData();
 
-	@Override
-	public void rewardSkills()
-	{
-		Clan owner = getOwner();
-		if (owner != null)
-		{
-			if (!_flags.contains(getId()))
-				return;
+        _siegeDate.setTimeInMillis(0);
+        if (getOwner() != null) {
+            DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+            runnerEvent.registerDominion(this);
+        }
+    }
 
-			for (int dominionId : _flags.toArray())
-			{
-				Dominion dominion = ResidenceHolder.getInstance().getResidence(Dominion.class, dominionId);
-				for (Skill skill : dominion.getSkills())
-				{
-					owner.addSkill(skill, false);
-					owner.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED).addSkillName(skill));
-				}
-			}
-		}
-	}
+    @Override
+    public void rewardSkills() {
+        Clan owner = getOwner();
+        if (owner != null) {
+            if (!_flags.contains(getId()))
+                return;
 
-	@Override
-	public void removeSkills()
-	{
-		Clan owner = getOwner();
-		if (owner != null)
-		{
-			for (int dominionId : _flags.toArray())
-			{
-				Dominion dominion = ResidenceHolder.getInstance().getResidence(Dominion.class, dominionId);
-				for (Skill skill : dominion.getSkills())
-					owner.removeSkill(skill.getId());
-			}
-		}
-	}
+            for (int dominionId : _flags) {
+                Dominion dominion = ResidenceHolder.getInstance().getResidence(Dominion.class, dominionId);
+                for (Skill skill : dominion.getSkills()) {
+                    owner.addSkill(skill, false);
+                    owner.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED).addSkillName(skill));
+                }
+            }
+        }
+    }
 
-	public void addFlag(int dominionId)
-	{
-		_flags.add(dominionId);
-	}
+    @Override
+    public void removeSkills() {
+        Clan owner = getOwner();
+        if (owner != null) {
+            for (int dominionId : _flags) {
+                Dominion dominion = ResidenceHolder.getInstance().getResidence(Dominion.class, dominionId);
+                for (Skill skill : dominion.getSkills())
+                    owner.removeSkill(skill.getId());
+            }
+        }
+    }
 
-	public void removeFlag(int dominionId)
-	{
-		_flags.remove(dominionId);
-	}
+    public void addFlag(int dominionId) {
+        _flags.add(dominionId);
+    }
 
-	public int[] getFlags()
-	{
-		return _flags.toArray();
-	}
+    public void removeFlag(int dominionId) {
+        _flags.remove(dominionId);
+    }
 
-	@Override
-	public ResidenceType getType()
-	{
-		return ResidenceType.Dominion;
-	}
+    public int[] getFlags() {
+        return _flags.stream().mapToInt(Number::intValue).toArray();
+    }
 
-	@Override
-	protected void loadData()
-	{
-		DominionDAO.getInstance().select(this);
-	}
+    @Override
+    public ResidenceType getType() {
+        return ResidenceType.Dominion;
+    }
 
-	@Override
-	public void changeOwner(Clan clan)
-	{
-		int newLordObjectId;
-		if (clan == null)
-		{
-			if (_lordObjectId > 0)
-				newLordObjectId = 0;
-			else
-				return;
-		}
-		else
-		{
-			newLordObjectId = clan.getLeaderId();
+    @Override
+    protected void loadData() {
+        DominionDAO.getInstance().select(this);
+    }
 
-			SystemMessage2 message = new SystemMessage2(SystemMsg.CLAN_LORD_C2_WHO_LEADS_CLAN_S1_HAS_BEEN_DECLARED_THE_LORD_OF_THE_S3_TERRITORY).addName(clan.getLeader().getPlayer()).addString(clan.getName()).addResidenceName(getCastle());
-			for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-				player.sendPacket(message);
-		}
+    @Override
+    public void changeOwner(Clan clan) {
+        int newLordObjectId;
+        if (clan == null) {
+            if (_lordObjectId > 0)
+                newLordObjectId = 0;
+            else
+                return;
+        } else {
+            newLordObjectId = clan.getLeaderId();
 
-		_lordObjectId = newLordObjectId;
+            SystemMessage2 message = new SystemMessage2(SystemMsg.CLAN_LORD_C2_WHO_LEADS_CLAN_S1_HAS_BEEN_DECLARED_THE_LORD_OF_THE_S3_TERRITORY).addName(clan.getLeader().getPlayer()).addString(clan.getName()).addResidenceName(getCastle());
+            for (Player player : GameObjectsStorage.getAllPlayersForIterate())
+                player.sendPacket(message);
+        }
 
-		setJdbcState(JdbcEntityState.UPDATED);
-		update();
+        _lordObjectId = newLordObjectId;
 
-		for (NpcInstance npc : GameObjectsStorage.getAllNpcsForIterate())
-			if (npc.getDominion() == this)
-				npc.broadcastCharInfoImpl();
-	}
+        setJdbcState(JdbcEntityState.UPDATED);
+        update();
 
-	public int getLordObjectId()
-	{
-		return _lordObjectId;
-	}
+        for (NpcInstance npc : GameObjectsStorage.getAllNpcsForIterate())
+            if (npc.getDominion() == this)
+                npc.broadcastCharInfoImpl();
+    }
 
-	public void setLordObjectId(int lordObjectId)
-	{
-		_lordObjectId = lordObjectId;
-	}
+    public int getLordObjectId() {
+        return _lordObjectId;
+    }
 
-	@Override
-	public Clan getOwner()
-	{
-		return _castle.getOwner();
-	}
+    public void setLordObjectId(int lordObjectId) {
+        _lordObjectId = lordObjectId;
+    }
 
-	@Override
-	public int getOwnerId()
-	{
-		return _castle.getOwnerId();
-	}
+    @Override
+    public Clan getOwner() {
+        return _castle.getOwner();
+    }
 
-	public Castle getCastle()
-	{
-		return _castle;
-	}
+    @Override
+    public int getOwnerId() {
+        return _castle.getOwnerId();
+    }
 
-	@Override
-	public void update()
-	{
-		DominionDAO.getInstance().update(this);
-	}
+    public Castle getCastle() {
+        return _castle;
+    }
+
+    @Override
+    public void update() {
+        DominionDAO.getInstance().update(this);
+    }
 }

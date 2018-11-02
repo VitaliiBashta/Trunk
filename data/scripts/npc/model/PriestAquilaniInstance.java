@@ -10,41 +10,32 @@ import quests._10288_SecretMission;
 /**
  * @author pchayka
  */
-public class PriestAquilaniInstance extends NpcInstance
-{
+public class PriestAquilaniInstance extends NpcInstance {
 
-	public PriestAquilaniInstance(int objectId, NpcTemplate template)
-	{
-		super(objectId, template);
-	}
+    public PriestAquilaniInstance(int objectId, NpcTemplate template) {
+        super(objectId, template);
+    }
 
-	@Override
-	public void showChatWindow(Player player, int val, Object... arg)
-	{
-		if (player.getQuestState(_10288_SecretMission.class) != null && player.getQuestState(_10288_SecretMission.class).isCompleted())
-		{
-			player.sendPacket(new NpcHtmlMessage(player, this, "default/32780-1.htm", val));
-			return;
-		}
-		else
-		{
-			player.sendPacket(new NpcHtmlMessage(player, this, "default/32780.htm", val));
-			return;
-		}
-	}
+    @Override
+    public void showChatWindow(Player player, int val, Object... arg) {
+        if (player.getQuestState(_10288_SecretMission.class) != null && player.getQuestState(_10288_SecretMission.class).isCompleted()) {
+            player.sendPacket(new NpcHtmlMessage(player, this, "default/32780-1.htm", val));
+            return;
+        } else {
+            player.sendPacket(new NpcHtmlMessage(player, this, "default/32780.htm", val));
+            return;
+        }
+    }
 
-	@Override
-	public void onBypassFeedback(Player player, String command)
-	{
-		if (!canBypassCheck(player, this))
-			return;
+    @Override
+    public void onBypassFeedback(Player player, String command) {
+        if (!canBypassCheck(player, this))
+            return;
 
-		if (command.equalsIgnoreCase("teleport"))
-		{
-			player.teleToLocation(new Location(118833, -80589, -2688));
-			return;
-		}
-		else
-			super.onBypassFeedback(player, command);
-	}
+        if (command.equalsIgnoreCase("teleport")) {
+            player.teleToLocation(new Location(118833, -80589, -2688));
+            return;
+        } else
+            super.onBypassFeedback(player, command);
+    }
 }

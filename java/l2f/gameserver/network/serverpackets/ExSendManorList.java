@@ -1,22 +1,22 @@
 package l2f.gameserver.network.serverpackets;
 
-import java.util.Collection;
-
 import l2f.gameserver.data.xml.holder.ResidenceHolder;
 import l2f.gameserver.model.entity.residence.Castle;
 import l2f.gameserver.model.entity.residence.Residence;
+
+import java.util.Collection;
 
 
 /**
  * Format : (h) d [dS]
  * h  sub id
- *
+ * <p>
  * d: number of manors
  * [
  * d: id
  * S: manor name
  * ]
- *
+ * <p>
  * Пример с оффа(828 протокол):
  * 0000: fe 22 00 09 00 00 00 01 00 00 00 67 00 6c 00 75    .".........g.l.u
  * 0010: 00 64 00 69 00 6f 00 00 00 02 00 00 00 64 00 69    .d.i.o.......d.i
@@ -30,18 +30,15 @@ import l2f.gameserver.model.entity.residence.Residence;
  * 0090: 00 68 00 75 00 74 00 74 00 67 00 61 00 72 00 74    .h.u.t.t.g.a.r.t
  * 00a0: 00 00 00                                           ...
  */
-public class ExSendManorList extends L2GameServerPacket
-{
-	@Override
-	protected void writeImpl()
-	{
-		writeEx(0x22);
-		Collection<Castle> residences = ResidenceHolder.getInstance().getResidenceList(Castle.class);
-		writeD(residences.size());
-		for (Residence castle : residences)
-		{
-			writeD(castle.getId());
-			writeS(castle.getName().toLowerCase());
-		}
-	}
+public class ExSendManorList extends L2GameServerPacket {
+    @Override
+    protected void writeImpl() {
+        writeEx(0x22);
+        Collection<Castle> residences = ResidenceHolder.getInstance().getResidenceList(Castle.class);
+        writeD(residences.size());
+        for (Residence castle : residences) {
+            writeD(castle.getId());
+            writeS(castle.getName().toLowerCase());
+        }
+    }
 }

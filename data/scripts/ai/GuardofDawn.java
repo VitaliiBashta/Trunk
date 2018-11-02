@@ -18,144 +18,129 @@ import l2f.gameserver.utils.Location;
  * - Если находят чара в радиусе 120, то кричат в чат и отправляют на точку старта
  * - Видят и цепляют тех, кто находится в хайде
  * - Никогда и никого не атакуют
+ *
  * @author n0nam3
  * @date 20/09/2010 19:03
  */
-public class GuardofDawn extends DefaultAI
-{
-	private static final int _aggrorange = 150;
-	private static final Skill _skill = SkillTable.getInstance().getInfo(5978, 1);
-	private Location _locStart = null;
-	private Location _locEnd = null;
-	private Location _locTele = null;
-	private boolean moveToEnd = true;
-	private boolean noCheckPlayers = false;
+public class GuardofDawn extends DefaultAI {
+    private static final int _aggrorange = 150;
+    private static final Skill _skill = SkillTable.getInstance().getInfo(5978, 1);
+    private Location _locStart = null;
+    private Location _locEnd = null;
+    private Location _locTele = null;
+    private boolean moveToEnd = true;
+    private boolean noCheckPlayers = false;
 
-	public GuardofDawn(NpcInstance actor, Location locationEnd, Location telePoint)
-	{
-		super(actor);
-		AI_TASK_ATTACK_DELAY = 200;
-		setStartPoint(actor.getSpawnedLoc()); // точка старта, по сути место спавна.
-		setEndPoint(locationEnd);
-		setTelePoint(telePoint);
-	}
+    public GuardofDawn(NpcInstance actor, Location locationEnd, Location telePoint) {
+        super(actor);
+        AI_TASK_ATTACK_DELAY = 200;
+        setStartPoint(actor.getSpawnedLoc()); // точка старта, по сути место спавна.
+        setEndPoint(locationEnd);
+        setTelePoint(telePoint);
+    }
 
-	public class Teleportation extends RunnableImpl
-	{
+    public class Teleportation extends RunnableImpl {
 
-		Location _telePoint = null;
-		Playable _target = null;
+        Location _telePoint = null;
+        Playable _target = null;
 
-		public Teleportation(Location telePoint, Playable target)
-		{
-			_telePoint = telePoint;
-			_target = target;
-		}
+        public Teleportation(Location telePoint, Playable target) {
+            _telePoint = telePoint;
+            _target = target;
+        }
 
-		@Override
-		public void runImpl()
-		{
-			_target.teleToLocation(_telePoint);
-			noCheckPlayers = false;
-		}
-	}
+        @Override
+        public void runImpl() {
+            _target.teleToLocation(_telePoint);
+            noCheckPlayers = false;
+        }
+    }
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
 
-		// проверяем игроков вокруг
-		if (!noCheckPlayers)
-			checkAroundPlayers(actor);
+        // проверяем игроков вокруг
+        if (!noCheckPlayers)
+            checkAroundPlayers(actor);
 
-		// если есть задания - делаем их
-		if (_def_think)
-		{
-			doTask();
-			return true;
-		}
+        // если есть задания - делаем их
+        if (_def_think) {
+            doTask();
+            return true;
+        }
 
-		// заданий нет, значит можно давать новое, для этого ставим moveToEnd обратное значение
-		moveToEnd = !moveToEnd;
+        // заданий нет, значит можно давать новое, для этого ставим moveToEnd обратное значение
+        moveToEnd = !moveToEnd;
 
-		// добавляем задачу на движение
-		if (!moveToEnd)
-			addTaskMove(getEndPoint(), true);
-		else
-			addTaskMove(getStartPoint(), true);
-		doTask();
+        // добавляем задачу на движение
+        if (!moveToEnd)
+            addTaskMove(getEndPoint(), true);
+        else
+            addTaskMove(getStartPoint(), true);
+        doTask();
 
-		return true;
-	}
+        return true;
+    }
 
-	private boolean checkAroundPlayers(NpcInstance actor)
-	{
-		for (Playable target : World.getAroundPlayables(actor, _aggrorange, _aggrorange))
-		{
-			if (!canSeeInSilentMove(target) || !canSeeInHide(target))
-				continue;
-				
-			if (target != null && target.isPlayer() && !target.isInvul() && GeoEngine.canSeeTarget(actor, target, false))
-			{
-				actor.doCast(_skill, target, true);
-				Functions.npcSay(actor, "Intruder! Protect the Priests of Dawn!");
-				noCheckPlayers = true;
-				ThreadPoolManager.getInstance().schedule(new Teleportation(getTelePoint(), target), 3000);
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean checkAroundPlayers(NpcInstance actor) {
+        for (Playable target : World.getAroundPlayables(actor, _aggrorange, _aggrorange)) {
+            if (!canSeeInSilentMove(target) || !canSeeInHide(target))
+                continue;
 
-	private void setStartPoint(Location loc)
-	{
-		_locStart = loc;
-	}
+            if (target != null && target.isPlayer() && !target.isInvul() && GeoEngine.canSeeTarget(actor, target, false)) {
+                actor.doCast(_skill, target, true);
+                Functions.npcSay(actor, "Intruder! Protect the Priests of Dawn!");
+                noCheckPlayers = true;
+                ThreadPoolManager.getInstance().schedule(new Teleportation(getTelePoint(), target), 3000);
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private void setEndPoint(Location loc)
-	{
-		_locEnd = loc;
-	}
+    private void setStartPoint(Location loc) {
+        _locStart = loc;
+    }
 
-	private void setTelePoint(Location loc)
-	{
-		_locTele = loc;
-	}
+    private void setEndPoint(Location loc) {
+        _locEnd = loc;
+    }
 
-	private Location getStartPoint()
-	{
-		return _locStart;
-	}
+    private void setTelePoint(Location loc) {
+        _locTele = loc;
+    }
 
-	private Location getEndPoint()
-	{
-		return _locEnd;
-	}
+    private Location getStartPoint() {
+        return _locStart;
+    }
 
-	private Location getTelePoint()
-	{
-		return _locTele;
-	}
+    private Location getEndPoint() {
+        return _locEnd;
+    }
 
-	@Override
-	protected void thinkAttack()
-	{}
+    private Location getTelePoint() {
+        return _locTele;
+    }
 
-	@Override
-	protected void onIntentionAttack(Creature target)
-	{}
+    @Override
+    protected void thinkAttack() {
+    }
 
-	@Override
-	protected void onEvtAttacked(Creature attacker, int damage)
-	{}
+    @Override
+    protected void onIntentionAttack(Creature target) {
+    }
 
-	@Override
-	protected void onEvtAggression(Creature attacker, int aggro)
-	{}
+    @Override
+    protected void onEvtAttacked(Creature attacker, int damage) {
+    }
 
-	@Override
-	protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage)
-	{}
+    @Override
+    protected void onEvtAggression(Creature attacker, int aggro) {
+    }
+
+    @Override
+    protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
+    }
 
 }

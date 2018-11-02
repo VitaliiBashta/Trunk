@@ -1,12 +1,5 @@
 package l2f.gameserver.model;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import l2f.commons.lang.ArrayUtils;
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.ThreadPoolManager;
@@ -14,343 +7,315 @@ import l2f.gameserver.ai.CtrlIntention;
 import l2f.gameserver.model.entity.Reflection;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.network.serverpackets.L2GameServerPacket;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class WorldRegion implements Iterable<GameObject>
-{
-	public final static WorldRegion[] EMPTY_L2WORLDREGION_ARRAY = new WorldRegion[0];
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-	@SuppressWarnings("unused")
-	private static final Logger _log = LoggerFactory.getLogger(WorldRegion.class);
-	/** Координаты региона в мире */
-	private final int tileX, tileY, tileZ;
-	/** Активен ли регион */
-	private final AtomicBoolean _isActive = new AtomicBoolean();
-	/** Блокировка для чтения/записи объектов из региона */
-	private final Lock lock = new ReentrantLock();
-	/** Все объекты в регионе */
-	private volatile GameObject[] _objects = GameObject.EMPTY_L2OBJECT_ARRAY;
-	/** Количество объектов в регионе */
-	private int _objectsCount = 0;
-	/** Зоны пересекающие этот регион */
-	private volatile Zone[] _zones = Zone.EMPTY_L2ZONE_ARRAY;
-	/** Количество игроков в регионе */
-	private int _playersCount = 0;
-	/** Запланированная задача активации/деактивации текущего и соседних регионов */
-	private Future<?> _activateTask;
-	WorldRegion(int x, int y, int z)
-	{
-		tileX = x;
-		tileY = y;
-		tileZ = z;
-	}
+public final class WorldRegion implements Iterable<GameObject> {
+    public final static WorldRegion[] EMPTY_L2WORLDREGION_ARRAY = new WorldRegion[0];
 
-	int getX()
-	{
-		return tileX;
-	}
+    @SuppressWarnings("unused")
+    private static final Logger _log = LoggerFactory.getLogger(WorldRegion.class);
+    /**
+     * Координаты региона в мире
+     */
+    private final int tileX, tileY, tileZ;
+    /**
+     * Активен ли регион
+     */
+    private final AtomicBoolean _isActive = new AtomicBoolean();
+    /**
+     * Блокировка для чтения/записи объектов из региона
+     */
+    private final Lock lock = new ReentrantLock();
+    /**
+     * Все объекты в регионе
+     */
+    private volatile GameObject[] _objects = GameObject.EMPTY_L2OBJECT_ARRAY;
+    /**
+     * Количество объектов в регионе
+     */
+    private int _objectsCount = 0;
+    /**
+     * Зоны пересекающие этот регион
+     */
+    private volatile Zone[] _zones = Zone.EMPTY_L2ZONE_ARRAY;
+    /**
+     * Количество игроков в регионе
+     */
+    private int _playersCount = 0;
+    /**
+     * Запланированная задача активации/деактивации текущего и соседних регионов
+     */
+    private Future<?> _activateTask;
 
-	int getY()
-	{
-		return tileY;
-	}
+    WorldRegion(int x, int y, int z) {
+        tileX = x;
+        tileY = y;
+        tileZ = z;
+    }
 
-	int getZ()
-	{
-		return tileZ;
-	}
+    int getX() {
+        return tileX;
+    }
 
-	void addToPlayers(GameObject object, Creature dropper)
-	{
-		if (object == null)
-			return;
+    int getY() {
+        return tileY;
+    }
 
-		Player player = null;
-		if (object.isPlayer())
-			player = (Player) object;
+    int getZ() {
+        return tileZ;
+    }
 
-		int oid = object.getObjectId();
-		int rid = object.getReflectionId();
+    void addToPlayers(GameObject object, Creature dropper) {
+        if (object == null)
+            return;
 
-		Player p;
+        Player player = null;
+        if (object.isPlayer())
+            player = (Player) object;
 
-		for (GameObject obj : this)
-		{
-			if (obj.getObjectId() == oid || obj.getReflectionId() != rid)
-				continue;
-			// Если object - игрок, показать ему все видимые обьекты в регионе
-			if (player != null)
-				player.sendPacket(player.addVisibleObject(obj, null));
+        int oid = object.getObjectId();
+        int rid = object.getReflectionId();
 
-			// Показать обьект всем игрокам в регионе
-			if (obj.isPlayer())
-			{
-				p = (Player) obj;
-				p.sendPacket(p.addVisibleObject(object, dropper));
-			}
-		}
-	}
+        Player p;
 
-	void removeFromPlayers(GameObject object)
-	{
-		if (object == null)
-			return;
+        for (GameObject obj : this) {
+            if (obj.getObjectId() == oid || obj.getReflectionId() != rid)
+                continue;
+            // Если object - игрок, показать ему все видимые обьекты в регионе
+            if (player != null)
+                player.sendPacket(player.addVisibleObject(obj, null));
 
-		Player player = null;
-		if (object.isPlayer())
-			player = (Player) object;
+            // Показать обьект всем игрокам в регионе
+            if (obj.isPlayer()) {
+                p = (Player) obj;
+                p.sendPacket(p.addVisibleObject(object, dropper));
+            }
+        }
+    }
 
-		int oid = object.getObjectId();
-		Reflection rid = object.getReflection();
+    void removeFromPlayers(GameObject object) {
+        if (object == null)
+            return;
 
-		Player p;
-		List<L2GameServerPacket> d = null;
+        Player player = null;
+        if (object.isPlayer())
+            player = (Player) object;
 
-		for (GameObject obj : this)
-		{
-			if (obj.getObjectId() == oid || obj.getReflection() != rid)
-				continue;
+        int oid = object.getObjectId();
+        Reflection rid = object.getReflection();
 
-			// Если object - игрок, убрать у него все видимые обьекты в регионе
-			if (player != null)
-				player.sendPacket(player.removeVisibleObject(obj, null));
+        Player p;
+        List<L2GameServerPacket> d = null;
 
-			// Убрать обьект у всех игроков в регионе
-			if (obj.isPlayer())
-			{
-				p = (Player) obj;
-				p.sendPacket(p.removeVisibleObject(object, d == null ? d = object.deletePacketList() : d));
-			}
-		}
-	}
+        for (GameObject obj : this) {
+            if (obj.getObjectId() == oid || obj.getReflection() != rid)
+                continue;
 
-	public void addObject(GameObject obj)
-	{
-		if (obj == null)
-			return;
+            // Если object - игрок, убрать у него все видимые обьекты в регионе
+            if (player != null)
+                player.sendPacket(player.removeVisibleObject(obj, null));
 
-		lock.lock();
-		try
-		{
-			GameObject[] objects = _objects;
+            // Убрать обьект у всех игроков в регионе
+            if (obj.isPlayer()) {
+                p = (Player) obj;
+                p.sendPacket(p.removeVisibleObject(object, d == null ? d = object.deletePacketList() : d));
+            }
+        }
+    }
 
-			GameObject[] resizedObjects = new GameObject[_objectsCount + 1];
-			System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
-			objects = resizedObjects;
-			objects[_objectsCount++] = obj;
+    public void addObject(GameObject obj) {
+        if (obj == null)
+            return;
 
-			_objects = resizedObjects;
+        lock.lock();
+        try {
+            GameObject[] objects = _objects;
 
-			if (obj.isPlayer())
-				if (_playersCount++ == 0)
-				{
-					if (_activateTask != null)
-						_activateTask.cancel(false);
-					//активируем регион и соседние регионы через секунду
-					_activateTask = ThreadPoolManager.getInstance().schedule(new ActivateTask(true), 1000L);
-				}
-		}
-		finally
-		{
-			lock.unlock();
-		}
-	}
+            GameObject[] resizedObjects = new GameObject[_objectsCount + 1];
+            System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
+            objects = resizedObjects;
+            objects[_objectsCount++] = obj;
 
-	public void removeObject(GameObject obj)
-	{
-		if (obj == null)
-			return;
+            _objects = resizedObjects;
 
-		lock.lock();
-		try
-		{
-			GameObject[] objects = _objects;
+            if (obj.isPlayer())
+                if (_playersCount++ == 0) {
+                    if (_activateTask != null)
+                        _activateTask.cancel(false);
+                    //активируем регион и соседние регионы через секунду
+                    _activateTask = ThreadPoolManager.getInstance().schedule(new ActivateTask(true), 1000L);
+                }
+        } finally {
+            lock.unlock();
+        }
+    }
 
-			int index = -1;
+    public void removeObject(GameObject obj) {
+        if (obj == null)
+            return;
 
-			for (int i = 0; i < _objectsCount; i++)
-			{
-				if (objects[i] == obj)
-				{
-					index = i;
-					break;
-				}
-			}
+        lock.lock();
+        try {
+            GameObject[] objects = _objects;
 
-			if (index == -1) //Ошибочная ситуация
-				return;
+            int index = -1;
 
-			_objectsCount--;
+            for (int i = 0; i < _objectsCount; i++) {
+                if (objects[i] == obj) {
+                    index = i;
+                    break;
+                }
+            }
 
-			GameObject[] resizedObjects = new GameObject[_objectsCount];
-			objects[index] = objects[_objectsCount];
-			System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
+            if (index == -1) //Ошибочная ситуация
+                return;
 
-			_objects = resizedObjects;
+            _objectsCount--;
 
-			if (obj.isPlayer())
-				if (--_playersCount == 0)
-				{
-					if (_activateTask != null)
-						_activateTask.cancel(false);
-					//деактивируем регион и соседние регионы через минуту
-					_activateTask = ThreadPoolManager.getInstance().schedule(new ActivateTask(false), 60000L);
-				}
-		}
-		finally
-		{
-			lock.unlock();
-		}
-	}
+            GameObject[] resizedObjects = new GameObject[_objectsCount];
+            objects[index] = objects[_objectsCount];
+            System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
 
-	public int getObjectsSize()
-	{
-		return _objectsCount;
-	}
+            _objects = resizedObjects;
 
-	public int getPlayersCount()
-	{
-		return _playersCount;
-	}
+            if (obj.isPlayer())
+                if (--_playersCount == 0) {
+                    if (_activateTask != null)
+                        _activateTask.cancel(false);
+                    //деактивируем регион и соседние регионы через минуту
+                    _activateTask = ThreadPoolManager.getInstance().schedule(new ActivateTask(false), 60000L);
+                }
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	public boolean isEmpty()
-	{
-		return _playersCount == 0;
-	}
+    public int getObjectsSize() {
+        return _objectsCount;
+    }
 
-	public boolean isActive()
-	{
-		return _isActive.get();
-	}
+    public int getPlayersCount() {
+        return _playersCount;
+    }
 
-	/**
-	 * Активация региона, включить или выключить AI всех NPC в регионе
-	 *
-	 * @param activate - переключатель
-	 */
-	void setActive(boolean activate)
-	{
-		if (!_isActive.compareAndSet(!activate, activate))
-			return;
+    public boolean isEmpty() {
+        return _playersCount == 0;
+    }
 
-		NpcInstance npc;
-		for (GameObject obj : this)
-		{
-			if (!obj.isNpc())
-				continue;
-			npc = (NpcInstance) obj;
-			if (npc.getAI().isActive() != isActive())
-				if (isActive())
-				{
-					npc.getAI().startAITask();
-					npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-					npc.startRandomAnimation();
-				}
-				else if (!npc.getAI().isGlobalAI())
-				{
-					npc.getAI().stopAITask();
-					npc.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-					npc.stopRandomAnimation();
-				}
-		}
-	}
+    public boolean isActive() {
+        return _isActive.get();
+    }
 
-	void addZone(Zone zone)
-	{
-		lock.lock();
-		try
-		{
-			_zones = ArrayUtils.add(_zones, zone);
-		}
-		finally
-		{
-			lock.unlock();
-		}
-	}
+    /**
+     * Активация региона, включить или выключить AI всех NPC в регионе
+     *
+     * @param activate - переключатель
+     */
+    void setActive(boolean activate) {
+        if (!_isActive.compareAndSet(!activate, activate))
+            return;
 
-	void removeZone(Zone zone)
-	{
-		lock.lock();
-		try
-		{
-			_zones = ArrayUtils.remove(_zones, zone);
-		}
-		finally
-		{
-			lock.unlock();
-		}
-	}
+        NpcInstance npc;
+        for (GameObject obj : this) {
+            if (!obj.isNpc())
+                continue;
+            npc = (NpcInstance) obj;
+            if (npc.getAI().isActive() != isActive())
+                if (isActive()) {
+                    npc.getAI().startAITask();
+                    npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+                    npc.startRandomAnimation();
+                } else if (!npc.getAI().isGlobalAI()) {
+                    npc.getAI().stopAITask();
+                    npc.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
+                    npc.stopRandomAnimation();
+                }
+        }
+    }
 
-	Zone[] getZones()
-	{
-		// Без синхронизации и копирования, т.к. удаление/добавление зон происходит достаточно редко
-		return _zones;
-	}
+    void addZone(Zone zone) {
+        lock.lock();
+        try {
+            _zones = ArrayUtils.add(_zones, zone);
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	@Override
-	public String toString()
-	{
-		return "[" + tileX + ", " + tileY + ", " + tileZ + "]";
-	}
+    void removeZone(Zone zone) {
+        lock.lock();
+        try {
+            _zones = ArrayUtils.remove(_zones, zone);
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	@Override
-	public Iterator<GameObject> iterator()
-	{
-		return new InternalIterator(_objects);
-	}
+    Zone[] getZones() {
+        // Без синхронизации и копирования, т.к. удаление/добавление зон происходит достаточно редко
+        return _zones;
+    }
 
-	/**
-	 * Activation / deactivation of the neighboring regions
-	 */
-	public class ActivateTask extends RunnableImpl
-	{
-		private boolean _isActivating;
+    @Override
+    public String toString() {
+        return "[" + tileX + ", " + tileY + ", " + tileZ + "]";
+    }
 
-		public ActivateTask(boolean isActivating)
-		{
-			_isActivating = isActivating;
-		}
+    @Override
+    public Iterator<GameObject> iterator() {
+        return new InternalIterator(_objects);
+    }
 
-		@Override
-		public void runImpl() throws Exception
-		{
-			if (_isActivating)
-				World.activate(WorldRegion.this);
-			else
-				World.deactivate(WorldRegion.this);
-		}
-	}
+    /**
+     * Activation / deactivation of the neighboring regions
+     */
+    public class ActivateTask extends RunnableImpl {
+        private boolean _isActivating;
 
-	private class InternalIterator implements Iterator<GameObject>
-	{
-		final GameObject[] objects;
-		int cursor = 0;
+        public ActivateTask(boolean isActivating) {
+            _isActivating = isActivating;
+        }
 
-		public InternalIterator(final GameObject[] objects)
-		{
-			this.objects = objects;
-		}
+        @Override
+        public void runImpl() {
+            if (_isActivating)
+                World.activate(WorldRegion.this);
+            else
+                World.deactivate(WorldRegion.this);
+        }
+    }
 
-		@Override
-		public boolean hasNext()
-		{
-			if (cursor < objects.length)
-				return objects[cursor] != null;
-			return false;
-		}
+    private class InternalIterator implements Iterator<GameObject> {
+        final GameObject[] objects;
+        int cursor = 0;
 
-		@Override
-		public GameObject next()
-		{
-			return objects[cursor++];
-		}
+        public InternalIterator(final GameObject[] objects) {
+            this.objects = objects;
+        }
 
-		@Override
-		public void remove()
-		{
-			throw new UnsupportedOperationException();
-		}
-	}
+        @Override
+        public boolean hasNext() {
+            if (cursor < objects.length)
+                return objects[cursor] != null;
+            return false;
+        }
+
+        @Override
+        public GameObject next() {
+            return objects[cursor++];
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
 }

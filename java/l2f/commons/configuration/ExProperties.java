@@ -1,91 +1,39 @@
 package l2f.commons.configuration;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * @author G1ta0
- */
 public class ExProperties extends Properties {
     public static final String defaultDelimiter = "[\\s,;]+";
     private static final long serialVersionUID = 1L;
 
     public static boolean parseBoolean(String s) {
+        boolean result;
         switch (s.length()) {
             case 1: {
-                char ch0 = s.charAt(0);
-                if (ch0 == 'y' || ch0 == 'Y' || ch0 == '1') {
-                    return true;
-                }
-                if (ch0 == 'n' || ch0 == 'N' || ch0 == '0') {
-                    return false;
-                }
-                break;
+                result = s.equalsIgnoreCase("y") || s.equals("1");
+                return result;
             }
             case 2: {
-                char ch0 = s.charAt(0);
-                char ch1 = s.charAt(1);
-                if ((ch0 == 'o' || ch0 == 'O') &&
-                        (ch1 == 'n' || ch1 == 'N')) {
-                    return true;
-                }
-                if ((ch0 == 'n' || ch0 == 'N') &&
-                        (ch1 == 'o' || ch1 == 'O')) {
-                    return false;
-                }
-                break;
+                result = s.equalsIgnoreCase("no");
+                return !result;
             }
             case 3: {
-                char ch0 = s.charAt(0);
-                char ch1 = s.charAt(1);
-                char ch2 = s.charAt(2);
-                if ((ch0 == 'y' || ch0 == 'Y') &&
-                        (ch1 == 'e' || ch1 == 'E') &&
-                        (ch2 == 's' || ch2 == 'S')) {
-                    return true;
-                }
-                if ((ch0 == 'o' || ch0 == 'O') &&
-                        (ch1 == 'f' || ch1 == 'F') &&
-                        (ch2 == 'f' || ch2 == 'F')) {
-                    return false;
-                }
-                break;
+                result = s.equalsIgnoreCase("yes");
+                return result;
             }
             case 4: {
-                char ch0 = s.charAt(0);
-                char ch1 = s.charAt(1);
-                char ch2 = s.charAt(2);
-                char ch3 = s.charAt(3);
-                if ((ch0 == 't' || ch0 == 'T') &&
-                        (ch1 == 'r' || ch1 == 'R') &&
-                        (ch2 == 'u' || ch2 == 'U') &&
-                        (ch3 == 'e' || ch3 == 'E')) {
-                    return true;
-                }
-                break;
-            }
+                result = s.equalsIgnoreCase("true");
+                return result;
+                            }
             case 5: {
-                char ch0 = s.charAt(0);
-                char ch1 = s.charAt(1);
-                char ch2 = s.charAt(2);
-                char ch3 = s.charAt(3);
-                char ch4 = s.charAt(4);
-                if ((ch0 == 'f' || ch0 == 'F') &&
-                        (ch1 == 'a' || ch1 == 'A') &&
-                        (ch2 == 'l' || ch2 == 'L') &&
-                        (ch3 == 's' || ch3 == 'S') &&
-                        (ch4 == 'e' || ch4 == 'E')) {
-                    return false;
-                }
-                break;
+                result = s.equalsIgnoreCase("false");
+                return !result;
             }
         }
-
         throw new IllegalArgumentException("For input string: \"" + s + "\"");
     }
 
@@ -94,11 +42,8 @@ public class ExProperties extends Properties {
     }
 
     public void load(File file) throws IOException {
-        InputStream is = null;
-        try {
-            load(is = new FileInputStream(file));
-        } finally {
-            IOUtils.closeQuietly(is);
+        try (InputStream is = new FileInputStream(file)) {
+            load(is);
         }
     }
 

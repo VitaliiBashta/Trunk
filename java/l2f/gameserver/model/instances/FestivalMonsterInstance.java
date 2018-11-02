@@ -19,95 +19,86 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FestivalMonsterInstance extends MonsterInstance
-{
-	protected int _bonusMultiplier = 1;
+public class FestivalMonsterInstance extends MonsterInstance {
+    protected int _bonusMultiplier = 1;
 
-	public FestivalMonsterInstance(int objectId, NpcTemplate template)
-	{
-		super(objectId, template);
-		
-		_hasRandomWalk = false;
-	}
+    public FestivalMonsterInstance(int objectId, NpcTemplate template) {
+        super(objectId, template);
 
-	public void setOfferingBonus(int bonusMultiplier)
-	{
-		_bonusMultiplier = bonusMultiplier;
-	}
+        _hasRandomWalk = false;
+    }
 
-	@Override
-	protected void onSpawn()
-	{
-		super.onSpawn();
+    public void setOfferingBonus(int bonusMultiplier) {
+        _bonusMultiplier = bonusMultiplier;
+    }
 
-		List<Player> pl = World.getAroundPlayers(this);
-		if (pl.isEmpty())
-			return;
-		List<Player> alive = new ArrayList<Player>(9);
-		for (Player p : pl)
-			if (!p.isDead())
-				alive.add(p);
-		if (alive.isEmpty())
-			return;
+    @Override
+    protected void onSpawn() {
+        super.onSpawn();
 
-		Player target = alive.get(Rnd.get(alive.size()));
-		getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, target, 1);
-	}
+        List<Player> pl = World.getAroundPlayers(this);
+        if (pl.isEmpty())
+            return;
+        List<Player> alive = new ArrayList<Player>(9);
+        for (Player p : pl)
+            if (!p.isDead())
+                alive.add(p);
+        if (alive.isEmpty())
+            return;
 
-	/**
-	 * Actions:
-	 * <li>Check if the killing object is a player, and then find the party they belong to.</li>
-	 * <li>Add a blood offering item to the leader of the party.</li>
-	 * <li>Update the party leader's inventory to show the new item addition.</li>
-	 */
-	@Override
-	public void rollRewards(Map.Entry<RewardType, RewardList> entry, final Creature lastAttacker, Creature topDamager)
-	{
-		super.rollRewards(entry, lastAttacker, topDamager);
+        Player target = alive.get(Rnd.get(alive.size()));
+        getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, target, 1);
+    }
 
-		if (entry.getKey() != RewardType.RATED_GROUPED)
-			return;
-		if (!topDamager.isPlayable())
-			return;
+    /**
+     * Actions:
+     * <li>Check if the killing object is a player, and then find the party they belong to.</li>
+     * <li>Add a blood offering item to the leader of the party.</li>
+     * <li>Update the party leader's inventory to show the new item addition.</li>
+     */
+    @Override
+    public void rollRewards(Map.Entry<RewardType, RewardList> entry, final Creature lastAttacker, Creature topDamager) {
+        super.rollRewards(entry, lastAttacker, topDamager);
 
-		Player topDamagerPlayer = topDamager.getPlayer();
-		Party associatedParty = topDamagerPlayer.getParty();
+        if (entry.getKey() != RewardType.RATED_GROUPED)
+            return;
+        if (!topDamager.isPlayable())
+            return;
 
-		if (associatedParty == null)
-			return;
+        Player topDamagerPlayer = topDamager.getPlayer();
+        Party associatedParty = topDamagerPlayer.getParty();
 
-		Player partyLeader = associatedParty.getLeader();
-		if (partyLeader == null)
-			return;
+        if (associatedParty == null)
+            return;
 
-		ItemInstance bloodOfferings = ItemFunctions.createItem(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING);
+        Player partyLeader = associatedParty.getLeader();
+        if (partyLeader == null)
+            return;
 
-		bloodOfferings.setCount(_bonusMultiplier);
-		partyLeader.getInventory().addItem(bloodOfferings, "FestivalMonster Offerings");
-		partyLeader.sendPacket(SystemMessage2.obtainItems(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING, _bonusMultiplier, 0));
-	}
+        ItemInstance bloodOfferings = ItemFunctions.createItem(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING);
 
-	@Override
-	public boolean isAggressive()
-	{
-		return true;
-	}
+        bloodOfferings.setCount(_bonusMultiplier);
+        partyLeader.getInventory().addItem(bloodOfferings, "FestivalMonster Offerings");
+        partyLeader.sendPacket(SystemMessage2.obtainItems(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING, _bonusMultiplier, 0));
+    }
 
-	@Override
-	public int getAggroRange()
-	{
-		return 1000;
-	}
+    @Override
+    public boolean isAggressive() {
+        return true;
+    }
 
-	@Override
-	public boolean hasRandomAnimation()
-	{
-		return false;
-	}
+    @Override
+    public int getAggroRange() {
+        return 1000;
+    }
 
-	@Override
-	public boolean canChampion()
-	{
-		return false;
-	}
+    @Override
+    public boolean hasRandomAnimation() {
+        return false;
+    }
+
+    @Override
+    public boolean canChampion() {
+        return false;
+    }
 }

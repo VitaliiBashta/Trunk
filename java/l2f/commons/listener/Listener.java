@@ -1,6 +1,5 @@
 package l2f.commons.listener;
 
-public interface Listener<T>
-{
+public interface Listener<T> {
 
 }

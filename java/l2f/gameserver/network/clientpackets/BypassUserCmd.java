@@ -10,28 +10,25 @@ import l2f.gameserver.network.serverpackets.components.CustomMessage;
  * Example package team /loc:
  * AA 00 00 00 00
  */
-public class BypassUserCmd extends L2GameClientPacket
-{
-	private int _command;
+public class BypassUserCmd extends L2GameClientPacket {
+    private int _command;
 
-	@Override
-	protected void readImpl()
-	{
-		_command = readD();
-	}
+    @Override
+    protected void readImpl() {
+        _command = readD();
+    }
 
-	@Override
-	protected void runImpl()
-	{
-		Player activeChar = getClient().getActiveChar();
-		if (activeChar == null)
-			return;
+    @Override
+    protected void runImpl() {
+        Player activeChar = getClient().getActiveChar();
+        if (activeChar == null)
+            return;
 
-		IUserCommandHandler handler = UserCommandHandler.getInstance().getUserCommandHandler(_command);
+        IUserCommandHandler handler = UserCommandHandler.getInstance().getUserCommandHandler(_command);
 
-		if (handler == null)
-			activeChar.sendMessage(new CustomMessage("common.S1NotImplemented", activeChar).addString(String.valueOf(_command)));
-		else
-			handler.useUserCommand(_command, activeChar);
-	}
+        if (handler == null)
+            activeChar.sendMessage(new CustomMessage("common.S1NotImplemented", activeChar).addString(String.valueOf(_command)));
+        else
+            handler.useUserCommand(_command, activeChar);
+    }
 }

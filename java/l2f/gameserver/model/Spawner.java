@@ -1,8 +1,5 @@
 package l2f.gameserver.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.collections.MultiValueSet;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
@@ -19,271 +16,242 @@ import l2f.gameserver.taskmanager.SpawnTaskManager;
 import l2f.gameserver.templates.npc.NpcTemplate;
 import l2f.gameserver.templates.spawn.SpawnRange;
 import l2f.gameserver.utils.Location;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Spawner extends EventOwner implements Cloneable
-{
-	protected static final Logger _log = LoggerFactory.getLogger(Spawner.class);
-	protected static final int MIN_RESPAWN_DELAY = 20;
-	private static final long serialVersionUID = 6326392189707112339L;
-	protected int _maximumCount;
-	protected int _referenceCount;
-	protected int _currentCount;
-	protected int _scheduledCount;
+import java.util.ArrayList;
+import java.util.List;
 
-	protected int _respawnDelay, _respawnDelayRandom, _nativeRespawnDelay;
+public abstract class Spawner extends EventOwner implements Cloneable {
+    protected static final Logger _log = LoggerFactory.getLogger(Spawner.class);
+    protected static final int MIN_RESPAWN_DELAY = 20;
+    private static final long serialVersionUID = 6326392189707112339L;
+    protected int _maximumCount;
+    protected int _referenceCount;
+    protected int _currentCount;
+    protected int _scheduledCount;
 
-	protected int _respawnTime;
+    protected int _respawnDelay, _respawnDelayRandom, _nativeRespawnDelay;
 
-	protected boolean _doRespawn;
+    protected int _respawnTime;
 
-	protected NpcInstance _lastSpawn;
+    protected boolean _doRespawn;
 
-	protected List<NpcInstance> _spawned;
+    protected NpcInstance _lastSpawn;
 
-	protected Reflection _reflection = ReflectionManager.DEFAULT;
+    protected List<NpcInstance> _spawned;
 
-	public void decreaseScheduledCount()
-	{
-		if (_scheduledCount > 0)
-			_scheduledCount--;
-	}
+    protected Reflection _reflection = ReflectionManager.DEFAULT;
 
-	public boolean isDoRespawn()
-	{
-		return _doRespawn;
-	}
+    public void decreaseScheduledCount() {
+        if (_scheduledCount > 0)
+            _scheduledCount--;
+    }
 
-	public Reflection getReflection()
-	{
-		return _reflection;
-	}
+    public boolean isDoRespawn() {
+        return _doRespawn;
+    }
 
-	public void setReflection(Reflection reflection)
-	{
-		_reflection = reflection;
-	}
+    public Reflection getReflection() {
+        return _reflection;
+    }
 
-	public int getRespawnDelay()
-	{
-		return _respawnDelay;
-	}
+    public void setReflection(Reflection reflection) {
+        _reflection = reflection;
+    }
 
-	public void setRespawnDelay(int respawnDelay)
-	{
-		setRespawnDelay(respawnDelay, 0);
-	}
+    public int getRespawnDelay() {
+        return _respawnDelay;
+    }
 
-	public int getNativeRespawnDelay()
-	{
-		return _nativeRespawnDelay;
-	}
+    public void setRespawnDelay(int respawnDelay) {
+        setRespawnDelay(respawnDelay, 0);
+    }
 
-	public int getRespawnDelayRandom()
-	{
-		return _respawnDelayRandom;
-	}
+    public int getNativeRespawnDelay() {
+        return _nativeRespawnDelay;
+    }
 
-	public int getRespawnDelayWithRnd()
-	{
-		return _respawnDelayRandom == 0 ? _respawnDelay : Rnd.get(_respawnDelay - _respawnDelayRandom, _respawnDelay);
-	}
+    public int getRespawnDelayRandom() {
+        return _respawnDelayRandom;
+    }
 
-	public int getRespawnTime()
-	{
-		return _respawnTime;
-	}
+    public int getRespawnDelayWithRnd() {
+        return _respawnDelayRandom == 0 ? _respawnDelay : Rnd.get(_respawnDelay - _respawnDelayRandom, _respawnDelay);
+    }
 
-	public void setRespawnTime(int respawnTime)
-	{
-		_respawnTime = respawnTime;
-	}
+    public int getRespawnTime() {
+        return _respawnTime;
+    }
 
-	public NpcInstance getLastSpawn()
-	{
-		return _lastSpawn;
-	}
+    public void setRespawnTime(int respawnTime) {
+        _respawnTime = respawnTime;
+    }
 
-	public void setAmount(int amount)
-	{
-		if (_referenceCount == 0)
-			_referenceCount = amount;
-		_maximumCount = amount;
-	}
+    public NpcInstance getLastSpawn() {
+        return _lastSpawn;
+    }
 
-	public void deleteAll()
-	{
-		stopRespawn();
-		for (NpcInstance npc : _spawned)
-			npc.deleteMe();
-		_spawned.clear();
-		_respawnTime = 0;
-		_scheduledCount = 0;
-		_currentCount = 0;
-	}
+    public void setAmount(int amount) {
+        if (_referenceCount == 0)
+            _referenceCount = amount;
+        _maximumCount = amount;
+    }
 
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	public abstract void decreaseCount(NpcInstance oldNpc);
+    public void deleteAll() {
+        stopRespawn();
+        for (NpcInstance npc : _spawned)
+            npc.deleteMe();
+        _spawned.clear();
+        _respawnTime = 0;
+        _scheduledCount = 0;
+        _currentCount = 0;
+    }
 
-	public abstract NpcInstance doSpawn(boolean spawn);
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    public abstract void decreaseCount(NpcInstance oldNpc);
 
-	public abstract void respawnNpc(NpcInstance oldNpc);
+    public abstract NpcInstance doSpawn(boolean spawn);
 
-	protected abstract NpcInstance initNpc(NpcInstance mob, boolean spawn, MultiValueSet<String> set);
+    public abstract void respawnNpc(NpcInstance oldNpc);
 
-	public abstract int getCurrentNpcId();
+    protected abstract NpcInstance initNpc(NpcInstance mob, boolean spawn, MultiValueSet<String> set);
 
-	public abstract SpawnRange getCurrentSpawnRange();
+    public abstract int getCurrentNpcId();
 
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	public int init()
-	{
-		while (_currentCount + _scheduledCount < _maximumCount)
-			doSpawn(false);
+    public abstract SpawnRange getCurrentSpawnRange();
 
-		_doRespawn = true;
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    public int init() {
+        while (_currentCount + _scheduledCount < _maximumCount)
+            doSpawn(false);
 
-		return _currentCount;
-	}
+        _doRespawn = true;
 
-	public List<NpcInstance> initAndReturn()
-	{
-		List<NpcInstance> spawnedNpcs = new ArrayList<>();
-		while (_currentCount + _scheduledCount < _maximumCount)
-			spawnedNpcs.add(doSpawn(false));
+        return _currentCount;
+    }
 
-		_doRespawn = true;
+    public List<NpcInstance> initAndReturn() {
+        List<NpcInstance> spawnedNpcs = new ArrayList<>();
+        while (_currentCount + _scheduledCount < _maximumCount)
+            spawnedNpcs.add(doSpawn(false));
 
-		return spawnedNpcs;
-	}
+        _doRespawn = true;
 
-	public NpcInstance spawnOne()
-	{
-		return doSpawn(false);
-	}
+        return spawnedNpcs;
+    }
 
-	public void stopRespawn()
-	{
-		_doRespawn = false;
-	}
+    public NpcInstance spawnOne() {
+        return doSpawn(false);
+    }
 
-	public void startRespawn()
-	{
-		_doRespawn = true;
-	}
+    public void stopRespawn() {
+        _doRespawn = false;
+    }
 
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	public List<NpcInstance> getAllSpawned()
-	{
-		return _spawned;
-	}
+    public void startRespawn() {
+        _doRespawn = true;
+    }
 
-	public NpcInstance getFirstSpawned()
-	{
-		List<NpcInstance> npcs = getAllSpawned();
-		return npcs.size() > 0 ? npcs.get(0) : null;
-	}
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    public List<NpcInstance> getAllSpawned() {
+        return _spawned;
+    }
 
-	public void setRespawnDelay(int respawnDelay, int respawnDelayRandom)
-	{
-		if (respawnDelay < 0)
-			_log.warn("respawn delay is negative");
+    public NpcInstance getFirstSpawned() {
+        List<NpcInstance> npcs = getAllSpawned();
+        return npcs.size() > 0 ? npcs.get(0) : null;
+    }
 
-		_nativeRespawnDelay = respawnDelay;
-		_respawnDelay = respawnDelay;
-		_respawnDelayRandom = respawnDelayRandom;
-	}
+    public void setRespawnDelay(int respawnDelay, int respawnDelayRandom) {
+        if (respawnDelay < 0)
+            _log.warn("respawn delay is negative");
 
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	protected NpcInstance doSpawn0(NpcTemplate template, boolean spawn, MultiValueSet<String> set)
-	{
-		if (template.isInstanceOf(PetInstance.class) || template.isInstanceOf(MinionInstance.class))
-		{
-			_currentCount++;
-			return null;
-		}
+        _nativeRespawnDelay = respawnDelay;
+        _respawnDelay = respawnDelay;
+        _respawnDelayRandom = respawnDelayRandom;
+    }
 
-		NpcInstance tmp = template.getNewInstance();
-		if (tmp == null)
-			return null;
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    protected NpcInstance doSpawn0(NpcTemplate template, boolean spawn, MultiValueSet<String> set) {
+        if (template.isInstanceOf(PetInstance.class) || template.isInstanceOf(MinionInstance.class)) {
+            _currentCount++;
+            return null;
+        }
 
-		if (!spawn)
-			spawn = _respawnTime <= System.currentTimeMillis() / 1000 + MIN_RESPAWN_DELAY;
+        NpcInstance tmp = template.getNewInstance();
+        if (tmp == null)
+            return null;
 
-		return initNpc(tmp, spawn, set);
-	}
+        if (!spawn)
+            spawn = _respawnTime <= System.currentTimeMillis() / 1000 + MIN_RESPAWN_DELAY;
 
-	protected NpcInstance initNpc0(NpcInstance mob, Location newLoc, boolean spawn, MultiValueSet<String> set)
-	{
-		mob.setParameters(set);
+        return initNpc(tmp, spawn, set);
+    }
 
-		// Set the HP and MP of the L2NpcInstance to the max
-		mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp(), true);
+    protected NpcInstance initNpc0(NpcInstance mob, Location newLoc, boolean spawn, MultiValueSet<String> set) {
+        mob.setParameters(set);
 
-		// Link the L2NpcInstance to this L2Spawn
-		mob.setSpawn(this);
+        // Set the HP and MP of the L2NpcInstance to the max
+        mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp(), true);
 
-		// save spawned points
-		mob.setSpawnedLoc(newLoc);
+        // Link the L2NpcInstance to this L2Spawn
+        mob.setSpawn(this);
 
-		// Является ли моб "подземным" мобом?
-		mob.setUnderground(GeoEngine.getHeight(newLoc, getReflection().getGeoIndex()) < GeoEngine.getHeight(newLoc.clone().changeZ(5000), getReflection().getGeoIndex()));
+        // save spawned points
+        mob.setSpawnedLoc(newLoc);
 
-		for (GlobalEvent e : getEvents())
-			mob.addEvent(e);
+        // Является ли моб "подземным" мобом?
+        mob.setUnderground(GeoEngine.getHeight(newLoc, getReflection().getGeoIndex()) < GeoEngine.getHeight(newLoc.clone().changeZ(5000), getReflection().getGeoIndex()));
 
-		if (spawn)
-		{
-			// Спавнится в указанном отражении
-			mob.setReflection(getReflection());
+        for (GlobalEvent e : getEvents())
+            mob.addEvent(e);
 
-			if (mob.isMonster())
-				((MonsterInstance) mob).setChampion();
+        if (spawn) {
+            // Спавнится в указанном отражении
+            mob.setReflection(getReflection());
 
-			// Init other values of the L2NpcInstance (ex : from its L2CharTemplate for INT, STR, DEX...) and add it in the world as a visible object
-			mob.spawnMe(newLoc);
+            if (mob.isMonster())
+                ((MonsterInstance) mob).setChampion();
 
-			// Increase the current number of L2NpcInstance managed by this L2Spawn
-			_currentCount++;
-		}
-		else
-		{
-			mob.setLoc(newLoc);
+            // Init other values of the L2NpcInstance (ex : from its L2CharTemplate for INT, STR, DEX...) and add it in the world as a visible object
+            mob.spawnMe(newLoc);
 
-			// Update the current number of SpawnTask in progress or stand by of this L2Spawn
-			_scheduledCount++;
+            // Increase the current number of L2NpcInstance managed by this L2Spawn
+            _currentCount++;
+        } else {
+            mob.setLoc(newLoc);
 
-			SpawnTaskManager.getInstance().addSpawnTask(mob, _respawnTime * 1000L - System.currentTimeMillis());
-		}
+            // Update the current number of SpawnTask in progress or stand by of this L2Spawn
+            _scheduledCount++;
 
-		_spawned.add(mob);
-		_lastSpawn = mob;
-		return mob;
-	}
+            SpawnTaskManager.getInstance().addSpawnTask(mob, _respawnTime * 1000L - System.currentTimeMillis());
+        }
 
-	public void decreaseCount0(NpcTemplate template, NpcInstance spawnedNpc, long deadTime)
-	{
-		_currentCount--;
+        _spawned.add(mob);
+        _lastSpawn = mob;
+        return mob;
+    }
 
-		if (_currentCount < 0)
-			_currentCount = 0;
+    public void decreaseCount0(NpcTemplate template, NpcInstance spawnedNpc, long deadTime) {
+        _currentCount--;
 
-		if (_respawnDelay == 0)
-			return;
+        if (_currentCount < 0)
+            _currentCount = 0;
 
-		if (_doRespawn && _scheduledCount + _currentCount < _maximumCount)
-		{
-			// Update the current number of SpawnTask in progress or stand by of this L2Spawn
-			_scheduledCount++;
+        if (_respawnDelay == 0)
+            return;
 
-			long delay = (long) (template.isRaid ? Config.ALT_RAID_RESPAWN_MULTIPLIER * getRespawnDelayWithRnd() : getRespawnDelayWithRnd()) * 1000L;
-			delay = Math.max(1000, delay - deadTime);
+        if (_doRespawn && _scheduledCount + _currentCount < _maximumCount) {
+            // Update the current number of SpawnTask in progress or stand by of this L2Spawn
+            _scheduledCount++;
 
-			_respawnTime = (int) ((System.currentTimeMillis() + delay) / 1000);
+            long delay = (long) (template.isRaid ? Config.ALT_RAID_RESPAWN_MULTIPLIER * getRespawnDelayWithRnd() : getRespawnDelayWithRnd()) * 1000L;
+            delay = Math.max(1000, delay - deadTime);
 
-			SpawnTaskManager.getInstance().addSpawnTask(spawnedNpc, delay);
-		}
-	}
+            _respawnTime = (int) ((System.currentTimeMillis() + delay) / 1000);
+
+            SpawnTaskManager.getInstance().addSpawnTask(spawnedNpc, delay);
+        }
+    }
 }

@@ -1,5 +1,11 @@
 package l2f.gameserver.model.entity.olympiad;
 
+import l2f.commons.threading.RunnableImpl;
+import l2f.commons.util.Rnd;
+import l2f.gameserver.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,224 +13,187 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import l2f.commons.threading.RunnableImpl;
-import l2f.commons.util.Rnd;
-import l2f.gameserver.Config;
+public class OlympiadManager extends RunnableImpl {
+    private static final Logger _log = LoggerFactory.getLogger(OlympiadManager.class);
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+    private final Map<Integer, OlympiadGame> _olympiadInstances = new ConcurrentHashMap<Integer, OlympiadGame>();
 
-public class OlympiadManager extends RunnableImpl
-{
-	private static final Logger _log = LoggerFactory.getLogger(OlympiadManager.class);
+    public void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+        }
+    }
 
-	private final Map<Integer, OlympiadGame> _olympiadInstances = new ConcurrentHashMap<Integer, OlympiadGame>();
+    @Override
+    public void runImpl() {
+        if (Olympiad.isOlympiadEnd())
+            return;
 
-	public void sleep(long time)
-	{
-		try
-		{
-			Thread.sleep(time);
-		}
-		catch (InterruptedException e)
-		{}
-	}
+        while (Olympiad.inCompPeriod()) {
+            if (Olympiad._nobles.isEmpty()) {
+                sleep(60000);
+                continue;
+            }
 
-	@Override
-	public void runImpl()
-	{
-		if (Olympiad.isOlympiadEnd())
-			return;
+            while (Olympiad.inCompPeriod()) {
+                // Подготовка и запуск внеклассовых боев
+                if (Olympiad._nonClassBasedRegisters.size() >= Config.NONCLASS_GAME_MIN)
+                    prepareBattles(CompType.NON_CLASSED, Olympiad._nonClassBasedRegisters);
 
-		while (Olympiad.inCompPeriod())
-		{
-			if (Olympiad._nobles.isEmpty())
-			{
-				sleep(60000);
-				continue;
-			}
+                // Подготовка и запуск классовых боев
+                for (Map.Entry<Integer, List<Integer>> entry : Olympiad._classBasedRegisters.entrySet())
+                    if (entry.getValue().size() >= Config.CLASS_GAME_MIN)
+                        prepareBattles(CompType.CLASSED, entry.getValue());
 
-			while (Olympiad.inCompPeriod())
-			{
-				// Подготовка и запуск внеклассовых боев
-				if (Olympiad._nonClassBasedRegisters.size() >= Config.NONCLASS_GAME_MIN)
-					prepareBattles(CompType.NON_CLASSED, Olympiad._nonClassBasedRegisters);
+                // Подготовка и запуск командных боев
+                if (Olympiad._teamBasedRegisters.size() >= Config.TEAM_GAME_MIN)
+                    prepareTeamBattles(CompType.TEAM, Olympiad._teamBasedRegisters.values());
 
-				// Подготовка и запуск классовых боев
-				for (Map.Entry<Integer, List<Integer>> entry : Olympiad._classBasedRegisters.entrySet())
-					if (entry.getValue().size() >= Config.CLASS_GAME_MIN)
-						prepareBattles(CompType.CLASSED, entry.getValue());
+                sleep(30000);
+            }
 
-				// Подготовка и запуск командных боев
-				if (Olympiad._teamBasedRegisters.size() >= Config.TEAM_GAME_MIN)
-					prepareTeamBattles(CompType.TEAM, Olympiad._teamBasedRegisters.values());
+            sleep(30000);
+        }
 
-				sleep(30000);
-			}
+        Olympiad._classBasedRegisters.clear();
+        Olympiad._nonClassBasedRegisters.clear();
+        Olympiad._teamBasedRegisters.clear();
 
-			sleep(30000);
-		}
+        // when comp time finish wait for all games terminated before execute the cleanup code
+        boolean allGamesTerminated = false;
 
-		Olympiad._classBasedRegisters.clear();
-		Olympiad._nonClassBasedRegisters.clear();
-		Olympiad._teamBasedRegisters.clear();
+        // wait for all games terminated
+        while (!allGamesTerminated) {
+            sleep(30000);
 
-		// when comp time finish wait for all games terminated before execute the cleanup code
-		boolean allGamesTerminated = false;
+            if (_olympiadInstances.isEmpty())
+                break;
 
-		// wait for all games terminated
-		while (!allGamesTerminated)
-		{
-			sleep(30000);
+            allGamesTerminated = true;
+            for (OlympiadGame game : _olympiadInstances.values()) {
+                if (game.getTask() != null && !game.getTask().isTerminated())
+                    allGamesTerminated = false;
+            }
+        }
 
-			if (_olympiadInstances.isEmpty())
-				break;
+        _olympiadInstances.clear();
+    }
 
-			allGamesTerminated = true;
-			for (OlympiadGame game : _olympiadInstances.values())
-			{
-				if (game.getTask() != null && !game.getTask().isTerminated())
-					allGamesTerminated = false;
-			}
-		}
+    private void prepareBattles(CompType type, List<Integer> list) {
+        boolean firstGameLaunched = false;
+        NobleSelector<Integer> selector = new NobleSelector<Integer>(list.size());
+        for (Integer noble : list)
+            if (noble != null)
+                selector.add(noble, Olympiad.getNoblePoints(noble));
 
-		_olympiadInstances.clear();
-	}
+        for (int i = 0; i < Olympiad.STADIUMS.length; i++) {
+            try {
+                if (!Olympiad.STADIUMS[i].isFreeToUse())
+                    continue;
+                if (selector.size() < type.getMinSize())
+                    break;
 
-	private void prepareBattles(CompType type, List<Integer> list)
-	{
-		boolean firstGameLaunched = false;
-		NobleSelector<Integer> selector = new NobleSelector<Integer>(list.size());
-		for (Integer noble : list)
-			if (noble != null)
-				selector.add(noble, Olympiad.getNoblePoints(noble));
+                OlympiadGame game = new OlympiadGame(i, type, nextOpponents(selector, type));
+                OlympiadGameTask gameTask = new OlympiadGameTask(game, BattleStatus.Begining, 0, 1);
+                game.sheduleTask(gameTask);
+                if (Config.OLYMPIAD_SHOUT_ONCE_PER_START && firstGameLaunched)
+                    gameTask.setShoutGameStart(false);
 
-		for (int i = 0; i < Olympiad.STADIUMS.length; i++)
-		{
-			try
-			{
-				if (!Olympiad.STADIUMS[i].isFreeToUse())
-					continue;
-				if(selector.size() < type.getMinSize())
-					break;
+                _olympiadInstances.put(i, game);
 
-				OlympiadGame game = new OlympiadGame(i, type, nextOpponents(selector, type));
-				OlympiadGameTask gameTask = new OlympiadGameTask(game, BattleStatus.Begining, 0, 1);
-				game.sheduleTask(gameTask);
-				if (Config.OLYMPIAD_SHOUT_ONCE_PER_START && firstGameLaunched)
-					gameTask.setShoutGameStart(false);
+                Olympiad.STADIUMS[i].setStadiaBusy();
+                firstGameLaunched = true;
+            } catch (Exception e) {
+                _log.error("Error while preparing Olympiad Battle", e);
+            }
+        }
+    }
 
-				_olympiadInstances.put(i, game);
+    private void prepareTeamBattles(CompType type, Collection<List<Integer>> list) {
+        for (int i = 0; i < Olympiad.STADIUMS.length; i++) {
+            try {
+                if (!Olympiad.STADIUMS[i].isFreeToUse())
+                    continue;
+                if (list.size() < type.getMinSize())
+                    break;
 
-				Olympiad.STADIUMS[i].setStadiaBusy();
-				firstGameLaunched = true;
-			}
-			catch(Exception e)
-			{
-				_log.error("Error while preparing Olympiad Battle", e);
-			}
-		}
-	}
+                List<Integer> nextOpponents = nextTeamOpponents(list, type);
+                if (nextOpponents == null)
+                    break;
 
-	private void prepareTeamBattles(CompType type, Collection<List<Integer>> list)
-	{
-		for (int i = 0; i < Olympiad.STADIUMS.length; i++)
-		{
-			try
-			{
-				if (!Olympiad.STADIUMS[i].isFreeToUse())
-					continue;
-				if (list.size() < type.getMinSize())
-					break;
+                OlympiadGame game = new OlympiadGame(i, type, nextOpponents);
+                game.sheduleTask(new OlympiadGameTask(game, BattleStatus.Begining, 0, 1));
 
-				List<Integer> nextOpponents = nextTeamOpponents(list, type);
-				if (nextOpponents == null)
-					break;
+                _olympiadInstances.put(i, game);
 
-				OlympiadGame game = new OlympiadGame(i, type, nextOpponents);
-				game.sheduleTask(new OlympiadGameTask(game, BattleStatus.Begining, 0, 1));
+                Olympiad.STADIUMS[i].setStadiaBusy();
+            } catch (Exception e) {
+                _log.error("Error while preparing Olympiad Team Battle", e);
+            }
+        }
+    }
 
-				_olympiadInstances.put(i, game);
+    public void freeOlympiadInstance(int index) {
+        _olympiadInstances.remove(index);
+        Olympiad.STADIUMS[index].setStadiaFree();
+    }
 
-				Olympiad.STADIUMS[i].setStadiaBusy();
-			}
-			catch(Exception e)
-			{
-				_log.error("Error while preparing Olympiad Team Battle", e);
-			}
-		}
-	}
+    public OlympiadGame getOlympiadInstance(int index) {
+        return _olympiadInstances.get(index);
+    }
 
-	public void freeOlympiadInstance(int index)
-	{
-		_olympiadInstances.remove(index);
-		Olympiad.STADIUMS[index].setStadiaFree();
-	}
+    public Map<Integer, OlympiadGame> getOlympiadGames() {
+        return _olympiadInstances;
+    }
 
-	public OlympiadGame getOlympiadInstance(int index)
-	{
-		return _olympiadInstances.get(index);
-	}
+    private List<Integer> nextOpponents(NobleSelector<Integer> selector, CompType type) {
+        List<Integer> opponents = new ArrayList<Integer>();
+        Integer noble;
 
-	public Map<Integer, OlympiadGame> getOlympiadGames()
-	{
-		return _olympiadInstances;
-	}
+        selector.reset();
+        for (int i = 0; i < type.getMinSize(); i++) {
+            noble = selector.select();
+            if (noble == null) // DS: error handling ?
+                break;
+            opponents.add(noble);
+            removeOpponent(noble);
+        }
 
-	private List<Integer> nextOpponents(NobleSelector<Integer> selector, CompType type)
-	{
-		List<Integer> opponents = new ArrayList<Integer>();
-		Integer noble;
+        return opponents;
+    }
 
-		selector.reset();
-		for (int i = 0; i < type.getMinSize(); i++)
-		{
-			noble = selector.select();
-			if (noble == null) // DS: error handling ?
-				break;
-			opponents.add(noble);
-			removeOpponent(noble);
-		}
+    private List<Integer> nextTeamOpponents(Collection<List<Integer>> list, CompType type) {
+        if (list.isEmpty())
+            return null;
+        List<Integer> opponents = new CopyOnWriteArrayList<Integer>();
+        List<List<Integer>> a = new ArrayList<List<Integer>>();
+        a.addAll(list);
 
-		return opponents;
-	}
+        for (int i = 0; i < type.getMinSize(); i++) {
+            if (a.size() < 1)
+                continue;
+            List<Integer> team = a.remove(Rnd.get(a.size()));
+            if (team.size() == 3)
+                for (Integer noble : team) {
+                    opponents.add(noble);
+                    removeOpponent(noble);
+                }
+            else {
+                for (Integer noble : team)
+                    removeOpponent(noble);
+                i--;
+            }
 
-	private List<Integer> nextTeamOpponents(Collection<List<Integer>> list, CompType type)
-	{
-		if (list.isEmpty())
-			return null;
-		List<Integer> opponents = new CopyOnWriteArrayList<Integer>();
-		List<List<Integer>> a = new ArrayList<List<Integer>>();
-		a.addAll(list);
+            list.remove(team);
+        }
 
-		for (int i = 0; i < type.getMinSize(); i++)
-		{
-			if (a.size() < 1)
-				continue;
-			List<Integer> team = a.remove(Rnd.get(a.size()));
-			if (team.size() == 3)
-				for (Integer noble : team)
-				{
-					opponents.add(noble);
-					removeOpponent(noble);
-				}
-			else
-			{
-				for (Integer noble : team)
-					removeOpponent(noble);
-				i--;
-			}
+        return opponents;
+    }
 
-			list.remove(team);
-		}
-
-		return opponents;
-	}
-
-	private void removeOpponent(Integer noble)
-	{
-		Olympiad._classBasedRegisters.removeValue(noble);
-		Olympiad._nonClassBasedRegisters.remove(noble);
-		Olympiad._teamBasedRegisters.removeValue(noble);
-	}
+    private void removeOpponent(Integer noble) {
+        Olympiad._classBasedRegisters.removeValue(noble);
+        Olympiad._nonClassBasedRegisters.remove(noble);
+        Olympiad._teamBasedRegisters.removeValue(noble);
+    }
 }

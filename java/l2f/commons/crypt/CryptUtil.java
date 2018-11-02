@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
 
@@ -44,7 +44,7 @@ public class CryptUtil {
     public static String encrypt(String data) {
         init();
         try {
-            return Base64.encodeBytes(_encCipher.doFinal(data.getBytes("UTF8")));
+            return Base64.encodeBytes(_encCipher.doFinal(data.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             _log.error("Cannot encrypt data.", e);
         }
@@ -54,9 +54,7 @@ public class CryptUtil {
     public static String decrypt(String data) {
         init();
         try {
-            String decoded = new String(_decCipher.doFinal(Base64.decode(data)), "UTF8");
-
-            return decoded;
+            return new String(_decCipher.doFinal(Base64.decode(data)), StandardCharsets.UTF_8);
         } catch (Exception e) {
             _log.error("Cannot decrypt data.", e);
         }
@@ -124,7 +122,7 @@ public class CryptUtil {
         in = new CipherInputStream(in, _decCipher);
         try {
             @SuppressWarnings("unused")
-            InputStreamReader reader = new InputStreamReader(in, "UTF8");
+            InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
 
             int num = 0;
             byte[] buffer = new byte[1024];

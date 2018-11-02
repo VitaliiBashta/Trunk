@@ -1,18 +1,17 @@
 package l2f.gameserver.utils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import l2f.commons.dbutils.DbUtils;
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.database.DatabaseFactory;
 import l2f.gameserver.model.Player;
-import l2f.gameserver.network.clientpackets.EnterWorld;
 import l2f.gameserver.network.serverpackets.TutorialCloseHtml;
 import l2f.gameserver.network.serverpackets.TutorialShowHtml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 
 /**

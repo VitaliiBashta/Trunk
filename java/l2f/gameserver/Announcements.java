@@ -1,14 +1,5 @@
 package l2f.gameserver;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.concurrent.Future;
-
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.GameObjectsStorage;
@@ -20,248 +11,219 @@ import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.network.serverpackets.components.CustomMessage;
 import l2f.gameserver.network.serverpackets.components.IStaticPacket;
 import l2f.gameserver.utils.MapUtils;
-
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Announcements
-{
-	private static final Logger _log = LoggerFactory.getLogger(Announcements.class);
-	private static final Announcements _instance = new Announcements();
-	private final List<Announce> _announcements = new ArrayList<Announce>();
-	private int lastAnnounceId = 5000000;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.concurrent.Future;
 
-	private Announcements()
-	{
-		loadAnnouncements();
-	}
+public class Announcements {
+    private static final Logger _log = LoggerFactory.getLogger(Announcements.class);
+    private static final Announcements _instance = new Announcements();
+    private final List<Announce> _announcements = new ArrayList<Announce>();
+    private int lastAnnounceId = 5000000;
 
-	private static String getQuestionMark(int announceId)
-	{
-		return "\b\tType=1 \tID=" + announceId + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b";
-	}
+    private Announcements() {
+        loadAnnouncements();
+    }
 
-	public static final Announcements getInstance()
-	{
-		return _instance;
-	}
+    private static String getQuestionMark(int announceId) {
+        return "\b\tType=1 \tID=" + announceId + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b";
+    }
 
-	public static void shout(Creature activeChar, String text, ChatType type)
-	{
-		Say2 cs = new Say2(activeChar.getObjectId(), type, activeChar.getName(), text);
+    public static final Announcements getInstance() {
+        return _instance;
+    }
 
-		int rx = MapUtils.regionX(activeChar);
-		int ry = MapUtils.regionY(activeChar);
-		int offset = Config.SHOUT_OFFSET;
+    public static void shout(Creature activeChar, String text, ChatType type) {
+        Say2 cs = new Say2(activeChar.getObjectId(), type, activeChar.getName(), text);
 
-		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-		{
-			if (player == activeChar || activeChar.getReflection() != player.getReflection())
-				continue;
+        int rx = MapUtils.regionX(activeChar);
+        int ry = MapUtils.regionY(activeChar);
+        int offset = Config.SHOUT_OFFSET;
 
-			int tx = MapUtils.regionX(player);
-			int ty = MapUtils.regionY(player);
+        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            if (player == activeChar || activeChar.getReflection() != player.getReflection())
+                continue;
 
-			if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || activeChar.isInRangeZ(player, Config.CHAT_RANGE))
-				player.sendPacket(cs);
-		}
+            int tx = MapUtils.regionX(player);
+            int ty = MapUtils.regionY(player);
 
-		activeChar.sendPacket(cs);
-	}
+            if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || activeChar.isInRangeZ(player, Config.CHAT_RANGE))
+                player.sendPacket(cs);
+        }
 
-	public List<Announce> getAnnouncements()
-	{
-		return _announcements;
-	}
+        activeChar.sendPacket(cs);
+    }
 
-	public void loadAnnouncements()
-	{
-		_announcements.clear();
+    public List<Announce> getAnnouncements() {
+        return _announcements;
+    }
 
-		try
-		{
-			List<String> lines =  Arrays.asList(FileUtils.readFileToString(new File("config/announcements.txt"), "UTF-8").split("\n"));
-			for (String line : lines)
-			{
-				StringTokenizer token = new StringTokenizer(line, "\t");
-				if (token.countTokens() > 1)
-					addAnnouncement(Integer.parseInt(token.nextToken()), token.nextToken(), false);
-				else
-					addAnnouncement(0, line, false);
-			}
-		}
-		catch (IOException | NumberFormatException e)
-		{
-			_log.error("Error while loading config/announcements.txt!", e);
-		}
-	}
+    public void loadAnnouncements() {
+        _announcements.clear();
 
-	public void showAnnouncements(Player activeChar)
-	{
-		for (Announce announce : _announcements)
-			announce.showAnnounce(activeChar);
-	}
+        try {
+            List<String> lines = Arrays.asList(FileUtils.readFileToString(new File("config/announcements.txt"), "UTF-8").split("\n"));
+            for (String line : lines) {
+                StringTokenizer token = new StringTokenizer(line, "\t");
+                if (token.countTokens() > 1)
+                    addAnnouncement(Integer.parseInt(token.nextToken()), token.nextToken(), false);
+                else
+                    addAnnouncement(0, line, false);
+            }
+        } catch (IOException | NumberFormatException e) {
+            _log.error("Error while loading config/announcements.txt!", e);
+        }
+    }
 
-	public void addAnnouncement(int val, String text, boolean save)
-	{
-		Announce announce = new Announce(val, text);
-		announce.start();
+    public void showAnnouncements(Player activeChar) {
+        for (Announce announce : _announcements)
+            announce.showAnnounce(activeChar);
+    }
 
-		_announcements.add(announce);
-		if (save)
-			saveToDisk();
-	}
+    public void addAnnouncement(int val, String text, boolean save) {
+        Announce announce = new Announce(val, text);
+        announce.start();
 
-	public void delAnnouncement(int line)
-	{
-		Announce announce = _announcements.remove(line);
-		if (announce != null)
-			announce.stop();
+        _announcements.add(announce);
+        if (save)
+            saveToDisk();
+    }
 
-		saveToDisk();
-	}
+    public void delAnnouncement(int line) {
+        Announce announce = _announcements.remove(line);
+        if (announce != null)
+            announce.stop();
 
-	private void saveToDisk()
-	{
-		try
-		{
-			File f = new File("config/announcements.txt");
-			FileWriter writer = new FileWriter(f, false);
-			for (Announce announce : _announcements)
-				writer.write(announce.getTime() + "\t" + announce.getAnnounce() + "\n");
-			writer.close();
-		}
-		catch (IOException e)
-		{
-			_log.error("Error while saving config/announcements.txt!", e);
-		}
-	}
+        saveToDisk();
+    }
 
-	public void announceToAll(SystemMessage sm)
-	{
-		for(Player player : GameObjectsStorage.getAllPlayers())
-			player.sendPacket(sm);
-	}
+    private void saveToDisk() {
+        try {
+            File f = new File("config/announcements.txt");
+            FileWriter writer = new FileWriter(f, false);
+            for (Announce announce : _announcements)
+                writer.write(announce.getTime() + "\t" + announce.getAnnounce() + "\n");
+            writer.close();
+        } catch (IOException e) {
+            _log.error("Error while saving config/announcements.txt!", e);
+        }
+    }
 
-	public void announceToAll(String text)
-	{
-		announceToAll(text, ChatType.ANNOUNCEMENT);
-	}
+    public void announceToAll(SystemMessage sm) {
+        for (Player player : GameObjectsStorage.getAllPlayers())
+            player.sendPacket(sm);
+    }
 
-	public void announceToAll(String text, ChatType type)
-	{
-		Say2 cs = new Say2(0, type, "", text);
-		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			player.sendPacket(cs);
-	}
+    public void announceToAll(String text) {
+        announceToAll(text, ChatType.ANNOUNCEMENT);
+    }
 
-	/**
-	 * Отправляет анонсом CustomMessage, приминимо к примеру в шатдауне.
-	 * @param address адрес в {@link l2f.gameserver.network.serverpackets.components.CustomMessage}
-	 * @param replacements массив String-ов которые атоматически добавятся в сообщения
-	 */
-	public void announceByCustomMessage(String address, String[] replacements)
-	{
-		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			announceToPlayerByCustomMessage(player, address, replacements);
-	}
+    public void announceToAll(String text, ChatType type) {
+        Say2 cs = new Say2(0, type, "", text);
+        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
+            player.sendPacket(cs);
+    }
 
-	public void announceByCustomMessage(String address, String[] replacements, ChatType type)
-	{
-		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			announceToPlayerByCustomMessage(player, address, replacements, type);
-	}
+    /**
+     * Отправляет анонсом CustomMessage, приминимо к примеру в шатдауне.
+     *
+     * @param address      адрес в {@link l2f.gameserver.network.serverpackets.components.CustomMessage}
+     * @param replacements массив String-ов которые атоматически добавятся в сообщения
+     */
+    public void announceByCustomMessage(String address, String[] replacements) {
+        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
+            announceToPlayerByCustomMessage(player, address, replacements);
+    }
 
-	public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements)
-	{
-		CustomMessage cm = new CustomMessage(address, player);
-		if (replacements != null)
-			for (String s : replacements)
-				cm.addString(s);
-		player.sendPacket(new Say2(0, ChatType.ANNOUNCEMENT, "", cm.toString()));
-	}
+    public void announceByCustomMessage(String address, String[] replacements, ChatType type) {
+        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
+            announceToPlayerByCustomMessage(player, address, replacements, type);
+    }
 
-	public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements, ChatType type)
-	{
-		CustomMessage cm = new CustomMessage(address, player);
-		if (replacements != null)
-			for (String s : replacements)
-				cm.addString(s);
-		player.sendPacket(new Say2(0, type, "", cm.toString()));
-	}
+    public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements) {
+        CustomMessage cm = new CustomMessage(address, player);
+        if (replacements != null)
+            for (String s : replacements)
+                cm.addString(s);
+        player.sendPacket(new Say2(0, ChatType.ANNOUNCEMENT, "", cm.toString()));
+    }
 
-	public void announceToAll(SystemMessage2 sm)
-	{
-		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			player.sendPacket(sm);
-	}
+    public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements, ChatType type) {
+        CustomMessage cm = new CustomMessage(address, player);
+        if (replacements != null)
+            for (String s : replacements)
+                cm.addString(s);
+        player.sendPacket(new Say2(0, type, "", cm.toString()));
+    }
 
-	public class Announce extends RunnableImpl
-	{
-		private final int _time;
-		private final String _announce;
-		private final int id;
-		private Future<?> _task;
+    public void announceToAll(SystemMessage2 sm) {
+        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
+            player.sendPacket(sm);
+    }
 
-		public Announce(int t, String announce)
-		{
-			_time = t;
-			_announce = announce;
+    public class Announce extends RunnableImpl {
+        private final int _time;
+        private final String _announce;
+        private final int id;
+        private Future<?> _task;
 
-			lastAnnounceId ++;
-			id = lastAnnounceId;
-		}
+        public Announce(int t, String announce) {
+            _time = t;
+            _announce = announce;
 
-		@Override
-		public void runImpl()
-		{
-			IStaticPacket csNoQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce);
-			IStaticPacket csQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce + getQuestionMark(id));
-			for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			{
-				if (player.containsQuickVar("DisabledAnnounce" + id))
-					continue;
-				int newValue = player.getQuickVarI("Announce: " + id, 0) + 1;
-				if (newValue >= 3)
-					player.sendPacket(csQuestion);
-				else
-				{
-					player.sendPacket(csNoQuestion);
-					player.addQuickVar("Announce: " + id, newValue);
-				}
-			}
-		}
+            lastAnnounceId++;
+            id = lastAnnounceId;
+        }
 
-		public void showAnnounce(Player player)
-		{
-			IStaticPacket cs = new Say2(0, ChatType.CRITICAL_ANNOUNCE, player.getName(), _announce);
-			player.sendPacket(cs);
-		}
+        @Override
+        public void runImpl() {
+            IStaticPacket csNoQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce);
+            IStaticPacket csQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce + getQuestionMark(id));
+            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+                if (player.containsQuickVar("DisabledAnnounce" + id))
+                    continue;
+                int newValue = player.getQuickVarI("Announce: " + id, 0) + 1;
+                if (newValue >= 3)
+                    player.sendPacket(csQuestion);
+                else {
+                    player.sendPacket(csNoQuestion);
+                    player.addQuickVar("Announce: " + id, newValue);
+                }
+            }
+        }
 
-		public void start()
-		{
-			if (_time > 0)
-				_task = ThreadPoolManager.getInstance().scheduleAtFixedRate(this, _time * 1000L, _time * 1000L);
-		}
+        public void showAnnounce(Player player) {
+            IStaticPacket cs = new Say2(0, ChatType.CRITICAL_ANNOUNCE, player.getName(), _announce);
+            player.sendPacket(cs);
+        }
 
-		public void stop()
-		{
-			if (_task != null)
-			{
-				_task.cancel(false);
-				_task = null;
-			}
-		}
+        public void start() {
+            if (_time > 0)
+                _task = ThreadPoolManager.getInstance().scheduleAtFixedRate(this, _time * 1000L, _time * 1000L);
+        }
 
-		public int getTime()
-		{
-			return _time;
-		}
+        public void stop() {
+            if (_task != null) {
+                _task.cancel(false);
+                _task = null;
+            }
+        }
 
-		public String getAnnounce()
-		{
-			return _announce;
-		}
-	}
+        public int getTime() {
+            return _time;
+        }
+
+        public String getAnnounce() {
+            return _announce;
+        }
+    }
 }

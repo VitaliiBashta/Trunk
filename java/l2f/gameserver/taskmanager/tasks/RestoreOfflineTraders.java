@@ -18,8 +18,7 @@ public class RestoreOfflineTraders extends RunnableImpl
 	private static final Logger LOG = LoggerFactory.getLogger(RestoreOfflineTraders.class);
 
 	@Override
-	public void runImpl() throws Exception
-	{
+	public void runImpl() {
 		int count = 0;
 
 		try (Connection con = DatabaseFactory.getInstance().getConnection())

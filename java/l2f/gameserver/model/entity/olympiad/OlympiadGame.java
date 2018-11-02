@@ -1,10 +1,5 @@
 package l2f.gameserver.model.entity.olympiad;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledFuture;
-
 import l2f.commons.lang.ArrayUtils;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
@@ -19,12 +14,7 @@ import l2f.gameserver.model.entity.Reflection;
 import l2f.gameserver.model.instances.DoorInstance;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.model.quest.QuestState;
-import l2f.gameserver.network.serverpackets.ExOlympiadUserInfo;
-import l2f.gameserver.network.serverpackets.ExReceiveOlympiad;
-import l2f.gameserver.network.serverpackets.L2GameServerPacket;
-import l2f.gameserver.network.serverpackets.Say2;
-import l2f.gameserver.network.serverpackets.SystemMessage;
-import l2f.gameserver.network.serverpackets.SystemMessage2;
+import l2f.gameserver.network.serverpackets.*;
 import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.network.serverpackets.components.IStaticPacket;
 import l2f.gameserver.network.serverpackets.components.NpcString;
@@ -33,9 +23,13 @@ import l2f.gameserver.scripts.Functions;
 import l2f.gameserver.templates.InstantZone;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.utils.Log;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledFuture;
 
 public class OlympiadGame {
     public static final int MAX_POINTS_LOOSE = 10;

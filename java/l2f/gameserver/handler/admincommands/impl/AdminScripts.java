@@ -4,13 +4,11 @@ import l2f.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2f.gameserver.model.Player;
 
 
-public class AdminScripts implements IAdminCommandHandler
-{
+public class AdminScripts implements IAdminCommandHandler {
     @SuppressWarnings("rawtypes")
     @Override
-    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar)
-    {
-    @SuppressWarnings("unused")
+    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
+        @SuppressWarnings("unused")
         Commands command = (Commands) comm;
 
         if (!activeChar.isGM())
@@ -21,12 +19,10 @@ public class AdminScripts implements IAdminCommandHandler
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Enum[] getAdminCommandEnum()
-    {
+    public Enum[] getAdminCommandEnum() {
         return Commands.values();
     }
 
-    private static enum Commands
-    {
+    private static enum Commands {
     }
 }

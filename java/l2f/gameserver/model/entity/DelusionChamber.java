@@ -1,7 +1,5 @@
 package l2f.gameserver.model.entity;
 
-import java.util.concurrent.Future;
-
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.data.xml.holder.InstantZoneHolder;
@@ -13,79 +11,68 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.templates.InstantZone;
 import l2f.gameserver.utils.Location;
 
-public class DelusionChamber extends DimensionalRift
-{
-	private Future<?> killRiftTask;
+import java.util.concurrent.Future;
 
-	public DelusionChamber(Party party, int type, int room)
-	{
-		super(party, type, room);
-	}
+public class DelusionChamber extends DimensionalRift {
+    private Future<?> killRiftTask;
 
-	@Override
-	public synchronized void createNewKillRiftTimer()
-	{
-		if (killRiftTask != null)
-		{
-			killRiftTask.cancel(false);
-			killRiftTask = null;
-		}
+    public DelusionChamber(Party party, int type, int room) {
+        super(party, type, room);
+    }
 
-		killRiftTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl()
-		{
-			@Override
-			public void runImpl() throws Exception
-			{
-				if (getParty() != null && !getParty().getMembers().isEmpty())
-					for (Player p : getParty().getMembers())
-						if (p.getReflection() == DelusionChamber.this)
-						{
-							String var = p.getVar("backCoords");
-							if (var == null || var.equals(""))
-								continue;
-							p.teleToLocation(Location.parseLoc(var), ReflectionManager.DEFAULT);
-							p.unsetVar("backCoords");
-						}
-				collapse();
-			}
-		}, 100L);
-	}
+    @Override
+    public synchronized void createNewKillRiftTimer() {
+        if (killRiftTask != null) {
+            killRiftTask.cancel(false);
+            killRiftTask = null;
+        }
 
-	@Override
-	public void partyMemberExited(Player player)
-	{
-		if (getPlayersInside(false) < 2 || getPlayersInside(true) == 0)
-		{
-			createNewKillRiftTimer();
-			return;
-		}
-	}
+        killRiftTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+            @Override
+            public void runImpl() {
+                if (getParty() != null && !getParty().getMembers().isEmpty())
+                    for (Player p : getParty().getMembers())
+                        if (p.getReflection() == DelusionChamber.this) {
+                            String var = p.getVar("backCoords");
+                            if (var == null || var.equals(""))
+                                continue;
+                            p.teleToLocation(Location.parseLoc(var), ReflectionManager.DEFAULT);
+                            p.unsetVar("backCoords");
+                        }
+                collapse();
+            }
+        }, 100L);
+    }
 
-	@Override
-	public void manualExitRift(Player player, NpcInstance npc)
-	{
-		if (!player.isInParty() || player.getParty().getReflection() != this)
-			return;
+    @Override
+    public void partyMemberExited(Player player) {
+        if (getPlayersInside(false) < 2 || getPlayersInside(true) == 0) {
+            createNewKillRiftTimer();
+            return;
+        }
+    }
 
-		if (!player.getParty().isLeader(player))
-		{
-			DimensionalRiftManager.getInstance().showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
-			return;
-		}
+    @Override
+    public void manualExitRift(Player player, NpcInstance npc) {
+        if (!player.isInParty() || player.getParty().getReflection() != this)
+            return;
 
-		createNewKillRiftTimer();
-	}
+        if (!player.getParty().isLeader(player)) {
+            DimensionalRiftManager.getInstance().showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
+            return;
+        }
 
-	@Override
-	public String getName()
-	{
-		InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(_roomType + 120);
-		return iz.getName();
-	}
+        createNewKillRiftTimer();
+    }
 
-	@Override
-	protected int getManagerId()
-	{
-		return 32664;
-	}
+    @Override
+    public String getName() {
+        InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(_roomType + 120);
+        return iz.getName();
+    }
+
+    @Override
+    protected int getManagerId() {
+        return 32664;
+    }
 }

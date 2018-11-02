@@ -1,49 +1,45 @@
 package l2f.gameserver.network.clientpackets;
 
+import l2f.commons.lang.StringUtils;
 import l2f.gameserver.dao.CharacterPostFriendDAO;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
-import org.apache.commons.lang3.StringUtils;
-import org.napile.primitive.maps.IntObjectMap;
 
-public class RequestExDeletePostFriendForPostBox extends L2GameClientPacket
-{
-	private String _name;
+import java.util.Map;
 
-	@Override
-	protected void readImpl()
-	{
-   		_name = readS();
-	}
+public class RequestExDeletePostFriendForPostBox extends L2GameClientPacket {
+    private String _name;
 
-	@Override
-	protected void runImpl()
-	{
-		Player player = getClient().getActiveChar();
-		if (player == null)
-			return;
+    @Override
+    protected void readImpl() {
+        _name = readS();
+    }
 
-		if (StringUtils.isEmpty(_name))
-			return;
+    @Override
+    protected void runImpl() {
+        Player player = getClient().getActiveChar();
+        if (player == null)
+            return;
 
-		int key = 0;
-		IntObjectMap<String> postFriends = player.getPostFriends();
-		for (IntObjectMap.Entry<String> entry : postFriends.entrySet())
-		{
-			if (entry.getValue().equalsIgnoreCase(_name))
-				key = entry.getKey();
-		}
+        if (StringUtils.isEmpty(_name))
+            return;
 
-		if (key == 0)
-		{
-			player.sendPacket(SystemMsg.THE_NAME_IS_NOT_CURRENTLY_REGISTERED);
-			return;
-		}
+        int key = 0;
+        Map<Integer,String> postFriends = player.getPostFriends();
+        for (Map.Entry<Integer,String> entry : postFriends.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(_name))
+                key = entry.getKey();
+        }
 
-		player.getPostFriends().remove(key);
+        if (key == 0) {
+            player.sendPacket(SystemMsg.THE_NAME_IS_NOT_CURRENTLY_REGISTERED);
+            return;
+        }
 
-		CharacterPostFriendDAO.delete(player, key);
-		player.sendPacket(new SystemMessage2(SystemMsg.S1_WAS_SUCCESSFULLY_DELETED_FROM_YOUR_CONTACT_LIST).addString(_name));
-	}
+        player.getPostFriends().remove(key);
+
+        CharacterPostFriendDAO.delete(player, key);
+        player.sendPacket(new SystemMessage2(SystemMsg.S1_WAS_SUCCESSFULLY_DELETED_FROM_YOUR_CONTACT_LIST).addString(_name));
+    }
 }

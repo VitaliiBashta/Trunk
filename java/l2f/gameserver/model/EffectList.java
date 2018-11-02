@@ -2,16 +2,7 @@ package l2f.gameserver.model;
 
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.set.hash.TIntHashSet;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
+import l2f.commons.lang.ArrayUtils;
 import l2f.gameserver.Config;
 import l2f.gameserver.skills.EffectType;
 import l2f.gameserver.skills.effects.EffectTemplate;
@@ -19,7 +10,10 @@ import l2f.gameserver.skills.skillclasses.Transformation;
 import l2f.gameserver.stats.Stats;
 import l2f.gameserver.stats.funcs.FuncTemplate;
 
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class EffectList {
     public static final int NONE_SLOT_TYPE = -1;

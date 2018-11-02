@@ -5,33 +5,29 @@ import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.entity.Reflection;
 import l2f.gameserver.model.instances.NpcInstance;
 
-public class Aenkinel extends Fighter
-{
+public class Aenkinel extends Fighter {
 
-	public Aenkinel(NpcInstance actor)
-	{
-		super(actor);
-	}
+    public Aenkinel(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	protected void onEvtDead(Creature killer)
-	{
-		NpcInstance actor = getActor();
+    @Override
+    protected void onEvtDead(Creature killer) {
+        NpcInstance actor = getActor();
 
-		// Устанавливаем реюз для Tower и Great Seal
-		if (actor.getNpcId() == 25694 || actor.getNpcId() == 25695)
-		{
-			Reflection ref = actor.getReflection();
-			ref.setReenterTime(System.currentTimeMillis());
-		}
+        // Устанавливаем реюз для Tower и Great Seal
+        if (actor.getNpcId() == 25694 || actor.getNpcId() == 25695) {
+            Reflection ref = actor.getReflection();
+            ref.setReenterTime(System.currentTimeMillis());
+        }
 
-		if (actor.getNpcId() == 25694)
-			for (int i = 0; i < 4; i++)
-				actor.getReflection().addSpawnWithoutRespawn(18820, actor.getLoc(), 250);
-		else if (actor.getNpcId() == 25695)
-			for (int i = 0; i < 4; i++)
-				actor.getReflection().addSpawnWithoutRespawn(18823, actor.getLoc(), 250);
+        if (actor.getNpcId() == 25694)
+            for (int i = 0; i < 4; i++)
+                actor.getReflection().addSpawnWithoutRespawn(18820, actor.getLoc(), 250);
+        else if (actor.getNpcId() == 25695)
+            for (int i = 0; i < 4; i++)
+                actor.getReflection().addSpawnWithoutRespawn(18823, actor.getLoc(), 250);
 
-		super.onEvtDead(killer);
-	}
+        super.onEvtDead(killer);
+    }
 }

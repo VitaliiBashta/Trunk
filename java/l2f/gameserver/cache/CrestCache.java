@@ -3,7 +3,6 @@ package l2f.gameserver.cache;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import l2f.gameserver.database.DatabaseFactory;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,379 +10,306 @@ import java.sql.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class CrestCache
-{
-	public static final int ALLY_CREST_SIZE = 192;
-	public static final int CREST_SIZE = 256;
-	public static final int LARGE_CREST_SIZE = 2176;
+public class CrestCache {
+    public static final int ALLY_CREST_SIZE = 192;
+    public static final int CREST_SIZE = 256;
+    public static final int LARGE_CREST_SIZE = 2176;
 
-	private static final Logger _log = LoggerFactory.getLogger(CrestCache.class);
+    private static final Logger _log = LoggerFactory.getLogger(CrestCache.class);
 
-	private final static CrestCache _instance = new CrestCache();
-	/** Требуется для получения ID значка по ID клана */
-	private final TIntIntHashMap _pledgeCrestId = new TIntIntHashMap();
-	private final TIntIntHashMap _pledgeCrestLargeId = new TIntIntHashMap();
-	private final TIntIntHashMap _allyCrestId = new TIntIntHashMap();
-	/** Получение значка по ID */
-	private final TIntObjectHashMap<byte[]> _pledgeCrest = new TIntObjectHashMap<byte[]>();
-	private final TIntObjectHashMap<byte[]> _pledgeCrestLarge = new TIntObjectHashMap<byte[]>();
-	private final TIntObjectHashMap<byte[]> _allyCrest = new TIntObjectHashMap<byte[]>();
-	/** Блокировка для чтения/записи объектов из "кэша" */
-	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-	private final Lock readLock = lock.readLock();
-	private final Lock writeLock = lock.writeLock();
-	private CrestCache()
-	{
-		load();
-	}
+    private final static CrestCache _instance = new CrestCache();
+    /**
+     * Требуется для получения ID значка по ID клана
+     */
+    private final TIntIntHashMap _pledgeCrestId = new TIntIntHashMap();
+    private final TIntIntHashMap _pledgeCrestLargeId = new TIntIntHashMap();
+    private final TIntIntHashMap _allyCrestId = new TIntIntHashMap();
+    /**
+     * Получение значка по ID
+     */
+    private final TIntObjectHashMap<byte[]> _pledgeCrest = new TIntObjectHashMap<>();
+    private final TIntObjectHashMap<byte[]> _pledgeCrestLarge = new TIntObjectHashMap<>();
+    private final TIntObjectHashMap<byte[]> _allyCrest = new TIntObjectHashMap<>();
+    /**
+     * Блокировка для чтения/записи объектов из "кэша"
+     */
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private final Lock readLock = lock.readLock();
+    private final Lock writeLock = lock.writeLock();
 
-	public final static CrestCache getInstance()
-	{
-		return _instance;
-	}
+    private CrestCache() {
+        load();
+    }
 
-	/**
-	 * Генерирует уникальный положительный ID на основе данных: ID клана/альянса и значка
-	 *
-	 * @param pledgeId ID клана или альянса
-	 * @param crest данные значка
-	 * @return ID значка в "кэше"
-	 */
-	private static int getCrestId(int pledgeId, byte[] crest)
-	{
-		return Math.abs(new HashCodeBuilder(15, 87).append(pledgeId).append(crest).toHashCode());
-	}
+    public final static CrestCache getInstance() {
+        return _instance;
+    }
 
-	public void load()
-	{
-		int count = 0;
-		int pledgeId, crestId;
-		byte[] crest;
+    /**
+     * Генерирует уникальный положительный ID на основе данных: ID клана/альянса и значка
+     *
+     * @param pledgeId ID клана или альянса
+     * @param crest    данные значка
+     * @return ID значка в "кэше"
+     */
+    private static int getCrestId(int pledgeId, byte[] crest) {
+        return pledgeId;
+    }
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection())
-		{
+    public void load() {
+        int count = 0;
+        int pledgeId, crestId;
+        byte[] crest;
 
-			try (PreparedStatement statement = con.prepareStatement("SELECT clan_id, crest FROM clan_data WHERE crest IS NOT NULL");
-					ResultSet rset = statement.executeQuery())
-			{
-				while (rset.next())
-				{
-					count++;
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
 
-					pledgeId = rset.getInt("clan_id");
-					crest = rset.getBytes("crest");
+            try (PreparedStatement statement = con.prepareStatement("SELECT clan_id, crest FROM clan_data WHERE crest IS NOT NULL");
+                 ResultSet rset = statement.executeQuery()) {
+                while (rset.next()) {
+                    count++;
 
-					crestId = getCrestId(pledgeId, crest);
+                    pledgeId = rset.getInt("clan_id");
+                    crest = rset.getBytes("crest");
 
-					_pledgeCrestId.put(pledgeId, crestId);
-					_pledgeCrest.put(crestId, crest);
-				}
-			}
+                    crestId = getCrestId(pledgeId, crest);
 
-			try (PreparedStatement statement = con.prepareStatement("SELECT clan_id, largecrest FROM clan_data WHERE largecrest IS NOT NULL");
-					ResultSet rset = statement.executeQuery())
-			{
-				while (rset.next())
-				{
-					count++;
+                    _pledgeCrestId.put(pledgeId, crestId);
+                    _pledgeCrest.put(crestId, crest);
+                }
+            }
 
-					pledgeId = rset.getInt("clan_id");
-					crest = rset.getBytes("largecrest");
+            try (PreparedStatement statement = con.prepareStatement("SELECT clan_id, largecrest FROM clan_data WHERE largecrest IS NOT NULL");
+                 ResultSet rset = statement.executeQuery()) {
+                while (rset.next()) {
+                    count++;
 
-					crestId = getCrestId(pledgeId, crest);
+                    pledgeId = rset.getInt("clan_id");
+                    crest = rset.getBytes("largecrest");
 
-					_pledgeCrestLargeId.put(pledgeId, crestId);
-					_pledgeCrestLarge.put(crestId, crest);
-				}
-			}
+                    crestId = getCrestId(pledgeId, crest);
 
-			try (PreparedStatement statement = con.prepareStatement("SELECT ally_id, crest FROM ally_data WHERE crest IS NOT NULL");
-					ResultSet rset = statement.executeQuery())
-			{
-				while (rset.next())
-				{
-					count++;
-					pledgeId = rset.getInt("ally_id");
-					crest = rset.getBytes("crest");
+                    _pledgeCrestLargeId.put(pledgeId, crestId);
+                    _pledgeCrestLarge.put(crestId, crest);
+                }
+            }
 
-					crestId = getCrestId(pledgeId, crest);
+            try (PreparedStatement statement = con.prepareStatement("SELECT ally_id, crest FROM ally_data WHERE crest IS NOT NULL");
+                 ResultSet rset = statement.executeQuery()) {
+                while (rset.next()) {
+                    count++;
+                    pledgeId = rset.getInt("ally_id");
+                    crest = rset.getBytes("crest");
 
-					_allyCrestId.put(pledgeId, crestId);
-					_allyCrest.put(crestId, crest);
-				}
-			}
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while loading CrestCache! ", e);
-		}
-		_log.info("CrestCache: Loaded " + count + " crests");
-	}
+                    crestId = getCrestId(pledgeId, crest);
 
-	public byte[] getPledgeCrest(int crestId)
-	{
-		byte[] crest = null;
+                    _allyCrestId.put(pledgeId, crestId);
+                    _allyCrest.put(crestId, crest);
+                }
+            }
+        } catch (SQLException e) {
+            _log.error("Error while loading CrestCache! ", e);
+        }
+        _log.info("CrestCache: Loaded " + count + " crests");
+    }
 
-		readLock.lock();
-		try
-		{
-			crest = _pledgeCrest.get(crestId);
-		}
-		finally
-		{
-			readLock.unlock();
-		}
+    public byte[] getPledgeCrest(int crestId) {
+        byte[] crest = null;
 
-		return crest;
-	}
+        readLock.lock();
+        try {
+            crest = _pledgeCrest.get(crestId);
+        } finally {
+            readLock.unlock();
+        }
 
-	public byte[] getPledgeCrestLarge(int crestId)
-	{
-		byte[] crest = null;
+        return crest;
+    }
 
-		readLock.lock();
-		try
-		{
-			crest = _pledgeCrestLarge.get(crestId);
-		}
-		finally
-		{
-			readLock.unlock();
-		}
+    public byte[] getPledgeCrestLarge(int crestId) {
+        byte[] crest = null;
 
-		return crest;
-	}
+        readLock.lock();
+        try {
+            crest = _pledgeCrestLarge.get(crestId);
+        } finally {
+            readLock.unlock();
+        }
 
-	public byte[] getAllyCrest(int crestId)
-	{
-		byte[] crest = null;
+        return crest;
+    }
 
-		readLock.lock();
-		try
-		{
-			crest = _allyCrest.get(crestId);
-		}
-		finally
-		{
-			readLock.unlock();
-		}
+    public byte[] getAllyCrest(int crestId) {
+        byte[] crest = null;
 
-		return crest;
-	}
+        readLock.lock();
+        try {
+            crest = _allyCrest.get(crestId);
+        } finally {
+            readLock.unlock();
+        }
 
-	public int getPledgeCrestId(int pledgeId)
-	{
-		int crestId = 0;
+        return crest;
+    }
 
-		readLock.lock();
-		try
-		{
-			crestId = _pledgeCrestId.get(pledgeId);
-		}
-		finally
-		{
-			readLock.unlock();
-		}
+    public int getPledgeCrestId(int pledgeId) {
+        int crestId = 0;
 
-		return crestId;
-	}
+        readLock.lock();
+        try {
+            crestId = _pledgeCrestId.get(pledgeId);
+        } finally {
+            readLock.unlock();
+        }
 
-	public int getPledgeCrestLargeId(int pledgeId)
-	{
-		int crestId = 0;
+        return crestId;
+    }
 
-		readLock.lock();
-		try
-		{
-			crestId = _pledgeCrestLargeId.get(pledgeId);
-		}
-		finally
-		{
-			readLock.unlock();
-		}
+    public int getPledgeCrestLargeId(int pledgeId) {
+        int crestId = 0;
 
-		return crestId;
-	}
+        readLock.lock();
+        try {
+            crestId = _pledgeCrestLargeId.get(pledgeId);
+        } finally {
+            readLock.unlock();
+        }
 
-	public int getAllyCrestId(int pledgeId)
-	{
-		int crestId = 0;
-		readLock.lock();
+        return crestId;
+    }
 
-		try
-		{
-			crestId = _allyCrestId.get(pledgeId);
-		}
-		finally
-		{
-			readLock.unlock();
-		}
+    public int getAllyCrestId(int pledgeId) {
+        int crestId = 0;
+        readLock.lock();
 
-		return crestId;
-	}
+        try {
+            crestId = _allyCrestId.get(pledgeId);
+        } finally {
+            readLock.unlock();
+        }
 
-	public void removePledgeCrest(int pledgeId)
-	{
-		writeLock.lock();
-		try
-		{
-			_pledgeCrest.remove(_pledgeCrestId.remove(pledgeId));
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
+        return crestId;
+    }
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET crest=? WHERE clan_id=?"))
-		{
-			statement.setNull(1, Types.VARBINARY);
-			statement.setInt(2, pledgeId);
-			statement.execute();
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while removing Pledge Crest!", e);
-		}
-	}
+    public void removePledgeCrest(int pledgeId) {
+        writeLock.lock();
+        try {
+            _pledgeCrest.remove(_pledgeCrestId.remove(pledgeId));
+        } finally {
+            writeLock.unlock();
+        }
 
-	public void removePledgeCrestLarge(int pledgeId)
-	{
-		writeLock.lock();
-		try
-		{
-			_pledgeCrestLarge.remove(_pledgeCrestLargeId.remove(pledgeId));
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET crest=? WHERE clan_id=?")) {
+            statement.setNull(1, Types.VARBINARY);
+            statement.setInt(2, pledgeId);
+            statement.execute();
+        } catch (SQLException e) {
+            _log.error("Error while removing Pledge Crest!", e);
+        }
+    }
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET largecrest=? WHERE clan_id=?"))
-		{
-			statement.setNull(1, Types.VARBINARY);
-			statement.setInt(2, pledgeId);
-			statement.execute();
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while removing Pledge Crest Large! ", e);
-		}
-	}
+    public void removePledgeCrestLarge(int pledgeId) {
+        writeLock.lock();
+        try {
+            _pledgeCrestLarge.remove(_pledgeCrestLargeId.remove(pledgeId));
+        } finally {
+            writeLock.unlock();
+        }
 
-	public void removeAllyCrest(int pledgeId)
-	{
-		writeLock.lock();
-		try
-		{
-			_allyCrest.remove(_allyCrestId.remove(pledgeId));
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET largecrest=? WHERE clan_id=?")) {
+            statement.setNull(1, Types.VARBINARY);
+            statement.setInt(2, pledgeId);
+            statement.execute();
+        } catch (SQLException e) {
+            _log.error("Error while removing Pledge Crest Large! ", e);
+        }
+    }
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET crest=? WHERE ally_id=?"))
-		{
-			statement.setNull(1, Types.VARBINARY);
-			statement.setInt(2, pledgeId);
-			statement.execute();
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while Removing Ally Crest ", e);
-		}
-	}
+    public void removeAllyCrest(int pledgeId) {
+        writeLock.lock();
+        try {
+            _allyCrest.remove(_allyCrestId.remove(pledgeId));
+        } finally {
+            writeLock.unlock();
+        }
 
-	public int savePledgeCrest(int pledgeId, byte[] crest)
-	{
-		int crestId = getCrestId(pledgeId, crest);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET crest=? WHERE ally_id=?")) {
+            statement.setNull(1, Types.VARBINARY);
+            statement.setInt(2, pledgeId);
+            statement.execute();
+        } catch (SQLException e) {
+            _log.error("Error while Removing Ally Crest ", e);
+        }
+    }
 
-		writeLock.lock();
-		try
-		{
-			_pledgeCrestId.put(pledgeId, crestId);
-			_pledgeCrest.put(crestId, crest);
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
+    public int savePledgeCrest(int pledgeId, byte[] crest) {
+        int crestId = getCrestId(pledgeId, crest);
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET crest=? WHERE clan_id=?"))
-		{
-			statement.setBytes(1, crest);
-			statement.setInt(2, pledgeId);
-			statement.execute();
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while saving Pledge Crest! ", e);
-		}
+        writeLock.lock();
+        try {
+            _pledgeCrestId.put(pledgeId, crestId);
+            _pledgeCrest.put(crestId, crest);
+        } finally {
+            writeLock.unlock();
+        }
 
-		return crestId;
-	}
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET crest=? WHERE clan_id=?")) {
+            statement.setBytes(1, crest);
+            statement.setInt(2, pledgeId);
+            statement.execute();
+        } catch (SQLException e) {
+            _log.error("Error while saving Pledge Crest! ", e);
+        }
 
-	public int savePledgeCrestLarge(int pledgeId, byte[] crest)
-	{
-		int crestId = getCrestId(pledgeId, crest);
+        return crestId;
+    }
 
-		writeLock.lock();
-		try
-		{
-			_pledgeCrestLargeId.put(pledgeId, crestId);
-			_pledgeCrestLarge.put(crestId, crest);
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
+    public int savePledgeCrestLarge(int pledgeId, byte[] crest) {
+        int crestId = getCrestId(pledgeId, crest);
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET largecrest=? WHERE clan_id=?"))
-		{
-			statement.setBytes(1, crest);
-			statement.setInt(2, pledgeId);
-			statement.execute();
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while saving Pledge Crest Large! ", e);
-		}
+        writeLock.lock();
+        try {
+            _pledgeCrestLargeId.put(pledgeId, crestId);
+            _pledgeCrestLarge.put(crestId, crest);
+        } finally {
+            writeLock.unlock();
+        }
 
-		return crestId;
-	}
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET largecrest=? WHERE clan_id=?")) {
+            statement.setBytes(1, crest);
+            statement.setInt(2, pledgeId);
+            statement.execute();
+        } catch (SQLException e) {
+            _log.error("Error while saving Pledge Crest Large! ", e);
+        }
 
-	public int saveAllyCrest(int pledgeId, byte[] crest)
-	{
-		int crestId = getCrestId(pledgeId, crest);
+        return crestId;
+    }
 
-		writeLock.lock();
-		try
-		{
-			_allyCrestId.put(pledgeId, crestId);
-			_allyCrest.put(crestId, crest);
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
+    public int saveAllyCrest(int pledgeId, byte[] crest) {
+        int crestId = getCrestId(pledgeId, crest);
 
-		try (Connection con = DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET crest=? WHERE ally_id=?"))
-		{
-			statement.setBytes(1, crest);
-			statement.setInt(2, pledgeId);
-			statement.execute();
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while saving Ally Crest! ", e);
-		}
+        writeLock.lock();
+        try {
+            _allyCrestId.put(pledgeId, crestId);
+            _allyCrest.put(crestId, crest);
+        } finally {
+            writeLock.unlock();
+        }
 
-		return crestId;
-	}
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET crest=? WHERE ally_id=?")) {
+            statement.setBytes(1, crest);
+            statement.setInt(2, pledgeId);
+            statement.execute();
+        } catch (SQLException e) {
+            _log.error("Error while saving Ally Crest! ", e);
+        }
+
+        return crestId;
+    }
 }

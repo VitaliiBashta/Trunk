@@ -17,109 +17,95 @@ import l2f.gameserver.scripts.ScriptFile;
 import l2f.gameserver.tables.SkillTable;
 import l2f.gameserver.templates.SoulCrystal;
 
-public class SoulCrystals extends ScriptItemHandler implements ScriptFile
-{
-	private int[] _itemIds;
+public class SoulCrystals extends ScriptItemHandler implements ScriptFile {
+    private int[] _itemIds;
 
-	@Override
-	public boolean pickupItem(Playable playable, ItemInstance item)
-	{
-		return true;
-	}
+    @Override
+    public boolean pickupItem(Playable playable, ItemInstance item) {
+        return true;
+    }
 
-	@Override
-	public void onLoad()
-	{
-		ItemHandler.getInstance().registerItemHandler(this);
-	}
+    @Override
+    public void onLoad() {
+        ItemHandler.getInstance().registerItemHandler(this);
+    }
 
-	@Override
-	public void onReload()
-	{
+    @Override
+    public void onReload() {
 
-	}
+    }
 
-	@Override
-	public void onShutdown()
-	{
+    @Override
+    public void onShutdown() {
 
-	}
+    }
 
-	public SoulCrystals()
-	{
-		TIntHashSet set = new TIntHashSet();
-		for (SoulCrystal crystal : SoulCrystalHolder.getInstance().getCrystals())
-		{
-			set.add(crystal.getItemId());
-			set.add(crystal.getNextItemId());
-		}
+    public SoulCrystals() {
+        TIntHashSet set = new TIntHashSet();
+        for (SoulCrystal crystal : SoulCrystalHolder.getInstance().getCrystals()) {
+            set.add(crystal.getItemId());
+            set.add(crystal.getNextItemId());
+        }
 
-		_itemIds = set.toArray();
-	}
-	@Override
-	public boolean useItem(Playable playable, ItemInstance item, boolean ctrl)
-	{
-		if (playable == null || !playable.isPlayer())
-			return false;
-		Player player = playable.getPlayer();
+        _itemIds = set.toArray();
+    }
 
-		if (player.getTarget() == null || !player.getTarget().isMonster())
-		{
-			player.sendPacket(Msg.INVALID_TARGET, ActionFail.STATIC);
-			return false;
-		}
+    @Override
+    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
+        if (playable == null || !playable.isPlayer())
+            return false;
+        Player player = playable.getPlayer();
 
-		if (playable.isActionsDisabled())
-		{
-			player.sendActionFailed();
-			return false;
-		}
+        if (player.getTarget() == null || !player.getTarget().isMonster()) {
+            player.sendPacket(Msg.INVALID_TARGET, ActionFail.STATIC);
+            return false;
+        }
 
-		MonsterInstance target = (MonsterInstance) player.getTarget();
+        if (playable.isActionsDisabled()) {
+            player.sendActionFailed();
+            return false;
+        }
 
-		// u can use soul crystal only when target hp goes to <50%
-		if (target.getCurrentHpPercents() >= 50)
-		{
-			player.sendPacket(Msg.THE_SOUL_CRYSTAL_WAS_NOT_ABLE_TO_ABSORB_A_SOUL, ActionFail.STATIC);
-			return false;
-		}
+        MonsterInstance target = (MonsterInstance) player.getTarget();
 
-		// Soul Crystal Casting section
-		int skillHitTime = SkillTable.getInstance().getInfo(2096, 1).getHitTime();
-		player.broadcastPacket(new MagicSkillUse(player, 2096, 1, skillHitTime, 0));
-		player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, skillHitTime));
-		// End Soul Crystal Casting section
+        // u can use soul crystal only when target hp goes to <50%
+        if (target.getCurrentHpPercents() >= 50) {
+            player.sendPacket(Msg.THE_SOUL_CRYSTAL_WAS_NOT_ABLE_TO_ABSORB_A_SOUL, ActionFail.STATIC);
+            return false;
+        }
 
-		// Continue execution later
-		player._skillTask = ThreadPoolManager.getInstance().schedule(new CrystalFinalizer(player, target), skillHitTime);
-		return true;
-	}
+        // Soul Crystal Casting section
+        int skillHitTime = SkillTable.getInstance().getInfo(2096, 1).getHitTime();
+        player.broadcastPacket(new MagicSkillUse(player, 2096, 1, skillHitTime, 0));
+        player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, skillHitTime));
+        // End Soul Crystal Casting section
 
-	static class CrystalFinalizer extends RunnableImpl
-	{
-		private Player _activeChar;
-		private MonsterInstance _target;
+        // Continue execution later
+        player._skillTask = ThreadPoolManager.getInstance().schedule(new CrystalFinalizer(player, target), skillHitTime);
+        return true;
+    }
 
-		CrystalFinalizer(Player activeChar, MonsterInstance target)
-		{
-			_activeChar = activeChar;
-			_target = target;
-		}
+    static class CrystalFinalizer extends RunnableImpl {
+        private Player _activeChar;
+        private MonsterInstance _target;
 
-		@Override
-		public void runImpl() throws Exception
-		{
-			_activeChar.sendActionFailed();
-			_activeChar.clearCastVars();
-			if (_activeChar.isDead() || _target.isDead())
-				return;
-			_target.addAbsorber(_activeChar);
-		}
-	}
+        CrystalFinalizer(Player activeChar, MonsterInstance target) {
+            _activeChar = activeChar;
+            _target = target;
+        }
 
-	@Override
-	public final int[] getItemIds()
-	{
-		return _itemIds;
-	}
+        @Override
+        public void runImpl() {
+            _activeChar.sendActionFailed();
+            _activeChar.clearCastVars();
+            if (_activeChar.isDead() || _target.isDead())
+                return;
+            _target.addAbsorber(_activeChar);
+        }
+    }
+
+    @Override
+    public final int[] getItemIds() {
+        return _itemIds;
+    }
 }

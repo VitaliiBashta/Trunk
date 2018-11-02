@@ -6,27 +6,24 @@ package l2f.gameserver.network.serverpackets;
  * d: blue points
  * d: red points
  */
-public class ExCubeGameChangePoints extends L2GameServerPacket
-{
-	int _timeLeft;
-	int _bluePoints;
-	int _redPoints;
+public class ExCubeGameChangePoints extends L2GameServerPacket {
+    int _timeLeft;
+    int _bluePoints;
+    int _redPoints;
 
-	public ExCubeGameChangePoints(int timeLeft, int bluePoints, int redPoints)
-	{
-		_timeLeft = timeLeft;
-		_bluePoints = bluePoints;
-		_redPoints = redPoints;
-	}
+    public ExCubeGameChangePoints(int timeLeft, int bluePoints, int redPoints) {
+        _timeLeft = timeLeft;
+        _bluePoints = bluePoints;
+        _redPoints = redPoints;
+    }
 
-	@Override
-	protected void writeImpl()
-	{
-		writeEx(0x98);
-		writeD(0x02);
+    @Override
+    protected void writeImpl() {
+        writeEx(0x98);
+        writeD(0x02);
 
-		writeD(_timeLeft);
-		writeD(_bluePoints);
-		writeD(_redPoints);
-	}
+        writeD(_timeLeft);
+        writeD(_bluePoints);
+        writeD(_redPoints);
+    }
 }

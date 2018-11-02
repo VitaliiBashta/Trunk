@@ -1,14 +1,13 @@
 package l2f.gameserver.dao;
 
+import l2f.gameserver.database.DatabaseFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import l2f.gameserver.database.DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CaptchaPunishmentDAO {
     private static final Logger _log = LoggerFactory.getLogger(CaptchaPunishmentDAO.class);

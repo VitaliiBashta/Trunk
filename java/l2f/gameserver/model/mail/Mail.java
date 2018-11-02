@@ -1,245 +1,208 @@
 package l2f.gameserver.model.mail;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import l2f.commons.dao.JdbcEntity;
 import l2f.commons.dao.JdbcEntityState;
 import l2f.gameserver.dao.MailDAO;
 import l2f.gameserver.model.items.ItemInstance;
 
-public class Mail implements JdbcEntity, Comparable<Mail>
-{
-	public static final int DELETED = 0;
-	public static final int READED = 1;
-	public static final int REJECTED = 2;
-	private static final long serialVersionUID = -8704970972611917153L;
-	private static final MailDAO _mailDAO = MailDAO.getInstance();
-	private int messageId;
-	private int senderId;
-	private String senderName;
-	private int receiverId;
-	private String receiverName;
-	private int expireTime;
-	private String topic;
-	private String body;
-	private long price;
-	private SenderType _type = SenderType.NORMAL;
-	private boolean isUnread;
-	private Set<ItemInstance> attachments = new HashSet<ItemInstance>();
-	private JdbcEntityState _state = JdbcEntityState.CREATED;
+import java.util.HashSet;
+import java.util.Set;
 
-	public int getMessageId()
-	{
-		return messageId;
-	}
+public class Mail implements JdbcEntity, Comparable<Mail> {
+    public static final int DELETED = 0;
+    public static final int READED = 1;
+    public static final int REJECTED = 2;
+    private static final long serialVersionUID = -8704970972611917153L;
+    private static final MailDAO _mailDAO = MailDAO.getInstance();
+    private int messageId;
+    private int senderId;
+    private String senderName;
+    private int receiverId;
+    private String receiverName;
+    private int expireTime;
+    private String topic;
+    private String body;
+    private long price;
+    private SenderType _type = SenderType.NORMAL;
+    private boolean isUnread;
+    private Set<ItemInstance> attachments = new HashSet<ItemInstance>();
+    private JdbcEntityState _state = JdbcEntityState.CREATED;
 
-	public void setMessageId(int messageId)
-	{
-		this.messageId = messageId;
-	}
+    public int getMessageId() {
+        return messageId;
+    }
 
-	public int getSenderId()
-	{
-		return senderId;
-	}
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
+    }
 
-	public void setSenderId(int senderId)
-	{
-		this.senderId = senderId;
-	}
+    public int getSenderId() {
+        return senderId;
+    }
 
-	public String getSenderName()
-	{
-		return senderName;
-	}
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
+    }
 
-	public void setSenderName(String senderName)
-	{
-		this.senderName = senderName;
-	}
+    public String getSenderName() {
+        return senderName;
+    }
 
-	public int getReceiverId()
-	{
-		return receiverId;
-	}
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
 
-	public void setReceiverId(int receiverId)
-	{
-		this.receiverId = receiverId;
-	}
+    public int getReceiverId() {
+        return receiverId;
+    }
 
-	public String getReceiverName()
-	{
-		return receiverName;
-	}
+    public void setReceiverId(int receiverId) {
+        this.receiverId = receiverId;
+    }
 
-	public void setReceiverName(String receiverName)
-	{
-		this.receiverName = receiverName;
-	}
+    public String getReceiverName() {
+        return receiverName;
+    }
 
-	public int getExpireTime()
-	{
-		return expireTime;
-	}
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
 
-	public void setExpireTime(int expireTime)
-	{
-		this.expireTime = expireTime;
-	}
+    public int getExpireTime() {
+        return expireTime;
+    }
 
-	public String getTopic()
-	{
-		return topic;
-	}
+    public void setExpireTime(int expireTime) {
+        this.expireTime = expireTime;
+    }
 
-	public void setTopic(String topic)
-	{
-		this.topic = topic;
-	}
+    public String getTopic() {
+        return topic;
+    }
 
-	public String getBody()
-	{
-		return body;
-	}
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
-	public void setBody(String body)
-	{
-		this.body = body;
-	}
+    public String getBody() {
+        return body;
+    }
 
-	public boolean isPayOnDelivery()
-	{
-		return price > 0L;
-	}
+    public void setBody(String body) {
+        this.body = body;
+    }
 
-	public long getPrice()
-	{
-		return price;
-	}
+    public boolean isPayOnDelivery() {
+        return price > 0L;
+    }
 
-	public void setPrice(long price)
-	{
-		this.price = price;
-	}
+    public long getPrice() {
+        return price;
+    }
 
-	public boolean isUnread()
-	{
-		return isUnread;
-	}
+    public void setPrice(long price) {
+        this.price = price;
+    }
 
-	public void setUnread(boolean isUnread)
-	{
-		this.isUnread = isUnread;
-	}
+    public boolean isUnread() {
+        return isUnread;
+    }
 
-	public Set<ItemInstance> getAttachments()
-	{
-		return attachments;
-	}
+    public void setUnread(boolean isUnread) {
+        this.isUnread = isUnread;
+    }
 
-	public void addAttachment(ItemInstance item)
-	{
-		attachments.add(item);
-	}
+    public Set<ItemInstance> getAttachments() {
+        return attachments;
+    }
 
-	@Override
-	public boolean equals(Object o)
-	{
-		if (o == this)
-			return true;
-		if (o == null)
-			return false;
-		if (o.getClass() != this.getClass())
-			return false;
-		return ((Mail) o).getMessageId() == getMessageId();
-	}
+    public void addAttachment(ItemInstance item) {
+        attachments.add(item);
+    }
 
-	@Override
-	public JdbcEntityState getJdbcState()
-	{
-		return _state;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (o == null)
+            return false;
+        if (o.getClass() != this.getClass())
+            return false;
+        return ((Mail) o).getMessageId() == getMessageId();
+    }
 
-	@Override
-	public void setJdbcState(JdbcEntityState state)
-	{
-		_state = state;
-	}
+    @Override
+    public JdbcEntityState getJdbcState() {
+        return _state;
+    }
 
-	public void save()
-	{
-		_mailDAO.save(this);
-	}
+    @Override
+    public void setJdbcState(JdbcEntityState state) {
+        _state = state;
+    }
 
-	public void update()
-	{
-		_mailDAO.update(this);
-	}
+    public void save() {
+        _mailDAO.save(this);
+    }
 
-	public void delete()
-	{
-		_mailDAO.delete(this);
-	}
+    public void update() {
+        _mailDAO.update(this);
+    }
 
-	public Mail reject()
-	{
-		Mail mail = new Mail();
-		mail.setSenderId(getReceiverId());
-		mail.setSenderName(getReceiverName());
-		mail.setReceiverId(getSenderId());
-		mail.setReceiverName(getSenderName());
-		mail.setTopic(getTopic());
-		mail.setBody(getBody());
-		synchronized (getAttachments())
-		{
-			for (ItemInstance item : getAttachments())
-				mail.addAttachment(item);
-			getAttachments().clear();
-		}
-		mail.setType(SenderType.NEWS_INFORMER);
-		mail.setUnread(true);
-		return mail;
-	}
+    public void delete() {
+        _mailDAO.delete(this);
+    }
 
-	public Mail reply()
-	{
-		Mail mail = new Mail();
-		mail.setSenderId(getReceiverId());
-		mail.setSenderName(getReceiverName());
-		mail.setReceiverId(getSenderId());
-		mail.setReceiverName(getSenderName());
-		mail.setTopic("[Re]" + getTopic());
-		mail.setBody(getBody());
-		mail.setType(SenderType.NEWS_INFORMER);
-		mail.setUnread(true);
-		return mail;
-	}
+    public Mail reject() {
+        Mail mail = new Mail();
+        mail.setSenderId(getReceiverId());
+        mail.setSenderName(getReceiverName());
+        mail.setReceiverId(getSenderId());
+        mail.setReceiverName(getSenderName());
+        mail.setTopic(getTopic());
+        mail.setBody(getBody());
+        synchronized (getAttachments()) {
+            for (ItemInstance item : getAttachments())
+                mail.addAttachment(item);
+            getAttachments().clear();
+        }
+        mail.setType(SenderType.NEWS_INFORMER);
+        mail.setUnread(true);
+        return mail;
+    }
 
-	@Override
-	public int compareTo(Mail o)
-	{
-		return o.getMessageId() - this.getMessageId();
-	}
+    public Mail reply() {
+        Mail mail = new Mail();
+        mail.setSenderId(getReceiverId());
+        mail.setSenderName(getReceiverName());
+        mail.setReceiverId(getSenderId());
+        mail.setReceiverName(getSenderName());
+        mail.setTopic("[Re]" + getTopic());
+        mail.setBody(getBody());
+        mail.setType(SenderType.NEWS_INFORMER);
+        mail.setUnread(true);
+        return mail;
+    }
 
-	public SenderType getType()
-	{
-		return _type;
-	}
+    @Override
+    public int compareTo(Mail o) {
+        return o.getMessageId() - this.getMessageId();
+    }
 
-	public void setType(SenderType type)
-	{
-		_type = type;
-	}
+    public SenderType getType() {
+        return _type;
+    }
 
-	public static enum SenderType
-	{
-		NORMAL,
-		NEWS_INFORMER,
-		NONE,
-		BIRTHDAY;
+    public void setType(SenderType type) {
+        _type = type;
+    }
 
-		public static SenderType[] VALUES = values();
-	}
+    public static enum SenderType {
+        NORMAL,
+        NEWS_INFORMER,
+        NONE,
+        BIRTHDAY;
+
+        public static SenderType[] VALUES = values();
+    }
 }

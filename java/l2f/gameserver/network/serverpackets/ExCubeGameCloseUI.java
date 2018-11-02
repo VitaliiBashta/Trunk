@@ -3,17 +3,15 @@ package l2f.gameserver.network.serverpackets;
 /**
  * Format: (chd)
  */
-public class ExCubeGameCloseUI extends L2GameServerPacket
-{
-	int _seconds;
+public class ExCubeGameCloseUI extends L2GameServerPacket {
+    int _seconds;
 
-	public ExCubeGameCloseUI()
-	{}
+    public ExCubeGameCloseUI() {
+    }
 
-	@Override
-	protected void writeImpl()
-	{
-		writeEx(0x97);
-		writeD(0xffffffff);
-	}
+    @Override
+    protected void writeImpl() {
+        writeEx(0x97);
+        writeD(0xffffffff);
+    }
 }

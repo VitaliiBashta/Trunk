@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.regex.Pattern;
 
 public class Strings {
@@ -39,7 +40,7 @@ public class Strings {
 
     public static void reload() {
         try {
-            String[] pairs = FileUtils.readFileToString(new File(Config.DATAPACK_ROOT, "data/translit.txt")).split("\n");
+            String[] pairs = FileUtils.readFileToString(new File(Config.DATAPACK_ROOT, "data/translit.txt"), Charset.defaultCharset()).split("\n");
             tr = new String[pairs.length * 2];
             for (int i = 0; i < pairs.length; i++) {
                 String[] ss = pairs[i].split(" +");
@@ -47,7 +48,9 @@ public class Strings {
                 tr[i * 2 + 1] = ss[1];
             }
 
-            pairs = FileUtils.readFileToString(new File(Config.DATAPACK_ROOT, "data/translit_back.txt")).split("\n");
+            pairs = FileUtils.readFileToString(new File(Config.DATAPACK_ROOT,
+                    "data/translit_back.txt"),Charset.defaultCharset()).split("\n");
+
             trb = new String[pairs.length * 2];
             for (int i = 0; i < pairs.length; i++) {
                 String[] ss = pairs[i].split(" +");
@@ -55,7 +58,7 @@ public class Strings {
                 trb[i * 2 + 1] = ss[1];
             }
 
-            pairs = FileUtils.readFileToString(new File(Config.DATAPACK_ROOT, "data/transcode.txt")).split("\n");
+            pairs = FileUtils.readFileToString(new File(Config.DATAPACK_ROOT, "data/transcode.txt"),Charset.defaultCharset()).split("\n");
             trcode = new String[pairs.length * 2];
             for (int i = 0; i < pairs.length; i++) {
                 String[] ss = pairs[i].split(" +");

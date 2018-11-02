@@ -1,46 +1,42 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.stats.Formulas;
 import l2f.gameserver.templates.StatsSet;
 
-public class MDam extends Skill
-{
-	public MDam(StatsSet set)
-	{
-		super(set);
-	}
+import java.util.List;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		int sps = isSSPossible() ? (isMagic() ? activeChar.getChargedSpiritShot() : activeChar.getChargedSoulShot() ? 2 : 0) : 0;
+public class MDam extends Skill {
+    public MDam(StatsSet set) {
+        super(set);
+    }
 
-		Creature realTarget;
-		boolean reflected;
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        int sps = isSSPossible() ? (isMagic() ? activeChar.getChargedSpiritShot() : activeChar.getChargedSoulShot() ? 2 : 0) : 0;
 
-		for (Creature target : targets)
-			if (target != null)
-			{
-				if (target.isDead())
-					continue;
+        Creature realTarget;
+        boolean reflected;
 
-				reflected = target.checkReflectSkill(activeChar, this);
-				realTarget = reflected ? activeChar : target;
+        for (Creature target : targets)
+            if (target != null) {
+                if (target.isDead())
+                    continue;
 
-				double damage = Formulas.calcMagicDam(activeChar, realTarget, this, sps);
-				if (damage >= 1)
-					realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
+                reflected = target.checkReflectSkill(activeChar, this);
+                realTarget = reflected ? activeChar : target;
 
-				getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
-			}
+                double damage = Formulas.calcMagicDam(activeChar, realTarget, this, sps);
+                if (damage >= 1)
+                    realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
 
-		if (isSuicideAttack())
-			activeChar.doDie(null);
-		else if (isSSPossible())
-			activeChar.unChargeShots(isMagic());
-	}
+                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+            }
+
+        if (isSuicideAttack())
+            activeChar.doDie(null);
+        else if (isSSPossible())
+            activeChar.unChargeShots(isMagic());
+    }
 }

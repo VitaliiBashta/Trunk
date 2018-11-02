@@ -1,11 +1,5 @@
 package l2f.gameserver.model.entity.residence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.dao.JdbcEntityState;
 import l2f.commons.dbutils.DbUtils;
 import l2f.gameserver.dao.ClanDataDAO;
@@ -16,255 +10,223 @@ import l2f.gameserver.model.pledge.Clan;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.templates.item.ItemTemplate;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Fortress extends Residence
-{
-	public static final long CASTLE_FEE = 25000;
-	// type
-	public static final int DOMAIN = 0;
-	public static final int BOUNDARY = 1;
-	// state
-	public static final int NOT_DECIDED = 0;
-	public static final int INDEPENDENT = 1;
-	public static final int CONTRACT_WITH_CASTLE = 2;
-	// facility
-	public static final int REINFORCE = 0;
-	public static final int GUARD_BUFF = 1;
-	public static final int DOOR_UPGRADE = 2;
-	public static final int DWARVENS = 3;
-	public static final int SCOUT = 4;
-	public static final int FACILITY_MAX = 5;
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
-	private static final Logger _log = LoggerFactory.getLogger(Fortress.class);
-	private static final long REMOVE_CYCLE = 7 * 24; // 7 Fort days may belong owneru
-	private static final long REWARD_CYCLE = 6; // every 6 hours
-	private final List<Castle> _relatedCastles = new ArrayList<Castle>(5);
-	private int[] _facilities = new int[FACILITY_MAX];
-	// envoy
-	private int _state;
-	private int _castleId;
-	private int _supplyCount;
-	private long _supplySpawn;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-	public Fortress(StatsSet set)
-	{
-		super(set);
-	}
+public final class Fortress extends Residence {
+    public static final long CASTLE_FEE = 25000;
+    // type
+    public static final int DOMAIN = 0;
+    public static final int BOUNDARY = 1;
+    // state
+    public static final int NOT_DECIDED = 0;
+    public static final int INDEPENDENT = 1;
+    public static final int CONTRACT_WITH_CASTLE = 2;
+    // facility
+    public static final int REINFORCE = 0;
+    public static final int GUARD_BUFF = 1;
+    public static final int DOOR_UPGRADE = 2;
+    public static final int DWARVENS = 3;
+    public static final int SCOUT = 4;
+    public static final int FACILITY_MAX = 5;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private static final Logger _log = LoggerFactory.getLogger(Fortress.class);
+    private static final long REMOVE_CYCLE = 7 * 24; // 7 Fort days may belong owneru
+    private static final long REWARD_CYCLE = 6; // every 6 hours
+    private final List<Castle> _relatedCastles = new ArrayList<Castle>(5);
+    private int[] _facilities = new int[FACILITY_MAX];
+    // envoy
+    private int _state;
+    private int _castleId;
+    private int _supplyCount;
+    private long _supplySpawn;
 
-	@Override
-	public ResidenceType getType()
-	{
-		return ResidenceType.Fortress;
-	}
+    public Fortress(StatsSet set) {
+        super(set);
+    }
 
-	@Override
-	public void changeOwner(Clan clan)
-	{
-		// If a clan is owned by a castle / fortress, we select it.
-		if (clan != null)
-		{
-			if (clan.getHasFortress() != 0)
-			{
-				Fortress oldFortress = ResidenceHolder.getInstance().getResidence(Fortress.class, clan.getHasFortress());
-				if (oldFortress != null)
-					oldFortress.changeOwner(null);
-			}
-			if (clan.getCastle() != 0)
-			{
-				Castle oldCastle = ResidenceHolder.getInstance().getResidence(Castle.class, clan.getCastle());
-				if (oldCastle != null)
-					oldCastle.changeOwner(null);
-			}
-		}
+    @Override
+    public ResidenceType getType() {
+        return ResidenceType.Fortress;
+    }
 
-		// If this fortress is someone captured, it takes away from the fortress
-		if (getOwnerId() > 0 && (clan == null || clan.getClanId() != getOwnerId()))
-		{
-			// Remove Fortress skills with the old owner
-			removeSkills();
-			Clan oldOwner = getOwner();
-			if (oldOwner != null)
-				oldOwner.setHasFortress(0);
+    @Override
+    public void changeOwner(Clan clan) {
+        // If a clan is owned by a castle / fortress, we select it.
+        if (clan != null) {
+            if (clan.getHasFortress() != 0) {
+                Fortress oldFortress = ResidenceHolder.getInstance().getResidence(Fortress.class, clan.getHasFortress());
+                if (oldFortress != null)
+                    oldFortress.changeOwner(null);
+            }
+            if (clan.getCastle() != 0) {
+                Castle oldCastle = ResidenceHolder.getInstance().getResidence(Castle.class, clan.getCastle());
+                if (oldCastle != null)
+                    oldCastle.changeOwner(null);
+            }
+        }
 
-			cancelCycleTask();
-			clearFacility();
-		}
+        // If this fortress is someone captured, it takes away from the fortress
+        if (getOwnerId() > 0 && (clan == null || clan.getClanId() != getOwnerId())) {
+            // Remove Fortress skills with the old owner
+            removeSkills();
+            Clan oldOwner = getOwner();
+            if (oldOwner != null)
+                oldOwner.setHasFortress(0);
 
-		// We provide the new owner of the fortress
-		if (clan != null)
-			clan.setHasFortress(getId());
+            cancelCycleTask();
+            clearFacility();
+        }
 
-		// Save to base
-		updateOwnerInDB(clan);
+        // We provide the new owner of the fortress
+        if (clan != null)
+            clan.setHasFortress(getId());
 
-		// We provide Fortress skills to a new owner
-		rewardSkills();
+        // Save to base
+        updateOwnerInDB(clan);
 
-		setFortState(NOT_DECIDED, 0);
-		setJdbcState(JdbcEntityState.UPDATED);
+        // We provide Fortress skills to a new owner
+        rewardSkills();
 
-		update();
-		
-		if (clan != null)
-			clan.getAllMembers().stream().filter(plr -> plr.isOnline()).forEach(plr -> plr.getPlayer().getCounters().fortSiegesWon++);
-	}
+        setFortState(NOT_DECIDED, 0);
+        setJdbcState(JdbcEntityState.UPDATED);
 
-	@Override
-	protected void loadData()
-	{
-		_owner = ClanDataDAO.getInstance().getOwner(this);
-		FortressDAO.getInstance().select(this);
-	}
+        update();
 
-	private void updateOwnerInDB(Clan clan)
-	{
-		_owner = clan;
+        if (clan != null)
+            clan.getAllMembers().stream().filter(plr -> plr.isOnline()).forEach(plr -> plr.getPlayer().getCounters().fortSiegesWon++);
+    }
 
-		Connection con = null;
-		PreparedStatement statement = null;
-		try
-		{
-			con = DatabaseFactory.getInstance().getConnection();
-			statement = con.prepareStatement("UPDATE clan_data SET hasFortress=0 WHERE hasFortress=? LIMIT 1");
-			statement.setInt(1, getId());
-			statement.execute();
-			DbUtils.close(statement);
+    @Override
+    protected void loadData() {
+        _owner = ClanDataDAO.getInstance().getOwner(this);
+        FortressDAO.getInstance().select(this);
+    }
 
-			if (clan != null)
-			{
-				statement = con.prepareStatement("UPDATE clan_data SET hasFortress=? WHERE clan_id=? LIMIT 1");
-				statement.setInt(1, getId());
-				statement.setInt(2, getOwnerId());
-				statement.execute();
+    private void updateOwnerInDB(Clan clan) {
+        _owner = clan;
 
-				clan.broadcastClanStatus(true, false, false);
-			}
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while updating Fortress Owner in Database", e);
-		}
-		finally
-		{
-			DbUtils.closeQuietly(con, statement);
-		}
-	}
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = DatabaseFactory.getInstance().getConnection();
+            statement = con.prepareStatement("UPDATE clan_data SET hasFortress=0 WHERE hasFortress=? LIMIT 1");
+            statement.setInt(1, getId());
+            statement.execute();
+            DbUtils.close(statement);
 
-	public void setFortState(int state, int castleId)
-	{
-		_state = state;
-		_castleId = castleId;
-	}
+            if (clan != null) {
+                statement = con.prepareStatement("UPDATE clan_data SET hasFortress=? WHERE clan_id=? LIMIT 1");
+                statement.setInt(1, getId());
+                statement.setInt(2, getOwnerId());
+                statement.execute();
 
-	public int getCastleId()
-	{
-		return _castleId;
-	}
+                clan.broadcastClanStatus(true, false, false);
+            }
+        } catch (SQLException e) {
+            _log.error("Error while updating Fortress Owner in Database", e);
+        } finally {
+            DbUtils.closeQuietly(con, statement);
+        }
+    }
 
-	public int getContractState()
-	{
-		return _state;
-	}
+    public void setFortState(int state, int castleId) {
+        _state = state;
+        _castleId = castleId;
+    }
 
-	@Override
-	public void chanceCycle()
-	{
-		super.chanceCycle();
-		if (getCycle() >= REMOVE_CYCLE)
-		{
-			getOwner().broadcastToOnlineMembers(SystemMsg.ENEMY_BLOOD_PLEDGES_HAVE_INTRUDED_INTO_THE_FORTRESS);
-			changeOwner(null);
-			return;
-		}
+    public int getCastleId() {
+        return _castleId;
+    }
 
-		setPaidCycle(getPaidCycle() + 1);
-		// if we add a multiple REWARD_CYCLE Revard
-		if (getPaidCycle() % REWARD_CYCLE == 0)
-		{
-			setPaidCycle(0);
-			setRewardCount(getRewardCount() + 1);
+    public int getContractState() {
+        return _state;
+    }
 
-			if (getContractState() == CONTRACT_WITH_CASTLE)
-			{
-				Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, _castleId);
-				if (castle.getOwner() == null || castle.getOwner().getReputationScore() < 2 || _owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > CASTLE_FEE)
-				{
-					setSupplyCount(0);
-					setFortState(INDEPENDENT, 0);
-					clearFacility();
-				}
-				else
-				{
-					if (_supplyCount < 6)
-					{
-						castle.getOwner().incReputation(-2, false, "Fortress:chanceCycle():" + getId());
-						_owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, CASTLE_FEE, "Fortress Cycle");
-						_supplyCount++;
-					}
-				}
-			}
-		}
-	}
+    @Override
+    public void chanceCycle() {
+        super.chanceCycle();
+        if (getCycle() >= REMOVE_CYCLE) {
+            getOwner().broadcastToOnlineMembers(SystemMsg.ENEMY_BLOOD_PLEDGES_HAVE_INTRUDED_INTO_THE_FORTRESS);
+            changeOwner(null);
+            return;
+        }
 
-	@Override
-	public void update()
-	{
-		FortressDAO.getInstance().update(this);
-	}
+        setPaidCycle(getPaidCycle() + 1);
+        // if we add a multiple REWARD_CYCLE Revard
+        if (getPaidCycle() % REWARD_CYCLE == 0) {
+            setPaidCycle(0);
+            setRewardCount(getRewardCount() + 1);
 
-	public int getSupplyCount()
-	{
-		return _supplyCount;
-	}
+            if (getContractState() == CONTRACT_WITH_CASTLE) {
+                Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, _castleId);
+                if (castle.getOwner() == null || castle.getOwner().getReputationScore() < 2 || _owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > CASTLE_FEE) {
+                    setSupplyCount(0);
+                    setFortState(INDEPENDENT, 0);
+                    clearFacility();
+                } else {
+                    if (_supplyCount < 6) {
+                        castle.getOwner().incReputation(-2, false, "Fortress:chanceCycle():" + getId());
+                        _owner.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, CASTLE_FEE, "Fortress Cycle");
+                        _supplyCount++;
+                    }
+                }
+            }
+        }
+    }
 
-	public void setSupplyCount(int c)
-	{
-		_supplyCount = c;
-	}
+    @Override
+    public void update() {
+        FortressDAO.getInstance().update(this);
+    }
 
-	public long getSupplySpawn()
-	{
-		return _supplySpawn;
-	}
+    public int getSupplyCount() {
+        return _supplyCount;
+    }
 
-	public void setSupplySpawn(long c) {
-		_supplySpawn = c;
-	}
+    public void setSupplyCount(int c) {
+        _supplyCount = c;
+    }
 
-	public int getFacilityLevel(int type)
-	{
-		return _facilities[type];
-	}
+    public long getSupplySpawn() {
+        return _supplySpawn;
+    }
 
-	public void setFacilityLevel(int type, int val)
-	{
-		_facilities[type] = val;
-	}
+    public void setSupplySpawn(long c) {
+        _supplySpawn = c;
+    }
 
-	public void clearFacility()
-	{
-		for (int i = 0; i < _facilities.length; i++)
-			_facilities[i] = 0;
-	}
+    public int getFacilityLevel(int type) {
+        return _facilities[type];
+    }
 
-	public int[] getFacilities()
-	{
-		return _facilities;
-	}
+    public void setFacilityLevel(int type, int val) {
+        _facilities[type] = val;
+    }
 
-	public void addRelatedCastle(Castle castle)
-	{
-		_relatedCastles.add(castle);
-	}
+    public void clearFacility() {
+        for (int i = 0; i < _facilities.length; i++)
+            _facilities[i] = 0;
+    }
 
-	public List<Castle> getRelatedCastles()
-	{
-		return _relatedCastles;
-	}
+    public int[] getFacilities() {
+        return _facilities;
+    }
+
+    public void addRelatedCastle(Castle castle) {
+        _relatedCastles.add(castle);
+    }
+
+    public List<Castle> getRelatedCastles() {
+        return _relatedCastles;
+    }
 }

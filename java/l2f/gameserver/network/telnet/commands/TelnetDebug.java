@@ -2,148 +2,131 @@ package l2f.gameserver.network.telnet.commands;
 
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import l2f.gameserver.model.GameObject;
 import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.network.loginservercon.AuthServerCommunication;
 import l2f.gameserver.network.telnet.TelnetCommand;
 import l2f.gameserver.network.telnet.TelnetCommandHolder;
-
 import org.apache.commons.io.FileUtils;
 
-public class TelnetDebug implements TelnetCommandHolder
-{
-	private Set<TelnetCommand> _commands = new LinkedHashSet<TelnetCommand>();
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
-	public TelnetDebug()
-	{
-		_commands.add(new TelnetCommand("dumpnpc", "dnpc"){
-			@Override
-			public String getUsage()
-			{
-				return "dumpnpc";
-			}
+public class TelnetDebug implements TelnetCommandHolder {
+    private Set<TelnetCommand> _commands = new LinkedHashSet<TelnetCommand>();
 
-			@Override
-			public String handle(String[] args)
-			{
-				StringBuilder sb = new StringBuilder();
+    public TelnetDebug() {
+        _commands.add(new TelnetCommand("dumpnpc", "dnpc") {
+            @Override
+            public String getUsage() {
+                return "dumpnpc";
+            }
 
-				int total = 0;
-				int maxId = 0, maxCount = 0;
+            @Override
+            public String handle(String[] args) {
+                StringBuilder sb = new StringBuilder();
 
-				TIntObjectHashMap<List<NpcInstance>> npcStats = new TIntObjectHashMap<List<NpcInstance>>();
+                int total = 0;
+                int maxId = 0, maxCount = 0;
 
-				for (GameObject obj : GameObjectsStorage.getAllObjects())
-					if (obj.isCreature())
-						if (obj.isNpc())
-						{
-							List<NpcInstance> list;
-							NpcInstance npc = (NpcInstance) obj;
-							int id = npc.getNpcId();
+                TIntObjectHashMap<List<NpcInstance>> npcStats = new TIntObjectHashMap<List<NpcInstance>>();
 
-							if ((list = npcStats.get(id)) == null)
-								npcStats.put(id, list = new ArrayList<NpcInstance>());
+                for (GameObject obj : GameObjectsStorage.getAllObjects())
+                    if (obj.isCreature())
+                        if (obj.isNpc()) {
+                            List<NpcInstance> list;
+                            NpcInstance npc = (NpcInstance) obj;
+                            int id = npc.getNpcId();
 
-							list.add(npc);
+                            if ((list = npcStats.get(id)) == null)
+                                npcStats.put(id, list = new ArrayList<NpcInstance>());
 
-							if (list.size() > maxCount)
-							{
-								maxId = id;
-								maxCount = list.size();
-							}
+                            list.add(npc);
 
-							total++;
-						}
+                            if (list.size() > maxCount) {
+                                maxId = id;
+                                maxCount = list.size();
+                            }
 
-				sb.append("Total NPCs: ").append(total).append("\n");
-				sb.append("Maximum NPC ID: ").append(maxId).append(" count : ").append(maxCount).append("\n");
+                            total++;
+                        }
 
-				TIntObjectIterator<List<NpcInstance>> itr = npcStats.iterator();
+                sb.append("Total NPCs: ").append(total).append("\n");
+                sb.append("Maximum NPC ID: ").append(maxId).append(" count : ").append(maxCount).append("\n");
 
-				while (itr.hasNext())
-				{
-					itr.advance();
-					int id = itr.key();
-					List<NpcInstance> list = itr.value();
-					sb.append("=== ID: ").append(id).append(" ").append(" Count: ").append(list.size()).append(" ===").append("\n");
+                TIntObjectIterator<List<NpcInstance>> itr = npcStats.iterator();
 
-					for (NpcInstance npc : list)
-						try
-						{
-							sb.append("AI: ");
+                while (itr.hasNext()) {
+                    itr.advance();
+                    int id = itr.key();
+                    List<NpcInstance> list = itr.value();
+                    sb.append("=== ID: ").append(id).append(" ").append(" Count: ").append(list.size()).append(" ===").append("\n");
 
-							if (npc.hasAI())
-								sb.append(npc.getAI().getClass().getName());
-							else
-								sb.append("none");
+                    for (NpcInstance npc : list)
+                        try {
+                            sb.append("AI: ");
 
-							sb.append(", ");
+                            if (npc.hasAI())
+                                sb.append(npc.getAI().getClass().getName());
+                            else
+                                sb.append("none");
 
-							if (npc.getReflectionId() > 0)
-							{
-								sb.append("ref: ").append(npc.getReflectionId());
-								sb.append(" - ").append(npc.getReflection().getName());
-							}
+                            sb.append(", ");
 
-							sb.append("loc: ").append(npc.getLoc());
-							sb.append(", ");
-							sb.append("spawned: ");
-							sb.append(npc.isVisible());
-							sb.append("\n");
-						}
-						catch (Exception e)
-						{
-							e.printStackTrace();
-						}
-				}
+                            if (npc.getReflectionId() > 0) {
+                                sb.append("ref: ").append(npc.getReflectionId());
+                                sb.append(" - ").append(npc.getReflection().getName());
+                            }
 
-				try
-				{
-					new File("stats").mkdir();
-					FileUtils.writeStringToFile(new File("stats/NpcStats-" + new SimpleDateFormat("MMddHHmmss").format(System.currentTimeMillis()) + ".txt"), sb.toString());
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
+                            sb.append("loc: ").append(npc.getLoc());
+                            sb.append(", ");
+                            sb.append("spawned: ");
+                            sb.append(npc.isVisible());
+                            sb.append("\n");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                }
 
-				return "NPC stats saved.\n";
-			}
+                try {
+                    new File("stats").mkdir();
+                    FileUtils.writeStringToFile(new File("stats/NpcStats-" + new SimpleDateFormat("MMddHHmmss").format(System.currentTimeMillis()) + ".txt"),
+                            sb.toString(),
+                            Charset.defaultCharset());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-		});
-		
-		_commands.add(new TelnetCommand("asrestart")
-		{
-			@Override
-			public String getUsage()
-			{
-				return "asrestart";
-			}
+                return "NPC stats saved.\n";
+            }
 
-			@Override
-			public String handle(String[] args)
-			{
-				AuthServerCommunication.getInstance().restart();
+        });
 
-				return "Restarted.\n";
-			}
-			
-		});
-	}
+        _commands.add(new TelnetCommand("asrestart") {
+            @Override
+            public String getUsage() {
+                return "asrestart";
+            }
 
-	@Override
-	public Set<TelnetCommand> getCommands()
-	{
-		return _commands;
-	}
+            @Override
+            public String handle(String[] args) {
+                AuthServerCommunication.getInstance().restart();
+
+                return "Restarted.\n";
+            }
+
+        });
+    }
+
+    @Override
+    public Set<TelnetCommand> getCommands() {
+        return _commands;
+    }
 }

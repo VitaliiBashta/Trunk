@@ -1,64 +1,60 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.stats.Formulas;
 import l2f.gameserver.stats.Formulas.AttackInfo;
 import l2f.gameserver.templates.StatsSet;
 
-public class ChargeSoul extends Skill
-{
-	private int _numSouls;
+import java.util.List;
 
-	public ChargeSoul(StatsSet set)
-	{
-		super(set);
-		_numSouls = set.getInteger("numSouls", getLevel());
-	}
+public class ChargeSoul extends Skill {
+    private int _numSouls;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		if (!activeChar.isPlayer())
-			return;
+    public ChargeSoul(StatsSet set) {
+        super(set);
+        _numSouls = set.getInteger("numSouls", getLevel());
+    }
 
-		boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
-		if (ss && getTargetType() != SkillTargetType.TARGET_SELF)
-			activeChar.unChargeShots(false);
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        if (!activeChar.isPlayer())
+            return;
 
-		Creature realTarget;
-		boolean reflected;
+        boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
+        if (ss && getTargetType() != SkillTargetType.TARGET_SELF)
+            activeChar.unChargeShots(false);
 
-		for (Creature target : targets)
-			if (target != null)
-			{
-				if (target.isDead())
-					continue;
+        Creature realTarget;
+        boolean reflected;
 
-				reflected = target != activeChar && target.checkReflectSkill(activeChar, this);
-				realTarget = reflected ? activeChar : target;
+        for (Creature target : targets)
+            if (target != null) {
+                if (target.isDead())
+                    continue;
 
-				if (getPower() > 0) // Если == 0 значит скилл "отключен"
-				{
-					AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
+                reflected = target != activeChar && target.checkReflectSkill(activeChar, this);
+                realTarget = reflected ? activeChar : target;
 
-					if (info.lethal_dmg > 0)
-						realTarget.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
+                if (getPower() > 0) // Если == 0 значит скилл "отключен"
+                {
+                    AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
 
-					realTarget.reduceCurrentHp(info.damage, activeChar, this, true, true, false, true, false, false, true);
-					if (!reflected)
-						realTarget.doCounterAttack(this, activeChar, false);
-				}
+                    if (info.lethal_dmg > 0)
+                        realTarget.reduceCurrentHp(info.lethal_dmg, activeChar, this, true, true, false, false, false, false, false);
 
-				if (realTarget.isPlayable() || realTarget.isMonster())
-					activeChar.setConsumedSouls(activeChar.getConsumedSouls() + _numSouls, null);
+                    realTarget.reduceCurrentHp(info.damage, activeChar, this, true, true, false, true, false, false, true);
+                    if (!reflected)
+                        realTarget.doCounterAttack(this, activeChar, false);
+                }
 
-				getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
-			}
+                if (realTarget.isPlayable() || realTarget.isMonster())
+                    activeChar.setConsumedSouls(activeChar.getConsumedSouls() + _numSouls, null);
 
-		if (isSSPossible())
-			activeChar.unChargeShots(isMagic());
-	}
+                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+            }
+
+        if (isSSPossible())
+            activeChar.unChargeShots(isMagic());
+    }
 }

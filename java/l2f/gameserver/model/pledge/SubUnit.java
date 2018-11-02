@@ -1,455 +1,375 @@
 package l2f.gameserver.model.pledge;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
 import l2f.commons.dbutils.DbUtils;
+import l2f.commons.lang.StringUtils;
 import l2f.gameserver.database.DatabaseFactory;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.network.serverpackets.ExSubPledgeSkillAdd;
 import l2f.gameserver.tables.SkillTable;
-
-import org.apache.commons.lang3.StringUtils;
-import org.napile.primitive.maps.IntObjectMap;
-import org.napile.primitive.maps.impl.CHashIntObjectMap;
-import org.napile.primitive.maps.impl.CTreeIntObjectMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SubUnit
-{
-	private static final Logger _log = LoggerFactory.getLogger(SubUnit.class);
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-	private IntObjectMap<Skill> _skills = new CTreeIntObjectMap<Skill>();
-	private IntObjectMap<UnitMember> _members = new CHashIntObjectMap<UnitMember>();
+public class SubUnit {
+    private static final Logger _log = LoggerFactory.getLogger(SubUnit.class);
 
-	private int _type;
+    private Map<Integer,Skill> _skills = new TreeMap<>();
+    private Map<Integer,UnitMember> _members = new HashMap<>();
 
-	private int _leaderObjectId;
-	private UnitMember _leader;
+    private int _type;
 
-	private String _name;
-	private Clan _clan;
+    private int _leaderObjectId;
+    private UnitMember _leader;
 
-	public SubUnit(Clan c, int type, UnitMember leader, String name)
-	{
-		_clan = c;
-		_type = type;
-		_name = name;
+    private String _name;
+    private Clan _clan;
 
-		setLeader(leader, false);
-	}
+    public SubUnit(Clan c, int type, UnitMember leader, String name) {
+        _clan = c;
+        _type = type;
+        _name = name;
 
-	public SubUnit(Clan c, int type, int leader, String name)
-	{
-		_clan = c;
-		_type = type;
-		_leaderObjectId = leader;
-		_name = name;
-	}
+        setLeader(leader, false);
+    }
 
-	private static void removeMemberInDatabase(UnitMember member)
-	{
-		Connection con = null;
-		PreparedStatement statement = null;
-		try
-		{
-			con = DatabaseFactory.getInstance().getConnection();
-			statement = con.prepareStatement("UPDATE characters SET clanid=0, pledge_type=?, pledge_rank=0, lvl_joined_academy=0, apprentice=0, title='', leaveclan=? WHERE obj_Id=?");
-			statement.setInt(1, Clan.SUBUNIT_NONE);
-			statement.setLong(2, System.currentTimeMillis() / 1000);
-			statement.setInt(3, member.getObjectId());
-			statement.execute();
-		}
-		catch (SQLException e)
-		{
-			_log.error("Exception while removing Member from Sub Unit", e);
-		}
-		finally
-		{
-			DbUtils.closeQuietly(con, statement);
-		}
-	}
+    public SubUnit(Clan c, int type, int leader, String name) {
+        _clan = c;
+        _type = type;
+        _leaderObjectId = leader;
+        _name = name;
+    }
 
-	public int getType()
-	{
-		return _type;
-	}
+    private static void removeMemberInDatabase(UnitMember member) {
+        Connection con = null;
+        PreparedStatement statement = null;
+        try {
+            con = DatabaseFactory.getInstance().getConnection();
+            statement = con.prepareStatement("UPDATE characters SET clanid=0, pledge_type=?, pledge_rank=0, lvl_joined_academy=0, apprentice=0, title='', leaveclan=? WHERE obj_Id=?");
+            statement.setInt(1, Clan.SUBUNIT_NONE);
+            statement.setLong(2, System.currentTimeMillis() / 1000);
+            statement.setInt(3, member.getObjectId());
+            statement.execute();
+        } catch (SQLException e) {
+            _log.error("Exception while removing Member from Sub Unit", e);
+        } finally {
+            DbUtils.closeQuietly(con, statement);
+        }
+    }
 
-	public String getName()
-	{
-		return _name;
-	}
+    public int getType() {
+        return _type;
+    }
 
-	public UnitMember getLeader()
-	{
-		return _leader;
-	}
+    public String getName() {
+        return _name;
+    }
 
-	public boolean isUnitMember(int obj)
-	{
-		return _members.containsKey(obj);
-	}
+    public UnitMember getLeader() {
+        return _leader;
+    }
 
-	public void addUnitMember(UnitMember member)
-	{
-		_members.put(member.getObjectId(), member);
-	}
+    public boolean isUnitMember(int obj) {
+        return _members.containsKey(obj);
+    }
 
-	public UnitMember getUnitMember(int obj)
-	{
-		if (obj == 0)
-		{
-			return null;
-		}
-		return _members.get(obj);
-	}
+    public void addUnitMember(UnitMember member) {
+        _members.put(member.getObjectId(), member);
+    }
 
-	public UnitMember getUnitMember(String obj)
-	{
-		for (UnitMember m : getUnitMembers())
-		{
-			if (m.getName().equalsIgnoreCase(obj))
-			{
-				return m;
-			}
-		}
+    public UnitMember getUnitMember(int obj) {
+        if (obj == 0) {
+            return null;
+        }
+        return _members.get(obj);
+    }
 
-		return null;
-	}
+    public UnitMember getUnitMember(String obj) {
+        for (UnitMember m : getUnitMembers()) {
+            if (m.getName().equalsIgnoreCase(obj)) {
+                return m;
+            }
+        }
 
-	public void removeUnitMember(int objectId)
-	{
-		UnitMember m = _members.remove(objectId);
-		if (m == null)
-		{
-			return;
-		}
+        return null;
+    }
 
-		if (objectId == getLeaderObjectId()) // subpledge leader
-			setLeader(null, true); // clan leader has to assign another one, via villagemaster
+    public void removeUnitMember(int objectId) {
+        UnitMember m = _members.remove(objectId);
+        if (m == null) {
+            return;
+        }
 
-		if (m.hasSponsor())
-			_clan.getAnyMember(m.getSponsor()).setApprentice(0);
+        if (objectId == getLeaderObjectId()) // subpledge leader
+            setLeader(null, true); // clan leader has to assign another one, via villagemaster
 
-		removeMemberInDatabase(m);
+        if (m.hasSponsor())
+            _clan.getAnyMember(m.getSponsor()).setApprentice(0);
 
-		m.setPlayerInstance(null, true);
+        removeMemberInDatabase(m);
 
-		// Synerge - We add a new member that withdrew from the clan to the stats
-		//_clan.getStats().addClanStats(Ranking.STAT_TOP_CLAN_MEMBERS_WITHDREW);
-	}
+        m.setPlayerInstance(null, true);
 
-	public void replace(int objectId, int newUnitId)
-	{
-		SubUnit newUnit = _clan.getSubUnit(newUnitId);
-		if (newUnit == null)
-		{
-			return;
-		}
+        // Synerge - We add a new member that withdrew from the clan to the stats
+        //_clan.getStats().addClanStats(Ranking.STAT_TOP_CLAN_MEMBERS_WITHDREW);
+    }
 
-		UnitMember m = _members.remove(objectId);
-		if (m == null)
-		{
-			return;
-		}
+    public void replace(int objectId, int newUnitId) {
+        SubUnit newUnit = _clan.getSubUnit(newUnitId);
+        if (newUnit == null) {
+            return;
+        }
 
-		m.setPledgeType(newUnitId);
-		newUnit.addUnitMember(m);
+        UnitMember m = _members.remove(objectId);
+        if (m == null) {
+            return;
+        }
 
-		if (m.getPowerGrade() > 5)
-			m.setPowerGrade(_clan.getAffiliationRank(m.getPledgeType()));
-	}
+        m.setPledgeType(newUnitId);
+        newUnit.addUnitMember(m);
 
-	public int getLeaderObjectId()
-	{
-		return _leader == null ? 0 : _leader.getObjectId();
-	}
+        if (m.getPowerGrade() > 5)
+            m.setPowerGrade(_clan.getAffiliationRank(m.getPledgeType()));
+    }
 
-	public int size()
-	{
-		return _members.size();
-	}
+    public int getLeaderObjectId() {
+        return _leader == null ? 0 : _leader.getObjectId();
+    }
 
-	public Collection<UnitMember> getUnitMembers()
-	{
-		return _members.values();
-	}
+    public int size() {
+        return _members.size();
+    }
 
-	public void setLeader(UnitMember newLeader, boolean updateDB)
-	{
-		final UnitMember old = _leader;
-		if (old != null)   // обновляем старого мембера
-			old.setLeaderOf(Clan.SUBUNIT_NONE);
+    public Collection<UnitMember> getUnitMembers() {
+        return _members.values();
+    }
 
-		_leader = newLeader;
-		_leaderObjectId = newLeader == null ? 0 : newLeader.getObjectId();
+    public void setLeader(UnitMember newLeader, boolean updateDB) {
+        final UnitMember old = _leader;
+        if (old != null)   // обновляем старого мембера
+            old.setLeaderOf(Clan.SUBUNIT_NONE);
 
-		if (newLeader != null)
-		{
-			newLeader.setLeaderOf(_type);
-		}
+        _leader = newLeader;
+        _leaderObjectId = newLeader == null ? 0 : newLeader.getObjectId();
 
-		if (updateDB)
-		{
-			Connection con = null;
-			PreparedStatement statement = null;
-			try
-			{
-				con = DatabaseFactory.getInstance().getConnection();
-				statement = con.prepareStatement("UPDATE clan_subpledges SET leader_id=? WHERE clan_id=? and type=?");
-				statement.setInt(1, getLeaderObjectId());
-				statement.setInt(2, _clan.getClanId());
-				statement.setInt(3, _type);
-				statement.execute();
-			}
-			catch (SQLException e)
-			{
-				_log.error("Exception while setting Sub Unit Leader", e);
-			}
-			finally
-			{
-				DbUtils.closeQuietly(con, statement);
-			}
-		}
-	}
+        if (newLeader != null) {
+            newLeader.setLeaderOf(_type);
+        }
 
-	public void setName(String name, boolean updateDB)
-	{
-		_name = name;
-		if (updateDB)
-		{
-			Connection con = null;
-			PreparedStatement statement = null;
-			try
-			{
-				con = DatabaseFactory.getInstance().getConnection();
-				statement = con.prepareStatement("UPDATE clan_subpledges SET name=? WHERE clan_id=? and type=?");
-				statement.setString(1, _name);
-				statement.setInt(2, _clan.getClanId());
-				statement.setInt(3, _type);
-				statement.execute();
-			}
-			catch (SQLException e)
-			{
-				_log.error("Exception while setting Sub Unit Name", e);
-			}
-			finally
-			{
-				DbUtils.closeQuietly(con, statement);
-			}
-		}
-	}
+        if (updateDB) {
+            Connection con = null;
+            PreparedStatement statement = null;
+            try {
+                con = DatabaseFactory.getInstance().getConnection();
+                statement = con.prepareStatement("UPDATE clan_subpledges SET leader_id=? WHERE clan_id=? and type=?");
+                statement.setInt(1, getLeaderObjectId());
+                statement.setInt(2, _clan.getClanId());
+                statement.setInt(3, _type);
+                statement.execute();
+            } catch (SQLException e) {
+                _log.error("Exception while setting Sub Unit Leader", e);
+            } finally {
+                DbUtils.closeQuietly(con, statement);
+            }
+        }
+    }
 
-	public String getLeaderName()
-	{
-		return _leader == null ? StringUtils.EMPTY : _leader.getName();
-	}
+    public void setName(String name, boolean updateDB) {
+        _name = name;
+        if (updateDB) {
+            Connection con = null;
+            PreparedStatement statement = null;
+            try {
+                con = DatabaseFactory.getInstance().getConnection();
+                statement = con.prepareStatement("UPDATE clan_subpledges SET name=? WHERE clan_id=? and type=?");
+                statement.setString(1, _name);
+                statement.setInt(2, _clan.getClanId());
+                statement.setInt(3, _type);
+                statement.execute();
+            } catch (SQLException e) {
+                _log.error("Exception while setting Sub Unit Name", e);
+            } finally {
+                DbUtils.closeQuietly(con, statement);
+            }
+        }
+    }
 
-	public Skill addSkill(Skill newSkill, boolean store)
-	{
-		Skill oldSkill = null;
-		if (newSkill != null)
-		{
-			// Replace oldSkill by newSkill or Add the newSkill
-			oldSkill = _skills.put(newSkill.getId(), newSkill);
+    public String getLeaderName() {
+        return _leader == null ? StringUtils.EMPTY : _leader.getName();
+    }
 
-			if (store)
-			{
-				Connection con = null;
-				PreparedStatement statement = null;
+    public Skill addSkill(Skill newSkill, boolean store) {
+        Skill oldSkill = null;
+        if (newSkill != null) {
+            // Replace oldSkill by newSkill or Add the newSkill
+            oldSkill = _skills.put(newSkill.getId(), newSkill);
 
-				try
-				{
-					con = DatabaseFactory.getInstance().getConnection();
+            if (store) {
+                Connection con = null;
+                PreparedStatement statement = null;
 
-					if (oldSkill != null)
-					{
-						statement = con.prepareStatement("UPDATE clan_subpledges_skills SET skill_level=? WHERE skill_id=? AND clan_id=? AND type=?");
-						statement.setInt(1, newSkill.getLevel());
-						statement.setInt(2, oldSkill.getId());
-						statement.setInt(3, _clan.getClanId());
-						statement.setInt(4, _type);
-						statement.execute();
-					}
-					else
-					{
-						statement = con.prepareStatement("INSERT INTO clan_subpledges_skills (clan_id,type,skill_id,skill_level) VALUES (?,?,?,?)");
-						statement.setInt(1, _clan.getClanId());
-						statement.setInt(2, _type);
-						statement.setInt(3, newSkill.getId());
-						statement.setInt(4, newSkill.getLevel());
-						statement.execute();
-					}
-				}
-				catch (SQLException e)
-				{
-					_log.warn("Exception while adding Skill to SubUnit", e);
-				}
-				finally
-				{
-					DbUtils.closeQuietly(con, statement);
-				}
-			}
+                try {
+                    con = DatabaseFactory.getInstance().getConnection();
 
-			ExSubPledgeSkillAdd packet = new ExSubPledgeSkillAdd(_type, newSkill.getId(), newSkill.getLevel());
-			for (UnitMember temp : _clan)
-				if (temp.isOnline())
-				{
-					Player player = temp.getPlayer();
-					if (player != null)
-					{
-						player.sendPacket(packet);
-						if (player.getPledgeType() == _type)
-							addSkill(player, newSkill);
-					}
-				}
-		}
+                    if (oldSkill != null) {
+                        statement = con.prepareStatement("UPDATE clan_subpledges_skills SET skill_level=? WHERE skill_id=? AND clan_id=? AND type=?");
+                        statement.setInt(1, newSkill.getLevel());
+                        statement.setInt(2, oldSkill.getId());
+                        statement.setInt(3, _clan.getClanId());
+                        statement.setInt(4, _type);
+                        statement.execute();
+                    } else {
+                        statement = con.prepareStatement("INSERT INTO clan_subpledges_skills (clan_id,type,skill_id,skill_level) VALUES (?,?,?,?)");
+                        statement.setInt(1, _clan.getClanId());
+                        statement.setInt(2, _type);
+                        statement.setInt(3, newSkill.getId());
+                        statement.setInt(4, newSkill.getLevel());
+                        statement.execute();
+                    }
+                } catch (SQLException e) {
+                    _log.warn("Exception while adding Skill to SubUnit", e);
+                } finally {
+                    DbUtils.closeQuietly(con, statement);
+                }
+            }
 
-		return oldSkill;
-	}
+            ExSubPledgeSkillAdd packet = new ExSubPledgeSkillAdd(_type, newSkill.getId(), newSkill.getLevel());
+            for (UnitMember temp : _clan)
+                if (temp.isOnline()) {
+                    Player player = temp.getPlayer();
+                    if (player != null) {
+                        player.sendPacket(packet);
+                        if (player.getPledgeType() == _type)
+                            addSkill(player, newSkill);
+                    }
+                }
+        }
 
-	/**
-	 * Функция вызывается из клановской addSkillsQuietly(), отдельно вызывать не нужно
-	 * @param player
-	 */
-	public void addSkillsQuietly(Player player)
-	{
-		for (Skill skill : _skills.values())
-			addSkill(player, skill);
-	}
+        return oldSkill;
+    }
 
-	public void enableSkills(Player player)
-	{
-		for (Skill skill : _skills.values())
-			if (skill.getMinRank() <= player.getPledgeClass())
-				player.removeUnActiveSkill(skill);
-	}
+    /**
+     * Функция вызывается из клановской addSkillsQuietly(), отдельно вызывать не нужно
+     *
+     * @param player
+     */
+    public void addSkillsQuietly(Player player) {
+        for (Skill skill : _skills.values())
+            addSkill(player, skill);
+    }
 
-	public void disableSkills(Player player)
-	{
-		for (Skill skill : _skills.values())
-			player.addUnActiveSkill(skill);
-	}
+    public void enableSkills(Player player) {
+        for (Skill skill : _skills.values())
+            if (skill.getMinRank() <= player.getPledgeClass())
+                player.removeUnActiveSkill(skill);
+    }
 
-	private void addSkill(Player player, Skill skill)
-	{
-		if (skill.getMinRank() <= player.getPledgeClass())
-		{
-			player.addSkill(skill, false);
-			if (_clan.getReputationScore() < 0 || player.isInOlympiadMode())
-				player.addUnActiveSkill(skill);
-		}
-	}
+    public void disableSkills(Player player) {
+        for (Skill skill : _skills.values())
+            player.addUnActiveSkill(skill);
+    }
 
-	public Collection<Skill> getSkills()
-	{
-		return _skills.values();
-	}
+    private void addSkill(Player player, Skill skill) {
+        if (skill.getMinRank() <= player.getPledgeClass()) {
+            player.addSkill(skill, false);
+            if (_clan.getReputationScore() < 0 || player.isInOlympiadMode())
+                player.addUnActiveSkill(skill);
+        }
+    }
 
-	public void restore()
-	{
-		Connection con = null;
-		PreparedStatement statement = null;
-		ResultSet rset = null;
-		try
-		{
-			con = DatabaseFactory.getInstance().getConnection();
-			statement = con.prepareStatement(//
-					"SELECT `c`.`char_name` AS `char_name`," + //
-					"`s`.`level` AS `level`," + //
-					"`s`.`class_id` AS `classid`," + //
-					"`c`.`obj_Id` AS `obj_id`," + //
-					"`c`.`title` AS `title`," + //
-					"`c`.`pledge_rank` AS `pledge_rank`," + //
-					"`c`.`apprentice` AS `apprentice`, " + //
-					"`c`.`sex` AS `sex` " + //
-					"FROM `characters` `c` " + //
-					"LEFT JOIN `character_subclasses` `s` ON (`s`.`char_obj_id` = `c`.`obj_Id` AND `s`.`isBase` = '1') " + //
-			"WHERE `c`.`clanid`=? AND `c`.`pledge_type`=? ORDER BY `c`.`lastaccess` DESC");
+    public Collection<Skill> getSkills() {
+        return _skills.values();
+    }
 
-			statement.setInt(1, _clan.getClanId());
-			statement.setInt(2, _type);
-			rset = statement.executeQuery();
+    public void restore() {
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet rset = null;
+        try {
+            con = DatabaseFactory.getInstance().getConnection();
+            statement = con.prepareStatement(//
+                    "SELECT `c`.`char_name` AS `char_name`," + //
+                            "`s`.`level` AS `level`," + //
+                            "`s`.`class_id` AS `classid`," + //
+                            "`c`.`obj_Id` AS `obj_id`," + //
+                            "`c`.`title` AS `title`," + //
+                            "`c`.`pledge_rank` AS `pledge_rank`," + //
+                            "`c`.`apprentice` AS `apprentice`, " + //
+                            "`c`.`sex` AS `sex` " + //
+                            "FROM `characters` `c` " + //
+                            "LEFT JOIN `character_subclasses` `s` ON (`s`.`char_obj_id` = `c`.`obj_Id` AND `s`.`isBase` = '1') " + //
+                            "WHERE `c`.`clanid`=? AND `c`.`pledge_type`=? ORDER BY `c`.`lastaccess` DESC");
 
-			while (rset.next())
-			{
-				UnitMember member = new UnitMember(_clan, rset.getString("char_name"), rset.getString("title"), rset.getInt("level"), rset.getInt("classid"),  rset.getInt("obj_Id"), _type, rset.getInt("pledge_rank"), rset.getInt("apprentice"), rset.getInt("sex"), Clan.SUBUNIT_NONE);
+            statement.setInt(1, _clan.getClanId());
+            statement.setInt(2, _type);
+            rset = statement.executeQuery();
 
-				addUnitMember(member);
-			}
+            while (rset.next()) {
+                UnitMember member = new UnitMember(_clan, rset.getString("char_name"), rset.getString("title"), rset.getInt("level"), rset.getInt("classid"), rset.getInt("obj_Id"), _type, rset.getInt("pledge_rank"), rset.getInt("apprentice"), rset.getInt("sex"), Clan.SUBUNIT_NONE);
 
-			if (_type != Clan.SUBUNIT_ACADEMY)
-			{
-				SubUnit mainClan = _clan.getSubUnit(Clan.SUBUNIT_MAIN_CLAN);
-				UnitMember leader = mainClan.getUnitMember(_leaderObjectId);
-				if (leader != null)
-					setLeader(leader, false);
-				else if (_type == Clan.SUBUNIT_MAIN_CLAN)
-					_log.error("Clan " + _name + " have no leader!");
-			}
-		}
-		catch (SQLException e)
-		{
-			_log.warn("Error while restoring clan members for clan: " + _clan.getClanId(), e);
-		}
-		finally
-		{
-			DbUtils.closeQuietly(con, statement, rset);
-		}
-	}
-	
-	public void restartMembers()
-	{
-		_members.clear();
-		restore();
-	}
+                addUnitMember(member);
+            }
 
-	public void restoreSkills()
-	{
-		Connection con = null;
-		PreparedStatement statement = null;
-		ResultSet rset = null;
-		try
-		{
-			con = DatabaseFactory.getInstance().getConnection();
-			statement = con.prepareStatement("SELECT skill_id,skill_level FROM clan_subpledges_skills WHERE clan_id=? AND type=?");
-			statement.setInt(1, _clan.getClanId());
-			statement.setInt(2, _type);
-			rset = statement.executeQuery();
+            if (_type != Clan.SUBUNIT_ACADEMY) {
+                SubUnit mainClan = _clan.getSubUnit(Clan.SUBUNIT_MAIN_CLAN);
+                UnitMember leader = mainClan.getUnitMember(_leaderObjectId);
+                if (leader != null)
+                    setLeader(leader, false);
+                else if (_type == Clan.SUBUNIT_MAIN_CLAN)
+                    _log.error("Clan " + _name + " have no leader!");
+            }
+        } catch (SQLException e) {
+            _log.warn("Error while restoring clan members for clan: " + _clan.getClanId(), e);
+        } finally {
+            DbUtils.closeQuietly(con, statement, rset);
+        }
+    }
 
-			while (rset.next())
-			{
-				int id = rset.getInt("skill_id");
-				int level = rset.getInt("skill_level");
+    public void restartMembers() {
+        _members.clear();
+        restore();
+    }
 
-				Skill skill = SkillTable.getInstance().getInfo(id, level);
+    public void restoreSkills() {
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet rset = null;
+        try {
+            con = DatabaseFactory.getInstance().getConnection();
+            statement = con.prepareStatement("SELECT skill_id,skill_level FROM clan_subpledges_skills WHERE clan_id=? AND type=?");
+            statement.setInt(1, _clan.getClanId());
+            statement.setInt(2, _type);
+            rset = statement.executeQuery();
 
-				_skills.put(skill.getId(), skill);
-			}
-		}
-		catch (SQLException e)
-		{
-			_log.error("Exception while restoring Sub Unit Skills", e);
-		}
-		finally
-		{
-			DbUtils.closeQuietly(con, statement, rset);
-		}
-	}
+            while (rset.next()) {
+                int id = rset.getInt("skill_id");
+                int level = rset.getInt("skill_level");
 
-	public int getSkillLevel(int id, int def)
-	{
-		Skill skill = _skills.get(id);
-		return skill == null ? def : skill.getLevel();
-	}
+                Skill skill = SkillTable.getInstance().getInfo(id, level);
 
-	public int getSkillLevel(int id)
-	{
-		return getSkillLevel(id, -1);
-	}
+                _skills.put(skill.getId(), skill);
+            }
+        } catch (SQLException e) {
+            _log.error("Exception while restoring Sub Unit Skills", e);
+        } finally {
+            DbUtils.closeQuietly(con, statement, rset);
+        }
+    }
+
+    public int getSkillLevel(int id, int def) {
+        Skill skill = _skills.get(id);
+        return skill == null ? def : skill.getLevel();
+    }
+
+    public int getSkillLevel(int id) {
+        return getSkillLevel(id, -1);
+    }
 }

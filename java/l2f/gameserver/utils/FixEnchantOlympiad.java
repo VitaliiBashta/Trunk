@@ -6,81 +6,73 @@ import l2f.gameserver.model.Player;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.network.serverpackets.InventoryUpdate;
 
-public class FixEnchantOlympiad
-{
-	public static void storeEnchantItemsOly(Player player)
-	{
-		ItemInstance[] arr = player.getInventory().getItems();
-		int len = arr.length;
-		StringBuilder items = new StringBuilder();
-		
-		for (int i = 0; i < len; i++)
-		{
-			ItemInstance _item = arr[i];
+public class FixEnchantOlympiad {
+    public static void storeEnchantItemsOly(Player player) {
+        ItemInstance[] arr = player.getInventory().getItems();
+        int len = arr.length;
+        StringBuilder items = new StringBuilder();
 
-			if (isMaxEnchant(_item))
-			{
-				items.append(_item.getObjectId()).append(";").append(_item.getEnchantLevel()).append(":");
+        for (int i = 0; i < len; i++) {
+            ItemInstance _item = arr[i];
 
-				if (_item.isWeapon())
-					_item.setEnchantLevel(Config.OLY_ENCHANT_LIMIT_WEAPON);
-				if (_item.isArmor())
-					_item.setEnchantLevel(Config.OLY_ENCHANT_LIMIT_ARMOR);
-				if (_item.isAccessory())
-					_item.setEnchantLevel(Config.OLY_ENCHANT_LIMIT_JEWEL);
+            if (isMaxEnchant(_item)) {
+                items.append(_item.getObjectId()).append(";").append(_item.getEnchantLevel()).append(":");
 
-				player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
-				player.broadcastUserInfo(true);
-				player.broadcastCharInfo();
-				player.setVar("EnItemOlyRec", items.toString(), -1);
-			}
-		}
-	}
+                if (_item.isWeapon())
+                    _item.setEnchantLevel(Config.OLY_ENCHANT_LIMIT_WEAPON);
+                if (_item.isArmor())
+                    _item.setEnchantLevel(Config.OLY_ENCHANT_LIMIT_ARMOR);
+                if (_item.isAccessory())
+                    _item.setEnchantLevel(Config.OLY_ENCHANT_LIMIT_JEWEL);
 
-	private static boolean isMaxEnchant(ItemInstance item)
-	{
-		if ((item.isWeapon() && item.getEnchantLevel() > Config.OLY_ENCHANT_LIMIT_WEAPON) 
-		|| (item.isArmor() && item.getEnchantLevel() > Config.OLY_ENCHANT_LIMIT_ARMOR)
-		|| (item.isAccessory() && item.getEnchantLevel() > Config.OLY_ENCHANT_LIMIT_JEWEL))
-			return true;
-		return false;
-	}
+                player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
+                player.broadcastUserInfo(true);
+                player.broadcastCharInfo();
+                player.setVar("EnItemOlyRec", items.toString(), -1);
+            }
+        }
+    }
 
-	public static void restoreEnchantItemsOly(Player player)
-	{
-		if (player.getVar("EnItemOlyRec") == null)
-			return;
+    private static boolean isMaxEnchant(ItemInstance item) {
+        if ((item.isWeapon() && item.getEnchantLevel() > Config.OLY_ENCHANT_LIMIT_WEAPON)
+                || (item.isArmor() && item.getEnchantLevel() > Config.OLY_ENCHANT_LIMIT_ARMOR)
+                || (item.isAccessory() && item.getEnchantLevel() > Config.OLY_ENCHANT_LIMIT_JEWEL))
+            return true;
+        return false;
+    }
 
-		String var;
-		var = player.getVar("EnItemOlyRec");
-		if (var != null)
-		{
-			String[] items = var.split(":");
-			for (String item : items)
-			{
-				if (item.equals(""))
-					continue;
-				String[] values = item.split(";");
-				if (values.length < 2)
-					continue;
+    public static void restoreEnchantItemsOly(Player player) {
+        if (player.getVar("EnItemOlyRec") == null)
+            return;
 
-				int oId = Integer.parseInt(values[0]);
-				int enchant = Integer.parseInt(values[1]);
+        String var;
+        var = player.getVar("EnItemOlyRec");
+        if (var != null) {
+            String[] items = var.split(":");
+            for (String item : items) {
+                if (item.equals(""))
+                    continue;
+                String[] values = item.split(";");
+                if (values.length < 2)
+                    continue;
 
-				ItemInstance itemToEnchant = player.getInventory().getItemByObjectId(oId);
-				if (itemToEnchant == null)
-					continue;
+                int oId = Integer.parseInt(values[0]);
+                int enchant = Integer.parseInt(values[1]);
 
-				itemToEnchant.setEnchantLevel(enchant);
-				itemToEnchant.setJdbcState(JdbcEntityState.UPDATED);
-				itemToEnchant.update();
-				
-				player.sendPacket(new InventoryUpdate().addModifiedItem(itemToEnchant));
-				player.broadcastUserInfo(true);
-				player.broadcastCharInfo();
-			}
-		}
+                ItemInstance itemToEnchant = player.getInventory().getItemByObjectId(oId);
+                if (itemToEnchant == null)
+                    continue;
 
-		player.unsetVar("EnItemOlyRec");
-	}
+                itemToEnchant.setEnchantLevel(enchant);
+                itemToEnchant.setJdbcState(JdbcEntityState.UPDATED);
+                itemToEnchant.update();
+
+                player.sendPacket(new InventoryUpdate().addModifiedItem(itemToEnchant));
+                player.broadcastUserInfo(true);
+                player.broadcastCharInfo();
+            }
+        }
+
+        player.unsetVar("EnItemOlyRec");
+    }
 }

@@ -10,29 +10,26 @@ import l2f.gameserver.model.instances.NpcInstance;
 
 /**
  * @author PaInKiLlEr
- * 		- AI Monster 22798, 22799, 22800.
- * 		- AI for spawning braziers room.
- * 		- There is a 5% chance that the spawn to death four braziers unlikely.
- * 		- AI is tested and works.
+ * - AI Monster 22798, 22799, 22800.
+ *  * 		- AI for spawning braziers room.
+ *  * 		- There is a 5% chance that the spawn to death four braziers unlikely.
+ *  * 		- AI is tested and works.
  */
-public class DivinityMonster extends DefaultAI
-{
-	public DivinityMonster(NpcInstance actor)
-	{
-		super(actor);
-	}
+public class DivinityMonster extends DefaultAI {
+    public DivinityMonster(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	protected void onEvtDead(Creature killer)
-	{
-		NpcInstance actor = getActor();
+    @Override
+    protected void onEvtDead(Creature killer) {
+        NpcInstance actor = getActor();
 
-		int event_id = actor.getAISpawnParam();
-		MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+        int event_id = actor.getAISpawnParam();
+        MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
 
-		if (Rnd.chance(5) && !furnace.isInProgress())
-			furnace.spawnAction(MonasteryFurnaceEvent.FURNACE_ROOM, true);
+        if (Rnd.chance(5) && !furnace.isInProgress())
+            furnace.spawnAction(MonasteryFurnaceEvent.FURNACE_ROOM, true);
 
-		super.onEvtDead(killer);
-	}
+        super.onEvtDead(killer);
+    }
 }

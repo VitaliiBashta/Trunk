@@ -10,21 +10,18 @@ import l2f.gameserver.tables.SkillTable;
  * @author VISTALL
  * @date 16:38/22.04.2011
  */
-public class MatchLeader extends MatchFighter
-{
-	public static final Skill ATTACK_SKILL = SkillTable.getInstance().getInfo(4077, 6);
+public class MatchLeader extends MatchFighter {
+    public static final Skill ATTACK_SKILL = SkillTable.getInstance().getInfo(4077, 6);
 
-	public MatchLeader(NpcInstance actor)
-	{
-		super(actor);
-	}
+    public MatchLeader(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	public void onEvtAttacked(Creature attacker, int dam)
-	{
-		super.onEvtAttacked(attacker, dam);
+    @Override
+    public void onEvtAttacked(Creature attacker, int dam) {
+        super.onEvtAttacked(attacker, dam);
 
-		if (Rnd.chance(10))
-			addTaskCast(attacker, ATTACK_SKILL);
-	}
+        if (Rnd.chance(10))
+            addTaskCast(attacker, ATTACK_SKILL);
+    }
 }

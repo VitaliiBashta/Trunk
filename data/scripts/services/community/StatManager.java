@@ -18,8 +18,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StatManager implements ScriptFile, ICommunityBoardHandler
-{
+public class StatManager implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(StatManager.class);
 
     /**
@@ -100,7 +99,7 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler
             return;
         } else
             ShowBoard.separateAndSend("<html><body><br><br><center>In community stats function: " + command + " not " +
-		            "implemented yet</center><br><br></body></html>", player);
+                    "implemented yet</center><br><br></body></html>", player);
     }
 
     /**

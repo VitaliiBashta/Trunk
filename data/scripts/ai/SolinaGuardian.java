@@ -7,18 +7,15 @@ import l2f.gameserver.tables.SkillTable;
 /**
  * @author pchayka
  */
-public class SolinaGuardian extends Fighter
-{
+public class SolinaGuardian extends Fighter {
 
-	public SolinaGuardian(NpcInstance actor)
-	{
-		super(actor);
-	}
+    public SolinaGuardian(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	protected void onEvtSpawn()
-	{
-		super.onEvtSpawn();
-		getActor().altOnMagicUseTimer(getActor(), SkillTable.getInstance().getInfo(6371, 1));
-	}
+    @Override
+    protected void onEvtSpawn() {
+        super.onEvtSpawn();
+        getActor().altOnMagicUseTimer(getActor(), SkillTable.getInstance().getInfo(6371, 1));
+    }
 }

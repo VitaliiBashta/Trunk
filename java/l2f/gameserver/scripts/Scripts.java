@@ -1,5 +1,15 @@
 package l2f.gameserver.scripts;
 
+import l2f.commons.lang.ArrayUtils;
+import l2f.gameserver.Config;
+import l2f.gameserver.model.Player;
+import l2f.gameserver.model.quest.Quest;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,25 +17,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
-
-import l2f.gameserver.Config;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.model.quest.Quest;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Scripts {
     public static final Map<Integer, List<ScriptClassAndMethod>> dialogAppends = new HashMap<Integer, List<ScriptClassAndMethod>>();
@@ -77,19 +71,19 @@ public class Scripts {
     private void load() {
         _log.info("Scripts: Loading...");
 
-        List<Class<?>> jarClasses = new ArrayList<Class<?>>();
+        List<Class<?>> jarClasses = new ArrayList<>();
         List<Class<?>> classes = new ArrayList<Class<?>>();
 
         boolean result = false;
 
-        File f = new File("./lib/l2f-scripts.jar");
+        File f = new File("./libs/l2f-scripts.jar");
         if (f.exists()) {
             _log.info("Loading Server Scripts");
             try (JarInputStream stream = new JarInputStream(new FileInputStream(f))) {
                 JarEntry entry = null;
                 while ((entry = stream.getNextJarEntry()) != null) {
                     //Вложенные класс
-                    if (entry.getName().contains(ClassUtils.INNER_CLASS_SEPARATOR) || !entry.getName().endsWith(".class"))
+                    if (entry.getName().contains("$") || !entry.getName().endsWith(".class"))
                         continue;
 
                     String name = entry.getName().replace(".class", "").replace("/", ".");
@@ -111,7 +105,6 @@ public class Scripts {
         classes.addAll(jarClasses);
         if (!result) {
             _log.error("Scripts: Failed loading scripts!");
-            Runtime.getRuntime().exit(0);
             return;
         }
 
@@ -260,7 +253,7 @@ public class Scripts {
      * @return Object returned from method
      */
     public Object callScripts(Player caller, String className, String methodName, Map<String, Object> variables) {
-        return callScripts(caller, className, methodName, ArrayUtils.EMPTY_OBJECT_ARRAY, variables);
+        return callScripts(caller, className, methodName, new Object[0], variables);
     }
 
     /**
@@ -300,7 +293,7 @@ public class Scripts {
 
         if (caller != null)
             try {
-                Field field = null;
+                Field field;
                 if ((field = FieldUtils.getField(clazz, "self")) != null)
                     FieldUtils.writeField(field, o, caller.getRef());
             } catch (IllegalAccessException e) {

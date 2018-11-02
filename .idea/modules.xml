@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Trunk.iml" filepath="$PROJECT_DIR$/Trunk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dist/gameserver/data/data.iml" filepath="$PROJECT_DIR$/dist/gameserver/data/data.iml" />
     </modules>
   </component>
 </project>

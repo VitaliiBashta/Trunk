@@ -1,12 +1,6 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
-import l2f.gameserver.model.Creature;
-import l2f.gameserver.model.GameObject;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.model.Skill;
-import l2f.gameserver.model.World;
+import l2f.gameserver.model.*;
 import l2f.gameserver.model.entity.events.impl.CastleSiegeEvent;
 import l2f.gameserver.model.entity.events.impl.FortressSiegeEvent;
 import l2f.gameserver.model.entity.events.objects.FortressCombatFlagObject;
@@ -17,96 +11,86 @@ import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.StatsSet;
 
-public class TakeFortress extends Skill
-{
-	public TakeFortress(StatsSet set)
-	{
-		super(set);
-	}
+import java.util.List;
 
-	@Override
-	public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first)
-	{
-		if (!super.checkCondition(activeChar, target, forceUse, dontMove, first))
-			return false;
+public class TakeFortress extends Skill {
+    public TakeFortress(StatsSet set) {
+        super(set);
+    }
 
-		if (activeChar == null || !activeChar.isPlayer())
-			return false;
+    @Override
+    public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
+        if (!super.checkCondition(activeChar, target, forceUse, dontMove, first))
+            return false;
 
-		GameObject flagPole = activeChar.getTarget();
-		if (!(flagPole instanceof StaticObjectInstance) || ((StaticObjectInstance) flagPole).getType() != 3)
-		{
-			activeChar.sendPacket(SystemMsg.THE_TARGET_IS_NOT_A_FLAGPOLE_SO_A_FLAG_CANNOT_BE_DISPLAYED);
-			return false;
-		}
+        if (activeChar == null || !activeChar.isPlayer())
+            return false;
 
-		if (first)
-		{
-			List<Creature> around = World.getAroundCharacters(flagPole, getSkillRadius() * 2, 100);
-			for (Creature ch : around)
-			{
-				if (ch.isCastingNow() && ch.getCastingSkill() == this) // проверяел ли ктото возле нас кастует накойже скил
-				{
-					activeChar.sendPacket(SystemMsg.A_FLAG_IS_ALREADY_BEING_DISPLAYED_ANOTHER_FLAG_CANNOT_BE_DISPLAYED);
-					return false;
-				}
-			}
-		}
+        GameObject flagPole = activeChar.getTarget();
+        if (!(flagPole instanceof StaticObjectInstance) || ((StaticObjectInstance) flagPole).getType() != 3) {
+            activeChar.sendPacket(SystemMsg.THE_TARGET_IS_NOT_A_FLAGPOLE_SO_A_FLAG_CANNOT_BE_DISPLAYED);
+            return false;
+        }
 
-		Player player = (Player) activeChar;
-		if (player.getClan() == null)
-		{
-			activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
-			return false;
-		}
+        if (first) {
+            List<Creature> around = World.getAroundCharacters(flagPole, getSkillRadius() * 2, 100);
+            for (Creature ch : around) {
+                if (ch.isCastingNow() && ch.getCastingSkill() == this) // проверяел ли ктото возле нас кастует накойже скил
+                {
+                    activeChar.sendPacket(SystemMsg.A_FLAG_IS_ALREADY_BEING_DISPLAYED_ANOTHER_FLAG_CANNOT_BE_DISPLAYED);
+                    return false;
+                }
+            }
+        }
 
-		FortressSiegeEvent siegeEvent = player.getEvent(FortressSiegeEvent.class);
-		if (siegeEvent == null)
-		{
-			activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
-			return false;
-		}
+        Player player = (Player) activeChar;
+        if (player.getClan() == null) {
+            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            return false;
+        }
 
-		if (player.isMounted())
-		{
-			activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
-			return false;
-		}
+        FortressSiegeEvent siegeEvent = player.getEvent(FortressSiegeEvent.class);
+        if (siegeEvent == null) {
+            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            return false;
+        }
 
-		ItemAttachment attach = player.getActiveWeaponFlagAttachment();
-		if (!(attach instanceof FortressCombatFlagObject) || ((FortressCombatFlagObject) attach).getEvent() != siegeEvent)
-		{
-			activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
-			return false;
-		}
+        if (player.isMounted()) {
+            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            return false;
+        }
 
-		if (!player.isInRangeZ(target, getCastRange()))
-		{
-			player.sendPacket(SystemMsg.YOUR_TARGET_IS_OUT_OF_RANGE);
-			return false;
-		}
+        ItemAttachment attach = player.getActiveWeaponFlagAttachment();
+        if (!(attach instanceof FortressCombatFlagObject) || ((FortressCombatFlagObject) attach).getEvent() != siegeEvent) {
+            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+            return false;
+        }
 
-		if (first)
-			siegeEvent.broadcastTo(new SystemMessage2(SystemMsg.S1_CLAN_IS_TRYING_TO_DISPLAY_A_FLAG).addString(player.getClan().getName()), CastleSiegeEvent.DEFENDERS);
+        if (!player.isInRangeZ(target, getCastRange())) {
+            player.sendPacket(SystemMsg.YOUR_TARGET_IS_OUT_OF_RANGE);
+            return false;
+        }
 
-		return true;
-	}
+        if (first)
+            siegeEvent.broadcastTo(new SystemMessage2(SystemMsg.S1_CLAN_IS_TRYING_TO_DISPLAY_A_FLAG).addString(player.getClan().getName()), CastleSiegeEvent.DEFENDERS);
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		GameObject flagPole = activeChar.getTarget();
-		if (!(flagPole instanceof StaticObjectInstance) || ((StaticObjectInstance) flagPole).getType() != 3)
-			return;
-		Player player = (Player) activeChar;
-		FortressSiegeEvent siegeEvent = player.getEvent(FortressSiegeEvent.class);
-		if (siegeEvent == null)
-			return;
+        return true;
+    }
 
-		StaticObjectObject object = siegeEvent.getFirstObject(FortressSiegeEvent.FLAG_POLE);
-		if (((StaticObjectInstance) flagPole).getUId() != object.getUId())
-			return;
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        GameObject flagPole = activeChar.getTarget();
+        if (!(flagPole instanceof StaticObjectInstance) || ((StaticObjectInstance) flagPole).getType() != 3)
+            return;
+        Player player = (Player) activeChar;
+        FortressSiegeEvent siegeEvent = player.getEvent(FortressSiegeEvent.class);
+        if (siegeEvent == null)
+            return;
 
-		siegeEvent.processStep(player.getClan());
-	}
+        StaticObjectObject object = siegeEvent.getFirstObject(FortressSiegeEvent.FLAG_POLE);
+        if (((StaticObjectInstance) flagPole).getUId() != object.getUId())
+            return;
+
+        siegeEvent.processStep(player.getClan());
+    }
 }

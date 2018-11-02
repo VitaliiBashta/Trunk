@@ -5,32 +5,27 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
-public class MemoryByteCode extends SimpleJavaFileObject
-{
-	private final String className;
-	private ByteArrayOutputStream oStream;
+public class MemoryByteCode extends SimpleJavaFileObject {
+    private final String className;
+    private ByteArrayOutputStream oStream;
 
-	public MemoryByteCode(String className, URI uri)
-	{
-		super(uri, Kind.CLASS);
-		this.className = className;
-	}
+    public MemoryByteCode(String className, URI uri) {
+        super(uri, Kind.CLASS);
+        this.className = className;
+    }
 
-	@Override
-	public OutputStream openOutputStream()
-	{
-		oStream = new ByteArrayOutputStream();
-		return oStream;
-	}
+    @Override
+    public OutputStream openOutputStream() {
+        oStream = new ByteArrayOutputStream();
+        return oStream;
+    }
 
-	public byte[] getBytes()
-	{
-		return oStream.toByteArray();
-	}
+    public byte[] getBytes() {
+        return oStream.toByteArray();
+    }
 
-	@Override
-	public String getName()
-	{
-		return className;
-	}
+    @Override
+    public String getName() {
+        return className;
+    }
 }

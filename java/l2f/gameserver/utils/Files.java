@@ -1,7 +1,6 @@
 package l2f.gameserver.utils;
 
 import l2f.gameserver.model.Player;
-
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +10,6 @@ import java.io.*;
 public class Files {
     private static final Logger LOG = LoggerFactory.getLogger(Files.class);
 
-    /**
-     * Saves the string to a file in UTF-8. <br>
-     * If the file exists, overwrite it.
-     *
-     * @param Path   path to the file
-     * @param String to store the string
-     */
     public static void writeFile(String path, String string) {
         try {
             FileUtils.writeStringToFile(new File(path), string, "UTF-8");
@@ -62,13 +54,6 @@ public class Files {
         return content;
     }
 
-    /**
-     * Saves the string to a file in UTF-8. <br>
-     * If the file exists, overwrite it.
-     *
-     * @param Path   path to the file
-     * @param String to store the string
-     */
     public static void writeFile1(String path, String string) {
         if (string == null || string.length() == 0)
             return;
@@ -91,12 +76,6 @@ public class Files {
         } catch (IOException e) {
             LOG.error("IOException while writing File1 in Files", e);
         }
-    }
-
-    public static String read(String name, Player player) {
-        if (player == null)
-            return "";
-        return read(name, player.getLang());
     }
 
     public static String read(String name, String lang) {

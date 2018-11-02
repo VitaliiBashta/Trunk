@@ -1,10 +1,6 @@
 package ai.hellbound;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import l2f.commons.threading.RunnableImpl;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ThreadPoolManager;
@@ -19,85 +15,80 @@ import l2f.gameserver.network.serverpackets.MagicSkillUse;
 import l2f.gameserver.tables.SkillTable;
 import l2f.gameserver.utils.Location;
 
-public class Darnel extends DefaultAI
-{
-	private class TrapTask extends RunnableImpl
-	{
-		@Override
-		public void runImpl()
-		{
-			NpcInstance actor = getActor();
-			if (actor.isDead())
-				return;
+import java.util.HashMap;
+import java.util.Map;
 
-			// Спавним 10 ловушек
-			TrapInstance trap;
-			for (int i = 0; i < 10; i++)
-			{
-				trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(13037), actor, trapSkills[Rnd.get(trapSkills.length)], new Location(Rnd.get(151896, 153608), Rnd.get(145032, 146808), -12584));
-				trap.spawnMe();
-			}
-		}
-	}
+public class Darnel extends DefaultAI {
+    private class TrapTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            NpcInstance actor = getActor();
+            if (actor.isDead())
+                return;
 
-	final Skill[] trapSkills = new Skill[] {
-			SkillTable.getInstance().getInfo(5267, 1),
-			SkillTable.getInstance().getInfo(5268, 1),
-			SkillTable.getInstance().getInfo(5269, 1),
-			SkillTable.getInstance().getInfo(5270, 1) };
+            // Спавним 10 ловушек
+            TrapInstance trap;
+            for (int i = 0; i < 10; i++) {
+                trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(13037), actor, trapSkills[Rnd.get(trapSkills.length)], new Location(Rnd.get(151896, 153608), Rnd.get(145032, 146808), -12584));
+                trap.spawnMe();
+            }
+        }
+    }
 
-	final Skill Poison;
-	final Skill Paralysis;
+    final Skill[] trapSkills = new Skill[]{
+            SkillTable.getInstance().getInfo(5267, 1),
+            SkillTable.getInstance().getInfo(5268, 1),
+            SkillTable.getInstance().getInfo(5269, 1),
+            SkillTable.getInstance().getInfo(5270, 1)};
 
-	public Darnel(NpcInstance actor)
-	{
-		super(actor);
+    final Skill Poison;
+    final Skill Paralysis;
 
-		TIntObjectHashMap<Skill> skills = getActor().getTemplate().getSkills();
+    public Darnel(NpcInstance actor) {
+        super(actor);
 
-		Poison = skills.get(4182);
-		Paralysis = skills.get(4189);
-	}
+        TIntObjectHashMap<Skill> skills = getActor().getTemplate().getSkills();
 
-	@Override
-	protected boolean createNewTask()
-	{
-		clearTasks();
-		Creature target;
-		if ((target = prepareTarget()) == null)
-			return false;
+        Poison = skills.get(4182);
+        Paralysis = skills.get(4189);
+    }
 
-		NpcInstance actor = getActor();
-		if (actor.isDead())
-			return false;
+    @Override
+    protected boolean createNewTask() {
+        clearTasks();
+        Creature target;
+        if ((target = prepareTarget()) == null)
+            return false;
 
-		int rnd_per = Rnd.get(100);
+        NpcInstance actor = getActor();
+        if (actor.isDead())
+            return false;
 
-		if (rnd_per < 5)
-		{
-			actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5440, 1, 3000, 0));
-			ThreadPoolManager.getInstance().schedule(new TrapTask(), 3000);
-			return true;
-		}
+        int rnd_per = Rnd.get(100);
 
-		double distance = actor.getDistance(target);
+        if (rnd_per < 5) {
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5440, 1, 3000, 0));
+            ThreadPoolManager.getInstance().schedule(new TrapTask(), 3000);
+            return true;
+        }
 
-		if (!actor.isAMuted() && rnd_per < 75)
-			return chooseTaskAndTargets(null, target, distance);
+        double distance = actor.getDistance(target);
 
-		Map<Skill, Integer> d_skill = new HashMap<Skill, Integer>();
+        if (!actor.isAMuted() && rnd_per < 75)
+            return chooseTaskAndTargets(null, target, distance);
 
-		addDesiredSkill(d_skill, target, distance, Poison);
-		addDesiredSkill(d_skill, target, distance, Paralysis);
+        Map<Skill, Integer> d_skill = new HashMap<Skill, Integer>();
 
-		Skill r_skill = selectTopSkill(d_skill);
+        addDesiredSkill(d_skill, target, distance, Poison);
+        addDesiredSkill(d_skill, target, distance, Paralysis);
 
-		return chooseTaskAndTargets(r_skill, target, distance);
-	}
+        Skill r_skill = selectTopSkill(d_skill);
 
-	@Override
-	protected boolean randomWalk()
-	{
-		return false;
-	}
+        return chooseTaskAndTargets(r_skill, target, distance);
+    }
+
+    @Override
+    protected boolean randomWalk() {
+        return false;
+    }
 }

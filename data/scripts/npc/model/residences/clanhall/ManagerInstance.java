@@ -8,49 +8,42 @@ import l2f.gameserver.network.serverpackets.L2GameServerPacket;
 import l2f.gameserver.templates.npc.NpcTemplate;
 import npc.model.residences.ResidenceManager;
 
-public class ManagerInstance extends ResidenceManager
-{
-	public ManagerInstance(int objectId, NpcTemplate template)
-	{
-		super(objectId, template);
-	}
-	@Override
-	protected Residence getResidence()
-	{
-		return getClanHall();
-	}
+public class ManagerInstance extends ResidenceManager {
+    public ManagerInstance(int objectId, NpcTemplate template) {
+        super(objectId, template);
+    }
 
-	@Override
-	public L2GameServerPacket decoPacket()
-	{
-		ClanHall clanHall = getClanHall();
-		if (clanHall != null)
-			return new AgitDecoInfo(clanHall);
-		else
-			return null;
-	}
+    @Override
+    protected Residence getResidence() {
+        return getClanHall();
+    }
 
-	@Override
-	protected int getPrivUseFunctions()
-	{
-		return Clan.CP_CH_USE_FUNCTIONS;
-	}
+    @Override
+    public L2GameServerPacket decoPacket() {
+        ClanHall clanHall = getClanHall();
+        if (clanHall != null)
+            return new AgitDecoInfo(clanHall);
+        else
+            return null;
+    }
 
-	@Override
-	protected int getPrivSetFunctions()
-	{
-		return Clan.CP_CH_SET_FUNCTIONS;
-	}
+    @Override
+    protected int getPrivUseFunctions() {
+        return Clan.CP_CH_USE_FUNCTIONS;
+    }
 
-	@Override
-	protected int getPrivDismiss()
-	{
-		return Clan.CP_CH_DISMISS;
-	}
+    @Override
+    protected int getPrivSetFunctions() {
+        return Clan.CP_CH_SET_FUNCTIONS;
+    }
 
-	@Override
-	protected int getPrivDoors()
-	{
-		return Clan.CP_CH_ENTRY_EXIT;
-	}
+    @Override
+    protected int getPrivDismiss() {
+        return Clan.CP_CH_DISMISS;
+    }
+
+    @Override
+    protected int getPrivDoors() {
+        return Clan.CP_CH_ENTRY_EXIT;
+    }
 }

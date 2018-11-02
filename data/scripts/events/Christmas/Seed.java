@@ -17,99 +17,89 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.scripts.ScriptFile;
 import l2f.gameserver.templates.npc.NpcTemplate;
 
-public class Seed extends ScriptItemHandler implements ScriptFile
-{
-	@Override
-	public void onLoad()
-	{
-		ItemHandler.getInstance().registerItemHandler(this);
-	}
+public class Seed extends ScriptItemHandler implements ScriptFile {
+    @Override
+    public void onLoad() {
+        ItemHandler.getInstance().registerItemHandler(this);
+    }
 
-	@Override
-	public void onReload()
-	{}
+    @Override
+    public void onReload() {
+    }
 
-	@Override
-	public void onShutdown()
-	{}
+    @Override
+    public void onShutdown() {
+    }
 
-	public class DeSpawnScheduleTimerTask extends RunnableImpl
-	{
-		SimpleSpawner spawnedTree = null;
+    public class DeSpawnScheduleTimerTask extends RunnableImpl {
+        SimpleSpawner spawnedTree = null;
 
-		public DeSpawnScheduleTimerTask(SimpleSpawner spawn)
-		{
-			spawnedTree = spawn;
-		}
+        public DeSpawnScheduleTimerTask(SimpleSpawner spawn) {
+            spawnedTree = spawn;
+        }
 
-		@SuppressWarnings("unused")
-		@Override
-		public void runImpl() throws Exception
-		{
-			spawnedTree.deleteAll();
-		}
-	}
+        @SuppressWarnings("unused")
+        @Override
+        public void runImpl() {
+            spawnedTree.deleteAll();
+        }
+    }
 
-	private static int[] _itemIds = { 5560, // Christmas Tree
-		5561 // Special Christmas Tree
-	};
+    private static int[] _itemIds = {5560, // Christmas Tree
+            5561 // Special Christmas Tree
+    };
 
-	private static int[] _npcIds = { 13006, // Christmas Tree
-		13007 // Special Christmas Tree
-	};
+    private static int[] _npcIds = {13006, // Christmas Tree
+            13007 // Special Christmas Tree
+    };
 
-	private static final int DESPAWN_TIME = 3600000; //60 min
+    private static final int DESPAWN_TIME = 3600000; //60 min
 
-	@Override
-	public boolean useItem(Playable playable, ItemInstance item, boolean ctrl)
-	{
-		Player activeChar = (Player) playable;
-		NpcTemplate template = null;
-		
-		if (activeChar.isInOlympiadMode() || Olympiad.isRegistered(activeChar))
-		{
-			return false;
-		}
+    @Override
+    public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
+        Player activeChar = (Player) playable;
+        NpcTemplate template = null;
 
-		int itemId = item.getItemId();
-		for (int i = 0; i < _itemIds.length; i++)
-			if (_itemIds[i] == itemId)
-			{
-				template = NpcHolder.getInstance().getTemplate(_npcIds[i]);
-				break;
-			}
+        if (activeChar.isInOlympiadMode() || Olympiad.isRegistered(activeChar)) {
+            return false;
+        }
 
-		for (NpcInstance npc : World.getAroundNpc(activeChar, 300, 200))
-			if (npc.getNpcId() == _npcIds[0] || npc.getNpcId() == _npcIds[1])
-			{
-				activeChar.sendPacket(new SystemMessage2(SystemMsg.SINCE_S1_ALREADY_EXISTS_NEARBY_YOU_CANNOT_SUMMON_IT_AGAIN).addName(npc));
-				return false;
-			}
+        int itemId = item.getItemId();
+        for (int i = 0; i < _itemIds.length; i++)
+            if (_itemIds[i] == itemId) {
+                template = NpcHolder.getInstance().getTemplate(_npcIds[i]);
+                break;
+            }
 
-		if (template == null)
-			return false;
+        for (NpcInstance npc : World.getAroundNpc(activeChar, 300, 200))
+            if (npc.getNpcId() == _npcIds[0] || npc.getNpcId() == _npcIds[1]) {
+                activeChar.sendPacket(new SystemMessage2(SystemMsg.SINCE_S1_ALREADY_EXISTS_NEARBY_YOU_CANNOT_SUMMON_IT_AGAIN).addName(npc));
+                return false;
+            }
 
-		if (!activeChar.getInventory().destroyItem(item, 1L, "Seed"))
-			return false;
+        if (template == null)
+            return false;
 
-		SimpleSpawner spawn = new SimpleSpawner(template);
-		spawn.setLoc(activeChar.getLoc());
-		NpcInstance npc = spawn.doSpawn(false);
-		npc.setTitle(activeChar.getName()); //FIXME Почему-то не устанавливается
-		spawn.respawnNpc(npc);
+        if (!activeChar.getInventory().destroyItem(item, 1L, "Seed"))
+            return false;
 
-		// АИ вещающее бафф регена устанавливается только для большой елки
-		if (itemId == 5560)
-			npc.setAI(new ctreeAI(npc));
+        SimpleSpawner spawn = new SimpleSpawner(template);
+        spawn.setLoc(activeChar.getLoc());
+        NpcInstance npc = spawn.doSpawn(false);
+        npc.setTitle(activeChar.getName()); //FIXME Почему-то не устанавливается
+        spawn.respawnNpc(npc);
 
-		ThreadPoolManager.getInstance().schedule(new DeSpawnScheduleTimerTask(spawn), (activeChar.isInPeaceZone() ? DESPAWN_TIME / 3 : DESPAWN_TIME));
-		playable.sendMessage("Christmas Tree will stay here for 1 Hour!");
-		return true;
-	}
+        // АИ вещающее бафф регена устанавливается только для большой елки
+        if (itemId == 5560)
+            npc.setAI(new ctreeAI(npc));
 
-	@Override
-	public int[] getItemIds()
-	{
-		return _itemIds;
-	}
+        ThreadPoolManager.getInstance().schedule(new DeSpawnScheduleTimerTask(spawn), (activeChar.isInPeaceZone() ? DESPAWN_TIME / 3 : DESPAWN_TIME));
+        playable.sendMessage("Christmas Tree will stay here for 1 Hour!");
+        return true;
+    }
+
+    @Override
+    public int[] getItemIds() {
+        return _itemIds;
+    }
 }

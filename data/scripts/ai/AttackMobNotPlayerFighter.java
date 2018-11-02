@@ -1,7 +1,5 @@
 package ai;
 
-import java.util.List;
-
 import l2f.gameserver.ai.CtrlIntention;
 import l2f.gameserver.ai.Fighter;
 import l2f.gameserver.model.Creature;
@@ -10,43 +8,40 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.model.quest.QuestEventType;
 import l2f.gameserver.model.quest.QuestState;
 
-public class AttackMobNotPlayerFighter extends Fighter
-{
-	public AttackMobNotPlayerFighter(NpcInstance actor)
-	{
-		super(actor);
-	}
+import java.util.List;
 
-	@Override
-	protected void onEvtAttacked(Creature attacker, int damage)
-	{
-		NpcInstance actor = getActor();
-		if (attacker == null)
-			return;
+public class AttackMobNotPlayerFighter extends Fighter {
+    public AttackMobNotPlayerFighter(NpcInstance actor) {
+        super(actor);
+    }
 
-		Player player = attacker.getPlayer();
-		if (player != null)
-		{
-			List<QuestState> quests = player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST);
-			if (quests != null)
-				for (QuestState qs : quests)
-					qs.getQuest().notifyAttack(actor, qs);
-		}
+    @Override
+    protected void onEvtAttacked(Creature attacker, int damage) {
+        NpcInstance actor = getActor();
+        if (attacker == null)
+            return;
 
-		onEvtAggression(attacker, damage);
-	}
+        Player player = attacker.getPlayer();
+        if (player != null) {
+            List<QuestState> quests = player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST);
+            if (quests != null)
+                for (QuestState qs : quests)
+                    qs.getQuest().notifyAttack(actor, qs);
+        }
 
-	@Override
-	protected void onEvtAggression(Creature attacker, int aggro)
-	{
-		NpcInstance actor = getActor();
-		if (attacker == null)
-			return;
+        onEvtAggression(attacker, damage);
+    }
 
-		if (!actor.isRunning())
-			startRunningTask(AI_TASK_ATTACK_DELAY);
+    @Override
+    protected void onEvtAggression(Creature attacker, int aggro) {
+        NpcInstance actor = getActor();
+        if (attacker == null)
+            return;
 
-		if (getIntention() != CtrlIntention.AI_INTENTION_ATTACK)
-			setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
-	}
+        if (!actor.isRunning())
+            startRunningTask(AI_TASK_ATTACK_DELAY);
+
+        if (getIntention() != CtrlIntention.AI_INTENTION_ATTACK)
+            setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+    }
 }

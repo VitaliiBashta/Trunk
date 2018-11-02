@@ -1,71 +1,64 @@
 package l2f.gameserver.network.telnet;
 
-import org.apache.commons.lang3.ArrayUtils;
 
-public abstract class TelnetCommand implements Comparable<TelnetCommand>
-{
-	private final String command;
-	private final String[] acronyms;
+import l2f.commons.lang.ArrayUtils;
 
-	public TelnetCommand(String command)
-	{
-		this(command, ArrayUtils.EMPTY_STRING_ARRAY);
-	}
+public abstract class TelnetCommand implements Comparable<TelnetCommand> {
+    private final String command;
+    private final String[] acronyms;
 
-	public TelnetCommand(String command, String... acronyms)
-	{
-		this.command = command;
-		this.acronyms = acronyms;
-	}
+    public TelnetCommand(String command) {
+        this(command, ArrayUtils.EMPTY_STRING_ARRAY);
+    }
 
-	public String getCommand()
-	{
-		return command;
-	}
+    public TelnetCommand(String command, String... acronyms) {
+        this.command = command;
+        this.acronyms = acronyms;
+    }
 
-	public String[] getAcronyms()
-	{
-		return acronyms;
-	}
+    public String getCommand() {
+        return command;
+    }
 
-	public abstract String getUsage();
+    public String[] getAcronyms() {
+        return acronyms;
+    }
 
-	/**
-	 * Handle command and return result
-	 * @param args arguments
-	 * @return result for output
-	 */
-	public abstract String handle(String[] args);
+    public abstract String getUsage();
 
-	public boolean equals(String command)
-	{
-		for (String acronym : acronyms)
-			if (command.equals(acronym))
-				return true;
-		return this.command.equalsIgnoreCase(command);
-	}
+    /**
+     * Handle command and return result
+     *
+     * @param args arguments
+     * @return result for output
+     */
+    public abstract String handle(String[] args);
 
-	@Override
-	public String toString()
-	{
-		return command;
-	}
+    public boolean equals(String command) {
+        for (String acronym : acronyms)
+            if (command.equals(acronym))
+                return true;
+        return this.command.equalsIgnoreCase(command);
+    }
 
-	@Override
-	public boolean equals(Object o)
-	{
-		if (o == this)
-			return true;
-		if (o == null)
-			return true;
-		if (o instanceof TelnetCommand)
-			return command.equals(((TelnetCommand) o).command);
-		return false;
-	}
+    @Override
+    public String toString() {
+        return command;
+    }
 
-	@Override
-	public int compareTo(TelnetCommand o)
-	{
-		return command.compareTo(o.command);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (o == null)
+            return true;
+        if (o instanceof TelnetCommand)
+            return command.equals(((TelnetCommand) o).command);
+        return false;
+    }
+
+    @Override
+    public int compareTo(TelnetCommand o) {
+        return command.compareTo(o.command);
+    }
 }

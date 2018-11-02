@@ -7,37 +7,34 @@ import l2f.gameserver.model.matching.MatchingRoom;
 /**
  * @author VISTALL
  */
-public class RequestExOustFromMpccRoom extends L2GameClientPacket
-{
-	private int _objectId;
+public class RequestExOustFromMpccRoom extends L2GameClientPacket {
+    private int _objectId;
 
-	@Override
-	protected void readImpl()
-	{
-		_objectId = readD();
-	}
+    @Override
+    protected void readImpl() {
+        _objectId = readD();
+    }
 
-	@Override
-	protected void runImpl()
-	{
-		Player player = getClient().getActiveChar();
-		if (player == null)
-			return;
+    @Override
+    protected void runImpl() {
+        Player player = getClient().getActiveChar();
+        if (player == null)
+            return;
 
-		MatchingRoom room = player.getMatchingRoom();
-		if (room == null || room.getType() != MatchingRoom.CC_MATCHING)
-			return;
+        MatchingRoom room = player.getMatchingRoom();
+        if (room == null || room.getType() != MatchingRoom.CC_MATCHING)
+            return;
 
-		if (room.getLeader() != player)
-			return;
+        if (room.getLeader() != player)
+            return;
 
-		Player member = GameObjectsStorage.getPlayer(_objectId);
-		if (member == null)
-			return;
+        Player member = GameObjectsStorage.getPlayer(_objectId);
+        if (member == null)
+            return;
 
-		if (member == room.getLeader())
-			return;
+        if (member == room.getLeader())
+            return;
 
-		room.removeMember(member, true);
-	}
+        room.removeMember(member, true);
+    }
 }

@@ -1,6 +1,5 @@
 package ai;
 
-import java.util.Collection;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ai.CtrlEvent;
 import l2f.gameserver.ai.Fighter;
@@ -9,6 +8,8 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.network.serverpackets.components.NpcString;
 import l2f.gameserver.scripts.Functions;
+
+import java.util.Collection;
 
 /**
  * Suppressor(22656).
@@ -19,8 +20,8 @@ public class Suppressor extends Fighter {
     private NpcInstance mob = null;
     private boolean _firstTimeAttacked = true;
     public static final NpcString[] MsgText = {
-        NpcString.DRIVE_DEVICE_ENTIRE_DESTRUCTION_MOVING_SUSPENSION,
-        NpcString.DRIVE_DEVICE_PARTIAL_DESTRUCTION_IMPULSE_RESULT};
+            NpcString.DRIVE_DEVICE_ENTIRE_DESTRUCTION_MOVING_SUSPENSION,
+            NpcString.DRIVE_DEVICE_PARTIAL_DESTRUCTION_IMPULSE_RESULT};
 
     public Suppressor(NpcInstance actor) {
         super(actor);

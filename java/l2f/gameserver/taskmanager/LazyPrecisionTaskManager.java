@@ -8,95 +8,82 @@ import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.model.premium.PremiumEnd;
+
 import java.util.concurrent.Future;
 
-public class LazyPrecisionTaskManager extends SteppingRunnableQueueManager
-{
-	private static final LazyPrecisionTaskManager _instance = new LazyPrecisionTaskManager();
+public class LazyPrecisionTaskManager extends SteppingRunnableQueueManager {
+    private static final LazyPrecisionTaskManager _instance = new LazyPrecisionTaskManager();
 
-	private LazyPrecisionTaskManager()
-	{
-		super(1000L);
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 1000L, 1000L);
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl()
-		{
-			@Override
-			public void runImpl() throws Exception
-			{
-				LazyPrecisionTaskManager.this.purge();
-			}
+    private LazyPrecisionTaskManager() {
+        super(1000L);
+        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 1000L, 1000L);
+        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+            @Override
+            public void runImpl() {
+                LazyPrecisionTaskManager.this.purge();
+            }
 
-		}, 60000L, 60000L);
-	}
+        }, 60000L, 60000L);
+    }
 
-	public static final LazyPrecisionTaskManager getInstance()
-	{
-		return _instance;
-	}
+    public static final LazyPrecisionTaskManager getInstance() {
+        return _instance;
+    }
 
-	public Future<?> addPCCafePointsTask(final Player player)
-	{
-		long delay = Config.ALT_PCBANG_POINTS_DELAY * 60000L;
+    public Future<?> addPCCafePointsTask(final Player player) {
+        long delay = Config.ALT_PCBANG_POINTS_DELAY * 60000L;
 
-		return scheduleAtFixedRate(new RunnableImpl(){
+        return scheduleAtFixedRate(new RunnableImpl() {
 
-			@Override
-			public void runImpl() throws Exception
-			{
-				if (player.isInOfflineMode() || player.getLevel() < Config.ALT_PCBANG_POINTS_MIN_LVL)
-					return;
+            @Override
+            public void runImpl() {
+                if (player.isInOfflineMode() || player.getLevel() < Config.ALT_PCBANG_POINTS_MIN_LVL)
+                    return;
 
-				player.addPcBangPoints(Config.ALT_PCBANG_POINTS_BONUS, Config.ALT_PCBANG_POINTS_BONUS_DOUBLE_CHANCE > 0 && Rnd.chance(Config.ALT_PCBANG_POINTS_BONUS_DOUBLE_CHANCE));
-			}
+                player.addPcBangPoints(Config.ALT_PCBANG_POINTS_BONUS, Config.ALT_PCBANG_POINTS_BONUS_DOUBLE_CHANCE > 0 && Rnd.chance(Config.ALT_PCBANG_POINTS_BONUS_DOUBLE_CHANCE));
+            }
 
-		}, delay, delay);
-	}
+        }, delay, delay);
+    }
 
-	public Future<?> addVitalityRegenTask(final Player player)
-	{
-		long delay = 60000L;
+    public Future<?> addVitalityRegenTask(final Player player) {
+        long delay = 60000L;
 
-		return scheduleAtFixedRate(new RunnableImpl(){
+        return scheduleAtFixedRate(new RunnableImpl() {
 
-			@Override
-			public void runImpl() throws Exception
-			{
-				if (player.isInOfflineMode() || !player.isInPeaceZone())
-					return;
+            @Override
+            public void runImpl() {
+                if (player.isInOfflineMode() || !player.isInPeaceZone())
+                    return;
 
-				player.setVitality(player.getVitality() + 1);
-			}
+                player.setVitality(player.getVitality() + 1);
+            }
 
-		}, delay, delay);
-	}
+        }, delay, delay);
+    }
 
-	public Future<?> startBonusExpirationTask(final Player player)
-	{
-		long delay = player.getBonus().getBonusExpire() * 1000L - System.currentTimeMillis();
+    public Future<?> startBonusExpirationTask(final Player player) {
+        long delay = player.getBonus().getBonusExpire() * 1000L - System.currentTimeMillis();
 
-		return schedule(new RunnableImpl()
-		{
+        return schedule(new RunnableImpl() {
 
-			@Override
-			public void runImpl() throws Exception
-			{
-				PremiumEnd.getInstance().stopBonuses(player);
-			}
+            @Override
+            public void runImpl() {
+                PremiumEnd.getInstance().stopBonuses(player);
+            }
 
-		}, delay);
-	}
+        }, delay);
+    }
 
-	public Future<?> addNpcAnimationTask(final NpcInstance npc)
-	{
-		return scheduleAtFixedRate(new RunnableImpl(){
+    public Future<?> addNpcAnimationTask(final NpcInstance npc) {
+        return scheduleAtFixedRate(new RunnableImpl() {
 
-			@Override
-			public void runImpl() throws Exception
-			{
-				if (npc.isVisible() && !npc.isActionsDisabled() && !npc.isMoving && !npc.isInCombat())
-					npc.onRandomAnimation();
-			}
+            @Override
+            public void runImpl() {
+                if (npc.isVisible() && !npc.isActionsDisabled() && !npc.isMoving && !npc.isInCombat())
+                    npc.onRandomAnimation();
+            }
 
-		}, 1000L, Rnd.get(Config.MIN_NPC_ANIMATION, Config.MAX_NPC_ANIMATION) * 1000L);
-	}
+        }, 1000L, Rnd.get(Config.MIN_NPC_ANIMATION, Config.MAX_NPC_ANIMATION) * 1000L);
+    }
 }

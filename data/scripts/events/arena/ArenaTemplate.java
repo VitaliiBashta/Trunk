@@ -13,47 +13,45 @@ import java.util.List;
 import java.util.Map;
 
 
-public abstract class ArenaTemplate extends Functions
-{
-	// Эти переменные выставляются автоматически при вызове скрипта
-	protected int _managerId;
-	protected String _className;
-	protected String _chatName;
-	protected Long _creatorId;
-	protected int _status = 0;
-	protected int _battleType = 1;
-	protected int _team1exp = 0;
-	protected int _team2exp = 0;
-	protected int _price = 10000;
-	protected int _team1count = 1;
-	protected int _team2count = 1;
-	protected int _team1min = 1;
-	protected int _team1max = 85;
-	protected int _team2min = 1;
-	protected int _team2max = 85;
-	protected int _timeToStart = 10;
-	protected boolean _timeOutTask;
+public abstract class ArenaTemplate extends Functions {
+    // Эти переменные выставляются автоматически при вызове скрипта
+    protected int _managerId;
+    protected String _className;
+    protected String _chatName;
+    protected Long _creatorId;
+    protected int _status = 0;
+    protected int _battleType = 1;
+    protected int _team1exp = 0;
+    protected int _team2exp = 0;
+    protected int _price = 10000;
+    protected int _team1count = 1;
+    protected int _team2count = 1;
+    protected int _team1min = 1;
+    protected int _team1max = 85;
+    protected int _team2min = 1;
+    protected int _team2max = 85;
+    protected int _timeToStart = 10;
+    protected boolean _timeOutTask;
 
-	protected List<Location> _team1points;
-	protected List<Location> _team2points;
+    protected List<Location> _team1points;
+    protected List<Location> _team2points;
 
-	protected List<Long> _team1list;
-	protected List<Long> _team2list;
-	protected List<Long> _team1live;
-	protected List<Long> _team2live;
+    protected List<Long> _team1list;
+    protected List<Long> _team2list;
+    protected List<Long> _team1live;
+    protected List<Long> _team2live;
 
-	protected Map<Integer, Integer> _expToReturn;
-	protected Map<Integer, Integer> _classToReturn;
+    protected Map<Integer, Integer> _expToReturn;
+    protected Map<Integer, Integer> _classToReturn;
 
-	protected Zone _zone;
-	protected ZoneListener _zoneListener;
+    protected Zone _zone;
+    protected ZoneListener _zoneListener;
 
-	protected abstract void onLoad();
+    protected abstract void onLoad();
 
-	protected abstract void onReload();
+    protected abstract void onReload();
 
-	public void template_stop()
-	{
+    public void template_stop() {
 		/*say("Fight interrupted for technical reasons, return");
 		if (_battleType == 1)
 			returnAdenaToTeams();
@@ -63,34 +61,30 @@ public abstract class ArenaTemplate extends Functions
 		clearTeams();
 		_status = 0;
 		_timeOutTask = false;*/
-	}
+    }
 
-	public void template_create1(Player player)
-	{
+    public void template_create1(Player player) {
 		/*if(_status > 0)
 			show("Wait for the fight", player);
 		else
 			show("scripts/events/arena/" + _managerId + "-1.htm", player);*/
-	}
+    }
 
-	public void template_create2(Player player)
-	{
+    public void template_create2(Player player) {
 		/*if(_status > 0)
 			show("Wait for the fight", player);
 		else
 			show("scripts/events/arena/" + _managerId + "-2.htm", player);*/
-	}
+    }
 
-	public void template_register(Player player)
-	{
+    public void template_register(Player player) {
 		/*if(_status > 1)
 			show("Wait for the fight", player);
 		else
 			show("scripts/events/arena/" + _managerId + "-3.htm", player);*/
-	}
+    }
 
-	public void template_check1(Player player, String[] var)
-	{
+    public void template_check1(Player player, String[] var) {
 		/*if(player.isDead())
 			return;
 
@@ -163,10 +157,9 @@ public abstract class ArenaTemplate extends Functions
 		_team1list.add(player.getStoredId());
 		say(player.getName() + " created a battle " + _team1count + "х" + _team2count + ", " + _team1min + "-" + _team1max + "lv vs " + _team2min + "-" + _team2max + "lv, rate " + _price + "а, Start over " + _timeToStart + " min");
 		executeTask("events.arena." + _className, "announce", new Object[0], 60000);*/
-	}
+    }
 
-	public void template_check2(Player player, String[] var)
-	{
+    public void template_check2(Player player, String[] var) {
 		/*if(!Config.ALT_ARENA_EXP)
 		{
 			show("This option is not available", player);
@@ -246,10 +239,9 @@ public abstract class ArenaTemplate extends Functions
 		_team1list.add(player.getStoredId());
 		say(player.getName() + " created a battle " + _team1count + "х" + _team2count + ", " + _team1min + "-" + _team1max + "lv vs " + _team2min + "-" + _team2max + "lv, rate " + "experience, beginning in " + _timeToStart + " min");
 		executeTask("events.arena." + _className, "announce", new Object[0], 60000);*/
-	}
+    }
 
-	public void template_register_check(Player player, String[] var)
-	{
+    public void template_register_check(Player player, String[] var) {
 		/*if(player.isDead())
 			return;
 
@@ -343,10 +335,9 @@ public abstract class ArenaTemplate extends Functions
 				_timeToStart = 1;
 			}
 		}*/
-	}
+    }
 
-	public void template_announce()
-	{
+    public void template_announce() {
 		/*Player creator = GameObjectsStorage.getAsPlayer(_creatorId);
 
 		if (_status != 1 || creator == null)
@@ -373,10 +364,9 @@ public abstract class ArenaTemplate extends Functions
 				returnExpToTeams();
 			clearTeams();
 		}*/
-	}
+    }
 
-	public void template_prepare()
-	{
+    public void template_prepare() {
 		/*if(_status != 1)
 			return;
 
@@ -394,10 +384,9 @@ public abstract class ArenaTemplate extends Functions
 		teleportTeamsToArena();
 		say("Fight starts in 15 seconds");
 		executeTask("events.arena." + _className, "start", new Object[0], 15000);*/
-	}
+    }
 
-	public void template_start()
-	{
+    public void template_start() {
 		/*if(_status != 2)
 			return;
 
@@ -408,17 +397,15 @@ public abstract class ArenaTemplate extends Functions
 		_status = 3;
 		executeTask("events.arena." + _className, "timeOut", new Object[0], 180000);
 		_timeOutTask = true;*/
-	}
+    }
 
-	public void clearArena()
-	{
+    public void clearArena() {
 		/*for(Creature cha : _zone.getObjects())
 			if (cha.isPlayable())
 				cha.teleToLocation(_zone.getSpawn());*/
-	}
+    }
 
-	public boolean checkTeams()
-	{
+    public boolean checkTeams() {
 		/*if(_team1live.isEmpty())
 		{
 			teamHasLost(1);
@@ -429,11 +416,10 @@ public abstract class ArenaTemplate extends Functions
 			teamHasLost(2);
 			return false;
 		}*/
-		return true;
-	}
+        return true;
+    }
 
-	public void paralyzeTeams()
-	{
+    public void paralyzeTeams() {
 		/*Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
 		for (Player player : getPlayers(_team1live))
 		{
@@ -449,10 +435,9 @@ public abstract class ArenaTemplate extends Functions
 			if (player.getPet() != null)
 				revengeSkill.getEffects(player, player.getPet(), false, false);
 		}*/
-	}
+    }
 
-	public void unParalyzeTeams()
-	{
+    public void unParalyzeTeams() {
 		/*for(Player player : getPlayers(_team1list))
 		{
 			player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
@@ -465,10 +450,9 @@ public abstract class ArenaTemplate extends Functions
 			if (player.getPet() != null)
 				player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
 		}*/
-	}
+    }
 
-	public void teleportTeamsToArena()
-	{
+    public void teleportTeamsToArena() {
 		/*Integer n = 0;
 		for (Player player : getPlayers(_team1live))
 		{
@@ -487,21 +471,19 @@ public abstract class ArenaTemplate extends Functions
 			player.setTeam(TeamType.RED);
 			n++;
 		}*/
-	}
+    }
 
-	public boolean playerHasLost(Player player)
-	{
+    public boolean playerHasLost(Player player) {
 		/*_team1live.remove(player.getStoredId());
 		_team2live.remove(player.getStoredId());
 		Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
 		player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
 		revengeSkill.getEffects(player, player, false, false);
 		return !checkTeams();*/
-		return false;
-	}
+        return false;
+    }
 
-	public void teamHasLost(Integer team_id)
-	{
+    public void teamHasLost(Integer team_id) {
 		/*if(team_id == 1)
 		{
 			say("Team 2 won");
@@ -522,10 +504,9 @@ public abstract class ArenaTemplate extends Functions
 		clearTeams();
 		_status = 0;
 		_timeOutTask = false;*/
-	}
+    }
 
-	public void template_timeOut()
-	{
+    public void template_timeOut() {
 		/*if(_timeOutTask && _status == 3)
 		{
 			say("Time has run out, a draw!");
@@ -538,10 +519,9 @@ public abstract class ArenaTemplate extends Functions
 			_status = 0;
 			_timeOutTask = false;
 		}*/
-	}
+    }
 
-	public void payAdenaToTeam(Integer team_id)
-	{
+    public void payAdenaToTeam(Integer team_id) {
 		/*if(team_id == 1)
 			for (Player player : getPlayers(_team1list))
 			{
@@ -554,10 +534,9 @@ public abstract class ArenaTemplate extends Functions
 				long reward = _price + _team1list.size() * _price / _team2list.size();
 				player.addAdena(reward, "ArenaTemplate payToTeam");
 			}*/
-	}
+    }
 
-	public void payExpToTeam(Integer team_id)
-	{
+    public void payExpToTeam(Integer team_id) {
 		/*if(team_id == 1)
 			for (Player player : getPlayers(_team1list))
 			{
@@ -570,10 +549,9 @@ public abstract class ArenaTemplate extends Functions
 				returnExp(player);
 				addExp(player, _team1exp / _team2list.size() / 2);
 			}*/
-	}
+    }
 
-	public void returnAdenaToTeams()
-	{
+    public void returnAdenaToTeams() {
 		/*for(Player player : getPlayers(_team1list))
 		{
 			player.addAdena(_price, "ArenaTemplate returnToTeams");
@@ -582,18 +560,16 @@ public abstract class ArenaTemplate extends Functions
 		{
 			player.addAdena(_price, "ArenaTemplate returnToTeams");
 		}*/
-	}
+    }
 
-	public void returnExpToTeams()
-	{
+    public void returnExpToTeams() {
 		/*for(Player player : getPlayers(_team1list))
 			returnExp(player);
 		for (Player player : getPlayers(_team2list))
 			returnExp(player);*/
-	}
+    }
 
-	public void clearTeams()
-	{
+    public void clearTeams() {
 		/*for(Player player : getPlayers(_team1list))
 			player.setTeam(TeamType.NONE);
 		for (Player player : getPlayers(_team2list))
@@ -602,10 +578,9 @@ public abstract class ArenaTemplate extends Functions
 		_team2list.clear();
 		_team1live.clear();
 		_team2live.clear();*/
-	}
+    }
 
-	public void removeExp(Player player, int team)
-	{
+    public void removeExp(Player player, int team) {
 		/*int lostExp = Math.round((Experience.LEVEL[player.getLevel() + 1] - Experience.LEVEL[player.getLevel()]) * 4 / 100);
 		player.addExpAndSp(-1 * lostExp, 0);
 		_expToReturn.put(player.getObjectId(), lostExp);
@@ -615,25 +590,22 @@ public abstract class ArenaTemplate extends Functions
 			_team1exp += lostExp;
 		else if (team == 2)
 			_team2exp += lostExp;*/
-	}
+    }
 
-	public void returnExp(Player player)
-	{
+    public void returnExp(Player player) {
 		/*int addExp = _expToReturn.get(player.getObjectId());
 		int classId = _classToReturn.get(player.getObjectId());
 		if (addExp > 0 && player.getActiveClassId() == classId)
 			player.addExpAndSp(addExp, 0);*/
-	}
+    }
 
-	public void addExp(Player player, int exp)
-	{
+    public void addExp(Player player, int exp) {
 		/*int classId = _classToReturn.get(player.getObjectId());
 		if (player.getActiveClassId() == classId)
 			player.addExpAndSp(exp, 0);*/
-	}
+    }
 
-	protected void onDeath(Creature self, Creature killer)
-	{
+    protected void onDeath(Creature self, Creature killer) {
 		/*if(_status >= 2 && self.isPlayer() && (_team1list.contains(self.getStoredId()) || _team2list.contains(self.getStoredId())))
 		{
 			Player player = self.getPlayer();
@@ -654,10 +626,9 @@ public abstract class ArenaTemplate extends Functions
 				playerHasLost(player);
 			}
 		}*/
-	}
+    }
 
-	protected void onPlayerExit(Player player)
-	{
+    protected void onPlayerExit(Player player) {
 		/*if(player != null && _status > 0 && (_team1list.contains(player.getStoredId()) || _team2list.contains(player.getStoredId())))
 			switch (_status)
 			{
@@ -688,27 +659,23 @@ public abstract class ArenaTemplate extends Functions
 					checkTeams();
 					break;
 			}*/
-	}
+    }
 
-	protected void onTeleport(Player player)
-	{
+    protected void onTeleport(Player player) {
 		/*if(_status > 1 && player.isInZone(_zone))
 			onPlayerExit(player);*/
-	}
+    }
 
-	public class ZoneListener implements OnZoneEnterLeaveListener
-	{
-		@Override
-		public void onZoneEnter(Zone zone, Creature cha)
-		{
+    public class ZoneListener implements OnZoneEnterLeaveListener {
+        @Override
+        public void onZoneEnter(Zone zone, Creature cha) {
 			/*Player player = cha.getPlayer();
 			if (_status >= 2 && player != null && !(_team1list.contains(player.getStoredId()) || _team2list.contains(player.getStoredId())))
 				ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, _zone.getSpawn()), 3000);*/
-		}
+        }
 
-		@Override
-		public void onZoneLeave(Zone zone, Creature cha)
-		{
+        @Override
+        public void onZoneLeave(Zone zone, Creature cha) {
 			/*Player player = cha.getPlayer();
 			if (_status >= 2 && player != null && (_team1list.contains(player.getStoredId()) || _team2list.contains(player.getStoredId())))
 			{
@@ -719,31 +686,27 @@ public abstract class ArenaTemplate extends Functions
 				int z = cha.getZ();
 				ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);
 			}*/
-		}
-	}
+        }
+    }
 
-	public class TeleportTask extends RunnableImpl
-	{
-		Location loc;
-		Creature target;
+    public class TeleportTask extends RunnableImpl {
+        Location loc;
+        Creature target;
 
-		public TeleportTask(Creature target, Location loc)
-		{
+        public TeleportTask(Creature target, Location loc) {
 			/*this.target = target;
 			this.loc = loc;
 			target.block();*/
-		}
+        }
 
-		@Override
-		public void runImpl() throws Exception
-		{
+        @Override
+        public void runImpl() {
 			/*target.unblock();
 			target.teleToLocation(loc);*/
-		}
-	}
+        }
+    }
 
-	private void removePlayer(Player player)
-	{
+    private void removePlayer(Player player) {
 		/*if(player != null)
 		{
 			_team1list.remove(player.getStoredId());
@@ -752,25 +715,23 @@ public abstract class ArenaTemplate extends Functions
 			_team2live.remove(player.getStoredId());
 			player.setTeam(TeamType.NONE);
 		}*/
-	}
+    }
 
-	private List<Player> getPlayers(List<Long> list)
-	{
-		List<Player> result = new ArrayList<Player>();
+    private List<Player> getPlayers(List<Long> list) {
+        List<Player> result = new ArrayList<Player>();
 		/*for(Long storeId : list)
 		{
 			Player player = GameObjectsStorage.getAsPlayer(storeId);
 			if (player != null)
 				result.add(player);
 		}*/
-		return result;
-	}
+        return result;
+    }
 
-	public void say(String text)
-	{
+    public void say(String text) {
 		/*Say2 cs = new Say2(0, ChatType.SHOUT, "Arena", text);
 		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
 			if (!player.isBlockAll() && player.isInRange(_zone.getSpawn(), 4000))
 				player.sendPacket(cs);*/
-	}
+    }
 }

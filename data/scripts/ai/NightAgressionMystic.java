@@ -13,40 +13,34 @@ import l2f.gameserver.model.instances.NpcInstance;
  * @Date: 23/11/2007
  * @Time: 8:40:10
  */
-public class NightAgressionMystic extends Mystic
-{
-	public NightAgressionMystic(NpcInstance actor)
-	{
-		super(actor);
-		GameTimeController.getInstance().addListener(new NightAgressionDayNightListener());
-	}
+public class NightAgressionMystic extends Mystic {
+    public NightAgressionMystic(NpcInstance actor) {
+        super(actor);
+        GameTimeController.getInstance().addListener(new NightAgressionDayNightListener());
+    }
 
-	private class NightAgressionDayNightListener implements OnDayNightChangeListener
-	{
-		private NightAgressionDayNightListener()
-		{
-			if (GameTimeController.getInstance().isNowNight())
-				onNight();
-			else
-				onDay();
-		}
+    private class NightAgressionDayNightListener implements OnDayNightChangeListener {
+        private NightAgressionDayNightListener() {
+            if (GameTimeController.getInstance().isNowNight())
+                onNight();
+            else
+                onDay();
+        }
 
-		/**
-		 * Вызывается, когда на сервере наступает день
-		 */
-		@Override
-		public void onDay()
-		{
-			getActor().setAggroRange(0);
-		}
+        /**
+         * Вызывается, когда на сервере наступает день
+         */
+        @Override
+        public void onDay() {
+            getActor().setAggroRange(0);
+        }
 
-		/**
-		 * Вызывается, когда на сервере наступает ночь
-		 */
-		@Override
-		public void onNight()
-		{
-			getActor().setAggroRange(-1);
-		}
-	}
+        /**
+         * Вызывается, когда на сервере наступает ночь
+         */
+        @Override
+        public void onNight() {
+            getActor().setAggroRange(-1);
+        }
+    }
 }

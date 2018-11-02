@@ -4,31 +4,27 @@ import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.scripts.ScriptFile;
 
-public class FlyingGracia implements IVoicedCommandHandler, ScriptFile
-{
-	@Override
-	public void onLoad()
-	{
-		//VoicedCommandHandler.getInstance().registerVoicedCommandHandler(this);
-	}
+public class FlyingGracia implements IVoicedCommandHandler, ScriptFile {
+    @Override
+    public void onLoad() {
+        //VoicedCommandHandler.getInstance().registerVoicedCommandHandler(this);
+    }
 
-	@Override
-	public void onReload()
-	{}
+    @Override
+    public void onReload() {
+    }
 
-	@Override
-	public void onShutdown()
-	{}
+    @Override
+    public void onShutdown() {
+    }
 
-	@Override
-	public String[] getVoicedCommandList()
-	{
-		return new String[] { /*"monteJestWDeche"*/ };
-	}
+    @Override
+    public String[] getVoicedCommandList() {
+        return new String[]{ /*"monteJestWDeche"*/};
+    }
 
-	@Override
-	public boolean useVoicedCommand(String command, Player activeChar, String args)
-	{
+    @Override
+    public boolean useVoicedCommand(String command, Player activeChar, String args) {
 		/*if(command.equals("monteJestWDeche"))
 		{
 			int bestId = -1;
@@ -64,6 +60,6 @@ public class FlyingGracia implements IVoicedCommandHandler, ScriptFile
 			activeChar.broadcastUserInfo(true);
 			return true;
 		}*/
-		return false;
-	}
+        return false;
+    }
 }

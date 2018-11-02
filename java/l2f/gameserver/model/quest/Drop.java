@@ -1,25 +1,23 @@
 package l2f.gameserver.model.quest;
 
-import org.apache.commons.lang3.ArrayUtils;
 
-public class Drop
-{
-	public final int condition;
-	public final int maxcount;
-	public final int chance;
+import l2f.commons.lang.ArrayUtils;
 
-	public int[] itemList = ArrayUtils.EMPTY_INT_ARRAY;
+public class Drop {
+    public final int condition;
+    public final int maxcount;
+    public final int chance;
 
-	public Drop(int condition, int maxcount, int chance)
-	{
-		this.condition = condition;
-		this.maxcount = maxcount;
-		this.chance = chance;
-	}
+    public int[] itemList = ArrayUtils.EMPTY_INT_ARRAY;
 
-	public Drop addItem(int item)
-	{
-		itemList = ArrayUtils.add(itemList, item);
-		return this;
-	}
+    public Drop(int condition, int maxcount, int chance) {
+        this.condition = condition;
+        this.maxcount = maxcount;
+        this.chance = chance;
+    }
+
+    public Drop addItem(int item) {
+        itemList = ArrayUtils.add(itemList, item);
+        return this;
+    }
 }

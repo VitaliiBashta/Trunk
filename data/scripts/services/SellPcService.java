@@ -17,57 +17,53 @@ import org.slf4j.LoggerFactory;
  * @update Buemo
  * @date 30.12.11
  */
-public class SellPcService extends Functions implements ScriptFile
-{
-	private static final Logger _log = LoggerFactory.getLogger(Player.class);
+public class SellPcService extends Functions implements ScriptFile {
+    private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
 
-	public void dialog()
-	{
-		Player player = getSelf();
-		if (player == null)
-			return;
+    public void dialog() {
+        Player player = getSelf();
+        if (player == null)
+            return;
 
-		show("scripts/services/SellPcService.htm", player);
-	}
+        show("scripts/services/SellPcService.htm", player);
+    }
 
 
-	public void pay(String[] param)
-	{
-		Player player = getSelf();
-		if (player == null)
-			return;
+    public void pay(String[] param) {
+        Player player = getSelf();
+        if (player == null)
+            return;
 
-		int points = Integer.parseInt(param[0]);    //поинты (очки)
-		int itemId = Integer.parseInt(param[1]);    //ид предмета, который взымается
-		int itemCount = Integer.parseInt(param[2]); //количество предмета, который взымается
+        int points = Integer.parseInt(param[0]);    //поинты (очки)
+        int itemId = Integer.parseInt(param[1]);    //ид предмета, который взымается
+        int itemCount = Integer.parseInt(param[2]); //количество предмета, который взымается
 
-		ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId); //id итема
+        ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId); //id итема
 
-		if (item == null)
-			return;
+        if (item == null)
+            return;
 
-		ItemInstance pay = player.getInventory().getItemByItemId(item.getItemId());
-		if (pay != null && pay.getCount() >= itemCount) //кол-во денег
-		{
-			player.addPcBangPoints(points, false);
-			player.getInventory().destroyItem(pay, itemCount, "SellPcService");
-			player.sendMessage("You have purchased " + points + " PC-Points");
-		} else
-			player.sendMessage("You are not " + item.getName());
-	}
+        ItemInstance pay = player.getInventory().getItemByItemId(item.getItemId());
+        if (pay != null && pay.getCount() >= itemCount) //кол-во денег
+        {
+            player.addPcBangPoints(points, false);
+            player.getInventory().destroyItem(pay, itemCount, "SellPcService");
+            player.sendMessage("You have purchased " + points + " PC-Points");
+        } else
+            player.sendMessage("You are not " + item.getName());
+    }
 
-	@Override
-	public void onLoad()
-	{
-		_log.info("Loaded Service: SellPcService");
-	}
+    @Override
+    public void onLoad() {
+        _log.info("Loaded Service: SellPcService");
+    }
 
-	@Override
-	public void onReload()
-	{}
+    @Override
+    public void onReload() {
+    }
 
-	@Override
-	public void onShutdown()
-	{}
+    @Override
+    public void onShutdown() {
+    }
 }

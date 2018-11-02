@@ -5,28 +5,25 @@ import l2f.gameserver.Announcements;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class CompStartTask extends RunnableImpl
-{
-	private static final Logger _log = LoggerFactory.getLogger(CompStartTask.class);
+class CompStartTask extends RunnableImpl {
+    private static final Logger _log = LoggerFactory.getLogger(CompStartTask.class);
 
-	@Override
-	public void runImpl()
-	{
-		if (Olympiad.isOlympiadEnd())
-			return;
+    @Override
+    public void runImpl() {
+        if (Olympiad.isOlympiadEnd())
+            return;
 
-		Olympiad._manager = new OlympiadManager();
-		Olympiad._inCompPeriod = true;
+        Olympiad._manager = new OlympiadManager();
+        Olympiad._inCompPeriod = true;
 
-		new Thread(Olympiad._manager).start();
+        new Thread(Olympiad._manager).start();
 
-		ThreadPoolManager.getInstance().schedule(new CompEndTask(), Olympiad.getMillisToCompEnd());
+        ThreadPoolManager.getInstance().schedule(new CompEndTask(), Olympiad.getMillisToCompEnd());
 
-		Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
-		_log.info("Olympiad System: Olympiad Game Started");
-	}
+        Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
+        _log.info("Olympiad System: Olympiad Game Started");
+    }
 }

@@ -1,56 +1,44 @@
 package l2f.gameserver.data.xml.holder;
 
-import java.util.Collection;
-
 import l2f.commons.data.xml.AbstractHolder;
 import l2f.gameserver.model.petition.PetitionMainGroup;
 
-import org.napile.primitive.maps.IntObjectMap;
-import org.napile.primitive.maps.impl.HashIntObjectMap;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 7:22/25.07.2011
- */
-public class PetitionGroupHolder extends AbstractHolder
-{
-	private static PetitionGroupHolder _instance = new PetitionGroupHolder();
 
-	private IntObjectMap<PetitionMainGroup> _petitionGroups = new HashIntObjectMap<PetitionMainGroup>();
+public class PetitionGroupHolder extends AbstractHolder {
+    private static PetitionGroupHolder _instance = new PetitionGroupHolder();
 
-	private PetitionGroupHolder()
-	{
-	}
+    private Map<Integer,PetitionMainGroup> _petitionGroups = new HashMap<>();
 
-	public static PetitionGroupHolder getInstance()
-	{
-		return _instance;
-	}
+    private PetitionGroupHolder() {
+    }
 
-	public void addPetitionGroup(PetitionMainGroup g)
-	{
-		_petitionGroups.put(g.getId(), g);
-	}
+    public static PetitionGroupHolder getInstance() {
+        return _instance;
+    }
 
-	public PetitionMainGroup getPetitionGroup(int val)
-	{
-		return _petitionGroups.get(val);
-	}
+    public void addPetitionGroup(PetitionMainGroup g) {
+        _petitionGroups.put(g.getId(), g);
+    }
 
-	public Collection<PetitionMainGroup> getPetitionGroups()
-	{
-		return _petitionGroups.values();
-	}
+    public PetitionMainGroup getPetitionGroup(int val) {
+        return _petitionGroups.get(val);
+    }
 
-	@Override
-	public int size()
-	{
-		return _petitionGroups.size();
-	}
+    public Collection<PetitionMainGroup> getPetitionGroups() {
+        return _petitionGroups.values();
+    }
 
-	@Override
-	public void clear()
-	{
-		_petitionGroups.clear();
-	}
+    @Override
+    public int size() {
+        return _petitionGroups.size();
+    }
+
+    @Override
+    public void clear() {
+        _petitionGroups.clear();
+    }
 }

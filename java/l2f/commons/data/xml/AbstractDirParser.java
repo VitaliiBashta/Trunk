@@ -6,59 +6,48 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import java.io.File;
 import java.util.Collection;
 
-public abstract class AbstractDirParser<H extends AbstractHolder> extends AbstractParser<H>
-{
-	protected AbstractDirParser(H holder)
-	{
-		super(holder);
-	}
+public abstract class AbstractDirParser<H extends AbstractHolder> extends AbstractParser<H> {
+    protected AbstractDirParser(H holder) {
+        super(holder);
+    }
 
-	public abstract File getXMLDir();
+    public abstract File getXMLDir();
 
-	public abstract boolean isIgnored(File f);
+    public abstract boolean isIgnored(File f);
 
-	public abstract String getDTDFileName();
+    public abstract String getDTDFileName();
 
-	@Override
-	protected final void parse()
-	{
-		File dir = getXMLDir();
+    @Override
+    protected final void parse() {
+        File dir = getXMLDir();
 
-		if (!dir.exists())
-		{
-			warn("Dir " + dir.getAbsolutePath() + " not exists");
-			return;
-		}
+        if (!dir.exists()) {
+            warn("Dir " + dir.getAbsolutePath() + " not exists");
+            return;
+        }
 
-		File dtd = new File(dir, getDTDFileName());
-		if (!dtd.exists())
-		{
-			info("DTD file: " + dtd.getName() + " not exists.");
-			return;
-		}
+        File dtd = new File(dir, getDTDFileName());
+        if (!dtd.exists()) {
+            info("DTD file: " + dtd.getName() + " not exists.");
+            return;
+        }
 
-		initDTD(dtd);
+        initDTD(dtd);
 
-		try
-		{
-			Collection<File> files = FileUtils.listFiles(dir, FileFilterUtils.suffixFileFilter(".xml"), 
-					FileFilterUtils.directoryFileFilter());
+        try {
+            Collection<File> files = FileUtils.listFiles(dir, FileFilterUtils.suffixFileFilter(".xml"),
+                    FileFilterUtils.directoryFileFilter());
 
-			for (File f : files)
-				if (!f.isHidden())
-					if (!isIgnored(f))
-						try
-						{
-							parseCrypted(f);
-						}
-						catch (Exception e)
-						{
-							info("Exception: " + e + " in file: " + f.getName(), e);
-						}
-		}
-		catch (RuntimeException e)
-		{
-			error("Exception in AbstractDirParser ", e);
-		}
-	}
+            for (File f : files)
+                if (!f.isHidden())
+                    if (!isIgnored(f))
+                        try {
+                            parseCrypted(f);
+                        } catch (Exception e) {
+                            info("Exception: " + e + " in file: " + f.getName(), e);
+                        }
+        } catch (RuntimeException e) {
+            error("Exception in AbstractDirParser ", e);
+        }
+    }
 }

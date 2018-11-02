@@ -1,16 +1,16 @@
 package l2f.gameserver.network.serverpackets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.gameserver.data.xml.holder.BuyListHolder.NpcTradeList;
 import l2f.gameserver.model.items.TradeItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Format: c ddh[hdddhhd]
  * c - id (0xE8)
- *
+ * <p>
  * d - money
  * d - manor id
  * h - size
@@ -24,33 +24,29 @@ import l2f.gameserver.model.items.TradeItem;
  * d - price
  * ]
  */
-public final class BuyListSeed extends L2GameServerPacket
-{
-	private int _manorId;
-	private List<TradeItem> _list = new ArrayList<TradeItem>();
-	private long _money;
+public final class BuyListSeed extends L2GameServerPacket {
+    private int _manorId;
+    private List<TradeItem> _list = new ArrayList<TradeItem>();
+    private long _money;
 
-	public BuyListSeed(NpcTradeList list, int manorId, long currentMoney)
-	{
-		_money = currentMoney;
-		_manorId = manorId;
-		_list = list.getItems();
-	}
+    public BuyListSeed(NpcTradeList list, int manorId, long currentMoney) {
+        _money = currentMoney;
+        _manorId = manorId;
+        _list = list.getItems();
+    }
 
-	@Override
-	protected final void writeImpl()
-	{
-		writeC(0xe9);
+    @Override
+    protected final void writeImpl() {
+        writeC(0xe9);
 
-		writeQ(_money); // current money
-		writeD(_manorId); // manor id
+        writeQ(_money); // current money
+        writeD(_manorId); // manor id
 
-		writeH(_list.size()); // list length
+        writeH(_list.size()); // list length
 
-		for (TradeItem item : _list)
-		{
-			writeItemInfo(item);
-			writeQ(item.getOwnersPrice());
-		}
-	}
+        for (TradeItem item : _list) {
+            writeItemInfo(item);
+            writeQ(item.getOwnersPrice());
+        }
+    }
 }

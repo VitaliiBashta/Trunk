@@ -5,34 +5,29 @@ import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.stats.Env;
 
-public final class EffectCharge extends Effect
-{
-	// Максимальное количество зарядов находится в поле val="xx"
+public final class EffectCharge extends Effect {
+    // Максимальное количество зарядов находится в поле val="xx"
 
-	public EffectCharge(Env env, EffectTemplate template)
-	{
-		super(env, template);
-	}
+    public EffectCharge(Env env, EffectTemplate template) {
+        super(env, template);
+    }
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
+    @Override
+    public void onStart() {
+        super.onStart();
 
-		if (getEffected().isPlayer())
-		{
-			final Player player = (Player)getEffected();
+        if (getEffected().isPlayer()) {
+            final Player player = (Player) getEffected();
 
-			if (player.getIncreasedForce() >= calc())
-				player.sendPacket(SystemMsg.YOUR_FORCE_HAS_REACHED_MAXIMUM_CAPACITY_);
-			else
-				player.setIncreasedForce(player.getIncreasedForce() + 1);
-		}
-	}
+            if (player.getIncreasedForce() >= calc())
+                player.sendPacket(SystemMsg.YOUR_FORCE_HAS_REACHED_MAXIMUM_CAPACITY_);
+            else
+                player.setIncreasedForce(player.getIncreasedForce() + 1);
+        }
+    }
 
-	@Override
-	public boolean onActionTime()
-	{
-		return false;
-	}
+    @Override
+    public boolean onActionTime() {
+        return false;
+    }
 }

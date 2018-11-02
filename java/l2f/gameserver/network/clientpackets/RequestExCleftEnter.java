@@ -1,21 +1,18 @@
 package l2f.gameserver.network.clientpackets;
 
-public class RequestExCleftEnter extends L2GameClientPacket
-{
-	private int unk;
+public class RequestExCleftEnter extends L2GameClientPacket {
+    private int unk;
 
-	/**
-	 * format: d
-	 */
-	@Override
-	protected void readImpl()
-	{
-		unk = readD();
-	}
+    /**
+     * format: d
+     */
+    @Override
+    protected void readImpl() {
+        unk = readD();
+    }
 
-	@Override
-	protected void runImpl()
-	{
-		//TODO not implemented
-	}
+    @Override
+    protected void runImpl() {
+        //TODO not implemented
+    }
 }

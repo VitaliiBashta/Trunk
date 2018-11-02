@@ -3,34 +3,29 @@ package l2f.commons.collections;
 import java.util.Iterator;
 
 @SuppressWarnings("rawtypes")
-public class EmptyIterator<E> implements Iterator<E>
-{
-	private static Iterator INSTANCE = new EmptyIterator();
+public class EmptyIterator<E> implements Iterator<E> {
+    private static Iterator INSTANCE = new EmptyIterator();
 
-	private EmptyIterator()
-	{}
+    private EmptyIterator() {
+    }
 
-	@SuppressWarnings("unchecked")
-	public static <E> Iterator<E> getInstance()
-	{
-		return INSTANCE;
-	}
+    @SuppressWarnings("unchecked")
+    public static <E> Iterator<E> getInstance() {
+        return INSTANCE;
+    }
 
-	@Override
-	public boolean hasNext()
-	{
-		return false;
-	}
+    @Override
+    public boolean hasNext() {
+        return false;
+    }
 
-	@Override
-	public E next()
-	{
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public E next() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public void remove()
-	{
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

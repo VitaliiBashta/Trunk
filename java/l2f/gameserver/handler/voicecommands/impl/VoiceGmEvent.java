@@ -14,65 +14,57 @@
  */
 package l2f.gameserver.handler.voicecommands.impl;
 
+import Elemental.managers.GmEventManager;
+import Elemental.managers.GmEventManager.StateEnum;
 import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2f.gameserver.scripts.Functions;
-import Elemental.managers.GmEventManager;
-import Elemental.managers.GmEventManager.StateEnum;
 
 /**
  * Un voiced para poder registrarse o salirse de un evento creado por un gm
  *
  * @author GipsyGrierosu Andrei
  */
-public class VoiceGmEvent extends Functions implements IVoicedCommandHandler
-{
-	private static final String[] VOICED_COMMANDS =
-	{
-		"gmevent"
-	};
+public class VoiceGmEvent extends Functions implements IVoicedCommandHandler {
+    private static final String[] VOICED_COMMANDS =
+            {
+                    "gmevent"
+            };
 
-	@Override
-	public boolean useVoicedCommand(String command, Player activeChar, String args)
-	{
-		// Evento no disponible o no en periodo de registro
-		if (GmEventManager.getInstance().getEventStatus() != StateEnum.REGISTERING)
-			return false;
+    @Override
+    public boolean useVoicedCommand(String command, Player activeChar, String args) {
+        // Evento no disponible o no en periodo de registro
+        if (GmEventManager.getInstance().getEventStatus() != StateEnum.REGISTERING)
+            return false;
 
-		try
-		{
-			// Menu principal
-			if (args == null || args.isEmpty())
-			{
-				final NpcHtmlMessage html = new NpcHtmlMessage(0);
-				html.setFile("events/GmEvent.htm");
-				activeChar.sendPacket(html);
-				return true;
-			}
+        try {
+            // Menu principal
+            if (args == null || args.isEmpty()) {
+                final NpcHtmlMessage html = new NpcHtmlMessage(0);
+                html.setFile("events/GmEvent.htm");
+                activeChar.sendPacket(html);
+                return true;
+            }
 
-			switch (args)
-			{
-				case "register":
-					GmEventManager.getInstance().registerToEvent(activeChar);
-					break;
-				case "unregister":
-					GmEventManager.getInstance().unregisterOfEvent(activeChar);
-					break;
-			}
-			return true;
-		}
-		catch (Exception e) 
-		{
-			
-		}
+            switch (args) {
+                case "register":
+                    GmEventManager.getInstance().registerToEvent(activeChar);
+                    break;
+                case "unregister":
+                    GmEventManager.getInstance().unregisterOfEvent(activeChar);
+                    break;
+            }
+            return true;
+        } catch (Exception e) {
 
-		return false;
-	}
+        }
 
-	@Override
-	public String[] getVoicedCommandList()
-	{
-		return VOICED_COMMANDS;
-	}
+        return false;
+    }
+
+    @Override
+    public String[] getVoicedCommandList() {
+        return VOICED_COMMANDS;
+    }
 }

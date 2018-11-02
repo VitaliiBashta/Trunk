@@ -1,7 +1,5 @@
 package l2f.gameserver.model.entity.events.actions;
 
-import java.util.List;
-
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.entity.events.EventAction;
 import l2f.gameserver.model.entity.events.GlobalEvent;
@@ -12,56 +10,52 @@ import l2f.gameserver.network.serverpackets.components.NpcString;
 import l2f.gameserver.network.serverpackets.components.SysString;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 
-public class SayAction implements EventAction
-{
-	private int _range;
-	private ChatType _chatType;
+import java.util.List;
 
-	private String _how;
-	private NpcString _text;
+public class SayAction implements EventAction {
+    private int _range;
+    private ChatType _chatType;
 
-	private SysString _sysString;
-	private SystemMsg _systemMsg;
+    private String _how;
+    private NpcString _text;
 
-	protected SayAction(int range, ChatType type)
-	{
-		_range = range;
-		_chatType = type;
-	}
+    private SysString _sysString;
+    private SystemMsg _systemMsg;
 
-	public SayAction(int range, ChatType type, SysString sysString, SystemMsg systemMsg)
-	{
-		this(range, type);
-		_sysString = sysString;
-		_systemMsg = systemMsg;
-	}
+    protected SayAction(int range, ChatType type) {
+        _range = range;
+        _chatType = type;
+    }
 
-	public SayAction(int range, ChatType type, String how, NpcString string)
-	{
-		this(range, type);
-		_text = string;
-		_how = how;
-	}
+    public SayAction(int range, ChatType type, SysString sysString, SystemMsg systemMsg) {
+        this(range, type);
+        _sysString = sysString;
+        _systemMsg = systemMsg;
+    }
 
-	@Override
-	public void call(GlobalEvent event)
-	{
-		List<Player> players = event.broadcastPlayers(_range);
-		for (Player player : players)
-			packet(player);
-	}
+    public SayAction(int range, ChatType type, String how, NpcString string) {
+        this(range, type);
+        _text = string;
+        _how = how;
+    }
 
-	private void packet(Player player)
-	{
-		if (player == null)
-			return;
+    @Override
+    public void call(GlobalEvent event) {
+        List<Player> players = event.broadcastPlayers(_range);
+        for (Player player : players)
+            packet(player);
+    }
 
-		L2GameServerPacket packet = null;
-		if (_sysString != null)
-			packet = new Say2(0, _chatType, _sysString, _systemMsg);
-		else
-			packet = new Say2(0, _chatType, _how, _text);
+    private void packet(Player player) {
+        if (player == null)
+            return;
 
-		player.sendPacket(packet);
-	}
+        L2GameServerPacket packet = null;
+        if (_sysString != null)
+            packet = new Say2(0, _chatType, _sysString, _systemMsg);
+        else
+            packet = new Say2(0, _chatType, _how, _text);
+
+        player.sendPacket(packet);
+    }
 }

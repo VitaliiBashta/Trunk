@@ -7,114 +7,91 @@ import l2f.gameserver.network.loginservercon.AuthServerCommunication;
 import l2f.gameserver.network.loginservercon.gspackets.ChangeAllowedIp;
 import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
 
-public class Security implements IVoicedCommandHandler
-{
+public class Security implements IVoicedCommandHandler {
 
-	private static final String[] _commandList = {};
+    private static final String[] _commandList = {};
 
-	@Override
-	public boolean useVoicedCommand(String command, Player activeChar, String target)
-	{
+    @Override
+    public boolean useVoicedCommand(String command, Player activeChar, String target) {
 
-		if (command.equalsIgnoreCase("lock"))
-		{
-			NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
-			html.setFile("command/lock/lock.htm");
-			html.replace("%ip_block%", IpBlockStatus());
-			html.replace("%hwid_block%", HwidBlockStatus());
-			html.replace("%hwid_val%", "CPU");
-			html.replace("%curIP%", activeChar.getIP());
-			activeChar.sendPacket(html);
-			return true;
-		}
+        if (command.equalsIgnoreCase("lock")) {
+            NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
+            html.setFile("command/lock/lock.htm");
+            html.replace("%ip_block%", IpBlockStatus());
+            html.replace("%hwid_block%", HwidBlockStatus());
+            html.replace("%hwid_val%", "CPU");
+            html.replace("%curIP%", activeChar.getIP());
+            activeChar.sendPacket(html);
+            return true;
+        } else if (command.equalsIgnoreCase("lockIp")) {
 
-		else if (command.equalsIgnoreCase("lockIp"))
-		{
+            if (!Config.ALLOW_IP_LOCK) {
+                return true;
+            }
 
-			if (!Config.ALLOW_IP_LOCK)
-			{
-				return true;
-			}
+            AuthServerCommunication.getInstance().sendPacket(new ChangeAllowedIp(activeChar.getAccountName(), activeChar.getIP()));
 
-			AuthServerCommunication.getInstance().sendPacket(new ChangeAllowedIp(activeChar.getAccountName(), activeChar.getIP()));
+            NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
+            html.setFile("command/lock/lock_ip.htm");
+            html.replace("%curIP%", activeChar.getIP());
+            activeChar.sendPacket(html);
+            return true;
+        } else if (command.equalsIgnoreCase("lockHwid")) {
 
-			NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
-			html.setFile("command/lock/lock_ip.htm");
-			html.replace("%curIP%", activeChar.getIP());
-			activeChar.sendPacket(html);
-			return true;
-		}
+            if (!Config.ALLOW_HWID_LOCK) {
+                return true;
+            }
 
-		else if (command.equalsIgnoreCase("lockHwid"))
-		{
+            if (!activeChar.getInventory().destroyItemByItemId(4037, 1, "Security")) {
+                activeChar.sendMessage("In order to secure your account you should pay 5 Security Coin");
+                return false;
+            }
 
-			if (!Config.ALLOW_HWID_LOCK)
-			{
-				return true;
-			}
+            activeChar.setHwidLock(activeChar.getHWID());
+            NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
+            html.setFile("command/lock/lock_hwid.htm");
+            activeChar.sendPacket(html);
 
-			if (!activeChar.getInventory().destroyItemByItemId(4037, 1, "Security"))
-			{
-				activeChar.sendMessage("In order to secure your account you should pay 5 Security Coin");
-				return false;
-			}
+            return true;
+        } else if (command.equalsIgnoreCase("unlockIp")) {
 
-			activeChar.setHwidLock(activeChar.getHWID());
-			NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
-			html.setFile("command/lock/lock_hwid.htm");
-			activeChar.sendPacket(html);
+            AuthServerCommunication.getInstance().sendPacket(new ChangeAllowedIp(activeChar.getAccountName(), ""));
 
-			return true;
-		}
+            NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
+            html.setFile("command/lock/unlock_ip.htm");
+            html.replace("%curIP", activeChar.getIP());
+            activeChar.sendPacket(html);
+            return true;
+        } else if (command.equalsIgnoreCase("unlockHwid")) {
 
-		else if (command.equalsIgnoreCase("unlockIp"))
-		{
+            activeChar.setHwidLock(null);
 
-			AuthServerCommunication.getInstance().sendPacket(new ChangeAllowedIp(activeChar.getAccountName(), ""));
+            NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
+            html.setFile("command/lock/unlock_hwid.htm");
+            activeChar.sendPacket(html);
 
-			NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
-			html.setFile("command/lock/unlock_ip.htm");
-			html.replace("%curIP", activeChar.getIP());
-			activeChar.sendPacket(html);
-			return true;
-		}
+            return true;
+        }
 
-		else if (command.equalsIgnoreCase("unlockHwid"))
-		{
+        return true;
+    }
 
-			activeChar.setHwidLock(null);
+    private String IpBlockStatus() {
+        if (Config.ALLOW_IP_LOCK) {
+            return "Allowed";
+        }
+        return "Prohibited";
+    }
 
-			NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
-			html.setFile("command/lock/unlock_hwid.htm");
-			activeChar.sendPacket(html);
+    private String HwidBlockStatus() {
+        if (Config.ALLOW_HWID_LOCK) {
+            return "Allowed";
+        }
+        return "Prohibited";
+    }
 
-			return true;
-		}
-
-		return true;
-	}
-
-	private String IpBlockStatus()
-	{
-		if (Config.ALLOW_IP_LOCK)
-		{
-			return "Allowed";
-		}
-		return "Prohibited";
-	}
-
-	private String HwidBlockStatus()
-	{
-		if (Config.ALLOW_HWID_LOCK)
-		{
-			return "Allowed";
-		}
-		return "Prohibited";
-	}
-
-	@Override
-	public String[] getVoicedCommandList()
-	{
-		return _commandList;
-	}
+    @Override
+    public String[] getVoicedCommandList() {
+        return _commandList;
+    }
 }

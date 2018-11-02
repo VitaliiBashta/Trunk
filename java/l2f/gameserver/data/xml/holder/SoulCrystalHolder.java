@@ -6,42 +6,35 @@ import l2f.gameserver.templates.SoulCrystal;
 
 /**
  * @author: VISTALL
- * @date:  10:55/08.12.2010
+ * @date: 10:55/08.12.2010
  */
-public final class SoulCrystalHolder extends AbstractHolder
-{
-	private static final SoulCrystalHolder _instance = new SoulCrystalHolder();
-	private final TIntObjectHashMap<SoulCrystal> _crystals = new TIntObjectHashMap<SoulCrystal>();
+public final class SoulCrystalHolder extends AbstractHolder {
+    private static final SoulCrystalHolder _instance = new SoulCrystalHolder();
+    private final TIntObjectHashMap<SoulCrystal> _crystals = new TIntObjectHashMap<SoulCrystal>();
 
-	public static SoulCrystalHolder getInstance()
-	{
-		return _instance;
-	}
+    public static SoulCrystalHolder getInstance() {
+        return _instance;
+    }
 
-	public void addCrystal(SoulCrystal crystal)
-	{
-		_crystals.put(crystal.getItemId(), crystal);
-	}
+    public void addCrystal(SoulCrystal crystal) {
+        _crystals.put(crystal.getItemId(), crystal);
+    }
 
-	public SoulCrystal getCrystal(int item)
-	{
-		return _crystals.get(item);
-	}
+    public SoulCrystal getCrystal(int item) {
+        return _crystals.get(item);
+    }
 
-	public SoulCrystal[] getCrystals()
-	{
-		return _crystals.values(new SoulCrystal[_crystals.size()]);
-	}
+    public SoulCrystal[] getCrystals() {
+        return _crystals.values(new SoulCrystal[_crystals.size()]);
+    }
 
-	@Override
-	public int size()
-	{
-		return _crystals.size();
-	}
+    @Override
+    public int size() {
+        return _crystals.size();
+    }
 
-	@Override
-	public void clear()
-	{
-		_crystals.clear();
-	}
+    @Override
+    public void clear() {
+        _crystals.clear();
+    }
 }

@@ -7,83 +7,65 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class RndSelector<E>
-{
-	private final List<RndNode<E>> nodes;
-	private int totalWeight = 0;
-	public RndSelector()
-	{
-		nodes = new ArrayList<RndNode<E>>();
-	}
+public class RndSelector<E> {
+    private final List<RndNode<E>> nodes;
+    private int totalWeight = 0;
 
-	public RndSelector(int initialCapacity)
-	{
-		nodes = new ArrayList<RndNode<E>>(initialCapacity);
-	}
+    public RndSelector() {
+        nodes = new ArrayList<>();
+    }
 
-	public void add(E value, int weight)
-	{
-		if (value == null || weight <= 0)
-			return;
-		totalWeight += weight;
-		nodes.add(new RndNode<E>(value, weight));
-	}
+    public RndSelector(int initialCapacity) {
+        nodes = new ArrayList<>(initialCapacity);
+    }
 
-	/**
-	 * ?????? ???? ?? ????????? ??? null, null ???????? ?????? ???? ????? ????? ???? ????????? ?????? maxWeight
-	 */
-	public E chance(int maxWeight)
-	{
-		if (maxWeight <= 0)
-			return null;
+    public void add(E value, int weight) {
+        if (value == null || weight <= 0)
+            return;
+        totalWeight += weight;
+        nodes.add(new RndNode<E>(value, weight));
+    }
 
-		Collections.sort(nodes);
+    public E chance(int maxWeight) {
+        if (maxWeight <= 0)
+            return null;
 
-		int r = Rnd.get(maxWeight);
-		int weight = 0;
-		for (int i = 0; i < nodes.size(); i++)
-			if ((weight += nodes.get(i).weight) > r)
-				return nodes.get(i).value;
-		return null;
-	}
+        Collections.sort(nodes);
 
-	/**
-	 * ?????? ???? ?? ????????? ??? null, null ???????? ?????? ???? ????? ????? ???? ????????? ?????? 100
-	 */
-	public E chance()
-	{
-		return chance(100);
-	}
+        int r = Rnd.get(maxWeight);
+        int weight = 0;
+        for (RndNode<E> node : nodes)
+            if ((weight += node.weight) > r)
+                return node.value;
+        return null;
+    }
 
-	/**
-	 * ?????? ???? ?? ?????????
-	 */
-	public E select()
-	{
-		return chance(totalWeight);
-	}
+    public E chance() {
+        return chance(100);
+    }
 
-	public void clear()
-	{
-		totalWeight = 0;
-		nodes.clear();
-	}
 
-	private class RndNode<T> implements Comparable<RndNode<T>>
-	{
-		private final T value;
-		private final int weight;
+    public E select() {
+        return chance(totalWeight);
+    }
 
-		public RndNode(T value, int weight)
-		{
-			this.value = value;
-			this.weight = weight;
-		}
+    public void clear() {
+        totalWeight = 0;
+        nodes.clear();
+    }
 
-		@Override
-		public int compareTo(RndNode<T> o)
-		{
-			return this.weight - weight;
-		}
-	}
+    private class RndNode<T> implements Comparable<RndNode<T>> {
+        private final T value;
+        private final int weight;
+
+        RndNode(T value, int weight) {
+            this.value = value;
+            this.weight = weight;
+        }
+
+        @Override
+        public int compareTo(RndNode<T> o) {
+            return 0;
+        }
+    }
 }

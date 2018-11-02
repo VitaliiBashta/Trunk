@@ -2,17 +2,16 @@ package l2f.commons.dao;
 
 import java.io.Serializable;
 
-public interface JdbcDAO<K extends Serializable, E extends JdbcEntity>
-{
-	public E load(K key);
-	
-	public void save(E e);
-	
-	public void update(E e);
-	
-	public void saveOrUpdate(E e);
-	
-	public void delete(E e);
-	
-	public JdbcEntityStats getStats();
+public interface JdbcDAO<K extends Serializable, E extends JdbcEntity> {
+    E load(K key);
+
+    void save(E e);
+
+    void update(E e);
+
+    void saveOrUpdate(E e);
+
+    void delete(E e);
+
+    JdbcEntityStats getStats();
 }

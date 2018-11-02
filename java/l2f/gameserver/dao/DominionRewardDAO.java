@@ -5,8 +5,6 @@ import l2f.gameserver.database.DatabaseFactory;
 import l2f.gameserver.model.entity.events.impl.DominionSiegeEvent;
 import l2f.gameserver.model.entity.residence.Dominion;
 import l2f.gameserver.utils.SqlBatch;
-
-import org.napile.primitive.maps.IntObjectMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 12:11/25.06.2011
- */
+
 public class DominionRewardDAO {
     private static final String INSERT_SQL_QUERY = "INSERT INTO dominion_rewards (id, object_id, static_badges, online_reward, kill_reward) VALUES";
     private static final String SELECT_SQL_QUERY = "SELECT * FROM dominion_rewards WHERE id=?";
@@ -66,17 +62,16 @@ public class DominionRewardDAO {
             statement.execute();
 
             DominionSiegeEvent siegeEvent = d.getSiegeEvent();
-            Collection<IntObjectMap.Entry<int[]>> rewards = siegeEvent.getRewards();
+            Collection<Map.Entry<Integer,int[]>> rewards = siegeEvent.getRewards();
 
             SqlBatch b = new SqlBatch(INSERT_SQL_QUERY);
-            for (IntObjectMap.Entry<int[]> entry : rewards) {
-                StringBuilder sb = new StringBuilder("(");
-                sb.append(d.getId()).append(",");
-                sb.append(entry.getKey()).append(",");
-                sb.append(entry.getValue()[DominionSiegeEvent.STATIC_BADGES]).append(",");
-                sb.append(entry.getValue()[DominionSiegeEvent.ONLINE_REWARD]).append(",");
-                sb.append(entry.getValue()[DominionSiegeEvent.KILL_REWARD]).append(")");
-                b.write(sb.toString());
+            for (Map.Entry<Integer,int[]> entry : rewards) {
+                String sb = "(" + d.getId() + "," +
+                        entry.getKey() + "," +
+                        entry.getValue()[DominionSiegeEvent.STATIC_BADGES] + "," +
+                        entry.getValue()[DominionSiegeEvent.ONLINE_REWARD] + "," +
+                        entry.getValue()[DominionSiegeEvent.KILL_REWARD] + ")";
+                b.write(sb);
             }
 
             if (!b.isEmpty())

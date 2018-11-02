@@ -2,28 +2,25 @@ package l2f.gameserver.network.clientpackets;
 
 import l2f.gameserver.model.Player;
 
-public class SetPrivateStoreMsgSell extends L2GameClientPacket
-{
-	private static final int MAX_MSG_LENGTH = 29;
-	
-	private String _storename;
+public class SetPrivateStoreMsgSell extends L2GameClientPacket {
+    private static final int MAX_MSG_LENGTH = 29;
 
-	@Override
-	protected void readImpl()
-	{
-		_storename = readS();
-	}
+    private String _storename;
 
-	@Override
-	protected void runImpl()
-	{
-		Player activeChar = getClient().getActiveChar();
-		if (activeChar == null)
-			return;
+    @Override
+    protected void readImpl() {
+        _storename = readS();
+    }
 
-		if ((_storename != null) && (_storename.length() > MAX_MSG_LENGTH))
-			return;
+    @Override
+    protected void runImpl() {
+        Player activeChar = getClient().getActiveChar();
+        if (activeChar == null)
+            return;
 
-		activeChar.setSellStoreName(_storename);
-	}
+        if ((_storename != null) && (_storename.length() > MAX_MSG_LENGTH))
+            return;
+
+        activeChar.setSellStoreName(_storename);
+    }
 }

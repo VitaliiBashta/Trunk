@@ -1,10 +1,5 @@
 package l2f.gameserver.model.items;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-
 import l2f.commons.dao.JdbcEntity;
 import l2f.commons.dao.JdbcEntityState;
 import l2f.gameserver.Config;
@@ -14,11 +9,7 @@ import l2f.gameserver.data.xml.holder.ItemHolder;
 import l2f.gameserver.geodata.GeoEngine;
 import l2f.gameserver.instancemanager.CursedWeaponsManager;
 import l2f.gameserver.instancemanager.ReflectionManager;
-import l2f.gameserver.model.Creature;
-import l2f.gameserver.model.GameObject;
-import l2f.gameserver.model.GameObjectsStorage;
-import l2f.gameserver.model.Playable;
-import l2f.gameserver.model.Player;
+import l2f.gameserver.model.*;
 import l2f.gameserver.model.base.Element;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.model.items.attachment.FlagItemAttachment;
@@ -42,9 +33,12 @@ import l2f.gameserver.templates.item.ItemType;
 import l2f.gameserver.utils.ItemFunctions;
 import l2f.gameserver.utils.Location;
 
-import org.napile.primitive.Containers;
-import org.napile.primitive.sets.IntSet;
-import org.napile.primitive.sets.impl.HashIntSet;
+import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+
+//import org.napile.primitive.Containers;
+//import org.napile.primitive.sets.IntSet;
+//import org.napile.primitive.sets.impl.HashIntSet;
 
 public final class ItemInstance extends GameObject implements JdbcEntity {
     public static final int[] EMPTY_AUGMENTATIONS = new int[2];
@@ -124,7 +118,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * Item drop time for autodestroy task
      */
     private long timeToDeleteAfterDrop;
-    private IntSet _dropPlayers = Containers.EMPTY_INT_SET;
+    private Set<Integer> _dropPlayers = new HashSet<>();
     private long _dropTimeOwner;
     private int _chargedSoulshot = CHARGED_NONE;
     private int _chargedSpiritshot = CHARGED_NONE;
@@ -848,7 +842,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         // activate non owner penalty
         if (lastAttacker != null) // lastAttacker в данном случае top damager
         {
-            _dropPlayers = new HashIntSet(1, 2);
+            _dropPlayers = new HashSet<>(1, 2);
             for (Player $member : lastAttacker.getPlayerGroup())
                 _dropPlayers.add($member.getObjectId());
 
@@ -1172,7 +1166,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         return _enchantOptions;
     }
 
-    public IntSet getDropPlayers() {
+    public Set<Integer> getDropPlayers() {
         return _dropPlayers;
     }
 

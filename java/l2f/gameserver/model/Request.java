@@ -1,200 +1,182 @@
 package l2f.gameserver.model;
 
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import l2f.commons.collections.MultiValueSet;
 import l2f.commons.lang.reference.HardReference;
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Request extends MultiValueSet<String>
-{
-	private static final long serialVersionUID = 1L;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
-	@SuppressWarnings("unused")
-	private static final Logger _log = LoggerFactory.getLogger(Request.class);
-	private final static AtomicInteger _nextId = new AtomicInteger();
-	private final int _id;
-	private L2RequestType _type;
-	private HardReference<Player> _requestor;
-	private HardReference<Player> _reciever;
-	private boolean _isRequestorConfirmed;
-	private boolean _isRecieverConfirmed;
-	private boolean _isCancelled;
-	private boolean _isDone;
-	private long _timeout;
-	private Future<?> _timeoutTask;
-	/**
-	 * Создает запрос
-	 */
-	public Request(L2RequestType type, Player requestor, Player reciever)
-	{
-		_id = _nextId.incrementAndGet();
-		_requestor = requestor.getRef();
-		_reciever = reciever.getRef();
-		_type = type;
-		requestor.setRequest(this);
-		reciever.setRequest(this);
-	}
+public class Request extends MultiValueSet<String> {
+    private static final long serialVersionUID = 1L;
 
-	public Request(L2RequestType type, Player requestor)
-	{
-		_id = _nextId.incrementAndGet();
-		_requestor = requestor.getRef();
-		_type = type;
-		requestor.setRequest(this);
-	}
+    @SuppressWarnings("unused")
+    private static final Logger _log = LoggerFactory.getLogger(Request.class);
+    private final static AtomicInteger _nextId = new AtomicInteger();
+    private final int _id;
+    private L2RequestType _type;
+    private HardReference<Player> _requestor;
+    private HardReference<Player> _reciever;
+    private boolean _isRequestorConfirmed;
+    private boolean _isRecieverConfirmed;
+    private boolean _isCancelled;
+    private boolean _isDone;
+    private long _timeout;
+    private Future<?> _timeoutTask;
 
-	public Request setTimeout(long timeout)
-	{
-		_timeout = timeout > 0 ? System.currentTimeMillis() + timeout : 0;
-		_timeoutTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl()
-		{
-			@Override
-			public void runImpl() throws Exception
-			{
-				timeout();
-			}
-		}, timeout);
-		return this;
-	}
+    /**
+     * Создает запрос
+     */
+    public Request(L2RequestType type, Player requestor, Player reciever) {
+        _id = _nextId.incrementAndGet();
+        _requestor = requestor.getRef();
+        _reciever = reciever.getRef();
+        _type = type;
+        requestor.setRequest(this);
+        reciever.setRequest(this);
+    }
 
-	public int getId()
-	{
-		return _id;
-	}
+    public Request(L2RequestType type, Player requestor) {
+        _id = _nextId.incrementAndGet();
+        _requestor = requestor.getRef();
+        _type = type;
+        requestor.setRequest(this);
+    }
 
-	/**
-	 * Отменяет запрос и очищает соответствующее поле у участников.
-	 */
-	public void cancel()
-	{
-		_isCancelled = true;
-		if (_timeoutTask != null)
-			_timeoutTask.cancel(false);
-		_timeoutTask = null;
-		Player player = getRequestor();
-		if (player != null && player.getRequest() == this)
-			player.setRequest(null);
-		player = getReciever();
-		if (player != null && player.getRequest() == this)
-			player.setRequest(null);
-	}
+    public Request setTimeout(long timeout) {
+        _timeout = timeout > 0 ? System.currentTimeMillis() + timeout : 0;
+        _timeoutTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+            @Override
+            public void runImpl() {
+                timeout();
+            }
+        }, timeout);
+        return this;
+    }
 
-	/**
-	 * Заканчивает запрос и очищает соответствующее поле у участников.
-	 */
-	public void done()
-	{
-		_isDone = true;
-		if (_timeoutTask != null)
-			_timeoutTask.cancel(false);
-		_timeoutTask = null;
-		Player player = getRequestor();
-		if (player != null && player.getRequest() == this)
-			player.setRequest(null);
-		player = getReciever();
-		if (player != null && player.getRequest() == this)
-			player.setRequest(null);
-	}
+    public int getId() {
+        return _id;
+    }
 
-	/**
-	 * Действие при таймауте.
-	 */
-	public void timeout()
-	{
-		Player player = getReciever();
-		if (player != null)
-			if (player.getRequest() == this)
-				player.sendPacket(SystemMsg.TIME_EXPIRED);
-		cancel();
-	}
+    /**
+     * Отменяет запрос и очищает соответствующее поле у участников.
+     */
+    public void cancel() {
+        _isCancelled = true;
+        if (_timeoutTask != null)
+            _timeoutTask.cancel(false);
+        _timeoutTask = null;
+        Player player = getRequestor();
+        if (player != null && player.getRequest() == this)
+            player.setRequest(null);
+        player = getReciever();
+        if (player != null && player.getRequest() == this)
+            player.setRequest(null);
+    }
 
-	public Player getOtherPlayer(Player player)
-	{
-		if (player == getRequestor())
-			return getReciever();
-		if (player == getReciever())
-			return getRequestor();
-		return null;
-	}
+    /**
+     * Заканчивает запрос и очищает соответствующее поле у участников.
+     */
+    public void done() {
+        _isDone = true;
+        if (_timeoutTask != null)
+            _timeoutTask.cancel(false);
+        _timeoutTask = null;
+        Player player = getRequestor();
+        if (player != null && player.getRequest() == this)
+            player.setRequest(null);
+        player = getReciever();
+        if (player != null && player.getRequest() == this)
+            player.setRequest(null);
+    }
 
-	public Player getRequestor()
-	{
-		return _requestor.get();
-	}
+    /**
+     * Действие при таймауте.
+     */
+    public void timeout() {
+        Player player = getReciever();
+        if (player != null)
+            if (player.getRequest() == this)
+                player.sendPacket(SystemMsg.TIME_EXPIRED);
+        cancel();
+    }
 
-	public Player getReciever()
-	{
-		return _reciever.get();
-	}
+    public Player getOtherPlayer(Player player) {
+        if (player == getRequestor())
+            return getReciever();
+        if (player == getReciever())
+            return getRequestor();
+        return null;
+    }
 
-	/**
-	 * Проверяет не просрочен ли запрос.
-	 */
-	public boolean isInProgress()
-	{
-		if (_isCancelled)
-			return false;
-		if (_isDone)
-			return false;
-		if (_timeout == 0)
-			return true;
-		if (_timeout > System.currentTimeMillis())
-			return true;
-		return false;
-	}
+    public Player getRequestor() {
+        return _requestor.get();
+    }
 
-	/**
-	 * Проверяет тип запроса.
-	 */
-	public boolean isTypeOf(L2RequestType type)
-	{
-		return _type == type;
-	}
+    public Player getReciever() {
+        return _reciever.get();
+    }
 
-	/**
-	 * Помечает участника как согласившегося.
-	 */
-	public void confirm(Player player)
-	{
-		if (player == getRequestor())
-			_isRequestorConfirmed = true;
-		else if (player == getReciever())
-			_isRecieverConfirmed = true;
-	}
+    /**
+     * Проверяет не просрочен ли запрос.
+     */
+    public boolean isInProgress() {
+        if (_isCancelled)
+            return false;
+        if (_isDone)
+            return false;
+        if (_timeout == 0)
+            return true;
+        if (_timeout > System.currentTimeMillis())
+            return true;
+        return false;
+    }
 
-	/**
-	 * Проверяет согласился ли игрок с запросом.
-	 */
-	public boolean isConfirmed(Player player)
-	{
-		if (player == getRequestor())
-			return _isRequestorConfirmed;
-		else if (player == getReciever())
-			return _isRecieverConfirmed;
-		return false; // WTF???
-	}
+    /**
+     * Проверяет тип запроса.
+     */
+    public boolean isTypeOf(L2RequestType type) {
+        return _type == type;
+    }
 
-	public static enum L2RequestType
-	{
-		CUSTOM,
-		PARTY,
-		PARTY_ROOM,
-		CLAN,
-		ALLY,
-		TRADE,
-		TRADE_REQUEST,
-		FRIEND,
-		CHANNEL,
-		DUEL,
-		POST,
-		COUPLE_ACTION,
-		AUCTION_ITEM_ADD
-	}
+    /**
+     * Помечает участника как согласившегося.
+     */
+    public void confirm(Player player) {
+        if (player == getRequestor())
+            _isRequestorConfirmed = true;
+        else if (player == getReciever())
+            _isRecieverConfirmed = true;
+    }
+
+    /**
+     * Проверяет согласился ли игрок с запросом.
+     */
+    public boolean isConfirmed(Player player) {
+        if (player == getRequestor())
+            return _isRequestorConfirmed;
+        else if (player == getReciever())
+            return _isRecieverConfirmed;
+        return false; // WTF???
+    }
+
+    public static enum L2RequestType {
+        CUSTOM,
+        PARTY,
+        PARTY_ROOM,
+        CLAN,
+        ALLY,
+        TRADE,
+        TRADE_REQUEST,
+        FRIEND,
+        CHANNEL,
+        DUEL,
+        POST,
+        COUPLE_ACTION,
+        AUCTION_ITEM_ADD
+    }
 }

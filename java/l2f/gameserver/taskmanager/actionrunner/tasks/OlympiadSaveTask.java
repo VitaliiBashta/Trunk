@@ -10,8 +10,7 @@ public class OlympiadSaveTask extends AutomaticTask
 	}
 
 	@Override
-	public void doTask() throws Exception
-	{
+	public void doTask() {
 		OlympiadDatabase.save();
 	}
 

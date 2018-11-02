@@ -1,10 +1,5 @@
 package ai;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ai.Mystic;
 import l2f.gameserver.model.Creature;
@@ -12,6 +7,10 @@ import l2f.gameserver.model.Effect;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.tables.SkillTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * AI for:
@@ -24,43 +23,35 @@ import l2f.gameserver.tables.SkillTable;
  *
  * @author Diamond
  */
-public class HotSpringsMob extends Mystic
-{
-	private static final Logger _log = LoggerFactory.getLogger(HotSpringsMob.class);
-	private static final int DeBuffs[] = { 4554, 4552 };
+public class HotSpringsMob extends Mystic {
+    private static final Logger _log = LoggerFactory.getLogger(HotSpringsMob.class);
+    private static final int DeBuffs[] = {4554, 4552};
 
-	public HotSpringsMob(NpcInstance actor)
-	{
-		super(actor);
-	}
+    public HotSpringsMob(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	protected void onEvtAttacked(Creature attacker, int damage)
-	{
-		NpcInstance actor = getActor();
-		if (attacker != null && Rnd.chance(5))
-		{
-			int DeBuff = DeBuffs[Rnd.get(DeBuffs.length)];
-			List<Effect> effect = attacker.getEffectList().getEffectsBySkillId(DeBuff);
-			if (effect != null)
-			{
-				int level = effect.get(0).getSkill().getLevel();
-				if (level < 10)
-				{
-					effect.get(0).exit();
-					Skill skill = SkillTable.getInstance().getInfo(DeBuff, level + 1);
-					skill.getEffects(actor, attacker, false, false);
-				}
-			}
-			else
-			{
-				Skill skill = SkillTable.getInstance().getInfo(DeBuff, 1);
-				if (skill != null)
-					skill.getEffects(actor, attacker, false, false);
-				else
-					_log.warn("Skill " + DeBuff + " is null, fix it.");
-			}
-		}
-		super.onEvtAttacked(attacker, damage);
-	}
+    @Override
+    protected void onEvtAttacked(Creature attacker, int damage) {
+        NpcInstance actor = getActor();
+        if (attacker != null && Rnd.chance(5)) {
+            int DeBuff = DeBuffs[Rnd.get(DeBuffs.length)];
+            List<Effect> effect = attacker.getEffectList().getEffectsBySkillId(DeBuff);
+            if (effect != null) {
+                int level = effect.get(0).getSkill().getLevel();
+                if (level < 10) {
+                    effect.get(0).exit();
+                    Skill skill = SkillTable.getInstance().getInfo(DeBuff, level + 1);
+                    skill.getEffects(actor, attacker, false, false);
+                }
+            } else {
+                Skill skill = SkillTable.getInstance().getInfo(DeBuff, 1);
+                if (skill != null)
+                    skill.getEffects(actor, attacker, false, false);
+                else
+                    _log.warn("Skill " + DeBuff + " is null, fix it.");
+            }
+        }
+        super.onEvtAttacked(attacker, damage);
+    }
 }

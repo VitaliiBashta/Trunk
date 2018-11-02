@@ -1,50 +1,46 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.templates.StatsSet;
 
-public class CPDam extends Skill
-{
-	public CPDam(StatsSet set)
-	{
-		super(set);
-	}
+import java.util.List;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
-		if (ss)
-			activeChar.unChargeShots(false);
+public class CPDam extends Skill {
+    public CPDam(StatsSet set) {
+        super(set);
+    }
 
-		Creature realTarget;
-		boolean reflected;
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
+        if (ss)
+            activeChar.unChargeShots(false);
 
-		for (Creature target : targets)
-			if (target != null)
-			{
-				if (target.isDead())
-					continue;
+        Creature realTarget;
+        boolean reflected;
 
-				target.doCounterAttack(this, activeChar, false);
+        for (Creature target : targets)
+            if (target != null) {
+                if (target.isDead())
+                    continue;
 
-				reflected = target.checkReflectSkill(activeChar, this);
-				realTarget = reflected ? activeChar : target;
+                target.doCounterAttack(this, activeChar, false);
 
-				if (realTarget.isCurrentCpZero())
-					continue;
+                reflected = target.checkReflectSkill(activeChar, this);
+                realTarget = reflected ? activeChar : target;
 
-				double damage = _power * realTarget.getCurrentCp();
+                if (realTarget.isCurrentCpZero())
+                    continue;
 
-				if (damage < 1)
-					damage = 1;
+                double damage = _power * realTarget.getCurrentCp();
 
-				realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
+                if (damage < 1)
+                    damage = 1;
 
-				getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
-			}
-	}
+                realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
+
+                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
+            }
+    }
 }

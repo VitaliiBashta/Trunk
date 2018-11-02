@@ -6,37 +6,33 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.stats.Env;
 import l2f.gameserver.stats.Stats;
 
-public class EffectSummonHealPercent extends Effect
-{
-	private final boolean _ignoreHpEff;
+public class EffectSummonHealPercent extends Effect {
+    private final boolean _ignoreHpEff;
 
-	public EffectSummonHealPercent(Env env, EffectTemplate template)
-	{
-		super(env, template);
-		_ignoreHpEff = template.getParam().getBool("ignoreHpEff", true);
-	}
-	
-	@Override
-	public void onStart()
-	{
-		super.onStart();
+    public EffectSummonHealPercent(Env env, EffectTemplate template) {
+        super(env, template);
+        _ignoreHpEff = template.getParam().getBool("ignoreHpEff", true);
+    }
 
-		if (_effected.isHealBlocked())
-			return;
+    @Override
+    public void onStart() {
+        super.onStart();
 
-		double hp = calc() * _effected.getMaxHp() / 100.;
-		double newHp = hp * (!_ignoreHpEff ? _effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
-		double addToHp = Math.max(0, Math.min(newHp, _effected.calcStat(Stats.HP_LIMIT, null, null) * _effected.getMaxHp() / 100. - _effected.getCurrentHp()));
+        if (_effected.isHealBlocked())
+            return;
 
-		_effected.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(addToHp)));
+        double hp = calc() * _effected.getMaxHp() / 100.;
+        double newHp = hp * (!_ignoreHpEff ? _effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
+        double addToHp = Math.max(0, Math.min(newHp, _effected.calcStat(Stats.HP_LIMIT, null, null) * _effected.getMaxHp() / 100. - _effected.getCurrentHp()));
 
-		if (addToHp > 0)
-			_effected.setCurrentHp(addToHp + _effected.getCurrentHp(), false);
-	}
-	
-	@Override
-	public boolean onActionTime()
-	{
-		return false;
-	}
+        _effected.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(addToHp)));
+
+        if (addToHp > 0)
+            _effected.setCurrentHp(addToHp + _effected.getCurrentHp(), false);
+    }
+
+    @Override
+    public boolean onActionTime() {
+        return false;
+    }
 }

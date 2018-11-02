@@ -8,63 +8,57 @@ import l2f.gameserver.model.instances.DoorInstance;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.utils.ItemFunctions;
 
-public class EmeraldDoorController extends DefaultAI
-{
-	private boolean openedDoor = false;
-	private Player opener = null;
+public class EmeraldDoorController extends DefaultAI {
+    private boolean openedDoor = false;
+    private Player opener = null;
 
-	public EmeraldDoorController(NpcInstance actor)
-	{
-		super(actor);
-		actor.setHasChatWindow(false);
-	}
+    public EmeraldDoorController(NpcInstance actor) {
+        super(actor);
+        actor.setHasChatWindow(false);
+    }
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
-		DoorInstance door = getClosestDoor();
-		boolean active = false;
-		CrystalCaverns refl = null;
-		if (actor.getReflection() instanceof CrystalCaverns)
-			refl = (CrystalCaverns) actor.getReflection();	
-		if(refl != null)		
-			active = refl.areDoorsActivated();
-		if(door != null && active)
-		{
-			for(Creature c : getActor().getAroundCharacters(250, 150))
-				if(!openedDoor && c.isPlayer() && ItemFunctions.getItemCount(c.getPlayer(), 9694) > 0) // Secret Key
-				{
-					openedDoor = true;
-					ItemFunctions.removeItem(c.getPlayer(), 9694, 1, true, "EmeraldDoorController");
-					door.openMe();
-					opener = c.getPlayer();
-				}
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
+        DoorInstance door = getClosestDoor();
+        boolean active = false;
+        CrystalCaverns refl = null;
+        if (actor.getReflection() instanceof CrystalCaverns)
+            refl = (CrystalCaverns) actor.getReflection();
+        if (refl != null)
+            active = refl.areDoorsActivated();
+        if (door != null && active) {
+            for (Creature c : getActor().getAroundCharacters(250, 150))
+                if (!openedDoor && c.isPlayer() && ItemFunctions.getItemCount(c.getPlayer(), 9694) > 0) // Secret Key
+                {
+                    openedDoor = true;
+                    ItemFunctions.removeItem(c.getPlayer(), 9694, 1, true, "EmeraldDoorController");
+                    door.openMe();
+                    opener = c.getPlayer();
+                }
 
-			boolean found = false;
-			if (opener != null)
-				for (Creature c : getActor().getAroundCharacters(250, 150))
-					if (openedDoor && c.isPlayer() && c.getPlayer() == opener)
-						found = true;
+            boolean found = false;
+            if (opener != null)
+                for (Creature c : getActor().getAroundCharacters(250, 150))
+                    if (openedDoor && c.isPlayer() && c.getPlayer() == opener)
+                        found = true;
 
-			if (!found)
-				door.closeMe();
-		}
-		return super.thinkActive();
-	}
+            if (!found)
+                door.closeMe();
+        }
+        return super.thinkActive();
+    }
 
-	private DoorInstance getClosestDoor()
-	{
-		NpcInstance actor = getActor();
-		for (Creature c : actor.getAroundCharacters(200, 200))
-			if (c.isDoor())
-				return (DoorInstance) c;
-		return null;
-	}
+    private DoorInstance getClosestDoor() {
+        NpcInstance actor = getActor();
+        for (Creature c : actor.getAroundCharacters(200, 200))
+            if (c.isDoor())
+                return (DoorInstance) c;
+        return null;
+    }
 
-	@Override
-	protected boolean randomWalk()
-	{
-		return false;
-	}
+    @Override
+    protected boolean randomWalk() {
+        return false;
+    }
 }

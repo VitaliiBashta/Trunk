@@ -1,9 +1,5 @@
 package l2f.gameserver.model.entity.events.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import l2f.commons.collections.CollectionUtils;
 import l2f.commons.collections.MultiValueSet;
 import l2f.gameserver.dao.SiegeClanDAO;
@@ -19,206 +15,181 @@ import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.tables.ClanTable;
 
-public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObject>
-{
-	public static final String NEXT_STEP = "next_step";
-	public static final String REFUND = "refund";
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-	private boolean _arenaClosed = true;
+public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObject> {
+    public static final String NEXT_STEP = "next_step";
+    public static final String REFUND = "refund";
 
-	public ClanHallMiniGameEvent(MultiValueSet<String> set)
-	{
-		super(set);
-	}
+    private boolean _arenaClosed = true;
 
-	@Override
-	public void startEvent()
-	{
-		_oldOwner = getResidence().getOwner();
+    public ClanHallMiniGameEvent(MultiValueSet<String> set) {
+        super(set);
+    }
 
-		List<CMGSiegeClanObject> siegeClans = getObjects(ATTACKERS);
-		if (siegeClans.size() < 2)
-		{
-			CMGSiegeClanObject siegeClan = CollectionUtils.safeGet(siegeClans, 0);
-			if (siegeClan != null)
-			{
-				CMGSiegeClanObject oldSiegeClan = getSiegeClan(REFUND, siegeClan.getObjectId());
-				if (oldSiegeClan != null)
-				{
-					SiegeClanDAO.getInstance().delete(getResidence(), siegeClan); // удаляем с базы старое
+    @Override
+    public void startEvent() {
+        _oldOwner = getResidence().getOwner();
 
-					oldSiegeClan.setParam(oldSiegeClan.getParam() + siegeClan.getParam());
+        List<CMGSiegeClanObject> siegeClans = getObjects(ATTACKERS);
+        if (siegeClans.size() < 2) {
+            CMGSiegeClanObject siegeClan = CollectionUtils.safeGet(siegeClans, 0);
+            if (siegeClan != null) {
+                CMGSiegeClanObject oldSiegeClan = getSiegeClan(REFUND, siegeClan.getObjectId());
+                if (oldSiegeClan != null) {
+                    SiegeClanDAO.getInstance().delete(getResidence(), siegeClan); // удаляем с базы старое
 
-					SiegeClanDAO.getInstance().update(getResidence(), oldSiegeClan);
-				}
-				else
-				{
-					siegeClan.setType(REFUND);
-					// удаляем с аттакеров
-					siegeClans.remove(siegeClan);
-					// добавляем к рефунд
-					addObject(REFUND, siegeClan);
+                    oldSiegeClan.setParam(oldSiegeClan.getParam() + siegeClan.getParam());
 
-					SiegeClanDAO.getInstance().update(getResidence(), siegeClan);
-				}
-			}
-			siegeClans.clear();
+                    SiegeClanDAO.getInstance().update(getResidence(), oldSiegeClan);
+                } else {
+                    siegeClan.setType(REFUND);
+                    // удаляем с аттакеров
+                    siegeClans.remove(siegeClan);
+                    // добавляем к рефунд
+                    addObject(REFUND, siegeClan);
 
-			broadcastTo(SystemMsg.THIS_CLAN_HALL_WAR_HAS_BEEN_CANCELLED, ATTACKERS);
-			broadcastInZone2(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()));
-			reCalcNextTime(false);
-			return;
-		}
+                    SiegeClanDAO.getInstance().update(getResidence(), siegeClan);
+                }
+            }
+            siegeClans.clear();
 
-		CMGSiegeClanObject[] clans = siegeClans.toArray(new CMGSiegeClanObject[siegeClans.size()]);
-		Arrays.sort(clans, SiegeClanObject.SiegeClanComparatorImpl.getInstance());
+            broadcastTo(SystemMsg.THIS_CLAN_HALL_WAR_HAS_BEEN_CANCELLED, ATTACKERS);
+            broadcastInZone2(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()));
+            reCalcNextTime(false);
+            return;
+        }
 
-		List<CMGSiegeClanObject> temp = new ArrayList<CMGSiegeClanObject>(4);
+        CMGSiegeClanObject[] clans = siegeClans.toArray(new CMGSiegeClanObject[siegeClans.size()]);
+        Arrays.sort(clans, SiegeClanObject.SiegeClanComparatorImpl.getInstance());
 
-		for (int i = 0; i < clans.length; i++)
-		{
-			CMGSiegeClanObject siegeClan =  clans[i];
-			SiegeClanDAO.getInstance().delete(getResidence(), siegeClan);
+        List<CMGSiegeClanObject> temp = new ArrayList<CMGSiegeClanObject>(4);
 
-			if (temp.size() == 4)
-			{
-				siegeClans.remove(siegeClan);
+        for (int i = 0; i < clans.length; i++) {
+            CMGSiegeClanObject siegeClan = clans[i];
+            SiegeClanDAO.getInstance().delete(getResidence(), siegeClan);
 
-				siegeClan.broadcast(SystemMsg.YOU_HAVE_FAILED_IN_YOUR_ATTEMPT_TO_REGISTER_FOR_THE_CLAN_HALL_WAR);
-			}
-			else
-			{
-				temp.add(siegeClan);
+            if (temp.size() == 4) {
+                siegeClans.remove(siegeClan);
 
-				siegeClan.broadcast(SystemMsg.YOU_HAVE_BEEN_REGISTERED_FOR_A_CLAN_HALL_WAR);
-			}
-		}
+                siegeClan.broadcast(SystemMsg.YOU_HAVE_FAILED_IN_YOUR_ATTEMPT_TO_REGISTER_FOR_THE_CLAN_HALL_WAR);
+            } else {
+                temp.add(siegeClan);
 
-		_arenaClosed = false;
+                siegeClan.broadcast(SystemMsg.YOU_HAVE_BEEN_REGISTERED_FOR_A_CLAN_HALL_WAR);
+            }
+        }
 
-		super.startEvent();
-	}
+        _arenaClosed = false;
 
-	@Override
-	public void stopEvent(boolean step)
-	{
-		removeBanishItems();
+        super.startEvent();
+    }
 
-		Clan newOwner = getResidence().getOwner();
-		if (newOwner != null)
-		{
-			if (_oldOwner != newOwner)
-			{
-				newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
+    @Override
+    public void stopEvent(boolean step) {
+        removeBanishItems();
 
-				newOwner.incReputation(1700, false, toString());
-			}
+        Clan newOwner = getResidence().getOwner();
+        if (newOwner != null) {
+            if (_oldOwner != newOwner) {
+                newOwner.broadcastToOnlineMembers(PlaySound.SIEGE_VICTORY);
 
-			broadcastTo(new SystemMessage2(SystemMsg.S1_CLAN_HAS_DEFEATED_S2).addString(newOwner.getName()).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
-			broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_IS_FINISHED).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
-		}
-		else
-			broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()), ATTACKERS);
+                newOwner.incReputation(1700, false, toString());
+            }
 
-		updateParticles(false, ATTACKERS);
+            broadcastTo(new SystemMessage2(SystemMsg.S1_CLAN_HAS_DEFEATED_S2).addString(newOwner.getName()).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
+            broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_IS_FINISHED).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);
+        } else
+            broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()), ATTACKERS);
 
-		removeObjects(ATTACKERS);
+        updateParticles(false, ATTACKERS);
 
-		super.stopEvent(step);
+        removeObjects(ATTACKERS);
 
-		_oldOwner = null;
-	}
+        super.stopEvent(step);
 
-	public void nextStep()
-	{
-		List<CMGSiegeClanObject> siegeClans = getObjects(ATTACKERS);
-		for (int i = 0; i < siegeClans.size(); i++)
-			spawnAction("arena_" + i, true);
+        _oldOwner = null;
+    }
 
-		_arenaClosed = true;
+    public void nextStep() {
+        List<CMGSiegeClanObject> siegeClans = getObjects(ATTACKERS);
+        for (int i = 0; i < siegeClans.size(); i++)
+            spawnAction("arena_" + i, true);
 
-		updateParticles(true, ATTACKERS);
+        _arenaClosed = true;
 
-		broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()), ATTACKERS);
-	}
+        updateParticles(true, ATTACKERS);
 
-	@Override
-	public void setRegistrationOver(boolean b)
-	{
-		if (b)
-			broadcastTo(SystemMsg.THE_REGISTRATION_PERIOD_FOR_A_CLAN_HALL_WAR_HAS_ENDED, ATTACKERS);
+        broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()), ATTACKERS);
+    }
 
-		super.setRegistrationOver(b);
-	}
+    @Override
+    public void setRegistrationOver(boolean b) {
+        if (b)
+            broadcastTo(SystemMsg.THE_REGISTRATION_PERIOD_FOR_A_CLAN_HALL_WAR_HAS_ENDED, ATTACKERS);
 
-	@Override
-	public CMGSiegeClanObject newSiegeClan(String type, int clanId, long param, long date)
-	{
-		Clan clan = ClanTable.getInstance().getClan(clanId);
-		return clan == null ? null : new CMGSiegeClanObject(type, clan, param, date);
-	}
+        super.setRegistrationOver(b);
+    }
 
-	@Override
-	public void announce(int val)
-	{
-		int seconds = val % 60;
-		int min = val / 60;
-		if (min > 0)
-		{
-			SystemMsg msg = min > 10 ? SystemMsg.IN_S1_MINUTES_THE_GAME_WILL_BEGIN_ALL_PLAYERS_MUST_HURRY_AND_MOVE_TO_THE_LEFT_SIDE_OF_THE_CLAN_HALLS_ARENA : SystemMsg.IN_S1_MINUTES_THE_GAME_WILL_BEGIN_ALL_PLAYERS_PLEASE_ENTER_THE_ARENA_NOW;
+    @Override
+    public CMGSiegeClanObject newSiegeClan(String type, int clanId, long param, long date) {
+        Clan clan = ClanTable.getInstance().getClan(clanId);
+        return clan == null ? null : new CMGSiegeClanObject(type, clan, param, date);
+    }
 
-			broadcastTo(new SystemMessage2(msg).addInteger(min), ATTACKERS);
-		}
-		else
-			broadcastTo(new SystemMessage2(SystemMsg.IN_S1_SECONDS_THE_GAME_WILL_BEGIN).addInteger(seconds), ATTACKERS);
-	}
+    @Override
+    public void announce(int val) {
+        int seconds = val % 60;
+        int min = val / 60;
+        if (min > 0) {
+            SystemMsg msg = min > 10 ? SystemMsg.IN_S1_MINUTES_THE_GAME_WILL_BEGIN_ALL_PLAYERS_MUST_HURRY_AND_MOVE_TO_THE_LEFT_SIDE_OF_THE_CLAN_HALLS_ARENA : SystemMsg.IN_S1_MINUTES_THE_GAME_WILL_BEGIN_ALL_PLAYERS_PLEASE_ENTER_THE_ARENA_NOW;
 
-	@Override
-	public void processStep(Clan clan)
-	{
-		if (clan != null)
-			getResidence().changeOwner(clan);
+            broadcastTo(new SystemMessage2(msg).addInteger(min), ATTACKERS);
+        } else
+            broadcastTo(new SystemMessage2(SystemMsg.IN_S1_SECONDS_THE_GAME_WILL_BEGIN).addInteger(seconds), ATTACKERS);
+    }
 
-		stopEvent(true);
-	}
+    @Override
+    public void processStep(Clan clan) {
+        if (clan != null)
+            getResidence().changeOwner(clan);
 
-	@Override
-	public void loadSiegeClans()
-	{
-		addObjects(ATTACKERS, SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS));
-		addObjects(REFUND, SiegeClanDAO.getInstance().load(getResidence(), REFUND));
-	}
+        stopEvent(true);
+    }
 
-	@Override
-	public void action(String name, boolean start)
-	{
-		if (name.equalsIgnoreCase(NEXT_STEP))
-			nextStep();
-		else
-			super.action(name, start);
-	}
+    @Override
+    public void loadSiegeClans() {
+        addObjects(ATTACKERS, SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS));
+        addObjects(REFUND, SiegeClanDAO.getInstance().load(getResidence(), REFUND));
+    }
 
-	@Override
-	public int getUserRelation(Player thisPlayer, int result)
-	{
-		return result;
-	}
+    @Override
+    public void action(String name, boolean start) {
+        if (name.equalsIgnoreCase(NEXT_STEP))
+            nextStep();
+        else
+            super.action(name, start);
+    }
 
-	@Override
-	public int getRelation(Player thisPlayer, Player targetPlayer, int result)
-	{
-		return result;
-	}
+    @Override
+    public int getUserRelation(Player thisPlayer, int result) {
+        return result;
+    }
 
-	public boolean isArenaClosed()
-	{
-		return _arenaClosed;
-	}
+    @Override
+    public int getRelation(Player thisPlayer, Player targetPlayer, int result) {
+        return result;
+    }
 
-	@Override
-	public void onAddEvent(GameObject object)
-	{
-		if (object.isItem())
-			addBanishItem((ItemInstance)object);
-	}
+    public boolean isArenaClosed() {
+        return _arenaClosed;
+    }
+
+    @Override
+    public void onAddEvent(GameObject object) {
+        if (object.isItem())
+            addBanishItem((ItemInstance) object);
+    }
 }

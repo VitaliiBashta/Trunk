@@ -6,37 +6,33 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.stats.Env;
 import l2f.gameserver.stats.Stats;
 
-public class EffectSummonManaHealPercent extends Effect
-{
-	private final boolean _ignoreMpEff;
+public class EffectSummonManaHealPercent extends Effect {
+    private final boolean _ignoreMpEff;
 
-	public EffectSummonManaHealPercent(Env env, EffectTemplate template)
-	{
-		super(env, template);
-		_ignoreMpEff = template.getParam().getBool("ignoreMpEff", true);
-	}
-	
-	@Override
-	public void onStart()
-	{
-		super.onStart();
+    public EffectSummonManaHealPercent(Env env, EffectTemplate template) {
+        super(env, template);
+        _ignoreMpEff = template.getParam().getBool("ignoreMpEff", true);
+    }
 
-		if (_effected.isHealBlocked())
-			return;
+    @Override
+    public void onStart() {
+        super.onStart();
 
-		double mp = calc() * _effected.getMaxMp() / 100.;
-		double newMp = mp * (!_ignoreMpEff ? _effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
-		double addToMp = Math.max(0, Math.min(newMp, _effected.calcStat(Stats.MP_LIMIT, null, null) * _effected.getMaxMp() / 100. - _effected.getCurrentMp()));
+        if (_effected.isHealBlocked())
+            return;
 
-		_effected.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
+        double mp = calc() * _effected.getMaxMp() / 100.;
+        double newMp = mp * (!_ignoreMpEff ? _effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
+        double addToMp = Math.max(0, Math.min(newMp, _effected.calcStat(Stats.MP_LIMIT, null, null) * _effected.getMaxMp() / 100. - _effected.getCurrentMp()));
 
-		if (addToMp > 0)
-			_effected.setCurrentMp(addToMp + _effected.getCurrentMp());
-	}
+        _effected.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
 
-	@Override
-	public boolean onActionTime()
-	{
-		return false;
-	}
+        if (addToMp > 0)
+            _effected.setCurrentMp(addToMp + _effected.getCurrentMp());
+    }
+
+    @Override
+    public boolean onActionTime() {
+        return false;
+    }
 }

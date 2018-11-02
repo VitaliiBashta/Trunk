@@ -15,112 +15,94 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ScheduledFuture;
 
-public class FollowNpc extends DefaultAI
-{
-	private static final Logger LOG = LoggerFactory.getLogger(FollowNpc.class);
-	private boolean _thinking = false;
-	private ScheduledFuture<?> _followTask;
+public class FollowNpc extends DefaultAI {
+    private static final Logger LOG = LoggerFactory.getLogger(FollowNpc.class);
+    private boolean _thinking = false;
+    private ScheduledFuture<?> _followTask;
 
-	public FollowNpc(NpcInstance actor)
-	{
-		super(actor);
-	}
+    public FollowNpc(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	protected boolean randomWalk()
-	{
-		if (getActor() instanceof MonsterInstance)
-			return true;
+    @Override
+    protected boolean randomWalk() {
+        if (getActor() instanceof MonsterInstance)
+            return true;
 
-		return false;
-	}
-	
-	@Override
-	protected void onEvtThink()
-	{
-		NpcInstance actor = getActor();
-		if (_thinking || actor.isActionsDisabled() || actor.isAfraid() || actor.isDead() || actor.isMovementDisabled())
-			return;
+        return false;
+    }
 
-		_thinking = true;
-		try
-		{
-			if (!Config.BLOCK_ACTIVE_TASKS && (getIntention() == CtrlIntention.AI_INTENTION_ACTIVE || getIntention() == CtrlIntention.AI_INTENTION_IDLE))
-				thinkActive();
-			else if (getIntention() == CtrlIntention.AI_INTENTION_FOLLOW)
-				thinkFollow();
-		}
-		catch (RuntimeException e)
-		{
-			LOG.error("Error while thinking on FollowNpc", e);
-		}
-		finally
-		{
-			_thinking = false;
-		}
-	}
+    @Override
+    protected void onEvtThink() {
+        NpcInstance actor = getActor();
+        if (_thinking || actor.isActionsDisabled() || actor.isAfraid() || actor.isDead() || actor.isMovementDisabled())
+            return;
 
-	protected void thinkFollow()
-	{
-		NpcInstance actor = getActor();
+        _thinking = true;
+        try {
+            if (!Config.BLOCK_ACTIVE_TASKS && (getIntention() == CtrlIntention.AI_INTENTION_ACTIVE || getIntention() == CtrlIntention.AI_INTENTION_IDLE))
+                thinkActive();
+            else if (getIntention() == CtrlIntention.AI_INTENTION_FOLLOW)
+                thinkFollow();
+        } catch (RuntimeException e) {
+            LOG.error("Error while thinking on FollowNpc", e);
+        } finally {
+            _thinking = false;
+        }
+    }
 
-		Creature target = actor.getFollowTarget();
+    protected void thinkFollow() {
+        NpcInstance actor = getActor();
 
-		//Находимся слишком далеко цели, либо цель не пригодна для следования, либо не можем перемещаться
-		if (target == null || target.isAlikeDead() || actor.getDistance(target) > 4000 || actor.isMovementDisabled())
-		{
-			clientActionFailed();
-			return;
-		}
+        Creature target = actor.getFollowTarget();
 
-		//Уже следуем за этой целью
-		if (actor.isFollow && actor.getFollowTarget() == target)
-		{
-			clientActionFailed();
-			return;
-		}
+        //Находимся слишком далеко цели, либо цель не пригодна для следования, либо не можем перемещаться
+        if (target == null || target.isAlikeDead() || actor.getDistance(target) > 4000 || actor.isMovementDisabled()) {
+            clientActionFailed();
+            return;
+        }
 
-		//Находимся достаточно близко
-		if (actor.isInRange(target, Config.FOLLOW_RANGE + 20))
-			clientActionFailed();
+        //Уже следуем за этой целью
+        if (actor.isFollow && actor.getFollowTarget() == target) {
+            clientActionFailed();
+            return;
+        }
 
-		if (_followTask != null)
-		{
-			_followTask.cancel(false);
-			_followTask = null;
-		}
+        //Находимся достаточно близко
+        if (actor.isInRange(target, Config.FOLLOW_RANGE + 20))
+            clientActionFailed();
 
-		_followTask = ThreadPoolManager.getInstance().schedule(new ThinkFollow(), 250L);
-	}
+        if (_followTask != null) {
+            _followTask.cancel(false);
+            _followTask = null;
+        }
 
-	protected class ThinkFollow extends RunnableImpl
-	{
-		public NpcInstance getActor()
-		{
-			return FollowNpc.this.getActor();
-		}
+        _followTask = ThreadPoolManager.getInstance().schedule(new ThinkFollow(), 250L);
+    }
 
-		@Override
-		public void runImpl()
-		{
-			NpcInstance actor = getActor();
-			if (actor == null)
-				return;
+    protected class ThinkFollow extends RunnableImpl {
+        public NpcInstance getActor() {
+            return FollowNpc.this.getActor();
+        }
 
-			Creature target = actor.getFollowTarget();
+        @Override
+        public void runImpl() {
+            NpcInstance actor = getActor();
+            if (actor == null)
+                return;
 
-			if (target == null || target.isAlikeDead() || actor.getDistance(target) > 4000)
-			{
-				setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-				return;
-			}
+            Creature target = actor.getFollowTarget();
 
-			if (!actor.isInRange(target, Config.FOLLOW_RANGE + 20) && (!actor.isFollow || actor.getFollowTarget() != target))
-			{
-				Location loc = new Location(target.getX() + Rnd.get(-60, 60), target.getY() + Rnd.get(-60, 60), target.getZ());
-				actor.followToCharacter(loc, target, Config.FOLLOW_RANGE, false);
-			}
-			_followTask = ThreadPoolManager.getInstance().schedule(this, 250L);
-		}
-	}
+            if (target == null || target.isAlikeDead() || actor.getDistance(target) > 4000) {
+                setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+                return;
+            }
+
+            if (!actor.isInRange(target, Config.FOLLOW_RANGE + 20) && (!actor.isFollow || actor.getFollowTarget() != target)) {
+                Location loc = new Location(target.getX() + Rnd.get(-60, 60), target.getY() + Rnd.get(-60, 60), target.getZ());
+                actor.followToCharacter(loc, target, Config.FOLLOW_RANGE, false);
+            }
+            _followTask = ThreadPoolManager.getInstance().schedule(this, 250L);
+        }
+    }
 }

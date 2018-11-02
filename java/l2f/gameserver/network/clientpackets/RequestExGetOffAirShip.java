@@ -1,29 +1,26 @@
 package l2f.gameserver.network.clientpackets;
 
 //@Deprecated
-public class RequestExGetOffAirShip extends L2GameClientPacket
-{
-	@SuppressWarnings("unused")
-	private int _x;
-	@SuppressWarnings("unused")
-	private int _y;
-	@SuppressWarnings("unused")
-	private int _z;
-	@SuppressWarnings("unused")
-	private int _id;
+public class RequestExGetOffAirShip extends L2GameClientPacket {
+    @SuppressWarnings("unused")
+    private int _x;
+    @SuppressWarnings("unused")
+    private int _y;
+    @SuppressWarnings("unused")
+    private int _z;
+    @SuppressWarnings("unused")
+    private int _id;
 
-	@Override
-	protected void readImpl()
-	{
-		_x = readD();
-		_y = readD();
-		_z = readD();
-		_id = readD();
-	}
+    @Override
+    protected void readImpl() {
+        _x = readD();
+        _y = readD();
+        _z = readD();
+        _id = readD();
+    }
 
-	@Override
-	protected void runImpl()
-	{
+    @Override
+    protected void runImpl() {
 		/*L2Player activeChar = getClient().getActiveChar();
 		if (activeChar == null)
 			return;
@@ -46,5 +43,5 @@ public class RequestExGetOffAirShip extends L2GameClientPacket
 
 		activeChar.setXYZ(x, y, z);
 		activeChar.broadcastPacket(new ExGetOffAirShip(activeChar, boat, new Location(x, y, z)));*/
-	}
+    }
 }

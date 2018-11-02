@@ -9,34 +9,31 @@ import l2f.gameserver.model.instances.NpcInstance;
 
 /**
  * @author VISTALL
- * @date  11:31/18.11.2010
+ * @date 11:31/18.11.2010
  */
-public class KrateisFighter extends Fighter
-{
-	public KrateisFighter(NpcInstance actor)
-	{
-		super(actor);
-	}
+public class KrateisFighter extends Fighter {
+    public KrateisFighter(NpcInstance actor) {
+        super(actor);
+    }
 
-	@Override
-	protected void onEvtDead(Creature killer)
-	{
-		super.onEvtDead(killer);
+    @Override
+    protected void onEvtDead(Creature killer) {
+        super.onEvtDead(killer);
 
-		Player player = killer.getPlayer();
-		if (player == null)
-			return;
+        Player player = killer.getPlayer();
+        if (player == null)
+            return;
 
-		KrateisCubeEvent cubeEvent = getActor().getEvent(KrateisCubeEvent.class);
-		if (cubeEvent == null)
-			return;
+        KrateisCubeEvent cubeEvent = getActor().getEvent(KrateisCubeEvent.class);
+        if (cubeEvent == null)
+            return;
 
-		KrateisCubePlayerObject particlePlayer = cubeEvent.getParticlePlayer(player);
-		
-		if (particlePlayer == null)
-			return;
-		
-		particlePlayer.setPoints(particlePlayer.getPoints() + 3);
-		cubeEvent.updatePoints(particlePlayer);
-	}
+        KrateisCubePlayerObject particlePlayer = cubeEvent.getParticlePlayer(player);
+
+        if (particlePlayer == null)
+            return;
+
+        particlePlayer.setPoints(particlePlayer.getPoints() + 3);
+        cubeEvent.updatePoints(particlePlayer);
+    }
 }

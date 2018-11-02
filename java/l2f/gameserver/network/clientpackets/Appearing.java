@@ -2,43 +2,37 @@ package l2f.gameserver.network.clientpackets;
 
 import l2f.gameserver.model.Player;
 
-public class Appearing extends L2GameClientPacket
-{
-	@Override
-	protected void readImpl()
-	{}
+public class Appearing extends L2GameClientPacket {
+    @Override
+    protected void readImpl() {
+    }
 
-	@Override
-	protected void runImpl()
-	{
-		final Player activeChar = getClient().getActiveChar();
-		if (activeChar == null)
-			return;
+    @Override
+    protected void runImpl() {
+        final Player activeChar = getClient().getActiveChar();
+        if (activeChar == null)
+            return;
 
-		if (activeChar.isLogoutStarted())
-		{
-			activeChar.sendActionFailed();
-			return;
-		}
+        if (activeChar.isLogoutStarted()) {
+            activeChar.sendActionFailed();
+            return;
+        }
 
-		if (activeChar.getObserverMode() == Player.OBSERVER_STARTING)
-		{
-			activeChar.appearObserverMode();
-			return;
-		}
+        if (activeChar.getObserverMode() == Player.OBSERVER_STARTING) {
+            activeChar.appearObserverMode();
+            return;
+        }
 
-		if (activeChar.getObserverMode() == Player.OBSERVER_LEAVING)
-		{
-			activeChar.returnFromObserverMode();
-			return;
-		}
+        if (activeChar.getObserverMode() == Player.OBSERVER_LEAVING) {
+            activeChar.returnFromObserverMode();
+            return;
+        }
 
-		if (!activeChar.isTeleporting())
-		{
-			activeChar.sendActionFailed();
-			return;
-		}
+        if (!activeChar.isTeleporting()) {
+            activeChar.sendActionFailed();
+            return;
+        }
 
-		activeChar.onTeleported();
-	}
+        activeChar.onTeleported();
+    }
 }

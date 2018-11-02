@@ -1,7 +1,5 @@
 package l2f.gameserver;
 
-import java.util.Calendar;
-
 import l2f.commons.listener.Listener;
 import l2f.commons.listener.ListenerList;
 import l2f.commons.threading.RunnableImpl;
@@ -11,163 +9,144 @@ import l2f.gameserver.listener.game.OnStartListener;
 import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.ClientSetTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GameTimeController
-{
-	public static final int TICKS_PER_SECOND = 10;
-	public static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
-	private static final Logger _log = LoggerFactory.getLogger(GameTimeController.class);
-	private static final GameTimeController _instance = new GameTimeController();
-	private long _gameStartTime;
-	private GameTimeListenerList listenerEngine = new GameTimeListenerList();
-	private Runnable _dayChangeNotify = new CheckSunState();
+import java.util.Calendar;
 
-	private GameTimeController()
-	{
-		_gameStartTime = getDayStartTime();
+public class GameTimeController {
+    public static final int TICKS_PER_SECOND = 10;
+    public static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
+    private static final Logger _log = LoggerFactory.getLogger(GameTimeController.class);
+    private static final GameTimeController _instance = new GameTimeController();
+    private long _gameStartTime;
+    private GameTimeListenerList listenerEngine = new GameTimeListenerList();
+    private Runnable _dayChangeNotify = new CheckSunState();
 
-		GameServer.getInstance().addListener(new OnStartListenerImpl());
+    private GameTimeController() {
+        _gameStartTime = getDayStartTime();
 
-		StringBuilder msg = new StringBuilder();
-		msg.append("GameTimeController: initialized.").append(" ");
-		msg.append("Current time is ");
-		msg.append(getGameHour()).append(":");
-		if (getGameMin() < 10)
-			msg.append("0");
-		msg.append(getGameMin());
-		msg.append(" in the ");
-		if (isNowNight())
-			msg.append("night");
-		else
-			msg.append("day");
-		msg.append(".");
+        GameServer.getInstance().addListener(new OnStartListenerImpl());
 
-		_log.info(msg.toString());
+        StringBuilder msg = new StringBuilder();
+        msg.append("GameTimeController: initialized.").append(" ");
+        msg.append("Current time is ");
+        msg.append(getGameHour()).append(":");
+        if (getGameMin() < 10)
+            msg.append("0");
+        msg.append(getGameMin());
+        msg.append(" in the ");
+        if (isNowNight())
+            msg.append("night");
+        else
+            msg.append("day");
+        msg.append(".");
 
-		long nightStart = 0;
-		long dayStart = 60 * 60 * 1000;
+        _log.info(msg.toString());
 
-		while (_gameStartTime + nightStart < System.currentTimeMillis())
-			nightStart += 4 * 60 * 60 * 1000;
+        long nightStart = 0;
+        long dayStart = 60 * 60 * 1000;
 
-		while (_gameStartTime + dayStart < System.currentTimeMillis())
-			dayStart += 4 * 60 * 60 * 1000;
+        while (_gameStartTime + nightStart < System.currentTimeMillis())
+            nightStart += 4 * 60 * 60 * 1000;
 
-		dayStart -= System.currentTimeMillis() - _gameStartTime;
-		nightStart -= System.currentTimeMillis() - _gameStartTime;
+        while (_gameStartTime + dayStart < System.currentTimeMillis())
+            dayStart += 4 * 60 * 60 * 1000;
 
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
-	}
+        dayStart -= System.currentTimeMillis() - _gameStartTime;
+        nightStart -= System.currentTimeMillis() - _gameStartTime;
 
-	public static final GameTimeController getInstance()
-	{
-		return _instance;
-	}
+        ThreadPoolManager.getInstance().scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
+        ThreadPoolManager.getInstance().scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
+    }
 
-	/**
-	 * Вычисляем смещение до начала игровых суток
-	 *
-	 * @return смещение в миллисекнду до начала игровых суток (6:00AM)
-	 */
-	private long getDayStartTime()
-	{
-		Calendar dayStart = Calendar.getInstance();
+    public static final GameTimeController getInstance() {
+        return _instance;
+    }
 
-		int HOUR_OF_DAY = dayStart.get(Calendar.HOUR_OF_DAY);
+    /**
+     * Вычисляем смещение до начала игровых суток
+     *
+     * @return смещение в миллисекнду до начала игровых суток (6:00AM)
+     */
+    private long getDayStartTime() {
+        Calendar dayStart = Calendar.getInstance();
 
-		dayStart.add(Calendar.HOUR_OF_DAY, - (HOUR_OF_DAY + 1) % 4); //1 день в игре это 4 часа реального времени
-		dayStart.set(Calendar.MINUTE, 0);
-		dayStart.set(Calendar.SECOND, 0);
-		dayStart.set(Calendar.MILLISECOND, 0);
+        int HOUR_OF_DAY = dayStart.get(Calendar.HOUR_OF_DAY);
 
-		return dayStart.getTimeInMillis();
-	}
+        dayStart.add(Calendar.HOUR_OF_DAY, -(HOUR_OF_DAY + 1) % 4); //1 день в игре это 4 часа реального времени
+        dayStart.set(Calendar.MINUTE, 0);
+        dayStart.set(Calendar.SECOND, 0);
+        dayStart.set(Calendar.MILLISECOND, 0);
 
-	public boolean isNowNight()
-	{
-		return getGameHour() < 6;
-	}
+        return dayStart.getTimeInMillis();
+    }
 
-	public int getGameTime()
-	{
-		return getGameTicks() / MILLIS_IN_TICK;
-	}
+    public boolean isNowNight() {
+        return getGameHour() < 6;
+    }
 
-	public int getGameHour()
-	{
-		return getGameTime() / 60 % 24;
-	}
+    public int getGameTime() {
+        return getGameTicks() / MILLIS_IN_TICK;
+    }
 
-	public int getGameMin()
-	{
-		return getGameTime() % 60;
-	}
+    public int getGameHour() {
+        return getGameTime() / 60 % 24;
+    }
 
-	public int getGameTicks()
-	{
-		return (int)((System.currentTimeMillis() - _gameStartTime) / MILLIS_IN_TICK);
-	}
+    public int getGameMin() {
+        return getGameTime() % 60;
+    }
 
-	public GameTimeListenerList getListenerEngine()
-	{
-		return listenerEngine;
-	}
+    public int getGameTicks() {
+        return (int) ((System.currentTimeMillis() - _gameStartTime) / MILLIS_IN_TICK);
+    }
 
-	public <T extends GameListener> boolean addListener(T listener)
-	{
-		return listenerEngine.add(listener);
-	}
+    public GameTimeListenerList getListenerEngine() {
+        return listenerEngine;
+    }
 
-	public <T extends GameListener> boolean removeListener(T listener)
-	{
-		return listenerEngine.remove(listener);
-	}
+    public <T extends GameListener> boolean addListener(T listener) {
+        return listenerEngine.add(listener);
+    }
 
-	private class OnStartListenerImpl implements OnStartListener
-	{
-		@Override
-		public void onStart()
-		{
-			ThreadPoolManager.getInstance().execute(_dayChangeNotify);
-		}
-	}
+    public <T extends GameListener> boolean removeListener(T listener) {
+        return listenerEngine.remove(listener);
+    }
 
-	public class CheckSunState extends RunnableImpl
-	{
-		@Override
-		public void runImpl()
-		{
-			if (isNowNight())
-				getInstance().getListenerEngine().onNight();
-			else
-				getInstance().getListenerEngine().onDay();
+    private class OnStartListenerImpl implements OnStartListener {
+        @Override
+        public void onStart() {
+            ThreadPoolManager.getInstance().execute(_dayChangeNotify);
+        }
+    }
 
-			for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			{
-				player.checkDayNightMessages();
-				player.sendPacket(new ClientSetTime());
-			}
-		}
-	}
+    public class CheckSunState extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            if (isNowNight())
+                getInstance().getListenerEngine().onNight();
+            else
+                getInstance().getListenerEngine().onDay();
 
-	protected class GameTimeListenerList extends ListenerList<GameServer>
-	{
-		public void onDay()
-		{
-			for (Listener<GameServer> listener : getListeners())
-				if (OnDayNightChangeListener.class.isInstance(listener))
-					((OnDayNightChangeListener) listener).onDay();
-		}
+            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+                player.checkDayNightMessages();
+                player.sendPacket(new ClientSetTime());
+            }
+        }
+    }
 
-		public void onNight()
-		{
-			for (Listener<GameServer> listener : getListeners())
-				if (OnDayNightChangeListener.class.isInstance(listener))
-					((OnDayNightChangeListener) listener).onNight();
-		}
-	}
+    protected class GameTimeListenerList extends ListenerList<GameServer> {
+        public void onDay() {
+            for (Listener<GameServer> listener : getListeners())
+                if (OnDayNightChangeListener.class.isInstance(listener))
+                    ((OnDayNightChangeListener) listener).onDay();
+        }
+
+        public void onNight() {
+            for (Listener<GameServer> listener : getListeners())
+                if (OnDayNightChangeListener.class.isInstance(listener))
+                    ((OnDayNightChangeListener) listener).onNight();
+        }
+    }
 }

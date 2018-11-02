@@ -1,177 +1,152 @@
 package l2f.gameserver.network.telnet.commands;
 
-import java.lang.management.ManagementFactory;
-import java.util.Calendar;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import l2f.commons.lang.NumberUtils;
 import l2f.gameserver.GameServer;
 import l2f.gameserver.Shutdown;
 import l2f.gameserver.network.telnet.TelnetCommand;
 import l2f.gameserver.network.telnet.TelnetCommandHolder;
 
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.time.DurationFormatUtils;
+import java.lang.management.ManagementFactory;
+import java.util.Calendar;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-public class TelnetServer implements TelnetCommandHolder
-{
-	private Set<TelnetCommand> _commands = new LinkedHashSet<TelnetCommand>();
+public class TelnetServer implements TelnetCommandHolder {
+    private Set<TelnetCommand> _commands = new LinkedHashSet<TelnetCommand>();
 
-	public TelnetServer()
-	{
-		_commands.add(new TelnetCommand("version", "ver"){
-			@Override
-			public String getUsage()
-			{
-				return "version";
-			}
+    public TelnetServer() {
+        _commands.add(new TelnetCommand("version", "ver") {
+            @Override
+            public String getUsage() {
+                return "version";
+            }
 
-			@Override
-			public String handle(String[] args)
-			{
-				return "Rev." + GameServer.getInstance().getVersion().getRevisionNumber() + " Builded : " + GameServer.getInstance().getVersion().getBuildDate() + "\n";
-			}
-		});
+            @Override
+            public String handle(String[] args) {
+                return "Rev." + " Builded : " + "\n";
+            }
+        });
 
-		_commands.add(new TelnetCommand("uptime"){
-			@Override
-			public String getUsage()
-			{
-				return "uptime";
-			}
+        _commands.add(new TelnetCommand("uptime") {
+            @Override
+            public String getUsage() {
+                return "uptime";
+            }
 
-			@Override
-			public String handle(String[] args)
-			{
-				return DurationFormatUtils.formatDurationHMS(ManagementFactory.getRuntimeMXBean().getUptime()) + "\n";
-			}
-		});
+            @Override
+            public String handle(String[] args) {
+                return (ManagementFactory.getRuntimeMXBean().getUptime()) + "\n";
+            }
+        });
 
-		_commands.add(new TelnetCommand("restart"){
-			@Override
-			public String getUsage()
-			{
-				return "restart <seconds>|now>";
-			}
+        _commands.add(new TelnetCommand("restart") {
+            @Override
+            public String getUsage() {
+                return "restart <seconds>|now>";
+            }
 
-			@Override
-			public String handle(String[] args)
-			{
-				if (args.length == 0)
-					return null;
+            @Override
+            public String handle(String[] args) {
+                if (args.length == 0)
+                    return null;
 
-				StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
 
-				if (NumberUtils.isNumber(args[0]))
-				{
-					int val = NumberUtils.toInt(args[0]);
-					Shutdown.getInstance().schedule(val, Shutdown.RESTART);
-					sb.append("Server will restart in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
-					sb.append("Type \"abort\" to abort restart!\n");
-				}
-				else if (args[0].equalsIgnoreCase("now"))
-				{
-					sb.append("Server will restart now!\n");
-					Shutdown.getInstance().schedule(0, Shutdown.RESTART);
-				}
-				else
-				{
-					String[] hhmm = args[0].split(":");
+                if (NumberUtils.isNumber(args[0])) {
+                    int val = NumberUtils.toInt(args[0], 0);
+                    Shutdown.getInstance().schedule(val, Shutdown.RESTART);
+                    sb.append("Server will restart in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
+                    sb.append("Type \"abort\" to abort restart!\n");
+                } else if (args[0].equalsIgnoreCase("now")) {
+                    sb.append("Server will restart now!\n");
+                    Shutdown.getInstance().schedule(0, Shutdown.RESTART);
+                } else {
+                    String[] hhmm = args[0].split(":");
 
-					Calendar date = Calendar.getInstance();
-					Calendar now = Calendar.getInstance();
+                    Calendar date = Calendar.getInstance();
+                    Calendar now = Calendar.getInstance();
 
-					date.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hhmm[0]));
-					date.set(Calendar.MINUTE, hhmm.length > 1 ? Integer.parseInt(hhmm[1]) : 0);
-					date.set(Calendar.SECOND, 0);
-					date.set(Calendar.MILLISECOND, 0);
-					if (date.before(now))
-						date.roll(Calendar.DAY_OF_MONTH, true);
+                    date.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hhmm[0]));
+                    date.set(Calendar.MINUTE, hhmm.length > 1 ? Integer.parseInt(hhmm[1]) : 0);
+                    date.set(Calendar.SECOND, 0);
+                    date.set(Calendar.MILLISECOND, 0);
+                    if (date.before(now))
+                        date.roll(Calendar.DAY_OF_MONTH, true);
 
-					int seconds = (int) (date.getTimeInMillis() / 1000L - now.getTimeInMillis() / 1000L);
-						
-					Shutdown.getInstance().schedule(seconds, Shutdown.RESTART);
-					sb.append("Server will restart in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
-					sb.append("Type \"abort\" to abort restart!\n");
-				}
+                    int seconds = (int) (date.getTimeInMillis() / 1000L - now.getTimeInMillis() / 1000L);
 
-				return sb.toString();
-			}
-		});
+                    Shutdown.getInstance().schedule(seconds, Shutdown.RESTART);
+                    sb.append("Server will restart in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
+                    sb.append("Type \"abort\" to abort restart!\n");
+                }
 
-		_commands.add(new TelnetCommand("shutdown"){
-			@Override
-			public String getUsage()
-			{
-				return "shutdown <seconds>|now|<hh:mm>";
-			}
+                return sb.toString();
+            }
+        });
 
-			@Override
-			public String handle(String[] args)
-			{
-				if (args.length == 0)
-					return null;
+        _commands.add(new TelnetCommand("shutdown") {
+            @Override
+            public String getUsage() {
+                return "shutdown <seconds>|now|<hh:mm>";
+            }
 
-				StringBuilder sb = new StringBuilder();
+            @Override
+            public String handle(String[] args) {
+                if (args.length == 0)
+                    return null;
 
-				if (NumberUtils.isNumber(args[0]))
-				{
-					int val = NumberUtils.toInt(args[0]);
-					Shutdown.getInstance().schedule(val, Shutdown.SHUTDOWN);
-					sb.append("Server will shutdown in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
-					sb.append("Type \"abort\" to abort shutdown!\n");
-				}
-				else if (args[0].equalsIgnoreCase("now"))
-				{
-					sb.append("Server will shutdown now!\n");
-					Shutdown.getInstance().schedule(0, Shutdown.SHUTDOWN);
-				}
-				else
-				{
-					String[] hhmm = args[0].split(":");
+                StringBuilder sb = new StringBuilder();
 
-					Calendar date = Calendar.getInstance();
-					Calendar now = Calendar.getInstance();
+                if (NumberUtils.isNumber(args[0])) {
+                    int val = NumberUtils.toInt(args[0], 0);
+                    Shutdown.getInstance().schedule(val, Shutdown.SHUTDOWN);
+                    sb.append("Server will shutdown in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
+                    sb.append("Type \"abort\" to abort shutdown!\n");
+                } else if (args[0].equalsIgnoreCase("now")) {
+                    sb.append("Server will shutdown now!\n");
+                    Shutdown.getInstance().schedule(0, Shutdown.SHUTDOWN);
+                } else {
+                    String[] hhmm = args[0].split(":");
 
-					date.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hhmm[0]));
-					date.set(Calendar.MINUTE, hhmm.length > 1 ? Integer.parseInt(hhmm[1]) : 0);
-					date.set(Calendar.SECOND, 0);
-					date.set(Calendar.MILLISECOND, 0);
-					if (date.before(now))
-						date.roll(Calendar.DAY_OF_MONTH, true);
+                    Calendar date = Calendar.getInstance();
+                    Calendar now = Calendar.getInstance();
 
-					int seconds = (int) (date.getTimeInMillis() / 1000L - now.getTimeInMillis() / 1000L);
-						
-					Shutdown.getInstance().schedule(seconds, Shutdown.SHUTDOWN);
-					sb.append("Server will shutdown in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
-					sb.append("Type \"abort\" to abort shutdown!\n");
-				}
+                    date.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hhmm[0]));
+                    date.set(Calendar.MINUTE, hhmm.length > 1 ? Integer.parseInt(hhmm[1]) : 0);
+                    date.set(Calendar.SECOND, 0);
+                    date.set(Calendar.MILLISECOND, 0);
+                    if (date.before(now))
+                        date.roll(Calendar.DAY_OF_MONTH, true);
 
-				return sb.toString();
-			}
-		});
+                    int seconds = (int) (date.getTimeInMillis() / 1000L - now.getTimeInMillis() / 1000L);
 
-		_commands.add(new TelnetCommand("abort"){
+                    Shutdown.getInstance().schedule(seconds, Shutdown.SHUTDOWN);
+                    sb.append("Server will shutdown in ").append(Shutdown.getInstance().getSeconds()).append(" seconds!\n");
+                    sb.append("Type \"abort\" to abort shutdown!\n");
+                }
 
-			@Override
-			public String getUsage()
-			{
-				return "abort";
-			}
+                return sb.toString();
+            }
+        });
 
-			@Override
-			public String handle(String[] args)
-			{
-				Shutdown.getInstance().cancel();
-				return "Aborted.\n";
-			}
+        _commands.add(new TelnetCommand("abort") {
 
-		});
-	}
+            @Override
+            public String getUsage() {
+                return "abort";
+            }
 
-	@Override
-	public Set<TelnetCommand> getCommands()
-	{
-		return _commands;
-	}
+            @Override
+            public String handle(String[] args) {
+                Shutdown.getInstance().cancel();
+                return "Aborted.\n";
+            }
+
+        });
+    }
+
+    @Override
+    public Set<TelnetCommand> getCommands() {
+        return _commands;
+    }
 }

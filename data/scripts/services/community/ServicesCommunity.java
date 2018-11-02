@@ -17,8 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class ServicesCommunity extends Functions implements ScriptFile, ICommunityBoardHandler
-{
+public class ServicesCommunity extends Functions implements ScriptFile, ICommunityBoardHandler {
 
     static final Logger _log = LoggerFactory.getLogger(ServicesCommunity.class);
     String NameItemPice = ItemFunctions.createItem(ServicesConfig.get("LevelUpItemPice", 4357)).getName();
@@ -50,18 +49,16 @@ public class ServicesCommunity extends Functions implements ScriptFile, ICommuni
     }
 
     @Override
-    public void onBypassCommand(Player player, String bypass) 
-    {
-		
-    	if (!checkCondition(player))
-			return;
-    	
-        if (!ServicesConfig.get("LevelUpEnable", false)) 
-        {
+    public void onBypassCommand(Player player, String bypass) {
+
+        if (!checkCondition(player))
+            return;
+
+        if (!ServicesConfig.get("LevelUpEnable", false)) {
             show("Service is disabled.", player);
             return;
         }
-        
+
 
         if (bypass.startsWith("_bbsservices:level")) {
             String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/pages/content.htm", player);
@@ -69,8 +66,8 @@ public class ServicesCommunity extends Functions implements ScriptFile, ICommuni
             TextBuilder _content = new TextBuilder();
             _content.append("<table width=400><tr><td align=center> Improve Services. </td></tr></table>");
             _content.append("<table border=0 width=400><tr>");
-            int LvList[] = ServicesConfig.get("LevelUpList", new int[] {});
-            int LvPiceList[] = ServicesConfig.get("LevelUpPiceList", new int[] {});
+            int LvList[] = ServicesConfig.get("LevelUpList", new int[]{});
+            int LvPiceList[] = ServicesConfig.get("LevelUpPiceList", new int[]{});
             for (int i = 0; i < LvList.length; i++) {
                 if (LvList[i] > player.getLevel()) {
                     if (i % 4 == 0)
@@ -93,18 +90,15 @@ public class ServicesCommunity extends Functions implements ScriptFile, ICommuni
     }
 
 
-	public boolean checkCondition(Player player)
-	{
-		if (/*player.isInJail() ||*/player.getReflectionId() != 0 || player.isDead() || player.isAlikeDead() || player.isCastingNow() || player.isInCombat() || player.isAttackingNow() || player.isInOlympiadMode() || player.isFlying())
-		{
-			player.sendMessage("Raising is not possible");
-			return false;
-		}
-		return false;
-	}
-	
+    public boolean checkCondition(Player player) {
+        if (/*player.isInJail() ||*/player.getReflectionId() != 0 || player.isDead() || player.isAlikeDead() || player.isCastingNow() || player.isInCombat() || player.isAttackingNow() || player.isInOlympiadMode() || player.isFlying()) {
+            player.sendMessage("Raising is not possible");
+            return false;
+        }
+        return false;
+    }
 
-	
+
     @Override
     public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
     }

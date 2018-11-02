@@ -1,8 +1,5 @@
 package l2f.gameserver.model.instances;
 
-import java.util.Collections;
-import java.util.List;
-
 import l2f.commons.lang.reference.HardReference;
 import l2f.gameserver.ai.CtrlIntention;
 import l2f.gameserver.model.Creature;
@@ -10,109 +7,95 @@ import l2f.gameserver.model.GameObject;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.World;
 import l2f.gameserver.model.reference.L2Reference;
-import l2f.gameserver.network.serverpackets.L2GameServerPacket;
-import l2f.gameserver.network.serverpackets.MyTargetSelected;
-import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2f.gameserver.network.serverpackets.ShowTownMap;
-import l2f.gameserver.network.serverpackets.StaticObject;
+import l2f.gameserver.network.serverpackets.*;
 import l2f.gameserver.scripts.Events;
 import l2f.gameserver.templates.StaticObjectTemplate;
 import l2f.gameserver.utils.Location;
 
-public class StaticObjectInstance extends GameObject
-{
-	private final HardReference<StaticObjectInstance> reference;
-	private final StaticObjectTemplate _template;
-	private int _meshIndex;
+import java.util.Collections;
+import java.util.List;
 
-	public StaticObjectInstance(int objectId, StaticObjectTemplate template)
-	{
-		super(objectId);
+public class StaticObjectInstance extends GameObject {
+    private final HardReference<StaticObjectInstance> reference;
+    private final StaticObjectTemplate _template;
+    private int _meshIndex;
 
-		_template = template;
-		reference = new L2Reference<StaticObjectInstance>(this);
-	}
+    public StaticObjectInstance(int objectId, StaticObjectTemplate template) {
+        super(objectId);
 
-	@Override
-	public HardReference<StaticObjectInstance> getRef()
-	{
-		return reference;
-	}
+        _template = template;
+        reference = new L2Reference<StaticObjectInstance>(this);
+    }
 
-	public int getUId()
-	{
-		return _template.getUId();
-	}
+    @Override
+    public HardReference<StaticObjectInstance> getRef() {
+        return reference;
+    }
 
-	public int getType()
-	{
-		return _template.getType();
-	}
+    public int getUId() {
+        return _template.getUId();
+    }
 
-	@Override
-	public void onAction(Player player, boolean shift)
-	{
-		if (Events.onAction(player, this, shift))
-			return;
+    public int getType() {
+        return _template.getType();
+    }
 
-		if (player.getTarget() != this)
-		{
-			player.setTarget(this);
-			player.sendPacket(new MyTargetSelected(getObjectId(), 0));
-			return;
-		}
+    @Override
+    public void onAction(Player player, boolean shift) {
+        if (Events.onAction(player, this, shift))
+            return;
 
-		MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-		player.sendPacket(my);
+        if (player.getTarget() != this) {
+            player.setTarget(this);
+            player.sendPacket(new MyTargetSelected(getObjectId(), 0));
+            return;
+        }
 
-		if (!isInRange(player, 150))
-		{
-			if (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT)
-				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
-			return;
-		}
+        MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
+        player.sendPacket(my);
 
-		if (_template.getType() == 0) // Arena Board
-			player.sendPacket(new NpcHtmlMessage(player, getUId(), "newspaper/arena.htm", 0));
-		else if (_template.getType() == 2) // Village map
-		{
-			player.sendPacket(new ShowTownMap(_template.getFilePath(), _template.getMapX(), _template.getMapY()));
-			player.sendActionFailed();
-		}
-	}
+        if (!isInRange(player, 150)) {
+            if (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT)
+                player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
+            return;
+        }
 
-	@Override
-	public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper)
-	{
-		return Collections.<L2GameServerPacket>singletonList(new StaticObject(this));
-	}
+        if (_template.getType() == 0) // Arena Board
+            player.sendPacket(new NpcHtmlMessage(player, getUId(), "newspaper/arena.htm", 0));
+        else if (_template.getType() == 2) // Village map
+        {
+            player.sendPacket(new ShowTownMap(_template.getFilePath(), _template.getMapX(), _template.getMapY()));
+            player.sendActionFailed();
+        }
+    }
 
-	@Override
-	public boolean isAttackable(Creature attacker)
-	{
-		return false;
-	}
+    @Override
+    public List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
+        return Collections.<L2GameServerPacket>singletonList(new StaticObject(this));
+    }
 
-	public void broadcastInfo(boolean force)
-	{
-		StaticObject p = new StaticObject(this);
-		for (Player player : World.getAroundPlayers(this))
-			player.sendPacket(p);
-	}
+    @Override
+    public boolean isAttackable(Creature attacker) {
+        return false;
+    }
 
-	@Override
-	public int getGeoZ(Location loc)   //FIXME [VISTALL] нужно ли?
-	{
-		return loc.z;
-	}
+    public void broadcastInfo(boolean force) {
+        StaticObject p = new StaticObject(this);
+        for (Player player : World.getAroundPlayers(this))
+            player.sendPacket(p);
+    }
 
-	public int getMeshIndex()
-	{
-		return _meshIndex;
-	}
+    @Override
+    public int getGeoZ(Location loc)   //FIXME [VISTALL] нужно ли?
+    {
+        return loc.z;
+    }
 
-	public void setMeshIndex(int meshIndex)
-	{
-		_meshIndex = meshIndex;
-	}
+    public int getMeshIndex() {
+        return _meshIndex;
+    }
+
+    public void setMeshIndex(int meshIndex) {
+        _meshIndex = meshIndex;
+    }
 }

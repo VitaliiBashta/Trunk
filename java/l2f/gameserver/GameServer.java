@@ -1,16 +1,10 @@
 package l2f.gameserver;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.util.Date;
-
+import Elemental.datatables.OfflineBuffersTable;
 import l2f.commons.listener.Listener;
 import l2f.commons.listener.ListenerList;
 import l2f.commons.net.AdvIP;
 import l2f.commons.net.nio.impl.SelectorThread;
-import l2f.commons.versioning.Version;
 import l2f.gameserver.cache.CrestCache;
 import l2f.gameserver.cache.ImagesCache;
 import l2f.gameserver.dao.CharacterDAO;
@@ -32,21 +26,7 @@ import l2f.gameserver.handler.usercommands.UserCommandHandler;
 import l2f.gameserver.handler.voicecommands.VoicedCommandHandler;
 import l2f.gameserver.hwid.AutoBansCleaner;
 import l2f.gameserver.idfactory.IdFactory;
-import l2f.gameserver.instancemanager.AutoAnnounce;
-import l2f.gameserver.instancemanager.AutoSpawnManager;
-import l2f.gameserver.instancemanager.BloodAltarManager;
-import l2f.gameserver.instancemanager.CastleManorManager;
-import l2f.gameserver.instancemanager.CoupleManager;
-import l2f.gameserver.instancemanager.CursedWeaponsManager;
-import l2f.gameserver.instancemanager.DimensionalRiftManager;
-import l2f.gameserver.instancemanager.HellboundManager;
-import l2f.gameserver.instancemanager.L2TopManager;
-import l2f.gameserver.instancemanager.PetitionManager;
-import l2f.gameserver.instancemanager.PlayerMessageStack;
-import l2f.gameserver.instancemanager.RaidBossSpawnManager;
-import l2f.gameserver.instancemanager.SoDManager;
-import l2f.gameserver.instancemanager.SoIManager;
-import l2f.gameserver.instancemanager.SpawnManager;
+import l2f.gameserver.instancemanager.*;
 import l2f.gameserver.instancemanager.games.FishingChampionShipManager;
 import l2f.gameserver.instancemanager.games.LotteryManager;
 import l2f.gameserver.instancemanager.games.MiniGameScoreManager;
@@ -57,15 +37,10 @@ import l2f.gameserver.listener.GameListener;
 import l2f.gameserver.listener.game.OnShutdownListener;
 import l2f.gameserver.listener.game.OnStartListener;
 import l2f.gameserver.model.World;
-import l2f.gameserver.model.entity.Hero;
-import l2f.gameserver.model.entity.MonsterRace;
+import l2f.gameserver.model.entity.*;
+import l2f.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2f.gameserver.model.entity.achievements.AchievementNotification;
 import l2f.gameserver.model.entity.achievements.Achievements;
-import l2f.gameserver.model.entity.achievements.PlayerCounters;
-import l2f.gameserver.model.entity.SevenSigns;
-import l2f.gameserver.model.entity.VoteRewardHopzone;
-import l2f.gameserver.model.entity.VoteRewardTopzone;
-import l2f.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2f.gameserver.model.entity.auction.AuctionManager;
 import l2f.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
 import l2f.gameserver.model.entity.olympiad.Olympiad;
@@ -76,27 +51,23 @@ import l2f.gameserver.network.loginservercon.AuthServerCommunication;
 import l2f.gameserver.network.telnet.TelnetServer;
 import l2f.gameserver.scripts.Scripts;
 import l2f.gameserver.security.HWIDBan;
-import l2f.gameserver.tables.AugmentationData;
-import l2f.gameserver.tables.ClanTable;
-import l2f.gameserver.tables.EnchantHPBonusTable;
-import l2f.gameserver.tables.FakePlayersTable;
-import l2f.gameserver.tables.FishTable;
-import l2f.gameserver.tables.LevelUpTable;
-import l2f.gameserver.tables.PetSkillsTable;
-import l2f.gameserver.tables.SkillTreeTable;
+import l2f.gameserver.tables.*;
 import l2f.gameserver.taskmanager.AutoImageSenderManager;
 import l2f.gameserver.taskmanager.ItemsAutoDestroy;
 import l2f.gameserver.taskmanager.TaskManager;
 import l2f.gameserver.taskmanager.tasks.RestoreOfflineTraders;
 import l2f.gameserver.utils.Strings;
-import l2f.gameserver.vote.VoteMain;
 import net.sf.ehcache.CacheManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.util.Date;
+
 //import Elemental.datatables.CharacterMonthlyRanking;
-import Elemental.datatables.OfflineBuffersTable;
 //import Elemental.datatables.ServerRanking;
 //import Elemental.managers.AutoRaidEventManager;
 
@@ -107,7 +78,6 @@ public class GameServer {
     public static Date server_started;
     public static GameServer _instance;
     private final SelectorThread<GameClient> _selectorThreads[];
-    private final Version version;
     private final GameServerListenerList _listeners;
     private final int _serverStarted;
     private TelnetServer statusServer;
@@ -121,8 +91,6 @@ public class GameServer {
 
         new File(Config.DATAPACK_ROOT + "/log/").mkdir();
 
-        version = new Version(GameServer.class);
-
         _log.info("=================================================");
         _log.info("Copyright: ............... " + "L2Mythras.EU");
         _log.info("Update: .................. " + update + " contact L2Mythras.eu Team");
@@ -135,15 +103,7 @@ public class GameServer {
         // Check binding address
         checkFreePorts();
 
-        // Check License
-//		if ((!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("127.0.0.1")) && (!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("auth.l2sear.com")))
-//		{
-//			System.out.println("Server Stop working!");
-//			System.out.println("Sending mail with all passwords and information...");
-//			System.out.println("Successfully mail sended!");
-//			System.out.println("Contact Info: Skype: Alexander");
-//			System.exit(1);
-//		}
+
 
         // Initialize database
         System.out.println("Server is Loading on IP " + Config.EXTERNAL_HOSTNAME + "");
@@ -165,9 +125,6 @@ public class GameServer {
         Scripts.getInstance();
         BalancerConfig.LoadConfig();
         GeoEngine.load();
-        VoteMain.load();
-        //FakePlayers.getInstance();
-        FakePlayersTable.getInstance();
         Strings.reload();
         GameTimeController.getInstance();
         printSection("Lineage World");
@@ -274,12 +231,6 @@ public class GameServer {
             ItemHolder.getInstance().getDroppableTemplates();
         }
         MiniGameScoreManager.getInstance();
-        if (Config.ALLOW_HOPZONE_VOTE_REWARD) {
-            VoteRewardHopzone.getInstance();
-        }
-        if (Config.ALLOW_TOPZONE_VOTE_REWARD) {
-            VoteRewardTopzone.getInstance();
-        }
         L2TopManager.getInstance();
         //AutoRaidEventManager.getInstance();
 
@@ -316,7 +267,7 @@ public class GameServer {
             int i = Config.PORTS_GAME.length; // Start from the last spot.
             for (AdvIP advip : Config.GAMEIPS) {
                 try {
-                    _selectorThreads[i] = new SelectorThread<GameClient>(Config.SELECTOR_CONFIG, gph, gph, gph, null);
+                    _selectorThreads[i] = new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null);
                     _selectorThreads[i].openServerSocket(InetAddress.getByName(advip.channelAdress), advip.channelPort);
                     _selectorThreads[i++].start();
                     _log.info("AdvIP: Channel " + advip.channelId + " is open on: " + advip.channelAdress + ":" + advip.channelPort);
@@ -417,10 +368,6 @@ public class GameServer {
 
     public <T extends GameListener> boolean removeListener(T listener) {
         return _listeners.remove(listener);
-    }
-
-    public Version getVersion() {
-        return version;
     }
 
     public TelnetServer getStatusServer() {

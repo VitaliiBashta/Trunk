@@ -1,65 +1,63 @@
 package l2f.gameserver.templates;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.gameserver.model.base.ClassId;
 import l2f.gameserver.model.base.Race;
 import l2f.gameserver.templates.item.CreateItem;
 import l2f.gameserver.utils.Location;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class PlayerTemplate extends CharTemplate
-{
-	/** The Class<?> object of the L2Player */
-	public final ClassId classId;
 
-	public final Race race;
-	public final String className;
+public class PlayerTemplate extends CharTemplate {
+    /**
+     * The Class<?> object of the L2Player
+     */
+    public final ClassId classId;
 
-	public final Location spawnLoc = new Location();
+    public final Race race;
+    public final String className;
 
-	public final boolean isMale;
+    public final Location spawnLoc = new Location();
 
-	public final int classBaseLevel;
-	public final double lvlHpAdd;
-	public final double lvlHpMod;
-	public final double lvlCpAdd;
-	public final double lvlCpMod;
-	public final double lvlMpAdd;
-	public final double lvlMpMod;
+    public final boolean isMale;
 
-	private List<CreateItem> _items;
+    public final int classBaseLevel;
+    public final double lvlHpAdd;
+    public final double lvlHpMod;
+    public final double lvlCpAdd;
+    public final double lvlCpMod;
+    public final double lvlMpAdd;
+    public final double lvlMpMod;
 
-	public PlayerTemplate(int id, StatsSet set, boolean isMale, List<CreateItem> items)
-	{
-		super(set);
-		classId = ClassId.VALUES[id];
-		race = Race.values()[set.getInteger("raceId")];
-		className = set.getString("name");
+    private List<CreateItem> _items;
 
-		spawnLoc.set(new Location(set.getInteger("spawnX"), set.getInteger("spawnY"), set.getInteger("spawnZ")));
+    public PlayerTemplate(int id, StatsSet set, boolean isMale, List<CreateItem> items) {
+        super(set);
+        classId = ClassId.VALUES[id];
+        race = Race.values()[set.getInteger("raceId")];
+        className = set.getString("name");
 
-		this.isMale = isMale;
+        spawnLoc.set(new Location(set.getInteger("spawnX"), set.getInteger("spawnY"), set.getInteger("spawnZ")));
 
-		classBaseLevel = set.getInteger("classBaseLevel");
-		lvlHpAdd = set.getDouble("lvlHpAdd");
-		lvlHpMod = set.getDouble("lvlHpMod");
-		lvlCpAdd = set.getDouble("lvlCpAdd");
-		lvlCpMod = set.getDouble("lvlCpMod");
-		lvlMpAdd = set.getDouble("lvlMpAdd");
-		lvlMpMod = set.getDouble("lvlMpMod");
+        this.isMale = isMale;
 
-		_items = new ArrayList<CreateItem>();
-		_items.addAll(items);
-	}
+        classBaseLevel = set.getInteger("classBaseLevel");
+        lvlHpAdd = set.getDouble("lvlHpAdd");
+        lvlHpMod = set.getDouble("lvlHpMod");
+        lvlCpAdd = set.getDouble("lvlCpAdd");
+        lvlCpMod = set.getDouble("lvlCpMod");
+        lvlMpAdd = set.getDouble("lvlMpAdd");
+        lvlMpMod = set.getDouble("lvlMpMod");
 
-	/**
-	 *
-	 * @return itemIds of all the starter equipment
-	 */
-	public List<CreateItem> getItems()
-	{
-		return _items;
-	}
+        _items = new ArrayList<CreateItem>();
+        _items.addAll(items);
+    }
+
+    /**
+     * @return itemIds of all the starter equipment
+     */
+    public List<CreateItem> getItems() {
+        return _items;
+    }
 }

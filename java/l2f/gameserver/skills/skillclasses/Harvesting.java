@@ -1,7 +1,5 @@
 package l2f.gameserver.skills.skillclasses;
 
-import java.util.List;
-
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
 import l2f.gameserver.model.Creature;
@@ -16,87 +14,80 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.utils.ItemFunctions;
 
-public class Harvesting extends Skill
-{
-	public Harvesting(StatsSet set)
-	{
-		super(set);
-	}
+import java.util.List;
 
-	@Override
-	public void useSkill(Creature activeChar, List<Creature> targets)
-	{
-		if (!activeChar.isPlayer())
-			return;
+public class Harvesting extends Skill {
+    public Harvesting(StatsSet set) {
+        super(set);
+    }
 
-		Player player = (Player) activeChar;
+    @Override
+    public void useSkill(Creature activeChar, List<Creature> targets) {
+        if (!activeChar.isPlayer())
+            return;
 
-		for (Creature target : targets)
-			if (target != null)
-			{
-				if (!target.isMonster())
-					continue;
+        Player player = (Player) activeChar;
 
-				MonsterInstance monster = (MonsterInstance) target;
+        for (Creature target : targets)
+            if (target != null) {
+                if (!target.isMonster())
+                    continue;
 
-				// Не посеяно
-				if (!monster.isSeeded())
-				{
-					activeChar.sendPacket(SystemMsg.THE_HARVEST_FAILED_BECAUSE_THE_SEED_WAS_NOT_SOWN);
-					continue;
-				}
+                MonsterInstance monster = (MonsterInstance) target;
 
-				if (!monster.isSeeded(player))
-				{
-					activeChar.sendPacket(SystemMsg.YOU_ARE_NOT_AUTHORIZED_TO_HARVEST);
-					continue;
-				}
+                // Не посеяно
+                if (!monster.isSeeded()) {
+                    activeChar.sendPacket(SystemMsg.THE_HARVEST_FAILED_BECAUSE_THE_SEED_WAS_NOT_SOWN);
+                    continue;
+                }
 
-				double SuccessRate = Config.MANOR_HARVESTING_BASIC_SUCCESS;
-				int diffPlayerTarget = Math.abs(activeChar.getLevel() - monster.getLevel());
+                if (!monster.isSeeded(player)) {
+                    activeChar.sendPacket(SystemMsg.YOU_ARE_NOT_AUTHORIZED_TO_HARVEST);
+                    continue;
+                }
 
-				// Штраф, на разницу уровней между мобом и игроком
-				// 5% на каждый уровень при разнице >5 - по умолчанию
-				if (diffPlayerTarget > Config.MANOR_DIFF_PLAYER_TARGET)
-					SuccessRate -= (diffPlayerTarget - Config.MANOR_DIFF_PLAYER_TARGET) * Config.MANOR_DIFF_PLAYER_TARGET_PENALTY;
+                double SuccessRate = Config.MANOR_HARVESTING_BASIC_SUCCESS;
+                int diffPlayerTarget = Math.abs(activeChar.getLevel() - monster.getLevel());
 
-				// Минимальный шанс успеха всегда 1%
-				if (SuccessRate < 1)
-					SuccessRate = 1;
+                // Штраф, на разницу уровней между мобом и игроком
+                // 5% на каждый уровень при разнице >5 - по умолчанию
+                if (diffPlayerTarget > Config.MANOR_DIFF_PLAYER_TARGET)
+                    SuccessRate -= (diffPlayerTarget - Config.MANOR_DIFF_PLAYER_TARGET) * Config.MANOR_DIFF_PLAYER_TARGET_PENALTY;
 
-				if (player.isGM())
-					player.sendMessage(new CustomMessage("l2f.gameserver.skills.skillclasses.Harvesting.Chance", player).addNumber((long) SuccessRate));
+                // Минимальный шанс успеха всегда 1%
+                if (SuccessRate < 1)
+                    SuccessRate = 1;
 
-				if (!Rnd.chance(SuccessRate))
-				{
-					activeChar.sendPacket(SystemMsg.THE_HARVEST_HAS_FAILED);
-					monster.clearHarvest();
-					continue;
-				}
+                if (player.isGM())
+                    player.sendMessage(new CustomMessage("l2f.gameserver.skills.skillclasses.Harvesting.Chance", player).addNumber((long) SuccessRate));
 
-				RewardItem item = monster.takeHarvest();
-				if (item == null)
-					continue;
+                if (!Rnd.chance(SuccessRate)) {
+                    activeChar.sendPacket(SystemMsg.THE_HARVEST_HAS_FAILED);
+                    monster.clearHarvest();
+                    continue;
+                }
 
-				ItemInstance harvest;
-				if (!player.getInventory().validateCapacity(item.itemId, item.count) || !player.getInventory().validateWeight(item.itemId, item.count))
-				{
-					harvest = ItemFunctions.createItem(item.itemId);
-					harvest.setCount(item.count);
-					harvest.dropToTheGround(player, monster);
-					continue;
-				}
+                RewardItem item = monster.takeHarvest();
+                if (item == null)
+                    continue;
 
-				ItemInstance harvestedItem = player.getInventory().addItem(item.itemId, item.count, "Harvesting");
-				
-				player.getCounters().manorSeedsSow++;
-				
-				player.sendPacket(new SystemMessage2(SystemMsg.C1_HARVESTED_S3_S2S).addName(player).addInteger(item.count).addItemName(item.itemId));
-				if (player.isInParty())
-				{
-					SystemMessage2 smsg = new SystemMessage2(SystemMsg.C1_HARVESTED_S3_S2S).addString(player.getName()).addInteger(item.count).addItemName(item.itemId);
-					player.getParty().sendPacket(player, smsg);
-				}
-			}
-	}
+                ItemInstance harvest;
+                if (!player.getInventory().validateCapacity(item.itemId, item.count) || !player.getInventory().validateWeight(item.itemId, item.count)) {
+                    harvest = ItemFunctions.createItem(item.itemId);
+                    harvest.setCount(item.count);
+                    harvest.dropToTheGround(player, monster);
+                    continue;
+                }
+
+                ItemInstance harvestedItem = player.getInventory().addItem(item.itemId, item.count, "Harvesting");
+
+                player.getCounters().manorSeedsSow++;
+
+                player.sendPacket(new SystemMessage2(SystemMsg.C1_HARVESTED_S3_S2S).addName(player).addInteger(item.count).addItemName(item.itemId));
+                if (player.isInParty()) {
+                    SystemMessage2 smsg = new SystemMessage2(SystemMsg.C1_HARVESTED_S3_S2S).addString(player.getName()).addInteger(item.count).addItemName(item.itemId);
+                    player.getParty().sendPacket(player, smsg);
+                }
+            }
+    }
 }

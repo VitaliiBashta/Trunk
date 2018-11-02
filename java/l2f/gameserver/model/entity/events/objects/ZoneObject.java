@@ -1,55 +1,47 @@
 package l2f.gameserver.model.entity.events.objects;
 
-import java.util.List;
-
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Zone;
 import l2f.gameserver.model.entity.Reflection;
 import l2f.gameserver.model.entity.events.GlobalEvent;
 
-public class ZoneObject implements InitableObject
-{
-	private String _name;
-	private Zone _zone;
+import java.util.List;
 
-	public ZoneObject(String name)
-	{
-		_name = name;
-	}
+public class ZoneObject implements InitableObject {
+    private String _name;
+    private Zone _zone;
 
-	@Override
-	public void initObject(GlobalEvent e)
-	{
-		Reflection r = e.getReflection();
+    public ZoneObject(String name) {
+        _name = name;
+    }
 
-		_zone = r.getZone(_name);
-	}
+    @Override
+    public void initObject(GlobalEvent e) {
+        Reflection r = e.getReflection();
 
-	public void setActive(boolean a)
-	{
-		_zone.setActive(a);
-	}
+        _zone = r.getZone(_name);
+    }
 
-	public void setActive(boolean a, GlobalEvent event)
-	{
-		setActive(a);
+    public void setActive(boolean a) {
+        _zone.setActive(a);
+    }
 
-		//
-	}
+    public void setActive(boolean a, GlobalEvent event) {
+        setActive(a);
 
-	public Zone getZone()
-	{
-		return _zone;
-	}
+        //
+    }
 
-	public List<Player> getInsidePlayers()
-	{
-		return _zone.getInsidePlayers();
-	}
+    public Zone getZone() {
+        return _zone;
+    }
 
-	public boolean checkIfInZone(Creature c)
-	{
-		return _zone.checkIfInZone(c);
-	}
+    public List<Player> getInsidePlayers() {
+        return _zone.getInsidePlayers();
+    }
+
+    public boolean checkIfInZone(Creature c) {
+        return _zone.checkIfInZone(c);
+    }
 }

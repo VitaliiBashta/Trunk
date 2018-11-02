@@ -7,42 +7,36 @@ import l2f.gameserver.model.instances.NpcInstance;
 /**
  * @author L2Mythras
  */
-public class DragonRaid extends Fighter
-{
-	
-	private long _lastHit;
-	
-	public DragonRaid(NpcInstance actor)
-	{
-		super(actor);
-	}
+public class DragonRaid extends Fighter {
 
-	@Override
-	protected boolean thinkActive()
-	{
-		NpcInstance actor = getActor();
-		if(_lastHit + 1500000 < System.currentTimeMillis())
-		{
-			actor.deleteMe();
-			return false;
-		}
-		return super.thinkActive();
-	}
+    private long _lastHit;
 
-	@Override
-	protected void onEvtSpawn()
-	{
-		_lastHit = System.currentTimeMillis();
-		super.onEvtSpawn();
-	}
-	
-	@Override
-	protected void onEvtAttacked(Creature attacker, int damage)
-	{
-		_lastHit = System.currentTimeMillis();
+    public DragonRaid(NpcInstance actor) {
+        super(actor);
+    }
 
-		super.onEvtAttacked(attacker, damage);
-	}
-	
-	
+    @Override
+    protected boolean thinkActive() {
+        NpcInstance actor = getActor();
+        if (_lastHit + 1500000 < System.currentTimeMillis()) {
+            actor.deleteMe();
+            return false;
+        }
+        return super.thinkActive();
+    }
+
+    @Override
+    protected void onEvtSpawn() {
+        _lastHit = System.currentTimeMillis();
+        super.onEvtSpawn();
+    }
+
+    @Override
+    protected void onEvtAttacked(Creature attacker, int damage) {
+        _lastHit = System.currentTimeMillis();
+
+        super.onEvtAttacked(attacker, damage);
+    }
+
+
 }

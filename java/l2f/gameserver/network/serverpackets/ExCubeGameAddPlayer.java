@@ -9,29 +9,26 @@ import l2f.gameserver.model.Player;
  * d: player object id
  * S: player name
  */
-public class ExCubeGameAddPlayer extends L2GameServerPacket
-{
-	boolean _isRedTeam;
-	private int _objectId;
-	private String _name;
+public class ExCubeGameAddPlayer extends L2GameServerPacket {
+    boolean _isRedTeam;
+    private int _objectId;
+    private String _name;
 
-	public ExCubeGameAddPlayer(Player player, boolean isRedTeam)
-	{
-		_objectId = player.getObjectId();
-		_name = player.getName();
-		_isRedTeam = isRedTeam;
-	}
+    public ExCubeGameAddPlayer(Player player, boolean isRedTeam) {
+        _objectId = player.getObjectId();
+        _name = player.getName();
+        _isRedTeam = isRedTeam;
+    }
 
-	@Override
-	protected void writeImpl()
-	{
-		writeEx(0x97);
-		writeD(0x01);
+    @Override
+    protected void writeImpl() {
+        writeEx(0x97);
+        writeD(0x01);
 
-		writeD(0xffffffff);
+        writeD(0xffffffff);
 
-		writeD(_isRedTeam ? 0x01 : 0x00);
-		writeD(_objectId);
-		writeS(_name);
-	}
+        writeD(_isRedTeam ? 0x01 : 0x00);
+        writeD(_objectId);
+        writeS(_name);
+    }
 }

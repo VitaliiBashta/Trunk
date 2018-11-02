@@ -10,30 +10,25 @@ import l2f.gameserver.scripts.ScriptFile;
  * @author VISTALL
  * @date 8:17/10.06.2011
  */
-public class _731_ProtectTheMilitaryAssociationLeader extends Quest implements ScriptFile
-{
-	public _731_ProtectTheMilitaryAssociationLeader()
-	{
-		super(PARTY_NONE);
-		DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
-		runnerEvent.addBreakQuest(this);
-	}
+public class _731_ProtectTheMilitaryAssociationLeader extends Quest implements ScriptFile {
+    public _731_ProtectTheMilitaryAssociationLeader() {
+        super(PARTY_NONE);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        runnerEvent.addBreakQuest(this);
+    }
 
-	@Override
-	public void onLoad()
-	{
+    @Override
+    public void onLoad() {
 
-	}
+    }
 
-	@Override
-	public void onReload()
-	{
+    @Override
+    public void onReload() {
 
-	}
+    }
 
-	@Override
-	public void onShutdown()
-	{
+    @Override
+    public void onShutdown() {
 
-	}
+    }
 }

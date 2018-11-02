@@ -11,123 +11,99 @@ import l2f.gameserver.network.serverpackets.components.IStaticPacket;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class SiegeClanObject implements Serializable
-{
-	private final long _date;
-	private String _type;
-	private Clan _clan;
-	private NpcInstance _flag;
-	public SiegeClanObject(String type, Clan clan, long param)
-	{
-		this(type, clan, 0, System.currentTimeMillis());
-	}
+public class SiegeClanObject implements Serializable {
+    private final long _date;
+    private String _type;
+    private Clan _clan;
+    private NpcInstance _flag;
 
-	public SiegeClanObject(String type, Clan clan, long param, long date)
-	{
-		_type = type;
-		_clan = clan;
-		_date = date;
-	}
+    public SiegeClanObject(String type, Clan clan, long param) {
+        this(type, clan, 0, System.currentTimeMillis());
+    }
 
-	public int getObjectId()
-	{
-		return _clan.getClanId();
-	}
+    public SiegeClanObject(String type, Clan clan, long param, long date) {
+        _type = type;
+        _clan = clan;
+        _date = date;
+    }
 
-	public Clan getClan()
-	{
-		return _clan;
-	}
+    public int getObjectId() {
+        return _clan.getClanId();
+    }
 
-	public NpcInstance getFlag()
-	{
-		return _flag;
-	}
+    public Clan getClan() {
+        return _clan;
+    }
 
-	public void setFlag(NpcInstance npc)
-	{
-		_flag = npc;
-	}
+    public NpcInstance getFlag() {
+        return _flag;
+    }
 
-	public void deleteFlag()
-	{
-		if (_flag != null)
-		{
-			_flag.deleteMe();
-			_flag = null;
-		}
-	}
+    public void setFlag(NpcInstance npc) {
+        _flag = npc;
+    }
 
-	public String getType()
-	{
-		return _type;
-	}
+    public void deleteFlag() {
+        if (_flag != null) {
+            _flag.deleteMe();
+            _flag = null;
+        }
+    }
 
-	public void setType(String type)
-	{
-		_type = type;
-	}
+    public String getType() {
+        return _type;
+    }
 
-	public void broadcast(IStaticPacket... packet)
-	{
-		getClan().broadcastToOnlineMembers(packet);
-	}
+    public void setType(String type) {
+        _type = type;
+    }
 
-	public void broadcast(L2GameServerPacket... packet)
-	{
-		getClan().broadcastToOnlineMembers(packet);
-	}
+    public void broadcast(IStaticPacket... packet) {
+        getClan().broadcastToOnlineMembers(packet);
+    }
 
-	public void setEvent(boolean start, SiegeEvent event)
-	{
-		if (start)
-		{
-			for (Player player : _clan.getOnlineMembers(0))
-			{
-				player.addEvent(event);
-				player.broadcastCharInfo();
-			}
-		}
-		else
-		{
-			for (Player player : _clan.getOnlineMembers(0))
-			{
-				player.removeEvent(event);
-				player.getEffectList().stopEffect(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME);
-				player.broadcastCharInfo();
-			}
-		}
-	}
+    public void broadcast(L2GameServerPacket... packet) {
+        getClan().broadcastToOnlineMembers(packet);
+    }
 
-	public boolean isParticle(Player player)
-	{
-		return true;
-	}
+    public void setEvent(boolean start, SiegeEvent event) {
+        if (start) {
+            for (Player player : _clan.getOnlineMembers(0)) {
+                player.addEvent(event);
+                player.broadcastCharInfo();
+            }
+        } else {
+            for (Player player : _clan.getOnlineMembers(0)) {
+                player.removeEvent(event);
+                player.getEffectList().stopEffect(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME);
+                player.broadcastCharInfo();
+            }
+        }
+    }
 
-	public long getParam()
-	{
-		return 0;
-	}
+    public boolean isParticle(Player player) {
+        return true;
+    }
 
-	public long getDate()
-	{
-		return _date;
-	}
+    public long getParam() {
+        return 0;
+    }
 
-	public static class SiegeClanComparatorImpl implements Comparator<SiegeClanObject>, Serializable
-	{
-		private static final SiegeClanComparatorImpl _instance = new SiegeClanComparatorImpl();
-		private static final long serialVersionUID = -1970716766952161021L;
+    public long getDate() {
+        return _date;
+    }
 
-		public static SiegeClanComparatorImpl getInstance()
-		{
-			return _instance;
-		}
+    public static class SiegeClanComparatorImpl implements Comparator<SiegeClanObject>, Serializable {
+        private static final SiegeClanComparatorImpl _instance = new SiegeClanComparatorImpl();
+        private static final long serialVersionUID = -1970716766952161021L;
 
-		@Override
-		public int compare(SiegeClanObject o1, SiegeClanObject o2)
-		{
-			return (o2.getParam() < o1.getParam()) ? -1 : ((o2.getParam() == o1.getParam()) ? 0 : 1);
-		}
-	}
+        public static SiegeClanComparatorImpl getInstance() {
+            return _instance;
+        }
+
+        @Override
+        public int compare(SiegeClanObject o1, SiegeClanObject o2) {
+            return (o2.getParam() < o1.getParam()) ? -1 : ((o2.getParam() == o1.getParam()) ? 0 : 1);
+        }
+    }
 }

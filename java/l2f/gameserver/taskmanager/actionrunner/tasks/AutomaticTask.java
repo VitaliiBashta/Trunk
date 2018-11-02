@@ -12,7 +12,7 @@ public abstract class AutomaticTask extends ActionWrapper
 		super(TASKS);
 	}
 
-	public abstract void doTask() throws Exception;
+	public abstract void doTask();
 
 	public abstract long reCalcTime(boolean start);
 

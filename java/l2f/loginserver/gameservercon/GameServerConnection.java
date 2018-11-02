@@ -1,5 +1,12 @@
 package l2f.loginserver.gameservercon;
 
+import l2f.commons.threading.RunnableImpl;
+import l2f.loginserver.Config;
+import l2f.loginserver.ThreadPoolManager;
+import l2f.loginserver.gameservercon.lspackets.PingRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.CancelledKeyException;
@@ -13,185 +20,144 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import l2f.commons.threading.RunnableImpl;
-import l2f.loginserver.Config;
-import l2f.loginserver.ThreadPoolManager;
-import l2f.loginserver.gameservercon.lspackets.PingRequest;
+public class GameServerConnection {
+    private static final Logger _log = LoggerFactory.getLogger(GameServerConnection.class);
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+    final ByteBuffer readBuffer = ByteBuffer.allocate(64 * 1024).order(ByteOrder.LITTLE_ENDIAN);
+    final Queue<SendablePacket> sendQueue = new ArrayDeque<SendablePacket>();
+    final Lock sendLock = new ReentrantLock();
 
-public class GameServerConnection
-{
-	private static final Logger _log = LoggerFactory.getLogger(GameServerConnection.class);
+    final AtomicBoolean isPengingWrite = new AtomicBoolean();
 
-	final ByteBuffer readBuffer = ByteBuffer.allocate(64 * 1024).order(ByteOrder.LITTLE_ENDIAN);
-	final Queue<SendablePacket> sendQueue = new ArrayDeque<SendablePacket>();
-	final Lock sendLock = new ReentrantLock();
+    private final Selector selector;
+    private final SelectionKey key;
 
-	final AtomicBoolean isPengingWrite = new AtomicBoolean();
+    protected GameServer gameServer;
+    protected int _pingRetry;
+    /**
+     * Ping system:
+     * <p>
+     * После авторизации игрвого сервера запускается PingTask с Config.GAME_SERVER_PING_DELAY - он посылает пакет и запускает такс PingCheckTask - который ждет ответ он ГС,
+     * если ответ непрыбыл, ГС умер, и про это будет написано в консоль
+     */
+    private Future<?> _pingTask;
 
-	private final Selector selector;
-	private final SelectionKey key;
+    public GameServerConnection(SelectionKey key) {
+        this.key = key;
+        selector = key.selector();
+    }
 
-	protected GameServer gameServer;
-	protected int _pingRetry;
-	/**
-	 * Ping system:
-	 *
-	 * После авторизации игрвого сервера запускается PingTask с Config.GAME_SERVER_PING_DELAY - он посылает пакет и запускает такс PingCheckTask - который ждет ответ он ГС,
-	 * если ответ непрыбыл, ГС умер, и про это будет написано в консоль
-	 */
-	private Future<?> _pingTask;
+    public void sendPacket(SendablePacket packet) {
+        boolean wakeUp;
 
-	public GameServerConnection(SelectionKey key)
-	{
-		this.key = key;
-		selector = key.selector();
-	}
+        sendLock.lock();
+        try {
+            sendQueue.add(packet);
+            wakeUp = enableWriteInterest();
+        } catch (CancelledKeyException e) {
+            return;
+        } finally {
+            sendLock.unlock();
+        }
 
-	public void sendPacket(SendablePacket packet)
-	{
-		boolean wakeUp;
+        if (wakeUp)
+            selector.wakeup();
+    }
 
-		sendLock.lock();
-		try
-		{
-			sendQueue.add(packet);
-			wakeUp = enableWriteInterest();
-		}
-		catch (CancelledKeyException e)
-		{
-			return;
-		}
-		finally
-		{
-			sendLock.unlock();
-		}
+    protected boolean disableWriteInterest() throws CancelledKeyException {
+        if (isPengingWrite.compareAndSet(true, false)) {
+            key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+            return true;
+        }
+        return false;
+    }
 
-		if (wakeUp)
-			selector.wakeup();
-	}
+    protected boolean enableWriteInterest() throws CancelledKeyException {
+        if (isPengingWrite.getAndSet(true) == false) {
+            key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
+            return true;
+        }
+        return false;
+    }
 
-	protected boolean disableWriteInterest() throws CancelledKeyException
-	{
-		if (isPengingWrite.compareAndSet(true, false))
-		{
-			key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
-			return true;
-		}
-		return false;
-	}
+    public void closeNow() {
+        key.interestOps(SelectionKey.OP_CONNECT);
+        selector.wakeup();
+    }
 
-	protected boolean enableWriteInterest() throws CancelledKeyException
-	{
-		if (isPengingWrite.getAndSet(true) == false)
-		{
-			key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
-			return true;
-		}
-		return false;
-	}
+    public void onDisconnection() {
+        try {
+            stopPingTask();
 
-	public void closeNow()
-	{
-		key.interestOps(SelectionKey.OP_CONNECT);
-		selector.wakeup();
-	}
+            readBuffer.clear();
 
-	public void onDisconnection()
-	{
-		try
-		{
-			stopPingTask();
+            sendLock.lock();
+            try {
+                sendQueue.clear();
+            } finally {
+                sendLock.unlock();
+            }
 
-			readBuffer.clear();
+            isPengingWrite.set(false);
 
-			sendLock.lock();
-			try
-			{
-				sendQueue.clear();
-			}
-			finally
-			{
-				sendLock.unlock();
-			}
+            if (gameServer != null && gameServer.isAuthed()) {
+                _log.info("Connection with gameserver " + gameServer.getId() + " [" + gameServer.getName() + "] lost.");
+                _log.info("Setting gameserver down.");
+                gameServer.setDown();
+            }
 
-			isPengingWrite.set(false);
+            gameServer = null;
+        } catch (Exception e) {
+            _log.error("", e);
+        }
+    }
 
-			if (gameServer != null && gameServer.isAuthed())
-			{
-				_log.info("Connection with gameserver " + gameServer.getId() + " [" + gameServer.getName() + "] lost.");
-				_log.info("Setting gameserver down.");
-				gameServer.setDown();
-			}
+    ByteBuffer getReadBuffer() {
+        return readBuffer;
+    }
 
-			gameServer = null;
-		}
-		catch (Exception e)
-		{
-			_log.error("", e);
-		}
-	}
+    GameServer getGameServer() {
+        return gameServer;
+    }
 
-	ByteBuffer getReadBuffer()
-	{
-		return readBuffer;
-	}
+    void setGameServer(GameServer gameServer) {
+        this.gameServer = gameServer;
+    }
 
-	GameServer getGameServer()
-	{
-		return gameServer;
-	}
+    public String getIpAddress() {
+        return ((SocketChannel) key.channel()).socket().getInetAddress().getHostAddress();
+    }
 
-	void setGameServer(GameServer gameServer)
-	{
-		this.gameServer = gameServer;
-	}
+    public void onPingResponse() {
+        _pingRetry = 0;
+    }
 
-	public String getIpAddress()
-	{
-		return ((SocketChannel) key.channel()).socket().getInetAddress().getHostAddress();
-	}
+    public void startPingTask() {
+        if (Config.GAME_SERVER_PING_DELAY == 0)
+            return;
 
-	public void onPingResponse()
-	{
-		_pingRetry = 0;
-	}
+        _pingTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new PingTask(), Config.GAME_SERVER_PING_DELAY, Config.GAME_SERVER_PING_DELAY);
+    }
 
-	public void startPingTask()
-	{
-		if (Config.GAME_SERVER_PING_DELAY == 0)
-			return;
+    public void stopPingTask() {
+        if (_pingTask != null) {
+            _pingTask.cancel(false);
+            _pingTask = null;
+        }
+    }
 
-		_pingTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new PingTask(), Config.GAME_SERVER_PING_DELAY, Config.GAME_SERVER_PING_DELAY);
-	}
-
-	public void stopPingTask()
-	{
-		if (_pingTask != null)
-		{
-			_pingTask.cancel(false);
-			_pingTask = null;
-		}
-	}
-
-	protected class PingTask extends RunnableImpl
-	{
-		@Override
-		public void runImpl()
-		{
-			if (Config.GAME_SERVER_PING_RETRY > 0)
-			{
-				if (_pingRetry > Config.GAME_SERVER_PING_RETRY)
-				{
-					_log.warn("Gameserver " + gameServer.getId() + " [" + gameServer.getName() + "] : ping timeout!");
-					closeNow();
-					return;
-				}
-			}
-			_pingRetry++;
-			sendPacket(new PingRequest());
-		}
-	}
+    protected class PingTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            if (Config.GAME_SERVER_PING_RETRY > 0) {
+                if (_pingRetry > Config.GAME_SERVER_PING_RETRY) {
+                    _log.warn("Gameserver " + gameServer.getId() + " [" + gameServer.getName() + "] : ping timeout!");
+                    closeNow();
+                    return;
+                }
+            }
+            _pingRetry++;
+            sendPacket(new PingRequest());
+        }
+    }
 }

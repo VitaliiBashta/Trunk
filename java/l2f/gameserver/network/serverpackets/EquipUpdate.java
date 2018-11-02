@@ -8,7 +8,7 @@ import l2f.gameserver.model.items.ItemInstance;
  * 01 00 00 00 		01 - added ?  02 - modified
  * 7b 86 73 42      object id
  * 08 00 00 00      body slot
- *
+ * <p>
  * body slot
  * 0000  ?? underwear
  * 0001  ear
@@ -25,26 +25,23 @@ import l2f.gameserver.model.items.ItemInstance;
  * 000c  feet
  * 000d  ?? back
  * 000e  lr.hand   (bow)
- *
+ * <p>
  * format  ddd
  */
 //@Deprecated
-public class EquipUpdate extends L2GameServerPacket
-{
-	private ItemInfo _item;
+public class EquipUpdate extends L2GameServerPacket {
+    private ItemInfo _item;
 
-	public EquipUpdate(ItemInstance item, int change)
-	{
-		_item = new ItemInfo(item);
-		_item.setLastChange(change);
-	}
+    public EquipUpdate(ItemInstance item, int change) {
+        _item = new ItemInfo(item);
+        _item.setLastChange(change);
+    }
 
-	@Override
-	protected final void writeImpl()
-	{
-		writeC(0x4B);
-		writeD(_item.getLastChange());
-		writeD(_item.getObjectId());
-		writeD(_item.getEquipSlot());
-	}
+    @Override
+    protected final void writeImpl() {
+        writeC(0x4B);
+        writeD(_item.getLastChange());
+        writeD(_item.getObjectId());
+        writeD(_item.getEquipSlot());
+    }
 }

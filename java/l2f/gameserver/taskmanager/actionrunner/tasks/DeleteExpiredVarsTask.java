@@ -24,7 +24,7 @@ public class DeleteExpiredVarsTask extends AutomaticTask {
     }
 
     @Override
-    public void doTask() throws Exception {
+    public void doTask() {
         Map<Integer, String> varMap = new HashMap<Integer, String>();
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();

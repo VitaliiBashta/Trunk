@@ -1,8 +1,7 @@
 package l2f.gameserver.model.base;
 
-public enum ClassType
-{
-	Fighter,
-	Mystic,
-	Priest
+public enum ClassType {
+    Fighter,
+    Mystic,
+    Priest
 }

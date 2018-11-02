@@ -8,12 +8,10 @@ package l2f.gameserver.network.serverpackets;
  * 0030: 00 00 00 00 00 3e 40 00 00 00 00 00 00 3e 40 00    .....>@......>@.
  * 0040: 00 00 00 00 00 00 00 04 00 00 00 00 00 00 00       ...............
  */
-public class ServerObjectInfo extends L2GameServerPacket
-{
-	@Override
-	protected void writeImpl()
-	{
-		writeC(0x92);
-		// TODO ddSdddddffffdddd	ServerObjectInfo ID:%d, ClassID:%d, CanBeAttacked:%d, X:%d, Y:%d, Z:%d
-	}
+public class ServerObjectInfo extends L2GameServerPacket {
+    @Override
+    protected void writeImpl() {
+        writeC(0x92);
+        // TODO ddSdddddffffdddd	ServerObjectInfo ID:%d, ClassID:%d, CanBeAttacked:%d, X:%d, Y:%d, Z:%d
+    }
 }

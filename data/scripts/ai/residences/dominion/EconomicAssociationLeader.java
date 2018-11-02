@@ -1,5 +1,6 @@
 package ai.residences.dominion;
 
+import ai.residences.SiegeGuardFighter;
 import l2f.gameserver.Config;
 import l2f.gameserver.instancemanager.QuestManager;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
@@ -13,149 +14,125 @@ import l2f.gameserver.model.quest.Quest;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.components.NpcString;
-
-import org.napile.primitive.maps.IntObjectMap;
-import org.napile.primitive.maps.impl.HashIntObjectMap;
-
 import quests._733_ProtectTheEconomicAssociationLeader;
-import ai.residences.SiegeGuardFighter;
 
-/**
- * @author VISTALL
- * @date 4:52/23.06.2011
- */
-public class EconomicAssociationLeader extends SiegeGuardFighter
-{
-	private static final IntObjectMap<NpcString[]> MESSAGES = new HashIntObjectMap<NpcString[]>(9);
+import java.util.HashMap;
+import java.util.Map;
 
-	static
-	{
-		MESSAGES.put(81, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GLUDIO, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GLUDIO_IS_DEAD});
-		MESSAGES.put(82, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_DION, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_DION_IS_DEAD});
-		MESSAGES.put(83, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GIRAN, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GIRAN_IS_DEAD});
-		MESSAGES.put(84, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_OREN, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_OREN_IS_DEAD});
-		MESSAGES.put(85, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_ADEN, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_ADEN_IS_DEAD});
-		MESSAGES.put(86, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_INNADRIL, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_INNADRIL_IS_DEAD});
-		MESSAGES.put(87, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GODDARD, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GODDARD_IS_DEAD});
-		MESSAGES.put(88, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_RUNE, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_RUNE_IS_DEAD});
-		MESSAGES.put(89, new NpcString[] {NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_SCHUTTGART, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_SCHUTTGART_IS_DEAD});
-	}
+public class EconomicAssociationLeader extends SiegeGuardFighter {
+    private static final Map<Integer,NpcString[]> MESSAGES = new HashMap<>(9);
 
-	private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener
-	{
-		@Override
-		public void onPlayerEnter(Player player)
-		{
-			NpcInstance actor = getActor();
-			DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-			if (siegeEvent == null)
-				return;
+    static {
+        MESSAGES.put(81, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GLUDIO, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GLUDIO_IS_DEAD});
+        MESSAGES.put(82, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_DION, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_DION_IS_DEAD});
+        MESSAGES.put(83, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GIRAN, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GIRAN_IS_DEAD});
+        MESSAGES.put(84, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_OREN, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_OREN_IS_DEAD});
+        MESSAGES.put(85, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_ADEN, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_ADEN_IS_DEAD});
+        MESSAGES.put(86, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_INNADRIL, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_INNADRIL_IS_DEAD});
+        MESSAGES.put(87, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GODDARD, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GODDARD_IS_DEAD});
+        MESSAGES.put(88, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_RUNE, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_RUNE_IS_DEAD});
+        MESSAGES.put(89, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_SCHUTTGART, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_SCHUTTGART_IS_DEAD});
+    }
 
-			if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
-				return;
+    private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {
+        @Override
+        public void onPlayerEnter(Player player) {
+            NpcInstance actor = getActor();
+            DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+            if (siegeEvent == null)
+                return;
 
-			Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
+            if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
+                return;
 
-			QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-			questState.setCond(1, false);
-			questState.setStateAndNotSave(Quest.STARTED);
-		}
-	}
+            Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
 
-	private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
+            QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
+            questState.setCond(1, false);
+            questState.setStateAndNotSave(Quest.STARTED);
+        }
+    }
 
-	public EconomicAssociationLeader(NpcInstance actor)
-	{
-		super(actor);
-	}
+    private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
 
-	@Override
-	public  void onEvtAttacked(Creature attacker, int dam)
-	{
-		super.onEvtAttacked(attacker, dam);
+    public EconomicAssociationLeader(NpcInstance actor) {
+        super(actor);
+    }
 
-		NpcInstance actor = getActor();
+    @Override
+    public void onEvtAttacked(Creature attacker, int dam) {
+        super.onEvtAttacked(attacker, dam);
 
-		DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-		if (siegeEvent == null)
-			return;
+        NpcInstance actor = getActor();
 
-		boolean first = actor.getParameter("dominion_first_attack", true);
-		if (first)
-		{
-			actor.setParameter("dominion_first_attack", false);
-			NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
-			Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
-			for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-			{
-				if (player.getEvent(DominionSiegeEvent.class) == siegeEvent)
-				{
-					player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+        DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+        if (siegeEvent == null)
+            return;
 
-					QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-					questState.setCond(1, false);
-					questState.setStateAndNotSave(Quest.STARTED);
-				}
-			}
-			PlayerListenerList.addGlobal(_listener);
-		}
-	}
+        boolean first = actor.getParameter("dominion_first_attack", true);
+        if (first) {
+            actor.setParameter("dominion_first_attack", false);
+            NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
+            Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
+            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+                if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
+                    player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 
-	@Override
-	public void onEvtDead(Creature killer)
-	{
-		super.onEvtDead(killer);
+                    QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
+                    questState.setCond(1, false);
+                    questState.setStateAndNotSave(Quest.STARTED);
+                }
+            }
+            PlayerListenerList.addGlobal(_listener);
+        }
+    }
 
-		NpcInstance actor = getActor();
+    @Override
+    public void onEvtDead(Creature killer) {
+        super.onEvtDead(killer);
 
-		DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-		if (siegeEvent == null)
-			return;
+        NpcInstance actor = getActor();
 
-		NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
-		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-		{
-			if (player.getEvent(DominionSiegeEvent.class) == siegeEvent)
-			{
-				player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+        DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+        if (siegeEvent == null)
+            return;
 
-				QuestState questState = player.getQuestState(_733_ProtectTheEconomicAssociationLeader.class);
-				if (questState != null)
-					questState.abortQuest();
-			}
-		}
+        NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
+        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
+                player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 
-		Player player = killer.getPlayer();
-		if (player == null)
-			return;
+                QuestState questState = player.getQuestState(_733_ProtectTheEconomicAssociationLeader.class);
+                if (questState != null)
+                    questState.abortQuest();
+            }
+        }
 
-		if (player.getParty() == null)
-		{
-			DominionSiegeEvent siegeEvent2 = player.getEvent(DominionSiegeEvent.class);
-			if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
-				return;
-			siegeEvent2.addReward(player, DominionSiegeEvent.STATIC_BADGES, 5);
-		}
-		else
-		{
-			for (Player $member : player.getParty())
-			{
-				if ($member.isInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE))
-				{
-					DominionSiegeEvent siegeEvent2 = $member.getEvent(DominionSiegeEvent.class);
-					if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
-						continue;
-					siegeEvent2.addReward($member, DominionSiegeEvent.STATIC_BADGES, 5);
-				}
-			}
-		}
-	}
+        Player player = killer.getPlayer();
+        if (player == null)
+            return;
 
-	@Override
-	public void onEvtDeSpawn()
-	{
-		super.onEvtDeSpawn();
+        if (player.getParty() == null) {
+            DominionSiegeEvent siegeEvent2 = player.getEvent(DominionSiegeEvent.class);
+            if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
+                return;
+            siegeEvent2.addReward(player, DominionSiegeEvent.STATIC_BADGES, 5);
+        } else {
+            for (Player $member : player.getParty()) {
+                if ($member.isInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
+                    DominionSiegeEvent siegeEvent2 = $member.getEvent(DominionSiegeEvent.class);
+                    if (siegeEvent2 == null || siegeEvent2 == siegeEvent)
+                        continue;
+                    siegeEvent2.addReward($member, DominionSiegeEvent.STATIC_BADGES, 5);
+                }
+            }
+        }
+    }
 
-		PlayerListenerList.removeGlobal(_listener);
-	}
+    @Override
+    public void onEvtDeSpawn() {
+        super.onEvtDeSpawn();
+
+        PlayerListenerList.removeGlobal(_listener);
+    }
 }

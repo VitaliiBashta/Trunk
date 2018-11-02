@@ -5,13 +5,11 @@ import l2f.gameserver.model.Playable;
 import l2f.gameserver.stats.Env;
 import l2f.gameserver.utils.ItemFunctions;
 
-public class EffectRestoration extends Effect
-{
+public class EffectRestoration extends Effect {
     private final int itemId;
     private final long count;
 
-    public EffectRestoration(Env env, EffectTemplate template)
-    {
+    public EffectRestoration(Env env, EffectTemplate template) {
         super(env, template);
         String item = getTemplate().getParam().getString("Item");
         itemId = Integer.parseInt(item.split(":")[0]);
@@ -20,15 +18,13 @@ public class EffectRestoration extends Effect
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         ItemFunctions.addItem((Playable) getEffected(), itemId, count, true, "EffectRestoration");
     }
 
     @Override
-    protected boolean onActionTime()
-    {
+    protected boolean onActionTime() {
         return false;
     }
 }

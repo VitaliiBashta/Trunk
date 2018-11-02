@@ -25,53 +25,43 @@ import l2f.gameserver.scripts.Functions;
  *
  * @author GipsyGrierosu Andrei
  */
-public class BuffStoreVoiced extends Functions implements IVoicedCommandHandler
-{
-	private static final String[] VOICED_COMMANDS =
-	{
-		"buffstore"
-	};
+public class BuffStoreVoiced extends Functions implements IVoicedCommandHandler {
+    private static final String[] VOICED_COMMANDS =
+            {
+                    "buffstore"
+            };
 
-	@Override
-	public boolean useVoicedCommand(String command, Player activeChar, String params)
-	{
-		try
-		{
-			// Check if the player can set a store
-			if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(activeChar.getClassId().getId()))
-			{
-				activeChar.sendMessage("Your profession is not allowed to set an Buff Store");
-				return false;
-			}
+    @Override
+    public boolean useVoicedCommand(String command, Player activeChar, String params) {
+        try {
+            // Check if the player can set a store
+            if (!Config.BUFF_STORE_ALLOWED_CLASS_LIST.contains(activeChar.getClassId().getId())) {
+                activeChar.sendMessage("Your profession is not allowed to set an Buff Store");
+                return false;
+            }
 
-			// Shows the initial buff store window
-			final NpcHtmlMessage html = new NpcHtmlMessage(0);
-			html.setFile("command/buffstore/buff_store.htm");
-			if (activeChar.getPrivateStoreType() == Player.STORE_PRIVATE_BUFF)
-			{
-				html.replace("%link%", "Stop Store");
-				html.replace("%bypass%", "bypass -h BuffStore stopstore");
-			}
-			else
-			{
-				html.replace("%link%", "Create Store");
-				html.replace("%bypass%", "bypass -h player_help command/buffstore/buff_store_create.htm");
-			}
-			activeChar.sendPacket(html);
+            // Shows the initial buff store window
+            final NpcHtmlMessage html = new NpcHtmlMessage(0);
+            html.setFile("command/buffstore/buff_store.htm");
+            if (activeChar.getPrivateStoreType() == Player.STORE_PRIVATE_BUFF) {
+                html.replace("%link%", "Stop Store");
+                html.replace("%bypass%", "bypass -h BuffStore stopstore");
+            } else {
+                html.replace("%link%", "Create Store");
+                html.replace("%bypass%", "bypass -h player_help command/buffstore/buff_store_create.htm");
+            }
+            activeChar.sendPacket(html);
 
-			return true;
-		}
-		catch (Exception e)
-		{
-			activeChar.sendMessage("Use: .buffstore");
-		}
+            return true;
+        } catch (Exception e) {
+            activeChar.sendMessage("Use: .buffstore");
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public String[] getVoicedCommandList()
-	{
-		return VOICED_COMMANDS;
-	}
+    @Override
+    public String[] getVoicedCommandList() {
+        return VOICED_COMMANDS;
+    }
 }

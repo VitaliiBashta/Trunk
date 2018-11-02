@@ -7,58 +7,48 @@ import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.ExConfirmAddingPostFriend;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
-import org.napile.primitive.maps.IntObjectMap;
 
-/**
- * @author VISTALL
- * @date 21:06/22.03.2011
- */
-public class RequestExAddPostFriendForPostBox extends L2GameClientPacket
-{
-	private String _name;
+import java.util.Map;
 
-	@Override
-	protected void readImpl()
-	{
-		_name = readS(Config.CNAME_MAXLEN);
-	}
+public class RequestExAddPostFriendForPostBox extends L2GameClientPacket {
+    private String _name;
 
-	@Override
-	protected void runImpl()
-	{
-		Player player = getClient().getActiveChar();
-		if (player == null)
-			return;
+    @Override
+    protected void readImpl() {
+        _name = readS(Config.CNAME_MAXLEN);
+    }
 
-		int targetObjectId = CharacterDAO.getInstance().getObjectIdByName(_name);
- 		if (targetObjectId == 0)
-		{
-			player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.NAME_IS_NOT_EXISTS));
-			return;
-		}
+    @Override
+    protected void runImpl() {
+        Player player = getClient().getActiveChar();
+        if (player == null)
+            return;
 
-		if (_name.equalsIgnoreCase(player.getName()))
-		{
-			player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.NAME_IS_NOT_REGISTERED));
-			return;
-		}
+        int targetObjectId = CharacterDAO.getInstance().getObjectIdByName(_name);
+        if (targetObjectId == 0) {
+            player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.NAME_IS_NOT_EXISTS));
+            return;
+        }
 
-		IntObjectMap<String> postFriend = player.getPostFriends();
-		if (postFriend.size() >= Player.MAX_POST_FRIEND_SIZE)
-		{
-			player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.LIST_IS_FULL));
-			return;
-		}
+        if (_name.equalsIgnoreCase(player.getName())) {
+            player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.NAME_IS_NOT_REGISTERED));
+            return;
+        }
 
-		if (postFriend.containsKey(targetObjectId))
-		{
-			player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.ALREADY_ADDED));
-			return;
-		}
+        Map<Integer,String> postFriend = player.getPostFriends();
+        if (postFriend.size() >= Player.MAX_POST_FRIEND_SIZE) {
+            player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.LIST_IS_FULL));
+            return;
+        }
 
-		CharacterPostFriendDAO.getInstance().insert(player, targetObjectId);
-		postFriend.put(targetObjectId, CharacterDAO.getInstance().getNameByObjectId(targetObjectId));
+        if (postFriend.containsKey(targetObjectId)) {
+            player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.ALREADY_ADDED));
+            return;
+        }
 
-		player.sendPacket(new SystemMessage2(SystemMsg.S1_WAS_SUCCESSFULLY_ADDED_TO_YOUR_CONTACT_LIST).addString(_name), new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.SUCCESS));
-	}
+        CharacterPostFriendDAO.getInstance().insert(player, targetObjectId);
+        postFriend.put(targetObjectId, CharacterDAO.getInstance().getNameByObjectId(targetObjectId));
+
+        player.sendPacket(new SystemMessage2(SystemMsg.S1_WAS_SUCCESSFULLY_ADDED_TO_YOUR_CONTACT_LIST).addString(_name), new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.SUCCESS));
+    }
 }

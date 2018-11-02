@@ -2,34 +2,29 @@ package l2f.commons.data.xml;
 
 import l2f.commons.logging.LoggerObject;
 
-public abstract class AbstractHolder extends LoggerObject
-{
-	private static String formatOut(String st)
-	{
-		char[] chars = st.toCharArray();
-		StringBuffer buf = new StringBuffer(chars.length);
+public abstract class AbstractHolder extends LoggerObject {
+    private static String formatOut(String st) {
+        char[] chars = st.toCharArray();
+        StringBuffer buf = new StringBuffer(chars.length);
 
-		for (char ch : chars)
-		{
-			if (Character.isUpperCase(ch))
-				buf.append(" ");
+        for (char ch : chars) {
+            if (Character.isUpperCase(ch))
+                buf.append(" ");
 
-			buf.append(Character.toLowerCase(ch));
-		}
+            buf.append(Character.toLowerCase(ch));
+        }
 
-		return buf.toString();
-	}
+        return buf.toString();
+    }
 
-	public void log()
-	{
-		info(String.format("loaded %d%s(s) count.", size(), formatOut(getClass().getSimpleName().replace("Holder", "")).toLowerCase()));
-	}
-	
-	protected void process()
-	{
-	}
+    public void log() {
+        info(String.format("loaded %d%s(s) count.", size(), formatOut(getClass().getSimpleName().replace("Holder", "")).toLowerCase()));
+    }
 
-	public abstract int size();
+    protected void process() {
+    }
 
-	public abstract void clear();
+    public abstract int size();
+
+    public abstract void clear();
 }

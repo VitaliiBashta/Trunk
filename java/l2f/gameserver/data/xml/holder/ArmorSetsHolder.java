@@ -1,44 +1,38 @@
 package l2f.gameserver.data.xml.holder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.data.xml.AbstractHolder;
 import l2f.gameserver.model.ArmorSet;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public final class ArmorSetsHolder extends AbstractHolder
-{
-	private static final ArmorSetsHolder _instance = new ArmorSetsHolder();
-	private List<ArmorSet> _armorSets = new ArrayList<ArmorSet>();
 
-	public static ArmorSetsHolder getInstance()
-	{
-		return _instance;
-	}
+public final class ArmorSetsHolder extends AbstractHolder {
+    private static final ArmorSetsHolder _instance = new ArmorSetsHolder();
+    private List<ArmorSet> _armorSets = new ArrayList<ArmorSet>();
 
-	public void addArmorSet(ArmorSet armorset)
-	{
-		_armorSets.add(armorset);
-	}
+    public static ArmorSetsHolder getInstance() {
+        return _instance;
+    }
 
-	public ArmorSet getArmorSet(int chestItemId)
-	{
-		for (ArmorSet as : _armorSets)
-			if (as.getChestItemIds().contains(chestItemId))
-				return as;
-		return null;
-	}
+    public void addArmorSet(ArmorSet armorset) {
+        _armorSets.add(armorset);
+    }
 
-	@Override
-	public int size()
-	{
-		return _armorSets.size();
-	}
+    public ArmorSet getArmorSet(int chestItemId) {
+        for (ArmorSet as : _armorSets)
+            if (as.getChestItemIds().contains(chestItemId))
+                return as;
+        return null;
+    }
 
-	@Override
-	public void clear()
-	{
-		_armorSets.clear();
-	}
+    @Override
+    public int size() {
+        return _armorSets.size();
+    }
+
+    @Override
+    public void clear() {
+        _armorSets.clear();
+    }
 }

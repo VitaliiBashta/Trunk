@@ -1,6 +1,5 @@
 package l2f.gameserver.ai;
 
-import static l2f.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 import l2f.gameserver.Config;
 import l2f.gameserver.geodata.GeoEngine;
 import l2f.gameserver.model.Creature;
@@ -14,231 +13,198 @@ import l2f.gameserver.network.serverpackets.ExRotation;
 import l2f.gameserver.network.serverpackets.SocialAction;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 
-public class PlayerAI extends PlayableAI
-{
-	public PlayerAI(Player actor)
-	{
-		super(actor);
-	}
+import static l2f.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
-	@Override
-	protected void onIntentionRest()
-	{
-		changeIntention(CtrlIntention.AI_INTENTION_REST, null, null);
-		setAttackTarget(null);
-		clientStopMoving();
-	}
+public class PlayerAI extends PlayableAI {
+    public PlayerAI(Player actor) {
+        super(actor);
+    }
 
-	@Override
-	protected void onIntentionActive()
-	{
-		clearNextAction();
-		changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
-	}
+    @Override
+    protected void onIntentionRest() {
+        changeIntention(CtrlIntention.AI_INTENTION_REST, null, null);
+        setAttackTarget(null);
+        clientStopMoving();
+    }
 
-	@Override
-	public void onIntentionInteract(GameObject object)
-	{
-		Player actor = getActor();
+    @Override
+    protected void onIntentionActive() {
+        clearNextAction();
+        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+    }
 
-		if(actor.getSittingTask())
-		{
-			setNextAction(nextAction.INTERACT, object, null, false, false);
-			return;
-		}
-		else if(actor.isSitting())
-		{
-			actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
-			clientActionFailed();
-			return;
-		}
-		super.onIntentionInteract(object);
-	}
+    @Override
+    public void onIntentionInteract(GameObject object) {
+        Player actor = getActor();
 
-	@Override
-	public void onIntentionPickUp(GameObject object)
-	{
-		Player actor = getActor();
+        if (actor.getSittingTask()) {
+            setNextAction(nextAction.INTERACT, object, null, false, false);
+            return;
+        } else if (actor.isSitting()) {
+            actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
+            clientActionFailed();
+            return;
+        }
+        super.onIntentionInteract(object);
+    }
 
-		if(actor.getSittingTask())
-		{
-			setNextAction(nextAction.PICKUP, object, null, false, false);
-			return;
-		}
-		else if(actor.isSitting())
-		{
-			actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
-			clientActionFailed();
-			return;
-		}
-		super.onIntentionPickUp(object);
-	}
+    @Override
+    public void onIntentionPickUp(GameObject object) {
+        Player actor = getActor();
 
-	@Override
-	protected void thinkAttack(boolean checkRange)
-	{
-		Player actor = getActor();
+        if (actor.getSittingTask()) {
+            setNextAction(nextAction.PICKUP, object, null, false, false);
+            return;
+        } else if (actor.isSitting()) {
+            actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
+            clientActionFailed();
+            return;
+        }
+        super.onIntentionPickUp(object);
+    }
 
-		if(actor.isInFlyingTransform())
-		{
-			setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-			return;
-		}
+    @Override
+    protected void thinkAttack(boolean checkRange) {
+        Player actor = getActor();
 
-		FlagItemAttachment attachment = actor.getActiveWeaponFlagAttachment();
-		if(attachment != null && !attachment.canAttack(actor))
-		{
-			setIntention(AI_INTENTION_ACTIVE);
-			actor.sendActionFailed();
-			return;
-		}
+        if (actor.isInFlyingTransform()) {
+            setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+            return;
+        }
 
-		if(actor.isFrozen())
-		{
-			setIntention(AI_INTENTION_ACTIVE);
-			actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_FROZEN, ActionFail.STATIC);
-			return;
-		}
+        FlagItemAttachment attachment = actor.getActiveWeaponFlagAttachment();
+        if (attachment != null && !attachment.canAttack(actor)) {
+            setIntention(AI_INTENTION_ACTIVE);
+            actor.sendActionFailed();
+            return;
+        }
 
-		super.thinkAttack(checkRange);
-	}
+        if (actor.isFrozen()) {
+            setIntention(AI_INTENTION_ACTIVE);
+            actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_FROZEN, ActionFail.STATIC);
+            return;
+        }
 
-	@Override
-	protected void thinkCast(boolean checkRange)
-	{
-		Player actor = getActor();
+        super.thinkAttack(checkRange);
+    }
 
-		FlagItemAttachment attachment = actor.getActiveWeaponFlagAttachment();
-		if(attachment != null && !attachment.canCast(actor, _skill))
-		{
-			setIntention(AI_INTENTION_ACTIVE);
-			actor.sendActionFailed();
-			return;
-		}
+    @Override
+    protected void thinkCast(boolean checkRange) {
+        Player actor = getActor();
 
-		if(actor.isFrozen())
-		{
-			setIntention(AI_INTENTION_ACTIVE);
-			actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_FROZEN, ActionFail.STATIC);
-			return;
-		}
+        FlagItemAttachment attachment = actor.getActiveWeaponFlagAttachment();
+        if (attachment != null && !attachment.canCast(actor, _skill)) {
+            setIntention(AI_INTENTION_ACTIVE);
+            actor.sendActionFailed();
+            return;
+        }
 
-		super.thinkCast(checkRange);
-	}
+        if (actor.isFrozen()) {
+            setIntention(AI_INTENTION_ACTIVE);
+            actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_FROZEN, ActionFail.STATIC);
+            return;
+        }
 
-	@Override
-	protected void thinkCoupleAction(Player target, Integer socialId, boolean cancel)
-	{
-		Player actor = getActor();
-		if(target == null || !target.isOnline())
-		{
-			actor.sendPacket(SystemMsg.THE_COUPLE_ACTION_WAS_CANCELLED);
-			return;
-		}
+        super.thinkCast(checkRange);
+    }
 
-		if(cancel || !actor.isInRange(target, 50) || actor.isInRange(target, 20) || actor.getReflection() != target.getReflection() || !GeoEngine.canSeeTarget(actor, target, false))
-		{
-			target.sendPacket(SystemMsg.THE_COUPLE_ACTION_WAS_CANCELLED);
-			actor.sendPacket(SystemMsg.THE_COUPLE_ACTION_WAS_CANCELLED);
-			return;
-		}
-		if(_forceUse) // служит только для флага что б активировать у другого игрока социалку
-			target.getAI().setIntention(CtrlIntention.AI_INTENTION_COUPLE_ACTION, actor, socialId);
-		//
-		int heading = actor.calcHeading(target.getX(), target.getY());
-		actor.setHeading(heading);
-		actor.broadcastPacket(new ExRotation(actor.getObjectId(), heading));
-		//
-		actor.broadcastPacket(new SocialAction(actor.getObjectId(), socialId));
-	}
+    @Override
+    protected void thinkCoupleAction(Player target, Integer socialId, boolean cancel) {
+        Player actor = getActor();
+        if (target == null || !target.isOnline()) {
+            actor.sendPacket(SystemMsg.THE_COUPLE_ACTION_WAS_CANCELLED);
+            return;
+        }
 
-	@Override
-	public void Attack(GameObject target, boolean forceUse, boolean dontMove)
-	{
-		Player actor = getActor();
+        if (cancel || !actor.isInRange(target, 50) || actor.isInRange(target, 20) || actor.getReflection() != target.getReflection() || !GeoEngine.canSeeTarget(actor, target, false)) {
+            target.sendPacket(SystemMsg.THE_COUPLE_ACTION_WAS_CANCELLED);
+            actor.sendPacket(SystemMsg.THE_COUPLE_ACTION_WAS_CANCELLED);
+            return;
+        }
+        if (_forceUse) // служит только для флага что б активировать у другого игрока социалку
+            target.getAI().setIntention(CtrlIntention.AI_INTENTION_COUPLE_ACTION, actor, socialId);
+        //
+        int heading = actor.calcHeading(target.getX(), target.getY());
+        actor.setHeading(heading);
+        actor.broadcastPacket(new ExRotation(actor.getObjectId(), heading));
+        //
+        actor.broadcastPacket(new SocialAction(actor.getObjectId(), socialId));
+    }
 
-		if(actor.isInFlyingTransform())
-		{
-			actor.sendActionFailed();
-			return;
-		}
+    @Override
+    public void Attack(GameObject target, boolean forceUse, boolean dontMove) {
+        Player actor = getActor();
 
-		if(System.currentTimeMillis() - actor.getLastAttackPacket() < Config.ATTACK_PACKET_DELAY)
-		{
-			actor.sendActionFailed();
-			return;
-		}
+        if (actor.isInFlyingTransform()) {
+            actor.sendActionFailed();
+            return;
+        }
 
-		actor.setLastAttackPacket();
+        if (System.currentTimeMillis() - actor.getLastAttackPacket() < Config.ATTACK_PACKET_DELAY) {
+            actor.sendActionFailed();
+            return;
+        }
 
-		if(actor.getSittingTask())
-		{
-			setNextAction(nextAction.ATTACK, target, null, forceUse, false);
-			return;
-		}
-		else if(actor.isSitting())
-		{
-			actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
-			clientActionFailed();
-			return;
-		}
+        actor.setLastAttackPacket();
 
-		super.Attack(target, forceUse, dontMove);
-	}
+        if (actor.getSittingTask()) {
+            setNextAction(nextAction.ATTACK, target, null, forceUse, false);
+            return;
+        } else if (actor.isSitting()) {
+            actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
+            clientActionFailed();
+            return;
+        }
 
-	@Override
-	public void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove)
-	{
-		Player actor = getActor();
+        super.Attack(target, forceUse, dontMove);
+    }
 
-		if(!skill.altUse() && !skill.isToggle() && !(skill.getSkillType() == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
-			// Если в этот момент встаем, то использовать скилл когда встанем
-			if(actor.getSittingTask())
-			{
-				setNextAction(nextAction.CAST, skill, target, forceUse, dontMove);
-				clientActionFailed();
-				return;
-			}
-			else if(skill.getSkillType() == SkillType.SUMMON)
-			{
-				if(actor.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
-				{
-					    actor.sendPacket(SystemMsg.YOU_CANNOT_SUMMON_DURING_A_TRADE_OR_WHILE_USING_A_PRIVATE_STORE);
+    @Override
+    public void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
+        Player actor = getActor();
+
+        if (!skill.altUse() && !skill.isToggle() && !(skill.getSkillType() == SkillType.CRAFT && Config.ALLOW_TALK_WHILE_SITTING))
+            // Если в этот момент встаем, то использовать скилл когда встанем
+            if (actor.getSittingTask()) {
+                setNextAction(nextAction.CAST, skill, target, forceUse, dontMove);
+                clientActionFailed();
+                return;
+            } else if (skill.getSkillType() == SkillType.SUMMON) {
+                if (actor.getPrivateStoreType() != Player.STORE_PRIVATE_NONE) {
+                    actor.sendPacket(SystemMsg.YOU_CANNOT_SUMMON_DURING_A_TRADE_OR_WHILE_USING_A_PRIVATE_STORE);
                     clientActionFailed();
                     return;
                 }
-             //   else if (actor.getPetSummonBlockedTime() > System.currentTimeMillis())	
-             //   {
-              //      int time = (int) (actor.getPetSummonBlockedTime() - System.currentTimeMillis()) / 60000;
-               //    if (time == 0)
-              //      actor.sendMessage("You must wait 1 minute after your firt summon." );
-              //      else 
-              //          actor.sendMessage("You must wait " + time + " minutes after your firt summon." );
-              //      clientActionFailed();
-              //      return;                    
-              //  }
-			}
-		  // char is sitting
-			else if(actor.isSitting())
-			{
-				if(skill.getSkillType() == SkillType.TRANSFORMATION)
-					actor.sendPacket(SystemMsg.YOU_CANNOT_TRANSFORM_WHILE_SITTING);
-				else
-					actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
+                //   else if (actor.getPetSummonBlockedTime() > System.currentTimeMillis())
+                //   {
+                //      int time = (int) (actor.getPetSummonBlockedTime() - System.currentTimeMillis()) / 60000;
+                //    if (time == 0)
+                //      actor.sendMessage("You must wait 1 minute after your firt summon." );
+                //      else
+                //          actor.sendMessage("You must wait " + time + " minutes after your firt summon." );
+                //      clientActionFailed();
+                //      return;
+                //  }
+            }
+            // char is sitting
+            else if (actor.isSitting()) {
+                if (skill.getSkillType() == SkillType.TRANSFORMATION)
+                    actor.sendPacket(SystemMsg.YOU_CANNOT_TRANSFORM_WHILE_SITTING);
+                else
+                    actor.sendPacket(SystemMsg.YOU_CANNOT_MOVE_WHILE_SITTING);
 
-				clientActionFailed();
-				return;
-			}
-			
-			// block the player for 10 minutes to summon a pet after the resurrection.
+                clientActionFailed();
+                return;
+            }
+
+        // block the player for 10 minutes to summon a pet after the resurrection.
         //actor.setPetSummonBlockedTime(System.currentTimeMillis() + 600 * 1000);
 
-		super.Cast(skill, target, forceUse, dontMove);
-	}
+        super.Cast(skill, target, forceUse, dontMove);
+    }
 
-	@Override
-	public Player getActor()
-	{
-		return (Player) super.getActor();
-	}
+    @Override
+    public Player getActor() {
+        return (Player) super.getActor();
+    }
 }

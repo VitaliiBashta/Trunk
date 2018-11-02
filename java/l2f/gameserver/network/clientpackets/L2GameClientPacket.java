@@ -13,71 +13,58 @@ import java.util.List;
 /**
  * Packets received by the game server from clients
  */
-public abstract class L2GameClientPacket extends ReceivablePacket<GameClient>
-{
-	private static final Logger _log = LoggerFactory.getLogger(L2GameClientPacket.class);
+public abstract class L2GameClientPacket extends ReceivablePacket<GameClient> {
+    private static final Logger _log = LoggerFactory.getLogger(L2GameClientPacket.class);
 
-	@Override
-	public final boolean read()
-	{
-		try
-		{
-			readImpl();
-			return true;
-		} catch (BufferUnderflowException e)
-		{
-			_client.onPacketReadFail();
-			// _log.error("Client: " + _client + " - Failed reading: " +
-			// getType() + " - Server Version: " +
-			// GameServer.getInstance().getVersion().getRevisionNumber(), e);
-		} catch (RuntimeException e)
-		{
-			_log.error("Client: " + _client + " - Failed reading: " + getType() + " - Server Version: " + GameServer.getInstance().getVersion().getRevisionNumber(), e);
-		}
+    @Override
+    public final boolean read() {
+        try {
+            readImpl();
+            return true;
+        } catch (BufferUnderflowException e) {
+            _client.onPacketReadFail();
+            // _log.error("Client: " + _client + " - Failed reading: " +
+            // getType() + " - Server Version: " +
+            // GameServer.getInstance().getVersion().getRevisionNumber(), e);
+        } catch (RuntimeException e) {
+            _log.error("Client: " + _client + " - Failed reading: " + getType() + " - Server Version: ", e);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	protected abstract void readImpl();
+    protected abstract void readImpl();
 
-	@Override
-	public final void run()
-	{
-		GameClient client = getClient();
-		try
-		{
-			runImpl();
-		} catch (RuntimeException e)
-		{
-			_log.error("Client: " + client + " - Failed running: " + getType() + " - Server Version: " + GameServer.getInstance().getVersion().getRevisionNumber(), e);
-		}
-	}
+    @Override
+    public final void run() {
+        GameClient client = getClient();
+        try {
+            runImpl();
+        } catch (RuntimeException e) {
+            _log.error("Client: " + client + " - Failed running: " + getType() + " - Server Version: " , e);
+        }
+    }
 
-	protected abstract void runImpl();
+    protected abstract void runImpl();
 
-	protected String readS(int len)
-	{
-		String ret = readS();
-		return ret.length() > len ? ret.substring(0, len) : ret;
-	}
+    protected String readS(int len) {
+        String ret = readS();
+        return ret.length() > len ? ret.substring(0, len) : ret;
+    }
 
-	protected void sendPacket(L2GameServerPacket packet)
-	{
-		getClient().sendPacket(packet);
-	}
+    protected void sendPacket(L2GameServerPacket packet) {
+        getClient().sendPacket(packet);
+    }
 
-	protected void sendPacket(L2GameServerPacket... packets)
-	{
-		getClient().sendPacket(packets);
-	}
+    protected void sendPacket(L2GameServerPacket... packets) {
+        getClient().sendPacket(packets);
+    }
 
-	protected void sendPackets(List<L2GameServerPacket> packets)
-	{
-		getClient().sendPackets(packets);
-	}
+    protected void sendPackets(List<L2GameServerPacket> packets) {
+        getClient().sendPackets(packets);
+    }
 
-	public String getType()
-	{
-		return "[C] " + getClass().getSimpleName();
-	}
+    public String getType() {
+        return "[C] " + getClass().getSimpleName();
+    }
 }

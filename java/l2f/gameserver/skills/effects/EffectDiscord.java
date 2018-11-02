@@ -1,8 +1,5 @@
 package l2f.gameserver.skills.effects;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ai.CtrlIntention;
 import l2f.gameserver.model.Creature;
@@ -13,105 +10,96 @@ import l2f.gameserver.model.instances.SummonInstance;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.stats.Env;
 
-public class EffectDiscord extends Effect
-{
-	public EffectDiscord(Env env, EffectTemplate template)
-	{
-		super(env, template);
-	}
+import java.util.ArrayList;
+import java.util.List;
 
-	@Override
-	public boolean checkCondition()
-	{
-		int skilldiff = _effected.getLevel() - _skill.getMagicLevel();
-		int lvldiff = _effected.getLevel() - _effector.getLevel();
-		if (skilldiff > 10 || skilldiff > 5 && Rnd.chance(30) || Rnd.chance(Math.abs(lvldiff) * 2))
-			return false;
+public class EffectDiscord extends Effect {
+    public EffectDiscord(Env env, EffectTemplate template) {
+        super(env, template);
+    }
 
-		boolean multitargets = _skill.isAoE();
+    @Override
+    public boolean checkCondition() {
+        int skilldiff = _effected.getLevel() - _skill.getMagicLevel();
+        int lvldiff = _effected.getLevel() - _effector.getLevel();
+        if (skilldiff > 10 || skilldiff > 5 && Rnd.chance(30) || Rnd.chance(Math.abs(lvldiff) * 2))
+            return false;
 
-		if (!_effected.isMonster())
-		{
-			if (!multitargets)
-				getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
-			return false;
-		}
+        boolean multitargets = _skill.isAoE();
 
-		if (_effected.isFearImmune() || _effected.isRaid())
-		{
-			if (!multitargets)
-				getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
-			return false;
-		}
+        if (!_effected.isMonster()) {
+            if (!multitargets)
+                getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+            return false;
+        }
 
-		// Discord нельзя наложить на осадных саммонов
-		Player player = _effected.getPlayer();
-		if (player != null)
-		{
-			SiegeEvent<?, ?> siegeEvent = player.getEvent(SiegeEvent.class);
-			if (_effected.isSummon() && siegeEvent != null && siegeEvent.containsSiegeSummon((SummonInstance)_effected))
-			{
-				if (!multitargets)
-					getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
-				return false;
-			}
-		}
+        if (_effected.isFearImmune() || _effected.isRaid()) {
+            if (!multitargets)
+                getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+            return false;
+        }
 
-		if (_effected.isInZonePeace())
-		{
-			if (!multitargets)
-				getEffector().sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
-			return false;
-		}
+        // Discord нельзя наложить на осадных саммонов
+        Player player = _effected.getPlayer();
+        if (player != null) {
+            SiegeEvent<?, ?> siegeEvent = player.getEvent(SiegeEvent.class);
+            if (_effected.isSummon() && siegeEvent != null && siegeEvent.containsSiegeSummon((SummonInstance) _effected)) {
+                if (!multitargets)
+                    getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
+                return false;
+            }
+        }
 
-		return super.checkCondition();
-	}
+        if (_effected.isInZonePeace()) {
+            if (!multitargets)
+                getEffector().sendPacket(SystemMsg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
+            return false;
+        }
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-		_effected.startConfused();
-		
-		onActionTime();
-	}
+        return super.checkCondition();
+    }
 
-	@Override
-	public void onExit()
-	{
-		super.onExit();
-		
-		if (!_effected.stopConfused())
-		{
-			_effected.abortAttack(true, true);
-			_effected.abortCast(true, true);
-			_effected.stopMove();
-			_effected.getAI().setAttackTarget(null);
-			_effected.setWalking();
-			_effected.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-		}
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        _effected.startConfused();
 
-	@Override
-	public boolean onActionTime()
-	{
-		List<Creature> targetList = new ArrayList<Creature>();
+        onActionTime();
+    }
 
-		for (Creature character : _effected.getAroundCharacters(900, 200))
-			if (character.isNpc() && character != getEffected())
-				targetList.add(character);
+    @Override
+    public void onExit() {
+        super.onExit();
 
-		// if there is no target, exit function
-		if (targetList.isEmpty())
-			return true;
+        if (!_effected.stopConfused()) {
+            _effected.abortAttack(true, true);
+            _effected.abortCast(true, true);
+            _effected.stopMove();
+            _effected.getAI().setAttackTarget(null);
+            _effected.setWalking();
+            _effected.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+        }
+    }
 
-		// Choosing randomly a new target
-		Creature target = targetList.get(Rnd.get(targetList.size()));
+    @Override
+    public boolean onActionTime() {
+        List<Creature> targetList = new ArrayList<Creature>();
 
-		// Attacking the target
-		_effected.setRunning();
-		_effected.getAI().Attack(target, true, false);
+        for (Creature character : _effected.getAroundCharacters(900, 200))
+            if (character.isNpc() && character != getEffected())
+                targetList.add(character);
 
-		return false;
-	}
+        // if there is no target, exit function
+        if (targetList.isEmpty())
+            return true;
+
+        // Choosing randomly a new target
+        Creature target = targetList.get(Rnd.get(targetList.size()));
+
+        // Attacking the target
+        _effected.setRunning();
+        _effected.getAI().Attack(target, true, false);
+
+        return false;
+    }
 }

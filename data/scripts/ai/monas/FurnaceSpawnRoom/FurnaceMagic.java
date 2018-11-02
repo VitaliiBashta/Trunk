@@ -11,56 +11,49 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.network.serverpackets.components.NpcString;
 import l2f.gameserver.scripts.Functions;
 
-public class FurnaceMagic extends DefaultAI
-{
-	private boolean _firstTimeAttacked = true;
+public class FurnaceMagic extends DefaultAI {
+    private boolean _firstTimeAttacked = true;
 
-	public FurnaceMagic(NpcInstance actor)
-	{
-		super(actor);
-		actor.setNameNpcString(NpcString.FURN5);
-	}
+    public FurnaceMagic(NpcInstance actor) {
+        super(actor);
+        actor.setNameNpcString(NpcString.FURN5);
+    }
 
-	@Override
-	protected void onEvtAttacked(Creature attacker, int damage)
-	{
-		NpcInstance actor = getActor();
-		if (actor == null)
-			return;
+    @Override
+    protected void onEvtAttacked(Creature attacker, int damage) {
+        NpcInstance actor = getActor();
+        if (actor == null)
+            return;
 
-		int event_id = actor.getAISpawnParam();
-		MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+        int event_id = actor.getAISpawnParam();
+        MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
 
-		if (_firstTimeAttacked && !furnace.isInProgress())
-		{
-			_firstTimeAttacked = false;
-			attacker.setTarget(null);
-			actor.setTargetable(false);
-			actor.setNpcState((byte) 1);
-			Functions.npcShout(actor, NpcString.FURN1);
-			furnace.registerActions();
-			ThreadPoolManager.getInstance().schedule(new ScheduleTimerTask(), 15000);
-		}
+        if (_firstTimeAttacked && !furnace.isInProgress()) {
+            _firstTimeAttacked = false;
+            attacker.setTarget(null);
+            actor.setTargetable(false);
+            actor.setNpcState((byte) 1);
+            Functions.npcShout(actor, NpcString.FURN1);
+            furnace.registerActions();
+            ThreadPoolManager.getInstance().schedule(new ScheduleTimerTask(), 15000);
+        }
 
-		super.onEvtAttacked(attacker, damage);
-	}
+        super.onEvtAttacked(attacker, damage);
+    }
 
-	private class ScheduleTimerTask extends RunnableImpl
-	{
-		@Override
-		public void runImpl()
-		{
-			NpcInstance actor = getActor();
-			int event_id = actor.getAISpawnParam();
-			MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
-			furnace.spawnAction(MonasteryFurnaceEvent.MYSTIC_ROOM, true);
-		}
-	}
+    private class ScheduleTimerTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            NpcInstance actor = getActor();
+            int event_id = actor.getAISpawnParam();
+            MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+            furnace.spawnAction(MonasteryFurnaceEvent.MYSTIC_ROOM, true);
+        }
+    }
 
-	@Override
-	protected void onEvtDead(Creature killer)
-	{
-		_firstTimeAttacked = true;
-		super.onEvtDead(killer);
-	}
+    @Override
+    protected void onEvtDead(Creature killer) {
+        _firstTimeAttacked = true;
+        super.onEvtDead(killer);
+    }
 }

@@ -5,8 +5,7 @@ import l2f.gameserver.model.Player;
 import l2f.gameserver.scripts.Functions;
 import l2f.gameserver.scripts.ScriptFile;
 
-public class GvG extends Functions implements ScriptFile
-{
+public class GvG extends Functions implements ScriptFile {
 	/*private static final Logger _log = LoggerFactory.getLogger(GvG.class);
 
 	public static final Location TEAM1_LOC = new Location(139736, 145832, -15264); // Team location after teleportation
@@ -31,51 +30,44 @@ public class GvG extends Functions implements ScriptFile
 
 	private static List<HardReference<Player>> leaderList = new CopyOnWriteArrayList<HardReference<Player>>();*/
 
-	public static class RegTask extends RunnableImpl
-	{
-		@SuppressWarnings("unused")
-		@Override
-		public void runImpl() throws Exception
-		{
-			//prepare();
-		}
-	}
+    public static class RegTask extends RunnableImpl {
+        @SuppressWarnings("unused")
+        @Override
+        public void runImpl() {
+            //prepare();
+        }
+    }
 
-	public static class Countdown extends RunnableImpl
-	{
-		int _timer;
+    public static class Countdown extends RunnableImpl {
+        int _timer;
 
-		public Countdown(int timer)
-		{
-			_timer = timer;
-		}
+        public Countdown(int timer) {
+            _timer = timer;
+        }
 
-		@SuppressWarnings("unused")
-		@Override
-		public void runImpl() throws Exception
-		{
-			//Announcements.getInstance().announceToAll("GvG: Until the end of the applications for the tournament remains " + Integer.toString(_timer) + " min.");
-		}
-	}
+        @SuppressWarnings("unused")
+        @Override
+        public void runImpl() {
+            //Announcements.getInstance().announceToAll("GvG: Until the end of the applications for the tournament remains " + Integer.toString(_timer) + " min.");
+        }
+    }
 
-	@Override
-	public void onLoad()
-	{
+    @Override
+    public void onLoad() {
 		/*_log.info("Loaded Event: GvG");
 		initTimer();*/
-	}
+    }
 
-	@Override
-	public void onReload()
-	{}
+    @Override
+    public void onReload() {
+    }
 
-	@Override
-	public void onShutdown()
-	{}
+    @Override
+    public void onShutdown() {
+    }
 
-	@SuppressWarnings("unused")
-	private static void initTimer()
-	{
+    @SuppressWarnings("unused")
+    private static void initTimer() {
 		/*long day = 24 * 60 * 60 * 1000L;
 		Calendar ci = Calendar.getInstance();
 		ci.set(Calendar.HOUR_OF_DAY, everydayStartTime[0]);
@@ -89,35 +81,30 @@ public class GvG extends Functions implements ScriptFile
 		if (_globalTask != null)
 			_globalTask.cancel(true);
 		_globalTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Launch(), delay, day);*/
-	}
+    }
 
-	public static class Launch extends RunnableImpl
-	{
-		@Override
-		public void runImpl()
-		{
-			//activateEvent();
-		}
-	}
+    public static class Launch extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            //activateEvent();
+        }
+    }
 
-	@SuppressWarnings("unused")
-	private static boolean canBeStarted()
-	{
+    @SuppressWarnings("unused")
+    private static boolean canBeStarted() {
 		/*for(Castle c : ResidenceHolder.getInstance().getResidenceList(Castle.class))
 			if (c.getSiegeEvent() != null && c.getSiegeEvent().isInProgress())
 				return false;*/
-		return true;
-	}
+        return true;
+    }
 
-	@SuppressWarnings("unused")
-	private static boolean isActive()
-	{
-		//return _active;
-		return false;
-	}
+    @SuppressWarnings("unused")
+    private static boolean isActive() {
+        //return _active;
+        return false;
+    }
 
-	public static void activateEvent()
-	{
+    public static void activateEvent() {
 		/*if(!isActive() && canBeStarted())
 		{
 			_regTask = ThreadPoolManager.getInstance().schedule(new RegTask(), regActiveTime);
@@ -136,13 +123,12 @@ public class GvG extends Functions implements ScriptFile
 			_active = true;
 			_isRegistrationActive = true;
 		}*/
-	}
+    }
 
-	/**
-	 * Cancels the event during registration time
-	 */
-	public static void deactivateEvent()
-	{
+    /**
+     * Cancels the event during registration time
+     */
+    public static void deactivateEvent() {
 		/*if(isActive())
 		{
 			stopTimers();
@@ -153,13 +139,12 @@ public class GvG extends Functions implements ScriptFile
 			_isRegistrationActive = false;
 			leaderList.clear();
 		}*/
-	}
+    }
 
-	/**
-	 * Shows groups and their leaders who's currently in registration list
-	 */
-	public void showStats()
-	{
+    /**
+     * Shows groups and their leaders who's currently in registration list
+     */
+    public void showStats() {
 		/*Player player = getSelf();
 		if (!player.getPlayerAccess().IsEventGm)
 			return;
@@ -188,10 +173,9 @@ public class GvG extends Functions implements ScriptFile
 		}
 		else
 			show("There are no participants at the time\n\n" + refresh, player, null);*/
-	}
+    }
 
-	public void startNow()
-	{
+    public void startNow() {
 		/*Player player = getSelf();
 		if (!player.getPlayerAccess().IsEventGm)
 			return;
@@ -203,13 +187,12 @@ public class GvG extends Functions implements ScriptFile
 		}
 
 		prepare();*/
-	}
+    }
 
-	/**
-	 * Handles the group applications and apply restrictions
-	 */
-	public void addGroup()
-	{
+    /**
+     * Handles the group applications and apply restrictions
+     */
+    public void addGroup() {
 		/*Player player = getSelf();
 		if (player == null)
 			return;
@@ -281,11 +264,10 @@ public class GvG extends Functions implements ScriptFile
 		leaderList.add(player.getRef());
 		player.getParty().broadcastMessageToPartyMembers("Your group has been included in the waiting list. Please do not register in the other event, and do not engage in duels before the tournament. A complete list of the requirements of the tournament in Community Board (Alt + B)");
 		*/
-	}
+    }
 
-	@SuppressWarnings("unused")
-	private static void stopTimers()
-	{
+    @SuppressWarnings("unused")
+    private static void stopTimers() {
 		/*if(_regTask != null)
 		{
 			_regTask.cancel(false);
@@ -306,11 +288,10 @@ public class GvG extends Functions implements ScriptFile
 			_countdownTask3.cancel(false);
 			_countdownTask3 = null;
 		}*/
-	}
+    }
 
-	@SuppressWarnings("unused")
-	private static void prepare()
-	{
+    @SuppressWarnings("unused")
+    private static void prepare() {
 		/*checkPlayers();
 		shuffleGroups();
 
@@ -331,17 +312,15 @@ public class GvG extends Functions implements ScriptFile
 
 		Announcements.getInstance().announceToAll("GvG: Receipt of applications is completed. Starting the tournament.");
 		start();*/
-	}
+    }
 
-	/**
-	 * @param player
-	 * @param doCheckLeadership
-	 * @return
-	 * Handles all limits for every group member. Called 2 times: when registering group and before sending it to the instance
-	 */
-	@SuppressWarnings("unused")
-	private static int checkPlayer(Player player, boolean doCheckLeadership)
-	{
+    /**
+     * @param player
+     * @param doCheckLeadership
+     * @return Handles all limits for every group member. Called 2 times: when registering group and before sending it to the instance
+     */
+    @SuppressWarnings("unused")
+    private static int checkPlayer(Player player, boolean doCheckLeadership) {
 		/*if(!player.isOnline())
 			return 1;
 
@@ -389,14 +368,13 @@ public class GvG extends Functions implements ScriptFile
 			return 15;
 		}
 */
-		return 0;
-	}
+        return 0;
+    }
 
-	/**
-	 */
-	@SuppressWarnings("unused")
-	private static void shuffleGroups()
-	{
+    /**
+     */
+    @SuppressWarnings("unused")
+    private static void shuffleGroups() {
 		/*if(leaderList.size() % 2 != 0) // If there are odd quantity of groups in the list we should remove one of them to make it even
 		{
 			int rndindex = Rnd.get(leaderList.size());
@@ -410,11 +388,10 @@ public class GvG extends Functions implements ScriptFile
 			int rndindex = Rnd.get(leaderList.size());
 			leaderList.set(i, leaderList.set(rndindex, leaderList.get(i)));
 		}*/
-	}
+    }
 
-	@SuppressWarnings("unused")
-	private static void checkPlayers()
-	{
+    @SuppressWarnings("unused")
+    private static void checkPlayers() {
 		/*for(Player player : HardReferences.unwrap(leaderList))
 		{
 			if (checkPlayer(player, true) != 0)
@@ -433,16 +410,14 @@ public class GvG extends Functions implements ScriptFile
 				}
 			}
 		}*/
-	}
+    }
 
-	public static void updateWinner(Player winner)
-	{
-		
-	}
+    public static void updateWinner(Player winner) {
 
-	@SuppressWarnings("unused")
-	private static void start()
-	{
+    }
+
+    @SuppressWarnings("unused")
+    private static void start() {
 		/*int instancedZoneId = 504;
 		InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(instancedZoneId);
 		if (iz == null)
@@ -493,5 +468,5 @@ public class GvG extends Functions implements ScriptFile
 		
 		leaderList.clear();
 		_log.info("GvG: Event started successfuly.");*/
-	}
+    }
 }
