@@ -3,7 +3,7 @@
 <list>
 	<npc id="12621" name="Wyvern" title="">
 		<set name="aggroRange" value="0" />
-		<set name="ai_type" value="Fighter" />
+		<set name="ai_type" value="CharacterAI"  />
 		<set name="baseAtkRange" value="40" />
 		<set name="baseCON" value="43" />
 		<set name="baseCritRate" value="40" />

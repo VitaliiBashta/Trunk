@@ -1,0 +1,35 @@
+package l2trunk.gameserver.network.serverpackets;
+
+public class ExCleftList extends L2GameServerPacket {
+    private static final int CleftType_Close = -1;
+    private static final int CleftType_Total = 0;
+    private static final int CleftType_Add = 1;
+    private static final int CleftType_Remove = 2;
+    private static final int CleftType_TeamChange = 3;
+
+    private final int CleftType = 0; //TODO
+
+    @Override
+    protected void writeImpl() {
+        writeEx(0x94);
+        writeD(CleftType);
+        switch (CleftType) {
+            case CleftType_Total:
+                //dd (MinMemberCount:%d bBalancedMatch:%d)
+                // BlueTeam: d[dS] (PlayerID:%d PlayerName:%s)
+                // RedTeam: d[dS] (PlayerID:%d PlayerName:%s)
+                break;
+            case CleftType_Add:
+                //ddS - TeamID:%d PlayerID:%d PlayerName:%s
+                break;
+            case CleftType_Remove:
+                //dd - TeamID:%d PlayerID:%d
+                break;
+            case CleftType_TeamChange:
+                //ddd - PlayerID:%d From:%d To:%d
+                break;
+            case CleftType_Close:
+                break;
+        }
+    }
+}

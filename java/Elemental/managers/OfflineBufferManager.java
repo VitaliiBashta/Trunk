@@ -14,21 +14,21 @@
  */
 package Elemental.managers;
 
-import l2f.gameserver.Config;
-import l2f.gameserver.data.xml.holder.CharTemplateHolder;
-import l2f.gameserver.data.xml.holder.ResidenceHolder;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.model.Skill;
-import l2f.gameserver.model.Skill.SkillTargetType;
-import l2f.gameserver.model.Skill.SkillType;
-import l2f.gameserver.model.Zone.ZoneType;
-import l2f.gameserver.model.base.ClassId;
-import l2f.gameserver.model.entity.olympiad.Olympiad;
-import l2f.gameserver.model.entity.residence.ClanHall;
-import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2f.gameserver.tables.SkillTable;
-import l2f.gameserver.utils.TradeHelper;
-import l2f.gameserver.utils.Util;
+import l2trunk.gameserver.Config;
+import l2trunk.gameserver.data.xml.holder.CharTemplateHolder;
+import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.Skill.SkillTargetType;
+import l2trunk.gameserver.model.Skill.SkillType;
+import l2trunk.gameserver.model.Zone.ZoneType;
+import l2trunk.gameserver.model.base.ClassId;
+import l2trunk.gameserver.model.entity.olympiad.Olympiad;
+import l2trunk.gameserver.model.entity.residence.ClanHall;
+import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
+import l2trunk.gameserver.tables.SkillTable;
+import l2trunk.gameserver.utils.TradeHelper;
+import l2trunk.gameserver.utils.Util;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,7 +47,7 @@ public class OfflineBufferManager {
 
     private final Map<Integer, BufferData> _buffStores = new ConcurrentHashMap<>();
 
-    protected OfflineBufferManager() {
+    private OfflineBufferManager() {
     }
 
     public static OfflineBufferManager getInstance() {
@@ -466,7 +466,7 @@ public class OfflineBufferManager {
     }
 
     private static class SingletonHolder {
-        protected static final OfflineBufferManager _instance = new OfflineBufferManager();
+        static final OfflineBufferManager _instance = new OfflineBufferManager();
     }
 
     // Clase donde se guardan todos los datos de cada offline buffer activo
@@ -487,7 +487,7 @@ public class OfflineBufferManager {
             }
         }
 
-        public Player getOwner() {
+        Player getOwner() {
             return _owner;
         }
 

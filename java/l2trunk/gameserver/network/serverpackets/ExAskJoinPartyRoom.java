@@ -1,0 +1,21 @@
+package l2trunk.gameserver.network.serverpackets;
+
+/**
+ * Format: ch S
+ */
+public class ExAskJoinPartyRoom extends L2GameServerPacket {
+    private final String _charName;
+    private final String _roomName;
+
+    public ExAskJoinPartyRoom(String charName, String roomName) {
+        _charName = charName;
+        _roomName = roomName;
+    }
+
+    @Override
+    protected final void writeImpl() {
+        writeEx(0x35);
+        writeS(_charName);
+        writeS(_roomName);
+    }
+}

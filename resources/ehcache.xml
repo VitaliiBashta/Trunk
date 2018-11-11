@@ -15,19 +15,19 @@
 		overflowToDisk="false" timeToLiveSeconds="3600" timeToIdleSeconds="600" />
 
 	<!-- HtmCache -->
-	<cache name="l2f.gameserver.data.htm.HtmCache.RUSSIAN" eternal="true" memoryStoreEvictionPolicy="LRU" maxElementsInMemory="100000" overflowToDisk="false"/>
-	<cache name="l2f.gameserver.data.htm.HtmCache.ENGLISH" eternal="true" memoryStoreEvictionPolicy="LRU" maxElementsInMemory="100000" overflowToDisk="false"/>
+	<cache name="l2trunk.gameserver.data.htm.HtmCache.RUSSIAN" eternal="true" memoryStoreEvictionPolicy="LRU" maxElementsInMemory="100000" overflowToDisk="false"/>
+	<cache name="l2trunk.gameserver.data.htm.HtmCache.ENGLISH" eternal="true" memoryStoreEvictionPolicy="LRU" maxElementsInMemory="100000" overflowToDisk="false"/>
 
 	<!-- ItemInfoCache -->
-	<cache name="l2f.gameserver.cache.ItemInfoCache"
+	<cache name="l2trunk.gameserver.cache.ItemInfoCache"
 		maxElementsInMemory="10000" eternal="false" overflowToDisk="false"
 		timeToLiveSeconds="3600" timeToIdleSeconds="600" />
 
-	<cache name="l2f.gameserver.model.items.ItemInstance"
+	<cache name="l2trunk.gameserver.model.items.ItemInstance"
 		maxElementsInMemory="200000" eternal="false"  timeToIdleSeconds="1800" memoryStoreEvictionPolicy="LRU"
 		timeToLiveSeconds="3600" overflowToDisk="false" statistics="true" />
 
-	<cache name="l2f.gameserver.model.mail.Mail"
+	<cache name="l2trunk.gameserver.model.mail.Mail"
 		maxElementsInMemory="100000" eternal="false" timeToIdleSeconds="3600" memoryStoreEvictionPolicy="LRU"
 		timeToLiveSeconds="28800" overflowToDisk="false" statistics="true" />
 

@@ -1071,7 +1071,7 @@
 	</npc>
 	<npc id="4325" name="Altar Guard" title="">
 		<set name="aggroRange" value="1000" />
-		<set name="ai_type" value="Guard" />
+		<set name="ai_type" value="CharacterAI" />
 		<set name="baseAtkRange" value="40" />
 		<set name="baseCON" value="43" />
 		<set name="baseCritRate" value="40" />

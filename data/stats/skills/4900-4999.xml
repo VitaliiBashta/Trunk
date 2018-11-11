@@ -22,7 +22,7 @@
 	</skill>
 	<skill id="4902" levels="1" name="Raid Boss - Level 74">
 		<!--
-			Description: The leader of the Mineral Spring Yetis in the hot springs area, he styles himself the Icicle Emperor. Despite his arrogant posturing, he is at heart a coward. He once marched into Fire Dragon Valakas' nest to prove his strength, but became frightened and fled at the mere site of Valakas' sleeping form. He is now terrified of Valakas, and runs away or hides at even the sound of roaring.
+			Description: The leader of the Mineral Spring Yetis in the hot springs area, he styles himself the Icicle Emperor. Despite his arrogant posturing, he is at Heart a coward. He once marched into Fire Dragon Valakas' nest to prove his strength, but became frightened and fled at the mere site of Valakas' sleeping form. He is now terrified of Valakas, and runs away or hides at even the sound of roaring.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />

@@ -2,10 +2,10 @@ package Elemental.datatables;
 
 import Elemental.managers.OfflineBufferManager;
 import Elemental.managers.OfflineBufferManager.BufferData;
-import l2f.gameserver.Config;
-import l2f.gameserver.database.DatabaseFactory;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.model.Skill;
+import l2trunk.gameserver.Config;
+import l2trunk.gameserver.database.DatabaseFactory;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,7 +151,7 @@ public class OfflineBuffersTable {
      * @param skills
      * @return Une toda la lista de buffs para que este toda en un string separados por ,
      */
-    private final String joinAllSkillsToString(Collection<Skill> skills) {
+    private String joinAllSkillsToString(Collection<Skill> skills) {
         if (skills.isEmpty())
             return "";
 
@@ -164,6 +164,6 @@ public class OfflineBuffersTable {
     }
 
     private static class SingletonHolder {
-        protected static final OfflineBuffersTable _instance = new OfflineBuffersTable();
+        static final OfflineBuffersTable _instance = new OfflineBuffersTable();
     }
 }

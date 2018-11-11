@@ -182,7 +182,7 @@
 	</skill>
 	<skill id="4818" levels="1" name="Raid Boss - Level 30">
 		<!--
-			Description: Leader of the most famous bandits in Gludio. After declaring that he will steal the most beautiful, never-changing and valuable thing in the world, he is trying to steal the heart of Poesia who is famous for her beauty. He is very romantic and possesses a vigorous personality.
+			Description: Leader of the most famous bandits in Gludio. After declaring that he will steal the most beautiful, never-changing and valuable thing in the world, he is trying to steal the Heart of Poesia who is famous for her beauty. He is very romantic and possesses a vigorous personality.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />

@@ -14,20 +14,20 @@
  */
 package Elemental.managers;
 
-import l2f.gameserver.Announcements;
-import l2f.gameserver.ThreadPoolManager;
-import l2f.gameserver.data.xml.holder.InstantZoneHolder;
-import l2f.gameserver.instancemanager.ReflectionManager;
-import l2f.gameserver.model.Creature;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.model.base.RestartType;
-import l2f.gameserver.model.entity.Reflection;
-import l2f.gameserver.model.entity.events.impl.DuelEvent;
-import l2f.gameserver.model.entity.olympiad.Olympiad;
-import l2f.gameserver.tables.SkillTable;
-import l2f.gameserver.templates.InstantZone;
-import l2f.gameserver.utils.Location;
-import l2f.gameserver.utils.TeleportUtils;
+import l2trunk.gameserver.Announcements;
+import l2trunk.gameserver.ThreadPoolManager;
+import l2trunk.gameserver.data.xml.holder.InstantZoneHolder;
+import l2trunk.gameserver.instancemanager.ReflectionManager;
+import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.base.RestartType;
+import l2trunk.gameserver.model.entity.Reflection;
+import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
+import l2trunk.gameserver.model.entity.olympiad.Olympiad;
+import l2trunk.gameserver.tables.SkillTable;
+import l2trunk.gameserver.templates.InstantZone;
+import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.TeleportUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -465,33 +465,33 @@ public class GmEventManager {
     }
 
     // Clase para guardar cada participante y alguna que otra info extra necesaria de cada uno
-    public static class GmEventParticipant {
+    static class GmEventParticipant {
         private final Player _player;
         private final Location _initialLoc;
 
-        public GmEventParticipant(Player player, Location initialLoc) {
+        GmEventParticipant(Player player, Location initialLoc) {
             _player = player;
             _initialLoc = initialLoc;
         }
 
-        public Player getPlayer() {
+        Player getPlayer() {
             return _player;
         }
 
-        public Location getInitialLoc() {
+        Location getInitialLoc() {
             return _initialLoc;
         }
     }
 
     private static class SingletonHolder {
-        protected static final GmEventManager _instance = new GmEventManager();
+        static final GmEventManager _instance = new GmEventManager();
     }
 
     // Un thread que maneja los res de los pjs cuando mueren
     private class ResurrectionTask implements Runnable {
         private final Player _player;
 
-        public ResurrectionTask(Player player) {
+        ResurrectionTask(Player player) {
             _player = player;
         }
 
