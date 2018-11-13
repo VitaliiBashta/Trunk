@@ -7,13 +7,13 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class Leodas extends Fighter {
+public final class Leodas extends Fighter {
     public Leodas(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         ReflectionUtils.getDoor(19250003).openMe();
         ReflectionUtils.getDoor(19250004).openMe();
         ThreadPoolManager.getInstance().schedule(new CloseDoor(), 60 * 1000L);

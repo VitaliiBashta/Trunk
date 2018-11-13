@@ -3,7 +3,7 @@ package l2trunk.scripts.ai;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class ZakenAnchor extends DefaultAI {
+public final class ZakenAnchor extends DefaultAI {
     private static final int DayZaken = 29176;
     private static final int UltraDayZaken = 29181;
     private static final int Candle = 32705;
@@ -14,7 +14,7 @@ public class ZakenAnchor extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         for (NpcInstance npc : actor.getAroundNpc(1000, 100))
             if (npc.getNpcId() == Candle && npc.getRightHandItem() == 15302)

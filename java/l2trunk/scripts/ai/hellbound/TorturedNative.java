@@ -5,13 +5,13 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-public class TorturedNative extends Fighter {
+public final class TorturedNative extends Fighter {
     public TorturedNative(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;

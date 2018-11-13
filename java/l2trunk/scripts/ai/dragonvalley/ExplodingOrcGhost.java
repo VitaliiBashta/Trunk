@@ -16,7 +16,7 @@ public final class ExplodingOrcGhost extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         ThreadPoolManager.getInstance().schedule(new StartSelfDestructionTimer(getActor()), 3000L);
         super.onEvtSpawn();
     }

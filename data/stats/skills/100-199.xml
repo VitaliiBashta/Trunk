@@ -1182,7 +1182,7 @@
 		<table name="#mpConsume2">14 21 25</table>
 		<table name="#magicLevel">32 46 55</table>
 		<set name="icon" val="icon.skill0176" />
-		<set name="reuseDelay" val="300000" />
+		<set name="reuseDelay" val="100000" />
 		<set name="magicLevel" val="#magicLevel" />
 		<set name="hitTime" val="1500" />
 		<set name="hitCancelTime" val="500" />
@@ -1191,25 +1191,15 @@
 		<set name="target" val="TARGET_SELF" />
 		<set name="skillType" val="BUFF" />
 		<set name="operateType" val="OP_ACTIVE" />
-		<cond msgId="113" addName="1">
-			<player percentHP="60" />
-		</cond>
+
 		<for>
-			<effect count="1" name="Buff" stackOrder="#abnormal_lv" stackType="guts" time="90" val="0">
+			<effect count="1" name="Buff" stackOrder="#abnormal_lv" time="190" val="0">
 				<mul order="0x30" stat="pAtk" val="#default" />
 				<mul order="0x30" stat="pAtk" val="#sword-blunt">
-					<and>
-						<using kind="Sword, Blunt, Big Sword, Big Blunt" />
-						<player percentHP="60" />
-					</and>
 				</mul>
 				<mul order="0x30" stat="pAtk" val="#two-hands">
-					<and>
-						<using kind="Big Sword, Big Blunt" />
-					</and>
 				</mul>
 				<add order="0x40" stat="accCombat" val="#accCombat">
-					<using kind="Big Sword, Big Blunt" />
 				</add>
 			</effect>
 		</for>

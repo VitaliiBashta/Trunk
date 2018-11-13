@@ -20,7 +20,7 @@ import java.util.concurrent.ScheduledFuture;
  *
  * @author SYS
  */
-public class Kama63Minion extends Fighter {
+public final class Kama63Minion extends Fighter {
     private static final int BOSS_ID = 18571;
     private static final int MINION_DIE_TIME = 25000;
     private long _wait_timeout = 0;
@@ -33,13 +33,13 @@ public class Kama63Minion extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         _boss = findBoss(BOSS_ID);
         super.onEvtSpawn();
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (_boss == null)
             _boss = findBoss(BOSS_ID);
         else if (!_spawned) {
@@ -70,7 +70,7 @@ public class Kama63Minion extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _spawned = false;
         if (_dieTask != null) {
             _dieTask.cancel(false);

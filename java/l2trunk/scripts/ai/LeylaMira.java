@@ -13,7 +13,7 @@ import l2trunk.gameserver.utils.Location;
  * - Indicates the social sphere, proigrovaet music.
  * - AI is tested and works.
  */
-public class LeylaMira extends DefaultAI {
+public final class LeylaMira extends DefaultAI {
     private static int count = 0;
 
     public LeylaMira(NpcInstance actor) {
@@ -21,7 +21,7 @@ public class LeylaMira extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

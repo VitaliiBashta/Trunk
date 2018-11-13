@@ -8,11 +8,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.NpcUtils;
 
-/**
- * @author L2Mythras
- */
 
-public class MuscleBomber extends Fighter {
+public final class MuscleBomber extends Fighter {
 
     private boolean spawn_50 = true;
     private boolean spawn_33 = true;
@@ -27,7 +24,7 @@ public class MuscleBomber extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         super.thinkActive();
         if (last_attack_time != 0 && last_attack_time + 30 * 60 * 1000L < System.currentTimeMillis()) {
             getActor().deleteMe();
@@ -36,14 +33,14 @@ public class MuscleBomber extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         getActor().altOnMagicUseTimer(getActor(), SkillTable.getInstance().getInfo(6842, 1));
         last_attack_time = System.currentTimeMillis();
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.getCurrentHpPercents() <= 50 && spawn_50) {
             spawn_drakos(actor, attacker);

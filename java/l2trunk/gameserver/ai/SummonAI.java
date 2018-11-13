@@ -4,13 +4,13 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Summon;
 
-public class SummonAI extends PlayableAI {
+public final class SummonAI extends PlayableAI {
     public SummonAI(Summon actor) {
         super(actor);
     }
 
     @Override
-    protected void thinkActive() {
+    public void thinkActive() {
         Summon actor = getActor();
 
         clearNextAction();
@@ -27,7 +27,7 @@ public class SummonAI extends PlayableAI {
     }
 
     @Override
-    protected void thinkAttack(boolean checkRange) {
+    public void thinkAttack(boolean checkRange) {
         Summon actor = getActor();
 
         if (actor.isDepressed())
@@ -37,7 +37,7 @@ public class SummonAI extends PlayableAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         Summon actor = getActor();
         if (attacker != null && actor.getPlayer().isDead() && !actor.isDepressed())
             Attack(attacker, false, false);

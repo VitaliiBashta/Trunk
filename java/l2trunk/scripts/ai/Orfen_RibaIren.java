@@ -5,7 +5,7 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class Orfen_RibaIren extends Fighter {
+public final class Orfen_RibaIren extends Fighter {
     private static final int Orfen_id = 29014;
 
     public Orfen_RibaIren(NpcInstance actor) {
@@ -13,12 +13,12 @@ public class Orfen_RibaIren extends Fighter {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return defaultNewTask();
     }
 
     @Override
-    protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
+    public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
         super.onEvtClanAttacked(attacked_member, attacker, damage);
         NpcInstance actor = getActor();
         if (_healSkills.length == 0)

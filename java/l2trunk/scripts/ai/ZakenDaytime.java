@@ -13,13 +13,7 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Daytime Zaken.
- * - иногда телепортируется в случайную комнату
- *
- * @author pchayka
- */
-public class ZakenDaytime extends Fighter {
+public final class ZakenDaytime extends Fighter {
     private static final Location[] _locations = new Location[]{
             new Location(55272, 219112, -3496),
             new Location(56296, 218072, -3496),
@@ -48,7 +42,7 @@ public class ZakenDaytime extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         if (_teleportSelfTimer + _teleportSelfReuse < System.currentTimeMillis()) {
             _teleportSelfTimer = System.currentTimeMillis();
             if (Rnd.chance(20)) {
@@ -66,7 +60,7 @@ public class ZakenDaytime extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         Reflection r = actor.getReflection();
         r.setReenterTime(System.currentTimeMillis());
         for (Player p : r.getPlayers())
@@ -76,7 +70,7 @@ public class ZakenDaytime extends Fighter {
     }
 
     @Override
-    protected void teleportHome() {
+    public void teleportHome() {
         return;
     }
 }

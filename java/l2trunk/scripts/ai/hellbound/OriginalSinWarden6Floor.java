@@ -8,12 +8,7 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Original Sin Warden 8-го этажа Tully Workshop
- *
- * @автор VAVAN
- */
-public class OriginalSinWarden6Floor extends Fighter {
+public final class OriginalSinWarden6Floor extends Fighter {
     private static final int[] servants = {22424, 22425, 22426, 22427, 22428, 22429, 22430};
     private static final int[] DarionsFaithfulServants = {22405, 22406, 22407};
 
@@ -22,7 +17,7 @@ public class OriginalSinWarden6Floor extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         if (Rnd.chance(15))

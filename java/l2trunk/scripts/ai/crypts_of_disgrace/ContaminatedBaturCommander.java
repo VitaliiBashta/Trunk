@@ -9,14 +9,6 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author Kolobrodik
- * @date 11:19/19.02.12
- * @description: AI для Contaminated Batur Commander в локации Crypts of Disgrace. (ID 22705)
- * - Когда вы убиваете Contaminated Batur Commander, обычно респавнится такой же моб.
- * Однако есть шанс, что появится Turka Commander in Chief, котоырй призовет к себе на помощь
- * много Turka Troop Commanders.
- */
 public final class ContaminatedBaturCommander extends Fighter {
     private static final int TurkaCommanderChief = 22707; // Turka Commander in Chief
     private static final int CHANCE = 10; // Шанс спауна Turka Commander in Chief и миньенов
@@ -26,7 +18,7 @@ public final class ContaminatedBaturCommander extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (Rnd.chance(CHANCE)) {
             // Спауним
             NpcInstance actor = getActor();

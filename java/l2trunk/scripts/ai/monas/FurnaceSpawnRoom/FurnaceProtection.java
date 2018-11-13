@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
-public class FurnaceProtection extends DefaultAI {
+public final class FurnaceProtection extends DefaultAI {
     private boolean _firstTimeAttacked = true;
 
     public FurnaceProtection(NpcInstance actor) {
@@ -20,7 +20,7 @@ public class FurnaceProtection extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -52,7 +52,7 @@ public class FurnaceProtection extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }

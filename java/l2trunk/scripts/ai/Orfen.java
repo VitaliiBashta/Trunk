@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.npc.model.OrfenInstance;
 
-public class Orfen extends Fighter {
+public final class Orfen extends Fighter {
     private static final PrintfFormat[] MsgOnRecall = {
             new PrintfFormat("%s. Stop kidding yourself about your own powerlessness!"),
             new PrintfFormat("%s. I'll make you feel what true fear is!"),
@@ -25,7 +25,7 @@ public class Orfen extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (super.thinkActive())
             return true;
         OrfenInstance actor = getActor();
@@ -39,12 +39,12 @@ public class Orfen extends Fighter {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return defaultNewTask();
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         super.onEvtAttacked(attacker, damage);
         OrfenInstance actor = getActor();
         if (actor.isCastingNow())
@@ -67,7 +67,7 @@ public class Orfen extends Fighter {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         super.onEvtSeeSpell(skill, caster);
         OrfenInstance actor = getActor();
         if (actor.isCastingNow())

@@ -28,11 +28,11 @@ public class KrateisCubeWatcherBlue extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtThink() {
+    public void onEvtThink() {
         NpcInstance actor = getActor();
         List<Creature> around = World.getAroundCharacters(actor, 600, 300);
         if (around.isEmpty())

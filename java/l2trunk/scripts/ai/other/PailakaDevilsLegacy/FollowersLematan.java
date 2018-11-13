@@ -12,7 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
  * - AI мобов Followers Lematan, миньёны-лекари Боса Lematan в пайлаке 61-67.
  * - Не умеют ходить, лечат Боса.
  */
-public class FollowersLematan extends Fighter {
+public final class FollowersLematan extends Fighter {
     private static final int LEMATAN = 18633;
 
     public FollowersLematan(NpcInstance actor) {
@@ -29,7 +29,6 @@ public class FollowersLematan extends Fighter {
             if (target.getNpcId() == LEMATAN && target.getCurrentHpPercents() < 65)
                 minion.doCast(SkillTable.getInstance().getInfo(5712, 1), target, true);
         }
-        return;
     }
 
     private void startSkillTimer() {
@@ -48,13 +47,13 @@ public class FollowersLematan extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         // stop timers if any
         super.onEvtDead(killer);
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

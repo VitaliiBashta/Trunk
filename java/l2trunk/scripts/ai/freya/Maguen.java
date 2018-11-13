@@ -22,7 +22,7 @@ public final class Maguen extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         ThreadPoolManager.getInstance().schedule(() -> getActor().setNpcState(Rnd.get(1, 3)), 2000L);
         ThreadPoolManager.getInstance().schedule(() -> {
@@ -39,7 +39,7 @@ public final class Maguen extends Fighter {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         if (skill.getId() != 9060)
             return;
         NpcInstance actor = getActor();
@@ -85,7 +85,7 @@ public final class Maguen extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         if (attacker == null)
             return;
 
@@ -96,7 +96,7 @@ public final class Maguen extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         if (target.isPlayable())
             return false;
 

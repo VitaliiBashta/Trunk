@@ -17,7 +17,7 @@ public class GuardianAngel extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         Functions.npcSay(actor, flood[Rnd.get(2)]);
 
@@ -25,7 +25,7 @@ public class GuardianAngel extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         if (actor != null)
             Functions.npcSay(actor, flood[2]);

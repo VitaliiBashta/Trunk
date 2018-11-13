@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.scripts.instances.HeartInfinityAttack;
 
-public class Ekimus extends Mystic {
+public final class Ekimus extends Mystic {
     private long delayTimer = 0;
 
     public Ekimus(NpcInstance actor) {
@@ -14,17 +14,17 @@ public class Ekimus extends Mystic {
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         for (NpcInstance npc : actor.getReflection().getAllByNpcId(29151, true))
             npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, damage);
@@ -32,7 +32,7 @@ public class Ekimus extends Mystic {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         if (delayTimer + 5000 < System.currentTimeMillis()) {
             delayTimer = System.currentTimeMillis();
             if (getActor().getReflection().getInstancedZoneId() == 121)
@@ -42,7 +42,7 @@ public class Ekimus extends Mystic {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (delayTimer + 5000 < System.currentTimeMillis()) {
             delayTimer = System.currentTimeMillis();
             if (getActor().getReflection().getInstancedZoneId() == 121)

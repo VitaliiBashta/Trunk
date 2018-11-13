@@ -15,13 +15,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.List;
 
-/**
- * AI Seduced Investigator для Rim Pailaka
- *
- * @author pchayka
- */
-
-public class SeducedInvestigator extends Fighter {
+public final class SeducedInvestigator extends Fighter {
     private final int[] _allowedTargets = {25659, 25660, 25661, 25662, 25663, 25664};
     private long _reuse = 0;
 
@@ -33,7 +27,7 @@ public class SeducedInvestigator extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
@@ -67,7 +61,7 @@ public class SeducedInvestigator extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         Reflection r = actor.getReflection();
         List<Player> players = r.getPlayers();
@@ -80,7 +74,7 @@ public class SeducedInvestigator extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null)
             return;
@@ -95,7 +89,7 @@ public class SeducedInvestigator extends Fighter {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
         if (target.isPlayer() || target.isPet() || target.isSummon())
             return;
 
@@ -103,7 +97,7 @@ public class SeducedInvestigator extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         if (target.isPlayable())
             return false;
 

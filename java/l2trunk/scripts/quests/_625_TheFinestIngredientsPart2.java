@@ -29,7 +29,7 @@ public class _625_TheFinestIngredientsPart2 extends Quest implements ScriptFile 
     private static final int Reward_First = 4589;
     private static final int Reward_Last = 4594;
 
-    private _625_TheFinestIngredientsPart2() {
+    public  _625_TheFinestIngredientsPart2() {
         super(true);
         addStartNpc(Jeremy);
         addTalkId(Yetis_Table);

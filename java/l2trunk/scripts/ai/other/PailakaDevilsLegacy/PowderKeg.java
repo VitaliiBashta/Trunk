@@ -11,7 +11,7 @@ public class PowderKeg extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -23,12 +23,12 @@ public class PowderKeg extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 }

@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class IsleOfPrayerFighter extends Fighter {
+public final class IsleOfPrayerFighter extends Fighter {
     private boolean _penaltyMobsNotSpawned = true;
     private static final int PENALTY_MOBS[] = {18364, 18365, 18366};
     private static final int YELLOW_CRYSTAL = 9593;
@@ -22,7 +22,7 @@ public class IsleOfPrayerFighter extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (_penaltyMobsNotSpawned && attacker.isPlayable() && attacker.getPlayer() != null) {
             Party party = attacker.getPlayer().getParty();
@@ -43,7 +43,7 @@ public class IsleOfPrayerFighter extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _penaltyMobsNotSpawned = true;
         if (killer != null) {
             final Player player = killer.getPlayer();

@@ -28,7 +28,7 @@ public class OiAriosh extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (!actor.isDead())
             if (_hpCount < _hps.length && actor.getCurrentHpPercents() < _hps[_hpCount]) {
@@ -52,7 +52,7 @@ public class OiAriosh extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _hpCount = 0;
         super.onEvtDead(killer);
     }

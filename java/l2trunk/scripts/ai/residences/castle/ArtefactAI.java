@@ -13,17 +13,13 @@ import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.entity.events.objects.SiegeClanObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-/**
- * @author VISTALL
- * @date 8:32/06.04.2011
- */
-public class ArtefactAI extends CharacterAI {
+public final class ArtefactAI extends CharacterAI {
     public ArtefactAI(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
         NpcInstance actor;
         Player player;
         if (attacker == null || (player = attacker.getPlayer()) == null || (actor = (NpcInstance) getActor()) == null)
@@ -37,7 +33,7 @@ public class ArtefactAI extends CharacterAI {
             ThreadPoolManager.getInstance().schedule(new notifyGuard(player), 1000);
     }
 
-    class notifyGuard extends RunnableImpl {
+    private class notifyGuard extends RunnableImpl {
         private final HardReference<Player> _playerRef;
 
         notifyGuard(Player attacker) {

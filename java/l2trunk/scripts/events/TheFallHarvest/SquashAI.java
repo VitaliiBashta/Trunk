@@ -44,7 +44,7 @@ public class SquashAI extends Fighter {
         }
     }
 
-    private static final RewardData[] _dropList = new RewardData[]
+    private final RewardData[] _dropList = new RewardData[]
             {
                     new RewardData(1539, 1, 5, 15000), // Greater Healing Potion
                     new RewardData(1374, 1, 3, 15000), // Greater Haste Potion
@@ -241,7 +241,7 @@ public class SquashAI extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (System.currentTimeMillis() > _timeToUnspawn) {
             _timeToUnspawn = Long.MAX_VALUE;
             if (_polimorphTask != null) {
@@ -258,7 +258,7 @@ public class SquashAI extends Fighter {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         SquashInstance actor = getActor();
         if (actor == null || skill.getId() != 2005)
             return;
@@ -360,14 +360,14 @@ public class SquashAI extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         SquashInstance actor = getActor();
         if (actor != null && Rnd.chance(5))
             Functions.npcSay(actor, textOnAttack[Rnd.get(textOnAttack.length)]);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _tryCount = -1;
         SquashInstance actor = getActor();
         if (actor == null)
@@ -432,12 +432,12 @@ public class SquashAI extends Fighter {
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 

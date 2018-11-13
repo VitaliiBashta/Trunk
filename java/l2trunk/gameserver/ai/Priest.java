@@ -2,18 +2,18 @@ package l2trunk.gameserver.ai;
 
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public abstract class Priest extends DefaultAI {
+public class Priest extends DefaultAI {
     protected Priest(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         return super.thinkActive() || defaultThinkBuff(10, 5);
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return defaultFightTask();
     }
 

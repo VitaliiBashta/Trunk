@@ -23,7 +23,7 @@ public class IsleOfPrayerMystic extends Mystic {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (_penaltyMobsNotSpawned && attacker.isPlayable() && attacker.getPlayer() != null) {
             Party party = attacker.getPlayer().getParty();
@@ -47,7 +47,7 @@ public class IsleOfPrayerMystic extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _penaltyMobsNotSpawned = true;
         if (killer != null) {
             final Player player = killer.getPlayer();

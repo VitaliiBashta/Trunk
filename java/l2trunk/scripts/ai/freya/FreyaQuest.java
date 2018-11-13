@@ -7,14 +7,14 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-public class FreyaQuest extends Fighter {
+public final class FreyaQuest extends Fighter {
     public FreyaQuest(NpcInstance actor) {
         super(actor);
         MAX_PURSUE_RANGE = Integer.MAX_VALUE;
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         Reflection r = getActor().getReflection();
@@ -25,11 +25,11 @@ public class FreyaQuest extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void returnHome(boolean clearAggro, boolean teleport) {
+    public void returnHome(boolean clearAggro, boolean teleport) {
     }
 }

@@ -9,13 +9,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.NpcUtils;
 
-/**
- * @author L2Mythras
- * <p>
- * PTS http://www.youtube.com/watch?v=nq54AesWUVg
- */
-
-public class SpikeSlasher extends Fighter {
+public final class SpikeSlasher extends Fighter {
 
     private boolean spawn_50 = true;
     private boolean spawn_33 = true;
@@ -33,7 +27,7 @@ public class SpikeSlasher extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         super.thinkActive();
         if (last_attack_time != 0 && last_attack_time + 30 * 60 * 1000L < System.currentTimeMillis()) {
             getActor().deleteMe();
@@ -42,13 +36,13 @@ public class SpikeSlasher extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         last_attack_time = System.currentTimeMillis();
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.getCurrentHpPercents() <= 50 && spawn_50) {
             spawn_gemdragons(actor, attacker);

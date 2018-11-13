@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class Shade extends Fighter {
+public final class Shade extends Fighter {
     private long _wait_timeout = 0;
     private boolean _wait = false;
     private static final int DESPAWN_TIME = 5 * 60 * 1000; // 5 min
@@ -17,7 +17,7 @@ public class Shade extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -42,12 +42,12 @@ public class Shade extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (killer != null) {
             final Player player = killer.getPlayer();
             if (player != null) {

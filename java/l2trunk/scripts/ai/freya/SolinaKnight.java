@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
 
-public class SolinaKnight extends Fighter {
+public final class SolinaKnight extends Fighter {
     private NpcInstance scarecrow = null;
 
     public SolinaKnight(NpcInstance actor) {
@@ -19,7 +19,7 @@ public class SolinaKnight extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (scarecrow == null) {
             List<NpcInstance> around = getActor().getAroundNpc(300, 100);
             if (around != null && !around.isEmpty())

@@ -17,11 +17,7 @@ import l2trunk.scripts.bosses.ValakasManager;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author pchayka
- */
-
-public class Valakas extends Fighter {
+public final class Valakas extends Fighter {
     // Self skills
     private final Skill s_lava_skin = getSkill(4680, 1);
     private final Skill s_fear = getSkill(4689, 1);
@@ -58,7 +54,7 @@ public class Valakas extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
 
         NpcInstance actor = getActor();
         if (DAMAGE_COUNTER == 0)
@@ -81,7 +77,7 @@ public class Valakas extends Fighter {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         Creature target;
         if ((target = prepareTarget()) == null)
@@ -199,7 +195,7 @@ public class Valakas extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         // Lava buff
         if (actor.isInZone(Zone.ZoneType.poison))

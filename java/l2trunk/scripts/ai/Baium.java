@@ -10,7 +10,7 @@ import l2trunk.scripts.bosses.BaiumManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Baium extends DefaultAI {
+public final class Baium extends DefaultAI {
     private boolean _firstTimeAttacked = true;
 
     // Боевые скилы байума
@@ -32,7 +32,7 @@ public class Baium extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         BaiumManager.setLastAttackTime();
 
         if (_firstTimeAttacked) {
@@ -51,7 +51,7 @@ public class Baium extends DefaultAI {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -109,7 +109,7 @@ public class Baium extends DefaultAI {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         NpcInstance actor = getActor();
         if (actor != null && !BaiumManager.getZone().checkIfInZone(actor))
             teleportHome();
@@ -117,7 +117,7 @@ public class Baium extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }

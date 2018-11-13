@@ -8,20 +8,15 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
 
-/**
- * AI Kanadis Guide и минионов для Rim Pailaka
- *
- * @author pchayka
- */
 
-public class KanadisGuide extends Fighter {
+public final class KanadisGuide extends Fighter {
 
     public KanadisGuide(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
@@ -33,7 +28,7 @@ public class KanadisGuide extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker.getNpcId() == 36562) {
             actor.getAggroList().addDamageHate(attacker, 0, 1);
@@ -44,7 +39,7 @@ public class KanadisGuide extends Fighter {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 }

@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-public class Alhena extends DefaultAI {
+public final class Alhena extends DefaultAI {
     private static final Location[] points = {
             new Location(10968, 14620, -4248),
             new Location(11308, 15847, -4584),
@@ -39,7 +39,7 @@ public class Alhena extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -84,17 +84,15 @@ public class Alhena extends DefaultAI {
             return true;
         }
 
-        if (randomAnimation())
-            return true;
+        return randomAnimation();
 
-        return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

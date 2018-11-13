@@ -15,7 +15,7 @@ public final class DrakosHunter extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         if (Rnd.chance(Config.DHUNTER_MS_CHANCE)) {
             NpcInstance actor = getActor();
             for (int i = 0; i < 4; i++) {

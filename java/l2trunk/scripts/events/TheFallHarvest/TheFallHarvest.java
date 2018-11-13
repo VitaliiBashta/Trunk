@@ -28,7 +28,7 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
     private static boolean _active = false;
     private static boolean MultiSellLoaded = false;
 
-    private static final Path multiSellFile = Config.DATAPACK_ROOT.resolve("data/multisell/events/TheFallHarvest/31255.xml");
+    private final Path multiSellFile = Config.DATAPACK_ROOT.resolve("data/multisell/events/TheFallHarvest/31255.xml");
 
     /**
      * Читает статус эвента из базы.
@@ -37,7 +37,7 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
         return isActive("TheFallHarvest");
     }
 
-    private static void loadMultiSell() {
+    private void loadMultiSell() {
         if (MultiSellLoaded)
             return;
         MultiSellHolder.getInstance().parseFile(multiSellFile);

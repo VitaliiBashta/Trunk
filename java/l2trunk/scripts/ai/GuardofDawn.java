@@ -22,9 +22,9 @@ import l2trunk.gameserver.utils.Location;
  * @author n0nam3
  * @date 20/09/2010 19:03
  */
-public class GuardofDawn extends DefaultAI {
+public final class GuardofDawn extends DefaultAI {
     private static final int _aggrorange = 150;
-    private static final Skill _skill = SkillTable.getInstance().getInfo(5978, 1);
+    private final Skill _skill = SkillTable.getInstance().getInfo(5978, 1);
     private Location _locStart = null;
     private Location _locEnd = null;
     private Location _locTele = null;
@@ -57,7 +57,7 @@ public class GuardofDawn extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
 
         // проверяем игроков вокруг
@@ -124,23 +124,23 @@ public class GuardofDawn extends DefaultAI {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
     }
 
     @Override
-    protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
+    public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
     }
 
 }

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class TarBeetle extends DefaultAI {
+public final class TarBeetle extends DefaultAI {
     private static final Logger _log = LoggerFactory.getLogger(TarBeetle.class);
 
     private static final Location[] POSITIONS = {
@@ -67,7 +67,7 @@ public class TarBeetle extends DefaultAI {
         super(actor);
     }
 
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
@@ -83,14 +83,14 @@ public class TarBeetle extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         CancelTarget(actor);
         super.onEvtAttacked(attacker, damage);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
 
         NpcInstance actor = getActor();
         CancelTarget(actor);
@@ -104,7 +104,7 @@ public class TarBeetle extends DefaultAI {
             CAN_DEBUF = false;
         }
 
-        if (actor == null || System.currentTimeMillis() - LAST_TELEPORT < TELEPORT_PERIOD)
+        if (System.currentTimeMillis() - LAST_TELEPORT < TELEPORT_PERIOD)
             return false;
 
         for (Location POSITION : POSITIONS) {

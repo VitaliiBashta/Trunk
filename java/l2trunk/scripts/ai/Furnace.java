@@ -10,13 +10,8 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Grivesky
- * @date 22.01.2012
- * @AI for Mobs Furnace is MOS
- */
 
-public class Furnace extends Fighter {
+public final class Furnace extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(Furnace.class);
     private static final long NextAtack = 10L * 1000L; // 10 seconds supposedly TODO
     private long _lastAttackTime = 0;
@@ -43,7 +38,7 @@ public class Furnace extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (_lastAttackTime + NextAtack < System.currentTimeMillis() && actor.getTitle() != null) {
             if ("Furnace of Magic Power".equals(actor.getTitle())) {
@@ -98,7 +93,7 @@ public class Furnace extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead())
             return true;

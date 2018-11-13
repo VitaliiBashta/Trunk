@@ -11,7 +11,7 @@ import l2trunk.gameserver.scripts.Functions;
  *
  * @author Diamond
  */
-public class DeluLizardmanSpecialAgent extends Ranger {
+public final class DeluLizardmanSpecialAgent extends Ranger {
     private boolean _firstTimeAttacked = true;
 
     public DeluLizardmanSpecialAgent(NpcInstance actor) {
@@ -19,13 +19,13 @@ public class DeluLizardmanSpecialAgent extends Ranger {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         _firstTimeAttacked = true;
         super.onEvtSpawn();
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (_firstTimeAttacked) {
             _firstTimeAttacked = false;

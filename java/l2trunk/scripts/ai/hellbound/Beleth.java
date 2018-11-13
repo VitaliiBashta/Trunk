@@ -18,13 +18,13 @@ public final class Beleth extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         BelethManager.setBelethDead();
         super.onEvtDead(killer);
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
@@ -39,12 +39,12 @@ public final class Beleth extends Mystic {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 

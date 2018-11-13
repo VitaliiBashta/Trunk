@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.Location;
  *
  * @author SYS
  */
-public class Rooney extends DefaultAI {
+public final class Rooney extends DefaultAI {
     private static final Location[] points = {
             new Location(184022, -117083, -3342),
             new Location(183516, -118815, -3093),
@@ -28,7 +28,7 @@ public class Rooney extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (System.currentTimeMillis() - _lastTeleport < TELEPORT_PERIOD)
             return false;

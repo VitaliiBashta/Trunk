@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class MasterZelos extends Fighter {
+public final class MasterZelos extends Fighter {
     private static Zone _zone;
     private static final int[] doors = {19260054, 19260053};
 
@@ -17,7 +17,7 @@ public class MasterZelos extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         setZoneInactive();
         super.onEvtSpawn();
         //Doors
@@ -28,7 +28,7 @@ public class MasterZelos extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         //Doors
         for (int door1 : doors) {
             DoorInstance door = ReflectionUtils.getDoor(door1);

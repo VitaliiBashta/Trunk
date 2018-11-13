@@ -8,7 +8,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 public final class DemonPrince extends Fighter {
-    private static final Skill ULTIMATE_DEFENSE_SKILL = SkillTable.getInstance().getInfo(5044, 3);
+    private final Skill ULTIMATE_DEFENSE_SKILL = SkillTable.getInstance().getInfo(5044, 3);
     private static final int TELEPORTATION_CUBIC_ID = 32375;
     private static final Location CUBIC_POSITION = new Location(-22144, 278744, -8239, 0);
     private boolean _notUsedUltimateDefense = true;
@@ -18,7 +18,7 @@ public final class DemonPrince extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (_notUsedUltimateDefense && actor.getCurrentHpPercents() < 10) {
@@ -33,7 +33,7 @@ public final class DemonPrince extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         _notUsedUltimateDefense = true;

@@ -12,7 +12,7 @@ import l2trunk.scripts.instances.CrystalCaverns;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Kechi extends DefaultAI {
+public final class Kechi extends DefaultAI {
     private final Skill KechiDoubleCutter; // Attack by crossing the sword. Power 2957.
     private final Skill KechiAirBlade; // Strikes the enemy a blow in a distance using sword energy. Critical enabled. Power 1812
 
@@ -47,7 +47,7 @@ public class Kechi extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         CrystalCaverns refl = null;
         if (actor.getReflection() instanceof CrystalCaverns)
@@ -59,7 +59,7 @@ public class Kechi extends DefaultAI {
 
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         Creature target;
         if ((target = prepareTarget()) == null)
@@ -156,7 +156,7 @@ public class Kechi extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         CrystalCaverns refl = null;
         if (actor.getReflection() instanceof CrystalCaverns)
@@ -167,7 +167,7 @@ public class Kechi extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

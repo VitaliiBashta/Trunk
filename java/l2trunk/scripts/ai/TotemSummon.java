@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class TotemSummon extends DefaultAI {
+public final class TotemSummon extends DefaultAI {
     private static final int TotemofBody = 143;
     private static final int TotemofSpirit = 144;
     private static final int TotemofBravery = 145;
@@ -26,7 +26,7 @@ public class TotemSummon extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
             @SuppressWarnings("unused")
@@ -39,7 +39,7 @@ public class TotemSummon extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (_timer < System.currentTimeMillis()) {
             _timer = System.currentTimeMillis() + 15000L;
             for (Creature c : getActor().getAroundCharacters(450, 200))

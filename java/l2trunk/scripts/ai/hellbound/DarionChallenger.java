@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DarionChallenger extends Fighter {
+public final class DarionChallenger extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(DarionChallenger.class);
     private static final int TeleportCube = 32467;
 
@@ -21,7 +21,7 @@ public class DarionChallenger extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (checkAllDestroyed())
             try {
                 SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(TeleportCube));
@@ -35,15 +35,12 @@ public class DarionChallenger extends Fighter {
         super.onEvtDead(killer);
     }
 
-    private static boolean checkAllDestroyed() {
+    private boolean checkAllDestroyed() {
         if (!GameObjectsStorage.getAllByNpcId(25600, true).isEmpty())
             return false;
         if (!GameObjectsStorage.getAllByNpcId(25601, true).isEmpty())
             return false;
-        if (!GameObjectsStorage.getAllByNpcId(25602, true).isEmpty())
-            return false;
-
-        return true;
+        return GameObjectsStorage.getAllByNpcId(25602, true).isEmpty();
     }
 
     private class Unspawn extends RunnableImpl {

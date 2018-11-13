@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.List;
 
 
-public class MasterYogi extends DefaultAI {
+public final class MasterYogi extends DefaultAI {
     private long wait_timeout1 = 0;
     private long wait_timeout2 = 0;
     private int range = 0;
@@ -23,7 +23,7 @@ public class MasterYogi extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
 
         //Calculate the radius at which NPCs will talk
@@ -52,17 +52,15 @@ public class MasterYogi extends DefaultAI {
             return true;
         }
 
-        if (randomAnimation())
-            return true;
+        return randomAnimation();
 
-        return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

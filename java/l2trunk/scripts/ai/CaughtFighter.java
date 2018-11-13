@@ -20,7 +20,7 @@ public class CaughtFighter extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         if (Rnd.chance(75))
@@ -28,7 +28,7 @@ public class CaughtFighter extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (Rnd.chance(75))
             Functions.npcSayCustomMessage(getActor(), "scripts.ai.CaughtMob.death");
 
@@ -36,7 +36,7 @@ public class CaughtFighter extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor != null && System.currentTimeMillis() >= TIME_TO_DIE) {
             actor.deleteMe();

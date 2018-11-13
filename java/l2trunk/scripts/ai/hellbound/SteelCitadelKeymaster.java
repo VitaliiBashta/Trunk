@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-public class SteelCitadelKeymaster extends Fighter {
+public final class SteelCitadelKeymaster extends Fighter {
     private boolean _firstTimeAttacked = true;
     private static final int AMASKARI_ID = 22449;
 
@@ -16,7 +16,7 @@ public class SteelCitadelKeymaster extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return;
@@ -35,13 +35,13 @@ public class SteelCitadelKeymaster extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

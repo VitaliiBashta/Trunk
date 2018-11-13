@@ -15,14 +15,14 @@ import l2trunk.gameserver.model.instances.NpcInstance;
  *
  * @author SYS
  */
-public class PaganGuard extends Mystic {
+public final class PaganGuard extends Mystic {
     public PaganGuard(NpcInstance actor) {
         super(actor);
         actor.startImmobilized();
     }
 
     @Override
-    protected boolean checkTarget(Creature target, int range) {
+    public boolean checkTarget(Creature target, int range) {
         NpcInstance actor = getActor();
         if (target != null && !actor.isInRange(target, actor.getAggroRange())) {
             actor.getAggroList().remove(target, true);
@@ -32,7 +32,7 @@ public class PaganGuard extends Mystic {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

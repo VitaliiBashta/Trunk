@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * - Uninstall it in 10-60 seconds.
  * - AI is tested and works.
  */
-public class FireFeed extends DefaultAI {
+public final class FireFeed extends DefaultAI {
     protected static Logger _log = LoggerFactory.getLogger(FireFeed.class.getName());
     private final long _wait_timeout = System.currentTimeMillis() + Rnd.get(10, 30) * 1000;
 
@@ -24,7 +24,7 @@ public class FireFeed extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -36,7 +36,7 @@ public class FireFeed extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         if (skill.getId() != 9075)
             return;
 

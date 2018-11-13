@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author Diamond
  */
-public class HotSpringsMob extends Mystic {
+public final class HotSpringsMob extends Mystic {
     private static final Logger _log = LoggerFactory.getLogger(HotSpringsMob.class);
     private static final int DeBuffs[] = {4554, 4552};
 
@@ -32,7 +32,7 @@ public class HotSpringsMob extends Mystic {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker != null && Rnd.chance(5)) {
             int DeBuff = DeBuffs[Rnd.get(DeBuffs.length)];

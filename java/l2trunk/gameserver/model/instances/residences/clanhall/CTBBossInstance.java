@@ -12,11 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public abstract class CTBBossInstance extends MonsterInstance {
-    private static final Skill SKILL = SkillTable.getInstance().getInfo(5456, 1);
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+    private final Skill SKILL = SkillTable.getInstance().getInfo(5456, 1);
     private CTBTeamObject _matchTeamObject;
 
     protected CTBBossInstance(int objectId, NpcTemplate template) {

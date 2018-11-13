@@ -13,13 +13,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.List;
 
-/**
- * @author Grivesky
- * - AI for Sel Mahum Shef (18,908).
- * - Is next, skill buff the player, the player resaya HP.
- * - AI is tested and works.
- */
-public class SelMahumShef extends Fighter {
+public final class SelMahumShef extends Fighter {
     private long _wait_timeout = System.currentTimeMillis() + 30000;
     private boolean _firstTime = true;
     private static final NpcString[] _text = {NpcString.SCHOOL3, NpcString.SCHOOL4};
@@ -29,7 +23,7 @@ public class SelMahumShef extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor != null) {
             if (_wait_timeout < System.currentTimeMillis()) {

@@ -7,13 +7,13 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class Chimera extends Fighter {
+public final class Chimera extends Fighter {
     public Chimera(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         if (skill.getId() != 2359)
             return;
         NpcInstance actor = getActor();
@@ -40,7 +40,7 @@ public class Chimera extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         if (HellboundManager.getHellboundLevel() < 7) {
             attacker.teleToLocation(-11272, 236464, -3248);
             return;

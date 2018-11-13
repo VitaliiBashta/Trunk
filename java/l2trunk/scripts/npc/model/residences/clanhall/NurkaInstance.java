@@ -10,12 +10,8 @@ import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 13:28/06.03.2011
- */
 public class NurkaInstance extends SiegeGuardInstance {
-    private static final Skill SKILL = SkillTable.getInstance().getInfo(5456, 1);
+    private  final Skill SKILL = SkillTable.getInstance().getInfo(5456, 1);
 
     public NurkaInstance(int objectId, NpcTemplate template) {
         super(objectId, template);

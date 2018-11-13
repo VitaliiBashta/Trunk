@@ -7,7 +7,7 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.NpcUtils;
 
-public class Fireplace extends DefaultAI {
+public final class Fireplace extends DefaultAI {
     private static final long delay = 5 * 60 * 1000L;
 
     public Fireplace(NpcInstance actor) {
@@ -16,7 +16,7 @@ public class Fireplace extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         if (Rnd.chance(60))
             getActor().setNpcState(1);

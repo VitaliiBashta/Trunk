@@ -25,7 +25,7 @@ public final class RaceManager extends DefaultAI {
     }
 
     @Override
-    protected void onEvtThink() {
+    public void onEvtThink() {
         RaceManagerInstance actor = getActor();
         if (actor == null)
             return;

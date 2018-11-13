@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class TiatsTrap extends DefaultAI {
+public final class TiatsTrap extends DefaultAI {
     private static final int[] holdTraps = {18720, 18721, 18722, 18723, 18724, 18725, 18726, 18727, 18728};
     private static final int[] damageTraps = {
             18737,
@@ -58,7 +58,7 @@ public class TiatsTrap extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (!actor.getAroundCharacters(200, 150).isEmpty()) {
             Skill skill = null;

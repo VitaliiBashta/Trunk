@@ -14,11 +14,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author PaInKiLlEr
- * - AI Archangel (29021).
- */
-public class Archangel extends Fighter {
+public final class Archangel extends Fighter {
     private long _new_target = System.currentTimeMillis() + 20000;
     private final Zone _zone = ReflectionUtils.getZone("[baium_epic]");
 
@@ -32,7 +28,7 @@ public class Archangel extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -62,7 +58,7 @@ public class Archangel extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor != null && !actor.isDead()) {
             if (attacker != null) {
@@ -76,7 +72,7 @@ public class Archangel extends Fighter {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         NpcInstance actor = getActor();
         if (actor != null && !_zone.checkIfInZone(actor))
             returnHome();
@@ -84,7 +80,7 @@ public class Archangel extends Fighter {
     }
 
     @Override
-    protected void returnHome() {
+    public void returnHome() {
         NpcInstance actor = getActor();
         Location sloc = actor.getSpawnedLoc();
 

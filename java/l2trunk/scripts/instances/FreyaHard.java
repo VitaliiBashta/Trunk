@@ -19,12 +19,6 @@ import l2trunk.gameserver.utils.Location;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * @author pchayka
- * <p/>
- * Инстанс Фреи в режиме высокой сложности.
- */
-
 public class FreyaHard extends Reflection {
     private static final int FreyaThrone = 29177;
     private static final int FreyaStandHard = 29180;

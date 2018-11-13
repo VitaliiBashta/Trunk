@@ -7,10 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
 
-/**
- * @author Diamond
- */
-public class RagnaHealer extends Priest {
+public final class RagnaHealer extends Priest {
     private long lastFactionNotifyTime;
 
     public RagnaHealer(NpcInstance actor) {
@@ -18,7 +15,7 @@ public class RagnaHealer extends Priest {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null)
             return;

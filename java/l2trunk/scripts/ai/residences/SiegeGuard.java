@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class SiegeGuard extends Fighter {
+public class SiegeGuard extends Fighter {
     SiegeGuard(NpcInstance actor) {
         super(actor);
         MAX_PURSUE_RANGE = 1000;
@@ -36,23 +36,23 @@ public abstract class SiegeGuard extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 
     @Override
-    protected boolean canSeeInSilentMove(Playable target) {
+    public boolean canSeeInSilentMove(Playable target) {
         // Осадные гварды могут видеть игроков в режиме Silent Move с вероятностью 10%
         return !target.isSilentMoving() || Rnd.chance(10);
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE || !isGlobalAggro())
             return false;
@@ -98,12 +98,12 @@ public abstract class SiegeGuard extends Fighter {
     }
 
     @Override
-    protected boolean isGlobalAggro() {
+    public boolean isGlobalAggro() {
         return true;
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
         SiegeGuardInstance actor = getActor();
         if (actor.isDead())
             return;
@@ -113,7 +113,7 @@ public abstract class SiegeGuard extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isActionsDisabled())
             return true;
@@ -159,7 +159,7 @@ public abstract class SiegeGuard extends Fighter {
     }
 
     @Override
-    protected Creature prepareTarget() {
+    public Creature prepareTarget() {
         SiegeGuardInstance actor = getActor();
         if (actor.isDead())
             return null;
@@ -186,7 +186,7 @@ public abstract class SiegeGuard extends Fighter {
     }
 
     @Override
-    protected boolean canAttackCharacter(Creature target) {
+    public boolean canAttackCharacter(Creature target) {
         return getActor().isAutoAttackable(target);
     }
 }

@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.instances.CrystalCaverns;
 
-public class EmeraldDoorController extends DefaultAI {
+public final class EmeraldDoorController extends DefaultAI {
     private boolean openedDoor = false;
     private Player opener = null;
 
@@ -18,7 +18,7 @@ public class EmeraldDoorController extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         DoorInstance door = getClosestDoor();
         boolean active = false;
@@ -58,7 +58,7 @@ public class EmeraldDoorController extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

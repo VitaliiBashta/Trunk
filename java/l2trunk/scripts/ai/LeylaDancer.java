@@ -13,7 +13,7 @@ import l2trunk.gameserver.utils.Location;
  * - Indicates the social sphere, and shout in the chat.
  * - AI is tested and works.
  */
-public class LeylaDancer extends DefaultAI {
+public final class LeylaDancer extends DefaultAI {
     private static int count = 0;
 
     public LeylaDancer(NpcInstance actor) {
@@ -21,7 +21,7 @@ public class LeylaDancer extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

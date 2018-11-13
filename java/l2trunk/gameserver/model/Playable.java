@@ -4,8 +4,10 @@ import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.util.Rnd;
 import l2trunk.commons.util.concurrent.atomic.AtomicState;
 import l2trunk.gameserver.Config;
+import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.CtrlIntention;
+import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.AggroList.AggroInfo;
@@ -24,6 +26,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.EffectType;
+import l2trunk.gameserver.skills.skillclasses.Default;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.CharTemplate;
@@ -531,7 +534,8 @@ public abstract class Playable extends Creature {
                         }
                         if (!skill.isAI()) {
                             int damage = skill.getEffectPoint() == 0 ? 1 : skill.getEffectPoint();
-                            target.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, this, damage);
+                            CharacterAI ai =  target.getAI();
+                            ai.notifyEvent(CtrlEvent.EVT_ATTACKED, this, damage);
                         }
                     }
                     target.getAI().notifyEvent(CtrlEvent.EVT_SEE_SPELL, skill, this);

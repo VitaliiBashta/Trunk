@@ -15,7 +15,7 @@ import l2trunk.gameserver.utils.Location;
  * - Then throw on a random coordinates of the first who saw the player.
  * - AI is tested and works.
  */
-public class TriolsLayperson extends Fighter {
+public final class TriolsLayperson extends Fighter {
     private boolean _tele = true;
 
     private static final Location[] locs = {new Location(-16128, -35888, -10726), new Location(-17029, -39617, -10724), new Location(-15729, -42001, -10724)};
@@ -25,7 +25,7 @@ public class TriolsLayperson extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -44,7 +44,7 @@ public class TriolsLayperson extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _tele = true;
         super.onEvtDead(killer);
     }

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class FafurionKindred extends Fighter {
+public final class FafurionKindred extends Fighter {
     private static final int DETRACTOR1 = 22270;
     private static final int DETRACTOR2 = 22271;
 
@@ -41,7 +41,7 @@ public class FafurionKindred extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         spawns.clear();
@@ -56,14 +56,14 @@ public class FafurionKindred extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         cleanUp();
 
         super.onEvtDead(killer);
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
         if (actor.isDead() || skill == null)
             return;
@@ -74,7 +74,7 @@ public class FafurionKindred extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 

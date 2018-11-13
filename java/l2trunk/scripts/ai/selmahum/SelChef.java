@@ -9,7 +9,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelChef extends Fighter {
+public final class SelChef extends Fighter {
     private Location targetLoc;
     private long wait_timeout = 0;
 
@@ -19,13 +19,13 @@ public class SelChef extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         getActor().getMinionList().spawnMinions();
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -46,7 +46,7 @@ public class SelChef extends Fighter {
     }
 
     private Location findFirePlace(NpcInstance actor) {
-        Location loc = new Location();
+        Location loc;
         List<NpcInstance> list = new ArrayList<>();
         for (NpcInstance npc : actor.getAroundNpc(3000, 600)) {
             if (npc.getNpcId() == 18927 && GeoEngine.canSeeTarget(actor, npc, false))
@@ -61,7 +61,7 @@ public class SelChef extends Fighter {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 

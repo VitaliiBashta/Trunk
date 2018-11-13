@@ -24,7 +24,7 @@ import java.util.concurrent.ScheduledFuture;
  * - All the information about the AI ​​painted.
  * - AI is tested and works.
  */
-public class AndreasVanHalter extends Fighter {
+public final class AndreasVanHalter extends Fighter {
     private boolean _firstTimeMove = true;
     private static ScheduledFuture<?> _movieTask = null;
 
@@ -53,7 +53,7 @@ public class AndreasVanHalter extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -65,7 +65,7 @@ public class AndreasVanHalter extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -94,7 +94,7 @@ public class AndreasVanHalter extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (actor == null)
@@ -267,7 +267,7 @@ public class AndreasVanHalter extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         // Сбрасываем переменную на показ видео
         _firstTimeMove = true;
 

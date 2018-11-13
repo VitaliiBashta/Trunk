@@ -20,7 +20,7 @@ public class Guard extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE || !isGlobalAggro())
             return false;
@@ -43,7 +43,7 @@ public class Guard extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

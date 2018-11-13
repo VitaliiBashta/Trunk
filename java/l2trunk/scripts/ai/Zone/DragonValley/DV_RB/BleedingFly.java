@@ -10,13 +10,7 @@ import l2trunk.gameserver.utils.NpcUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author L2Mythras
- * <p>
- * PTS http://www.youtube.com/watch?v=PiuIeRkqdJc
- */
-
-public class BleedingFly extends Mystic {
+public final class BleedingFly extends Mystic {
 
     private final List<Creature> leech_list = new ArrayList<>();
     private boolean spawn_50 = true;
@@ -32,7 +26,7 @@ public class BleedingFly extends Mystic {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         super.thinkActive();
         if (last_attack_time != 0 && last_attack_time + 30 * 60 * 1000L < System.currentTimeMillis()) {
             getActor().deleteMe();
@@ -41,13 +35,13 @@ public class BleedingFly extends Mystic {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         last_attack_time = System.currentTimeMillis();
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.getCurrentHpPercents() <= 50 && spawn_50 && leech_list.size() < 6) {
             spawn_leechs(actor, attacker);

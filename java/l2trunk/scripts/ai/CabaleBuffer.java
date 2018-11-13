@@ -14,7 +14,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.List;
 
-public class CabaleBuffer extends DefaultAI {
+public final class CabaleBuffer extends DefaultAI {
     private static final int PREACHER_FIGHTER_SKILL_ID = 4361;
     private static final int PREACHER_MAGE_SKILL_ID = 4362;
     private static final int ORATOR_FIGHTER_SKILL_ID = 4364;
@@ -45,7 +45,7 @@ public class CabaleBuffer extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;

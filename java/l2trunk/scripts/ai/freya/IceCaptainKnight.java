@@ -13,7 +13,7 @@ public class IceCaptainKnight extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         Reflection r = getActor().getReflection();
         if (r != null && r.getPlayers() != null) {
@@ -24,7 +24,6 @@ public class IceCaptainKnight extends Fighter {
     }
 
     @Override
-    protected void teleportHome() {
-        return;
+    public void teleportHome() {
     }
 }

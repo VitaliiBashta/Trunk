@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author pchayka
  */
-public class GuardianAltar extends DefaultAI {
+public final class GuardianAltar extends DefaultAI {
     private static final Logger LOG = LoggerFactory.getLogger(GuardianAltar.class);
     private static final int DarkShamanVarangka = 18808;
 
@@ -33,7 +33,7 @@ public class GuardianAltar extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null)
             return;
@@ -82,7 +82,7 @@ public class GuardianAltar extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

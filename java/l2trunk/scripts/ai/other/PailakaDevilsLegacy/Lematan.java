@@ -29,14 +29,14 @@ public final class Lematan extends Fighter {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         if (getActor().isInRange(getActor().getSpawnedLoc(), 10000L))
             return true;
         return true;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (actor.getCurrentHp() < (actor.getMaxHp() / 2) && !_teleported) {

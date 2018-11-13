@@ -10,9 +10,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.events.PiratesTreasure.PiratesTreasure;
 
-/**
- * @author L2Mythras
- */
 public class PiratesKing extends Fighter {
 
     public PiratesKing(NpcInstance actor) {
@@ -24,7 +21,7 @@ public class PiratesKing extends Fighter {
     private boolean isFirst = true;
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         actor.setTargetable(false); //Not yet found a pirate, take it to the Target can not be
 
@@ -41,7 +38,7 @@ public class PiratesKing extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead())
             return true;
@@ -63,7 +60,7 @@ public class PiratesKing extends Fighter {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         NpcInstance actor = getActor();
         actor.setTargetable(true);
 
@@ -77,28 +74,28 @@ public class PiratesKing extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         Announcements.getInstance().announceToAll("The Pirate King of Darkness is defeated!");
         super.onEvtDead(killer);
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 
     @Override
-    protected boolean canSeeInSilentMove(Playable target) {
+    public boolean canSeeInSilentMove(Playable target) {
         return true;
     }
 
     @Override
-    protected boolean canSeeInHide(Playable target) {
+    public boolean canSeeInHide(Playable target) {
         return true;
     }
 

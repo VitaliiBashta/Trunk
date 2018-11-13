@@ -13,7 +13,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
  * - Controllers doors.
  * - AI is tested and works.
  */
-public class AltarGatekeeper extends DefaultAI {
+public final class AltarGatekeeper extends DefaultAI {
     private boolean _firstTime = true;
 
     public AltarGatekeeper(NpcInstance actor) {
@@ -21,7 +21,7 @@ public class AltarGatekeeper extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;

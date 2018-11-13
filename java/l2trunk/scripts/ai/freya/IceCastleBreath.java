@@ -6,14 +6,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class IceCastleBreath extends Fighter {
+public final class IceCastleBreath extends Fighter {
     public IceCastleBreath(NpcInstance actor) {
         super(actor);
         MAX_PURSUE_RANGE = 6000;
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         Reflection r = getActor().getReflection();
         if (r != null && r.getPlayers() != null) {
@@ -24,7 +24,7 @@ public class IceCastleBreath extends Fighter {
     }
 
     @Override
-    protected void teleportHome() {
+    public void teleportHome() {
         return;
     }
 }

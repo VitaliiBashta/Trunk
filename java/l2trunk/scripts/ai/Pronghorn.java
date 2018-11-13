@@ -12,14 +12,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * AI моба Pronghorn для Frozen Labyrinth.<br>
- * - Если был атакован физическим скилом, спавнится миньон-мобы Pronghorn Spirit 22087 в количестве 4 штук.<br>
- * - Не используют функцию Random Walk, если были заспавнены "миньоны"<br>
- *
- * @author SYS
- */
-public class Pronghorn extends Fighter {
+public final class Pronghorn extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(Pronghorn.class);
 
     private boolean _mobsNotSpawned = true;
@@ -31,7 +24,7 @@ public class Pronghorn extends Fighter {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
         if (skill.isMagic())
             return;
@@ -52,13 +45,13 @@ public class Pronghorn extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _mobsNotSpawned = true;
         super.onEvtDead(killer);
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return _mobsNotSpawned;
     }
 }

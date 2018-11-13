@@ -15,7 +15,7 @@ public class OutpostCaptain extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         if (attacker == null || attacker.getPlayer() == null)
             return;
 
@@ -30,7 +30,7 @@ public class OutpostCaptain extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 

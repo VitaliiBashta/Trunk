@@ -16,8 +16,8 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public class LafiLakfi extends DefaultAI {
     private static final int MAX_RADIUS = 500;
-    private static final Skill s_display_bug_of_fortune1 = SkillTable.getInstance().getInfo(6045, 1);
-    private static final Skill s_display_jackpot_firework = SkillTable.getInstance().getInfo(5778, 1);
+    private  final Skill s_display_bug_of_fortune1 = SkillTable.getInstance().getInfo(6045, 1);
+    private  final Skill s_display_jackpot_firework = SkillTable.getInstance().getInfo(5778, 1);
 
     private long _nextEat;
     private int i_ai2, actor_lvl, prev_st;
@@ -28,7 +28,7 @@ public class LafiLakfi extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
@@ -48,7 +48,7 @@ public class LafiLakfi extends DefaultAI {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         super.onEvtArrived();
         NpcInstance actor = getActor();
         if (actor == null)
@@ -109,7 +109,7 @@ public class LafiLakfi extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead())
             return true;
@@ -149,7 +149,7 @@ public class LafiLakfi extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         super.onEvtDead(killer);
         NpcInstance actor = getActor();
         if (actor == null)
@@ -230,7 +230,7 @@ public class LafiLakfi extends DefaultAI {
     }
 
     @Override
-    protected void onEvtTimer(int timerId, Object arg1, Object arg2) {
+    public void onEvtTimer(int timerId, Object arg1, Object arg2) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -288,10 +288,10 @@ public class LafiLakfi extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

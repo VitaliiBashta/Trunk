@@ -10,13 +10,13 @@ import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.List;
 
-public class AttackMobNotPlayerFighter extends Fighter {
+public final class AttackMobNotPlayerFighter extends Fighter {
     public AttackMobNotPlayerFighter(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null)
             return;
@@ -33,7 +33,7 @@ public class AttackMobNotPlayerFighter extends Fighter {
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
         NpcInstance actor = getActor();
         if (attacker == null)
             return;

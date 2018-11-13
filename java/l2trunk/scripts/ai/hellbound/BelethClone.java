@@ -5,18 +5,18 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class BelethClone extends Mystic {
+public final class BelethClone extends Mystic {
     public BelethClone(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 
@@ -32,7 +32,6 @@ public class BelethClone extends Mystic {
 
     @Override
     public void addTaskAttack(Creature target) {
-        return;
     }
 
 }

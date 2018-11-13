@@ -3,10 +3,7 @@ package l2trunk.scripts.ai.Zone.DragonValley.DV_RB;
 import l2trunk.gameserver.ai.Mystic;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-/**
- * @author L2Mythras
- */
-public class DustRider extends Mystic {
+public final class DustRider extends Mystic {
 
     private long last_attack_time = 0;
 
@@ -15,7 +12,7 @@ public class DustRider extends Mystic {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         super.thinkActive();
         if (last_attack_time != 0 && last_attack_time + 30 * 60 * 1000L < System.currentTimeMillis()) {
             getActor().deleteMe();
@@ -24,7 +21,7 @@ public class DustRider extends Mystic {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         last_attack_time = System.currentTimeMillis();
     }

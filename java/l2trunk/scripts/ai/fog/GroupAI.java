@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class GroupAI extends Fighter {
+public final class GroupAI extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(GroupAI.class);
 
     private static final int[] RANDOM_SPAWN_MOBS = {
@@ -28,7 +28,7 @@ public abstract class GroupAI extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance npc;
         NpcInstance actor = getActor();
 

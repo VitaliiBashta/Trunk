@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-public class Leogul extends Fighter {
+public final class Leogul extends Fighter {
     public Leogul(NpcInstance actor) {
         super(actor);
         AI_TASK_ATTACK_DELAY = 1000;
@@ -14,7 +14,7 @@ public class Leogul extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         if (super.checkAggression(target, avoidAttack)) {
             Functions.npcSayCustomMessage(getActor(), "scripts.ai.Leogul");
 

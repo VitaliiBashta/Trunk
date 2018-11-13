@@ -72,7 +72,7 @@ public class _350_EnhanceYourWeapon extends Quest implements ScriptFile {
     public void onShutdown() {
     }
 
-    private _350_EnhanceYourWeapon() {
+    public  _350_EnhanceYourWeapon() {
         super(false);
         addStartNpc(Jurek);
         addStartNpc(Gideon);

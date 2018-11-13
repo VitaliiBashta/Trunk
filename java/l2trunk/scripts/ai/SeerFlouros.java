@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author n0nam3
  */
-public class SeerFlouros extends Mystic {
+public final class SeerFlouros extends Mystic {
     private static final Logger LOG = LoggerFactory.getLogger(SeerFlouros.class);
 
     private int _hpCount = 0;
@@ -30,7 +30,7 @@ public class SeerFlouros extends Mystic {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (!actor.isDead())
             if (_hpCount < _hps.length && actor.getCurrentHpPercents() < _hps[_hpCount]) {
@@ -55,7 +55,7 @@ public class SeerFlouros extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _hpCount = 0;
         super.onEvtDead(killer);
     }

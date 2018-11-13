@@ -13,7 +13,7 @@ import l2trunk.gameserver.stats.funcs.FuncMul;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public class GilmoreAI extends Fighter {
+public final class GilmoreAI extends Fighter {
     private static final Location[] points_stage1 = {
             new Location(73195, 118483, -3722),
             new Location(73535, 117945, -3754),
@@ -45,7 +45,7 @@ public class GilmoreAI extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead())
             return true;
@@ -129,7 +129,7 @@ public class GilmoreAI extends Fighter {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         NpcInstance actor = getActor();
         if (actor == null)

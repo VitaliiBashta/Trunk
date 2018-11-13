@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class Typhoon extends Fighter {
+public final class Typhoon extends Fighter {
     private static final Location[] points = {
             // spawn: -15864,250872,-3013
             new Location(-16696, 250232, -2956),
@@ -47,7 +47,7 @@ public class Typhoon extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
@@ -108,7 +108,7 @@ public class Typhoon extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

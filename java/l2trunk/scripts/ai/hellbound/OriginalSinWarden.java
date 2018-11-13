@@ -10,7 +10,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OriginalSinWarden extends Fighter {
+public final class OriginalSinWarden extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(OriginalSinWarden.class);
     private static final int[] servants1 = {22424, 22425, 22426, 22427, 22428, 22429, 22430};
     private static final int[] servants2 = {22432, 22433, 22434, 22435, 22436, 22437, 22438};
@@ -21,7 +21,7 @@ public class OriginalSinWarden extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
@@ -58,7 +58,7 @@ public class OriginalSinWarden extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         if (Rnd.chance(15))

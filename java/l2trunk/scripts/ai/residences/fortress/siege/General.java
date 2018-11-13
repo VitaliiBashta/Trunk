@@ -12,11 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
-/**
- * @author VISTALL
- * @date 16:43/17.04.2011
- */
-public class General extends SiegeGuardFighter {
+public final class General extends SiegeGuardFighter {
     public General(NpcInstance actor) {
         super(actor);
     }

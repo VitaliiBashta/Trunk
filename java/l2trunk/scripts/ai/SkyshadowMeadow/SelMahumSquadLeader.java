@@ -22,7 +22,7 @@ import l2trunk.gameserver.utils.Location;
  * - When the characters are over the head, to be a significant decrease.
  * - AI is tested and works.
  */
-public class SelMahumSquadLeader extends Fighter {
+public final class SelMahumSquadLeader extends Fighter {
     private boolean _firstTime1 = true;
     private boolean _firstTime2 = true;
     private boolean _firstTime3 = true;
@@ -36,7 +36,7 @@ public class SelMahumSquadLeader extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -140,7 +140,7 @@ public class SelMahumSquadLeader extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTime1 = true;
         _firstTime2 = true;
         _firstTime3 = true;

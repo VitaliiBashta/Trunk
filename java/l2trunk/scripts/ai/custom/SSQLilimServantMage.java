@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-public class SSQLilimServantMage extends Mystic {
+public final class SSQLilimServantMage extends Mystic {
     private boolean _attacked = false;
 
     public SSQLilimServantMage(NpcInstance actor) {
@@ -14,7 +14,7 @@ public class SSQLilimServantMage extends Mystic {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         super.onEvtAttacked(attacker, damage);
         if (Rnd.chance(30) && !_attacked) {
             Functions.npcSay(getActor(), "Who dares enter this place?");
@@ -23,7 +23,7 @@ public class SSQLilimServantMage extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (Rnd.chance(30))
             Functions.npcSay(getActor(), "Lord Shilen... some day... you will accomplish... this mission...");
         super.onEvtDead(killer);

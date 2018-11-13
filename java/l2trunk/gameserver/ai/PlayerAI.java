@@ -21,14 +21,14 @@ public class PlayerAI extends PlayableAI {
     }
 
     @Override
-    protected void onIntentionRest() {
+    public void onIntentionRest() {
         changeIntention(CtrlIntention.AI_INTENTION_REST, null, null);
         setAttackTarget(null);
         clientStopMoving();
     }
 
     @Override
-    protected void onIntentionActive() {
+    public void onIntentionActive() {
         clearNextAction();
         changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
     }
@@ -64,7 +64,7 @@ public class PlayerAI extends PlayableAI {
     }
 
     @Override
-    protected void thinkAttack(boolean checkRange) {
+    public void thinkAttack(boolean checkRange) {
         Player actor = getActor();
 
         if (actor.isInFlyingTransform()) {
@@ -89,7 +89,7 @@ public class PlayerAI extends PlayableAI {
     }
 
     @Override
-    protected void thinkCast(boolean checkRange) {
+    public void thinkCast(boolean checkRange) {
         Player actor = getActor();
 
         FlagItemAttachment attachment = actor.getActiveWeaponFlagAttachment();
@@ -109,7 +109,7 @@ public class PlayerAI extends PlayableAI {
     }
 
     @Override
-    protected void thinkCoupleAction(Player target, Integer socialId, boolean cancel) {
+    public void thinkCoupleAction(Player target, Integer socialId, boolean cancel) {
         Player actor = getActor();
         if (target == null || !target.isOnline()) {
             actor.sendPacket(SystemMsg.THE_COUPLE_ACTION_WAS_CANCELLED);

@@ -18,7 +18,7 @@ import l2trunk.gameserver.tables.SkillTable;
  *
  * @author SYS
  */
-public class PrisonGuard extends Fighter {
+public final class PrisonGuard extends Fighter {
     private static final int RACE_STAMP = 10013;
 
     public PrisonGuard(NpcInstance actor) {
@@ -26,7 +26,7 @@ public class PrisonGuard extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         // 18367 не агрятся
         NpcInstance actor = getActor();
         if (actor.isDead() || actor.getNpcId() == 18367)
@@ -39,7 +39,7 @@ public class PrisonGuard extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return;
@@ -69,7 +69,7 @@ public class PrisonGuard extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

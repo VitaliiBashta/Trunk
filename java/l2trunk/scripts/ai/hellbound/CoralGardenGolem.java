@@ -12,10 +12,7 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.scripts.instances.CrystalCaverns;
 
-/**
- * @author pchayka
- */
-public class CoralGardenGolem extends DefaultAI {
+public final class CoralGardenGolem extends DefaultAI {
     private boolean fedCrystal = false;
     private boolean trapped = false;
     private static final NpcString[] phrases_idle = {NpcString.HELLO_IS_ANYONE_THERE,
@@ -34,7 +31,7 @@ public class CoralGardenGolem extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (!fedCrystal && Rnd.chance(1))
             Functions.npcShout(actor, phrases_idle[Rnd.get(phrases_idle.length)]);
@@ -50,7 +47,7 @@ public class CoralGardenGolem extends DefaultAI {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         super.onEvtArrived();
         NpcInstance actor = getActor();
         ItemInstance closestItem;
@@ -72,15 +69,15 @@ public class CoralGardenGolem extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

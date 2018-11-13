@@ -17,7 +17,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
  *
  * @author SYS
  */
-public class Ballista extends DefaultAI {
+public final class Ballista extends DefaultAI {
     private static final int BALLISTA_BOMB_SKILL_ID = 2342;
     private int _bombsUseCounter;
 
@@ -26,7 +26,7 @@ public class Ballista extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         super.onEvtSeeSpell(skill, caster);
 
         NpcInstance actor = getActor();
@@ -45,12 +45,12 @@ public class Ballista extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _bombsUseCounter = 0;
         super.onEvtDead(killer);
     }

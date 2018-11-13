@@ -28,7 +28,7 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
     private static boolean _active = false;
     private static boolean MultiSellLoaded = false;
 
-    private static final Path multiSellFile = Config.DATAPACK_ROOT.resolve("data/multisell/events/SummerMeleons/3790004.xml");
+    private final Path multiSellFile = Config.DATAPACK_ROOT.resolve("data/multisell/events/SummerMeleons/3790004.xml");
 
     @Override
     public void onLoad() {
@@ -117,7 +117,7 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
         deSpawnNPCs(_spawns);
     }
 
-    private static void loadMultiSell() {
+    private void loadMultiSell() {
         if (MultiSellLoaded)
             return;
         MultiSellHolder.getInstance().parseFile(multiSellFile);

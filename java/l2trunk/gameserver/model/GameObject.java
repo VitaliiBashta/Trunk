@@ -225,8 +225,6 @@ public abstract class GameObject extends EventOwner {
 
     /**
      * Добавляет обьект в мир, добавляет в текущий регион. Делает обьект видимым.
-     *
-     * @param dropper
      */
     private void spawn0(Creature dropper) {
         if (!_state.compareAndSet(CREATED, VISIBLE))

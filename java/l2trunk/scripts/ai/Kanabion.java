@@ -15,13 +15,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.scripts.instances.KamalokaNightmare;
 
-public class Kanabion extends Fighter {
+public final class Kanabion extends Fighter {
     public Kanabion(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         boolean isOverhit = false;
         if (actor instanceof MonsterInstance)

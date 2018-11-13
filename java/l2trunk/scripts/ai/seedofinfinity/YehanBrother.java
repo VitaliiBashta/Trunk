@@ -9,7 +9,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public class YehanBrother extends Fighter {
+public final class YehanBrother extends Fighter {
     private long _spawnTimer = 0;
     private static final int[] _minions = ArrayUtils.createAscendingArray(22509, 22512);
 
@@ -18,7 +18,7 @@ public class YehanBrother extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         _spawnTimer = System.currentTimeMillis();
     }
@@ -37,7 +37,7 @@ public class YehanBrother extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         NpcInstance brother = getBrother();
         if (!brother.isDead() && !actor.isInRange(brother, 300))

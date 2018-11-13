@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class WardofDeath extends DefaultAI {
+public final class WardofDeath extends DefaultAI {
     private static final int[] mobs = {22516, 22520, 22522, 22524};
 
     public WardofDeath(NpcInstance actor) {
@@ -15,7 +15,7 @@ public class WardofDeath extends DefaultAI {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (target.isInRange(actor, actor.getAggroRange()) && target.isPlayable() && !target.isDead() && !target.isInvisible()) {
             if (actor.getNpcId() == 18667) // trap skill

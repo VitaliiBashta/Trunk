@@ -14,17 +14,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 7:15/24.04.2011
- */
-public abstract class MatchFighter extends Fighter {
+public class MatchFighter extends Fighter {
     MatchFighter(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isActionsDisabled())
             return true;
@@ -47,7 +43,7 @@ public abstract class MatchFighter extends Fighter {
             }
 
             if (!aggroList.isEmpty()) {
-                Collections.sort(aggroList, _nearestTargetComparator);
+                aggroList.sort(_nearestTargetComparator);
 
                 for (Creature cha : aggroList) {
                     if (cha != null && !cha.isDead()) {
@@ -58,14 +54,12 @@ public abstract class MatchFighter extends Fighter {
             }
         }
 
-        if (randomWalk())
-            return true;
+        return randomWalk();
 
-        return false;
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         CTBBossInstance actor = getActor();
 
         if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE)
@@ -93,7 +87,7 @@ public abstract class MatchFighter extends Fighter {
     }
 
     @Override
-    protected boolean canAttackCharacter(Creature target) {
+    public boolean canAttackCharacter(Creature target) {
         NpcInstance actor = getActor();
         return actor.isAttackable(target);
     }

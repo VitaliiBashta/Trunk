@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class RankuScapegoat extends DefaultAI {
+public final class RankuScapegoat extends DefaultAI {
     private static final int Eidolon_ID = 25543;
 
     public RankuScapegoat(NpcInstance actor) {
@@ -14,7 +14,7 @@ public class RankuScapegoat extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(Eidolon_ID, actor.getLoc(), 0);
         NpcInstance boss = getBoss();

@@ -8,20 +8,13 @@ import l2trunk.gameserver.model.entity.events.EventType;
 import l2trunk.gameserver.model.entity.events.impl.MonasteryFurnaceEvent;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-/**
- * @author PaInKiLlEr
- * - AI Monster 22798, 22799, 22800.
- *  * 		- AI for spawning braziers room.
- *  * 		- There is a 5% chance that the spawn to death four braziers unlikely.
- *  * 		- AI is tested and works.
- */
-public class DivinityMonster extends DefaultAI {
+public final class DivinityMonster extends DefaultAI {
     public DivinityMonster(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         int event_id = actor.getAISpawnParam();

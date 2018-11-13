@@ -10,10 +10,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public class Sandstorm extends DefaultAI {
+public final class Sandstorm extends DefaultAI {
     private static final int AGGRO_RANGE = 200;
-    private static final Skill SKILL1 = SkillTable.getInstance().getInfo(5435, 1);
-    private static final Skill SKILL2 = SkillTable.getInstance().getInfo(5494, 1);
+    private  final Skill SKILL1 = SkillTable.getInstance().getInfo(5435, 1);
+    private  final Skill SKILL2 = SkillTable.getInstance().getInfo(5494, 1);
     private long lastThrow = 0;
 
     public Sandstorm(NpcInstance actor) {
@@ -21,7 +21,7 @@ public class Sandstorm extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (lastThrow + 5000 < System.currentTimeMillis())
             for (Playable target : World.getAroundPlayables(actor, AGGRO_RANGE, AGGRO_RANGE))
@@ -36,27 +36,27 @@ public class Sandstorm extends DefaultAI {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
     }
 
     @Override
-    protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
+    public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         NpcInstance actor = getActor();
         Location sloc = actor.getSpawnedLoc();
 

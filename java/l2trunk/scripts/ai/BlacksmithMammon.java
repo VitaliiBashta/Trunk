@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
-public class BlacksmithMammon extends DefaultAI {
+public final class BlacksmithMammon extends DefaultAI {
     private long _chatVar = 0;
     private static final long chatDelay = 30 * 60 * 1000L;
 
@@ -23,7 +23,7 @@ public class BlacksmithMammon extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;

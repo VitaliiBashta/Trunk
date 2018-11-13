@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class PetSummon extends ScriptItemHandler implements ScriptFile {
     // all the items ids that this handler knowns
-    private static final List<Integer> _itemIds = PetDataTable.getPetControlItems();
+    private final List<Integer> _itemIds = PetDataTable.getPetControlItems();
     private static final int _skillId = 2046;
 
     @Override

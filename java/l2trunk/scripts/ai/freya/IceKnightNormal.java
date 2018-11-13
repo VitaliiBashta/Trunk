@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.concurrent.ScheduledFuture;
 
-public class IceKnightNormal extends Fighter {
+public final class IceKnightNormal extends Fighter {
     private boolean iced;
     private ScheduledFuture<?> task;
 
@@ -21,7 +21,7 @@ public class IceKnightNormal extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         NpcInstance actor = getActor();
         iced = true;
@@ -32,9 +32,6 @@ public class IceKnightNormal extends Fighter {
         task = ThreadPoolManager.getInstance().schedule(new ReleaseFromIce(), 6000L);
     }
 
-    /**
-     * @param actor
-     */
     private void aggroPlayers() {
         Reflection r = getActor().getReflection();
         if (r != null && r.getPlayers() != null) {
@@ -45,7 +42,7 @@ public class IceKnightNormal extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (iced) {
@@ -71,6 +68,6 @@ public class IceKnightNormal extends Fighter {
     }
 
     @Override
-    protected void teleportHome() {
+    public void teleportHome() {
     }
 }

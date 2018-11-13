@@ -4,7 +4,7 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class HekatonPrime extends Fighter {
+public final class HekatonPrime extends Fighter {
     private long _lastTimeAttacked;
 
     public HekatonPrime(NpcInstance actor) {
@@ -12,13 +12,13 @@ public class HekatonPrime extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         _lastTimeAttacked = System.currentTimeMillis();
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (_lastTimeAttacked + 600000 < System.currentTimeMillis()) {
             if (getActor().getMinionList().hasMinions())
                 getActor().getMinionList().deleteMinions();
@@ -29,7 +29,7 @@ public class HekatonPrime extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         _lastTimeAttacked = System.currentTimeMillis();
         super.onEvtAttacked(attacker, damage);
     }

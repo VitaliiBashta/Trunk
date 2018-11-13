@@ -18,11 +18,7 @@ import l2trunk.scripts.npc.model.residences.clanhall.RainbowYetiInstance;
 
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 12:50/14.05.2011
- */
-public class RainbowYeti extends CharacterAI {
+public final class RainbowYeti extends CharacterAI {
     private static class ZoneDeactive extends RunnableImpl {
         private final ZoneObject _zone;
 
@@ -61,10 +57,10 @@ public class RainbowYeti extends CharacterAI {
             return;
 
         int index = attackers.indexOf(siegeClan);
-        int warIndex = Integer.MIN_VALUE;
+        int warIndex;
 
-        RainbowGourdInstance gourdInstance = null;
-        RainbowGourdInstance gourdInstance2 = null;
+        RainbowGourdInstance gourdInstance;
+        RainbowGourdInstance gourdInstance2;
         switch (skill.getId()) {
             case 2240: //nectar
                 // убить хп у своего Фрукта :D

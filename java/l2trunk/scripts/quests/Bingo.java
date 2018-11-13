@@ -5,7 +5,7 @@ import l2trunk.commons.util.Rnd;
 import java.util.ArrayList;
 import java.util.List;
 
-class Bingo {
+public abstract class Bingo {
     private final static String template = "%msg%<br><br>%choices%<br><br>%board%";
     private final static String template_final = "%msg%<br><br>%board%";
     private final static String template_board = "For your information, below is your current selection.<br><table border=\"1\" border color=\"white\" width=100><tr><td align=\"center\">%cell1%</td><td align=\"center\">%cell2%</td><td align=\"center\">%cell3%</td></tr><tr><td align=\"center\">%cell4%</td><td align=\"center\">%cell5%</td><td align=\"center\">%cell6%</td></tr><tr><td align=\"center\">%cell7%</td><td align=\"center\">%cell8%</td><td align=\"center\">%cell9%</td></tr></table>";

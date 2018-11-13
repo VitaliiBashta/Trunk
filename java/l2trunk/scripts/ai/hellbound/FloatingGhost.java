@@ -11,7 +11,7 @@ public final class FloatingGhost extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isMoving)
             return false;
@@ -21,7 +21,7 @@ public final class FloatingGhost extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         NpcInstance actor = getActor();
         Location sloc = actor.getSpawnedLoc();
         Location pos = Location.findPointToStay(actor, sloc, 50, 300);

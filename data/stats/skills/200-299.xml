@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <list>
 	<skill id="205" levels="45" name="Sword/Blunt Weapon Mastery">
 		<table name="#pAtk">4.5 7.3 8.9 10.7 12.8 15.1 17.7 20.5 23.7 25.4 27.1 29 30.9 32.9 35 37.1 39.4 41.7 44.1 46.6 49.2 51.9 54.6 57.5 60.4 63.3 66.4 69.5 72.7 76 79.3 82.7 86.1 89.6 93.1 96.6 100.2 103.8 107.5 111.1 114.8 118.4 122.1 125.7 129.3</table>
@@ -2270,7 +2270,7 @@
 	</skill>
 	<skill id="292" levels="1" name="Bison Spirit Totem">
 		<set name="icon" val="icon.skill0292" />
-		<set name="reuseDelay" val="600000" />
+		<set name="reuseDelay" val="500000" />
 		<set name="magicLevel" val="68" />
 		<set name="hitTime" val="2000" />
 		<set name="hitCancelTime" val="500" />
@@ -2279,29 +2279,21 @@
 		<set name="target" val="TARGET_SELF" />
 		<set name="skillType" val="BUFF" />
 		<set name="operateType" val="OP_ACTIVE" />
-		<cond msgId="113" addName="1">
-			<using kind="Dual Fist" />
-		</cond>
-		<for>
+			<for>
 			<effect count="1" name="Buff" stackOrder="2" stackType="possession" time="60" val="0">
 				<add order="0x40" stat="accCombat" val="6" >
-					<using kind="Fist, Dual Fist" />
+					
 				</add>
 				<mul order="0x30" stat="pAtk" val="1.10">
-					<player percentHP="60" />
-					<using kind="Fist, Dual Fist" />
+					
 				</mul>
 				<add order="0x40" stat="baseCrit" val="100">
-					<player percentHP="60" />
-					<using kind="Fist, Dual Fist" />
+					
 				</add>
 				<mul order="0x30" stat="pAtk" val="1.182"><!-- 1.10 * 1.182 = 1.30 -->
-					<player percentHP="30" />
-					<using kind="Fist, Dual Fist" />
 				</mul>
 				<add order="0x40" stat="baseCrit" val="300">
-					<player percentHP="30" />
-					<using kind="Fist, Dual Fist" />
+				
 				</add>
 			</effect>
 		</for>

@@ -11,14 +11,14 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.npc.model.QueenAntInstance;
 
-public class QueenAntNurse extends Priest {
+public final class QueenAntNurse extends Priest {
     public QueenAntNurse(NpcInstance actor) {
         super(actor);
         MAX_PURSUE_RANGE = 10000;
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -45,7 +45,7 @@ public class QueenAntNurse extends Priest {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         NpcInstance actor = getActor();
         Creature top_desire_target = getTopDesireTarget();
@@ -95,11 +95,11 @@ public class QueenAntNurse extends Priest {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
     }
 
     @Override
-    protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
+    public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
         if (doTask())
             createNewTask();
     }

@@ -14,18 +14,11 @@ import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardMystic;
 
-/**
- * @author VISTALL
- * @date 18:25/10.05.2011
- * 35631
- * lidia_zone1
- * lidia_zone2
- */
-public class GiselleVonHellmann extends SiegeGuardMystic {
-    private static final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(5003, 1);
+public final class GiselleVonHellmann extends SiegeGuardMystic {
+    private final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(5003, 1);
 
-    private static final Zone ZONE_1 = ReflectionUtils.getZone("lidia_zone1");
-    private static final Zone ZONE_2 = ReflectionUtils.getZone("lidia_zone2");
+    private final Zone ZONE_1 = ReflectionUtils.getZone("lidia_zone1");
+    private final Zone ZONE_2 = ReflectionUtils.getZone("lidia_zone2");
 
     public GiselleVonHellmann(NpcInstance actor) {
         super(actor);

@@ -21,7 +21,7 @@ public class Ranku extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         Reflection r = getActor().getReflection();
         if (r != null)
@@ -30,7 +30,7 @@ public class Ranku extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return;
@@ -45,7 +45,7 @@ public class Ranku extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         if (actor.getReflection() != null) {

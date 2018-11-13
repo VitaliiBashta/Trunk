@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DarkWaterDragon extends Fighter {
+public final class DarkWaterDragon extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(DarkWaterDragon.class);
     private int _mobsSpawned = 0;
     private static final int FAFURION = 18482;
@@ -27,7 +27,7 @@ public class DarkWaterDragon extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (!actor.isDead())
             switch (_mobsSpawned) {
@@ -60,7 +60,7 @@ public class DarkWaterDragon extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _mobsSpawned = 0;
         NpcInstance actor = getActor();
         try {
@@ -80,7 +80,7 @@ public class DarkWaterDragon extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return _mobsSpawned == 0;
     }
 }

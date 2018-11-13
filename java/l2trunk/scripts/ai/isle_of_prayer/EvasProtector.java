@@ -6,14 +6,14 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.scripts.instances.CrystalCaverns;
 
-public class EvasProtector extends DefaultAI {
+public final class EvasProtector extends DefaultAI {
     public EvasProtector(NpcInstance actor) {
         super(actor);
         actor.setHasChatWindow(false);
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
 
         CrystalCaverns refl = null;
@@ -26,7 +26,7 @@ public class EvasProtector extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

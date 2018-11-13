@@ -16,7 +16,7 @@ public final class Glacier extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         getActor().setNpcState(1);
         ThreadPoolManager.getInstance().schedule(() -> getActor().setNpcState(2), 800);
@@ -24,7 +24,7 @@ public final class Glacier extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         getActor().getAroundCharacters(350, 100).stream()
                 .filter(GameObject::isPlayer)
                 .forEach(cha -> cha.altOnMagicUseTimer(cha, skill));

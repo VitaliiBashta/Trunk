@@ -13,7 +13,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Tully extends Fighter {
+public final class Tully extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(Tully.class);
     // 32371
     private static final Location[] locSD = {
@@ -38,7 +38,7 @@ public class Tully extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         for (Location aLocSD : locSD) {
             try {
                 SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(32371));

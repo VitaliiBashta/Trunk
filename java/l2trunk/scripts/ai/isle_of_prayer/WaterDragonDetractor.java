@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class WaterDragonDetractor extends Fighter {
+public final class WaterDragonDetractor extends Fighter {
     private static final int SPIRIT_OF_LAKE = 9689;
     private static final int BLUE_CRYSTAL = 9595;
 
@@ -15,7 +15,7 @@ public class WaterDragonDetractor extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (killer != null) {
             final Player player = killer.getPlayer();
             if (player != null) {

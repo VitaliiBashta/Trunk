@@ -10,13 +10,9 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 
-/**
- * @author VISTALL
- * @date 18:22/10.05.2011
- */
 public class LidiaVonHellmann extends SiegeGuardFighter {
-    private static final Skill DRAIN_SKILL = SkillTable.getInstance().getInfo(4999, 1);
-    private static final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(4998, 1);
+    private  final Skill DRAIN_SKILL = SkillTable.getInstance().getInfo(4999, 1);
+    private  final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(4998, 1);
 
     public LidiaVonHellmann(NpcInstance actor) {
         super(actor);

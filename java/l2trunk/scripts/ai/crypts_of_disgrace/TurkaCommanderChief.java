@@ -9,14 +9,7 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author Kolobrodik
- * @date 11:46/19.02.12
- * @description: AI моба Turka Commander in Chief (Ghost) в локации Crypts of Disgrace. (ID 27707)
- * - При спауне зовет на помощь миньенов.
- * - При убийстве с неким шансом появляется Guardian of the Burial Grounds (AI crypts_of_disgrace.GuardoftheGrave)
- */
-public class TurkaCommanderChief extends Fighter {
+public final class TurkaCommanderChief extends Fighter {
     private static final int TurkaCommanderMinion = 22706; // Миньен
     private static final int MinionCount = 2; // Количество миньенов
     private static final int Guardian = 18815; // Guardian of the Burial Grounds
@@ -27,7 +20,7 @@ public class TurkaCommanderChief extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         for (int i = 0; i < MinionCount; i++) // При спауне главного спауним и миньенов
@@ -35,7 +28,7 @@ public class TurkaCommanderChief extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (Rnd.chance(CHANCE)) // Если повезло
         {
             // Спауним гварда

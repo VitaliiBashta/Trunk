@@ -8,7 +8,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Pylon extends Fighter {
+public final class Pylon extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(Pylon.class);
 
     private Pylon(NpcInstance actor) {
@@ -17,7 +17,7 @@ public class Pylon extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();

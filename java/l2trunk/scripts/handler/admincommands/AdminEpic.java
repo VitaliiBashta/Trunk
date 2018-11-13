@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-public class AdminEpic implements IAdminCommandHandler, ScriptFile {
+public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
     private enum Commands {
         admin_epic,
         admin_epic_edit

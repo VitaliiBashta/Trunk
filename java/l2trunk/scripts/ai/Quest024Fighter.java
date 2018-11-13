@@ -9,16 +9,14 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.scripts.quests._024_InhabitantsOfTheForestOfTheDead;
 
-/**
- * @author VISTALL
- */
-public class Quest024Fighter extends Fighter {
+
+public final class Quest024Fighter extends Fighter {
     public Quest024Fighter(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         Quest q = QuestManager.getQuest(_024_InhabitantsOfTheForestOfTheDead.class);
         if (q != null)
             for (Player player : World.getAroundPlayers(getActor(), 300, 200)) {

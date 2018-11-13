@@ -33,8 +33,8 @@ import java.util.concurrent.ScheduledFuture;
 public class Functions {
     private static final Logger _log = LoggerFactory.getLogger(Functions.class);
 
-    private final HardReference<Player> self = HardReferences.emptyRef();
-    private final HardReference<NpcInstance> npc = HardReferences.emptyRef();
+    public  HardReference<Player> self = HardReferences.emptyRef();
+    public  HardReference<NpcInstance> npc = HardReferences.emptyRef();
 
     private static ScheduledFuture<?> executeTask(final Player caller, final String className, final String methodName, final Object[] args, final Map<String, Object> variables, long delay) {
         return ThreadPoolManager.getInstance().schedule(new RunnableImpl() {

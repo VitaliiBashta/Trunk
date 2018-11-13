@@ -4,7 +4,7 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class SymbolofCohemenes extends DefaultAI {
+public final class SymbolofCohemenes extends DefaultAI {
 
     public SymbolofCohemenes(NpcInstance actor) {
         super(actor);
@@ -12,10 +12,10 @@ public class SymbolofCohemenes extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

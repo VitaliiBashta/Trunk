@@ -41,7 +41,7 @@ public class _604_DaimontheWhiteEyedPart2 extends Quest implements ScriptFile {
     public void onShutdown() {
     }
 
-    private _604_DaimontheWhiteEyedPart2() {
+    public  _604_DaimontheWhiteEyedPart2() {
         super(true);
 
         addStartNpc(EYE);

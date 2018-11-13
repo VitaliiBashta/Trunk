@@ -44,7 +44,7 @@ public class glitmedal extends Functions implements ScriptFile, OnDeathListener,
     private static boolean _active = false;
     private static boolean MultiSellLoaded = false;
 
-    private static final Path[] multiSellFiles = {
+    private final Path[] multiSellFiles = {
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/502.xml"),
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/503.xml"),
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/504.xml"),
@@ -167,7 +167,7 @@ public class glitmedal extends Functions implements ScriptFile, OnDeathListener,
         deSpawnNPCs(_spawns);
     }
 
-    private static void loadMultiSell() {
+    private void loadMultiSell() {
         if (MultiSellLoaded)
             return;
         for (Path f : multiSellFiles)

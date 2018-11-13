@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MonstersAI extends Fighter {
+public final class MonstersAI extends Fighter {
     private List<Location> _points = new ArrayList<>();
     private int current_point = -1;
 
@@ -37,7 +37,7 @@ public class MonstersAI extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead())
             return true;
@@ -71,9 +71,7 @@ public class MonstersAI extends Fighter {
             return true;
         }
 
-        if (randomAnimation())
-            return true;
+        return randomAnimation();
 
-        return false;
     }
 }

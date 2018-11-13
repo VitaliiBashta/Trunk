@@ -88,7 +88,7 @@ public class TalkingGuard extends Guard {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         _lastAggroSay = 0;
         _lastNormalSay = 0;
         _crazyState = Rnd.chance(_crazyChance);
@@ -96,7 +96,7 @@ public class TalkingGuard extends Guard {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         if (_crazyState) {
             NpcInstance actor = getActor();
             Player player = target.getPlayer();

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class AirshipGuard2 extends Guard {
+public final class AirshipGuard2 extends Guard {
     private static final Location[] points = {
             new Location(-148162, 255173, -180),
             new Location(-148242, 254842, -184),
@@ -35,7 +35,7 @@ public class AirshipGuard2 extends Guard {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -68,10 +68,10 @@ public class AirshipGuard2 extends Guard {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

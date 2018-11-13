@@ -11,11 +11,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.scripts.ai.residences.SiegeGuardRanger;
 import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
-/**
- * @author VISTALL
- * @date 16:39/17.04.2011
- */
-public class ArcherCaption extends SiegeGuardRanger {
+public final class ArcherCaption extends SiegeGuardRanger {
     public ArcherCaption(NpcInstance actor) {
         super(actor);
     }

@@ -9,7 +9,7 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.StatusUpdate;
 
-public class FangOfSplendor extends Fighter {
+public final class FangOfSplendor extends Fighter {
     public FangOfSplendor(NpcInstance actor) {
         super(actor);
         this.AI_TASK_ATTACK_DELAY = 1000;
@@ -17,7 +17,7 @@ public class FangOfSplendor extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null || actor.isDead())
             return;

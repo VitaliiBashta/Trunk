@@ -14,11 +14,6 @@ import l2trunk.gameserver.tables.SkillTable;
 import java.util.Calendar;
 
 
-/**
- * User: Death
- * Date: 20/12/2007
- * Time: 23:25:41
- */
 public class NewYearTimer implements ScriptFile {
     private static NewYearTimer instance;
 
@@ -28,7 +23,7 @@ public class NewYearTimer implements ScriptFile {
         return instance;
     }
 
-    private NewYearTimer() {
+    public NewYearTimer() {
         if (instance != null)
             return;
 

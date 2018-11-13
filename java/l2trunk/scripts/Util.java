@@ -27,8 +27,8 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.WarehouseFunctions;
 
-class Util extends Functions {
-    private void Gatekeeper(String[] param) {
+public class Util extends Functions {
+    public void Gatekeeper(String[] param) {
         if (param.length < 4)
             throw new IllegalArgumentException();
 

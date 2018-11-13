@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-public class ElcardiaAssistant extends DefaultAI {
+public final class ElcardiaAssistant extends DefaultAI {
     private static final Logger LOG = LoggerFactory.getLogger(ElcardiaAssistant.class);
 
     private boolean _thinking = false;
@@ -45,7 +45,7 @@ public class ElcardiaAssistant extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
@@ -56,7 +56,7 @@ public class ElcardiaAssistant extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         Creature following = actor.getFollowTarget();
         if (following == null || !actor.isFollow) {
@@ -72,7 +72,7 @@ public class ElcardiaAssistant extends DefaultAI {
     }
 
     @Override
-    protected void onEvtThink() {
+    public void onEvtThink() {
         NpcInstance actor = getActor();
         if (_thinking || actor.isActionsDisabled() || actor.isAfraid() || actor.isDead() || actor.isMovementDisabled())
             return;

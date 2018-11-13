@@ -21,7 +21,7 @@ public class EvilNpc extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null || attacker.getPlayer() == null)
             return;

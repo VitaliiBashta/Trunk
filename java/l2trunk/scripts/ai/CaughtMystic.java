@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-public class CaughtMystic extends Mystic {
+public final class CaughtMystic extends Mystic {
     private static final int TIME_TO_LIVE = 60000;
     private final long TIME_TO_DIE = System.currentTimeMillis() + TIME_TO_LIVE;
 
@@ -20,7 +20,7 @@ public class CaughtMystic extends Mystic {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         if (Rnd.chance(75))
@@ -28,7 +28,7 @@ public class CaughtMystic extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (Rnd.chance(75))
             Functions.npcSayCustomMessage(getActor(), "scripts.ai.CaughtMob.death");
 
@@ -36,7 +36,7 @@ public class CaughtMystic extends Mystic {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (System.currentTimeMillis() >= TIME_TO_DIE) {
             actor.deleteMe();

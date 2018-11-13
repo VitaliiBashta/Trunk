@@ -17,7 +17,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 public abstract class Dominion_KillSpecialUnitQuest extends Quest implements ScriptFile {
     private final ClassId[] _classIds;
 
-    Dominion_KillSpecialUnitQuest() {
+    public Dominion_KillSpecialUnitQuest() {
         super(PARTY_ALL);
 
         _classIds = getTargetClassIds();

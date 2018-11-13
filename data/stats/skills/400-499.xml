@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <list>
 	<skill id="400" levels="10" name="Tribunal">
 		<!--
@@ -329,7 +329,7 @@
 		<table name="#Tab-Def">1.5</table>
 		<table name="#Tab-hpEff">0.2</table>
 		<table name="#time">60</table>
-		<table name="#reuseDelay">300000</table>
+		<table name="#reuseDelay">10000</table>
 		<table name="#mpConsume2">133 153 170</table>
 		<table name="#magicLevel">58 66 74</table>
 		<set name="icon" val="icon.skill0406" />
@@ -341,9 +341,6 @@
 		<set name="target" val="TARGET_SELF" />
 		<set name="skillType" val="BUFF" />
 		<set name="operateType" val="OP_ACTIVE" />
-		<cond msgId="113" addName="1">
-			<player percentHP="30" />
-		</cond>
 		<enchant1 levels="30" name="Power">
 			<table name="#Tab-pAtkSpd">1.305 1.31 1.315 1.32 1.325 1.33 1.335 1.34 1.345 1.35 1.355 1.36 1.365 1.37 1.375 1.38 1.385 1.39 1.395 1.4 1.405 1.415 1.42 1.425 1.43 1.435 1.44 1.445 1.45</table>
 			<table name="#Tab-Def">1.503 1.506 1.51 1.513 1.516 1.52 1.523 1.526 1.53 1.533 1.536 1.54 1.543 1.546 1.55 1.553 1.556 1.56 1.563 1.566 1.57 1.573 1.576 1.58 1.583 1.586 1.59 1.593 1.596 1.6</table>
@@ -377,7 +374,6 @@
 				<add order="0x40" stat="cancelResist" val="40" />
 				<add order="0x40" stat="debuffResist" val="40" />
 				<add order="0x40" stat="baseCrit" val="#baseCrit">
-					<using kind="Sword, Big Sword" />
 				</add>
 				<mul order="0x30" stat="cAtk" val="#cAtk">
 					<using kind="Blunt, Big Blunt" />
@@ -2468,7 +2464,7 @@
 		<set name="skillType" val="BUFF" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<for>
-			<effect count="1" name="Buff" stackOrder="#order" stackType="pa_up_special" time="90" val="0">
+			<effect count="1" name="Buff" stackOrder="#order" time="90" val="0">
 				<add order="0x40" stat="rCrit" val="#crit" />
 				<mul order="0x30" stat="cAtk" val="#cAtk" />
 				<mul order="0x30" stat="pDef" val="0.95" />

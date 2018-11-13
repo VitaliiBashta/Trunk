@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-public class Kreed extends DefaultAI {
+public final class Kreed extends DefaultAI {
     private static final Location[] points = {
             new Location(23436, 11164, -3728),
             new Location(20256, 11104, -3728),
@@ -34,7 +34,7 @@ public class Kreed extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -70,17 +70,15 @@ public class Kreed extends DefaultAI {
             return true;
         }
 
-        if (randomAnimation())
-            return true;
+        return randomAnimation();
 
-        return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class ThroneofDestruction extends DefaultAI {
+public final class ThroneofDestruction extends DefaultAI {
     private static final int DOOR = 12240031;
     private static final int TIAT_NPC_ID = 29163;
     private static final Location TIAT_LOC = new Location(-250403, 207273, -11952, 16384);
@@ -20,7 +20,7 @@ public class ThroneofDestruction extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         Reflection ref = actor.getReflection();
         if (checkAllDestroyed(actor.getNpcId())) {

@@ -13,9 +13,9 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public class GuardofDawnStat extends DefaultAI {
+public final class GuardofDawnStat extends DefaultAI {
     private static final int _aggrorange = 120;
-    private static final Skill _skill = SkillTable.getInstance().getInfo(5978, 1);
+    private  final Skill _skill = SkillTable.getInstance().getInfo(5978, 1);
     private Location _locTele = null;
     private boolean noCheckPlayers = false;
 
@@ -43,7 +43,7 @@ public class GuardofDawnStat extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
 
         // проверяем игроков вокруг
@@ -78,28 +78,28 @@ public class GuardofDawnStat extends DefaultAI {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
     }
 
     @Override
-    protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
+    public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
     }
 
 }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class SprigantStun extends Fighter {
+public final class SprigantStun extends Fighter {
 
     private final Skill SKILL = SkillTable.getInstance().getInfo(5085, 1);
     private long _waitTime;
@@ -17,7 +17,7 @@ public class SprigantStun extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (System.currentTimeMillis() > _waitTime) {
             actor.doCast(SKILL, actor, false);

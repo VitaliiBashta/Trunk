@@ -4,7 +4,7 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class GreaterEvil extends Fighter {
+public final class GreaterEvil extends Fighter {
     private static final Location[] path = {
             new Location(28448, 243816, -3696),
             new Location(27624, 245256, -3696),
@@ -25,7 +25,7 @@ public class GreaterEvil extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -47,13 +47,13 @@ public class GreaterEvil extends Fighter {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         current_point++;
         super.onEvtArrived();
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 }

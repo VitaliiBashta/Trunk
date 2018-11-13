@@ -83,7 +83,6 @@ public abstract class Creature extends GameObject {
     public static final double HEADINGS_IN_PI = 10430.378350470452724949566316381;
     public static final int INTERACTION_DISTANCE = 200;
     private final static int CLIENT_BAR_SIZE = 352; // 352 - размер полоски CP/HP/MP в клиенте, в пикселях
-    private static final long serialVersionUID = 1L;
     private static final Logger _log = LoggerFactory.getLogger(Creature.class);
     private static final double[] POLE_VAMPIRIC_MOD =
             {1.0, 0.9, 0.8, 0.7, 0.2, 0.01};

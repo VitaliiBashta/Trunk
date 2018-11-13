@@ -13,7 +13,7 @@ public final class DragonRaid extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (_lastHit + 1500000 < System.currentTimeMillis()) {
             actor.deleteMe();
@@ -23,13 +23,13 @@ public final class DragonRaid extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         _lastHit = System.currentTimeMillis();
         super.onEvtSpawn();
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         _lastHit = System.currentTimeMillis();
 
         super.onEvtAttacked(attacker, damage);

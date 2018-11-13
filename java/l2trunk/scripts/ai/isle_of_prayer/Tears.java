@@ -68,7 +68,7 @@ public final class Tears extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         CrystalCaverns refl = null;
@@ -83,7 +83,7 @@ public final class Tears extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
         if (actor.isDead() || skill == null || caster == null)
             return;
@@ -113,7 +113,7 @@ public final class Tears extends DefaultAI {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         Creature target;
         if ((target = prepareTarget()) == null)
@@ -178,7 +178,7 @@ public final class Tears extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         CrystalCaverns refl = null;
@@ -190,7 +190,7 @@ public final class Tears extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

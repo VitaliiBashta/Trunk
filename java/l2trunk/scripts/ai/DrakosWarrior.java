@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 //import l2trunk.gameserver.scripts.Functions;
 
 
-public class DrakosWarrior extends Fighter {
+public final class DrakosWarrior extends Fighter {
     private static final int[] CLONES = {22823};
 
     private boolean _firstTimeAttacked = true;
@@ -23,7 +23,7 @@ public class DrakosWarrior extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

@@ -7,12 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
-/**
- * Darion Faithful Servant 6го этажа Tully Workshop
- *
- * @автор pchayka, доработка VAVAN
- */
-public class DarionFaithfulServant6Floor extends Fighter {
+public final class DarionFaithfulServant6Floor extends Fighter {
     private static final int MysteriousAgent = 32372;
 
     public DarionFaithfulServant6Floor(NpcInstance actor) {
@@ -20,7 +15,7 @@ public class DarionFaithfulServant6Floor extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         if (Rnd.chance(15) && actor.isInZone("[tully6_room1]"))

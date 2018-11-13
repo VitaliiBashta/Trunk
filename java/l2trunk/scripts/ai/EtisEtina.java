@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
-public class EtisEtina extends Fighter {
+public final class EtisEtina extends Fighter {
     private boolean summonsReleased = false;
     private NpcInstance summon1;
     private NpcInstance summon2;
@@ -16,7 +16,7 @@ public class EtisEtina extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.getCurrentHpPercents() < 70 && !summonsReleased) {
             summonsReleased = true;
@@ -27,7 +27,7 @@ public class EtisEtina extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (summon1 != null && !summon1.isDead())
             summon1.decayMe();
         if (summon2 != null && !summon2.isDead())

@@ -15,7 +15,7 @@ import l2trunk.gameserver.stats.funcs.FuncTemplate;
 import java.nio.file.Path;
 
 public final class ctreeAI extends DefaultAI {
-    private static final Path ORIGINAL_EFFECT_FILE = Config.DATAPACK_ROOT.resolve("data/stats/skills/2100-2199.xml");
+    private  final Path ORIGINAL_EFFECT_FILE = Config.DATAPACK_ROOT.resolve("data/stats/skills/2100-2199.xml");
     private static final int ORIGINAL_EFFECT_ID = 2139;
     private static final int RANGE = 200;
     private final Skill treeEffect;
@@ -25,7 +25,7 @@ public final class ctreeAI extends DefaultAI {
         treeEffect = getRandomTreeEffect();
     }
 
-    private static Skill getRandomTreeEffect() {
+    private  Skill getRandomTreeEffect() {
         int random = Rnd.get(7);
         switch (random) {
             case 0:
@@ -47,7 +47,7 @@ public final class ctreeAI extends DefaultAI {
         }
     }
 
-    private static Skill createRandomSkillEffect(Stats stat, double mult) {
+    private  Skill createRandomSkillEffect(Stats stat, double mult) {
         Skill copiedSkill = SkillsEngine.getInstance().loadSkill(ORIGINAL_EFFECT_ID, ORIGINAL_EFFECT_FILE);
         changeSkillEffect(copiedSkill, stat, mult);
         return copiedSkill;
@@ -62,7 +62,7 @@ public final class ctreeAI extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -75,12 +75,12 @@ public final class ctreeAI extends DefaultAI {
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

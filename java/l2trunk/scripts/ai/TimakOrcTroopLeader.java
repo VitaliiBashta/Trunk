@@ -12,12 +12,7 @@ import l2trunk.gameserver.scripts.Functions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * AI для Timak Orc Troop Leader ID: 20767, кричащего и призывающего братьев по клану при ударе.
- *
- * @author SYS
- */
-public class TimakOrcTroopLeader extends Fighter {
+public final class TimakOrcTroopLeader extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(TimakOrcTroopLeader.class);
 
     private static final int[] BROTHERS = {20768, // Timak Orc Troop Shaman
@@ -32,7 +27,7 @@ public class TimakOrcTroopLeader extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (!actor.isDead() && _firstTimeAttacked) {
             _firstTimeAttacked = false;
@@ -53,7 +48,7 @@ public class TimakOrcTroopLeader extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }

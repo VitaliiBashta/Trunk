@@ -12,7 +12,7 @@ public final class ValakasMinion extends Mystic {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         ValakasManager.getZone().getInsidePlayers()
                 .forEach(p -> notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 5000));

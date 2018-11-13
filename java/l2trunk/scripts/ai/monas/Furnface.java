@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.monas;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
@@ -10,13 +9,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.scripts.npc.model.events.SumielInstance;
 
-public class Furnface extends DefaultAI {
+public final class Furnface extends DefaultAI {
     public Furnface(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
 
         if (skill.getId() == 9059) {
@@ -28,16 +27,12 @@ public class Furnface extends DefaultAI {
                     ((SumielInstance) npc).setSCE_POT_ON(actor.getAISpawnParam());
             }
 
-            ThreadPoolManager.getInstance().schedule(new OFF_TIMER(), 2 * 1000);
+            ThreadPoolManager.getInstance().schedule(() -> {
+                NpcInstance act = getActor();
+                act.setNpcState(2);
+            }, 2 * 1000);
             actor.setTargetable(true);
         }
     }
 
-    private class OFF_TIMER extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            actor.setNpcState(2);
-        }
-    }
 }

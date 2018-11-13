@@ -16,20 +16,20 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    protected void onIntentionIdle() {
+    public void onIntentionIdle() {
         clientStopMoving();
         changeIntention(CtrlIntention.AI_INTENTION_IDLE, null, null);
     }
 
     @Override
-    protected void onIntentionActive() {
+    public void onIntentionActive() {
         clientStopMoving();
         changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
         onEvtThink();
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         setAttackTarget(target);
         clientStopMoving();
         changeIntention(CtrlIntention.AI_INTENTION_ATTACK, target, null);
@@ -37,36 +37,36 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    protected void onIntentionCast(Skill skill, Creature target) {
+    public void onIntentionCast(Skill skill, Creature target) {
         setAttackTarget(target);
         changeIntention(CtrlIntention.AI_INTENTION_CAST, skill, target);
         onEvtThink();
     }
 
     @Override
-    protected void onIntentionFollow(Creature target, Integer offset) {
+    public void onIntentionFollow(Creature target, Integer offset) {
         changeIntention(CtrlIntention.AI_INTENTION_FOLLOW, target, offset);
         onEvtThink();
     }
 
     @Override
-    protected void onIntentionInteract(GameObject object) {
+    public void onIntentionInteract(GameObject object) {
     }
 
     @Override
-    protected void onIntentionPickUp(GameObject item) {
+    public void onIntentionPickUp(GameObject item) {
     }
 
     @Override
-    protected void onIntentionRest() {
+    public void onIntentionRest() {
     }
 
     @Override
-    protected void onIntentionCoupleAction(Player player, Integer socialId) {
+    public void onIntentionCoupleAction(Player player, Integer socialId) {
     }
 
     @Override
-    protected void onEvtArrivedBlocked(Location blocked_at_pos) {
+    public void onEvtArrivedBlocked(Location blocked_at_pos) {
         Creature actor = getActor();
         if (actor.isPlayer()) {
             // Приводит к застреванию в стенах:
@@ -82,7 +82,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    protected void onEvtForgetObject(GameObject object) {
+    public void onEvtForgetObject(GameObject object) {
         if (object == null)
             return;
 
@@ -108,7 +108,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         Creature actor = getActor();
 
         actor.abortAttack(true, true);
@@ -120,18 +120,22 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    protected void onEvtFakeDeath() {
+    public void onEvtFakeDeath() {
         clientStopMoving();
         setIntention(CtrlIntention.AI_INTENTION_IDLE);
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
+        if (damage > 0) {
+            notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2);
+        }
+
 
     }
 
     @Override
-    protected void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
+    public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
     }
 
     public void Attack(GameObject target, boolean forceUse, boolean dontMove) {
@@ -147,35 +151,35 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    protected void onEvtThink() {
+    public void onEvtThink() {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 
     @Override
-    protected void onEvtFinishCasting() {
+    public void onEvtFinishCasting() {
     }
 
     @Override
-    protected void onEvtReadyToAct() {
+    public void onEvtReadyToAct() {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
     }
 
     @Override
-    protected void onEvtArrivedTarget() {
+    public void onEvtArrivedTarget() {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
     }
 
     @Override
@@ -199,7 +203,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    protected void onEvtTimer(int timerId, Object arg1, Object arg2) {
+    public void onEvtTimer(int timerId, Object arg1, Object arg2) {
     }
 
     protected void addTimer(int timerId, long delay) {

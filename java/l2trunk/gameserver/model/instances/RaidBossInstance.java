@@ -226,7 +226,7 @@ public class RaidBossInstance extends MonsterInstance {
 
     @Override
     public boolean canChampion() {
-        return false;
+        return true;
     }
 
     @Override

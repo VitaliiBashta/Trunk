@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Antharas extends DefaultAI {
+public final class Antharas extends DefaultAI {
     // debuffs
     private final Skill s_fear = getSkill(4108, 1);
     private final Skill s_fear2 = getSkill(5092, 1);
@@ -58,7 +58,7 @@ public class Antharas extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (DAMAGE_COUNTER == 0)
             actor.getAI().startAITask();
@@ -71,13 +71,13 @@ public class Antharas extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         setNextMinionSpawnDelay();
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         Creature target;
         if ((target = prepareTarget()) == null)
@@ -180,7 +180,7 @@ public class Antharas extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (minions != null && !minions.isEmpty())
             for (NpcInstance n : minions)
                 n.deleteMe();

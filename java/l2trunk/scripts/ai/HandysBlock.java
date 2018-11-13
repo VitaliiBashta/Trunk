@@ -16,16 +16,13 @@ import l2trunk.gameserver.network.serverpackets.ExCubeGameExtendedChangePoints;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author n0nam3
- */
-public class HandysBlock extends DefaultAI {
+public final class HandysBlock extends DefaultAI {
     public HandysBlock(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         BlockInstance actor = (BlockInstance) getActor();
         if (caster == null)
             return;

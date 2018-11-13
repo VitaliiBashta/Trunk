@@ -6,21 +6,21 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.scripts.bosses.BelethManager;
 
-public class MutatedElpy extends Fighter {
+public final class MutatedElpy extends Fighter {
     public MutatedElpy(NpcInstance actor) {
         super(actor);
         actor.startImmobilized();
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NaiaCoreManager.launchNaiaCore();
         BelethManager.setElpyDead();
         super.onEvtDead(killer);
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         actor.doDie(attacker);
     }

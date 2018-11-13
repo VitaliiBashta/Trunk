@@ -10,11 +10,11 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.NpcUtils;
 
-public class FortuneBug extends DefaultAI {
+public final class FortuneBug extends DefaultAI {
     private static final int MAX_RADIUS = 500;
 
-    private static final Skill s_display_bug_of_fortune1 = SkillTable.getInstance().getInfo(6045, 1);
-    private static final Skill s_display_jackpot_firework = SkillTable.getInstance().getInfo(5778, 1);
+    private final Skill s_display_bug_of_fortune1 = SkillTable.getInstance().getInfo(6045, 1);
+    private final Skill s_display_jackpot_firework = SkillTable.getInstance().getInfo(5778, 1);
 
     private final int Wingless_Luckpy = 2502;
     private final int Wingless_Luckpy_Gold = 2503;
@@ -31,14 +31,14 @@ public class FortuneBug extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         addTimer(7778, 1000);
         i_ai0 = i_ai1 = i_ai2 = 0;
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         super.onEvtArrived();
         NpcInstance actor = getActor();
         if (actor == null)
@@ -96,7 +96,7 @@ public class FortuneBug extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead())
             return true;
@@ -118,7 +118,7 @@ public class FortuneBug extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         super.onEvtDead(killer);
         NpcInstance actor = getActor();
 
@@ -160,7 +160,7 @@ public class FortuneBug extends DefaultAI {
     }
 
     @Override
-    protected void onEvtTimer(int timerId, Object arg1, Object arg2) {
+    public void onEvtTimer(int timerId, Object arg1, Object arg2) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -195,10 +195,10 @@ public class FortuneBug extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

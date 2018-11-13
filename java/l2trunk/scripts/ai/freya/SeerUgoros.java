@@ -11,16 +11,16 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.quests._288_HandleWithCare;
 
-public class SeerUgoros extends Mystic {
+public final class SeerUgoros extends Mystic {
     private int _weeds = 0;
-    private static final Skill _skill = SkillTable.getInstance().getInfo(6426, 1);
+    private final Skill _skill = SkillTable.getInstance().getInfo(6426, 1);
 
     public SeerUgoros(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         super.thinkActive();
         if (!getActor().getReflection().isDefault() && !getActor().getReflection().getPlayers().isEmpty())
             for (Player p : getActor().getReflection().getPlayers())
@@ -29,7 +29,7 @@ public class SeerUgoros extends Mystic {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         if (!actor.isMuted(_skill) && actor.getCurrentHpPercents() < 80) {
             for (NpcInstance n : actor.getAroundNpc(2000, 300))
@@ -45,7 +45,7 @@ public class SeerUgoros extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         QuestState qs = killer.getPlayer().getQuestState(_288_HandleWithCare.class);
         if (qs != null && qs.getCond() == 1) {
             if (_weeds < 5) {

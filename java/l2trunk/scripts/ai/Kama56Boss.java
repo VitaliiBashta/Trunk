@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Kama56Boss extends Fighter {
+public final class Kama56Boss extends Fighter {
     private long _nextOrderTime = 0;
     private HardReference<Player> _lastMinionsTargetRef = HardReferences.emptyRef();
 
@@ -75,7 +75,7 @@ public class Kama56Boss extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

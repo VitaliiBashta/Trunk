@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class Pterosaur extends DefaultAI {
+public final class Pterosaur extends DefaultAI {
     private static final Location[] points = {
             new Location(3964, -7496, -3488),
             new Location(7093, -6207, -3447),
@@ -78,7 +78,7 @@ public class Pterosaur extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         actor.setFlying(true);
         actor.setHasChatWindow(false);
@@ -91,7 +91,7 @@ public class Pterosaur extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -132,10 +132,10 @@ public class Pterosaur extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

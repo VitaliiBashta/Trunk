@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.StatusUpdate;
 
 
-public class AngerOfSplendor extends Fighter {
+public final class AngerOfSplendor extends Fighter {
 
     public AngerOfSplendor(NpcInstance actor) {
         super(actor);
@@ -19,7 +19,7 @@ public class AngerOfSplendor extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null || actor.isDead())
             return;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <list>
 	<skill id="1400" levels="10" name="Turn Undead">
 		<!--
@@ -750,11 +750,7 @@
 		<set name="isReuseDelayPermanent" val="true" />
 		<set name="isSkillTimePermanent" val="true" />
 		<set name="cancelable" val="false" />
-		<cond msgId="1509">
-			<not>
-				<player olympiad="true" />
-			</not>
-		</cond>
+
 		<for>
 			<effect count="6" name="Symbol" time="2" val="0" applyOnSummon="false" />
 		</for>
@@ -767,7 +763,7 @@
 		-->
 		<set name="magicType" val="MAGIC" />
 		<set name="icon" val="icon.skill1422" />
-		<set name="reuseDelay" val="1800000" />
+		<set name="reuseDelay" val="100000" />
 		<set name="magicLevel" val="80" />
 		<set name="castRange" val="900" />
 		<set name="hitTime" val="5000" />
@@ -777,12 +773,10 @@
 		<set name="target" val="TARGET_SELF" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<set name="skillType" val="BUFF" />
-		<set name="symbolId" val="13028" />
 		<set name="addSkills" val="5145;1" />
 		<set name="skillRadius" val="200" />
 		<set name="itemConsumeId" val="8876" />
 		<set name="itemConsumeCount" val="1" />
-		<set name="isReuseDelayPermanent" val="true" />
 		<set name="cancelable" val="false" />
 		<cond msgId="1509">
 			<not>
@@ -2756,7 +2750,7 @@
 		<table name="#cAtk">1.3 1.4 1.5</table>
 		<table name="#rCrit">30 40 50</table>
 		<table name="#abnormal_lv">1 2 3</table>
-		<table name="#abnormal_time">15</table>
+		<table name="#abnormal_time">150</table>
 		<table name="#reuseDelay">300000</table>
 		<table name="#mpConsume2">56 70 85</table>
 		<table name="#mpConsume1">14 18 22</table>
@@ -2787,7 +2781,7 @@
 			<table name="#magicLevel">76 76 76 77 77 77 78 78 78 79 79 79 80 80 80 81 81 81 82 82 82 83 83 83 84 84 84 85 85 85</table>
 		</enchant3>
 		<for>
-			<effect count="1" name="Buff" time="#abnormal_time" val="0" stackOrder="#abnormal_lv" stackType="impulse">
+			<effect count="1" name="Buff" time="#abnormal_time" val="0" stackOrder="#abnormal_lv">
 				<mul order="0x30" stat="pAtk" val="#pAtk" />
 				<mul order="0x30" stat="cAtk" val="#cAtk" />
 				<add order="0x40" stat="rCrit" val="#rCrit" />

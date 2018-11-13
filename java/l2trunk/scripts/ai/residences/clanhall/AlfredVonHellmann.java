@@ -14,17 +14,9 @@ import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 
-/**
- * @author VISTALL
- * @date 12:21/08.05.2011
- * 35630
- * <p>
- * При убийстве если верить Аи, то говорит он 1010635, но на aинале он говорит как и  GiselleVonHellmann
- * lidia_zone3
- */
 public class AlfredVonHellmann extends SiegeGuardFighter {
-    private static final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(5000, 1);
-    private static final Skill DRAIN_SKILL = SkillTable.getInstance().getInfo(5001, 1);
+    private  final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(5000, 1);
+    private  final Skill DRAIN_SKILL = SkillTable.getInstance().getInfo(5001, 1);
 
     private static final Zone ZONE_3 = ReflectionUtils.getZone("lidia_zone3");
 

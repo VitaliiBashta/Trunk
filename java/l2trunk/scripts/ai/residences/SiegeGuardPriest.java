@@ -2,13 +2,13 @@ package l2trunk.scripts.ai.residences;
 
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class SiegeGuardPriest extends SiegeGuard {
+public final class SiegeGuardPriest extends SiegeGuard {
     public SiegeGuardPriest(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return defaultFightTask();
     }
 

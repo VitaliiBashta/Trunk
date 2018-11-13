@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <list>
 	<skill id="700" levels="1" name="Divine Healer Group Heal">
 		<!--
@@ -2298,9 +2298,6 @@
 		<set name="skillType" val="BUFF" />
 		<set name="skillRadius" val="1000" />
 		<set name="operateType" val="OP_ACTIVE" />
-		<cond msgId="113" addName="1">
-			<target hasBuffId="5562;3" />
-		</cond>
 		<for>
 			<effect name="Buff" count="1" time="60" stackOrder="2" stackType="knight_icon" val="0">
 				<add order="0x40" stat="runSpd" val="30" />
@@ -2308,7 +2305,6 @@
 				<add order="0x40" stat="cancelResist" val="40" />
 				<add order="0x40" stat="accCombat" val="6" />
 				<add order="0x40" stat="rCrit" val="100">
-					<using kind="Sword, Big Sword" />
 				</add>
 				<mul order="0x30" stat="mDef" val="1.5" />
 				<mul order="0x30" stat="pDef" val="1.5" />
@@ -2368,11 +2364,8 @@
 		<set name="skillRadius" val="1000" />
 		<set name="skillType" val="HEAL_PERCENT" />
 		<set name="operateType" val="OP_ACTIVE" />
-		<cond msgId="113" addName="1">
-			<target hasBuffId="5563;3" />
-		</cond>
 		<for>
-			<effect name="HealOverTime" time="1" count="60" val="50" stackType="touch_of_life" stackOrder="1">
+			<effect name="HealOverTime" time="1" count="60" val="50" stackOrder="1">
 				<mul order="0x30" stat="hpEff" val="1.3" />
 				<add order="0x40" stat="debuffResist" val="30" />
 				<add order="0x40" stat="cancelResist" val="100" />
@@ -2423,7 +2416,7 @@
 			Недокументированная возможность: 23% м. атаки.
 		-->
 		<set name="icon" val="icon.skill0789" />
-		<set name="reuseDelay" val="150000" />
+		<set name="reuseDelay" val="50000" />
 		<set name="magicLevel" val="81" />
 		<set name="hitTime" val="1800" />
 		<set name="hitCancelTime" val="500" />
@@ -2432,11 +2425,8 @@
 		<set name="skillRadius" val="1000" />
 		<set name="operateType" val="OP_ACTIVE" />
 		<set name="skillType" val="BUFF" />
-		<cond msgId="113" addName="1">
-			<target hasBuffId="5564;3" />
-		</cond>
 		<for>
-			<effect name="Buff" time="60" stackOrder="2" stackType="knight_icon" count="1" val="0">
+			<effect name="Buff" time="60" stackOrder="2" count="1" val="0">
 				<mul order="0x30" stat="pAtk" val="1.3" />
 				<add order="0x40" stat="runSpd" val="30" />
 				<mul order="0x30" stat="pAtkSpd" val="1.3" />

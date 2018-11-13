@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class BladeOfSplendor extends RndTeleportFighter {
+public final class BladeOfSplendor extends RndTeleportFighter {
     private static final Logger LOG = LoggerFactory.getLogger(BladeOfSplendor.class);
     private static final int[] CLONES = {21525};
 
@@ -25,7 +25,7 @@ public class BladeOfSplendor extends RndTeleportFighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

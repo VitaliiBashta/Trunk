@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class SuspiciousMerchantHive extends DefaultAI {
+public final class SuspiciousMerchantHive extends DefaultAI {
     private static final Location[] points = {
             new Location(19408, 189422, -3136),
             new Location(20039, 187700, -3416),
@@ -38,7 +38,7 @@ public class SuspiciousMerchantHive extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -96,17 +96,15 @@ public class SuspiciousMerchantHive extends DefaultAI {
             return true;
         }
 
-        if (randomAnimation())
-            return true;
+        return randomAnimation();
 
-        return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

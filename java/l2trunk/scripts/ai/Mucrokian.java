@@ -25,7 +25,7 @@ public class Mucrokian extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor != null && !actor.isDead()) {
             if (attacker != null) {

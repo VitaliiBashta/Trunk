@@ -146,8 +146,8 @@ public class GameServer {
         PetSkillsTable.getInstance();
         printSection("Auctioneer");
         ItemAuctionManager.getInstance();
-        _log.info("===============[Loading RAIDBOSS]==================");
-//        Scripts.getInstance().init();
+        _log.info("===============[Adding handlers to scripts]==================");
+        Scripts.getInstance().init2();
         SpawnManager.getInstance().spawnAll();
         printSection("Boats");
         BoatHolder.getInstance().spawnAll();

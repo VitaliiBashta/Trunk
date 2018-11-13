@@ -15,14 +15,14 @@ import l2trunk.gameserver.scripts.Functions;
  *
  * @author SYS
  */
-public class GatekeeperZombie extends Mystic {
+public final class GatekeeperZombie extends Mystic {
     public GatekeeperZombie(NpcInstance actor) {
         super(actor);
         actor.startImmobilized();
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
@@ -46,7 +46,7 @@ public class GatekeeperZombie extends Mystic {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

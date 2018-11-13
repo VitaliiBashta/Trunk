@@ -11,7 +11,7 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.templates.spawn.SpawnRange;
 import l2trunk.gameserver.utils.Location;
 
-public abstract class RndTeleportFighter extends Fighter {
+public class RndTeleportFighter extends Fighter {
     private long _lastTeleport;
 
     RndTeleportFighter(NpcInstance actor) {
@@ -19,7 +19,7 @@ public abstract class RndTeleportFighter extends Fighter {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         NpcInstance actor = getActor();
         if (System.currentTimeMillis() - _lastTeleport < 10000)
             return false;
@@ -45,7 +45,7 @@ public abstract class RndTeleportFighter extends Fighter {
 
         SpawnRange spawnRange = actor.getSpawnRange();
         boolean isInside = true;
-        if (spawnRange != null && spawnRange instanceof Territory)
+        if (spawnRange instanceof Territory)
             isInside = ((Territory) spawnRange).isInside(x, y);
 
         if (isInside) {

@@ -5,18 +5,18 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public abstract class Ranger extends DefaultAI {
+public class Ranger extends DefaultAI {
     protected Ranger(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         return super.thinkActive() || defaultThinkBuff(10);
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         super.onEvtAttacked(attacker, damage);
         NpcInstance actor = getActor();
         if (actor.isDead() || attacker == null || actor.getDistance(attacker) > 200)
@@ -46,7 +46,7 @@ public abstract class Ranger extends DefaultAI {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return defaultFightTask();
     }
 

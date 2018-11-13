@@ -12,7 +12,7 @@ import l2trunk.gameserver.taskmanager.AiTaskManager;
 
 import java.util.Calendar;
 
-public class MercenaryCaptain extends DefaultAI {
+public final class MercenaryCaptain extends DefaultAI {
     private static final NpcString[] MESSAGES = new NpcString[]
             {
                     NpcString.COURAGE_AMBITION_PASSION_MERCENARIES_WHO_WANT_TO_REALIZE_THEIR_DREAM_OF_FIGHTING_IN_THE_TERRITORY_WAR_COME_TO_ME_FORTUNE_AND_GLORY_ARE_WAITING_FOR_YOU,
@@ -31,11 +31,11 @@ public class MercenaryCaptain extends DefaultAI {
     }
 
     @Override
-    protected synchronized void switchAITask(long NEW_DELAY) {
+    public synchronized void switchAITask(long NEW_DELAY) {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;

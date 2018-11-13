@@ -14,12 +14,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.List;
 
-/**
- * Author: VISTALL
- * Date:  9:03/17.11.2010
- * npc Id : 18601
- */
-public class KrateisCubeWatcherRed extends DefaultAI {
+public final class KrateisCubeWatcherRed extends DefaultAI {
     private static final int[][] SKILLS = {{1064, 14}, {1160, 15}, {1164, 19}, {1167, 6}, {1168, 7}};
     private static final int SKILL_CHANCE = 25;
 
@@ -29,11 +24,11 @@ public class KrateisCubeWatcherRed extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtThink() {
+    public void onEvtThink() {
         NpcInstance actor = getActor();
         List<Creature> around = World.getAroundCharacters(actor, 600, 300);
         if (around.isEmpty())

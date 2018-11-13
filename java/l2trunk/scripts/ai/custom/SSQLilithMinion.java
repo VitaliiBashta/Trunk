@@ -9,7 +9,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
 
-public class SSQLilithMinion extends Fighter {
+public final class SSQLilithMinion extends Fighter {
     private final int[] _enemies = {32719, 32720, 32721};
 
     public SSQLilithMinion(NpcInstance actor) {
@@ -18,7 +18,7 @@ public class SSQLilithMinion extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         ThreadPoolManager.getInstance().schedule(new Attack(), 3000);
     }
@@ -41,7 +41,7 @@ public class SSQLilithMinion extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

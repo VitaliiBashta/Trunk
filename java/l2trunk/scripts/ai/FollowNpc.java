@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ScheduledFuture;
 
-public class FollowNpc extends DefaultAI {
+public final class FollowNpc extends DefaultAI {
     private static final Logger LOG = LoggerFactory.getLogger(FollowNpc.class);
     private boolean _thinking = false;
     private ScheduledFuture<?> _followTask;
@@ -25,12 +25,12 @@ public class FollowNpc extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return getActor() instanceof MonsterInstance;
     }
 
     @Override
-    protected void onEvtThink() {
+    public void onEvtThink() {
         NpcInstance actor = getActor();
         if (_thinking || actor.isActionsDisabled() || actor.isAfraid() || actor.isDead() || actor.isMovementDisabled())
             return;

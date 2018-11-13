@@ -14,7 +14,7 @@ import l2trunk.gameserver.utils.Location;
  * - All the information about the AI ​​painted.
  * - AI is tested and works.
  */
-public class TriolsBeliever extends Mystic {
+public final class TriolsBeliever extends Mystic {
     private boolean _tele = true;
 
     private static final Location[] locs = {new Location(-16128, -35888, -10726), new Location(-16397, -44970, -10724), new Location(-15729, -42001, -10724)};
@@ -24,7 +24,7 @@ public class TriolsBeliever extends Mystic {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -43,7 +43,7 @@ public class TriolsBeliever extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _tele = true;
         super.onEvtDead(killer);
     }

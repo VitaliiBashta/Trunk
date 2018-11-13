@@ -13,7 +13,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Darion extends Fighter {
+public final class Darion extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(Darion.class);
 
     private static final int[] doors = {
@@ -29,7 +29,7 @@ public class Darion extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
@@ -51,7 +51,7 @@ public class Darion extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         //Doors
         for (int door1 : doors) {
             DoorInstance door = ReflectionUtils.getDoor(door1);

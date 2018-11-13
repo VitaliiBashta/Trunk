@@ -6,12 +6,8 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-/**
- * @author VISTALL
- * @date 16:38/22.04.2011
- */
-public class MatchLeader extends MatchFighter {
-    private static final Skill ATTACK_SKILL = SkillTable.getInstance().getInfo(4077, 6);
+public final class MatchLeader extends MatchFighter {
+    private final Skill ATTACK_SKILL = SkillTable.getInstance().getInfo(4077, 6);
 
     public MatchLeader(NpcInstance actor) {
         super(actor);

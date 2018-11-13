@@ -9,10 +9,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.instances.HeartInfinityAttack;
 import l2trunk.scripts.instances.HeartInfinityDefence;
 
-/**
- * @author pchayka
- */
-
 public final class AbyssGazeInstance extends NpcInstance {
     private static final int ekimusIzId = 121;
     private static final int hoidefIzId = 122;

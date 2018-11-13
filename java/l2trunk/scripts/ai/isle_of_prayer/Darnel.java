@@ -18,7 +18,7 @@ import l2trunk.scripts.instances.CrystalCaverns;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Darnel extends DefaultAI {
+public final class Darnel extends DefaultAI {
     private class TrapTask extends RunnableImpl {
         @Override
         public void runImpl() {
@@ -54,7 +54,7 @@ public class Darnel extends DefaultAI {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         Creature target;
         if ((target = prepareTarget()) == null)
@@ -88,7 +88,7 @@ public class Darnel extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         CrystalCaverns refl = null;
         if (actor.getReflection() instanceof CrystalCaverns)
@@ -99,7 +99,7 @@ public class Darnel extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         CrystalCaverns refl = null;
         if (actor.getReflection() instanceof CrystalCaverns)
@@ -110,7 +110,7 @@ public class Darnel extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class Gordon extends Fighter {
+public final class Gordon extends Fighter {
     private static final Location[] points = {
             // spawn: 147316,-64797,-3469
             new Location(146268, -64651, -3412),
@@ -57,7 +57,7 @@ public class Gordon extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         // Агрится только на носителей проклятого оружия
         if (!target.isCursedWeaponEquipped())
             return false;
@@ -68,7 +68,7 @@ public class Gordon extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -111,7 +111,7 @@ public class Gordon extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

@@ -19,9 +19,9 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public class Tiat extends Fighter {
+public final class Tiat extends Fighter {
     private static final int TIAT_TRANSFORMATION_SKILL_ID = 5974;
-    private static final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.getInstance().getInfo(TIAT_TRANSFORMATION_SKILL_ID, 1);
+    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.getInstance().getInfo(TIAT_TRANSFORMATION_SKILL_ID, 1);
     private boolean _notUsedTransform = true;
     private static final int TRAPS_COUNT = 4;
     private static final Location[] TRAP_LOCS = {
@@ -45,7 +45,7 @@ public class Tiat extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return;
@@ -85,7 +85,7 @@ public class Tiat extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -110,7 +110,7 @@ public class Tiat extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _notUsedTransform = true;
         _lastAttackTime = 0;
         _lastFactionNotifyTime = 0;

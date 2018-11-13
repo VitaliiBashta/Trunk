@@ -11,11 +11,7 @@ import l2trunk.scripts.npc.model.residences.fortress.siege.MercenaryCaptionInsta
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 10:58/19.04.2011
- */
-public class MercenaryCaption extends Fighter {
+public final class MercenaryCaption extends Fighter {
     private List<Location> _points = Collections.emptyList();
     private int _tick = -1;
 
@@ -36,7 +32,7 @@ public class MercenaryCaption extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isActionsDisabled())
             return true;
@@ -47,10 +43,8 @@ public class MercenaryCaption extends Fighter {
             return true;
         }
 
-        if (randomWalk())
-            return true;
+        return randomWalk();
 
-        return false;
     }
 
     @Override

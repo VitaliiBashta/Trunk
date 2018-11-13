@@ -9,7 +9,7 @@ public class BoatAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         Boat actor = (Boat) getActor();
         if (actor == null)
             return;

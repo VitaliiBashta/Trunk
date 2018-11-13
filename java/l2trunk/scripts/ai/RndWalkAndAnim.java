@@ -15,7 +15,7 @@ public class RndWalkAndAnim extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isMoving)
             return false;
@@ -31,7 +31,7 @@ public class RndWalkAndAnim extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         NpcInstance actor = getActor();
         if (actor == null)
             return false;
@@ -49,10 +49,10 @@ public class RndWalkAndAnim extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

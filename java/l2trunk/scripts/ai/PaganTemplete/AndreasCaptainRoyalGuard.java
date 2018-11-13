@@ -29,7 +29,7 @@ public class AndreasCaptainRoyalGuard extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -48,7 +48,7 @@ public class AndreasCaptainRoyalGuard extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (actor.getCurrentHpPercents() <= 70) {
@@ -59,7 +59,7 @@ public class AndreasCaptainRoyalGuard extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

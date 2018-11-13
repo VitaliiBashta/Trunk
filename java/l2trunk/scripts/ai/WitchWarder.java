@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
  *
  * @author SYS
  */
-public class WitchWarder extends Fighter {
+public final class WitchWarder extends Fighter {
     private long _wait_timeout = 0;
     private boolean _wait = false;
     private static final int DESPAWN_TIME = 3 * 60 * 1000; // 3 min
@@ -21,7 +21,7 @@ public class WitchWarder extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -44,7 +44,7 @@ public class WitchWarder extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

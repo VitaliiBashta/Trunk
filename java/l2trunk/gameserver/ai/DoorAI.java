@@ -31,7 +31,7 @@ public class DoorAI extends CharacterAI {
 
     //TODO [VISTALL] унести в SiegeDoor
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         Creature actor;
         if (attacker == null || (actor = getActor()) == null)
             return;

@@ -15,7 +15,7 @@ public final class EmeraldDrake extends Mystic {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         if (Rnd.chance(Config.EDRAKE_MS_CHANCE)) {
             NpcInstance actor = getActor();
             NpcInstance n = NpcUtils.spawnSingle(22860, (actor.getX() + Rnd.get(-100, 100)), (actor.getY() + Rnd.get(-100, 100)), actor.getZ());

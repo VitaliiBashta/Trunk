@@ -10,7 +10,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NaiaLock extends Fighter {
+public final class NaiaLock extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(NaiaLock.class);
     private static boolean _attacked = false;
     private static boolean _entranceactive = false;
@@ -21,7 +21,7 @@ public class NaiaLock extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         _entranceactive = true;
         Functions.npcShout(actor, "The lock has been removed from the Controller device");
@@ -29,7 +29,7 @@ public class NaiaLock extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         NpcInstance actor = getActor();
         _entranceactive = false;
@@ -37,12 +37,12 @@ public class NaiaLock extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (!_attacked) {

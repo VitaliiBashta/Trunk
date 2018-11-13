@@ -54,7 +54,7 @@ public final class StakatoNest extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         if (actor.getNpcId() != QUEEN_SHYEED) {
             super.onEvtSpawn();
@@ -73,7 +73,7 @@ public final class StakatoNest extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         MonsterInstance _mob = (MonsterInstance) actor;
 
@@ -94,7 +94,7 @@ public final class StakatoNest extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         MinionInstance _minion = getAliveMinion(actor);
@@ -153,7 +153,7 @@ public final class StakatoNest extends Fighter {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
         if (actor == null || !ArrayUtils.contains(BIZARRE_COCOON, actor.getNpcId()) || caster == null || skill.getId() != SKILL_GROWTH_ACCELERATOR) {
             super.onEvtSeeSpell(skill, caster);
@@ -228,12 +228,12 @@ public final class StakatoNest extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return !(ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId()) || getActor().getNpcId() == QUEEN_SHYEED);
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return !ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId());
     }
 }

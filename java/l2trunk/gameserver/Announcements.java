@@ -15,15 +15,16 @@ import l2trunk.gameserver.utils.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Future;
 
-public class Announcements {
+public final class Announcements {
     private static final Logger _log = LoggerFactory.getLogger(Announcements.class);
     private static final Announcements _instance = new Announcements();
     private final List<Announce> _announcements = new ArrayList<>();
@@ -102,12 +103,10 @@ public class Announcements {
     }
 
     private void saveToDisk() {
-        try {
-            File f = new File("config/announcements.txt");
-            FileWriter writer = new FileWriter(f, false);
+        Path f = Config.CONFIG.resolve("announcements.txt");
+        try (BufferedWriter writer = Files.newBufferedWriter(f)) {
             for (Announce announce : _announcements)
                 writer.write(announce.getTime() + "\t" + announce.getAnnounce() + "\n");
-            writer.close();
         } catch (IOException e) {
             _log.error("Error while saving config/announcements.txt!", e);
         }

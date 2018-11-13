@@ -7,17 +7,13 @@ import l2trunk.gameserver.model.entity.events.impl.KrateisCubeEvent;
 import l2trunk.gameserver.model.entity.events.objects.KrateisCubePlayerObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-/**
- * @author VISTALL
- * @date 11:31/18.11.2010
- */
-public class KrateisFighter extends Fighter {
+public final class KrateisFighter extends Fighter {
     public KrateisFighter(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         super.onEvtDead(killer);
 
         Player player = killer.getPlayer();

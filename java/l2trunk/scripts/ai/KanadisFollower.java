@@ -8,19 +8,14 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
 
-/**
- * AI Kanadis Follower и минионов для Rim Pailaka
- *
- * @author pchayka
- */
 
-public class KanadisFollower extends Fighter {
+public final class KanadisFollower extends Fighter {
     public KanadisFollower(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
@@ -32,7 +27,7 @@ public class KanadisFollower extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker.getNpcId() == 36562) {
             actor.getAggroList().addDamageHate(attacker, 0, 100);
@@ -43,7 +38,7 @@ public class KanadisFollower extends Fighter {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 }

@@ -11,7 +11,7 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
 
-public class SSQAnakim extends Mystic {
+public final class SSQAnakim extends Mystic {
     private static final String PLAYER_NAME = "%playerName%";
 
     private static final String[] chat = {
@@ -38,12 +38,12 @@ public class SSQAnakim extends Mystic {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (_lastChatTime < System.currentTimeMillis()) {
             Functions.npcSay(getActor(), chat[Rnd.get(chat.length)]);
             _lastChatTime = System.currentTimeMillis() + 12 * 1000;
@@ -86,15 +86,15 @@ public class SSQAnakim extends Mystic {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
     }
 }

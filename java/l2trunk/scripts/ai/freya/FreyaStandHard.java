@@ -13,7 +13,7 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class FreyaStandHard extends Fighter {
+public final class FreyaStandHard extends Fighter {
     private static final int Skill_EternalBlizzard = 6275; // Мощнейшая атака ледяного урагана с силой 45к по площади в 3000 радиуса
     private long _eternalblizzardReuseTimer = 0; // Таймер отката умения
     private final int _eternalblizzardReuseDelay = 50; // Откат умения в секундах
@@ -55,7 +55,7 @@ public class FreyaStandHard extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         Creature topDamager = actor.getAggroList().getTopDamager();
         Creature randomHated = actor.getAggroList().getRandomHated();
@@ -138,7 +138,7 @@ public class FreyaStandHard extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         // Назначаем начальный откат всем умениям
@@ -158,13 +158,13 @@ public class FreyaStandHard extends Fighter {
     }
 
     @Override
-    protected boolean canTeleWhenCannotSeeTarget() {
+    public boolean canTeleWhenCannotSeeTarget() {
         teleportHome();
         return false;
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         // Если все атакующе погибли, покинули инстанс etc, в течение 60 секунд закрываем рефлект.
         if (_idleDelay == 0 && !getActor().isCurrentHpFull())
             _idleDelay = System.currentTimeMillis();

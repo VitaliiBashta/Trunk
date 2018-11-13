@@ -21,7 +21,7 @@ public final class DrakeBosses extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance corpse = null;
         switch (getActor().getNpcId()) {
             case 25725:

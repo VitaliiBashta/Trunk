@@ -18,7 +18,7 @@ import java.util.List;
  * - If the attack swears to chat with a 20% chance, Agrita main mob.
  * - AI is tested and works.
  */
-public class SelMahumRecruit extends Fighter {
+public final class SelMahumRecruit extends Fighter {
     private long _wait_timeout = System.currentTimeMillis() + 180000;
     private final List<NpcInstance> _arm = new ArrayList<>();
     private boolean _firstTimeAttacked = true;
@@ -29,7 +29,7 @@ public class SelMahumRecruit extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
@@ -49,7 +49,7 @@ public class SelMahumRecruit extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -72,7 +72,7 @@ public class SelMahumRecruit extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }

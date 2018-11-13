@@ -11,7 +11,10 @@ import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -30,7 +33,7 @@ public final class QuizEvent {
     private static int _status;
     private static int announced;
     private static AutoEventTask _task;
-    private static String[][] _questions;
+    private static List<String[]> _questions = new ArrayList<>();
     private static int i = 0;
 
     // ----------------------------------------------------------------------------
@@ -66,7 +69,7 @@ public final class QuizEvent {
         _answer3 = "";
         _rightanswer = 0;
         _players = new HashMap<>(100);
-        _questions = new String[93][];
+//        _questions = new String[193][];
         includeQuestions();
         ThreadPoolManager.getInstance().schedule(_task, _initWait * 1000);
 
@@ -75,11 +78,11 @@ public final class QuizEvent {
     // Get a random question from the quiz_event table
     private static void selectQuestion() {
         int id = Rnd.get(i) + 1;
-        _question = _questions[id][0];
-        _answer1 = _questions[id][1];
-        _answer2 = _questions[id][2];
-        _answer3 = _questions[id][3];
-        _rightanswer = Integer.parseInt("" + _questions[id][4]);
+        _question = _questions.get(id)[0];
+        _answer1 = _questions.get(id)[1];
+        _answer2 = _questions.get(id)[2];
+        _answer3 = _questions.get(id)[3];
+        _rightanswer = Integer.parseInt("" + _questions.get(id)[4]);
     }
 
     // Announce the question
@@ -151,7 +154,7 @@ public final class QuizEvent {
 
     private void includeQuestions() {
 
-        Path questionFile = Config.DATAPACK_ROOT.resolve("data/scripts/custom/QuizEvent.xml");
+        Path questionFile = Config.CONFIG.resolve("QuizEvent.xml");
         Document doc;
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -176,8 +179,8 @@ public final class QuizEvent {
                             answer2 = attrs.getNamedItem("answer2").getNodeValue();
                             answer3 = attrs.getNamedItem("answer3").getNodeValue();
 
-                            _questions[id] = new String[]
-                                    {ask, answer1, answer2, answer3, "" + correct};
+                            _questions.add( new String[]
+                                    {ask, answer1, answer2, answer3, "" + correct});
                             i++;
 
                         }

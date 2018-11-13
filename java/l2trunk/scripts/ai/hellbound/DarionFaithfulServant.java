@@ -6,6 +6,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -13,7 +14,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DarionFaithfulServant extends Fighter {
+public final class DarionFaithfulServant extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(DarionFaithfulServant.class);
     private static final int MysteriousAgent = 32372;
 
@@ -22,29 +23,20 @@ public class DarionFaithfulServant extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (Rnd.chance(15))
             try {
                 SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(MysteriousAgent));
                 sp.setLoc(new Location(-11984, 278880, -13599, -4472));
                 sp.doSpawn(true);
                 sp.stopRespawn();
-                ThreadPoolManager.getInstance().schedule(new Unspawn(), 600 * 1000L); // 10 mins
+                ThreadPoolManager.getInstance().schedule(() ->
+                                GameObjectsStorage.getAllByNpcId(MysteriousAgent, true).forEach(GameObject::deleteMe)
+                        , 600 * 1000L); // 10 mins
             } catch (RuntimeException e) {
                 LOG.error("Error on Darion Faithful Servanth Death", e);
             }
         super.onEvtDead(killer);
-    }
-
-    private class Unspawn extends RunnableImpl {
-        Unspawn() {
-        }
-
-        @Override
-        public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllByNpcId(MysteriousAgent, true))
-                npc.deleteMe();
-        }
     }
 
 }

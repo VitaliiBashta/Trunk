@@ -16,14 +16,14 @@ import l2trunk.gameserver.utils.Location;
  * Кричит в чат перед атакой.
  * Игнорирует атаку стражей и убегает.
  */
-public class ContaminatedMucrokian extends Fighter {
+public final class ContaminatedMucrokian extends Fighter {
 
     public ContaminatedMucrokian(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         NpcInstance actor = getActor();
         if (actor == null) {
             return;
@@ -35,7 +35,7 @@ public class ContaminatedMucrokian extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor != null && !actor.isDead()) {
             if (attacker != null) {

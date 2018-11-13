@@ -20,14 +20,14 @@ public class MoSMonk extends Fighter {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         if (getIntention() == CtrlIntention.AI_INTENTION_ACTIVE && Rnd.chance(20))
             Functions.npcSayCustomMessage(getActor(), "scripts.ai.MoSMonk.onIntentionAttack");
         super.onIntentionAttack(target);
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         if (target.getActiveWeaponInstance() == null)
             return false;
         return super.checkAggression(target, avoidAttack);

@@ -7,13 +7,13 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.NpcUtils;
 
-public class DragonKnight extends Fighter {
+public final class DragonKnight extends Fighter {
     public DragonKnight(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         super.onEvtDead(killer);
         switch (getActor().getNpcId()) {
             case 22844:

@@ -10,11 +10,8 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.templates.npc.MinionData;
 
-/**
- * При спавне саммонят случайную охрану.
- * Защита прямо пропорциональна количеству охранников.
- */
-public class GraveRobberSummoner extends Mystic {
+
+public final class GraveRobberSummoner extends Mystic {
     private static final int[] Servitors = {22683, 22684, 22685, 22686};
 
     private int _lastMinionCount = 1;
@@ -38,7 +35,7 @@ public class GraveRobberSummoner extends Mystic {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
@@ -47,7 +44,7 @@ public class GraveRobberSummoner extends Mystic {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         MonsterInstance actor = (MonsterInstance) getActor();
         if (actor.isDead())
             return;
@@ -56,7 +53,7 @@ public class GraveRobberSummoner extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         actor.getMinionList().deleteMinions();
         super.onEvtDead(killer);

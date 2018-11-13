@@ -11,13 +11,13 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
  * - Indicates social programs.
  * - AI is tested and works.
  */
-public class MCIndividual extends DefaultAI {
+public final class MCIndividual extends DefaultAI {
     public MCIndividual(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

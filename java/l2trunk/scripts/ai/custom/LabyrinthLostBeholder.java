@@ -8,14 +8,14 @@ import l2trunk.gameserver.model.instances.ReflectionBossInstance;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncSet;
 
-public class LabyrinthLostBeholder extends Fighter {
+public final class LabyrinthLostBeholder extends Fighter {
 
     public LabyrinthLostBeholder(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         Reflection r = actor.getReflection();
         if (!r.isDefault())

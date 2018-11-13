@@ -14,7 +14,7 @@ import l2trunk.gameserver.utils.NpcUtils;
  * - When Cook (18908) passes by, if the caster is off, the lights and spawns Katel (18,933).
  * - AI is tested and works.
  */
-public class Fire extends DefaultAI {
+public final class Fire extends DefaultAI {
     private static final int FEED = 18933;
     private boolean _firstTime = true;
     private long _wait_timeout = System.currentTimeMillis() + Rnd.get(120, 240) * 1000;
@@ -24,7 +24,7 @@ public class Fire extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;

@@ -6,10 +6,8 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-/**
- * @author Diamond
- */
-public class EvasGiftBox extends Fighter {
+
+public final class EvasGiftBox extends Fighter {
     private static final int[] KISS_OF_EVA = new int[]{1073, 3141, 3252};
 
     private static final int Red_Coral = 9692;
@@ -20,7 +18,7 @@ public class EvasGiftBox extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         if (killer != null) {
             Player player = killer.getPlayer();
@@ -31,7 +29,7 @@ public class EvasGiftBox extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

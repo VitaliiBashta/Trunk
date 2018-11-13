@@ -7,7 +7,7 @@ import l2trunk.gameserver.instancemanager.naia.NaiaCoreManager;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class NaiaCube extends DefaultAI {
+public final class NaiaCube extends DefaultAI {
 
     public NaiaCube(NpcInstance actor) {
         super(actor);
@@ -15,7 +15,7 @@ public class NaiaCube extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         ThreadPoolManager.getInstance().schedule(new Despawn(getActor()), 300 * 1000L);
     }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.scripts.instances.*;
 
-public class SoulCoffin extends DefaultAI {
+public final class SoulCoffin extends DefaultAI {
     private long checkTimer = 0;
 
     public SoulCoffin(NpcInstance actor) {
@@ -15,7 +15,7 @@ public class SoulCoffin extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         Reflection r = actor.getReflection();
         if (!r.isDefault())
@@ -33,7 +33,7 @@ public class SoulCoffin extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.getNpcId() == 18706 && actor.getReflection().getInstancedZoneId() == 116 && checkTimer + 10000 < System.currentTimeMillis()) {
             checkTimer = System.currentTimeMillis();
@@ -43,10 +43,10 @@ public class SoulCoffin extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

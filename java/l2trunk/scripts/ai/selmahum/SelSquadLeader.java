@@ -11,7 +11,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public class SelSquadLeader extends Fighter {
+public final class SelSquadLeader extends Fighter {
     private boolean isBusy;
     private boolean isImmobilized;
 
@@ -30,7 +30,7 @@ public class SelSquadLeader extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -98,7 +98,7 @@ public class SelSquadLeader extends Fighter {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         NpcInstance actor = getActor();
 
         super.onEvtArrived();
@@ -112,7 +112,7 @@ public class SelSquadLeader extends Fighter {
     }
 
     @Override
-    protected void onIntentionActive() {
+    public void onIntentionActive() {
         //таймаут после атаки
         idleTimeout = System.currentTimeMillis() + Rnd.get(60, 5 * 60) * 1000L;
 
@@ -120,7 +120,7 @@ public class SelSquadLeader extends Fighter {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         wakeUp();
 
         super.onIntentionAttack(target);
@@ -132,6 +132,6 @@ public class SelSquadLeader extends Fighter {
     }
 
     @Override
-    protected void returnHome(boolean clearAggro, boolean teleport) {
+    public void returnHome(boolean clearAggro, boolean teleport) {
     }
 }

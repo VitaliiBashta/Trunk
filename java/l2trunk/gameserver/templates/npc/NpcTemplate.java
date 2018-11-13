@@ -48,7 +48,7 @@ public final class NpcTemplate extends CharTemplate {
     private final StatsSet AIParams;
     private final int castleId;
     private final Map<Integer, TeleportLocation[]> teleportList = new HashMap<>();
-    private final Map<QuestEventType, Quest[]> _questEvents = Collections.emptyMap();
+    private final Map<QuestEventType, Quest[]> _questEvents = new HashMap<>();
     private final Map<Integer, Skill> skills = new HashMap<>();
     private final String _htmRoot;
     public boolean isRaid = false;

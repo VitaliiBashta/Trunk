@@ -7,11 +7,8 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-/**
- * @author L2Mythras
- */
 
-public class SpikeSlasherMinion extends Fighter {
+public final class SpikeSlasherMinion extends Fighter {
 
     private final Skill paralysis = SkillTable.getInstance().getInfo(6878, 1);
 
@@ -22,7 +19,7 @@ public class SpikeSlasherMinion extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (last_cast_anchor < System.currentTimeMillis()) {
             actor.doCast(paralysis, attacker, true);

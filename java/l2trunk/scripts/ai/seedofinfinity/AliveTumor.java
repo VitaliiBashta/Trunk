@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class AliveTumor extends DefaultAI {
+public final class AliveTumor extends DefaultAI {
     private long checkTimer = 0;
     private int coffinsCount = 0;
     private static final int[] regenCoffins = {18706, 18709, 18710};
@@ -17,7 +17,7 @@ public class AliveTumor extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
 
         if (checkTimer + 10000 < System.currentTimeMillis()) {
@@ -37,10 +37,10 @@ public class AliveTumor extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

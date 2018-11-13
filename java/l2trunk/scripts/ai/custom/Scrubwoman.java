@@ -16,7 +16,7 @@ import l2trunk.gameserver.utils.Location;
  * <br> - Собирает все предметы в радиусе MAX_RADIUS
  * <br> - убивает всех кто нанес удар (_firstTimeAttacked = true;) с выводом сообщения
  */
-public class Scrubwoman extends DefaultAI {
+public final class Scrubwoman extends DefaultAI {
     private static final int MAX_RADIUS = 900;
     private long _nextEat;
     protected Location[] _points;
@@ -28,7 +28,7 @@ public class Scrubwoman extends DefaultAI {
 
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         super.onEvtArrived();
         NpcInstance actor = getActor();
         if (actor == null)
@@ -74,13 +74,11 @@ public class Scrubwoman extends DefaultAI {
     }
 
     private boolean getFirstSpawned(NpcInstance actor) {
-        if (actor.getNpcId() == 18583)
-            return false;
-        return true;
+        return actor.getNpcId() != 18583;
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead())
             return true;

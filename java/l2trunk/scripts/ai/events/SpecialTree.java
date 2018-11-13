@@ -27,7 +27,7 @@ public class SpecialTree extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (_buffsEnabled) {
             _timer++;
             if (_timer >= 180) {
@@ -48,7 +48,7 @@ public class SpecialTree extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         super.onEvtSpawn();
         _buffsEnabled = !getActor().isInZonePeace();
         _timer = 0;

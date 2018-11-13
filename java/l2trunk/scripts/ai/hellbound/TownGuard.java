@@ -7,13 +7,13 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-public class TownGuard extends Fighter {
+public final class TownGuard extends Fighter {
     public TownGuard(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         NpcInstance actor = getActor();
         if (getIntention() == CtrlIntention.AI_INTENTION_ACTIVE && Rnd.chance(50))
             Functions.npcSay(actor, "Invader!");

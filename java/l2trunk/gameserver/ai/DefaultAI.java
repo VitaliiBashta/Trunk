@@ -206,7 +206,7 @@ public class DefaultAI extends CharacterAI {
         _def_think = true;
     }
 
-    protected void addTaskAttack(Creature target) {
+    public void addTaskAttack(Creature target) {
         Task task = new Task();
         task.type = TaskType.ATTACK;
         task.target = target.getRef();
@@ -214,7 +214,7 @@ public class DefaultAI extends CharacterAI {
         _def_think = true;
     }
 
-    protected void addTaskAttack(Creature target, Skill skill, int weight) {
+    public void addTaskAttack(Creature target, Skill skill, int weight) {
         Task task = new Task();
         task.type = skill.isOffensive() ? TaskType.CAST : TaskType.BUFF;
         task.target = target.getRef();
@@ -233,7 +233,7 @@ public class DefaultAI extends CharacterAI {
         _def_think = true;
     }
 
-    void addTaskMove(int locX, int locY, int locZ, boolean pathfind) {
+    public void addTaskMove(int locX, int locY, int locZ, boolean pathfind) {
         addTaskMove(new Location(locX, locY, locZ), pathfind);
     }
 
@@ -268,7 +268,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     // protected final synchronized void switchAITask(long NEW_DELAY)
-    protected synchronized void switchAITask(long NEW_DELAY) {
+    public synchronized void switchAITask(long NEW_DELAY) {
         if (_aiTask == null) {
             return;
         }
@@ -294,14 +294,14 @@ public class DefaultAI extends CharacterAI {
      * @param target L2Playable цель
      * @return true если цель видна в режиме Silent Move
      */
-    protected boolean canSeeInSilentMove(Playable target) {
+    public boolean canSeeInSilentMove(Playable target) {
         if (getActor().getParameter("canSeeInSilentMove", false)) {
             return true;
         }
         return !target.isSilentMoving();
     }
 
-    protected boolean canSeeInHide(Playable target) {
+    public boolean canSeeInHide(Playable target) {
         if (getActor().getParameter("canSeeInHide", false)) {
             return true;
         }
@@ -309,11 +309,11 @@ public class DefaultAI extends CharacterAI {
         return !target.isInvisible();
     }
 
-    protected boolean checkAggression(Creature target) {
+    public boolean checkAggression(Creature target) {
         return checkAggression(target, false);
     }
 
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if ((getIntention() != CtrlIntention.AI_INTENTION_ACTIVE) || !isGlobalAggro()) {
             return false;
@@ -396,7 +396,7 @@ public class DefaultAI extends CharacterAI {
         _randomAnimationEnd = System.currentTimeMillis() + time;
     }
 
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         NpcInstance actor = getActor();
 
         if (actor.getParameter("noRandomAnimation", false)) {
@@ -411,7 +411,7 @@ public class DefaultAI extends CharacterAI {
         return false;
     }
 
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         NpcInstance actor = getActor();
 
         if (actor.getParameter("noRandomWalk", false)) {
@@ -424,7 +424,7 @@ public class DefaultAI extends CharacterAI {
     /**
      * @return true если действие выполнено, false если нет
      */
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isActionsDisabled()) {
             return true;
@@ -468,7 +468,7 @@ public class DefaultAI extends CharacterAI {
 
                     // Only sort if there is actually a target to attack
                     if (!aggroList.isEmpty()) {
-                        Collections.sort(aggroList, _nearestTargetComparator);
+                        aggroList.sort(_nearestTargetComparator);
 
                         for (Creature target : aggroList) {
                             if (target == null || target.isAlikeDead())
@@ -518,7 +518,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onIntentionIdle() {
+    public void onIntentionIdle() {
         NpcInstance actor = getActor();
 
         // Удаляем все задания
@@ -533,7 +533,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onIntentionActive() {
+    public void onIntentionActive() {
         NpcInstance actor = getActor();
 
         actor.stopMove();
@@ -548,7 +548,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         NpcInstance actor = getActor();
 
         // Removes all jobs
@@ -567,11 +567,11 @@ public class DefaultAI extends CharacterAI {
         onEvtThink();
     }
 
-    protected boolean canAttackCharacter(Creature target) {
+    public boolean canAttackCharacter(Creature target) {
         return target.isPlayable();
     }
 
-    protected boolean checkTarget(Creature target, int range) {
+    public boolean checkTarget(Creature target, int range) {
         NpcInstance actor = getActor();
         if ((target == null) || target.isAlikeDead() || !actor.isInRangeZ(target, range)) {
             return false;
@@ -608,7 +608,7 @@ public class DefaultAI extends CharacterAI {
         attackTimeout = time;
     }
 
-    protected void thinkAttack() {
+    public void thinkAttack() {
         NpcInstance actor = getActor();
         if (actor.isDead()) {
             return;
@@ -630,24 +630,24 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         setGlobalAggro(System.currentTimeMillis() + getActor().getParameter("globalAggro", 10000L));
 
         setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
     }
 
     @Override
-    protected void onEvtReadyToAct() {
+    public void onEvtReadyToAct() {
         onEvtThink();
     }
 
     @Override
-    protected void onEvtArrivedTarget() {
+    public void onEvtArrivedTarget() {
         onEvtThink();
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         onEvtThink();
     }
 
@@ -682,7 +682,7 @@ public class DefaultAI extends CharacterAI {
 
     }
 
-    protected boolean canTeleWhenCannotSeeTarget() {
+    public boolean canTeleWhenCannotSeeTarget() {
         return true;
     }
 
@@ -838,7 +838,7 @@ public class DefaultAI extends CharacterAI {
         return false;
     }
 
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return false;
     }
 
@@ -856,7 +856,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtThink() {
+    public void onEvtThink() {
         NpcInstance actor = getActor();
         if (_thinking || (actor == null) || actor.isActionsDisabled() || actor.isAfraid()) {
             return;
@@ -883,7 +883,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         int transformer = actor.getParameter("transformOnDead", 0);
@@ -902,7 +902,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtClanAttacked(Creature attacked, Creature attacker, int damage) {
+    public void onEvtClanAttacked(Creature attacked, Creature attacker, int damage) {
         if (!isGlobalAggro()) {
             return;
         }
@@ -913,7 +913,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if ((attacker == null) || actor.isDead()) {
             if (actor.isDead()) {
@@ -980,7 +980,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
         NpcInstance actor = getActor();
         if ((attacker == null) || actor.isDead()) {
             return;
@@ -1001,7 +1001,7 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         NpcInstance actor = getActor();
         if (actor.isDead()) {
             return false;
@@ -1033,15 +1033,15 @@ public class DefaultAI extends CharacterAI {
         return true;
     }
 
-    protected void returnHome() {
+    public void returnHome() {
         returnHome(true, Config.ALWAYS_TELEPORT_HOME);
     }
 
-    protected void teleportHome() {
+    public void teleportHome() {
         returnHome(true, true);
     }
 
-    protected void returnHome(boolean clearAggro, boolean teleport) {
+    public void returnHome(boolean clearAggro, boolean teleport) {
         NpcInstance actor = getActor();
         Location sloc = actor.getSpawnedLoc();
 
@@ -1072,7 +1072,7 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    protected Creature prepareTarget() {
+    public Creature prepareTarget() {
         NpcInstance actor = getActor();
 
         if (actor.isConfused()) {
@@ -1342,7 +1342,7 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    protected boolean isGlobalAggro() {
+    public boolean isGlobalAggro() {
         if (_globalAggro == 0) {
             return true;
         }
@@ -1565,14 +1565,14 @@ public class DefaultAI extends CharacterAI {
         return !getActor().getParameter("isImmobilized", false);
     }
 
-    protected int getMaxPathfindFails() {
+    public int getMaxPathfindFails() {
         return 3;
     }
 
     /**
      * Задержка, перед переключением в активный режим после атаки, если цель не найдена (вне зоны досягаемости, убита, очищен хейт)
      */
-    protected int getMaxAttackTimeout() {
+    public int getMaxAttackTimeout() {
         return 15000;
     }
 

@@ -9,10 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
 
-/**
- * @author pchayka
- */
-public class DeluLizardmanSpecialCommander extends Fighter {
+public final class DeluLizardmanSpecialCommander extends Fighter {
     private boolean _shouted = false;
 
     public DeluLizardmanSpecialCommander(NpcInstance actor) {
@@ -20,13 +17,13 @@ public class DeluLizardmanSpecialCommander extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         _shouted = false;
         super.onEvtSpawn();
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
 
         if (Rnd.chance(40) && !_shouted) {

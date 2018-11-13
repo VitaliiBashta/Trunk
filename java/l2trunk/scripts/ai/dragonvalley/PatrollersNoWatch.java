@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public abstract class PatrollersNoWatch extends Fighter {
+public class PatrollersNoWatch extends Fighter {
     Location[] _points;
     private final int[] _teleporters = {22857, 22833, 22834};
 
@@ -38,7 +38,7 @@ public abstract class PatrollersNoWatch extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (super.thinkActive())
             return true;
 
@@ -49,7 +49,7 @@ public abstract class PatrollersNoWatch extends Fighter {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         startMoveTask();
         super.onEvtArrived();
     }
@@ -84,21 +84,21 @@ public abstract class PatrollersNoWatch extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 
     @Override
-    protected void teleportHome() {
+    public void teleportHome() {
     }
 
     @Override
-    protected void returnHome(boolean clearAggro, boolean teleport) {
+    public void returnHome(boolean clearAggro, boolean teleport) {
         super.returnHome(clearAggro, teleport);
         clearTasks();
         _firstThought = true;

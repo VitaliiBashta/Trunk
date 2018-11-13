@@ -8,7 +8,7 @@ public class SiegeGuardRanger extends SiegeGuard {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return defaultFightTask();
     }
 

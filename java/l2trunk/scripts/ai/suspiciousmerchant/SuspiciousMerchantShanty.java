@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-public class SuspiciousMerchantShanty extends DefaultAI {
+public final class SuspiciousMerchantShanty extends DefaultAI {
     private static final Location[] points = {
             new Location(-58672, 154703, -2688),
             new Location(-58672, 154703, -2688),
@@ -44,7 +44,7 @@ public class SuspiciousMerchantShanty extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -120,10 +120,10 @@ public class SuspiciousMerchantShanty extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

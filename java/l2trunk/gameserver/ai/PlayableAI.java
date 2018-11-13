@@ -50,7 +50,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    protected void onIntentionCast(Skill skill, Creature target) {
+    public void onIntentionCast(Skill skill, Creature target) {
         _skill = skill;
         super.onIntentionCast(skill, target);
     }
@@ -171,21 +171,21 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtFinishCasting() {
+    public void onEvtFinishCasting() {
         if (!setNextIntention()) {
             setIntention(AI_INTENTION_ACTIVE);
         }
     }
 
     @Override
-    protected void onEvtReadyToAct() {
+    public void onEvtReadyToAct() {
         if (!setNextIntention()) {
             onEvtThink();
         }
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         if (!setNextIntention()) {
             if ((getIntention() == AI_INTENTION_INTERACT) || (getIntention() == AI_INTENTION_PICK_UP)) {
                 onEvtThink();
@@ -196,7 +196,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    protected void onEvtArrivedTarget() {
+    public void onEvtArrivedTarget() {
         switch (getIntention()) {
             case AI_INTENTION_ATTACK:
                 thinkAttack(false);
@@ -214,7 +214,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    protected final void onEvtThink() {
+    public final void onEvtThink() {
         Playable actor = getActor();
         if (actor.isActionsDisabled()) {
             return;
@@ -260,11 +260,11 @@ public class PlayableAI extends CharacterAI {
         }
     }
 
-    void thinkActive() {
+    public void thinkActive() {
 
     }
 
-    void thinkFollow() {
+    public void thinkFollow() {
         Playable actor = getActor();
 
         Creature target = (Creature) _intention_arg0;
@@ -296,7 +296,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    protected void onIntentionInteract(GameObject object) {
+    public void onIntentionInteract(GameObject object) {
         Playable actor = getActor();
 
         if (actor.isActionsDisabled()) {
@@ -311,7 +311,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    protected void onIntentionCoupleAction(Player player, Integer socialId) {
+    public void onIntentionCoupleAction(Player player, Integer socialId) {
         clearNextAction();
         changeIntention(CtrlIntention.AI_INTENTION_COUPLE_ACTION, player, socialId);
         onEvtThink();
@@ -341,7 +341,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    protected void onIntentionPickUp(GameObject object) {
+    public void onIntentionPickUp(GameObject object) {
         Playable actor = getActor();
 
         if (actor.isActionsDisabled()) {
@@ -381,7 +381,7 @@ public class PlayableAI extends CharacterAI {
         }
     }
 
-    void thinkAttack(boolean checkRange) {
+    public void thinkAttack(boolean checkRange) {
         Playable actor = getActor();
 
         Player player = actor.getPlayer();
@@ -447,7 +447,7 @@ public class PlayableAI extends CharacterAI {
         }
     }
 
-    void thinkCast(boolean checkRange) {
+    public void thinkCast(boolean checkRange) {
         Playable actor = getActor();
 
         Creature target = getAttackTarget();
@@ -541,18 +541,18 @@ public class PlayableAI extends CharacterAI {
         }
     }
 
-    void thinkCoupleAction(Player target, Integer socialId, boolean cancel) {
+    public void thinkCoupleAction(Player target, Integer socialId, boolean cancel) {
         //
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         clearNextAction();
         super.onEvtDead(killer);
     }
 
     @Override
-    protected void onEvtFakeDeath() {
+    public void onEvtFakeDeath() {
         clearNextAction();
         super.onEvtFakeDeath();
     }

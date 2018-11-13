@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
-public class FreyaEventAI extends DefaultAI {
+public final class FreyaEventAI extends DefaultAI {
     private static final int[] GIFT_SKILLS = {9150, 9151, 9152, 9153, 9154, 9155, 9156};
     private static final int GIFT_CHANCE = 5;
     private static final int FREYA_GIFT = 17138;
@@ -33,12 +33,12 @@ public class FreyaEventAI extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
 
         if (caster == null || !caster.isPlayer())
@@ -60,10 +60,10 @@ public class FreyaEventAI extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

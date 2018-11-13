@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.Functions;
 
-public class SSQLilith extends Mystic {
+public final class SSQLilith extends Mystic {
     private final String[] chat = {
             "You, such a fool! The victory over this war belongs to Shilen!!!",
             "How dare you try to contend against me in strength? Ridiculous.",
@@ -25,7 +25,7 @@ public class SSQLilith extends Mystic {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (_lastChatTime < System.currentTimeMillis()) {
             Functions.npcSay(getActor(), chat[Rnd.get(chat.length)]);
             _lastChatTime = System.currentTimeMillis() + 15 * 1000;
@@ -48,15 +48,15 @@ public class SSQLilith extends Mystic {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature attacker, int aggro) {
+    public void onEvtAggression(Creature attacker, int aggro) {
     }
 }

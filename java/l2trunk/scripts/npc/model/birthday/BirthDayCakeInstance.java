@@ -11,13 +11,10 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.concurrent.Future;
 
-/**
- * @author Grivesky
- * @date 21.01.2013
- */
+
 @SuppressWarnings("serial")
 public class BirthDayCakeInstance extends NpcInstance {
-    private static final Skill SKILL = SkillTable.getInstance().getInfo(22035, 1);
+    private final Skill SKILL = SkillTable.getInstance().getInfo(22035, 1);
 
     private class CastTask extends RunnableImpl {
         @Override

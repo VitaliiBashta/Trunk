@@ -12,7 +12,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class MasterFestina extends Fighter {
+public final class MasterFestina extends Fighter {
     private static Zone _zone;
     private static Location[] _mysticSpawnPoints;
     private static Location[] _spiritGuardSpawnPoints;
@@ -54,7 +54,7 @@ public class MasterFestina extends Fighter {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         // Спауним охрану
         for (Location loc : _mysticSpawnPoints) {
@@ -77,7 +77,7 @@ public class MasterFestina extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
@@ -91,7 +91,7 @@ public class MasterFestina extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         _lastFactionNotifyTime = 0;
 

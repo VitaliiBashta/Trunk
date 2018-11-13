@@ -1,6 +1,10 @@
 package l2trunk.gameserver.scripts;
 
+import l2trunk.commons.lang.FileUtils;
+import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.quest.Quest;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
@@ -13,6 +17,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -26,7 +32,7 @@ public class Scripts {
     private final Map<String, Class<?>> _classes = new TreeMap<>();
 
     private Scripts() {
-        load();
+//        load();
     }
 
     public static Scripts getInstance() {
@@ -58,6 +64,8 @@ public class Scripts {
                 }
         } catch (NumberFormatException | SecurityException e) {
             _log.error("Exception while adding Handlers ", e);
+        } catch (Exception e) {
+            _log.error("something went wrong: " + e);
         }
     }
 
@@ -84,8 +92,8 @@ public class Scripts {
                     String name = entry.getName().replace(".class", "").replace("/", ".");
 
 
-                    Class<?> clazz;// = Class.forName(name);
-                    clazz = getClass().getClassLoader().loadClass(name);
+                    Class<?> clazz = Class.forName(name);
+//                    clazz = getClass().getClassLoader().loadClass(name);
                     if (Modifier.isAbstract(clazz.getModifiers()))
                         continue;
                     jarClasses.add(clazz);
@@ -94,6 +102,8 @@ public class Scripts {
             } catch (ClassNotFoundException | IOException e) {
                 _log.error("Fail to load l2trunk-scripts.jar!", e);
                 jarClasses.clear();
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
         }
 
@@ -115,26 +125,26 @@ public class Scripts {
     /**
      * Creating new Instance of every Class<?> from _classes
      */
-//    public void init() {
-////		if ((!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("127.0.0.1")) && (!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("178.33.90.147")))
-////		{
-////			return;
-////		}
-//        for (Class<?> clazz : _classes.values()) {
-//            addHandlers(clazz);
-//
-//            if (Config.DONTLOADQUEST)
-//                if (clazz.isInstance(Quest.class) )
-//                    continue;
-//
-//            if (ClassUtils.isAssignable(clazz, ScriptFile.class))
-//                try {
-//                    ((ScriptFile) clazz.newInstance()).onLoad();
-//                } catch (IllegalAccessException | InstantiationException e) {
-//                    _log.error("Scripts: Failed running " + clazz.getName() + ".onLoad()", e);
-//                }
-//        }
-//    }
+    public void init() {
+		if ((!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("127.0.0.1")) && (!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("178.33.90.147")))
+		{
+			return;
+		}
+        for (Class<?> clazz : _classes.values()) {
+            addHandlers(clazz);
+
+            if (Config.DONTLOADQUEST)
+                if (clazz.isInstance(Quest.class) )
+                    continue;
+
+            if (ClassUtils.isAssignable(clazz, ScriptFile.class))
+                try {
+                    ((ScriptFile) clazz.newInstance()).onLoad();
+                } catch (IllegalAccessException | InstantiationException e) {
+                    _log.error("Scripts: Failed running " + clazz.getName() + ".onLoad()", e);
+                }
+        }
+    }
 
     /**
      * Shutting down every class instance in _classes
@@ -251,9 +261,18 @@ public class Scripts {
      */
     public Object callScripts(Player caller, String className, String methodName, Object[] args, Map<String, Object> variables) {
         Object o;
-        Class<?> clazz;
+        Class<?> clazz=null;
 
-        clazz = _classes.get(className);
+        try {
+            clazz = Class.forName("l2trunk.scripts."+className);
+        } catch (ClassNotFoundException e) {
+            try {
+                clazz = Class.forName(className);
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        }
+//                _classes.get(className);
         if (clazz == null) {
             _log.error("Script class " + className + " not found!");
             return null;
@@ -316,5 +335,66 @@ public class Scripts {
             this.className = className;
             this.methodName = methodName;
         }
+    }
+    public void init2 () {
+        Path path = Config.CONFIG.resolve("scripts.txt");
+        String[] scripts = FileUtils.readFileToString(path).split("\r\n");
+//        Map <String, Class<?>> classes = new HashMap<>();
+        for (String script :scripts) {
+            Class<?> clazz = null;
+            int i =0;
+            try {
+                clazz = Class.forName("l2trunk.scripts." + script);
+//                if (ClassUtils.isAssignable(clazz,Quest.class) )
+//                    continue;
+                _classes.put(script, clazz);
+                i++;
+                if (i > 50 )
+                    System.out.println("loaded: " + i);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        for ( Class<?> clazz:_classes.values()) {
+            addHandlers(clazz);
+            if (ClassUtils.isAssignable(clazz, ScriptFile.class)) {
+                if (Modifier.isAbstract(clazz.getModifiers())) continue;
+                try {
+                    ((ScriptFile) clazz.newInstance()).onLoad();
+                } catch (IllegalAccessException | InstantiationException e) {
+                    _log.error("Scripts: Failed running " + clazz.getName() + ".onLoad()", e);
+                }
+            }
+        }
+
+
+    }
+
+    public void load2() {
+        for ( Class<?> clazz:_classes.values()) {
+            if (ClassUtils.isAssignable(clazz, ScriptFile.class))
+                try {
+                    ((ScriptFile) clazz.newInstance()).onLoad();
+                } catch (IllegalAccessException | InstantiationException e) {
+                    _log.error("Scripts: Failed running " + clazz.getName() + ".onLoad()", e);
+                } catch (Exception e) {
+                    _log.error("some error: " + e );
+                }
+        }
+    }
+    public static void main(String[] args) {
+//        Path path = Paths.get("java/l2trunk/scripts");
+//        System.out.println(path.toAbsolutePath());
+//        List<Path> scripts = FileUtils.getAllFiles(path, true, ".java");
+//        scripts.stream()
+//                .map(path::relativize)
+//                .map(Path::toString)
+//                .map(a -> a.substring(0, a.length()-5))
+//                .map(a -> a.replace("\\", "."))
+//                .forEach(System.out::println);
+        Scripts.getInstance().init2();
+//        Scripts.getInstance().load2();
     }
 }

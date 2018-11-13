@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author SYS
  */
-public class FrostBuffalo extends Fighter {
+public final class FrostBuffalo extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(FrostBuffalo.class);
 
     private boolean _mobsNotSpawned = true;
@@ -31,7 +31,7 @@ public class FrostBuffalo extends Fighter {
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
         if (skill.isMagic())
             return;
@@ -52,13 +52,13 @@ public class FrostBuffalo extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _mobsNotSpawned = true;
         super.onEvtDead(killer);
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return _mobsNotSpawned;
     }
 }

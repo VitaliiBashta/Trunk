@@ -16,7 +16,7 @@ public class NihilInvaderChest extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor.getNpcId() == 18820) {
             if (Rnd.chance(40)) {
@@ -39,7 +39,7 @@ public class NihilInvaderChest extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 
 }

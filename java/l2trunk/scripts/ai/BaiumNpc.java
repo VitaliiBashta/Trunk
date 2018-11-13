@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 
 import java.util.List;
 
-public class BaiumNpc extends DefaultAI {
+public final class BaiumNpc extends DefaultAI {
     private long _wait_timeout = 0;
     private static final int BAIUM_EARTHQUAKE_TIMEOUT = 1000 * 60 * 15; // 15 min
 
@@ -22,7 +22,7 @@ public class BaiumNpc extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         // Is it time to start the earthquake
         if (_wait_timeout < System.currentTimeMillis()) {
@@ -37,7 +37,7 @@ public class BaiumNpc extends DefaultAI {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 }

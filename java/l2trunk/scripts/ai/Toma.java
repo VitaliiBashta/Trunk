@@ -7,12 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Master Toma, телепортируется раз в 30 минут по 3м разным точкам гномьего острова.
- *
- * @author SYS
- */
-public class Toma extends DefaultAI {
+public final class Toma extends DefaultAI {
     private final Location[] _points = {
             new Location(151680, -174891, -1807, 41400),
             new Location(154153, -220105, -3402),
@@ -25,7 +20,7 @@ public class Toma extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (System.currentTimeMillis() - _lastTeleport < TELEPORT_PERIOD)
             return false;
 

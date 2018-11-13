@@ -6,12 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * AI для Karul Bugbear ID: 20438
- *
- * @author Diamond
- */
-public class OlMahumGeneral extends Fighter {
+public final class OlMahumGeneral extends Fighter {
     private boolean _firstTimeAttacked = true;
 
     public OlMahumGeneral(NpcInstance actor) {
@@ -19,7 +14,7 @@ public class OlMahumGeneral extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (_firstTimeAttacked) {
             _firstTimeAttacked = false;
@@ -31,7 +26,7 @@ public class OlMahumGeneral extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }

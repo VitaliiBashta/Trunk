@@ -21,7 +21,7 @@ import java.util.List;
  * - He uses a random Social Networks and makes Coaches mobs to repeat after him three times.
  * - AI is tested and works.
  */
-public class SelMahumTrainer extends Fighter {
+public final class SelMahumTrainer extends Fighter {
     private long _wait_timeout = System.currentTimeMillis() + 20000;
     private final List<NpcInstance> _arm = new ArrayList<>();
     private boolean _firstTimeAttacked = true;
@@ -33,7 +33,7 @@ public class SelMahumTrainer extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         final int social = Rnd.get(4, 7);
         NpcInstance actor = getActor();
         if (actor == null)
@@ -68,7 +68,7 @@ public class SelMahumTrainer extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance npc = _arm.get(_arm.size() - 1);
         NpcInstance actor = getActor();
         if (actor == null)
@@ -88,7 +88,7 @@ public class SelMahumTrainer extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }

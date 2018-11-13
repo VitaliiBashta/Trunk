@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NaiaSpore extends Fighter {
+public final class NaiaSpore extends Fighter {
     private static final Map<Integer, Integer> epidosIndex = new HashMap<>();
 
     static {
@@ -27,7 +27,7 @@ public class NaiaSpore extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         int npcId = actor.getNpcId();
         switch (npcId) {

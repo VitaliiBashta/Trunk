@@ -11,12 +11,7 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Night Zaken. Refine behavior
- *
- * @author pchayka
- */
-public class ZakenNightly extends Fighter {
+public final class ZakenNightly extends Fighter {
     private static final int doll_blader_b = 29023;
     private static final int vale_master_b = 29024;
     private static final int pirates_zombie_captain_b = 29026;
@@ -51,7 +46,7 @@ public class ZakenNightly extends Fighter {
     }
 
     @Override
-    protected void thinkAttack() {
+    public void thinkAttack() {
         if (_teleportSelfTimer + _teleportSelfReuse < System.currentTimeMillis()) {
             _teleportSelfTimer = System.currentTimeMillis();
             if (Rnd.chance(20)) {
@@ -135,7 +130,7 @@ public class ZakenNightly extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         Reflection r = actor.getReflection();
         r.setReenterTime(System.currentTimeMillis());
         actor.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_D", 1, actor.getObjectId(), actor.getLoc()));
@@ -143,7 +138,7 @@ public class ZakenNightly extends Fighter {
     }
 
     @Override
-    protected void teleportHome() {
+    public void teleportHome() {
         return;
     }
 }

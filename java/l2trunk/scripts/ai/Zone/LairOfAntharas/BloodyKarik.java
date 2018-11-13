@@ -10,10 +10,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Bloody Kariks after death can spawn another 5 same Kariks, but after death they spawn no one, although they have the same npcId.
- */
-public class BloodyKarik extends Fighter {
+
+public final class BloodyKarik extends Fighter {
 
     private final int BLOODYKARIK = 22854;
     private final int BLOODYKARIK_COUNT = 5;
@@ -26,7 +24,7 @@ public class BloodyKarik extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         super.onEvtDead(killer);
         NpcInstance npc = getActor();
         if (Rnd.chance(BKARIK_D_M_CHANCE) && !spawned_minion.containsKey(npc.getObjectId())) {

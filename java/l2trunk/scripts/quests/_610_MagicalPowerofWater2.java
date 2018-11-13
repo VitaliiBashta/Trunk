@@ -37,7 +37,7 @@ public class _610_MagicalPowerofWater2 extends Quest implements ScriptFile {
     public void onShutdown() {
     }
 
-    private _610_MagicalPowerofWater2() {
+    public  _610_MagicalPowerofWater2() {
         super(true);
 
         addStartNpc(ASEFA);

@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class EdwinFollower extends DefaultAI {
+public final class EdwinFollower extends DefaultAI {
     private static final int EDWIN_ID = 32072;
     private static final int DRIFT_DISTANCE = 200;
     private long _wait_timeout = 0;
@@ -24,17 +24,17 @@ public class EdwinFollower extends DefaultAI {
     }
 
     @Override
-    protected boolean randomAnimation() {
+    public boolean randomAnimation() {
         return false;
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         Creature edwin = _edwinRef.get();
         if (edwin == null) {
@@ -60,10 +60,10 @@ public class EdwinFollower extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

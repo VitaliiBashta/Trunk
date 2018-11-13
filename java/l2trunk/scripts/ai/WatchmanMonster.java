@@ -26,7 +26,7 @@ public class WatchmanMonster extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(final Creature attacker, int damage) {
+    public void onEvtAttacked(final Creature attacker, int damage) {
         final NpcInstance actor = getActor();
         if (attacker != null && !actor.getFaction().isNone() && actor.getCurrentHpPercents() < 50 && _lastSearch < System.currentTimeMillis() - 15000) {
             _lastSearch = System.currentTimeMillis();
@@ -58,7 +58,7 @@ public class WatchmanMonster extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _lastSearch = 0;
         _attackerRef = HardReferences.emptyRef();
         isSearching = false;
@@ -66,7 +66,7 @@ public class WatchmanMonster extends Fighter {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         NpcInstance actor = getActor();
         if (isSearching) {
             Creature attacker = _attackerRef.get();
@@ -81,7 +81,7 @@ public class WatchmanMonster extends Fighter {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
         if (!isSearching)
             super.onEvtAggression(target, aggro);
     }

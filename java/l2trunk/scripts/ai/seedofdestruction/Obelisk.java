@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessag
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 
-public class Obelisk extends DefaultAI {
+public final class Obelisk extends DefaultAI {
     private static final int[] MOBS = {22541, 22544, 22543};
     private boolean _firstTimeAttacked = true;
 
@@ -20,7 +20,7 @@ public class Obelisk extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         NpcInstance actor = getActor();
         actor.broadcastPacket(new ExShowScreenMessage(NpcString.NONE, 3000, ScreenMessageAlign.MIDDLE_CENTER, false, "Obelisk has collapsed. Don't let the enemies jump around wildly anymore!!!"));
@@ -32,7 +32,7 @@ public class Obelisk extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (_firstTimeAttacked) {
             _firstTimeAttacked = false;

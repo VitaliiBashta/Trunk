@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public abstract class Patrollers extends Fighter {
+public class Patrollers extends Fighter {
     Location[] _points;
     private final int[] _teleporters = {22857, 22833, 22834, 22835};
 
@@ -29,7 +29,7 @@ public abstract class Patrollers extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
@@ -49,7 +49,7 @@ public abstract class Patrollers extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (super.thinkActive())
             return true;
 
@@ -60,7 +60,7 @@ public abstract class Patrollers extends Fighter {
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         startMoveTask();
         super.onEvtArrived();
     }
@@ -103,21 +103,21 @@ public abstract class Patrollers extends Fighter {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 
     @Override
-    protected void teleportHome() {
+    public void teleportHome() {
     }
 
     @Override
-    protected void returnHome(boolean clearAggro, boolean teleport) {
+    public void returnHome(boolean clearAggro, boolean teleport) {
         super.returnHome(clearAggro, teleport);
         clearTasks();
         _firstThought = true;

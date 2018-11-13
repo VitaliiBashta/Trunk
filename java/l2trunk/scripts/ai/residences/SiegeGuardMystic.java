@@ -8,7 +8,7 @@ public class SiegeGuardMystic extends SiegeGuard {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         return defaultFightTask();
     }
 

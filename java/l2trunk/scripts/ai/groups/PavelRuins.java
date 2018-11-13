@@ -26,7 +26,7 @@ public final class PavelRuins extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         super.onEvtDead(killer);
         ThreadPoolManager.getInstance().schedule(new SpawnNext(actor, killer), 5000);

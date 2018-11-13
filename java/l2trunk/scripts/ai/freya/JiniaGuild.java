@@ -7,13 +7,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
 
-public class JiniaGuild extends Fighter {
+public final class JiniaGuild extends Fighter {
     public JiniaGuild(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
@@ -27,7 +27,7 @@ public class JiniaGuild extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         if (attacker == null || attacker.isPlayable())
             return;
 
@@ -35,7 +35,7 @@ public class JiniaGuild extends Fighter {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         if (target.isPlayable())
             return false;
 

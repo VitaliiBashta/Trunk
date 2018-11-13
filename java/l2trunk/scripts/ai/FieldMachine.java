@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.List;
 
-public class FieldMachine extends DefaultAI {
+public final class FieldMachine extends DefaultAI {
     private long _lastAction;
 
     public FieldMachine(NpcInstance actor) {
@@ -16,7 +16,7 @@ public class FieldMachine extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null || attacker.getPlayer() == null)
             return;

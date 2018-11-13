@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Prims
  */
-public class DimensionMovingDevice extends DefaultAI {
+public final class DimensionMovingDevice extends DefaultAI {
     private static final int MOBS_WAVE_DELAY = 120 * 1000; // 2 мин между волнами мобов
     private static final int MOBS_WAVE_DELAY2 = 20 * 1000;
     private long spawnTime = 0;
@@ -40,14 +40,14 @@ public class DimensionMovingDevice extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         spawnTime = 0;
         _npcs.clear();
         super.onEvtDead(killer);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (spawnTime + MOBS_WAVE_DELAY < System.currentTimeMillis()) {
             if (_npcs.size() < 100) {
@@ -101,12 +101,12 @@ public class DimensionMovingDevice extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
 
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
 
     }
 }

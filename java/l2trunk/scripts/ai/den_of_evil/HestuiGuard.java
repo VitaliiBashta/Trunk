@@ -21,11 +21,11 @@ public final class HestuiGuard extends DefaultAI {
     }
 
     @Override
-    protected synchronized void switchAITask(long NEW_DELAY) {
+    public synchronized void switchAITask(long NEW_DELAY) {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
 
         for (Player player : World.getAroundPlayers(actor)) {

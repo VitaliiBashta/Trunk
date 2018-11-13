@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 
 
 public final class Coffer extends ScriptItemHandler implements ScriptFile {
-    private static final RewardData[] _dropacc = new RewardData[]{
+    private final RewardData[] _dropacc = new RewardData[]{
             // Аксессуары и сувениры
             new RewardData(8660, 1, 1, 1000), // Demon Horns        0.1%
             new RewardData(8661, 1, 1, 1000), // Mask of Spirits    0.1%
@@ -62,7 +62,7 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
             new RewardData(9203, 1, 1, 100), // Romantic Chapeau - Firework
             new RewardData(9204, 1, 1, 100) // Iron Circlet - Firework
     };
-    private static final RewardData[] _dropevents = new RewardData[]{
+    private final RewardData[] _dropevents = new RewardData[]{
             // Эвентовые скролы
             new RewardData(9146, 1, 1, 3000), // Scroll of Guidance        0.3%
             new RewardData(9147, 1, 1, 3000), // Scroll of Death Whisper   0.3%
@@ -94,7 +94,7 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
             new RewardData(1540, 1, 3, 20000), // Quick Healing Potion     1%
             new RewardData(5126, 1, 1, 1000) // Dualsword Craft Stamp      0.1%
     };
-    private static final RewardData[] _dropench = new RewardData[]{
+    private final RewardData[] _dropench = new RewardData[]{
             // Заточки
             new RewardData(955, 1, 1, 400), // EWD          0.04%
             new RewardData(956, 1, 1, 2000), // EAD         0.2%
@@ -123,7 +123,7 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
     };
     // Дроп для эвентого сундука Coffer of Shadows
     private static final int _itemIds = 8659;
-    private static final RewardData[] _dropmats = new RewardData[]{
+    private final RewardData[] _dropmats = new RewardData[]{
             //                                     Item                      Chance
             // Материалы
             new RewardData(4041, 1, 1, 250), // Mold Hardener         0.025%

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.instances.HeartInfinityDefence;
 
-public class EkimusFood extends DefaultAI {
+public final class EkimusFood extends DefaultAI {
     private static final Location[] _route1 = {new Location(-179544, 207400, -15496),
             new Location(-178856, 207464, -15496),
             new Location(-178168, 207864, -15496),
@@ -42,18 +42,18 @@ public class EkimusFood extends DefaultAI {
     }
 
     @Override
-    protected boolean checkAggression(Creature target, boolean avoidAttack) {
+    public boolean checkAggression(Creature target, boolean avoidAttack) {
         return false;
     }
 
     @Override
-    protected void onEvtArrived() {
+    public void onEvtArrived() {
         startMoveTask();
         super.onEvtArrived();
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         if (!_def_think)
             startMoveTask();
         return true;
@@ -74,20 +74,20 @@ public class EkimusFood extends DefaultAI {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected boolean randomWalk() {
+    public boolean randomWalk() {
         return false;
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 
     @Override
-    protected void teleportHome() {
+    public void teleportHome() {
     }
 }

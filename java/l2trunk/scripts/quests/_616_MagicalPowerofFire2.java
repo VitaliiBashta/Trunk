@@ -39,7 +39,7 @@ public class _616_MagicalPowerofFire2 extends Quest implements ScriptFile {
     public void onShutdown() {
     }
 
-    private _616_MagicalPowerofFire2() {
+    public _616_MagicalPowerofFire2() {
         super(true);
 
         addStartNpc(UDAN);

@@ -11,7 +11,7 @@ public final class MCManager extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         NpcInstance actor = getActor();
         if (actor == null)
             return;

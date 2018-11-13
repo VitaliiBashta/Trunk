@@ -215,53 +215,53 @@ public abstract class AbstractAI extends RunnableImpl {
         return getClass().getSimpleName() + " for " + getActor();
     }
 
-    protected abstract void onIntentionIdle();
+    public abstract void onIntentionIdle();
 
-    protected abstract void onIntentionActive();
+    public abstract void onIntentionActive();
 
-    protected abstract void onIntentionRest();
+    public abstract void onIntentionRest();
 
-    protected abstract void onIntentionAttack(Creature target);
+    public abstract void onIntentionAttack(Creature target);
 
-    protected abstract void onIntentionCast(Skill skill, Creature target);
+    public abstract void onIntentionCast(Skill skill, Creature target);
 
-    protected abstract void onIntentionPickUp(GameObject item);
+    public abstract void onIntentionPickUp(GameObject item);
 
-    protected abstract void onIntentionInteract(GameObject object);
+    public abstract void onIntentionInteract(GameObject object);
 
-    protected abstract void onIntentionCoupleAction(Player player, Integer socialId);
+    public abstract void onIntentionCoupleAction(Player player, Integer socialId);
 
-    protected abstract void onEvtThink();
+    public abstract void onEvtThink();
 
-    protected abstract void onEvtAttacked(Creature attacker, int damage);
+    public abstract void onEvtAttacked(Creature attacker, int damage);
 
-    protected abstract void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage);
+    public abstract void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage);
 
-    protected abstract void onEvtAggression(Creature target, int aggro);
+    public abstract void onEvtAggression(Creature target, int aggro);
 
-    protected abstract void onEvtReadyToAct();
+    public abstract void onEvtReadyToAct();
 
-    protected abstract void onEvtArrived();
+    public abstract void onEvtArrived();
 
-    protected abstract void onEvtArrivedTarget();
+    public abstract void onEvtArrivedTarget();
 
-    protected abstract void onEvtArrivedBlocked(Location blocked_at_pos);
+    public abstract void onEvtArrivedBlocked(Location blocked_at_pos);
 
-    protected abstract void onEvtForgetObject(GameObject object);
+    public abstract void onEvtForgetObject(GameObject object);
 
-    protected abstract void onEvtDead(Creature killer);
+    public abstract void onEvtDead(Creature killer);
 
-    protected abstract void onEvtFakeDeath();
+    public abstract void onEvtFakeDeath();
 
-    protected abstract void onEvtFinishCasting();
+    public abstract void onEvtFinishCasting();
 
-    protected abstract void onEvtSeeSpell(Skill skill, Creature caster);
+    public abstract void onEvtSeeSpell(Skill skill, Creature caster);
 
-    protected abstract void onEvtSpawn();
+    public abstract void onEvtSpawn();
 
-    protected abstract void onEvtDeSpawn();
+    public abstract void onEvtDeSpawn();
 
-    protected abstract void onIntentionFollow(Creature target, Integer offset);
+    public abstract void onIntentionFollow(Creature target, Integer offset);
 
-    protected abstract void onEvtTimer(int timerId, Object arg1, Object arg2);
+    public abstract void onEvtTimer(int timerId, Object arg1, Object arg2);
 }

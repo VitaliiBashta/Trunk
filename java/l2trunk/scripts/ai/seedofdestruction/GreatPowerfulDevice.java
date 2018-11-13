@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class GreatPowerfulDevice extends DefaultAI {
+public final class GreatPowerfulDevice extends DefaultAI {
     private static final int[] MOBS = {22540, // White Dragon Leader
             22546, // Warrior of Light
             22542, // Dragon Steed Troop Magic Leader
@@ -21,7 +21,7 @@ public class GreatPowerfulDevice extends DefaultAI {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         if (checkAllDestroyed(actor.getNpcId())) {
             // Спаун мобов вокруг обелиска

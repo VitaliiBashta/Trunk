@@ -15,7 +15,7 @@ import java.util.Collection;
  * Tries to attack the protective devices within sight.
  * When attacking defenders, ignoring the attack and escapes.
  */
-public class AwakenedMucrokian extends Fighter {
+public final class AwakenedMucrokian extends Fighter {
 
     private NpcInstance mob = null;
 
@@ -24,7 +24,7 @@ public class AwakenedMucrokian extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead()) {
             return true;
@@ -52,7 +52,7 @@ public class AwakenedMucrokian extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor != null && !actor.isDead()) {
             if (attacker != null) {

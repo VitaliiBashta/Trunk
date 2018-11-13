@@ -17,7 +17,7 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Baylor extends DefaultAI {
+public final class Baylor extends DefaultAI {
     private final Skill Berserk; // Increases P. Atk. and P. Def.
     private final Skill Invincible; // Неуязвимость при 30% hp
     private final Skill Imprison; // Помещает одиночную цель в тюрьму, рейндж 600
@@ -71,13 +71,13 @@ public class Baylor extends DefaultAI {
     }
 
     @Override
-    protected void onEvtSpawn() {
+    public void onEvtSpawn() {
         ThreadPoolManager.getInstance().schedule(new SpawnSocial(), 20000);
         super.onEvtSpawn();
     }
 
     @Override
-    protected void onEvtSeeSpell(Skill skill, Creature caster) {
+    public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
         if (actor.isDead() || skill == null || caster == null)
             return;
@@ -108,7 +108,7 @@ public class Baylor extends DefaultAI {
     }
 
     @Override
-    protected boolean createNewTask() {
+    public boolean createNewTask() {
         clearTasks();
         Creature target;
         if ((target = prepareTarget()) == null)
@@ -165,13 +165,13 @@ public class Baylor extends DefaultAI {
     }
 
     @Override
-    protected boolean maybeMoveToHome() {
+    public boolean maybeMoveToHome() {
         return false;
     }
 
     //Hellbound opening hook
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         if (HellboundManager.getConfidence() < 1)
             HellboundManager.setConfidence(1);
 

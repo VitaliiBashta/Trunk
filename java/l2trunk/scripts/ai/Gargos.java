@@ -11,7 +11,7 @@ import l2trunk.gameserver.tables.SkillTable;
  *
  * @author n0nam3
  */
-public class Gargos extends Fighter {
+public final class Gargos extends Fighter {
     private long _lastFire;
 
     public Gargos(NpcInstance actor) {
@@ -19,7 +19,7 @@ public class Gargos extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         return super.thinkActive() || thinkFire();
     }
 

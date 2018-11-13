@@ -9,7 +9,7 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TiatCamera extends DefaultAI {
+public final class TiatCamera extends DefaultAI {
     private final List<Player> _players = new ArrayList<>();
 
     public TiatCamera(NpcInstance actor) {
@@ -19,7 +19,7 @@ public class TiatCamera extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         for (Player p : World.getAroundPlayers(actor, 300, 300))
             if (!_players.contains(p)) {

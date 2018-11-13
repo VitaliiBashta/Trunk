@@ -24,7 +24,7 @@ import l2trunk.gameserver.utils.Util;
 
 import java.util.*;
 
-class OnActionShift extends Functions {
+public class OnActionShift extends Functions {
     public boolean OnActionShift_NpcInstance(Player player, GameObject object) {
         if (player == null || object == null)
             return false;

@@ -12,7 +12,6 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import java.util.concurrent.Future;
 
 public class RignosInstance extends NpcInstance {
-    private static final long serialVersionUID = -1L;
 
     private class EndRaceTask extends RunnableImpl {
         @Override
@@ -21,7 +20,7 @@ public class RignosInstance extends NpcInstance {
         }
     }
 
-    private static final Skill SKILL_EVENT_TIMER = SkillTable.getInstance().getInfo(5239, 5);
+    private final Skill SKILL_EVENT_TIMER = SkillTable.getInstance().getInfo(5239, 5);
     private static final int RACE_STAMP = 10013;
     private static final int SECRET_KEY = 9694;
 

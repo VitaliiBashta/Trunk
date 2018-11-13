@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class DaimonTheWhiteEyed extends DefaultAI {
+public final class DaimonTheWhiteEyed extends DefaultAI {
     private static final Location[] points = {
             new Location(191276, -49556, -2960),
             new Location(193537, -47182, -2984),
@@ -47,7 +47,7 @@ public class DaimonTheWhiteEyed extends DefaultAI {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;
@@ -76,17 +76,15 @@ public class DaimonTheWhiteEyed extends DefaultAI {
             return true;
         }
 
-        if (randomAnimation())
-            return true;
+        return randomAnimation();
 
-        return false;
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
     }
 
     @Override
-    protected void onEvtAggression(Creature target, int aggro) {
+    public void onEvtAggression(Creature target, int aggro) {
     }
 }

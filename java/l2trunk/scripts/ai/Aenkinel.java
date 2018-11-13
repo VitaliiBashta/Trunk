@@ -5,14 +5,14 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class Aenkinel extends Fighter {
+public final class Aenkinel extends Fighter {
 
     public Aenkinel(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
 
         // Устанавливаем реюз для Tower и Great Seal

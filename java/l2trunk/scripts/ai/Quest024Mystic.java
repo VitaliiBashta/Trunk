@@ -9,16 +9,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.scripts.quests._024_InhabitantsOfTheForestOfTheDead;
 
-/**
- * @author VISTALL
- */
-public class Quest024Mystic extends Mystic {
+public final class Quest024Mystic extends Mystic {
     public Quest024Mystic(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         Quest q = QuestManager.getQuest(_024_InhabitantsOfTheForestOfTheDead.class);
         if (q != null)
             for (Player player : World.getAroundPlayers(getActor(), 300, 200)) {

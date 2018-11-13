@@ -7,11 +7,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-/**
- * @author L2Mythras
- */
-
-public class BleedingFlyMinion extends Fighter {
+public final class BleedingFlyMinion extends Fighter {
 
     private final Skill self_destruction = SkillTable.getInstance().getInfo(6872, 1);
 
@@ -22,7 +18,7 @@ public class BleedingFlyMinion extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (last_cast_sd < System.currentTimeMillis()) {
             actor.doCast(self_destruction, attacker, true);

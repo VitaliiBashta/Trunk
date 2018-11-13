@@ -14,9 +14,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-/**
- * @author pchayka
- */
 public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
     private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {
         @Override

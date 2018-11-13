@@ -15,7 +15,7 @@ import java.util.Collection;
  * Suppressor(22656).
  * Срывается на защиту устройства в радиусе. Атакует крокодилов в пределах радиуса.
  */
-public class Suppressor extends Fighter {
+public final class Suppressor extends Fighter {
 
     private NpcInstance mob = null;
     private boolean _firstTimeAttacked = true;
@@ -28,7 +28,7 @@ public class Suppressor extends Fighter {
     }
 
     @Override
-    protected void onIntentionAttack(Creature target) {
+    public void onIntentionAttack(Creature target) {
         NpcInstance actor = getActor();
         if (actor == null) {
             return;
@@ -37,7 +37,7 @@ public class Suppressor extends Fighter {
     }
 
     @Override
-    protected boolean thinkActive() {
+    public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (actor == null || actor.isDead()) {
             return true;
@@ -66,7 +66,7 @@ public class Suppressor extends Fighter {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (actor == null) {
             return;
@@ -82,7 +82,7 @@ public class Suppressor extends Fighter {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }

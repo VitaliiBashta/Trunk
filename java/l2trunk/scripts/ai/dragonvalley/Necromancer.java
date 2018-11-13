@@ -16,7 +16,7 @@ public final class Necromancer extends Mystic {
     }
 
     @Override
-    protected void onEvtAttacked(Creature attacker, int damage) {
+    public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (attacker == null || actor.isDead()) {
             return;
@@ -42,7 +42,7 @@ public final class Necromancer extends Mystic {
     }
 
     @Override
-    protected void onEvtDead(Creature killer) {
+    public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         int count = actor.getMinionList().getAliveMinions().size();
         if (Rnd.chance(Config.NECROMANCER_MS_CHANCE * 2)) {
