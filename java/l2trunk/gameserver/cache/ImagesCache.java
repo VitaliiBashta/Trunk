@@ -68,7 +68,7 @@ public class ImagesCache {
             return files;
         }
 
-        for (Path file : FileUtils.getAllFiles(folder, false, ".png")) {
+        for (Path file : FileUtils.getAllFiles(folder, true, ".png")) {
             file = resizeImage(file);
 
             int id;

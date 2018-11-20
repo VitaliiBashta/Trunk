@@ -5,10 +5,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- * Repeatable
- */
 public class _904_DragonTrophyAntharas extends Quest implements ScriptFile {
     private static final int Theodric = 30755;
     private static final int AntharasMax = 29068;

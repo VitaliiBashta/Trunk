@@ -80,7 +80,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
 public abstract class Creature extends GameObject {
-    public static final double HEADINGS_IN_PI = 10430.378350470452724949566316381;
+    public static final double HEADINGS_IN_PI = 10430.3783;
     public static final int INTERACTION_DISTANCE = 200;
     private final static int CLIENT_BAR_SIZE = 352; // 352 - размер полоски CP/HP/MP в клиенте, в пикселях
     private static final Logger _log = LoggerFactory.getLogger(Creature.class);

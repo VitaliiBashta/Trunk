@@ -15,7 +15,7 @@ public final class CrestCache {
 
     private static final Logger _log = LoggerFactory.getLogger(CrestCache.class);
 
-    private final static CrestCache _instance = new CrestCache();
+    private static CrestCache _instance;
     /**
      * Требуется для получения ID значка по ID клана
      */
@@ -34,6 +34,9 @@ public final class CrestCache {
     }
 
     public static CrestCache getInstance() {
+        if (_instance != null)
+            return _instance;
+        _instance = new CrestCache();
         return _instance;
     }
 
@@ -117,11 +120,15 @@ public final class CrestCache {
     }
 
     public synchronized int getPledgeCrestId(int pledgeId) {
-        return _pledgeCrestId.get(pledgeId);
+        if (_pledgeCrest.containsKey(pledgeId))
+            return _pledgeCrestId.get(pledgeId);
+        return 0;
     }
 
     public synchronized int getPledgeCrestLargeId(int pledgeId) {
+        if (_pledgeCrestLargeId.containsKey(pledgeId))
         return _pledgeCrestLargeId.get(pledgeId);
+        return 0;
     }
 
     public synchronized int getAllyCrestId(int pledgeId) {

@@ -1288,10 +1288,8 @@ public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     private void restoreRankPrivs() {
-        if (_privs == null)
-            InitializePrivs();
         try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement("SELECT privilleges,rank FROM clan_privs WHERE clan_id=?")) {
+             PreparedStatement statement = con.prepareStatement("SELECT privilleges,renk FROM clan_privs WHERE clan_id=?")) {
             statement.setInt(1, getClanId());
             ResultSet rset = statement.executeQuery();
 
