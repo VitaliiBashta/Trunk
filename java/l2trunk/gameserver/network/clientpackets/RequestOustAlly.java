@@ -42,7 +42,7 @@ public class RequestOustAlly extends L2GameClientPacket {
         if (_clanName == null)
             return;
 
-        clan = ClanTable.getInstance().getClanByName(_clanName);
+        clan = ClanTable.INSTANCE.getClanByName(_clanName);
         if (clan != null) {
             if (!alliance.isMember(clan.getClanId())) {
                 activeChar.sendActionFailed();

@@ -77,7 +77,7 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
     }
 
     private String partyMatchingList(Player player, int currentPage) {
-        String content = HtmCache.getInstance().getNotNull("CommunityBoard/PartyMatching/Home.htm", player);
+        String content = HtmCache.INSTANCE().getNotNull("CommunityBoard/PartyMatching/Home.htm", player);
         if (content == null) {
             content = "<html><body><br><br><center>Error 404: File not found: 'CommunityBoard/PartyMatching/Home.htm'.<br>Report to an administrator.</center></body></html>";
         }
@@ -333,8 +333,11 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_bbsPartyMatching", "_bbsPartyMatching;", "_bbsPartyMatchingEnter", "_bbsPartyMatchingLeave"};
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_bbsPartyMatching",
+                "_bbsPartyMatching;",
+                "_bbsPartyMatchingEnter",
+                "_bbsPartyMatchingLeave");
     }
 
     @Override

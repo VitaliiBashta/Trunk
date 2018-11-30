@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
 public class MatchBerserker extends MatchFighter {
-    private  final Skill ATTACK_SKILL = SkillTable.getInstance().getInfo(4032, 6);
+    private  final Skill ATTACK_SKILL = SkillTable.INSTANCE().getInfo(4032, 6);
 
     public MatchBerserker(NpcInstance actor) {
         super(actor);

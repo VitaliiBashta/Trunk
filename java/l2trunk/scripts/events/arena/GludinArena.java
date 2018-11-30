@@ -90,8 +90,8 @@ public class GludinArena extends Functions implements ScriptFile, OnDeathListene
         if (val == 0) {
             Player player = getSelf();
             if (player.isGM())
-                return HtmCache.getInstance().getNotNull("scripts/events/arena/17220015.htm", player) + HtmCache.getInstance().getNotNull("scripts/events/arena/17220015-4.htm", player);
-            return HtmCache.getInstance().getNotNull("scripts/events/arena/17220015.htm", player);
+                return HtmCache.INSTANCE.getNotNull("scripts/events/arena/17220015.htm", player) + HtmCache.INSTANCE.getNotNull("scripts/events/arena/17220015-4.htm", player);
+            return HtmCache.INSTANCE.getNotNull("scripts/events/arena/17220015.htm", player);
         }
         return "";
     }

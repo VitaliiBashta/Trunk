@@ -10,33 +10,12 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
 public class _147_PathToBecomingAnEliteMercenary extends Quest implements ScriptFile {
-    private final int[] MERCENARY_CAPTAINS = {
-            36481,
-            36482,
-            36483,
-            36484,
-            36485,
-            36486,
-            36487,
-            36488,
-            36489
-    };
+    private final Integer[] MERCENARY_CAPTAINS = {
+            36481, 36482, 36483, 36484, 36485, 36486, 36487, 36488, 36489};
 
     private final int[] CATAPULTAS = {
-            36499,
-            36500,
-            36501,
-            36502,
-            36503,
-            36504,
-            36505,
-            36506,
-            36507
-    };
+            36499, 36500, 36501, 36502, 36503, 36504, 36505, 36506, 36507};
 
     public _147_PathToBecomingAnEliteMercenary() {
         super(PARTY_ALL);
@@ -133,9 +112,7 @@ public class _147_PathToBecomingAnEliteMercenary extends Quest implements Script
             return false;
         if (killedSiegeEvent == killerSiegeEvent)
             return false;
-        if (killed.getLevel() < 61)
-            return false;
-        return true;
+        return killed.getLevel() >= 61;
     }
 
     private boolean isValidNpcKill(Player killer, NpcInstance npc) {
@@ -144,9 +121,7 @@ public class _147_PathToBecomingAnEliteMercenary extends Quest implements Script
 
         if (npcSiegeEvent == null || killerSiegeEvent == null)
             return false;
-        if (npcSiegeEvent == killerSiegeEvent)
-            return false;
-        return true;
+        return npcSiegeEvent != killerSiegeEvent;
     }
 
     @Override

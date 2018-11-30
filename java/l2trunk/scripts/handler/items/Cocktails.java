@@ -88,7 +88,7 @@ public final class Cocktails extends SimpleItemHandler implements ScriptFile {
             case 20393:
                 for (int skill : sweet_list) {
                     player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(skill, 1));
+                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(skill, 1));
                 }
                 break;
             // Fresh Fruit Cocktail
@@ -97,16 +97,16 @@ public final class Cocktails extends SimpleItemHandler implements ScriptFile {
             case 20394:
                 for (int skill : fresh_list) {
                     player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(skill, 1));
+                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(skill, 1));
                 }
                 break;
             //Event - Fresh Milk
             case 14739:
                 player.broadcastPacket(new MagicSkillUse(player, player, 2873, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(2891, 6));
+                player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(2891, 6));
                 for (int skill : milk_list) {
                     player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(skill, 1));
+                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(skill, 1));
                 }
             default:
                 return false;

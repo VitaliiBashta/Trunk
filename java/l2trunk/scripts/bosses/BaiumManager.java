@@ -52,7 +52,7 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
                 if (_lastAttackTime + FWB_LIMITUNTILSLEEP < System.currentTimeMillis())
                     sleepBaium();
                 else
-                    _sleepCheckTask = ThreadPoolManager.getInstance().schedule(new CheckLastAttack(), 60000);
+                    _sleepCheckTask = ThreadPoolManager.INSTANCE().schedule(new CheckLastAttack(), 60000);
         }
     }
 
@@ -88,7 +88,7 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
 
         @Override
         public void runImpl() {
-            Skill skill = SkillTable.getInstance().getInfo(4136, 1);
+            Skill skill = SkillTable.INSTANCE().getInfo(4136, 1);
             if (_target != null && skill != null) {
                 _boss.setTarget(_target);
                 _boss.doCast(skill, _target, false);
@@ -216,7 +216,7 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
 
     private synchronized static void checkAnnihilated() {
         if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.getInstance().schedule(new onAnnihilated(), 5000);
+            _onAnnihilatedTask = ThreadPoolManager.INSTANCE().schedule(new onAnnihilated(), 5000);
     }
 
     // Archangel ascension.
@@ -338,7 +338,7 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
 
         deleteArchangels();
 
-        _cubeSpawnTask = ThreadPoolManager.getInstance().schedule(new CubeSpawn(), 10000L);
+        _cubeSpawnTask = ThreadPoolManager.INSTANCE().schedule(new CubeSpawn(), 10000L);
     }
 
     private static long getRespawnInterval() {
@@ -356,7 +356,7 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
             _state.update();
         }
 
-        _intervalEndTask = ThreadPoolManager.getInstance().schedule(new IntervalEnd(), _state.getInterval());
+        _intervalEndTask = ThreadPoolManager.INSTANCE().schedule(new IntervalEnd(), _state.getInterval());
     }
 
     public static void setLastAttackTime() {
@@ -480,20 +480,20 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
         baium.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_A", 1, 0, baium.getLoc()));
         baium.broadcastPacket(new SocialAction(baium.getObjectId(), 2));
 
-        _socialTask = ThreadPoolManager.getInstance().schedule(new Social(baium, 3), 15000);
+        _socialTask = ThreadPoolManager.INSTANCE().schedule(new Social(baium, 3), 15000);
 
-        ThreadPoolManager.getInstance().schedule(new EarthquakeTask(baium), 25000);
+        ThreadPoolManager.INSTANCE().schedule(new EarthquakeTask(baium), 25000);
 
-        _socialTask2 = ThreadPoolManager.getInstance().schedule(new Social(baium, 1), 25000);
-        _killPcTask = ThreadPoolManager.getInstance().schedule(new KillPc(awakeBy, baium), 26000);
-        _callAngelTask = ThreadPoolManager.getInstance().schedule(new CallArchAngel(), 35000);
-        _mobiliseTask = ThreadPoolManager.getInstance().schedule(new SetMobilised(baium), 35500);
+        _socialTask2 = ThreadPoolManager.INSTANCE().schedule(new Social(baium, 1), 25000);
+        _killPcTask = ThreadPoolManager.INSTANCE().schedule(new KillPc(awakeBy, baium), 26000);
+        _callAngelTask = ThreadPoolManager.INSTANCE().schedule(new CallArchAngel(), 35000);
+        _mobiliseTask = ThreadPoolManager.INSTANCE().schedule(new SetMobilised(baium), 35500);
 
         // move at random.
         Location pos = new Location(Rnd.get(112826, 116241), Rnd.get(15575, 16375), 10078, 0);
-        _moveAtRandomTask = ThreadPoolManager.getInstance().schedule(new MoveAtRandom(baium, pos), 36000);
+        _moveAtRandomTask = ThreadPoolManager.INSTANCE().schedule(new MoveAtRandom(baium, pos), 36000);
 
-        _sleepCheckTask = ThreadPoolManager.getInstance().schedule(new CheckLastAttack(), 600000);
+        _sleepCheckTask = ThreadPoolManager.INSTANCE().schedule(new CheckLastAttack(), 600000);
     }
 
     public static EpicBossState getState() {

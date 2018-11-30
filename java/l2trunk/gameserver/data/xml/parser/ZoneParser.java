@@ -165,7 +165,7 @@ public class ZoneParser extends AbstractDirParser<ZoneHolder> {
                         Polygon shape = parsePolygon(n);
 
                         if (!shape.validate())
-                            error("ZoneParser: invalid territory data : " + shape + ", zone: " + zoneDat.getString("name") + "!");
+                            LOG.error("ZoneParser: invalid territory data : " + shape + ", zone: " + zoneDat.getString("name") + "!");
 
                         if (territory == null) {
                             territory = new Territory();
@@ -180,7 +180,7 @@ public class ZoneParser extends AbstractDirParser<ZoneHolder> {
                 }
 
                 if (territory == null || territory.getTerritories().isEmpty())
-                    error("Empty territory for zone: " + zoneDat.get("name"));
+                    LOG.error("Empty territory for zone: " + zoneDat.get("name"));
                 ZoneTemplate template = new ZoneTemplate(zoneDat);
                 getHolder().addTemplate(template);
             }

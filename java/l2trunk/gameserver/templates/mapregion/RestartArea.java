@@ -1,29 +1,25 @@
 package l2trunk.gameserver.templates.mapregion;
 
-import java.util.Map;
-
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.model.base.Race;
 
-public class RestartArea implements RegionData
-{
-	private final Territory _territory;
-	private final Map<Race, RestartPoint> _restarts;
+import java.util.Map;
 
-	public RestartArea(Territory territory, Map<Race, RestartPoint> restarts)
-	{
-		_territory = territory;
-		_restarts = restarts;
-	}
+public class RestartArea implements RegionData {
+    private final Territory _territory;
+    private final Map<Race, RestartPoint> _restarts;
 
-	@Override
-	public Territory getTerritory()
-	{
-		return _territory;
-	}
+    public RestartArea(Territory territory, Map<Race, RestartPoint> restarts) {
+        _territory = territory;
+        _restarts = restarts;
+    }
 
-	public Map<Race, RestartPoint> getRestartPoint()
-	{
-		return _restarts;
-	}
+    @Override
+    public Territory getTerritory() {
+        return _territory;
+    }
+
+    public Map<Race, RestartPoint> getRestartPoint() {
+        return _restarts;
+    }
 }

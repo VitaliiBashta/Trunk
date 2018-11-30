@@ -211,7 +211,7 @@ public final class OlympiadDatabase {
     }
 
     public static synchronized void setNewOlympiadEnd() {
-        Announcements.getInstance().announceToAll(new SystemMessage(SystemMsg.ROUND_S1_OF_THE_GRAND_OLYMPIAD_GAMES_HAS_STARTED).addNumber(Olympiad._currentCycle));
+        Announcements.INSTANCE.announceToAll(new SystemMessage(SystemMsg.ROUND_S1_OF_THE_GRAND_OLYMPIAD_GAMES_HAS_STARTED).addNumber(Olympiad._currentCycle));
 
         Calendar currentTime = Calendar.getInstance();
         currentTime.set(Calendar.DAY_OF_MONTH, 1);
@@ -224,7 +224,7 @@ public final class OlympiadDatabase {
         Olympiad._nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;
 
         Olympiad._isOlympiadEnd = false;
-        Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_STARTED).addInteger(Olympiad._currentCycle));
+        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_STARTED).addInteger(Olympiad._currentCycle));
     }
 
     public static void save() {

@@ -84,8 +84,6 @@ public class TelnetWorld implements TelnetCommandHolder {
                     if (player.getAlliance() != null)
                         sb.append("Ally: .................... ").append(player.getAlliance().getAllyName()).append("\n");
                 }
-                sb.append("Offline: ................. ").append(player.isInOfflineMode()).append("\n");
-
                 sb.append(player.toString()).append("\n");
 
                 return sb.toString();

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public final class AirshipDockHolder extends AbstractHolder {
     private static final AirshipDockHolder INSTANCE = new AirshipDockHolder();
-    private final Map<Integer,AirshipDock> docks = new HashMap<>(4);
+    private final Map<Integer, AirshipDock> docks = new HashMap<>(4);
 
     public static AirshipDockHolder getInstance() {
         return INSTANCE;

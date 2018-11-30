@@ -5,11 +5,6 @@ import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 
 import java.util.*;
 
-
-/**
- * @author VISTALL
- * @date 18:38/10.12.2010
- */
 public final class SpawnHolder extends AbstractHolder {
     private static final SpawnHolder _instance = new SpawnHolder();
 
@@ -20,9 +15,7 @@ public final class SpawnHolder extends AbstractHolder {
     }
 
     public void addSpawn(String group, SpawnTemplate spawn) {
-        List<SpawnTemplate> spawns = _spawns.get(group);
-        if (spawns == null)
-            _spawns.put(group, (spawns = new ArrayList<>()));
+        List<SpawnTemplate> spawns = _spawns.computeIfAbsent(group, k -> new ArrayList<>());
         spawns.add(spawn);
     }
 

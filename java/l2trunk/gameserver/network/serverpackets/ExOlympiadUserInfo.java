@@ -9,8 +9,8 @@ public class ExOlympiadUserInfo extends L2GameServerPacket {
     private final int maxHp;
     private final int curCp;
     private final int maxCp;
-    private int obj_id = 0;
     private final String _name;
+    private int obj_id = 0;
 
     public ExOlympiadUserInfo(Player player, int side) {
         _side = side;

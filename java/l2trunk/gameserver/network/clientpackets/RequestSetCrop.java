@@ -74,7 +74,7 @@ public class RequestSetCrop extends L2GameClientPacket {
             long price = _items[i * 4 + 2];
             int type = (int) _items[i * 4 + 3];
             if (id > 0) {
-                CropProcure s = CastleManorManager.getInstance().getNewCropProcure(id, sales, type, price, sales);
+                CropProcure s = CastleManorManager.INSTANCE.getNewCropProcure(id, sales, type, price, sales);
                 crops.add(s);
             }
         }

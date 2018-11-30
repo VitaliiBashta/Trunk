@@ -15,7 +15,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardMystic;
 
 public final class GiselleVonHellmann extends SiegeGuardMystic {
-    private final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(5003, 1);
+    private final Skill DAMAGE_SKILL = SkillTable.INSTANCE().getInfo(5003, 1);
 
     private final Zone ZONE_1 = ReflectionUtils.getZone("lidia_zone1");
     private final Zone ZONE_2 = ReflectionUtils.getZone("lidia_zone2");

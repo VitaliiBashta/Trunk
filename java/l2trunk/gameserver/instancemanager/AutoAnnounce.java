@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AutoAnnounce implements Runnable {
+public final class AutoAnnounce implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(AutoAnnounce.class);
     private static HashMap<Integer, AutoAnnounces> _lists;
     private static AutoAnnounce _instance;
@@ -37,10 +37,6 @@ public class AutoAnnounce implements Runnable {
         return _instance;
     }
 
-    public static void reload() {
-        _instance = new AutoAnnounce();
-    }
-
     private void load() {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -49,7 +45,7 @@ public class AutoAnnounce implements Runnable {
 
             Path file = Config.CONFIG.resolve("autoannounce.xml");
             if (!Files.exists(file)) {
-                LOG.warn("AutoAnnounce: NO FILE "+ file.toAbsolutePath());
+                LOG.warn("AutoAnnounce: NO FILE " + file.toAbsolutePath());
                 return;
             }
 
@@ -82,16 +78,17 @@ public class AutoAnnounce implements Runnable {
         }
     }
 
+    @Override
     public void run() {
-        if (_lists.size() <= 0) return;
-        for (AutoAnnounces list : _lists.values()) {
-            if (list.canAnnounce()) {
-                ArrayList<String> msg = list.getMessage();
-                for (String aMsg : msg) {
-                    Announcements.getInstance().announceToAll(aMsg);
-                }
-                list.updateRepeat();
-            }
-        }
+        _lists.values().stream()
+                .filter(AutoAnnounces::canAnnounce)
+                .forEach(list -> {
+                    list.getMessage()
+                            .forEach(msg -> {
+                                Announcements.INSTANCE.announceToAll(msg);
+                                System.out.println(msg);
+                            });
+                    list.updateRepeat();
+                });
     }
 }

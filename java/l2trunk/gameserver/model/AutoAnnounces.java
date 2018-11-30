@@ -2,39 +2,35 @@ package l2trunk.gameserver.model;
 
 import java.util.ArrayList;
 
-public class AutoAnnounces {
-    private final int _id;
-    private ArrayList<String> _msg;
-    private int _repeat;
-    private long _nextSend;
+public final class AutoAnnounces {
+    private final int id;
+    private ArrayList<String> msg;
+    private int repeat;
+    private long nextSend;
 
     public AutoAnnounces(int id) {
-        _id = id;
+        this.id = id;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public void setAnnounce(int delay, int repeat, ArrayList<String> msg) {
-        _nextSend = System.currentTimeMillis() + delay * 1000;
-        _repeat = repeat;
-        _msg = msg;
+        nextSend = System.currentTimeMillis() + delay * 1000;
+        this.repeat = repeat;
+        this.msg = msg;
     }
 
     public void updateRepeat() {
-        _nextSend = System.currentTimeMillis() + _repeat * 1000;
+        nextSend = System.currentTimeMillis() + repeat * 1000;
     }
 
     public boolean canAnnounce() {
-        long currentTimeMillis = System.currentTimeMillis();
-        if (currentTimeMillis > _nextSend)
-            return true;
-        else
-            return false;
+        return System.currentTimeMillis() > nextSend;
     }
 
     public ArrayList<String> getMessage() {
-        return _msg;
+        return msg;
     }
 }

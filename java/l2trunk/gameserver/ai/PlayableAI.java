@@ -17,10 +17,10 @@ import java.util.concurrent.ScheduledFuture;
 import static l2trunk.gameserver.ai.CtrlIntention.*;
 
 public class PlayableAI extends CharacterAI {
-    private Object _intention_arg0 = null;
-    private Object _intention_arg1 = null;
     Skill _skill;
     boolean _forceUse;
+    private Object _intention_arg0 = null;
+    private Object _intention_arg1 = null;
     private volatile int thinking = 0; // to prevent recursive thinking
     private nextAction _nextAction;
     private Object _nextAction_arg0;
@@ -292,7 +292,7 @@ public class PlayableAI extends CharacterAI {
             _followTask = null;
         }
 
-        _followTask = ThreadPoolManager.getInstance().schedule(new ThinkFollow(), 250L);
+        _followTask = ThreadPoolManager.INSTANCE.schedule(new ThinkFollow(), 250L);
     }
 
     @Override
@@ -371,7 +371,7 @@ public class PlayableAI extends CharacterAI {
             }
             setIntention(AI_INTENTION_ACTIVE);
         } else {
-            ThreadPoolManager.getInstance().execute(new RunnableImpl() {
+            ThreadPoolManager.INSTANCE.execute(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     actor.moveToLocation(target.getLoc(), 10, true);
@@ -441,7 +441,7 @@ public class PlayableAI extends CharacterAI {
             clientStopMoving(false);
             actor.doAttack(attack_target);
         } else if (!_dontMove) {
-            ThreadPoolManager.getInstance().execute(new ExecuteFollow(attack_target, range - 20));
+            ThreadPoolManager.INSTANCE.execute(new ExecuteFollow(attack_target, range - 20));
         } else {
             actor.sendActionFailed();
         }
@@ -533,7 +533,7 @@ public class PlayableAI extends CharacterAI {
                 }
             }
         } else if (!_dontMove) {
-            ThreadPoolManager.getInstance().execute(new ExecuteFollow(target, range - 20));
+            ThreadPoolManager.INSTANCE.execute(new ExecuteFollow(target, range - 20));
         } else {
             actor.sendPacket(Msg.YOUR_TARGET_IS_OUT_OF_RANGE);
             setIntention(AI_INTENTION_ACTIVE);
@@ -684,7 +684,7 @@ public class PlayableAI extends CharacterAI {
 
             if (target == null || !target.isVisible() || target.isAlikeDead() || actor.getDistance(target) > 4000) {
                 setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-                ThreadPoolManager.getInstance().schedule(new FollowRecover(), 250L);
+                ThreadPoolManager.INSTANCE.schedule(new FollowRecover(), 250L);
                 return;
             }
 
@@ -697,7 +697,7 @@ public class PlayableAI extends CharacterAI {
 
             if (!actor.isInRange(target, offset + 20) && (!actor.isFollow || (actor.getFollowTarget() != target)))
                 actor.followToCharacter(target, offset, false);
-            _followTask = ThreadPoolManager.getInstance().schedule(this, 250L);
+            _followTask = ThreadPoolManager.INSTANCE.schedule(this, 250L);
         }
     }
 
@@ -733,13 +733,13 @@ public class PlayableAI extends CharacterAI {
 
                 if (!target.isAlikeDead() && (actor.getDistance(target) <= 4000)) {
                     ((Summon) actor).setFollowMode(true);
-                    int offset = (_intention_arg1 != null && _intention_arg1 instanceof Integer) ? (Integer) _intention_arg1 : 0;
+                    int offset = (_intention_arg1 instanceof Integer) ? (Integer) _intention_arg1 : 0;
                     actor.followToCharacter(target, offset, false);
                     return;
                 }
             }
 
-            ThreadPoolManager.getInstance().schedule(this, 250L);
+            ThreadPoolManager.INSTANCE.schedule(this, 250L);
         }
     }
 }

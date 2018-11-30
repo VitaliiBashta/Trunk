@@ -40,6 +40,7 @@ public class NpcUtils {
             throw new NullPointerException("Npc template id : " + npcId + " not found!");
 
         NpcInstance npc = template.getNewInstance();
+        if (npc == null) return null;
         npc.setHeading(loc.h < 0 ? Rnd.get(0xFFFF) : loc.h);
         npc.setSpawnedLoc(loc);
         npc.setReflection(reflection);
@@ -47,7 +48,7 @@ public class NpcUtils {
 
         npc.spawnMe(npc.getSpawnedLoc());
         if (despawnTime > 0)
-            ThreadPoolManager.getInstance().schedule(new GameObjectTasks.DeleteTask(npc), despawnTime);
+            ThreadPoolManager.INSTANCE().schedule(new GameObjectTasks.DeleteTask(npc), despawnTime);
         return npc;
     }
 }

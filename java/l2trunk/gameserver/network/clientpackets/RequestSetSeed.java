@@ -71,7 +71,7 @@ public class RequestSetSeed extends L2GameClientPacket {
             long sales = _items[i * 3 + 1];
             long price = _items[i * 3 + 2];
             if (id > 0) {
-                SeedProduction s = CastleManorManager.getInstance().getNewSeedProduction(id, sales, price, sales);
+                SeedProduction s = CastleManorManager.INSTANCE.getNewSeedProduction(id, sales, price, sales);
                 seeds.add(s);
             }
         }

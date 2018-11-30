@@ -27,13 +27,10 @@ public final class FafurionKindred extends Fighter {
 
     private static final int Water_Dragon_Scale = 9691;
     private static final int Water_Dragon_Claw = 9700;
-
+    private static final FuncTemplate ft = new FuncTemplate(null, "Mul", Stats.HEAL_EFFECTIVNESS, 0x90, 0);
+    private final List<SimpleSpawner> spawns = new ArrayList<>();
     private ScheduledFuture<?> poisonTask;
     private ScheduledFuture<?> despawnTask;
-
-    private final List<SimpleSpawner> spawns = new ArrayList<>();
-
-    private static final FuncTemplate ft = new FuncTemplate(null, "Mul", Stats.HEAL_EFFECTIVNESS, 0x90, 0);
 
     public FafurionKindred(NpcInstance actor) {
         super(actor);
@@ -46,13 +43,16 @@ public final class FafurionKindred extends Fighter {
 
         spawns.clear();
 
-        ThreadPoolManager.getInstance().schedule(new SpawnTask(DETRACTOR1), 500);
-        ThreadPoolManager.getInstance().schedule(new SpawnTask(DETRACTOR2), 500);
-        ThreadPoolManager.getInstance().schedule(new SpawnTask(DETRACTOR1), 500);
-        ThreadPoolManager.getInstance().schedule(new SpawnTask(DETRACTOR2), 500);
+        ThreadPoolManager.INSTANCE.schedule(new SpawnTask(DETRACTOR1), 500);
+        ThreadPoolManager.INSTANCE.schedule(new SpawnTask(DETRACTOR2), 500);
+        ThreadPoolManager.INSTANCE.schedule(new SpawnTask(DETRACTOR1), 500);
+        ThreadPoolManager.INSTANCE.schedule(new SpawnTask(DETRACTOR2), 500);
 
-        poisonTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new PoisonTask(), 3000, 3000);
-        despawnTask = ThreadPoolManager.getInstance().schedule(new DeSpawnTask(), 300000);
+        poisonTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(() -> {
+            NpcInstance actor = getActor();
+            actor.reduceCurrentHp(500, actor, null, true, false, true, false, false, false, false); // Травим дракошу ядом
+        }, 3000, 3000);
+        despawnTask = ThreadPoolManager.INSTANCE().schedule(new DeSpawnTask(), 300000);
     }
 
     @Override
@@ -97,17 +97,23 @@ public final class FafurionKindred extends Fighter {
         spawns.clear();
     }
 
+    private void dropItem(NpcInstance actor, int id, int count) {
+        ItemInstance item = ItemFunctions.createItem(id);
+        item.setCount(count);
+        item.dropToTheGround(actor, Location.findPointToStay(actor, 100));
+    }
+
     private class SpawnTask extends RunnableImpl {
-        private final int _id;
+        private final int id;
 
         SpawnTask(int id) {
-            _id = id;
+            this.id = id;
         }
 
         @Override
         public void runImpl() {
             NpcInstance actor = getActor();
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(_id));
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(id));
             sp.setLoc(Location.findPointToStay(actor, 100, 120));
             sp.setRespawnDelay(30, 40);
             sp.doSpawn(true);
@@ -136,11 +142,5 @@ public final class FafurionKindred extends Fighter {
             cleanUp();
             actor.deleteMe();
         }
-    }
-
-    private void dropItem(NpcInstance actor, int id, int count) {
-        ItemInstance item = ItemFunctions.createItem(id);
-        item.setCount(count);
-        item.dropToTheGround(actor, Location.findPointToStay(actor, 100));
     }
 }

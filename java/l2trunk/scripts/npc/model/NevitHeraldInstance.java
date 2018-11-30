@@ -33,7 +33,7 @@ public final class NevitHeraldInstance extends NpcInstance {
             List<Creature> target = new ArrayList<>();
             target.add(player);
             broadcastPacket(new MagicSkillUse(this, player, 23312, 1, 0, 0));
-            callSkill(SkillTable.getInstance().getInfo(23312, 1), target, true);
+            callSkill(SkillTable.INSTANCE().getInfo(23312, 1), target, true);
         } else
             super.onBypassFeedback(player, command);
     }

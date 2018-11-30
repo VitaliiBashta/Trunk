@@ -1,14 +1,14 @@
 package l2trunk.gameserver.model.quest;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import l2trunk.commons.lang.ArrayUtils;
-
-public class Drop {
+public final class Drop {
     public final int condition;
     public final int maxcount;
     public final int chance;
 
-    public int[] itemList = ArrayUtils.EMPTY_INT_ARRAY;
+    public List<Integer> itemList = new ArrayList<>();
 
     public Drop(int condition, int maxcount, int chance) {
         this.condition = condition;
@@ -17,7 +17,7 @@ public class Drop {
     }
 
     public Drop addItem(int item) {
-        itemList = ArrayUtils.add(itemList, item);
+        itemList.add(item);
         return this;
     }
 }

@@ -9,9 +9,9 @@ public class CharStatsChangeRecorder<T extends Creature> {
     private static final int SEND_STATUS_INFO = 1 << 2; // Требуется обновить статус HP/MP/CP
 
     final T activeChar;
-
+    TeamType _team;
+    int _changes;
     private int _level;
-
     private int _accuracy;
     private int _attackSpeed;
     private int _castSpeed;
@@ -24,14 +24,9 @@ public class CharStatsChangeRecorder<T extends Creature> {
     private int _physicAttack;
     private int _physicDefence;
     private int _runSpeed;
-
     private int _abnormalEffects;
     private int _abnormalEffects2;
     private int _abnormalEffects3;
-
-    TeamType _team;
-
-    int _changes;
 
     public CharStatsChangeRecorder(T actor) {
         this.activeChar = actor;

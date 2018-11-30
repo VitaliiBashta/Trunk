@@ -34,55 +34,45 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Hero {
+public enum Hero {
+    INSTANCE;
     public static final String COUNT = "count";
-    private static final String PLAYED = "played";
     public static final String CLAN_NAME = "clan_name";
     public static final String CLAN_CREST = "clan_crest";
     public static final String ALLY_NAME = "ally_name";
     public static final String ALLY_CREST = "ally_crest";
     public static final String ACTIVE = "active";
     public static final String MESSAGE = "message";  //TODO [VISTALL]
-    private static final Logger _log = LoggerFactory.getLogger(Hero.class);
+    private static final String PLAYED = "played";
+    private static final Logger LOG = LoggerFactory.getLogger(Hero.class);
     private static final String GET_HEROES = "SELECT * FROM heroes WHERE played = 1";
     private static final String GET_ALL_HEROES = "SELECT * FROM heroes";
-    private static Hero _instance;
-    private static Map<Integer, StatsSet> _heroes;
+    private static Map<Integer, StatsSet> heroes;
     private static Map<Integer, StatsSet> _completeHeroes;
     private static Map<Integer, List<HeroDiary>> _herodiary;
     private static Map<Integer, String> _heroMessage;
 
-    private Hero() {
+    Hero() {
         init();
     }
 
-    public static Hero getInstance() {
-        if (_instance == null)
-            _instance = new Hero();
-        return _instance;
-    }
-
     private static void HeroSetClanAndAlly(int charId, StatsSet hero) {
-        Entry<Clan, Alliance> e = ClanTable.getInstance().getClanAndAllianceByCharId(charId);
+        Entry<Clan, Alliance> e = ClanTable.INSTANCE.getClanAndAllianceByCharId(charId);
         hero.set(CLAN_CREST, e.getKey() == null ? 0 : e.getKey().getCrestId());
         hero.set(CLAN_NAME, e.getKey() == null ? "" : e.getKey().getName());
         hero.set(ALLY_CREST, e.getValue() == null ? 0 : e.getValue().getAllyCrestId());
         hero.set(ALLY_NAME, e.getValue() == null ? "" : e.getValue().getAllyName());
-        e = null;
     }
 
     public static void deleteHero(Player player) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("REPLACE INTO heroes (char_id, count, played, active) VALUES (?,?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("REPLACE INTO heroes (char_id, count, played, active) VALUES (?,?,?,?)")) {
 
-            for (Integer heroId : _heroes.keySet()) {
+            for (Integer heroId : heroes.keySet()) {
                 int id = player.getObjectId();
                 if (id > 0 && heroId != id)
                     continue;
-                StatsSet hero = _heroes.get(heroId);
+                StatsSet hero = heroes.get(heroId);
                 statement.setInt(1, heroId);
                 statement.setInt(2, hero.getInteger(COUNT));
                 statement.setInt(3, hero.getInteger(PLAYED));
@@ -93,18 +83,16 @@ public class Hero {
                 }
             }
         } catch (SQLException e) {
-            _log.warn("Hero System: Couldnt update Heroes", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
+            LOG.warn("Hero System: Couldnt update Heroes", e);
         }
     }
 
     public static void addSkills(Player player) {
-        player.addSkill(SkillTable.getInstance().getInfo(Skill.SKILL_HEROIC_MIRACLE, 1));
-        player.addSkill(SkillTable.getInstance().getInfo(Skill.SKILL_HEROIC_BERSERKER, 1));
-        player.addSkill(SkillTable.getInstance().getInfo(Skill.SKILL_HEROIC_VALOR, 1));
-        player.addSkill(SkillTable.getInstance().getInfo(Skill.SKILL_HEROIC_GRANDEUR, 1));
-        player.addSkill(SkillTable.getInstance().getInfo(Skill.SKILL_HEROIC_DREAD, 1));
+        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_MIRACLE, 1));
+        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_BERSERKER, 1));
+        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_VALOR, 1));
+        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_GRANDEUR, 1));
+        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_DREAD, 1));
     }
 
     public static void removeSkills(Player player) {
@@ -116,7 +104,7 @@ public class Hero {
     }
 
     private void init() {
-        _heroes = new ConcurrentHashMap<>();
+        heroes = new ConcurrentHashMap<>();
         _completeHeroes = new ConcurrentHashMap<>();
         _herodiary = new ConcurrentHashMap<>();
         _heroMessage = new ConcurrentHashMap<>();
@@ -139,7 +127,7 @@ public class Hero {
                 HeroSetClanAndAlly(charId, hero);
                 loadDiary(charId);
                 loadMessage(charId);
-                _heroes.put(charId, hero);
+                heroes.put(charId, hero);
             }
             DbUtils.close(statement, rset);
 
@@ -157,24 +145,22 @@ public class Hero {
                 _completeHeroes.put(charId, hero);
             }
         } catch (SQLException e) {
-            _log.warn("Hero System: Couldnt load Heroes", e);
+            LOG.warn("Hero System: Couldnt load Heroes", e);
         } finally {
             DbUtils.closeQuietly(con, statement, rset);
         }
 
-        _log.info("Hero System: Loaded " + _heroes.size() + " Heroes.");
-        _log.info("Hero System: Loaded " + _completeHeroes.size() + " all time Heroes.");
     }
 
     public Map<Integer, StatsSet> getHeroes() {
-        return _heroes;
+        return heroes;
     }
 
     public synchronized void clearHeroes() {
         mysql.set("UPDATE heroes SET played = 0, active = 0");
 
-        if (!_heroes.isEmpty())
-            for (StatsSet hero : _heroes.values()) {
+        if (!heroes.isEmpty())
+            for (StatsSet hero : heroes.values()) {
                 if (hero.getInteger(ACTIVE) == 0)
                     continue;
 
@@ -202,7 +188,7 @@ public class Hero {
         //Deleting hero weapons from db
         mysql.set("DELETE FROM items WHERE item_id >= 6611 AND item_id <= 6621 OR item_id >= 9388 AND item_id <= 9390");
 
-        _heroes.clear();
+        heroes.clear();
         _herodiary.clear();
     }
 
@@ -239,7 +225,7 @@ public class Hero {
             loadDiary(charId);
         }
 
-        _heroes.putAll(heroes);
+        Hero.heroes.putAll(heroes);
         heroes.clear();
 
         updateHeroes(0);
@@ -254,10 +240,10 @@ public class Hero {
             con = DatabaseFactory.getInstance().getConnection();
             statement = con.prepareStatement("REPLACE INTO heroes (char_id, count, played, active) VALUES (?,?,?,?)");
 
-            for (Integer heroId : _heroes.keySet()) {
+            for (Integer heroId : heroes.keySet()) {
                 if (id > 0 && heroId != id)  //if (id > 0 && heroId != id) //Here maybe not normal with intValue
                     continue;
-                StatsSet hero = _heroes.get(heroId);
+                StatsSet hero = heroes.get(heroId);
                 statement.setInt(1, heroId); // statement.setInt(1, heroId);
                 statement.setInt(2, hero.getInteger(COUNT));
                 statement.setInt(3, hero.getInteger(PLAYED));
@@ -269,33 +255,33 @@ public class Hero {
                 }
             }
         } catch (SQLException e) {
-            _log.error("Hero System: Couldnt update Heroes", e);
+            LOG.error("Hero System: Couldnt update Heroes", e);
         } finally {
             DbUtils.closeQuietly(con, statement);
         }
     }
 
     public boolean isHero(int id) {
-        if (_heroes == null || _heroes.isEmpty())
+        if (heroes == null || heroes.isEmpty())
             return false;
-        if (_heroes.containsKey(id) && _heroes.get(id).getInteger(ACTIVE) == 1)
+        if (heroes.containsKey(id) && heroes.get(id).getInteger(ACTIVE) == 1)
             return true;
         return false;
     }
 
     public boolean isInactiveHero(int id) {
-        if (_heroes == null || _heroes.isEmpty())
+        if (heroes == null || heroes.isEmpty())
             return false;
-        if (_heroes.containsKey(id) && _heroes.get(id).getInteger(ACTIVE) == 0)
+        if (heroes.containsKey(id) && heroes.get(id).getInteger(ACTIVE) == 0)
             return true;
         return false;
     }
 
     public void activateHero(Player player) {
-        StatsSet hero = _heroes.get(player.getObjectId());
+        StatsSet hero = heroes.get(player.getObjectId());
         hero.set(ACTIVE, 1);
-        _heroes.remove(player.getObjectId());
-        _heroes.put(player.getObjectId(), hero);
+        heroes.remove(player.getObjectId());
+        heroes.put(player.getObjectId(), hero);
 
         if (player.getBaseClassId() == player.getActiveClassId())
             addSkills(player);
@@ -337,9 +323,9 @@ public class Hero {
             _herodiary.put(charId, diary);
 
             if (Config.DEBUG)
-                _log.info("Hero System: Loaded " + diary.size() + " diary entries for Hero(object id: #" + charId + ")");
+                LOG.info("Hero System: Loaded " + diary.size() + " diary entries for Hero(object id: #" + charId + ")");
         } catch (SQLException e) {
-            _log.warn("Hero System: Couldnt load Hero Diary for CharId: " + charId, e);
+            LOG.warn("Hero System: Couldnt load Hero Diary for CharId: " + charId, e);
         } finally {
             DbUtils.closeQuietly(con, statement, rset);
         }
@@ -353,7 +339,7 @@ public class Hero {
         if (mainlist != null) {
             NpcHtmlMessage html = new NpcHtmlMessage(activeChar, null);
             html.setFile("olympiad/monument_hero_info.htm");
-            html.replace("%title%", StringHolder.getInstance().getNotNull(activeChar, "hero.diary"));
+            html.replace("%title%", StringHolder.INSTANCE.getNotNull(activeChar, "hero.diary"));
             html.replace("%heroname%", Olympiad.getNobleName(charid));
             html.replace("%message%", _heroMessage.get(charid));
 
@@ -424,7 +410,7 @@ public class Hero {
             statement.execute();
             statement.close();
         } catch (SQLException e) {
-            _log.error("SQL exception while saving DiaryData.", e);
+            LOG.error("SQL exception while saving DiaryData.", e);
         } finally {
             DbUtils.closeQuietly(con, statement);
         }
@@ -445,7 +431,7 @@ public class Hero {
             message = rset.getString("message");
             _heroMessage.put(charId, message);
         } catch (SQLException e) {
-            _log.error("Hero System: Couldnt load Hero Message for CharId: " + charId, e);
+            LOG.error("Hero System: Couldnt load Hero Message for CharId: " + charId, e);
         } finally {
             DbUtils.closeQuietly(con, statement, rset);
         }
@@ -470,21 +456,20 @@ public class Hero {
             statement.execute();
             statement.close();
         } catch (SQLException e) {
-            _log.error("SQL exception while saving HeroMessage.", e);
+            LOG.error("SQL exception while saving HeroMessage.", e);
         } finally {
             DbUtils.closeQuietly(con, statement);
         }
     }
 
     public void shutdown() {
-        for (int charId : _heroMessage.keySet())
-            saveHeroMessage(charId);
+        _heroMessage.keySet().forEach(this::saveHeroMessage);
     }
 
     public int getHeroByClass(int classid) {
-        if (!_heroes.isEmpty())
-            for (Integer heroId : _heroes.keySet()) {
-                StatsSet hero = _heroes.get(heroId);
+        if (!heroes.isEmpty())
+            for (Integer heroId : heroes.keySet()) {
+                StatsSet hero = heroes.get(heroId);
                 if (hero.getInteger(Olympiad.CLASS_ID) == classid)
                     return heroId;
             }
@@ -492,12 +477,18 @@ public class Hero {
     }
 
     public Map.Entry<Integer, StatsSet> getHeroStats(int classId) {
-        if (!_heroes.isEmpty()) {
-            for (Map.Entry<Integer, StatsSet> entry : _heroes.entrySet()) {
+        if (!heroes.isEmpty()) {
+            for (Map.Entry<Integer, StatsSet> entry : heroes.entrySet()) {
                 if (entry.getValue().getInteger(Olympiad.CLASS_ID) == classId)
                     return entry;
             }
         }
         return null;
+    }
+
+    public void log() {
+        LOG.info("Hero System: Loaded " + heroes.size() + " Heroes.");
+        LOG.info("Hero System: Loaded " + _completeHeroes.size() + " all time Heroes.");
+
     }
 }

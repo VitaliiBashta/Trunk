@@ -3,10 +3,9 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-/**
- * @author VISTALL
- * @date 16:14/12.04.2011
- */
+import java.util.Arrays;
+import java.util.List;
+
 public class _735_MakeSpearsDull extends Dominion_KillSpecialUnitQuest {
     public _735_MakeSpearsDull() {
         super();
@@ -38,8 +37,8 @@ public class _735_MakeSpearsDull extends Dominion_KillSpecialUnitQuest {
     }
 
     @Override
-    protected ClassId[] getTargetClassIds() {
-        return new ClassId[]{
+    protected List<ClassId> getTargetClassIds() {
+        return Arrays.asList(
                 ClassId.gladiator,
                 ClassId.warlord,
                 ClassId.treasureHunter,
@@ -70,6 +69,6 @@ public class _735_MakeSpearsDull extends Dominion_KillSpecialUnitQuest {
                 ClassId.maleSoulhound,
                 ClassId.femaleSoulhound,
                 ClassId.trickster
-        };
+        );
     }
 }

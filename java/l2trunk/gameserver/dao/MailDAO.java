@@ -179,7 +179,7 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
                 int objectId;
                 while (rset.next()) {
                     objectId = rset.getInt(1);
-                    item = ItemsDAO.getInstance().load(objectId);
+                    item = ItemsDAO.INSTANCE.load(objectId);
                     if (item != null)
                         mail.addAttachment(item);
                 }

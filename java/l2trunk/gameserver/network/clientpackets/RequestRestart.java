@@ -64,7 +64,7 @@ public class RequestRestart extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInStoreMode() && !activeChar.isInZone(Zone.ZoneType.offshore) && Config.SERVICES_OFFLINE_TRADE_ALLOW_OFFSHORE) {
+        if (activeChar.isInStoreMode() && !activeChar.isInZone(Zone.ZoneType.offshore)) {
             activeChar.sendMessage(new CustomMessage("trade.OfflineNoTradeZoneOnlyOffshore", activeChar));
             activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);
             return;

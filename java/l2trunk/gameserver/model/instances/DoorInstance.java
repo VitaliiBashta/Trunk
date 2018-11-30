@@ -91,7 +91,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
             _autoActionTask = null;
         }
 
-        _autoActionTask = ThreadPoolManager.getInstance().schedule(new AutoOpenClose(open), actionDelay);
+        _autoActionTask = ThreadPoolManager.INSTANCE.schedule(new AutoOpenClose(open), actionDelay);
     }
 
     public int getDamage() {

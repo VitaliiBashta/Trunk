@@ -1,57 +1,49 @@
 package l2trunk.gameserver.templates.item.support;
 
-import java.util.Map;
-
 import l2trunk.commons.collections.MultiValueSet;
 
-class LureTemplate
-{
-	private final int _itemId;
-	private final int _lengthBonus;
-	private final double _revisionNumber;
-	private final double _rateBonus;
-	private final LureType _lureType;
+import java.util.Map;
 
-	private final Map<FishGroup, Integer> _chances;
+class LureTemplate {
+    private final int _itemId;
+    private final int _lengthBonus;
+    private final double _revisionNumber;
+    private final double _rateBonus;
+    private final LureType _lureType;
 
-	@SuppressWarnings("unchecked")
-	public LureTemplate(MultiValueSet<String> set)
-	{
-		_itemId = set.getInteger("item_id");
-		_lengthBonus = set.getInteger("length_bonus");
-		_revisionNumber = set.getDouble("revision_number");
-		_rateBonus = set.getDouble("rate_bonus");
-		_lureType = set.getEnum("type", LureType.class);
-		_chances = (Map<FishGroup, Integer>)set.get("chances");
-	}
+    private final Map<FishGroup, Integer> _chances;
 
-	public int getItemId()
-	{
-		return _itemId;
-	}
+    @SuppressWarnings("unchecked")
+    public LureTemplate(MultiValueSet<String> set) {
+        _itemId = set.getInteger("item_id");
+        _lengthBonus = set.getInteger("length_bonus");
+        _revisionNumber = set.getDouble("revision_number");
+        _rateBonus = set.getDouble("rate_bonus");
+        _lureType = set.getEnum("type", LureType.class);
+        _chances = (Map<FishGroup, Integer>) set.get("chances");
+    }
 
-	public int getLengthBonus()
-	{
-		return _lengthBonus;
-	}
+    public int getItemId() {
+        return _itemId;
+    }
 
-	public double getRevisionNumber()
-	{
-		return _revisionNumber;
-	}
+    public int getLengthBonus() {
+        return _lengthBonus;
+    }
 
-	public double getRateBonus()
-	{
-		return _rateBonus;
-	}
+    public double getRevisionNumber() {
+        return _revisionNumber;
+    }
 
-	public LureType getLureType()
-	{
-		return _lureType;
-	}
+    public double getRateBonus() {
+        return _rateBonus;
+    }
 
-	public Map<FishGroup, Integer> getChances()
-	{
-		return _chances;
-	}
+    public LureType getLureType() {
+        return _lureType;
+    }
+
+    public Map<FishGroup, Integer> getChances() {
+        return _chances;
+    }
 }

@@ -30,7 +30,7 @@ public class SepulcherRaidInstance extends RaidBossInstance {
             giveCup(player);
         if (_onDeadEventTask != null)
             _onDeadEventTask.cancel(false);
-        _onDeadEventTask = ThreadPoolManager.getInstance().schedule(new OnDeadEvent(this), 8500);
+        _onDeadEventTask = ThreadPoolManager.INSTANCE().schedule(new OnDeadEvent(this), 8500);
     }
 
     @Override

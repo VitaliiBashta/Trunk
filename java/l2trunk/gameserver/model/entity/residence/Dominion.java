@@ -23,7 +23,7 @@ import java.util.TreeSet;
 public final class Dominion extends Residence {
     private static final long serialVersionUID = 1L;
     private final Set<Integer> _flags = new TreeSet<>();
-    private Castle _castle;
+    private Castle castle;
     private int _lordObjectId;
 
     public Dominion(StatsSet set) {
@@ -34,8 +34,8 @@ public final class Dominion extends Residence {
     public void init() {
         initEvent();
 
-        _castle = ResidenceHolder.getInstance().getResidence(Castle.class, getId() - 80);
-        _castle.setDominion(this);
+        castle = ResidenceHolder.getInstance().getResidence(Castle.class, getId() - 80);
+        castle.setDominion(this);
 
         loadData();
 
@@ -94,7 +94,7 @@ public final class Dominion extends Residence {
 
     @Override
     protected void loadData() {
-        DominionDAO.getInstance().select(this);
+        DominionDAO.INSTANCE.select(this);
     }
 
     @Override
@@ -133,20 +133,20 @@ public final class Dominion extends Residence {
 
     @Override
     public Clan getOwner() {
-        return _castle.getOwner();
+        return castle.getOwner();
     }
 
     @Override
     public int getOwnerId() {
-        return _castle.getOwnerId();
+        return castle.getOwnerId();
     }
 
     public Castle getCastle() {
-        return _castle;
+        return castle;
     }
 
     @Override
     public void update() {
-        DominionDAO.getInstance().update(this);
+        DominionDAO.INSTANCE.update(this);
     }
 }

@@ -21,12 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Эвент к 8 марта: http://www.lineage2.com/archive/2009/01/the_valentine_e.html
- *
- * @author SYS
- */
-public class March8 extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+public final class March8 extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(March8.class);
     private static final String EVENT_NAME = "March8";
     private static final int RECIPE_PRICE = 50000; // 50.000 adena at x1 servers
@@ -36,9 +31,6 @@ public class March8 extends Functions implements ScriptFile, OnDeathListener, On
     private static final int[] DROP = {20192, 20193, 20194};
     private static boolean _active = false;
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
         final int EVENT_MANAGERS[][] = {{-14823, 123567, -3143, 8192}, // Gludio
                 {-83159, 150914, -3155, 49152}, // Gludin
@@ -63,11 +55,6 @@ public class March8 extends Functions implements ScriptFile, OnDeathListener, On
         deSpawnNPCs(_spawns);
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return isActive(EVENT_NAME);
     }
@@ -83,7 +70,7 @@ public class March8 extends Functions implements ScriptFile, OnDeathListener, On
         if (SetActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: March 8 started.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.March8.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStarted", null);
         } else
             player.sendMessage("Event 'March 8' already started.");
 
@@ -101,7 +88,7 @@ public class March8 extends Functions implements ScriptFile, OnDeathListener, On
         if (SetActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: March 8 stopped.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.March8.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStoped", null);
         } else
             player.sendMessage("Event 'March 8' not started.");
 
@@ -168,7 +155,7 @@ public class March8 extends Functions implements ScriptFile, OnDeathListener, On
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.March8.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.March8.AnnounceEventStarted", null);
     }
 
     /**

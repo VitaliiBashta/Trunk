@@ -15,9 +15,9 @@ import java.util.TreeMap;
  * dd[dddc[d]c[d]dQQcQ] - Gracia Final
  */
 public class ExShowSellCropList extends L2GameServerPacket {
-    private int _manorId = 1;
     private final Map<Integer, ItemInstance> _cropsItems;
     private final Map<Integer, CropProcure> _castleCrops;
+    private int _manorId = 1;
 
     public ExShowSellCropList(Player player, int manorId, List<CropProcure> crops) {
         _manorId = manorId;

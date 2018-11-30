@@ -1,13 +1,10 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.collections.EmptyIterator;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -15,42 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface PlayerGroup extends Iterable<Player> {
-    PlayerGroup EMPTY = new PlayerGroup() {
-        @Override
-        public Stream<Player> stream() {
-            return Stream.empty();
-        }
-
-        @Override
-        public Iterator<Player> iterator() {
-            return EmptyIterator.getInstance();
-        }
-
-        @Override
-        public int size() {
-            return 0;
-        }
-
-        @Override
-        public Player getLeader() {
-            return null;
-        }
-
-        @Override
-        public List<Player> getMembers(Player... excluded) {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public boolean containsMember(Player player) {
-            return false;
-        }
-
-        @Override
-        public void setReflection(Reflection reflection) {
-
-        }
-    };
 
     int size();
 

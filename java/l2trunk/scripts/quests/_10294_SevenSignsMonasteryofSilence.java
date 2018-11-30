@@ -9,21 +9,20 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
-/**
- * @author pchayka
- */
-public class _10294_SevenSignsMonasteryofSilence extends Quest implements ScriptFile {
+public final class _10294_SevenSignsMonasteryofSilence extends Quest implements ScriptFile {
     private static final int Elcardia = 32784;
     private static final int ErisEvilThoughts = 32792;
     private static final int ElcardiaInzone1 = 32787;
     private static final int RelicGuard = 32803;
-    private static final int[] RelicWatcher = ArrayUtils.createAscendingArray(32804, 32807);
-    private static final int YellowRelicWatcher = RelicWatcher[0];
-    private static final int GreenRelicWatcher = RelicWatcher[1];
-    private static final int BlueRelicWatcher = RelicWatcher[2];
-    private static final int RedRelicWatcher = RelicWatcher[3];
+    private static final List<Integer> RelicWatcher = ArrayUtils.createAscendingList(32804, 32807);
+    private static final int YellowRelicWatcher = RelicWatcher.get(0);
+    private static final int GreenRelicWatcher = RelicWatcher.get(1);
+    private static final int BlueRelicWatcher = RelicWatcher.get(2);
+    private static final int RedRelicWatcher = RelicWatcher.get(3);
 
     private static final int JudevanEtinasEvilThoughts = 32888;
     private static final int SolinaLayrother = 27407;
@@ -32,19 +31,22 @@ public class _10294_SevenSignsMonasteryofSilence extends Quest implements Script
     private static final int SolinasEvilThoughts = 32793;
 
     // reading desks
-    private static final int[] ReadingDesk = ArrayUtils.createAscendingArray(32821, 32836);
+    private static final List<Integer> ReadingDesk = ArrayUtils.createAscendingList(32821, 32836);
 
-    private static final int[] YellowRoomDesks = {ReadingDesk[0], ReadingDesk[1], ReadingDesk[2], ReadingDesk[3]};
+    private static final int[] YellowRoomDesks = {ReadingDesk.get(0), ReadingDesk.get(1), ReadingDesk.get(2), ReadingDesk.get(3)};
     private static final int YellowTrueReadingDesk = YellowRoomDesks[2];
 
-    private static final int[] GreenRoomDesks = {ReadingDesk[4], ReadingDesk[5], ReadingDesk[6], ReadingDesk[7]};
+    private static final int[] GreenRoomDesks = {ReadingDesk.get(4),
+            ReadingDesk.get(5), ReadingDesk.get(6), ReadingDesk.get(7)};
     private static final int GreenTrueReadingDesk = GreenRoomDesks[3];
 
-    private static final int[] BlueRoomDesks = {ReadingDesk[8], ReadingDesk[9], ReadingDesk[10], ReadingDesk[11]};
+    private static final int[] BlueRoomDesks = {ReadingDesk.get(8), ReadingDesk.get(9), ReadingDesk.get(10),
+            ReadingDesk.get(11)};
     private static final int BlueTrueReadingDesk = BlueRoomDesks[1];
 
-    private static final int[] RedRoomDesks = {ReadingDesk[12], ReadingDesk[13], ReadingDesk[14], ReadingDesk[15]};
-    private static final int RedTrueReadingDesk = RedRoomDesks[0];
+    private static final List<Integer> RedRoomDesks = Arrays.asList(ReadingDesk.get(12), ReadingDesk.get(13),
+            ReadingDesk.get(14), ReadingDesk.get(15));
+    private static final int RedTrueReadingDesk = RedRoomDesks.get(0);
 
     public _10294_SevenSignsMonasteryofSilence() {
         super(false);
@@ -214,10 +216,10 @@ public class _10294_SevenSignsMonasteryofSilence extends Quest implements Script
                 htmltext = "relicguard_q10294_1.htm";
             else if (cond == 3)
                 htmltext = "relicguard_q10294_5.htm";
-        } else if (ArrayUtils.contains(RelicWatcher, npcId)) {
+        } else if (RelicWatcher.contains(npcId)) {
             if (cond == 2)
                 htmltext = "relicwatcher_q10294_1.htm";
-        } else if (ArrayUtils.contains(ReadingDesk, npcId)) {
+        } else if (ReadingDesk.contains(npcId)) {
             if (cond == 2) {
                 if (ArrayUtils.contains(YellowRoomDesks, npcId)) {
                     if (npcId == YellowTrueReadingDesk)
@@ -234,7 +236,7 @@ public class _10294_SevenSignsMonasteryofSilence extends Quest implements Script
                         htmltext = "readingdesk_q10294_bluetrue.htm";
                     else
                         htmltext = "readingdesk_q10294_false.htm";
-                } else if (ArrayUtils.contains(RedRoomDesks, npcId)) {
+                } else if (RedRoomDesks.contains(npcId)) {
                     if (npcId == RedTrueReadingDesk)
                         htmltext = "readingdesk_q10294_redtrue.htm";
                     else

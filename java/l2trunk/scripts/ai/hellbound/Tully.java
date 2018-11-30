@@ -70,7 +70,7 @@ public final class Tully extends Fighter {
         } catch (RuntimeException e) {
             LOG.error("Error on Tully Death Spawn Removable Ghost", e);
         }
-        ThreadPoolManager.getInstance().schedule(new UnspawnAndExplode(), 600 * 1000L); // 10 mins
+        ThreadPoolManager.INSTANCE().schedule(new UnspawnAndExplode(), 600 * 1000L); // 10 mins
 
         super.onEvtDead(killer);
     }

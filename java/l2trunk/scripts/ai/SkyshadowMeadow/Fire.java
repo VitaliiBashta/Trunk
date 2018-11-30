@@ -48,7 +48,7 @@ public final class Fire extends DefaultAI {
                     if (actor.getNpcState() < 1)
                         actor.setNpcState((byte) 1); // Зажигаем кастер.
                     NpcUtils.spawnSingle(FEED, new Location(actor.getX(), actor.getY(), actor.getZ()), 0);
-                    ThreadPoolManager.getInstance().schedule(new SpawnStart(), 20000); // Время паузы
+                    ThreadPoolManager.INSTANCE().schedule(new SpawnStart(), 20000); // Время паузы
                 }
             }
         }

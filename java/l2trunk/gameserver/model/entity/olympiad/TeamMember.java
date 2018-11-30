@@ -126,7 +126,7 @@ public class TeamMember {
         }
 
         //Fix for Cancel exploit
-        CancelTaskManager.getInstance().cancelPlayerTasks(player);
+        CancelTaskManager.INSTANCE.cancelPlayerTasks(player);
 
         DuelEvent duel = player.getEvent(DuelEvent.class);
         if (duel != null)

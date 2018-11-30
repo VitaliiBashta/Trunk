@@ -61,7 +61,7 @@ public final class CharTemplateParser extends AbstractFileParser<CharTemplateHol
                             shortcat = Integer.parseInt(templat.attributeValue("shortcut"));
                         items.add(new CreateItem(itemId, count, equipable, shortcat));
                     } catch (NumberFormatException e) {
-                        _log.error("Error parsing char_template, add item for classId " + set.get("classId") + ": ", e);
+                        LOG.error("Error parsing char_template, add item for classId " + set.get("classId") + ": ", e);
                     }
             }
 

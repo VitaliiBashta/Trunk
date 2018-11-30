@@ -60,7 +60,7 @@ public class AdminPledge implements IAdminCommandHandler {
                         return false;
                     }
 
-                    Clan clan = ClanTable.getInstance().createClan(target, pledgeName);
+                    Clan clan = ClanTable.INSTANCE.createClan(target, pledgeName);
                     if (clan != null) {
                         target.sendPacket(clan.listAll());
                         target.sendPacket(new PledgeShowInfoUpdate(clan), SystemMsg.YOUR_CLAN_HAS_BEEN_CREATED);
@@ -167,9 +167,9 @@ public class AdminPledge implements IAdminCommandHandler {
             target.getClan().restoreCWH();
             activeChar.sendMessage("CWH restored! Found " + target.getClan().getWarehouse().getSize() + " items!");
         } else if (fullString.startsWith("admin_show_cwh")) {
-            Clan clan = null;
+            Clan clan;
             if (wordList.length >= 2)
-                clan = ClanTable.getInstance().getClanByName(wordList[1]);
+                clan = ClanTable.INSTANCE.getClanByName(wordList[1]);
             else
                 clan = target.getClan();
 

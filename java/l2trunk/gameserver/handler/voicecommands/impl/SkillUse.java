@@ -8,14 +8,17 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.Collections;
+import java.util.List;
+
 public class SkillUse extends Functions implements IVoicedCommandHandler {
-    private static final String[] _commandList = {};
+    private static final List<String> _commandList = Collections.singletonList("useskill");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
         int skills = Integer.parseInt(args);
 
-        Skill skill = SkillTable.getInstance().getInfo(skills, activeChar.getSkillLevel(skills));
+        Skill skill = SkillTable.INSTANCE().getInfo(skills, activeChar.getSkillLevel(skills));
 
         String sk = "/useskill " + skill.getName();
         Say2 cs = new Say2(activeChar.getObjectId(), ChatType.ALL, activeChar.getName(), sk);
@@ -27,7 +30,7 @@ public class SkillUse extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 }

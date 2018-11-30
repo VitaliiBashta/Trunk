@@ -6,7 +6,7 @@ public class PollAnswer {
     private int _votes;
 
     public PollAnswer(String answer) {
-        _id = PollEngine.getInstance().getPoll().getNewAnswerId();
+        _id = PollEngine.INSTANCE.getPoll().getNewAnswerId();
         _answer = answer;
         _votes = 0;
     }

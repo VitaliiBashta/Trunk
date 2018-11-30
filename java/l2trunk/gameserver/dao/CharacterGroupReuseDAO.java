@@ -70,13 +70,13 @@ public class CharacterGroupReuseDAO {
             statement.setInt(1, player.getObjectId());
             statement.execute();
 
-            Collection<Map.Entry<Integer,TimeStamp>> reuses = player.getSharedGroupReuses();
+            Collection<Map.Entry<Integer, TimeStamp>> reuses = player.getSharedGroupReuses();
             if (reuses.isEmpty())
                 return;
 
             SqlBatch b = new SqlBatch(INSERT_SQL_QUERY);
             synchronized (reuses) {
-                for (Map.Entry<Integer,TimeStamp> entry : reuses) {
+                for (Map.Entry<Integer, TimeStamp> entry : reuses) {
                     int group = entry.getKey();
                     TimeStamp timeStamp = entry.getValue();
                     if (timeStamp.hasNotPassed()) {

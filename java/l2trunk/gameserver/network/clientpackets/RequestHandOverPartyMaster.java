@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestHandOverPartyMaster extends L2GameClientPacket {
+public final class RequestHandOverPartyMaster extends L2GameClientPacket {
     private String _name;
 
     @Override

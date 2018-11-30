@@ -48,9 +48,9 @@ public class RimPailaka extends Reflection {
     public void onCreate() {
         super.onCreate();
 
-        ThreadPoolManager.getInstance().schedule(new CollapseTimer(10), (getInstancedZone().getTimelimit() - 10) * 60 * 1000L);
-        initTask = ThreadPoolManager.getInstance().schedule(new InvestigatorsSpawn(), initdelay);
-        firstwaveTask = ThreadPoolManager.getInstance().schedule(new FirstWave(), firstwavedelay);
+        ThreadPoolManager.INSTANCE().schedule(new CollapseTimer(10), (getInstancedZone().getTimelimit() - 10) * 60 * 1000L);
+        initTask = ThreadPoolManager.INSTANCE().schedule(new InvestigatorsSpawn(), initdelay);
+        firstwaveTask = ThreadPoolManager.INSTANCE().schedule(new FirstWave(), firstwavedelay);
     }
 
     public class InvestigatorsSpawn extends RunnableImpl {
@@ -79,7 +79,7 @@ public class RimPailaka extends Reflection {
             addSpawnWithoutRespawn(KanadisGuide1, bossnminions, 0);
             for (int i = 0; i < 10; i++)
                 addSpawnWithoutRespawn(KanadisFollower1, bossnminions, 400);
-            secondWaveTask = ThreadPoolManager.getInstance().schedule(new SecondWave(), secondwavedelay);
+            secondWaveTask = ThreadPoolManager.INSTANCE().schedule(new SecondWave(), secondwavedelay);
         }
     }
 
@@ -95,7 +95,7 @@ public class RimPailaka extends Reflection {
             addSpawnWithoutRespawn(KanadisGuide2, bossnminions, 0);
             for (int i = 0; i < 10; i++)
                 addSpawnWithoutRespawn(KanadisFollower2, bossnminions, 400);
-            thirdWaveTask = ThreadPoolManager.getInstance().schedule(new ThirdWave(), thirdwavedelay);
+            thirdWaveTask = ThreadPoolManager.INSTANCE().schedule(new ThirdWave(), thirdwavedelay);
         }
     }
 

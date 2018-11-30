@@ -1,17 +1,19 @@
 package l2trunk.gameserver.handler.usercommands;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.handler.usercommands.impl.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class UserCommandHandler extends AbstractHolder {
-    private static final UserCommandHandler _instance = new UserCommandHandler();
-    private final Map<Integer,IUserCommandHandler> _datatable = new HashMap<>();
+public enum UserCommandHandler {
+    INSTANCE;
+    private static final Logger LOG = LoggerFactory.getLogger(UserCommandHandler.class);
+    private final Map<Integer, IUserCommandHandler> datatable = new HashMap<>();
 
-    private UserCommandHandler() {
+    UserCommandHandler() {
         registerUserCommandHandler(new ClanWarsList());
         registerUserCommandHandler(new ClanPenalty());
         registerUserCommandHandler(new CommandChannel());
@@ -25,27 +27,24 @@ public class UserCommandHandler extends AbstractHolder {
         registerUserCommandHandler(new Time());
     }
 
-    public static UserCommandHandler getInstance() {
-        return _instance;
-    }
 
     private void registerUserCommandHandler(IUserCommandHandler handler) {
-        int[] ids = handler.getUserCommandList();
-        for (int element : ids)
-            _datatable.put(element, handler);
+        handler.getUserCommandList().forEach(e -> datatable.put(e, handler));
     }
 
     public IUserCommandHandler getUserCommandHandler(int userCommand) {
-        return _datatable.get(userCommand);
+        return datatable.get(userCommand);
     }
 
-    @Override
     public int size() {
-        return _datatable.size();
+        return datatable.size();
     }
 
-    @Override
     public void clear() {
-        _datatable.clear();
+        datatable.clear();
+    }
+
+    public void log() {
+        LOG.info(String.format("loaded %d %s(s) count.", size(), getClass().getSimpleName()));
     }
 }

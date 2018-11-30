@@ -1,6 +1,5 @@
 package l2trunk.gameserver.stats;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
 import l2trunk.gameserver.stats.triggers.TriggerInfo;
@@ -10,39 +9,52 @@ import java.util.Collections;
 import java.util.List;
 
 public class StatTemplate {
-    protected FuncTemplate[] _funcTemplates = FuncTemplate.EMPTY_ARRAY;
-    private List<TriggerInfo> _triggerList = Collections.emptyList();
+    protected List<FuncTemplate> _funcTemplates = new ArrayList<>();
+    private List<TriggerInfo> _triggerList = new ArrayList<>();
 
     public List<TriggerInfo> getTriggerList() {
         return _triggerList;
     }
 
     public void addTrigger(TriggerInfo f) {
-        if (_triggerList.isEmpty())
-            _triggerList = new ArrayList<>(4);
         _triggerList.add(f);
     }
 
     public void attachFunc(FuncTemplate f) {
-        _funcTemplates = ArrayUtils.add(_funcTemplates, f);
+        if (_funcTemplates.isEmpty())
+            _funcTemplates = new ArrayList<>();
+        _funcTemplates.add(f);
     }
 
     public void clearAttachedFuncs() {
-        _funcTemplates = FuncTemplate.EMPTY_ARRAY;
+        _funcTemplates.clear();
     }
 
-    public FuncTemplate[] getAttachedFuncs() {
+    public List<FuncTemplate> getAttachedFuncs() {
         return _funcTemplates;
     }
 
-    public Func[] getStatFuncs(Object owner) {
-        if (_funcTemplates.length == 0)
-            return Func.EMPTY_FUNC_ARRAY;
+    public List<Func> getStatFuncs(Object owner) {
 
-        Func[] funcs = new Func[_funcTemplates.length];
-        for (int i = 0; i < funcs.length; i++) {
-            funcs[i] = _funcTemplates[i].getFunc(owner);
+        _funcTemplates.forEach(a -> a.getFunc(owner));
+
+
+        if (_funcTemplates.size() == 0)
+            return Collections.emptyList();
+
+        List<Func> funcs = new ArrayList<>();
+        for (FuncTemplate _funcTemplate : _funcTemplates) {
+            funcs.add(_funcTemplate.getFunc(owner));
         }
         return funcs;
+
+//        if (_funcTemplates.length == 0)
+//            return Func.EMPTY_FUNC_ARRAY;
+//
+//        Func[] funcs = new Func[_funcTemplates.length];
+//        for (int i = 0; i < funcs.length; i++) {
+//            funcs[i] = _funcTemplates[i].getFunc(owner);
+//        }
+//        return funcs;
     }
 }

@@ -74,24 +74,22 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
         if (_resultsThread != null)
             return;
 
-        List<Clan> clans = ClanTable.getInstance().getClans();
+        List<Clan> clans = ClanTable.INSTANCE.getClans();
         clans.sort((o1, o2) -> o2.getSiegeKills() - o1.getSiegeKills());
 
 
         ShowSiegeKillResults results =
                 new ShowSiegeKillResults(clans
                         .stream()
-                        .filter( a ->a.getSiegeKills()>0)
+                        .filter(a -> a.getSiegeKills() > 0)
                         .limit(25)
                         .collect(Collectors.toList()));
         broadcastToWorld(results);
 
-        _resultsThread = ThreadPoolManager.getInstance().schedule(() ->
+        _resultsThread = ThreadPoolManager.INSTANCE.schedule(() ->
         {
             broadcastToWorld(ExPVPMatchCCRetire.STATIC);
-
-            for (Clan clan : ClanTable.getInstance().getClans())
-                clan.setSiegeKills(0);
+            ClanTable.INSTANCE.getClans().forEach(cl -> cl.setSiegeKills(0));
             _resultsThread = null;
         }, 5 * 60000L);
     }
@@ -257,7 +255,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
 
     @SuppressWarnings("unchecked")
     public S newSiegeClan(String type, int clanId, long param, long date) {
-        Clan clan = ClanTable.getInstance().getClan(clanId);
+        Clan clan = ClanTable.INSTANCE.getClan(clanId);
         return clan == null ? null : (S) new SiegeClanObject(type, clan, param, date);
     }
 
@@ -324,9 +322,9 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
         final long startSiegeMillis = startTimeMillis();
 
         if (startSiegeMillis == 0)
-            info(getName() + " time - undefined");
+            LOG.info(getName() + " time - undefined");
         else
-            info(getName() + " time - " + TimeUtils.toSimpleFormat(startSiegeMillis));
+            LOG.info(getName() + " time - " + TimeUtils.toSimpleFormat(startSiegeMillis));
     }
 
     @Override

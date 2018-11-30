@@ -86,7 +86,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                 if (_lastAttackTime + FWV_LIMITUNTILSLEEP < System.currentTimeMillis())
                     sleep();
                 else
-                    _sleepCheckTask = ThreadPoolManager.getInstance().schedule(new CheckLastAttack(), 60000);
+                    _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 60000);
         }
     }
 
@@ -133,7 +133,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                     _state.setState(State.ALIVE);
                     _state.update();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(2), 16);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(2), 16);
                     break;
                 case 2:
                     // Do social.
@@ -147,7 +147,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(3), 1500);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(3), 1500);
                     break;
                 case 3:
                     // Set camera.
@@ -158,7 +158,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(4), 3300);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(4), 3300);
                     break;
                 case 4:
                     // Set camera.
@@ -169,7 +169,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(5), 2900);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(5), 2900);
                     break;
                 case 5:
                     // Set camera.
@@ -180,7 +180,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(6), 2700);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(6), 2700);
                     break;
                 case 6:
                     // Set camera.
@@ -191,7 +191,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(7), 1);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(7), 1);
                     break;
                 case 7:
                     // Set camera.
@@ -202,7 +202,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(8), 3200);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(8), 3200);
                     break;
                 case 8:
                     // Set camera.
@@ -213,7 +213,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(9), 1400);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(9), 1400);
                     break;
                 case 9:
                     // Set camera.
@@ -224,7 +224,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(10), 6700);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(10), 6700);
                     break;
                 case 10:
                     // Set camera.
@@ -235,7 +235,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(11), 5700);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(11), 5700);
                     break;
                 case 11:
                     // Reset camera.
@@ -249,7 +249,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                     if (_valakas.getAI().getIntention() == AI_INTENTION_ACTIVE)
                         _valakas.moveToLocation(new Location(Rnd.get(211080, 214909), Rnd.get(-115841, -112822), -1662, 0), 0, false);
 
-                    _sleepCheckTask = ThreadPoolManager.getInstance().schedule(new CheckLastAttack(), 600000);
+                    _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 600000);
                     break;
 
                 // Death Movie
@@ -264,7 +264,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(13), 500);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(13), 500);
                     break;
                 case 13:
                     for (Player pc : _players)
@@ -274,7 +274,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(14), 3500);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(14), 3500);
                     break;
                 case 14:
                     for (Player pc : _players)
@@ -284,7 +284,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(15), 4500);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(15), 4500);
                     break;
                 case 15:
                     for (Player pc : _players)
@@ -294,7 +294,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(16), 500);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(16), 500);
                     break;
                 case 16:
                     for (Player pc : _players)
@@ -304,7 +304,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(17), 4600);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(17), 4600);
                     break;
                 case 17:
                     for (Player pc : _players)
@@ -314,7 +314,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(18), 750);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(18), 750);
                     break;
                 case 18:
                     for (Player pc : _players)
@@ -324,12 +324,12 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
                         } else
                             pc.leaveMovieMode();
 
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(19), 2500);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(19), 2500);
                     break;
                 case 19:
                     for (Player pc : _players) {
                         pc.leaveMovieMode();
-                        pc.altOnMagicUseTimer(pc, SkillTable.getInstance().getInfo(23312, 1));
+                        pc.altOnMagicUseTimer(pc, SkillTable.INSTANCE().getInfo(23312, 1));
                     }
                     break;
             }
@@ -343,7 +343,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
 
     private synchronized static void checkAnnihilated() {
         if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.getInstance().schedule(new onAnnihilated(), 5000);
+            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(new onAnnihilated(), 5000);
     }
 
     private static List<Player> getPlayersInside() {
@@ -370,7 +370,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
         if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && _zone != null && _zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
         else if (self.isNpc() && self.getNpcId() == Valakas)
-            ThreadPoolManager.getInstance().schedule(new SpawnDespawn(12), 1);
+            ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(12), 1);
     }
 
     private static void onValakasDie() {
@@ -404,7 +404,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
             _state.update();
         }
 
-        _intervalEndTask = ThreadPoolManager.getInstance().schedule(new IntervalEnd(), _state.getInterval());
+        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(new IntervalEnd(), _state.getInterval());
     }
 
     // Clean Valakas's lair.
@@ -476,7 +476,7 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
     // Setting Valakas spawn task.
     private synchronized static void setValakasSpawnTask() {
         if (_valakasSpawnTask == null)
-            _valakasSpawnTask = ThreadPoolManager.getInstance().schedule(new SpawnDespawn(1), FWV_APPTIMEOFVALAKAS);
+            _valakasSpawnTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(1), FWV_APPTIMEOFVALAKAS);
         //_entryLocked = true;
     }
 

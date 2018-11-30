@@ -7,18 +7,18 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Support for /partyinfo command
  */
-public class PartyInfo implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    81
-            };
+public final class PartyInfo implements IUserCommandHandler {
+    private static final int COMMAND_ID = 81;
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (id != COMMAND_IDS[0])
+        if (id != COMMAND_ID)
             return false;
 
         Party playerParty = activeChar.getParty();
@@ -59,7 +59,7 @@ public class PartyInfo implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public final List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_ID);
     }
 }

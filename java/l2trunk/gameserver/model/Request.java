@@ -49,7 +49,7 @@ public class Request extends MultiValueSet<String> {
 
     public Request setTimeout(long timeout) {
         _timeout = timeout > 0 ? System.currentTimeMillis() + timeout : 0;
-        _timeoutTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        _timeoutTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 timeout();

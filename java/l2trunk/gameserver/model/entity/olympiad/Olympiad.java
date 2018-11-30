@@ -22,15 +22,15 @@ import l2trunk.gameserver.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
 public class Olympiad {
-    //public static final int DEFAULT_POINTS = 50;
-    //private static final int WEEKLY_POINTS = 10;
-    private static final int TEAM_PARTY_SIZE = 3;
     public static final String OLYMPIAD_HTML_PATH = "olympiad/";
     public static final String CHAR_ID = "char_id";
     public static final String CLASS_ID = "class_id";
@@ -45,13 +45,17 @@ public class Olympiad {
     public static final String GAME_NOCLASSES_COUNT = "game_noclasses_count";
     public static final String GAME_TEAM_COUNT = "game_team_count";
     public static final Stadia[] STADIUMS = new Stadia[Config.OLYMPIAD_STADIAS_COUNT];
-    private static final Logger _log = LoggerFactory.getLogger(Olympiad.class);
-    public static Map<Integer, StatsSet> _nobles;
-    public static Map<Integer, Integer> _noblesRank;
-    public static List<StatsSet> _heroesToBe;
     public static final List<Integer> _nonClassBasedRegisters = new CopyOnWriteArrayList<>();
     public static final MultiValueIntegerMap _classBasedRegisters = new MultiValueIntegerMap();
     public static final MultiValueIntegerMap _teamBasedRegisters = new MultiValueIntegerMap();
+    //public static final int DEFAULT_POINTS = 50;
+    //private static final int WEEKLY_POINTS = 10;
+    private static final int TEAM_PARTY_SIZE = 3;
+    private static final Logger _log = LoggerFactory.getLogger(Olympiad.class);
+    private static final List<NpcInstance> _npcs = new ArrayList<>();
+    public static Map<Integer, StatsSet> _nobles;
+    public static Map<Integer, Integer> _noblesRank;
+    public static List<StatsSet> _heroesToBe;
     public static long _olympiadEnd;
     public static long _validationEnd;
     public static int _period;
@@ -68,7 +72,6 @@ public class Olympiad {
     private static long _compEnd;
     private static Calendar _compStart;
     private static ScheduledFuture<?> _scheduledOlympiadEnd;
-    private static final List<NpcInstance> _npcs = new ArrayList<>();
 
     public static void load() {
         _nobles = new ConcurrentHashMap<>();
@@ -106,7 +109,7 @@ public class Olympiad {
                 break;
             case 1:
                 _isOlympiadEnd = true;
-                _scheduledValdationTask = ThreadPoolManager.getInstance().schedule(new ValidationTask(), getMillisToValidationEnd());
+                _scheduledValdationTask = ThreadPoolManager.INSTANCE().schedule(new ValidationTask(), getMillisToValidationEnd());
                 break;
             default:
                 _log.warn("Olympiad System: Omg something went wrong in loading!! Period = " + _period);
@@ -181,13 +184,13 @@ public class Olympiad {
 
         if (_scheduledOlympiadEnd != null)
             _scheduledOlympiadEnd.cancel(false);
-        _scheduledOlympiadEnd = ThreadPoolManager.getInstance().schedule(new OlympiadEndTask(), getMillisToOlympiadEnd());
+        _scheduledOlympiadEnd = ThreadPoolManager.INSTANCE().schedule(new OlympiadEndTask(), getMillisToOlympiadEnd());
 
         updateCompStatus();
 
         if (_scheduledWeeklyTask != null)
             _scheduledWeeklyTask.cancel(false);
-        _scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
+        _scheduledWeeklyTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
     }
 
     public static synchronized boolean registerNoble(Player noble, CompType type) {
@@ -403,7 +406,7 @@ public class Olympiad {
         _log.info("Olympiad System: Competition Period Starts in " + numDays + " days, " + numHours + " hours and " + numMins + " mins.");
         _log.info("Olympiad System: Event starts/started: " + _compStart.getTime());
 
-        ThreadPoolManager.getInstance().schedule(new CompStartTask(), getMillisToCompBegin());
+        ThreadPoolManager.INSTANCE().schedule(new CompStartTask(), getMillisToCompBegin());
     }
 
     private static long getMillisToOlympiadEnd() {
@@ -569,7 +572,7 @@ public class Olympiad {
                 points = Config.ALT_OLY_RANK5_POINTS;
         }
 
-        if (player.isHero() || Hero.getInstance().isInactiveHero(player.getObjectId()))
+        if (player.isHero() || Hero.INSTANCE.isInactiveHero(player.getObjectId()))
             points += Config.ALT_OLY_HERO_POINTS;
 
         noble.set(POINTS_PAST, 0);

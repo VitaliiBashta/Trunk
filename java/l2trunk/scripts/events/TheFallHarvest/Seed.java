@@ -63,7 +63,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         npc.setAI(new SquashAI(npc));
         ((SquashInstance) npc).setSpawner(activeChar);
 
-        ThreadPoolManager.getInstance().schedule(new DeSpawnScheduleTimerTask(spawn), 180000);
+        ThreadPoolManager.INSTANCE().schedule(new DeSpawnScheduleTimerTask(spawn), 180000);
 
         return true;
     }

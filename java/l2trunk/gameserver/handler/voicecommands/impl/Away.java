@@ -8,15 +8,13 @@ import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Away implements IVoicedCommandHandler {
-    private final String[] VOICED_COMMANDS = {"away", "back"};
+    private final List<String> VOICED_COMMANDS = Arrays.asList("away", "back");
 
     public boolean useVoicedCommand(String command, Player activeChar, String text) {
-        if ((Config.AWAY_ONLY_FOR_PREMIUM) && (!activeChar.hasBonus())) {
-            activeChar.sendMessage(new CustomMessage("PremiumOnly", activeChar, new Object[0]));
-            return false;
-        }
-
         if (command.startsWith("away"))
             return away(activeChar, text);
 
@@ -30,12 +28,12 @@ public class Away implements IVoicedCommandHandler {
         SiegeEvent<?, ?> siege = (SiegeEvent<?, ?>) activeChar.getEvent(SiegeEvent.class);
 
         if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Already", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Already", activeChar));
             return false;
         }
 
         if ((!activeChar.isInZone(Zone.ZoneType.peace_zone)) && (Config.AWAY_PEACE_ZONE)) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.PieceOnly", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.PieceOnly", activeChar));
             return false;
         }
 
@@ -44,37 +42,37 @@ public class Away implements IVoicedCommandHandler {
         }
 
         if (siege != null) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Siege", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Siege", activeChar));
             return false;
         }
 
         if (activeChar.isCursedWeaponEquipped()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Cursed", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Cursed", activeChar));
             return false;
         }
 
         if (activeChar.isInDuel()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Duel", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Duel", activeChar));
             return false;
         }
 
         if ((activeChar.isInParty()) && (activeChar.getParty().isInDimensionalRift())) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Rift", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Rift", activeChar));
             return false;
         }
 
         if ((activeChar.isInOlympiadMode()) || (activeChar.getOlympiadGame() != null)) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Olympiad", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Olympiad", activeChar));
             return false;
         }
 
         if (activeChar.isInObserverMode()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Observer", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Observer", activeChar));
             return false;
         }
 
         if ((activeChar.getKarma() > 0) || (activeChar.getPvpFlag() > 0)) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Pvp", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Pvp", activeChar));
             return false;
         }
 
@@ -83,14 +81,14 @@ public class Away implements IVoicedCommandHandler {
         }
 
         if (text.length() > 10) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Text", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Text", activeChar));
             return false;
         }
 
         if (activeChar.getTarget() == null) {
-            AwayManager.getInstance().setAway(activeChar, text);
+            AwayManager.INSTANCE.setAway(activeChar, text);
         } else {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Target", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Target", activeChar));
             return false;
         }
 
@@ -99,14 +97,14 @@ public class Away implements IVoicedCommandHandler {
 
     private boolean back(Player activeChar) {
         if (!activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Not", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.handler.voicecommands.impl.Away.Not", activeChar));
             return false;
         }
-        AwayManager.getInstance().setBack(activeChar);
+        AwayManager.INSTANCE.setBack(activeChar);
         return true;
     }
 
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return VOICED_COMMANDS;
     }
 }

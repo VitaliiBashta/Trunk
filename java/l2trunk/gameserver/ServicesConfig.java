@@ -192,7 +192,7 @@ public final class ServicesConfig {
     }
 
     public static Map<Integer, Integer> getII(String name, HashMap<Integer, Integer> defaultValue) {
-        Map<Integer,Integer> values = new HashMap<>(defaultValue);
+        Map<Integer, Integer> values = new HashMap<>(defaultValue);
 
         String[] propertySplit = get(name, new String[0]);
         for (String element : propertySplit) {
@@ -210,7 +210,7 @@ public final class ServicesConfig {
     }
 
     public static Map<Integer, Double> getID(String name, HashMap<Integer, Double> defaultValue) {
-        Map<Integer,Double> values = new HashMap<>(defaultValue);
+        Map<Integer, Double> values = new HashMap<>(defaultValue);
 
         String[] propertySplit = get(name, new String[0]);
         for (String element : propertySplit) {
@@ -228,7 +228,7 @@ public final class ServicesConfig {
     }
 
     public static Map<Integer, Long> getIL(String name, HashMap<Integer, Long> defaultValue) {
-        Map<Integer,Long> values = new HashMap<>(defaultValue);
+        Map<Integer, Long> values = new HashMap<>(defaultValue);
 
         String[] propertySplit = get(name, new String[0]);
         for (String element : propertySplit) {

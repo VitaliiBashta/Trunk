@@ -7,6 +7,10 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.network.serverpackets.CastleSiegeInfo;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Command .siege which allows players to Participate to Castle Sieges or check their starting dates.
  */
@@ -40,11 +44,8 @@ public class CommandSiege implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
-        return new String[]
-                {
-                        "siege"
-                };
+    public List<String> getVoicedCommandList() {
+        return Collections.singletonList("siege");
     }
 
 }

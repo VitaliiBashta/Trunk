@@ -8,8 +8,8 @@ import java.util.List;
 
 public class FightClubTeam implements Serializable {
     private final int _index;
-    private String _name;
     private final List<FightClubPlayer> _players = new ArrayList<>();
+    private String _name;
     private Location _spawnLoc;
     private int _score;
 

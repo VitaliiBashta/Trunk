@@ -1,9 +1,9 @@
 package l2trunk.gameserver.model.base;
 
 public final class PlayerAccess {
-    public  boolean UseWarehouse = true;
-    public  boolean UseShop = true;
-    public  boolean CanPolymorph = false;
+    public boolean UseWarehouse = true;
+    public boolean UseShop = true;
+    public boolean CanPolymorph = false;
     // Сколько банов в день разрешено, -1 отключено
     public int BanChatCountPerDay = -1;
     // Выдавать модератору бонус раз в сутки, -1 отключено

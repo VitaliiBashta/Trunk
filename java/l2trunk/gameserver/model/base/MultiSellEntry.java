@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiSellEntry {
-    private int _entryId;
     private final List<MultiSellIngredient> _ingredients = new ArrayList<>();
     private final List<MultiSellIngredient> _production = new ArrayList<>();
+    private int _entryId;
     private long _tax;
 
     public MultiSellEntry() {

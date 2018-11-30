@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 public class BasicDataSource implements DataSource {
     private final PoolingDataSource _source;
     private final ObjectPool _connectionPool;
-
     protected BasicDataSource(String driver, String connectURI, String uname, String passwd, int maxActive, int maxIdle, int idleTimeOut, int idleTestPeriod, boolean poolPreparedStatements) {
         GenericObjectPool connectionPool = new GenericObjectPool(null);
 

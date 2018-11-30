@@ -25,7 +25,7 @@ public final class GuardoftheGrave extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.getInstance().schedule(new DeSpawnTask(), DESPAWN_TIME + Rnd.get(1, 30));
+        ThreadPoolManager.INSTANCE().schedule(new DeSpawnTask(), DESPAWN_TIME + Rnd.get(1, 30));
     }
 
     @Override

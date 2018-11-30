@@ -27,8 +27,8 @@ class NickColor extends Functions {
         final int perpage = 6;
         int counter = 0;
 
-        String html = HtmCache.getInstance().getNotNull("scripts/services/NickColor/index.htm", player);
-        String template = HtmCache.getInstance().getNotNull("scripts/services/NickColor/template.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull("scripts/services/NickColor/index.htm", player);
+        String template = HtmCache.INSTANCE.getNotNull("scripts/services/NickColor/template.htm", player);
         String block = "";
         String list = "";
         for (int i = (page - 1) * perpage; i < Config.SERVICES_CHANGE_NICK_COLOR_LIST.length; i++) {

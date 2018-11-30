@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -67,6 +66,20 @@ public class Scripts {
         } catch (Exception e) {
             _log.error("something went wrong: " + e);
         }
+    }
+
+    public static void main(String[] args) {
+//        Path path = Paths.get("java/l2trunk/scripts");
+//        System.out.println(path.toAbsolutePath());
+//        List<Path> scripts = FileUtils.getAllFiles(path, true, ".java");
+//        scripts.stream()
+//                .map(path::relativize)
+//                .map(Path::toString)
+//                .map(a -> a.substring(0, a.length()-5))
+//                .map(a -> a.replace("\\", "."))
+//                .forEach(System.out::println);
+        Scripts.getInstance().init2();
+//        Scripts.INSTANCE().load2();
     }
 
     /**
@@ -123,30 +136,6 @@ public class Scripts {
     }
 
     /**
-     * Creating new Instance of every Class<?> from _classes
-     */
-    public void init() {
-		if ((!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("127.0.0.1")) && (!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("178.33.90.147")))
-		{
-			return;
-		}
-        for (Class<?> clazz : _classes.values()) {
-            addHandlers(clazz);
-
-            if (Config.DONTLOADQUEST)
-                if (clazz.isInstance(Quest.class) )
-                    continue;
-
-            if (ClassUtils.isAssignable(clazz, ScriptFile.class))
-                try {
-                    ((ScriptFile) clazz.newInstance()).onLoad();
-                } catch (IllegalAccessException | InstantiationException e) {
-                    _log.error("Scripts: Failed running " + clazz.getName() + ".onLoad()", e);
-                }
-        }
-    }
-
-    /**
      * Shutting down every class instance in _classes
      */
 //    public void shutdown() {
@@ -164,6 +153,29 @@ public class Scripts {
 //    }
 
     /**
+     * Creating new Instance of every Class<?> from _classes
+     */
+    public void init() {
+        if ((!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("127.0.0.1")) && (!Config.EXTERNAL_HOSTNAME.equalsIgnoreCase("178.33.90.147"))) {
+            return;
+        }
+        for (Class<?> clazz : _classes.values()) {
+            addHandlers(clazz);
+
+            if (Config.DONTLOADQUEST)
+                if (clazz.isInstance(Quest.class))
+                    continue;
+
+            if (ClassUtils.isAssignable(clazz, ScriptFile.class))
+                try {
+                    ((ScriptFile) clazz.newInstance()).onLoad();
+                } catch (IllegalAccessException | InstantiationException e) {
+                    _log.error("Scripts: Failed running " + clazz.getName() + ".onLoad()", e);
+                }
+        }
+    }
+
+    /**
      * Calling Method in Script file with Player caller as NULL, arguments as NULL, variables as NULL
      *
      * @param className  Class to call
@@ -172,18 +184,6 @@ public class Scripts {
      */
     public Object callScripts(String className, String methodName) {
         return callScripts(null, className, methodName, null, null);
-    }
-
-    /**
-     * Calling Method in Script file with arguments, Player caller as NULL, variables as NULL
-     *
-     * @param className  Class to call
-     * @param methodName Method to call
-     * @param args       Arguments that method takes
-     * @return Object returned from method
-     */
-    public Object callScripts(String className, String methodName, Object[] args) {
-        return callScripts(null, className, methodName, args, null);
     }
 
     /**
@@ -224,6 +224,18 @@ public class Scripts {
 //    }
 
     /**
+     * Calling Method in Script file with arguments, Player caller as NULL, variables as NULL
+     *
+     * @param className  Class to call
+     * @param methodName Method to call
+     * @param args       Arguments that method takes
+     * @return Object returned from method
+     */
+    public Object callScripts(String className, String methodName, Object[] args) {
+        return callScripts(null, className, methodName, args, null);
+    }
+
+    /**
      * Calling Method in Script file with variables, argument and Player caller as NULL
      *
      * @param caller     Player calling class(can be used later with getSelf())
@@ -261,10 +273,10 @@ public class Scripts {
      */
     public Object callScripts(Player caller, String className, String methodName, Object[] args, Map<String, Object> variables) {
         Object o;
-        Class<?> clazz=null;
+        Class<?> clazz = null;
 
         try {
-            clazz = Class.forName("l2trunk.scripts."+className);
+            clazz = Class.forName("l2trunk.scripts." + className);
         } catch (ClassNotFoundException e) {
             try {
                 clazz = Class.forName(className);
@@ -320,44 +332,27 @@ public class Scripts {
         return ret;
     }
 
-    /**
-     * @return All script classes in Map<Class Name, Class<?>>
-     */
-//    public Map<String, Class<?>> getClasses() {
-//        return Collections.unmodifiableMap(_classes);
-//    }
-
-    public static class ScriptClassAndMethod {
-        public final String className;
-        public final String methodName;
-
-        ScriptClassAndMethod(String className, String methodName) {
-            this.className = className;
-            this.methodName = methodName;
-        }
-    }
-    public void init2 () {
+    public void init2() {
         Path path = Config.CONFIG.resolve("scripts.txt");
         String[] scripts = FileUtils.readFileToString(path).split("\r\n");
 //        Map <String, Class<?>> classes = new HashMap<>();
-        for (String script :scripts) {
-            Class<?> clazz = null;
-            int i =0;
+        for (String script : scripts) {
+            Class<?> clazz;
+            int i = 0;
             try {
                 clazz = Class.forName("l2trunk.scripts." + script);
 //                if (ClassUtils.isAssignable(clazz,Quest.class) )
 //                    continue;
                 _classes.put(script, clazz);
                 i++;
-                if (i > 50 )
+                if (i > 50)
                     System.out.println("loaded: " + i);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             } catch (Exception e) {
+                _log.error("not found class for " + script);
                 e.printStackTrace();
             }
         }
-        for ( Class<?> clazz:_classes.values()) {
+        for (Class<?> clazz : _classes.values()) {
             addHandlers(clazz);
             if (ClassUtils.isAssignable(clazz, ScriptFile.class)) {
                 if (Modifier.isAbstract(clazz.getModifiers())) continue;
@@ -373,28 +368,32 @@ public class Scripts {
     }
 
     public void load2() {
-        for ( Class<?> clazz:_classes.values()) {
+        for (Class<?> clazz : _classes.values()) {
             if (ClassUtils.isAssignable(clazz, ScriptFile.class))
                 try {
                     ((ScriptFile) clazz.newInstance()).onLoad();
                 } catch (IllegalAccessException | InstantiationException e) {
                     _log.error("Scripts: Failed running " + clazz.getName() + ".onLoad()", e);
                 } catch (Exception e) {
-                    _log.error("some error: " + e );
+                    _log.error("some error: " + e);
                 }
         }
     }
-    public static void main(String[] args) {
-//        Path path = Paths.get("java/l2trunk/scripts");
-//        System.out.println(path.toAbsolutePath());
-//        List<Path> scripts = FileUtils.getAllFiles(path, true, ".java");
-//        scripts.stream()
-//                .map(path::relativize)
-//                .map(Path::toString)
-//                .map(a -> a.substring(0, a.length()-5))
-//                .map(a -> a.replace("\\", "."))
-//                .forEach(System.out::println);
-        Scripts.getInstance().init2();
-//        Scripts.getInstance().load2();
+
+    /**
+     * @return All script classes in Map<Class Name, Class<?>>
+     */
+//    public Map<String, Class<?>> getClasses() {
+//        return Collections.unmodifiableMap(_classes);
+//    }
+
+    public static class ScriptClassAndMethod {
+        public final String className;
+        public final String methodName;
+
+        ScriptClassAndMethod(String className, String methodName) {
+            this.className = className;
+            this.methodName = methodName;
+        }
     }
 }

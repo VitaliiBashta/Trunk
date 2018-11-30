@@ -14,14 +14,14 @@ import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class Achievements {
+public enum Achievements {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(Achievements.class);
-    private static Achievements _instance;
     // id-max
     private final Map<Integer, Integer> _achievementMaxLevels = new HashMap<>();
     private final List<AchievementCategory> _achievementCategories = new LinkedList<>();
 
-    private Achievements() {
+    Achievements() {
         load();
     }
 
@@ -29,11 +29,6 @@ public class Achievements {
         return player.getAchievements(categoryId).values().stream().mapToInt(level -> level).sum();
     }
 
-    public static Achievements getInstance() {
-        if (_instance == null)
-            _instance = new Achievements();
-        return _instance;
-    }
 
     public void onBypass(Player player, String bypass, String[] cm) {
         if (bypass.startsWith("_bbs_achievements_cat")) {
@@ -52,7 +47,7 @@ public class Achievements {
         if (player == null)
             return;
 
-        String achievements = HtmCache.getInstance().getNotNull("achievements/Achievements.htm", player);
+        String achievements = HtmCache.INSTANCE.getNotNull("achievements/Achievements.htm", player);
 
         StringBuilder ac = new StringBuilder();
         for (AchievementCategory cat : _achievementCategories)
@@ -68,7 +63,7 @@ public class Achievements {
         if (player == null)
             return;
 
-        String FULL_PAGE = HtmCache.getInstance().getNotNull("achievements/inAchievements.htm", player);
+        String FULL_PAGE = HtmCache.INSTANCE.getNotNull("achievements/inAchievements.htm", player);
 
         boolean done;
         StringBuilder achievementsNotDone = new StringBuilder();
@@ -115,7 +110,7 @@ public class Achievements {
             if (!a.isDone(playerPoints)) {
                 done = false;
 
-                String notDoneAchievement = HtmCache.getInstance().getNullable("achievements/oneAchievement.htm", null);
+                String notDoneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm", null);
 
                 long needpoints = a.getPointsToComplete();
                 long diff = Math.max(0, needpoints - playerPoints);
@@ -143,7 +138,7 @@ public class Achievements {
             } else {
                 done = true;
 
-                String doneAchievement = HtmCache.getInstance().getNullable("achievements/oneAchievement.htm", null);
+                String doneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm", null);
 
                 doneAchievement = doneAchievement.replaceFirst("%fame%", "" + a.getFame());
                 doneAchievement = doneAchievement.replaceAll("%bar1%", "24");
@@ -321,6 +316,10 @@ public class Achievements {
             e.printStackTrace();
         }
 
+    }
+
+    public  void log(){
         _log.info("Achievement System: Loaded " + _achievementCategories.size() + " achievement categories and " + _achievementMaxLevels.size() + " achievements.");
+
     }
 }

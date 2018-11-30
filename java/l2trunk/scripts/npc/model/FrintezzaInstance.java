@@ -6,9 +6,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author n0nam3
- */
 public final class FrintezzaInstance extends NpcInstance {
     public FrintezzaInstance(int objectId, NpcTemplate template) {
         super(objectId, template);

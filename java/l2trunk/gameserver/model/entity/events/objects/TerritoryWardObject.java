@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.events.objects;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -28,6 +27,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment {
@@ -63,7 +63,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
             _wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
         }
 
-        ThreadPoolManager.getInstance().schedule(() -> {
+        ThreadPoolManager.INSTANCE().schedule(() -> {
             if (_wardNpcInstance.getZone(ZoneType.SIEGE) != null) {
                 _wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
             }
@@ -152,7 +152,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
         _wardNpcInstance.setCurrentHpMp(_wardNpcInstance.getMaxHp(), _wardNpcInstance.getMaxMp(), true);
         if (owner.isInZone(ZoneType.SIEGE)) {
             _wardNpcInstance.spawnMe(loc);
-            teleportBackTask = ThreadPoolManager.getInstance().schedule(new ReturnFlagThread(), RETURN_FLAG_DELAY);
+            teleportBackTask = ThreadPoolManager.INSTANCE().schedule(new ReturnFlagThread(), RETURN_FLAG_DELAY);
         } else {
             _wardNpcInstance.spawnMe(_location);
             runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
@@ -200,7 +200,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
             _startTimerTask.cancel(false);
             _startTimerTask = null;
         }
-        _startTimerTask = ThreadPoolManager.getInstance().schedule(new DropFlagInstance(player), Config.INTERVAL_FLAG_DROP * 1000);
+        _startTimerTask = ThreadPoolManager.INSTANCE().schedule(new DropFlagInstance(player), Config.INTERVAL_FLAG_DROP * 1000);
 
         player.sendMessage("You've leaved the battle zone! The flag will dissapear in " + Config.INTERVAL_FLAG_DROP + " seconds!");
 
@@ -216,13 +216,13 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
 
     @Override
     public boolean canCast(Player player, Skill skill) {
-        Skill[] skills = player.getActiveWeaponItem().getAttachedSkills();
+        List<Skill> skills = player.getActiveWeaponItem().getAttachedSkills();
         if (player.getActiveWeaponItem().getAttachedSkills() == null) {
             player.sendPacket(SystemMsg.THAT_WEAPON_CANNOT_USE_ANY_OTHER_SKILL_EXCEPT_THE_WEAPONS_SKILL);
             return false;
         }
 
-        if (!ArrayUtils.contains(skills, skill)) {
+        if (!skills.contains(skill)) {
             player.sendPacket(SystemMsg.THAT_WEAPON_CANNOT_USE_ANY_OTHER_SKILL_EXCEPT_THE_WEAPONS_SKILL);
             return false;
         }

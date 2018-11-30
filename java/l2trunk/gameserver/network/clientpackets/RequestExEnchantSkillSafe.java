@@ -61,7 +61,7 @@ public final class RequestExEnchantSkillSafe extends L2GameClientPacket {
             return;
         }
 
-        Skill skill = SkillTable.getInstance().getInfo(_skillId, enchantLevel);
+        Skill skill = SkillTable.INSTANCE.getInfo(_skillId, enchantLevel);
         if (skill == null)
             return;
 

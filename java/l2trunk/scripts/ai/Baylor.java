@@ -72,7 +72,7 @@ public final class Baylor extends DefaultAI {
 
     @Override
     public void onEvtSpawn() {
-        ThreadPoolManager.getInstance().schedule(new SpawnSocial(), 20000);
+        ThreadPoolManager.INSTANCE.schedule(new SpawnSocial(), 20000);
         super.onEvtSpawn();
     }
 

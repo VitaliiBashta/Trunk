@@ -4,8 +4,7 @@ import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.Location;
 
-public class TeleportLocation extends Location {
-    private static final long serialVersionUID = 1L;
+public final class TeleportLocation extends Location {
     private final long _price;
     private final ItemTemplate _item;
     private final int _name;

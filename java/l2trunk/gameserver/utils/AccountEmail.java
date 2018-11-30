@@ -40,14 +40,14 @@ public class AccountEmail {
     public static void checkEmail(Player player) {
         if (getEmail(player) == null) // Player has no e-mail set.
         {
-            String html = HtmCache.getInstance().getNotNull("custom/AccountEmail.htm", player);
+            String html = HtmCache.INSTANCE().getNotNull("custom/AccountEmail.htm", player);
             player.sendPacket(new TutorialShowHtml(html));
         }
     }
 
     public static void verifyEmail(Player player, String email) {
         if (email == null) {
-            String html = HtmCache.getInstance().getNotNull("custom/VerifyEmail.htm", player);
+            String html = HtmCache.INSTANCE().getNotNull("custom/VerifyEmail.htm", player);
             player.sendPacket(new TutorialShowHtml(html));
             if (!player.isBlocked())
                 player.block();

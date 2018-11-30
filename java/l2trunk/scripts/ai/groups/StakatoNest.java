@@ -40,9 +40,9 @@ public final class StakatoNest extends Fighter {
     private static final int ABSORB_MINION_CHANCE = 20;
 
     // Queen Shyeed Management
-    private static final Zone _zone_mob_buff = ReflectionUtils.getZone("[stakato_mob_buff]");
-    private static final Zone _zone_mob_buff_pc_display = ReflectionUtils.getZone("[stakato_mob_buff_display]");
-    private static final Zone _zone_pc_buff = ReflectionUtils.getZone("[stakato_pc_buff]");
+    private final Zone _zone_mob_buff = ReflectionUtils.getZone("[stakato_mob_buff]");
+    private  final Zone _zone_mob_buff_pc_display = ReflectionUtils.getZone("[stakato_mob_buff_display]");
+    private  final Zone _zone_pc_buff = ReflectionUtils.getZone("[stakato_pc_buff]");
     private static boolean _debuffed = false;
 
     private StakatoNest(NpcInstance actor) {
@@ -84,7 +84,7 @@ public final class StakatoNest extends Fighter {
                 _mob.abortAttack(true, false);
                 _mob.abortCast(true, false);
                 _mob.setHeading(PositionUtils.getHeadingTo(_mob, _follower));
-                _mob.doCast(SkillTable.getInstance().getInfo(4485, 1), _follower, false);
+                _mob.doCast(SkillTable.INSTANCE().getInfo(4485, 1), _follower, false);
                 _mob.setCurrentHp(_mob.getCurrentHp() + _follower.getCurrentHp(), false);
                 _follower.doDie(_follower);
                 _follower.deleteMe();
@@ -111,7 +111,7 @@ public final class StakatoNest extends Fighter {
             case SPIKED_STAKATO_BABY:
                 _leader = ((MinionInstance) actor).getLeader();
                 if (_leader != null && !_leader.isDead())
-                    ThreadPoolManager.getInstance().schedule(new ChangeMonster(SPIKE_STAKATO_NURSE_CHANGED, actor, killer), 3000L);
+                    ThreadPoolManager.INSTANCE().schedule(new ChangeMonster(SPIKE_STAKATO_NURSE_CHANGED, actor, killer), 3000L);
                 break;
             case MALE_SPIKED_STAKATO:
                 if (_minion == null)
@@ -123,7 +123,7 @@ public final class StakatoNest extends Fighter {
             case FEMALE_SPIKED_STAKATO:
                 _leader = ((MinionInstance) actor).getLeader();
                 if (_leader != null && !_leader.isDead())
-                    ThreadPoolManager.getInstance().schedule(new ChangeMonster(MALE_SPIKED_STAKATO_2, actor, killer), 3000L);
+                    ThreadPoolManager.INSTANCE().schedule(new ChangeMonster(MALE_SPIKED_STAKATO_2, actor, killer), 3000L);
                 break;
 			/*
 			case CANNIBALISTIC_STAKATO_CHIEF:

@@ -10,9 +10,9 @@ import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.FileFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,7 +25,7 @@ public interface IXmlReader {
     /**
      * The default file filter, ".xml" files only.
      */
-    XMLFilter XML_FILTER = new XMLFilter();
+    PathMatcher XML_FILTER = new XMLFilter();
 
     /**
      * This method can be used to load/reload the data.<br>
@@ -45,7 +45,7 @@ public interface IXmlReader {
      * @param f the XML file to parse.
      */
     default void parseFile(Path f) {
-        if (!getCurrentFileFilter().accept(f.toFile())) {
+        if (!getCurrentFileFilter().matches(f)) {
             LOGGER.warning(getClass().getSimpleName() + ": Could not parse " + f.toString() + " is not a file or it doesn't exist!");
             return;
         }
@@ -58,7 +58,7 @@ public interface IXmlReader {
             dbf.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
             final DocumentBuilder db = dbf.newDocumentBuilder();
             db.setErrorHandler(new XMLErrorHandler());
-            parseDocument(db.parse(f.toFile()), f);
+            parseDocument(db.parse(Files.newInputStream(f)), f);
         } catch (SAXParseException e) {
             LOGGER.warning(getClass().getSimpleName() + ": Could not parse file " + f.toString() + " at line " + e.getLineNumber() + ", column " + e.getColumnNumber() + ": " + e.getMessage());
         } catch (Exception e) {
@@ -109,9 +109,10 @@ public interface IXmlReader {
     /**
      * @param doc the current document to parse
      */
-    default void parseDocument(Document doc) {
-        LOGGER.severe("Parser not implemented!");
-    }
+    void parseDocument(Document doc);
+//    {
+//        LOGGER.severe("Parser not implemented!");
+//    }
 
     /**
      * Parses a boolean value.
@@ -552,7 +553,7 @@ public interface IXmlReader {
      *
      * @return the current file filter
      */
-    default FileFilter getCurrentFileFilter() {
+    default PathMatcher getCurrentFileFilter() {
         return XML_FILTER;
     }
 

@@ -3,11 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-/**
- * @author VISTALL
- * @date 16:23/12.04.2011
- */
-public class _738_DestroyKeyTargets extends Dominion_KillSpecialUnitQuest {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _738_DestroyKeyTargets extends Dominion_KillSpecialUnitQuest {
     public _738_DestroyKeyTargets() {
         super();
     }
@@ -38,8 +37,8 @@ public class _738_DestroyKeyTargets extends Dominion_KillSpecialUnitQuest {
     }
 
     @Override
-    protected ClassId[] getTargetClassIds() {
-        return new ClassId[]{
+    protected List<ClassId> getTargetClassIds() {
+        return Arrays.asList(
                 ClassId.necromancer,
                 ClassId.swordSinger,
                 ClassId.bladedancer,
@@ -52,6 +51,6 @@ public class _738_DestroyKeyTargets extends Dominion_KillSpecialUnitQuest {
                 ClassId.maestro,
                 ClassId.inspector,
                 ClassId.judicator
-        };
+        );
     }
 }

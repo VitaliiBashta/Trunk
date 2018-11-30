@@ -178,8 +178,8 @@ public class OlympiadManagerInstance extends NpcInstance {
                     player.sendPacket(new ExHeroList());
                     break;
                 case 5:
-                    if (Hero.getInstance().isInactiveHero(player.getObjectId())) {
-                        Hero.getInstance().activateHero(player);
+                    if (Hero.INSTANCE.isInactiveHero(player.getObjectId())) {
+                        Hero.INSTANCE.activateHero(player);
                         reply.setFile(Olympiad.OLYMPIAD_HTML_PATH + "monument_give_hero.htm");
                     } else
                         reply.setFile(Olympiad.OLYMPIAD_HTML_PATH + "monument_dont_hero.htm");

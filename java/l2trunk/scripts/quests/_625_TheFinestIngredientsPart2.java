@@ -66,7 +66,7 @@ public class _625_TheFinestIngredientsPart2 extends Quest implements ScriptFile 
                 return "yetis_table_q0625_0202.htm";
             st.takeItems(Food_for_Bumbalump, 1);
             st.setCond(2);
-            ThreadPoolManager.getInstance().schedule(new BumbalumpSpawner(), 1000);
+            ThreadPoolManager.INSTANCE().schedule(new BumbalumpSpawner(), 1000);
         }
 
         return event;
@@ -112,7 +112,7 @@ public class _625_TheFinestIngredientsPart2 extends Quest implements ScriptFile 
             if (cond == 2) {
                 if (BumbalumpSpawned())
                     return "yetis_table_q0625_0202.htm";
-                ThreadPoolManager.getInstance().schedule(new BumbalumpSpawner(), 1000);
+                ThreadPoolManager.INSTANCE().schedule(new BumbalumpSpawner(), 1000);
                 return "yetis_table_q0625_0201.htm";
             }
             if (cond == 3)
@@ -200,7 +200,7 @@ public class _625_TheFinestIngredientsPart2 extends Quest implements ScriptFile 
                 tiks++;
                 if (tiks == 1200)
                     Say("May the gods forever condemn you! Your power weakens!");
-                ThreadPoolManager.getInstance().schedule(this, 1000);
+                ThreadPoolManager.INSTANCE().schedule(this, 1000);
                 return;
             }
             _spawn.deleteAll();

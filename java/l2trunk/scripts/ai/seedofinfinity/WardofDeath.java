@@ -21,7 +21,7 @@ public final class WardofDeath extends DefaultAI {
             if (actor.getNpcId() == 18667) // trap skill
             {
                 if (!avoidAttack) {
-                    actor.doCast(SkillTable.getInstance().getInfo(Rnd.get(5423, 5424), 9), actor, false);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(Rnd.get(5423, 5424), 9), actor, false);
                     actor.doDie(null);
                 }
                 return true;

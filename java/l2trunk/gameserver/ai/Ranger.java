@@ -37,7 +37,7 @@ public class Ranger extends DefaultAI {
         posX += signx * range;
         posY += signy * range;
         posZ = GeoEngine.getHeight(posX, posY, posZ, actor.getGeoIndex());
-        Location newLocation = new Location(posX,posY,posZ);
+        Location newLocation = new Location(posX, posY, posZ);
 
         if (GeoEngine.canMoveToCoord(oldLocation, newLocation, actor.getGeoIndex())) {
             addTaskMove(newLocation, false);

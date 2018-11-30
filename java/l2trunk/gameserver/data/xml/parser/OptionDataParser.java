@@ -50,12 +50,12 @@ public final class OptionDataParser extends StatParser<OptionDataHolder> {
                         int id = Integer.parseInt(nextElement.attributeValue("id"));
                         int level = Integer.parseInt(nextElement.attributeValue("level"));
 
-                        Skill skill = SkillTable.getInstance().getInfo(id, level);
+                        Skill skill = SkillTable.INSTANCE().getInfo(id, level);
 
                         if (skill != null)
                             template.addSkill(skill);
                         else
-                            info("Skill not found(" + id + "," + level + ") for option data:" + template.getId() + "; file:" + getCurrentFileName());
+                            LOG.info("Skill not found(" + id + "," + level + ") for option data:" + template.getId() + "; file:" + getCurrentFileName());
                     }
                 }
             }

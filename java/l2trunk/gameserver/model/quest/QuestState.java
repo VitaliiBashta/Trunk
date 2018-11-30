@@ -26,10 +26,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class QuestState {
-    private static final int RESTART_HOUR = 6;
-    private static final int RESTART_MINUTES = 30;
     public static final String VAR_COND = "cond";
     public final static QuestState[] EMPTY_ARRAY = new QuestState[0];
+    private static final int RESTART_HOUR = 6;
+    private static final int RESTART_MINUTES = 30;
     private static final Logger _log = LoggerFactory.getLogger(QuestState.class);
     private final Player _player;
     private final Quest _quest;
@@ -427,15 +427,14 @@ public final class QuestState {
 
     private double getRateQuestsDrop() {
         Player player = getPlayer();
-        double Bonus = player == null ? 1. : player.getBonus().getQuestDropRate();
         if (Config.ALLOW_ADDONS_CONFIG)
-            return Config.RATE_QUESTS_DROP * Bonus * AddonsConfig.getQuestDropRates(getQuest());
-        return Config.RATE_QUESTS_DROP * Bonus;
+            return Config.RATE_QUESTS_DROP *  AddonsConfig.getQuestDropRates(getQuest());
+        return Config.RATE_QUESTS_DROP ;
     }
 
     public double getRateQuestsReward() {
         Player player = getPlayer();
-        double Bonus = player == null ? 1. : player.getBonus().getQuestRewardRate();
+        double Bonus =  1.;
         if (Config.ALLOW_ADDONS_CONFIG)
             return Config.RATE_QUESTS_REWARD * Bonus * AddonsConfig.getQuestRewardRates(getQuest());
         return Config.RATE_QUESTS_REWARD * Bonus;
@@ -663,7 +662,7 @@ public final class QuestState {
         Player player = getPlayer();
         if (player == null)
             return;
-        String text = HtmCache.getInstance().getNotNull("quests/_255_Tutorial/" + html, player);
+        String text = HtmCache.INSTANCE.getNotNull("quests/_255_Tutorial/" + html, player);
         player.sendPacket(new TutorialShowHtml(text));
     }
 
@@ -685,7 +684,7 @@ public final class QuestState {
 
             // Alexander - If the html has crests then we should delay the tutorial html so the images reach their destination before the htm
             if (html.startsWith("CREST")) {
-                ThreadPoolManager.getInstance().schedule(new TutorialShowThread(html.substring(5)), 200);
+                ThreadPoolManager.INSTANCE.schedule(new TutorialShowThread(html.substring(5)), 200);
             } else {
                 _player.sendPacket(new TutorialShowHtml(html));
                 _player.addQuickVar("watchingTutorial", true);

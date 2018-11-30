@@ -100,7 +100,7 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
 
     private void stopEndTask() {
         _endTask.cancel(false);
-        _endTask = ThreadPoolManager.getInstance().schedule(new EndTask(), 3000);
+        _endTask = ThreadPoolManager.INSTANCE().schedule(new EndTask(), 3000);
     }
 
     /**
@@ -108,8 +108,8 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
      */
     private void initBattle() {
         final Object[] args = {player1, player2, reflection};
-        _startTask = ThreadPoolManager.getInstance().scheduleAtFixedDelay(new StartTask(player1, player2), Config.ARENA_TELEPORT_DELAY * 1000, 1000);
-        _endTask = ThreadPoolManager.getInstance().schedule(new EndTask(), ((Config.ARENA_TELEPORT_DELAY + Config.FIGHT_TIME)) * 1000);
+        _startTask = ThreadPoolManager.INSTANCE().scheduleAtFixedDelay(new StartTask(player1, player2), Config.ARENA_TELEPORT_DELAY * 1000, 1000);
+        _endTask = ThreadPoolManager.INSTANCE().schedule(new EndTask(), ((Config.ARENA_TELEPORT_DELAY + Config.FIGHT_TIME)) * 1000);
         sayToPlayers("scripts.events.fightclub.TeleportThrough", Config.ARENA_TELEPORT_DELAY, false, player1, player2);
         executeTask(CLASS_NAME, "resurrectPlayers", args, Config.ARENA_TELEPORT_DELAY * 1000 - 600);
         executeTask(CLASS_NAME, "healPlayers", args, Config.ARENA_TELEPORT_DELAY * 1000 - 500);
@@ -293,7 +293,7 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
             Player player = actor.getPlayer();
             if (!_inBattle.contains(player.getStoredId()))
                 ;
-            ThreadPoolManager.getInstance().schedule(new TeleportTask(player, new Location(147451, 46728, -3410)), 3000);
+            ThreadPoolManager.INSTANCE().schedule(new TeleportTask(player, new Location(147451, 46728, -3410)), 3000);
         }
 
         @Override
@@ -308,7 +308,7 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
                 int x = (int) (actor.getX() + 50 * Math.sin(radian));
                 int y = (int) (actor.getY() - 50 * Math.cos(radian));
                 int z = actor.getZ();
-                ThreadPoolManager.getInstance().schedule(new TeleportTask(player, new Location(x, y, z)), 3000);
+                ThreadPoolManager.INSTANCE().schedule(new TeleportTask(player, new Location(x, y, z)), 3000);
             }
         }
     }

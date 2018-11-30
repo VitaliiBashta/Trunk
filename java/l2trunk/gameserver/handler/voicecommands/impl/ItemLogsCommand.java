@@ -5,15 +5,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.itemLogs.CCPItemLogs;
 import l2trunk.gameserver.utils.Util;
 
+import java.util.Collections;
+import java.util.List;
+
 public class ItemLogsCommand implements IVoicedCommandHandler {
-    private static final String[] _commandList =
-            {
-                    "itemlogs"
-            };
 
     @Override
-    public String[] getVoicedCommandList() {
-        return _commandList;
+    public List<String> getVoicedCommandList() {
+        return Collections.singletonList("itemlogs");
     }
 
     @Override

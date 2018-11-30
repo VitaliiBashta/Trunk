@@ -80,7 +80,7 @@ public class RestartPointParser extends AbstractFileParser<MapRegionManager> {
                         Polygon shape = ZoneParser.parsePolygon(n);
 
                         if (!shape.validate())
-                            error("RestartPointParser: invalid territory data : " + shape + "!");
+                            LOG.error("RestartPointParser: invalid territory data : " + shape + "!");
 
                         if (territory == null)
                             territory = new Territory();

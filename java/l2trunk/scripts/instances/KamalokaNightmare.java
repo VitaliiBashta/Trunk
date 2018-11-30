@@ -99,7 +99,7 @@ public class KamalokaNightmare extends Reflection {
             _expireTask = null;
         }
 
-        _expireTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        _expireTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 try {

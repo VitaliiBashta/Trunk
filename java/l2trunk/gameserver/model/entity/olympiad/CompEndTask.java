@@ -24,11 +24,11 @@ class CompEndTask extends RunnableImpl {
 
             // Если остались игры, ждем их завершения еще одну минуту
             if (manager != null && !manager.getOlympiadGames().isEmpty()) {
-                ThreadPoolManager.getInstance().schedule(new CompEndTask(), 60000);
+                ThreadPoolManager.INSTANCE().schedule(new CompEndTask(), 60000);
                 return;
             }
 
-            Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
+            Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
             _log.info("Olympiad System: Olympiad Game Ended");
             OlympiadDatabase.save();
         } catch (Exception e) {

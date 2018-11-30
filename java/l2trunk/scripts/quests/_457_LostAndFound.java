@@ -48,7 +48,7 @@ public class _457_LostAndFound extends Quest implements ScriptFile {
                 if (FollowTask != null)
                     FollowTask.cancel(false);
                 FollowTask = null;
-                FollowTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Follow(npc, player, st), 10, 1000);
+                FollowTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new Follow(npc, player, st), 10, 1000);
             }
         }
         return event;

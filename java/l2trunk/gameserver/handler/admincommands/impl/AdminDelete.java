@@ -22,7 +22,7 @@ public class AdminDelete implements IAdminCommandHandler {
 
         switch (command) {
             case admin_delete:
-                GameObject obj = wordList.length == 1 ? activeChar.getTarget() : GameObjectsStorage.getNpc(NumberUtils.toInt(wordList[1],0));
+                GameObject obj = wordList.length == 1 ? activeChar.getTarget() : GameObjectsStorage.getNpc(NumberUtils.toInt(wordList[1], 0));
                 if (obj != null && obj.isNpc()) {
                     NpcInstance target = (NpcInstance) obj;
                     if (Config.SAVE_GM_SPAWN)

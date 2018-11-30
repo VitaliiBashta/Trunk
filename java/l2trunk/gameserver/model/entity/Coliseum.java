@@ -93,16 +93,16 @@ public final class Coliseum {
     private void startBattle(Party party, Party party2) {
         if (!isInUse()) {
             if (getPreviusWinners() == null) {
-                ThreadPoolManager.getInstance().schedule(new StartBattle(party, party2), 10000L);
+                ThreadPoolManager.INSTANCE().schedule(new StartBattle(party, party2), 10000L);
             } else {
-                ThreadPoolManager.getInstance().schedule(new StartBattle(party, getPreviusWinners()), 10000L);
+                ThreadPoolManager.INSTANCE().schedule(new StartBattle(party, getPreviusWinners()), 10000L);
                 setIsWaitingRoom1Free(true);
                 Location teleloc = getFreeWaitingRoom();
                 setIsWaitingRoom2Free(true);
                 teleportToWaitingRoom(party2, teleloc);
             }
         } else {
-            ThreadPoolManager.getInstance().schedule(new TryStart(party, party2), 300000L);
+            ThreadPoolManager.INSTANCE().schedule(new TryStart(party, party2), 300000L);
         }
     }
 
@@ -155,7 +155,7 @@ public final class Coliseum {
     }
 
     private void StopBattle(Party party, Party party2, TeamType winner, long period) {
-        ThreadPoolManager.getInstance().schedule(new StopBattle(party, party2, winner), period);
+        ThreadPoolManager.INSTANCE().schedule(new StopBattle(party, party2, winner), period);
     }
 
     private void teleportPlayers(Party party, Party party2) {

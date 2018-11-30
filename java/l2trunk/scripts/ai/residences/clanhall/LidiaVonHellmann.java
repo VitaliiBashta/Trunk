@@ -11,8 +11,8 @@ import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 
 public class LidiaVonHellmann extends SiegeGuardFighter {
-    private  final Skill DRAIN_SKILL = SkillTable.getInstance().getInfo(4999, 1);
-    private  final Skill DAMAGE_SKILL = SkillTable.getInstance().getInfo(4998, 1);
+    private  final Skill DRAIN_SKILL = SkillTable.INSTANCE().getInfo(4999, 1);
+    private  final Skill DAMAGE_SKILL = SkillTable.INSTANCE().getInfo(4998, 1);
 
     public LidiaVonHellmann(NpcInstance actor) {
         super(actor);

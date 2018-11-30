@@ -13,17 +13,17 @@ import l2trunk.gameserver.scripts.ScriptFile;
  * Вызов всплывающего окна из комьюнити - [bypass _bbsscripts:services.community.ShowInfo:show info_folder info_page|Имя папки, Имя страницы]
  **/
 
-public class ShowInfo extends Functions implements ScriptFile {
+public final class ShowInfo extends Functions implements ScriptFile {
     public void show(String[] param) {
         Player player = getSelf();
-        String info_folder = "";
-        String info_page = "";
+        String info_folder;
+        String info_page;
 
         if (player == null)
             return;
 
         if (param.length != 2) {
-            String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "wiki/error_page.htm", player);
+            String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "wiki/error_page.htm", player);
             show(html, player);
             return;
         }
@@ -31,7 +31,7 @@ public class ShowInfo extends Functions implements ScriptFile {
         info_folder = String.valueOf(param[0]);
         info_page = String.valueOf(param[1]);
 
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "wiki/" + info_folder + "/" + info_page + ".htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "wiki/" + info_folder + "/" + info_page + ".htm", player);
         show(html, player);
     }
 

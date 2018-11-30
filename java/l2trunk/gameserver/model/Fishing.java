@@ -26,7 +26,7 @@ public class Fishing {
     private final static int FISHING_COMBAT = 3;
     private final Player _fisher;
     private final AtomicInteger _state;
-
+    private final Location _fishLoc = new Location();
     private int _time;
     private int _stop;
     private int _gooduse;
@@ -34,13 +34,9 @@ public class Fishing {
     private int _combatMode = -1;
     private int _deceptiveMode;
     private int _fishCurHP;
-
     private FishTemplate _fish;
     private int _lureId;
-
     private Future<?> _fishingTask;
-
-    private final Location _fishLoc = new Location();
 
     public Fishing(Player fisher) {
         _fisher = fisher;
@@ -423,8 +419,6 @@ public class Fishing {
 
     /**
      * Заканчиваем рыбалку, в случае удачи или неудачи, завершаем текущую задачу
-     *
-     * @param win
      */
     private void endFishing(boolean win) {
         if (!_state.compareAndSet(FISHING_COMBAT, FISHING_NONE))
@@ -470,7 +464,7 @@ public class Fishing {
                 break;
         }
 
-        _fishingTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new LookingForFishTask(), 10000L, checkDelay);
+        _fishingTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new LookingForFishTask(), 10000L, checkDelay);
     }
 
     public boolean isInCombat() {
@@ -502,7 +496,7 @@ public class Fishing {
         _fisher.broadcastPacket(efsc);
         _fisher.sendPacket(SystemMsg.SUCCEEDED_IN_GETTING_A_BITE);
 
-        _fishingTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new FishCombatTask(), 1000L, 1000L);
+        _fishingTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new FishCombatTask(), 1000L, 1000L);
     }
 
     private void changeHp(int hp, int pen) {
@@ -533,7 +527,7 @@ public class Fishing {
                 _fisher.sendPacket(SystemMsg.SUCCEEDED_IN_FISHING);
                 //TODO [G1ta0] добавить проверку на перевес
                 ItemFunctions.addItem(_fisher, _fish.getId(), 1, true, "Fishing");
-                FishingChampionShipManager.getInstance().newFish(_fisher, _lureId);
+                FishingChampionShipManager.INSTANCE.newFish(_fisher, _lureId);
             }
 
         endFishing(win);

@@ -146,7 +146,7 @@ public class FreyaNormal extends Reflection {
                     qs.setCond(6);
                 player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_OPENING);
             }
-            ThreadPoolManager.getInstance().schedule(new PreStage(), 55000L); // 53.5sec for movie
+            ThreadPoolManager.INSTANCE.schedule(new PreStage(), 55000L); // 53.5sec for movie
         }
     }
 
@@ -160,7 +160,7 @@ public class FreyaNormal extends Reflection {
             //spawning few guards
             for (int i = 0; i < 10; i++)
                 addSpawnWithoutRespawn(IceKnightNormal, Territory.getRandomLoc(centralRoom, getGeoIndex()), 0);
-            ThreadPoolManager.getInstance().schedule(new FirstStage(), 40000L);
+            ThreadPoolManager.INSTANCE.schedule(new FirstStage(), 40000L);
         }
     }
 
@@ -174,7 +174,7 @@ public class FreyaNormal extends Reflection {
             //Spawning Freya Throne
             NpcInstance freyaTrhone = addSpawnWithoutRespawn(FreyaThrone, new Location(114720, -117085, -11088, 15956), 0);
             freyaTrhone.addListener(_deathListener);
-            firstStageGuardSpawn = ThreadPoolManager.getInstance().scheduleAtFixedRate(new GuardSpawnTask(1), 2000L, 30000L);
+            firstStageGuardSpawn = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GuardSpawnTask(1), 2000L, 30000L);
         }
     }
 
@@ -238,16 +238,15 @@ public class FreyaNormal extends Reflection {
 
             for (Player p : getPlayers())
                 p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_A);
-            ThreadPoolManager.getInstance().schedule(new TimerToSecondStage(), 22000L); // 22.1 secs for movie
+            ThreadPoolManager.INSTANCE.schedule(new TimerToSecondStage(), 22000L); // 22.1 secs for movie
         }
     }
 
     private class TimerToSecondStage extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (Player p : getPlayers())
-                p.sendPacket(new ExSendUIEvent(p, false, false, 60, 0, NpcString.TIME_REMAINING_UNTIL_NEXT_BATTLE));
-            ThreadPoolManager.getInstance().schedule(new SecondStage(), 60000L);
+            getPlayers().forEach( p -> p.sendPacket(new ExSendUIEvent(p, false, false, 60, 0, NpcString.TIME_REMAINING_UNTIL_NEXT_BATTLE)));
+            ThreadPoolManager.INSTANCE.schedule(new SecondStage(), 60000L);
         }
     }
 
@@ -258,8 +257,8 @@ public class FreyaNormal extends Reflection {
             manageDamageZone(3, false);
             for (Player p : getPlayers())
                 p.sendPacket(new ExShowScreenMessage(NpcString.BEGIN_STAGE_2_FREYA, 6000, ScreenMessageAlign.TOP_CENTER, true, 1, -1, true));
-            secondStageGuardSpawn = ThreadPoolManager.getInstance().scheduleAtFixedRate(new GuardSpawnTask(2), 2000L, 30000L);
-            ThreadPoolManager.getInstance().schedule(new KnightCaptainSpawnMovie(), 60000L);
+            secondStageGuardSpawn = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GuardSpawnTask(2), 2000L, 30000L);
+            ThreadPoolManager.INSTANCE.schedule(new KnightCaptainSpawnMovie(), 60000L);
         }
     }
 
@@ -270,7 +269,7 @@ public class FreyaNormal extends Reflection {
                 n.block();
             for (Player p : getPlayers())
                 p.showQuestMovie(ExStartScenePlayer.SCENE_ICE_HEAVYKNIGHT_SPAWN);
-            ThreadPoolManager.getInstance().schedule(new KnightCaptainSpawn(), 7500L);
+            ThreadPoolManager.INSTANCE.schedule(new KnightCaptainSpawn(), 7500L);
         }
     }
 
@@ -294,7 +293,7 @@ public class FreyaNormal extends Reflection {
             for (NpcInstance n : getNpcs())
                 if (n.getNpcId() != Sirra && n.getNpcId() != IceCastleController)
                     n.deleteMe();
-            ThreadPoolManager.getInstance().schedule(new PreThirdStageM(), 60000L);
+            ThreadPoolManager.INSTANCE.schedule(new PreThirdStageM(), 60000L);
         }
     }
 
@@ -303,7 +302,7 @@ public class FreyaNormal extends Reflection {
         public void runImpl() {
             for (Player p : getPlayers())
                 p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_B);
-            ThreadPoolManager.getInstance().schedule(new ThirdStage(), 22000L); // 21.5 secs for movie
+            ThreadPoolManager.INSTANCE.schedule(new ThirdStage(), 22000L); // 21.5 secs for movie
         }
     }
 
@@ -318,7 +317,7 @@ public class FreyaNormal extends Reflection {
                 p.sendPacket(new ExShowScreenMessage(NpcString.BEGIN_STAGE_3_FREYA, 6000, ScreenMessageAlign.TOP_CENTER, true, 1, -1, true));
                 p.sendPacket(new ExChangeClientEffectInfo(2));
             }
-            thirdStageGuardSpawn = ThreadPoolManager.getInstance().scheduleAtFixedRate(new GuardSpawnTask(3), 2000L, 30000L);
+            thirdStageGuardSpawn = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GuardSpawnTask(3), 2000L, 30000L);
             NpcInstance freyaStand = addSpawnWithoutRespawn(FreyaStandNormal, new Location(114720, -117085, -11088, 15956), 0);
             freyaStand.addListener(_currentHpListener);
             freyaStand.addListener(_deathListener);
@@ -334,7 +333,7 @@ public class FreyaNormal extends Reflection {
                 p.block();
                 p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_KEGOR_INTRUSION);
             }
-            ThreadPoolManager.getInstance().schedule(new ForthStage(), 28000L); // 27 secs for movie
+            ThreadPoolManager.INSTANCE.schedule(new ForthStage(), 28000L); // 27 secs for movie
         }
     }
 
@@ -373,7 +372,7 @@ public class FreyaNormal extends Reflection {
                     qs.setCond(7);
                 p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_ENDING_A);
             }
-            ThreadPoolManager.getInstance().schedule(new ConclusionMovie(), 16200L); // 16 secs for movie
+            ThreadPoolManager.INSTANCE.schedule(new ConclusionMovie(), 16200L); // 16 secs for movie
         }
     }
 
@@ -382,7 +381,7 @@ public class FreyaNormal extends Reflection {
         public void runImpl() {
             for (Player p : getPlayers())
                 p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_ENDING_B);
-            ThreadPoolManager.getInstance().schedule(new InstanceConclusion(), 57000L); // 56 secs for movie
+            ThreadPoolManager.INSTANCE.schedule(new InstanceConclusion(), 57000L); // 56 secs for movie
         }
     }
 
@@ -400,12 +399,12 @@ public class FreyaNormal extends Reflection {
         @Override
         public void onDeath(Creature self, Creature killer) {
             if (self.isNpc() && self.getNpcId() == FreyaThrone) {
-                ThreadPoolManager.getInstance().schedule(new PreSecondStage(), 10);
+                ThreadPoolManager.INSTANCE.schedule(new PreSecondStage(), 10);
                 self.deleteMe();
             } else if (self.isNpc() && self.getNpcId() == IceKnightLeaderNormal)
-                ThreadPoolManager.getInstance().schedule(new PreThirdStage(), 10);
+                ThreadPoolManager.INSTANCE.schedule(new PreThirdStage(), 10);
             else if (self.isNpc() && self.getNpcId() == FreyaStandNormal)
-                ThreadPoolManager.getInstance().schedule(new FreyaDeathStage(), 10);
+                ThreadPoolManager.INSTANCE.schedule(new FreyaDeathStage(), 10);
         }
     }
 
@@ -418,7 +417,7 @@ public class FreyaNormal extends Reflection {
             double maxHp = actor.getMaxHp();
             if (!_freyaSlayed && newHp <= 0.2 * maxHp) {
                 _freyaSlayed = true;
-                ThreadPoolManager.getInstance().schedule(new PreForthStage(), 10);
+                ThreadPoolManager.INSTANCE.schedule(new PreForthStage(), 10);
                 actor.removeListener(_currentHpListener);
             }
         }
@@ -435,7 +434,7 @@ public class FreyaNormal extends Reflection {
                 return;
 
             if (checkstartCond(raidplayers.incrementAndGet())) {
-                ThreadPoolManager.getInstance().schedule(new StartNormalFreya(), 30000L);
+                ThreadPoolManager.INSTANCE.schedule(new StartNormalFreya(), 30000L);
                 _startLaunched = true;
             }
         }

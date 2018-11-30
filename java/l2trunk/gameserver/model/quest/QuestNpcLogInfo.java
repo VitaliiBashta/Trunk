@@ -1,17 +1,23 @@
 package l2trunk.gameserver.model.quest;
 
-public class QuestNpcLogInfo {
-    private final int[] _npcIds;
+import java.util.ArrayList;
+import java.util.List;
+
+public final class QuestNpcLogInfo {
+    private final List<Integer> _npcIds;
     private final String _varName;
     private final int _maxCount;
 
-    public QuestNpcLogInfo(int[] npcIds, String varName, int maxCount) {
-        _npcIds = npcIds;
+    QuestNpcLogInfo(int[] npcIds, String varName, int maxCount) {
+        _npcIds = new ArrayList<>();
+        for (int id : npcIds) {
+            _npcIds.add(id);
+        }
         _varName = varName;
         _maxCount = maxCount;
     }
 
-    public int[] getNpcIds() {
+    public List<Integer> getNpcIds() {
         return _npcIds;
     }
 

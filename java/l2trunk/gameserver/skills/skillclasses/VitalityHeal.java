@@ -16,7 +16,7 @@ public class VitalityHeal extends Skill {
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
         int fullPoints = Config.VITALITY_LEVELS[4];
-        double percent = _power;
+        double percent = power;
 
         for (Creature target : targets) {
             if (target.isPlayer()) {

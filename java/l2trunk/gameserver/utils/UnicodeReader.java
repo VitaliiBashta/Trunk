@@ -5,8 +5,8 @@ import java.io.*;
 class UnicodeReader extends Reader {
     private static final int BOM_SIZE = 4;
     private final PushbackInputStream internalIn;
-    private InputStreamReader internalIn2 = null;
     private final String defaultEnc;
+    private InputStreamReader internalIn2 = null;
 
     UnicodeReader(InputStream in, String defaultEnc) {
         internalIn = new PushbackInputStream(in, BOM_SIZE);

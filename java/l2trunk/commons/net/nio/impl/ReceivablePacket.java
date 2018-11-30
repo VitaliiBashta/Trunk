@@ -2,9 +2,8 @@ package l2trunk.commons.net.nio.impl;
 
 import java.nio.ByteBuffer;
 
-@SuppressWarnings("rawtypes")
 public abstract class ReceivablePacket<T extends MMOClient> extends l2trunk.commons.net.nio.ReceivablePacket<T> {
-    protected T _client;
+    protected T client;
     protected ByteBuffer _buf;
 
     @Override
@@ -18,11 +17,11 @@ public abstract class ReceivablePacket<T extends MMOClient> extends l2trunk.comm
 
     @Override
     public T getClient() {
-        return _client;
+        return client;
     }
 
     void setClient(T client) {
-        _client = client;
+        this.client = client;
     }
 
     protected abstract boolean read();

@@ -53,7 +53,7 @@ public final class QueenAntNurse extends Priest {
             return false;
 
         if (!top_desire_target.isCurrentHpFull()) {
-            Skill skill = _healSkills[Rnd.get(_healSkills.length)];
+            Skill skill = _healSkills.get(Rnd.get(_healSkills.size()));
             if (skill.getAOECastRange() < actor.getDistance(top_desire_target))
                 moveOrTeleportToLocation(Location.findFrontPosition(top_desire_target, actor, skill.getAOECastRange() - 30, skill.getAOECastRange() - 10));
             addTaskBuff(top_desire_target, skill);
@@ -76,7 +76,7 @@ public final class QueenAntNurse extends Priest {
         clientStopMoving();
         _pathfindFails = 0;
         actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 2036, 1, 500, 600000));
-        ThreadPoolManager.getInstance().schedule(new Teleport(loc), 500);
+        ThreadPoolManager.INSTANCE.schedule(new Teleport(loc), 500);
     }
 
     private Creature getTopDesireTarget() {

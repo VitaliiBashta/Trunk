@@ -56,8 +56,8 @@ public class GameTimeController {
         dayStart -= System.currentTimeMillis() - _gameStartTime;
         nightStart -= System.currentTimeMillis() - _gameStartTime;
 
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
     }
 
     public static GameTimeController getInstance() {
@@ -117,7 +117,7 @@ public class GameTimeController {
     private class OnStartListenerImpl implements OnStartListener {
         @Override
         public void onStart() {
-            ThreadPoolManager.getInstance().execute(_dayChangeNotify);
+            ThreadPoolManager.INSTANCE().execute(_dayChangeNotify);
         }
     }
 

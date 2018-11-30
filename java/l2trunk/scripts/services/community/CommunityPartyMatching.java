@@ -27,8 +27,8 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
     private static final int MAX_PER_PAGE = 14;
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_partymatching"};
+    public List<String> getBypassCommands() {
+        return Collections.singletonList("_partymatching");
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
     }
 
     private void showMainPage(Player player, int classesSortType, int sortType, int asc, int page, int charObjId) {
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_partymatching.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_partymatching.htm", player);
         html = html.replace("%characters%", getCharacters(player, sortType, asc, classesSortType, page, charObjId));
         html = html.replace("%visible%", player.isPartyMatchingVisible() ? "Hide from list" : "Show on list");
         html = replace(html, classesSortType, sortType, asc, page, charObjId);
@@ -239,8 +239,6 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
             return "Don't invite GMs...";
         if (player.getParty() != null)
             return name + " has already found a party.";
-        if (player.isInOfflineMode())
-            return name + " is offline.";
         if (player.isInOlympiadMode())
             return name + " is currently fighting in the Olympiad.";
         if (player.isInObserverMode())

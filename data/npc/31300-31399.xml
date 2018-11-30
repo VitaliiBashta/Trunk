@@ -1316,7 +1316,7 @@
 		<set name="rewardSp" value="0" />
 		<set name="shots" value="NONE" />
 		<set name="texture" value="" />
-		<set name="type" value="WeddingManager" />
+		<set name="type" value="Npc" />
 		<equip>
 			<rhand item_id="316" />	<!--Sage's Blood-->
 		</equip>

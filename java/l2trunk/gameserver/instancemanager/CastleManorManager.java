@@ -29,7 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public final class CastleManorManager {
+public enum CastleManorManager {
+    INSTANCE;
     public static final int PERIOD_CURRENT = 0;
     public static final int PERIOD_NEXT = 1;
     private static final String var_name = "ManorApproved";
@@ -46,22 +47,9 @@ public final class CastleManorManager {
     private boolean underMaintenance;
     private boolean disabled;
 
-    private CastleManorManager() {
+    CastleManorManager() {
         load(); // load data from database
-        init(); // schedule all manor related events
-        underMaintenance = false;
-        disabled = !Config.ALLOW_MANOR;
-        List<Castle> castleList = ResidenceHolder.getInstance().getResidenceList(Castle.class);
-        for (Castle c : castleList)
-            c.setNextPeriodApproved(ServerVariables.getBool(var_name));
-    }
 
-    public static CastleManorManager getInstance() {
-        if (_instance == null) {
-            LOG.info("Manor System: Initializing...");
-            _instance = new CastleManorManager();
-        }
-        return _instance;
     }
 
     private void load() {
@@ -131,7 +119,7 @@ public final class CastleManorManager {
         }
     }
 
-    private void init() {
+    public void init() {
         if (ServerVariables.getString(var_name, "").isEmpty()) {
             Calendar manorRefresh = Calendar.getInstance();
             manorRefresh.set(Calendar.HOUR_OF_DAY, MANOR_REFRESH);
@@ -152,7 +140,14 @@ public final class CastleManorManager {
         FirstDelay.set(Calendar.SECOND, 0);
         FirstDelay.set(Calendar.MILLISECOND, 0);
         FirstDelay.add(Calendar.MINUTE, 1);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new ManorTask(), FirstDelay.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), 60000);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new ManorTask(), FirstDelay.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), 60000);
+
+
+        underMaintenance = false;
+        disabled = !Config.ALLOW_MANOR;
+        List<Castle> castleList = ResidenceHolder.getInstance().getResidenceList(Castle.class);
+        for (Castle c : castleList)
+            c.setNextPeriodApproved(ServerVariables.getBool(var_name));
     }
 
     private void setNextPeriod() {
@@ -161,7 +156,7 @@ public final class CastleManorManager {
             if (c.getOwnerId() <= 0)
                 continue;
 
-            Clan clan = ClanTable.getInstance().getClan(c.getOwnerId());
+            Clan clan = ClanTable.INSTANCE.getClan(c.getOwnerId());
             if (clan == null)
                 continue;
 
@@ -314,7 +309,7 @@ public final class CastleManorManager {
             statement.setInt(1, castleId);
             rs = statement.executeQuery();
             if (rs.next())
-                return ClanTable.getInstance().getClan(rs.getInt("clan_id")).toString();
+                return ClanTable.INSTANCE.getClan(rs.getInt("clan_id")).toString();
         } catch (SQLException e) {
             LOG.error("Error while selecting Manor Owners", e);
         } finally {

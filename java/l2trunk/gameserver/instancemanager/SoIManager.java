@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 public class SoIManager {
     private static final Logger _log = LoggerFactory.getLogger(SoIManager.class);
     private static final long SOI_OPEN_TIME = 24 * 60 * 60 * 1000L;
-    private static SoIManager _instance = null;
     private static final Location[] openSeedTeleportLocs = {new Location(-179537, 209551, -15504),
             new Location(-179779, 212540, -15520),
             new Location(-177028, 211135, -15520),
@@ -38,7 +37,7 @@ public class SoIManager {
             new Location(-180921, 216789, -9536),
             new Location(-177264, 217760, -9536),
             new Location(-173727, 218169, -9536)};
-
+    private static SoIManager _instance = null;
     private static Zone _zone = null;
 
     private SoIManager() {
@@ -92,7 +91,7 @@ public class SoIManager {
         spawnOpenedSeed();
         ReflectionUtils.getDoor(14240102).openMe();
 
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 closeSeed();

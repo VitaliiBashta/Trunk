@@ -24,15 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Community Board page containing Drop Calculator
  */
-public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandler {
+public final class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityDropCalculator.class);
 
     @Override
@@ -54,8 +51,8 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_friendlist_", "_dropCalc", "_dropItemsByName", "_dropMonstersByItem", "_dropMonstersByName", "_dropMonsterDetailsByItem", "_dropMonsterDetailsByName"};
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_friendlist_", "_dropCalc", "_dropItemsByName", "_dropMonstersByItem", "_dropMonstersByName", "_dropMonsterDetailsByItem", "_dropMonsterDetailsByName");
     }
 
     @Override
@@ -65,7 +62,7 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
         player.setSessionVar("add_fav", null);
 
         if (!Config.ALLOW_DROP_CALCULATOR) {
-            String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcOff.htm", player);
+            String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcOff.htm", player);
             ShowBoard.separateAndSend(html, player);
             return;
         }
@@ -80,12 +77,12 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
                     showMainPage(player);
                     return;
                 }
-                String itemName = "";
+                StringBuilder itemName = new StringBuilder();
                 while (st.countTokens() > 1)
-                    itemName += " " + st.nextToken();
+                    itemName.append(" ").append(st.nextToken());
 
                 int itemsPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
-                showDropItemsByNamePage(player, itemName.trim(), itemsPage);
+                showDropItemsByNamePage(player, itemName.toString().trim(), itemsPage);
                 break;
             case "dropMonstersByItem":
                 int itemId = Integer.parseInt(st.nextToken());
@@ -103,12 +100,12 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
                     showMainPage(player);
                     return;
                 }
-                String monsterName = "";
+                StringBuilder monsterName = new StringBuilder();
                 while (st.countTokens() > 1)
-                    monsterName += " " + st.nextToken();
+                    monsterName.append(" ").append(st.nextToken());
 
                 int monsterPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
-                showDropMonstersByName(player, monsterName.trim(), monsterPage);
+                showDropMonstersByName(player, monsterName.toString().trim(), monsterPage);
                 break;
             case "dropMonsterDetailsByName":
                 int chosenMobId = Integer.parseInt(st.nextToken());
@@ -122,14 +119,14 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
     }
 
     private static void showMainPage(Player player) {
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcMain.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcMain.htm", player);
         ShowBoard.separateAndSend(html, player);
     }
 
     private static void showDropItemsByNamePage(Player player, String itemName, int page) {
         player.addQuickVar("DCItemName", itemName);
         player.addQuickVar("DCItemsPage", page);
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_dropItemsByName.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropItemsByName.htm", player);
         html = replaceItemsByNamePage(html, itemName, page);
         ShowBoard.separateAndSend(html, player);
     }
@@ -167,7 +164,7 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
     private static void showDropMonstersByItem(Player player, int itemId, int page) {
         player.addQuickVar("DCItemId", itemId);
         player.addQuickVar("DCMonstersPage", page);
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonstersByItem.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonstersByItem.htm", player);
         html = replaceMonstersByItemPage(player, html, itemId, page);
         ShowBoard.separateAndSend(html, player);
     }
@@ -206,7 +203,7 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
     }
 
     private static void showdropMonsterDetailsByItem(Player player, int monsterId) {
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByItem.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByItem.htm", player);
         html = replaceMonsterDetails(player, html, monsterId);
 
         // DO NOT ALLOW TO TELEPORT TO MOBS
@@ -258,7 +255,7 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
     private static void showDropMonstersByName(Player player, String monsterName, int page) {
         player.addQuickVar("DCMonsterName", monsterName);
         player.addQuickVar("DCMonstersPage", page);
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonstersByName.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonstersByName.htm", player);
         html = replaceMonstersByName(html, monsterName, page);
         ShowBoard.separateAndSend(html, player);
     }
@@ -291,7 +288,7 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
     }
 
     private static void showDropMonsterDetailsByName(Player player, int monsterId) {
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByName.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByName.htm", player);
         html = replaceMonsterDetails(player, html, monsterId);
 //		if (!canTeleToMonster(player, monsterId, false))
 //			html = html.replace("%goToNpc%", "<br>");

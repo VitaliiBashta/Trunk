@@ -12,14 +12,15 @@ import l2trunk.gameserver.model.pledge.UnitMember;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Collections;
 import java.util.List;
 
-public class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
-    private final String[] _commandList = new String[]{"clan"};
+public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
+    private final String _commandList = "clan";
 
     @Override
     public void onLoad() {
-        VoicedCommandHandler.getInstance().registerVoicedCommandHandler(this);
+        VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
     }
 
     @Override
@@ -31,8 +32,8 @@ public class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
-        return _commandList;
+    public List<String> getVoicedCommandList() {
+        return Collections.singletonList(_commandList);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
                         return true;
                     }
             }
-            String dialog = HtmCache.getInstance().getNotNull("scripts/services/clan.htm", activeChar);
+            String dialog = HtmCache.INSTANCE().getNotNull("scripts/services/clan.htm", activeChar);
             if (!Config.SERVICES_EXPAND_CWH_ENABLED)
                 dialog = dialog.replaceFirst("%whextprice%", "service disabled");
             else

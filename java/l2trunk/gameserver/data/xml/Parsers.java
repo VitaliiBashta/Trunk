@@ -3,10 +3,7 @@ package l2trunk.gameserver.data.xml;
 
 import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.data.htm.HtmCache;
-import l2trunk.gameserver.data.xml.holder.BuyListHolder;
-import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
-import l2trunk.gameserver.data.xml.holder.ProductHolder;
-import l2trunk.gameserver.data.xml.holder.RecipeHolder;
+import l2trunk.gameserver.data.xml.holder.*;
 import l2trunk.gameserver.data.xml.parser.*;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.tables.SkillTable;
@@ -17,10 +14,10 @@ public final class Parsers {
     }
 
     public static void parseAll() {
-        HtmCache.getInstance().reload();
-        StringHolder.getInstance().load();
+        HtmCache.INSTANCE().reload();
+        StringHolder.INSTANCE.load();
         //
-        SkillTable.getInstance().load(); // - SkillParser.getInstance();
+        SkillTable.INSTANCE().load(); // - SkillParser.INSTANCE();
         OptionDataParser.getInstance().load();
         ItemParser.getInstance().load();
         //
@@ -47,6 +44,7 @@ public final class Parsers {
         CharTemplateParser.getInstance().load();
         //
         ResidenceParser.getInstance().load();
+
         EventParser.getInstance().load();
         FightClubMapParser.getInstance().load();
         // support(cubic & agathion)
@@ -56,11 +54,12 @@ public final class Parsers {
         RecipeHolder.getInstance();
         MultiSellHolder.getInstance();
         ProductHolder.getInstance();
-        // AgathionParser.getInstance();
+        // AgathionParser.INSTANCE();
         // item support
         HennaParser.getInstance().load();
         EnchantItemParser.getInstance().load();
-        SoulCrystalParser.getInstance().load();
+//        SoulCrystalParser.INSTANCE().load();
+        SoulCrystalHolder.getInstance();
         ArmorSetsParser.getInstance().load();
 
         // etc
@@ -70,9 +69,6 @@ public final class Parsers {
         DressShieldParser.getInstance().load();
         DressWeaponParser.getInstance().load();
         AugmentationDataParser.getInstance().load();
-
-        // Premium
-        PremiumParser.getInstance().load();
 
         // Community Board Adds
         FoundationParser.getInstance().load();

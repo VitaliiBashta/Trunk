@@ -8,11 +8,7 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author L2Mythras
- */
-
-public class PiratesTreasure extends Functions implements ScriptFile {
+public final class PiratesTreasure extends Functions implements ScriptFile {
 
     private static int id;
     private static String pointInfo;
@@ -54,7 +50,7 @@ public class PiratesTreasure extends Functions implements ScriptFile {
     }
 
     private static void sayToAll(String text) {
-        Announcements.getInstance().announceToAll(text);
+        Announcements.INSTANCE.announceToAll(text);
     }
 
     public void callPirates() {

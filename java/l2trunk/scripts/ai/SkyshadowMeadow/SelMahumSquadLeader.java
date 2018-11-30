@@ -49,12 +49,12 @@ public final class SelMahumSquadLeader extends Fighter {
         if (!statsIsChanged) {
             switch (actor.getNpcState()) {
                 case 1: {
-                    actor.doCast(SkillTable.getInstance().getInfo(6332, 1), actor, true);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(6332, 1), actor, true);
                     statsIsChanged = true;
                     break;
                 }
                 case 2: {
-                    actor.doCast(SkillTable.getInstance().getInfo(6331, 1), actor, true);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(6331, 1), actor, true);
                     statsIsChanged = true;
                     break;
                 }
@@ -88,7 +88,7 @@ public final class SelMahumSquadLeader extends Fighter {
                     }
                     if (_firstTime2) {
                         _firstTime2 = false;
-                        ThreadPoolManager.getInstance().schedule(new Go(), Rnd.get(20, 30) * 1000);
+                        ThreadPoolManager.INSTANCE.schedule(new Go(), Rnd.get(20, 30) * 1000);
                     }
                 }
             }
@@ -104,12 +104,12 @@ public final class SelMahumSquadLeader extends Fighter {
                         addTaskMove(loc, true);
                         if (_firstTime4) {
                             _firstTime4 = false;
-                            ThreadPoolManager.getInstance().schedule(new Go(), Rnd.get(20, 30) * 1000);
+                            ThreadPoolManager.INSTANCE.schedule(new Go(), Rnd.get(20, 30) * 1000);
                         }
                     }
                 } else if (Rnd.chance(20)) {
                     actor.setNpcState((byte) 2);
-                    ThreadPoolManager.getInstance().schedule(new Stop(), Rnd.get(20, 30) * 1000);
+                    ThreadPoolManager.INSTANCE.schedule(new Stop(), Rnd.get(20, 30) * 1000);
                 }
             }
         }

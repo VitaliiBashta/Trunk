@@ -28,7 +28,7 @@ public final class TotemSummon extends DefaultAI {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @SuppressWarnings("unused")
             @Override
             public void runImpl() {
@@ -44,7 +44,7 @@ public final class TotemSummon extends DefaultAI {
             _timer = System.currentTimeMillis() + 15000L;
             for (Creature c : getActor().getAroundCharacters(450, 200))
                 if (c.isPlayable() && !c.isDead())
-                    c.altOnMagicUseTimer(c, SkillTable.getInstance().getInfo(getBuffId(getActor().getNpcId()), 1));
+                    c.altOnMagicUseTimer(c, SkillTable.INSTANCE().getInfo(getBuffId(getActor().getNpcId()), 1));
         }
 
         return true;

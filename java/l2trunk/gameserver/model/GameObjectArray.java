@@ -5,17 +5,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-class GameObjectArray<E extends GameObject> implements Iterable<E> {
+public class GameObjectArray<E extends GameObject> implements Iterable<E> {
     private static final Logger _log = LoggerFactory.getLogger(GameObjectArray.class);
 
     public final String name;
-    private final int resizeStep;
     public final int initCapacity;
+    private final int resizeStep;
     private final List<Integer> freeIndexes;
     private E[] elementData;
     private int size = 0, real_size = 0;
 
-    @SuppressWarnings("unchecked")
     public GameObjectArray(String _name, int initialCapacity, int _resizeStep) {
         name = _name;
         resizeStep = _resizeStep;

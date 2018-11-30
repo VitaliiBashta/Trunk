@@ -4,7 +4,7 @@ import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.gameserver.model.Player;
 
-public class Friend {
+public final class Friend {
     private final int _objectId;
     private String _name;
     private int _classId;
@@ -28,7 +28,7 @@ public class Friend {
         _level = player.getLevel();
         _name = player.getName();
         _classId = player.getActiveClassId();
-        _playerRef = set ? player.getRef() : HardReferences.<Player>emptyRef();
+        _playerRef = set ? player.getRef() : HardReferences.emptyRef();
     }
 
     public String getName() {
@@ -52,11 +52,10 @@ public class Friend {
 
     public boolean isOnline() {
         Player player = _playerRef.get();
-        return player != null && !player.isInOfflineMode();
+        return player != null;
     }
 
     private Player getPlayer() {
-        Player player = _playerRef.get();
-        return player != null && !player.isInOfflineMode() ? player : null;
+        return _playerRef.get();
     }
 }

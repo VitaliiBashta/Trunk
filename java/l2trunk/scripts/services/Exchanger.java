@@ -37,7 +37,7 @@ class Exchanger extends Functions {
         removeVars(true);
         cleanAtt(-1);
         NpcHtmlMessage html = new NpcHtmlMessage(5).setFile("scripts/services/Exchanger/page.htm");
-        String template = HtmCache.getInstance().getNotNull("scripts/services/Exchanger/template.htm", player);
+        String template = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/template.htm", player);
         String block = "";
         String list = "";
         List<Change> _list = new ArrayList<>();
@@ -118,7 +118,7 @@ class Exchanger extends Functions {
         boolean isUpgrade = arg[1].equalsIgnoreCase("1");
 
         NpcHtmlMessage html = new NpcHtmlMessage(5).setFile("scripts/services/Exchanger/list.htm");
-        String template = HtmCache.getInstance().getNotNull("scripts/services/Exchanger/template.htm", player);
+        String template = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/template.htm", player);
         String block = "";
         String list = "";
 
@@ -260,7 +260,7 @@ class Exchanger extends Functions {
         html.replace("%my_icon%", item.getTemplate().getIcon());
         ItemAttributes att = item.getAttributes();
         if ((!change.attChange()) || (item.getAttributeElementValue() == 0)) {
-            String att_info = HtmCache.getInstance().getNotNull("scripts/services/Exchanger/att_info.htm", player);
+            String att_info = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/att_info.htm", player);
             att_info = att_info.replace("%Earth%", String.valueOf(att.getEarth()));
             att_info = att_info.replace("%Fire%", String.valueOf(att.getFire()));
             att_info = att_info.replace("%Holy%", String.valueOf(att.getHoly()));
@@ -269,7 +269,7 @@ class Exchanger extends Functions {
             att_info = att_info.replace("%Wind%", String.valueOf(att.getWind()));
             html.replace("%att_info%", att_info);
         } else {
-            String att_info = HtmCache.getInstance().getNotNull("scripts/services/Exchanger/att_change.htm", player);
+            String att_info = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/att_change.htm", player);
             if (player.getQuickVarI("ex_att", new int[]{-1}) == -1) {
                 att_info = att_info.replace("%Earth%", String.valueOf(att.getEarth()));
                 att_info = att_info.replace("%Fire%", String.valueOf(att.getFire()));

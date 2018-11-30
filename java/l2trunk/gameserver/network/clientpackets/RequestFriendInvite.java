@@ -8,15 +8,12 @@ import l2trunk.gameserver.network.serverpackets.FriendAddRequest;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestFriendInvite extends L2GameClientPacket {
+public final class RequestFriendInvite extends L2GameClientPacket {
     private String _name;
 
     private static void checkAndAddFriend(Player activeChar, String name) {
-        if (activeChar == null || (name==null) || (name.length()==0))
+        if (activeChar == null || (name == null) || (name.length() == 0))
             return;
-
-        activeChar.isntAfk();
-
         if (activeChar.isOutOfControl()) {
             activeChar.sendActionFailed();
             return;

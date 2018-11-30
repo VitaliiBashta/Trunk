@@ -9,15 +9,13 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.skills.skillclasses.Call;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Relocate extends Functions implements IVoicedCommandHandler {
-
-    private static final String[] _commandList = {};
-
     @Override
-    public String[] getVoicedCommandList() {
-        return _commandList;
+    public List<String> getVoicedCommandList() {
+        return Collections.singletonList("km-all-to-me");
     }
 
     @Override

@@ -26,6 +26,6 @@ public class SendBypassBuildCmd extends L2GameClientPacket {
         if (!cmd.contains("admin_"))
             cmd = "admin_" + cmd;
 
-        AdminCommandHandler.getInstance().useAdminCommandHandler(activeChar, cmd);
+        AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, cmd);
     }
 }

@@ -12,7 +12,7 @@ import org.dom4j.Element;
 
 import java.io.Serializable;
 
-public class Location extends Point3D implements SpawnRange, Serializable {
+public class Location extends Point3D implements SpawnRange {
     public int h;
 
     public Location() {

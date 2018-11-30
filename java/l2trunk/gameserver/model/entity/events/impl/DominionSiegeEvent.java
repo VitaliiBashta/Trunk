@@ -31,16 +31,17 @@ import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.utils.Location;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
+    private static final Logger LOG = LoggerFactory.getLogger(DominionSiegeEvent.class);
     public static final int KILL_REWARD = 0;
     public static final int ONLINE_REWARD = 1;
     public static final int STATIC_BADGES = 2;
-    //
-    private static final int REWARD_MAX = 3;
     // object name
     public static final String ATTACKER_PLAYERS = "attacker_players";
     public static final String DEFENDER_PLAYERS = "defender_players";
@@ -48,7 +49,9 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     public static final String TERRITORY_NPC = "territory_npc";
     public static final String CATAPULT = "catapult";
     public static final String CATAPULT_DOORS = "catapult_doors";
-    private final Map<Integer,int[]> _playersRewards = new ConcurrentHashMap<>();
+    //
+    private static final int REWARD_MAX = 3;
+    private final Map<Integer, int[]> _playersRewards = new ConcurrentHashMap<>();
     private DominionSiegeRunnerEvent _runnerEvent;
     private Quest _forSakeQuest;
 
@@ -381,7 +384,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
 
         Residence r = ResidenceHolder.getInstance().getResidence(zone.getParams().getInteger("residence"));
         if (r == null) {
-            error(toString(), new Exception("Not find residence: " + zone.getParams().getInteger("residence")));
+            LOG.error(toString(), new Exception("Not find residence: " + zone.getParams().getInteger("residence")));
             return player.getLoc();
         }
         return r.getNotOwnerRestartPoint(player);
@@ -479,7 +482,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
         }
     }
 
-    public Collection<Map.Entry<Integer,int[]>> getRewards() {
+    public Collection<Map.Entry<Integer, int[]>> getRewards() {
         return _playersRewards.entrySet();
     }
 

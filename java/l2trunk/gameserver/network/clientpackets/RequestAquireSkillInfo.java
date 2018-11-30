@@ -28,7 +28,7 @@ public class RequestAquireSkillInfo extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         Player player = getClient().getActiveChar();
-        if (player == null || player.getTransformation() != 0 || SkillTable.getInstance().getInfo(_id, _level) == null || _type == null)
+        if (player == null || player.getTransformation() != 0 || SkillTable.INSTANCE().getInfo(_id, _level) == null || _type == null)
             return;
 
         NpcInstance trainer = player.getLastNpc();

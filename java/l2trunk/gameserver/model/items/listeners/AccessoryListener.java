@@ -22,7 +22,7 @@ public final class AccessoryListener implements OnEquipListener {
 
         Player player = (Player) actor;
 
-        if (item.getBodyPart() == ItemTemplate.SLOT_L_BRACELET && item.getTemplate().getAttachedSkills().length > 0) {
+        if (item.getBodyPart() == ItemTemplate.SLOT_L_BRACELET && item.getTemplate().getAttachedSkills().size() > 0) {
             int agathionId = player.getAgathionId();
             int transformNpcId = player.getTransformationTemplate();
             for (Skill skill : item.getTemplate().getAttachedSkills()) {

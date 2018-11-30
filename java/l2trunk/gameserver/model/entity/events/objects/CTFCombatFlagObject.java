@@ -14,6 +14,8 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class CTFCombatFlagObject implements SpawnableObject, FlagItemAttachment {
     private static final Logger _log = LoggerFactory.getLogger(CTFCombatFlagObject.class);
     private ItemInstance _item;
@@ -85,8 +87,8 @@ public class CTFCombatFlagObject implements SpawnableObject, FlagItemAttachment 
 
     @Override
     public boolean canCast(Player player, Skill skill) {
-        Skill[] skills = player.getActiveWeaponItem().getAttachedSkills();
-        if (!ArrayUtils.contains(skills, skill)) {
+        List<Skill> skills = player.getActiveWeaponItem().getAttachedSkills();
+        if (!skills.contains(skill)) {
             player.sendPacket(SystemMsg.THAT_WEAPON_CANNOT_USE_ANY_OTHER_SKILL_EXCEPT_THE_WEAPONS_SKILL);
             return false;
         } else

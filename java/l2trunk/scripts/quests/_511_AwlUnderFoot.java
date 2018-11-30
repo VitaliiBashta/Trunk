@@ -236,7 +236,7 @@ public class _511_AwlUnderFoot extends Quest implements ScriptFile {
         }
 
         void initSpawn(int npcId, boolean first) {
-            ThreadPoolManager.getInstance().schedule(new PrisonSpawnTask(npcId), first ? 60000 : 180000);
+            ThreadPoolManager.INSTANCE().schedule(new PrisonSpawnTask(npcId), first ? 60000 : 180000);
         }
 
         int getReflectionId() {

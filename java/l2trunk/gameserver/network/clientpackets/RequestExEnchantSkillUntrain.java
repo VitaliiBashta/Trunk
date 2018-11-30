@@ -54,9 +54,9 @@ public final class RequestExEnchantSkillUntrain extends L2GameClientPacket {
 
         if (_skillLvl % 100 == 0) {
             _skillLvl = sl.getBaseLevel();
-            newSkill = SkillTable.getInstance().getInfo(_skillId, _skillLvl);
+            newSkill = SkillTable.INSTANCE().getInfo(_skillId, _skillLvl);
         } else
-            newSkill = SkillTable.getInstance().getInfo(_skillId, SkillTreeTable.convertEnchantLevel(sl.getBaseLevel(), _skillLvl, sl.getMaxLevel()));
+            newSkill = SkillTable.INSTANCE().getInfo(_skillId, SkillTreeTable.convertEnchantLevel(sl.getBaseLevel(), _skillLvl, sl.getMaxLevel()));
 
         if (newSkill == null)
             return;

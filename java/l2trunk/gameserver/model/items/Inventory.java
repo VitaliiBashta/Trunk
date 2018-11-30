@@ -75,9 +75,9 @@ public abstract class Inventory extends ItemContainer {
                     Inventory.PAPERDOLL_BELT // Пояс
             };
     private static final Logger _log = LoggerFactory.getLogger(Inventory.class);
-    private final int _ownerId;
     final ItemInstance[] _paperdoll = new ItemInstance[PAPERDOLL_MAX];
     final InventoryListenerList _listeners = new InventoryListenerList();
+    private final int _ownerId;
     private int _totalWeight;
     // used to quickly check for using of items of special type
     private long _wearedMask;
@@ -169,7 +169,7 @@ public abstract class Inventory extends ItemContainer {
         refreshWeight();
 
         // Alexander - Add the new amount of adena to the stats. Will be registered only if bigger than the last
-//    	if (getActor() instanceof Player && item.getItemId() == ItemTemplate.ITEM_ID_ADENA)
+//    	if (getActor() instanceof Player && item.getItem_id() == ItemTemplate.ITEM_ID_ADENA)
 //    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
     }
 
@@ -182,7 +182,7 @@ public abstract class Inventory extends ItemContainer {
         refreshWeight();
 
         // Alexander - Add the new amount of adena to the stats. Will be registered only if bigger than the last
-//    	if (getActor() instanceof Player && item.getItemId() == ItemTemplate.ITEM_ID_ADENA)
+//    	if (getActor() instanceof Player && item.getItem_id() == ItemTemplate.ITEM_ID_ADENA)
 //    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
     }
 

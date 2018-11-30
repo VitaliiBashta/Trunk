@@ -91,7 +91,7 @@ public class MonsterTrap implements ScriptFile {
                     spawn.stopRespawn();
                     NpcInstance mob = spawn.doSpawn(true);
                     if (mob != null) {
-                        ThreadPoolManager.getInstance().schedule(new UnSpawnTask(spawn), despawn * 1000L);
+                        ThreadPoolManager.INSTANCE().schedule(new UnSpawnTask(spawn), despawn * 1000L);
                         if (mob.isAggressive() && attackOnSpawn)
                             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 100);
                     }

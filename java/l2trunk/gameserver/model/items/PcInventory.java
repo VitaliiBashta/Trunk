@@ -195,8 +195,8 @@ public class PcInventory extends Inventory {
 
             boolean needUnequipSkills = getActor().getWeaponsExpertisePenalty() > 0;
 
-            if (item.getTemplate().getAttachedSkills().length > 0) {
-                boolean has = getActor().getSkillLevel(item.getTemplate().getAttachedSkills()[0].getId()) > 0;
+            if (item.getTemplate().getAttachedSkills().size() > 0) {
+                boolean has = getActor().getSkillLevel(item.getTemplate().getAttachedSkills().get(0).getId()) > 0;
                 if (needUnequipSkills && has) {
                     ItemSkillsListener.getInstance().onUnequip(item.getEquipSlot(), item, getActor());
                 } else if (!needUnequipSkills && !has) {
@@ -355,7 +355,7 @@ public class PcInventory extends Inventory {
         }
 
         if (item.isCursed()) {
-            CursedWeaponsManager.getInstance().checkPlayer(getActor(), item);
+            CursedWeaponsManager.INSTANCE.checkPlayer(getActor(), item);
         }
     }
 
@@ -372,7 +372,7 @@ public class PcInventory extends Inventory {
         }
 
         if (item.isCursed()) {
-            CursedWeaponsManager.getInstance().checkPlayer(getActor(), item);
+            CursedWeaponsManager.INSTANCE.checkPlayer(getActor(), item);
         }
     }
 
@@ -587,7 +587,7 @@ public class PcInventory extends Inventory {
             return true;
 
 		/*
-		DressArmorData dress = DressArmorHolder.getInstance().getArmorByPartId(glovesItem.getVisualItemId() != 0 ? glovesItem.getVisualItemId() : feetItem.getVisualItemId());
+		DressArmorData dress = DressArmorHolder.INSTANCE().getArmorByPartId(glovesItem.getVisualItemId() != 0 ? glovesItem.getVisualItemId() : feetItem.getVisualItemId());
 		if (dress == null)
 			return false;
 

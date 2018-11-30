@@ -1122,15 +1122,15 @@ public class Formulas {
 
     public static class AttackInfo {
         public double damage = 0;
-        double defence = 0;
-        double crit_static = 0;
-        double death_rcpt = 0;
-        double lethal1 = 0;
-        double lethal2 = 0;
         public double lethal_dmg = 0;
         public boolean crit = false;
         public boolean shld = false;
         public boolean lethal = false;
         public boolean miss = false;
+        double defence = 0;
+        double crit_static = 0;
+        double death_rcpt = 0;
+        double lethal1 = 0;
+        double lethal2 = 0;
     }
 }

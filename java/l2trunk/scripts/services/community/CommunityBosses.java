@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-public class CommunityBosses implements ScriptFile, ICommunityBoardHandler {
+public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityBosses.class);
 
     private static final int BOSSES_PER_PAGE = 10;
@@ -67,8 +67,8 @@ public class CommunityBosses implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_bbsmemo", "_bbsbosslist", "_bbsboss"};
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_bbsmemo", "_bbsbosslist", "_bbsboss");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class CommunityBosses implements ScriptFile, ICommunityBoardHandler {
      * @param search word in Name of the boss
      */
     private static void sendBossListPage(Player player, SortType sort, int page, String search) {
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_boss_list.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_boss_list.htm", player);
 
         Map<Integer, StatsSet> allBosses = getSearchedBosses(sort, search);
         Map<Integer, StatsSet> bossesToShow = getBossesToShow(allBosses, page);
@@ -200,7 +200,7 @@ public class CommunityBosses implements ScriptFile, ICommunityBoardHandler {
      * @param bossId Id of the boss to show
      */
     private static void sendBossDetails(Player player, SortType sort, int page, CharSequence search, int bossId) {
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_boss_details.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_boss_details.htm", player);
         StatsSet bossSet = RaidBossSpawnManager.getInstance().getAllBosses().get(bossId);
 
         if (bossSet == null) {
@@ -271,7 +271,7 @@ public class CommunityBosses implements ScriptFile, ICommunityBoardHandler {
         newHtml = newHtml.replace("<?status_color?>", getTextColor(isAlive));
         newHtml = newHtml.replace("<?minions?>", String.valueOf(getMinionsCount(bossTemplate)));
 
-        newHtml = newHtml.replace("<?currentHp?>", Util.formatAdena((int) (bossInstance != null ? (int) bossInstance.getCurrentHp() : 0)));
+        newHtml = newHtml.replace("<?currentHp?>", Util.formatAdena((bossInstance != null ? (int) bossInstance.getCurrentHp() : 0)));
         newHtml = newHtml.replace("<?maxHp?>", Util.formatAdena((int) bossTemplate.baseHpMax));
         newHtml = newHtml.replace("<?minions?>", String.valueOf(getMinionsCount(bossTemplate)));
 
@@ -362,8 +362,8 @@ public class CommunityBosses implements ScriptFile, ICommunityBoardHandler {
     private static Map<Integer, StatsSet> getSearchedBosses(SortType sort, String search) {
         Map<Integer, StatsSet> result = getBossesMapBySearch(search);
 
-        for (int id : BOSSES_TO_NOT_SHOW)
-            result.remove(id);
+//        for (int id : BOSSES_TO_NOT_SHOW)
+//            result.remove(id);
 
         result = sortResults(result, sort);
 

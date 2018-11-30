@@ -10,33 +10,15 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-public class _148_PathToBecomingAnExaltedMercenary extends Quest implements ScriptFile {
-    private final int[] MERCENARY_CAPTAINS = {
-            36481,
-            36482,
-            36483,
-            36484,
-            36485,
-            36486,
-            36487,
-            36488,
-            36489
-    };
+import java.util.Arrays;
+import java.util.List;
 
-    private final int[] CATAPULTAS = {
-            36499,
-            36500,
-            36501,
-            36502,
-            36503,
-            36504,
-            36505,
-            36506,
-            36507
-    };
+public class _148_PathToBecomingAnExaltedMercenary extends Quest implements ScriptFile {
+    private final List<Integer> MERCENARY_CAPTAINS = Arrays.asList(
+            36481, 36482, 36483, 36484, 36485, 36486, 36487, 36488, 36489);
+
+    private final List<Integer> CATAPULTAS = Arrays.asList(
+            36499, 36500, 36501, 36502, 36503, 36504, 36505, 36506, 36507);
 
     public _148_PathToBecomingAnExaltedMercenary() {
         super(PARTY_ALL);
@@ -139,9 +121,7 @@ public class _148_PathToBecomingAnExaltedMercenary extends Quest implements Scri
             return false;
         if (killedSiegeEvent == killerSiegeEvent)
             return false;
-        if (killed.getLevel() < 61)
-            return false;
-        return true;
+        return killed.getLevel() >= 61;
     }
 
     private boolean isValidNpcKill(Player killer, NpcInstance npc) {
@@ -150,9 +130,7 @@ public class _148_PathToBecomingAnExaltedMercenary extends Quest implements Scri
 
         if (npcSiegeEvent == null || killerSiegeEvent == null)
             return false;
-        if (npcSiegeEvent == killerSiegeEvent)
-            return false;
-        return true;
+        return npcSiegeEvent != killerSiegeEvent;
     }
 
     @Override

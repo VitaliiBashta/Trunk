@@ -28,9 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SevenSignsFestival {
     public static final int FESTIVAL_MANAGER_START = 120000; // 2 mins
-    private static final int FESTIVAL_LENGTH = 1080000; // 18 mins
-    private static final int FESTIVAL_CYCLE_LENGTH = 2280000; // 38 mins
-    public static final int FESTIVAL_SIGNUP_TIME = FESTIVAL_CYCLE_LENGTH - FESTIVAL_LENGTH;
     public static final int FESTIVAL_FIRST_SPAWN = 120000; // 2 mins
     public static final int FESTIVAL_FIRST_SWARM = 300000; // 5 mins
     public static final int FESTIVAL_SECOND_SPAWN = 540000; // 9 mins
@@ -45,6 +42,9 @@ public class SevenSignsFestival {
     public static final int[] FESTIVAL_LEVEL_SCORES = {60, 70, 100, 120, 150}; // 500 maximum possible score
     public static final int FESTIVAL_BLOOD_OFFERING = 5901;
     public static final int FESTIVAL_OFFERING_VALUE = 1;
+    private static final int FESTIVAL_LENGTH = 1080000; // 18 mins
+    private static final int FESTIVAL_CYCLE_LENGTH = 2280000; // 38 mins
+    public static final int FESTIVAL_SIGNUP_TIME = FESTIVAL_CYCLE_LENGTH - FESTIVAL_LENGTH;
     private static final Logger _log = LoggerFactory.getLogger(SevenSignsFestival.class);
     private static final SevenSigns _signsInstance = SevenSigns.getInstance();
     private static SevenSignsFestival _instance;
@@ -315,7 +315,7 @@ public class SevenSignsFestival {
                 if (rset.next()) {
                     int clanId = rset.getInt("clanid");
                     if (clanId > 0) {
-                        Clan clan = ClanTable.getInstance().getClan(clanId);
+                        Clan clan = ClanTable.INSTANCE.getClan(clanId);
                         if (clan != null) {
                             clan.incReputation(100, true, "SevenSignsFestival");
                             clan.broadcastToOnlineMembers(new PledgeShowInfoUpdate(clan));
@@ -448,10 +448,6 @@ public class SevenSignsFestival {
      * Set the final score details for the last participants of the specified festival data.
      * Returns <b>true</b> if the score is higher than that previously recorded <b>this cycle</b>.
      *
-     * @param player
-     * @param oracle
-     * @param festivalId
-     * @param offeringScore
      * @return boolean isHighestScore
      */
     public boolean setFinalScore(Party party, int oracle, int festivalId, long offeringScore) {

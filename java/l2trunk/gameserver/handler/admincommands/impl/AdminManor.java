@@ -7,8 +7,6 @@ import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.templates.manor.CropProcure;
-import l2trunk.gameserver.templates.manor.SeedProduction;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -67,12 +65,12 @@ public class AdminManor implements IAdminCommandHandler {
             }
             showMainPage(activeChar);
         } else if (fullString.equals("admin_manor_save")) {
-            CastleManorManager.getInstance().save();
+            CastleManorManager.INSTANCE.save();
             activeChar.sendMessage("Manor System: all data saved");
             showMainPage(activeChar);
         } else if (fullString.equals("admin_manor_disable")) {
-            boolean mode = CastleManorManager.getInstance().isDisabled();
-            CastleManorManager.getInstance().setDisabled(!mode);
+            boolean mode = CastleManorManager.INSTANCE.isDisabled();
+            CastleManorManager.INSTANCE.setDisabled(!mode);
             if (mode)
                 activeChar.sendMessage("Manor System: enabled");
             else
@@ -94,13 +92,13 @@ public class AdminManor implements IAdminCommandHandler {
 
         replyMSG.append("<center><font color=\"LEVEL\"> [Manor System] </font></center><br>");
         replyMSG.append("<table width=\"100%\">");
-        replyMSG.append("<tr><td>Disabled: " + (CastleManorManager.getInstance().isDisabled() ? "yes" : "no") + "</td>");
-        replyMSG.append("<td>Under Maintenance: " + (CastleManorManager.getInstance().isUnderMaintenance() ? "yes" : "no") + "</td></tr>");
+        replyMSG.append("<tr><td>Disabled: " + (CastleManorManager.INSTANCE.isDisabled() ? "yes" : "no") + "</td>");
+        replyMSG.append("<td>Under Maintenance: " + (CastleManorManager.INSTANCE.isUnderMaintenance() ? "yes" : "no") + "</td></tr>");
         replyMSG.append("<tr><td>Approved: " + (ServerVariables.getBool("ManorApproved") ? "yes" : "no") + "</td></tr>");
         replyMSG.append("</table>");
 
         replyMSG.append("<center><table>");
-        replyMSG.append("<tr><td><button value=\"" + (CastleManorManager.getInstance().isDisabled() ? "Enable" : "Disable") + "\" action=\"bypass -h admin_manor_disable\" width=110 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+        replyMSG.append("<tr><td><button value=\"" + (CastleManorManager.INSTANCE.isDisabled() ? "Enable" : "Disable") + "\" action=\"bypass -h admin_manor_disable\" width=110 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td><button value=\"Reset\" action=\"bypass -h admin_manor_reset\" width=110 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
         replyMSG.append("<tr><td><button value=\"Refresh\" action=\"bypass -h admin_manor\" width=110 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td><button value=\"Back\" action=\"bypass -h admin_admin\" width=110 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");

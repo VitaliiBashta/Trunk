@@ -27,8 +27,8 @@ public class LastManStandingEvent extends AbstractFightClub {
                 fActor.increaseKills(true);
                 updatePlayerScore(fActor);
                 sendMessageToPlayer(fActor, MESSAGE_TYPES.GM, "You have killed " + victim.getName());
-            } else if (victim.isPet()) {
-
+            } else {
+                victim.isPet();
             }
             actor.getPlayer().sendUserInfo();
         }
@@ -54,7 +54,7 @@ public class LastManStandingEvent extends AbstractFightClub {
         super.startEvent();
 
         lastKill = System.currentTimeMillis();
-        ThreadPoolManager.getInstance().schedule(new InactivityCheck(), 60000);
+        ThreadPoolManager.INSTANCE.schedule(new InactivityCheck(), 60000);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class LastManStandingEvent extends AbstractFightClub {
             updateScreenScores();
             setState(EVENT_STATE.OVER);
 
-            ThreadPoolManager.getInstance().schedule(() -> endRound(), 5000L);
+            ThreadPoolManager.INSTANCE.schedule(this::endRound, 5000L);
             if (_winner != null)
                 FightClubEventManager.getInstance().sendToAllMsg(this, _winner.getPlayer().getName() + " Won Last Hero Event!");
             return true;
@@ -124,8 +124,8 @@ public class LastManStandingEvent extends AbstractFightClub {
                 }
             }
 
-//		if (playerToKill != null)
-//			playerToKill.doDie(null);
+		if (playerToKill != null)
+			playerToKill.doDie(null);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class LastManStandingEvent extends AbstractFightClub {
                 killOnePlayer();
             }
 
-            ThreadPoolManager.getInstance().schedule(this, 60000);
+            ThreadPoolManager.INSTANCE.schedule(this, 60000);
         }
     }
 }

@@ -8,6 +8,7 @@ import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerExitListener;
 import l2trunk.gameserver.listener.actor.player.OnTeleportListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -93,7 +94,7 @@ public class TvTArena3 extends Functions implements ScriptFile, OnDeathListener,
     public void onLoad() {
         CharListenerList.addGlobal(this);
         getInstance().onLoad();
-        if (isActive()) {
+        if (isActive("TvT Arena 3")) {
             spawnEventManagers();
             _log.info("Loaded Event: TvT Arena 3 [state: activated]");
         } else
@@ -131,8 +132,8 @@ public class TvTArena3 extends Functions implements ScriptFile, OnDeathListener,
         if (val == 0) {
             Player player = getSelf();
             if (player.isGM())
-                return HtmCache.getInstance().getNotNull("scripts/events/TvTArena/31392.htm", player) + HtmCache.getInstance().getNotNull("scripts/events/TvTArena/31392-4.htm", player);
-            return HtmCache.getInstance().getNotNull("scripts/events/TvTArena/31392.htm", player);
+                return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31392.htm", player) + HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31392-4.htm", player);
+            return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31392.htm", player);
         }
         return "";
     }
@@ -175,18 +176,6 @@ public class TvTArena3 extends Functions implements ScriptFile, OnDeathListener,
 
     private final List<NpcInstance> _spawns = new ArrayList<>();
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
-    private boolean isActive() {
-        return isActive("TvT Arena 3");
-    }
-
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -195,16 +184,13 @@ public class TvTArena3 extends Functions implements ScriptFile, OnDeathListener,
         if (SetActive("TvT Arena 3", true)) {
             spawnEventManagers();
             System.out.println("Event: TvT Arena 3 started.");
-            Announcements.getInstance().announceToAll("Started TvT Arena Event 3.");
+            Announcements.INSTANCE.announceToAll("Started TvT Arena Event 3.");
         } else
             player.sendMessage("TvT Arena 3 Event already started.");
 
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -215,47 +201,26 @@ public class TvTArena3 extends Functions implements ScriptFile, OnDeathListener,
             unSpawnEventManagers();
             stop();
             System.out.println("TvT Arena 3 Event stopped.");
-            Announcements.getInstance().announceToAll("TvT Arena 3 Event is over.");
+            Announcements.INSTANCE.announceToAll("TvT Arena 3 Event is over.");
         } else
             player.sendMessage("TvT Arena 3 Event not started.");
 
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {
-                {
-                        82840,
-                        148936,
-                        -3472,
-                        0
-                }
-        };
-
         NpcTemplate template = NpcHolder.getInstance().getTemplate(31392);
 
-        for (int[] element : EVENT_MANAGERS) {
-            SimpleSpawner sp = new SimpleSpawner(template);
-            sp.setLocx(element[0]);
-            sp.setLocy(element[1]);
-            sp.setLocz(element[2]);
-            sp.setHeading(element[3]);
-            NpcInstance npc = sp.doSpawn(true);
-            npc.setName("Arena 3");
-            npc.setTitle("TvT Event");
-            _spawns.add(npc);
-        }
+        SimpleSpawner sp = new SimpleSpawner(template);
+        sp.setLoc(new Location(82840, 148936, -3472, 0));
+        NpcInstance npc = sp.doSpawn(true);
+        npc.setName("Arena 3");
+        npc.setTitle("TvT Event");
+        _spawns.add(npc);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
     private void unSpawnEventManagers() {
-        for (NpcInstance npc : _spawns)
-            npc.deleteMe();
+        _spawns.forEach(GameObject::decayMe);
         _spawns.clear();
     }
 }

@@ -11,18 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class SkillsEngine {
-    private static final Logger _log = LoggerFactory.getLogger(SkillsEngine.class);
-
-    private static final SkillsEngine _instance = new SkillsEngine();
-
-    public static SkillsEngine getInstance() {
-        return _instance;
-    }
+public enum SkillsEngine {
+    INSTANCE;
+    private static final Logger LOG = LoggerFactory.getLogger(SkillsEngine.class);
 
     private List<Skill> loadSkills(Path file) {
         if (file == null) {
-            _log.warn("SkillsEngine: File not found!");
+            LOG.warn("SkillsEngine: File not found!");
             return null;
         }
         DocumentSkill doc = new DocumentSkill(file);
@@ -44,7 +39,7 @@ public class SkillsEngine {
     public Map<Integer, Skill> loadAllSkills() {
         Path dir = Config.DATAPACK_ROOT.resolve("data/stats/skills");
         if (!Files.exists(dir)) {
-            _log.info("Dir " + dir.toAbsolutePath() + " not exists");
+            LOG.info("Dir " + dir.toAbsolutePath() + " not exists");
             return Collections.emptyMap();
         }
 
@@ -66,7 +61,7 @@ public class SkillsEngine {
             }
         }
 
-        _log.info("SkillsEngine: Loaded " + result.size() + " skill templates from XML files. Max id: " + maxId + ", max level: " + maxLvl);
+        LOG.info("SkillsEngine: Loaded " + result.size() + " skill templates from XML files. Max id: " + maxId + ", max level: " + maxLvl);
         return result;
     }
 }

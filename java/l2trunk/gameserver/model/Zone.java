@@ -359,7 +359,7 @@ public final class Zone {
                         synchronized (this) {
                             if (_effectThread == null) {
                                 // TODO: Reuse 30 hardcoded
-                                _effectThread = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SkillTimer(), getTemplate().getInitialDelay(), 30000);
+                                _effectThread = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SkillTimer(), getTemplate().getInitialDelay(), 30000);
                             }
                         }
                     }
@@ -368,7 +368,7 @@ public final class Zone {
                         synchronized (this) {
                             if (_damageThread == null) {
                                 // TODO: Reuse 30 hardcoded
-                                _damageThread = ThreadPoolManager.getInstance().scheduleAtFixedRate(new DamageTimer(), getTemplate().getInitialDelay(), 30000);
+                                _damageThread = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DamageTimer(), getTemplate().getInitialDelay(), 30000);
                             }
                         }
                     }

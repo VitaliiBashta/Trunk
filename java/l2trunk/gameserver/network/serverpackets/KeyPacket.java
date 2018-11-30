@@ -6,7 +6,7 @@ public class KeyPacket extends L2GameServerPacket {
 
     public KeyPacket(byte key[]) {
         _key = key;
-        //_signatures = ClickersSignatureDao.getInstance().getSignatures();
+        //_signatures = ClickersSignatureDao.INSTANCE().getSignatures();
     }
 
     @Override

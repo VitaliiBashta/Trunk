@@ -3,7 +3,7 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.utils.Location;
 
-public class PetStatusUpdate extends L2GameServerPacket {
+public final class PetStatusUpdate extends L2GameServerPacket {
     private final int type;
     private final int obj_id;
     private final int level;

@@ -15,8 +15,8 @@ public final class SpawnExObject implements SpawnableObject {
     private static final Logger _log = LoggerFactory.getLogger(SpawnExObject.class);
 
     private final List<Spawner> _spawns;
-    private boolean _spawned;
     private final String _name;
+    private boolean _spawned;
 
     public SpawnExObject(String name) {
         _name = name;

@@ -704,9 +704,7 @@ public class World {
      */
     public static void getZones(List<Zone> inside, Location loc, Reflection reflection) {
         WorldRegion region = getRegion(loc);
-        Zone[] zones = region.getZones();
-        if (zones.length == 0)
-            return;
+        List<Zone> zones = region.getZones();
         for (Zone zone : zones)
             if (zone.checkIfInZone(loc.x, loc.y, loc.z, reflection))
                 inside.add(zone);
@@ -718,8 +716,8 @@ public class World {
 
     private static Zone getWater(Location loc, Reflection reflection) {
         WorldRegion region = getRegion(loc);
-        Zone[] zones = region.getZones();
-        if (zones.length == 0)
+        List<Zone> zones = region.getZones();
+        if (zones.size() == 0)
             return null;
         for (Zone zone : zones)
             if (zone != null && zone.getType() == ZoneType.water && zone.checkIfInZone(loc.x, loc.y, loc.z, reflection))
@@ -774,8 +772,6 @@ public class World {
                                     ret[12]++;
                                     Player p = (Player) obj;
 
-                                    if (p.isInOfflineMode())
-                                        ret[13]++;
                                 } else if (obj.isNpc()) {
                                     ret[14]++;
 

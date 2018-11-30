@@ -464,25 +464,22 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]
-                {
-                        "_bbsclan",
-                        "_clbbsclan_",
-                        "_clbbslist_",
-                        "_clbbsmanage",
-                        "_bbsclanjoin",
-                        "_clbbspetitions",
-                        "_clbbsplayerpetition",
-                        "_clbbsplayerinventory",
-                        "_bbsclanmembers",
-                        "_clbbssinglemember",
-                        "_clbbsskills",
-                        "_mailwritepledgeform",
-                        "_announcepledgewriteform",
-                        "_announcepledgeswitchshowflag",
-                        "_announcepledgewrite"
-                };
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_bbsclan",
+                "_clbbsclan_",
+                "_clbbslist_",
+                "_clbbsmanage",
+                "_bbsclanjoin",
+                "_clbbspetitions",
+                "_clbbsplayerpetition",
+                "_clbbsplayerinventory",
+                "_bbsclanmembers",
+                "_clbbssinglemember",
+                "_clbbsskills",
+                "_mailwritepledgeform",
+                "_announcepledgewriteform",
+                "_announcepledgeswitchshowflag",
+                "_announcepledgewrite");
     }
 
     @Override
@@ -502,7 +499,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             return;
         } else if ("clbbslist".equals(cmd)) {
             int page = Integer.parseInt(st.nextToken());
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanlist.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanlist.htm", player);
             html = html.replace("%rank%", getAllClansRank(player, page));
             html = html.replace("%myClan%", (player.getClan() != null ? "_clbbsclan_" + player.getClanId() : "_clbbslist_0"));
         } else if ("clbbsclan".equals(cmd)) {
@@ -513,13 +510,13 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 return;
             }
 
-            Clan clan = ClanTable.getInstance().getClan(clanId);
+            Clan clan = ClanTable.INSTANCE.getClan(clanId);
             if (clan == null) {
                 onBypassCommand(player, "_clbbslist_0");
                 return;
             }
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clan.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clan.htm", player);
             html = getMainClanPage(player, clan, html);
         } else if ("clbbsmanage".equals(cmd))// _clbbsmanage_btn
         {
@@ -531,12 +528,12 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 if (shouldReturn)
                     return;
             }
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanrecruit.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanrecruit.htm", player);
             html = getClanRecruitmentManagePage(player, html);
         } else if ("bbsclanjoin".equals(cmd)) {
             int clanId = Integer.parseInt(st.nextToken());
 
-            Clan clan = ClanTable.getInstance().getClan(clanId);
+            Clan clan = ClanTable.INSTANCE.getClan(clanId);
             if (clan == null) {
                 sendErrorMessage(player, "Such clan cannot be found!", "_clbbslist_0");
                 return;
@@ -562,18 +559,18 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 sendInfoMessage(player, "Your petition has been submitted!", "_clbbsclan_" + clan.getClanId(), false);
                 return;
             }
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanjoin.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanjoin.htm", player);
             html = getClanJoinPage(player, clan, html);
         } else if ("clbbspetitions".equals(cmd)) {
             int clanId = Integer.parseInt(st.nextToken());
 
-            Clan clan = ClanTable.getInstance().getClan(clanId);
+            Clan clan = ClanTable.INSTANCE.getClan(clanId);
             if (clan == null) {
                 sendErrorMessage(player, "Such clan cannot be found!", "_clbbslist_0");
                 return;
             }
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanpetitions.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanpetitions.htm", player);
             html = getClanPetitionsPage(player, clan, html);
         } else if ("clbbsplayerpetition".equals(cmd)) {
             int senderId = Integer.parseInt(st.nextToken());
@@ -582,7 +579,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 managePlayerPetition(player, senderId, action);
                 return;
             }
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanplayerpetition.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanplayerpetition.htm", player);
 
             Player sender = GameObjectsStorage.getPlayer(senderId);
             if (sender != null)
@@ -593,7 +590,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             int senderId = Integer.parseInt(st.nextToken());
             Player sender = GameObjectsStorage.getPlayer(senderId);
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanplayerinventory.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanplayerinventory.htm", player);
 
             if (sender != null)
                 html = getPlayerInventoryPage(sender, html);
@@ -608,18 +605,18 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
             int page = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 0;
 
-            Clan clan = ClanTable.getInstance().getClan(clanId);
+            Clan clan = ClanTable.INSTANCE.getClan(clanId);
             if (clan == null) {
                 sendErrorMessage(player, "Such clan cannot be found!", "_clbbslist_0");
                 return;
             }
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanmembers.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanmembers.htm", player);
             html = getClanMembersPage(player, clan, html, page);
         } else if ("clbbssinglemember".equals(cmd)) {
             int playerId = Integer.parseInt(st.nextToken());
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clansinglemember.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clansinglemember.htm", player);
 
             Player member = GameObjectsStorage.getPlayer(playerId);
             if (member != null)
@@ -633,13 +630,13 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 return;
             }
 
-            Clan clan = ClanTable.getInstance().getClan(clanId);
+            Clan clan = ClanTable.INSTANCE.getClan(clanId);
             if (clan == null) {
                 sendErrorMessage(player, "Such clan cannot be found!", "_clbbslist_0");
                 return;
             }
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanskills.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanskills.htm", player);
             html = getClanSkills(clan, html);
         } else if ("mailwritepledgeform".equals(cmd)) {
             Clan clan = player.getClan();
@@ -648,7 +645,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 return;
             }
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_pledge_mail_write.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_pledge_mail_write.htm", player);
 
             html = html.replace("%PLEDGE_ID%", String.valueOf(clan.getClanId()));
             html = html.replace("%pledge_id%", String.valueOf(clan.getClanId()));
@@ -662,7 +659,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 return;
             }
 
-            HashMap<Integer, String> tpls = Util.parseTemplate(HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_clanannounce.htm", player));
+            HashMap<Integer, String> tpls = Util.parseTemplate(HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_clanannounce.htm", player));
             html = tpls.get(0);
 
             String notice = "";
@@ -1558,7 +1555,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     }
 
     private String getAllClansRank(Player player, int page) {
-        List<Clan> clans = ClanTable.getInstance().getClans();
+        List<Clan> clans = ClanTable.INSTANCE.getClans();
         clans.sort((o1, o2) -> {
             int lvlDiff = o2.getLevel() - o1.getLevel();
             if (lvlDiff == 0) return o2.getReputationScore() - o1.getReputationScore();
@@ -1762,7 +1759,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                         "`c`.`sex` AS `sex` " + //
                         "FROM `characters` `c` " + //
                         "LEFT JOIN `character_subclasses` `s` ON (`s`.`char_obj_id` = `c`.`obj_Id` AND `s`.`isBase` = '1') " + //
-                        "WHERE `c`.`obj_Id`=?");) {
+                        "WHERE `c`.`obj_Id`=?")) {
             statement.setInt(1, memberId);
 
             try (ResultSet rset = statement.executeQuery()) {
@@ -1920,7 +1917,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             }
 
             if (!clan.getNotice().isEmpty()) {
-                String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "clan_popup.htm", player);
+                String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "clan_popup.htm", player);
                 html = html.replace("%pledge_name%", clan.getName());
                 html = html.replace("%content%", clan.getNotice());
 

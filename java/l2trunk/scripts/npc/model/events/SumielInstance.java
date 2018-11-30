@@ -162,14 +162,14 @@ public class SumielInstance extends NpcInstance {
 
                 switch (getAISpawnParam()) {
                     case 1:
-                        HURRY_UP_1 = ThreadPoolManager.getInstance().schedule(new HURRY_UP(), 2 * 60 * 1000);
+                        HURRY_UP_1 = ThreadPoolManager.INSTANCE.schedule(new HURRY_UP(), 2 * 60 * 1000);
                         break;
                     case 2:
-                        HURRY_UP_2 = ThreadPoolManager.getInstance().schedule(new HURRY_UP(), 2 * 60 * 1000);
+                        HURRY_UP_2 = ThreadPoolManager.INSTANCE.schedule(new HURRY_UP(), 2 * 60 * 1000);
                         break;
                 }
-                GAME_TIME = ThreadPoolManager.getInstance().schedule(new GAME_TIME(), 3 * 60 * 1000 + 10 * 1000);
-                TIMER_0 = ThreadPoolManager.getInstance().schedule(new TIMER_0(), 1 * 1000);
+                GAME_TIME = ThreadPoolManager.INSTANCE.schedule(new GAME_TIME(), 3 * 60 * 1000 + 10 * 1000);
+                TIMER_0 = ThreadPoolManager.INSTANCE.schedule(new TIMER_0(), 1000);
             } else if (command.equals("restart")) {
                 i_quest1 = 1;
                 i_ai1 = Rnd.get(9) + 1;
@@ -184,7 +184,7 @@ public class SumielInstance extends NpcInstance {
                 c_ai0 = player;
                 if (i_quest9 == 1) {
                 }
-                TIMER_0 = ThreadPoolManager.getInstance().schedule(new TIMER_0(), 1 * 1000);
+                TIMER_0 = ThreadPoolManager.INSTANCE().schedule(new TIMER_0(), 1 * 1000);
             }
         } else
             super.onBypassFeedback(player, command);
@@ -197,7 +197,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114002();
             }
-            TIMER_1 = ThreadPoolManager.getInstance().schedule(new TIMER_1(), interval_time * 2000);
+            TIMER_1 = ThreadPoolManager.INSTANCE.schedule(new TIMER_1(), interval_time * 2000);
         }
     }
 
@@ -208,7 +208,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai1);
             }
-            TIMER_2 = ThreadPoolManager.getInstance().schedule(new TIMER_2(), interval_time * 1000);
+            TIMER_2 = ThreadPoolManager.INSTANCE.schedule(new TIMER_2(), interval_time * 1000);
         }
     }
 
@@ -219,7 +219,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai2);
             }
-            TIMER_3 = ThreadPoolManager.getInstance().schedule(new TIMER_3(), interval_time * 1000);
+            TIMER_3 = ThreadPoolManager.INSTANCE.schedule(new TIMER_3(), interval_time * 1000);
         }
     }
 
@@ -230,7 +230,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai3);
             }
-            TIMER_4 = ThreadPoolManager.getInstance().schedule(new TIMER_4(), interval_time * 1000);
+            TIMER_4 = ThreadPoolManager.INSTANCE.schedule(new TIMER_4(), interval_time * 1000);
         }
     }
 
@@ -241,7 +241,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai4);
             }
-            TIMER_5 = ThreadPoolManager.getInstance().schedule(new TIMER_5(), interval_time * 1000);
+            TIMER_5 = ThreadPoolManager.INSTANCE.schedule(new TIMER_5(), interval_time * 1000);
         }
     }
 
@@ -252,7 +252,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai5);
             }
-            TIMER_6 = ThreadPoolManager.getInstance().schedule(new TIMER_6(), interval_time * 1000);
+            TIMER_6 = ThreadPoolManager.INSTANCE.schedule(new TIMER_6(), interval_time * 1000);
         }
     }
 
@@ -263,7 +263,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai6);
             }
-            TIMER_7 = ThreadPoolManager.getInstance().schedule(new TIMER_7(), interval_time * 1000);
+            TIMER_7 = ThreadPoolManager.INSTANCE.schedule(new TIMER_7(), interval_time * 1000);
         }
     }
 
@@ -274,7 +274,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai7);
             }
-            TIMER_8 = ThreadPoolManager.getInstance().schedule(new TIMER_8(), interval_time * 1000);
+            TIMER_8 = ThreadPoolManager.INSTANCE.schedule(new TIMER_8(), interval_time * 1000);
         }
     }
 
@@ -285,7 +285,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai8);
             }
-            TIMER_9 = ThreadPoolManager.getInstance().schedule(new TIMER_9(), interval_time * 1000);
+            TIMER_9 = ThreadPoolManager.INSTANCE.schedule(new TIMER_9(), interval_time * 1000);
         }
     }
 
@@ -296,7 +296,7 @@ public class SumielInstance extends NpcInstance {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
                     ((FurnfaceInstance) npc).setActive2114001(i_ai9);
             }
-            PC_TURN = ThreadPoolManager.getInstance().schedule(new PC_TURN(), interval_time * 1000);
+            PC_TURN = ThreadPoolManager.INSTANCE.schedule(new PC_TURN(), interval_time * 1000);
         }
     }
 
@@ -307,10 +307,10 @@ public class SumielInstance extends NpcInstance {
             Functions.npcShout(npc, NpcString.FURNFACE2);
             switch (getAISpawnParam()) {
                 case 1:
-                    HURRY_UP2_1 = ThreadPoolManager.getInstance().schedule(new HURRY_UP2(), 60 * 1000);
+                    HURRY_UP2_1 = ThreadPoolManager.INSTANCE.schedule(new HURRY_UP2(), 60 * 1000);
                     break;
                 case 2:
-                    HURRY_UP2_2 = ThreadPoolManager.getInstance().schedule(new HURRY_UP2(), 60 * 1000);
+                    HURRY_UP2_2 = ThreadPoolManager.INSTANCE.schedule(new HURRY_UP2(), 60 * 1000);
                     break;
             }
         }
@@ -321,7 +321,7 @@ public class SumielInstance extends NpcInstance {
         public void runImpl() {
             NpcInstance npc = GameObjectsStorage.getAsNpc(_storedId);
             Functions.npcShout(npc, NpcString.FURNFACE3);
-            GAME_TIME_EXPIRED = ThreadPoolManager.getInstance().schedule(new GAME_TIME_EXPIRED(), 10 * 1000);
+            GAME_TIME_EXPIRED = ThreadPoolManager.INSTANCE.schedule(new GAME_TIME_EXPIRED(), 10 * 1000);
         }
     }
 

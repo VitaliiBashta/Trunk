@@ -13,9 +13,9 @@ public class AutoSaveManager extends SteppingRunnableQueueManager {
 
     private AutoSaveManager() {
         super(10000L);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 10000L, 10000L);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(this, 10000L, 10000L);
         //Очистка каждые 60 секунд
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 AutoSaveManager.this.purge();

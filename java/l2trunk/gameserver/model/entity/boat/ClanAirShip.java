@@ -26,15 +26,12 @@ import java.util.concurrent.Future;
 public class ClanAirShip extends AirShip {
     public static final int MAX_FUEL = 600;
     private static final long MAINTENANCE_DELAY = 60 * 1000L;
-    private int _currentFuel;
-
-    private AirshipDock _dock;
-    private AirshipDock.AirshipPlatform _platform;
-
-    private HardReference<Player> _driverRef = HardReferences.emptyRef();
     private final GameObject _controlKey = new ControlKeyInstance();
     private final Clan _clan;
-
+    private int _currentFuel;
+    private AirshipDock _dock;
+    private AirshipDock.AirshipPlatform _platform;
+    private HardReference<Player> _driverRef = HardReferences.emptyRef();
     private boolean _customMove;
     private Future<?> _deleteTask = null;
 
@@ -135,7 +132,7 @@ public class ClanAirShip extends AirShip {
             getCurrentWay().reCalcNextTime(false);
         } else {
             _customMove = true;
-            _deleteTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new FuelAndDeleteTask(), MAINTENANCE_DELAY, MAINTENANCE_DELAY);
+            _deleteTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new FuelAndDeleteTask(), MAINTENANCE_DELAY, MAINTENANCE_DELAY);
         }
     }
 

@@ -41,7 +41,7 @@ public class RequestStartPledgeWar extends L2GameClientPacket {
             return;
         }
 
-        Clan targetClan = ClanTable.getInstance().getClanByName(_pledgeName);
+        Clan targetClan = ClanTable.INSTANCE.getClanByName(_pledgeName);
         if (targetClan == null) {
             activeChar.sendPacket(SystemMsg.A_CLAN_WAR_CANNOT_BE_DECLARED_AGAINST_A_CLAN_THAT_DOES_NOT_EXIST, ActionFail.STATIC);
             return;
@@ -59,6 +59,6 @@ public class RequestStartPledgeWar extends L2GameClientPacket {
             return;
         }
 
-        ClanTable.getInstance().startClanWar(activeChar.getClan(), targetClan);
+        ClanTable.INSTANCE.startClanWar(activeChar.getClan(), targetClan);
     }
 }

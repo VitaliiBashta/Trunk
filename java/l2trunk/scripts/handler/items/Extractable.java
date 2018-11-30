@@ -13276,12 +13276,12 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
             extractChance += c;
 
         if (Rnd.chance(extractChance)) {
-            int[] successfulItems = new int[0];
-            while (successfulItems.length == 0)
+            List<Integer> successfulItems = new ArrayList<>();
+            while (successfulItems.size() == 0)
                 for (int i = 0; i < items.length; i++)
                     if (Rnd.chance(chances[i]))
-                        successfulItems = ArrayUtils.add(successfulItems, i);
-            int[] item = items[successfulItems[Rnd.get(successfulItems.length)]];
+                        successfulItems.add(i);
+            int[] item = items[successfulItems.get(Rnd.get(successfulItems.size()))];
             if (item.length < 2)
                 return false;
 

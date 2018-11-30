@@ -27,7 +27,7 @@ public final class FollowersLematan extends Fighter {
 
         for (NpcInstance target : World.getAroundNpc(minion, 1000, 1000)) {
             if (target.getNpcId() == LEMATAN && target.getCurrentHpPercents() < 65)
-                minion.doCast(SkillTable.getInstance().getInfo(5712, 1), target, true);
+                minion.doCast(SkillTable.INSTANCE().getInfo(5712, 1), target, true);
         }
     }
 
@@ -37,7 +37,7 @@ public final class FollowersLematan extends Fighter {
     }
 
     private void ScheduleTimerTask(long time) {
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 findBoss();

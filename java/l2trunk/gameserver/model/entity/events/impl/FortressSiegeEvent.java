@@ -40,18 +40,18 @@ import java.util.concurrent.Future;
  */
 public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
     public static final String FLAG_POLE = "flag_pole";
-    private static final String COMBAT_FLAGS = "combat_flags";
     public static final String SIEGE_COMMANDERS = "siege_commanders";
     public static final String PEACE_COMMANDERS = "peace_commanders";
     public static final String UPGRADEABLE_DOORS = "upgradeable_doors";
-    private static final String COMMANDER_DOORS = "commander_doors";
     public static final String ENTER_DOORS = "enter_doors";
     public static final String MACHINE_DOORS = "machine_doors";
     public static final String OUT_POWER_UNITS = "out_power_units";
     public static final String IN_POWER_UNITS = "in_power_units";
+    public static final String MERCENARY_POINTS = "mercenary_points";
+    private static final String COMBAT_FLAGS = "combat_flags";
+    private static final String COMMANDER_DOORS = "commander_doors";
     private static final String GUARDS_LIVE_WITH_C_CENTER = "guards_live_with_c_center";
     private static final String ENVOY = "envoy";
-    public static final String MERCENARY_POINTS = "mercenary_points";
     private static final String MERCENARY = "mercenary";
     private static final String MERCHANT = "merchant";
     private static final long SIEGE_WAIT_PERIOD = 4 * 60 * 60 * 1000L;
@@ -224,10 +224,10 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
             //FIXME [VISTALL] debug
             SpawnExObject exObject = getFirstObject(ENVOY);
             if (exObject.isSpawned())
-                info("Last siege: " + TimeUtils.toSimpleFormat(getResidence().getLastSiegeDate()) + ", own date: " + TimeUtils.toSimpleFormat(getResidence().getOwnDate()) + ", siege date: " + TimeUtils.toSimpleFormat(getResidence().getSiegeDate()));
+                LOG.info("Last siege: " + TimeUtils.toSimpleFormat(getResidence().getLastSiegeDate()) + ", own date: " + TimeUtils.toSimpleFormat(getResidence().getOwnDate()) + ", siege date: " + TimeUtils.toSimpleFormat(getResidence().getSiegeDate()));
 
             spawnAction(ENVOY, true);
-            _envoyTask = ThreadPoolManager.getInstance().schedule(new EnvoyDespawn(), diff);
+            _envoyTask = ThreadPoolManager.INSTANCE().schedule(new EnvoyDespawn(), diff);
         } else if (getResidence().getContractState() == Fortress.NOT_DECIDED) {
             getResidence().setFortState(Fortress.INDEPENDENT, 0);
             getResidence().setJdbcState(JdbcEntityState.UPDATED);
@@ -256,7 +256,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
         long needDate = getResidence().getLastSiegeDate().getTimeInMillis() + SIEGE_WAIT_PERIOD;
         long diff = needDate - System.currentTimeMillis();
         if (diff > 0)
-            _merchantSpawnTask = ThreadPoolManager.getInstance().schedule(new MerchantSpawnTask(), diff);
+            _merchantSpawnTask = ThreadPoolManager.INSTANCE().schedule(new MerchantSpawnTask(), diff);
         else {
             setRegistrationOver(false);
             spawnAction(MERCHANT, true);
@@ -382,7 +382,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
     }
 
     private void startCommanderSpawnTask() {
-        _commanderSpawnTask = ThreadPoolManager.getInstance().schedule(_commanderSpawnRunnable, COMMANDER_RESPAWN);
+        _commanderSpawnTask = ThreadPoolManager.INSTANCE().schedule(_commanderSpawnRunnable, COMMANDER_RESPAWN);
     }
 
     private void stopCommanderSpawnTask() {

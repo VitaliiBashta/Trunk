@@ -67,7 +67,7 @@ public class AdminEffects implements IAdminCommandHandler {
 
                 if (val == 0) {
                     if (sh_level != 0) {
-                        activeChar.doCast(SkillTable.getInstance().getInfo(7029, sh_level), activeChar, true); // снимаем еффект
+                        activeChar.doCast(SkillTable.INSTANCE().getInfo(7029, sh_level), activeChar, true); // снимаем еффект
                     }
                     activeChar.unsetVar("gm_gmspeed");
                 } else if ((val >= 1) && (val <= 4)) {
@@ -76,9 +76,9 @@ public class AdminEffects implements IAdminCommandHandler {
                     }
                     if (val != sh_level) {
                         if (sh_level != 0) {
-                            activeChar.doCast(SkillTable.getInstance().getInfo(7029, sh_level), activeChar, true); // снимаем еффект
+                            activeChar.doCast(SkillTable.INSTANCE().getInfo(7029, sh_level), activeChar, true); // снимаем еффект
                         }
-                        activeChar.doCast(SkillTable.getInstance().getInfo(7029, val), activeChar, true);
+                        activeChar.doCast(SkillTable.INSTANCE().getInfo(7029, val), activeChar, true);
                     }
                 } else {
                     activeChar.sendMessage("USAGE: //gmspeed value=[0 1 2 3 4]");
@@ -98,21 +98,6 @@ public class AdminEffects implements IAdminCommandHandler {
             return false;
 
         switch (command) {
-            case admin_offline_vis:
-                for (Player player : GameObjectsStorage.getAllPlayers())
-                    if (player != null && player.isInOfflineMode()) {
-                        player.setInvisibleType(InvisibleType.NONE);
-                        player.decayMe();
-                        player.spawnMe();
-                    }
-                break;
-            case admin_offline_invis:
-                for (Player player : GameObjectsStorage.getAllPlayers())
-                    if (player != null && player.isInOfflineMode()) {
-                        player.setInvisibleType(InvisibleType.NORMAL);
-                        player.decayMe();
-                    }
-                break;
             case admin_earthquake:
                 try {
                     int intensity = Integer.parseInt(wordList[1]);
@@ -235,7 +220,7 @@ public class AdminEffects implements IAdminCommandHandler {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 }
-                String oldName = ((Creature) target).getName();
+                String oldName = target.getName();
                 String newName = Util.joinStrings(" ", wordList, 1);
 
                 ((Creature) target).setName(newName);
@@ -317,7 +302,7 @@ public class AdminEffects implements IAdminCommandHandler {
                     activeChar.sendMessage("USAGE: //transform transform_id");
                     return false;
                 }
-                activeChar.doCast(SkillTable.getInstance().getInfo(id, lvl), activeChar, true);
+                activeChar.doCast(SkillTable.INSTANCE().getInfo(id, lvl), activeChar, true);
                 break;
             case admin_showmovie:
                 if (wordList.length < 2) {

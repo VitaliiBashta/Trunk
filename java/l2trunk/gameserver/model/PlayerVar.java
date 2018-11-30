@@ -6,46 +6,32 @@ import l2trunk.gameserver.skills.AbnormalEffect;
 
 import java.util.concurrent.ScheduledFuture;
 
-public class PlayerVar {
+public final class PlayerVar {
     private final Player owner;
     private final String name;
-    private String value;
     private final long expire_time;
+    private String value;
+    private ScheduledFuture<?> task;
 
-    @SuppressWarnings("rawtypes")
-    private ScheduledFuture task;
-
-    public PlayerVar(Player owner, String name, String value, long expire_time) {
+    PlayerVar(Player owner, String name, String value, long expire_time) {
         this.owner = owner;
         this.name = name;
         this.value = value;
         this.expire_time = expire_time;
 
-        if (expire_time > 0) // if expires schedule expiration
-        {
-            task = ThreadPoolManager.getInstance().schedule(new PlayerVarExpireTask(this), expire_time - System.currentTimeMillis());
+        if (expire_time > 0) {
+            task = ThreadPoolManager.INSTANCE.schedule(new PlayerVarExpireTask(this), expire_time - System.currentTimeMillis());
         }
-    }
-
-    private String getName() {
-        return name;
-    }
-
-    private Player getOwner() {
-        return owner;
     }
 
     public boolean hasExpired() {
         return task == null || task.isDone();
     }
 
-    public long getTimeToExpire() {
+    long getTimeToExpire() {
         return expire_time - System.currentTimeMillis();
     }
 
-    /**
-     * @return возвращает значение переменной
-     */
     public String getValue() {
         return value;
     }
@@ -54,14 +40,11 @@ public class PlayerVar {
         value = val;
     }
 
-    /**
-     * @return возвращает значение в виде логической переменной
-     */
-    public boolean getValueBoolean() {
-        return value.equals("1") || value.equalsIgnoreCase("true");
+    boolean getValueBoolean() {
+        return value.equals("1") || Boolean.valueOf(value);
     }
 
-    public void stopExpireTask() {
+    void stopExpireTask() {
         if (task != null && !task.isDone()) {
             task.cancel(true);
         }
@@ -75,26 +58,26 @@ public class PlayerVar {
         }
 
         private static void onUnsetVar(PlayerVar var) {
-            switch (var.getName()) {
+            switch (var.name) {
                 case "Para":
-                    if (!var.getOwner().isBlocked())
+                    if (!var.owner.isBlocked())
                         return;
-                    var.getOwner().unblock();
-                    var.getOwner().stopAbnormalEffect(AbnormalEffect.HOLD_1);
-                    if (var.getOwner().isPlayable())
-                        var.getOwner().getPlayer().unsetVar("Para");
+                    var.owner.unblock();
+                    var.owner.stopAbnormalEffect(AbnormalEffect.HOLD_1);
+                    if (var.owner.isPlayable())
+                        var.owner.getPlayer().unsetVar("Para");
                     break;
             }
         }
 
         @Override
         public void runImpl() {
-            Player pc = _pv.getOwner();
+            Player pc = _pv.owner;
             if (pc == null) {
                 return;
             }
 
-            pc.unsetVar(_pv.getName());
+            pc.unsetVar(_pv.name);
 
             onUnsetVar(_pv);
         }

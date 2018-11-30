@@ -24,11 +24,10 @@ import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
-public class Forge implements ScriptFile, ICommunityBoardHandler {
+public final class Forge implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(Forge.class);
 
     @Override
@@ -50,11 +49,8 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]
-                {
-                        "_bbsforge"
-                };
+    public List<String> getBypassCommands() {
+        return Collections.singletonList("_bbsforge");
     }
 
     @Override
@@ -67,7 +63,7 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
 
         String content = "";
         if (command.equals("_bbsforge")) {
-            content = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/index.htm").toString(), player);
+            content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/index.htm", player);
         } else {
             if (command.equals("_bbsforge:augment")) {
                 onBypassCommand(player, "_bbsforge");
@@ -84,7 +80,7 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                 return;
             }
             if (command.equals("_bbsforge:enchant:list")) {
-                content = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/itemlist.htm").toString(), player);
+                content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/itemlist.htm", player);
 
                 ItemInstance head = player.getInventory().getPaperdollItem(6);
                 ItemInstance chest = player.getInventory().getPaperdollItem(10);
@@ -179,9 +175,9 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                     return;
                 }
 
-                content = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant.htm").toString(), player);
+                content = HtmCache.INSTANCE.getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant.htm").toString(), player);
 
-                String template = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant_template.htm").toString(), player);
+                String template = HtmCache.INSTANCE.getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant_template.htm").toString(), player);
 
                 template = template.replace("{icon}", _item.getTemplate().getIcon());
                 String _name = _item.getName();
@@ -194,7 +190,7 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                 template = template.replace("{enchant}", _item.getEnchantLevel() <= 0 ? "" : new StringBuilder().append("+").append(_item.getEnchantLevel()).toString());
                 template = template.replace("{msg}", new CustomMessage("communityboard.forge.enchant.getBonuses", player).toString());
 
-                String button_tm = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant_button_template.htm").toString(), player);
+                String button_tm = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/enchant_button_template.htm", player);
                 String button = null;
                 String block = null;
 
@@ -203,16 +199,16 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                     if (_item.getEnchantLevel() >= level[i])
                         continue;
                     block = button_tm;
-                    block = block.replace("{link}", new StringBuilder().append("bypass _bbsforge:enchant:").append(i * item).append(":").append(item).toString());
-                    block = block.replace("{value}", new StringBuilder().append("+").append(level[i]).append(" (").append(_item.getTemplate().isArmor() ? Config.BBS_FORGE_ENCHANT_PRICE_ARMOR[i] : _item.getTemplate().isWeapon() ? Config.BBS_FORGE_ENCHANT_PRICE_WEAPON[i] : Config.BBS_FORGE_ENCHANT_PRICE_JEWELS[i]).append(" ").append(name).append(")").toString());
-                    button = new StringBuilder().append(button).append(block).toString();
+                    block = block.replace("{link}", "bypass _bbsforge:enchant:" + i * item + ":" + item);
+                    block = block.replace("{value}", "+" + level[i] + " (" + (_item.getTemplate().isArmor() ? Config.BBS_FORGE_ENCHANT_PRICE_ARMOR[i] : _item.getTemplate().isWeapon() ? Config.BBS_FORGE_ENCHANT_PRICE_WEAPON[i] : Config.BBS_FORGE_ENCHANT_PRICE_JEWELS[i]) + " " + name + ")");
+                    button = button + block;
                 }
 
                 template = template.replace("{button}", ((button == null) ? "" : button));
 
                 content = content.replace("<?content?>", template);
             } else if (command.equals("_bbsforge:foundation:list")) {
-                content = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/foundationlist.htm").toString(), player);
+                content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/foundationlist.htm", player);
 
                 ItemInstance head = player.getInventory().getPaperdollItem(6);
                 ItemInstance chest = player.getInventory().getPaperdollItem(10);
@@ -271,8 +267,8 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                 for (Entry<Integer, String[]> info : data.entrySet()) {
                     int slot = info.getKey();
                     String[] array = info.getValue();
-                    content = content.replace(new StringBuilder().append("<?").append(slot).append("_icon?>").toString(), array[0]);
-                    content = content.replace(new StringBuilder().append("<?").append(slot).append("_name?>").toString(), array[1]);
+                    content = content.replace("<?" + slot + "_icon?>", array[0]);
+                    content = content.replace("<?" + slot + "_name?>", array[1]);
                     content = content.replace(new StringBuilder().append("<?").append(slot).append("_button?>").toString(), array[2]);
                     content = content.replace(new StringBuilder().append("<?").append(slot).append("_pic?>").toString(), array[3]);
                 }
@@ -390,7 +386,7 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                     return;
                 }
                 if (command.equals("_bbsforge:attribute:list")) {
-                    content = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/attributelist.htm").toString(), player);
+                    content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/attributelist.htm", player);
 
                     ItemInstance head = player.getInventory().getPaperdollItem(6);
                     ItemInstance chest = player.getInventory().getPaperdollItem(10);
@@ -492,7 +488,7 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                         return;
                     }
 
-                    content = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/attribute.htm").toString(), player);
+                    content = HtmCache.INSTANCE.getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/attribute.htm").toString(), player);
 
                     String slotclose = "<img src=\"L2UI_CT1.ItemWindow_DF_SlotBox_Disable\" width=\"32\" height=\"32\">";
                     String buttonFire = new StringBuilder().append("<button action=\"bypass _bbsforge:attribute:element:0:").append(item).append("\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"/>").toString();
@@ -587,7 +583,7 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                         }
                     }
 
-                    String html = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/attribute_choice_template.htm").toString(), player);
+                    String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/attribute_choice_template.htm", player);
 
                     html = html.replace("{icon}", _item.getTemplate().getIcon());
                     String _name = _item.getName();
@@ -652,21 +648,21 @@ public class Forge implements ScriptFile, ICommunityBoardHandler {
                         return;
                     }
 
-                    content = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/attribute.htm").toString(), player);
-                    String template = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant_template.htm").toString(), player);
+                    content = HtmCache.INSTANCE.getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/attribute.htm").toString(), player);
+                    String template = HtmCache.INSTANCE.getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant_template.htm").toString(), player);
 
                     template = template.replace("{icon}", _item.getTemplate().getIcon());
                     String _name = _item.getName();
                     _name = _name.replace(" {PvP}", "");
 
                     if (_name.length() > 30) {
-                        _name = new StringBuilder().append(_name.substring(0, 29)).append("...").toString();
+                        _name = _name.substring(0, 29) + "...";
                     }
                     template = template.replace("{name}", _name);
                     template = template.replace("{enchant}", _item.getEnchantLevel() <= 0 ? "" : new StringBuilder().append("+").append(_item.getEnchantLevel()).toString());
                     template = template.replace("{msg}", new CustomMessage("communityboard.forge.attribute.selected", player).addString(elementName).toString());
 
-                    String button_tm = HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant_button_template.htm").toString(), player);
+                    String button_tm = HtmCache.INSTANCE().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/enchant_button_template.htm").toString(), player);
                     StringBuilder button = new StringBuilder();
                     String block = null;
 

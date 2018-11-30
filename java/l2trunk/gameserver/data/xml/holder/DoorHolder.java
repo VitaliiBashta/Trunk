@@ -10,7 +10,7 @@ import java.util.Map;
 public final class DoorHolder extends AbstractHolder {
     private static final DoorHolder _instance = new DoorHolder();
 
-    private final Map<Integer,DoorTemplate> doors = new HashMap<>();
+    private final Map<Integer, DoorTemplate> doors = new HashMap<>();
 
     public static DoorHolder getInstance() {
         return _instance;
@@ -24,7 +24,7 @@ public final class DoorHolder extends AbstractHolder {
         return doors.get(doorId);
     }
 
-    public Map<Integer,DoorTemplate> getDoors() {
+    public Map<Integer, DoorTemplate> getDoors() {
         return doors;
     }
 

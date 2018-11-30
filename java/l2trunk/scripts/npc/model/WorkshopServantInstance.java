@@ -70,7 +70,7 @@ public class WorkshopServantInstance extends NpcInstance {
             player.teleToLocation(-12176, 279696, -10492);
         else if (command.startsWith("acceptjob")) {
             broadcastPacket(new MagicSkillUse(this, player, 5526, 1, 0, 0));
-            player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(5526, 1));
+            player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(5526, 1));
             player.teleToLocation(22616, 244888, 11062);
         } else if (command.startsWith("rejectjob")) {
             for (NpcInstance challenger : World.getAroundNpc(this, 600, 300)) {

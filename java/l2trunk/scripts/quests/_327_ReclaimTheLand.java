@@ -184,7 +184,7 @@ public class _327_ReclaimTheLand extends Quest implements ScriptFile {
             else
                 qs.giveItems(JADE_NECKLACE_BEAD, 1);
         }
-        qs.giveItems(_drop.itemList[0], 1);
+        qs.giveItems(_drop.itemList.get(0), 1);
         qs.playSound(SOUND_ITEMGET);
 
         return null;

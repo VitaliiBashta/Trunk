@@ -51,7 +51,7 @@ public class GustavInstance extends SiegeGuardInstance implements _34SiegeGuard 
 
             // Застваляем снять таргет и остановить аттаку
             for (Creature cha : World.getAroundCharacters(this))
-                ThreadPoolManager.getInstance().execute(new GameObjectTasks.NotifyAITask(cha, CtrlEvent.EVT_FORGET_OBJECT, this, null));
+                ThreadPoolManager.INSTANCE().execute(new GameObjectTasks.NotifyAITask(cha, CtrlEvent.EVT_FORGET_OBJECT, this, null));
 
             ClanHallSiegeEvent siegeEvent = getEvent(ClanHallSiegeEvent.class);
             if (siegeEvent == null)
@@ -65,7 +65,7 @@ public class GustavInstance extends SiegeGuardInstance implements _34SiegeGuard 
                 Functions.npcSay(npc, ((_34SiegeGuard) npc).teleChatSay());
                 npc.broadcastPacket(new MagicSkillUse(npc, npc, 4235, 1, 10000, 0));
 
-                _teleportTask = ThreadPoolManager.getInstance().schedule(()-> {
+                _teleportTask = ThreadPoolManager.INSTANCE().schedule(()-> {
                         Location loc = Location.findAroundPosition(new Location(177134, -18807, -2256), 50, 100, npc.getGeoIndex());
 
                         npc.teleToLocation(loc);

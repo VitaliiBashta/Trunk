@@ -47,7 +47,7 @@ public class ClanDataDAO {
             statement.setInt(1, residence.getId());
             try (ResultSet rset = statement.executeQuery()) {
                 if (rset.next())
-                    return ClanTable.getInstance().getClan(rset.getInt("clan_id"));
+                    return ClanTable.INSTANCE.getClan(rset.getInt("clan_id"));
             }
         } catch (SQLException e) {
             _log.error("ClanDataDAO.getOwner(Residence, String)", e);

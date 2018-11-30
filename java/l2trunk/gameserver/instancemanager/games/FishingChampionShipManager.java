@@ -24,21 +24,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * @author n0nam3
- * @date 08/08/2010 15:11
- */
-public class FishingChampionShipManager {
+public enum FishingChampionShipManager {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(FishingChampionShipManager.class);
 
-    private static final FishingChampionShipManager _instance = new FishingChampionShipManager();
-    private long _enddate = 0;
+//    private static final FishingChampionShipManager _instance = new FishingChampionShipManager();
     private final List<String> _playersName = new ArrayList<>();
     private final List<String> _fishLength = new ArrayList<>();
     private final List<String> _winPlayersName = new ArrayList<>();
     private final List<String> _winFishLength = new ArrayList<>();
     private final List<Fisher> _tmpPlayers = new ArrayList<>();
     private final List<Fisher> _winPlayers = new ArrayList<>();
+    private long _enddate = 0;
     private double _minFishLength = 0;
     private boolean _needRefresh = true;
 
@@ -50,12 +47,12 @@ public class FishingChampionShipManager {
             _enddate = System.currentTimeMillis();
             new finishChamp().run();
         } else
-            ThreadPoolManager.getInstance().schedule(new finishChamp(), _enddate - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(new finishChamp(), _enddate - System.currentTimeMillis());
     }
 
-    public static FishingChampionShipManager getInstance() {
-        return _instance;
-    }
+//    public static FishingChampionShipManager INSTANCE() {
+//        return _instance;
+//    }
 
     private void setEndOfChamp() {
         Calendar finishtime = Calendar.getInstance();
@@ -214,7 +211,7 @@ public class FishingChampionShipManager {
     public void showMidResult(Player pl) {
         if (_needRefresh) {
             refreshResult();
-            ThreadPoolManager.getInstance().schedule(new needRefresh(), 60000);
+            ThreadPoolManager.INSTANCE.schedule(new needRefresh(), 60000);
         }
         NpcHtmlMessage html = new NpcHtmlMessage(pl.getObjectId());
         String filename = "fisherman/championship/MidResult.htm";
@@ -344,7 +341,7 @@ public class FishingChampionShipManager {
             setEndOfChamp();
             shutdown();
             _log.info("Fishing Championship Manager : start new event period.");
-            ThreadPoolManager.getInstance().schedule(new finishChamp(), _enddate - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(new finishChamp(), _enddate - System.currentTimeMillis());
         }
     }
 

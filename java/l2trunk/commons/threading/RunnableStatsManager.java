@@ -23,7 +23,7 @@ public final class RunnableStatsManager {
     private final Lock lock = new ReentrantLock();
 
     /**
-     * Method getInstance.
+     * Method INSTANCE.
      *
      * @return RunnableStatsManager
      */

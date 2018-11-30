@@ -154,7 +154,7 @@ public class WorkshopGatekeeperInstance extends NpcInstance {
             for (int i : set) {
                 DoorInstance doorToOpen = ReflectionUtils.getDoor(i);
                 doorToOpen.openMe();
-                ThreadPoolManager.getInstance().schedule(new DoorClose(doorToOpen), 120 * 1000L);
+                ThreadPoolManager.INSTANCE().schedule(new DoorClose(doorToOpen), 120 * 1000L);
             }
         }
     }

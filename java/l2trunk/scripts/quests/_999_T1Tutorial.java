@@ -9,7 +9,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class _999_T1Tutorial extends Quest implements ScriptFile {
@@ -243,8 +245,8 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
 
     public _999_T1Tutorial() {
         super(false);
-
-        addStartNpc(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
+        List<Integer> startNPCs = Arrays.asList(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
+        addStartNpc(startNPCs);
         addTalkId(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
         addFirstTalkId(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
 
@@ -315,7 +317,7 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
             }
 
             if (e.radarX != 0) {
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         st.addRadarWithMap(e.radarX, e.radarY, e.radarZ);
@@ -423,7 +425,7 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
             qs.set("Ex", "2");
         }
         if (Ex <= 2 && st.getQuestItemsCount(BLUE_GEM) < 1)
-            ThreadPoolManager.getInstance().schedule(new DropGem(npc, st), 3000);
+            ThreadPoolManager.INSTANCE().schedule(new DropGem(npc, st), 3000);
         return null;
     }
 

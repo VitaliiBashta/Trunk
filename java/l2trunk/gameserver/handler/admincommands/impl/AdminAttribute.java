@@ -17,7 +17,7 @@ import java.util.Map;
 public class AdminAttribute implements IAdminCommandHandler {
     private static void showDetailsPage(Player player, Player target, int paperdoll) {
         ItemInstance item = target.getInventory().getPaperdollItem(paperdoll);
-        String html = HtmCache.getInstance().getNullable("admin/attributeDetails.htm", player);
+        String html = HtmCache.INSTANCE.getNullable("admin/attributeDetails.htm", player);
 
         html = html.replace("%item%", item.getName());
         html = html.replace("%nick%", player.getName());

@@ -41,10 +41,10 @@ public class SepulcherMonsterInstance extends MonsterInstance {
             case 18157:
                 if (_victimSpawnKeyBoxTask != null)
                     _victimSpawnKeyBoxTask.cancel(false);
-                _victimSpawnKeyBoxTask = ThreadPoolManager.getInstance().schedule(new VictimSpawnKeyBox(this), 300000);
+                _victimSpawnKeyBoxTask = ThreadPoolManager.INSTANCE.schedule(new VictimSpawnKeyBox(this), 300000);
                 if (_victimShout != null)
                     _victimShout.cancel(false);
-                _victimShout = ThreadPoolManager.getInstance().schedule(new VictimShout(this), 5000);
+                _victimShout = ThreadPoolManager.INSTANCE.schedule(new VictimShout(this), 5000);
                 break;
             case 18196:
             case 18197:
@@ -78,7 +78,7 @@ public class SepulcherMonsterInstance extends MonsterInstance {
             case 18243:
                 if (_changeImmortalTask != null)
                     _changeImmortalTask.cancel(false);
-                _changeImmortalTask = ThreadPoolManager.getInstance().schedule(new ChangeImmortal(this), 1600);
+                _changeImmortalTask = ThreadPoolManager.INSTANCE.schedule(new ChangeImmortal(this), 1600);
                 break;
             case 18256:
                 break;
@@ -124,7 +124,7 @@ public class SepulcherMonsterInstance extends MonsterInstance {
             case 18219:
                 if (_onDeadEventTask != null)
                     _onDeadEventTask.cancel(false);
-                _onDeadEventTask = ThreadPoolManager.getInstance().schedule(new OnDeadEvent(this), 3500);
+                _onDeadEventTask = ThreadPoolManager.INSTANCE.schedule(new OnDeadEvent(this), 3500);
                 break;
 
             case 18150:
@@ -145,7 +145,7 @@ public class SepulcherMonsterInstance extends MonsterInstance {
                 }
                 if (_onDeadEventTask != null)
                     _onDeadEventTask.cancel(false);
-                _onDeadEventTask = ThreadPoolManager.getInstance().schedule(new OnDeadEvent(this), 3500);
+                _onDeadEventTask = ThreadPoolManager.INSTANCE.schedule(new OnDeadEvent(this), 3500);
                 break;
 
             case 18141:
@@ -159,7 +159,7 @@ public class SepulcherMonsterInstance extends MonsterInstance {
                 if (FourSepulchersSpawn.isViscountMobsAnnihilated(mysteriousBoxId) && !hasPartyAKey(killer.getPlayer())) {
                     if (_onDeadEventTask != null)
                         _onDeadEventTask.cancel(false);
-                    _onDeadEventTask = ThreadPoolManager.getInstance().schedule(new OnDeadEvent(this), 3500);
+                    _onDeadEventTask = ThreadPoolManager.INSTANCE.schedule(new OnDeadEvent(this), 3500);
                 }
                 break;
 
@@ -187,7 +187,7 @@ public class SepulcherMonsterInstance extends MonsterInstance {
                 if (FourSepulchersSpawn.isDukeMobsAnnihilated(mysteriousBoxId)) {
                     if (_onDeadEventTask != null)
                         _onDeadEventTask.cancel(false);
-                    _onDeadEventTask = ThreadPoolManager.getInstance().schedule(new OnDeadEvent(this), 3500);
+                    _onDeadEventTask = ThreadPoolManager.INSTANCE.schedule(new OnDeadEvent(this), 3500);
                 }
                 break;
         }
@@ -352,7 +352,7 @@ public class SepulcherMonsterInstance extends MonsterInstance {
 
         @Override
         public void runImpl() {
-            Skill fp = SkillTable.getInstance().getInfo(4616, 1); // Invulnerable by petrification
+            Skill fp = SkillTable.INSTANCE.getInfo(4616, 1); // Invulnerable by petrification
             fp.getEffects(activeChar, activeChar, false, false);
         }
     }

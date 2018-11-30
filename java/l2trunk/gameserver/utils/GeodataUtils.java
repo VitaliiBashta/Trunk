@@ -7,12 +7,12 @@ import l2trunk.gameserver.network.serverpackets.ExServerPrimitive;
 import java.awt.*;
 
 public class GeodataUtils {
+    public static final byte NSWE_ALL = 15;
+    public static final byte NSWE_NONE = 0;
     private static final byte EAST = 1;
     private static final byte WEST = 2;
     private static final byte SOUTH = 4;
     private static final byte NORTH = 8;
-    public static final byte NSWE_ALL = 15;
-    public static final byte NSWE_NONE = 0;
 
     public static void debug2DLine(Player player, int x, int y, int tx, int ty, int z) {
         int gx = GeoEngine.getGeoX(x);

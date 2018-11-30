@@ -88,7 +88,7 @@ public class Roulette extends Functions {
 
     public void dialog() {
         Player player = getSelf();
-        show(HtmCache.getInstance().getNotNull("scripts/services/roulette.htm", player).replaceFirst("%min%", Util.formatAdena(Config.SERVICES_ROULETTE_MIN_BET)).replaceFirst("%max%", Util.formatAdena(Config.SERVICES_ROULETTE_MAX_BET)), player);
+        show(HtmCache.INSTANCE().getNotNull("scripts/services/roulette.htm", player).replaceFirst("%min%", Util.formatAdena(Config.SERVICES_ROULETTE_MIN_BET)).replaceFirst("%max%", Util.formatAdena(Config.SERVICES_ROULETTE_MAX_BET)), player);
     }
 
     public void play(String[] param) {
@@ -129,7 +129,7 @@ public class Roulette extends Functions {
         String[] roll = Numbers[Rnd.get(Numbers.length)];
         int result = check(betID, roll, type);
 
-        String ret = HtmCache.getInstance().getNotNull("scripts/services/rouletteresult.htm", player);
+        String ret = HtmCache.INSTANCE().getNotNull("scripts/services/rouletteresult.htm", player);
 
         if (result == 0) {
             removeItem(player, 57, bet, "Roulette");

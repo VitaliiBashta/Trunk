@@ -18,7 +18,7 @@ public class SpawnTaskManager {
     private int _spawnTasksSize = 0;
 
     private SpawnTaskManager() {
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new SpawnScheduler(), 2000, 2000);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SpawnScheduler(), 2000, 2000);
     }
 
     public static SpawnTaskManager getInstance() {

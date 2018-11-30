@@ -14,10 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Author: VISTALL
- * Date:  10:50/14.12.2010
- */
 public final class AirshipDockParser extends AbstractFileParser<AirshipDockHolder> {
     private static final AirshipDockParser _instance = new AirshipDockParser();
 

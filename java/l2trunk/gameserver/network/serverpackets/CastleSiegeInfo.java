@@ -34,9 +34,9 @@ import java.util.Calendar;
  * @reworked VISTALL
  */
 public class CastleSiegeInfo extends L2GameServerPacket {
-    private long _startTime;
     private final int _id;
     private final int _ownerObjectId;
+    private long _startTime;
     private int _allyId;
     private boolean _isLeader;
     private String _ownerName = "No owner";

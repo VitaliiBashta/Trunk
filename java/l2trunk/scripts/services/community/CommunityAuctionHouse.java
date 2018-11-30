@@ -51,8 +51,8 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_maillist", "_bbsAuction_", "_bbsNewAuction"};
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_maillist", "_bbsAuction_", "_bbsNewAuction");
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
 
         if ("maillist".equals(cmd)) {
 
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
 
             html = fillAuctionListPage(player, html, 1, new int[]{-1, -1}, "All", null, 1, 0, 0, 0);
 
@@ -126,12 +126,12 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
                         }
                     }
                     //sending buy_item html
-                    html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_buy_item.htm", player);
+                    html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_buy_item.htm", player);
                     html = fillPurchasePage(player, html, page, itemTypes, grade, search, itemSort, gradeSort, quantitySort, priceSort, auctionId);
 
                 } else {
                     //sending auction list html
-                    html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
+                    html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
                     html = fillAuctionListPage(player, html, page, itemTypes, grade, search, itemSort, gradeSort, quantitySort, priceSort);
                 }
             } catch (NumberFormatException e) {
@@ -195,7 +195,7 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
             }
 
             //sending my auction page
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_new_auction.htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_new_auction.htm", player);
             html = fillNewAuctionPage(player, html, currentItem.equals("n"), currentObjectId, line);
         }
 
@@ -525,7 +525,7 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
         html = html.replace("%choosenImage%", (choosenItem != null ? "<img src=icon." + choosenItem.getTemplate().getIcon() + " width=32 height=32>" : ""));
         html = html.replace("%choosenItem%", (choosenItem != null ? (getItemName(choosenItem, 180, 45, false, (choosenItem.getCount() > 1 ? " x" + choosenItem.getCount() : ""))) : ""));
         html = html.replace("%quantity%", (choosenItem == null || choosenItem.getCount() > 1 ? "<edit var=\"quantity\" type=number value=\"\" width=160 height=12>" : "<center>1</center>"));
-        html = html.replace("%NewAuctionButton%", (choosenItem != null ? "<center><button value=\"New Auction\" action=\"bypass _bbsNewAuction_ " + (newItem ? "n" : "c") + currentItem + " _ " + line + " _ 0 _ " + (choosenItem == null || choosenItem.getCount() > 1 ? "$quantity" : "1") + " _ $sale_price\" width=90 height=30 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>" : ""));
+        html = html.replace("%NewAuctionButton%", choosenItem != null ? "<center><button value=\"New Auction\" action=\"bypass _bbsNewAuction_ " + (newItem ? "n" : "c") + currentItem + " _ " + line + " _ 0 _ " + (choosenItem.getCount() > 1 ? "$quantity" : "1") + " _ $sale_price\" width=90 height=30 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>" : "");
 
         return html;
     }

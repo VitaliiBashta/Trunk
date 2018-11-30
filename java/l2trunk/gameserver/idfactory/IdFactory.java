@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class IdFactory {
+    static final int FIRST_OID = 0x10000000;
     private static final String[][] EXTRACT_OBJ_ID_TABLES = {
             {"characters", "obj_id"},
             {"items", "object_id"},
@@ -21,7 +22,6 @@ public abstract class IdFactory {
             {"ally_data", "ally_id"},
             {"pets", "objId"},
             {"couples", "id"}};
-    static final int FIRST_OID = 0x10000000;
     private static final int LAST_OID = 0x7FFFFFFF;
     static final int FREE_OBJECT_ID_SIZE = LAST_OID - FIRST_OID;
     //    protected  final IdFactory _instance = new BitSetIDFactory();

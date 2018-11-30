@@ -17,6 +17,7 @@ import l2trunk.gameserver.taskmanager.EffectTaskManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,9 +43,9 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     protected final Creature _effected;
 
     protected final Skill _skill;
+    protected final EffectTemplate _template;
     private final int _displayId;
     private final int _displayLevel;
-    protected final EffectTemplate _template;
     // the value of an update
     private final double _value;
     // the current state
@@ -376,7 +377,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
                     next.schedule();
 
             if (getSkill().getDelayedEffect() > 0) {
-                Skill delayErrects = SkillTable.getInstance().getInfo(getSkill().getDelayedEffect(), 1);
+                Skill delayErrects = SkillTable.INSTANCE.getInfo(getSkill().getDelayedEffect(), 1);
                 if (delayErrects != null) {
                     delayErrects.getEffects(_effector, _effected, false, false);
                 }
@@ -478,7 +479,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
         return true;
     }
 
-    protected Func[] getStatFuncs() {
+    protected List<Func> getStatFuncs() {
         return getTemplate().getStatFuncs(this);
     }
 

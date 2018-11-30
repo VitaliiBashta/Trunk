@@ -17,11 +17,12 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class FortressCombatFlagObject implements SpawnableObject, FlagItemAttachment {
     private static final Logger _log = LoggerFactory.getLogger(FortressCombatFlagObject.class);
-    private ItemInstance _item;
     private final Location _location;
-
+    private ItemInstance _item;
     private GlobalEvent event;
 
     public FortressCombatFlagObject(Location location) {
@@ -114,8 +115,8 @@ public class FortressCombatFlagObject implements SpawnableObject, FlagItemAttach
 
     @Override
     public boolean canCast(Player player, Skill skill) {
-        Skill[] skills = player.getActiveWeaponItem().getAttachedSkills();
-        if (!ArrayUtils.contains(skills, skill)) {
+        List<Skill> skills = player.getActiveWeaponItem().getAttachedSkills();
+        if (!skills.contains(skill)) {
             player.sendPacket(SystemMsg.THAT_WEAPON_CANNOT_USE_ANY_OTHER_SKILL_EXCEPT_THE_WEAPONS_SKILL);
             return false;
         } else

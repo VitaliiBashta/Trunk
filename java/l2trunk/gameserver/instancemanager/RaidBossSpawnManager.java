@@ -439,7 +439,7 @@ public class RaidBossSpawnManager {
             if (player != null)
                 clan = player.getClan();
             else
-                clan = ClanTable.getInstance().getClan(mysql.simple_get_int("clanid", "characters", "obj_Id=" + playerId));
+                clan = ClanTable.INSTANCE.getClan(mysql.simple_get_int("clanid", "characters", "obj_Id=" + playerId));
             if (clan != null)
                 clan.incReputation(reward, true, "RaidPoints");
             counter++;

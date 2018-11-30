@@ -7,14 +7,14 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class QuestTimer extends RunnableImpl {
+public final class QuestTimer extends RunnableImpl {
     private final String _name;
     private final NpcInstance _npc;
     private long _time;
     private QuestState _qs;
     private ScheduledFuture<?> _schedule;
 
-    public QuestTimer(String name, long time, NpcInstance npc) {
+    QuestTimer(String name, long time, NpcInstance npc) {
         _name = name;
         _time = time;
         _npc = npc;
@@ -29,7 +29,7 @@ public class QuestTimer extends RunnableImpl {
     }
 
     void start() {
-        _schedule = ThreadPoolManager.getInstance().schedule(this, _time);
+        _schedule = ThreadPoolManager.INSTANCE.schedule(this, _time);
     }
 
     @Override

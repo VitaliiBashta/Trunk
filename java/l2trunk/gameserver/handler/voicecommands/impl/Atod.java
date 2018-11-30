@@ -5,8 +5,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPSmallCommands;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Atod extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS = {};
+    private static final List<String> COMMANDS = Collections.singletonList("openatod");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String params) {
@@ -14,7 +17,7 @@ public class Atod extends Functions implements IVoicedCommandHandler {
             if (params == null) {
                 activeChar.sendMessage("Usage: .openatod <num>");
             } else {
-                int num = 0;
+                int num;
                 try {
                     num = Integer.parseInt(params);
                 } catch (NumberFormatException nfe) {
@@ -30,7 +33,7 @@ public class Atod extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 

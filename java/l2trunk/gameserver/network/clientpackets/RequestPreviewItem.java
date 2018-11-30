@@ -139,7 +139,7 @@ public class RequestPreviewItem extends L2GameClientPacket {
         if (!itemList.isEmpty()) {
             activeChar.sendPacket(new ShopPreviewInfo(itemList));
             // Schedule task
-            ThreadPoolManager.getInstance().schedule(new RemoveWearItemsTask(activeChar), Config.WEAR_DELAY * 1000);
+            ThreadPoolManager.INSTANCE().schedule(new RemoveWearItemsTask(activeChar), Config.WEAR_DELAY * 1000);
         }
     }
 

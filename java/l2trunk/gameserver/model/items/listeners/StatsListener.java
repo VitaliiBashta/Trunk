@@ -5,6 +5,8 @@ import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.stats.funcs.Func;
 
+import java.util.List;
+
 public final class StatsListener implements OnEquipListener {
     private static final StatsListener _instance = new StatsListener();
 
@@ -20,7 +22,7 @@ public final class StatsListener implements OnEquipListener {
 
     @Override
     public void onEquip(int slot, ItemInstance item, Playable actor) {
-        Func[] funcs = item.getStatFuncs();
+        List<Func> funcs = item.getStatFuncs();
         actor.addStatFuncs(funcs);
         actor.updateStats();
     }

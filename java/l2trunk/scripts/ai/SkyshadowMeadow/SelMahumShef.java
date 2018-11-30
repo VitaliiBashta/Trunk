@@ -29,7 +29,7 @@ public final class SelMahumShef extends Fighter {
             if (_wait_timeout < System.currentTimeMillis()) {
                 List<Player> players = World.getAroundPlayers(actor, 100, 100);
                 for (Player p : players)
-                    actor.doCast(SkillTable.getInstance().getInfo(6330, 1), p, true);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(6330, 1), p, true);
                 _wait_timeout = (System.currentTimeMillis() + 30000);
             }
 
@@ -39,7 +39,7 @@ public final class SelMahumShef extends Fighter {
                         // Включаем паузу что бы не зафлудить чат.
                         _firstTime = false;
                         Functions.npcSay(actor, _text[Rnd.get(_text.length)]);
-                        ThreadPoolManager.getInstance().schedule(new NewText(), 20000); // Время паузы
+                        ThreadPoolManager.INSTANCE().schedule(new NewText(), 20000); // Время паузы
                     }
                 }
             }

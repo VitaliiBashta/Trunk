@@ -50,7 +50,7 @@ public class PathfinderInstance extends NpcInstance {
             player.unsetVar("backCoords");
             r.startCollapseTimer(1000);
         } else if (command.startsWith("ListPossible")) {
-            if (getNpcId() == 32484 && Config.ALT_KAMALOKA_NIGHTMARES_PREMIUM_ONLY && !player.hasBonus()) {
+            if (getNpcId() == 32484 && Config.ALT_KAMALOKA_NIGHTMARES_PREMIUM_ONLY) {
                 showChatWindow(player, "instance/soloKamaloka/32484-no.htm");
                 return;
             }

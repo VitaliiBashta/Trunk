@@ -3,8 +3,8 @@ package l2trunk.gameserver.utils;
 public final class SqlBatch {
     private final String _header;
     private final String _tail;
-    private StringBuilder _sb;
     private final StringBuilder _result;
+    private StringBuilder _sb;
     private long limit = Long.MAX_VALUE;
     private boolean isEmpty = true;
 

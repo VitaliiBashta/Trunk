@@ -49,7 +49,7 @@ public class RaidBossInstance extends MonsterInstance {
 
     @Override
     public void notifyMinionDied(MinionInstance minion) {
-        minionMaintainTask = ThreadPoolManager.getInstance().schedule(new MaintainKilledMinion(minion), getKilledInterval(minion));
+        minionMaintainTask = ThreadPoolManager.INSTANCE.schedule(new MaintainKilledMinion(minion), getKilledInterval(minion));
         super.notifyMinionDied(minion);
     }
 
@@ -77,12 +77,12 @@ public class RaidBossInstance extends MonsterInstance {
                 for (Player member : player.getParty().getMembers()) {
                     member.updateRaidKills();
                     if (member.isNoble())
-                        Hero.getInstance().addHeroDiary(member.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
+                        Hero.INSTANCE.addHeroDiary(member.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
                 }
                 player.getParty().sendPacket(Msg.CONGRATULATIONS_YOUR_RAID_WAS_SUCCESSFUL);
             } else {
                 if (player.isNoble())
-                    Hero.getInstance().addHeroDiary(player.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
+                    Hero.INSTANCE.addHeroDiary(player.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
 
                 player.getCounters().raidsKilled++;
                 player.sendPacket(Msg.CONGRATULATIONS_YOUR_RAID_WAS_SUCCESSFUL);
@@ -100,12 +100,9 @@ public class RaidBossInstance extends MonsterInstance {
         }
 
         if (getMinionList().hasAliveMinions()) {
-            ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-                @Override
-                public void runImpl() {
-                    if (isDead())
-                        getMinionList().unspawnMinions();
-                }
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                if (isDead())
+                    getMinionList().unspawnMinions();
             }, getMinionUnspawnInterval());
         }
 
@@ -132,7 +129,7 @@ public class RaidBossInstance extends MonsterInstance {
                 box.spawnMe(getLoc());
                 box.setSpawnedLoc(getLoc());
 
-                ThreadPoolManager.getInstance().schedule(new GameObjectTasks.DeleteTask(box), 60000);
+                ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(box), 60000);
             }
         }
 
@@ -150,11 +147,7 @@ public class RaidBossInstance extends MonsterInstance {
         for (HateInfo ai : getAggroList().getPlayableMap().values()) {
             Player player = ai.attacker.getPlayer();
             Object key = player.getParty() != null ? player.getParty().getCommandChannel() != null ? player.getParty().getCommandChannel() : player.getParty() : player.getPlayer();
-            Object[] info = participants.get(key);
-            if (info == null) {
-                info = new Object[]{new HashSet<Player>(), 0L};
-                participants.put(key, info);
-            }
+            Object[] info = participants.computeIfAbsent(key, k -> new Object[]{new HashSet<Player>(), 0L});
 
             // если это пати или командный канал то берем оттуда весь список участвующих, даже тех кто не в аггролисте
             // дубликаты не страшны - это хашсет
@@ -200,7 +193,7 @@ public class RaidBossInstance extends MonsterInstance {
     @Override
     protected void onSpawn() {
         super.onSpawn();
-        addSkill(SkillTable.getInstance().getInfo(4045, 1)); // Resist Full Magic Attack
+        addSkill(SkillTable.INSTANCE().getInfo(4045, 1)); // Resist Full Magic Attack
         RaidBossSpawnManager.getInstance().onBossSpawned(this);
     }
 

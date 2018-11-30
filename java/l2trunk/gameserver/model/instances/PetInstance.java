@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.Future;
 
 public class PetInstance extends Summon {
@@ -39,8 +40,8 @@ public class PetInstance extends Summon {
 
     private static final int DELUXE_FOOD_FOR_STRIDER = 5169;
     private final int _controlItemObjId;
-    private PetData _data;
     private final PetInventory _inventory;
+    private PetData _data;
     private int _curFed;
     private Future<?> _feedTask;
     private int _level;
@@ -292,8 +293,8 @@ public class PetInstance extends Summon {
                 return;
 
             if (item.isHerb()) {
-                Skill[] skills = item.getTemplate().getAttachedSkills();
-                if (skills.length > 0)
+                List<Skill> skills = item.getTemplate().getAttachedSkills();
+                if (skills.size() > 0)
                     for (Skill skill : skills)
                         altUseSkill(skill, this);
                 item.deleteMe();
@@ -549,7 +550,7 @@ public class PetInstance extends Summon {
 
     @Override
     public NpcTemplate getTemplate() {
-        return (NpcTemplate) _template;
+        return (NpcTemplate) template;
     }
 
     @Override
@@ -586,7 +587,7 @@ public class PetInstance extends Summon {
                 feedTime = 10000;
             else
                 feedTime = Math.max(first ? 15000 : 1000, 60000 / (battleFeed ? _data.getFeedBattle() : _data.getFeedNormal()));
-            _feedTask = ThreadPoolManager.getInstance().schedule(new FeedTask(), feedTime);
+            _feedTask = ThreadPoolManager.INSTANCE.schedule(new FeedTask(), feedTime);
         }
     }
 
@@ -738,7 +739,7 @@ public class PetInstance extends Summon {
     }
 
     private void changeTemplate(NpcTemplate template) {
-        _template = template;
+        this.template = template;
     }
 
     class FeedTask extends RunnableImpl {

@@ -129,7 +129,7 @@ public class SeedOfAnnihilation extends Functions implements ScriptFile {
             chanceZoneActive(sr.buff_zone_pc[sr.activeBuff - 1], true);
             chanceZoneActive(sr.buff_zone_npc[sr.activeBuff - 1], true);
         }
-        ThreadPoolManager.getInstance().schedule(new ChangeSeedsStatus(), _seedsNextStatusChange - System.currentTimeMillis());
+        ThreadPoolManager.INSTANCE().schedule(new ChangeSeedsStatus(), _seedsNextStatusChange - System.currentTimeMillis());
     }
 
     private class ChangeSeedsStatus extends RunnableImpl {
@@ -153,7 +153,7 @@ public class SeedOfAnnihilation extends Functions implements ScriptFile {
                 chanceZoneActive(_regionsData[i].buff_zone_pc[_regionsData[i].activeBuff - 1], true);
                 chanceZoneActive(_regionsData[i].buff_zone_npc[_regionsData[i].activeBuff - 1], true);
             }
-            ThreadPoolManager.getInstance().schedule(new ChangeSeedsStatus(), _seedsNextStatusChange - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE().schedule(new ChangeSeedsStatus(), _seedsNextStatusChange - System.currentTimeMillis());
         }
     }
 
@@ -204,8 +204,8 @@ public class SeedOfAnnihilation extends Functions implements ScriptFile {
             return;
         } else {
             npc.setTarget(player);
-            SkillTable.getInstance().getInfo(6408, 1).getEffects(player, player, false, false);
-            SkillTable.getInstance().getInfo(6649, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(6408, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(6649, 1).getEffects(player, player, false, false);
             show("default/32739-1.htm", player);
         }
     }

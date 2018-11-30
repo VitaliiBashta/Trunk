@@ -21,7 +21,7 @@ import l2trunk.gameserver.utils.Location;
 
 public final class Tiat extends Fighter {
     private static final int TIAT_TRANSFORMATION_SKILL_ID = 5974;
-    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.getInstance().getInfo(TIAT_TRANSFORMATION_SKILL_ID, 1);
+    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.INSTANCE().getInfo(TIAT_TRANSFORMATION_SKILL_ID, 1);
     private boolean _notUsedTransform = true;
     private static final int TRAPS_COUNT = 4;
     private static final Location[] TRAP_LOCS = {
@@ -65,7 +65,7 @@ public final class Tiat extends Fighter {
             // Transform skill cast [custom: making Tiat invul while casting]
             actor.setIsInvul(true);
             actor.doCast(TIAT_TRANSFORMATION_SKILL, actor, true);
-            ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+            ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     getActor().setCurrentHpMp(getActor().getMaxHp(), getActor().getMaxMp());
@@ -96,7 +96,7 @@ public final class Tiat extends Fighter {
             _failed = true;
 
             // Показываем финальный ролик при фейле серез секунду после очистки инстанса
-            ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+            ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     for (Player pl : r.getPlayers())
@@ -122,7 +122,7 @@ public final class Tiat extends Fighter {
         for (NpcInstance n : r.getNpcs())
             n.deleteMe();
         // Показываем финальный ролик серез секунду после очистки инстанса
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 for (Player pl : r.getPlayers())

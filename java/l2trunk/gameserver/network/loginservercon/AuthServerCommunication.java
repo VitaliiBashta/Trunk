@@ -242,7 +242,7 @@ public class AuthServerCommunication extends Thread {
 
                 if (rp != null) {
                     if (rp.read())
-                        ThreadPoolManager.getInstance().execute(rp);
+                        ThreadPoolManager.INSTANCE.execute(rp);
                 }
 
                 buf.limit(limit);
@@ -432,7 +432,7 @@ public class AuthServerCommunication extends Thread {
     public String[] getAccounts() {
         readLock.lock();
         try {
-            return authedClients.keySet().toArray(new String[authedClients.size()]);
+            return authedClients.keySet().toArray(new String[0]);
         } finally {
             readLock.unlock();
         }

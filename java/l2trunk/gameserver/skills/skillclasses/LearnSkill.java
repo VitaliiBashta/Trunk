@@ -45,7 +45,7 @@ public class LearnSkill extends Skill {
 
         for (int i = 0; i < _learnSkillId.length; i++) {
             if (player.getSkillLevel(_learnSkillId[i]) < _learnSkillLvl[i] && _learnSkillId[i] != 0) {
-                newSkill = SkillTable.getInstance().getInfo(_learnSkillId[i], _learnSkillLvl[i]);
+                newSkill = SkillTable.INSTANCE().getInfo(_learnSkillId[i], _learnSkillLvl[i]);
                 if (newSkill != null)
                     player.addSkill(newSkill, true);
             }

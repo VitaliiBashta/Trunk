@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MushroomInstance extends MonsterInstance {
+public final class MushroomInstance extends MonsterInstance {
     private static final int FANTASY_MUSHROOM = 18864;
     private static final int FANTASY_MUSHROOM_SKILL = 6427;
 
@@ -51,15 +51,15 @@ public class MushroomInstance extends MonsterInstance {
 
         if (getNpcId() == RAINBOW_FROG) // Этот моб баффает баффом.
         {
-            ThreadPoolManager.getInstance().schedule(new TaskAfterDead(this, killer, RAINBOW_FROG_SKILL), 3000);
+            ThreadPoolManager.INSTANCE.schedule(new TaskAfterDead(this, killer, RAINBOW_FROG_SKILL), 3000);
             doDie(killer);
         } else if (getNpcId() == STICKY_MUSHROOM) // Этот моб лечит и с шансом 40% кидает корни.
         {
-            ThreadPoolManager.getInstance().schedule(new TaskAfterDead(this, killer, STICKY_MUSHROOM_SKILL), 3000);
+            ThreadPoolManager.INSTANCE.schedule(new TaskAfterDead(this, killer, STICKY_MUSHROOM_SKILL), 3000);
             doDie(killer);
         } else if (getNpcId() == ENERGY_PLANT) // Этот моб лечит.
         {
-            ThreadPoolManager.getInstance().schedule(new TaskAfterDead(this, killer, ENERGY_PLANT_SKILL), 3000);
+            ThreadPoolManager.INSTANCE.schedule(new TaskAfterDead(this, killer, ENERGY_PLANT_SKILL), 3000);
             doDie(killer);
         } else if (getNpcId() == ABYSS_WEED) // TODO: Неизвестно, что он делает.
         {
@@ -73,7 +73,7 @@ public class MushroomInstance extends MonsterInstance {
                         npc.setRunning();
                         npc.moveToLocation(Location.findPointToStay(this, 20, 50), 0, true);
                     }
-            ThreadPoolManager.getInstance().schedule(new TaskAfterDead(this, killer, FANTASY_MUSHROOM_SKILL), 4000);
+            ThreadPoolManager.INSTANCE.schedule(new TaskAfterDead(this, killer, FANTASY_MUSHROOM_SKILL), 4000);
         }
     }
 
@@ -85,7 +85,7 @@ public class MushroomInstance extends MonsterInstance {
         TaskAfterDead(NpcInstance actor, Creature killer, int skillId) {
             _actor = actor;
             _killer = killer;
-            _skill = SkillTable.getInstance().getInfo(skillId, 1);
+            _skill = SkillTable.INSTANCE().getInfo(skillId, 1);
         }
 
         @Override

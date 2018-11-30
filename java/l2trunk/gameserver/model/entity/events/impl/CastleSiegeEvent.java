@@ -35,12 +35,12 @@ import java.util.concurrent.Future;
 
 public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
     public static final int MAX_SIEGE_CLANS = 20;
-    private static final long DAY_IN_MILISECONDS = 86400000L;
     public static final String DEFENDERS_WAITING = "defenders_waiting";
     public static final String DEFENDERS_REFUSED = "defenders_refused";
     public static final String CONTROL_TOWERS = "control_towers";
     public static final String FLAME_TOWERS = "flame_towers";
     public static final String BOUGHT_ZONES = "bought_zones";
+    private static final long DAY_IN_MILISECONDS = 86400000L;
     private static final String GUARDS = "guards";
     private static final String HIRED_GUARDS = "hired_guards";
     private Set<Integer> _nextSiegeTimes = new HashSet<>();
@@ -259,7 +259,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
 
                         player.sendPacket(PlaySound.SIEGE_VICTORY);
                         if (player.isOnline() && player.isNoble()) {
-                            Hero.getInstance().addHeroDiary(player.getObjectId(), HeroDiary.ACTION_CASTLE_TAKEN, getResidence().getId());
+                            Hero.INSTANCE.addHeroDiary(player.getObjectId(), HeroDiary.ACTION_CASTLE_TAKEN, getResidence().getId());
                         }
                     }
                 }
@@ -445,7 +445,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
         }
 
         long diff = (getResidence().getOwnDate().getTimeInMillis() + DAY_IN_MILISECONDS) - System.currentTimeMillis();
-        _nextSiegeDateSetTask = ThreadPoolManager.getInstance().schedule(new NextSiegeDateSet(), diff);
+        _nextSiegeDateSetTask = ThreadPoolManager.INSTANCE().schedule(new NextSiegeDateSet(), diff);
     }
 
     // ========================================================================================================================================================================

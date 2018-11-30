@@ -9,10 +9,9 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 public class Say2 extends NpcStringContainer {
     private final ChatType _type;
+    private final int _objectId;
     private SysString _sysString;
     private SystemMsg _systemMsg;
-
-    private final int _objectId;
     private String _charName, _text;
 
     public Say2(int objectId, ChatType type, SysString st, SystemMsg sm) {

@@ -18,10 +18,6 @@ import l2trunk.gameserver.utils.Util;
 import java.util.List;
 import java.util.StringTokenizer;
 
-/**
- * @author pchayka
- */
-
 public final class CaravanTraderInstance extends NpcInstance {
     private static final int NativeTreasure = 9684;
     private static final int HolyWater = 9673;
@@ -53,25 +49,21 @@ public final class CaravanTraderInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.startsWith("Chat")) // general
-        {
+        if (command.startsWith("Chat")) {
             int val = 0;
             try {
                 val = Integer.parseInt(command.substring(5));
-            } catch (IndexOutOfBoundsException | NumberFormatException ioobe) {
+            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
             }
             showDialog(player, getHtmlPath(getNpcId(), val, player));
-            return;
         } else if (command.startsWith("give_treasures")) //Jude
         {
             if (player.getInventory().getCountOf(NativeTreasure) >= 40) {
                 Functions.removeItem(player, NativeTreasure, 40, "CaravanTraderInstance");
                 ServerVariables.set("HB_judesBoxes", true);
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
-                return;
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
-                return;
             }
         } else if (command.startsWith("buy_holy_water")) //Bernarde
         {
@@ -83,10 +75,8 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, DarionsBadge, 5, "CaravanTraderInstance");
                 Functions.addItem(player, HolyWater, 1, "CaravanTraderInstance");
                 showDialog(player, getHtmlPath(getNpcId(), 6, player));
-                return;
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
-                return;
             }
         } else if (command.startsWith("one_treasure")) //Bernarde
         {
@@ -94,10 +84,8 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, NativeTreasure, 1, "CaravanTraderInstance");
                 ServerVariables.set("HB_bernardBoxes", true);
                 showDialog(player, getHtmlPath(getNpcId(), 8, player));
-                return;
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 9, player));
-                return;
             }
         } else if (command.startsWith("request_1_badge")) //Falk
         {
@@ -111,12 +99,10 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, DarionsBadge, 20, "CaravanTraderInstance");
                 Functions.addItem(player, FirstMark, 1, "CaravanTraderInstance");
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
-                return;
             } else
             // not enough badges
             {
                 showDialog(player, getHtmlPath(getNpcId(), 5, player));
-                return;
             }
         } else if (command.startsWith("bdgc"))
             try {
@@ -141,10 +127,8 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, DarionsBadge, val, "CaravanTraderInstance");
                 HellboundManager.addConfidence(val * 10L);
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
-                return;
             } catch (NumberFormatException nfe) {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
-                return;
             }
         else if (command.startsWith("buy_magic_bottle")) // Kief
         {
@@ -152,12 +136,10 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, ScorpionPoisonStinger, 20, "CaravanTraderInstance");
                 Functions.addItem(player, MagicBottle, 1, "CaravanTraderInstance");
                 showDialog(player, getHtmlPath(getNpcId(), 6, player));
-                return;
             } else
             // not enough
             {
                 showDialog(player, getHtmlPath(getNpcId(), 7, player));
-                return;
             }
         } else if (command.startsWith("cntf"))
             try {
@@ -194,8 +176,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                         showDialog(player, getHtmlPath(getNpcId(), 3, player));
                         break;
                 }
-            } catch (NumberFormatException nfe) {
-                return;
+            } catch (NumberFormatException ignored) {
             }
         else if (command.startsWith("getc"))
             try {
@@ -224,8 +205,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                         showDialog(player, getHtmlPath(getNpcId(), 4, player));
                         break;
                 }
-            } catch (NumberFormatException nfe) {
-                return;
+            } catch (NumberFormatException ignored) {
             }
         else if (command.startsWith("get_second")) // Hude
         {
@@ -235,15 +215,12 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, ScorpionPoisonStinger, 60, "CaravanTraderInstance");
                 Functions.addItem(player, SecondMark, 1, "CaravanTraderInstance");
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
-                return;
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
-                return;
             }
         } else if (command.startsWith("secret_med")) // Hude
         {
             MultiSellHolder.getInstance().SeparateAndSend(250980014, player, 0);
-            return;
         } else if (command.startsWith("get_third")) // Hude
         {
             if (player.getInventory().getCountOf(SecondMark) >= 1 && player.getInventory().getCountOf(LifeForce) >= 56 && player.getInventory().getCountOf(ContainedLifeForce) >= 14) {
@@ -253,25 +230,21 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.addItem(player, ThirdMark, 1, "CaravanTraderInstance");
                 Functions.addItem(player, 9994, 1, "CaravanTraderInstance"); // Hellbound Map
                 showDialog(player, getHtmlPath(getNpcId(), 6, player));
-                return;
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
-                return;
             }
         } else if (command.startsWith("s80_trade")) // Hude
         {
             MultiSellHolder.getInstance().SeparateAndSend(250980013, player, 0);
-            return;
         } else if (command.startsWith("try_open_door")) // Traitor
         {
             if (player.getInventory().getCountOf(MarkOfBetrayal) >= 10) {
                 Functions.removeItem(player, MarkOfBetrayal, 10, "CaravanTraderInstance");
                 ReflectionUtils.getDoor(19250003).openMe();
                 ReflectionUtils.getDoor(19250004).openMe();
-                ThreadPoolManager.getInstance().schedule(new CloseDoor(), 60 * 1000L);
+                ThreadPoolManager.INSTANCE.schedule(new CloseDoor(), 60 * 1000L);
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
-                return;
             }
         } else if (command.startsWith("supply_badges")) // Native Slave
         {
@@ -279,19 +252,15 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, DarionsBadge, 5, "CaravanTraderInstance");
                 HellboundManager.addConfidence(20);
                 showDialog(player, getHtmlPath(getNpcId(), 2, player));
-                return;
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 3, player));
-                return;
             }
         } else if (command.startsWith("tully_entrance")) // Deltuva
         {
             if (player.isQuestCompleted("_132_MatrasCuriosity")) {
                 player.teleToLocation(new Location(17947, 283205, -9696));
-                return;
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 1, player));
-                return;
             }
         } else if (command.startsWith("infinitum_entrance")) // Jerian
         {
@@ -302,14 +271,11 @@ public final class CaravanTraderInstance extends NpcInstance {
 
             List<Player> members = player.getParty().getMembers();
             for (Player member : members)
-                if (member == null || !isInRange(member, 500) || member.getEffectList().getEffectsBySkillId(FieryDemonBloodSkill) == null) {
+                if (!isInRange(member, 500) || member.getEffectList().getEffectsBySkillId(FieryDemonBloodSkill) == null) {
                     showDialog(player, getHtmlPath(getNpcId(), 2, player));
                     return;
                 }
-
-            for (Player member : members)
-                member.teleToLocation(new Location(-22204, 277056, -15045));
-            return;
+                members.forEach(m ->m.teleToLocation(new Location(-22204, 277056, -15045)));
         } else if (command.startsWith("tully_dorian_entrance")) // Dorian
         {
             if (player.getParty() == null || !player.getParty().isLeader(player)) {
@@ -319,7 +285,7 @@ public final class CaravanTraderInstance extends NpcInstance {
             List<Player> members = player.getParty().getMembers();
 
             for (Player member : members)
-                if (member == null || !isInRange(member, 500) || !member.isQuestCompleted("_132_MatrasCuriosity")) {
+                if (!isInRange(member, 500) || !member.isQuestCompleted("_132_MatrasCuriosity")) {
                     showDialog(player, getHtmlPath(getNpcId(), 1, player));
                     return;
                 }

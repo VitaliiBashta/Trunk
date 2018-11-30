@@ -48,7 +48,7 @@ public final class ctreeAI extends DefaultAI {
     }
 
     private  Skill createRandomSkillEffect(Stats stat, double mult) {
-        Skill copiedSkill = SkillsEngine.getInstance().loadSkill(ORIGINAL_EFFECT_ID, ORIGINAL_EFFECT_FILE);
+        Skill copiedSkill = SkillsEngine.INSTANCE.loadSkill(ORIGINAL_EFFECT_ID, ORIGINAL_EFFECT_FILE);
         changeSkillEffect(copiedSkill, stat, mult);
         return copiedSkill;
     }

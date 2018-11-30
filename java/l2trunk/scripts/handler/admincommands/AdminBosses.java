@@ -55,7 +55,7 @@ public class AdminBosses implements IAdminCommandHandler, ScriptFile {
 
     @Override
     public void onLoad() {
-        AdminCommandHandler.getInstance().registerAdminCommandHandler(this);
+        AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
     }
 
     @Override

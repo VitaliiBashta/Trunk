@@ -65,7 +65,7 @@ public class Core extends Fighter {
             cubic2.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
             cubic2.spawnMe(CUBIC_2_POSITION);
 
-            ThreadPoolManager.getInstance().schedule(new DeSpawnScheduleTimerTask(cubic1, cubic2), CUBIC_DESPAWN_TIME);
+            ThreadPoolManager.INSTANCE().schedule(new DeSpawnScheduleTimerTask(cubic1, cubic2), CUBIC_DESPAWN_TIME);
         } catch (RuntimeException e) {
             LOG.error("Error on Core Death ", e);
         }

@@ -11,8 +11,8 @@ public class ExPartyPetWindowUpdate extends L2GameServerPacket {
     private final int curMp;
     private final int maxMp;
     private final int level;
-    private int obj_id = 0;
     private final String _name;
+    private int obj_id = 0;
 
     public ExPartyPetWindowUpdate(Summon summon) {
         obj_id = summon.getObjectId();

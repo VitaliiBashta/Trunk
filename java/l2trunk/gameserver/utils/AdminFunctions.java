@@ -1,12 +1,10 @@
 package l2trunk.gameserver.utils;
 
-import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.CharacterDAO;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
-import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 
 public final class AdminFunctions {
@@ -28,7 +26,7 @@ public final class AdminFunctions {
         if (Config.ALLOW_CURSED_WEAPONS && Config.DROP_CURSED_WEAPONS_ON_KICK)
             if (player.isCursedWeaponEquipped()) {
                 player.setPvpFlag(0);
-                CursedWeaponsManager.getInstance().dropPlayer(player);
+                CursedWeaponsManager.INSTANCE.dropPlayer(player);
             }
 
         player.kick();
@@ -73,11 +71,6 @@ public final class AdminFunctions {
 
         if (player != null)
             updateNoChannel(player, val, reason);
-        else
-            AutoBan.ChatBan(charName, val, reason, adminName);
-
-        if (announce != null)
-            Announcements.shout(adminChar, announce, ChatType.CRITICAL_ANNOUNCE);
 
         return result;
     }

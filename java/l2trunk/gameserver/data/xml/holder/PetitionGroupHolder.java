@@ -11,7 +11,7 @@ import java.util.Map;
 public class PetitionGroupHolder extends AbstractHolder {
     private static final PetitionGroupHolder _instance = new PetitionGroupHolder();
 
-    private final Map<Integer,PetitionMainGroup> _petitionGroups = new HashMap<>();
+    private final Map<Integer, PetitionMainGroup> _petitionGroups = new HashMap<>();
 
     private PetitionGroupHolder() {
     }

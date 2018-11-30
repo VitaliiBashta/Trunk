@@ -15,32 +15,32 @@ public class FurnfaceInstance extends NpcInstance {
         setTargetable(false);
         if (getAISpawnParam() == i) {
             setNpcState(1);
-            ThreadPoolManager.getInstance().schedule(new OFF_TIMER(), 2 * 1000);
+            ThreadPoolManager.INSTANCE.schedule(new OFF_TIMER(), 2 * 1000);
         }
     }
 
     public void setActive2114002() {
         setTargetable(false);
         setNpcState(1);
-        ThreadPoolManager.getInstance().schedule(new OFF_TIMER(), 2 * 1000);
+        ThreadPoolManager.INSTANCE.schedule(new OFF_TIMER(), 2 * 1000);
     }
 
     public void setSCE_GAME_PLAYER_START() {
         setNpcState(1);
-        ThreadPoolManager.getInstance().schedule(new OFF_TIMER(), 2 * 1000);
+        ThreadPoolManager.INSTANCE.schedule(new OFF_TIMER(), 2 * 1000);
         setTargetable(true);
     }
 
     public void setSCE_GAME_END() {
         setNpcState(1);
-        ThreadPoolManager.getInstance().schedule(new OFF_TIMER(), 2 * 1000);
+        ThreadPoolManager.INSTANCE.schedule(new OFF_TIMER(), 2 * 1000);
         setTargetable(false);
     }
 
     public void setSCE_GAME_FAILURE() {
         setTargetable(false);
         setNpcState(1);
-        ThreadPoolManager.getInstance().schedule(new OFF_TIMER(), 2 * 1000);
+        ThreadPoolManager.INSTANCE.schedule(new OFF_TIMER(), 2 * 1000);
     }
 
     private class OFF_TIMER extends RunnableImpl {

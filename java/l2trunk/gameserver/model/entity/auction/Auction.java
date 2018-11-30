@@ -7,10 +7,10 @@ public class Auction {
     private final int _sellerObjectId;
     private final String _sellerName;
     private final ItemInstance _item;
-    private long _countToSell;
     private final long _pricePerItem;
     private final AuctionItemTypes _itemType;
     private final boolean _privateStore;
+    private long _countToSell;
 
     public Auction(int id, int sellerObjectId, String sellerName, ItemInstance item, long pricePerItem, long countToSell, AuctionItemTypes itemType, boolean privateStore) {
         _auctionId = id;

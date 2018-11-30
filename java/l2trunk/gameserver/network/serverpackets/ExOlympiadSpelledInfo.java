@@ -7,8 +7,8 @@ import java.util.List;
 
 
 public class ExOlympiadSpelledInfo extends L2GameServerPacket {
-    private int char_obj_id = 0;
     private final List<Effect> _effects;
+    private int char_obj_id = 0;
 
     public ExOlympiadSpelledInfo() {
         _effects = new ArrayList<>();

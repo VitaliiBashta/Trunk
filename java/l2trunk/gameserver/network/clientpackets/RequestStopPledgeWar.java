@@ -31,7 +31,7 @@ public class RequestStopPledgeWar extends L2GameClientPacket {
             return;
         }
 
-        Clan clan = ClanTable.getInstance().getClanByName(_pledgeName);
+        Clan clan = ClanTable.INSTANCE.getClanByName(_pledgeName);
 
         if (clan == null) {
             activeChar.sendPacket(SystemMsg.CLAN_NAME_IS_INVALID, ActionFail.STATIC);
@@ -49,6 +49,6 @@ public class RequestStopPledgeWar extends L2GameClientPacket {
                 return;
             }
 
-        ClanTable.getInstance().stopClanWar(playerClan, clan);
+        ClanTable.INSTANCE.stopClanWar(playerClan, clan);
     }
 }

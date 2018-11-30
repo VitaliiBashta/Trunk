@@ -9,11 +9,11 @@ import l2trunk.gameserver.network.serverpackets.RadarControl;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * @Author: Abaddon
- */
-public class Help extends Functions implements IVoicedCommandHandler {
-    private static final String[] _commandList = {"changes"};
+import java.util.Arrays;
+import java.util.List;
+
+public final class Help extends Functions implements IVoicedCommandHandler {
+    private static final List<String> _commandList = Arrays.asList("changes", "whereis", "exp");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
@@ -53,13 +53,13 @@ public class Help extends Functions implements IVoicedCommandHandler {
     }
 
     private boolean help(String command, Player activeChar, String args) {
-        String dialog = HtmCache.getInstance().getNotNull("command/help.htm", activeChar);
+        String dialog = HtmCache.INSTANCE.getNotNull("command/help.htm", activeChar);
         show(dialog, activeChar);
         return true;
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 }

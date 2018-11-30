@@ -69,7 +69,7 @@ public class DionArena extends Functions implements ScriptFile, OnDeathListener,
 
     @Override
     public void onReload() {
-        //getInstance().onReload();
+        //INSTANCE().onReload();
         //_instance = null;
     }
 
@@ -79,7 +79,7 @@ public class DionArena extends Functions implements ScriptFile, OnDeathListener,
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        //getInstance().onDeath(cha, killer);
+        //INSTANCE().onDeath(cha, killer);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class DionArena extends Functions implements ScriptFile, OnDeathListener,
 		{
 			Player player = getSelf();
 			if (player.isGM())
-				return HtmCache.getInstance().getNotNull("scripts/events/arena/20230001.htm", player) + HtmCache.getInstance().getNotNull("scripts/events/arena/20230001-4.htm", player);
-			return HtmCache.getInstance().getNotNull("scripts/events/arena/20230001.htm", player);
+				return HtmCache.INSTANCE().getNotNull("scripts/events/arena/20230001.htm", player) + HtmCache.INSTANCE().getNotNull("scripts/events/arena/20230001-4.htm", player);
+			return HtmCache.INSTANCE().getNotNull("scripts/events/arena/20230001.htm", player);
 		}*/
         return "";
     }
@@ -108,46 +108,46 @@ public class DionArena extends Functions implements ScriptFile, OnDeathListener,
     }
 
     public void create1() {
-        //getInstance().template_create1(getSelf());
+        //INSTANCE().template_create1(getSelf());
     }
 
     public void create2() {
-        //getInstance().template_create2(getSelf());
+        //INSTANCE().template_create2(getSelf());
     }
 
     public void register() {
-        //getInstance().template_register(getSelf());
+        //INSTANCE().template_register(getSelf());
     }
 
     public void check1(String[] var) {
-        //getInstance().template_check1(getSelf(), var);
+        //INSTANCE().template_check1(getSelf(), var);
     }
 
     public void check2(String[] var) {
-        //getInstance().template_check2(getSelf(), var);
+        //INSTANCE().template_check2(getSelf(), var);
     }
 
     public void register_check(String[] var) {
-        //getInstance().template_register_check(getSelf(), var);
+        //INSTANCE().template_register_check(getSelf(), var);
     }
 
     public void stop() {
-        //getInstance().template_stop();
+        //INSTANCE().template_stop();
     }
 
     public void announce() {
-        //getInstance().template_announce();
+        //INSTANCE().template_announce();
     }
 
     public void prepare() {
-        //getInstance().template_prepare();
+        //INSTANCE().template_prepare();
     }
 
     public void start() {
-        //getInstance().template_start();
+        //INSTANCE().template_start();
     }
 
     public static void timeOut() {
-        //getInstance().template_timeOut();
+        //INSTANCE().template_timeOut();
     }
 }

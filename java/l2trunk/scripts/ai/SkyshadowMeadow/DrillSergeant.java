@@ -1,16 +1,16 @@
 package l2trunk.scripts.ai.SkyshadowMeadow;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class DrillSergeant extends Fighter {
-    private static final int[] recruits = {22780, 22782, 22783, 22784, 22785};
-    private long _wait_timeout = 0;
+public final class DrillSergeant extends Fighter {
+    private static final List<Integer> recruits = Arrays.asList(22780, 22782, 22783, 22784, 22785);
+    private long waitTimeout = 0;
 
     public DrillSergeant(NpcInstance actor) {
         super(actor);
@@ -21,30 +21,19 @@ public class DrillSergeant extends Fighter {
     public boolean thinkActive() {
         NpcInstance actor = getActor();
 
-        if (System.currentTimeMillis() > _wait_timeout) {
-            _wait_timeout = System.currentTimeMillis() + Rnd.get(10, 30) * 1000L;
+        if (System.currentTimeMillis() > waitTimeout) {
+            waitTimeout = System.currentTimeMillis() + Rnd.get(10, 30) * 1000L;
             List<NpcInstance> around = actor.getAroundNpc(700, 100);
-            if (around != null && !around.isEmpty())
-                switch (Rnd.get(1, 3)) {
-                    case 1:
-                        actor.broadcastPacket(new SocialAction(actor.getObjectId(), 7));
-                        for (NpcInstance mob : around)
-                            if (ArrayUtils.contains(recruits, mob.getNpcId()))
-                                mob.broadcastPacket(new SocialAction(mob.getObjectId(), 7));
-                        break;
-                    case 2:
-                        actor.broadcastPacket(new SocialAction(actor.getObjectId(), 7));
-                        for (NpcInstance mob : around)
-                            if (ArrayUtils.contains(recruits, mob.getNpcId()))
-                                mob.broadcastPacket(new SocialAction(mob.getObjectId(), 4));
-                        break;
-                    case 3:
-                        actor.broadcastPacket(new SocialAction(actor.getObjectId(), 7));
-                        for (NpcInstance mob : around)
-                            if (ArrayUtils.contains(recruits, mob.getNpcId()))
-                                mob.broadcastPacket(new SocialAction(mob.getObjectId(), 5));
-                        break;
-                }
+            int[] socialAction = {7, 4, 5};
+
+            int random = Rnd.get(0, 2);
+            if (around != null && !around.isEmpty()) {
+                actor.broadcastPacket(new SocialAction(actor.getObjectId(), 7));
+                around.stream()
+                        .filter(mob -> recruits.contains(mob.getNpcId()))
+                        .forEach(mob -> mob.broadcastPacket(new SocialAction(mob.getObjectId(), socialAction[random])));
+
+            }
         }
         return false;
     }

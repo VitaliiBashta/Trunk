@@ -14,11 +14,7 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.tables.GmListTable;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.loginserver.database.L2DatabaseFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.StringTokenizer;
 
 public class AdminPanel implements IAdminCommandHandler {
@@ -56,7 +52,7 @@ public class AdminPanel implements IAdminCommandHandler {
             if (i == 391)
                 lvl = 1;
 
-            Skill skill = SkillTable.getInstance().getInfo(i, lvl);
+            Skill skill = SkillTable.INSTANCE().getInfo(i, lvl);
 
             html.append("<tr>");
             html.append("<td width=230 align=left>");
@@ -279,7 +275,7 @@ public class AdminPanel implements IAdminCommandHandler {
 
                 int skillId = Integer.parseInt(st.nextToken());
                 int skillLevel = Integer.parseInt(st.nextToken());
-                Skill skill = SkillTable.getInstance().getInfo(skillId, skillLevel);
+                Skill skill = SkillTable.INSTANCE().getInfo(skillId, skillLevel);
                 if (skill != null && target.getPlayer().getClan() != null) {
                     Clan clan = target.getPlayer().getClan();
                     clan.addSkill(skill, true);

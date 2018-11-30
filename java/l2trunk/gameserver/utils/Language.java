@@ -6,13 +6,13 @@ public enum Language {
 
     public static final Language[] VALUES = Language.values();
 
-    private final String _shortName;
+    private final String shortName;
 
     Language(String shortName) {
-        _shortName = shortName;
+        this.shortName = shortName;
     }
 
     public String getShortName() {
-        return _shortName;
+        return shortName;
     }
 }

@@ -72,11 +72,6 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
             _log.info("Loaded Event: Christmas [state: deactivated]");
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return isActive("Christmas");
     }
@@ -92,7 +87,7 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         if (SetActive("Christmas", true)) {
             spawnEventManagers();
             System.out.println("Event 'Christmas' started.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.Christmas.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.Christmas.AnnounceEventStarted", null);
         } else
             player.sendMessage("Event 'Christmas' already started.");
 
@@ -101,9 +96,6 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -111,7 +103,7 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         if (SetActive("Christmas", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'Christmas' stopped.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.Christmas.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.Christmas.AnnounceEventStoped", null);
         } else
             player.sendMessage("Event 'Christmas' not started.");
 
@@ -249,6 +241,6 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.Christmas.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.Christmas.AnnounceEventStarted", null);
     }
 }

@@ -25,101 +25,101 @@ public class ResidenceFunction {
     public static final int SUPPORT = 6;
     public static final int CURTAIN = 7;
     public static final int PLATFORM = 8;
-    private static final String A = "";
     public static final String W = "W";
     public static final String M = "M";
+    private static final String A = "";
     private static final Logger _log = LoggerFactory.getLogger(ResidenceFunction.class);
     private static final Object[][][] buffs_template = {{
             // level 0 - no buff
     },
             {
                     // level 1
-                    {SkillTable.getInstance().getInfo(4342, 1), A},
-                    {SkillTable.getInstance().getInfo(4343, 1), A},
-                    {SkillTable.getInstance().getInfo(4344, 1), A},
-                    {SkillTable.getInstance().getInfo(4346, 1), A},
-                    {SkillTable.getInstance().getInfo(4345, 1), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 1), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 1), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 1), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 1), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 1), W},},
             {
                     // level 2
-                    {SkillTable.getInstance().getInfo(4342, 2), A},
-                    {SkillTable.getInstance().getInfo(4343, 3), A},
-                    {SkillTable.getInstance().getInfo(4344, 3), A},
-                    {SkillTable.getInstance().getInfo(4346, 4), A},
-                    {SkillTable.getInstance().getInfo(4345, 3), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 3), W},},
             {
                     // level 3
-                    {SkillTable.getInstance().getInfo(4342, 2), A},
-                    {SkillTable.getInstance().getInfo(4343, 3), A},
-                    {SkillTable.getInstance().getInfo(4344, 3), A},
-                    {SkillTable.getInstance().getInfo(4346, 4), A},
-                    {SkillTable.getInstance().getInfo(4345, 3), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 3), W},},
             {
                     // level 4
-                    {SkillTable.getInstance().getInfo(4342, 2), A},
-                    {SkillTable.getInstance().getInfo(4343, 3), A},
-                    {SkillTable.getInstance().getInfo(4344, 3), A},
-                    {SkillTable.getInstance().getInfo(4346, 4), A},
-                    {SkillTable.getInstance().getInfo(4345, 3), W},
-                    {SkillTable.getInstance().getInfo(4347, 2), A},
-                    {SkillTable.getInstance().getInfo(4349, 1), A},
-                    {SkillTable.getInstance().getInfo(4350, 1), W},
-                    {SkillTable.getInstance().getInfo(4348, 2), A},},
+                    {SkillTable.INSTANCE.getInfo(4342, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 3), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 1), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 1), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 2), A},},
             {
                     // level 5
-                    {SkillTable.getInstance().getInfo(4342, 2), A},
-                    {SkillTable.getInstance().getInfo(4343, 3), A},
-                    {SkillTable.getInstance().getInfo(4344, 3), A},
-                    {SkillTable.getInstance().getInfo(4346, 4), A},
-                    {SkillTable.getInstance().getInfo(4345, 3), W},
-                    {SkillTable.getInstance().getInfo(4347, 2), A},
-                    {SkillTable.getInstance().getInfo(4349, 1), A},
-                    {SkillTable.getInstance().getInfo(4350, 1), W},
-                    {SkillTable.getInstance().getInfo(4348, 2), A},
-                    {SkillTable.getInstance().getInfo(4351, 2), M},
-                    {SkillTable.getInstance().getInfo(4352, 1), A},
-                    {SkillTable.getInstance().getInfo(4353, 2), W},
-                    {SkillTable.getInstance().getInfo(4358, 1), W},
-                    {SkillTable.getInstance().getInfo(4354, 1), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 3), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 1), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 1), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4351, 2), M},
+                    {SkillTable.INSTANCE.getInfo(4352, 1), A},
+                    {SkillTable.INSTANCE.getInfo(4353, 2), W},
+                    {SkillTable.INSTANCE.getInfo(4358, 1), W},
+                    {SkillTable.INSTANCE.getInfo(4354, 1), W},},
             {
                     // level 6 - unused
             },
             {
                     // level 7
-                    {SkillTable.getInstance().getInfo(4342, 2), A},
-                    {SkillTable.getInstance().getInfo(4343, 3), A},
-                    {SkillTable.getInstance().getInfo(4344, 3), A},
-                    {SkillTable.getInstance().getInfo(4346, 4), A},
-                    {SkillTable.getInstance().getInfo(4345, 3), W},
-                    {SkillTable.getInstance().getInfo(4347, 6), A},
-                    {SkillTable.getInstance().getInfo(4349, 2), A},
-                    {SkillTable.getInstance().getInfo(4350, 4), W},
-                    {SkillTable.getInstance().getInfo(4348, 6), A},
-                    {SkillTable.getInstance().getInfo(4351, 6), M},
-                    {SkillTable.getInstance().getInfo(4352, 2), A},
-                    {SkillTable.getInstance().getInfo(4353, 6), W},
-                    {SkillTable.getInstance().getInfo(4358, 3), W},
-                    {SkillTable.getInstance().getInfo(4354, 4), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 3), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 4), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4351, 6), M},
+                    {SkillTable.INSTANCE.getInfo(4352, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4353, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4358, 3), W},
+                    {SkillTable.INSTANCE.getInfo(4354, 4), W},},
             {
                     // level 8
-                    {SkillTable.getInstance().getInfo(4342, 2), A},
-                    {SkillTable.getInstance().getInfo(4343, 3), A},
-                    {SkillTable.getInstance().getInfo(4344, 3), A},
-                    {SkillTable.getInstance().getInfo(4346, 4), A},
-                    {SkillTable.getInstance().getInfo(4345, 3), W},
-                    {SkillTable.getInstance().getInfo(4347, 6), A},
-                    {SkillTable.getInstance().getInfo(4349, 2), A},
-                    {SkillTable.getInstance().getInfo(4350, 4), W},
-                    {SkillTable.getInstance().getInfo(4348, 6), A},
-                    {SkillTable.getInstance().getInfo(4351, 6), M},
-                    {SkillTable.getInstance().getInfo(4352, 2), A},
-                    {SkillTable.getInstance().getInfo(4353, 6), W},
-                    {SkillTable.getInstance().getInfo(4358, 3), W},
-                    {SkillTable.getInstance().getInfo(4354, 4), W},
-                    {SkillTable.getInstance().getInfo(4355, 1), M},
-                    {SkillTable.getInstance().getInfo(4356, 1), M},
-                    {SkillTable.getInstance().getInfo(4357, 1), W},
-                    {SkillTable.getInstance().getInfo(4359, 1), W},
-                    {SkillTable.getInstance().getInfo(4360, 1), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 3), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 4), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4351, 6), M},
+                    {SkillTable.INSTANCE.getInfo(4352, 2), A},
+                    {SkillTable.INSTANCE.getInfo(4353, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4358, 3), W},
+                    {SkillTable.INSTANCE.getInfo(4354, 4), W},
+                    {SkillTable.INSTANCE.getInfo(4355, 1), M},
+                    {SkillTable.INSTANCE.getInfo(4356, 1), M},
+                    {SkillTable.INSTANCE.getInfo(4357, 1), W},
+                    {SkillTable.INSTANCE.getInfo(4359, 1), W},
+                    {SkillTable.INSTANCE.getInfo(4360, 1), W},},
             {
                     // level 9 - unused
             },
@@ -128,102 +128,102 @@ public class ResidenceFunction {
             },
             {
                     // level 11
-                    {SkillTable.getInstance().getInfo(4342, 3), A},
-                    {SkillTable.getInstance().getInfo(4343, 4), A},
-                    {SkillTable.getInstance().getInfo(4344, 4), A},
-                    {SkillTable.getInstance().getInfo(4346, 5), A},
-                    {SkillTable.getInstance().getInfo(4345, 4), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 5), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 4), W},},
             {
                     // level 12
-                    {SkillTable.getInstance().getInfo(4342, 4), A},
-                    {SkillTable.getInstance().getInfo(4343, 6), A},
-                    {SkillTable.getInstance().getInfo(4344, 6), A},
-                    {SkillTable.getInstance().getInfo(4346, 8), A},
-                    {SkillTable.getInstance().getInfo(4345, 6), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 6), W},},
             {
                     // level 13
-                    {SkillTable.getInstance().getInfo(4342, 4), A},
-                    {SkillTable.getInstance().getInfo(4343, 6), A},
-                    {SkillTable.getInstance().getInfo(4344, 6), A},
-                    {SkillTable.getInstance().getInfo(4346, 8), A},
-                    {SkillTable.getInstance().getInfo(4345, 6), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 6), W},},
             {
                     // level 14
-                    {SkillTable.getInstance().getInfo(4342, 4), A},
-                    {SkillTable.getInstance().getInfo(4343, 6), A},
-                    {SkillTable.getInstance().getInfo(4344, 6), A},
-                    {SkillTable.getInstance().getInfo(4346, 8), A},
-                    {SkillTable.getInstance().getInfo(4345, 6), W},
-                    {SkillTable.getInstance().getInfo(4347, 8), A},
-                    {SkillTable.getInstance().getInfo(4349, 3), A},
-                    {SkillTable.getInstance().getInfo(4350, 5), W},
-                    {SkillTable.getInstance().getInfo(4348, 8), A},},
+                    {SkillTable.INSTANCE.getInfo(4342, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 5), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 8), A},},
             {
                     // level 15
-                    {SkillTable.getInstance().getInfo(4342, 4), A},
-                    {SkillTable.getInstance().getInfo(4343, 6), A},
-                    {SkillTable.getInstance().getInfo(4344, 6), A},
-                    {SkillTable.getInstance().getInfo(4346, 8), A},
-                    {SkillTable.getInstance().getInfo(4345, 6), W},
-                    {SkillTable.getInstance().getInfo(4347, 8), A},
-                    {SkillTable.getInstance().getInfo(4349, 3), A},
-                    {SkillTable.getInstance().getInfo(4350, 5), W},
-                    {SkillTable.getInstance().getInfo(4348, 8), A},
-                    {SkillTable.getInstance().getInfo(4351, 8), M},
-                    {SkillTable.getInstance().getInfo(4352, 3), A},
-                    {SkillTable.getInstance().getInfo(4353, 8), W},
-                    {SkillTable.getInstance().getInfo(4358, 4), W},
-                    {SkillTable.getInstance().getInfo(4354, 5), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 5), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4351, 8), M},
+                    {SkillTable.INSTANCE.getInfo(4352, 3), A},
+                    {SkillTable.INSTANCE.getInfo(4353, 8), W},
+                    {SkillTable.INSTANCE.getInfo(4358, 4), W},
+                    {SkillTable.INSTANCE.getInfo(4354, 5), W},},
             {
                     // level 16 - unused
             },
             {
                     // level 17
-                    {SkillTable.getInstance().getInfo(4342, 4), A},
-                    {SkillTable.getInstance().getInfo(4343, 6), A},
-                    {SkillTable.getInstance().getInfo(4344, 6), A},
-                    {SkillTable.getInstance().getInfo(4346, 8), A},
-                    {SkillTable.getInstance().getInfo(4345, 6), W},
-                    {SkillTable.getInstance().getInfo(4347, 12), A},
-                    {SkillTable.getInstance().getInfo(4349, 4), A},
-                    {SkillTable.getInstance().getInfo(4350, 8), W},
-                    {SkillTable.getInstance().getInfo(4348, 12), A},
-                    {SkillTable.getInstance().getInfo(4351, 12), M},
-                    {SkillTable.getInstance().getInfo(4352, 4), A},
-                    {SkillTable.getInstance().getInfo(4353, 12), W},
-                    {SkillTable.getInstance().getInfo(4358, 6), W},
-                    {SkillTable.getInstance().getInfo(4354, 8), W},},
+                    {SkillTable.INSTANCE.getInfo(4342, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 12), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 8), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 12), A},
+                    {SkillTable.INSTANCE.getInfo(4351, 12), M},
+                    {SkillTable.INSTANCE.getInfo(4352, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4353, 12), W},
+                    {SkillTable.INSTANCE.getInfo(4358, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4354, 8), W},},
             {
                     // level 18
-                    {SkillTable.getInstance().getInfo(4342, 4), A},
-                    {SkillTable.getInstance().getInfo(4343, 6), A},
-                    {SkillTable.getInstance().getInfo(4344, 6), A},
-                    {SkillTable.getInstance().getInfo(4346, 8), A},
-                    {SkillTable.getInstance().getInfo(4345, 6), W},
-                    {SkillTable.getInstance().getInfo(4347, 12), A},
-                    {SkillTable.getInstance().getInfo(4349, 4), A},
-                    {SkillTable.getInstance().getInfo(4350, 8), W},
-                    {SkillTable.getInstance().getInfo(4348, 12), A},
-                    {SkillTable.getInstance().getInfo(4351, 12), M},
-                    {SkillTable.getInstance().getInfo(4352, 4), A},
-                    {SkillTable.getInstance().getInfo(4353, 12), W},
-                    {SkillTable.getInstance().getInfo(4358, 6), W},
-                    {SkillTable.getInstance().getInfo(4354, 8), W},
-                    {SkillTable.getInstance().getInfo(4355, 4), M},
-                    {SkillTable.getInstance().getInfo(4356, 4), M},
-                    {SkillTable.getInstance().getInfo(4357, 3), W},
-                    {SkillTable.getInstance().getInfo(4359, 4), W},
-                    {SkillTable.getInstance().getInfo(4360, 4), W},},};
+                    {SkillTable.INSTANCE.getInfo(4342, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4343, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4344, 6), A},
+                    {SkillTable.INSTANCE.getInfo(4346, 8), A},
+                    {SkillTable.INSTANCE.getInfo(4345, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4347, 12), A},
+                    {SkillTable.INSTANCE.getInfo(4349, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4350, 8), W},
+                    {SkillTable.INSTANCE.getInfo(4348, 12), A},
+                    {SkillTable.INSTANCE.getInfo(4351, 12), M},
+                    {SkillTable.INSTANCE.getInfo(4352, 4), A},
+                    {SkillTable.INSTANCE.getInfo(4353, 12), W},
+                    {SkillTable.INSTANCE.getInfo(4358, 6), W},
+                    {SkillTable.INSTANCE.getInfo(4354, 8), W},
+                    {SkillTable.INSTANCE.getInfo(4355, 4), M},
+                    {SkillTable.INSTANCE.getInfo(4356, 4), M},
+                    {SkillTable.INSTANCE.getInfo(4357, 3), W},
+                    {SkillTable.INSTANCE.getInfo(4359, 4), W},
+                    {SkillTable.INSTANCE.getInfo(4360, 4), W},},};
     private final int id;
     private final int type;
-    private int level;
     private final Calendar endDate;
-    private boolean inDebt;
-    private boolean active;
     private final Map<Integer, Integer> _leases = new ConcurrentSkipListMap<>();
     private final Map<Integer, TeleportLocation[]> _teleports = new ConcurrentSkipListMap<>();
     private final Map<Integer, int[]> _buylists = new ConcurrentSkipListMap<>();
-    private final Map<Integer, Object[][]> _buffs = new ConcurrentSkipListMap<>();
+    private final Map<Integer, Object[][]> buffs = new ConcurrentSkipListMap<>();
+    private int level;
+    private boolean inDebt;
+    private boolean active;
 
     public ResidenceFunction(int id, int type) {
         this.id = id;
@@ -334,11 +334,11 @@ public class ResidenceFunction {
     }
 
     private Object[][] getBuffs(int level) {
-        return _buffs.get(level);
+        return buffs.get(level);
     }
 
     public void addBuffs(int level) {
-        _buffs.put(level, buffs_template[level]);
+        buffs.put(level, buffs_template[level]);
     }
 
     public Set<Integer> getLevels() {

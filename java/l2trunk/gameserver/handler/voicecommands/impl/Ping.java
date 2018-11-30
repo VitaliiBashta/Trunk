@@ -5,11 +5,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPSmallCommands;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * @author Grivesky
- */
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class Ping extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS = {"ping"};
+    private static final List<String> COMMANDS = Collections.singletonList("ping");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
@@ -18,7 +19,7 @@ public class Ping extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 }

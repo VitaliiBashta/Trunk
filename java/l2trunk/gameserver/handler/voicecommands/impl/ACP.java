@@ -7,10 +7,12 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.Say2;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public final class ACP implements IVoicedCommandHandler {
-    private static final String[] COMMANDS = {"acpon", "acpoff"};
+    private static final List<String> COMMANDS = Arrays.asList("acpon", "acpoff");
 
     // @VoicedCommand "ACP": items id's
     private static final int ID_HEAL_CP = 5592;
@@ -39,12 +41,6 @@ public final class ACP implements IVoicedCommandHandler {
             return false;
         }
 
-        // Alexander - Only for premiums
-        if (activeChar.getNetConnection().getBonus() < 1) {
-            activeChar.sendPacket(new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Donation", "You need premium status to use this function"));
-            return false;
-        }
-
         if (command.equals("acpon")) {
             if (userAcpMap.containsKey(activeChar.toString())) {
                 activeChar.sendMessage("[ACP]: Already enabled!");
@@ -68,7 +64,7 @@ public final class ACP implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 

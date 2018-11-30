@@ -21,11 +21,11 @@ import java.util.Map;
  * d: count
  * ]
  */
-public class ExHeroList extends L2GameServerPacket {
+public final class ExHeroList extends L2GameServerPacket {
     private final Map<Integer, StatsSet> _heroList;
 
     public ExHeroList() {
-        _heroList = Hero.getInstance().getHeroes();
+        _heroList = Hero.INSTANCE.getHeroes();
     }
 
     @Override

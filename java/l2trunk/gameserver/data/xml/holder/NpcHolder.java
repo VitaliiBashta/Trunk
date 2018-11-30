@@ -3,7 +3,10 @@ package l2trunk.gameserver.data.xml.holder;
 import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class NpcHolder extends AbstractHolder {
@@ -24,7 +27,7 @@ public final class NpcHolder extends AbstractHolder {
 
     public NpcTemplate getTemplate(int id) {
         if (!_npcs.containsKey(id)) {
-            warn("Not defined npc id : " + id + ", or out of range!", new Exception());
+            LOG.warn("Not defined npc id : " + id + ", or out of range!", new Exception());
         }
         return _npcs.get(id);
     }
@@ -39,10 +42,6 @@ public final class NpcHolder extends AbstractHolder {
 
     public Collection<NpcTemplate> getAll() {
         return _npcs.values();
-    }
-
-    @Override
-    protected void process() {
     }
 
     @Override

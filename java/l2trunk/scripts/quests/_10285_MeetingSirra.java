@@ -134,7 +134,7 @@ public class _10285_MeetingSirra extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(izId)) {
             Reflection newInstance = ReflectionUtils.enterReflection(player, izId);
             if (izId == 137)
-                ThreadPoolManager.getInstance().schedule(new FreyaSpawn(newInstance, player), 2 * 60 * 1000L);
+                ThreadPoolManager.INSTANCE().schedule(new FreyaSpawn(newInstance, player), 2 * 60 * 1000L);
         }
     }
 
@@ -151,7 +151,7 @@ public class _10285_MeetingSirra extends Quest implements ScriptFile {
         public void runImpl() {
             if (_r != null) {
                 NpcInstance freya = _r.addSpawnWithoutRespawn(18847, new Location(114720, -117085, -11088, 15956), 0);
-                ThreadPoolManager.getInstance().schedule(new FreyaMovie(_player, _r, freya), 2 * 60 * 1000L);
+                ThreadPoolManager.INSTANCE().schedule(new FreyaMovie(_player, _r, freya), 2 * 60 * 1000L);
             }
         }
     }
@@ -174,7 +174,7 @@ public class _10285_MeetingSirra extends Quest implements ScriptFile {
             if (_npc != null && !_npc.isDead())
                 _npc.deleteMe();
             _player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_FORCED_DEFEAT);
-            ThreadPoolManager.getInstance().schedule(new ResetInstance(_player, _r), 23000L);
+            ThreadPoolManager.INSTANCE().schedule(new ResetInstance(_player, _r), 23000L);
         }
     }
 

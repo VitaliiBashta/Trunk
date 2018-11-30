@@ -12,7 +12,7 @@ public final class CCPPoll {
         String second = vars.length > 1 ? vars[1] : "";
         String fileName;
 
-        Poll activePoll = PollEngine.getInstance().getActivePoll();
+        Poll activePoll = PollEngine.INSTANCE.getActivePoll();
 
         if (activePoll == null) {
             fileName = "pollEmpty.htm";
@@ -26,7 +26,7 @@ public final class CCPPoll {
             fileName = "pollVote.htm";
         }
 
-        String html = HtmCache.getInstance().getNotNull("command/" + fileName, activeChar);
+        String html = HtmCache.INSTANCE().getNotNull("command/" + fileName, activeChar);
 
         if (html.contains("%question%"))
             html = html.replace("%question%", activePoll.getQuestion());
@@ -48,7 +48,7 @@ public final class CCPPoll {
     }
 
     private static String fillAnswers(String html, Player activeChar) {
-        PollAnswer[] answers = PollEngine.getInstance().getPoll().getAnswers();
+        PollAnswer[] answers = PollEngine.INSTANCE.getPoll().getAnswers();
         StringBuilder resultsBuilder = new StringBuilder("<table width=280><tr><td>");
 
 
@@ -67,14 +67,14 @@ public final class CCPPoll {
     }
 
     private static String fillResults(String html, Player activeChar) {
-        Poll currentPoll = PollEngine.getInstance().getPoll();
+        Poll currentPoll = PollEngine.INSTANCE.getPoll();
         int answersCount = currentPoll.getAnswers().length;
         PollAnswer[] answersToSort = new PollAnswer[answersCount];
 
         for (int i = 0; i < answersCount; i++) {
             answersToSort[i] = currentPoll.getAnswers()[i];
         }
-        answersToSort = PollEngine.getInstance().sortAnswers(answersToSort);
+        answersToSort = PollEngine.INSTANCE.sortAnswers(answersToSort);
 
         StringBuilder resultsBuilder = new StringBuilder("<table width=280><tr><td>");
 
@@ -84,7 +84,7 @@ public final class CCPPoll {
             resultsBuilder.append("><tr><td width=200>");
             resultsBuilder.append(answer.getAnswer());
             resultsBuilder.append("</td><td width=80><center>");
-            resultsBuilder.append(PollEngine.getInstance().getAnswerProcentage(answer)).append('%');
+            resultsBuilder.append(PollEngine.INSTANCE.getAnswerProcentage(answer)).append('%');
             resultsBuilder.append("</center></td></tr></table>");
         }
 

@@ -72,7 +72,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                 npc = (NpcInstance) target;
 
             if (bp.bypass.startsWith("admin_"))
-                AdminCommandHandler.getInstance().useAdminCommandHandler(activeChar, bp.bypass);
+                AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, bp.bypass);
             else if (bp.bypass.equals("come_here") && activeChar.isGM())
                 comeHere(getClient());
             else if (bp.bypass.startsWith("player_help "))
@@ -101,7 +101,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                 String command = bp.bypass.substring(5).trim();
                 String word = command.split("\\s+")[0];
                 String args = command.substring(word.length()).trim();
-                IVoicedCommandHandler vch = VoicedCommandHandler.getInstance().getVoicedCommandHandler(word);
+                IVoicedCommandHandler vch = VoicedCommandHandler.INSTANCE.getVoicedCommandHandler(word);
 
                 if (vch != null)
                     vch.useVoicedCommand(word, activeChar, args);
@@ -137,9 +137,9 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                 StringTokenizer st = new StringTokenizer(params, "&");
                 int heroclass = Integer.parseInt(st.nextToken().split("=")[1]);
                 int heropage = Integer.parseInt(st.nextToken().split("=")[1]);
-                int heroid = Hero.getInstance().getHeroByClass(heroclass);
+                int heroid = Hero.INSTANCE.getHeroByClass(heroclass);
                 if (heroid > 0)
-                    Hero.getInstance().showHeroDiary(activeChar, heroclass, heroid, heropage);
+                    Hero.INSTANCE.showHeroDiary(activeChar, heroclass, heroid, heropage);
             } else if (bp.bypass.startsWith("_match")) {
                 String params = bp.bypass.substring(bp.bypass.indexOf("?") + 1);
                 StringTokenizer st = new StringTokenizer(params, "&");

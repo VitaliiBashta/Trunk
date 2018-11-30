@@ -9,6 +9,8 @@ import l2trunk.gameserver.dao.CastleHiredGuardDAO;
 import l2trunk.gameserver.dao.ClanDataDAO;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
+import l2trunk.gameserver.hibenate.HibernateUtil;
+import l2trunk.gameserver.hibenate.dao.CastleEntity;
 import l2trunk.gameserver.instancemanager.CastleManorManager;
 import l2trunk.gameserver.model.Manor;
 import l2trunk.gameserver.model.Player;
@@ -50,6 +52,7 @@ public final class Castle extends Residence {
     private final Map<Integer, MerchantGuard> _merchantGuards = new HashMap<>();
     private final Map<Integer, List<Integer>> relatedFortresses = new ConcurrentHashMap<>();
     private final NpcString npcStringName;
+    private final Set<ItemInstance> _spawnMerchantTickets = new CopyOnWriteArraySet<>();
     private Dominion _dominion;
     private List<CropProcure> _procure;
     private List<SeedProduction> _production;
@@ -60,8 +63,7 @@ public final class Castle extends Residence {
     private double _TaxRate;
     private long treasury;
     private long collectedShops;
-    private long _collectedSeed;
-    private final Set<ItemInstance> _spawnMerchantTickets = new CopyOnWriteArraySet<>();
+    private long collectedSeed;
 
     public Castle(StatsSet set) {
         super(set);
@@ -162,9 +164,15 @@ public final class Castle extends Residence {
     // This method loads castle
     @Override
     protected void loadData() {
-        _TaxPercent = 0;
-        _TaxRate = 0;
-        treasury = 0;
+        CastleEntity castleEntity = HibernateUtil.getSession().get(CastleEntity.class, _id);
+        _TaxPercent = castleEntity.getTaxPercent();
+        setTaxPercent(_TaxPercent);
+        treasury = castleEntity.getTreasury();
+        setRewardCount(castleEntity.getRewardCount());
+        _siegeDate.setTimeInMillis(castleEntity.getSiegeDate());
+        getLastSiegeDate().setTimeInMillis(castleEntity.getLastSiegeDate());
+        getOwnDate().setTimeInMillis(castleEntity.getOwnDate());
+
         _procure = new ArrayList<>();
         _production = new ArrayList<>();
         _procureNext = new ArrayList<>();
@@ -172,7 +180,8 @@ public final class Castle extends Residence {
         _isNextPeriodApproved = false;
 
         _owner = ClanDataDAO.getInstance().getOwner(this);
-        CastleDAO.getInstance().select(this);
+//        CastleDAO.INSTANCE().select(this);
+
         CastleHiredGuardDAO.getInstance().load(this);
     }
 
@@ -222,11 +231,11 @@ public final class Castle extends Residence {
     }
 
     public long getCollectedSeed() {
-        return _collectedSeed;
+        return collectedSeed;
     }
 
     public void setCollectedSeed(long value) {
-        _collectedSeed = value;
+        collectedSeed = value;
     }
 
     /**
@@ -277,7 +286,7 @@ public final class Castle extends Residence {
             collectedShops += amount;
 
         if (seed)
-            _collectedSeed += amount;
+            collectedSeed += amount;
 
         setJdbcState(JdbcEntityState.UPDATED);
         update();
@@ -433,7 +442,7 @@ public final class Castle extends Residence {
             statement.setInt(2, period);
             statement.execute();
 
-            List<SeedProduction> prod= getSeedProduction(period);
+            List<SeedProduction> prod = getSeedProduction(period);
 
             if (prod != null) {
                 int count = 0;
@@ -459,7 +468,7 @@ public final class Castle extends Residence {
     // Save crop procure data
     public void saveCropData() {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            PreparedStatement statement =  con.prepareStatement(CASTLE_MANOR_DELETE_PROCURE);
+            PreparedStatement statement = con.prepareStatement(CASTLE_MANOR_DELETE_PROCURE);
             statement.setInt(1, getId());
             statement.execute();
             if (_procure != null) {
@@ -595,7 +604,7 @@ public final class Castle extends Residence {
 //        List<Integer> fortresses =
         List<Integer> fortresses = relatedFortresses.computeIfAbsent(type, k -> new ArrayList<>());
         fortresses.add(fortress);
-//        fortresses.add(ResidenceHolder.getInstance().getResidence(Fortress.class, fortress));
+//        fortresses.add(ResidenceHolder.INSTANCE().getResidence(Fortress.class, fortress));
 //                relatedFortresses.get(fortress));
     }
 

@@ -16,7 +16,6 @@ import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.data.xml.holder.StaticObjectHolder;
 import l2trunk.gameserver.data.xml.parser.ClassesStatsBalancerParser;
-import l2trunk.gameserver.data.xml.parser.NpcStatsBalancerParser;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.database.LoginDatabaseFactory;
 import l2trunk.gameserver.geodata.GeoEngine;
@@ -24,6 +23,7 @@ import l2trunk.gameserver.handler.admincommands.AdminCommandHandler;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.handler.usercommands.UserCommandHandler;
 import l2trunk.gameserver.handler.voicecommands.VoicedCommandHandler;
+import l2trunk.gameserver.hibenate.HibernateUtil;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.instancemanager.*;
 import l2trunk.gameserver.instancemanager.games.FishingChampionShipManager;
@@ -36,7 +36,9 @@ import l2trunk.gameserver.listener.GameListener;
 import l2trunk.gameserver.listener.game.OnShutdownListener;
 import l2trunk.gameserver.listener.game.OnStartListener;
 import l2trunk.gameserver.model.World;
-import l2trunk.gameserver.model.entity.*;
+import l2trunk.gameserver.model.entity.Hero;
+import l2trunk.gameserver.model.entity.MonsterRace;
+import l2trunk.gameserver.model.entity.SevenSigns;
 import l2trunk.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2trunk.gameserver.model.entity.achievements.AchievementNotification;
 import l2trunk.gameserver.model.entity.achievements.Achievements;
@@ -52,7 +54,6 @@ import l2trunk.gameserver.tables.*;
 import l2trunk.gameserver.taskmanager.AutoImageSenderManager;
 import l2trunk.gameserver.taskmanager.ItemsAutoDestroy;
 import l2trunk.gameserver.taskmanager.TaskManager;
-import l2trunk.gameserver.taskmanager.tasks.RestoreOfflineTraders;
 import l2trunk.gameserver.utils.Strings;
 import net.sf.ehcache.CacheManager;
 import org.slf4j.Logger;
@@ -95,7 +96,6 @@ public class GameServer {
         checkFreePorts();
 
 
-
         // Initialize database
         System.out.println("Server is Loading on IP " + Config.EXTERNAL_HOSTNAME + "");
 
@@ -111,7 +111,7 @@ public class GameServer {
 
         CacheManager.getInstance();
 
-        ThreadPoolManager.getInstance();
+        ThreadPoolManager.INSTANCE.toString();
         _log.info("===============[Loading Scripts]==================");
         Scripts.getInstance();
         BalancerConfig.LoadConfig();
@@ -122,18 +122,18 @@ public class GameServer {
         World.init();
         printSection("");
         Parsers.parseAll();
-        ItemsDAO.getInstance();
+        ItemsDAO.INSTANCE.toString();
         printSection("Clan Crests");
         CrestCache.getInstance();
         // Alexander - Load all the information for the Server Ranking
         //_log.info("===================[Ranking]=======================");
-        //ServerRanking.getInstance();
-        //CharacterMonthlyRanking.getInstance();
+        //ServerRanking.INSTANCE();
+        //CharacterMonthlyRanking.INSTANCE();
         _log.info("===============[Loading Images]==================");
         ImagesCache.getInstance();
         printSection("");
         CharacterDAO.getInstance();
-        ClanTable.getInstance();
+        ClanTable.INSTANCE.toString();
         printSection("Fish Table");
         FishTable.getInstance();
         printSection("Skills");
@@ -156,7 +156,7 @@ public class GameServer {
         RaidBossSpawnManager.getInstance();
         printSection("Dimensional Rift");
         DimensionalRiftManager.getInstance();
-        Announcements.getInstance();
+        Announcements.INSTANCE.loadAnnouncements();
         LotteryManager.getInstance();
         PlayerMessageStack.getInstance();
         if (Config.AUTODESTROY_ITEM_AFTER > 0) {
@@ -172,41 +172,36 @@ public class GameServer {
         _log.info("===================[Loading Olympiad System]=======================");
         if (Config.ENABLE_OLYMPIAD) {
             Olympiad.load();
-            Hero.getInstance();
+            Hero.INSTANCE.log();
         }
         _log.info("===================[Olympiad System Loaded]=======================");
         PetitionManager.getInstance();
-        CursedWeaponsManager.getInstance();
-        if (!Config.ALLOW_WEDDING) {
-            CoupleManager.getInstance();
-            _log.info("CoupleManager initialized");
-        }
+        CursedWeaponsManager.INSTANCE.log();
         ItemHandler.getInstance();
         _log.info("======================[Loading BALANCER]==========================");
-        NpcStatsBalancerParser.getInstance();
         ClassesStatsBalancerParser.getInstance();
         _log.info("======================[Loading BALANCER]==========================");
         printSection("Admin Commands");
-        AdminCommandHandler.getInstance().log();
+        AdminCommandHandler.INSTANCE.log();
         printSection("Players Commands");
-        UserCommandHandler.getInstance().log();
-        VoicedCommandHandler.getInstance().log();
-        TaskManager.getInstance();
+        UserCommandHandler.INSTANCE.log();
+        VoicedCommandHandler.INSTANCE.log();
+        TaskManager.INSTANCE.init();
         _log.info("======================[Loading Castels & Clan Halls]==========================");
         ResidenceHolder.getInstance().callInit();
         EventHolder.getInstance().callInit();
-        CastleManorManager.getInstance();
+        CastleManorManager.INSTANCE.init(); // schedule all manor related events
         printSection("");
         Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
         printSection("Auto Cleaner");
         _log.info("IdFactory: Free ObjectID's remaining: " + IdFactory.getInstance().size());
         printSection("");
-        CoupleManager.getInstance();
+//        CoupleManager.INSTANCE();
         if (Config.ALT_FISH_CHAMPIONSHIP_ENABLED) {
-            FishingChampionShipManager.getInstance();
+            FishingChampionShipManager.INSTANCE.toString();
         }
         printSection("Hellbound");
-        HellboundManager.getInstance();
+        HellboundManager.INSTANCE.toString();
 
         NaiaTowerManager.getInstance();
         NaiaCoreManager.getInstance();
@@ -220,8 +215,6 @@ public class GameServer {
             ItemHolder.getInstance().getDroppableTemplates();
         }
         MiniGameScoreManager.getInstance();
-        L2TopManager.getInstance();
-        //AutoRaidEventManager.getInstance();
 
         if (Config.BUFF_STORE_ENABLED) {
             printSection("Offline Buffers");
@@ -231,8 +224,6 @@ public class GameServer {
         printSection("");
         _log.info(">>>>>>>>>> GameServer Started <<<<<<<<<");
         _log.info("Maximum Numbers of Connected Players: " + Config.MAXIMUM_ONLINE_USERS);
-        //Protection.Init();
-        CharacterDAO.getInstance().markTooOldChars();
         _log.info("===============[Protection Database]==================");
         CharacterDAO.getInstance().checkCharactersToDelete();
         printSection("");
@@ -265,14 +256,11 @@ public class GameServer {
             }
         }
 
-        if (Config.SERVICES_OFFLINE_TRADE_RESTORE_AFTER_RESTART) {
-            ThreadPoolManager.getInstance().schedule(new RestoreOfflineTraders(), 100000L);
-        }
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new AutoAnnounce(), 60000, 60000);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new AutoAnnounce(), 60000, 60000);
         AutoImageSenderManager.startSendingImages();
 
         if (Config.ENABLE_ACHIEVEMENTS) {
-            Achievements.getInstance();
+            Achievements.INSTANCE.log();
             AchievementNotification.getInstance();
         }
 
@@ -329,6 +317,8 @@ public class GameServer {
     }
 
     public static void main(String[] args) throws Exception {
+
+        HibernateUtil.getSession();
         new GameServer();
     }
 

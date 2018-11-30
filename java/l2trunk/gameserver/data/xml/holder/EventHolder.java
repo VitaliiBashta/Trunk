@@ -11,7 +11,7 @@ import java.util.TreeMap;
 public final class EventHolder extends AbstractHolder {
     private static final EventHolder _instance = new EventHolder();
     public static int FIGHT_CLUB_EVENTS = 0;
-    private final Map<Integer,GlobalEvent> _events = new TreeMap<>();
+    private final Map<Integer, GlobalEvent> _events = new TreeMap<>();
 
     public static EventHolder getInstance() {
         return _instance;

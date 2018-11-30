@@ -42,15 +42,15 @@ public class PetInfo extends L2GameServerPacket {
     private final int sps;
     private final int ss;
     private final int type;
-    private int _showSpawnAnimation;
     private final Location _loc;
     private final double col_redius;
     private final double col_height;
     private final long exp;
     private final long exp_this_lvl;
     private final long exp_next_lvl;
-    private String _name, title;
     private final TeamType _team;
+    private int _showSpawnAnimation;
+    private String _name, title;
 
     public PetInfo(Summon summon) {
         _type = summon.getSummonType();

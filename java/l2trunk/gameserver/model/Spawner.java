@@ -25,7 +25,6 @@ import java.util.List;
 public abstract class Spawner extends EventOwner implements Cloneable {
     private static final Logger _log = LoggerFactory.getLogger(Spawner.class);
     private static final int MIN_RESPAWN_DELAY = 20;
-    private static final long serialVersionUID = 6326392189707112339L;
     int _maximumCount;
     int _referenceCount;
     int _currentCount;
@@ -33,17 +32,12 @@ public abstract class Spawner extends EventOwner implements Cloneable {
 
     int _respawnDelay;
     int _respawnDelayRandom;
-    private int _nativeRespawnDelay;
-
-    private int _respawnTime;
-
-    private boolean _doRespawn;
-
-    private NpcInstance _lastSpawn;
-
     List<NpcInstance> _spawned;
-
     Reflection _reflection = ReflectionManager.DEFAULT;
+    private int _nativeRespawnDelay;
+    private int _respawnTime;
+    private boolean _doRespawn;
+    private NpcInstance _lastSpawn;
 
     public void decreaseScheduledCount() {
         if (_scheduledCount > 0)

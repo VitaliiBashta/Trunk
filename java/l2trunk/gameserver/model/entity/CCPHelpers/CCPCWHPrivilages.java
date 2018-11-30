@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
 import java.util.List;
 
-public class CCPCWHPrivilages {
+public final class CCPCWHPrivilages {
     /**
      * @param activeChar
      * @param args
@@ -69,7 +69,7 @@ public class CCPCWHPrivilages {
                     builder.append(") AND `name`='canWhWithdraw'");
                     List<Object> list = mysql.get_array(builder.toString());
 
-                    String msg = HtmCache.getInstance().getNotNull("command/cfgClanList.htm", activeChar);
+                    String msg = HtmCache.INSTANCE.getNotNull("command/cfgClanList.htm", activeChar);
 
                     StringBuilder replaceBuilder = new StringBuilder("<table width=280>");
 

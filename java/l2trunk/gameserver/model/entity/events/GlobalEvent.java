@@ -3,7 +3,6 @@ package l2trunk.gameserver.model.entity.events;
 import l2trunk.commons.collections.MultiValueSet;
 import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
-import l2trunk.commons.logging.LoggerObject;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.ItemsDAO;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
@@ -26,29 +25,28 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.taskmanager.actionrunner.ActionRunner;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.TimeUtils;
-//import org.napile.primitive.Containers;
-//import org.napile.primitive.maps.IntObjectMap;
-//import org.napile.primitive.maps.impl.CHashIntObjectMap;
-//import org.napile.primitive.maps.impl.TreeIntObjectMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class GlobalEvent extends LoggerObject {
+public abstract class GlobalEvent {
+    public static final Logger LOG = LoggerFactory.getLogger(GlobalEvent.class);
     protected static final String EVENT = "event";
     // actions
-    protected final Map<Integer,List<EventAction>> _onTimeActions = new TreeMap<>();
+    protected final Map<Integer, List<EventAction>> _onTimeActions = new TreeMap<>();
     private final List<EventAction> _onStartActions = new ArrayList<>(0);
     private final List<EventAction> _onStopActions = new ArrayList<>(0);
     private final List<EventAction> _onInitActions = new ArrayList<>(0);
     // objects
-    private final Map<String, List<Serializable>> _objects = new HashMap<>(0);
+    private final Map<String, List<Object>> _objects = new HashMap<>(0);
     private final int _id;
     private final String _name;
     private final String _timerName;
     private final ListenerListImpl _listenerList = new ListenerListImpl();
-    private Map<Integer,ItemInstance> _banishedItems = new HashMap<>();//Containers.emptyIntObjectMap();
+    private Map<Integer, ItemInstance> _banishedItems = new HashMap<>();//Containers.emptyIntObjectMap();
 
     protected GlobalEvent(MultiValueSet<String> set) {
         this(set.getInteger("id"), set.getString("name"));
@@ -87,7 +85,7 @@ public abstract class GlobalEvent extends LoggerObject {
     }
 
     protected void printInfo() {
-        info(getName() + " time - " + TimeUtils.toSimpleFormat(startTimeMillis()));
+        LOG.info(getName() + " time - " + TimeUtils.toSimpleFormat(startTimeMillis()));
     }
 
     @Override
@@ -141,7 +139,7 @@ public abstract class GlobalEvent extends LoggerObject {
     public void timeActions(int time) {
         List<EventAction> actions = _onTimeActions.get(time);
         if (actions == null) {
-            info("Undefined time : " + time);
+            LOG.info("Undefined time : " + time);
             return;
         }
 
@@ -162,11 +160,11 @@ public abstract class GlobalEvent extends LoggerObject {
             return;
 
         for (int key : _onTimeActions.keySet())
-            ActionRunner.getInstance().register(t + key * 1000L, new EventWrapper(_timerName, this, key));
+            ActionRunner.INSTANCE.register(t + key * 1000L, new EventWrapper(_timerName, this, key));
     }
 
     public void clearActions() {
-        ActionRunner.getInstance().clear(_timerName);
+        ActionRunner.INSTANCE.clear(_timerName);
     }
 
     // ===============================================================================================================
@@ -174,8 +172,8 @@ public abstract class GlobalEvent extends LoggerObject {
     // ===============================================================================================================
 
     @SuppressWarnings("unchecked")
-    public <O extends Serializable> List<O> getObjects(String name) {
-        List<Serializable> objects = _objects.get(name);
+    public <O> List<O> getObjects(String name) {
+        List<Object> objects = _objects.get(name);
         return objects == null ? Collections.emptyList() : (List<O>) objects;
     }
 
@@ -185,11 +183,11 @@ public abstract class GlobalEvent extends LoggerObject {
         return objects.size() > 0 ? (O) objects.get(0) : null;
     }
 
-    public void addObject(String name, Serializable object) {
+    public void addObject(String name, Object object) {
         if (object == null)
             return;
 
-        List<Serializable> list = _objects.get(name);
+        List<Object> list = _objects.get(name);
         if (list != null) {
             list.add(object);
         } else {
@@ -203,37 +201,37 @@ public abstract class GlobalEvent extends LoggerObject {
         if (o == null)
             return;
 
-        List<Serializable> list = _objects.get(name);
+        List<Object> list = _objects.get(name);
         if (list != null)
             list.remove(o);
     }
 
     @SuppressWarnings("unchecked")
-    public <O extends Serializable> List<O> removeObjects(String name) {
-        List<Serializable> objects = _objects.remove(name);
-        return objects == null ? Collections.<O>emptyList() : (List<O>) objects;
+    public <O> List<O> removeObjects(String name) {
+        List<Object> objects = _objects.remove(name);
+        return objects == null ? Collections.emptyList() : (List<O>) objects;
     }
 
     @SuppressWarnings("unchecked")
-    public void addObjects(String name, List<? extends Serializable> objects) {
+    public void addObjects(String name, List objects) {
         if (objects.isEmpty())
             return;
 
-        List<Serializable> list = _objects.get(name);
+        List<Object> list = _objects.get(name);
         if (list != null)
             list.addAll(objects);
         else
-            _objects.put(name, (List<Serializable>) objects);
+            _objects.put(name, objects);
     }
 
-    public Map<String, List<Serializable>> getObjects() {
+    public Map<String, List<Object>> getObjects() {
         return _objects;
     }
 
     public void spawnAction(String name, boolean spawn) {
         List<Serializable> objects = getObjects(name);
         if (objects.isEmpty()) {
-            info("Undefined objects: " + name);
+            LOG.info("Undefined objects: " + name);
             return;
         }
 
@@ -249,7 +247,7 @@ public abstract class GlobalEvent extends LoggerObject {
     public void doorAction(String name, boolean open) {
         List<Serializable> objects = getObjects(name);
         if (objects.isEmpty()) {
-            info("Undefined objects: " + name);
+            LOG.info("Undefined objects: " + name);
             return;
         }
 
@@ -265,7 +263,7 @@ public abstract class GlobalEvent extends LoggerObject {
     public void zoneAction(String name, boolean active) {
         List<Serializable> objects = getObjects(name);
         if (objects.isEmpty()) {
-            info("Undefined objects: " + name);
+            LOG.info("Undefined objects: " + name);
             return;
         }
 
@@ -277,7 +275,7 @@ public abstract class GlobalEvent extends LoggerObject {
     public void initAction(String name) {
         List<Serializable> objects = getObjects(name);
         if (objects.isEmpty()) {
-            info("Undefined objects: " + name);
+            LOG.info("Undefined objects: " + name);
             return;
         }
 
@@ -298,7 +296,7 @@ public abstract class GlobalEvent extends LoggerObject {
     public void refreshAction(String name) {
         List<Serializable> objects = getObjects(name);
         if (objects.isEmpty()) {
-            info("Undefined objects: " + name);
+            LOG.info("Undefined objects: " + name);
             return;
         }
 
@@ -441,12 +439,12 @@ public abstract class GlobalEvent extends LoggerObject {
     }
 
     public void removeBanishItems() {
-        Iterator<Map.Entry<Integer,ItemInstance>> iterator = _banishedItems.entrySet().iterator();
+        Iterator<Map.Entry<Integer, ItemInstance>> iterator = _banishedItems.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<Integer,ItemInstance> entry = iterator.next();
+            Map.Entry<Integer, ItemInstance> entry = iterator.next();
             iterator.remove();
 
-            ItemInstance item = ItemsDAO.getInstance().load(entry.getKey());
+            ItemInstance item = ItemsDAO.INSTANCE.load(entry.getKey());
             if (item != null) {
                 if (item.getOwnerId() > 0) {
                     GameObject object = GameObjectsStorage.findObject(item.getOwnerId());
@@ -490,7 +488,7 @@ public abstract class GlobalEvent extends LoggerObject {
         for (EventAction a : _onStopActions)
             e._onStopActions.add(a);
 
-        for (Map.Entry<Integer,List<EventAction>> entry : _onTimeActions.entrySet())
+        for (Map.Entry<Integer, List<EventAction>> entry : _onTimeActions.entrySet())
             e.addOnTimeActions(entry.getKey(), entry.getValue());
     }
 

@@ -3,7 +3,10 @@ package l2trunk.gameserver.data.xml.holder;
 import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.templates.augmentation.AugmentationInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AugmentationDataHolder extends AbstractHolder {
     private static final AugmentationDataHolder _instance = new AugmentationDataHolder();

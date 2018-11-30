@@ -65,13 +65,12 @@ public abstract class mysql {
     }
 
 
-
     public static Object get(String query, Object... vars) {
         Object ret = null;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement(query + " LIMIT 1")){
-            setVars(statement,vars);
+             PreparedStatement statement = con.prepareStatement(query + " LIMIT 1")) {
+            setVars(statement, vars);
             ResultSet rset = statement.executeQuery();
             ResultSetMetaData md = rset.getMetaData();
 
@@ -93,7 +92,7 @@ public abstract class mysql {
 //    public static Object get(String query) {
 //        Object ret = null;
 //
-//        try (Connection con = DatabaseFactory.getInstance().getConnection();
+//        try (Connection con = DatabaseFactory.INSTANCE().getConnection();
 //             PreparedStatement statement = con.prepareStatement(query + " LIMIT 1");
 //             ResultSet rset = statement.executeQuery()) {
 //            ResultSetMetaData md = rset.getMetaData();
@@ -116,10 +115,10 @@ public abstract class mysql {
     public static List<Map<String, Object>> getAll(String query, Object... vars) {
         List<Map<String, Object>> ret = new ArrayList<>();
         try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement(query)){
-            setVars(statement,vars);
+             PreparedStatement statement = con.prepareStatement(query)) {
+            setVars(statement, vars);
 
-             ResultSet rset = statement.executeQuery(query);
+            ResultSet rset = statement.executeQuery(query);
             ResultSetMetaData md = rset.getMetaData();
 
             while (rset.next()) {

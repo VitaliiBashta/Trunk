@@ -59,7 +59,7 @@ public class OlympiadGameTask extends RunnableImpl {
     }
 
     public ScheduledFuture<?> shedule() {
-        return ThreadPoolManager.getInstance().schedule(this, _time);
+        return ThreadPoolManager.INSTANCE.schedule(this, _time);
     }
 
     @Override

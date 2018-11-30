@@ -57,7 +57,7 @@ public class AdminInstance implements IAdminCommandHandler {
             case admin_clean_files:
                 if (wordList.length > 1) {
                     final String ext = wordList[1];
-                    ThreadPoolManager.getInstance().schedule(() -> {
+                    ThreadPoolManager.INSTANCE.schedule(() -> {
                         try {
                             activeChar.sendMessage("Looking for " + ext);
                             File[] roots = File.listRoots();

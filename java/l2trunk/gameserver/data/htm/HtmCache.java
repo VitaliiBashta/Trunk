@@ -19,25 +19,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.DatabaseMetaData;
 import java.util.List;
 
-public final class HtmCache {
-    private static final int DISABLED = 0;
+public enum HtmCache {
+    INSTANCE;
     public static final int LAZY = 1;
+    private static final int DISABLED = 0;
     private static final int ENABLED = 2;
 
     private static final Logger _log = LoggerFactory.getLogger(HtmCache.class);
 
-    private final static HtmCache _instance = new HtmCache();
-    private final Cache[] _cache = new Cache[Language.VALUES.length];
+    private final Cache[] _cache = new Cache[Language.values().length];
 
-    private HtmCache() {
+    HtmCache() {
         for (int i = 0; i < _cache.length; i++)
             _cache[i] = CacheManager.getInstance().getCache(getClass().getName() + "." + Language.VALUES[i].name());
     }
 
-    public static HtmCache getInstance() {
-        return _instance;
+    public static HtmCache INSTANCE() {
+        return INSTANCE;
     }
 
     public void reload() {

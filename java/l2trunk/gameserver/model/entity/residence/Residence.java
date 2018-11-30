@@ -39,23 +39,23 @@ public abstract class Residence implements JdbcEntity {
     private static final long serialVersionUID = 1L;
     private static final Logger _log = LoggerFactory.getLogger(Residence.class);
     final int _id;
+    final Calendar _siegeDate = Calendar.getInstance();
     private final String _name;
-    Clan _owner;
-    private Zone _zone;
     private final List<ResidenceFunction> _functions = new ArrayList<>();
     private final List<Skill> skills = new ArrayList<>();
-    private SiegeEvent<?, ?> _siegeEvent;
-    final Calendar _siegeDate = Calendar.getInstance();
-    private final Calendar _lastSiegeDate = Calendar.getInstance();
-    private final Calendar _ownDate = Calendar.getInstance();
-    // rewards
-    private ScheduledFuture<?> _cycleTask;
-    private JdbcEntityState _jdbcEntityState = JdbcEntityState.CREATED;
+    private final Calendar lastSiegeDate = Calendar.getInstance();
+    private final Calendar ownDate = Calendar.getInstance();
     // points
     private final List<Location> _banishPoints = new ArrayList<>();
     private final List<Location> _ownerRestartPoints = new ArrayList<>();
     private final List<Location> _otherRestartPoints = new ArrayList<>();
     private final List<Location> _chaosRestartPoints = new ArrayList<>();
+    Clan _owner;
+    private Zone _zone;
+    private SiegeEvent<?, ?> _siegeEvent;
+    // rewards
+    private ScheduledFuture<?> _cycleTask;
+    private JdbcEntityState _jdbcEntityState = JdbcEntityState.CREATED;
     private int _cycle;
     private int _rewardCount;
     private int _paidCycle;
@@ -116,7 +116,7 @@ public abstract class Residence implements JdbcEntity {
     public abstract void changeOwner(Clan clan);
 
     public Calendar getOwnDate() {
-        return _ownDate;
+        return ownDate;
     }
 
     public Calendar getSiegeDate() {
@@ -124,7 +124,7 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public Calendar getLastSiegeDate() {
-        return _lastSiegeDate;
+        return lastSiegeDate;
     }
 
     public void addSkill(Skill skill) {
@@ -293,16 +293,16 @@ public abstract class Residence implements JdbcEntity {
             return;
 
         if (function.getEndTimeInMillis() > System.currentTimeMillis())
-            ThreadPoolManager.getInstance().schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
         else if (function.isInDebt() && clan.getAdenaCount() >= function.getLease()) // if player didn't pay before add extra fee
         {
             clan.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, function.getLease(), "Residence Functions Auto Task");
             function.updateRentTime(false);
-            ThreadPoolManager.getInstance().schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
         } else if (!function.isInDebt()) {
             function.setInDebt(true);
             function.updateRentTime(true);
-            ThreadPoolManager.getInstance().schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
         } else {
             function.setLvl(0);
             function.setActive(false);
@@ -353,7 +353,7 @@ public abstract class Residence implements JdbcEntity {
         while (diff >= CYCLE_TIME)
             diff -= CYCLE_TIME;
 
-        _cycleTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ResidenceCycleTask(), diff, CYCLE_TIME);
+        _cycleTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ResidenceCycleTask(), diff, CYCLE_TIME);
     }
 
     void chanceCycle() {

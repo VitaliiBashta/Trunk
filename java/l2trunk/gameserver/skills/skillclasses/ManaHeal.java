@@ -21,7 +21,7 @@ public class ManaHeal extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        double mp = _power;
+        double mp = power;
 
         int sps = isSSPossible() ? activeChar.getChargedSpiritShot() : 0;
         if (sps > 0 && Config.MANAHEAL_SPS_BONUS)
@@ -45,7 +45,7 @@ public class ManaHeal extends Skill {
             }
 
             if (newMp == 0) {
-                activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(_id, getDisplayLevel()));
+                activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_HAS_FAILED).addSkillName(id, getDisplayLevel()));
                 getEffects(activeChar, target, getActivateRate() > 0, false);
                 continue;
             }

@@ -17,7 +17,7 @@ public final class NaiaCube extends DefaultAI {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.getInstance().schedule(new Despawn(getActor()), 300 * 1000L);
+        ThreadPoolManager.INSTANCE.schedule(new Despawn(getActor()), 300 * 1000L);
     }
 
     private class Despawn extends RunnableImpl {

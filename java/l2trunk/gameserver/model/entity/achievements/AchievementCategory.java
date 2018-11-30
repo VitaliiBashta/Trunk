@@ -34,7 +34,7 @@ final class AchievementCategory {
             greenbar = Math.min(greenbar, BAR_MAX);
         }
 
-        String temp = HtmCache.getInstance().getNullable("achievements/AchievementsCat.htm", null);
+        String temp = HtmCache.INSTANCE.getNullable("achievements/AchievementsCat.htm", null);
 
         temp = temp.replaceFirst("%bg%", getCategoryId() % 2 == 0 ? "090908" : "0f100f");
         temp = temp.replaceFirst("%desc%", getDesc());

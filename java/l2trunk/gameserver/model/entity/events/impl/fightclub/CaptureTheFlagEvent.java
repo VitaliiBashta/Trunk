@@ -55,7 +55,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
 
             super.onKilled(actor, victim);
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag OnKilled!", e);
+            LOG.error("Error on CaptureTheFlag OnKilled!", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
                 i++;
             }
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag startEvent!", e);
+            LOG.error("Error on CaptureTheFlag startEvent!", e);
         }
     }
 
@@ -93,7 +93,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
             }
             _flagTeams = null;
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag stopEvent!", e);
+            LOG.error("Error on CaptureTheFlag stopEvent!", e);
         }
     }
 
@@ -122,7 +122,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
                 return getEnemyFlag(fPlayer, flagTeam);
             }
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag tryToTakeFlag!", e);
+            LOG.error("Error on CaptureTheFlag tryToTakeFlag!", e);
             return false;
         }
     }
@@ -152,7 +152,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
                 }
             }
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag talkedWithFlagHolder!", e);
+            LOG.error("Error on CaptureTheFlag talkedWithFlagHolder!", e);
         }
     }
 
@@ -188,7 +188,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
             }
             return false;
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag talkedWithFlagHolder!", e);
+            LOG.error("Error on CaptureTheFlag talkedWithFlagHolder!", e);
             return false;
         }
     }
@@ -202,7 +202,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
                     return iFlagTeam;
             return null;
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag getTeam!", e);
+            LOG.error("Error on CaptureTheFlag getTeam!", e);
             return null;
         }
     }
@@ -231,7 +231,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
                 fPlayer.increaseEventSpecificScore("capture");
             }
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag giveFlagBack!", e);
+            LOG.error("Error on CaptureTheFlag giveFlagBack!", e);
         }
     }
 
@@ -246,7 +246,7 @@ public class CaptureTheFlagEvent extends AbstractFightClub//TODO sprawdzic czy f
             flag.broadcastCharInfo();
             flagTeam._flag = flag;
         } catch (Exception e) {
-            _log.error("Error on CaptureTheFlag spawnFlag!", e);
+            LOG.error("Error on CaptureTheFlag spawnFlag!", e);
         }
     }
 

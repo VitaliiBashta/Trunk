@@ -17,9 +17,11 @@ import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
-public class CareerManager implements ScriptFile, ICommunityBoardHandler {
+public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CareerManager.class);
 
     @Override
@@ -41,8 +43,8 @@ public class CareerManager implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_bbscareer;", "_bbscareer;sub;", "_bbscareer;classmaster;change_class;"};
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_bbscareer;", "_bbscareer;sub;", "_bbscareer;classmaster;change_class;");
     }
 
     @SuppressWarnings("incomplete-switch")
@@ -105,7 +107,7 @@ public class CareerManager implements ScriptFile, ICommunityBoardHandler {
                 html.append("</tr>");
                 html.append("</table>");
             }
-            String content = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/career.htm", activeChar);
+            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/career.htm", activeChar);
             content = content.replace("%career%", html.toString());
             ShowBoard.separateAndSend(content, activeChar);
         }

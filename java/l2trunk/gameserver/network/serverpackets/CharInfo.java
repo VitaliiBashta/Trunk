@@ -108,7 +108,7 @@ public class CharInfo extends L2GameServerPacket {
             ally_crest_id = 0;
             large_clan_crest_id = 0;
             if (player.isCursedWeaponEquipped())
-                cw_level = CursedWeaponsManager.getInstance().getLevel(player.getCursedWeaponEquippedId());
+                cw_level = CursedWeaponsManager.INSTANCE.getLevel(player.getCursedWeaponEquippedId());
         } else {
             _name = player.getVisibleName();
             if (player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE && !player.isInBuffStore()) {

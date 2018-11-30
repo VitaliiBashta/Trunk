@@ -52,7 +52,7 @@ public class CastleMassTeleporterInstance extends NpcInstance {
             return;
         }
 
-        _teleportTask = ThreadPoolManager.getInstance().schedule(new TeleportTask(), isAllTowersDead() ? 480000L : 30000L);
+        _teleportTask = ThreadPoolManager.INSTANCE().schedule(new TeleportTask(), isAllTowersDead() ? 480000L : 30000L);
 
         showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", "%teleportIn%", getSecondsToTP());
     }

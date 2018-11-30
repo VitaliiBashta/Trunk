@@ -480,7 +480,7 @@ public final class VillageMasterInstance extends NpcInstance {
             return;
         }
 
-        Clan clan = ClanTable.getInstance().createClan(player, clanName);
+        Clan clan = ClanTable.INSTANCE.createClan(player, clanName);
         if (clan == null) {
             // clan name is already taken
             player.sendPacket(Msg.THIS_NAME_ALREADY_EXISTS);
@@ -550,7 +550,7 @@ public final class VillageMasterInstance extends NpcInstance {
                 return;
             }
 
-        if (ClanTable.getInstance().getClanByName(clanName) != null) {
+        if (ClanTable.INSTANCE.getClanByName(clanName) != null) {
             player.sendPacket(Msg.ANOTHER_MILITARY_UNIT_IS_ALREADY_USING_THAT_NAME_PLEASE_ENTER_A_DIFFERENT_NAME);
             return;
         }
@@ -681,7 +681,7 @@ public final class VillageMasterInstance extends NpcInstance {
             }
         }
 
-        ClanTable.getInstance().dissolveClan(player);
+        ClanTable.INSTANCE.dissolveClan(player);
     }
 
     private void levelUpClan(Player player) {
@@ -805,7 +805,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
             player.broadcastCharInfo();
 
-            doCast(SkillTable.getInstance().getInfo(5103, 1), player, true);
+            doCast(SkillTable.INSTANCE().getInfo(5103, 1), player, true);
 
             if (clan.getLevel() >= 4)
                 SiegeUtils.addSiegeSkills(player);
@@ -833,7 +833,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
         player.broadcastCharInfo();
 
-        doCast(SkillTable.getInstance().getInfo(5103, 1), player, true);
+        doCast(SkillTable.INSTANCE().getInfo(5103, 1), player, true);
 
         if (clan.getLevel() >= 4)
             SiegeUtils.addSiegeSkills(player);
@@ -893,7 +893,7 @@ public final class VillageMasterInstance extends NpcInstance {
             player.sendPacket(Msg.TO_CREATE_AN_ALLIANCE_YOUR_CLAN_MUST_BE_LEVEL_5_OR_HIGHER);
             return;
         }
-        if (ClanTable.getInstance().getAllyByName(allyName) != null) {
+        if (ClanTable.INSTANCE.getAllyByName(allyName) != null) {
             player.sendPacket(Msg.THIS_ALLIANCE_NAME_ALREADY_EXISTS);
             return;
         }
@@ -902,7 +902,7 @@ public final class VillageMasterInstance extends NpcInstance {
             return;
         }
 
-        Alliance alliance = ClanTable.getInstance().createAlliance(player, allyName);
+        Alliance alliance = ClanTable.INSTANCE.createAlliance(player, allyName);
         if (alliance == null)
             return;
 
@@ -924,7 +924,7 @@ public final class VillageMasterInstance extends NpcInstance {
             return;
         }
 
-        ClanTable.getInstance().dissolveAlly(player);
+        ClanTable.INSTANCE.dissolveAlly(player);
     }
 
     private Set<PlayerClass> getAvailableSubsByNpc(Player player, boolean isNew) {

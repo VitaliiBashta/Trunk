@@ -98,12 +98,12 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
                         _socialTask.cancel(false);
                         _socialTask = null;
                     }
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new Social(_velociraptor, 2), 6000);
+                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new Social(_velociraptor, 2), 6000);
                     if (_activityTimeEndTask != null) {
                         _activityTimeEndTask.cancel(false);
                         _activityTimeEndTask = null;
                     }
-                    _activityTimeEndTask = ThreadPoolManager.getInstance().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
+                    _activityTimeEndTask = ThreadPoolManager.INSTANCE().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Pterosaur:
                     _pterosaur = spawn(new Location(27852, -5536, -1983, 44732), Pterosaur);
@@ -112,12 +112,12 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
                         _socialTask.cancel(false);
                         _socialTask = null;
                     }
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new Social(_pterosaur, 2), 6000);
+                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new Social(_pterosaur, 2), 6000);
                     if (_activityTimeEndTask != null) {
                         _activityTimeEndTask.cancel(false);
                         _activityTimeEndTask = null;
                     }
-                    _activityTimeEndTask = ThreadPoolManager.getInstance().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
+                    _activityTimeEndTask = ThreadPoolManager.INSTANCE().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Tyrannosaurus:
                     _tyranno = spawn(new Location(27852, -5536, -1983, 44732), Tyrannosaurus);
@@ -126,12 +126,12 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
                         _socialTask.cancel(false);
                         _socialTask = null;
                     }
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new Social(_tyranno, 2), 6000);
+                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new Social(_tyranno, 2), 6000);
                     if (_activityTimeEndTask != null) {
                         _activityTimeEndTask.cancel(false);
                         _activityTimeEndTask = null;
                     }
-                    _activityTimeEndTask = ThreadPoolManager.getInstance().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
+                    _activityTimeEndTask = ThreadPoolManager.INSTANCE().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
                 case Sailren:
                     _sailren = spawn(new Location(27810, -5655, -1983, 44732), Sailren);
@@ -146,12 +146,12 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
                         _socialTask.cancel(false);
                         _socialTask = null;
                     }
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new Social(_sailren, 2), 6000);
+                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new Social(_sailren, 2), 6000);
                     if (_activityTimeEndTask != null) {
                         _activityTimeEndTask.cancel(false);
                         _activityTimeEndTask = null;
                     }
-                    _activityTimeEndTask = ThreadPoolManager.getInstance().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
+                    _activityTimeEndTask = ThreadPoolManager.INSTANCE().schedule(new ActivityTimeEnd(), FWS_ACTIVITYTIMEOFMOBS);
                     break;
             }
         }
@@ -199,7 +199,7 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
 
     private synchronized static void checkAnnihilated() {
         if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.getInstance().schedule(new onAnnihilated(), 5000);
+            _onAnnihilatedTask = ThreadPoolManager.INSTANCE().schedule(new onAnnihilated(), 5000);
     }
 
     private static List<Player> getPlayersInside() {
@@ -241,15 +241,15 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
         else if (self == _velociraptor) {
             if (_monsterSpawnTask != null)
                 _monsterSpawnTask.cancel(false);
-            _monsterSpawnTask = ThreadPoolManager.getInstance().schedule(new SailrenSpawn(Pterosaur), FWS_INTERVALOFNEXTMONSTER);
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE().schedule(new SailrenSpawn(Pterosaur), FWS_INTERVALOFNEXTMONSTER);
         } else if (self == _pterosaur) {
             if (_monsterSpawnTask != null)
                 _monsterSpawnTask.cancel(false);
-            _monsterSpawnTask = ThreadPoolManager.getInstance().schedule(new SailrenSpawn(Tyrannosaurus), FWS_INTERVALOFNEXTMONSTER);
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE().schedule(new SailrenSpawn(Tyrannosaurus), FWS_INTERVALOFNEXTMONSTER);
         } else if (self == _tyranno) {
             if (_monsterSpawnTask != null)
                 _monsterSpawnTask.cancel(false);
-            _monsterSpawnTask = ThreadPoolManager.getInstance().schedule(new SailrenSpawn(Sailren), FWS_INTERVALOFNEXTMONSTER);
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE().schedule(new SailrenSpawn(Sailren), FWS_INTERVALOFNEXTMONSTER);
         } else if (self == _sailren) {
             onSailrenDie(killer);
         }
@@ -266,7 +266,7 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
 
         Log.add("Sailren died", "bosses");
 
-        _cubeSpawnTask = ThreadPoolManager.getInstance().schedule(new CubeSpawn(), 10000);
+        _cubeSpawnTask = ThreadPoolManager.INSTANCE().schedule(new CubeSpawn(), 10000);
     }
 
     // Start interval.
@@ -286,7 +286,7 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
             _state.update();
         }
 
-        _intervalEndTask = ThreadPoolManager.getInstance().schedule(new IntervalEnd(), _state.getInterval());
+        _intervalEndTask = ThreadPoolManager.INSTANCE().schedule(new IntervalEnd(), _state.getInterval());
     }
 
     private static void setUnspawn() {
@@ -358,7 +358,7 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
 
     public synchronized static void setSailrenSpawnTask() {
         if (_monsterSpawnTask == null)
-            _monsterSpawnTask = ThreadPoolManager.getInstance().schedule(new SailrenSpawn(Velociraptor), FWS_INTERVALOFNEXTMONSTER);
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE().schedule(new SailrenSpawn(Velociraptor), FWS_INTERVALOFNEXTMONSTER);
     }
 
     public static boolean isEnableEnterToLair() {

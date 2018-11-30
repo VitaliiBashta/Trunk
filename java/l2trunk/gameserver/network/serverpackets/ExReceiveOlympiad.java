@@ -60,10 +60,10 @@ public abstract class ExReceiveOlympiad extends L2GameServerPacket {
         }
 
         static class ArenaInfo {
-            private final int _id, _matchType;
             final int _status;
             final String _name1;
             final String _name2;
+            private final int _id, _matchType;
 
             ArenaInfo(int id, int status, int match_type, String name1, String name2) {
                 _id = id;

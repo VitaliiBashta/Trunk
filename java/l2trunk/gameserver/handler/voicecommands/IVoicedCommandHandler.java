@@ -2,11 +2,8 @@ package l2trunk.gameserver.handler.voicecommands;
 
 import l2trunk.gameserver.model.Player;
 
-/**
- * This class ...
- *
- * @version $Revision: 1.1.4.2 $ $Date: 2005/03/27 15:30:09 $
- */
+import java.util.List;
+
 public interface IVoicedCommandHandler {
     /**
      * this is the worker method that is called when someone uses an admin command.
@@ -23,5 +20,5 @@ public interface IVoicedCommandHandler {
      *
      * @return all known itemIds
      */
-    String[] getVoicedCommandList();
+    List<String> getVoicedCommandList();
 }

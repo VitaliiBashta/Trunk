@@ -21,13 +21,13 @@ public abstract class AbstractDirParser<H extends AbstractHolder> extends Abstra
         Path dir = getXMLDir();
 
         if (!Files.exists(dir)) {
-            warn("Dir " + dir.toAbsolutePath() + " not exists");
+            LOG.warn("Dir " + dir.toAbsolutePath() + " not exists");
             return;
         }
 
         Path dtd = dir.resolve(getDTDFileName());
         if (!Files.exists(dtd)) {
-            info("DTD file: " + dtd.toAbsolutePath() + " not exists.");
+            LOG.warn("DTD file: " + dtd.toAbsolutePath() + " not exists.");
             return;
         }
 
@@ -40,10 +40,10 @@ public abstract class AbstractDirParser<H extends AbstractHolder> extends Abstra
                     try {
                         parseCrypted(f);
                     } catch (Exception e) {
-                        _log.info("Exception: " + e + " in file: " + f.toAbsolutePath(), e);
+                        LOG.info("Exception: " + e + " in file: " + f.toAbsolutePath(), e);
                     }
         } catch (RuntimeException e) {
-            error("Exception in AbstractDirParser ", e);
+            LOG.error("Exception in AbstractDirParser ", e);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity;
 
 import l2trunk.commons.lang.NumberUtils;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
@@ -61,7 +60,7 @@ public final class CharacterControlPanel {
             if (q != null) {
                 QuestState st = activeChar.getQuestState(q.getName());
                 if (st != null) {
-                    String change = ChangeLogManager.getInstance().getChangeLog(ChangeLogManager.getInstance().getLatestChangeId());
+                    String change = ChangeLogManager.INSTANCE.getChangeLog(ChangeLogManager.INSTANCE.getLatestChangeId());
                     st.showTutorialHTML(change);
                 }
             }
@@ -107,12 +106,6 @@ public final class CharacterControlPanel {
                 activeChar.setNotShowBuffAnim(false);
                 activeChar.unsetVar(Player.NO_ANIMATION_OF_CAST_VAR);
             }
-        }
-        // Change auto loot
-        else if (param[0].equalsIgnoreCase("autoloot")) {
-            setAutoLoot(activeChar);
-        } else if (param[0].equalsIgnoreCase("autolootherbs")) {
-            setAutoLootHerbs(activeChar);
         } else if (param[0].equalsIgnoreCase("blocktrade")) {
             activeChar.setTradeRefusal(!activeChar.getTradeRefusal());
         } else if (param[0].equalsIgnoreCase("blockpartyinvite")) {
@@ -124,12 +117,6 @@ public final class CharacterControlPanel {
                 CCPRepair.repairChar(activeChar, param[1]);
             else
                 return null;
-        } else if (param[0].equalsIgnoreCase("offlineStore")) {
-            boolean result = CCPOffline.setOfflineStore(activeChar);
-            if (result)
-                return null;
-            else
-                return "char.htm";
         } else if (param[0].startsWith("poll") || param[0].startsWith("Poll")) {
             CCPPoll.bypass(activeChar, param);
             return null;
@@ -140,7 +127,7 @@ public final class CharacterControlPanel {
             CCPSmallCommands.openToad(activeChar, -1);
             return null;
         } else if (param[0].equals("hwidPage")) {
-                return "cfgLockHwid.htm";
+            return "cfgLockHwid.htm";
         } else if (param[0].startsWith("secondaryPass")) {
             CCPSecondaryPassword.startSecondaryPasswordSetup(activeChar, text);
             return null;
@@ -190,8 +177,6 @@ public final class CharacterControlPanel {
         currentPage = currentPage.replaceFirst("%soulshot%", getONOFF(activeChar.getVarB("soulshot")));
         currentPage = currentPage.replaceFirst("%notraders%", getONOFF(activeChar.getVarB("notraders")));
         currentPage = currentPage.replaceFirst("%notShowBuffAnim%", getONOFF(activeChar.getVarB("notShowBuffAnim")));
-        currentPage = currentPage.replaceFirst("%autoLoot%", getONOFF(activeChar.isAutoLootEnabled()));
-        currentPage = currentPage.replaceFirst("%autoLootHerbs%", getONOFF(activeChar.isAutoLootHerbsEnabled()));
         currentPage = currentPage.replaceFirst("%blocktrade%", getONOFF(activeChar.getTradeRefusal()));
         currentPage = currentPage.replaceFirst("%blockpartyinvite%", getONOFF(activeChar.getPartyInviteRefusal()));
         currentPage = currentPage.replaceFirst("%blockfriendinvite%", getONOFF(activeChar.getFriendInviteRefusal()));
@@ -208,15 +193,5 @@ public final class CharacterControlPanel {
             return "OFF";
     }
 
-    private void setAutoLoot(Player player) {
-        if (Config.AUTO_LOOT_INDIVIDUAL) {
-            player.setAutoLoot(!player.isAutoLootEnabled());
-        }
-    }
 
-    private void setAutoLootHerbs(Player player) {
-        if (Config.AUTO_LOOT_INDIVIDUAL) {
-            player.setAutoLootHerbs(!player.isAutoLootHerbsEnabled());
-        }
-    }
 }

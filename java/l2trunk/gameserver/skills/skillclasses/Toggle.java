@@ -13,8 +13,8 @@ public class Toggle extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        if (activeChar.getEffectList().getEffectsBySkillId(_id) != null) {
-            activeChar.getEffectList().stopEffect(_id);
+        if (activeChar.getEffectList().getEffectsBySkillId(id) != null) {
+            activeChar.getEffectList().stopEffect(id);
             activeChar.sendActionFailed();
             return;
         }

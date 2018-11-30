@@ -26,7 +26,7 @@ public class ManaHealPercent extends Skill {
 
                 getEffects(activeChar, target, getActivateRate() > 0, false);
 
-                double mp = _power * target.getMaxMp() / 100.;
+                double mp = power * target.getMaxMp() / 100.;
                 double newMp = mp * (!_ignoreMpEff ? target.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;
                 double addToMp = Math.max(0, Math.min(newMp, target.calcStat(Stats.MP_LIMIT, null, null) * target.getMaxMp() / 100. - target.getCurrentMp()));
 

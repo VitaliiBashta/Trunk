@@ -52,7 +52,7 @@ public class LuckyCreaturesEvent extends AbstractFightClub {
     public void startEvent() {
         super.startEvent();
 
-        ThreadPoolManager.getInstance().schedule(new RespawnThread(), 30000);
+        ThreadPoolManager.INSTANCE.schedule(new RespawnThread(), 30000);
 
         for (Zone zone : getReflection().getZones())
             zone.setType(Zone.ZoneType.peace_zone);
@@ -132,7 +132,7 @@ public class LuckyCreaturesEvent extends AbstractFightClub {
             for (Long l : toRemove)
                 _deathTimes.remove(l);
 
-            ThreadPoolManager.getInstance().schedule(this, 10000L);
+            ThreadPoolManager.INSTANCE.schedule(this, 10000L);
         }
     }
 }

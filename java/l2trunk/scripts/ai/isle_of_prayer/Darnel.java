@@ -36,10 +36,10 @@ public final class Darnel extends DefaultAI {
     }
 
     private final Skill[] trapSkills = new Skill[]{
-            SkillTable.getInstance().getInfo(5267, 1),
-            SkillTable.getInstance().getInfo(5268, 1),
-            SkillTable.getInstance().getInfo(5269, 1),
-            SkillTable.getInstance().getInfo(5270, 1)};
+            SkillTable.INSTANCE().getInfo(5267, 1),
+            SkillTable.INSTANCE().getInfo(5268, 1),
+            SkillTable.INSTANCE().getInfo(5269, 1),
+            SkillTable.INSTANCE().getInfo(5270, 1)};
 
     private final Skill Poison;
     private final Skill Paralysis;
@@ -68,7 +68,7 @@ public final class Darnel extends DefaultAI {
 
         if (rnd_per < 5) {
             actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5440, 1, 3000, 0));
-            ThreadPoolManager.getInstance().schedule(new TrapTask(), 3000);
+            ThreadPoolManager.INSTANCE().schedule(new TrapTask(), 3000);
             return true;
         }
 

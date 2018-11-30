@@ -2,16 +2,24 @@ package l2trunk.gameserver.templates;
 
 import l2trunk.gameserver.model.Skill;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public final class CubicTemplate {
-    private final int id;
-    private final int level;
-    private final int delay;
+    private  int id;
+    private  int level;
+    private  int delay;
+
     private final List<Map.Entry<Integer, List<SkillInfo>>> _skills = new ArrayList<>(3);
+
+    public CubicTemplate() {
+    }
 
     public CubicTemplate(int id, int level, int delay) {
         this.id = id;
@@ -51,9 +59,9 @@ public final class CubicTemplate {
         private final int chance;
         private final ActionType actionType;
         private final boolean canAttackDoor;
-        private final Map<Integer,Integer> chanceList;
+        private final Map<Integer, Integer> chanceList;
 
-        public SkillInfo(Skill skill, int chance, ActionType actionType, boolean canAttackDoor, Map<Integer,Integer> set) {
+        public SkillInfo(Skill skill, int chance, ActionType actionType, boolean canAttackDoor, Map<Integer, Integer> set) {
             this.skill = skill;
             this.chance = chance;
             this.actionType = actionType;

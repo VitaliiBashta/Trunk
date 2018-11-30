@@ -31,10 +31,10 @@ import l2trunk.gameserver.utils.Location;
 import java.util.*;
 
 public class KrateisCubeEvent extends GlobalEvent {
-    private static final String PARTICLE_PLAYERS = "particle_players";
     public static final String REGISTERED_PLAYERS = "registered_players";
     public static final String WAIT_LOCS = "wait_locs";
     public static final String TELEPORT_LOCS = "teleport_locs";
+    private static final String PARTICLE_PLAYERS = "particle_players";
     private static final String PREPARE = "prepare";
     private static final SchedulingPattern DATE_PATTERN = new SchedulingPattern("0,30 * * * *");
     private static final Location RETURN_LOC = new Location(-70381, -70937, -1428);
@@ -43,8 +43,8 @@ public class KrateisCubeEvent extends GlobalEvent {
     private final int _minLevel;
     private final int _maxLevel;
     private final Calendar _calendar = Calendar.getInstance();
-    private KrateisCubeRunnerEvent _runnerEvent;
     private final Listeners _listeners = new Listeners();
+    private KrateisCubeRunnerEvent _runnerEvent;
 
     public KrateisCubeEvent(MultiValueSet<String> set) {
         super(set);
@@ -133,7 +133,7 @@ public class KrateisCubeEvent extends GlobalEvent {
         player.setCurrentCp(player.getMaxCp());
 
         for (int j = 0; j < SKILL_IDS.length; j++) {
-            Skill skill = SkillTable.getInstance().getInfo(SKILL_IDS[j], SKILL_LEVEL[j]);
+            Skill skill = SkillTable.INSTANCE().getInfo(SKILL_IDS[j], SKILL_LEVEL[j]);
             if (skill != null)
                 skill.getEffects(player, player, false, false);
         }

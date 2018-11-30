@@ -129,7 +129,7 @@ public class _615_MagicalPowerofFire1 extends Quest implements ScriptFile {
                     st.setCond(2);
                 } else if (cond == 2 && proval == 1) {
                     htmltext = "shaman_udan_q0615_03.htm";
-                    npc.doCast(SkillTable.getInstance().getInfo(4548, 1), st.getPlayer(), true);
+                    npc.doCast(SkillTable.INSTANCE().getInfo(4548, 1), st.getPlayer(), true);
                     st.set("proval", "0");
                 } else if (cond == 3 && st.getQuestItemsCount(STOLEN_RED_TOTEM) >= 1) {
                     htmltext = "shaman_udan_q0615_04.htm";
@@ -153,7 +153,7 @@ public class _615_MagicalPowerofFire1 extends Quest implements ScriptFile {
         int cond = st.getCond();
         int proval = st.getInt("proval");
         if (cond == 2 && proval == 0) {
-            npc.doCast(SkillTable.getInstance().getInfo(4547, 1), st.getPlayer(), true);
+            npc.doCast(SkillTable.INSTANCE.getInfo(4547, 1), st.getPlayer(), true);
             st.set("proval", "1");
         }
         return null;

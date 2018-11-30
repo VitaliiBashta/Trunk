@@ -68,7 +68,7 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
             loadMultiSell();
             spawnEventManagers();
             System.out.println("Event 'The Fall Harvest' started.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.TheFallHarvest.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.TheFallHarvest.AnnounceEventStarted", null);
         } else
             player.sendMessage("Event 'The Fall Harvest' already started.");
 
@@ -77,9 +77,6 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -87,7 +84,7 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
         if (SetActive("TheFallHarvest", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'The Fall Harvest' stopped.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.TheFallHarvest.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.TheFallHarvest.AnnounceEventStoped", null);
         } else
             player.sendMessage("Event 'The Fall Harvest' not started.");
 
@@ -138,9 +135,6 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
 
     }
 
-    /**
-     * Обработчик смерти мобов, управляющий эвентовым дропом
-     */
     @Override
     public void onDeath(Creature cha, Creature killer) {
         if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TFH_POLLEN_CHANCE * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
@@ -150,6 +144,6 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.TheFallHarvest.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.TheFallHarvest.AnnounceEventStarted", null);
     }
 }

@@ -45,7 +45,7 @@ public final class ElcardiaAssistantInstance extends NpcInstance {
             List<Creature> target = new ArrayList<>();
             target.add(player);
             for (int[] buff : _elcardiaBuff)
-                callSkill(SkillTable.getInstance().getInfo(buff[0], 1), target, true);
+                callSkill(SkillTable.INSTANCE().getInfo(buff[0], 1), target, true);
         } else
             super.onBypassFeedback(player, command);
     }

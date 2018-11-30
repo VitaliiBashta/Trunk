@@ -25,7 +25,7 @@ public class ExQuestNpcLogList extends L2GameServerPacket {
         _logList = new ArrayList<>(vars.size());
         for (QuestNpcLogInfo entry : vars) {
             int[] i = new int[2];
-            i[0] = entry.getNpcIds()[0] + 1000000;
+            i[0] = entry.getNpcIds().get(0) + 1000000;
             i[1] = state.getInt(entry.getVarName());
             _logList.add(i);
         }

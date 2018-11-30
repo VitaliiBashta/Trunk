@@ -6,11 +6,11 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class SiegeStatus implements IUserCommandHandler {
-    private static final int[] COMMANDS =
-            {
-                    99
-            };
+import java.util.Collections;
+import java.util.List;
+
+public final class SiegeStatus implements IUserCommandHandler {
+    private static final int COMMANDS = 99;
 
     @Override
     public boolean useUserCommand(int id, Player player) {
@@ -41,7 +41,7 @@ public class SiegeStatus implements IUserCommandHandler {
     }
 
     @Override
-    public int[] getUserCommandList() {
-        return COMMANDS;
+    public List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMANDS);
     }
 }

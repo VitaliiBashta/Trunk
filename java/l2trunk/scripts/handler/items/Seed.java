@@ -100,7 +100,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         }
 
         // use Sowing skill, id 2097
-        Skill skill = SkillTable.getInstance().getInfo(2097, 1);
+        Skill skill = SkillTable.INSTANCE().getInfo(2097, 1);
         if (skill == null) {
             player.sendActionFailed();
             return false;

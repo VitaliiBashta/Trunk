@@ -20,7 +20,7 @@ public final class SSQLilithMinion extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.getInstance().schedule(new Attack(), 3000);
+        ThreadPoolManager.INSTANCE().schedule(new Attack(), 3000);
     }
 
     public class Attack extends RunnableImpl {

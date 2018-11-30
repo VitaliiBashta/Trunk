@@ -3,11 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-/**
- * @author VISTALL
- * @date 16:19/12.04.2011
- */
-public class _737_DenyBlessings extends Dominion_KillSpecialUnitQuest {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _737_DenyBlessings extends Dominion_KillSpecialUnitQuest {
     public _737_DenyBlessings() {
         super();
     }
@@ -38,11 +37,10 @@ public class _737_DenyBlessings extends Dominion_KillSpecialUnitQuest {
     }
 
     @Override
-    protected ClassId[] getTargetClassIds() {
-        return new ClassId[]{
+    protected List<ClassId> getTargetClassIds() {
+        return Arrays.asList(
                 ClassId.bishop,
                 ClassId.prophet,
-                ClassId.elder,
                 ClassId.elder,
                 ClassId.shillienElder,
                 ClassId.cardinal,
@@ -50,6 +48,6 @@ public class _737_DenyBlessings extends Dominion_KillSpecialUnitQuest {
                 ClassId.evaSaint,
                 ClassId.shillienSaint,
                 ClassId.doomcryer
-        };
+        );
     }
 }

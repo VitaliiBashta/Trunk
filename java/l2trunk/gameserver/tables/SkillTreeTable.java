@@ -21,9 +21,8 @@ public class SkillTreeTable {
     public static final int SAFE_ENCHANT_BOOK = 9627;
     public static final int CHANGE_ENCHANT_BOOK = 9626;
     public static final int UNTRAIN_ENCHANT_BOOK = 9625;
-
-    private static final Logger _log = LoggerFactory.getLogger(SkillTreeTable.class);
     public static final Map<Integer, List<EnchantSkillLearn>> _enchant = new ConcurrentHashMap<>();
+    private static final Logger _log = LoggerFactory.getLogger(SkillTreeTable.class);
     private static SkillTreeTable _instance;
 
     private SkillTreeTable() {
@@ -54,7 +53,7 @@ public class SkillTreeTable {
                 if (learn2.getMinLevel() > player.getLevel() + 6) // Official +10 (Alexander)
                     continue;
 
-                Skill newSkill = SkillTable.getInstance().getInfo(skill.getId(), i);
+                Skill newSkill = SkillTable.INSTANCE().getInfo(skill.getId(), i);
                 if (newSkill != null) {
                     player.addSkill(newSkill, true);
                     break;

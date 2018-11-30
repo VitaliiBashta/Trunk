@@ -21,50 +21,38 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * Un voiced para poder registrarse o salirse de un evento creado por un gm
- *
- * @author GipsyGrierosu Andrei
- */
+import java.util.Collections;
+import java.util.List;
+
 public class VoiceGmEvent extends Functions implements IVoicedCommandHandler {
-    private static final String[] VOICED_COMMANDS =
-            {
-                    "gmevent"
-            };
+    private static final List<String> VOICED_COMMANDS = Collections.singletonList("gmevent");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
         // Evento no disponible o no en periodo de registro
         if (GmEventManager.getInstance().getEventStatus() != StateEnum.REGISTERING)
             return false;
-
-        try {
-            // Menu principal
-            if (args == null || args.isEmpty()) {
-                final NpcHtmlMessage html = new NpcHtmlMessage(0);
-                html.setFile("events/GmEvent.htm");
-                activeChar.sendPacket(html);
-                return true;
-            }
-
-            switch (args) {
-                case "register":
-                    GmEventManager.getInstance().registerToEvent(activeChar);
-                    break;
-                case "unregister":
-                    GmEventManager.getInstance().unregisterOfEvent(activeChar);
-                    break;
-            }
+        // Menu principal
+        if (args == null || args.isEmpty()) {
+            final NpcHtmlMessage html = new NpcHtmlMessage(0);
+            html.setFile("events/GmEvent.htm");
+            activeChar.sendPacket(html);
             return true;
-        } catch (Exception e) {
-
         }
 
-        return false;
+        switch (args) {
+            case "register":
+                GmEventManager.getInstance().registerToEvent(activeChar);
+                break;
+            case "unregister":
+                GmEventManager.getInstance().unregisterOfEvent(activeChar);
+                break;
+        }
+        return true;
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return VOICED_COMMANDS;
     }
 }

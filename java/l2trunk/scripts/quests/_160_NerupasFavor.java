@@ -6,6 +6,8 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+
 public class _160_NerupasFavor extends Quest implements ScriptFile {
     private static final int SILVERY_SPIDERSILK = 1026;
     private static final int UNOS_RECEIPT = 1027;

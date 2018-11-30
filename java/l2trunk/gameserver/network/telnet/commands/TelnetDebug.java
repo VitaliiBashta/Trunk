@@ -30,7 +30,7 @@ public class TelnetDebug implements TelnetCommandHolder {
                 int total = 0;
                 int maxId = 0, maxCount = 0;
 
-                Map<Integer,List<NpcInstance>> npcStats = new HashMap<>();
+                Map<Integer, List<NpcInstance>> npcStats = new HashMap<>();
 
                 for (GameObject obj : GameObjectsStorage.getAllObjects())
                     if (obj.isCreature())
@@ -55,7 +55,7 @@ public class TelnetDebug implements TelnetCommandHolder {
                 sb.append("Total NPCs: ").append(total).append("\n");
                 sb.append("Maximum NPC ID: ").append(maxId).append(" count : ").append(maxCount).append("\n");
 
-                for ( Map.Entry<Integer, List<NpcInstance>> itr: npcStats.entrySet()) {
+                for (Map.Entry<Integer, List<NpcInstance>> itr : npcStats.entrySet()) {
                     int id = itr.getKey();
                     List<NpcInstance> list = itr.getValue();
                     sb.append("=== ID: ").append(id).append(" ").append(" Count: ").append(list.size()).append(" ===").append("\n");

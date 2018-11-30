@@ -1,27 +1,14 @@
 package l2trunk.commons.data.xml;
 
-import l2trunk.commons.logging.LoggerObject;
 
-public abstract class AbstractHolder extends LoggerObject {
-    private static String formatOut(String st) {
-        char[] chars = st.toCharArray();
-        StringBuilder buf = new StringBuilder(chars.length);
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-        for (char ch : chars) {
-            if (Character.isUpperCase(ch))
-                buf.append(" ");
-
-            buf.append(Character.toLowerCase(ch));
-        }
-
-        return buf.toString();
-    }
+public abstract class AbstractHolder  {
+    public static final Logger LOG = LoggerFactory.getLogger(AbstractHolder.class);
 
     public void log() {
-        info(String.format("loaded %d%s(s) count.", size(), formatOut(getClass().getSimpleName().replace("Holder", "")).toLowerCase()));
-    }
-
-    protected void process() {
+        LOG.info(String.format("loaded %d %s(s) count.", size(), getClass().getSimpleName()));
     }
 
     protected abstract int size();

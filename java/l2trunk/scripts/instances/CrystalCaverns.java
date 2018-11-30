@@ -1,6 +1,5 @@
 package l2trunk.scripts.instances;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
@@ -14,27 +13,21 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
-/**
- * @author Grivesky
- */
-public class CrystalCaverns extends Reflection {
+public final class CrystalCaverns extends Reflection {
     private static final int gatekeeper_provo = 22277;
     private static final int gatekeeper_lohan = 22275;
 
-    private static final int[] cor_gar_monsters = {22312, 22313, 22314, 22315, 22316, 22317, 22311};
-    private static final int[] cor_gar_st_room_monsters = {22305, 22418, 22419, 22306, 22420, 22416, 22306, 22307};
-    private static final int[] cor_gar_emerald_sq_monsters = {22286, 22287, 22288, 22289, 22292, 22293, 22294, 22280, 22281, 22283};
-    private static final int[] cor_gar_emerald_sq_reef_golems = {22295, 22296};
-    private static final int[] cor_gar_emerald_sq_callers = {22301, 22299};
-    private static final int[] cor_gar_emerald_sq_guardians = {22298, 22303, 22302, 22304};
+    private static final List<Integer> cor_gar_monsters = Arrays.asList(22312, 22313, 22314, 22315, 22316, 22317, 22311);
+    private static final List<Integer> cor_gar_st_room_monsters = Arrays.asList(22305, 22418, 22419, 22306, 22420, 22416, 22306, 22307);
+    private static final List<Integer> cor_gar_emerald_sq_monsters = Arrays.asList(22286, 22287, 22288, 22289, 22292, 22293, 22294, 22280, 22281, 22283);
+    private static final List<Integer> cor_gar_emerald_sq_reef_golems = Arrays.asList(22295, 22296);
+    private static final List<Integer> cor_gar_emerald_sq_callers = Arrays.asList(22301, 22299);
+    private static final List<Integer> cor_gar_emerald_sq_guardians = Arrays.asList(22298, 22303, 22302, 22304);
 
-    private static final int[] evas_protectors = {32284, 32285, 32286, 32287};
+    private static final List<Integer> evas_protectors = Arrays.asList(32284, 32285, 32286, 32287);
 
     private static final int door_cry_cav_corgar_main = 24220024;
     private static final int door_cry_cav_corgar_sec = 24220025;
@@ -47,10 +40,9 @@ public class CrystalCaverns extends Reflection {
 
     private final DeathListener deathListener = new DeathListener();
     private final ZoneListener zoneListener = new ZoneListener();
-    private ScheduledFuture<?> failureTimer = null;
     private final Map<NpcInstance, Integer> protectorsIndex = new HashMap<>();
     private final Map<Integer, List<Location>> protectorsLoc = new HashMap<>();
-
+    private ScheduledFuture<?> failureTimer = null;
     private boolean golemSpawned = false;
     private int golemsTrapped = 0;
     private boolean timerActivated = false;
@@ -148,8 +140,8 @@ public class CrystalCaverns extends Reflection {
             return;
         timerActivated = true;
         for (Player p : getPlayers())
-            p.altOnMagicUseTimer(p, SkillTable.getInstance().getInfo(5239, 1));
-        failureTimer = ThreadPoolManager.getInstance().schedule(new FailureTimer(), 5 * 60 * 1000L);
+            p.altOnMagicUseTimer(p, SkillTable.INSTANCE().getInfo(5239, 1));
+        failureTimer = ThreadPoolManager.INSTANCE.schedule(new FailureTimer(), 5 * 60 * 1000L);
         spawnByGroup("cry_cav_steam_room_1");
         invokeDeathListener();
     }
@@ -199,10 +191,10 @@ public class CrystalCaverns extends Reflection {
             return;
         if (failureTimer != null) {
             failureTimer.cancel(false);
-            failureTimer = ThreadPoolManager.getInstance().schedule(new FailureTimer(), min * 60 * 1000L);
+            failureTimer = ThreadPoolManager.INSTANCE.schedule(new FailureTimer(), min * 60 * 1000L);
         }
         for (Player p : getPlayers()) {
-            p.altOnMagicUseTimer(p, SkillTable.getInstance().getInfo(5239, level));
+            p.altOnMagicUseTimer(p, SkillTable.INSTANCE.getInfo(5239, level));
             p.teleToLocation(loc);
         }
         npc.deleteMe();
@@ -210,7 +202,7 @@ public class CrystalCaverns extends Reflection {
 
     private void removeProtectors() {
         for (NpcInstance npc : getNpcs())
-            if (ArrayUtils.contains(evas_protectors, npc.getNpcId()))
+            if (evas_protectors.contains(npc.getNpcId()))
                 npc.deleteMe();
     }
 
@@ -270,13 +262,20 @@ public class CrystalCaverns extends Reflection {
             npc.addListener(deathListener);
     }
 
+    private boolean checkRoomWiped(Zone zone) {
+        for (NpcInstance npc : zone.getInsideNpcs())
+            if (npc.isMonster() && !npc.isDead() && !npc.isMinion())
+                return false;
+        return true;
+    }
+
     private class DeathListener implements OnDeathListener {
         @Override
         public void onDeath(Creature self, Creature killer) {
             if (!self.isNpc())
                 return;
             Zone square = getZone("[cry_cav_emerald_emerald_square]");
-            if (ArrayUtils.contains(cor_gar_monsters, self.getNpcId())) {
+            if (cor_gar_monsters.contains(self.getNpcId())) {
                 if (!golemSpawned) {
                     for (NpcInstance npc : getNpcs())
                         if (npc.isMonster() && !npc.isDead())
@@ -290,7 +289,7 @@ public class CrystalCaverns extends Reflection {
             } else if (self.getNpcId() == gatekeeper_lohan) {
                 if (getAllByNpcId(gatekeeper_provo, true).size() > 0)
                     ((NpcInstance) self).dropItem(killer.getPlayer(), 9698, 1); //Blue Coral Key
-            } else if (ArrayUtils.contains(cor_gar_st_room_monsters, self.getNpcId())) {
+            } else if (cor_gar_st_room_monsters.contains(self.getNpcId())) {
                 Zone room1 = getZone("[cry_cav_steam_corr_room1]");
                 Zone room2 = getZone("[cry_cav_steam_corr_room2]");
                 Zone room3 = getZone("[cry_cav_steam_corr_room3]");
@@ -321,7 +320,7 @@ public class CrystalCaverns extends Reflection {
                         getDoor(door_cry_cav_steam_c_kechi_door).openMe();
                     }
                 }
-            } else if (ArrayUtils.contains(cor_gar_emerald_sq_monsters, self.getNpcId())) {
+            } else if (cor_gar_emerald_sq_monsters.contains(self.getNpcId())) {
                 if (self.isInZone(square)) {
                     if (!emeraldWiped && checkRoomWiped(square)) {
                         emeraldWiped = true;
@@ -329,12 +328,12 @@ public class CrystalCaverns extends Reflection {
                         invokeDeathListener();
                     }
                 }
-            } else if (ArrayUtils.contains(cor_gar_emerald_sq_reef_golems, self.getNpcId())) {
+            } else if (cor_gar_emerald_sq_reef_golems.contains(self.getNpcId())) {
                 if (checkRoomWiped(square)) {
                     spawnByGroup("cry_cav_emerald_main_callers");
                     invokeDeathListener();
                 }
-            } else if (ArrayUtils.contains(cor_gar_emerald_sq_callers, self.getNpcId())) {
+            } else if (cor_gar_emerald_sq_callers.contains(self.getNpcId())) {
                 if (checkRoomWiped(square) && !emeraldReady) {
                     emeraldReady = true;
                     spawnByGroup("cry_cav_emerald_main_guardian");
@@ -342,7 +341,7 @@ public class CrystalCaverns extends Reflection {
                     spawnByGroup("cry_cav_emerald_main_trap");
                     invokeDeathListener();
                 }
-            } else if (ArrayUtils.contains(cor_gar_emerald_sq_guardians, self.getNpcId())) {
+            } else if (cor_gar_emerald_sq_guardians.contains(self.getNpcId())) {
                 if (checkRoomWiped(square) && emeraldReady) {
                     getDoor(door_cry_cav_emerald_darnel).openMe();
                     getDoor(door_cry_cav_emerald_darnel_inner).openMe();
@@ -350,13 +349,6 @@ public class CrystalCaverns extends Reflection {
                 }
             }
         }
-    }
-
-    private boolean checkRoomWiped(Zone zone) {
-        for (NpcInstance npc : zone.getInsideNpcs())
-            if (npc.isMonster() && !npc.isDead() && !npc.isMinion())
-                return false;
-        return true;
     }
 
     private class ZoneListener implements OnZoneEnterLeaveListener {

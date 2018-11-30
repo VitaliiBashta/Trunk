@@ -19,10 +19,7 @@ import l2trunk.gameserver.templates.augmentation.AugmentationInfo;
 import l2trunk.gameserver.templates.item.EtcItemTemplate.EtcItemType;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //import org.napile.primitive.Containers;
 //import org.napile.primitive.maps.IntObjectMap;
@@ -78,24 +75,11 @@ public abstract class ItemTemplate extends StatTemplate {
     public static final int ITEM_ID_NINJA_UNIFORM = 57011;
     public static final int ITEM_ID_DARK_ASSASIN_UNIFORM = 57012;
     public static final int ITEM_ID_METAL_UNIFORM = 57013;
-    static final int TYPE1_WEAPON_RING_EARRING_NECKLACE = 0;
-    static final int TYPE1_SHIELD_ARMOR = 1;
-    static final int TYPE1_OTHER = 2;
-    static final int TYPE1_ITEM_QUESTITEM_ADENA = 4;
     public static final int TYPE2_WEAPON = 0;
     public static final int TYPE2_SHIELD_ARMOR = 1;
     public static final int TYPE2_ACCESSORY = 2;
-    static final int TYPE2_QUEST = 3;
-    static final int TYPE2_MONEY = 4;
     public static final int TYPE2_OTHER = 5;
-    static final int TYPE2_PET_WOLF = 6;
-    static final int TYPE2_PET_HATCHLING = 7;
-    static final int TYPE2_PET_STRIDER = 8;
     public static final int TYPE2_NODROP = 9;
-    static final int TYPE2_PET_GWOLF = 10;
-    static final int TYPE2_PENDANT = 11;
-    static final int TYPE2_PET_BABY = 12;
-    static final int SLOT_NONE = 0x00000;
     public static final int SLOT_UNDERWEAR = 0x00001;
     public static final int SLOT_R_EAR = 0x00002;
     public static final int SLOT_L_EAR = 0x00004;
@@ -120,12 +104,6 @@ public abstract class ItemTemplate extends StatTemplate {
     public static final int SLOT_L_BRACELET = 0x200000;
     public static final int SLOT_DECO = 0x400000;
     public static final int SLOT_BELT = 0x10000000;
-    static final int SLOT_WOLF = -100;
-    static final int SLOT_HATCHLING = -101;
-    static final int SLOT_STRIDER = -102;
-    static final int SLOT_BABYPET = -103;
-    static final int SLOT_GWOLF = -104;
-    static final int SLOT_PENDANT = -105;
     // Все слоты, используемые броней.
     public static final int SLOTS_ARMOR = SLOT_HEAD | SLOT_L_HAND | SLOT_GLOVES | SLOT_CHEST | SLOT_LEGS | SLOT_FEET | SLOT_BACK | SLOT_FULL_ARMOR;
     // Все слоты, используемые бижей.
@@ -143,6 +121,25 @@ public abstract class ItemTemplate extends StatTemplate {
     public static final int ATTRIBUTE_EARTH = 3;
     public static final int ATTRIBUTE_HOLY = 4;
     public static final int ATTRIBUTE_DARK = 5;
+    static final int TYPE1_WEAPON_RING_EARRING_NECKLACE = 0;
+    static final int TYPE1_SHIELD_ARMOR = 1;
+    static final int TYPE1_OTHER = 2;
+    static final int TYPE1_ITEM_QUESTITEM_ADENA = 4;
+    static final int TYPE2_QUEST = 3;
+    static final int TYPE2_MONEY = 4;
+    static final int TYPE2_PET_WOLF = 6;
+    static final int TYPE2_PET_HATCHLING = 7;
+    static final int TYPE2_PET_STRIDER = 8;
+    static final int TYPE2_PET_GWOLF = 10;
+    static final int TYPE2_PENDANT = 11;
+    static final int TYPE2_PET_BABY = 12;
+    static final int SLOT_NONE = 0x00000;
+    static final int SLOT_WOLF = -100;
+    static final int SLOT_HATCHLING = -101;
+    static final int SLOT_STRIDER = -102;
+    static final int SLOT_BABYPET = -103;
+    static final int SLOT_GWOLF = -104;
+    static final int SLOT_PENDANT = -105;
     protected final int _itemId;
     protected final String _name;
     private final String _addname;
@@ -168,7 +165,7 @@ public abstract class ItemTemplate extends StatTemplate {
     int _type1; // needed for item list (inventory)
     int _type2; // different lists for armor, weapon, etc
     int _bodyPart;
-    private Skill[] _skills;
+    private List<Skill> _skills;
     private Map<Integer, AugmentationInfo> _augmentationInfos = new HashMap<>();//Containers.emptyIntObjectMap();
     private int _flags;
     private Skill _enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
@@ -207,8 +204,8 @@ public abstract class ItemTemplate extends StatTemplate {
             }
         }
 
-        _funcTemplates = FuncTemplate.EMPTY_ARRAY;
-        _skills = Skill.EMPTY_ARRAY;
+        _funcTemplates = Collections.emptyList();
+        _skills = new ArrayList<>();
     }
 
     /**
@@ -459,18 +456,15 @@ public abstract class ItemTemplate extends StatTemplate {
      * @param skill : L2Skill
      */
     public void attachSkill(Skill skill) {
-        _skills = ArrayUtils.add(_skills, skill);
+        _skills.add(skill);
     }
 
-    public Skill[] getAttachedSkills() {
+    public List<Skill> getAttachedSkills() {
         return _skills;
     }
 
     public Skill getFirstSkill() {
-        if (_skills.length > 0) {
-            return _skills[0];
-        }
-        return null;
+        return _skills.get(0);
     }
 
     /**
@@ -633,7 +627,7 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public boolean isCursed() {
-        return CursedWeaponsManager.getInstance().isCursed(_itemId);
+        return CursedWeaponsManager.INSTANCE.isCursed(_itemId);
     }
 
     public boolean isMercenaryTicket() {

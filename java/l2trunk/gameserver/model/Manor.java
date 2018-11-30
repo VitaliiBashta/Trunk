@@ -10,7 +10,9 @@ import l2trunk.gameserver.templates.manor.CropProcure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -240,10 +242,10 @@ public final class Manor {
     }
 
     private class SeedData {
-        private int id;
         private final int level; // seed level
         private final int crop; // crop type
         private final int mature; // mature crop type
+        private int id;
         private int type1;
         private int type2;
         private int manorId; // id of manor (castle id) where seed can be farmed

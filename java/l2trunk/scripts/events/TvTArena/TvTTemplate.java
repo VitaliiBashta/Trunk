@@ -526,7 +526,7 @@ public abstract class TvTTemplate extends Functions {
     }
 
     private void paralyzeTeams() {
-        Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
+        Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
         for (Player player : getPlayers(_team1list)) {
             player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
             revengeSkill.getEffects(player, player, false, false);
@@ -580,7 +580,7 @@ public abstract class TvTTemplate extends Functions {
             _team1live.remove(player.getStoredId());
         else
             _team2live.remove(player.getStoredId());
-        Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
+        Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
         revengeSkill.getEffects(player, player, false, false);
         return !checkTeams();
     }
@@ -709,7 +709,7 @@ public abstract class TvTTemplate extends Functions {
         public void onZoneEnter(Zone zone, Creature cha) {
             Player player = cha.getPlayer();
             if (_status >= 2 && player != null && !(_team1list.contains(player.getStoredId()) || _team2list.contains(player.getStoredId())))
-                ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, _zone.getSpawn()), 3000);
+                ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, _zone.getSpawn()), 3000);
         }
 
         @Override
@@ -721,7 +721,7 @@ public abstract class TvTTemplate extends Functions {
                 int x = (int) (cha.getX() + 50 * Math.sin(radian));
                 int y = (int) (cha.getY() - 50 * Math.cos(radian));
                 int z = cha.getZ();
-                ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);
+                ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);
             }
         }
     }
@@ -736,7 +736,6 @@ public abstract class TvTTemplate extends Functions {
             target.block();
         }
 
-        @SuppressWarnings("unused")
         @Override
         public void runImpl() {
             target.unblock();
@@ -765,6 +764,6 @@ public abstract class TvTTemplate extends Functions {
     }
 
     private void sayToAll(String text) {
-        Announcements.getInstance().announceToAll(_manager.getName() + ": " + text, ChatType.CRITICAL_ANNOUNCE);
+        Announcements.INSTANCE.announceToAll(_manager.getName() + ": " + text, ChatType.CRITICAL_ANNOUNCE);
     }
 }

@@ -122,7 +122,9 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
     @Override
     public final List<Integer> getItemIds() {
         Set<Integer> set = new HashSet<>(100);
-        for (Castle c : ResidenceHolder.getInstance().getResidenceList(Castle.class))
+        ResidenceHolder residenceList = ResidenceHolder.getInstance();
+        List<Castle> castles = residenceList.getResidenceList(Castle.class);
+        for (Castle c : castles)
             set.addAll(c.getMerchantGuards().keySet());
         return new ArrayList<>(set);
     }

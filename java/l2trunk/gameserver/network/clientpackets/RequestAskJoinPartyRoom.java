@@ -25,9 +25,6 @@ public class RequestAskJoinPartyRoom extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-
-        player.isntAfk();
-
         Player targetPlayer = World.getPlayer(_name);
 
         if (targetPlayer == null || targetPlayer == player) {

@@ -19,9 +19,9 @@ public class AiTaskManager extends SteppingRunnableQueueManager {
 
     private AiTaskManager() {
         super(TICK);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, Rnd.get(TICK), TICK);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(this, Rnd.get(TICK), TICK);
         //Очистка каждую минуту
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 AiTaskManager.this.purge();

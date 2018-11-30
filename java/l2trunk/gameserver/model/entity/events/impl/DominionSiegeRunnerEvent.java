@@ -26,15 +26,15 @@ import java.util.concurrent.Future;
 public class DominionSiegeRunnerEvent extends GlobalEvent {
     private static final String REGISTRATION = "registration";
     private static final String BATTLEFIELD = "battlefield";
-    private boolean _battlefieldChatActive;
-    private Future<?> _battlefieldChatFuture;
     private final BattlefieldChatTask _battlefieldChatTask = new BattlefieldChatTask();
-    private Calendar _startTime = Calendar.getInstance();
-    private boolean _isInProgress;
-    private boolean _isRegistrationOver;
     private final Map<ClassId, Quest> _classQuests = new HashMap<>();
     private final List<Quest> _breakQuests = new ArrayList<>();
     private final List<Dominion> _registeredDominions = new ArrayList<>(9);
+    private boolean _battlefieldChatActive;
+    private Future<?> _battlefieldChatFuture;
+    private Calendar _startTime = Calendar.getInstance();
+    private boolean _isInProgress;
+    private boolean _isRegistrationOver;
 
     public DominionSiegeRunnerEvent(MultiValueSet<String> set) {
         super(set);
@@ -102,7 +102,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
 
         broadcastToWorld(SystemMsg.TERRITORY_WAR_HAS_ENDED);
 
-        _battlefieldChatFuture = ThreadPoolManager.getInstance().schedule(_battlefieldChatTask, 600000L);
+        _battlefieldChatFuture = ThreadPoolManager.INSTANCE().schedule(_battlefieldChatTask, 600000L);
 
         SiegeEvent.showResults();
 

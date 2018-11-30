@@ -18,11 +18,11 @@ public class BeastFeed extends Skill {
     @Override
     public void useSkill(final Creature activeChar, List<Creature> targets) {
         for (final Creature target : targets) {
-            ThreadPoolManager.getInstance().execute(new RunnableImpl() {
+            ThreadPoolManager.INSTANCE().execute(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     if (target instanceof FeedableBeastInstance)
-                        ((FeedableBeastInstance) target).onSkillUse((Player) activeChar, _id);
+                        ((FeedableBeastInstance) target).onSkillUse((Player) activeChar, id);
                 }
             });
         }

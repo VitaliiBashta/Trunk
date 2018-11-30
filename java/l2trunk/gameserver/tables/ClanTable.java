@@ -1,7 +1,6 @@
 package l2trunk.gameserver.tables;
 
 
-import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.idfactory.IdFactory;
@@ -23,32 +22,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class ClanTable {
+public enum ClanTable {
+    INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(ClanTable.class);
-
-    private static ClanTable instance;
 
     private final Map<Integer, Clan> clans = new ConcurrentHashMap<>();
     private final Map<Integer, Alliance> alliances = new ConcurrentHashMap<>();
 
-    private ClanTable() {
-        instance = this;
-
+    ClanTable() {
         restoreClans();
         restoreAllies();
         restoreWars();
     }
 
-    public static ClanTable getInstance() {
-        if (instance == null) {
-            new ClanTable();
-        }
-        return instance;
-    }
 
     public List<Clan> getClans() {
         List<Clan> result = new ArrayList<>(clans.values());
@@ -62,19 +55,18 @@ public final class ClanTable {
 
     public Clan getClan(int clanId) {
         if (clanId <= 0) {
-            return null;
+            throw new IllegalArgumentException("clan ID should be >0 ");
         }
         return clans.get(clanId);
     }
 
     public String getClanName(int clanId) {
-        Clan c = getClan(clanId);
-        return c != null ? c.getName() : StringUtils.EMPTY;
+        return getClan(clanId).getName();
     }
 
     private Clan getClanByCharId(int charId) {
         if (charId <= 0) {
-            return null;
+            throw new IllegalArgumentException("charID can be less 0");
         }
         for (Clan clan : getClans()) {
             if (clan != null && clan.isAnyMember(charId)) {
@@ -85,19 +77,18 @@ public final class ClanTable {
     }
 
     public Alliance getAlliance(int allyId) {
-        if (allyId <= 0) {
-            return null;
-        }
         return alliances.get(allyId);
     }
 
-    public Alliance getAllianceByCharId(int charId) {
-        if (charId <= 0) {
-            return null;
-        }
-        Clan charClan = getClanByCharId(charId);
-        return charClan == null ? null : charClan.getAlliance();
-    }
+//    public Alliance getAllianceByCharId(int charId) {
+////        charId.nothing();
+//        if (charId <= 0) {
+//            return null;
+//        }
+//
+//        Clan charClan = getClanByCharId(charId);
+//        return charClan == null ? null : charClan.getAlliance();
+//    }
 
     public Map.Entry<Clan, Alliance> getClanAndAllianceByCharId(int charId) {
         Player player = GameObjectsStorage.getPlayer(charId);
@@ -174,12 +165,9 @@ public final class ClanTable {
             return null;
         }
 
-        for (Clan clan : clans.values()) {
-            if (clan.getName().equalsIgnoreCase(clanName))
-                return clan;
-        }
-
-        return null;
+        return clans.values().stream()
+                .filter(cl -> cl.getName().equalsIgnoreCase(clanName))
+                .findFirst().orElse(null);
     }
 
     public Alliance getAllyByName(String allyName) {

@@ -31,7 +31,7 @@ public class RequestTutorialLinkHtml extends L2GameClientPacket {
             if (_bypass.length() < 5)
                 return;
 
-            Achievements.getInstance().onBypass(player, _bypass, null);
+            Achievements.INSTANCE.onBypass(player, _bypass, null);
         }
     }
 }

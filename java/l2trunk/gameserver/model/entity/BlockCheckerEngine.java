@@ -47,33 +47,33 @@ public final class BlockCheckerEngine {
     // Default arena
     private static final byte DEFAULT_ARENA = -1;
     private final String[] zoneNames = {"[block_checker_1]", "[block_checker_2]", "[block_checker_3]", "[block_checker_4]"};
-    // The object which holds all basic members info
-    private HandysBlockCheckerManager.ArenaParticipantsHolder _holder;
     // Maps to hold player of each team and his points
     private final Map<Player, Integer> _redTeamPoints = new ConcurrentHashMap<>();
     private final Map<Player, Integer> _blueTeamPoints = new ConcurrentHashMap<>();
+    // All blocks
+    private final List<SimpleSpawner> _spawns = new CopyOnWriteArrayList<>();
+    // List of dropped items in event (for later deletion)
+    private final List<ItemInstance> _drops = new ArrayList<>();
+    private final OnExitPlayerListener _listener = new OnExitPlayerListener();
+    // The object which holds all basic members info
+    private HandysBlockCheckerManager.ArenaParticipantsHolder _holder;
     // The initial points of the event
     private int _redPoints = 15;
     private int _bluePoints = 15;
     // Current used arena
     private int _arena = -1;
-    // All blocks
-    private final List<SimpleSpawner> _spawns = new CopyOnWriteArrayList<>();
     // Sets if the red team won the event at the end of this (used for packets)
     private boolean _isRedWinner;
     // Time when the event starts. Used on packet sending
     private long _startedTime;
     // Girl Npc
     private NpcInstance _girlNpc;
-    // List of dropped items in event (for later deletion)
-    private final List<ItemInstance> _drops = new ArrayList<>();
     // Event is started
     private boolean _isStarted = false;
     // Event end
     private ScheduledFuture<?> _task;
     // Preserve from exploit reward by logging out
     private boolean _abnormalEnd = false;
-    private final OnExitPlayerListener _listener = new OnExitPlayerListener();
 
     public BlockCheckerEngine(HandysBlockCheckerManager.ArenaParticipantsHolder holder, int arena) {
         _holder = holder;
@@ -232,7 +232,7 @@ public final class BlockCheckerEngine {
 
                 _abnormalEnd = true;
 
-                ThreadPoolManager.getInstance().execute(new EndEvent());
+                ThreadPoolManager.INSTANCE.execute(new EndEvent());
             }
         } catch (RuntimeException e) {
             _log.error("Couldnt end Block Checker event at " + _arena, e);
@@ -263,9 +263,9 @@ public final class BlockCheckerEngine {
 
         public StartEvent() {
             // Initialize all used skills
-            _freeze = SkillTable.getInstance().getInfo(6034, 1);
-            _transformationRed = SkillTable.getInstance().getInfo(6035, 1);
-            _transformationBlue = SkillTable.getInstance().getInfo(6036, 1);
+            _freeze = SkillTable.INSTANCE().getInfo(6034, 1);
+            _transformationRed = SkillTable.INSTANCE().getInfo(6035, 1);
+            _transformationBlue = SkillTable.INSTANCE().getInfo(6036, 1);
         }
 
         /**
@@ -349,7 +349,7 @@ public final class BlockCheckerEngine {
             clearArena(zoneNames[_arena]);
             _isStarted = true;
             // Spawn the blocks
-            ThreadPoolManager.getInstance().execute(new SpawnRound(16, 1));
+            ThreadPoolManager.INSTANCE.execute(new SpawnRound(16, 1));
             // Start up player parameters
             setUpPlayers();
             // Set the started time
@@ -378,15 +378,15 @@ public final class BlockCheckerEngine {
             switch (_round) {
                 case 1:
                     // Schedule second spawn round
-                    _task = ThreadPoolManager.getInstance().schedule(new SpawnRound(20, 2), 60000);
+                    _task = ThreadPoolManager.INSTANCE.schedule(new SpawnRound(20, 2), 60000);
                     break;
                 case 2:
                     // Schedule third spawn round
-                    _task = ThreadPoolManager.getInstance().schedule(new SpawnRound(14, 3), 60000);
+                    _task = ThreadPoolManager.INSTANCE.schedule(new SpawnRound(14, 3), 60000);
                     break;
                 case 3:
                     // Schedule Event End Count Down
-                    _task = ThreadPoolManager.getInstance().schedule(new CountDown(), 175000);
+                    _task = ThreadPoolManager.INSTANCE.schedule(new CountDown(), 175000);
                     break;
             }
             // random % 2, if == 0 will spawn a red block
@@ -430,7 +430,7 @@ public final class BlockCheckerEngine {
                     girlSpawn.init();
                     _girlNpc = girlSpawn.getLastSpawn();
                     // Schedule his deletion after 9 secs of spawn
-                    ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                    ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                         @Override
                         public void runImpl() {
                             if (_girlNpc == null)
@@ -476,9 +476,9 @@ public final class BlockCheckerEngine {
             }
 
             if (--seconds > 0)
-                ThreadPoolManager.getInstance().schedule(this, 1000L);
+                ThreadPoolManager.INSTANCE.schedule(this, 1000L);
             else
-                ThreadPoolManager.getInstance().execute(new EndEvent());
+                ThreadPoolManager.INSTANCE.execute(new EndEvent());
         }
     }
 

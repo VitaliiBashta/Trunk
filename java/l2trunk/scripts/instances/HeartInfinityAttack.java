@@ -62,13 +62,13 @@ public class HeartInfinityAttack extends Reflection {
         invoker = leader;
         for (Player p : getPlayers())
             p.sendPacket(new ExShowScreenMessage(NpcString.YOU_WILL_PARTICIPATE_IN_S1_S2_SHORTLY, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.ATTACK.getId()));
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 for (Player p : getPlayers())
                     p.showQuestMovie(ExStartScenePlayer.SCENE_ECHMUS_OPENING);
 
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         conquestBegins();
@@ -116,7 +116,7 @@ public class HeartInfinityAttack extends Reflection {
         }
         invokeDeathListener();
         startTime = System.currentTimeMillis();
-        timerTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
+        timerTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
     }
 
     private void invokeDeathListener() {
@@ -135,9 +135,9 @@ public class HeartInfinityAttack extends Reflection {
                 self.deleteMe();
                 notifyTumorDeath();
                 //Schedule tumor revival
-                ThreadPoolManager.getInstance().schedule(new TumorRevival(deadTumor), tumorRespawnTime);
+                ThreadPoolManager.INSTANCE().schedule(new TumorRevival(deadTumor), tumorRespawnTime);
                 // Schedule regeneration coffins spawn
-                ThreadPoolManager.getInstance().schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
+                ThreadPoolManager.INSTANCE().schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
             } else if (self.getNpcId() == Ekimus) {
                 conquestConclusion(true);
                 SoIManager.notifyEkimusKill();
@@ -326,7 +326,7 @@ public class HeartInfinityAttack extends Reflection {
         notifiedEkimusIdle = true;
         for (Player p : getPlayers())
             p.sendPacket(new ExShowScreenMessage(NpcString.THERE_IS_NO_PARTY_CURRENTLY_CHALLENGING_EKIMUS, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "180"));
-        ekimusIdleTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ekimusIdleTask = ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 conquestConclusion(false);
@@ -337,7 +337,7 @@ public class HeartInfinityAttack extends Reflection {
     public void notifyEkimusRoomEntrance() {
         for (Playable playable : getZone("[soi_hoi_attack_echmusroom]").getInsidePlayables())
             playable.teleToLocation(new Location(-179537, 211233, -15472));
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 for (Player p : getPlayers())

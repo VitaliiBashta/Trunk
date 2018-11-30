@@ -2,7 +2,6 @@ package l2trunk.gameserver.model.entity.CCPHelpers;
 
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
@@ -73,25 +72,18 @@ public class CCPSmallCommands {
     }
 
     public static String showOnlineCount() {
-        if (!Config.ALLOW_TOTAL_ONLINE) {
-            return null;
-        }
 
         int i = 0;
-        int j = 0;
         for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
             i++;
-            if (player.isInOfflineMode()) {
-                j++;
-            }
         }
-        return "Players Online: " + (i + j) + " and  " + j + " offline traders.";
+        return "Players Online: " + (i ) ;
     }
 
     public static boolean getPing(Player activeChar) {
         activeChar.sendMessage("Processing request...");
         activeChar.sendPacket(new NetPingPacket(activeChar));
-        ThreadPoolManager.getInstance().schedule(new AnswerTask(activeChar), 3000L);
+        ThreadPoolManager.INSTANCE().schedule(new AnswerTask(activeChar), 3000L);
         return true;
     }
 

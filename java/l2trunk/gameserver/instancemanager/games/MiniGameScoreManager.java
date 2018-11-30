@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class MiniGameScoreManager {
     private static final Logger _log = LoggerFactory.getLogger(MiniGameScoreManager.class);
     private static final MiniGameScoreManager _instance = new MiniGameScoreManager();
-    private final Map<Integer,Set<String>> scores = new TreeMap<>((o1, o2) -> o2 - o1);
+    private final Map<Integer, Set<String>> scores = new TreeMap<>((o1, o2) -> o2 - o1);
 
     private MiniGameScoreManager() {
         if (Config.EX_JAPAN_MINIGAME)
@@ -74,7 +74,7 @@ public class MiniGameScoreManager {
         return set.add(name);
     }
 
-    public Map<Integer,Set<String>> getScores() {
+    public Map<Integer, Set<String>> getScores() {
         return scores;
     }
 }

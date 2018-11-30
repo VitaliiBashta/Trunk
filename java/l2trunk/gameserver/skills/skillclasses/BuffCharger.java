@@ -24,7 +24,7 @@ public class BuffCharger extends Skill {
             if (el != null)
                 level = el.get(0).getSkill().getLevel();
 
-            Skill next = SkillTable.getInstance().getInfo(_target, level + 1);
+            Skill next = SkillTable.INSTANCE().getInfo(_target, level + 1);
             if (next != null)
                 next.getEffects(activeChar, target, false, false);
         }

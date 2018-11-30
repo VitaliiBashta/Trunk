@@ -18,12 +18,12 @@ public class OlympiadEndTask extends RunnableImpl {
     public void runImpl() {
         if (Olympiad._inCompPeriod) // Если бои еще не закончились, откладываем окончание олимпиады на минуту
         {
-            ThreadPoolManager.getInstance().schedule(new OlympiadEndTask(), 60000);
+            ThreadPoolManager.INSTANCE().schedule(new OlympiadEndTask(), 60000);
             return;
         }
 
-        Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_ENDED).addInteger(Olympiad._currentCycle));
-        Announcements.getInstance().announceToAll("Olympiad Validation Period has began");
+        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_ENDED).addInteger(Olympiad._currentCycle));
+        Announcements.INSTANCE.announceToAll("Olympiad Validation Period has began");
 
         Olympiad._isOlympiadEnd = true;
         if (Olympiad._scheduledManagerTask != null)
@@ -35,7 +35,7 @@ public class OlympiadEndTask extends RunnableImpl {
 
         OlympiadDatabase.saveNobleData();
         Olympiad._period = 1;
-        Hero.getInstance().clearHeroes();
+        Hero.INSTANCE.clearHeroes();
 
         try {
             OlympiadDatabase.save();
@@ -47,6 +47,6 @@ public class OlympiadEndTask extends RunnableImpl {
 
         if (Olympiad._scheduledValdationTask != null)
             Olympiad._scheduledValdationTask.cancel(false);
-        Olympiad._scheduledValdationTask = ThreadPoolManager.getInstance().schedule(new ValidationTask(), Olympiad.getMillisToValidationEnd());
+        Olympiad._scheduledValdationTask = ThreadPoolManager.INSTANCE().schedule(new ValidationTask(), Olympiad.getMillisToValidationEnd());
     }
 }

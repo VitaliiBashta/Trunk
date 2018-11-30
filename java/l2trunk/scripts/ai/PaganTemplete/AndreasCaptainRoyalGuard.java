@@ -52,7 +52,7 @@ public class AndreasCaptainRoyalGuard extends Fighter {
         NpcInstance actor = getActor();
 
         if (actor.getCurrentHpPercents() <= 70) {
-            actor.doCast(SkillTable.getInstance().getInfo(4612, 9), attacker, true);
+            actor.doCast(SkillTable.INSTANCE().getInfo(4612, 9), attacker, true);
             actor.doDie(attacker);
         }
         super.onEvtAttacked(attacker, damage);
@@ -66,11 +66,11 @@ public class AndreasCaptainRoyalGuard extends Fighter {
 
         NUMBER_OF_DEATH++;
         // The doors to the balcony
-        // Door door1 = DoorHolder.getInstance().getDoor(19160014);
-        // Door door2 = DoorHolder.getInstance().getDoor(19160015);
+        // Door door1 = DoorHolder.INSTANCE().getDoor(19160014);
+        // Door door2 = DoorHolder.INSTANCE().getDoor(19160015);
         // The doors to the althar
-        // Door door3 = DoorHolder.getInstance().getDoor(19160016);
-        // Door door4 = DoorHolder.getInstance().getDoor(19160017);
+        // Door door3 = DoorHolder.INSTANCE().getDoor(19160016);
+        // Door door4 = DoorHolder.INSTANCE().getDoor(19160017);
         if (NUMBER_OF_DEATH == 39 && _talk) {
             _talk = false;
             // Reset the memory

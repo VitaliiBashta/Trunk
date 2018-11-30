@@ -60,7 +60,7 @@ public class EffectsDAO {
                 long effectCurTime = rset.getLong("effect_cur_time");
                 long duration = rset.getLong("duration");
 
-                Skill skill = SkillTable.getInstance().getInfo(skillId, skillLvl);
+                Skill skill = SkillTable.INSTANCE().getInfo(skillId, skillLvl);
                 if (skill == null)
                     continue;
 
@@ -86,7 +86,7 @@ public class EffectsDAO {
             _log.error("Could not restore active effects data!", e);
         }
 
-        ThreadPoolManager.getInstance().execute(() -> {
+        ThreadPoolManager.INSTANCE.execute(() -> {
             for (Effect e : effectsToRestore) {
                 e.schedule();
 

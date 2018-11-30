@@ -13,8 +13,8 @@ import l2trunk.gameserver.utils.NpcUtils;
 public final class FortuneBug extends DefaultAI {
     private static final int MAX_RADIUS = 500;
 
-    private final Skill s_display_bug_of_fortune1 = SkillTable.getInstance().getInfo(6045, 1);
-    private final Skill s_display_jackpot_firework = SkillTable.getInstance().getInfo(5778, 1);
+    private final Skill s_display_bug_of_fortune1 = SkillTable.INSTANCE().getInfo(6045, 1);
+    private final Skill s_display_jackpot_firework = SkillTable.INSTANCE().getInfo(5778, 1);
 
     private final int Wingless_Luckpy = 2502;
     private final int Wingless_Luckpy_Gold = 2503;
@@ -75,13 +75,13 @@ public final class FortuneBug extends DefaultAI {
 
                     switch (actor.getLevel()) {
                         case 52:
-                            npc.addSkill(SkillTable.getInstance().getInfo(24009, 1));
+                            npc.addSkill(SkillTable.INSTANCE().getInfo(24009, 1));
                             break;
                         case 70:
-                            npc.addSkill(SkillTable.getInstance().getInfo(24009, 2));
+                            npc.addSkill(SkillTable.INSTANCE().getInfo(24009, 2));
                             break;
                         case 80:
-                            npc.addSkill(SkillTable.getInstance().getInfo(24009, 3));
+                            npc.addSkill(SkillTable.INSTANCE().getInfo(24009, 3));
                             break;
                     }
                     npc.setLevel(actor.getLevel());

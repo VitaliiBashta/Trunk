@@ -10,17 +10,16 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Support for /time command
  */
-public class Time implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    77
-            };
+public final class Time implements IUserCommandHandler {
+    private static final int COMMAND_ID = 77;
 
     private static final NumberFormat df = NumberFormat.getInstance(Locale.ENGLISH);
     private static final SimpleDateFormat sf = new SimpleDateFormat("H:mm");
@@ -31,7 +30,7 @@ public class Time implements IUserCommandHandler {
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (COMMAND_IDS[0] != id)
+        if (COMMAND_ID != id)
             return false;
 
         int h = GameTimeController.getInstance().getGameHour();
@@ -53,7 +52,7 @@ public class Time implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public final List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_ID);
     }
 }

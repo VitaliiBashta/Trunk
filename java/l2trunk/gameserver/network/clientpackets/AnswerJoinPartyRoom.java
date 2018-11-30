@@ -26,8 +26,6 @@ public class AnswerJoinPartyRoom extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        activeChar.isntAfk();
-
         Request request = activeChar.getRequest();
         if (request == null || !request.isTypeOf(L2RequestType.PARTY_ROOM))
             return;

@@ -14,12 +14,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.List;
 
-/**
- * Author: VISTALL
- * Date:  9:03/17.11.2010
- * npc Id : 18602
- */
-public class KrateisCubeWatcherBlue extends DefaultAI {
+public final class KrateisCubeWatcherBlue extends DefaultAI {
     private static final int RESTORE_CHANCE = 60;
 
     public KrateisCubeWatcherBlue(NpcInstance actor) {
@@ -66,8 +61,7 @@ public class KrateisCubeWatcherBlue extends DefaultAI {
         super.onEvtDead(killer);
 
         actor.deleteMe();
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-            @SuppressWarnings("unused")
+        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 NpcTemplate template = NpcHolder.getInstance().getTemplate(18601);

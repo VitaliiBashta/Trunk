@@ -1,17 +1,3 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2trunk.gameserver.handler.voicecommands.impl;
 
 import l2trunk.gameserver.Config;
@@ -20,16 +6,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * Un voiced para poder setear buff stores
- *
- * @author GipsyGrierosu Andrei
- */
+import java.util.Collections;
+import java.util.List;
+
 public class BuffStoreVoiced extends Functions implements IVoicedCommandHandler {
-    private static final String[] VOICED_COMMANDS =
-            {
-                    "buffstore"
-            };
+    private static final List<String> VOICED_COMMANDS = Collections.singletonList("buffstore");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String params) {
@@ -61,7 +42,7 @@ public class BuffStoreVoiced extends Functions implements IVoicedCommandHandler 
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return VOICED_COMMANDS;
     }
 }

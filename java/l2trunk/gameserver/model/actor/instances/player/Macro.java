@@ -29,11 +29,11 @@ public class Macro {
     }
 
     public static class L2MacroCmd {
-        final int entry;
         public final int type;
         public final int d1; // skill_id or page for shortcuts
         public final int d2; // shortcut
         public final String cmd;
+        final int entry;
 
         public L2MacroCmd(int entry, int type, int d1, int d2, String cmd) {
             this.entry = entry;

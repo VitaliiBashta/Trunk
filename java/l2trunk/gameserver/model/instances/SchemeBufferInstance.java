@@ -204,9 +204,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         if (!checkConditions(player))
             return;
 
-        if (!ENABLE_VIP_BUFFER || (ENABLE_VIP_BUFFER && (player.getAccessLevel() == VIP_ACCESS_LEVEL))) {
-
-        } else {
+        if (ENABLE_VIP_BUFFER && player.getAccessLevel() != VIP_ACCESS_LEVEL) {
             sendErrorMessageToPlayer(player, "This buffer is for VIPs only.");
         }
         showCommunity(player, main(player));
@@ -249,7 +247,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static String main(final Player player) {
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_main.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_main.htm", player);
 
         final String bottonA, bottonB, bottonC;
         if (isPetBuff(player)) {
@@ -296,7 +294,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static String viewAllSchemeBuffs(Player player, String scheme, String page) {
         int pageN = Integer.parseInt(page);
         int schemeId = Integer.parseInt(scheme);
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_buffs.htm", player);
+        String dialog = HtmCache.INSTANCE().getNotNull("scripts/services/communityPVP/buffer_scheme_buffs.htm", player);
 
         int[] buffCount = getBuffCount(player, schemeId);
         int TOTAL_BUFF = buffCount[0];
@@ -340,7 +338,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             }
 
             if (row < 2 && schemeBuffs.size() > i) {
-                final Skill skill = SkillTable.getInstance().getInfo(schemeBuffs.get(i).skillId, schemeBuffs.get(i).skillLevel);
+                final Skill skill = SkillTable.INSTANCE.getInfo(schemeBuffs.get(i).skillId, schemeBuffs.get(i).skillLevel);
                 addedBuffs.append("<td width=34>");
                 addedBuffs.append("<table cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.getIcon() + ">");
                 addedBuffs.append("<tr>");
@@ -351,7 +349,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 addedBuffs.append("</table>");
                 addedBuffs.append("</td>");
             } else if (row >= 2 && schemeDances.size() > i - ROW_SIZES[row - 1]) {
-                final Skill skill = SkillTable.getInstance().getInfo(schemeDances.get(i - ROW_SIZES[row - 1]).skillId, schemeDances.get(i - ROW_SIZES[row - 1]).skillLevel);
+                final Skill skill = SkillTable.INSTANCE.getInfo(schemeDances.get(i - ROW_SIZES[row - 1]).skillId, schemeDances.get(i - ROW_SIZES[row - 1]).skillLevel);
                 addedBuffs.append("<td width=34>");
                 addedBuffs.append("<table cellspacing=0 cellpadding=0 width=34 height=34 background=" + skill.getIcon() + ">");
                 addedBuffs.append("<tr>");
@@ -424,7 +422,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                     break;
             }
 
-            availableSkills.add(SkillTable.getInstance().getInfo(singleBuff._buffId, singleBuff._buffLevel));
+            availableSkills.add(SkillTable.INSTANCE.getInfo(singleBuff._buffId, singleBuff._buffLevel));
         }
 
         final int SKILLS_PER_ROW = 4;
@@ -498,9 +496,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static boolean canHeal(Player player) {
         if (player.isInFightClub() && player.getFightClubEvent().getState() != AbstractFightClub.EVENT_STATE.PREPARATION)
             return false;
-        if (!player.isInFightClub() && (!checkConditions(player) || (!player.isInPeaceZone() && !player.isInZone(ZoneType.RESIDENCE))))
-            return false;
-        return true;
+        return player.isInFightClub() || (checkConditions(player) && (player.isInPeaceZone() || player.isInZone(ZoneType.RESIDENCE)));
     }
 
     private static void heal(Player player, boolean isPet) {
@@ -557,7 +553,7 @@ public final class SchemeBufferInstance extends NpcInstance {
 
     private static String getDeleteSchemePage(Player player) {
         StringBuilder builder = new StringBuilder();
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_delete.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_delete.htm", player);
         //builder.append("<html><head><title>").append(TITLE_NAME).append("</title></head><body><br><center><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br><font name=\"hs12\" color=LEVEL>Available schemes:</font><br><br>");
 
         for (PlayerScheme scheme : player.getBuffSchemes()) {
@@ -575,7 +571,7 @@ public final class SchemeBufferInstance extends NpcInstance {
 
     private static String buildHtml(String buffType, Player player) {
         StringBuilder builder = new StringBuilder();
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_indbuffs.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_indbuffs.htm", player);
 
         //builder.append("<html><head><title>").append(TITLE_NAME).append("</title></head><body><br><center><br>");
 
@@ -586,7 +582,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 continue;
 
             if (buff._buffType.equals(buffType)) {
-                String bName = SkillTable.getInstance().getInfo(buff._buffId, buff._buffLevel).getName();
+                String bName = SkillTable.INSTANCE().getInfo(buff._buffId, buff._buffLevel).getName();
                 bName = bName.replace(" ", "+");
                 availableBuffs.add(bName + "_" + buff._buffId + "_" + buff._buffLevel);
             }
@@ -623,7 +619,7 @@ public final class SchemeBufferInstance extends NpcInstance {
 
     private static String getEditSchemePage(Player player) {
         StringBuilder builder = new StringBuilder();
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_menu.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_menu.htm", player);
 
         //builder.append("<html><head><title>").append(TITLE_NAME).append("</title></head><body><br><center><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br><font name=\"hs12\" color=LEVEL>Select a scheme that you would like to manage:</font><br><br>");
 
@@ -658,7 +654,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static String getOptionList(Player player, int schemeId) {
         final PlayerScheme scheme = player.getBuffSchemeById(schemeId);
         int[] buffCount = getBuffCount(player, schemeId);
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_options.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_options.htm", player);
 
         if (isPetBuff(player))
             dialog = dialog.replace("%topbtn%", (player.getPet() != null ? player.getPet().getName() : "You don't have Pet"));
@@ -713,7 +709,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static String createScheme(Player player, int iconId) {
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_create.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_create.htm", player);
 
         if (isPetBuff(player)) {
             dialog = dialog.replace("%topbtn%", (player.getPet() != null ? player.getPet().getName() : "You don't have Pet"));
@@ -760,7 +756,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static String changeSchemeIcon(Player player, int schemeId) {
-        String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_change_icon.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_change_icon.htm", player);
 
         if (isPetBuff(player)) {
             dialog = dialog.replace("%topbtn%", (player.getPet() != null ? player.getPet().getName() : "You don't have Pet"));
@@ -1069,9 +1065,9 @@ public final class SchemeBufferInstance extends NpcInstance {
             player.addQuickVar("BackHpOn", true);
             Playable target = isPetBuff(player) ? player.getPet() : player;
             if (!isPetBuff(player))
-                ThreadPoolManager.getInstance().schedule(new BackHp(target, target.getCurrentHp(), target.getCurrentMp(), target.getCurrentCp()), 250);
+                ThreadPoolManager.INSTANCE.schedule(new BackHp(target, target.getCurrentHp(), target.getCurrentMp(), target.getCurrentCp()), 250);
             if (player.getPet() != null)
-                ThreadPoolManager.getInstance().schedule(new BackHp(player.getPet(), target.getCurrentHp(), target.getCurrentMp(), target.getCurrentCp()), 250);
+                ThreadPoolManager.INSTANCE.schedule(new BackHp(player.getPet(), target.getCurrentHp(), target.getCurrentMp(), target.getCurrentCp()), 250);
         }
 
         if (!FREE_BUFFS) {
@@ -1247,9 +1243,9 @@ public final class SchemeBufferInstance extends NpcInstance {
                             player.getCubic(cubic.getId()).exit();
                         }
                     }
-                    player.onMagicUseTimer(player, SkillTable.getInstance().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)), false);
+                    player.onMagicUseTimer(player, SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)), false);
                 } else {
-                    SkillTable.getInstance().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)).getEffects(player, player, false, false);
+                    SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)).getEffects(player, player, false, false);
                     player.broadcastPacket(new MagicSkillUse(player, player, Integer.parseInt(eventParam1), Integer.parseInt(eventParam2), 2, 0));
                 }
             } else {
@@ -1260,10 +1256,10 @@ public final class SchemeBufferInstance extends NpcInstance {
                             player.getCubic(cubic.getId()).exit();
                         }
                     }
-                    player.onMagicUseTimer(player, SkillTable.getInstance().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)), false);
+                    player.onMagicUseTimer(player, SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)), false);
                 } else {
                     if (player.getPet() != null) {
-                        SkillTable.getInstance().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)).getEffects(player.getPet(), player.getPet(), false, false);
+                        SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)).getEffects(player.getPet(), player.getPet(), false, false);
                         player.broadcastPacket(new MagicSkillUse(player, player.getPet(), Integer.parseInt(eventParam1), Integer.parseInt(eventParam2), 0, 0));
                     } else {
                         sendErrorMessageToPlayer(player, "You do not have a servitor. Summon your pet first!");
@@ -1302,9 +1298,9 @@ public final class SchemeBufferInstance extends NpcInstance {
                     }
                 }
 
-                ThreadPoolManager.getInstance().execute(() -> {
+                ThreadPoolManager.INSTANCE.execute(() -> {
                     for (int[] i : buff_sets) {
-                        SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
+                        SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
                         npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                     }
                 });
@@ -1319,9 +1315,9 @@ public final class SchemeBufferInstance extends NpcInstance {
                         }
                     }
 
-                    ThreadPoolManager.getInstance().execute(() -> {
+                    ThreadPoolManager.INSTANCE.execute(() -> {
                         for (int[] i : buff_sets) {
-                            SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
+                            SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
                             npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                         }
                     });
@@ -1480,20 +1476,20 @@ public final class SchemeBufferInstance extends NpcInstance {
                 showCommunity(player, main(player));
                 return;
             } else {
-                ThreadPoolManager.getInstance().execute(() -> {
+                ThreadPoolManager.INSTANCE.execute(() -> {
                     for (int i = 0; i < buffs.size(); ++i) {
                         if (!getpetbuff) {
-                            SkillTable.getInstance().getInfo(buffs.get(i), levels.get(i)).getEffects(player, player, false, false);
+                            SkillTable.INSTANCE.getInfo(buffs.get(i), levels.get(i)).getEffects(player, player, false, false);
                             npc2.broadcastPacket(new MagicSkillUse(npc2, player, buffs.get(i), levels.get(i), 0, 0));
                         } else {
-                            SkillTable.getInstance().getInfo(buffs.get(i), levels.get(i)).getEffects(player.getPet(), player.getPet(), false, false);
+                            SkillTable.INSTANCE.getInfo(buffs.get(i), levels.get(i)).getEffects(player.getPet(), player.getPet(), false, false);
                             // npc2.getPet().broadcastPacket(new MagicSkillUse(npc2, player.getPet(), buffs.get(i), levels.get(i), 0, 0));
                         }
                         try {
                             Thread.sleep(5);
                             if (player.isBlocked())
                                 return;
-                        } catch (InterruptedException e) {
+                        } catch (InterruptedException ignored) {
                         }
 
                     }
@@ -1668,17 +1664,17 @@ public final class SchemeBufferInstance extends NpcInstance {
 
             final boolean getpetbuff = isPetBuff(player);
             if (!getpetbuff) {
-                ThreadPoolManager.getInstance().execute(() -> {
+                ThreadPoolManager.INSTANCE.execute(() -> {
                     for (int[] i : buff_sets) {
-                        SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
+                        SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
                         npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                     }
                 });
             } else {
                 if (player.getPet() != null) {
-                    ThreadPoolManager.getInstance().execute(() -> {
+                    ThreadPoolManager.INSTANCE.execute(() -> {
                         for (int[] i : buff_sets) {
-                            SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
+                            SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
                             npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                         }
                     });
@@ -1694,7 +1690,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         }
         // Alexander - Main page for changing scheme name
         else if (eventParam0.equalsIgnoreCase("changeName_1")) {
-            String dialog = HtmCache.getInstance().getNotNull("scripts/services/communityPVP/buffer_scheme_change_name.htm", player);
+            String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_change_name.htm", player);
 
             if (isPetBuff(player)) {
                 dialog = dialog.replace("%topbtn%", (player.getPet() != null ? player.getPet().getName() : "You don't have Pet"));
@@ -1853,7 +1849,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             _buffLevel = buffLevel;
             _forClass = forClass;
             _canUse = canUse;
-            _buffName = SkillTable.getInstance().getInfo(buffId, buffLevel).getName();
+            _buffName = SkillTable.INSTANCE().getInfo(buffId, buffLevel).getName();
         }
     }
 

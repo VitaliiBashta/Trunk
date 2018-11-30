@@ -11,117 +11,83 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BalancerConfig {
+    public static final Map<Integer, Double> CUSTOM_POWER_SKILLS = new HashMap<>();
+    public static final Map<Integer, Integer> CUSTOM_CHANCE_SKILLS = new HashMap<>();
     private static final Path BALANCER_FILE = Config.CONFIG.resolve("balancer/balancer.properties");
     private static final Path DAMAGE_BALANCER_FILE = Config.CONFIG.resolve("balancer/damagebalancer.properties");
     private static final Logger _log = Logger.getLogger(BalancerConfig.class.getName());
     public static HashMap<Integer, Double> DuelistDamageMap;
     public static HashMap<Integer, Double> DuelistDamageMapOly;
-
     public static HashMap<Integer, Double> DreadnoughtDamageMap;
     public static HashMap<Integer, Double> DreadnoughtDamageMapOly;
-
     public static HashMap<Integer, Double> PheonixKnightDamageMap;
     public static HashMap<Integer, Double> PheonixKnightDamageMapOly;
-
     public static HashMap<Integer, Double> HellKnightDamageMap;
     public static HashMap<Integer, Double> HellKnightDamageMapOly;
-
     public static HashMap<Integer, Double> SagittariusDamageMap;
     public static HashMap<Integer, Double> SagittariusDamageMapOly;
-
     public static HashMap<Integer, Double> AdventurerDamageMap;
     public static HashMap<Integer, Double> AdventurerDamageMapOly;
-
     public static HashMap<Integer, Double> ArchmageDamageMap;
     public static HashMap<Integer, Double> ArchmageDamageMapOly;
-
     public static HashMap<Integer, Double> SoultakerDamageMap;
     public static HashMap<Integer, Double> SoultakerDamageMapOly;
-
     public static HashMap<Integer, Double> ArcanalordDamageMap;
     public static HashMap<Integer, Double> ArcanalordDamageMapOly;
-
     public static HashMap<Integer, Double> CardinalDamageMap;
     public static HashMap<Integer, Double> CardinalDamageMapOly;
-
     public static HashMap<Integer, Double> HierophantDamageMap;
     public static HashMap<Integer, Double> HierophantDamageMapOly;
-
     public static HashMap<Integer, Double> EvatemplarDamageMap;
     public static HashMap<Integer, Double> EvatemplarDamageMapOly;
-
     public static HashMap<Integer, Double> SwordmuseDamageMap;
     public static HashMap<Integer, Double> SwordmuseDamageMapOly;
-
     public static HashMap<Integer, Double> WindriderDamageMap;
     public static HashMap<Integer, Double> WindriderDamageMapOly;
-
     public static HashMap<Integer, Double> MoonlightDamageMap;
     public static HashMap<Integer, Double> MoonlightDamageMapOly;
-
     public static HashMap<Integer, Double> MysticmuseDamageMap;
     public static HashMap<Integer, Double> MysticmuseDamageMapOly;
-
     public static HashMap<Integer, Double> ElementalMasterDamageMap;
     public static HashMap<Integer, Double> ElementalMasterDamageMapOly;
-
     public static HashMap<Integer, Double> EvasaintMasterDamageMap;
     public static HashMap<Integer, Double> EvasaintMasterDamageMapOly;
-
     public static HashMap<Integer, Double> ShillienTemplarDamageMap;
     public static HashMap<Integer, Double> ShillienTemplarDamageMapOly;
-
     public static HashMap<Integer, Double> SpectralDancerDamageMap;
     public static HashMap<Integer, Double> SpectralDancerDamageMapOly;
-
     public static HashMap<Integer, Double> GhostHunterDamageMap;
     public static HashMap<Integer, Double> GhostHunterDamageMapOly;
-
     public static HashMap<Integer, Double> GhostSentinelDamageMap;
     public static HashMap<Integer, Double> GhostSentinelDamageMapOly;
-
     public static HashMap<Integer, Double> StormscreamerDamageMap;
     public static HashMap<Integer, Double> StormscreamerDamageMapOly;
-
     public static HashMap<Integer, Double> SpectralMasterDamageMap;
     public static HashMap<Integer, Double> SpectralMasterDamageMapOly;
-
     public static HashMap<Integer, Double> ShillenSaintDamageMap;
     public static HashMap<Integer, Double> ShillenSaintDamageMapOly;
-
     public static HashMap<Integer, Double> TitanDamageMap;
     public static HashMap<Integer, Double> TitanDamageMapOly;
-
     public static HashMap<Integer, Double> GrandKhauatariDamageMap;
     public static HashMap<Integer, Double> GrandKhauatariDamageMapOly;
-
     public static HashMap<Integer, Double> DominatorDamageMap;
     public static HashMap<Integer, Double> DominatorDamageMapOly;
-
     public static HashMap<Integer, Double> DoomcryerDamageMap;
     public static HashMap<Integer, Double> DoomcryerDamageMapOly;
-
     public static HashMap<Integer, Double> FortuneSeekerDamageMap;
     public static HashMap<Integer, Double> FortuneSeekerDamageMapOly;
-
     public static HashMap<Integer, Double> MaestroDamageMap;
     public static HashMap<Integer, Double> MaestroDamageMapOly;
-
     public static HashMap<Integer, Double> DoombringerDamageMap;
     public static HashMap<Integer, Double> DoombringerDamageMapOly;
-
     public static HashMap<Integer, Double> MaleSoulhoundDamageMap;
     public static HashMap<Integer, Double> MaleSoulhoundDamageMapOly;
-
     public static HashMap<Integer, Double> FemaleSoulhoundDamageMap;
     public static HashMap<Integer, Double> FemaleSoulhoundDamageMapOly;
-
     public static HashMap<Integer, Double> TricksterDamageMap;
     public static HashMap<Integer, Double> TricksterDamageMapOly;
-
     public static HashMap<Integer, Double> JudicatorDamageMap;
     public static HashMap<Integer, Double> JudicatorDamageMapOly;
-
     public static boolean DEBUG;
     public static double LETHAL1_CHANCE;
     public static double LETHAL2_CHANCE;
@@ -131,13 +97,11 @@ public class BalancerConfig {
     public static double MAGIC_CRITICAL_DAMAGE_ON_PLAYERS;
     public static double MAGIC_CRITICAL_DAMAGE_GENERAL;
     public static double FIGHTER_DAMAGE_VS_MAGE_OLYMPIAD;
-
     public static double BLOW_BEHIND_DAMAGE;
     public static double OLY_BLOW_BEHIND_DAMAGE;
     public static double BLOW_NOT_BEHIND_DAMAGE;
     public static double OLY_BLOW_NOT_BEHIND_DAMAGE;
     public static double CURSE_DEATH_LINK_MUL;
-
     public static int DUELIST_DAMAGE_LIMIT;
     public static int DREADNOUGHT_DAMAGE_LIMIT;
     public static int PHEONIXKNIGHT_DAMAGE_LIMIT;
@@ -174,7 +138,6 @@ public class BalancerConfig {
     public static int FEMALESOULHOUND_DAMAGE_LIMIT;
     public static int TRICKSTER_DAMAGE_LIMIT;
     public static int JUDICATOR_DAMAGE_LIMIT;
-
     public static double SKILLS_CHANCE_MOD;
     public static double SKILLS_CHANCE_POW;
     public static double SKILLS_MOB_CHANCE;
@@ -188,13 +151,11 @@ public class BalancerConfig {
     public static double SKILLS_ELEMENT_MOD_MIN;
     public static boolean SKILLS_CALC_STAT_MOD;
     public static double ALT_ABSORB_DAMAGE_MODIFIER;
-
     /**
      * limits of stats
      **/
     public static int LIM_PATK;
     public static int LIM_MATK;
-    private static int LIM_PDEF;
     public static int LIM_MDEF;
     public static int LIM_MATK_SPD;
     public static int LIM_PATK_SPD;
@@ -203,9 +164,6 @@ public class BalancerConfig {
     public static int LIM_MCRIT;
     public static int LIM_ACCURACY;
     public static int LIM_EVASION;
-    private static int LIM_MOVE;
-    private static int GM_LIM_MOVE;
-
     public static double ALT_NPC_PATK_MODIFIER;
     public static double ALT_NPC_MATK_MODIFIER;
     public static double ALT_NPC_MAXHP_MODIFIER;
@@ -214,21 +172,19 @@ public class BalancerConfig {
     public static double ALT_NPC_MDEF_MODIFIER;
     public static double ALT_POLE_DAMAGE_MODIFIER;
     public static double ALT_SUMMONS_DAMAGE;
-
     public static double SKILLS_CHANCE_STUN;
     public static double SKILLS_CHANCE_REMOVE_TARGET;
     public static double SKILLS_MAX_CHANCE_SUCCESS_IN_OLYMPIAD;
     public static boolean CUSTOM_POWER_SKILLS_ENABLED;
     public static boolean CUSTOM_POWER_SKILLS_DEBUG;
-    public static final Map<Integer, Double> CUSTOM_POWER_SKILLS = new HashMap<>();
-
     public static double MINIMUM_CHANCE_SKILLS;
     public static double DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
-
     public static boolean CUSTOM_CHANCE_SKILLS_ENABLED;
     public static boolean USE_METHOD_CHANCE_WITHOUT_RESISTS;
+    private static int LIM_PDEF;
+    private static int LIM_MOVE;
+    private static int GM_LIM_MOVE;
     private static boolean CUSTOM_CHANCE_SKILLS_DEBUG;
-    public static final Map<Integer, Integer> CUSTOM_CHANCE_SKILLS = new HashMap<>();
 
     public static void LoadConfig() {
         ExProperties balancer = load(BALANCER_FILE);

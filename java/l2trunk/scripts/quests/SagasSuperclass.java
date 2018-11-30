@@ -228,7 +228,7 @@ public abstract class SagasSuperclass extends Quest {
     SagasSuperclass(boolean party) {
         super(party);
         cleanTempVars();
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new SpawnCleaner(), 60000, 10000);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SpawnCleaner(), 60000, 10000);
     }
 
     void registerNPCs() {

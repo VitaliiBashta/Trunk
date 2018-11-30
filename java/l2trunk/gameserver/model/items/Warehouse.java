@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public abstract class Warehouse extends ItemContainer {
-    private static final ItemsDAO _itemsDAO = ItemsDAO.getInstance();
+    private static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
     private final int _ownerId;
 
     Warehouse(int ownerId) {

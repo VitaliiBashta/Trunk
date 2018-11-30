@@ -36,7 +36,7 @@ public final class DragonVortexInstance extends NpcInstance {
             if (ItemFunctions.getItemCount(player, 17248) > 0) {
                 ItemFunctions.removeItem(player, 17248, 1, true, "DragonVortex");
                 boss = NpcUtils.spawnSingle(bosses[Rnd.get(bosses.length)], Location.coordsRandomize(getLoc(), 300, 600), getReflection());
-                ThreadPoolManager.getInstance().schedule(() -> {
+                ThreadPoolManager.INSTANCE().schedule(() -> {
                     if (getBoss() != null && !getBoss().isDead())
                         setBoss(null);
                 }, 1800000);

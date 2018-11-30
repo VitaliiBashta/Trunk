@@ -125,7 +125,7 @@ public class LettersCollection extends Functions implements ScriptFile, OnDeathL
         if (SetActive(_name, true)) {
             spawnEventManagers();
             System.out.println("Event '" + _name + "' started.");
-            Announcements.getInstance().announceByCustomMessage(_msgStarted, null);
+            Announcements.INSTANCE.announceByCustomMessage(_msgStarted, null);
         } else
             player.sendMessage("Event '" + _name + "' already started.");
 
@@ -144,7 +144,7 @@ public class LettersCollection extends Functions implements ScriptFile, OnDeathL
         if (SetActive(_name, false)) {
             unSpawnEventManagers();
             System.out.println("Event '" + _name + "' stopped.");
-            Announcements.getInstance().announceByCustomMessage(_msgEnded, null);
+            Announcements.INSTANCE.announceByCustomMessage(_msgEnded, null);
         } else
             player.sendMessage("Event '" + _name + "' not started.");
 
@@ -194,7 +194,7 @@ public class LettersCollection extends Functions implements ScriptFile, OnDeathL
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, _msgStarted, null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, _msgStarted, null);
     }
 
     public String DialogAppend_31230(Integer val) {

@@ -11,8 +11,8 @@ import java.util.*;
 public final class ItemHolder extends AbstractHolder {
     private static final ItemHolder _instance = new ItemHolder();
 
-    private final Map<Integer,ItemTemplate> _items = new HashMap<>();
-//    private List<ItemTemplate> _allTemplates;
+    private final Map<Integer, ItemTemplate> _items = new HashMap<>();
+    //    private List<ItemTemplate> _allTemplates;
     private List<ItemTemplate> droppableTemplates;
 
     private ItemHolder() {
@@ -44,11 +44,10 @@ public final class ItemHolder extends AbstractHolder {
 
     /**
      * Returns the item corresponding to the item ID
-     *
      */
     public ItemTemplate getTemplate(int id) {
         if (!_items.containsKey(id)) {
-            warn("Not defined item id : " + id + ", or out of range!", new Exception());
+            LOG.warn("Not defined item id : " + id + ", or out of range!", new Exception());
         }
         return _items.get(id);
     }
@@ -73,10 +72,6 @@ public final class ItemHolder extends AbstractHolder {
         return droppableTemplates;
     }
 
-    @Override
-    protected void process() {
-//        buildFastLookupTable();
-    }
 
     @Override
     public int size() {

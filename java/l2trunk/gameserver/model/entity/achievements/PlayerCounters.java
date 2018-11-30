@@ -5,9 +5,6 @@ import l2trunk.gameserver.model.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Nik
- */
 public class PlayerCounters {
     private static final Logger _log = LoggerFactory.getLogger(PlayerCounters.class);
     public static PlayerCounters DUMMY_COUNTER = new PlayerCounters(null);
@@ -123,7 +120,7 @@ public class PlayerCounters {
 //		ResultSet rs = null;
 //		try
 //		{
-//			con2 = DatabaseFactory.getInstance().getConnection();
+//			con2 = DatabaseFactory.INSTANCE().getConnection();
 //			statement2 = con2.prepareStatement("SELECT char_id FROM character_counters WHERE char_id = " + _playerObjId + ";");
 //			rs = statement2.executeQuery();
 //			if (!rs.next())
@@ -145,7 +142,7 @@ public class PlayerCounters {
 //		PreparedStatement statement = null;
 //		try
 //		{
-//			con = DatabaseFactory.getInstance().getConnection();
+//			con = DatabaseFactory.INSTANCE().getConnection();
 //			StringBuilder sb = new StringBuilder();
 //			sb.append("UPDATE character_counters SET ");
 //			boolean firstPassed = false;
@@ -199,7 +196,7 @@ public class PlayerCounters {
 //		ResultSet rs = null;
 //		try
 //		{
-//			con = DatabaseFactory.getInstance().getConnection();
+//			con = DatabaseFactory.INSTANCE().getConnection();
 //			statement = con.prepareStatement("SELECT * FROM character_counters WHERE char_id = ?");
 //			statement.setInt(1, getChar().getObjectId());
 //			rs = statement.executeQuery();
@@ -247,7 +244,7 @@ public class PlayerCounters {
 //		{
 //			sb.append("<tr><td><table border=0 width=294 bgcolor=" + (order % 2 == 0 ? "1E1E1E" : "090909") + ">")
 //			.append("<tr><td fixwidth=10%><font color=LEVEL>").append(order++).append(".<font></td>")
-//			.append("<td fixwidth=45%>").append(CharacterDAO.getInstance().getNameByObjectId(top.getKey()))
+//			.append("<td fixwidth=45%>").append(CharacterDAO.INSTANCE().getNameByObjectId(top.getKey()))
 //			.append("</td><td fixwidth=45%><font color=777777>").append(top.getValue())
 //			.append("</font></td></tr>")
 //			.append("</table></td></tr>");
@@ -262,7 +259,7 @@ public class PlayerCounters {
 //		Map<Integer, Long> ret = null;
 //		PreparedStatement statement = null;
 //		ResultSet rs = null;
-//		try(Connection con = DatabaseFactory.getInstance().getConnection())
+//		try(Connection con = DatabaseFactory.INSTANCE().getConnection())
 //		{
 //			statement = con.prepareStatement("SELECT char_id, " + fieldName + " FROM character_counters ORDER BY " + fieldName + " " + (asc ? "ASC" : "DESC") + " LIMIT 0, " + maxRetrieved + ";");
 //			rs = statement.executeQuery();
@@ -308,7 +305,7 @@ public class PlayerCounters {
 //		ResultSet rs = null;
 //		try
 //		{
-//			con = DatabaseFactory.getInstance().getConnection();
+//			con = DatabaseFactory.INSTANCE().getConnection();
 //			statement = con.prepareStatement("DESC character_counters");
 //			rs = statement.executeQuery();
 //			while(rs.next())
@@ -348,7 +345,7 @@ public class PlayerCounters {
 //				}
 //				sb.setCharAt(sb.length() - 1, ';');
 //				
-//				con = DatabaseFactory.getInstance().getConnection();
+//				con = DatabaseFactory.INSTANCE().getConnection();
 //				statement = con.prepareStatement(sb.toString());
 //				statement.execute();
 //				_log.info("PlayerCounters Update: Changes executed!");

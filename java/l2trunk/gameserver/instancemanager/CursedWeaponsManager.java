@@ -1,7 +1,6 @@
 package l2trunk.gameserver.instancemanager;
 
 import l2trunk.commons.dbutils.DbUtils;
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -33,16 +32,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
-public class CursedWeaponsManager {
+public enum CursedWeaponsManager {
+    INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(CursedWeaponsManager.class);
-
-    private static final CursedWeaponsManager _instance = new CursedWeaponsManager();
     private static final int CURSEDWEAPONS_MAINTENANCE_INTERVAL = 60 * 60 * 1000; // 60 min in millisec
     private static final String SQL_DELETE_CW = "DELETE FROM cursed_weapons WHERE item_id = ?";
     private static final String SQL_DELETE_CW_FROM_PLAYER_INVENTORY = "DELETE FROM items WHERE owner_id=? AND item_id=?";
@@ -51,7 +46,7 @@ public class CursedWeaponsManager {
     private final Map<Integer, CursedWeapon> cursedWeaponsMap;
     private ScheduledFuture<?> _removeTask;
 
-    private CursedWeaponsManager() {
+    CursedWeaponsManager() {
         cursedWeaponsMap = new HashMap<>();
 
         if (!Config.ALLOW_CURSED_WEAPONS)
@@ -62,17 +57,7 @@ public class CursedWeaponsManager {
         checkConditions();
 
         cancelTask();
-        _removeTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new RemoveTask(), CURSEDWEAPONS_MAINTENANCE_INTERVAL, CURSEDWEAPONS_MAINTENANCE_INTERVAL);
-
-        LOG.info("CursedWeaponsManager: Loaded " + cursedWeaponsMap.size() + " cursed weapon(s).");
-    }
-
-    public static CursedWeaponsManager getInstance() {
-        return _instance;
-    }
-
-    @Deprecated
-    public final void reload() {
+        _removeTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RemoveTask(), CURSEDWEAPONS_MAINTENANCE_INTERVAL, CURSEDWEAPONS_MAINTENANCE_INTERVAL);
 
     }
 
@@ -266,7 +251,7 @@ public class CursedWeaponsManager {
                 player.setCursedWeaponEquippedId(0);
                 player.setTransformation(0);
                 player.setTransformationName(null);
-                player.removeSkill(SkillTable.getInstance().getInfo(cw.getSkillId(), player.getSkillLevel(cw.getSkillId())), false);
+                player.removeSkill(SkillTable.INSTANCE().getInfo(cw.getSkillId(), player.getSkillLevel(cw.getSkillId())), false);
                 player.getInventory().destroyItemByItemId(cw.getItemId(), 1L, "CursedWeapon");
                 player.broadcastCharInfo();
             } else {
@@ -415,15 +400,15 @@ public class CursedWeaponsManager {
             return;
 
         synchronized (cursedWeaponsMap.values()) {
-            CursedWeapon[] cursedWeapons = new CursedWeapon[0];
+            List<CursedWeapon> cursedWeapons = new ArrayList<>();
             for (CursedWeapon cw : this.cursedWeaponsMap.values()) {
                 if (cw.isActive())
                     continue;
-                cursedWeapons = ArrayUtils.add(cursedWeapons, cw);
+                cursedWeapons.add(cw);
             }
 
-            if (cursedWeapons.length > 0) {
-                CursedWeapon cw = cursedWeapons[Rnd.get(cursedWeapons.length)];
+            if (cursedWeapons.size() > 0) {
+                CursedWeapon cw = cursedWeapons.get(Rnd.get(cursedWeapons.size()));
                 if (Rnd.get(100000000) <= cw.getDropRate())
                     cw.create(attackable, killer);
             }
@@ -493,12 +478,17 @@ public class CursedWeaponsManager {
         return cursedWeaponsMap.get(itemId);
     }
 
+    public void log() {
+        LOG.info("Loaded " + this.cursedWeaponsMap.size() + " cursed weapons");
+    }
+
     private class RemoveTask extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (CursedWeapon cw : cursedWeaponsMap.values())
-                if (cw.isActive() && cw.getTimeLeft() <= 0)
-                    endOfLife(cw);
+            cursedWeaponsMap.values().stream()
+                    .filter(CursedWeapon::isActive)
+                    .filter( cw -> cw.getTimeLeft() <=0)
+                    .forEach(CursedWeaponsManager.this::endOfLife);
         }
     }
 }

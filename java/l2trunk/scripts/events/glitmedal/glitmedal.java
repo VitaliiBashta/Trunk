@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class glitmedal extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+public final class glitmedal extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final int EVENT_MANAGER_ID1 = 31228; // Roy
     private static final int EVENT_MANAGER_ID2 = 31229; // Winnie
 
@@ -82,7 +82,7 @@ public class glitmedal extends Functions implements ScriptFile, OnDeathListener,
             loadMultiSell();
             spawnEventManagers();
             System.out.println("Event 'L2 Medal Collection Event' started.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStarted", null);
         } else
             player.sendMessage("Event 'L2 Medal Collection Event' already started.");
 
@@ -101,7 +101,7 @@ public class glitmedal extends Functions implements ScriptFile, OnDeathListener,
         if (SetActive("glitter", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'L2 Medal Collection Event' stopped.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStoped", null);
         } else
             player.sendMessage("Event 'L2 Medal Collection Event' not started.");
 
@@ -113,7 +113,7 @@ public class glitmedal extends Functions implements ScriptFile, OnDeathListener,
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.glitmedal.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.glitmedal.AnnounceEventStarted", null);
     }
 
     /**
@@ -190,9 +190,6 @@ public class glitmedal extends Functions implements ScriptFile, OnDeathListener,
 
     }
 
-    /**
-     * Обработчик смерти мобов, управляющий эвентовым дропом
-     */
     @Override
     public void onDeath(Creature cha, Creature killer) {
         if (_active && SimpleCheckDrop(cha, killer)) {

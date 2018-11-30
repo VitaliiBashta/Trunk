@@ -31,7 +31,6 @@ public class ExEventMatchTeamInfo extends L2GameServerPacket {
 
     static class EventMatchTeamInfo {
         final String _name;
-        String pet_Name;
         final int _id;
         final int curCp;
         final int maxCp;
@@ -43,6 +42,7 @@ public class ExEventMatchTeamInfo extends L2GameServerPacket {
         final int class_id;
         final int race_id;
         final int pet_id;
+        String pet_Name;
         int pet_NpcId;
         int pet_curHp;
         int pet_maxHp;

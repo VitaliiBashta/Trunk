@@ -100,7 +100,7 @@ public class Summon extends Skill {
             case SIEGE_SUMMON:
                 // Removal of the corpse if it summon from a corpse.
                 Location loc = null;
-                if (_targetType == SkillTargetType.TARGET_CORPSE)
+                if (targetType == SkillTargetType.TARGET_CORPSE)
                     for (Creature target : targets)
                         if (target != null && target.isDead()) {
                             activeChar.getAI().setAttackTarget(null);
@@ -130,7 +130,7 @@ public class Summon extends Skill {
                 summon.setFollowMode(true);
 
                 if (summon.getSkillLevel(4140) > 0)
-                    summon.altUseSkill(SkillTable.getInstance().getInfo(4140, summon.getSkillLevel(4140)), activeChar);
+                    summon.altUseSkill(SkillTable.INSTANCE().getInfo(4140, summon.getSkillLevel(4140)), activeChar);
 
                 if (summon.getName().equalsIgnoreCase("Shadow"))//FIXME [G1ta0] идиотский хардкод
                     summon.addStatFunc(new FuncAdd(Stats.ABSORB_DAMAGE_PERCENT, 0x40, this, 15));
@@ -160,7 +160,7 @@ public class Summon extends Skill {
                 merchant.setReflection(activeChar.getReflection());
                 merchant.spawnMe(activeChar.getLoc());
 
-                ThreadPoolManager.getInstance().schedule(new GameObjectTasks.DeleteTask(merchant), _lifeTime);
+                ThreadPoolManager.INSTANCE().schedule(new GameObjectTasks.DeleteTask(merchant), _lifeTime);
                 break;
         }
 
@@ -171,7 +171,7 @@ public class Summon extends Skill {
 
     @Override
     public boolean isOffensive() {
-        return _targetType == SkillTargetType.TARGET_CORPSE;
+        return targetType == SkillTargetType.TARGET_CORPSE;
     }
 
     private enum SummonType {

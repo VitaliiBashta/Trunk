@@ -81,11 +81,11 @@ public class _178_IconicTrinity extends Quest implements ScriptFile {
                 }
             } else {
                 if (cond == 1)
-                    htmltext = HtmCache.getInstance().getNotNull("quests/_178_IconicTrinity/32255-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/32255-03.htm", st.getPlayer());
                 else if (cond == 2)
-                    htmltext = HtmCache.getInstance().getNotNull("quests/_178_IconicTrinity/32256-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/32256-03.htm", st.getPlayer());
                 else
-                    htmltext = HtmCache.getInstance().getNotNull("quests/_178_IconicTrinity/32257-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/32257-03.htm", st.getPlayer());
 
                 if (len == 0)
                     htmltext = htmltext.replace("Password :  ", "").replace("#N", "first");
@@ -105,7 +105,7 @@ public class _178_IconicTrinity extends Quest implements ScriptFile {
             st.exitCurrentQuest(false);
         }
         if (event.equalsIgnoreCase("32255-07.htm") || event.equalsIgnoreCase("32255-09.htm") || event.equalsIgnoreCase("32256-07.htm") || event.equalsIgnoreCase("32256-08.htm") || event.equalsIgnoreCase("32256-09.htm") || event.equalsIgnoreCase("32257-06.htm")) {
-            htmltext = HtmCache.getInstance().getNotNull("quests/_178_IconicTrinity/" + event, st.getPlayer());
+            htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/" + event, st.getPlayer());
             htmltext = htmltext.replace("%player_name%", st.getPlayer().getName());
         }
 

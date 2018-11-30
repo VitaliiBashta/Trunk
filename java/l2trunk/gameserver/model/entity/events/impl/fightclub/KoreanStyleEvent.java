@@ -144,7 +144,7 @@ public class KoreanStyleEvent extends AbstractFightClub {
         super.startRound();
         checkFightingPlayers();
         _lastKill = System.currentTimeMillis();
-        ThreadPoolManager.getInstance().schedule(new CheckFightersInactive(this), 5000L);
+        ThreadPoolManager.INSTANCE().schedule(new CheckFightersInactive(this), 5000L);
     }
 
     @Override
@@ -174,7 +174,6 @@ public class KoreanStyleEvent extends AbstractFightClub {
                     endRound();
                     return;
                 }
-                newPlayer.getPlayer().isntAfk();
                 _fightingPlayers[i] = newPlayer;
                 changed = true;
             }
@@ -218,7 +217,6 @@ public class KoreanStyleEvent extends AbstractFightClub {
 
             }
             player.standUp();
-            player.isntAfk();
             if (Config.EVENT_KOREAN_RESET_REUSE)
                 player.resetReuse();
             player.sendPacket(new SkillCoolTime(player));
@@ -238,7 +236,7 @@ public class KoreanStyleEvent extends AbstractFightClub {
         }
 
         // Alexander - Unroot the players 10 seconds after the teleport so they can start fighting
-        ThreadPoolManager.getInstance().schedule(() -> {
+        ThreadPoolManager.INSTANCE().schedule(() -> {
             for (FightClubPlayer fPlayer : _fightingPlayers) {
                 Player player = fPlayer.getPlayer();
 
@@ -295,10 +293,6 @@ public class KoreanStyleEvent extends AbstractFightClub {
     @Override
     protected int getRewardForWinningTeam(FightClubPlayer fPlayer, boolean atLeast1Kill) {
         return super.getRewardForWinningTeam(fPlayer, false);
-    }
-
-    @Override
-    protected void handleAfk(FightClubPlayer fPlayer, boolean setAsAfk) {
     }
 
     @Override
@@ -369,9 +363,6 @@ public class KoreanStyleEvent extends AbstractFightClub {
                         if (!fPlayer.getPlayer().getNetConnection().isConnected()) {
                             playerToKill = fPlayer.getPlayer();
                             playerMinDamage = -100.0;
-                        } else if (currentTime - fPlayer.getPlayer().getLastNotAfkTime() > 8000L) {
-                            playerToKill = fPlayer.getPlayer();
-                            playerMinDamage = -1.0;
                         } else if (fPlayer.getDamage() < playerMinDamage) {
                             playerToKill = fPlayer.getPlayer();
                             playerMinDamage = fPlayer.getDamage();
@@ -383,7 +374,7 @@ public class KoreanStyleEvent extends AbstractFightClub {
                     playerToKill.doDie(null);
             }
 
-            ThreadPoolManager.getInstance().schedule(this, 5000L);
+            ThreadPoolManager.INSTANCE().schedule(this, 5000L);
         }
     }
 }

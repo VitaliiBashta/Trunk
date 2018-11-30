@@ -24,7 +24,7 @@ public class Drain extends Skill {
         boolean ss = isSSPossible() && activeChar.getChargedSoulShot();
         Creature realTarget;
         boolean reflected;
-        final boolean corpseSkill = _targetType == SkillTargetType.TARGET_CORPSE;
+        final boolean corpseSkill = targetType == SkillTargetType.TARGET_CORPSE;
 
         for (Creature target : targets)
             if (target != null) {

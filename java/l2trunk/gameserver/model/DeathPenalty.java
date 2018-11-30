@@ -86,7 +86,7 @@ public class DeathPenalty {
             return;
 
         if (getLevel() > 0) {
-            player.addSkill(SkillTable.getInstance().getInfo(_skillId, getLevel()), false);
+            player.addSkill(SkillTable.INSTANCE.getInfo(_skillId, getLevel()), false);
             player.sendPacket(new SystemMessage2(SystemMsg.THE_LEVEL_S1_DEATH_PENALTY_WILL_BE_ASSESSED).addInteger(getLevel()));
         }
         player.sendEtcStatusUpdate();
@@ -106,7 +106,7 @@ public class DeathPenalty {
 
         _level++;
 
-        player.addSkill(SkillTable.getInstance().getInfo(_skillId, getLevel()), false);
+        player.addSkill(SkillTable.INSTANCE.getInfo(_skillId, getLevel()), false);
         player.sendPacket(new SystemMessage2(SystemMsg.THE_LEVEL_S1_DEATH_PENALTY_WILL_BE_ASSESSED).addInteger(getLevel()));
         player.sendEtcStatusUpdate();
         player.updateStats();
@@ -124,7 +124,7 @@ public class DeathPenalty {
         _level--;
 
         if (getLevel() > 0) {
-            player.addSkill(SkillTable.getInstance().getInfo(_skillId, getLevel()), false);
+            player.addSkill(SkillTable.INSTANCE.getInfo(_skillId, getLevel()), false);
             player.sendPacket(new SystemMessage2(SystemMsg.THE_LEVEL_S1_DEATH_PENALTY_WILL_BE_ASSESSED).addInteger(getLevel()));
         } else
             player.sendPacket(SystemMsg.THE_DEATH_PENALTY_HAS_BEEN_LIFTED);

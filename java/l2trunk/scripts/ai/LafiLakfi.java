@@ -16,8 +16,8 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public class LafiLakfi extends DefaultAI {
     private static final int MAX_RADIUS = 500;
-    private  final Skill s_display_bug_of_fortune1 = SkillTable.getInstance().getInfo(6045, 1);
-    private  final Skill s_display_jackpot_firework = SkillTable.getInstance().getInfo(5778, 1);
+    private  final Skill s_display_bug_of_fortune1 = SkillTable.INSTANCE().getInfo(6045, 1);
+    private  final Skill s_display_jackpot_firework = SkillTable.INSTANCE().getInfo(5778, 1);
 
     private long _nextEat;
     private int i_ai2, actor_lvl, prev_st;

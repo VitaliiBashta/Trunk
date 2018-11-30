@@ -17,12 +17,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class ChangeLogManager {
+public enum ChangeLogManager {
+    INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(ChangeLogManager.class);
-    private final List<Change> changeList;
+    private final List<Change> changeList =new LinkedList<>();
 
-    private ChangeLogManager() {
-        changeList = new LinkedList<>();
+    ChangeLogManager() {
         loadChangeLog();
     }
 
@@ -66,10 +66,6 @@ public final class ChangeLogManager {
         return new Fix(realType, desc);
     }
 
-    public static ChangeLogManager getInstance() {
-        return ChangeLogManagerHolder.instance;
-    }
-
     public int getNotSeenChangeLog(Player player) {
         return -1;
     }
@@ -98,7 +94,7 @@ public final class ChangeLogManager {
 
         pagesBuilder.append("</tr></table>");
 
-        String html = HtmCache.getInstance().getNotNull("command/changeLog.htm", Language.ENGLISH);
+        String html = HtmCache.INSTANCE.getNotNull("command/changeLog.htm", Language.ENGLISH);
         html = html.replace("%date%", change.getDate());
         html = html.replace("%fixes%", fixesBuilder.toString());
         html = html.replace("%leftPageBtn%", index > 0 ? "<button value=\"Previous\" action=\"bypass -h ShowChangeLogPage " + (index - 1) + "\" width=80 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.button_df\">" : "<br>");
@@ -184,7 +180,4 @@ public final class ChangeLogManager {
         }
     }
 
-    private static class ChangeLogManagerHolder {
-        static final ChangeLogManager instance = new ChangeLogManager();
-    }
 }

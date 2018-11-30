@@ -8,7 +8,6 @@ import java.util.*;
  * Побочный эффект - размер массива при удалении элемента не меняется, но можно использовать clear. <br /> <br />
  * <p>
  * Синхронизированная версия.
- *
  */
 class GSArray<E> implements Collection<E> {
     private transient E[] elementData;

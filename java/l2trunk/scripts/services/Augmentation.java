@@ -37,105 +37,109 @@ class Augmentation extends Functions {
             showMainMenu(player, 0, _filter);
             return;
         }
-        if (command.equals("section")) {
-            try {
-                switch (Integer.parseInt(arg[1])) {
-                    case 1:
-                        _filter = Options.AugmentationFilter.NONE;
-                        break;
-                    case 2:
-                        _filter = Options.AugmentationFilter.ACTIVE_SKILL;
-                        break;
-                    case 3:
-                        _filter = Options.AugmentationFilter.PASSIVE_SKILL;
-                        break;
-                    case 4:
-                        _filter = Options.AugmentationFilter.CHANCE_SKILL;
-                        break;
-                    case 5:
-                        _filter = Options.AugmentationFilter.STATS;
-                }
-
-                _page = 1;
-            } catch (Exception e) {
-                e.printStackTrace();
-                player.sendMessage("Error.");
-            }
-        } else if (command.equals("page")) {
-            try {
-                switch (Integer.parseInt(arg[2])) {
-                    case 1:
-                        _filter = Options.AugmentationFilter.NONE;
-                        break;
-                    case 2:
-                        _filter = Options.AugmentationFilter.ACTIVE_SKILL;
-                        break;
-                    case 3:
-                        _filter = Options.AugmentationFilter.PASSIVE_SKILL;
-                        break;
-                    case 4:
-                        _filter = Options.AugmentationFilter.CHANCE_SKILL;
-                        break;
-                    case 5:
-                        _filter = Options.AugmentationFilter.STATS;
-                }
-
-                _page = Integer.parseInt(arg[1]);
-            } catch (Exception e) {
-                e.printStackTrace();
-                player.sendMessage("Error.");
-            }
-        } else if (command.equals("put")) {
-            try {
-                if ((player.isInStoreMode()) || (player.isProcessingRequest()) || (player.isInTrade())) {
-                    player.sendMessage("You cannot edit augmentation because you are on store mode");
-                    return;
-                }
-                PcInventory inv = player.getInventory();
-                ItemInstance targetItem = inv.getItemByObjectId(inv.getPaperdollObjectId(7));
-                if (targetItem == null) {
-                    player.sendMessage("You doesn't have any weapon equipped");
-                    return;
-                }
-                if (!check(targetItem))
-                    return;
-                if (Util.getPay(player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, true)) {
-                    unAugment(targetItem);
-                    int augId = Integer.parseInt(arg[1]);
-                    int secAugId = AugmentationData.getInstance().generateRandomSecondaryAugmentation();
-                    int aug = (augId << 16) + secAugId;
-                    targetItem.setAugmentationId(aug);
-                    targetItem.setJdbcState(JdbcEntityState.UPDATED);
-                    targetItem.update();
-                    inv.equipItem(targetItem);
-                    player.sendPacket(new InventoryUpdate().addModifiedItem(targetItem));
-                    for (ShortCut sc : player.getAllShortCuts()) {
-                        if ((sc.getId() == targetItem.getObjectId()) && (sc.getType() == 1))
-                            player.sendPacket(new ShortCutRegister(player, sc));
+        switch (command) {
+            case "section":
+                try {
+                    switch (Integer.parseInt(arg[1])) {
+                        case 1:
+                            _filter = Options.AugmentationFilter.NONE;
+                            break;
+                        case 2:
+                            _filter = Options.AugmentationFilter.ACTIVE_SKILL;
+                            break;
+                        case 3:
+                            _filter = Options.AugmentationFilter.PASSIVE_SKILL;
+                            break;
+                        case 4:
+                            _filter = Options.AugmentationFilter.CHANCE_SKILL;
+                            break;
+                        case 5:
+                            _filter = Options.AugmentationFilter.STATS;
                     }
-                    player.sendChanges();
-                }
-                switch (Integer.parseInt(arg[2])) {
-                    case 1:
-                        _filter = Options.AugmentationFilter.NONE;
-                        break;
-                    case 2:
-                        _filter = Options.AugmentationFilter.ACTIVE_SKILL;
-                        break;
-                    case 3:
-                        _filter = Options.AugmentationFilter.PASSIVE_SKILL;
-                        break;
-                    case 4:
-                        _filter = Options.AugmentationFilter.CHANCE_SKILL;
-                        break;
-                    case 5:
-                        _filter = Options.AugmentationFilter.STATS;
-                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                player.sendMessage("Error.");
-            }
+                    _page = 1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    player.sendMessage("Error.");
+                }
+                break;
+            case "page":
+                try {
+                    switch (Integer.parseInt(arg[2])) {
+                        case 1:
+                            _filter = Options.AugmentationFilter.NONE;
+                            break;
+                        case 2:
+                            _filter = Options.AugmentationFilter.ACTIVE_SKILL;
+                            break;
+                        case 3:
+                            _filter = Options.AugmentationFilter.PASSIVE_SKILL;
+                            break;
+                        case 4:
+                            _filter = Options.AugmentationFilter.CHANCE_SKILL;
+                            break;
+                        case 5:
+                            _filter = Options.AugmentationFilter.STATS;
+                    }
+
+                    _page = Integer.parseInt(arg[1]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    player.sendMessage("Error.");
+                }
+                break;
+            case "put":
+                try {
+                    if ((player.isInStoreMode()) || (player.isProcessingRequest()) || (player.isInTrade())) {
+                        player.sendMessage("You cannot edit augmentation because you are on store mode");
+                        return;
+                    }
+                    PcInventory inv = player.getInventory();
+                    ItemInstance targetItem = inv.getItemByObjectId(inv.getPaperdollObjectId(7));
+                    if (targetItem == null) {
+                        player.sendMessage("You doesn't have any weapon equipped");
+                        return;
+                    }
+                    if (!check(targetItem))
+                        return;
+                    if (Util.getPay(player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, true)) {
+                        unAugment(targetItem);
+                        int augId = Integer.parseInt(arg[1]);
+                        int secAugId = AugmentationData.getInstance().generateRandomSecondaryAugmentation();
+                        int aug = (augId << 16) + secAugId;
+                        targetItem.setAugmentationId(aug);
+                        targetItem.setJdbcState(JdbcEntityState.UPDATED);
+                        targetItem.update();
+                        inv.equipItem(targetItem);
+                        player.sendPacket(new InventoryUpdate().addModifiedItem(targetItem));
+                        for (ShortCut sc : player.getAllShortCuts()) {
+                            if ((sc.getId() == targetItem.getObjectId()) && (sc.getType() == 1))
+                                player.sendPacket(new ShortCutRegister(player, sc));
+                        }
+                        player.sendChanges();
+                    }
+                    switch (Integer.parseInt(arg[2])) {
+                        case 1:
+                            _filter = Options.AugmentationFilter.NONE;
+                            break;
+                        case 2:
+                            _filter = Options.AugmentationFilter.ACTIVE_SKILL;
+                            break;
+                        case 3:
+                            _filter = Options.AugmentationFilter.PASSIVE_SKILL;
+                            break;
+                        case 4:
+                            _filter = Options.AugmentationFilter.CHANCE_SKILL;
+                            break;
+                        case 5:
+                            _filter = Options.AugmentationFilter.STATS;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    player.sendMessage("Error.");
+                }
+                break;
         }
         showMainMenu(player, _page, _filter);
     }
@@ -209,7 +213,7 @@ class Augmentation extends Functions {
         }
         NpcHtmlMessage adminReply = new NpcHtmlMessage(0);
         adminReply.setFile("scripts/services/Augmentations/list.htm");
-        String template = HtmCache.getInstance().getNotNull("scripts/services/Augmentations/template.htm", player);
+        String template = HtmCache.INSTANCE.getNotNull("scripts/services/Augmentations/template.htm", player);
         String block = "";
         String list = "";
         StringBuilder pagesHtm = new StringBuilder();
@@ -221,9 +225,9 @@ class Augmentation extends Functions {
 
         for (int i = Math.max(maxPage - _page < 3 ? maxPage - MAX_PAGES_PER_PAGE : _page - 3, 1); i <= maxPage; i++) {
             if (i == _page)
-                pagesHtm.append(new StringBuilder().append("<td background=L2UI_ct1.button_df><button action=\"\" value=\"").append(i).append("\" width=38 height=20 back=\"\" fore=\"\"></td>").toString());
+                pagesHtm.append("<td background=L2UI_ct1.button_df><button action=\"\" value=\"" + i + "\" width=38 height=20 back=\"\" fore=\"\"></td>");
             else
-                pagesHtm.append(new StringBuilder().append("<td><button action=\"bypass -h scripts_services.Augmentation:run page ").append(i).append(" ").append(_filter.ordinal() + 1).append("\" value=\"").append(i).append("\" width=34 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df></td>").toString());
+                pagesHtm.append("<td><button action=\"bypass -h scripts_services.Augmentation:run page " + i + " " + (_filter.ordinal() + 1) + "\" value=\"" + i + "\" width=34 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df></td>");
             count++;
             if (count >= 6)
                 break;

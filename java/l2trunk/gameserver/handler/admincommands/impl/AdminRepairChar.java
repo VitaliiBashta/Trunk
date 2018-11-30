@@ -44,19 +44,19 @@ public class AdminRepairChar implements IAdminCommandHandler {
             if (objId == 0)
                 return false;
 
-            // con = L2DatabaseFactory.getInstance().getConnection();
+            // con = L2DatabaseFactory.INSTANCE().getConnection();
             statement = con.prepareStatement("DELETE FROM character_shortcuts WHERE object_id=?");
             statement.setInt(1, objId);
             statement.execute();
             DbUtils.close(statement);
 
-            // con = L2DatabaseFactory.getInstance().getConnection();
+            // con = L2DatabaseFactory.INSTANCE().getConnection();
             statement = con.prepareStatement("UPDATE items SET loc='INVENTORY' WHERE owner_id=? AND loc!='WAREHOUSE'");
             statement.setInt(1, objId);
             statement.execute();
             DbUtils.close(statement);
 
-            // con = L2DatabaseFactory.getInstance().getConnection();
+            // con = L2DatabaseFactory.INSTANCE().getConnection();
             statement = con.prepareStatement("DELETE FROM character_variables WHERE obj_id=? AND `type`='user-var' AND `name`='reflection' LIMIT 1");
             statement.setInt(1, objId);
             statement.execute();

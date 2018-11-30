@@ -5,11 +5,15 @@ import l2trunk.gameserver.instancemanager.HellboundManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class Hellbound extends Functions implements IVoicedCommandHandler {
-    private static final String[] _commandList = {};
+    private static final List<String> _commandList = Collections.singletonList("hellbound");
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 

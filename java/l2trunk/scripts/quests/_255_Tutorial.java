@@ -381,9 +381,9 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
         if (!checkCanSeeTutorial(player)) {
             addToTutorialQueue(player, "checkChangeLog");
         } else {
-            int lastNotSeenChange = ChangeLogManager.getInstance().getNotSeenChangeLog(player);
+            int lastNotSeenChange = ChangeLogManager.INSTANCE.getNotSeenChangeLog(player);
             if (lastNotSeenChange >= 0) {
-                String change = ChangeLogManager.getInstance().getChangeLog(lastNotSeenChange);
+                String change = ChangeLogManager.INSTANCE.getChangeLog(lastNotSeenChange);
                 st.showTutorialHTML(change);
             }
         }
@@ -501,20 +501,20 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
         int Ex = st.getInt("Ex");
 
         if (event.equals("CheckPass")) {
-            String text = HtmCache.getInstance().getNotNull("enterworldSecondary.htm", player);
+            String text = HtmCache.INSTANCE.getNotNull("enterworldSecondary.htm", player);
             st.showTutorialHTML(text);
             player.block();
             //player.startAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
 
             return null;
         } else if (event.equals("ProposePass")) {
-            String text = HtmCache.getInstance().getNotNull("enterworldNoSecondary.htm", player);
+            String text = HtmCache.INSTANCE.getNotNull("enterworldNoSecondary.htm", player);
             st.showTutorialHTML(text);
             //player.startAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
             return null;
         } else if (event.startsWith("TryPass")) {
             String pass = null;
-            boolean correct = false;
+            boolean correct;
             try {
                 pass = event.substring("TryPass ".length());
                 pass = pass.trim();
@@ -541,10 +541,10 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                 // Synerge - Show the premium htm and message
                 if (Config.ENTER_WORLD_SHOW_HTML_PREMIUM_BUY) {
 
-                    if (player.getClan() == null && player.getNetConnection().getBonus() < 1) {
+                    if (player.getClan() == null) {
                         player.sendPacket(new NpcHtmlMessage(5).setFile("advertise.htm").replace("%playername%", player.getName()));
                     }
-                    if (player.getNetConnection() != null && player.getNetConnection().getBonus() < 1) {
+                    if (player.getNetConnection() != null ) {
                         String msg = "You don't have Premium Account, you can buy it from Community Board.";
                         player.sendPacket(new ExShowScreenMessage(msg, 10000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
                         player.sendMessage(msg);
@@ -582,7 +582,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
             checkChangeLog(st);
         } else if (event.startsWith("ShowChangeLogPage")) {
             int page = Integer.parseInt(event.substring("ShowChangeLogPage".length()).trim());
-            String change = ChangeLogManager.getInstance().getChangeLog(page);
+            String change = ChangeLogManager.INSTANCE.getChangeLog(page);
             st.showTutorialHTML(change);
         } else if (event.startsWith("ChangeTo")) {
             StringTokenizer tokenizer = new StringTokenizer(event, ";");
@@ -629,12 +629,12 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                     // Synerge - Show a special tutorial htm for weapons after the first class transfer
                     if (jobLevel == 1 && player.getVarInt("lvl") < 21) {
                         player.setVar("lvl", "21");
-                        player.sendPacket(new TutorialShowHtml(HtmCache.getInstance().getNotNull("SpecialTutorial/Level21.htm", player)));
+                        player.sendPacket(new TutorialShowHtml(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level21.htm", player)));
                     }
                     // Synerge - Show a special tutorial htm after the second class transfer
                     else if (jobLevel == 2 && player.getVarInt("lvl") < 41) {
                         player.setVar("lvl", "41");
-                        player.sendPacket(new TutorialShowHtml(HtmCache.getInstance().getNotNull("SpecialTutorial/Level41.htm", player)));
+                        player.sendPacket(new TutorialShowHtml(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level41.htm", player)));
                     }
                 } else
                     onEvent("OpenClassMaster", st, null);
@@ -1239,18 +1239,18 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                     if (player.getClassId().level() == 0) {
                         //player.setVar("lvl", "6");
                         st.set("firstexp", "2");
-                        st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level6.htm", player));
+                        st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level6.htm", player));
                     }
                 }
                 // Synerge - Show a special tutorial htm for showing a npc in radar
                 else if (player.getLevel() >= 32 && player.getVarInt("lvl") < 32) {
                     player.setVar("lvl", "32");
-                    st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level32.htm", player));
+                    st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level32.htm", player));
                 }
                 // Synerge - Show a special tutorial htm for teleporting
                 else if (player.getLevel() >= 52 && player.getVarInt("lvl") < 52) {
                     player.setVar("lvl", "52");
-                    st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level52.htm", player));
+                    st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level52.htm", player));
                 }
             }
             // Exp events
@@ -1264,7 +1264,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                 else if (st.getInt("firstexp") == 3) {
                     player.setVar("lvl", "6");
                     st.set("firstexp", "4");
-                    st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level8.htm", player));
+                    st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level8.htm", player));
                 }
             }
             // Teleport events
@@ -1272,7 +1272,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                 // Synerge - Shows the level41Ready htm when teleporting after lvl 40
                 if (player.getVarInt("lvl") == 41) {
                     player.setVar("lvl", "42");
-                    st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level41Ready.htm", player));
+                    st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level41Ready.htm", player));
                 }
             }
         }
@@ -1282,7 +1282,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
 
             SchemeBufferInstance.showWindow(player);
 
-            st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level7.htm", player));
+            st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level7.htm", player));
         }
         // Synerge - Gives the character a certain weapon id and equips it
         else if (event.startsWith("GetWeaponD ") && player.getVarInt("weapon") < 1) {
@@ -1317,9 +1317,9 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
 
             // Show the equip armor next
             if (player.getRace() == Race.kamael)
-                st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level21ArmorKamael.htm", player));
+                st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level21ArmorKamael.htm", player));
             else
-                st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level21Armors.htm", player));
+                st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level21Armors.htm", player));
         }
         // Synerge - Gives the character a certain armor ids and equips it
         else if (event.startsWith("GetArmorD ") && player.getVarInt("armor") < 1) {
@@ -1349,7 +1349,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
             }
 
             // Show the soulshots html next
-            st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level21Soulshots.htm", player));
+            st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level21Soulshots.htm", player));
         }
         // Synerge - Gives the character some shots
         else if (event.startsWith("GetShotsD ") && player.getVarInt("shots") < 1) {
@@ -1377,7 +1377,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
             player.registerShortCut(shortCut);
 
             // Show the cruma html next
-            st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/Level21Cruma.htm", player));
+            st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level21Cruma.htm", player));
         }
         // Synerge - Allows to open htmls directly as a bypass. Support for link on tutorials? Should work outside this, but whatever
         else if (event.startsWith("Link ")) {
@@ -1385,7 +1385,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
             tokenizer.nextToken();
             final String htm = tokenizer.nextToken();
 
-            st.showTutorialHTML(HtmCache.getInstance().getNotNull("SpecialTutorial/" + htm, player));
+            st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/" + htm, player));
         }
         // Synerge - Shows a certain npc in the map and radar
         else if (event.startsWith("ShowLocation ")) {

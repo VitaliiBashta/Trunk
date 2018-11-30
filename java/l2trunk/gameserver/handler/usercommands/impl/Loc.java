@@ -7,18 +7,18 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.mapregion.RestartArea;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Support for /loc command
  */
-public class Loc implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    0
-            };
+public final class Loc implements IUserCommandHandler {
+    private static final int COMMAND_ID = 0;
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (COMMAND_IDS[0] != id)
+        if (COMMAND_ID != id)
             return false;
 
         RestartArea ra = MapRegionManager.getInstance().getRegionData(RestartArea.class, activeChar);
@@ -32,7 +32,7 @@ public class Loc implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public final List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_ID);
     }
 }

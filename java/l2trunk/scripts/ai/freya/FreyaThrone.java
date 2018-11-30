@@ -58,7 +58,7 @@ public final class FreyaThrone extends Fighter {
         Creature mostHated = actor.getAggroList().getMostHated();
         //Eternal Blizzard Cast
         if (!actor.isCastingNow() && _eternalblizzardReuseTimer < System.currentTimeMillis()) {
-            actor.doCast(SkillTable.getInstance().getInfo(Skill_EternalBlizzard, 1), actor, true);
+            actor.doCast(SkillTable.INSTANCE().getInfo(Skill_EternalBlizzard, 1), actor, true);
             Reflection r = getActor().getReflection();
             for (Player p : r.getPlayers())
                 p.sendPacket(new ExShowScreenMessage(NpcString.I_FEEL_STRONG_MAGIC_FLOW, 3000, ScreenMessageAlign.MIDDLE_CENTER, true));
@@ -68,36 +68,36 @@ public final class FreyaThrone extends Fighter {
         // Ice Ball Cast
         if (!actor.isCastingNow() && !actor.isMoving && _iceballReuseTimer < System.currentTimeMillis() && Rnd.chance(_iceballChance)) {
             if (topDamager != null && !topDamager.isDead() && topDamager.isInRangeZ(actor, 1000)) {
-                actor.doCast(SkillTable.getInstance().getInfo(Skill_IceBall, 1), topDamager, true);
+                actor.doCast(SkillTable.INSTANCE().getInfo(Skill_IceBall, 1), topDamager, true);
                 _iceballReuseTimer = System.currentTimeMillis() + _iceballReuseDelay * 1000L;
             }
         }
 
         // Summon Buff Cast
         if (!actor.isCastingNow() && _summonReuseTimer < System.currentTimeMillis() && Rnd.chance(_summonChance)) {
-            actor.doCast(SkillTable.getInstance().getInfo(Skill_SummonElemental, 1), actor, true);
+            actor.doCast(SkillTable.INSTANCE().getInfo(Skill_SummonElemental, 1), actor, true);
             for (NpcInstance guard : getActor().getAroundNpc(800, 100))
-                guard.altOnMagicUseTimer(guard, SkillTable.getInstance().getInfo(Skill_SummonElemental, 1));
+                guard.altOnMagicUseTimer(guard, SkillTable.INSTANCE().getInfo(Skill_SummonElemental, 1));
             _summonReuseTimer = System.currentTimeMillis() + _summonReuseDelay * 1000L;
         }
 
         // Self Nova
         if (!actor.isCastingNow() && _selfnovaReuseTimer < System.currentTimeMillis()) {
-            actor.doCast(SkillTable.getInstance().getInfo(Skill_SelfNova, 1), actor, true);
+            actor.doCast(SkillTable.INSTANCE().getInfo(Skill_SelfNova, 1), actor, true);
             _selfnovaReuseTimer = System.currentTimeMillis() + _selfnovaReuseDelay * 1000L;
         }
 
         // Death Sentence
         if (!actor.isCastingNow() && !actor.isMoving && _deathsentenceReuseTimer < System.currentTimeMillis() && Rnd.chance(_deathsentenceChance)) {
             if (randomHated != null && !randomHated.isDead() && randomHated.isInRangeZ(actor, 1000)) {
-                actor.doCast(SkillTable.getInstance().getInfo(Skill_DeathSentence, 1), randomHated, true);
+                actor.doCast(SkillTable.INSTANCE().getInfo(Skill_DeathSentence, 1), randomHated, true);
                 _deathsentenceReuseTimer = System.currentTimeMillis() + _deathsentenceReuseDelay * 1000L;
             }
         }
 
         // Freya Anger
         if (!actor.isCastingNow() && !actor.isMoving && _angerReuseTimer < System.currentTimeMillis() && Rnd.chance(_angerChance)) {
-            actor.doCast(SkillTable.getInstance().getInfo(Skill_Anger, 1), actor, true);
+            actor.doCast(SkillTable.INSTANCE().getInfo(Skill_Anger, 1), actor, true);
             _angerReuseTimer = System.currentTimeMillis() + _angerReuseDelay * 1000L;
 
             //Random agro

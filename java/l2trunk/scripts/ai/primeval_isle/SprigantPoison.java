@@ -8,7 +8,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class SprigantPoison extends Fighter {
 
-    private final Skill SKILL = SkillTable.getInstance().getInfo(5086, 1);
+    private final Skill SKILL = SkillTable.INSTANCE().getInfo(5086, 1);
     private long _waitTime;
 
     private static final int TICK_IN_MILISECONDS = 15000;

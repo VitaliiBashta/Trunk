@@ -24,8 +24,8 @@ public class CharacterPostFriendDAO {
         return _instance;
     }
 
-    public static Map<Integer,String> select(Player player, Connection con) {
-        Map<Integer,String> set = new HashMap<>();
+    public static Map<Integer, String> select(Player player, Connection con) {
+        Map<Integer, String> set = new HashMap<>();
         try (PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {
             statement.setInt(1, player.getObjectId());
             try (ResultSet rset = statement.executeQuery()) {

@@ -3,7 +3,6 @@ package l2trunk.gameserver.handler.voicecommands.impl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Element;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -14,16 +13,15 @@ import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2trunk.gameserver.utils.Strings;
 
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class WhoAmI implements IVoicedCommandHandler {
-    private static final String[] _commandList = new String[]
-            {
-                    "stats"
-            };
+    private static final List<String> _commandList = Collections.singletonList("stats");
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 
@@ -51,11 +49,11 @@ public class WhoAmI implements IVoicedCommandHandler {
         double shieldDef = shield ? playerToShow.calcStat(Stats.SHIELD_DEFENCE, player.getTemplate().baseShldDef, player, null) : 0.;
         double shieldRate = shield ? playerToShow.calcStat(Stats.SHIELD_RATE, player, null) : 0.;
 
-        double xpRate = Config.RATE_XP * playerToShow.getBonus().getRateXp();
-        double spRate = Config.RATE_SP * playerToShow.getBonus().getRateSp();
-        double dropRate = Config.RATE_DROP_ITEMS * playerToShow.getBonus().getDropItems();
-        double adenaRate = Config.RATE_DROP_ADENA * playerToShow.getBonus().getDropAdena();
-        double spoilRate = Config.RATE_DROP_SPOIL * playerToShow.getBonus().getDropSpoil();
+        double xpRate = Config.RATE_XP ;
+        double spRate = Config.RATE_SP ;
+        double dropRate = Config.RATE_DROP_ITEMS ;
+        double adenaRate = Config.RATE_DROP_ADENA ;
+        double spoilRate = Config.RATE_DROP_SPOIL ;
         double fireResist = playerToShow.calcStat(Element.FIRE.getDefence(), 0., player, null);
         double windResist = playerToShow.calcStat(Element.WIND.getDefence(), 0., player, null);
         double waterResist = playerToShow.calcStat(Element.WATER.getDefence(), 0., player, null);
@@ -95,7 +93,7 @@ public class WhoAmI implements IVoicedCommandHandler {
         double critDamResistStatic = playerToShow.calcStat(Stats.CRIT_DAMAGE_RECEPTIVE, player, null);
         double critDamResist = 100. - 100 * (playerToShow.calcStat(Stats.CRIT_DAMAGE_RECEPTIVE, 1., player, null) - critDamResistStatic);
 
-        String dialog = HtmCache.getInstance().getNotNull(player.isGM() ? "command/whoamiGM.htm" : "command/whoami.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull(player.isGM() ? "command/whoamiGM.htm" : "command/whoami.htm", player);
 
         NumberFormat df = NumberFormat.getInstance(Locale.ENGLISH);
         df.setMaximumFractionDigits(1);

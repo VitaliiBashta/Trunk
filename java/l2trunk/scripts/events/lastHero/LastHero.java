@@ -34,7 +34,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
 
 	private static final Location _enter = new Location(149505, 46719, -3417);
 
-	private static Calendar _date = Calendar.getInstance();*/
+	private static Calendar _date = Calendar.INSTANCE();*/
 
     @Override
     public void onLoad() {
@@ -68,7 +68,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
 			executeTask("events.lastHero.LastHero", "preLoad", new Object[0], 10000);
 			ServerVariables.set("LastHero", "on");
 			_log.info("Event 'Last Hero' activated.");
-			Announcements.getInstance().announceByCustomMessage("scripts.events.LastHero.AnnounceEventStarted", null);
+			Announcements.INSTANCE().announceByCustomMessage("scripts.events.LastHero.AnnounceEventStarted", null);
 		}
 		else
 			player.sendMessage("Event 'Last Hero' already active.");
@@ -87,7 +87,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
 		{
 			ServerVariables.unset("LastHero");
 			_log.info("Event 'Last Hero' deactivated.");
-			Announcements.getInstance().announceByCustomMessage("scripts.events.LastHero.AnnounceEventStoped", null);
+			Announcements.INSTANCE().announceByCustomMessage("scripts.events.LastHero.AnnounceEventStoped", null);
 		}
 		else
 			player.sendMessage("Event 'LastHero' not active.");
@@ -190,7 +190,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
     }
 
     public static void sayToAll(String address, String[] replacements) {
-        //Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
+        //Announcements.INSTANCE().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
     }
 
     public static void question() {
@@ -380,7 +380,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
     }
 
     public static void paralyzePlayers() {
-		/*Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
+		/*Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
 		for (Player player : getPlayers(players_list)){
 			if (EventsConfig.getBoolean("LastHero_DisableEffect"))
 				player.getEffectList().stopAllEffects();
@@ -527,7 +527,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
 				return;
 			Player player = cha.getPlayer();
 			if (_status > 0 && player != null && !live_list.contains(player.getStoredId()))
-				ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, new Location(147451, 46728, -3410)), 3000);*/
+				ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, new Location(147451, 46728, -3410)), 3000);*/
         }
 
         @Override
@@ -541,7 +541,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
 				int x = (int) (cha.getX() + 50 * Math.sin(radian));
 				int y = (int) (cha.getY() - 50 * Math.cos(radian));
 				int z = cha.getZ();
-				ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);}}*/
+				ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);}}*/
         }
     }
 

@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 public class SoDManager {
     private static final String SPAWN_GROUP = "sod_free";
     private static final Logger _log = LoggerFactory.getLogger(SoDManager.class);
-    private static SoDManager _instance;
     private static final long SOD_OPEN_TIME = 12 * 60 * 60 * 1000L;
+    private static SoDManager _instance;
     private static Zone _zone;
     private static boolean _isOpened = false;
 
@@ -86,7 +86,7 @@ public class SoDManager {
         SpawnManager.getInstance().spawn(SPAWN_GROUP);
         handleDoors(true);
 
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 closeSeed();

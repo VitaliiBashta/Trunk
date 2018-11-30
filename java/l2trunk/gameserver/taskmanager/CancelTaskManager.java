@@ -11,18 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class CancelTaskManager {
-    private static CancelTaskManager _instance;
+public enum CancelTaskManager {
+    INSTANCE;
     private final List<DispelClass> _taskTimes = new CopyOnWriteArrayList<>();
 
-    private CancelTaskManager() {
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new ManageTasks(), 0, 500);
-    }
-
-    public static CancelTaskManager getInstance() {
-        if (_instance == null)
-            _instance = new CancelTaskManager();
-        return _instance;
+    CancelTaskManager() {
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ManageTasks(), 0, 500);
     }
 
     public void addNewCancelTask(Playable playable, List<Effect> buffs) {

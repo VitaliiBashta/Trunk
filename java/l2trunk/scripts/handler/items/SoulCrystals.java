@@ -76,13 +76,13 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
         }
 
         // Soul Crystal Casting section
-        int skillHitTime = SkillTable.getInstance().getInfo(2096, 1).getHitTime();
+        int skillHitTime = SkillTable.INSTANCE().getInfo(2096, 1).getHitTime();
         player.broadcastPacket(new MagicSkillUse(player, 2096, 1, skillHitTime, 0));
         player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, skillHitTime));
         // End Soul Crystal Casting section
 
         // Continue execution later
-        player._skillTask = ThreadPoolManager.getInstance().schedule(new CrystalFinalizer(player, target), skillHitTime);
+        player._skillTask = ThreadPoolManager.INSTANCE().schedule(new CrystalFinalizer(player, target), skillHitTime);
         return true;
     }
 

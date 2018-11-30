@@ -420,7 +420,7 @@ public abstract class ArenaTemplate extends Functions {
     }
 
     public void paralyzeTeams() {
-		/*Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
+		/*Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
 		for (Player player : getPlayers(_team1live))
 		{
 			player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
@@ -476,7 +476,7 @@ public abstract class ArenaTemplate extends Functions {
     public boolean playerHasLost(Player player) {
 		/*_team1live.remove(player.getStoredId());
 		_team2live.remove(player.getStoredId());
-		Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
+		Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
 		player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
 		revengeSkill.getEffects(player, player, false, false);
 		return !checkTeams();*/
@@ -671,7 +671,7 @@ public abstract class ArenaTemplate extends Functions {
         public void onZoneEnter(Zone zone, Creature cha) {
 			/*Player player = cha.getPlayer();
 			if (_status >= 2 && player != null && !(_team1list.contains(player.getStoredId()) || _team2list.contains(player.getStoredId())))
-				ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, _zone.getSpawn()), 3000);*/
+				ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, _zone.getSpawn()), 3000);*/
         }
 
         @Override
@@ -684,7 +684,7 @@ public abstract class ArenaTemplate extends Functions {
 				int x = (int) (cha.getX() + 50 * Math.sin(radian));
 				int y = (int) (cha.getY() - 50 * Math.cos(radian));
 				int z = cha.getZ();
-				ThreadPoolManager.getInstance().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);
+				ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);
 			}*/
         }
     }

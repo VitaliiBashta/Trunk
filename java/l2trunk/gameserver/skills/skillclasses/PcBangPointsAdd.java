@@ -14,7 +14,7 @@ public class PcBangPointsAdd extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        int points = (int) _power;
+        int points = (int) power;
 
         for (Creature target : targets) {
             if (target.isPlayer()) {

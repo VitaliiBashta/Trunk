@@ -399,7 +399,7 @@ public class OfflineBufferManager {
                 break;
 
             buff = it.next();
-            baseMaxLvl = SkillTable.getInstance().getBaseLevel(buff.getId());
+            baseMaxLvl = SkillTable.INSTANCE.getBaseLevel(buff.getId());
 
             buffList.append("<tr>");
             buffList.append("<td fixwidth=300>");

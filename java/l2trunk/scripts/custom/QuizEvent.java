@@ -11,7 +11,6 @@ import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +70,7 @@ public final class QuizEvent {
         _players = new HashMap<>(100);
 //        _questions = new String[193][];
         includeQuestions();
-        ThreadPoolManager.getInstance().schedule(_task, _initWait * 1000);
+        ThreadPoolManager.INSTANCE.schedule(_task, _initWait * 1000);
 
     }
 
@@ -88,38 +87,38 @@ public final class QuizEvent {
     // Announce the question
     private static void announceQuestion() {
         selectQuestion();
-        Announcements.getInstance().announceToAll("-----------------");
-        Announcements.getInstance().announceToAll("Question: " + _question);
-        Announcements.getInstance().announceToAll("-----------------");
-        Announcements.getInstance().announceToAll("1: " + _answer1);
-        Announcements.getInstance().announceToAll("2: " + _answer2);
-        Announcements.getInstance().announceToAll("3: " + _answer3);
-        Announcements.getInstance().announceToAll("-----------------");
+        Announcements.INSTANCE.announceToAll("-----------------");
+        Announcements.INSTANCE.announceToAll("Question: " + _question);
+        Announcements.INSTANCE.announceToAll("-----------------");
+        Announcements.INSTANCE.announceToAll("1: " + _answer1);
+        Announcements.INSTANCE.announceToAll("2: " + _answer2);
+        Announcements.INSTANCE.announceToAll("3: " + _answer3);
+        Announcements.INSTANCE.announceToAll("-----------------");
 
         _status = STATUS_ANSWER;
-        ThreadPoolManager.getInstance().schedule(_task, _answerTime * 1000);
+        ThreadPoolManager.INSTANCE.schedule(_task, _answerTime * 1000);
     }
 
     // Announce the correct answer
     private static void announceCorrect() {
-        Announcements.getInstance().announceToAll("-----------------");
-        Announcements.getInstance().announceToAll("The correct answer was: " + _rightanswer);
-        Announcements.getInstance().announceToAll("-----------------");
+        Announcements.INSTANCE.announceToAll("-----------------");
+        Announcements.INSTANCE.announceToAll("The correct answer was: " + _rightanswer);
+        Announcements.INSTANCE.announceToAll("-----------------");
         announced++;
         giveReward();
         _status = STATUS_ASK;
-        ThreadPoolManager.getInstance().schedule(_task, 5000);
+        ThreadPoolManager.INSTANCE.schedule(_task, 5000);
     }
 
     private static void announceStart() {
         _quizRunning = true;
         _players.clear();
-        Announcements.getInstance().announceToAll("Quiz Event begins! " + _questionNumber + " questions. " + _answerTime + " secs for answer each. ");
-        Announcements.getInstance().announceToAll("Type . and the number of the correct answer to the chat. (Like: .1)");
-        Announcements.getInstance().announceToAll("Get Ready! L2Mythras is ready to reward you!");
+        Announcements.INSTANCE.announceToAll("Quiz Event begins! " + _questionNumber + " questions. " + _answerTime + " secs for answer each. ");
+        Announcements.INSTANCE.announceToAll("Type . and the number of the correct answer to the chat. (Like: .1)");
+        Announcements.INSTANCE.announceToAll("Get Ready! L2Mythras is ready to reward you!");
 
         _status = STATUS_ASK;
-        ThreadPoolManager.getInstance().schedule(_task, 5000);
+        ThreadPoolManager.INSTANCE.schedule(_task, 5000);
     }
 
     // Add a player and its answer
@@ -132,10 +131,10 @@ public final class QuizEvent {
 
     private static void endEvent() {
         _quizRunning = false;
-        Announcements.getInstance().announceToAll("The Quiz Event is over! Play with us! We <3 L2Mythras");
+        Announcements.INSTANCE.announceToAll("The Quiz Event is over! Play with us! We <3 L2Mythras");
         announced = 0;
         _status = STATUS_NOT_IN_PROGRESS;
-        ThreadPoolManager.getInstance().schedule(_task, _betweenTime * 1000);
+        ThreadPoolManager.INSTANCE.schedule(_task, _betweenTime * 1000);
     }
 
     private static void giveReward() {
@@ -204,7 +203,7 @@ public final class QuizEvent {
                         announceQuestion();
                     } else {
                         _status = STATUS_END;
-                        ThreadPoolManager.getInstance().schedule(_task, 3000);
+                        ThreadPoolManager.INSTANCE.schedule(_task, 3000);
                     }
                     break;
                 case STATUS_ANSWER:

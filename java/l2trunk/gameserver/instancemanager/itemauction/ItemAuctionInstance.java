@@ -185,10 +185,10 @@ public final class ItemAuctionInstance {
         this.nextAuction = nextAuction;
 
         if ((currentAuction != null) && (currentAuction.getAuctionState() == ItemAuctionState.STARTED)) {
-            setStateTask(ThreadPoolManager.getInstance().schedule(new ScheduleAuctionTask(currentAuction), Math.max(currentAuction.getEndingTime() - System.currentTimeMillis(), 0L)));
+            setStateTask(ThreadPoolManager.INSTANCE.schedule(new ScheduleAuctionTask(currentAuction), Math.max(currentAuction.getEndingTime() - System.currentTimeMillis(), 0L)));
             _log.info("ItemAuction: Schedule current auction " + currentAuction.getAuctionId() + " for instance " + _instanceId);
         } else {
-            setStateTask(ThreadPoolManager.getInstance().schedule(new ScheduleAuctionTask(nextAuction), Math.max(nextAuction.getStartingTime() - System.currentTimeMillis(), 0L)));
+            setStateTask(ThreadPoolManager.INSTANCE.schedule(new ScheduleAuctionTask(nextAuction), Math.max(nextAuction.getStartingTime() - System.currentTimeMillis(), 0L)));
             _log.info("ItemAuction: Schedule next auction " + nextAuction.getAuctionId() + " on " + DATE_FORMAT.format(new Date(nextAuction.getStartingTime())) + " for instance " + _instanceId);
         }
     }
@@ -332,7 +332,7 @@ public final class ItemAuctionInstance {
                     _log.info("ItemAuction: Auction " + auction.getAuctionId() + " has started for instance " + auction.getInstanceId());
                     if (Config.ALT_ITEM_AUCTION_START_ANNOUNCE) {
                         String[] params = {};
-                        Announcements.getInstance().announceByCustomMessage("l2trunk.gameserver.model.instances.L2ItemAuctionBrokerInstance.announce." + auction.getInstanceId(), params);
+                        Announcements.INSTANCE.announceByCustomMessage("l2trunk.gameserver.model.instances.L2ItemAuctionBrokerInstance.announce." + auction.getInstanceId(), params);
                     }
                     checkAndSetCurrentAndNextAuction();
                     break;
@@ -343,7 +343,7 @@ public final class ItemAuctionInstance {
                         case 1: {
                             if (auction.getScheduledAuctionEndingExtendState() == 0) {
                                 auction.setScheduledAuctionEndingExtendState(1);
-                                setStateTask(ThreadPoolManager.getInstance().schedule(this, Math.max(auction.getEndingTime() - System.currentTimeMillis(), 0L)));
+                                setStateTask(ThreadPoolManager.INSTANCE().schedule(this, Math.max(auction.getEndingTime() - System.currentTimeMillis(), 0L)));
                                 return;
                             }
                             break;
@@ -352,7 +352,7 @@ public final class ItemAuctionInstance {
                         case 2: {
                             if (auction.getScheduledAuctionEndingExtendState() != 2) {
                                 auction.setScheduledAuctionEndingExtendState(2);
-                                setStateTask(ThreadPoolManager.getInstance().schedule(this, Math.max(auction.getEndingTime() - System.currentTimeMillis(), 0L)));
+                                setStateTask(ThreadPoolManager.INSTANCE.schedule(this, Math.max(auction.getEndingTime() - System.currentTimeMillis(), 0L)));
                                 return;
                             }
                             break;

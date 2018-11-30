@@ -6,7 +6,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.geodata.GeoEngine;
-import l2trunk.gameserver.handler.voicecommands.impl.BotReport.CaptchaHandler;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
 import l2trunk.gameserver.model.entity.boat.ClanAirShip;
@@ -106,7 +105,7 @@ public class RequestActionUse extends L2GameClientPacket {
             }
             activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), action.value));
             if (Config.ALT_SOCIAL_ACTION_REUSE) {
-                ThreadPoolManager.getInstance().schedule(new SocialTask(activeChar), 2600);
+                ThreadPoolManager.INSTANCE().schedule(new SocialTask(activeChar), 2600);
                 activeChar.startParalyzed();
             }
             return;
@@ -144,7 +143,7 @@ public class RequestActionUse extends L2GameClientPacket {
             pcTarget.sendPacket(new ExAskCoupleAction(activeChar.getObjectId(), action.value));
 
             if (Config.ALT_SOCIAL_ACTION_REUSE) {
-                ThreadPoolManager.getInstance().schedule(new SocialTask(activeChar), 2600);
+                ThreadPoolManager.INSTANCE().schedule(new SocialTask(activeChar), 2600);
                 activeChar.startParalyzed();
             }
             return;
@@ -168,17 +167,15 @@ public class RequestActionUse extends L2GameClientPacket {
                 return;
 
             // TODO transfer these skills in terms of
-            if (action.id == 1000 && target != null && !target.isDoor()) // Siege Golem - Siege Hammer
+            if (action.id == 1000 && !target.isDoor()) // Siege Golem - Siege Hammer
             {
                 activeChar.sendActionFailed();
                 return;
             }
-            if (target != null) {
-                if ((action.id == 1039 || action.id == 1040) && (target.isDoor() || target instanceof SiegeFlagInstance)) // Swoop Cannon (can not attack the door and flags)
-                {
-                    activeChar.sendActionFailed();
-                    return;
-                }
+            if ((action.id == 1039 || action.id == 1040) && (target.isDoor() || target instanceof SiegeFlagInstance)) // Swoop Cannon (can not attack the door and flags)
+            {
+                activeChar.sendActionFailed();
+                return;
             }
             UseSkill(action.value);
             return;
@@ -321,11 +318,6 @@ public class RequestActionUse extends L2GameClientPacket {
                 _log.info("97 Accessed");
                 break;
             case 65: // Bot Report Button
-                if (activeChar.getTarget() == null || !activeChar.getTarget().isPlayer()) {
-                    activeChar.sendMessage("You need to target Player first!");
-                    return;
-                }
-                CaptchaHandler.tryReportPlayer(activeChar, activeChar.getTarget().getPlayer());
                 break;
 
             // Actions with pet:
@@ -509,7 +501,7 @@ public class RequestActionUse extends L2GameClientPacket {
             return;
         }
 
-        Skill skill = SkillTable.getInstance().getInfo(skillId, skillLevel);
+        Skill skill = SkillTable.INSTANCE().getInfo(skillId, skillLevel);
         if (skill == null) {
             activeChar.sendActionFailed();
             return;

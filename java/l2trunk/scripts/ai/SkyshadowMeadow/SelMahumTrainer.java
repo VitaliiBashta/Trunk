@@ -52,7 +52,7 @@ public final class SelMahumTrainer extends Fighter {
 
             int time = 2000;
             for (int i = 0; i <= 2; i++) {
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         for (NpcInstance voin : _arm) {

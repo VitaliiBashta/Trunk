@@ -27,15 +27,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
 public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHandler, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(Viktorina.class);
-    private final String[] _commandList = new String[]{"o", "voff", "von", "vhelp", "vtop", "v", "vo"};
+    private final List<String> _commandList = Arrays.asList("o", "voff", "von", "vhelp", "vtop", "v", "vo");
     private final ArrayList<String> questions = new ArrayList<>();
     private static final ArrayList<Player> playerList = new ArrayList<>();
     private static ScheduledFuture<?> _taskViktorinaStart;
@@ -208,18 +205,18 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         long currentTime = System.currentTimeMillis();
         // Если время виторины еще не наступило
         if (_timeStartViktorina.getTimeInMillis() >= currentTime) {
-            _taskViktorinaStart = ThreadPoolManager.getInstance().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
+            _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
         }
         // Если как раз идет время викторины - стартуем викторину
         else if (currentTime > _timeStartViktorina.getTimeInMillis() && currentTime < _timeStopViktorina.getTimeInMillis()) {
-            _taskViktorinaStart = ThreadPoolManager.getInstance().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), 1000);
+            _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), 1000);
         }
         // сегодня олим уже не должен запускаться, значит нада стартовать викторину
         // на след день, прибавляем 24 часа
         else {
             _timeStartViktorina.add(Calendar.HOUR_OF_DAY, 24);
             _timeStopViktorina.add(Calendar.HOUR_OF_DAY, 24);
-            _taskViktorinaStart = ThreadPoolManager.getInstance().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
+            _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
         }
 
         if (DEBUG_VIKROINA)
@@ -246,7 +243,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         _timeStartViktorina.add(Calendar.HOUR_OF_DAY, 24);
         _timeStopViktorina.add(Calendar.HOUR_OF_DAY, 24);
         long currentTime = System.currentTimeMillis();
-        _taskViktorinaStart = ThreadPoolManager.getInstance().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
+        _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
         if (DEBUG_VIKROINA)
             _log.info("Continue Viktorina: " + _timeStartViktorina.getTime() + "|Stop Viktorina: " + _timeStopViktorina.getTime());
 
@@ -264,7 +261,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         _timeStopViktorina.setTimeInMillis(_timeStartViktorina.getTimeInMillis());
         _timeStopViktorina.add(Calendar.HOUR_OF_DAY, Config.VIKTORINA_WORK_TIME);
         _log.info("Viktorina Started");
-        _taskViktorinaStart = ThreadPoolManager.getInstance().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), 1000);
+        _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), 1000);
         if (DEBUG_VIKROINA)
             _log.info("Start Viktorina: " + _timeStartViktorina.getTime());
         _log.info("Stop Viktorina: " + _timeStopViktorina.getTime());
@@ -293,9 +290,9 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
                 //}
                 if (_taskStartQuestion != null)
                     _taskStartQuestion.cancel(true);
-                _taskStartQuestion = ThreadPoolManager.getInstance().schedule(new startQuestion(_timeStopViktorina), 5000);
-                Announcements.getInstance().announceToAll("Quiz started!");
-                Announcements.getInstance().announceToAll("For help, typе .vhelp");
+                _taskStartQuestion = ThreadPoolManager.INSTANCE().schedule(new startQuestion(_timeStopViktorina), 5000);
+                Announcements.INSTANCE.announceToAll("Quiz started!");
+                Announcements.INSTANCE.announceToAll("For help, typе .vhelp");
                 loadQuestions();
                 setStatus(true);
 
@@ -326,7 +323,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
                 setStatus(false);
                 setQuestionStatus(false);
                 announseViktorina("Opening hours of the quiz is up, all the participants have fun!");
-                Announcements.getInstance().announceToAll("The quiz is over.!");
+                Announcements.INSTANCE.announceToAll("The quiz is over.!");
                 return;
             }
             if (!playerList.isEmpty()) {
@@ -344,7 +341,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
                 announseViktorina(question);
                 if (_taskStopQuestion != null)
                     _taskStopQuestion.cancel(true);
-                _taskStopQuestion = ThreadPoolManager.getInstance().schedule(new stopQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_ANSER * 1000);
+                _taskStopQuestion = ThreadPoolManager.INSTANCE().schedule(new stopQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_ANSER * 1000);
                 setQuestionStatus(true);
             } else {
                 _log.info("Wtf?? Why is the status question true?? when should be false!!!!", "Viktorina");
@@ -377,7 +374,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
             playerList.clear();
             if (_taskStartQuestion != null)
                 _taskStartQuestion.cancel(true);
-            _taskStartQuestion = ThreadPoolManager.getInstance().schedule(new startQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_PAUSE * 1000);
+            _taskStartQuestion = ThreadPoolManager.INSTANCE().schedule(new startQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_PAUSE * 1000);
         }
     }
 
@@ -393,7 +390,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         setQuestionStatus(false);
         _log.info("Viktorina Stoped.", "Viktorina");
         if (isStatus())
-            Announcements.getInstance().announceToAll("Quiz stopped!");
+            Announcements.INSTANCE.announceToAll("Quiz stopped!");
         setStatus(false);
         Continue();
     }
@@ -530,7 +527,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
     public void onLoad() {
         CharListenerList.addGlobal(this);
         executeTask("events.Viktorina.Viktorina", "preLoad", new Object[0], 20000);
-        VoicedCommandHandler.getInstance().registerVoicedCommandHandler(this);
+        VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
         _log.info("Loaded Event: Viktorina");
     }
 
@@ -546,7 +543,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 

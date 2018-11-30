@@ -68,7 +68,7 @@ public class NevitSystem {
         if (!_active) {
             _active = true;
             if (_time > 0 && _adventTask == null)
-                _adventTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new AdventTask(), 30000L, 30000L);
+                _adventTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new AdventTask(), 30000L, 30000L);
 
             _player.sendPacket(new ExNavitAdventTimeChange(_active, _time));
         }
@@ -85,7 +85,7 @@ public class NevitSystem {
             _player.sendPacket(SystemMsg.THE_ANGEL_NEVIT_HAS_BLESSED_YOU_FROM_ABOVE_YOU_ARE_IMBUED_WITH_FULL_VITALITY_AS_WELL_AS_A_VITALITY_REPLENISHING_EFFECT);
             _player.startAbnormalEffect(AbnormalEffect.S_NAVIT);
             _player.addVitality(Config.ALT_VITALITY_NEVIT_UP_POINT);
-            _nevitEffectTask = ThreadPoolManager.getInstance().schedule(new NevitEffectEnd(), time * 1000L);
+            _nevitEffectTask = ThreadPoolManager.INSTANCE.schedule(new NevitEffectEnd(), time * 1000L);
         }
     }
 

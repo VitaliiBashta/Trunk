@@ -1,14 +1,33 @@
 package l2trunk.scripts.quests;
 
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _451_LuciensAltar extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _451_LuciensAltar extends Quest implements ScriptFile {
+    private static final int DAICHIR = 30537;
+    private static final int REPLENISHED_BEAD = 14877;
+    private static final int DISCHARGED_BEAD = 14878;
+    private static final int ALTAR_1 = 32706;
+    private static final int ALTAR_2 = 32707;
+    private static final int ALTAR_3 = 32708;
+    private static final int ALTAR_4 = 32709;
+    private static final int ALTAR_5 = 32710;
+    private static final List<Integer> ALTARS = Arrays.asList(ALTAR_1, ALTAR_2, ALTAR_3, ALTAR_4, ALTAR_5);
+
+    public _451_LuciensAltar() {
+        super(false);
+
+        addStartNpc(DAICHIR);
+        addTalkId(ALTARS);
+    }
+
     @Override
     public void onLoad() {
     }
@@ -19,32 +38,6 @@ public class _451_LuciensAltar extends Quest implements ScriptFile {
 
     @Override
     public void onShutdown() {
-    }
-
-    private static final int DAICHIR = 30537;
-
-    private static final int REPLENISHED_BEAD = 14877;
-    private static final int DISCHARGED_BEAD = 14878;
-
-    private static final int ALTAR_1 = 32706;
-    private static final int ALTAR_2 = 32707;
-    private static final int ALTAR_3 = 32708;
-    private static final int ALTAR_4 = 32709;
-    private static final int ALTAR_5 = 32710;
-
-    private static final int[] ALTARS = new int[]{
-            ALTAR_1,
-            ALTAR_2,
-            ALTAR_3,
-            ALTAR_4,
-            ALTAR_5
-    };
-
-    public _451_LuciensAltar() {
-        super(false);
-
-        addStartNpc(DAICHIR);
-        addTalkId(ALTARS);
     }
 
     @Override
@@ -85,7 +78,7 @@ public class _451_LuciensAltar extends Quest implements ScriptFile {
                 st.playSound(SOUND_FINISH);
                 st.getPlayer().setVar(getName(), String.valueOf(System.currentTimeMillis()), -1);
             }
-        } else if (cond == 1 && ArrayUtils.contains(ALTARS, npcId))
+        } else if (cond == 1 && ALTARS.contains(npcId))
             if (npcId == ALTAR_1 && st.getInt("Altar1") < 1) {
                 htmltext = "recharge.htm";
                 onAltarCheck(st);

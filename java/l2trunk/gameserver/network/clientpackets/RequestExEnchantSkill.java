@@ -72,7 +72,7 @@ public class RequestExEnchantSkill extends L2GameClientPacket {
             return;
         }
 
-        Skill skill = SkillTable.getInstance().getInfo(_skillId, enchantLevel);
+        Skill skill = SkillTable.INSTANCE().getInfo(_skillId, enchantLevel);
         if (skill == null) {
             activeChar.sendMessage("Internal error: not found skill level");
             return;
@@ -108,7 +108,7 @@ public class RequestExEnchantSkill extends L2GameClientPacket {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOUR_SP_HAS_DECREASED_BY_S1).addInteger(requiredSp), new SystemMessage2(SystemMsg.SKILL_ENCHANT_WAS_SUCCESSFUL_S1_HAS_BEEN_ENCHANTED).addSkillName(_skillId, _skillLvl), new SkillList(activeChar), new ExEnchantSkillResult(1));
             Log.add(activeChar.getName() + "|Successfully enchanted|" + _skillId + "|to+" + _skillLvl + "|" + rate, "enchant_skills");
         } else {
-            skill = SkillTable.getInstance().getInfo(_skillId, sl.getBaseLevel());
+            skill = SkillTable.INSTANCE().getInfo(_skillId, sl.getBaseLevel());
             activeChar.sendPacket(new SystemMessage(SystemMessage.FAILED_IN_ENCHANTING_SKILL_S1).addSkillName(_skillId, _skillLvl), new ExEnchantSkillResult(0));
             Log.add(activeChar.getName() + "|Failed to enchant|" + _skillId + "|to+" + _skillLvl + "|" + rate, "enchant_skills");
         }

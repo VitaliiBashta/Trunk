@@ -3,11 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-/**
- * @author VISTALL
- * @date 15:56/12.04.2011
- */
-public class _734_PierceThroughAShield extends Dominion_KillSpecialUnitQuest {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _734_PierceThroughAShield extends Dominion_KillSpecialUnitQuest {
     public _734_PierceThroughAShield() {
         super();
     }
@@ -38,8 +37,8 @@ public class _734_PierceThroughAShield extends Dominion_KillSpecialUnitQuest {
     }
 
     @Override
-    protected ClassId[] getTargetClassIds() {
-        return new ClassId[]{
+    protected List<ClassId> getTargetClassIds() {
+        return Arrays.asList(
                 ClassId.darkAvenger,
                 ClassId.hellKnight,
                 ClassId.paladin,
@@ -48,6 +47,6 @@ public class _734_PierceThroughAShield extends Dominion_KillSpecialUnitQuest {
                 ClassId.evaTemplar,
                 ClassId.shillienKnight,
                 ClassId.shillienTemplar
-        };
+        );
     }
 }

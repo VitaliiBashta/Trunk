@@ -33,11 +33,11 @@ public final class ElcardiaAssistant extends DefaultAI {
     private boolean _thinking = false;
     private ScheduledFuture<?> _followTask;
     private long _chatTimer;
-    private final Skill vampRage = SkillTable.getInstance().getInfo(6727, 1);
-    private final Skill holyResist = SkillTable.getInstance().getInfo(6729, 1);
-    private final Skill blessBlood = SkillTable.getInstance().getInfo(6725, 1);
-    private final Skill recharge = SkillTable.getInstance().getInfo(6728, 1);
-    private final Skill heal = SkillTable.getInstance().getInfo(6724, 1);
+    private final Skill vampRage = SkillTable.INSTANCE.getInfo(6727, 1);
+    private final Skill holyResist = SkillTable.INSTANCE.getInfo(6729, 1);
+    private final Skill blessBlood = SkillTable.INSTANCE.getInfo(6725, 1);
+    private final Skill recharge = SkillTable.INSTANCE.getInfo(6728, 1);
+    private final Skill heal = SkillTable.INSTANCE.getInfo(6724, 1);
 
     private ElcardiaAssistant(NpcInstance actor) {
         super(actor);
@@ -116,7 +116,7 @@ public final class ElcardiaAssistant extends DefaultAI {
             _followTask = null;
         }
 
-        _followTask = ThreadPoolManager.getInstance().schedule(new ThinkFollow(), 250L);
+        _followTask = ThreadPoolManager.INSTANCE().schedule(new ThinkFollow(), 250L);
 
         // -----------------
         Reflection ref = actor.getReflection();
@@ -247,7 +247,7 @@ public final class ElcardiaAssistant extends DefaultAI {
                 Location loc = new Location(target.getX() + Rnd.get(-60, 60), target.getY() + Rnd.get(-60, 60), target.getZ());
                 actor.followToCharacter(loc, target, Config.FOLLOW_RANGE, false);
             }
-            _followTask = ThreadPoolManager.getInstance().schedule(this, 250L);
+            _followTask = ThreadPoolManager.INSTANCE().schedule(this, 250L);
         }
     }
 

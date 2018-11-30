@@ -82,12 +82,12 @@ public final class AndreasVanHalter extends Fighter {
         if (!door1.isOpen() && !door2.isOpen() && door3.isOpen() && door4.isOpen() && _firstTimeMove) {
             _firstTimeMove = false;
             // Запускаем показ видео
-            _movieTask = ThreadPoolManager.getInstance().schedule(new Movie(1), 3000);
+            _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(1), 3000);
             // Запускаем музыку
             actor.broadcastPacket(new PlaySound("BS04_A"));
             // Вдруг мы не пошли бить РБ, нужно сделать перереспавн и поменять открытие и закрытие дверей местами.
             // Запускаем проверку через 1 час
-            ThreadPoolManager.getInstance().schedule(new CheckAttack(), 3600000);
+            ThreadPoolManager.INSTANCE().schedule(new CheckAttack(), 3600000);
         }
 
         return true;
@@ -136,7 +136,7 @@ public final class AndreasVanHalter extends Fighter {
                     // Ставим таргет на жертву
                     actor.setTarget(npc1);
                     // Нашли, теперь можно кастонуть на неё скилом
-                    actor.doCast(SkillTable.getInstance().getInfo(1168, 7), npc1, false);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(1168, 7), npc1, false);
 
                     // Включаем на всякие пажарные запрет хождения что бы не испортить мувик
                     actor.startImmobilized();
@@ -152,7 +152,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.getInstance().schedule(new Movie(2), 300);
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(2), 300);
                     break;
                 case 2:
                     // Ищем заного жертву
@@ -173,7 +173,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.getInstance().schedule(new Movie(3), 300);
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(3), 300);
                     break;
                 case 3:
                     // Удаляем жертву
@@ -191,7 +191,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.getInstance().schedule(new Movie(4), 9400);
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(4), 9400);
                     break;
                 case 4:
                     // Ищем игроков в радиусе и показываем мувик
@@ -206,7 +206,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.getInstance().schedule(new Movie(5), 5000);
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(5), 5000);
                     break;
                 case 5:
                     // Ищем игроков в радиусе и показываем мувик
@@ -221,7 +221,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.getInstance().schedule(new Movie(6), 6000);
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(6), 6000);
                     break;
                 case 6:
                     // Сбрасываем режим мувиков
@@ -252,8 +252,8 @@ public final class AndreasVanHalter extends Fighter {
                 DeleteNpc();
 
                 // Даём задание заспавнить заного всех через 10 секунд
-                ThreadPoolManager.getInstance().schedule(new NewSpawn(), 10000);
-                ThreadPoolManager.getInstance().schedule(new CheckAttack(), 3600000);
+                ThreadPoolManager.INSTANCE().schedule(new NewSpawn(), 10000);
+                ThreadPoolManager.INSTANCE().schedule(new CheckAttack(), 3600000);
             }
         }
     }

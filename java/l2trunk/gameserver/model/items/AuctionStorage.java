@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public class AuctionStorage extends ItemContainer {
     private static final Logger _log = LoggerFactory.getLogger(AuctionStorage.class);
-    private static final ItemsDAO _itemsDAO = ItemsDAO.getInstance();
+    private static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
     private static AuctionStorage _instance;
 
     private AuctionStorage() {
@@ -133,9 +133,7 @@ public class AuctionStorage extends ItemContainer {
             _items.clear();
             Collection<ItemInstance> items = _itemsDAO.getItemsByLocation(ItemLocation.AUCTION);
 
-            for (ItemInstance item : items) {
-                _items.add(item);
-            }
+            _items.addAll(items);
         } finally {
             writeUnlock();
         }

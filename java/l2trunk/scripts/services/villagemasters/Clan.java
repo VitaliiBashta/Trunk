@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.VillageMasterInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-class Clan extends Functions {
+public class Clan extends Functions {
     public void CheckCreateClan() {
         if (getNpc() == null || getSelf() == null)
             return;
@@ -19,7 +19,7 @@ class Clan extends Functions {
             // Player already consists in clan and can not create clan
         else if (pl.getClan() != null)
             htmltext = "clan-09.htm";
-        ((VillageMasterInstance) getNpc()).showChatWindow(pl, "villagemaster/" + htmltext);
+        getNpc().showChatWindow(pl, "villagemaster/" + htmltext);
     }
 
     public void CheckDissolveClan() {
@@ -36,6 +36,6 @@ class Clan extends Functions {
                 // Player not in clan and can not dismiss clan
             else
                 htmltext = "clan-11.htm";
-        ((VillageMasterInstance) getNpc()).showChatWindow(pl, "villagemaster/" + htmltext);
+        getNpc().showChatWindow(pl, "villagemaster/" + htmltext);
     }
 }

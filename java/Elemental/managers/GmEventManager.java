@@ -126,7 +126,7 @@ public class GmEventManager {
             return;
 
         // Avisamos que el evento comenzo
-        Announcements.getInstance().announceToAll("The registration period for the event " + _eventName + " is now opened");
+        Announcements.INSTANCE.announceToAll("The registration period for the event " + _eventName + " is now opened");
 
         // Ponemos el evento en registro
         _state = StateEnum.REGISTERING;
@@ -140,7 +140,7 @@ public class GmEventManager {
             return;
 
         // Avisamos que el evento comenzo
-        Announcements.getInstance().announceToAll("The event " + _eventName + " has started");
+        Announcements.INSTANCE.announceToAll("The event " + _eventName + " has started");
 
         // Ponemos el evento en activo
         _state = StateEnum.ACTIVE;
@@ -165,7 +165,7 @@ public class GmEventManager {
             return;
 
         // Avisamos que el evento fue detenido
-        Announcements.getInstance().announceToAll("The event " + _eventName + " has finished");
+        Announcements.INSTANCE.announceToAll("The event " + _eventName + " has finished");
 
         // Enviamos a todos los pjs de nuevo a la ubicacion de donde se anotaron
         for (GmEventParticipant participant : _participants.values()) {
@@ -273,11 +273,6 @@ public class GmEventManager {
             return;
         }
 
-        if (player.isInOfflineMode()) {
-            player.sendMessage("Players in Offline mode may not participate in the event!");
-            return;
-        }
-
         if (player.isInStoreMode()) {
             player.sendMessage("Players in Store mode may not participate in the event!");
             return;
@@ -344,7 +339,7 @@ public class GmEventManager {
 
         // Si el evento debe revivir a los muertos, ponemos un thread a 10 segundos para revivirlo
         if (isAutoRes())
-            ThreadPoolManager.getInstance().schedule(new ResurrectionTask(killed), RESURRECTION_DELAY);
+            ThreadPoolManager.INSTANCE.schedule(new ResurrectionTask(killed), RESURRECTION_DELAY);
     }
 
     /**
@@ -504,7 +499,7 @@ public class GmEventManager {
             _player.doRevive(100);
 
             // Le damos celestial shield asi esta invulnerable al principio
-            SkillTable.getInstance().getInfo(5576, 1).getEffects(_player, _player, false, true);
+            SkillTable.INSTANCE().getInfo(5576, 1).getEffects(_player, _player, false, true);
         }
     }
 }

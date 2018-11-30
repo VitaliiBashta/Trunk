@@ -96,10 +96,10 @@ public class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
             return false; // Avoid the use of potion when enabling/disabling feature
         } else {
-            Skill[] skills = item.getTemplate().getAttachedSkills();
+            List<Skill> skills = item.getTemplate().getAttachedSkills();
 
-            for (int i = 0; i < skills.length; i++) {
-                Skill skill = skills[i];
+            for (int i = 0; i < skills.size(); i++) {
+                Skill skill = skills.get(i);
                 Creature aimingTarget = skill.getAimingTarget(player, player.getTarget());
                 if (skill.checkCondition(player, aimingTarget, ctrl, false, true))
                     player.getAI().Cast(skill, aimingTarget, ctrl, false);

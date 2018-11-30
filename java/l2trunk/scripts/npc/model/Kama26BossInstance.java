@@ -23,7 +23,7 @@ public class Kama26BossInstance extends KamalokaBossInstance {
 
     @Override
     public void notifyMinionDied(MinionInstance minion) {
-        _spawner = ThreadPoolManager.getInstance().scheduleAtFixedRate(new MinionSpawner(), 60000, 60000);
+        _spawner = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new MinionSpawner(), 60000, 60000);
     }
 
     @Override

@@ -21,16 +21,14 @@ import java.util.concurrent.Future;
 public class SummonInstance extends Summon {
     private final int CYCLE = 5000; // in millis
     private final int _summonSkillId;
-    private double _expPenalty = 0;
     private final int _itemConsumeIdInTime;
     private final int _itemConsumeCountInTime;
     private final int _itemConsumeDelay;
-
+    private final int _maxLifetime;
+    private double _expPenalty = 0;
     private Future<?> _disappearTask;
-
     private int _consumeCountdown;
     private int _lifetimeCountdown;
-    private final int _maxLifetime;
 
     public SummonInstance(int objectId, NpcTemplate template, Player owner, int lifetime, int consumeid, int consumecount, int consumedelay, Skill skill) {
         super(objectId, template, owner);
@@ -40,7 +38,7 @@ public class SummonInstance extends Summon {
         _itemConsumeCountInTime = consumecount;
         _consumeCountdown = _itemConsumeDelay = consumedelay;
         _summonSkillId = skill.getDisplayId();
-        _disappearTask = ThreadPoolManager.getInstance().schedule(new Lifetime(), CYCLE);
+        _disappearTask = ThreadPoolManager.INSTANCE.schedule(new Lifetime(), CYCLE);
     }
 
     @SuppressWarnings("unchecked")
@@ -152,7 +150,7 @@ public class SummonInstance extends Summon {
                 return;
 
             String dialog;
-            dialog = HtmCache.getInstance().getNotNull("scripts/actions/admin.L2SummonInstance.onActionShift.htm", player);
+            dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/admin.L2SummonInstance.onActionShift.htm", player);
             dialog = dialog.replaceFirst("%name%", String.valueOf(getName()));
             dialog = dialog.replaceFirst("%level%", String.valueOf(getLevel()));
             dialog = dialog.replaceFirst("%class%", String.valueOf(getClass().getSimpleName().replaceFirst("L2", "").replaceFirst("Instance", "")));
@@ -233,7 +231,7 @@ public class SummonInstance extends Summon {
 
             owner.sendPacket(new SetSummonRemainTime(SummonInstance.this));
 
-            _disappearTask = ThreadPoolManager.getInstance().schedule(this, CYCLE);
+            _disappearTask = ThreadPoolManager.INSTANCE.schedule(this, CYCLE);
         }
     }
 }

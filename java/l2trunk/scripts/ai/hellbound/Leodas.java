@@ -16,7 +16,7 @@ public final class Leodas extends Fighter {
     public void onEvtDead(Creature killer) {
         ReflectionUtils.getDoor(19250003).openMe();
         ReflectionUtils.getDoor(19250004).openMe();
-        ThreadPoolManager.getInstance().schedule(new CloseDoor(), 60 * 1000L);
+        ThreadPoolManager.INSTANCE().schedule(new CloseDoor(), 60 * 1000L);
         super.onEvtDead(killer);
     }
 

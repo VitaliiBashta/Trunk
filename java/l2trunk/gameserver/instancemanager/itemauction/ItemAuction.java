@@ -29,7 +29,7 @@ public class ItemAuction {
     private final long _startingTime;
     private final long _endingTime;
     private final AuctionItem _auctionItem;
-    private final Map<Integer,ItemAuctionBid> _auctionBids;
+    private final Map<Integer, ItemAuctionBid> _auctionBids;
 
     private ItemAuctionState _auctionState;
     private int _scheduledAuctionEndingExtendState;

@@ -8,26 +8,22 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Support for /attacklist /underattacklist /warlist commands
  */
-public class ClanWarsList implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    88,
-                    89,
-                    90
-            };
+public final class ClanWarsList implements IUserCommandHandler {
+    private static final List<Integer> COMMAND_IDS = Arrays.asList(88, 89, 90);
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (id != COMMAND_IDS[0] && id != COMMAND_IDS[1] && id != COMMAND_IDS[2])
+        if (!COMMAND_IDS.contains(id))
             return false;
 
         Clan clan = activeChar.getClan();
-        if (clan == null) {
+        if (activeChar.getClan() == null) {
             activeChar.sendPacket(SystemMsg.NOT_JOINED_IN_ANY_CLAN);
             return false;
         }
@@ -67,7 +63,7 @@ public class ClanWarsList implements IUserCommandHandler {
     }
 
     @Override
-    public int[] getUserCommandList() {
+    public List<Integer> getUserCommandList() {
         return COMMAND_IDS;
     }
 }

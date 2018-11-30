@@ -22,7 +22,6 @@ public final class EffectTemplate extends StatTemplate {
     private static final Logger _log = LoggerFactory.getLogger(EffectTemplate.class);
     public final double _value;
     public final int _count;
-    private final long _period; // in milliseconds
     public final EffectType _effectType;
     public final String _stackType;
     public final String _stackType2;
@@ -33,15 +32,16 @@ public final class EffectTemplate extends StatTemplate {
     public final boolean _applyOnSummon;
     public final boolean _cancelOnAction;
     public final boolean _isReflectable;
+    public final AbnormalEffect _abnormalEffect;
+    public final AbnormalEffect _abnormalEffect2;
+    public final AbnormalEffect _abnormalEffect3;
+    private final long _period; // in milliseconds
     private final Boolean _isSaveable;
     private final Boolean _isCancelable;
     private final Boolean _isOffensive;
     private final StatsSet _paramSet;
     private final int _chance;
     private Condition _attachCond;
-    public final AbnormalEffect _abnormalEffect;
-    public final AbnormalEffect _abnormalEffect2;
-    public final AbnormalEffect _abnormalEffect3;
 
     public EffectTemplate(StatsSet set) {
         _value = set.getDouble("value");

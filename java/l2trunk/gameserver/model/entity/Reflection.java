@@ -33,22 +33,22 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
+import java.util.stream.Collectors;
 
 public class Reflection {
     private static final Logger _log = LoggerFactory.getLogger(Reflection.class);
     private final static AtomicInteger _nextId = new AtomicInteger();
     protected final Lock lock = new ReentrantLock();
+    protected final List<GameObject> _objects = new ArrayList<>();
     private final int id;
     private final ReflectionListenerList listeners = new ReflectionListenerList();
     private final List<Spawner> _spawns = new ArrayList<>();
-    protected final List<GameObject> _objects = new ArrayList<>();
-    // vars
-    private Map<Integer,DoorInstance> _doors = new HashMap<>();
-    private Map<String, Zone> _zones = Collections.emptyMap();
-    private Map<String, List<Spawner>> _spawners = Collections.emptyMap();
     private final Set<Integer> _visitors = new HashSet<>();
     int _playerCount;
+    // vars
+    private Map<Integer, DoorInstance> _doors = new HashMap<>();
+    private Map<String, Zone> _zones = Collections.emptyMap();
+    private Map<String, List<Spawner>> _spawners = Collections.emptyMap();
     private Party party;
     private CommandChannel _commandChannel;
     private String name = "";
@@ -171,8 +171,9 @@ public class Reflection {
     }
 
     public Zone getZone(String name) {
-        if (!_zones.containsKey(name)){
-            _log.warn("not found zone for name: " + name);
+        if (!_zones.containsKey(name)) {
+            _log.warn("not found zone for name1: " + name);
+            System.exit(1);
         }
         return _zones.get(name);
     }
@@ -195,7 +196,7 @@ public class Reflection {
                 _collapse1minTask.cancel(false);
                 _collapse1minTask = null;
             }
-            _collapseTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+            _collapseTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     collapse();
@@ -203,7 +204,7 @@ public class Reflection {
             }, timeInMillis);
 
             if (timeInMillis >= (60 * 1000L)) {
-                _collapse1minTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                _collapse1minTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         minuteBeforeCollapse();
@@ -405,12 +406,7 @@ public class Reflection {
             if (_collapseIfEmptyTime <= 0) {
                 collapse();
             } else {
-                _hiddencollapseTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        collapse();
-                    }
-                }, _collapseIfEmptyTime * 60 * 1000L);
+                _hiddencollapseTask = ThreadPoolManager.INSTANCE.schedule(this::collapse, _collapseIfEmptyTime * 60 * 1000L);
             }
         }
     }
@@ -425,19 +421,8 @@ public class Reflection {
         player.getInventory().validateItems();
     }
 
-    public List<Player> getPlayers() {
-        List<Player> result = new ArrayList<>();
-        lock.lock();
-        try {
-            for (GameObject o : _objects) {
-                if (o.isPlayer()) {
-                    result.add((Player) o);
-                }
-            }
-        } finally {
-            lock.unlock();
-        }
-        return result;
+    public synchronized List<Player> getPlayers() {
+        return _objects.stream().filter(GameObject::isPlayer).map(o -> (Player)o).collect(Collectors.toList());
     }
 
     public List<NpcInstance> getNpcs() {
@@ -548,7 +533,7 @@ public class Reflection {
     }
 
     // FIXME [VISTALL] сдвинуть в один?
-    public void init(Map<Integer,DoorTemplate> doors, Map<String, ZoneTemplate> zones) {
+    public void init(Map<Integer, DoorTemplate> doors, Map<String, ZoneTemplate> zones) {
         if (!doors.isEmpty()) {
             _doors = new HashMap<>(doors.size());
         }
@@ -596,7 +581,7 @@ public class Reflection {
     }
 
     // FIXME [VISTALL] сдвинуть в один?
-    private void init0(Map<Integer,InstantZone.DoorInfo> doors, Map<String, InstantZone.ZoneInfo> zones) {
+    private void init0(Map<Integer, InstantZone.DoorInfo> doors, Map<String, InstantZone.ZoneInfo> zones) {
         if (!doors.isEmpty()) {
             _doors = new HashMap<>(doors.size());
         }
@@ -763,7 +748,7 @@ public class Reflection {
 
     public void init(InstantZone instantZone) {
         setName(instantZone.getName());
-        setInstancedZone(instantZone);
+        _instance = instantZone;
 
         if (instantZone.getMapX() >= 0) {
             int geoIndex = GeoEngine.NextGeoIndex(instantZone.getMapX(), instantZone.getMapY(), getId());

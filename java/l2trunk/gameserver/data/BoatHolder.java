@@ -21,10 +21,11 @@ public final class BoatHolder extends AbstractHolder {
     }
 
     public void spawnAll() {
-        log();
+        LOG.info(String.format("loaded %d %s(s) count.", _boats.size(), getClass().getSimpleName()));
+
         for (Boat boat : _boats.values()) {
             boat.spawnMe();
-            info("Spawning: " + boat.getName());
+            LOG.info("Spawning: " + boat.getName());
         }
     }
 
@@ -38,7 +39,7 @@ public final class BoatHolder extends AbstractHolder {
             addBoat(boat);
             return boat;
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            error("Fail to init boat: " + clazz, e);
+            LOG.error("Fail to init boat: " + clazz, e);
         }
 
         return null;

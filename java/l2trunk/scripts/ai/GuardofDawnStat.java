@@ -15,7 +15,7 @@ import l2trunk.gameserver.utils.Location;
 
 public final class GuardofDawnStat extends DefaultAI {
     private static final int _aggrorange = 120;
-    private  final Skill _skill = SkillTable.getInstance().getInfo(5978, 1);
+    private  final Skill _skill = SkillTable.INSTANCE().getInfo(5978, 1);
     private Location _locTele = null;
     private boolean noCheckPlayers = false;
 
@@ -62,7 +62,7 @@ public final class GuardofDawnStat extends DefaultAI {
                 actor.doCast(_skill, target, true);
                 Functions.npcSay(actor, "Intruder alert!! We have been infiltrated!");
                 noCheckPlayers = true;
-                ThreadPoolManager.getInstance().schedule(new Teleportation(getTelePoint(), target), 3000);
+                ThreadPoolManager.INSTANCE().schedule(new Teleportation(getTelePoint(), target), 3000);
                 return true;
             }
         }

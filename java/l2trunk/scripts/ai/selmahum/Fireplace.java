@@ -20,10 +20,10 @@ public final class Fireplace extends DefaultAI {
         super.onEvtSpawn();
         if (Rnd.chance(60))
             getActor().setNpcState(1);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new Switch(), 10000L, delay);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new Switch(), 10000L, delay);
     }
 
-    public class Switch extends RunnableImpl {
+    private class Switch extends RunnableImpl {
         @Override
         public void runImpl() {
             NpcInstance actor = getActor();

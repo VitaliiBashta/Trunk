@@ -3,11 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-/**
- * @author VISTALL
- * @date 16:18/12.04.2011
- */
-public class _736_WeakenTheMagic extends Dominion_KillSpecialUnitQuest {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _736_WeakenTheMagic extends Dominion_KillSpecialUnitQuest {
     public _736_WeakenTheMagic() {
         super();
     }
@@ -38,8 +37,8 @@ public class _736_WeakenTheMagic extends Dominion_KillSpecialUnitQuest {
     }
 
     @Override
-    protected ClassId[] getTargetClassIds() {
-        return new ClassId[]{
+    protected List<ClassId> getTargetClassIds() {
+        return Arrays.asList(
                 ClassId.sorceror,
                 ClassId.warlock,
                 ClassId.spellsinger,
@@ -52,6 +51,6 @@ public class _736_WeakenTheMagic extends Dominion_KillSpecialUnitQuest {
                 ClassId.elementalMaster,
                 ClassId.stormScreamer,
                 ClassId.spectralMaster
-        };
+        );
     }
 }

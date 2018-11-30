@@ -47,4 +47,22 @@ public class FileUtils {
     public static String readFileToString(String fileName) {
         return readFileToString(Paths.get(fileName));
     }
+
+
+    public static void main(String[] args) {
+        Path path = Paths.get("./data/doors");
+        StringBuilder result = new StringBuilder();
+        List<Path> allFiles = getAllFiles(path, true, ".xml");
+        for (Path curFile :allFiles) {
+            result.append(readFileToString(curFile));
+        }
+
+        Path outputFile = path.resolve("allDors.xml");
+        try {
+            Files.write(outputFile, result.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(path.toAbsolutePath());
+    }
 }

@@ -31,7 +31,7 @@ public class BloodAltarManager {
     private BloodAltarManager() {
         _log.info("Blood Altar Manager: Initializing...");
         manageNpcs(true);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 if (Rnd.chance(30) && bossRespawnTimer < System.currentTimeMillis())

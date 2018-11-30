@@ -26,8 +26,8 @@ public class RequestExDeletePostFriendForPostBox extends L2GameClientPacket {
             return;
 
         int key = 0;
-        Map<Integer,String> postFriends = player.getPostFriends();
-        for (Map.Entry<Integer,String> entry : postFriends.entrySet()) {
+        Map<Integer, String> postFriends = player.getPostFriends();
+        for (Map.Entry<Integer, String> entry : postFriends.entrySet()) {
             if (entry.getValue().equalsIgnoreCase(_name))
                 key = entry.getKey();
         }

@@ -13,8 +13,8 @@ import java.util.Comparator;
 
 public class SiegeClanObject implements Serializable {
     private final long _date;
-    private String _type;
     private final Clan _clan;
+    private String _type;
     private NpcInstance _flag;
 
     public SiegeClanObject(String type, Clan clan, long param) {

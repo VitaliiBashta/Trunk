@@ -19,12 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-/**
- * User: Keiichi
- * Date: 24.11.2008
- * Time: 23:32:22
- * Порт с SF.
- */
 public class LotteryManager {
     public static final long SECOND = 1000;
     private static final long MINUTE = 60000;
@@ -105,11 +99,11 @@ public class LotteryManager {
                     if (_enddate > System.currentTimeMillis()) {
 
                         _isStarted = true;
-                        ThreadPoolManager.getInstance().schedule(new finishLottery(), _enddate - System.currentTimeMillis());
+                        ThreadPoolManager.INSTANCE.schedule(new finishLottery(), _enddate - System.currentTimeMillis());
 
                         if (_enddate > System.currentTimeMillis() + 12 * MINUTE) {
                             _isSellingTickets = true;
-                            ThreadPoolManager.getInstance().schedule(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
+                            ThreadPoolManager.INSTANCE.schedule(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
                         }
 
                         return false;
@@ -131,13 +125,13 @@ public class LotteryManager {
         _isSellingTickets = true;
         _isStarted = true;
 
-        Announcements.getInstance().announceToAll("Lottery tickets are now available for Lucky Lottery #" + getId() + ".");
+        Announcements.INSTANCE.announceToAll("Lottery tickets are now available for Lucky Lottery #" + getId() + ".");
     }
 
     private void scheduleEndOfLottery() {
         //Connection con = null;
         //PreparedStatement statement;
-        /** Calendar finishtime = Calendar.getInstance();
+        /** Calendar finishtime = Calendar.INSTANCE();
          finishtime.setTimeInMillis(_enddate);
          finishtime.set(Calendar.MINUTE, 0);
          finishtime.set(Calendar.SECOND, 0);
@@ -146,8 +140,8 @@ public class LotteryManager {
          finishtime.set(Calendar.HOUR_OF_DAY, 7);
          _enddate = finishtime.getTimeInMillis();
 
-         ThreadPoolManager.getInstance().scheduleGeneral(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
-         ThreadPoolManager.getInstance().scheduleGeneral(new finishLottery(), _enddate - System.currentTimeMillis());
+         ThreadPoolManager.INSTANCE().scheduleGeneral(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
+         ThreadPoolManager.INSTANCE().scheduleGeneral(new finishLottery(), _enddate - System.currentTimeMillis());
          **/
 
         Calendar finishtime = Calendar.getInstance();
@@ -165,8 +159,8 @@ public class LotteryManager {
             _enddate = finishtime.getTimeInMillis();
         }
 
-        ThreadPoolManager.getInstance().schedule(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
-        ThreadPoolManager.getInstance().schedule(new finishLottery(), _enddate - System.currentTimeMillis());
+        ThreadPoolManager.INSTANCE().schedule(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
+        ThreadPoolManager.INSTANCE().schedule(new finishLottery(), _enddate - System.currentTimeMillis());
     }
 
     private void createNewLottery() {
@@ -325,7 +319,7 @@ public class LotteryManager {
                 _log.info("Lottery: Stopping ticket sell for lottery #" + getId() + ".");
             _isSellingTickets = false;
 
-            Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.LOTTERY_TICKET_SALES_HAVE_BEEN_TEMPORARILY_SUSPENDED));
+            Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.LOTTERY_TICKET_SALES_HAVE_BEEN_TEMPORARILY_SUSPENDED));
         }
     }
 
@@ -456,13 +450,13 @@ public class LotteryManager {
                 sm.addInteger(getId());
                 sm.addInteger(getPrize());
                 sm.addInteger(count1);
-                Announcements.getInstance().announceToAll(sm);
+                Announcements.INSTANCE.announceToAll(sm);
             } else {
                 // There are no winners.
                 sm = new SystemMessage2(SystemMsg.THE_PRIZE_AMOUNT_FOR_LUCKY_LOTTERY__S1__IS_S2_ADENA_THERE_WAS_NO_FIRST_PRIZE_WINNER_IN_THIS_DRAWING_THEREFORE_THE_JACKPOT_WILL_BE_ADDED_TO_THE_NEXT_DRAWING);
                 sm.addInteger(getId());
                 sm.addInteger(getPrize());
-                Announcements.getInstance().announceToAll(sm);
+                Announcements.INSTANCE.announceToAll(sm);
             }
 
             try {
@@ -484,7 +478,7 @@ public class LotteryManager {
                 DbUtils.closeQuietly(con, statement);
             }
 
-            ThreadPoolManager.getInstance().schedule(new startLottery(), 1 * MINUTE);
+            ThreadPoolManager.INSTANCE().schedule(new startLottery(), 1 * MINUTE);
             _number++;
 
             _isStarted = false;

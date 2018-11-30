@@ -139,7 +139,7 @@ public final class AuctionManager {
             item.setCount(adena);
             item.setOwnerId(sellerObjectId);
             item.setLocation(ItemLocation.INVENTORY);
-            ItemsDAO.getInstance().save(item);
+            ItemsDAO.INSTANCE.save(item);
         } else {
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("UPDATE items SET count=count+" + adena + " WHERE object_id=" + objId)) {
@@ -147,7 +147,7 @@ public final class AuctionManager {
             } catch (SQLException e) {
                 _log.error("Error while selecting adena:", e);
             }
-            ItemsDAO.getInstance().getCache().remove(objId);
+            ItemsDAO.INSTANCE.getCache().remove(objId);
         }
     }
 

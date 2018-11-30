@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlIntention;
@@ -10,12 +9,11 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public final class WorldRegion implements Iterable<GameObject> {
     public final static WorldRegion[] EMPTY_L2WORLDREGION_ARRAY = new WorldRegion[0];
@@ -31,10 +29,6 @@ public final class WorldRegion implements Iterable<GameObject> {
      */
     private final AtomicBoolean _isActive = new AtomicBoolean();
     /**
-     * Блокировка для чтения/записи объектов из региона
-     */
-    private final Lock lock = new ReentrantLock();
-    /**
      * Все объекты в регионе
      */
     private volatile GameObject[] _objects = GameObject.EMPTY_L2OBJECT_ARRAY;
@@ -45,7 +39,7 @@ public final class WorldRegion implements Iterable<GameObject> {
     /**
      * Зоны пересекающие этот регион
      */
-    private volatile Zone[] _zones = Zone.EMPTY_L2ZONE_ARRAY;
+    private volatile List<Zone> _zones = new ArrayList<>();
     /**
      * Количество игроков в регионе
      */
@@ -131,71 +125,61 @@ public final class WorldRegion implements Iterable<GameObject> {
         }
     }
 
-    public void addObject(GameObject obj) {
+    public synchronized void addObject(GameObject obj) {
         if (obj == null)
             return;
 
-        lock.lock();
-        try {
-            GameObject[] objects = _objects;
+        GameObject[] objects = _objects;
 
-            GameObject[] resizedObjects = new GameObject[_objectsCount + 1];
-            System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
-            objects = resizedObjects;
-            objects[_objectsCount++] = obj;
+        GameObject[] resizedObjects = new GameObject[_objectsCount + 1];
+        System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
+        objects = resizedObjects;
+        objects[_objectsCount++] = obj;
 
-            _objects = resizedObjects;
+        _objects = resizedObjects;
 
-            if (obj.isPlayer())
-                if (_playersCount++ == 0) {
-                    if (_activateTask != null)
-                        _activateTask.cancel(false);
-                    //активируем регион и соседние регионы через секунду
-                    _activateTask = ThreadPoolManager.getInstance().schedule(new ActivateTask(true), 1000L);
-                }
-        } finally {
-            lock.unlock();
-        }
+        if (obj.isPlayer())
+            if (_playersCount++ == 0) {
+                if (_activateTask != null)
+                    _activateTask.cancel(false);
+                //активируем регион и соседние регионы через секунду
+                _activateTask = ThreadPoolManager.INSTANCE.schedule(new ActivateTask(true), 1000L);
+            }
     }
 
-    public void removeObject(GameObject obj) {
+    public synchronized void removeObject(GameObject obj) {
         if (obj == null)
             return;
 
-        lock.lock();
-        try {
-            GameObject[] objects = _objects;
+        GameObject[] objects = _objects;
 
-            int index = -1;
+        int index = -1;
 
-            for (int i = 0; i < _objectsCount; i++) {
-                if (objects[i] == obj) {
-                    index = i;
-                    break;
-                }
+        for (int i = 0; i < _objectsCount; i++) {
+            if (objects[i] == obj) {
+                index = i;
+                break;
             }
-
-            if (index == -1) //Ошибочная ситуация
-                return;
-
-            _objectsCount--;
-
-            GameObject[] resizedObjects = new GameObject[_objectsCount];
-            objects[index] = objects[_objectsCount];
-            System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
-
-            _objects = resizedObjects;
-
-            if (obj.isPlayer())
-                if (--_playersCount == 0) {
-                    if (_activateTask != null)
-                        _activateTask.cancel(false);
-                    //деактивируем регион и соседние регионы через минуту
-                    _activateTask = ThreadPoolManager.getInstance().schedule(new ActivateTask(false), 60000L);
-                }
-        } finally {
-            lock.unlock();
         }
+
+        if (index == -1) //Ошибочная ситуация
+            return;
+
+        _objectsCount--;
+
+        GameObject[] resizedObjects = new GameObject[_objectsCount];
+        objects[index] = objects[_objectsCount];
+        System.arraycopy(objects, 0, resizedObjects, 0, _objectsCount);
+
+        _objects = resizedObjects;
+
+        if (obj.isPlayer())
+            if (--_playersCount == 0) {
+                if (_activateTask != null)
+                    _activateTask.cancel(false);
+                //деактивируем регион и соседние регионы через минуту
+                _activateTask = ThreadPoolManager.INSTANCE.schedule(new ActivateTask(false), 60000L);
+            }
     }
 
     public int getObjectsSize() {
@@ -241,25 +225,15 @@ public final class WorldRegion implements Iterable<GameObject> {
         }
     }
 
-    void addZone(Zone zone) {
-        lock.lock();
-        try {
-            _zones = ArrayUtils.add(_zones, zone);
-        } finally {
-            lock.unlock();
-        }
+    synchronized void addZone(Zone zone) {
+            _zones.add(zone);
     }
 
-    void removeZone(Zone zone) {
-        lock.lock();
-        try {
-            _zones = ArrayUtils.remove(_zones, zone);
-        } finally {
-            lock.unlock();
-        }
+    synchronized void removeZone(Zone zone) {
+            _zones.remove(zone);
     }
 
-    Zone[] getZones() {
+    List<Zone> getZones() {
         // Без синхронизации и копирования, т.к. удаление/добавление зон происходит достаточно редко
         return _zones;
     }

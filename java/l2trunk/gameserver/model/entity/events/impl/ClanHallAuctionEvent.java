@@ -166,7 +166,7 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
 
     @Override
     public AuctionSiegeClanObject newSiegeClan(String type, int clanId, long param, long date) {
-        Clan clan = ClanTable.getInstance().getClan(clanId);
+        Clan clan = ClanTable.INSTANCE.getClan(clanId);
         return clan == null ? null : new AuctionSiegeClanObject(type, clan, param, date);
     }
 

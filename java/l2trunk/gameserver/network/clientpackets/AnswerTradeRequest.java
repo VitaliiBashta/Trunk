@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Request;
 import l2trunk.gameserver.model.Request.L2RequestType;
-import l2trunk.gameserver.model.items.TradeItem;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.TradeStart;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;

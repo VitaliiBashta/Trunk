@@ -23,12 +23,6 @@ public class CharTemplate {
      * MP Regen base
      */
     public final double baseMpReg;
-
-    /**
-     * CP Regen base
-     */
-    private final double baseCpReg;
-
     public final int basePAtk;
     public final int baseMAtk;
     public final int basePDef;
@@ -41,12 +35,14 @@ public class CharTemplate {
     public final int baseCritRate;
     public final int baseRunSpd;
     public final int baseWalkSpd;
-
     public final int[] baseAttributeAttack;
     public final int[] baseAttributeDefence;
-
     public final double collisionRadius;
     public final double collisionHeight;
+    /**
+     * CP Regen base
+     */
+    private final double baseCpReg;
 
     public CharTemplate(StatsSet set) {
         baseSTR = set.getInteger("baseSTR");

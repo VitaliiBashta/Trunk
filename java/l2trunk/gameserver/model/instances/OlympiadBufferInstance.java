@@ -58,7 +58,7 @@ public final class OlympiadBufferInstance extends NpcInstance {
             st.nextToken();
             int id = Integer.parseInt(st.nextToken());
             int lvl = Integer.parseInt(st.nextToken());
-            Skill skill = SkillTable.getInstance().getInfo(id, lvl);
+            Skill skill = SkillTable.INSTANCE.getInfo(id, lvl);
             List<Creature> target = new ArrayList<>();
             target.add(player);
             broadcastPacket(new MagicSkillUse(this, player, id, lvl, 0, 0));

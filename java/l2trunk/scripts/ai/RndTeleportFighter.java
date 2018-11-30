@@ -50,7 +50,7 @@ public class RndTeleportFighter extends Fighter {
 
         if (isInside) {
             actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 4671, 1, 500, 0));
-            ThreadPoolManager.getInstance().schedule(new Teleport(new Location(x, y, z)), 500);
+            ThreadPoolManager.INSTANCE().schedule(new Teleport(new Location(x, y, z)), 500);
             _lastTeleport = System.currentTimeMillis();
         }
         return isInside;

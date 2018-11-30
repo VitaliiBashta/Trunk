@@ -7,8 +7,8 @@ import l2trunk.gameserver.utils.Log;
 
 public class CharMoveToLocation extends L2GameServerPacket {
     private final int _objectId;
-    private int _client_z_shift;
     private final Location _current;
+    private int _client_z_shift;
     private Location _destination;
 
     public CharMoveToLocation(Creature cha) {

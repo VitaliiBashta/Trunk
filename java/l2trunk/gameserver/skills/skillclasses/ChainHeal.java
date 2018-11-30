@@ -10,7 +10,6 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class ChainHeal extends Skill {

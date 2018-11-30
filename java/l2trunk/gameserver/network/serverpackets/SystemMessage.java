@@ -644,7 +644,6 @@ public class SystemMessage extends L2GameServerPacket {
     public static final int THE_SPOIL_CONDITION_HAS_BEEN_ACTIVATED = 612; // Активировано умение «Spoil».
     public static final int _IGNORE_LIST_ = 613; // ======<IGNORE_LIST>======
     public static final int C1___C2 = 614; // $c1 : $c2
-    private static final int S1 = 1983; // $s1
     public static final int YOU_HAVE_FAILED_TO_REGISTER_THE_USER_TO_YOUR_IGNORE_LIST = 615; // Ошибка при добавлении в игнор-лист.
     public static final int YOU_HAVE_FAILED_TO_DELETE_THE_CHARACTER_FROM_IGNORE_LIST = 616; // Ошибка при удалении из игнор-листа.
     public static final int S1_HAS_BEEN_ADDED_TO_YOUR_IGNORE_LIST = 617; // $s1 добавляется в игнор-лист.
@@ -3001,7 +3000,6 @@ public class SystemMessage extends L2GameServerPacket {
     public static final int SKILL_NOT_AVAILABLE_TO_BE_ENHANCED_CHECK_SKILL_S_LV_AND_CURRENT_PC_STATUS = 3070; // Это умение улучшить нельзя. Проверьте уровень умения и состояние персонажа.
     public static final int DO_YOU_REALLY_WANT_TO_RESET_1000000010_MILLION_ADENA_WILL_BE_CONSUMED = 3071; // Перезапустить? Будет истрачено 10,000,000 аден.
     public static final int S1_ACQUIRED_THE_ATTACHED_ITEM_TO_YOUR_MAIL = 3072; // $s1 получил предмет, прикрепленный к письму.
-    private static final int YOU_HAVE_ACQUIRED_S2_S1 = 3073; // Вы получили $s1, $s2 ед.
     public static final int THE_ALLOWED_LENGTH_FOR_RECIPIENT_EXCEEDED = 3074; // Вы превысили установленную длину имени получателя.
     public static final int THE_ALLOWED_LENGTH_FOR_A_TITLE_EXCEEDED = 3075; // Вы превысили установленную длину названия.
     public static final int _THE_ALLOWED_LENGTH_FOR_A_TITLE_EXCEEDED = 3076; // Вы превысили разрешенный объем содержания.
@@ -3073,6 +3071,8 @@ public class SystemMessage extends L2GameServerPacket {
     public static final int YOU_OBTAINED_S1_RECOMMENDS = 3207; // Получено рекомендаций: "$s1:.
     public static final int CURRENT_LOCATION__S1_S2_S3_INSIDE_SEED_OF_ANNIHILATION = 3170; // Текущая локация: $s1, $s2, $s3 (Внутри Семени Уничтожения)
     public static final int YOU_HAVE_EARNED_S1_B_S2_EXP_AND_S3_B_S4_SP = 3259; // Получено значение опыта $s1 (Бонус: $s2) и SP $s3 (Бонус: $s4).
+    private static final int S1 = 1983; // $s1
+    private static final int YOU_HAVE_ACQUIRED_S2_S1 = 3073; // Вы получили $s1, $s2 ед.
     // d d (d S/d d/d dd)
     // |--------------> 0 - String 1-number 2-textref npcname (1000000-1002655) 3-textref itemname 4-textref skills 5-??
     private static final int TYPE_SYSTEM_STRING = 13;

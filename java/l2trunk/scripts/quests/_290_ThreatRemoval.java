@@ -7,26 +7,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
+import java.util.Arrays;
+import java.util.List;
 
 public class _290_ThreatRemoval extends Quest implements ScriptFile {
     private static final int GuardPinaps = 30201;
-    private static final int[] SelMahumTrainers = {
-            22775,
-            22776,
-            22777,
-            22778
-    };
-    private static final int[] SelMahumRecruits = {
-            22780,
-            22781,
-            22782,
-            22783,
-            22784,
-            22785
-    };
+    private static final List<Integer> SelMahumTrainers =
+            Arrays.asList(22775, 22776, 22777, 22778);
+    private static final List<Integer> SelMahumRecruits =
+            Arrays.asList(22780, 22781, 22782, 22783, 22784, 22785);
     private static final int SelMahumIDTag = 15714;
 
     public _290_ThreatRemoval() {
@@ -102,9 +91,9 @@ public class _290_ThreatRemoval extends Quest implements ScriptFile {
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            if (ArrayUtils.contains(SelMahumTrainers, npc.getNpcId()))
+            if (SelMahumTrainers.contains(npc.getNpcId()))
                 st.rollAndGive(SelMahumIDTag, 1, 53.2);
-            else if (ArrayUtils.contains(SelMahumRecruits, npc.getNpcId()))
+            else if (SelMahumRecruits.contains(npc.getNpcId()))
                 st.rollAndGive(SelMahumIDTag, 1, 36.3);
         }
         return null;

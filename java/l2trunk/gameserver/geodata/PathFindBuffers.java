@@ -1,13 +1,10 @@
 package l2trunk.gameserver.geodata;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.text.StrTable;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public final class PathFindBuffers {
@@ -15,9 +12,8 @@ public final class PathFindBuffers {
     private final static int STEP_MAP_SIZE = 1 << 5;
     private final static int MAX_MAP_SIZE = 1 << 9;
 
-    private static final Map<Integer, PathFindBuffer[]> buffers = new HashMap<>();
+    private static final Map<Integer, List<PathFindBuffer>> buffers = new HashMap<>();
     private static final List<Integer> sizes;
-    private static final Lock lock = new ReentrantLock();
 
     static {
         Map<Integer, Integer> config = new HashMap<>();
@@ -30,9 +26,9 @@ public final class PathFindBuffers {
             int size = itr.getKey();
             int count = itr.getValue();
 
-            PathFindBuffer[] buff = new PathFindBuffer[count];
+            List<PathFindBuffer> buff = new ArrayList<>();
             for (int i = 0; i < count; i++)
-                buff[i] = new PathFindBuffer(size);
+                buff.add(new PathFindBuffer(size));
 
             buffers.put(size, buff);
         }
@@ -42,12 +38,12 @@ public final class PathFindBuffers {
     }
 
     private synchronized static PathFindBuffer create(int mapSize) {
-        PathFindBuffer buffer;
-        PathFindBuffer[] buff = buffers.get(mapSize);
+        PathFindBuffer buffer = new PathFindBuffer(mapSize);
+        List<PathFindBuffer> buff = buffers.get(mapSize);
         if (buff != null)
-            buff = ArrayUtils.add(buff, buffer = new PathFindBuffer(mapSize));
+            buff.add(buffer);
         else {
-            buff = new PathFindBuffer[]{buffer = new PathFindBuffer(mapSize)};
+            buff = new ArrayList<>();
             sizes.add(mapSize);
             Collections.sort(sizes);
         }
@@ -56,19 +52,14 @@ public final class PathFindBuffers {
         return buffer;
     }
 
-    private static PathFindBuffer get(int mapSize) {
-        lock.lock();
-        try {
-            PathFindBuffer[] buff = buffers.get(mapSize);
-            for (PathFindBuffer buffer : buff)
-                if (!buffer.inUse) {
-                    buffer.inUse = true;
-                    return buffer;
-                }
-            return null;
-        } finally {
-            lock.unlock();
-        }
+    private synchronized static PathFindBuffer get(int mapSize) {
+        List<PathFindBuffer> buff = buffers.get(mapSize);
+        for (PathFindBuffer buffer : buff)
+            if (!buffer.inUse) {
+                buffer.inUse = true;
+                return buffer;
+            }
+        return null;
     }
 
     static PathFindBuffer alloc(int mapSize) {
@@ -99,66 +90,56 @@ public final class PathFindBuffers {
         return buffer;
     }
 
-    public static void recycle(PathFindBuffer buffer) {
-        lock.lock();
-        try {
-            buffer.inUse = false;
-        } finally {
-            lock.unlock();
-        }
+    public static synchronized void recycle(PathFindBuffer buffer) {
+        buffer.inUse = false;
     }
 
     public static StrTable getStats() {
         StrTable table = new StrTable("PathFind Buffers Stats");
-        lock.lock();
-        try {
-            long totalUses = 0, totalPlayable = 0, totalTime = 0;
-            int index = 0;
-            int count;
-            long uses;
-            long playable;
-            long itrs;
-            long success;
-            long overtime;
-            long time;
+        long totalUses = 0, totalPlayable = 0, totalTime = 0;
+        int index = 0;
+        int count;
+        long uses;
+        long playable;
+        long itrs;
+        long success;
+        long overtime;
+        long time;
 
-            for (int size : sizes) {
-                index++;
-                count = 0;
-                uses = 0;
-                playable = 0;
-                itrs = 0;
-                success = 0;
-                overtime = 0;
-                time = 0;
-                for (PathFindBuffer buff : buffers.get(size)) {
-                    count++;
-                    uses += buff.totalUses;
-                    playable += buff.playableUses;
-                    success += buff.successUses;
-                    overtime += buff.overtimeUses;
-                    time += buff.totalTime / 1000000;
-                    itrs += buff.totalItr;
-                }
-
-                totalUses += uses;
-                totalPlayable += playable;
-                totalTime += time;
-
-                table.set(index, "Size", size)
-                        .set(index, "Count", count)
-                        .set(index, "Uses (success%)", uses + "(" + String.format("%2.2f", (uses > 0) ? success * 100. / uses : 0) + "%)")
-                        .set(index, "Uses, playble", playable + "(" + String.format("%2.2f", (uses > 0) ? playable * 100. / uses : 0) + "%)")
-                        .set(index, "Uses, overtime", overtime + "(" + String.format("%2.2f", (uses > 0) ? overtime * 100. / uses : 0) + "%)")
-                        .set(index, "Iter., avg", (uses > 0) ? itrs / uses : 0)
-                        .set(index, "Time, avg (ms)", String.format("%1.3f", (uses > 0) ? (double) time / uses : 0.));
+        for (int size : sizes) {
+            index++;
+            count = 0;
+            uses = 0;
+            playable = 0;
+            itrs = 0;
+            success = 0;
+            overtime = 0;
+            time = 0;
+            for (PathFindBuffer buff : buffers.get(size)) {
+                count++;
+                uses += buff.totalUses;
+                playable += buff.playableUses;
+                success += buff.successUses;
+                overtime += buff.overtimeUses;
+                time += buff.totalTime / 1000000;
+                itrs += buff.totalItr;
             }
 
-            table.addTitle("Uses, total / playable  : " + totalUses + " / " + totalPlayable)
-                    .addTitle("Uses, total time / avg (ms) : " + totalTime + " / " + String.format("%1.3f", totalUses > 0 ? (double) totalTime / totalUses : 0));
-        } finally {
-            lock.unlock();
+            totalUses += uses;
+            totalPlayable += playable;
+            totalTime += time;
+
+            table.set(index, "Size", size)
+                    .set(index, "Count", count)
+                    .set(index, "Uses (success%)", uses + "(" + String.format("%2.2f", (uses > 0) ? success * 100. / uses : 0) + "%)")
+                    .set(index, "Uses, playble", playable + "(" + String.format("%2.2f", (uses > 0) ? playable * 100. / uses : 0) + "%)")
+                    .set(index, "Uses, overtime", overtime + "(" + String.format("%2.2f", (uses > 0) ? overtime * 100. / uses : 0) + "%)")
+                    .set(index, "Iter., avg", (uses > 0) ? itrs / uses : 0)
+                    .set(index, "Time, avg (ms)", String.format("%1.3f", (uses > 0) ? (double) time / uses : 0.));
         }
+
+        table.addTitle("Uses, total / playable  : " + totalUses + " / " + totalPlayable)
+                .addTitle("Uses, total time / avg (ms) : " + totalTime + " / " + String.format("%1.3f", totalUses > 0 ? (double) totalTime / totalUses : 0));
 
         return table;
     }

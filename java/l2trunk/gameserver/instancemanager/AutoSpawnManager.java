@@ -157,7 +157,6 @@ public class AutoSpawnManager {
 
     /**
      * Remove a registered spawn from the list, specified by the given spawn object ID.
-     *
      */
     public void removeSpawn(int objectId) {
         removeSpawn(_registeredSpawns.get(objectId));
@@ -165,7 +164,6 @@ public class AutoSpawnManager {
 
     /**
      * Sets the active state of the specified spawn.
-     *
      */
     public void setSpawnActive(AutoSpawnInstance spawnInst, boolean isActive) {
         int objectId = spawnInst.objectId;
@@ -176,10 +174,10 @@ public class AutoSpawnManager {
             if (isActive) {
                 AutoSpawner rset = new AutoSpawner(objectId);
                 if (spawnInst._desDelay > 0)
-                    spawnTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(rset, spawnInst.initDelay, spawnInst.resDelay);
+                    spawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(rset, spawnInst.initDelay, spawnInst.resDelay);
                 else
-                    spawnTask = ThreadPoolManager.getInstance().schedule(rset, spawnInst.initDelay);
-                //spawnTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(rset, spawnInst.initDelay, spawnInst.resDelay);
+                    spawnTask = ThreadPoolManager.INSTANCE.schedule(rset, spawnInst.initDelay);
+                //spawnTask = ThreadPoolManager.INSTANCE().scheduleGeneralAtFixedRate(rset, spawnInst.initDelay, spawnInst.resDelay);
                 _runningSpawns.put(objectId, spawnTask);
             } else {
                 spawnTask = _runningSpawns.remove(objectId);
@@ -236,7 +234,6 @@ public class AutoSpawnManager {
 
     /**
      * Tests if the specified object ID is assigned to an auto spawn.
-     *
      */
     private boolean isSpawnRegistered(int objectId) {
         return _registeredSpawns.containsKey(objectId);
@@ -342,14 +339,14 @@ public class AutoSpawnManager {
 
                 // Announce to all players that the spawn has taken place, with the nearest town location.
 				/*if (spawnInst.isBroadcasting() && npcInst != null)
-					Announcements.getInstance().announceByCustomMessage("l2trunk.gameserver.model.AutoSpawnHandler.spawnNPC", new String[] {
+					Announcements.INSTANCE().announceByCustomMessage("l2trunk.gameserver.model.AutoSpawnHandler.spawnNPC", new String[] {
 							npcInst.getName(),
 							nearestTown });*/
 
                 // If there is no despawn time, do not create a despawn task.
                 if (spawnInst.getDespawnDelay() > 0) {
                     AutoDespawner rd = new AutoDespawner(_objectId);
-                    ThreadPoolManager.getInstance().schedule(rd, spawnInst.getDespawnDelay() - 1000);
+                    ThreadPoolManager.INSTANCE.schedule(rd, spawnInst.getDespawnDelay() - 1000);
                 }
             } catch (RuntimeException e) {
                 _log.warn("AutoSpawnHandler: An error occurred while initializing spawn instance (Object ID = " +

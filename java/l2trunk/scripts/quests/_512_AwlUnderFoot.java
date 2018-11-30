@@ -19,6 +19,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,7 +53,7 @@ public class _512_AwlUnderFoot extends Quest implements ScriptFile {
         super(false);
 
         // Wardens
-        addStartNpc(36403, 36404, 36405, 36406, 36407, 36408, 36409, 36410, 36411);
+        addStartNpc(Arrays.asList(36403, 36404, 36405, 36406, 36407, 36408, 36409, 36410, 36411));
         addQuestItem(FragmentOfTheDungeonLeaderMark);
         addKillId(RhiannaTheTraitor, TeslaTheDeceiver, SoulHunterChakundel, DurangoTheCrusher, BrutusTheObstinate, RangerKarankawa, SargonTheMad, BeautifulAtrielle, NagenTheTomboy, JaxTheDestroyer);
     }
@@ -235,7 +236,7 @@ public class _512_AwlUnderFoot extends Quest implements ScriptFile {
         }
 
         void initSpawn(int npcId, boolean first) {
-            ThreadPoolManager.getInstance().schedule(new PrisonSpawnTask(npcId), first ? 60000 : 180000);
+            ThreadPoolManager.INSTANCE().schedule(new PrisonSpawnTask(npcId), first ? 60000 : 180000);
         }
 
         int getReflectionId() {

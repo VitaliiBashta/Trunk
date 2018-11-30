@@ -16,7 +16,7 @@ class GrandIsleofPrayerRace extends Functions {
     private static final int SECRET_KEY = 9694;
 
     public void startRace() {
-        Skill skill = SkillTable.getInstance().getInfo(Skill.SKILL_EVENT_TIMER, 1);
+        Skill skill = SkillTable.INSTANCE().getInfo(Skill.SKILL_EVENT_TIMER, 1);
         Player player = getSelf();
         NpcInstance npc = getNpc();
         if (skill == null || player == null || npc == null)

@@ -2,8 +2,8 @@ package l2trunk.gameserver.model;
 
 public class PremiumItem {
     private final int _itemId;
-    private long _count;
     private final String _sender;
+    private long _count;
 
     public PremiumItem(int itemid, long count, String sender) {
         _itemId = itemid;

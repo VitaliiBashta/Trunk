@@ -22,7 +22,7 @@ public final class MCIndividual extends DefaultAI {
         if (actor == null)
             return;
 
-        ThreadPoolManager.getInstance().schedule(new ScheduleSocial(), 1000);
+        ThreadPoolManager.INSTANCE.schedule(new ScheduleSocial(), 1000);
         super.onEvtSpawn();
     }
 

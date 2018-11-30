@@ -3,11 +3,6 @@ package l2trunk.gameserver.model;
 import l2trunk.gameserver.stats.triggers.TriggerInfo;
 import l2trunk.gameserver.stats.triggers.TriggerType;
 
-/**
- * Holder para guardar cada opcion de augmentation
- *
- * @author GipsyGrierosu Andrei
- */
 public class Options {
     private final int _id;
     private final String _augType;

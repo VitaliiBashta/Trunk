@@ -33,8 +33,6 @@ public class RequestShowBoard extends L2GameClientPacket {
             return;
         if (activeChar.isCursedWeaponEquipped())
             return;
-        activeChar.isntAfk();
-
         if (Config.COMMUNITYBOARD_ENABLED && !activeChar.isJailed()) {
             ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(Config.BBS_DEFAULT);
             if (handler != null)

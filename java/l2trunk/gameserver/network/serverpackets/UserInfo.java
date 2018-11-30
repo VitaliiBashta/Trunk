@@ -46,21 +46,21 @@ public class UserInfo extends L2GameServerPacket {
     private final boolean openCloak;
     private final double _expPercent;
     private final TeamType _team;
-    private boolean can_writeImpl = false;
     private final int _flyRunSpd;
     private final int _flyWalkSpd;
-    private int _relation;
     private final int _enchant;
-    private int clan_id;
     private final int clan_crest_id;
-    private int ally_id;
     private final int ally_crest_id;
     private final int large_clan_crest_id;
     private final int mount_id;
     private final int cw_level;
+    private final int mount_type;
+    private boolean can_writeImpl = false;
+    private int _relation;
+    private int clan_id;
+    private int ally_id;
     private int name_color;
     private int title_color;
-    private final int mount_type;
     private String _name, title;
 
     public UserInfo(Player player) {
@@ -70,7 +70,7 @@ public class UserInfo extends L2GameServerPacket {
             clan_crest_id = 0;
             ally_crest_id = 0;
             large_clan_crest_id = 0;
-            cw_level = CursedWeaponsManager.getInstance().getLevel(player.getCursedWeaponEquippedId());
+            cw_level = CursedWeaponsManager.INSTANCE.getLevel(player.getCursedWeaponEquippedId());
         } else {
             _name = player.getVisibleName();
 

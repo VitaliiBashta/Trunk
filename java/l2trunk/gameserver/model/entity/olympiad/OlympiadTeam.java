@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OlympiadTeam {
     private final OlympiadGame _game;
-    private final Map<Integer,TeamMember> _members;
+    private final Map<Integer, TeamMember> _members;
     private final int _side;
     private String _name = "";
     private double _damage;

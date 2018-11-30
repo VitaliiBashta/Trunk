@@ -116,7 +116,7 @@ public class RainbowYetiInstance extends NpcInstance {
                 player.teleToLocation(event.getResidence().getOtherRestartPoint());
         }
 
-        _task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new GenerateTask(), 10000L, 300000L);
+        _task = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new GenerateTask(), 10000L, 300000L);
     }
 
     @Override

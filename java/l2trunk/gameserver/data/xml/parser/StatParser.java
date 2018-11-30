@@ -60,7 +60,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         }
 
         if (cond._conditions == null || cond._conditions.size() == 0)
-            error("Empty <and> condition in " + getCurrentFileName());
+            LOG.error("Empty <and> condition in " + getCurrentFileName());
         return cond;
     }
 
@@ -72,14 +72,14 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         }
 
         if (cond._conditions == null || cond._conditions.size() == 0)
-            error("Empty <or> condition in " + getCurrentFileName());
+            LOG.error("Empty <or> condition in " + getCurrentFileName());
         return cond;
     }
 
     private Condition parseLogicNot(Element n) {
-        for (Object element : n.elements())
-            return new ConditionLogicNot(parseCond((Element) element));
-        error("Empty <not> condition in " + getCurrentFileName());
+        if (!n.elements().isEmpty())
+            return new ConditionLogicNot(parseCond(n.elements().get(0)));
+        LOG.error("Empty <not> condition in " + getCurrentFileName());
         return null;
     }
 
@@ -166,7 +166,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
                             continue tokens;
                         }
 
-                    error("Invalid item kind: \"" + item + "\" in " + getCurrentFileName());
+                    LOG.error("Invalid item kind: \"" + item + "\" in " + getCurrentFileName());
                 }
                 if (mask != 0)
                     cond = joinAnd(cond, new ConditionUsingItemType(mask));

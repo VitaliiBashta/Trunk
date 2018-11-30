@@ -86,7 +86,7 @@ public class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
         List<Creature> target = new ArrayList<>();
         target.add(player);
         npc.broadcastPacket(new MagicSkillUse(npc, player, skillId, level, 0, 0));
-        npc.callSkill(SkillTable.getInstance().getInfo(skillId, level), target, true);
+        npc.callSkill(SkillTable.INSTANCE().getInfo(skillId, level), target, true);
     }
 
     @Override

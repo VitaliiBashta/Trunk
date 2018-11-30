@@ -14,8 +14,10 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.List;
+
 public abstract class Dominion_KillSpecialUnitQuest extends Quest implements ScriptFile {
-    private final ClassId[] _classIds;
+    private final List<ClassId> _classIds;
 
     public Dominion_KillSpecialUnitQuest() {
         super(PARTY_ALL);
@@ -36,7 +38,7 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
 
     protected abstract int getRandomMax();
 
-    protected abstract ClassId[] getTargetClassIds();
+    protected abstract List<ClassId> getTargetClassIds();
 
     @Override
     public String onKill(Player killed, QuestState qs) {
@@ -48,10 +50,10 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
         if (event1 == null)
             return null;
         DominionSiegeEvent event2 = killed.getEvent(DominionSiegeEvent.class);
-        if (event1 == null || event2 == null || event2 == event1)
+        if (event2 == null || event2 == event1)
             return null;
 
-        if (!ArrayUtils.contains(_classIds, killed.getClassId()))
+        if (!_classIds.contains(killed.getClassId()))
             return null;
 
         int max_kills = qs.getInt("max_kills");

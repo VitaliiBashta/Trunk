@@ -83,7 +83,7 @@ public class Spawn extends Skill {
             spawn.doSpawn(true);
             spawn.init();
             _spawnNpc = spawn.getLastSpawn();
-            if (_despawnDelay > 0) ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+            if (_despawnDelay > 0) ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     if (_spawnNpc == null) return;

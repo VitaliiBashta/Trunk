@@ -42,8 +42,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
 public abstract class AbstractFightClub extends GlobalEvent {
-    protected static final String REGISTERED_PLAYERS = "registered_players";
     public static final String LOGGED_OFF_PLAYERS = "logged_off_players";
+    protected static final String REGISTERED_PLAYERS = "registered_players";
     protected static final String FIGHTING_PLAYERS = "fighting_players";
     private static final int INSTANT_ZONE_ID = 400;
     private static final int CLOSE_LOCATIONS_VALUE = 150;//Used for spawning players
@@ -153,14 +153,14 @@ public abstract class AbstractFightClub extends GlobalEvent {
     private static void giveBuffs(final Playable playable, int[][] buffs) {
         Skill buff;
         for (int[] buff1 : buffs) {
-            buff = SkillTable.getInstance().getInfo(buff1[0], buff1[1]);
+            buff = SkillTable.INSTANCE().getInfo(buff1[0], buff1[1]);
             if (buff == null) {
                 continue;
             }
             buff.getEffects(playable, playable, false, false);
         }
 
-        ThreadPoolManager.getInstance().schedule(() ->
+        ThreadPoolManager.INSTANCE.schedule(() ->
         {
             playable.setCurrentHp(playable.getMaxHp(), true);
             playable.setCurrentMp(playable.getMaxMp());
@@ -219,7 +219,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
         _state = EVENT_STATE.PREPARATION;
 
         //Getting all zones
-        Map<Integer,DoorTemplate> doors = new HashMap<>(0);
+        Map<Integer, DoorTemplate> doors = new HashMap<>(0);
         Map<String, ZoneTemplate> zones = new HashMap<>();
         for (Entry<Integer, Map<String, ZoneTemplate>> entry : getMap().getTerritories().entrySet()) {
             for (Entry<String, ZoneTemplate> team : entry.getValue().entrySet()) {
@@ -255,14 +255,13 @@ public abstract class AbstractFightClub extends GlobalEvent {
         updateEveryScore();
 
         for (FightClubPlayer iFPlayer : getPlayers(FIGHTING_PLAYERS, REGISTERED_PLAYERS)) {
-            iFPlayer.getPlayer().isntAfk();
             iFPlayer.getPlayer().setFightClubGameRoom(null);
             SchemeBufferInstance.showWindow(iFPlayer.getPlayer());
         }
 
         startNewTimer(true, TIME_PLAYER_TELEPORTING * 1000, "startRoundTimer", TIME_PREPARATION_BEFORE_FIRST_ROUND);
 
-        ThreadPoolManager.getInstance().schedule(new LeftZoneThread(), 5000L);
+        ThreadPoolManager.INSTANCE.schedule(new LeftZoneThread(), 5000L);
     }
 
     public void startRound() {
@@ -285,8 +284,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
         }
 
         if (_currentRound == 1) {
-            ThreadPoolManager.getInstance().schedule(new TimeSpentOnEventThread(), 10 * 1000);
-            ThreadPoolManager.getInstance().schedule(new CheckAfkThread(), 1000);
+            ThreadPoolManager.INSTANCE.schedule(new TimeSpentOnEventThread(), 10 * 1000);
         }
 
         for (FightClubPlayer iFPlayer : getPlayers(FIGHTING_PLAYERS)) {
@@ -316,7 +314,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
                     team.setSpawnLoc(null);
             }
 
-            ThreadPoolManager.getInstance().schedule(() ->
+            ThreadPoolManager.INSTANCE.schedule(() ->
             {
                 for (FightClubPlayer iFPlayer : getPlayers(FIGHTING_PLAYERS)) {
                     teleportSinglePlayer(iFPlayer, false, true);
@@ -326,7 +324,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
 
             }, TIME_AFTER_ROUND_END_TO_RETURN_SPAWN * 1000);
         } else {
-            ThreadPoolManager.getInstance().schedule(this::stopEvent, 10 * 1000);
+            ThreadPoolManager.INSTANCE.schedule(this::stopEvent, 10 * 1000);
 
             if (isTeamed())
                 announceWinnerTeam(true, null);
@@ -359,7 +357,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
             showScores(player);
         }
 
-        ThreadPoolManager.getInstance().schedule(() ->
+        ThreadPoolManager.INSTANCE().schedule(() ->
         {
             for (Player player : getAllFightingPlayers()) {
                 leaveEvent(player, true);
@@ -996,32 +994,6 @@ public abstract class AbstractFightClub extends GlobalEvent {
         c.sendPacket(ExPVPMatchCCRetire.STATIC);
     }
 
-    /**
-     * If player is AFK: getting him back from it
-     * If player isn't AFK: checking if he is in combat and asking if he really wants it
-     *
-     * @param fPlayer
-     * @param setAsAfk
-     */
-    protected void handleAfk(FightClubPlayer fPlayer, boolean setAsAfk) {
-        Player player = fPlayer.getPlayer();
-
-        if (setAsAfk) {
-            fPlayer.setAfk(true);
-            fPlayer.setAfkStartTime(player.getLastNotAfkTime());
-
-            sendMessageToPlayer(player, MESSAGE_TYPES.CRITICAL, "You are considered as AFK Player!");
-        } else if (fPlayer.isAfk()) {
-            int totalAfkTime = (int) ((System.currentTimeMillis() - fPlayer.getAfkStartTime()) / 1000);
-            totalAfkTime -= TIME_TO_BE_AFK;
-            if (totalAfkTime > 5) {
-                fPlayer.setAfk(false);
-
-                fPlayer.addTotalAfkSeconds(totalAfkTime);
-                sendMessageToPlayer(player, MESSAGE_TYPES.CRITICAL, "You were afk for " + totalAfkTime + " seconds!");
-            }
-        }
-    }
 
     /**
      * @param player
@@ -1473,7 +1445,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
      * Spreading Players in team into List of Partys(Party = List<Player> with 9 as MAX Count)
      *
      * @param team team to create Partys
-     * @return List<Party   (   List   <   Player>)>
+     * @return List<Party       (       List       <       Player>)>
      */
     protected List<List<Player>> spreadTeamInPartys(FightClubTeam team) {
         //Creating Map<Class, List of Players>
@@ -1538,7 +1510,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
         }
     }
 
-    private synchronized void createReflection(Map<Integer,DoorTemplate> doors, Map<String, ZoneTemplate> zones) {
+    private synchronized void createReflection(Map<Integer, DoorTemplate> doors, Map<String, ZoneTemplate> zones) {
         InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(INSTANT_ZONE_ID);
 
         _reflection = new Reflection();
@@ -1637,8 +1609,6 @@ public abstract class AbstractFightClub extends GlobalEvent {
         if (player.isDead())
             return false;
         if (!player.getReflection().equals(getReflection()))
-            return false;
-        if (System.currentTimeMillis() - player.getLastNotAfkTime() > 120000)//If inactive for at least 2 minutes
             return false;
 
         boolean insideZone = false;
@@ -1931,7 +1901,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
      * @args - arguments that method takes(except int eventObjId)
      */
     private void startNewTimer(boolean saveAsMainTimer, int firstWaitingTimeInMilis, String methodName, Object... args) {
-        ScheduledFuture<?> timer = ThreadPoolManager.getInstance().schedule(new SmartTimer(methodName, saveAsMainTimer, args), firstWaitingTimeInMilis);
+        ScheduledFuture<?> timer = ThreadPoolManager.INSTANCE.schedule(new SmartTimer(methodName, saveAsMainTimer, args), firstWaitingTimeInMilis);
 
         if (saveAsMainTimer)
             _timer = timer;
@@ -2087,7 +2057,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
             }
 
             if (_state != EVENT_STATE.NOT_ACTIVE)
-                ThreadPoolManager.getInstance().schedule(new TimeSpentOnEventThread(), 10 * 1000);
+                ThreadPoolManager.INSTANCE.schedule(new TimeSpentOnEventThread(), 10 * 1000);
         }
     }
 
@@ -2126,47 +2096,11 @@ public abstract class AbstractFightClub extends GlobalEvent {
             }
 
             if (_state != EVENT_STATE.NOT_ACTIVE)
-                ThreadPoolManager.getInstance().schedule(this, 1000L);
-        }
-    }
-
-    private class CheckAfkThread extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            long currentTime = System.currentTimeMillis();
-            for (FightClubPlayer iFPlayer : getPlayers(FIGHTING_PLAYERS)) {
-                Player player = iFPlayer.getPlayer();
-                boolean isAfk = (player.getLastNotAfkTime() + TIME_TO_BE_AFK * 1000) < currentTime;
-
-                if (isAfkTimerStopped(player))//Cannot do any actions, doesn't mean he is afk
-                    continue;
-
-                if (iFPlayer.isAfk()) {
-                    if (!isAfk) {
-                        handleAfk(iFPlayer, false);//Just came back from afk
-                    } else if (_state != EVENT_STATE.OVER) {
-                        sendMessageToPlayer(player, MESSAGE_TYPES.CRITICAL, "You are in AFK mode!");
-                    }
-                } else if (_state == EVENT_STATE.NOT_ACTIVE) {
-                    handleAfk(iFPlayer, false);
-                } else if (isAfk) {
-                    handleAfk(iFPlayer, true);//Just started to be afk
-                }
-            }
-
-            if (getState() != EVENT_STATE.NOT_ACTIVE) {
-                ThreadPoolManager.getInstance().schedule(this, 1000);
-            } else {
-                for (FightClubPlayer iFPlayer : getPlayers(FIGHTING_PLAYERS)) {
-                    if (iFPlayer.isAfk())
-                        handleAfk(iFPlayer, false);
-                }
-            }
+                ThreadPoolManager.INSTANCE.schedule(this, 1000L);
         }
     }
 
     private class BestTeamComparator implements Comparator<FightClubTeam>, Serializable {
-        private static final long serialVersionUID = -7744947898101934099L;
         private final boolean _scoreNotKills;
 
         private BestTeamComparator(boolean scoreNotKills) {
@@ -2224,12 +2158,11 @@ public abstract class AbstractFightClub extends GlobalEvent {
 
                 _args[1] = waitingTime;
 
-                ScheduledFuture<?> timer = ThreadPoolManager.getInstance().schedule(this, toWait * 1000);
+                ScheduledFuture<?> timer = ThreadPoolManager.INSTANCE.schedule(this, toWait * 1000);
 
                 if (_saveAsMain)
                     _timer = timer;
-            } else
-                return;
+            }
         }
     }
 }

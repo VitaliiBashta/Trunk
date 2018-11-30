@@ -137,8 +137,8 @@ public class ChamberlainInstance extends ResidenceManager {
                 player.sendPacket(SystemMsg.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
                 return;
             }
-            String filename = "";
-            if (CastleManorManager.getInstance().isDisabled())
+            String filename;
+            if (CastleManorManager.INSTANCE.isDisabled())
                 filename = "npcdefault.htm";
             else {
                 int cmd = Integer.parseInt(val);
@@ -168,7 +168,7 @@ public class ChamberlainInstance extends ResidenceManager {
             }
             // input string format:
             // manor_menu_select?ask=X&state=Y&time=X
-            if (CastleManorManager.getInstance().isUnderMaintenance()) {
+            if (CastleManorManager.INSTANCE.isUnderMaintenance()) {
                 player.sendPacket(SystemMsg.THE_MANOR_SYSTEM_IS_CURRENTLY_UNDER_MAINTENANCE);
                 player.sendActionFailed();
                 return;
@@ -190,7 +190,7 @@ public class ChamberlainInstance extends ResidenceManager {
             switch (ask) { // Main action
                 case 3: // Current seeds (Manor info)
                     if (time == 1 && !ResidenceHolder.getInstance().getResidence(Castle.class, castleId).isNextPeriodApproved())
-                        player.sendPacket(new ExShowSeedInfo(castleId, Collections.<SeedProduction>emptyList()));
+                        player.sendPacket(new ExShowSeedInfo(castleId, Collections.emptyList()));
                     else
                         player.sendPacket(new ExShowSeedInfo(castleId, ResidenceHolder.getInstance().getResidence(Castle.class, castleId).getSeedProduction(time)));
                     break;

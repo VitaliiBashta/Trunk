@@ -4,7 +4,7 @@ import l2trunk.commons.net.nio.impl.SelectorThread;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.commons.time.cron.SchedulingPattern.InvalidPatternException;
 import l2trunk.gameserver.database.DatabaseFactory;
-import l2trunk.gameserver.instancemanager.CoupleManager;
+//import l2trunk.gameserver.instancemanager.CoupleManager;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
 import l2trunk.gameserver.instancemanager.games.FishingChampionShipManager;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -143,7 +143,7 @@ public class Shutdown extends Thread {
         AuthServerCommunication.getInstance().shutdown();
 
         _log.info("Shutting down scripts...");
-//        Scripts.getInstance().shutdown();
+//        Scripts.INSTANCE().shutdown();
 
         _log.info("Disconnecting players...");
         disconnectAllPlayers();
@@ -156,7 +156,7 @@ public class Shutdown extends Thread {
 
         try {
             _log.info("Shutting down thread pool...");
-            ThreadPoolManager.getInstance().shutdown();
+            ThreadPoolManager.INSTANCE.shutdown();
         } catch (InterruptedException e) {
             _log.error("Shut down Interrupted ", e);
         }
@@ -208,23 +208,15 @@ public class Shutdown extends Thread {
                 _log.error("Error while saving Olympiad Database! ", e);
             }
 
-        if (Config.ALLOW_WEDDING)
-            try {
-                CoupleManager.getInstance().store();
-                _log.info("CoupleManager: Data saved.");
-            } catch (RuntimeException e) {
-                _log.error("Error while saving Couple Manager! ", e);
-            }
-
         try {
-            FishingChampionShipManager.getInstance().shutdown();
+            FishingChampionShipManager.INSTANCE.shutdown();
             _log.info("FishingChampionShipManager: Data saved.");
         } catch (RuntimeException e) {
             _log.error("Error while saving Fishing Championship Manager! ", e);
         }
 
         try {
-            Hero.getInstance().shutdown();
+            Hero.INSTANCE.shutdown();
             _log.info("Hero: Data saved.");
         } catch (RuntimeException e) {
             _log.error("Error while saving Heroes! ", e);
@@ -232,7 +224,7 @@ public class Shutdown extends Thread {
 
         if (Config.ALLOW_CURSED_WEAPONS)
             try {
-                CursedWeaponsManager.getInstance().saveData();
+                CursedWeaponsManager.INSTANCE.saveData();
                 _log.info("CursedWeaponsManager: Data saved,");
             } catch (RuntimeException e) {
                 _log.error("Error while saving Cursed Weapons! ", e);
@@ -263,13 +255,13 @@ public class Shutdown extends Thread {
                 case 180:
                 case 120:
                 case 60:
-                    Announcements.getInstance().announceToAll("Server is restarting in " + shutdownCounter / 60 + " minutes!");
+                    Announcements.INSTANCE.announceToAll("Server is restarting in " + shutdownCounter / 60 + " minutes!");
                     break;
                 case 30:
                 case 20:
                 case 10:
                 case 5:
-                    Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_SERVER_WILL_BE_COMING_DOWN_IN_S1_SECONDS__PLEASE_FIND_A_SAFE_PLACE_TO_LOG_OUT).addInteger(shutdownCounter));
+                    Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_SERVER_WILL_BE_COMING_DOWN_IN_S1_SECONDS__PLEASE_FIND_A_SAFE_PLACE_TO_LOG_OUT).addInteger(shutdownCounter));
                     break;
                 case 0:
                     switch (shutdownMode) {

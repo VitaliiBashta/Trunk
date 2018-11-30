@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-@SuppressWarnings("unused")
 public class _336_CoinOfMagic extends Quest implements ScriptFile {
     @Override
     public void onLoad() {
@@ -299,7 +298,7 @@ public class _336_CoinOfMagic extends Quest implements ScriptFile {
         super(true);
         addStartNpc(SORINT);
 
-        addTalkId(new int[]{
+        addTalkId(
                 SORINT,
                 BERNARD,
                 PAGE,
@@ -311,7 +310,7 @@ public class _336_CoinOfMagic extends Quest implements ScriptFile {
                 PANO,
                 DUNING,
                 LORAIN
-        });
+        );
 
         for (int mob[] : DROPLIST)
             addKillId(mob[0]);

@@ -78,16 +78,6 @@ public abstract class GameObject extends EventOwner {
         return _reflection;
     }
 
-    public void setReflection(int reflectionId) {
-        Reflection r = ReflectionManager.getInstance().get(reflectionId);
-        if (r == null) {
-            Log.debug("Trying to set unavailable reflection: " + reflectionId + " for object: " + this + "!", new Throwable().fillInStackTrace());
-            return;
-        }
-
-        setReflection(r);
-    }
-
     public void setReflection(Reflection reflection) {
         if (_reflection == reflection)
             return;
@@ -111,6 +101,16 @@ public abstract class GameObject extends EventOwner {
 
         if (respawn)
             spawnMe();
+    }
+
+    public void setReflection(int reflectionId) {
+        Reflection r = ReflectionManager.getInstance().get(reflectionId);
+        if (r == null) {
+            Log.debug("Trying to set unavailable reflection: " + reflectionId + " for object: " + this + "!", new Throwable().fillInStackTrace());
+            return;
+        }
+
+        setReflection(r);
     }
 
     public int getReflectionId() {

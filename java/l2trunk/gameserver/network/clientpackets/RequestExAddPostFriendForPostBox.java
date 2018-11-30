@@ -35,7 +35,7 @@ public class RequestExAddPostFriendForPostBox extends L2GameClientPacket {
             return;
         }
 
-        Map<Integer,String> postFriend = player.getPostFriends();
+        Map<Integer, String> postFriend = player.getPostFriends();
         if (postFriend.size() >= Player.MAX_POST_FRIEND_SIZE) {
             player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.LIST_IS_FULL));
             return;

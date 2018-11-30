@@ -29,7 +29,7 @@ public final class PavelRuins extends Fighter {
     public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         super.onEvtDead(killer);
-        ThreadPoolManager.getInstance().schedule(new SpawnNext(actor, killer), 5000);
+        ThreadPoolManager.INSTANCE.schedule(new SpawnNext(actor, killer), 5000);
     }
 
     private static class SpawnNext extends RunnableImpl {

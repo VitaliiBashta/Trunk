@@ -7,12 +7,11 @@ package l2trunk.gameserver.network.serverpackets;
 public class ExConfirmAddingPostFriend extends L2GameServerPacket {
     public static final int NAME_IS_NOT_EXISTS = 0;
     public static final int SUCCESS = 1;
-    public static int PREVIOS_NAME_IS_BEEN_REGISTERED = -1;  // The previous name is being registered. Please try again later.
-    public static int NAME_IS_NOT_EXISTS2 = -2;
     public static final int LIST_IS_FULL = -3;
     public static final int ALREADY_ADDED = -4;
     public static final int NAME_IS_NOT_REGISTERED = -4;
-
+    public static int PREVIOS_NAME_IS_BEEN_REGISTERED = -1;  // The previous name is being registered. Please try again later.
+    public static int NAME_IS_NOT_EXISTS2 = -2;
     private final String _name;
     private final int _result;
 

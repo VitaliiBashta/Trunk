@@ -19,10 +19,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Alliance {
     private static final Logger _log = LoggerFactory.getLogger(Alliance.class);
     private static final long EXPELLED_MEMBER_PENALTY = 24 * 60 * 60 * 1000L;
+    private final Map<Integer, Clan> _members = new ConcurrentHashMap<>();
     private String _allyName;
     private int _allyId;
     private Clan _leader = null;
-    private final Map<Integer, Clan> _members = new ConcurrentHashMap<>();
     private int _allyCrestId;
     private long _expelledMemberTime;
 
@@ -217,7 +217,7 @@ public class Alliance {
                 rset = statement.executeQuery();
 
                 while (rset.next()) {
-                    member = ClanTable.getInstance().getClan(rset.getInt("clan_id"));
+                    member = ClanTable.INSTANCE.getClan(rset.getInt("clan_id"));
                     if (member != null)
                         if (member.getClanId() == leaderId)
                             setLeader(member);

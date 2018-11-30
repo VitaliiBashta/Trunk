@@ -4,8 +4,8 @@ import l2trunk.gameserver.utils.Location;
 
 //@Deprecated
 public class RequestExGetOnAirShip extends L2GameClientPacket {
-    private int _shipId;
     private final Location loc = new Location();
+    private int _shipId;
 
     @Override
     protected void readImpl() {
@@ -20,7 +20,7 @@ public class RequestExGetOnAirShip extends L2GameClientPacket {
 		/*L2Player activeChar = getClient().getActiveChar();
 		if (activeChar == null)
 			return;
-		L2AirShip boat = (L2AirShip) L2VehicleManager.getInstance().getBoat(_shipId);
+		L2AirShip boat = (L2AirShip) L2VehicleManager.INSTANCE().getBoat(_shipId);
 		if (boat == null)
 			return;
 		activeChar.stopMove();

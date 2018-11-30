@@ -33,7 +33,7 @@ public final class SealDeviceInstance extends MonsterInstance {
 
                 if (ItemFunctions.getItemCount(attacker.getPlayer(), 13846) >= 4) {
                     attacker.getPlayer().showQuestMovie(ExStartScenePlayer.SCENE_SSQ_SEALING_EMPEROR_2ND);
-                    ThreadPoolManager.getInstance().schedule(new TeleportPlayer(attacker.getPlayer()), 26500L);
+                    ThreadPoolManager.INSTANCE.schedule(new TeleportPlayer(attacker.getPlayer()), 26500L);
                 }
             }
             i = this.getCurrentHp() - 1;

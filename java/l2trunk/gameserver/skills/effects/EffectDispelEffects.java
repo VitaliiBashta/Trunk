@@ -14,6 +14,7 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -21,12 +22,12 @@ import java.util.regex.Pattern;
 /**
  * Cancellation, Touch of Death, Insane Crusher, Banes, Infinity Spear effect
  */
-public class EffectDispelEffects extends Effect {
+public final class EffectDispelEffects extends Effect {
     private static final Pattern STACK_TYPE_SEPARATOR = Pattern.compile(";");
 
     private final String dispelType;
     private final int cancelRate;
-    private final String[] stackTypes;
+    private final List<String> stackTypes;
     private final int negateMin;
     private final int negateMax;
 
@@ -44,7 +45,7 @@ public class EffectDispelEffects extends Effect {
         cancelRate = template.getParam().getInteger("cancelRate", 0);
         negateMin = template.getParam().getInteger("negateMin", 2);
         negateMax = template.getParam().getInteger("negateCount", 5);
-        stackTypes = STACK_TYPE_SEPARATOR.split(template.getParam().getString("negateStackTypes", ""));
+        stackTypes = Arrays.asList(STACK_TYPE_SEPARATOR.split(template.getParam().getString("negateStackTypes", "")));
     }
 
     public static boolean calcCancelSuccess(Creature activeChar, Creature target, Effect buff, Skill cancelSk, double dispelRate) {
@@ -116,7 +117,7 @@ public class EffectDispelEffects extends Effect {
         }
 
         if (!oldEff.isEmpty())
-            ThreadPoolManager.getInstance().schedule(new GameObjectTasks.ReturnTask(_effected, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
+            ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.ReturnTask(_effected, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
     }
 
     private List<Effect> createEffectList() {
@@ -134,7 +135,7 @@ public class EffectDispelEffects extends Effect {
                     }
                     break;
                 case "bane":
-                    if (!e.isOffensive() && (ArrayUtils.contains(stackTypes, e.getStackType()) || ArrayUtils.contains(stackTypes, e.getStackType2())) && e.isCancelable()) {
+                    if (!e.isOffensive() && (stackTypes.contains(e.getStackType()) || stackTypes.contains(e.getStackType2())) && e.isCancelable()) {
                         buffList.add(e);
                     }
                     break;
@@ -146,9 +147,8 @@ public class EffectDispelEffects extends Effect {
             }
         }
 
-        List<Effect> effectList = new ArrayList<>();
         Collections.reverse(musicList);
-        effectList.addAll(musicList);
+        List<Effect> effectList = new ArrayList<>(musicList);
         Collections.reverse(buffList);
         effectList.addAll(buffList);
 

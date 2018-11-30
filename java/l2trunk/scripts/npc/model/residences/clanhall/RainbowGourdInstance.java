@@ -109,7 +109,7 @@ public class RainbowGourdInstance extends NpcInstance {
         miniGameEvent.removeBanishItems();
 
         final NpcInstance npc = NpcUtils.spawnSingle(35600, loc.x, loc.y, loc.z, 0);
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 List<Player> around = World.getAroundPlayers(npc, 750, 100);

@@ -15,7 +15,10 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ServicesCommunity extends Functions implements ScriptFile, ICommunityBoardHandler {
+import java.util.Collections;
+import java.util.List;
+
+public final class ServicesCommunity extends Functions implements ScriptFile, ICommunityBoardHandler {
 
     private static final Logger _log = LoggerFactory.getLogger(ServicesCommunity.class);
     private final String NameItemPice = ItemFunctions.createItem(ServicesConfig.get("LevelUpItemPice", 4357)).getName();
@@ -40,10 +43,8 @@ public class ServicesCommunity extends Functions implements ScriptFile, ICommuni
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]
-                {
-                };
+    public List<String> getBypassCommands() {
+        return Collections.singletonList("");
     }
 
     @Override
@@ -59,7 +60,7 @@ public class ServicesCommunity extends Functions implements ScriptFile, ICommuni
 
 
         if (bypass.startsWith("_bbsservices:level")) {
-            String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/pages/content.htm", player);
+            String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/pages/content.htm", player);
 
             StringBuilder _content = new StringBuilder();
             _content.append("<table width=400><tr><td align=center> Improve Services. </td></tr></table>");
@@ -70,7 +71,7 @@ public class ServicesCommunity extends Functions implements ScriptFile, ICommuni
                 if (LvList[i] > player.getLevel()) {
                     if (i % 4 == 0)
                         _content.append("</tr><tr>");
-                    _content.append("<td><center><button value=\"On " + LvList[i] + " (Price:" + LvPiceList[i] + " " + NameItemPice + ")\" action=\"bypass _bbsservices:level:up:" + LvList[i] + ":" + LvPiceList[i] + "\" width=180 height=20 back=\"L2UI_CT1.Button_DF\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
+                    _content.append("<td><center><button value=\"On ").append(LvList[i]).append(" (Price:").append(LvPiceList[i]).append(" ").append(NameItemPice).append(")\" action=\"bypass _bbsservices:level:up:").append(LvList[i]).append(":").append(LvPiceList[i]).append("\" width=180 height=20 back=\"L2UI_CT1.Button_DF\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
                 }
             }
             _content.append("</tr></table>");

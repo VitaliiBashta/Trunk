@@ -13,7 +13,7 @@ import l2trunk.scripts.quests._288_HandleWithCare;
 
 public final class SeerUgoros extends Mystic {
     private int _weeds = 0;
-    private final Skill _skill = SkillTable.getInstance().getInfo(6426, 1);
+    private final Skill _skill = SkillTable.INSTANCE().getInfo(6426, 1);
 
     public SeerUgoros(NpcInstance actor) {
         super(actor);

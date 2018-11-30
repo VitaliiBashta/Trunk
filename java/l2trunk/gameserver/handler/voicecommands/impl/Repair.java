@@ -5,12 +5,10 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPRepair;
 import l2trunk.gameserver.scripts.Functions;
 
-public class Repair extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS =
-            {
-                    "repair"
-            };
+import java.util.Collections;
+import java.util.List;
 
+public final class Repair extends Functions implements IVoicedCommandHandler {
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
         CCPRepair.repairChar(activeChar, target);
@@ -18,7 +16,7 @@ public class Repair extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
-        return COMMANDS;
+    public List<String> getVoicedCommandList() {
+        return Collections.singletonList("repair");
     }
 }

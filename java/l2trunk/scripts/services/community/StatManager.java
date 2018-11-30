@@ -16,9 +16,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
-public class StatManager implements ScriptFile, ICommunityBoardHandler {
+public final class StatManager implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(StatManager.class);
 
     /**
@@ -46,57 +48,30 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler {
      * Регистратор команд
      */
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_bbsstat", "_bbsstat_pk", "_bbsstat_online", "_bbsstat_clan", "_bbsstat_castle"};
-    }
-
-    /**
-     * Класс общих пер-х
-     */
-    class CBStatMan {
-        int PlayerId = 0; // obj_id Char
-        String ChName = ""; // Char name
-        int ChGameTime = 0; // Time in game
-        int ChPk = 0; // Char PK
-        int ChPvP = 0; // Char PVP
-        int ChOnOff = 0; // Char offline/online cure time
-        int ChSex = 0; // Char sex
-        String NameCastl;
-        Object siegeDate;
-        String Percent;
-        public Object id2;
-        public int id;
-        int ClanLevel;
-        int hasCastle;
-        int ReputationClan;
-        String AllyName;
-        String ClanName;
-        String Owner;
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_bbsstat",
+                "_bbsstat_pk",
+                "_bbsstat_online",
+                "_bbsstat_clan",
+                "_bbsstat_castle");
     }
 
     /**
      * Обработчик команд класса
      *
-     * @param Player  - плеер (Call'er)
-     * @param command - команда обработки
      */
     @Override
     public void onBypassCommand(Player player, String command) {
         if (command.equals("_bbsstat")) {
             showPvp(player);
-            return;
         } else if (command.startsWith("_bbsstat_pk")) {
             showPK(player);
-            return;
         } else if (command.startsWith("_bbsstat_online")) {
             showOnline(player);
-            return;
         } else if (command.startsWith("_bbsstat_clan")) {
             showClan(player);
-            return;
         } else if (command.startsWith("_bbsstat_castle")) {
             showCastle(player);
-            return;
         } else
             ShowBoard.separateAndSend("<html><body><br><br><center>In community stats function: " + command + " not " +
                     "implemented yet</center><br><br></body></html>", player);
@@ -150,7 +125,7 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler {
             }
             html.append("</table>");
 
-            String content = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_top_pvp.htm", player);
+            String content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_top_pvp.htm", player);
 
             content = content.replace("%stats_top_pvp%", html.toString());
             ShowBoard.separateAndSend(content, player);
@@ -202,7 +177,7 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler {
                 html.append("</tr>");
             }
             html.append("</table>");
-            String content = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_top_pk.htm", player);
+            String content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_top_pk.htm", player);
             content = content.replace("%stats_top_pk%", html.toString());
             ShowBoard.separateAndSend(content, player);
         } catch (Exception e) {
@@ -254,7 +229,7 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler {
             }
             html.append("</table>");
 
-            String content = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_online.htm", player);
+            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_online.htm", player);
             content = content.replace("%stats_online%", html.toString());
             ShowBoard.separateAndSend(content, player);
         } catch (Exception e) {
@@ -301,7 +276,7 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler {
                 html.append("</tr>");
             }
             html.append("</table>");
-            String content = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_castle.htm", player);
+            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_castle.htm", player);
             content = content.replace("%stats_castle%", html.toString());
             ShowBoard.separateAndSend(content, player);
         } catch (Exception e) {
@@ -386,7 +361,7 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler {
                 html.append("</tr>");
             }
             html.append("</table>");
-            String content = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_clan.htm", player);
+            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_clan.htm", player);
             content = content.replace("%stats_clan%", html.toString());
             ShowBoard.separateAndSend(content, player);
         } catch (Exception e) {
@@ -418,5 +393,29 @@ public class StatManager implements ScriptFile, ICommunityBoardHandler {
      */
     @Override
     public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
+    }
+
+    /**
+     * Класс общих пер-х
+     */
+    class CBStatMan {
+        public Object id2;
+        public int id;
+        int PlayerId = 0; // obj_id Char
+        String ChName = ""; // Char name
+        int ChGameTime = 0; // Time in game
+        int ChPk = 0; // Char PK
+        int ChPvP = 0; // Char PVP
+        int ChOnOff = 0; // Char offline/online cure time
+        int ChSex = 0; // Char sex
+        String NameCastl;
+        Object siegeDate;
+        String Percent;
+        int ClanLevel;
+        int hasCastle;
+        int ReputationClan;
+        String AllyName;
+        String ClanName;
+        String Owner;
     }
 }

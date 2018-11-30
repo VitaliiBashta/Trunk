@@ -18,7 +18,7 @@ public abstract class KamalokaBossInstance extends LostCaptainInstance {
 
     KamalokaBossInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        _manaRegen = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ManaRegen(), 20000, 20000);
+        _manaRegen = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new ManaRegen(), 20000, 20000);
     }
 
     @Override

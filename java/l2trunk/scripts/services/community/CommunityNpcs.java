@@ -125,7 +125,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             return;
         }
 
-        if (ClanTable.getInstance().getClanByName(newName) != null) {
+        if (ClanTable.INSTANCE.getClanByName(newName) != null) {
             player.sendPacket(Msg.THIS_NAME_ALREADY_EXISTS);
             return;
         }
@@ -148,7 +148,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
     }
 
     private static void sendFileToPlayer(Player player, String path, boolean sendImages, String... replacements) {
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + path, player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + path, player);
 
         if (sendImages)
             ImagesCache.getInstance().sendUsedImages(html, player);
@@ -382,28 +382,27 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]
-                {
-                        "_bbsgetfav",
-                        "_bbsnpcs",
-                        "_bbsgatekeeper",
-                        "_bbsbuffer",
-                        "_bbsbufferbypass",
-                        "_bbsNewSubPage",
-                        "_bbsAddNewSub",
-                        "_changeSubPage",
-                        "_bbsChangeSubTo",
-                        "_bbsCancelSubPage",
-                        "_bbsSelectCancelSub",
-                        "_bbsChooseCertificate",
-                        "_decreasePKPage",
-                        "_decreasePK",
-                        "_actionToAsk",
-                        "_changeNick",
-                        "_changeClanName",
-                        "_bbsepicsRespawn"
-                };
+    public List<String> getBypassCommands() {
+        return Arrays.asList(
+                "_bbsgetfav",
+                "_bbsnpcs",
+                "_bbsgatekeeper",
+                "_bbsbuffer",
+                "_bbsbufferbypass",
+                "_bbsNewSubPage",
+                "_bbsAddNewSub",
+                "_changeSubPage",
+                "_bbsChangeSubTo",
+                "_bbsCancelSubPage",
+                "_bbsSelectCancelSub",
+                "_bbsChooseCertificate",
+                "_decreasePKPage",
+                "_decreasePK",
+                "_actionToAsk",
+                "_changeNick",
+                "_changeClanName",
+                "_bbsepicsRespawn"
+        );
     }
 
     @Override
@@ -518,8 +517,8 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         }
 
         if ("bbsepicsRespawn".equals(cmd)) {
-            //convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29001)*1000L);
-            String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "epicsRespawn/index.htm", player);
+            //convertRespawnDate(RaidBossSpawnManager.INSTANCE().getRespawntime(29001)*1000L);
+            String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "epicsRespawn/index.htm", player);
 
             html = html.replace("%respawnAntharas%", convertRespawnDate(AntharasManager.getState().getRespawnDate()));
             html = html.replace("%respawnValakas%", convertRespawnDate(ValakasManager.getState().getRespawnDate()));
@@ -599,7 +598,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
 
         @Override
         public void sayYes() {
-            if (player==null) return;
+            if (player == null) return;
             if (action == 0)// Inventory
             {
                 if (player.getInventory().destroyItemByItemId(Config.SERVICES_EXPAND_WAREHOUSE_ITEM, Config.SERVICES_EXPAND_WAREHOUSE_PRICE, "Inventory Expand")) {

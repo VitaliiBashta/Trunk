@@ -184,7 +184,7 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
 				scheduleEventStart();
 			ServerVariables.set("TvT", "on");
 			_log.info("Event 'TvT' activated.");
-			Announcements.getInstance().announceByCustomMessage("scripts.events.TvT.AnnounceEventStarted", null);
+			Announcements.INSTANCE().announceByCustomMessage("scripts.events.TvT.AnnounceEventStarted", null);
 		}
 		else
 			player.sendMessage("Event 'TvT' already active.");
@@ -206,7 +206,7 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
 			}
 			ServerVariables.unset("TvT");
 			_log.info("Event 'TvT' deactivated.");
-			Announcements.getInstance().announceByCustomMessage("scripts.events.TvT.AnnounceEventStoped", null);
+			Announcements.INSTANCE().announceByCustomMessage("scripts.events.TvT.AnnounceEventStoped", null);
 		}
 		else
 			player.sendMessage("Event 'TvT' not active.");
@@ -339,7 +339,7 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
     }
 
     public static void sayToAll(String address, String[] replacements) {
-        /*Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);*/
+        /*Announcements.INSTANCE().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);*/
     }
 
     public static void question() {
@@ -1022,12 +1022,12 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
 
     public void scheduleEventStart() {
 		/*try {
-			Calendar currentTime = Calendar.getInstance();
+			Calendar currentTime = Calendar.INSTANCE();
 			Calendar nextStartTime = null;
 			Calendar testStartTime = null;
 
 			for (String timeOfDay : Config.EVENT_TvTStartTime) {
-				testStartTime = Calendar.getInstance();
+				testStartTime = Calendar.INSTANCE();
 				testStartTime.setLenient(true);
 
 				String[] splitTimeOfDay = timeOfDay.split(":");
@@ -1045,7 +1045,7 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
 					_startTask.cancel(false);
 					_startTask = null;
 				}
-				_startTask = ThreadPoolManager.getInstance().schedule(new StartTask(), nextStartTime.getTimeInMillis() - System.currentTimeMillis());
+				_startTask = ThreadPoolManager.INSTANCE().schedule(new StartTask(), nextStartTime.getTimeInMillis() - System.currentTimeMillis());
 			
 			}
 
@@ -1061,7 +1061,7 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
     public static void mageBuff(Player player) {
 		/*for(int i = 0; i < mage_buffs.length; i++) 
 		{
-			buff = SkillTable.getInstance().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
+			buff = SkillTable.INSTANCE().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
 			if (buff == null)
 				continue;
 			buff.getEffects(player, player, false, false);
@@ -1074,7 +1074,7 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
     public static void fighterBuff(Player player) {
 		/*for(int i = 0; i < fighter_buffs.length; i++) 
 		{
-			buff = SkillTable.getInstance().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
+			buff = SkillTable.INSTANCE().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
 			if (buff == null)
 				continue;
 			buff.getEffects(player, player, false, false);
@@ -1096,7 +1096,7 @@ public class TvT extends Functions implements ScriptFile, OnDeathListener,
 				return;
 			}
 
-			for (Residence c : ResidenceHolder.getInstance().getResidenceList(Castle.class))
+			for (Residence c : ResidenceHolder.INSTANCE().getResidenceList(Castle.class))
 				if (c.getSiegeEvent() != null && c.getSiegeEvent().isInProgress()) {
 					_log.debug("TvT not started: CastleSiege in progress");
 					return;

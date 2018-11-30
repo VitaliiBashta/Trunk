@@ -20,7 +20,7 @@ public class ZakenNight extends Reflection {
     @Override
     protected void onCreate() {
         super.onCreate();
-        ThreadPoolManager.getInstance().schedule(new ZakenSpawn(this), initdelay + Rnd.get(120, 240) * 1000L);
+        ThreadPoolManager.INSTANCE().schedule(new ZakenSpawn(this), initdelay + Rnd.get(120, 240) * 1000L);
     }
 
     public class ZakenSpawn extends RunnableImpl {

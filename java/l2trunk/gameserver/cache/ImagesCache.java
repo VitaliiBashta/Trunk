@@ -24,7 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
 /**
  * Class containing Map of Images sent from Server to Client Images are located in ./data/images/id_by_name They are sent to client by PledgeCrest packet
  */
@@ -261,6 +260,7 @@ public class ImagesCache {
 //			_log.warn("Trying to send image that doesn't exist, id:" + imageId);
 //		}
     }
+
     private static class ImagesCacheHolder {
         static final ImagesCache instance = new ImagesCache();
     }

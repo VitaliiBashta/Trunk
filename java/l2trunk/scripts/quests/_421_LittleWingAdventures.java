@@ -261,7 +261,7 @@ public class _421_LittleWingAdventures extends Quest implements ScriptFile {
 
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
-        ThreadPoolManager.getInstance().schedule(new GuardiansSpawner(npc, st, Rnd.get(15, 20)), 1000);
+        ThreadPoolManager.INSTANCE().schedule(new GuardiansSpawner(npc, st, Rnd.get(15, 20)), 1000);
         return null;
     }
 
@@ -340,7 +340,7 @@ public class _421_LittleWingAdventures extends Quest implements ScriptFile {
             tiks++;
             if (tiks < 600) {
                 updateAgression();
-                ThreadPoolManager.getInstance().schedule(this, 1000);
+                ThreadPoolManager.INSTANCE().schedule(this, 1000);
                 return;
             }
             _spawn.deleteAll();

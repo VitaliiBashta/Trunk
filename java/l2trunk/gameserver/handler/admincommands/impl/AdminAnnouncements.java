@@ -34,13 +34,13 @@ public class AdminAnnouncements implements IAdminCommandHandler {
                 break;
             case admin_announce_menu:
                 if ((fullString.length() > 20) && (fullString.length() <= 3020)) {
-                    Announcements.getInstance().announceToAll(fullString.substring(20));
+                    Announcements.INSTANCE.announceToAll(fullString.substring(20));
                 }
                 listAnnouncements(activeChar);
                 break;
             case admin_announce_announcements:
                 for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    Announcements.getInstance().showAnnouncements(player);
+                    Announcements.INSTANCE.showAnnouncements(player);
                 listAnnouncements(activeChar);
                 break;
             case admin_add_announcement:
@@ -52,7 +52,7 @@ public class AdminAnnouncements implements IAdminCommandHandler {
                     for (int i = 2; i < wordList.length; i++)
                         builder.append(" ").append(wordList[i]);
 
-                    Announcements.getInstance().addAnnouncement(time, builder.toString(), true);
+                    Announcements.INSTANCE.addAnnouncement(time, builder.toString(), true);
                     listAnnouncements(activeChar);
                 } catch (Exception e) {
                 }
@@ -61,26 +61,26 @@ public class AdminAnnouncements implements IAdminCommandHandler {
                 if (wordList.length != 2)
                     return false;
                 int val = Integer.parseInt(wordList[1]);
-                Announcements.getInstance().delAnnouncement(val);
+                Announcements.INSTANCE.delAnnouncement(val);
                 listAnnouncements(activeChar);
                 break;
             case admin_announce:
-                Announcements.getInstance().announceToAll(fullString.substring(15));
+                Announcements.INSTANCE.announceToAll(fullString.substring(15));
                 break;
             case admin_a:
                 String name = activeChar.getName();
-                Announcements.getInstance().announceToAll(fullString.substring(8) + " (" + name + ")");
+                Announcements.INSTANCE.announceToAll(fullString.substring(8) + " (" + name + ")");
                 break;
             case admin_crit_announce:
             case admin_c:
                 if (wordList.length < 2)
                     return false;
-                Announcements.getInstance().announceToAll(activeChar.getName() + ": " + fullString.replaceFirst("admin_crit_announce ", "").replaceFirst("admin_c ", ""), ChatType.CRITICAL_ANNOUNCE);
+                Announcements.INSTANCE.announceToAll(activeChar.getName() + ": " + fullString.replaceFirst("admin_crit_announce ", "").replaceFirst("admin_c ", ""), ChatType.CRITICAL_ANNOUNCE);
                 break;
             case admin_cc:
                 if (wordList.length < 2)
                     return false;
-                Announcements.getInstance().announceToAll(fullString.replaceFirst("admin_cc ", ""), ChatType.COMMANDCHANNEL_ALL);
+                Announcements.INSTANCE.announceToAll(fullString.replaceFirst("admin_cc ", ""), ChatType.COMMANDCHANNEL_ALL);
                 break;
             case admin_toscreen:
             case admin_s:
@@ -93,7 +93,7 @@ public class AdminAnnouncements implements IAdminCommandHandler {
                     player.sendPacket(sm);
                 break;
             case admin_reload_announcements:
-                Announcements.getInstance().loadAnnouncements();
+                Announcements.INSTANCE.loadAnnouncements();
                 listAnnouncements(activeChar);
                 activeChar.sendMessage("Announcements reloaded.");
                 break;
@@ -103,7 +103,7 @@ public class AdminAnnouncements implements IAdminCommandHandler {
     }
 
     private void listAnnouncements(Player activeChar) {
-        List<Announcements.Announce> announcements = Announcements.getInstance().getAnnouncements();
+        List<Announcements.Announce> announcements = Announcements.INSTANCE.getAnnouncements();
 
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 

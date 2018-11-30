@@ -104,9 +104,9 @@ public class GvGInstance extends Reflection {
         addSpawnWithoutRespawn(35423, new Location(139640, 139736, -15264), 0); //Red team flag
         addSpawnWithoutRespawn(35426, new Location(139672, 145896, -15264), 0); //Blue team flag
 
-        _bossSpawnTask = ThreadPoolManager.getInstance().schedule(new BossSpawn(), bossSpawnTime); //
-        _countDownTask = ThreadPoolManager.getInstance().schedule(new CountingDown(), (eventTime - 1) * 1000L);
-        _battleEndTask = ThreadPoolManager.getInstance().schedule(new BattleEnd(), (eventTime - 6) * 1000L); // -6 is about to prevent built-in BlockChecker countdown task
+        _bossSpawnTask = ThreadPoolManager.INSTANCE().schedule(new BossSpawn(), bossSpawnTime); //
+        _countDownTask = ThreadPoolManager.INSTANCE().schedule(new CountingDown(), (eventTime - 1) * 1000L);
+        _battleEndTask = ThreadPoolManager.INSTANCE().schedule(new BattleEnd(), (eventTime - 6) * 1000L); // -6 is about to prevent built-in BlockChecker countdown task
 
         //Assigning players to teams
         for (Player member : team1.getMembers()) {
@@ -178,7 +178,7 @@ public class GvGInstance extends Reflection {
         startCollapseTimer(60 * 1000L);
 
         paralyzePlayers();
-        ThreadPoolManager.getInstance().schedule(new Finish(), 55 * 1000L);
+        ThreadPoolManager.INSTANCE().schedule(new Finish(), 55 * 1000L);
 
         if (_bossSpawnTask != null) {
             _bossSpawnTask.cancel(false);
@@ -368,7 +368,7 @@ public class GvGInstance extends Reflection {
             //player.setCurrentMp(player.getMaxMp());
             player.broadcastPacket(new Revive(player));
         }
-        player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(5660, 2)); // Battlefield Death Syndrome
+        player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(5660, 2)); // Battlefield Death Syndrome
 
         //Location pos;
         //if(team1.containsMember(player))

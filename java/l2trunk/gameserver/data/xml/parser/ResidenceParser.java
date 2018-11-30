@@ -62,7 +62,7 @@ public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
             residence = (Residence) constructor.newInstance(set);
             getHolder().addResidence(residence);
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            error("fail to init: " + getCurrentFileName(), e);
+            LOG.error("fail to init: " + getCurrentFileName(), e);
             return;
         }
 
@@ -116,7 +116,7 @@ public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
                     int id2 = Integer.parseInt(nextElement.attributeValue("id"));
                     int level2 = Integer.parseInt(nextElement.attributeValue("level"));
 
-                    Skill skill = SkillTable.getInstance().getInfo(id2, level2);
+                    Skill skill = SkillTable.INSTANCE.getInfo(id2, level2);
                     if (skill != null)
                         residence.addSkill(skill);
                 }
@@ -169,7 +169,7 @@ public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
                         else if (q.equalsIgnoreCase("cabal_dawn"))
                             intSet.add(SevenSigns.CABAL_DAWN);
                         else
-                            error("Unknown ssq type: " + q + "; file: " + getCurrentFileName());
+                            LOG.error("Unknown ssq type: " + q + "; file: " + getCurrentFileName());
                     }
 
                     ((Castle) residence).addMerchantGuard(new MerchantGuard(itemId, npcId2, maxGuard, intSet));
@@ -179,6 +179,7 @@ public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
             if (function != null)
                 function.addLease(level, lease);
         }
+        getHolder().buildFastLook();
     }
 
     private ResidenceFunction checkAndGetFunction(Residence residence, int type) {

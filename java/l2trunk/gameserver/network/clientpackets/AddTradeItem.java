@@ -34,8 +34,6 @@ public class AddTradeItem extends L2GameClientPacket {
         if (parthner1 == null || _amount < 1)
             return;
 
-        parthner1.isntAfk();
-
         Request request = parthner1.getRequest();
         if (request == null || !request.isTypeOf(L2RequestType.TRADE)) {
             parthner1.sendActionFailed();

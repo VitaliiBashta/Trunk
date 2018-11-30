@@ -56,7 +56,7 @@ public final class EventParser extends AbstractDirParser<EventHolder> {
             try {
                 eventClass = (Class<GlobalEvent>) Class.forName("l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
             } catch (ClassNotFoundException e) {
-                error("Not found impl class: " + impl + "; File: " + getCurrentFileName(), e);
+                LOG.error("Not found impl class: " + impl + "; File: " + getCurrentFileName(), e);
                 continue;
             }
 
@@ -92,7 +92,7 @@ public final class EventParser extends AbstractDirParser<EventHolder> {
             for (Iterator<Element> objectIterator = eventElement.elementIterator("objects"); objectIterator.hasNext(); ) {
                 Element objectElement = objectIterator.next();
                 String objectsName = objectElement.attributeValue("name");
-                List<Serializable> objects = parseObjects(objectElement);
+                List<Object> objects = parseObjects(objectElement);
 
                 event.addObjects(objectsName, objects);
             }
@@ -102,11 +102,11 @@ public final class EventParser extends AbstractDirParser<EventHolder> {
         }
     }
 
-    private List<Serializable> parseObjects(Element element) {
+    private List<Object> parseObjects(Element element) {
         if (element == null)
             return Collections.emptyList();
 
-        List<Serializable> objects = new ArrayList<>(2);
+        List<Object> objects = new ArrayList<>(2);
         for (Iterator<Element> objectsIterator = element.elementIterator(); objectsIterator.hasNext(); ) {
             Element objectsElement = objectsIterator.next();
             final String nodeName = objectsElement.getName();
@@ -235,7 +235,7 @@ public final class EventParser extends AbstractDirParser<EventHolder> {
             } else if (actionElement.getName().equalsIgnoreCase("announce")) {
                 String val = actionElement.attributeValue("val");
                 if (val == null && time == Integer.MAX_VALUE) {
-                    info("Can't get announce time." + getCurrentFileName());
+                    LOG.info("Can't get announce time." + getCurrentFileName());
                     continue;
                 }
 
@@ -260,7 +260,7 @@ public final class EventParser extends AbstractDirParser<EventHolder> {
                 lastIf = action;
             } else if (actionElement.getName().equalsIgnoreCase("else")) {
                 if (lastIf == null)
-                    info("Not find <if> for <else> tag");
+                    LOG.info("Not find <if> for <else> tag");
                 else
                     lastIf.setElseList(parseActions(actionElement, time));
             } else if (actionElement.getName().equalsIgnoreCase("say")) {

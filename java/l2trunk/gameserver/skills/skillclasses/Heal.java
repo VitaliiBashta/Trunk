@@ -39,9 +39,9 @@ public class Heal extends Skill {
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
         // Надо уточнить формулу.
-        double hp = _power;
+        double hp = power;
         if (!_staticPower) {
-            hp += 0.1 * _power * Math.sqrt(activeChar.getMAtk(null, this) / 333);
+            hp += 0.1 * power * Math.sqrt(activeChar.getMAtk(null, this) / 333);
         }
 
         int sps = isSSPossible() && (getHpConsume() == 0) ? activeChar.getChargedSpiritShot() : 0;
@@ -78,7 +78,7 @@ public class Heal extends Skill {
 
                 double addToHp = 0;
                 if (_staticPower) {
-                    addToHp = _power;
+                    addToHp = power;
                 } else {
                     addToHp = (hp * (!_ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.)) / 100.;
                     addToHp = activeChar.calcStat(Stats.HEAL_POWER, addToHp, target, this);

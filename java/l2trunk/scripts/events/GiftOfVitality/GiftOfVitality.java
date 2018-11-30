@@ -103,8 +103,6 @@ public class GiftOfVitality extends Functions implements ScriptFile {
 
     /**
      * Читает статус эвента из базы.
-     *
-     * @return
      */
     private static boolean isActive() {
         return isActive(EVENT_NAME);
@@ -121,7 +119,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
         if (SetActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: 'Gift Of Vitality' started.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStarted", null);
         } else
             player.sendMessage("Event 'Gift Of Vitality' already started.");
 
@@ -138,7 +136,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
         if (SetActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: 'Gift Of Vitality' stopped.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStoped", null);
         } else
             player.sendMessage("Event: 'Gift Of Vitality' not started.");
 
@@ -182,7 +180,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
 //					htmltext = "jack-onSub.htm";
                 else {
                     npc.broadcastPacket(new MagicSkillUse(npc, player, 23179, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(23179, 1));
+                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(23179, 1));
                     player.setVar("govEventTime", String.valueOf(System.currentTimeMillis() + REUSE_HOURS * 60 * 60 * 1000L), -1);
                     player.setVitality(Config.VITALITY_LEVELS[4]);
                     htmltext = "jack-okvitality.htm";
@@ -196,7 +194,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
                 else {
                     for (int[] buff : _summonBuff) {
                         npc.broadcastPacket(new MagicSkillUse(npc, player.getPet(), buff[0], buff[1], 0, 0));
-                        player.altOnMagicUseTimer(player.getPet(), SkillTable.getInstance().getInfo(buff[0], buff[1]));
+                        player.altOnMagicUseTimer(player.getPet(), SkillTable.INSTANCE().getInfo(buff[0], buff[1]));
                     }
                     htmltext = "jack-okbuff.htm";
                 }
@@ -208,12 +206,12 @@ public class GiftOfVitality extends Functions implements ScriptFile {
                     if (!player.isMageClass() || player.getTemplate().race == Race.orc)
                         for (int[] buff : _warrBuff) {
                             npc.broadcastPacket(new MagicSkillUse(npc, player, buff[0], buff[1], 0, 0));
-                            player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(buff[0], buff[1]));
+                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(buff[0], buff[1]));
                         }
                     else
                         for (int[] buff : _mageBuff) {
                             npc.broadcastPacket(new MagicSkillUse(npc, player, buff[0], buff[1], 0, 0));
-                            player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(buff[0], buff[1]));
+                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(buff[0], buff[1]));
                         }
                     htmltext = "jack-okbuff.htm";
                 }

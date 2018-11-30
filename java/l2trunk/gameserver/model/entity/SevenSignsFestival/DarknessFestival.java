@@ -79,7 +79,7 @@ public class DarknessFestival extends Reflection {
             case 0:
                 currentState = FESTIVAL_FIRST_SPAWN;
 
-                _spawnTimerTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         spawnFestivalMonsters(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN, 0);
@@ -91,7 +91,7 @@ public class DarknessFestival extends Reflection {
             case FESTIVAL_FIRST_SPAWN:
                 currentState = FESTIVAL_SECOND_SPAWN;
 
-                _spawnTimerTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         spawnFestivalMonsters(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN, 2);
@@ -103,7 +103,7 @@ public class DarknessFestival extends Reflection {
             case FESTIVAL_SECOND_SPAWN:
                 currentState = FESTIVAL_CHEST_SPAWN;
 
-                _spawnTimerTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         spawnFestivalMonsters(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN, 3);

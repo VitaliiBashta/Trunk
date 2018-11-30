@@ -13,7 +13,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.StringTokenizer;
 
-public class FightClubManagerInstance extends NpcInstance {
+public final class FightClubManagerInstance extends NpcInstance {
     private static final long serialVersionUID = 1L;
 
     private static final String HTML_INDEX = "scripts/events/fightclub/index.htm";
@@ -34,16 +34,16 @@ public class FightClubManagerInstance extends NpcInstance {
             return;
 
         if (!Config.FIGHT_CLUB_ENABLED) {
-            player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.getInstance().getNotNull(HTML_DISABLED, player), 0));
+            player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.INSTANCE.getNotNull(HTML_DISABLED, player), 0));
             return;
         }
 
         if (command.equalsIgnoreCase("index")) {
-            player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.getInstance().getNotNull(HTML_INDEX, player), 0));
+            player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.INSTANCE.getNotNull(HTML_INDEX, player), 0));
         } else if (command.equalsIgnoreCase("makebattle")) {
             player.sendPacket(makeBattleHtml(player));
         } else if (command.equalsIgnoreCase("info")) {
-            player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.getInstance().getNotNull(HTML_INFO, player), 0));
+            player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.INSTANCE.getNotNull(HTML_INFO, player), 0));
         } else {
             final StringTokenizer st = new StringTokenizer(command, " ");
             String pageName = st.nextToken();
@@ -95,7 +95,7 @@ public class FightClubManagerInstance extends NpcInstance {
 
     @Override
     public void showChatWindow(Player player, int val, Object... arg) {
-        player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.getInstance().getNotNull(HTML_INDEX, player), val));
+        player.sendPacket(new NpcHtmlMessage(player, this, HtmCache.INSTANCE.getNotNull(HTML_INDEX, player), val));
     }
 
     private NpcHtmlMessage makeOpenPage(Player player, int pageId) {
@@ -179,7 +179,7 @@ public class FightClubManagerInstance extends NpcInstance {
 
     private void sendResult(Player player, String title, String text) {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
-        html.setFile(HtmCache.getInstance().getNotNull(HTML_RESULT, player));
+        html.setFile(HtmCache.INSTANCE.getNotNull(HTML_RESULT, player));
         html.replace("%title%", title);
         html.replace("%text%", text);
         player.sendPacket(html);

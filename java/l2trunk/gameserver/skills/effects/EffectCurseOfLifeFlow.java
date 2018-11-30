@@ -14,9 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class EffectCurseOfLifeFlow extends Effect {
-    private CurseOfLifeFlowListener _listener;
-
     private final Map<Integer, HardReference<? extends Creature>> _damageList = new HashMap<>();
+    private CurseOfLifeFlowListener _listener;
 
     public EffectCurseOfLifeFlow(Env env, EffectTemplate template) {
         super(env, template);

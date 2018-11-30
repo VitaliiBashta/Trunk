@@ -13,12 +13,12 @@ class RateBonus extends Functions {
     public void list() {
         Player player = getSelf();
         if (!Config.SERVICES_WASH_PK_ENABLED) {
-            show(HtmCache.getInstance().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
             return;
         }
         String html = null;
 
-        html = HtmCache.getInstance().getNotNull("scripts/services/Eleanor.htm", player);
+        html = HtmCache.INSTANCE().getNotNull("scripts/services/Eleanor.htm", player);
         String add = "";
 
         for (int pk : PKS) {
@@ -42,7 +42,7 @@ class RateBonus extends Functions {
     public void get(String[] param) {
         Player player = getSelf();
         if (!Config.SERVICES_WASH_PK_ENABLED) {
-            show(HtmCache.getInstance().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
             return;
         }
         int i = Integer.parseInt(param[0]);

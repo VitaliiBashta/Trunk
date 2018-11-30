@@ -2,59 +2,48 @@ package l2trunk.gameserver.model;
 
 public class Recipe {
     /**
-     * The table containing all l2fecipeInstance (1 line of the recipe : Item-Quantity needed) of the l2fecipeList
-     */
-    private RecipeComponent[] _recipes;
-
-    /**
      * The Identifier of the Instance
      */
     private final int _id;
-
     /**
      * The crafting level needed to use this l2fecipeList
      */
     private final int _level;
-
     /**
      * The Identifier of the l2fecipeList
      */
     private final int _recipeId;
-
     /**
      * The name of the l2fecipeList
      */
     private final String _recipeName;
-
     /**
      * The crafting success rate when using the l2fecipeList
      */
     private final int _successRate;
-
     /**
      * The crafting MP cost of this l2fecipeList
      */
     private final int _mpCost;
-
     /**
      * The Identifier of the Item crafted with this l2fecipeList
      */
     private final int _itemId;
-
     private final int _foundation;
-
     /**
      * The quantity of Item crafted when using this l2fecipeList
      */
     private final int _count;
-
     /**
      * Is dvarven-only or common
      */
     private final boolean _isdwarvencraft;
-
     private final long _exp;
     private final long _sp;
+    /**
+     * The table containing all l2fecipeInstance (1 line of the recipe : Item-Quantity needed) of the l2fecipeList
+     */
+    private RecipeComponent[] _recipes;
 
     /**
      * Constructor<?> of l2fecipeList (create a new Recipe).<BR><BR>

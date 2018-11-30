@@ -22,7 +22,7 @@ public class CustomMessage {
     }
 
     public CustomMessage(String address, Player player, Object... args) {
-        _text = StringHolder.getInstance().getNotNull(player, address);
+        _text = StringHolder.INSTANCE.getNotNull(player, address);
         add(args);
     }
 
@@ -69,7 +69,7 @@ public class CustomMessage {
     }
 
     public CustomMessage addSkillName(int skillId, int skillLevel) {
-        return addSkillName(SkillTable.getInstance().getInfo(skillId, skillLevel));
+        return addSkillName(SkillTable.INSTANCE.getInfo(skillId, skillLevel));
     }
 
     public CustomMessage addItemName(ItemTemplate item) {

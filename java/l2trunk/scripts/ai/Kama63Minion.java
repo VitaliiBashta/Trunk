@@ -47,7 +47,7 @@ public final class Kama63Minion extends Fighter {
             Functions.npcSayCustomMessage(_boss, "Kama63Boss");
             NpcInstance minion = getActor();
             minion.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _boss.getAggroList().getRandomHated(), Rnd.get(1, 100));
-            _dieTask = ThreadPoolManager.getInstance().schedule(new DieScheduleTimerTask(minion, _boss), MINION_DIE_TIME);
+            _dieTask = ThreadPoolManager.INSTANCE().schedule(new DieScheduleTimerTask(minion, _boss), MINION_DIE_TIME);
         }
         return super.thinkActive();
     }

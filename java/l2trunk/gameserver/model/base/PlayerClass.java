@@ -182,9 +182,9 @@ public enum PlayerClass {
     private static final EnumMap<PlayerClass, Set<PlayerClass>> subclassSetMap = new EnumMap<>(PlayerClass.class);
 
     static {
-        kamaelSubclassSet = getSet(kamael, Third);
+        kamaelSubclassSet = getSet(kamael);
 
-        Set<PlayerClass> subclasses = getSet(null, Third);
+        Set<PlayerClass> subclasses = getSet(null);
         subclasses.removeAll(neverSubclassed);
         subclasses.removeAll(kamaelSubclassSet);
 
@@ -256,12 +256,12 @@ public enum PlayerClass {
         _type = type;
     }
 
-    private static EnumSet<PlayerClass> getSet(Race race, ClassLevel level) {
+    private static EnumSet<PlayerClass> getSet(Race race) {
         EnumSet<PlayerClass> allOf = EnumSet.noneOf(PlayerClass.class);
 
         for (PlayerClass playerClass : EnumSet.allOf(PlayerClass.class))
             if (race == null || playerClass.isOfRace(race))
-                if (level == null || playerClass.isOfLevel(level))
+                if (playerClass.isOfLevel(ClassLevel.Third))
                     allOf.add(playerClass);
 
         return allOf;
@@ -296,10 +296,10 @@ public enum PlayerClass {
 
             switch (_race) {
                 case elf:
-                    subclasses.removeAll(getSet(darkelf, Third));
+                    subclasses.removeAll(getSet(darkelf));
                     break;
                 case darkelf:
-                    subclasses.removeAll(getSet(elf, Third));
+                    subclasses.removeAll(getSet(elf));
                     break;
             }
 

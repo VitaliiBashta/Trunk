@@ -40,7 +40,6 @@ public class SevenSigns {
     public static final int CABAL_NULL = 0;
     public static final int CABAL_DUSK = 1;
     public static final int CABAL_DAWN = 2;
-    private static final int SEAL_NULL = 0;
     public static final int SEAL_AVARICE = 1;
     public static final int SEAL_GNOSIS = 2;
     public static final int SEAL_STRIFE = 3;
@@ -48,12 +47,6 @@ public class SevenSigns {
     public static final int PERIOD_COMPETITION = 1;
     public static final int PERIOD_COMP_RESULTS = 2;
     public static final int PERIOD_SEAL_VALIDATION = 3;
-    private static final int PERIOD_START_HOUR = 18;
-    private static final int PERIOD_START_MINS = 00;
-    private static final int PERIOD_START_DAY = Calendar.MONDAY;
-    // The quest event and seal validation periods last for approximately one week
-    // with a 15 minutes "interval" period sandwiched between them.
-    private static final int PERIOD_MINOR_LENGTH = 900000;
     public static final int PERIOD_MAJOR_LENGTH = 603900000;
     public static final int ANCIENT_ADENA_ID = 5575;
     public static final int RECORD_SEVEN_SIGNS_ID = 5707;
@@ -63,15 +56,6 @@ public class SevenSigns {
     // NPC Related Constants
     public static final int ORATOR_NPC_ID = 31094;
     public static final int PREACHER_NPC_ID = 31093;
-    private static final int MAMMON_MERCHANT_ID = 31113;
-    private static final int MAMMON_BLACKSMITH_ID = 31126;
-    private static final int MAMMON_MARKETEER_ID = 31092;
-    private static final int SPIRIT_IN_ID = 31111;
-    private static final int SPIRIT_OUT_ID = 31112;
-    private static final int LILITH_NPC_ID = 25283;
-    private static final int ANAKIM_NPC_ID = 25286;
-    private static final int CREST_OF_DAWN_ID = 31170;
-    private static final int CREST_OF_DUSK_ID = 31171;
     // Seal Stone Related Constants
     public static final int SEAL_STONE_BLUE_ID = 6360;
     public static final int SEAL_STONE_GREEN_ID = 6361;
@@ -84,23 +68,39 @@ public class SevenSigns {
     public static final int RED_CONTRIB_POINTS = 10;
     // There is a max on official, but not sure what!
     public static final long MAXIMUM_PLAYER_CONTRIB = Config.MAX_PLAYER_CONTRIBUTION;
+    private static final int SEAL_NULL = 0;
+    private static final int PERIOD_START_HOUR = 18;
+    private static final int PERIOD_START_MINS = 0;
+    private static final int PERIOD_START_DAY = Calendar.MONDAY;
+    // The quest event and seal validation periods last for approximately one week
+    // with a 15 minutes "interval" period sandwiched between them.
+    private static final int PERIOD_MINOR_LENGTH = 900000;
+    private static final int MAMMON_MERCHANT_ID = 31113;
+    private static final int MAMMON_BLACKSMITH_ID = 31126;
+    private static final int MAMMON_MARKETEER_ID = 31092;
+    private static final int SPIRIT_IN_ID = 31111;
+    private static final int SPIRIT_OUT_ID = 31112;
+    private static final int LILITH_NPC_ID = 25283;
+    private static final int ANAKIM_NPC_ID = 25286;
+    private static final int CREST_OF_DAWN_ID = 31170;
+    private static final int CREST_OF_DUSK_ID = 31171;
     private static final Logger _log = LoggerFactory.getLogger(SevenSigns.class);
     private static SevenSigns _instance;
     private final Calendar _calendar = Calendar.getInstance();
+    private final Map<Integer, StatsSet> _signsPlayerData;
+    private final Map<Integer, Integer> _signsSealOwners;
+    private final Map<Integer, Integer> _signsDuskSealTotals;
+    private final Map<Integer, Integer> _signsDawnSealTotals;
+    private final SSListenerList _listenerList = new SSListenerList();
+    protected int _compWinner;
     private int _activePeriod;
     private int _currentCycle;
     private long _dawnStoneScore;
     private long _duskStoneScore;
     private long _dawnFestivalScore;
     private long _duskFestivalScore;
-    protected int _compWinner;
     private int _previousWinner;
     private ScheduledFuture<?> _periodChange;
-    private final Map<Integer, StatsSet> _signsPlayerData;
-    private final Map<Integer, Integer> _signsSealOwners;
-    private final Map<Integer, Integer> _signsDuskSealTotals;
-    private final Map<Integer, Integer> _signsDawnSealTotals;
-    private final SSListenerList _listenerList = new SSListenerList();
 
     private SevenSigns() {
         GameServer.getInstance().addListener(new OnStartListenerImpl());
@@ -138,10 +138,10 @@ public class SevenSigns {
         if (milliToChange < 10)
             milliToChange = 10;
         // Schedule a time for the next period change.
-        _periodChange = ThreadPoolManager.getInstance().schedule(new SevenSignsPeriodChange(), milliToChange);
+        _periodChange = ThreadPoolManager.INSTANCE.schedule(new SevenSignsPeriodChange(), milliToChange);
 
-        double numSecs = milliToChange / 1000 % 60;
-        double countDown = (milliToChange / 1000 - numSecs) / 60;
+        double numSecs = milliToChange / 1000. % 60;
+        double countDown = (milliToChange / 1000. - numSecs) / 60;
         numMins = (int) Math.floor(countDown % 60);
         countDown = (countDown - numMins) / 60;
         numHours = (int) Math.floor(countDown % 24);
@@ -150,7 +150,7 @@ public class SevenSigns {
         _log.info("SevenSigns: Next period begins in " + numDays + " days, " + numHours + " hours and " + numMins + " mins.");
 
         if (Config.SS_ANNOUNCE_PERIOD > 0)
-            ThreadPoolManager.getInstance().schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
+            ThreadPoolManager.INSTANCE.schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
     }
 
     public static SevenSigns getInstance() {
@@ -224,8 +224,6 @@ public class SevenSigns {
     /**
      * Used to capitalize the first letter of every "word" in a string.<br>
      * (Ported from the idea in Perl and PHP)
-     *
-     * @param String str
      * @return String containing the modified string.
      */
     public static String capitalizeWords(String str) {
@@ -740,8 +738,6 @@ public class SevenSigns {
 
     /**
      * Tests whether the specified player has joined a cabal in the past.
-     *
-     * @param player
      * @return boolean hasRegistered
      */
     private boolean hasRegisteredBefore(int charObjId) {
@@ -754,11 +750,6 @@ public class SevenSigns {
      * if necessary.
      * <BR>
      * Returns the cabal ID the player has joined.
-     *
-     * @param player
-     * @param chosenCabal
-     * @param chosenSeal
-     * @return int cabal
      */
     public int setPlayerInfo(int charObjId, int chosenCabal, int chosenSeal) {
         StatsSet currPlayer = null;
@@ -1161,7 +1152,7 @@ public class SevenSigns {
     }
 
     public void changePeriod() {
-        _periodChange = ThreadPoolManager.getInstance().schedule(new SevenSignsPeriodChange(), 10);
+        _periodChange = ThreadPoolManager.INSTANCE.schedule(new SevenSignsPeriodChange(), 10);
     }
 
     public void changePeriod(int period) {
@@ -1172,14 +1163,14 @@ public class SevenSigns {
         _activePeriod = period - 1;
         if (_activePeriod < 0)
             _activePeriod += 4;
-        _periodChange = ThreadPoolManager.getInstance().schedule(new SevenSignsPeriodChange(), seconds * 1000L);
+        _periodChange = ThreadPoolManager.INSTANCE.schedule(new SevenSignsPeriodChange(), seconds * 1000L);
     }
 
     public void setTimeToNextPeriodChange(int time) {
         _calendar.setTimeInMillis(System.currentTimeMillis() + time * 1000L * 60);
         if (_periodChange != null)
             _periodChange.cancel(false);
-        _periodChange = ThreadPoolManager.getInstance().schedule(new SevenSignsPeriodChange(), getMilliToPeriodChange());
+        _periodChange = ThreadPoolManager.INSTANCE.schedule(new SevenSignsPeriodChange(), getMilliToPeriodChange());
     }
 
     private SSListenerList getListenerEngine() {
@@ -1217,7 +1208,7 @@ public class SevenSigns {
         public void runImpl() {
             for (Player player : GameObjectsStorage.getAllPlayersForIterate())
                 sendCurrentPeriodMsg(player);
-            ThreadPoolManager.getInstance().schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
+            ThreadPoolManager.INSTANCE.schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
         }
     }
 
@@ -1291,7 +1282,7 @@ public class SevenSigns {
                 setCalendarForNextPeriodChange();
                 _log.info("SevenSignsPeriodChange: time to next change=" + Util.formatTime((int) (getMilliToPeriodChange() / 1000L)));
                 SevenSignsPeriodChange sspc = new SevenSignsPeriodChange();
-                _periodChange = ThreadPoolManager.getInstance().schedule(sspc, getMilliToPeriodChange());
+                _periodChange = ThreadPoolManager.INSTANCE.schedule(sspc, getMilliToPeriodChange());
             } catch (RuntimeException e) {
                 _log.error("Error on SevenSignsPeriodChange", e);
             }

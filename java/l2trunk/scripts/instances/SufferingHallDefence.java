@@ -46,13 +46,13 @@ public class SufferingHallDefence extends Reflection {
     private void startDefence() {
         spawnByGroup("soi_hos_defence_tumor");
         doCountCoffinNotifications = true;
-        coffinSpawnTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        coffinSpawnTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 addSpawnWithoutRespawn(RegenerationCoffin, new Location(-173704, 218092, -9562, Location.getRandomHeading()), 250);
             }
         }, 1000L, 10000L);
-        monstersSpawnTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        monstersSpawnTask = ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 spawnMonsters();
@@ -68,7 +68,7 @@ public class SufferingHallDefence extends Reflection {
             if (ArrayUtils.contains(monsters, self.getNpcId()) && !checkAliveMonsters()) {
                 if (monstersSpawnTask != null)
                     monstersSpawnTask.cancel(false);
-                monstersSpawnTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                monstersSpawnTask = ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         spawnMonsters();
@@ -81,7 +81,7 @@ public class SufferingHallDefence extends Reflection {
                 tumorIndex = 300;
                 doCountCoffinNotifications = true;
             } else if (self.getNpcId() == Yehan) {
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         if (monstersSpawnTask != null)

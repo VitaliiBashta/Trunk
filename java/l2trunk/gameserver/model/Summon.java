@@ -32,8 +32,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
 public abstract class Summon extends Playable {
-    private static final long serialVersionUID = 1L;
-
     private static final int SUMMON_DISAPPEAR_RANGE = 2500;
 
     private final Player _owner;
@@ -90,7 +88,7 @@ public abstract class Summon extends Playable {
 
     @Override
     public NpcTemplate getTemplate() {
-        return (NpcTemplate) _template;
+        return (NpcTemplate) template;
     }
 
     @Override
@@ -358,7 +356,7 @@ public abstract class Summon extends Playable {
             return;
         }
 
-        _updateEffectIconsTask = ThreadPoolManager.getInstance().schedule(new UpdateEffectIcons(), Config.USER_INFO_INTERVAL);
+        _updateEffectIconsTask = ThreadPoolManager.INSTANCE.schedule(new UpdateEffectIcons(), Config.USER_INFO_INTERVAL);
     }
 
     private void updateEffectIconsImpl() {
@@ -504,7 +502,7 @@ public abstract class Summon extends Playable {
             return;
         }
 
-        _broadcastCharInfoTask = ThreadPoolManager.getInstance().schedule(new BroadcastCharInfoTask(), Config.BROADCAST_CHAR_INFO_INTERVAL);
+        _broadcastCharInfoTask = ThreadPoolManager.INSTANCE.schedule(new BroadcastCharInfoTask(), Config.BROADCAST_CHAR_INFO_INTERVAL);
     }
 
     private void broadcastCharInfoImpl() {
@@ -538,7 +536,7 @@ public abstract class Summon extends Playable {
             return;
         }
 
-        _petInfoTask = ThreadPoolManager.getInstance().schedule(new PetInfoTask(), Config.USER_INFO_INTERVAL);
+        _petInfoTask = ThreadPoolManager.INSTANCE.schedule(new PetInfoTask(), Config.USER_INFO_INTERVAL);
     }
 
     /**

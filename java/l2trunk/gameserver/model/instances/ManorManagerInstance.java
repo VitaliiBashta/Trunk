@@ -34,7 +34,7 @@ public class ManorManagerInstance extends MerchantInstance {
                 player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
                 player.sendActionFailed();
             } else {
-                if (CastleManorManager.getInstance().isDisabled()) {
+                if (CastleManorManager.INSTANCE.isDisabled()) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("npcdefault.htm");
                     html.replace("%objectId%", String.valueOf(getObjectId()));
@@ -60,7 +60,7 @@ public class ManorManagerInstance extends MerchantInstance {
 
         if (command.startsWith("manor_menu_select")) { // input string format:
             // manor_menu_select?ask=X&state=Y&time=X
-            if (CastleManorManager.getInstance().isUnderMaintenance()) {
+            if (CastleManorManager.INSTANCE.isUnderMaintenance()) {
                 player.sendPacket(ActionFail.STATIC, Msg.THE_MANOR_SYSTEM_IS_CURRENTLY_UNDER_MAINTENANCE);
                 return;
             }

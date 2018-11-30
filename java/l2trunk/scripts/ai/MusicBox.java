@@ -15,7 +15,7 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 class MusicBox extends CharacterAI {
     public MusicBox(NpcInstance actor) {
         super(actor);
-        ThreadPoolManager.getInstance().schedule(new ScheduleMusic(), 1000);
+        ThreadPoolManager.INSTANCE().schedule(new ScheduleMusic(), 1000);
     }
 
     private class ScheduleMusic implements Runnable {

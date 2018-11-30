@@ -7,21 +7,19 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.utils.Strings;
 
 import java.text.SimpleDateFormat;
-
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Support for command: /clanpenalty
  */
-public class ClanPenalty implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    100,
-                    114
-            };
+public final class ClanPenalty implements IUserCommandHandler {
+    private static final List<Integer> COMMAND_IDS = Arrays.asList(100, 114);
+
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (COMMAND_IDS[0] != id)
+        if (COMMAND_IDS.get(0) != id)
             return false;
 
         long leaveClan = 0;
@@ -31,7 +29,7 @@ public class ClanPenalty implements IUserCommandHandler {
         if (activeChar.getDeleteClanTime() != 0)
             deleteClan = activeChar.getDeleteClanTime() + 10 * 24 * 60 * 60 * 1000L; // SET TIME Leave from clan penalty
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        String html = HtmCache.getInstance().getNotNull("command/penalty.htm", activeChar);
+        String html = HtmCache.INSTANCE.getNotNull("command/penalty.htm", activeChar);
 
         if (activeChar.getClanId() == 0) {
             if (leaveClan == 0 && deleteClan == 0) {
@@ -59,7 +57,7 @@ public class ClanPenalty implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
+    public final List<Integer> getUserCommandList() {
         return COMMAND_IDS;
     }
 }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 
-public class RequestDismissAlly extends L2GameClientPacket {
+public final class RequestDismissAlly extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }
@@ -39,6 +39,6 @@ public class RequestDismissAlly extends L2GameClientPacket {
             return;
         }
 
-        ClanTable.getInstance().dissolveAlly(activeChar);
+        ClanTable.INSTANCE.dissolveAlly(activeChar);
     }
 }

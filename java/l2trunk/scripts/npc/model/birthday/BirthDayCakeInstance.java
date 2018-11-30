@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 
 @SuppressWarnings("serial")
 public class BirthDayCakeInstance extends NpcInstance {
-    private final Skill SKILL = SkillTable.getInstance().getInfo(22035, 1);
+    private final Skill SKILL = SkillTable.INSTANCE().getInfo(22035, 1);
 
     private class CastTask extends RunnableImpl {
         @Override
@@ -39,7 +39,7 @@ public class BirthDayCakeInstance extends NpcInstance {
     public void onSpawn() {
         super.onSpawn();
 
-        _castTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new CastTask(), 1000L, 1000L);
+        _castTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new CastTask(), 1000L, 1000L);
     }
 
     @Override

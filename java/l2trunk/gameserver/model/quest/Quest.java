@@ -36,8 +36,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Quest {
     public static final String SOUND_ITEMGET = "ItemSound.quest_itemget";
-    protected static final String SOUND_ACCEPT = "ItemSound.quest_accept";
     public static final String SOUND_MIDDLE = "ItemSound.quest_middle";
+    public static final int PARTY_NONE = 0;
+    public static final int PARTY_ALL = 2;
+    public final static int CREATED = 1;
+    public final static int STARTED = 2;
+    public final static int COMPLETED = 3;
+    public final static int DELAYED = 4;
+    protected static final String SOUND_ACCEPT = "ItemSound.quest_accept";
     protected static final String SOUND_FINISH = "ItemSound.quest_finish";
     protected static final String SOUND_GIVEUP = "ItemSound.quest_giveup";
     protected static final String SOUND_TUTORIAL = "ItemSound.quest_tutorial";
@@ -54,13 +60,7 @@ public class Quest {
     protected static final String SOUND_ITEM_DROP_EQUIP_ARMOR_CLOTH = "ItemSound.item_drop_equip_armor_cloth";
     protected static final String NO_QUEST_DIALOG = "no-quest";
     protected static final int ADENA_ID = 57;
-    public static final int PARTY_NONE = 0;
     protected static final int PARTY_ONE = 1;
-    public static final int PARTY_ALL = 2;
-    public final static int CREATED = 1;
-    public final static int STARTED = 2;
-    public final static int COMPLETED = 3;
-    public final static int DELAYED = 4;
     private static final Logger _log = LoggerFactory.getLogger(Quest.class);
     private final String _name;
     private final int _party;
@@ -68,7 +68,7 @@ public class Quest {
     //карта с приостановленными квестовыми таймерами для каждого игрока
     private final Map<Integer, Map<String, QuestTimer>> _pausedQuestTimers = new ConcurrentHashMap<>();
     private final Set<Integer> _questItems = new HashSet<>();
-    private Map<Integer,List<QuestNpcLogInfo>> _npcLogList = new HashMap<>();
+    private Map<Integer, List<QuestNpcLogInfo>> _npcLogList = new HashMap<>();
 
     public Quest(boolean party) {
         this(party ? 1 : 0);
@@ -328,10 +328,21 @@ public class Quest {
      * Add this quest to the list of quests that the passed mob will respond to
      * for Kill Events.<BR>
      */
-    protected void addKillId(int... killIds) {
-        for (int killid : killIds)
-            addEventId(killid, QuestEventType.MOB_KILLED_WITH_QUEST);
+    protected void addKillId(List<Integer> killIds) {
+        killIds.forEach(killid -> addEventId(killid, QuestEventType.MOB_KILLED_WITH_QUEST));
     }
+
+    private void addKillId(int killid) {
+        addEventId(killid, QuestEventType.MOB_KILLED_WITH_QUEST);
+    }
+
+    protected void addKillId(int... killIds) {
+        for (int killid : killIds) {
+            addKillId(killid);
+        }
+    }
+
+
 
     /**
      * Добавляет нпц масив для слушателя при их убийстве, и обновлении пакетом {@link l2trunk.gameserver.network.serverpackets.ExQuestNpcLogList}
@@ -364,7 +375,7 @@ public class Quest {
         boolean find = false;
         for (QuestNpcLogInfo info : vars) {
             int count = st.getInt(info.getVarName());
-            if (!find && ArrayUtils.contains(info.getNpcIds(), npc.getNpcId())) {
+            if (!find && info.getNpcIds().contains(npc.getNpcId())) {
                 find = true;
                 if (count < info.getMaxCount()) {
                     st.set(info.getVarName(), ++count);
@@ -396,18 +407,14 @@ public class Quest {
         return addEventId(npcId, QuestEventType.MOB_TARGETED_BY_SKILL);
     }
 
-    protected void addStartNpc(int... npcIds) {
-        for (int talkId : npcIds)
-            addStartNpc(talkId);
+    protected void addStartNpc(Integer... npcIds) {
+        addStartNpc(Arrays.asList(npcIds));
     }
 
-    /**
-     * Add the quest to the NPC's startQuest
-     * Вызывает addTalkId
-     *
-     * @param npcId
-     * @return L2NpcTemplate : Start NPC
-     */
+    protected void addStartNpc(Collection<Integer> npcIds) {
+        npcIds.forEach(this::addStartNpc);
+    }
+
     protected NpcTemplate addStartNpc(int npcId) {
         addTalkId(npcId);
         return addEventId(npcId, QuestEventType.QUEST_START);
@@ -424,22 +431,16 @@ public class Quest {
             addEventId(npcId, QuestEventType.NPC_FIRST_TALK);
     }
 
-    /**
-     * Add this quest to the list of quests that the passed npc will respond to
-     * for Talk Events.<BR>
-     * <BR>
-     *
-     * @param talkIds : ID of the NPC
-     * @return int : ID of the NPC
-     */
-    protected void addTalkId(int... talkIds) {
-        for (int talkId : talkIds)
-            addEventId(talkId, QuestEventType.QUEST_TALK);
+    public void addTalkId(Integer talkId) {
+        addEventId(talkId, QuestEventType.QUEST_TALK);
+    }
+
+    public void addTalkId(Integer... talkIds) {
+        addTalkId(Arrays.asList(talkIds));
     }
 
     public void addTalkId(Collection<Integer> talkIds) {
-        for (int talkId : talkIds)
-            addTalkId(talkId);
+        talkIds.forEach(this::addTalkId);
     }
 
     /**
@@ -544,7 +545,7 @@ public class Quest {
     }
 
     public void notifyKill(NpcInstance npc, QuestState qs) {
-        String res = null;
+        String res;
         try {
             res = onKill(npc, qs);
         } catch (RuntimeException e) {
@@ -790,7 +791,7 @@ public class Quest {
     protected NpcInstance addSpawn(int npcId, Location loc, int randomOffset, int despawnDelay) {
         NpcInstance result = Functions.spawn(randomOffset > 50 ? Location.findPointToStay(loc, 0, randomOffset, ReflectionManager.DEFAULT.getGeoIndex()) : loc, npcId);
         if (despawnDelay > 0 && result != null)
-            ThreadPoolManager.getInstance().schedule(new DeSpawnScheduleTimerTask(result), despawnDelay);
+            ThreadPoolManager.INSTANCE.schedule(new DeSpawnScheduleTimerTask(result), despawnDelay);
         return result;
     }
 

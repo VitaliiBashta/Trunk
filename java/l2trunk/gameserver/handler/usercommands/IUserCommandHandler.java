@@ -2,6 +2,8 @@ package l2trunk.gameserver.handler.usercommands;
 
 import l2trunk.gameserver.model.Player;
 
+import java.util.List;
+
 public interface IUserCommandHandler {
     /**
      * this is the worker method that is called when someone uses an admin command.
@@ -17,5 +19,5 @@ public interface IUserCommandHandler {
      *
      * @return all known itemIds
      */
-    int[] getUserCommandList();
+    List<Integer> getUserCommandList();
 }

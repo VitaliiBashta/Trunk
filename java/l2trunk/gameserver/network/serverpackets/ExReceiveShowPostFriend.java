@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 public class ExReceiveShowPostFriend extends L2GameServerPacket {
-    private final Map<Integer,String> _list;
+    private final Map<Integer, String> _list;
 
     public ExReceiveShowPostFriend(Player player) {
         _list = player.getPostFriends();

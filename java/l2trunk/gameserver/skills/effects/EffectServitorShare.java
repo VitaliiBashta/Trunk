@@ -8,6 +8,9 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.Func;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class EffectServitorShare extends Effect {
     public EffectServitorShare(Env paramEnv, EffectTemplate paramEffectTemplate) {
         super(paramEnv, paramEffectTemplate);
@@ -22,8 +25,8 @@ public class EffectServitorShare extends Effect {
         super.onExit();
     }
 
-    public Func[] getStatFuncs() {
-        return new Func[]{new Func(Stats.POWER_ATTACK, 64, this) {
+    public List<Func> getStatFuncs() {
+        return Arrays.asList((new Func(Stats.POWER_ATTACK, 64, this) {
             public void calc(Env env) {
                 Player pc = env.character.getPlayer();
                 if (pc != null) {
@@ -31,7 +34,7 @@ public class EffectServitorShare extends Effect {
                     env.value += pc.getPAtk((Creature) ((target != null) && (target.isPet()) ? target : null)) * 0.5D;
                 }
             }
-        }
+        })
                 , new Func(Stats.POWER_DEFENCE, 64, this) {
             public void calc(Env env) {
                 Player pc = env.character.getPlayer();
@@ -95,8 +98,7 @@ public class EffectServitorShare extends Effect {
                 if (pc != null)
                     env.value += pc.getMAtkSpd() * 0.03D;
             }
-        }
-        };
+        });
     }
 
     protected boolean onActionTime() {

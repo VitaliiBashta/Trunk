@@ -21,7 +21,7 @@ public class AchievementNotification {
     private ScheduledFuture<?> _globalNotification;
 
     private AchievementNotification(int intervalInMiliseconds) {
-        _globalNotification = ThreadPoolManager.getInstance().scheduleAtFixedRate(() ->
+        _globalNotification = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() ->
         {
             try {
                 for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
@@ -31,10 +31,10 @@ public class AchievementNotification {
                     for (Entry<Integer, Integer> arco : player.getAchievements().entrySet()) {
                         int achievementId = arco.getKey();
                         int achievementLevel = arco.getValue();
-                        if (Achievements.getInstance().getMaxLevel(achievementId) <= achievementLevel)
+                        if (Achievements.INSTANCE.getMaxLevel(achievementId) <= achievementLevel)
                             continue;
 
-                        Achievement nextLevelAchievement = Achievements.getInstance().getAchievement(achievementId, ++achievementLevel);
+                        Achievement nextLevelAchievement = Achievements.INSTANCE.getAchievement(achievementId, ++achievementLevel);
                         if (nextLevelAchievement != null && nextLevelAchievement.isDone(player.getCounters().getPoints(nextLevelAchievement.getType()))) {
                             // Make a question mark button.
                             player.sendPacket(new TutorialShowQuestionMark(player.getObjectId()));

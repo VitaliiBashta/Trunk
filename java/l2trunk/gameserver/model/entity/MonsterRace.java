@@ -15,10 +15,10 @@ public class MonsterRace {
     private static final Logger _log = LoggerFactory.getLogger(MonsterRace.class);
     private static MonsterRace _instance;
     private final NpcInstance[] monsters;
-    private Constructor<?> _constructor;
-    private int[][] speeds;
     private final int[] first;
     private final int[] second;
+    private Constructor<?> _constructor;
+    private int[][] speeds;
 
     private MonsterRace() {
         monsters = new NpcInstance[8];

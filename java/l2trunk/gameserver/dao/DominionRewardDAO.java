@@ -62,10 +62,10 @@ public class DominionRewardDAO {
             statement.execute();
 
             DominionSiegeEvent siegeEvent = d.getSiegeEvent();
-            Collection<Map.Entry<Integer,int[]>> rewards = siegeEvent.getRewards();
+            Collection<Map.Entry<Integer, int[]>> rewards = siegeEvent.getRewards();
 
             SqlBatch b = new SqlBatch(INSERT_SQL_QUERY);
-            for (Map.Entry<Integer,int[]> entry : rewards) {
+            for (Map.Entry<Integer, int[]> entry : rewards) {
                 String sb = "(" + d.getId() + "," +
                         entry.getKey() + "," +
                         entry.getValue()[DominionSiegeEvent.STATIC_BADGES] + "," +

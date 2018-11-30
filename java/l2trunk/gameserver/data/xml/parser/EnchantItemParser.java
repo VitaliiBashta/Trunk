@@ -67,7 +67,7 @@ public final class EnchantItemParser extends AbstractFileParser<EnchantItemHolde
                     for (Element e : element2.elements())
                         item.addItemId(Integer.parseInt(e.attributeValue("id")));
                 } else {
-                    info("Not supported for now.2");
+                    LOG.info("Not supported for now.2");
                 }
             }
         }

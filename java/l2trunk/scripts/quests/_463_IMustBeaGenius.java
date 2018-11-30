@@ -70,10 +70,10 @@ public class _463_IMustBeaGenius extends Quest implements ScriptFile {
                 }
                 // One with higher chance
                 st.set(String.valueOf(MOBS[Rnd.get(0, MOBS.length - 1)]), String.valueOf(Rnd.get(1, 100)));
-                htmltext = HtmCache.getInstance().getNotNull("quests/_463_IMustBeaGenius/" + event, st.getPlayer());
+                htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.getPlayer());
                 htmltext = htmltext.replace("%num%", String.valueOf(_number));
             } else if (event.equalsIgnoreCase("collecter_gutenhagen_q0463_07.htm")) {
-                htmltext = HtmCache.getInstance().getNotNull("quests/_463_IMustBeaGenius/" + event, st.getPlayer());
+                htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.getPlayer());
                 htmltext = htmltext.replace("%num%", st.get("number"));
             } else if (event.equalsIgnoreCase("reward")) {
                 int diff = st.getInt("number") - 500;

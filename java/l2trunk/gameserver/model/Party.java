@@ -26,8 +26,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-public class Party implements PlayerGroup {
-    public static final int MAX_SIZE = Config.MAX_PARTY_SIZE;
+public final class Party implements PlayerGroup {
+    public static final int MAX_SIZE = 9;
 
     public static final int ITEM_LOOTER = 0;
     public static final int ITEM_RANDOM = 1;
@@ -43,8 +43,8 @@ public class Party implements PlayerGroup {
     public double _rateDrop;
     public double _rateAdena;
     public double _rateSpoil;
-    private int _partyLvl = 0;
-    private int _itemDistribution = 0;
+    private int _partyLvl;
+    private int _itemDistribution;
     private int _itemOrder = 0;
     private int _dimentionalRift;
     private Reflection _reflection;
@@ -65,22 +65,18 @@ public class Party implements PlayerGroup {
         _itemDistribution = itemDistribution;
         _members.add(leader);
         _partyLvl = leader.getLevel();
-        _rateExp = leader.getBonus().getRateXp();
-        _rateSp = leader.getBonus().getRateSp();
-        _rateAdena = leader.getBonus().getDropAdena();
-        _rateDrop = leader.getBonus().getDropItems();
-        _rateSpoil = leader.getBonus().getDropSpoil();
+        _rateExp = 1;
+        _rateSp = 1;
+        _rateAdena = 1;
+        _rateDrop = 1;
+        _rateSpoil = 1;
 
         // Ady - Add this party to the static manager
         getParties().put(leader.getStoredId(), this);
     }
 
     private static void TeleportParty(List<Player> members, Location dest) {
-        for (Player _member : members) {
-            if (_member == null)
-                continue;
-            _member.teleToLocation(dest);
-        }
+        members.forEach( pl -> pl.teleToLocation(dest));
     }
 
     private static void TeleportParty(List<Player> members, Territory territory, Location dest) {
@@ -277,7 +273,7 @@ public class Party implements PlayerGroup {
      */
     public boolean removePartyMember(Player player, boolean kick) {
         boolean isLeader = isLeader(player);
-        boolean dissolve = false;
+        boolean dissolve;
 
         synchronized (_members) {
             if (!_members.remove(player))
@@ -599,17 +595,6 @@ public class Party implements PlayerGroup {
             _partyLvl = Math.max(_partyLvl, level);
             count++;
 
-            rateExp += member.getBonus().getRateXp();
-            rateSp += member.getBonus().getRateSp();
-            rateDrop += member.getBonus().getDropItems();
-            rateAdena += member.getBonus().getDropAdena();
-            rateSpoil += member.getBonus().getDropSpoil();
-
-            minRateExp = Math.min(minRateExp, member.getBonus().getRateXp());
-            minRateSp = Math.min(minRateSp, member.getBonus().getRateSp());
-            minRateDrop = Math.min(minRateDrop, member.getBonus().getDropItems());
-            minRateAdena = Math.min(minRateAdena, member.getBonus().getDropAdena());
-            minRateSpoil = Math.min(minRateSpoil, member.getBonus().getDropSpoil());
         }
 
         _rateExp = Config.RATE_PARTY_MIN ? minRateExp : rateExp / count;
@@ -687,17 +672,6 @@ public class Party implements PlayerGroup {
     }
 
     /**
-     * Телепорт всей пати в одну точку (x,y,z)
-     *
-     * @param x
-     * @param y
-     * @param z
-     */
-    public void Teleport(int x, int y, int z) {
-        TeleportParty(getMembers(), new Location(x, y, z));
-    }
-
-    /**
      * Телепорт всей пати в одну точку dest
      *
      * @param dest
@@ -713,16 +687,6 @@ public class Party implements PlayerGroup {
      */
     public void Teleport(Territory territory) {
         RandomTeleportParty(getMembers(), territory);
-    }
-
-    /**
-     * Телепорт всей пати на территорию, лидер попадает в точку dest, а все остальные относительно лидера
-     *
-     * @param territory
-     * @param dest
-     */
-    public void Teleport(Territory territory, Location dest) {
-        TeleportParty(getMembers(), territory, dest);
     }
 
     private void startUpdatePositionTask() {
@@ -746,7 +710,7 @@ public class Party implements PlayerGroup {
         int additionalTime = 45000; // timeout 45sec, guess
         _requestChangeLootTimer = System.currentTimeMillis() + additionalTime;
         _changeLootAnswers = new CopyOnWriteArraySet<>();
-        _checkTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ChangeLootCheck(), additionalTime + 1000, 5000);
+        _checkTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ChangeLootCheck(), additionalTime + 1000, 5000);
         sendPacket(getLeader(), new ExAskModifyPartyLooting(getLeader().getName(), type));
         SystemMessage2 sm = new SystemMessage2(SystemMsg.REQUESTING_APPROVAL_CHANGE_PARTY_LOOT_S1);
         sm.addSysString(LOOT_SYSSTRINGS[type]);

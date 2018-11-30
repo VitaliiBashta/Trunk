@@ -67,9 +67,9 @@ public final class CubicParser extends AbstractFileParser<CubicHolder> {
                     }
 
                     if (chance2 == 0 && set.isEmpty()) {
-                        warn("Wrong skill chance. Cubic: " + id + "/" + level);
+                        LOG.warn("Wrong skill chance. Cubic: " + id + "/" + level);
                     }
-                    Skill skill = SkillTable.getInstance().getInfo(id2, level2);
+                    Skill skill = SkillTable.INSTANCE().getInfo(id2, level2);
                     if (skill != null) {
                         skill.setCubicSkill(true);
                         skills.add(new CubicTemplate.SkillInfo(skill, chance2, type, canAttackDoor, set));

@@ -95,8 +95,6 @@ public class Say2C extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        activeChar.isntAfk();
-
         if (_type == null || _text == null || _text.length() == 0) {
             activeChar.sendActionFailed();
             return;
@@ -137,7 +135,7 @@ public class Say2C extends L2GameClientPacket {
 
             if (command.length() > 0) {
                 // then check for VoicedCommands
-                IVoicedCommandHandler vch = VoicedCommandHandler.getInstance().getVoicedCommandHandler(command);
+                IVoicedCommandHandler vch = VoicedCommandHandler.INSTANCE.getVoicedCommandHandler(command);
                 if (vch != null) {
                     vch.useVoicedCommand(command, activeChar, args);
                     return;
@@ -147,22 +145,6 @@ public class Say2C extends L2GameClientPacket {
             // Check again for min lvl if there is no voiced with that text
             if (activeChar.getSubClasses().size() <= 1 && (_type == ChatType.ALL && (receiver == null || !receiver.isGM())))
                 return;
-        } else if (_text.startsWith(".") && _text.endsWith("offline") && Config.SERVICES_OFFLINE_TRADE_ALLOW && Config.NOT_USE_USER_VOICED && !activeChar.isBlocked()) // Если войс комманды не доступны, но включен оффлайн трей, обрабатываем его
-        {
-            String fullcmd = _text.substring(1).trim();
-            String command = fullcmd.split("\\s+")[0];
-            String args = fullcmd.substring(command.length()).trim();
-
-            if (command.length() > 0) {
-                // then check for VoicedCommands
-                IVoicedCommandHandler vch = VoicedCommandHandler.getInstance().getVoicedCommandHandler(command);
-                if (vch != null) {
-                    vch.useVoicedCommand(command, activeChar, args);
-                    return;
-                }
-            }
-            //activeChar.sendMessage(new CustomMessage("common.command404", activeChar));
-            //return;
         } else if (_text.startsWith("==") && !activeChar.isBlocked()) {
             String expression = _text.substring(2);
 //            Expression expr = null;
@@ -252,15 +234,12 @@ public class Say2C extends L2GameClientPacket {
         switch (_type) {
             case TELL:
                 if ((receiver == null)) {
-                    cs = new Say2(activeChar.getObjectId(), _type, new StringBuilder().append("->").append(_target).toString(), _text);
+                    cs = new Say2(activeChar.getObjectId(), _type, "->" + _target, _text);
                     activeChar.sendPacket(cs);
                     return;
                 }
 
-                if (receiver.isInOfflineMode()) {
-                    activeChar.sendMessage("The person is in offline trade mode.");
-                    activeChar.sendActionFailed();
-                } else if (!receiver.isInBlockList(activeChar) && !receiver.isBlockAll()) {
+                if (!receiver.isInBlockList(activeChar) && !receiver.isBlockAll()) {
                     if (!receiver.getMessageRefusal()) {
                         if (activeChar.antiFlood.canTell(receiver.getObjectId(), _text))
                             receiver.sendPacket(cs);

@@ -25,7 +25,7 @@ public final class EmeraldHorn extends Mystic {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        getActor().altOnMagicUseTimer(getActor(), SkillTable.getInstance().getInfo(86, Rnd.get(1, 3)));
+        getActor().altOnMagicUseTimer(getActor(), SkillTable.INSTANCE().getInfo(86, Rnd.get(1, 3)));
         last_attack_time = System.currentTimeMillis();
     }
 

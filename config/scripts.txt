@@ -468,7 +468,6 @@ handler.items.WorldMap
 handler.petition.SimplePetitionHandler
 handler.voicecommands.CWHPrivileges
 handler.voicecommands.DragonStatus
-handler.voicecommands.DressMe
 handler.voicecommands.Epics
 handler.voicecommands.Quiz
 instances.CrystalCaverns
@@ -1198,7 +1197,6 @@ quests._906_TheCallofValakas
 quests._907_DragonTrophyValakas
 quests._999_T1Tutorial
 scriptconfig.ScriptConfig
-services.Account
 services.Augmentation
 services.Birthday
 services.BuyHero
@@ -1249,7 +1247,6 @@ services.petevolve.ibbuffalo
 services.petevolve.ibcougar
 services.petevolve.ibkookaburra
 services.petevolve.wolfevolve
-services.Premium
 services.PurpleManedHorse
 services.Pushkin
 services.RateBonus
@@ -1267,7 +1264,6 @@ services.TeleToMDT
 services.TeleToParnassus
 services.TeleToStakatoNest
 services.TitleColor
-services.totalonline.totalonline
 services.villagemasters.Ally
 services.villagemasters.Clan
 services.villagemasters.Occupation

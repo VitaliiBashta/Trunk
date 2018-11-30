@@ -94,7 +94,7 @@ public class _196_SevenSignsSealoftheEmperor extends Quest implements ScriptFile
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ_SEALING_EMPEROR_1ST);
             player.sendPacket(new SystemMessage(SystemMessage.IN_ORDER_TO_HELP_ANAKIM_ACTIVATE_THE_SEALING_DEVICE_OF_THE_EMPEROR_WHO_IS_POSSESED_BY_THE_EVIL));
             ref.openDoor(door11);
-            ThreadPoolManager.getInstance().schedule(new SpawnLilithRoom(ref), 17000);
+            ThreadPoolManager.INSTANCE().schedule(new SpawnLilithRoom(ref), 17000);
             return null;
         } else if (event.equalsIgnoreCase("shunaiman_q196_4.htm")) {
             st.setCond(5);

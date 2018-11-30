@@ -44,6 +44,6 @@ public final class FireFeed extends DefaultAI {
         if (actor == null)
             return;
 
-        actor.doCast(SkillTable.getInstance().getInfo(6688, 1), caster, true);
+        actor.doCast(SkillTable.INSTANCE().getInfo(6688, 1), caster, true);
     }
 }

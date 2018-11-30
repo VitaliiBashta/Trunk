@@ -116,9 +116,9 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		{
 			_active = true;
 			if (_startTask == null)
-				ThreadPoolManager.getInstance().execute(new StartTask());
+				ThreadPoolManager.INSTANCE().execute(new StartTask());
 			_log.info("Event 'Korean Style' activated.");
-			Announcements.getInstance().announceByCustomMessage("scripts.events.KoreanStyle.AnnounceEventStarted", null);
+			Announcements.INSTANCE().announceByCustomMessage("scripts.events.KoreanStyle.AnnounceEventStarted", null);
 		}
 		else
 		{
@@ -140,7 +140,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				_startTask = null;
 			}
 			_log.info("Event 'Korean Style' deactivated.");
-			Announcements.getInstance().announceByCustomMessage("scripts.events.KoreanStyle.AnnounceEventStoped", null);
+			Announcements.INSTANCE().announceByCustomMessage("scripts.events.KoreanStyle.AnnounceEventStoped", null);
 		}
 		else
 		{
@@ -202,7 +202,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
     }
 
     public static void sayToAll(String address, String[] replacements) {
-        //Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
+        //Announcements.INSTANCE().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
     }
 
     public static void question() {
@@ -377,7 +377,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		sayToAll("scripts.events.KoreanStyle.AnnounceFight", null);
 		for (Zone z : _reflection.getZones())
 			z.setType(ZoneType.battle_zone);
-		ThreadPoolManager.getInstance().schedule(new CheckActiveTask(), 5100);*/
+		ThreadPoolManager.INSTANCE().schedule(new CheckActiveTask(), 5100);*/
     }
 
     public static void endBattle(boolean blueIsWinner) {
@@ -630,7 +630,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 		
 		player.setSitting(true);
 		player.sittingTaskLaunched = true;
-		ThreadPoolManager.getInstance().schedule(new EndSitDownTask(player), 2500);*/
+		ThreadPoolManager.INSTANCE().schedule(new EndSitDownTask(player), 2500);*/
     }
 
     public static void ressurectPlayers() {
@@ -932,7 +932,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
     public static void mageBuff(Player player) {
 		/*for(int i = 0; i < mage_buffs.length; i++) 
 		{
-			buff = SkillTable.getInstance().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
+			buff = SkillTable.INSTANCE().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
 			if (buff == null)
 				continue;
 			buff.getEffects(player, player, false, false);
@@ -945,7 +945,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
     public static void fighterBuff(Player player) {
 		/*for(int i = 0; i < fighter_buffs.length; i++) 
 		{
-			buff = SkillTable.getInstance().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
+			buff = SkillTable.INSTANCE().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
 			if (buff == null)
 				continue;
 			buff.getEffects(player, player, false, false);
@@ -999,7 +999,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 			}
 			
 
-			ThreadPoolManager.getInstance().schedule(this, 5100);*/
+			ThreadPoolManager.INSTANCE().schedule(this, 5100);*/
         }
     }
 
@@ -1016,7 +1016,7 @@ public class KoreanStyle extends Functions /*implements ScriptFile, OnDeathListe
 				return;
 			}
 
-			for (Residence c : ResidenceHolder.getInstance().getResidenceList(Castle.class))
+			for (Residence c : ResidenceHolder.INSTANCE().getResidenceList(Castle.class))
 				if (c.getSiegeEvent() != null && c.getSiegeEvent().isInProgress()) {
 					_log.debug("KoreanStyle not started: CastleSiege in progress");
 					return;

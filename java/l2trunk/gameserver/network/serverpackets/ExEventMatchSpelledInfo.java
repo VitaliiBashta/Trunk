@@ -7,9 +7,9 @@ import java.util.List;
 
 
 public class ExEventMatchSpelledInfo extends L2GameServerPacket {
+    private final List<Effect> _effects;
     // chdd(dhd)
     private int char_obj_id = 0;
-    private final List<Effect> _effects;
 
     public ExEventMatchSpelledInfo() {
         _effects = new ArrayList<>();

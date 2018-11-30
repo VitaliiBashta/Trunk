@@ -118,7 +118,7 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
         if (getOrderByTargetName(actor.getName()) != null && !actor.getName().equals(killer.getName())) {
             final Order order = getOrderByTargetName(actor.getName());
             Functions.addItem(killer.getPlayer(), order.getItemId(), order.getItemCount(), "Killed");
-            Announcements.getInstance().announceToAll(new CustomMessage("scripts.events.Hitman.AnnounceKill", killer.getPlayer(), killer.getName(), actor.getName(), order.getItemCount(), ItemFunctions.createItem(order.getItemId()).getTemplate().getName()).toString());
+            Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.AnnounceKill", killer.getPlayer(), killer.getName(), actor.getName(), order.getItemCount(), ItemFunctions.createItem(order.getItemId()).getTemplate().getName()).toString());
 
             if (order.getKillsCount() > 1) {
                 order.decrementKillsCount();
@@ -206,7 +206,7 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
         Functions.removeItem(player, Config.EVENT_HITMAN_COST_ITEM_ID, Config.EVENT_HITMAN_COST_ITEM_COUNT, "RemovedHitItem");
         Functions.removeItem(player, _allowedItems.get(itemname), itemcount * killsCount, "Removed Hit Event");
 
-        Announcements.getInstance().announceToAll(new CustomMessage("scripts.events.Hitman.Announce", player, player.getName(), itemcount, itemname, name).toString());
+        Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.Announce", player, player.getName(), itemcount, itemname, name).toString());
 
         World.getPlayer(name).setOrdered(player.getObjectId());
 

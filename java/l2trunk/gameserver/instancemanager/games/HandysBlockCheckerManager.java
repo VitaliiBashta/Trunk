@@ -25,17 +25,14 @@ public final class HandysBlockCheckerManager {
      * list or liberate the arena
      */
 
-    // All the participants and their team classifed by arena
-    private static ArenaParticipantsHolder[] arenaPlayers;
-
     // Arena votes to start the game
-    private static final Map<Integer,Integer> _arenaVotes = new HashMap<>();
-
-    // Arena Status, True = is being used, otherwise, False
-    private static Map<Integer, Boolean> _arenaStatus;
-
+    private static final Map<Integer, Integer> _arenaVotes = new HashMap<>();
     // Registration request penalty (10 seconds)
     private static final List<Integer> _registrationPenalty = new ArrayList<>();
+    // All the participants and their team classifed by arena
+    private static ArenaParticipantsHolder[] arenaPlayers;
+    // Arena Status, True = is being used, otherwise, False
+    private static Map<Integer, Boolean> _arenaStatus;
 
     private HandysBlockCheckerManager() {
         // Initialize arena status
@@ -81,7 +78,7 @@ public final class HandysBlockCheckerManager {
                 return;
             if (Config.ALT_HBCE_FAIR_PLAY)
                 holder.checkAndShuffle();
-            ThreadPoolManager.getInstance().execute(holder.getEvent().new StartEvent());
+            ThreadPoolManager.INSTANCE.execute(holder.getEvent().new StartEvent());
         } else
             _arenaVotes.put(arena, newVotes);
     }
@@ -114,7 +111,6 @@ public final class HandysBlockCheckerManager {
     /**
      * Add the player to the specified arena (thorough the specified
      * arena manager) and send the needed server ->  client packets
-
      */
     public boolean addPlayerToArena(Player player, int arenaId) {
         ArenaParticipantsHolder holder = arenaPlayers[arenaId];
@@ -143,9 +139,9 @@ public final class HandysBlockCheckerManager {
                 return false;
             }
 			/*
-			if (UnderGroundColiseum.getInstance().isRegisteredPlayer(player))
+			if (UnderGroundColiseum.INSTANCE().isRegisteredPlayer(player))
 			{
-				UngerGroundColiseum.getInstance().removeParticipant(player);
+				UngerGroundColiseum.INSTANCE().removeParticipant(player);
 				player.sendPacket(new SystemMessage(SystemMessageId.COLISEUM_OLYMPIAD_KRATEIS_APPLICANTS_CANNOT_PARTICIPATE));
 			}
 			 */
@@ -252,7 +248,7 @@ public final class HandysBlockCheckerManager {
     }
 
     private void schedulePenaltyRemoval(int objId) {
-        ThreadPoolManager.getInstance().schedule(new PenaltyRemove(objId), 10000);
+        ThreadPoolManager.INSTANCE.schedule(new PenaltyRemove(objId), 10000);
     }
 
     private static class SingletonHolder {

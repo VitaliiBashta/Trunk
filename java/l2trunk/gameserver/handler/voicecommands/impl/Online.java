@@ -5,11 +5,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPSmallCommands;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Online extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS =
-            {
-                    "online"
-            };
+    private static final List<String> COMMANDS = Collections.singletonList("online");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
@@ -20,7 +20,7 @@ public class Online extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 }

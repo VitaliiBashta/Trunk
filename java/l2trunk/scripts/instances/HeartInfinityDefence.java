@@ -42,7 +42,7 @@ public class HeartInfinityDefence extends Reflection {
         tumorRespawnTime = 3 * 60 * 1000L;
         wagonRespawnTime = 60 * 1000L;
         coffinsCreated = 0;
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 conquestBegins();
@@ -63,7 +63,7 @@ public class HeartInfinityDefence extends Reflection {
         spawnByGroup("soi_hoi_defence_wards");
         getDoor(14240102).openMe();
         preawakenedEchmus = addSpawnWithoutRespawn(29161, new Location(-179534, 208510, -15496, 16342), 0);
-        coffinSpawnTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        coffinSpawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 if (!conquestEnded)
@@ -71,7 +71,7 @@ public class HeartInfinityDefence extends Reflection {
                         spawnCoffin(npc);
             }
         }, 1000L, 60000L);
-        aliveTumorSpawnTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        aliveTumorSpawnTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 if (!conquestEnded) {
@@ -84,14 +84,14 @@ public class HeartInfinityDefence extends Reflection {
                 }
             }
         }, tumorRespawnTime);
-        wagonSpawnTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        wagonSpawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 addSpawnWithoutRespawn(SoulWagon, new Location(-179544, 207400, -15496), 0);
             }
         }, 1000L, wagonRespawnTime);
         startTime = System.currentTimeMillis();
-        timerTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
+        timerTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
     }
 
     private void spawnCoffin(NpcInstance tumor) {
@@ -120,7 +120,7 @@ public class HeartInfinityDefence extends Reflection {
                 self.deleteMe();
                 for (Player p : getPlayers())
                     p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_SPEED_THAT_EKIMUS_CALLS_OUT_HIS_PREY_HAS_SLOWED_DOWN, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId()));
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         deadTumor.deleteMe();

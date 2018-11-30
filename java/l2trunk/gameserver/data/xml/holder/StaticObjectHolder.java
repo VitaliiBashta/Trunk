@@ -10,8 +10,8 @@ import java.util.Map;
 public final class StaticObjectHolder extends AbstractHolder {
     private static final StaticObjectHolder _instance = new StaticObjectHolder();
 
-    private final Map<Integer,StaticObjectTemplate> _templates = new HashMap<>();
-    private final Map<Integer,StaticObjectInstance> _spawned = new HashMap<>();
+    private final Map<Integer, StaticObjectTemplate> _templates = new HashMap<>();
+    private final Map<Integer, StaticObjectInstance> _spawned = new HashMap<>();
 
     public static StaticObjectHolder getInstance() {
         return _instance;
@@ -32,7 +32,7 @@ public final class StaticObjectHolder extends AbstractHolder {
 
                 _spawned.put(template.getUId(), obj);
             }
-        info("spawned: " + _spawned.size() + " static object(s).");
+        LOG.info("spawned: " + _spawned.size() + " static object(s).");
     }
 
     public StaticObjectInstance getObject(int id) {

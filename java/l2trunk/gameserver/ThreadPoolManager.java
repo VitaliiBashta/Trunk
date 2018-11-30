@@ -2,35 +2,30 @@ package l2trunk.gameserver;
 
 import l2trunk.commons.threading.LoggingRejectedExecutionHandler;
 import l2trunk.commons.threading.PriorityThreadFactory;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.threading.RunnableStatsWrapper;
 
 import java.util.concurrent.*;
 
-public class ThreadPoolManager {
-    private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
+public enum ThreadPoolManager {
+    INSTANCE;
 
-    private static final ThreadPoolManager _instance = new ThreadPoolManager();
+    private static final long MAX_DELAY = (long) 1000 * 60 * 60 * 24 * 365;
     private final ScheduledThreadPoolExecutor _scheduledExecutor;
     private final ThreadPoolExecutor _executor;
     private boolean _shutdown;
-
-    private ThreadPoolManager() {
+    ThreadPoolManager() {
         _scheduledExecutor = new ScheduledThreadPoolExecutor(Config.SCHEDULED_THREAD_POOL_SIZE, new PriorityThreadFactory("ScheduledThreadPool", Thread.NORM_PRIORITY), new LoggingRejectedExecutionHandler());
         _executor = new ThreadPoolExecutor(Config.EXECUTOR_THREAD_POOL_SIZE, Integer.MAX_VALUE, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new PriorityThreadFactory("ThreadPoolExecutor", Thread.NORM_PRIORITY), new LoggingRejectedExecutionHandler());
 
         //Очистка каждые 5 минут
-        scheduleAtFixedRate(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                _scheduledExecutor.purge();
-                _executor.purge();
-            }
+        scheduleAtFixedRate(() -> {
+            _scheduledExecutor.purge();
+            _executor.purge();
         }, 300000L, 300000L);
     }
 
-    public static ThreadPoolManager getInstance() {
-        return _instance;
+    public static ThreadPoolManager INSTANCE() {
+        return INSTANCE;
     }
 
     private long validate(long delay) {
@@ -50,7 +45,9 @@ public class ThreadPoolManager {
     }
 
     public ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long initial, long delay) {
-        return _scheduledExecutor.scheduleAtFixedRate(wrap(r), validate(initial), validate(delay), TimeUnit.MILLISECONDS);
+        long del = validate(delay);
+        ScheduledFuture<?> scheduledFuture = _scheduledExecutor.scheduleAtFixedRate(wrap(r), validate(initial), del, TimeUnit.MILLISECONDS);
+        return scheduledFuture;
     }
 
     public ScheduledFuture<?> scheduleAtFixedDelay(Runnable r, long initial, long delay) {

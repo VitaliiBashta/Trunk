@@ -20,9 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObject> {
-    private static final String NEXT_STEP = "next_step";
     public static final String REFUND = "refund";
-
+    private static final String NEXT_STEP = "next_step";
     private boolean _arenaClosed = true;
 
     public ClanHallMiniGameEvent(MultiValueSet<String> set) {
@@ -134,7 +133,7 @@ public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObje
 
     @Override
     public CMGSiegeClanObject newSiegeClan(String type, int clanId, long param, long date) {
-        Clan clan = ClanTable.getInstance().getClan(clanId);
+        Clan clan = ClanTable.INSTANCE.getClan(clanId);
         return clan == null ? null : new CMGSiegeClanObject(type, clan, param, date);
     }
 

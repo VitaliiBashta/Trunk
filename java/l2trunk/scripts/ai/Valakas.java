@@ -121,7 +121,7 @@ public final class Valakas extends Fighter {
                 if (randomHated != null) {
                     setAttackTarget(randomHated);
                     actor.startConfused();
-                    ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                    ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                         @SuppressWarnings("unused")
                         @Override
                         public void runImpl() {
@@ -205,6 +205,6 @@ public final class Valakas extends Fighter {
     }
 
     private Skill getSkill(int id, int level) {
-        return SkillTable.getInstance().getInfo(id, level);
+        return SkillTable.INSTANCE().getInfo(id, level);
     }
 }

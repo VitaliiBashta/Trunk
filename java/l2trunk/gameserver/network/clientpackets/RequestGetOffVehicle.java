@@ -6,9 +6,9 @@ import l2trunk.gameserver.model.entity.boat.Boat;
 import l2trunk.gameserver.utils.Location;
 
 public class RequestGetOffVehicle extends L2GameClientPacket {
+    private final Location _location = new Location();
     // Format: cdddd
     private int _objectId;
-    private final Location _location = new Location();
 
     @Override
     protected void readImpl() {

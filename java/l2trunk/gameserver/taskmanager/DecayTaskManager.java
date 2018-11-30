@@ -22,7 +22,7 @@ public final class DecayTaskManager {
     private final Map<Creature, Long> _decayTasks = new ConcurrentHashMap<>();
 
     private DecayTaskManager() {
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new DecayScheduler(), 10000, 5000);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DecayScheduler(), 10000, 5000);
     }
 
     public static DecayTaskManager getInstance() {

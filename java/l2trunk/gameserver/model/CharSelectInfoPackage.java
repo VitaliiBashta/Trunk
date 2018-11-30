@@ -34,13 +34,10 @@ public class CharSelectInfoPackage {
     private int _x = 0, _y = 0, _z = 0;
     private int _vitalityPoints = 20000;
 
-    /**
-     * @param int1
-     */
     public CharSelectInfoPackage(int objectId, String name) {
         setObjectId(objectId);
         _name = name;
-        Collection<ItemInstance> items = ItemsDAO.getInstance().getItemsByOwnerIdAndLoc(objectId, ItemLocation.PAPERDOLL);
+        Collection<ItemInstance> items = ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objectId, ItemLocation.PAPERDOLL);
         _paperdoll = new ItemInstance[Inventory.PAPERDOLL_MAX];
         for (ItemInstance item : items)
             if (item.getEquipSlot() < Inventory.PAPERDOLL_MAX) //FIXME [G1ta0] временный фикс отображения одетых вещей при входе на персонажа в NO CARRIER

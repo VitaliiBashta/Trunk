@@ -15,18 +15,18 @@ public class PledgeShowMemberListAll extends L2GameServerPacket {
     private final int _level;
     private final int _rank;
     private final int _reputation;
-    private int _allianceObjectId;
-    private int _allianceCrestId;
     private final int _hasCastle;
     private final int _hasClanHall;
     private final int _hasFortress;
     private final int _atClanWar;
     private final String _unitName;
     private final String _leaderName;
-    private String _allianceName;
     private final int _pledgeType;
     private final int _territorySide;
     private final List<PledgePacketMember> _members;
+    private int _allianceObjectId;
+    private int _allianceCrestId;
+    private String _allianceName;
 
     public PledgeShowMemberListAll(Clan clan, final SubUnit sub) {
         _pledgeType = sub.getType();

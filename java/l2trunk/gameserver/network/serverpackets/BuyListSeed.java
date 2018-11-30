@@ -26,8 +26,8 @@ import java.util.List;
  */
 public final class BuyListSeed extends L2GameServerPacket {
     private final int _manorId;
-    private List<TradeItem> _list = new ArrayList<>();
     private final long _money;
+    private List<TradeItem> _list = new ArrayList<>();
 
     public BuyListSeed(NpcTradeList list, int manorId, long currentMoney) {
         _money = currentMoney;

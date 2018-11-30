@@ -37,9 +37,9 @@ public class AdminClientSupport implements IAdminCommandHandler {
                 if (target == null || !target.isPlayer())
                     return false;
                 try {
-                    Skill skill = SkillTable.getInstance().getInfo(Integer.parseInt(wordList[1]), Integer.parseInt(wordList[2]));
+                    Skill skill = SkillTable.INSTANCE().getInfo(Integer.parseInt(wordList[1]), Integer.parseInt(wordList[2]));
                     if (skill == null) {
-                        player.sendMessage("Too big level, max:" + SkillTable.getInstance().getMaxLevel(Integer.parseInt(wordList[1])));
+                        player.sendMessage("Too big level, max:" + SkillTable.INSTANCE().getMaxLevel(Integer.parseInt(wordList[1])));
                         return false;
                     }
                     target.getPlayer().addSkill(skill, true);

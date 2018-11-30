@@ -52,7 +52,7 @@ public class RequestExMagicSkillUseGround extends L2GameClientPacket {
             return;
         }
 
-        Skill skill = SkillTable.getInstance().getInfo(_skillId, activeChar.getSkillLevel(_skillId));
+        Skill skill = SkillTable.INSTANCE().getInfo(_skillId, activeChar.getSkillLevel(_skillId));
         if (skill != null) {
             if (skill.getAddedSkills().size() == 0)
                 return;

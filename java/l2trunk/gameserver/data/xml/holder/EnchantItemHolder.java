@@ -10,7 +10,7 @@ import java.util.Set;
 public class EnchantItemHolder extends AbstractHolder {
     private static final EnchantItemHolder _instance = new EnchantItemHolder();
 
-    private final Map<Integer,EnchantScroll> _enchantScrolls = new HashMap<>();
+    private final Map<Integer, EnchantScroll> _enchantScrolls = new HashMap<>();
 
     private EnchantItemHolder() {
     }
@@ -33,7 +33,7 @@ public class EnchantItemHolder extends AbstractHolder {
 
     @Override
     public void log() {
-        info("load " + _enchantScrolls.size() + " enchant scroll(s).");
+        LOG.info("load " + _enchantScrolls.size() + " enchant scroll(s).");
     }
 
     @Override

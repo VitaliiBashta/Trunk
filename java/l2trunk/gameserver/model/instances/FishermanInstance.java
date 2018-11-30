@@ -29,9 +29,9 @@ public class FishermanInstance extends MerchantInstance {
         if (command.equalsIgnoreCase("FishingSkillList"))
             showFishingSkillList(player);
         else if (command.startsWith("FishingChampionship") && Config.ALT_FISH_CHAMPIONSHIP_ENABLED)
-            FishingChampionShipManager.getInstance().showChampScreen(player, this);
+            FishingChampionShipManager.INSTANCE.showChampScreen(player, this);
         else if (command.startsWith("FishingReward") && Config.ALT_FISH_CHAMPIONSHIP_ENABLED)
-            FishingChampionShipManager.getInstance().getReward(player);
+            FishingChampionShipManager.INSTANCE.getReward(player);
         else
             super.onBypassFeedback(player, command);
     }

@@ -9,11 +9,11 @@ public class ExAirShipInfo extends L2GameServerPacket {
     private final int _objId;
     private final int _speed1;
     private final int _speed2;
+    private final Location _loc;
     private int _fuel;
     private int _maxFuel;
     private int _driverObjId;
     private int _controlKey;
-    private final Location _loc;
 
     public ExAirShipInfo(AirShip ship) {
         _objId = ship.getObjectId();

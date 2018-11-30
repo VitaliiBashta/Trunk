@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Future;
 
-public final class Announcements {
+public enum Announcements {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(Announcements.class);
-    private static final Announcements _instance = new Announcements();
     private final List<Announce> _announcements = new ArrayList<>();
     private int lastAnnounceId = 5000000;
 
-    private Announcements() {
+    Announcements() {
         loadAnnouncements();
     }
 
@@ -38,9 +38,6 @@ public final class Announcements {
         return "\b\tType=1 \tID=" + announceId + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b";
     }
 
-    public static Announcements getInstance() {
-        return _instance;
-    }
 
     public static void shout(Creature activeChar, String text, ChatType type) {
         Say2 cs = new Say2(activeChar.getObjectId(), type, activeChar.getName(), text);
@@ -106,7 +103,7 @@ public final class Announcements {
         Path f = Config.CONFIG.resolve("announcements.txt");
         try (BufferedWriter writer = Files.newBufferedWriter(f)) {
             for (Announce announce : _announcements)
-                writer.write(announce.getTime() + "\t" + announce.getAnnounce() + "\n");
+                writer.write(announce.time + "\t" + announce.getAnnounce() + "\n");
         } catch (IOException e) {
             _log.error("Error while saving config/announcements.txt!", e);
         }
@@ -165,14 +162,14 @@ public final class Announcements {
     }
 
     public class Announce extends RunnableImpl {
-        private final int _time;
-        private final String _announce;
+        private final int time;
+        private final String announce;
         private final int id;
         private Future<?> _task;
 
-        Announce(int t, String announce) {
-            _time = t;
-            _announce = announce;
+        Announce(int time, String announce) {
+            this.time = time;
+            this.announce = announce;
 
             lastAnnounceId++;
             id = lastAnnounceId;
@@ -180,8 +177,8 @@ public final class Announcements {
 
         @Override
         public void runImpl() {
-            IStaticPacket csNoQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce);
-            IStaticPacket csQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce + getQuestionMark(id));
+            IStaticPacket csNoQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", announce);
+            IStaticPacket csQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", announce + getQuestionMark(id));
             for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
                 if (player.containsQuickVar("DisabledAnnounce" + id))
                     continue;
@@ -196,13 +193,13 @@ public final class Announcements {
         }
 
         void showAnnounce(Player player) {
-            IStaticPacket cs = new Say2(0, ChatType.CRITICAL_ANNOUNCE, player.getName(), _announce);
+            IStaticPacket cs = new Say2(0, ChatType.CRITICAL_ANNOUNCE, player.getName(), announce);
             player.sendPacket(cs);
         }
 
         void start() {
-            if (_time > 0)
-                _task = ThreadPoolManager.getInstance().scheduleAtFixedRate(this, _time * 1000L, _time * 1000L);
+            if (time > 0)
+                _task = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(this, time * 1000L, time * 1000L);
         }
 
         void stop() {
@@ -212,12 +209,8 @@ public final class Announcements {
             }
         }
 
-        int getTime() {
-            return _time;
-        }
-
         public String getAnnounce() {
-            return _announce;
+            return announce;
         }
     }
 }

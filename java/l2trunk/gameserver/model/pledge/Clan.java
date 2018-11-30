@@ -34,7 +34,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
+public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     public static final int CP_CL_INVITE_CLAN = 2; // Join clan
     public static final int CP_CL_MANAGE_TITLES = 4; // Give a title
     public static final int CP_CL_WAREHOUSE_SEARCH = 8; // View warehouse content
@@ -133,7 +133,6 @@ public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
         Clan clan = null;
 
-        ;
         try (Connection con1 = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement1 = con1.prepareStatement("SELECT clan_level,hasCastle,hasFortress,hasHideout,ally_id,reputation_score,expelled_member,leaved_ally,dissolved_ally,warehouse,airship FROM clan_data where clan_id=?")) {
             statement1.setInt(1, clanId);
@@ -633,30 +632,28 @@ public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int isAtWar() {
-        if (_atWarWith != null && !_atWarWith.isEmpty())
+        if (!_atWarWith.isEmpty())
             return 1;
         return 0;
     }
 
     public int isAtWarOrUnderAttack() {
-        if (_atWarWith != null && !_atWarWith.isEmpty() || _underAttackFrom != null && !_underAttackFrom.isEmpty())
+        if (!_atWarWith.isEmpty() || !_underAttackFrom.isEmpty())
             return 1;
         return 0;
     }
 
     public boolean isAtWarWith(int id) {
-        Clan clan = ClanTable.getInstance().getClan(id);
-        if (_atWarWith != null && !_atWarWith.isEmpty())
-            if (_atWarWith.contains(clan))
-                return true;
+        Clan clan = ClanTable.INSTANCE.getClan(id);
+        if (!_atWarWith.isEmpty())
+            return _atWarWith.contains(clan);
         return false;
     }
 
     public boolean isUnderAttackFrom(int id) {
-        Clan clan = ClanTable.getInstance().getClan(id);
-        if (_underAttackFrom != null && !_underAttackFrom.isEmpty())
-            if (_underAttackFrom.contains(clan))
-                return true;
+        Clan clan = ClanTable.INSTANCE.getClan(id);
+        if (!_underAttackFrom.isEmpty())
+            return _underAttackFrom.contains(clan);
         return false;
     }
 
@@ -708,7 +705,7 @@ public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public Alliance getAlliance() {
-        return _allyId == 0 ? null : ClanTable.getInstance().getAlliance(_allyId);
+        return _allyId == 0 ? null : ClanTable.INSTANCE.getAlliance(_allyId);
     }
 
     public boolean canInvite() {
@@ -724,10 +721,10 @@ public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getRank() {
-        List<Clan> clans = ClanTable.getInstance().getClans();
+        List<Clan> clans = ClanTable.INSTANCE.getClans();
         for (int i = 0; i < clans.size(); i++) {
             if (this == clans.get(i))
-                return  i+1;
+                return i + 1;
         }
         return 0;
     }
@@ -800,7 +797,7 @@ public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                 int id = rset.getInt("skill_id");
                 int level = rset.getInt("skill_level");
                 // Create a L2Skill object for each record
-                Skill skill = SkillTable.getInstance().getInfo(id, level);
+                Skill skill = SkillTable.INSTANCE().getInfo(id, level);
                 // Add the L2Skill object to the L2Clan skills
                 _skills.put(skill.getId(), skill);
             }
@@ -813,11 +810,11 @@ public class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         return _skills.values();
     }
 
-    public final Skill[] getAllSkills() {
+    public final Collection<Skill> getAllSkills() {
         if (_reputation < 0)
-            return Skill.EMPTY_ARRAY;
+            return Collections.emptyList();
 
-        return _skills.values().toArray(Skill.EMPTY_ARRAY);
+        return _skills.values();
     }
 
     /**

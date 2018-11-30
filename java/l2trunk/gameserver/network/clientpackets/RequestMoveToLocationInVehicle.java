@@ -27,8 +27,6 @@ public class RequestMoveToLocationInVehicle extends L2GameClientPacket {
         if (player == null)
             return;
 
-        player.isntAfk();
-
         Boat boat = BoatHolder.getInstance().getBoat(_boatObjectId);
         if (boat == null) {
             player.sendActionFailed();

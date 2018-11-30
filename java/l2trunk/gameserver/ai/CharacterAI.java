@@ -215,7 +215,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     protected void addTimer(int timerId, Object arg1, Object arg2, long delay) {
-        ThreadPoolManager.getInstance().schedule(new Timer(timerId, arg1, arg2), delay);
+        ThreadPoolManager.INSTANCE.schedule(new Timer(timerId, arg1, arg2), delay);
     }
 
     protected class Timer extends RunnableImpl {

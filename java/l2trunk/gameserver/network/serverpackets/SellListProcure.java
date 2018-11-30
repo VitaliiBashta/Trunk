@@ -14,8 +14,8 @@ import java.util.Map;
 public class SellListProcure extends L2GameServerPacket {
     private final long _money;
     private final Map<ItemInstance, Long> _sellList = new HashMap<>();
-    private List<CropProcure> _procureList = new ArrayList<>();
     private final int _castle;
+    private List<CropProcure> _procureList = new ArrayList<>();
 
     public SellListProcure(Player player, int castleId) {
         _money = player.getAdena();

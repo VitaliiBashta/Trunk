@@ -150,7 +150,7 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
         _inList.add(0, player.getStoredId());
         if (Config.FIGHT_CLUB_ANNOUNCE_RATE) {
             final String[] args = {player.getName(), String.valueOf(player.getLevel()), String.valueOf(rate.getItemCount()), item};
-            Announcements.getInstance().announceByCustomMessage("scripts.events.fightclub.Announce", args, ChatType.MPCC_ROOM);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.fightclub.Announce", args, ChatType.MPCC_ROOM);
         }
 
         return "OK";
@@ -420,10 +420,10 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
         }
 
         if (Config.REMOVE_HERO_SKILLS && player1.isHero())
-            Hero.getInstance().addSkills(player1);
+            Hero.INSTANCE.addSkills(player1);
 
         if (Config.REMOVE_HERO_SKILLS && player2.isHero())
-            Hero.getInstance().addSkills(player1);
+            Hero.INSTANCE.addSkills(player1);
         player1.block();
         player1.teleToLocation(_restoreCoord.get(player1.getStoredId()), ReflectionManager.DEFAULT);
         player1.unblock();
@@ -554,7 +554,7 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
         }
 
         if (Config.REMOVE_HERO_SKILLS && player1.isHero())
-            Hero.getInstance().removeSkills(player1);
+            Hero.INSTANCE.removeSkills(player1);
         if (Config.CANCEL_BUFF_BEFORE_FIGHT) {
             player1.getEffectList().stopAllEffects();
             if (player1.getPet() != null)
@@ -583,7 +583,7 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
         }
 
         if (Config.REMOVE_HERO_SKILLS && player2.isHero())
-            Hero.getInstance().removeSkills(player2);
+            Hero.INSTANCE.removeSkills(player2);
 
         if (Config.CANCEL_BUFF_BEFORE_FIGHT) {
             player2.getEffectList().stopAllEffects();

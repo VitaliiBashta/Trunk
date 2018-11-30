@@ -25,7 +25,7 @@ public abstract class AbstractSuspiciousMerchant extends DefaultAI {
     public abstract boolean thinkActive();
 
 
-    public boolean thinkActive0(final Location[] points) {
+    boolean thinkActive0(final Location[] points) {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return true;

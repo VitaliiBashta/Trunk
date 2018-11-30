@@ -8,18 +8,18 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Support for /unstuck command
  */
-public class Escape implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    52
-            };
+public final class Escape implements IUserCommandHandler {
+    private static final Integer COMMAND_IDS = 52;
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (id != COMMAND_IDS[0])
+        if (COMMAND_IDS !=id)
             return false;
 
         if (activeChar.isMovementDisabled() || activeChar.isOutOfControl() || activeChar.isInOlympiadMode())
@@ -50,9 +50,9 @@ public class Escape implements IUserCommandHandler {
 
         Skill skill;
         if (activeChar.getPlayerAccess().FastUnstuck)
-            skill = SkillTable.getInstance().getInfo(1050, 2);
+            skill = SkillTable.INSTANCE().getInfo(1050, 2);
         else
-            skill = SkillTable.getInstance().getInfo(2099, 1);
+            skill = SkillTable.INSTANCE().getInfo(2099, 1);
 
         if (skill != null && skill.checkCondition(activeChar, activeChar, false, false, true))
             activeChar.getAI().Cast(skill, activeChar, false, true);
@@ -61,7 +61,7 @@ public class Escape implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public final List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_IDS);
     }
 }

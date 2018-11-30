@@ -140,7 +140,7 @@ class ForgeElement {
     }
 
     static String page(Player player) {
-        return HtmCache.getInstance().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/page_template.htm").toString(), player);
+        return HtmCache.INSTANCE().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/page_template.htm").toString(), player);
     }
 
     static boolean itemCheckGrade(boolean hasBonus, ItemInstance item) {

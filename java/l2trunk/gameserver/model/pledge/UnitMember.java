@@ -11,15 +11,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class UnitMember {
+public final class UnitMember {
     private static final Logger _log = LoggerFactory.getLogger(UnitMember.class);
-
+    private final int _objectId;
     private Player _player;
-
     private Clan _clan;
     private String _name;
     private String _title;
-    private final int _objectId;
     private int _level;
     private int _classId;
     private int _sex;
@@ -74,8 +72,7 @@ public class UnitMember {
     }
 
     public boolean isOnline() {
-        Player player = getPlayer();
-        return player != null && !player.isInOfflineMode();
+        return _player != null;
     }
 
     public Clan getClan() {
@@ -119,18 +116,13 @@ public class UnitMember {
             player.setTitle(title);
             player.broadcastPacket(new NickNameChanged(player));
         } else {
-            Connection con = null;
-            PreparedStatement statement = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                statement = con.prepareStatement("UPDATE characters SET title=? WHERE obj_Id=?");
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement("UPDATE characters SET title=? WHERE obj_Id=?")) {
                 statement.setString(1, title);
                 statement.setInt(2, getObjectId());
                 statement.execute();
             } catch (SQLException e) {
                 _log.error("Error while setting Unit Member Title", e);
-            } finally {
-                DbUtils.closeQuietly(con, statement);
             }
         }
     }

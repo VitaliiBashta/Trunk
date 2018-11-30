@@ -29,13 +29,13 @@ public class NpcInfoPoly extends L2GameServerPacket {
     private final int _flWalkSpd;
     private final int _flyRunSpd;
     private final int _flyWalkSpd;
-    private int _rhand, _lhand;
-    private String _name, _title;
     private final int _abnormalEffect;
     private final int _abnormalEffect2;
     private final double colRadius;
     private final double colHeight;
     private final TeamType _team;
+    private int _rhand, _lhand;
+    private String _name, _title;
 
     public NpcInfoPoly(Player cha) {
         _obj = cha;

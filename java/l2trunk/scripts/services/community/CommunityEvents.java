@@ -19,6 +19,7 @@ import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -44,8 +45,8 @@ public class CommunityEvents implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_bbslink", "_bbsevent", "_bbseventUnregister", "_bbseventRegister"};
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_bbslink", "_bbsevent", "_bbseventUnregister", "_bbseventRegister");
     }
 
 
@@ -61,7 +62,7 @@ public class CommunityEvents implements ScriptFile, ICommunityBoardHandler {
         String cmd = st.nextToken();
 
         if ("bbsevent".equals(cmd) || "bbslink".equals(cmd)) {
-            String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "bbs_events.htm", player);
+            String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_events.htm", player);
             html = getEventInfo(html, player);
             html = getEventStats(html, player);
             html = BbsUtil.htmlAll(html, player);

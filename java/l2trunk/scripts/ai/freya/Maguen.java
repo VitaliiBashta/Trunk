@@ -24,8 +24,8 @@ public final class Maguen extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.getInstance().schedule(() -> getActor().setNpcState(Rnd.get(1, 3)), 2000L);
-        ThreadPoolManager.getInstance().schedule(() -> {
+        ThreadPoolManager.INSTANCE.schedule(() -> getActor().setNpcState(Rnd.get(1, 3)), 2000L);
+        ThreadPoolManager.INSTANCE.schedule(() -> {
             getActor().setNpcState(4);
             getActor().doDie(null);
         }, 10000L);
@@ -47,21 +47,21 @@ public final class Maguen extends Fighter {
             switch (actor.getNpcState()) {
                 case 1:
                     if (Rnd.chance(80))
-                        actor.doCast(SkillTable.getInstance().getInfo(maguenRaceSkills[0], Rnd.get(2, 3)), caster, true);
+                        actor.doCast(SkillTable.INSTANCE.getInfo(maguenRaceSkills[0], Rnd.get(2, 3)), caster, true);
                     else
-                        actor.doCast(SkillTable.getInstance().getInfo(maguenStatsSkills[0], Rnd.get(1, 2)), caster, true);
+                        actor.doCast(SkillTable.INSTANCE.getInfo(maguenStatsSkills[0], Rnd.get(1, 2)), caster, true);
                     break;
                 case 2:
                     if (Rnd.chance(80))
-                        actor.doCast(SkillTable.getInstance().getInfo(maguenRaceSkills[1], Rnd.get(2, 3)), caster, true);
+                        actor.doCast(SkillTable.INSTANCE.getInfo(maguenRaceSkills[1], Rnd.get(2, 3)), caster, true);
                     else
-                        actor.doCast(SkillTable.getInstance().getInfo(maguenStatsSkills[1], Rnd.get(1, 2)), caster, true);
+                        actor.doCast(SkillTable.INSTANCE.getInfo(maguenStatsSkills[1], Rnd.get(1, 2)), caster, true);
                     break;
                 case 3:
                     if (Rnd.chance(80))
-                        actor.doCast(SkillTable.getInstance().getInfo(maguenRaceSkills[2], Rnd.get(2, 3)), caster, true);
+                        actor.doCast(SkillTable.INSTANCE.getInfo(maguenRaceSkills[2], Rnd.get(2, 3)), caster, true);
                     else
-                        actor.doCast(SkillTable.getInstance().getInfo(maguenStatsSkills[2], Rnd.get(1, 2)), caster, true);
+                        actor.doCast(SkillTable.INSTANCE.getInfo(maguenStatsSkills[2], Rnd.get(1, 2)), caster, true);
                     break;
                 default:
                     break;
@@ -69,13 +69,13 @@ public final class Maguen extends Fighter {
         } else {
             switch (actor.getNpcState()) {
                 case 1:
-                    actor.doCast(SkillTable.getInstance().getInfo(maguenRaceSkills[0], 1), caster, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(maguenRaceSkills[0], 1), caster, true);
                     break;
                 case 2:
-                    actor.doCast(SkillTable.getInstance().getInfo(maguenRaceSkills[1], 1), caster, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(maguenRaceSkills[1], 1), caster, true);
                     break;
                 case 3:
-                    actor.doCast(SkillTable.getInstance().getInfo(maguenRaceSkills[2], 1), caster, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(maguenRaceSkills[2], 1), caster, true);
                     break;
                 default:
                     break;

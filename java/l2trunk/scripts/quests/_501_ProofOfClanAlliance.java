@@ -196,7 +196,7 @@ public class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
                 st.set("chest_game", "0");
                 st.set("chest_try", "0");
                 st.startQuestTimer("poison_timer", 3600000);
-                st.getPlayer().altUseSkill(SkillTable.getInstance().getInfo(4082, 1), st.getPlayer());
+                st.getPlayer().altUseSkill(SkillTable.INSTANCE().getInfo(4082, 1), st.getPlayer());
                 st.getPlayer().startImmobilized();
                 htmltext = "30759-07.htm";
             }

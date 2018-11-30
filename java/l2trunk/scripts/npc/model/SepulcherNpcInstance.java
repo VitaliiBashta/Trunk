@@ -80,7 +80,7 @@ public class SepulcherNpcInstance extends NpcInstance {
                 doDie(player);
                 if (_spawnMonsterTask != null)
                     _spawnMonsterTask.cancel(false);
-                _spawnMonsterTask = ThreadPoolManager.getInstance().schedule(new SpawnMonster(getNpcId()), 3500);
+                _spawnMonsterTask = ThreadPoolManager.INSTANCE().schedule(new SpawnMonster(getNpcId()), 3500);
                 return;
 
             case 31455:
@@ -152,7 +152,7 @@ public class SepulcherNpcInstance extends NpcInstance {
 
         if (_closeTask != null)
             _closeTask.cancel(false);
-        _closeTask = ThreadPoolManager.getInstance().schedule(new CloseNextDoor(gk), 10000);
+        _closeTask = ThreadPoolManager.INSTANCE().schedule(new CloseNextDoor(gk), 10000);
     }
 
     private class CloseNextDoor extends RunnableImpl {
@@ -172,7 +172,7 @@ public class SepulcherNpcInstance extends NpcInstance {
                     e.printStackTrace();
                 }
                 state++;
-                _closeTask = ThreadPoolManager.getInstance().schedule(this, 10000);
+                _closeTask = ThreadPoolManager.INSTANCE.schedule(this, 10000);
             } else if (state == 1) {
                 FourSepulchersSpawn.spawnMysteriousBox(_gk.template.npcId);
                 _closeTask = null;

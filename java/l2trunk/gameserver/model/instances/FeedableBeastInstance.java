@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FeedableBeastInstance extends MonsterInstance {
-    private static final Map<Integer,growthInfo> growthCapableMobs = new HashMap<>();
+    private static final Map<Integer, growthInfo> growthCapableMobs = new HashMap<>();
     private static final List<Integer> tamedBeasts = new ArrayList<>();
     private static final List<Integer> feedableBeasts = new ArrayList<>();
     private static final Logger _log = LoggerFactory.getLogger(NpcInstance.class);
@@ -203,7 +203,7 @@ public class FeedableBeastInstance extends MonsterInstance {
             MonsterInstance nextNpc = spawn(nextNpcId, getX(), getY(), getZ());
             feedInfo.put(nextNpc.getObjectId(), player.getObjectId()); // register the player in the feedinfo for the mob that just spawned
             player.setObjectTarget(nextNpc);
-            ThreadPoolManager.getInstance().schedule(new AggrPlayer(nextNpc, player), 3000);
+            ThreadPoolManager.INSTANCE.schedule(new AggrPlayer(nextNpc, player), 3000);
         }
     }
 

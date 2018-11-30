@@ -82,9 +82,8 @@ public class MatchingRoomManager {
     }
 
     private class RoomsHolder {
+        private final Map<Integer, MatchingRoom> _rooms = new HashMap<>();
         private int _id = 1;
-
-        private final Map<Integer,MatchingRoom> _rooms = new HashMap<>();
 
         int addRoom(MatchingRoom r) {
             int val = _id++;

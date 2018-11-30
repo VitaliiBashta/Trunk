@@ -75,7 +75,7 @@ public final class Knoriks extends Patrollers {
             return;
 
         if (attacker != null)
-            actor.doCast(SkillTable.getInstance().getInfo(KNORIKS_SKILL_DBUFF_ID, 1), (Player) attacker, false);
+            actor.doCast(SkillTable.INSTANCE().getInfo(KNORIKS_SKILL_DBUFF_ID, 1), (Player) attacker, false);
     }
 
     public static int getKNORIKS_SEARCH_RADIUS() {

@@ -6,12 +6,11 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
-public class MyBirthday implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    126
-            };
+public final class MyBirthday implements IUserCommandHandler {
+    private static final int COMMAND_ID = 126;
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
@@ -29,7 +28,7 @@ public class MyBirthday implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public final List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_ID);
     }
 }

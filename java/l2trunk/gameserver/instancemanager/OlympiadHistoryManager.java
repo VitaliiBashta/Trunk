@@ -20,8 +20,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class OlympiadHistoryManager {
     private static final OlympiadHistoryManager _instance = new OlympiadHistoryManager();
 
-    private final Map<Integer,List<OlympiadHistory>> _historyNew = new HashMap<>();
-    private final Map<Integer,List<OlympiadHistory>> _historyOld = new HashMap<>();
+    private final Map<Integer, List<OlympiadHistory>> _historyNew = new HashMap<>();
+    private final Map<Integer, List<OlympiadHistory>> _historyOld = new HashMap<>();
 
     private OlympiadHistoryManager() {
         Map<Boolean, List<OlympiadHistory>> historyList = OlympiadHistoryDAO.getInstance().select();
@@ -54,13 +54,13 @@ public class OlympiadHistoryManager {
     }
 
     private void addHistory(boolean old, OlympiadHistory history) {
-        Map<Integer,List<OlympiadHistory>> map = old ? _historyOld : _historyNew;
+        Map<Integer, List<OlympiadHistory>> map = old ? _historyOld : _historyNew;
 
         addHistory0(map, history.getObjectId1(), history);
         addHistory0(map, history.getObjectId2(), history);
     }
 
-    private void addHistory0(Map<Integer,List<OlympiadHistory>> map, int objectId, OlympiadHistory history) {
+    private void addHistory0(Map<Integer, List<OlympiadHistory>> map, int objectId, OlympiadHistory history) {
         List<OlympiadHistory> historySet = map.get(objectId);
         if (historySet == null)
             map.put(objectId, historySet = new CopyOnWriteArrayList<>());
@@ -71,7 +71,7 @@ public class OlympiadHistoryManager {
     public void showHistory(Player player, int targetClassId, int page) {
         final int perpage = 15;
 
-        Map.Entry<Integer, StatsSet> entry = Hero.getInstance().getHeroStats(targetClassId);
+        Map.Entry<Integer, StatsSet> entry = Hero.INSTANCE.getHeroStats(targetClassId);
         if (entry == null)
             return;
 
@@ -81,7 +81,7 @@ public class OlympiadHistoryManager {
 
         NpcHtmlMessage html = new NpcHtmlMessage(player, null);
         html.setFile("olympiad/monument_hero_info.htm");
-        html.replace("%title%", StringHolder.getInstance().getNotNull(player, "hero.history"));
+        html.replace("%title%", StringHolder.INSTANCE.getNotNull(player, "hero.history"));
 
         int allStatWinner = 0;
         int allStatLoss = 0;

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _263_OrcSubjugation extends Quest implements ScriptFile {
+public final class _263_OrcSubjugation extends Quest implements ScriptFile {
     // NPC
     private final int KAYLEEN = 30346;
 
@@ -20,6 +20,18 @@ public class _263_OrcSubjugation extends Quest implements ScriptFile {
     private final int ORC_AMULET = 1116;
     private final int ORC_NECKLACE = 1117;
 
+    public _263_OrcSubjugation() {
+        super(false);
+        addStartNpc(KAYLEEN);
+        addKillId(
+                BALOR_ORC_ARCHER,
+                BALOR_ORC_FIGHTER,
+                BALOR_ORC_FIGHTER_LEADER,
+                BALOR_ORC_LIEUTENANT
+        );
+        addQuestItem(ORC_AMULET, ORC_NECKLACE);
+    }
+
     @Override
     public void onLoad() {
     }
@@ -30,21 +42,6 @@ public class _263_OrcSubjugation extends Quest implements ScriptFile {
 
     @Override
     public void onShutdown() {
-    }
-
-    public _263_OrcSubjugation() {
-        super(false);
-        addStartNpc(KAYLEEN);
-        addKillId(new int[]{
-                BALOR_ORC_ARCHER,
-                BALOR_ORC_FIGHTER,
-                BALOR_ORC_FIGHTER_LEADER,
-                BALOR_ORC_LIEUTENANT
-        });
-        addQuestItem(new int[]{
-                ORC_AMULET,
-                ORC_NECKLACE
-        });
     }
 
     @Override

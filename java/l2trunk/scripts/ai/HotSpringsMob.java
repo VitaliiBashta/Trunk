@@ -41,11 +41,11 @@ public final class HotSpringsMob extends Mystic {
                 int level = effect.get(0).getSkill().getLevel();
                 if (level < 10) {
                     effect.get(0).exit();
-                    Skill skill = SkillTable.getInstance().getInfo(DeBuff, level + 1);
+                    Skill skill = SkillTable.INSTANCE().getInfo(DeBuff, level + 1);
                     skill.getEffects(actor, attacker, false, false);
                 }
             } else {
-                Skill skill = SkillTable.getInstance().getInfo(DeBuff, 1);
+                Skill skill = SkillTable.INSTANCE().getInfo(DeBuff, 1);
                 if (skill != null)
                     skill.getEffects(actor, attacker, false, false);
                 else

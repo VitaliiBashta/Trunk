@@ -125,8 +125,8 @@ public final class BaylorManager extends Functions implements ScriptFile {
             pc.getReflection().startCollapseTimer(30 * 60 * 1000L);
 
         ReflectionManager.getInstance().get(currentReflection).closeDoor(24220008);
-        ThreadPoolManager.getInstance().schedule(new BaylorSpawn(CrystalPrisonGuard), 20000);
-        ThreadPoolManager.getInstance().schedule(new BaylorSpawn(Baylor), 40000);
+        ThreadPoolManager.INSTANCE().schedule(new BaylorSpawn(CrystalPrisonGuard), 20000);
+        ThreadPoolManager.INSTANCE().schedule(new BaylorSpawn(Baylor), 40000);
 
         if (pc.getParty() == null) {
             pc.teleToLocation(153569 + Rnd.get(-80, 80), 142075 + Rnd.get(-80, 80), -12732);
@@ -215,7 +215,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
             _state.update();
         }
 
-        _intervalEndTask = ThreadPoolManager.getInstance().schedule(new IntervalEnd(), _state.getInterval());
+        _intervalEndTask = ThreadPoolManager.INSTANCE().schedule(new IntervalEnd(), _state.getInterval());
     }
 
     // Clean up Baylor's lair.
@@ -295,7 +295,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
                         _crystaline[i] = spawn(_crystalineLocation[i], CrystalPrisonGuard);
                         _crystaline[i].setRunning();
                         _crystaline[i].moveToLocation(_pos, 300, false);
-                        ThreadPoolManager.getInstance().schedule(new Social(_crystaline[i], 2), 15000);
+                        ThreadPoolManager.INSTANCE().schedule(new Social(_crystaline[i], 2), 15000);
                     }
 
                     break;
@@ -313,19 +313,19 @@ public final class BaylorManager extends Functions implements ScriptFile {
                         _socialTask.cancel(false);
                         _socialTask = null;
                     }
-                    _socialTask = ThreadPoolManager.getInstance().schedule(new Social(_baylor, 1), 500);
+                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new Social(_baylor, 1), 500);
 
                     if (_endSceneTask != null) {
                         _endSceneTask.cancel(false);
                         _endSceneTask = null;
                     }
-                    _endSceneTask = ThreadPoolManager.getInstance().schedule(new EndScene(), 23000);
+                    _endSceneTask = ThreadPoolManager.INSTANCE().schedule(new EndScene(), 23000);
 
                     if (_activityTimeEndTask != null) {
                         _activityTimeEndTask.cancel(false);
                         _activityTimeEndTask = null;
                     }
-                    _activityTimeEndTask = ThreadPoolManager.getInstance().schedule(new ActivityTimeEnd(), FWBA_ACTIVITYTIMEOFMOBS);
+                    _activityTimeEndTask = ThreadPoolManager.INSTANCE().schedule(new ActivityTimeEnd(), FWBA_ACTIVITYTIMEOFMOBS);
 
                     break;
             }

@@ -7,7 +7,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.CtrlIntention;
-import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.AggroList.AggroInfo;
@@ -26,7 +25,6 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.EffectType;
-import l2trunk.gameserver.skills.skillclasses.Default;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.CharTemplate;
@@ -382,12 +380,12 @@ public abstract class Playable extends Creature {
 
     @Override
     public int getPAtkSpd() {
-        return Math.max((int) calcStat(Stats.POWER_ATTACK_SPEED, calcStat(Stats.ATK_BASE, _template.basePAtkSpd, null, null), null, null), 1);
+        return Math.max((int) calcStat(Stats.POWER_ATTACK_SPEED, calcStat(Stats.ATK_BASE, template.basePAtkSpd, null, null), null, null), 1);
     }
 
     @Override
     public int getPAtk(final Creature target) {
-        double init = getActiveWeaponInstance() == null ? _template.basePAtk : 0;
+        double init = getActiveWeaponInstance() == null ? template.basePAtk : 0;
         return (int) calcStat(Stats.POWER_ATTACK, init, target, null);
     }
 
@@ -396,7 +394,7 @@ public abstract class Playable extends Creature {
         if ((skill != null) && (skill.getMatak() > 0)) {
             return skill.getMatak();
         }
-        final double init = getActiveWeaponInstance() == null ? _template.baseMAtk : 0;
+        final double init = getActiveWeaponInstance() == null ? template.baseMAtk : 0;
         return (int) calcStat(Stats.MAGIC_ATTACK, init, target, skill);
     }
 
@@ -515,7 +513,7 @@ public abstract class Playable extends Creature {
     }
 
     @Override
-    public void callSkill(Skill skill, List<Creature> targets, boolean useActionSkills) {
+    public void callSkill(Skill skill, final List<Creature> targets, boolean useActionSkills) {
         Player player = getPlayer();
         if (player == null) {
             return;
@@ -534,7 +532,7 @@ public abstract class Playable extends Creature {
                         }
                         if (!skill.isAI()) {
                             int damage = skill.getEffectPoint() == 0 ? 1 : skill.getEffectPoint();
-                            CharacterAI ai =  target.getAI();
+                            CharacterAI ai = target.getAI();
                             ai.notifyEvent(CtrlEvent.EVT_ATTACKED, this, damage);
                         }
                     }
@@ -615,7 +613,7 @@ public abstract class Playable extends Creature {
     }
 
     public void paralizeMe(Creature effector) {
-        Skill revengeSkill = SkillTable.getInstance().getInfo(Skill.SKILL_RAID_CURSE, 1);
+        Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE, 1);
         revengeSkill.getEffects(effector, this, false, false);
     }
 

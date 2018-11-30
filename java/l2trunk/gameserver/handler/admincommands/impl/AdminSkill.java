@@ -80,7 +80,7 @@ public class AdminSkill implements IAdminCommandHandler {
                 break;
             case admin_buff:
                 for (int i = 7041; i <= 7064; i++)
-                    activeChar.addSkill(SkillTable.getInstance().getInfo(i, 1));
+                    activeChar.addSkill(SkillTable.INSTANCE().getInfo(i, 1));
                 activeChar.sendPacket(new SkillList(activeChar));
                 break;
             case admin_people_having_effect:
@@ -117,7 +117,7 @@ public class AdminSkill implements IAdminCommandHandler {
         {
             Collection<SkillLearn> clanSkills = SkillAcquireHolder.getInstance().getAvailableSkills(target, AcquireType.CLAN);
             for (SkillLearn sl : clanSkills) {
-                skill = SkillTable.getInstance().getInfo(sl.getId(), sl.getLevel());
+                skill = SkillTable.INSTANCE().getInfo(sl.getId(), sl.getLevel());
                 clan.addSkill(skill, true);
             }
         }
@@ -136,7 +136,7 @@ public class AdminSkill implements IAdminCommandHandler {
 
         Creature target = (Creature) target_obj;
 
-        Calculator[] calculators = target.getCalculators();
+        List<Calculator> calculators = target.getCalculators();
 
         StringBuilder log_str = new StringBuilder("--- Debug for " + target.getName() + " ---\r\n");
 
@@ -146,15 +146,15 @@ public class AdminSkill implements IAdminCommandHandler {
             Env env = new Env(target, activeChar, null);
             env.value = calculator.getBase();
             log_str.append("Stat: ").append(calculator._stat.getValue()).append("\r\n");
-            Func[] funcs = calculator.getFunctions();
-            for (int i = 0; i < funcs.length; i++) {
-                String order = Integer.toHexString(funcs[i].order).toUpperCase();
+            List<Func> funcs = calculator.getFunctions();
+            for (int i = 0; i < funcs.size(); i++) {
+                String order = Integer.toHexString(funcs.get(i).order).toUpperCase();
                 if (order.length() == 1)
                     order = "0" + order;
-                log_str.append("\tFunc #").append(i).append("@ [0x").append(order).append("]").append(funcs[i].getClass().getSimpleName()).append("\t").append(env.value);
-                if (funcs[i].getCondition() == null || funcs[i].getCondition().test(env))
-                    funcs[i].calc(env);
-                log_str.append(" -> ").append(env.value).append(funcs[i].owner != null ? "; owner: " + funcs[i].owner.toString() : "; no owner").append("\r\n");
+                log_str.append("\tFunc #").append(i).append("@ [0x").append(order).append("]").append(funcs.get(i).getClass().getSimpleName()).append("\t").append(env.value);
+                if (funcs.get(i).getCondition() == null || funcs.get(i).getCondition().test(env))
+                    funcs.get(i).calc(env);
+                log_str.append(" -> ").append(env.value).append(funcs.get(i).owner != null ? "; owner: " + funcs.get(i).owner.toString() : "; no owner").append("\r\n");
             }
         }
 
@@ -180,7 +180,7 @@ public class AdminSkill implements IAdminCommandHandler {
         while (skills.size() > unLearnable) {
             unLearnable = 0;
             for (SkillLearn s : skills) {
-                Skill sk = SkillTable.getInstance().getInfo(s.getId(), s.getLevel());
+                Skill sk = SkillTable.INSTANCE().getInfo(s.getId(), s.getLevel());
                 if (sk == null || !sk.getCanLearn(player.getClassId())) {
                     unLearnable++;
                     continue;
@@ -390,7 +390,7 @@ public class AdminSkill implements IAdminCommandHandler {
         if (wordList.length == 3) {
             int id = Integer.parseInt(wordList[1]);
             int level = Integer.parseInt(wordList[2]);
-            Skill skill = SkillTable.getInstance().getInfo(id, level);
+            Skill skill = SkillTable.INSTANCE().getInfo(id, level);
             if (skill != null) {
                 player.sendMessage("Admin gave you the skill " + skill.getName() + ".");
                 player.addSkill(skill, true);
@@ -416,7 +416,7 @@ public class AdminSkill implements IAdminCommandHandler {
         if (wordList.length == 2) {
             int id = Integer.parseInt(wordList[1]);
             int level = player.getSkillLevel(id);
-            Skill skill = SkillTable.getInstance().getInfo(id, level);
+            Skill skill = SkillTable.INSTANCE().getInfo(id, level);
             if (skill != null) {
                 player.sendMessage("Admin removed the skill " + skill.getName() + ".");
                 player.removeSkill(skill, true);

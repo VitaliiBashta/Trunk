@@ -9,9 +9,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class YehanBrother extends Fighter {
+    private static final List<Integer> _minions = ArrayUtils.createAscendingList(22509, 22512);
     private long _spawnTimer = 0;
-    private static final int[] _minions = ArrayUtils.createAscendingArray(22509, 22512);
 
     public YehanBrother(NpcInstance actor) {
         super(actor);
@@ -41,12 +43,12 @@ public final class YehanBrother extends Fighter {
         NpcInstance actor = getActor();
         NpcInstance brother = getBrother();
         if (!brother.isDead() && !actor.isInRange(brother, 300))
-            actor.altOnMagicUseTimer(getActor(), SkillTable.getInstance().getInfo(6371, 1));
+            actor.altOnMagicUseTimer(getActor(), SkillTable.INSTANCE().getInfo(6371, 1));
         else
             removeInvul(actor);
         if (_spawnTimer + 40000 < System.currentTimeMillis()) {
             _spawnTimer = System.currentTimeMillis();
-            NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(_minions[Rnd.get(_minions.length)], Location.findAroundPosition(actor, 300), 0);
+            NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(_minions.get(Rnd.get(_minions.size())), Location.findAroundPosition(actor, 300), 0);
             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggressionTarget(), 1000);
         }
         super.thinkAttack();

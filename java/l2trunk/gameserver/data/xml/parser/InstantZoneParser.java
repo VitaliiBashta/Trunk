@@ -53,7 +53,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
             int timer = 60;
             int mapx = -1;
             int mapy = -1;
-            boolean dispelBuffs = false;
+            boolean dispelBuffs;
             boolean onPartyDismiss = true;
             int mobId, respawn, respawnRnd, count, sharedReuseGroup = 0;
             int collapseIfEmpty = 0;
@@ -67,7 +67,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
             StatsSet params = new StatsSet();
 
             List<InstantZone.SpawnInfo> spawns = new ArrayList<>();
-            Map<Integer,InstantZone.DoorInfo> doors = new HashMap<>();
+            Map<Integer, InstantZone.DoorInfo> doors = new HashMap<>();
             Map<String, InstantZone.ZoneInfo> zones = Collections.emptyMap();
             Map<String, InstantZone.SpawnInfo2> spawns2 = Collections.emptyMap();
             instanceId = Integer.parseInt(element.attributeValue("id"));
@@ -153,7 +153,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
                         boolean active = e.attributeValue("active") != null && Boolean.parseBoolean(e.attributeValue("active"));
                         ZoneTemplate template = ZoneHolder.getInstance().getTemplate(e.attributeValue("name"));
                         if (template == null) {
-                            error("Zone: " + e.attributeValue("name") + " not found; file: " + getCurrentFileName());
+                            LOG.error("Zone: " + e.attributeValue("name") + " not found; file: " + getCurrentFileName());
                             continue;
                         }
                         zones.put(template.getName(), new InstantZone.ZoneInfo(template, active));
@@ -169,7 +169,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
                             boolean spawned = e.attributeValue("spawned") != null && Boolean.parseBoolean(e.attributeValue("spawned"));
                             List<SpawnTemplate> templates = SpawnHolder.getInstance().getSpawn(group);
                             if (templates == null)
-                                info("not find spawn group: " + group + " in file: " + getCurrentFileName());
+                                LOG.info("not find spawn group: " + group + " in file: " + getCurrentFileName());
                             else {
                                 if (spawns2.isEmpty())
                                     spawns2 = new Hashtable<>();
@@ -199,7 +199,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
                             else if (spawnTypeNode.equalsIgnoreCase("loc"))
                                 spawnType = 2;
                             else
-                                error("Spawn type  '" + spawnTypeNode + "' is unknown!");
+                                LOG.error("Spawn type  '" + spawnTypeNode + "' is unknown!");
 
                             for (Element e2 : e.elements())
                                 if ("coords".equalsIgnoreCase(e2.getName()))
@@ -212,7 +212,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
                                     poly.add(loc.x, loc.y).setZmin(loc.z).setZmax(loc.z);
 
                                 if (!poly.validate())
-                                    error("invalid spawn territory for instance id : " + instanceId + " - " + poly + "!");
+                                    LOG.error("invalid spawn territory for instance id : " + instanceId + " - " + poly + "!");
 
                                 territory = new Territory().add(poly);
                             }

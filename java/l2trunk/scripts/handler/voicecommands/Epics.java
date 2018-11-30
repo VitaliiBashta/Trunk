@@ -14,19 +14,22 @@ import l2trunk.scripts.bosses.BaiumManager;
 import l2trunk.scripts.bosses.ValakasManager;
 import l2trunk.scripts.services.community.CommunityNpcs;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Epics implements IVoicedCommandHandler, ScriptFile {
-    private final String[] _commandList = new String[]{
+    private final List<String> _commandList = Arrays.asList(
             "epicAntharas",
             "epicValakas",
             "epicBaium",
             "epicBeleth",
             "epicQueenAnt",
             "epicOrfen"
-    };
+    );
 
     @Override
     public void onLoad() {
-        VoicedCommandHandler.getInstance().registerVoicedCommandHandler(this);
+        VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class Epics implements IVoicedCommandHandler, ScriptFile {
         if (activeChar == null)
             return false;
 
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "epicsRespawn/template.htm", activeChar);
+        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "epicsRespawn/template.htm", activeChar);
 
         if (command.equals("epicAntharas")) {
             html = html.replace("%img%", "Btns.epic_29068");
@@ -127,7 +130,7 @@ public class Epics implements IVoicedCommandHandler, ScriptFile {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 }

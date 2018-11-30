@@ -7,11 +7,12 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.Revive;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * @author GipsyGrierosu Andrei
- */
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class res extends Functions implements IVoicedCommandHandler {
-    private static final String[] _commandList = {};
+    private static final List<String> _commandList = Collections.singletonList("res");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
@@ -57,7 +58,7 @@ public class res extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 }

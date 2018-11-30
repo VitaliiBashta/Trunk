@@ -72,7 +72,7 @@ public final class SpawnParser extends AbstractDirParser<SpawnHolder> {
                         if (terName != null) {
                             Territory g = territories.get(terName);
                             if (g == null) {
-                                error("Invalid territory name: " + terName + "; " + getCurrentFileName());
+                                LOG.error("Invalid territory name: " + terName + "; " + getCurrentFileName());
                                 continue;
                             }
                             template.addSpawnRange(g);
@@ -96,12 +96,12 @@ public final class SpawnParser extends AbstractDirParser<SpawnHolder> {
                 }
 
                 if (template.getNpcSize() == 0) {
-                    warn("Npc id is zero! File: " + getCurrentFileName());
+                    LOG.warn("Npc id is zero! File: " + getCurrentFileName());
                     continue;
                 }
 
                 if (template.getSpawnRangeSize() == 0) {
-                    warn("No points to spawn! File: " + getCurrentFileName());
+                    LOG.warn("No points to spawn! File: " + getCurrentFileName());
                     continue;
                 }
 
@@ -132,7 +132,7 @@ public final class SpawnParser extends AbstractDirParser<SpawnHolder> {
         }
 
         if (!temp.validate())
-            error("Invalid polygon: " + name + "{" + temp + "}. File: " + getCurrentFileName());
+            LOG.error("Invalid polygon: " + name + "{" + temp + "}. File: " + getCurrentFileName());
         return temp;
     }
 }

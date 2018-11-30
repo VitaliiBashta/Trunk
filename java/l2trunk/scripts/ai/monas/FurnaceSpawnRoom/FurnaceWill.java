@@ -45,7 +45,7 @@ public class FurnaceWill extends DefaultAI {
             actor.setNpcState((byte) 1);
             Functions.npcShout(actor, NpcString.FURN1);
             furnace.registerActions();
-            ThreadPoolManager.getInstance().schedule(new ScheduleTimerTask(), 15000);
+            ThreadPoolManager.INSTANCE().schedule(new ScheduleTimerTask(), 15000);
         }
 
         super.onEvtAttacked(attacker, damage);

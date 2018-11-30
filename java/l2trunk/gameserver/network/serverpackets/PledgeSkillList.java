@@ -14,8 +14,8 @@ import java.util.List;
  * Reworked: VISTALL
  */
 public class PledgeSkillList extends L2GameServerPacket {
-    private List<SkillInfo> _allSkills = Collections.emptyList();
     private final List<UnitSkillInfo> _unitSkills = new ArrayList<>();
+    private List<SkillInfo> _allSkills = Collections.emptyList();
 
     public PledgeSkillList(Clan clan) {
         Collection<Skill> skills = clan.getSkills();

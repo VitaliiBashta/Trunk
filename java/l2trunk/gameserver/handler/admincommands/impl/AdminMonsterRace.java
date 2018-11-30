@@ -12,7 +12,6 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.Location;
 
-@SuppressWarnings("unused")
 public class AdminMonsterRace implements IAdminCommandHandler {
     private static int state = -1;
 
@@ -58,7 +57,7 @@ public class AdminMonsterRace implements IAdminCommandHandler {
             activeChar.broadcastPacket(new PlaySound(PlaySound.Type.SOUND, "ItemSound2.race_start", 1, 121209259, new Location(12125, 182487, -3559)));
             activeChar.broadcastPacket(new MonRaceInfo(codes[state][0], codes[state][1], race.getMonsters(), race.getSpeeds()));
 
-            ThreadPoolManager.getInstance().schedule(new RunRace(codes, activeChar), 5000);
+            ThreadPoolManager.INSTANCE.schedule(new RunRace(codes, activeChar), 5000);
         }
     }
 
@@ -77,9 +76,9 @@ public class AdminMonsterRace implements IAdminCommandHandler {
 
         @Override
         public void runImpl() {
-            // int[][] speeds1 = MonsterRace.getInstance().getSpeeds();
-            // MonsterRace.getInstance().newSpeeds();
-            // int[][] speeds2 = MonsterRace.getInstance().getSpeeds();
+            // int[][] speeds1 = MonsterRace.INSTANCE().getSpeeds();
+            // MonsterRace.INSTANCE().newSpeeds();
+            // int[][] speeds2 = MonsterRace.INSTANCE().getSpeeds();
             /*
              * int[] speed = new int[8]; for(int i=0; i<8; i++) { for(int j=0; j<20;
              * j++) { //_log.info.println("Adding "+speeds1[i][j] +" and "+
@@ -88,7 +87,7 @@ public class AdminMonsterRace implements IAdminCommandHandler {
              */
 
             activeChar.broadcastPacket(new MonRaceInfo(codes[2][0], codes[2][1], MonsterRace.getInstance().getMonsters(), MonsterRace.getInstance().getSpeeds()));
-            ThreadPoolManager.getInstance().schedule(new RunEnd(activeChar), 30000);
+            ThreadPoolManager.INSTANCE.schedule(new RunEnd(activeChar), 30000);
         }
     }
 

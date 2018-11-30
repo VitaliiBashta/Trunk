@@ -72,12 +72,12 @@ public class AdminOlympiad implements IAdminCommandHandler {
 
                     new Thread(Olympiad._manager).start();
 
-                    Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
+                    Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
                     break;
                 }
                 case admin_oly_stop: {
                     Olympiad._inCompPeriod = false;
-                    Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
+                    Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
                     try {
                         OlympiadDatabase.save();
                     } catch (Exception e) {
@@ -107,19 +107,19 @@ public class AdminOlympiad implements IAdminCommandHandler {
                     List<StatsSet> heroesToBe = new ArrayList<>();
                     heroesToBe.add(hero);
 
-                    Hero.getInstance().computeNewHeroes(heroesToBe);
+                    Hero.INSTANCE.computeNewHeroes(heroesToBe);
 
                     activeChar.sendMessage("Hero status added to player " + player.getName());
                     break;
                 }
                 case admin_olympiad_stop_period: {
                     Olympiad.cancelPeriodTasks();
-                    ThreadPoolManager.getInstance().execute(new OlympiadEndTask());
+                    ThreadPoolManager.INSTANCE.execute(new OlympiadEndTask());
                     break;
                 }
                 case admin_olympiad_start_period: {
                     Olympiad.cancelPeriodTasks();
-                    ThreadPoolManager.getInstance().execute(new ValidationTask());
+                    ThreadPoolManager.INSTANCE.execute(new ValidationTask());
                     break;
                 }
             }

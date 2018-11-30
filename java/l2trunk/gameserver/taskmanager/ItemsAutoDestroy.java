@@ -15,7 +15,7 @@ public class ItemsAutoDestroy {
 
     private ItemsAutoDestroy() {
         itemsToDelete = new ConcurrentLinkedQueue<>();
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new CheckItemsForDestroy(), MILLIS_TO_CHECK_DESTROY_THREAD, MILLIS_TO_CHECK_DESTROY_THREAD);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new CheckItemsForDestroy(), MILLIS_TO_CHECK_DESTROY_THREAD, MILLIS_TO_CHECK_DESTROY_THREAD);
     }
 
     public static ItemsAutoDestroy getInstance() {

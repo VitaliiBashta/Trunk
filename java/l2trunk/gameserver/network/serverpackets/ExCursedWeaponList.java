@@ -8,7 +8,7 @@ public final class ExCursedWeaponList extends L2GameServerPacket {
     private final Set<Integer> cursedWeapon_ids;
 
     public ExCursedWeaponList() {
-        cursedWeapon_ids = CursedWeaponsManager.getInstance().getCursedWeaponsIds();
+        cursedWeapon_ids = CursedWeaponsManager.INSTANCE.getCursedWeaponsIds();
     }
 
     @Override

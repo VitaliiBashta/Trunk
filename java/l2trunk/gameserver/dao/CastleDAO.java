@@ -22,6 +22,7 @@ public final class CastleDAO {
     }
 
     public void select(Castle castle) {
+
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {
             statement.setInt(1, castle.getId());

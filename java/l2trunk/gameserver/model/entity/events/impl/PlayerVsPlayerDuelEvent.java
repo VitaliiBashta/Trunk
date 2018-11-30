@@ -131,7 +131,7 @@ public class PlayerVsPlayerDuelEvent extends DuelEvent {
         if (allDead) {
             _winner = team.revert();
 
-            ThreadPoolManager.getInstance().schedule(this::stopEvent, 500);
+            ThreadPoolManager.INSTANCE.schedule(this::stopEvent, 500);
         }
     }
 

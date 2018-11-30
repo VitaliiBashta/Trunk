@@ -22,8 +22,6 @@ public class PlayerAuthResponse extends ReceivablePacket {
     private int playOkId2;
     private int loginOkId1;
     private int loginOkId2;
-    private double bonus;
-    private int bonusExpire;
 
     @Override
     public void readImpl() {
@@ -34,8 +32,8 @@ public class PlayerAuthResponse extends ReceivablePacket {
             playOkId2 = readD();
             loginOkId1 = readD();
             loginOkId2 = readD();
-            bonus = readF();
-            bonusExpire = readD();
+            readF();
+            readD();
         }
         String hwid = readS();
     }
@@ -50,19 +48,6 @@ public class PlayerAuthResponse extends ReceivablePacket {
         if (authed && client.getSessionKey().equals(skey)) {
             client.setAuthed(true);
             client.setState(GameClient.GameClientState.AUTHED);
-            switch (Config.SERVICES_RATE_TYPE) {
-                case Bonus.NO_BONUS:
-                    bonus = 0;
-                    bonusExpire = 0;
-                    break;
-                case Bonus.BONUS_GLOBAL_ON_GAMESERVER:
-                    Pair<Integer, Integer> bonuses = AccountBonusDAO.getInstance().getBonuses(account);
-                    bonus = bonuses.getKey();
-                    bonusExpire = bonuses.getValue();
-                    break;
-            }
-            client.setBonus((int) bonus);
-            client.setBonusExpire(bonusExpire);
 
             GameClient oldClient = AuthServerCommunication.getInstance().addAuthedClient(client);
             if (oldClient != null) {

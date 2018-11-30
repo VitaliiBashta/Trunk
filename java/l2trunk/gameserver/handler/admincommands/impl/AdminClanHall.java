@@ -70,14 +70,14 @@ public class AdminClanHall implements IAdminCommandHandler {
         replyMSG.append("<tr><td width=130>ClanHall Name</td><td width=58>Town</td><td width=80>Owner</td></tr>");
 
         // TODO: make sort by Location
-		/*for(ClanHall clanhall : ClanHallManager.getInstance().getClanHalls().values())
+		/*for(ClanHall clanhall : ClanHallManager.INSTANCE().getClanHalls().values())
 			if (clanhall != null)
 			{
 				replyMSG.append("<tr><td>");
 				replyMSG.append("<a action=\"bypass -h admin_clanhall " + clanhall.getId() + "\">" + clanhall.getName() + "</a>");
 				replyMSG.append("</td><td>" + clanhall.getLocation() + "</td><td>");
 
-				L2Clan owner = clanhall.getOwnerId() == 0 ? null : ClanTable.getInstance().getClan(clanhall.getOwnerId());
+				L2Clan owner = clanhall.getOwnerId() == 0 ? null : ClanTable.INSTANCE().getClan(clanhall.getOwnerId());
 				if (owner == null)
 					replyMSG.append("none");
 				else
@@ -105,7 +105,7 @@ public class AdminClanHall implements IAdminCommandHandler {
         replyMSG.append("<br><br><br>ClanHall: " + clanhall.getName() + "<br>");
         replyMSG.append("Location: &^" + clanhall.getId() + ";<br>");
         replyMSG.append("ClanHall Owner: ");
-        Clan owner = clanhall.getOwnerId() == 0 ? null : ClanTable.getInstance().getClan(clanhall.getOwnerId());
+        Clan owner = clanhall.getOwnerId() == 0 ? null : ClanTable.INSTANCE.getClan(clanhall.getOwnerId());
         if (owner == null)
             replyMSG.append("none");
         else

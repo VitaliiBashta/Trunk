@@ -1,7 +1,6 @@
 package l2trunk.gameserver.idfactory;
 
 import l2trunk.commons.math.PrimeFinder;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,11 @@ public class BitSetIDFactory extends IdFactory {
         super();
         initialize();
 
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new BitSetCapacityCheck(), 30000, 30000);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(
+                () -> {
+                    if (reachingBitSetCapacity())
+                        increaseBitSetCapacity();
+                }, 30000, 30000);
     }
 
     private void initialize() {
@@ -100,11 +103,4 @@ public class BitSetIDFactory extends IdFactory {
         freeIds = newBitSet;
     }
 
-    public class BitSetCapacityCheck extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            if (reachingBitSetCapacity())
-                increaseBitSetCapacity();
-        }
-    }
 }

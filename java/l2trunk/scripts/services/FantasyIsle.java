@@ -176,7 +176,7 @@ public class FantasyIsle extends Functions implements ScriptFile {
 
     @Override
     public void onLoad() {
-        _startTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new StartTask(), 60000, 60000);
+        _startTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new StartTask(), 60000, 60000);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class RignosInstance extends NpcInstance {
         }
     }
 
-    private final Skill SKILL_EVENT_TIMER = SkillTable.getInstance().getInfo(5239, 5);
+    private final Skill SKILL_EVENT_TIMER = SkillTable.INSTANCE().getInfo(5239, 5);
     private static final int RACE_STAMP = 10013;
     private static final int SECRET_KEY = 9694;
 
@@ -41,7 +41,7 @@ public class RignosInstance extends NpcInstance {
 
             altUseSkill(SKILL_EVENT_TIMER, player);
             ItemFunctions.removeItem(player, RACE_STAMP, ItemFunctions.getItemCount(player, RACE_STAMP), true, "RignosInstance");
-            _raceTask = ThreadPoolManager.getInstance().schedule(new EndRaceTask(), 30 * 60 * 1000L);
+            _raceTask = ThreadPoolManager.INSTANCE().schedule(new EndRaceTask(), 30 * 60 * 1000L);
         } else if (command.equalsIgnoreCase("endRace")) {
             if (_raceTask == null)
                 return;

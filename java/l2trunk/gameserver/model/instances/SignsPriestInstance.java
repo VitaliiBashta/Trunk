@@ -52,9 +52,9 @@ public final class SignsPriestInstance extends NpcInstance {
             if (allyId != 0) {
                 // Check if another clan in the same alliance owns a castle,
                 // by traversing the list of clans and act accordingly.
-                return ClanTable.getInstance().getClans()
+                return ClanTable.INSTANCE.getClans()
                         .stream()
-                        .anyMatch(clan-> clan.getAllyId() == allyId && clan.getCastle()>0);
+                        .anyMatch(clan -> clan.getAllyId() == allyId && clan.getCastle() > 0);
             }
         }
         return playerClan.getCastle() > 0;
@@ -410,7 +410,7 @@ public final class SignsPriestInstance extends NpcInstance {
                     }
 
                     path = SevenSigns.SEVEN_SIGNS_HTML_PATH + "signs_17.htm";
-                    content = HtmCache.getInstance().getNotNull(path, player);
+                    content = HtmCache.INSTANCE.getNotNull(path, player);
 
                     if (content != null) {
                         content = content.replaceAll("%stoneColor%", stoneColor);

@@ -51,7 +51,7 @@ public class OnActionShift extends Functions {
                 String dialog;
 
                 if (Config.ALT_FULL_NPC_STATS_PAGE) {
-                    dialog = HtmCache.getInstance().getNotNull("scripts/actions/player.L2NpcInstance.onActionShift.full.htm", player);
+                    dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/player.L2NpcInstance.onActionShift.full.htm", player);
                     dialog = dialog.replaceFirst("%class%", String.valueOf(targetNpc.getClass().getSimpleName().replaceFirst("L2", "").replaceFirst("Instance", "")));
                     dialog = dialog.replaceFirst("%id%", String.valueOf(targetNpc.getNpcId()));
                     dialog = dialog.replaceFirst("%respawn%", String.valueOf(targetNpc.getSpawn() != null ? Util.formatTime(targetNpc.getSpawn().getRespawnDelay()) : "0"));
@@ -76,7 +76,7 @@ public class OnActionShift extends Functions {
                         b.append(e.toString()).append(";");
                     dialog = dialog.replaceFirst("%event%", b.toString());
                 } else
-                    dialog = HtmCache.getInstance().getNotNull("scripts/actions/player.L2NpcInstance.onActionShift.htm", player);
+                    dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/player.L2NpcInstance.onActionShift.htm", player);
 
                 dialog = dialog.replaceFirst("%name%", nameNpc(targetNpc));
                 dialog = dialog.replaceFirst("%id%", String.valueOf(targetNpc.getNpcId()));
@@ -261,7 +261,7 @@ public class OnActionShift extends Functions {
         if (player == null || npc == null)
             return;
 
-        String dialog = HtmCache.getInstance().getNotNull("scripts/actions/player.L2NpcInstance.stats.htm", player);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/player.L2NpcInstance.stats.htm", player);
         dialog = dialog.replaceFirst("%name%", nameNpc(npc));
         dialog = dialog.replaceFirst("%level%", String.valueOf(npc.getLevel()));
         dialog = dialog.replaceFirst("%factionId%", String.valueOf(npc.getFaction()));
@@ -369,7 +369,7 @@ public class OnActionShift extends Functions {
 
         String dialog;
         DoorInstance door = (DoorInstance) object;
-        dialog = HtmCache.getInstance().getNotNull("scripts/actions/admin.L2DoorInstance.onActionShift.htm", player);
+        dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/admin.L2DoorInstance.onActionShift.htm", player);
         dialog = dialog.replaceFirst("%CurrentHp%", String.valueOf((int) door.getCurrentHp()));
         dialog = dialog.replaceFirst("%MaxHp%", String.valueOf(door.getMaxHp()));
         dialog = dialog.replaceAll("%ObjectId%", String.valueOf(door.getObjectId()));
@@ -404,7 +404,7 @@ public class OnActionShift extends Functions {
 
             String dialog;
 
-            dialog = HtmCache.getInstance().getNotNull("scripts/actions/admin.L2PetInstance.onActionShift.htm", player);
+            dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/admin.L2PetInstance.onActionShift.htm", player);
             dialog = dialog.replaceFirst("%name%", HtmlUtils.htmlNpcName(pet.getNpcId()));
             dialog = dialog.replaceFirst("%title%", String.valueOf(StringUtils.isEmpty(pet.getTitle()) ? "Empty" : pet.getTitle()));
             dialog = dialog.replaceFirst("%level%", String.valueOf(pet.getLevel()));
@@ -456,7 +456,7 @@ public class OnActionShift extends Functions {
         if (object.isItem()) {
             String dialog;
             ItemInstance item = (ItemInstance) object;
-            dialog = HtmCache.getInstance().getNotNull("scripts/actions/admin.L2ItemInstance.onActionShift.htm", player);
+            dialog = HtmCache.INSTANCE.getNotNull("scripts/actions/admin.L2ItemInstance.onActionShift.htm", player);
             dialog = dialog.replaceFirst("%name%", String.valueOf(item.getTemplate().getName()));
             dialog = dialog.replaceFirst("%objId%", String.valueOf(item.getObjectId()));
             dialog = dialog.replaceFirst("%itemId%", String.valueOf(item.getItemId()));

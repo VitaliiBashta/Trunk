@@ -15,7 +15,7 @@ import java.util.List;
 public class CurseDivinity extends Skill {
     public CurseDivinity(StatsSet set) {
         super(set);
-        _power = set.getInteger("power", 1);
+        power = set.getInteger("power", 1);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CurseDivinity extends Skill {
                 int buffCount = effectsList.size();
                 double damage = Formulas.calcMagicDam(activeChar, realTarget, this, sps);
                 if (damage >= 1) {
-                    damage = damage + (_power * 0.1 + _power * 0.254 * buffCount);
+                    damage = damage + (power * 0.1 + power * 0.254 * buffCount);
                     realTarget.reduceCurrentHp(damage, activeChar, this, true, true, false, true, false, false, true);
                 }
 

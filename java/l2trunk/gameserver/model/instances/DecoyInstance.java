@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class DecoyInstance extends NpcInstance {
+public final class DecoyInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(DecoyInstance.class);
 
     private final HardReference<Player> _playerRef;
@@ -35,8 +35,8 @@ public class DecoyInstance extends NpcInstance {
         _lifeTime = lifeTime;
         _timeRemaining = _lifeTime;
         int skilllevel = getNpcId() < 13257 ? getNpcId() - 13070 : getNpcId() - 13250;
-        _decoyLifeTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new DecoyLifetime(), 1000, 1000);
-        _hateSpam = ThreadPoolManager.getInstance().scheduleAtFixedRate(new HateSpam(SkillTable.getInstance().getInfo(5272, skilllevel)), 1000, 3000);
+        _decoyLifeTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DecoyLifetime(), 1000, 1000);
+        _hateSpam = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new HateSpam(SkillTable.INSTANCE.getInfo(5272, skilllevel)), 1000, 3000);
     }
 
     @Override

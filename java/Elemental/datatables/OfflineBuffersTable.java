@@ -38,7 +38,6 @@ public class OfflineBuffersTable {
                     if (player == null)
                         continue;
 
-                    player.setOfflineMode(true);
                     player.setIsOnline(true);
                     player.updateOnlineStatus();
 

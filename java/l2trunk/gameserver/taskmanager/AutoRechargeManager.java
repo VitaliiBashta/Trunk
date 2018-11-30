@@ -8,6 +8,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.UserInfo;
 import l2trunk.gameserver.utils.ItemFunctions;
 
+import java.util.List;
 import java.util.concurrent.Future;
 
 public class AutoRechargeManager extends SteppingRunnableQueueManager {
@@ -21,8 +22,8 @@ public class AutoRechargeManager extends SteppingRunnableQueueManager {
 
     private AutoRechargeManager() {
         super(10000L);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 1000L, 1000L);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(this, 1000L, 1000L);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 AutoRechargeManager.this.purge();
@@ -46,12 +47,8 @@ public class AutoRechargeManager extends SteppingRunnableQueueManager {
 
             boolean consumeItem(int itemId) {
                 if (ItemFunctions.getItemCount(player, itemId) > 0) {
-                    Skill[] itemSkills = player.getInventory().getItemByItemId(itemId).getTemplate().getAttachedSkills();
-                    if (itemSkills.length > 0) {
-                        for (Skill itemSkill : itemSkills) {
-                            player.altUseSkill(itemSkill, player);
-                        }
-                    }
+                    List<Skill> itemSkills = player.getInventory().getItemByItemId(itemId).getTemplate().getAttachedSkills();
+                    itemSkills.forEach(s -> player.altUseSkill(s, player));
                 } else
                     return false;
 

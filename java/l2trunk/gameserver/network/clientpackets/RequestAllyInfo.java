@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RequestAllyInfo extends L2GameClientPacket {
+public final class RequestAllyInfo extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }
@@ -27,9 +27,9 @@ public class RequestAllyInfo extends L2GameClientPacket {
         if (ally == null)
             return;
 
-        int clancount = 0;
+        int clancount;
         Clan leaderclan = player.getAlliance().getLeader();
-        clancount = ClanTable.getInstance().getAlliance(leaderclan.getAllyId()).getMembers().length;
+        clancount = ClanTable.INSTANCE.getAlliance(leaderclan.getAllyId()).getMembers().length;
         int[] online = new int[clancount + 1];
         int[] count = new int[clancount + 1];
         Clan[] clans = player.getAlliance().getMembers();

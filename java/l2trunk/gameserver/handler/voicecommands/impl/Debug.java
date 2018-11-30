@@ -5,12 +5,14 @@ import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Debug implements IVoicedCommandHandler {
-    private static final String[] _commandList = {};
 
     @Override
-    public String[] getVoicedCommandList() {
-        return _commandList;
+    public List<String> getVoicedCommandList() {
+        return Collections.emptyList();
     }
 
     @Override

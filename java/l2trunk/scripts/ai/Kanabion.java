@@ -76,7 +76,7 @@ public final class Kanabion extends Fighter {
                 }
             if (player == null)
                 player = killer;
-            ThreadPoolManager.getInstance().schedule(new SpawnNext(actor, player, nextId), 5000);
+            ThreadPoolManager.INSTANCE().schedule(new SpawnNext(actor, player, nextId), 5000);
         }
 
         super.onEvtDead(killer);

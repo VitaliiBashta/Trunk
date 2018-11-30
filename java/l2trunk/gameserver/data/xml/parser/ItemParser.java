@@ -95,7 +95,7 @@ public final class ItemParser extends StatParser<ItemHolder> {
                 // {
                 // info("set " + entry.getKey() + ":" + entry.getValue());
                 // }
-                warn("Fail create item: " + set.get("item_id"), e);
+                LOG.warn("Fail create item: " + set.get("item_id"), e);
                 continue;
             }
 
@@ -113,19 +113,19 @@ public final class ItemParser extends StatParser<ItemHolder> {
                             int id = Integer.parseInt(nextElement.attributeValue("id"));
                             int level = Integer.parseInt(nextElement.attributeValue("level"));
 
-                            Skill skill = SkillTable.getInstance().getInfo(id, level);
+                            Skill skill = SkillTable.INSTANCE().getInfo(id, level);
 
                             if (skill != null) {
                                 template.attachSkill(skill);
                             } else {
-                                info("Skill not found(" + id + "," + level + ") for item:" + set.getObject("item_id") + "; file:" + getCurrentFileName());
+                                LOG.info("Skill not found(" + id + "," + level + ") for item:" + set.getObject("item_id") + "; file:" + getCurrentFileName());
                             }
                         }
                     } else if (subName.equalsIgnoreCase("enchant4_skill")) {
                         int id = Integer.parseInt(subElement.attributeValue("id"));
                         int level = Integer.parseInt(subElement.attributeValue("level"));
 
-                        Skill skill = SkillTable.getInstance().getInfo(id, level);
+                        Skill skill = SkillTable.INSTANCE().getInfo(id, level);
                         if (skill != null) {
                             template.setEnchant4Skill(skill);
                         }
@@ -172,7 +172,7 @@ public final class ItemParser extends StatParser<ItemHolder> {
                                     for (Element optionElement : nextElement.elements()) {
                                         OptionDataTemplate optionData = OptionDataHolder.getInstance().getTemplate(Integer.parseInt(optionElement.attributeValue("id")));
                                         if (optionData == null) {
-                                            error("Not found option_data for id: " + optionElement.attributeValue("id") + "; item_id: " + set.get("item_id"));
+                                            LOG.error("Not found option_data for id: " + optionElement.attributeValue("id") + "; item_id: " + set.get("item_id"));
                                         } else {
                                             options[(i++)] = optionData.getId();
                                         }

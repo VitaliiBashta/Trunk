@@ -10,7 +10,7 @@ import java.util.*;
 public final class ResidenceHolder extends AbstractHolder {
     private static final ResidenceHolder _instance = new ResidenceHolder();
 
-    private final Map<Integer,Residence> _residences = new TreeMap<>();
+    private final Map<Integer, Residence> _residences = new TreeMap<>();
 
     @SuppressWarnings("rawtypes")
     private final Map<Class, List<Residence>> _fastResidencesByType = new HashMap<>(4);
@@ -81,27 +81,20 @@ public final class ResidenceHolder extends AbstractHolder {
             r.init();
     }
 
-    private void buildFastLook() {
+    public void buildFastLook() {
         for (Residence residence : _residences.values()) {
-            List<Residence> list = _fastResidencesByType.get(residence.getClass());
-            if (list == null)
-                _fastResidencesByType.put(residence.getClass(), (list = new ArrayList<>()));
+            List<Residence> list = _fastResidencesByType.computeIfAbsent(residence.getClass(), k -> new ArrayList<>());
             list.add(residence);
         }
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public void log() {
-        buildFastLook();
-        info("total size: " + _residences.size());
+        LOG.info("total size: " + _residences.size());
         for (Map.Entry<Class, List<Residence>> entry : _fastResidencesByType.entrySet())
-            info(" - load " + entry.getValue().size() + " " + entry.getKey().getSimpleName().toLowerCase() + "(s).");
+            LOG.info(" - load " + entry.getValue().size() + " " + entry.getKey().getSimpleName().toLowerCase() + "(s).");
+
     }
 
     @Override
     public int size() {
-        return 0;
+        return _residences.size();
     }
 
     @Override

@@ -22,10 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HuntersGuild extends Functions implements ScriptFile, IVoicedCommandHandler, OnDeathListener {
-    private static final String[] _commandList = new String[]{"gettask", "declinetask"};
+    private static final List<String> _commandList = Arrays.asList("gettask", "declinetask");
     private static final Logger _log = LoggerFactory.getLogger(HuntersGuild.class);
 
     @Override
@@ -33,7 +34,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
         CharListenerList.addGlobal(this);
         if (!Config.EVENT_BOUNTY_HUNTERS_ENABLED)
             return;
-        VoicedCommandHandler.getInstance().registerVoicedCommandHandler(this);
+        VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
         _log.info("Loaded Event: Bounty Hunters Guild");
     }
 
@@ -68,9 +69,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
             return false;
         if (npc.title.contains("Quest Monster"))
             return false;
-        if (GameObjectsStorage.getByNpcId(npc.getNpcId()) == null)
-            return false;
-        return true;
+        return GameObjectsStorage.getByNpcId(npc.getNpcId()) != null;
     }
 
     private void getTask(Player player, int id) {
@@ -173,7 +172,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 

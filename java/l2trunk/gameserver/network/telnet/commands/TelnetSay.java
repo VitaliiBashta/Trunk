@@ -27,7 +27,7 @@ public class TelnetSay implements TelnetCommandHolder {
                 if (args.length == 0)
                     return null;
 
-                Announcements.getInstance().announceToAll(args[0]);
+                Announcements.INSTANCE.announceToAll(args[0]);
 
                 return "Announcement sent.\n";
             }

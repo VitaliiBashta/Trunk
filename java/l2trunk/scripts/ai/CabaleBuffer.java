@@ -25,9 +25,6 @@ public final class CabaleBuffer extends DefaultAI {
     private static final long castDelay = 60 * 1000L;
     private static final long buffDelay = 1000L;
 
-    /**
-     * Messages of NPCs
-     **/
     private static final NpcString[] preacherText = {
             NpcString.THIS_WORLD_WILL_SOON_BE_ANNIHILATED,
             NpcString.ALL_IS_LOST__PREPARE_TO_MEET_THE_GODDESS_OF_DEATH,
@@ -94,14 +91,14 @@ public final class CabaleBuffer extends DefaultAI {
                             if (i1 < 1)
                                 Functions.npcSay(actor, NpcString.I_BESTOW_UPON_YOU_A_BLESSING);
 
-                            Skill skill = SkillTable.getInstance().getInfo(ORATOR_MAGE_SKILL_ID, 1);
+                            Skill skill = SkillTable.INSTANCE.getInfo(ORATOR_MAGE_SKILL_ID, 1);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         } else if (i0 < 5) {
                             if (i1 < 500)
                                 Functions.npcSay(actor, NpcString.S1__I_GIVE_YOU_THE_BLESSING_OF_PROPHECY, player.getName());
 
-                            Skill skill = SkillTable.getInstance().getInfo(ORATOR_MAGE_SKILL_ID, 2);
+                            Skill skill = SkillTable.INSTANCE.getInfo(ORATOR_MAGE_SKILL_ID, 2);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         }
@@ -111,14 +108,14 @@ public final class CabaleBuffer extends DefaultAI {
                             if (i1 < 1)
                                 Functions.npcSay(actor, NpcString.HERALD_OF_THE_NEW_ERA__OPEN_YOUR_EYES);
 
-                            Skill skill = SkillTable.getInstance().getInfo(ORATOR_FIGHTER_SKILL_ID, 1);
+                            Skill skill = SkillTable.INSTANCE.getInfo(ORATOR_FIGHTER_SKILL_ID, 1);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         } else if (i0 < 5) {
                             if (i1 < 500)
                                 Functions.npcSay(actor, NpcString.S1__I_BESTOW_UPON_YOU_THE_AUTHORITY_OF_THE_ABYSS, player.getName());
 
-                            Skill skill = SkillTable.getInstance().getInfo(ORATOR_FIGHTER_SKILL_ID, 2);
+                            Skill skill = SkillTable.INSTANCE.getInfo(ORATOR_FIGHTER_SKILL_ID, 2);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         }
@@ -130,14 +127,14 @@ public final class CabaleBuffer extends DefaultAI {
                             if (i1 < 1)
                                 Functions.npcSay(actor, NpcString.YOU_DONT_HAVE_ANY_HOPE__YOUR_END_HAS_COME);
 
-                            Skill skill = SkillTable.getInstance().getInfo(PREACHER_MAGE_SKILL_ID, 1);
+                            Skill skill = SkillTable.INSTANCE.getInfo(PREACHER_MAGE_SKILL_ID, 1);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         } else if (i0 < 5) {
                             if (i1 < 500)
                                 Functions.npcSay(actor, NpcString.A_CURSE_UPON_YOU);
 
-                            Skill skill = SkillTable.getInstance().getInfo(PREACHER_MAGE_SKILL_ID, 2);
+                            Skill skill = SkillTable.INSTANCE.getInfo(PREACHER_MAGE_SKILL_ID, 2);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         }
@@ -147,14 +144,14 @@ public final class CabaleBuffer extends DefaultAI {
                             if (i1 < 1)
                                 Functions.npcSay(actor, NpcString.S1__YOU_BRING_AN_ILL_WIND, player.getName());
 
-                            Skill skill = SkillTable.getInstance().getInfo(PREACHER_FIGHTER_SKILL_ID, 1);
+                            Skill skill = SkillTable.INSTANCE.getInfo(PREACHER_FIGHTER_SKILL_ID, 1);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         } else if (i0 < 5) {
                             if (i1 < 500)
                                 Functions.npcSay(actor, NpcString.S1__YOU_MIGHT_AS_WELL_GIVE_UP, player.getName());
 
-                            Skill skill = SkillTable.getInstance().getInfo(PREACHER_FIGHTER_SKILL_ID, 2);
+                            Skill skill = SkillTable.INSTANCE.getInfo(PREACHER_FIGHTER_SKILL_ID, 2);
                             if (skill != null)
                                 actor.altUseSkill(skill, player);
                         }

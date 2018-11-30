@@ -122,7 +122,7 @@ public class NaiaRoomController extends DefaultAI {
                 //Room 12
                 case 18505: {
                     ReflectionUtils.getDoor(18250024).openMe();
-                    ThreadPoolManager.getInstance().schedule(new LastDoorClose(), 300 * 1000L);
+                    ThreadPoolManager.INSTANCE.schedule(new LastDoorClose(), 300 * 1000L);
                     NaiaTowerManager.unlockRoom(npcId);
                     NaiaTowerManager.removeRoomMobs(npcId);
                     break;

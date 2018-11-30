@@ -12,12 +12,12 @@ class lvl extends Functions {
     public void list() {
         Player player = getSelf();
         if (!Config.SERVICES_LVL_ENABLED) {
-            show(HtmCache.getInstance().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE.getNotNull("npcdefault.htm", player), player);
             return;
         }
-        String html = null;
+        String html;
 
-        html = HtmCache.getInstance().getNotNull("scripts/services/lvl.htm", player);
+        html = HtmCache.INSTANCE().getNotNull("scripts/services/lvl.htm", player);
         String add = "";
         if (player.getLevel() < Config.SERVICES_LVL_UP_MAX)
             add += "<button value=\"Raise the level at1 (Price:" + Config.SERVICES_LVL_UP_PRICE + " " + ItemHolder.getInstance().getTemplate(Config.SERVICES_LVL_UP_ITEM).getName() + ") \" action=\"bypass -h scripts_services.lvl:up" + "\" width=250 height=20 back=\"L2UI_CT1.Button_DF\" fore=\"L2UI_CT1.Button_DF\">" + "</a><br>";
@@ -31,7 +31,7 @@ class lvl extends Functions {
     public void up() {
         Player player = getSelf();
         if (!Config.SERVICES_LVL_ENABLED) {
-            show(HtmCache.getInstance().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
             return;
         }
         int level = player.getLevel() + 1;
@@ -45,7 +45,7 @@ class lvl extends Functions {
     public void down() {
         Player player = getSelf();
         if (!Config.SERVICES_LVL_ENABLED) {
-            show(HtmCache.getInstance().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
             return;
         }
         int level = player.getLevel() - 1;

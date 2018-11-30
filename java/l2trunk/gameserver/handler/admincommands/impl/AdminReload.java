@@ -77,9 +77,9 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_htm: {
-                HtmCache.getInstance().clear();
+                HtmCache.INSTANCE.clear();
                 if (Config.HTM_CACHE_MODE == 2) {
-                    HtmCache.getInstance().reload();
+                    HtmCache.INSTANCE.reload();
                 }
                 activeChar.sendMessage("HtmCache reloaded!");
                 break;
@@ -110,7 +110,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_skills: {
-                ThreadPoolManager.getInstance().execute(() -> SkillTable.getInstance().reload());
+                ThreadPoolManager.INSTANCE.execute(() -> SkillTable.INSTANCE().reload());
                 activeChar.sendMessage("Skills Reloaded!");
                 break;
             }
@@ -119,7 +119,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_spawn: {
-                ThreadPoolManager.getInstance().execute(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE.execute(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         SpawnManager.getInstance().reloadAll();
@@ -140,7 +140,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_static: {
-                //StaticObjectsTable.getInstance().reloadStaticObjects();
+                //StaticObjectsTable.INSTANCE().reloadStaticObjects();
                 break;
             }
             case admin_reload_pets: {
@@ -148,7 +148,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_locale: {
-                StringHolder.getInstance().reload();
+                StringHolder.INSTANCE.reload();
                 break;
             }
             case admin_reload_nobles: {
@@ -173,13 +173,8 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_changelog: {
-                ChangeLogManager.getInstance().reloadChangeLog();
+                ChangeLogManager.INSTANCE.reloadChangeLog();
                 activeChar.sendMessage("Changelog reloaded!");
-                break;
-            }
-            case admin_reload_balancenpc: {
-                NpcStatsBalancerParser.getInstance().reload();
-                activeChar.sendMessage("Balance Npcs reloaded!");
                 break;
             }
             case admin_reload_balanceclasses: {
@@ -190,11 +185,6 @@ public class AdminReload implements IAdminCommandHandler {
             case admin_reload_damageclasses: {
                 BalancerConfig.LoadConfig();
                 activeChar.sendMessage("Balance properties data have been reloaded.");
-                break;
-            }
-            case admin_reload_premium: {
-                PremiumHolder.getInstance().clear();
-                PremiumParser.getInstance().reload();
                 break;
             }
         }
@@ -239,8 +229,6 @@ public class AdminReload implements IAdminCommandHandler {
         admin_reload_events,
         admin_reload_fc_maps,
         admin_reload_changelog,
-        admin_reload_premium,
-        admin_reload_balancenpc,
         admin_reload_balanceclasses,
         admin_reload_damageclasses
     }

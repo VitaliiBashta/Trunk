@@ -47,7 +47,7 @@ public class TreasureChestInstance extends ChestInstance {
     }
 
     private void fakeOpen(Creature opener) {
-        Skill bomb = SkillTable.getInstance().getInfo(TREASURE_BOMB_ID, getBombLvl());
+        Skill bomb = SkillTable.INSTANCE().getInfo(TREASURE_BOMB_ID, getBombLvl());
         if (bomb != null)
             doCast(bomb, opener, false);
         onDecay();

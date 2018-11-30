@@ -102,7 +102,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
     private void showEpicIndexPage(Player player) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 
-        String html = HtmCache.getInstance().getNotNull("admin/epic/index.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull("admin/epic/index.htm", player);
 
         int i = 1;
 
@@ -124,7 +124,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
     private void showEpicEditPage(Player player, int epic) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 
-        String html = HtmCache.getInstance().getNotNull("admin/epic/edit.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull("admin/epic/edit.htm", player);
         EpicBossState boss = EpicBossState.getState(epic);
 
         int id = boss.getBossId();
@@ -166,7 +166,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
 
     @Override
     public void onLoad() {
-        AdminCommandHandler.getInstance().registerAdminCommandHandler(this);
+        AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
     }
 
     @Override

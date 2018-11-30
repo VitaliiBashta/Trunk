@@ -7,13 +7,16 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author pchayka
  * Daily quest
  * ВНИМАНИЕ! Данный квест можно выполнять не только группой, но и командным каналом, все персонажи в командном канале имеют шанс получить квестовые предметы. После убийства боссов будут появляться специальные НПЦ - мертвые тела боссов, для получения квестовых предметов необходимо будет "поговорить" с этим НПЦ.
  */
 public class _456_DontKnowDontCare extends Quest implements ScriptFile {
-    private static final int[] SeparatedSoul = {32864, 32865, 32866, 32867, 32868, 32869, 32870};
+    private static final List<Integer> SeparatedSoul = Arrays.asList(32864, 32865, 32866, 32867, 32868, 32869, 32870);
     private static final int DrakeLordsEssence = 17251;
     private static final int BehemothLeadersEssence = 17252;
     private static final int DragonBeastsEssence = 17253;
@@ -99,7 +102,7 @@ public class _456_DontKnowDontCare extends Quest implements ScriptFile {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int cond = st.getCond();
-        if (ArrayUtils.contains(SeparatedSoul, npc.getNpcId())) {
+        if (SeparatedSoul.contains(npc.getNpcId())) {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {

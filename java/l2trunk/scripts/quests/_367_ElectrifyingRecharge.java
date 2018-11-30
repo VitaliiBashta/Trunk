@@ -111,7 +111,7 @@ public class _367_ElectrifyingRecharge extends Quest implements ScriptFile {
                         qs.playSound(SOUND_MIDDLE);
                     } else
                         qs.playSound(SOUND_ITEMGET);
-                    npc.doCast(SkillTable.getInstance().getInfo(4072, 4), qs.getPlayer(), true);
+                    npc.doCast(SkillTable.INSTANCE().getInfo(4072, 4), qs.getPlayer(), true);
                     return null;
                 } else if (Rnd.chance(broke_chance))
                     if (takeAllLamps(qs))

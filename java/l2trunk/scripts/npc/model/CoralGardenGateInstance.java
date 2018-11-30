@@ -8,8 +8,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.instances.CrystalCaverns;
 
 public class CoralGardenGateInstance extends NpcInstance {
-    private static final long serialVersionUID = -1L;
-
     public CoralGardenGateInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

@@ -50,8 +50,8 @@ public final class ZakenNightly extends Fighter {
         if (_teleportSelfTimer + _teleportSelfReuse < System.currentTimeMillis()) {
             _teleportSelfTimer = System.currentTimeMillis();
             if (Rnd.chance(20)) {
-                actor.doCast(SkillTable.getInstance().getInfo(4222, 1), actor, false);
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                actor.doCast(SkillTable.INSTANCE().getInfo(4222, 1), actor, false);
+                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         actor.teleToLocation(_locations[Rnd.get(_locations.length)]);

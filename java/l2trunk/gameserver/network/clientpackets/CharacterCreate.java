@@ -7,7 +7,6 @@ import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SkillLearn;
-import l2trunk.gameserver.model.actor.instances.player.Bonus;
 import l2trunk.gameserver.model.actor.instances.player.ShortCut;
 import l2trunk.gameserver.model.base.AcquireType;
 import l2trunk.gameserver.model.base.ClassId;
@@ -139,11 +138,6 @@ public class CharacterCreate extends L2GameClientPacket {
         else
             newChar.setTitle("");
 
-        if (Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && Config.SERVICES_RATE_CREATE_PA != 0 && newChar.getBonus() == null) {
-            newChar.getBonus().setBonusExpire((int) (System.currentTimeMillis() / 1000L * (60 * 60 * 24 * Config.SERVICES_RATE_CREATE_PA)));
-            newChar.stopBonusTask();
-            newChar.startBonusTask();
-        }
 
         for (CreateItem i : template.getItems()) {
             ItemInstance item = ItemFunctions.createItem(i.getItemId());
@@ -187,7 +181,7 @@ public class CharacterCreate extends L2GameClientPacket {
         newChar.getInventory().addItem(item, "New Char Item");
 
         for (SkillLearn skill : SkillAcquireHolder.getInstance().getAvailableSkills(newChar, AcquireType.NORMAL))
-            newChar.addSkill(SkillTable.getInstance().getInfo(skill.getId(), skill.getLevel()), true);
+            newChar.addSkill(SkillTable.INSTANCE().getInfo(skill.getId(), skill.getLevel()), true);
 
         if (newChar.getSkillLevel(1001) > 0) // Soul Cry
             newChar.registerShortCut(new ShortCut(1, 0, ShortCut.TYPE_SKILL, 1001, 1, 1));

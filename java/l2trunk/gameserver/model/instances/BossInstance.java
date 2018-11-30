@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.entity.HeroDiary;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public class BossInstance extends RaidBossInstance {
-    private boolean _teleportedToNest;
+    private boolean teleportedToNest;
 
     protected BossInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -29,26 +29,21 @@ public class BossInstance extends RaidBossInstance {
         if (killer.isPlayable()) {
             Player player = killer.getPlayer();
             if (player.isInParty()) {
-                for (Player member : player.getParty().getMembers())
-                    if (member.isNoble())
-                        Hero.getInstance().addHeroDiary(member.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
+                player.getParty().getMembers().stream()
+                        .filter(Player::isNoble)
+                        .forEach(member -> Hero.INSTANCE.addHeroDiary(member.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId()));
             } else if (player.isNoble())
-                Hero.getInstance().addHeroDiary(player.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
+                Hero.INSTANCE.addHeroDiary(player.getObjectId(), HeroDiary.ACTION_RAID_KILLED, getNpcId());
         }
         super.onDeath(killer);
     }
 
     public boolean isTeleported() {
-        return _teleportedToNest;
+        return teleportedToNest;
     }
 
-    /**
-     * Used by Orfen to set 'teleported' flag, when hp goes to <50%
-     *
-     * @param flag
-     */
     public void setTeleported(boolean flag) {
-        _teleportedToNest = flag;
+        teleportedToNest = flag;
     }
 
     @Override

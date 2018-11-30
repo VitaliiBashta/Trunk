@@ -12,7 +12,7 @@ import java.util.Map;
 public final class HennaHolder extends AbstractHolder {
     private static final HennaHolder INSTANCE = new HennaHolder();
 
-    private final Map<Integer,Henna> hennas = new HashMap<>();
+    private final Map<Integer, Henna> hennas = new HashMap<>();
 
     public static HennaHolder getInstance() {
         return INSTANCE;
@@ -37,7 +37,7 @@ public final class HennaHolder extends AbstractHolder {
     }
 
     public boolean isHenna(int itemId) {
-        return hennas.entrySet().stream().anyMatch( h -> h.getValue().getDyeId() == itemId);
+        return hennas.entrySet().stream().anyMatch(h -> h.getValue().getDyeId() == itemId);
     }
 
     @Override

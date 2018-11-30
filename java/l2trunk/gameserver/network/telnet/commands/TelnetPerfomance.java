@@ -39,7 +39,7 @@ public class TelnetPerfomance implements TelnetCommandHolder {
                 StringBuilder sb = new StringBuilder();
 
                 if ((args.length == 0) || args[0].isEmpty()) {
-                    sb.append(ThreadPoolManager.getInstance().getStats());
+                    sb.append(ThreadPoolManager.INSTANCE.getStats());
                 } else if (args[0].equals("dump") || args[0].equals("d")) {
                     System.out.println("no realization for dump !");
 
@@ -200,9 +200,9 @@ public class TelnetPerfomance implements TelnetCommandHolder {
 //                LiveCacheStatistics cacheStats;
                 JdbcEntityStats entityStats;
 
-                cache = ItemsDAO.getInstance().getCache();
+                cache = ItemsDAO.INSTANCE.getCache();
 //                cacheStats = cache.getLiveCacheStatistics();
-                entityStats = ItemsDAO.getInstance().getStats();
+                entityStats = ItemsDAO.INSTANCE.getStats();
 
 //                cacheHitCount = cacheStats.getCacheHitCount();
 //                cacheMissCount = cacheStats.getCacheMissCount();

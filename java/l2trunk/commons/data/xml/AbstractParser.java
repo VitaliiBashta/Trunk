@@ -2,10 +2,11 @@ package l2trunk.commons.data.xml;
 
 import l2trunk.commons.crypt.CryptUtil;
 import l2trunk.commons.data.xml.helpers.ErrorHandlerImpl;
-import l2trunk.commons.logging.LoggerObject;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import java.io.InputStream;
@@ -13,7 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 
-public abstract class AbstractParser<H extends AbstractHolder> extends LoggerObject {
+public abstract class AbstractParser<H extends AbstractHolder> {
+    public static final Logger LOG = LoggerFactory.getLogger(AbstractParser.class);
     private final H holder;
 
     private String currentFile;
@@ -54,12 +56,11 @@ public abstract class AbstractParser<H extends AbstractHolder> extends LoggerObj
 
     public void load() {
         parse();
-        holder.process();
-        holder.log();
+        LOG.info(String.format("loaded %d %s(s) count.", holder.size(), getClass().getSimpleName()));
     }
 
     public void reload() {
-        info("reload start...");
+        LOG.info("reload start...");
         holder.clear();
         load();
     }

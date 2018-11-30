@@ -49,9 +49,9 @@ public class Poll {
      */
     public void setEndTime(long time) {
         _endTime = time;
-        if (PollEngine.getInstance().isActive()) {
+        if (PollEngine.INSTANCE.isActive()) {
             _endTime = System.currentTimeMillis() + time;
-            PollEngine.getInstance().startThread();
+            PollEngine.INSTANCE.startThread();
         }
     }
 

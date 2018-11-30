@@ -148,8 +148,8 @@ public class SecondaryPasswordAuth {
 
         if (!password.equals(_password)) {
             _wrongAttempts++;
-                _activeClient.sendPacket(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_WRONG, _wrongAttempts));
-                insertWrongAttempt(_wrongAttempts);
+            _activeClient.sendPacket(new Ex2ndPasswordVerify(Ex2ndPasswordVerify.PASSWORD_WRONG, _wrongAttempts));
+            insertWrongAttempt(_wrongAttempts);
 
             return false;
         }

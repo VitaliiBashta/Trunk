@@ -13,17 +13,17 @@ public class ErrorHandlerImpl implements ErrorHandler {
 
     @Override
     public void warning(SAXParseException exception) {
-        _parser.warn("File: " + _parser.getCurrentFileName() + ":" + exception.getLineNumber() + " warning: " + exception.getMessage());
+        AbstractParser.LOG.warn("File: " + _parser.getCurrentFileName() + ":" + exception.getLineNumber() + " warning: " + exception.getMessage());
     }
 
     @Override
     public void error(SAXParseException exception) {
-        _parser.error("File: " + _parser.getCurrentFileName() + ":" + exception.getLineNumber() + " error: " + exception.getMessage());
+        AbstractParser.LOG.error("File: " + _parser.getCurrentFileName() + ":" + exception.getLineNumber() + " error: " + exception.getMessage());
     }
 
     @Override
     public void fatalError(SAXParseException exception) {
-        _parser.error("File: " + _parser.getCurrentFileName() + ":" + exception.getLineNumber() + " fatal: " + exception.getMessage());
+        AbstractParser.LOG.error("File: " + _parser.getCurrentFileName() + ":" + exception.getLineNumber() + " fatal: " + exception.getMessage());
     }
 }
 

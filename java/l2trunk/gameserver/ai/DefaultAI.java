@@ -1,5 +1,6 @@
 package l2trunk.gameserver.ai;
 
+import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.math.random.RndSelector;
 import l2trunk.commons.threading.RunnableImpl;
@@ -25,26 +26,26 @@ import l2trunk.gameserver.utils.NpcUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
 
 public class DefaultAI extends CharacterAI {
     protected static final Logger _log = LoggerFactory.getLogger(DefaultAI.class);
     private static final int TaskDefaultWeight = 10000;
     public static String namechar;
-    protected final Skill[] _damSkills;
-    protected final Skill[] _healSkills;
+    protected final List<Skill> _damSkills;
+    protected final List<Skill> _healSkills;
     protected final Comparator<Creature> _nearestTargetComparator;
     /**
      * Список заданий
      */
     private final NavigableSet<Task> _tasks = new ConcurrentSkipListSet<>();
-    private final Skill[] _dotSkills;
-    private final Skill[] _debuffSkills;
-    private final Skill[] _buffSkills;
-    private final Skill[] _stunSkills;
+    private final List<Skill> _dotSkills;
+    private final List<Skill> _debuffSkills;
+    private final List<Skill> _buffSkills;
+    private final List<Skill> _stunSkills;
     protected long AI_TASK_ATTACK_DELAY = Config.AI_TASK_ATTACK_DELAY;
     protected long AI_TASK_ACTIVE_DELAY = Config.AI_TASK_ACTIVE_DELAY;
     protected int MAX_PURSUE_RANGE;
@@ -95,16 +96,16 @@ public class DefaultAI extends CharacterAI {
         _minFactionNotifyInterval = actor.getParameter("FactionNotifyInterval", 10000);
     }
 
-    private static Skill selectTopSkillByDamage(Creature actor, Creature target, double distance, Skill[] skills) {
-        if ((skills == null) || (skills.length == 0)) {
+    private static Skill selectTopSkillByDamage(Creature actor, Creature target, double distance, List<Skill> skills) {
+        if ((skills == null) || (skills.size() == 0)) {
             return null;
         }
 
-        if (skills.length == 1) {
-            return skills[0];
+        if (skills.size() == 1) {
+            return skills.get(0);
         }
 
-        RndSelector<Skill> rnd = new RndSelector<>(skills.length);
+        RndSelector<Skill> rnd = new RndSelector<>(skills.size());
         double weight;
         for (Skill skill : skills) {
             weight = (skill.getSimpleDamage(actor, target) * skill.getAOECastRange()) / distance;
@@ -116,17 +117,17 @@ public class DefaultAI extends CharacterAI {
         return rnd.select();
     }
 
-    private static Skill selectTopSkillByDebuff(Creature actor, Creature target, double distance, Skill[] skills) // FIXME
+    private static Skill selectTopSkillByDebuff(Creature actor, Creature target, double distance, List<Skill> skills) // FIXME
     {
-        if ((skills == null) || (skills.length == 0)) {
+        if ((skills == null) || (skills.size() == 0)) {
             return null;
         }
 
-        if (skills.length == 1) {
-            return skills[0];
+        if (skills.size() == 1) {
+            return skills.get(0);
         }
 
-        RndSelector<Skill> rnd = new RndSelector<>(skills.length);
+        RndSelector<Skill> rnd = new RndSelector<>(skills.size());
         double weight;
         for (Skill skill : skills) {
             if (skill.getSameByStackType(target) != null) {
@@ -140,16 +141,16 @@ public class DefaultAI extends CharacterAI {
         return rnd.select();
     }
 
-    private static Skill selectTopSkillByBuff(Creature target, Skill[] skills) {
-        if ((skills == null) || (skills.length == 0)) {
+    private static Skill selectTopSkillByBuff(Creature target, List<Skill> skills) {
+        if ((skills == null) || (skills.size() == 0)) {
             return null;
         }
 
-        if (skills.length == 1) {
-            return skills[0];
+        if (skills.size() == 1) {
+            return skills.get(0);
         }
 
-        RndSelector<Skill> rnd = new RndSelector<>(skills.length);
+        RndSelector<Skill> rnd = new RndSelector<>(skills.size());
         double weight;
         for (Skill skill : skills) {
             if (skill.getSameByStackType(target) != null) {
@@ -163,8 +164,8 @@ public class DefaultAI extends CharacterAI {
         return rnd.select();
     }
 
-    private static Skill selectTopSkillByHeal(Creature target, Skill[] skills) {
-        if ((skills == null) || (skills.length == 0)) {
+    private static Skill selectTopSkillByHeal(Creature target, List<Skill> skills) {
+        if ((skills == null) || (skills.size() == 0)) {
             return null;
         }
 
@@ -173,11 +174,11 @@ public class DefaultAI extends CharacterAI {
             return null;
         }
 
-        if (skills.length == 1) {
-            return skills[0];
+        if (skills.size() == 1) {
+            return skills.get(0);
         }
 
-        RndSelector<Skill> rnd = new RndSelector<>(skills.length);
+        RndSelector<Skill> rnd = new RndSelector<>(skills.size());
         double weight;
         for (Skill skill : skills) {
             if ((weight = Math.abs(skill.getPower() - hpReduced)) <= 0) {
@@ -730,7 +731,7 @@ public class DefaultAI extends CharacterAI {
                     _pathfindFails = 0;
                     actor.teleToLocation(currentTask.loc);
                     // actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 2036, 1, 500, 600000));
-                    // ThreadPoolManager.getInstance().scheduleAi(new Teleport(currentTask.loc), 500, false);
+                    // ThreadPoolManager.INSTANCE().scheduleAi(new Teleport(currentTask.loc), 500, false);
                     return maybeNextTask(currentTask);
                 }
             }
@@ -1086,7 +1087,7 @@ public class DefaultAI extends CharacterAI {
                 setAttackTarget(randomHated);
                 if ((_madnessTask == null) && !actor.isConfused()) {
                     actor.startConfused();
-                    _madnessTask = ThreadPoolManager.getInstance().schedule(new MadnessTask(), 10000);
+                    _madnessTask = ThreadPoolManager.INSTANCE.schedule(new MadnessTask(), 10000);
                 }
                 return randomHated;
             }
@@ -1153,33 +1154,11 @@ public class DefaultAI extends CharacterAI {
         return canUseSkill(sk, target, 0);
     }
 
-    private Skill[] selectUsableSkills(Creature target, double distance, Skill[] skills) {
-        if ((skills == null) || (skills.length == 0) || (target == null)) {
+    private List<Skill> selectUsableSkills(Creature target, double distance, List<Skill> skills) {
+        if ((skills == null) || (skills.size() == 0) || (target == null)) {
             return null;
         }
-
-        Skill[] ret = null;
-        int usable = 0;
-
-        for (Skill skill : skills) {
-            if (canUseSkill(skill, target, distance)) {
-                if (ret == null) {
-                    ret = new Skill[skills.length];
-                }
-                ret[usable++] = skill;
-            }
-        }
-
-        if ((ret == null) || (usable == skills.length)) {
-            return ret;
-        }
-
-        if (usable == 0) {
-            return null;
-        }
-
-        ret = Arrays.copyOf(ret, usable);
-        return ret;
+        return skills.stream().filter( a-> canUseSkill(a, target, distance)).collect(Collectors.toList());
     }
 
     protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill[] skills) {
@@ -1338,7 +1317,7 @@ public class DefaultAI extends CharacterAI {
     protected void startRunningTask(long interval) {
         NpcInstance actor = getActor();
         if ((actor != null) && (_runningTask == null) && !actor.isRunning()) {
-            _runningTask = ThreadPoolManager.getInstance().schedule(new RunningTask(), interval);
+            _runningTask = ThreadPoolManager.INSTANCE.schedule(new RunningTask(), interval);
         }
     }
 
@@ -1446,12 +1425,12 @@ public class DefaultAI extends CharacterAI {
         if (Rnd.chance(rateSelf)) {
             double actorHp = actor.getCurrentHpPercents();
 
-            Skill[] skills = actorHp < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills);
-            if ((skills == null) || (skills.length == 0)) {
+            List<Skill> skills = actorHp < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills);
+            if ((skills == null) || (skills.size() == 0)) {
                 return false;
             }
 
-            Skill skill = skills[Rnd.get(skills.length)];
+            Skill skill = skills.get(Rnd.get(skills.size()));
             addTaskBuff(actor, skill);
             return true;
         }
@@ -1460,12 +1439,12 @@ public class DefaultAI extends CharacterAI {
             for (NpcInstance npc : activeFactionTargets()) {
                 double targetHp = npc.getCurrentHpPercents();
 
-                Skill[] skills = targetHp < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills);
-                if ((skills == null) || (skills.length == 0)) {
+                List<Skill> skills = targetHp < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills);
+                if ((skills == null) || (skills.size() == 0)) {
                     continue;
                 }
 
-                Skill skill = skills[Rnd.get(skills.length)];
+                Skill skill = skills.get(Rnd.get(skills.size()));
                 addTaskBuff(actor, skill);
                 return true;
             }
@@ -1491,14 +1470,14 @@ public class DefaultAI extends CharacterAI {
         double targetHp = target.getCurrentHpPercents();
         double actorHp = actor.getCurrentHpPercents();
 
-        Skill[] dam = Rnd.chance(getRateDAM()) ? selectUsableSkills(target, distance, _damSkills) : null;
-        Skill[] dot = Rnd.chance(getRateDOT()) ? selectUsableSkills(target, distance, _dotSkills) : null;
-        Skill[] debuff = targetHp > 10 ? Rnd.chance(getRateDEBUFF()) ? selectUsableSkills(target, distance, _debuffSkills) : null : null;
-        Skill[] stun = Rnd.chance(getRateSTUN()) ? selectUsableSkills(target, distance, _stunSkills) : null;
-        Skill[] heal = actorHp < 50 ? Rnd.chance(getRateHEAL()) ? selectUsableSkills(actor, 0, _healSkills) : null : null;
-        Skill[] buff = Rnd.chance(getRateBUFF()) ? selectUsableSkills(actor, 0, _buffSkills) : null;
+        List<Skill> dam = Rnd.chance(getRateDAM()) ? selectUsableSkills(target, distance, _damSkills) : null;
+        List<Skill> dot = Rnd.chance(getRateDOT()) ? selectUsableSkills(target, distance, _dotSkills) : null;
+        List<Skill> debuff = targetHp > 10 ? Rnd.chance(getRateDEBUFF()) ? selectUsableSkills(target, distance, _debuffSkills) : null : null;
+        List<Skill> stun = Rnd.chance(getRateSTUN()) ? selectUsableSkills(target, distance, _stunSkills) : null;
+        List<Skill> heal = actorHp < 50 ? Rnd.chance(getRateHEAL()) ? selectUsableSkills(actor, 0, _healSkills) : null : null;
+        List<Skill> buff = Rnd.chance(getRateBUFF()) ? selectUsableSkills(actor, 0, _buffSkills) : null;
 
-        RndSelector<Skill[]> rnd = new RndSelector<>();
+        RndSelector<List<Skill>> rnd = new RndSelector<>();
         if (!actor.isAMuted()) {
             rnd.add(null, getRatePHYS());
         }
@@ -1509,9 +1488,9 @@ public class DefaultAI extends CharacterAI {
         rnd.add(buff, getRateBUFF());
         rnd.add(stun, getRateSTUN());
 
-        Skill[] selected = rnd.select();
+        List<Skill> selected = rnd.select();
         if (selected != null) {
-            if ((selected == dam) || (selected == dot)) {
+            if ((ArrayUtils.equalLists(selected, dam) || ArrayUtils.equalLists(selected, dot))) {
                 return chooseTaskAndTargets(selectTopSkillByDamage(actor, target, distance, selected), target, distance);
             }
 
@@ -1621,8 +1600,7 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    static class NearestTargetComparator implements Comparator<Creature>, Serializable {
-        private static final long serialVersionUID = 5445124625540501776L;
+    static class NearestTargetComparator implements Comparator<Creature> {
         private final Creature actor;
 
         NearestTargetComparator(Creature actor) {

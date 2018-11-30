@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public abstract class ItemContainer {
-    static final ItemsDAO _itemsDAO = ItemsDAO.getInstance();
+    static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
 
     final List<ItemInstance> _items = new ArrayList<>();
     /**

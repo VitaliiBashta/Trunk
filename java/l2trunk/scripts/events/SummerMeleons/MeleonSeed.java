@@ -63,7 +63,7 @@ public class MeleonSeed extends ScriptItemHandler implements ScriptFile {
         npc.setAI(new MeleonAI(npc));
         ((MeleonInstance) npc).setSpawner(activeChar);
 
-        ThreadPoolManager.getInstance().schedule(new DeSpawnScheduleTimerTask(spawn), 180000);
+        ThreadPoolManager.INSTANCE().schedule(new DeSpawnScheduleTimerTask(spawn), 180000);
 
         return true;
     }

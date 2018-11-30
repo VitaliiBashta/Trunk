@@ -7,10 +7,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public final class _455_WingsofSand extends Quest implements ScriptFile {
-    private static final int[] SeparatedSoul = {32864, 32865, 32866, 32867, 32868, 32869, 32870};
+    private static final List<Integer> SeparatedSoul = Arrays.asList(32864, 32865, 32866, 32867, 32868, 32869, 32870);
     private static final int LargeDragon = 17250;
     private static final int[] raids = {25718, 25719, 25720, 25721, 25722, 25723, 25724};
 
@@ -100,7 +102,7 @@ public final class _455_WingsofSand extends Quest implements ScriptFile {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int cond = st.getCond();
-        if (ArrayUtils.contains(SeparatedSoul, npc.getNpcId())) {
+        if (SeparatedSoul.contains(npc.getNpcId())) {
             switch (st.getState()) {
                 case CREATED:
                     if (st.isNowAvailable()) {

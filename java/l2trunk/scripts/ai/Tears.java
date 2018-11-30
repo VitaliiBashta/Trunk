@@ -120,7 +120,7 @@ public final class Tears extends DefaultAI {
 
         if (rnd_per < 5 && spawnTask == null && despawnTask == null) {
             actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5441, 1, 3000, 0));
-            spawnTask = ThreadPoolManager.getInstance().schedule(new SpawnMobsTask(), 3000);
+            spawnTask = ThreadPoolManager.INSTANCE().schedule(new SpawnMobsTask(), 3000);
             return true;
         }
 
@@ -165,7 +165,7 @@ public final class Tears extends DefaultAI {
 
         if (despawnTask != null)
             despawnTask.cancel(false);
-        despawnTask = ThreadPoolManager.getInstance().schedule(new DeSpawnTask(), 30000);
+        despawnTask = ThreadPoolManager.INSTANCE.schedule(new DeSpawnTask(), 30000);
     }
 
     @Override

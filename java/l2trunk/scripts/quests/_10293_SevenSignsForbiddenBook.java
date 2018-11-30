@@ -22,7 +22,7 @@ public class _10293_SevenSignsForbiddenBook extends Quest implements ScriptFile 
 
     private static final int SolinasBiography = 17213;
 
-    private static final int[] books = {32809, 32810, 32811, 32812, 32813};
+    private static final Integer[] books = {32809, 32810, 32811, 32812, 32813};
 
     public _10293_SevenSignsForbiddenBook() {
         super(false);

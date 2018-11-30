@@ -14,7 +14,6 @@ import java.util.List;
 
 //TODO [G1ta0] submit the bredyatinu to hell
 public class GameObjectsStorage {
-    @SuppressWarnings("unused")
     private static final Logger _log = LoggerFactory.getLogger(GameObjectsStorage.class);
 
     private static final int STORAGE_PLAYERS = 0x00;
@@ -41,11 +40,6 @@ public class GameObjectsStorage {
     @SuppressWarnings("unchecked")
     private static GameObjectArray<Player> getStoragePlayers() {
         return storages[STORAGE_PLAYERS];
-    }
-
-    @SuppressWarnings({"unchecked", "unused"})
-    private static GameObjectArray<Playable> getStorageSummons() {
-        return storages[STORAGE_SUMMONS];
     }
 
     @SuppressWarnings("unchecked")
@@ -79,13 +73,6 @@ public class GameObjectsStorage {
         return result != null && result.getObjectId() == getStoredObjectId(storedId) ? result : null;
     }
 
-    public static boolean isStored(long storedId) {
-        int STORAGE_ID;
-        if (storedId == 0 || (STORAGE_ID = getStorageID(storedId)) == STORAGE_NONE)
-            return false;
-        GameObject o = storages[STORAGE_ID].get(getStoredIndex(storedId));
-        return o != null && o.getObjectId() == getStoredObjectId(storedId);
-    }
 
     public static NpcInstance getAsNpc(long storedId) {
         return (NpcInstance) get(storedId);
@@ -153,16 +140,6 @@ public class GameObjectsStorage {
         return getStoragePlayers().getRealSize() + Config.ONLINE_PLUS;
     }
 
-    public static int getAllTradablePlayersCount() {
-        int count = 0;
-        for (Player player : getStoragePlayers()) {
-            if (player.isInOfflineMode()) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     private static int getAllObjectsCount() {
         int result = 0;
         for (GameObjectArray<?> storage : storages)
@@ -181,28 +158,12 @@ public class GameObjectsStorage {
     }
 
     public static GameObject findObject(int objId) {
-        GameObject result = null;
+        GameObject result;
         for (GameObjectArray<?> storage : storages)
             if (storage != null)
                 if ((result = storage.findByObjectId(objId)) != null)
                     return result;
         return null;
-    }
-
-    public static int getAllOfflineCount() {
-        if (!Config.SERVICES_OFFLINE_TRADE_ALLOW)
-            return 0;
-
-        long now = System.currentTimeMillis();
-        if (now > offline_refresh) {
-            offline_refresh = now + 10000;
-            offline_count = 0;
-            for (Player player : getStoragePlayers())
-                if (player.isInOfflineMode())
-                    offline_count++;
-        }
-
-        return offline_count;
     }
 
     public static List<NpcInstance> getAllNpcs() {
@@ -273,10 +234,6 @@ public class GameObjectsStorage {
     public static long put(GameObject o) {
         int STORAGE_ID = selectStorageID(o);
         return o.getObjectId() & 0xFFFFFFFFL | (STORAGE_ID & 0x1FL) << 32 | (storages[STORAGE_ID].add(o) & 0xFFFFFFFFL) << 37;
-    }
-
-    public static long putDummy(GameObject o) {
-        return objIdNoStore(o.getObjectId());
     }
 
     /**

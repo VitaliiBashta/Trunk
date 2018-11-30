@@ -8,6 +8,9 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Support for CommandChannel commands:<br>
  * 92 /channelcreate<br>
@@ -19,18 +22,12 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
  *
  * @author SYS
  */
-public class CommandChannel implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    92,
-                    93,
-                    96,
-                    97
-            };
+public final class CommandChannel implements IUserCommandHandler {
+    private static final List<Integer> COMMAND_IDS = Arrays.asList(92, 93, 96, 97);
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (id != COMMAND_IDS[0] && id != COMMAND_IDS[1] && id != COMMAND_IDS[2] && id != COMMAND_IDS[3])
+        if (!COMMAND_IDS.contains(id))
             return false;
 
         switch (id) {
@@ -83,7 +80,7 @@ public class CommandChannel implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
+    public final List<Integer> getUserCommandList() {
         return COMMAND_IDS;
     }
 }

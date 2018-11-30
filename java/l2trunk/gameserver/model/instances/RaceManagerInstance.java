@@ -29,8 +29,8 @@ public class RaceManagerInstance extends NpcInstance {
     private static final int WAITING = 1;
     private static final int STARTING_RACE = 2;
     private static final int RACE_END = 3;
-    private static MonRaceInfo packet;
     private static final int[] cost = {100, 500, 1000, 5000, 10000, 20000, 50000, 100000};
+    private static MonRaceInfo packet;
     @SuppressWarnings("unused")
     private static List<Race> history;
     private static Set<RaceManagerInstance> managers;
@@ -48,7 +48,7 @@ public class RaceManagerInstance extends NpcInstance {
             history = new ArrayList<>();
             managers = new CopyOnWriteArraySet<>();
 
-            ThreadPoolManager s = ThreadPoolManager.getInstance();
+            ThreadPoolManager s = ThreadPoolManager.INSTANCE;
             s.scheduleAtFixedRate(new Announcement(SystemMessage.TICKETS_ARE_NOW_AVAILABLE_FOR_THE_S1TH_MONSTER_RACE), 0, 10 * MINUTE);
             s.scheduleAtFixedRate(new Announcement(SystemMessage.WE_ARE_NOW_SELLING_TICKETS_FOR_THE_S1TH_MONSTER_RACE), 30 * SECOND, 10 * MINUTE);
             s.scheduleAtFixedRate(new Announcement(SystemMessage.TICKETS_ARE_NOW_AVAILABLE_FOR_THE_S1TH_MONSTER_RACE), MINUTE, 10 * MINUTE);
@@ -146,7 +146,7 @@ public class RaceManagerInstance extends NpcInstance {
             packet = new MonRaceInfo(codes[1][0], codes[1][1], race.getMonsters(), race.getSpeeds());
             sendMonsterInfo();
 
-            ThreadPoolManager.getInstance().schedule(new RunRace(), 5000);
+            ThreadPoolManager.INSTANCE.schedule(new RunRace(), 5000);
         } else {
             //state++;
             race.newRace();
@@ -372,7 +372,7 @@ public class RaceManagerInstance extends NpcInstance {
         public void runImpl() {
             packet = new MonRaceInfo(codes[2][0], codes[2][1], MonsterRace.getInstance().getMonsters(), MonsterRace.getInstance().getSpeeds());
             sendMonsterInfo();
-            ThreadPoolManager.getInstance().schedule(new RunEnd(), 30000);
+            ThreadPoolManager.INSTANCE().schedule(new RunEnd(), 30000);
         }
     }
 

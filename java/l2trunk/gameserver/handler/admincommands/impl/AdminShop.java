@@ -7,7 +7,6 @@ import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExBuySellList;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.taskmanager.tasks.RestoreOfflineTraders;
 import l2trunk.gameserver.utils.GameStats;
 
 public class AdminShop implements IAdminCommandHandler {
@@ -36,9 +35,6 @@ public class AdminShop implements IAdminCommandHandler {
             case admin_taxclear:
                 GameStats.addTax(-GameStats.getTaxSum());
                 activeChar.sendMessage("TaxSum: " + GameStats.getTaxSum());
-                break;
-            case admin_restore_offline_stores:
-                ThreadPoolManager.getInstance().execute(new RestoreOfflineTraders());
                 break;
         }
 

@@ -83,9 +83,9 @@ public class NpcInstance extends Creature {
     protected int _spawnAnimation = 2;
     protected boolean _hasRandomAnimation;
     protected boolean _hasRandomWalk;
+    long _lastSocialAction;
     private boolean _hasChatWindow;
     private boolean _unAggred = false;
-    long _lastSocialAction;
     private int _personalAggroRange = -1;
     private int _level = 0;
     private long _dieTime = 0L;
@@ -131,7 +131,7 @@ public class NpcInstance extends Creature {
         _showBoard = getParameter(SHOW_BOARD, "");
 
         if (template.getSkills().size() > 0) {
-            for ( Skill skill : template.getSkills().values()) {
+            for (Skill skill : template.getSkills().values()) {
                 addSkill(skill);
             }
         }
@@ -474,7 +474,7 @@ public class NpcInstance extends Creature {
             startRandomAnimation();
         }
 
-        ThreadPoolManager.getInstance().execute(new NotifyAITask(this, CtrlEvent.EVT_SPAWN));
+        ThreadPoolManager.INSTANCE.execute(new NotifyAITask(this, CtrlEvent.EVT_SPAWN));
 
         getListeners().onSpawn();
     }
@@ -493,7 +493,7 @@ public class NpcInstance extends Creature {
 
     @Override
     public NpcTemplate getTemplate() {
-        return (NpcTemplate) _template;
+        return (NpcTemplate) template;
     }
 
     @Override
@@ -734,7 +734,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        _broadcastCharInfoTask = ThreadPoolManager.getInstance().schedule(new BroadcastCharInfoTask(), Config.BROADCAST_CHAR_INFO_INTERVAL);
+        _broadcastCharInfoTask = ThreadPoolManager.INSTANCE.schedule(new BroadcastCharInfoTask(), Config.BROADCAST_CHAR_INFO_INTERVAL);
     }
 
     public void broadcastCharInfoImpl() {
@@ -983,7 +983,7 @@ public class NpcInstance extends Creature {
                     html.replace("%taxpercent%", String.valueOf(castle.getTaxPercent()));
 
                     if (castle.getOwnerId() > 0) {
-                        Clan clan = ClanTable.getInstance().getClan(castle.getOwnerId());
+                        Clan clan = ClanTable.INSTANCE.getClan(castle.getOwnerId());
                         if (clan != null) {
                             html.replace("%clanname%", clan.getName());
                             html.replace("%clanleadername%", clan.getLeaderName());
@@ -1369,12 +1369,12 @@ public class NpcInstance extends Creature {
         }
 
         String temp = "default/" + pom + ".htm";
-        if (HtmCache.getInstance().getNullable(temp, player) != null) {
+        if (HtmCache.INSTANCE.getNullable(temp, player) != null) {
             return temp;
         }
 
         temp = "trainer/" + pom + ".htm";
-        if (HtmCache.getInstance().getNullable(temp, player) != null) {
+        if (HtmCache.INSTANCE.getNullable(temp, player) != null) {
             return temp;
         }
 
@@ -1418,11 +1418,10 @@ public class NpcInstance extends Creature {
 
         if (getTemplate().getTeachInfo().isEmpty()) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
-            StringBuilder sb = new StringBuilder();
-            sb.append("<html><head><body>");
-            sb.append("I cannot teach you. My class list is empty.<br> Ask admin to fix it. <br>NpcId:" + npcId + ", Your classId:" + player.getClassId().getId() + "<br>");
-            sb.append("</body></html>");
-            html.setHtml(sb.toString());
+            String sb = "<html><head><body>" +
+                    "I cannot teach you. My class list is empty.<br> Ask admin to fix it. <br>NpcId:" + npcId + ", Your classId:" + player.getClassId().getId() + "<br>" +
+                    "</body></html>";
+            html.setHtml(sb);
             player.sendPacket(html);
 
             return;
@@ -1435,11 +1434,10 @@ public class NpcInstance extends Creature {
                 showChatWindow(player, "trainer/" + getNpcId() + "-noteach.htm");
             } else {
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
-                StringBuilder sb = new StringBuilder();
-                sb.append("<html><head><body>");
-                sb.append(new CustomMessage("l2trunk.gameserver.model.instances.L2NpcInstance.WrongTeacherClass", player));
-                sb.append("</body></html>");
-                html.setHtml(sb.toString());
+                String sb = "<html><head><body>" +
+                        new CustomMessage("l2trunk.gameserver.model.instances.L2NpcInstance.WrongTeacherClass", player) +
+                        "</body></html>";
+                html.setHtml(sb);
                 player.sendPacket(html);
             }
             return;
@@ -1455,7 +1453,7 @@ public class NpcInstance extends Creature {
                 continue;
             }
 
-            Skill sk = SkillTable.getInstance().getInfo(s.getId(), s.getLevel());
+            Skill sk = SkillTable.INSTANCE.getInfo(s.getId(), s.getLevel());
             if ((sk == null) || !sk.getCanLearn(player.getClassId()) || !sk.canTeachBy(npcId)) {
                 continue;
             }
@@ -1491,11 +1489,10 @@ public class NpcInstance extends Creature {
 
         if ((player.getLevel() < 76) || (classId.getLevel() < 4)) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
-            StringBuilder sb = new StringBuilder();
-            sb.append("<html><head><body>");
-            sb.append("You must have 3rd class change quest completed.");
-            sb.append("</body></html>");
-            html.setHtml(sb.toString());
+            String sb = "<html><head><body>" +
+                    "You must have 3rd class change quest completed." +
+                    "</body></html>";
+            html.setHtml(sb);
             player.sendPacket(html);
             return;
         }

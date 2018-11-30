@@ -2,8 +2,11 @@ package l2trunk.commons.geometry;
 
 import l2trunk.commons.lang.ArrayUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Polygon extends AbstractShape {
-    private Point2D[] points = Point2D.EMPTY_ARRAY;
+    private List<Point2D> points = new ArrayList<>();
 
     public Polygon add(int x, int y) {
         add(new Point2D(x, y));
@@ -11,7 +14,7 @@ public class Polygon extends AbstractShape {
     }
 
     private Polygon add(Point2D p) {
-        if (points.length == 0) {
+        if (points.size() == 0) {
             min.y = p.y;
             min.x = p.x;
             max.x = p.x;
@@ -22,7 +25,7 @@ public class Polygon extends AbstractShape {
             max.x = Math.max(max.x, p.x);
             max.y = Math.max(max.y, p.y);
         }
-        points = (ArrayUtils.add(points, p));
+        points.add(p);
         return this;
     }
 
@@ -44,12 +47,12 @@ public class Polygon extends AbstractShape {
             return false;
 
         int hits = 0;
-        int npoints = points.length;
-        Point2D last = points[npoints - 1];
+        int npoints = points.size();
+        Point2D last = points.get(npoints - 1);
 
         Point2D cur;
         for (int i = 0; i < npoints; last = cur, i++) {
-            cur = points[i];
+            cur = points.get(i);
 
             if (cur.y == last.y) {
                 continue;
@@ -100,19 +103,19 @@ public class Polygon extends AbstractShape {
     }
 
     public boolean validate() {
-        if (points.length < 3)
+        if (points.size() < 3)
             return false;
 
         // ??????????? ?? ????? ???? ??????????????????
-        if (points.length > 3)
+        if (points.size() > 3)
             // ??????? ???? - ?????????? ??? ????? ??????????????
-            for (int i = 1; i < points.length; i++) {
-                int ii = i + 1 < points.length ? i + 1 : 0; // ?????? ????? ?????? ?????
+            for (int i = 1; i < points.size(); i++) {
+                int ii = i + 1 < points.size() ? i + 1 : 0; // ?????? ????? ?????? ?????
                 // ?????????? ???? - ?????????? ??? ????? ??????????????? ????? ???, ??? ?? ??????? ????? ? ????????
-                for (int n = i; n < points.length; n++)
+                for (int n = i; n < points.size(); n++)
                     if (Math.abs(n - i) > 1) {
-                        int nn = n + 1 < points.length ? n + 1 : 0; // ?????? ????? ?????? ?????
-                        if (GeometryUtils.checkIfLineSegementsIntersects(points[i], points[ii], points[n], points[nn])) {
+                        int nn = n + 1 < points.size() ? n + 1 : 0; // ?????? ????? ?????? ?????
+                        if (GeometryUtils.checkIfLineSegementsIntersects(points.get(i), points.get(ii), points.get(n), points.get(nn))) {
                             return false;
                         }
                     }
@@ -125,9 +128,9 @@ public class Polygon extends AbstractShape {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (int i = 0; i < points.length; i++) {
-            sb.append(points[i]);
-            if (i < points.length - 1)
+        for (int i = 0; i < points.size(); i++) {
+            sb.append(points.get(i));
+            if (i < points.size() - 1)
                 sb.append(",");
         }
         sb.append("]");

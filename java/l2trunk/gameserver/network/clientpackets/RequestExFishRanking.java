@@ -19,6 +19,6 @@ public class RequestExFishRanking extends L2GameClientPacket {
         if (activeChar == null)
             return;
         if (Config.ALT_FISH_CHAMPIONSHIP_ENABLED)
-            FishingChampionShipManager.getInstance().showMidResult(getClient().getActiveChar());
+            FishingChampionShipManager.INSTANCE.showMidResult(getClient().getActiveChar());
     }
 }

@@ -353,7 +353,7 @@ public final class MeleonAI extends Fighter {
                     else
                         _npcId = Rain_Honey_Watermelon;
 
-                _polimorphTask = ThreadPoolManager.getInstance().schedule(new PolimorphTask(), NECTAR_REUSE);
+                _polimorphTask = ThreadPoolManager.INSTANCE.schedule(new PolimorphTask(), NECTAR_REUSE);
                 break;
         }
     }

@@ -6,11 +6,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CharacterControlPanel;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Cfg extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS = new String[]
-            {
-                    "control", "cfg", "menu"
-            };
+    private static final List<String> COMMANDS = Arrays.asList("control", "cfg", "menu");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
@@ -21,7 +21,7 @@ public class Cfg extends Functions implements IVoicedCommandHandler {
 
         String html = "command/" + nextPage;
 
-        String dialog = HtmCache.getInstance().getNotNull(html, activeChar);
+        String dialog = HtmCache.INSTANCE.getNotNull(html, activeChar);
 
         String additionalText = args.split(" ").length > 1 ? args.split(" ")[1] : "";
         dialog = CharacterControlPanel.getInstance().replacePage(dialog, activeChar, additionalText, "-h user_control ");
@@ -32,7 +32,7 @@ public class Cfg extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 }

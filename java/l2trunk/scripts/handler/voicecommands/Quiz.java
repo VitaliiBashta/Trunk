@@ -6,19 +6,19 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.scripts.custom.QuizEvent;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Ionescu Leontin-Ovidiu
  * @date 07.05.2013
  * @project_name l2jeuropa
  */
 public class Quiz implements IVoicedCommandHandler, ScriptFile {
-    private static final String[] _voicedCommands = {"quiz", "1", "2", "3"};
+    private static final List<String> _voicedCommands = Arrays.asList("quiz", "1", "2", "3");
 
-    /**
-     * @see com.l2jserver.gameserver.handler.IVoicedCommandHandler#getVoicedCommandList()
-     */
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _voicedCommands;
     }
 
@@ -43,7 +43,7 @@ public class Quiz implements IVoicedCommandHandler, ScriptFile {
     @Override
     public void onLoad() {
         System.out.println("Loading Quiz.java");
-        VoicedCommandHandler.getInstance().registerVoicedCommandHandler(this);
+        VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
         new QuizEvent();
     }
 

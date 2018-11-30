@@ -1,22 +1,16 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.dao.MailDAO;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.mail.Mail;
 import l2trunk.gameserver.network.serverpackets.ExShowReceivedPostList;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Запрос на удаление полученных сообщений. Удалить можно только письмо без вложения. Отсылается при нажатии на "delete" в списке полученных писем.
- *
- * @see ExShowReceivedPostList
- * @see RequestExDeleteSentPost
- */
-public class RequestExDeleteReceivedPost extends L2GameClientPacket {
+public final class RequestExDeleteReceivedPost extends L2GameClientPacket {
     private int _count;
-    private int[] _list;
+    private List<Integer> _list;
 
     /**
      * format: dx[d]
@@ -28,9 +22,9 @@ public class RequestExDeleteReceivedPost extends L2GameClientPacket {
             _count = 0;
             return;
         }
-        _list = new int[_count]; // количество элементов для удаления
+        _list = new ArrayList<>(_count); // количество элементов для удаления
         for (int i = 0; i < _count; i++)
-            _list[i] = readD(); // уникальный номер письма
+            _list.add(readD()); // уникальный номер письма
     }
 
     @Override
@@ -42,7 +36,7 @@ public class RequestExDeleteReceivedPost extends L2GameClientPacket {
         List<Mail> mails = MailDAO.getInstance().getReceivedMailByOwnerId(activeChar.getObjectId());
         if (!mails.isEmpty()) {
             for (Mail mail : mails)
-                if (ArrayUtils.contains(_list, mail.getMessageId()))
+                if (_list.contains(mail.getMessageId()))
                     if (mail.getAttachments().isEmpty()) {
                         MailDAO.getInstance().deleteReceivedMailByMailId(activeChar.getObjectId(), mail.getMessageId());
                     }

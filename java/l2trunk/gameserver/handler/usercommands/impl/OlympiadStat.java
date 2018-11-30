@@ -8,18 +8,18 @@ import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Support for /olympiadstat command
  */
-public class OlympiadStat implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    109
-            };
+public final class OlympiadStat implements IUserCommandHandler {
+    private static final int COMMAND_IDS = 109;
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (id != COMMAND_IDS[0])
+        if (id != COMMAND_IDS)
             return false;
 
         GameObject objectTarget = Config.OLYMPIAD_OLDSTYLE_STAT ? activeChar : activeChar.getTarget();
@@ -49,7 +49,7 @@ public class OlympiadStat implements IUserCommandHandler {
     }
 
     @Override
-    public int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_IDS);
     }
 }

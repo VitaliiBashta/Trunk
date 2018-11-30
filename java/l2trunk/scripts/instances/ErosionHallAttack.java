@@ -23,7 +23,6 @@ import l2trunk.gameserver.utils.Location;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-
 public final class ErosionHallAttack extends Reflection {
     private static final int AliveTumor = 18708;
     private static final int DeadTumor = 32535;
@@ -31,7 +30,7 @@ public final class ErosionHallAttack extends Reflection {
     private static final int RegenerationCoffin = 18710;
 
     private final Zone[] viceraZones = new Zone[12];
-    private final int[] zoneEventTriggers = ArrayUtils.createAscendingArray(14240001, 14240012);
+    private final List<Integer> zoneEventTriggers = ArrayUtils.createAscendingList(14240001, 14240012);
     private final ZoneListener startZoneListener = new ZoneListener();
     private final DeathListener deathListener = new DeathListener();
     private boolean conquestBegun = false;
@@ -83,7 +82,7 @@ public final class ErosionHallAttack extends Reflection {
         spawnByGroup("soi_hoe_attack_mob_7");
         spawnByGroup("soi_hoe_attack_mob_8");
         startTime = System.currentTimeMillis();
-        timerTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
+        timerTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
     }
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
@@ -111,9 +110,9 @@ public final class ErosionHallAttack extends Reflection {
                 self.deleteMe();
                 notifyTumorDeath(deadTumor);
                 //Schedule tumor revival
-                ThreadPoolManager.getInstance().schedule(new TumorRevival(deadTumor), tumorRespawnTime);
+                ThreadPoolManager.INSTANCE.schedule(new TumorRevival(deadTumor), tumorRespawnTime);
                 // Schedule regeneration coffins spawn
-                ThreadPoolManager.getInstance().schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
+                ThreadPoolManager.INSTANCE.schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
             } else if (self.getNpcId() == Cohemenes) {
                 Functions.npcShout(cohemenes, NpcString.KEU);
                 conquestConclusion(true);

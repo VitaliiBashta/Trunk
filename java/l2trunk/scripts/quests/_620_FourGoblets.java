@@ -9,33 +9,21 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.scripts.bosses.FourSepulchersManager;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class _620_FourGoblets extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+    public final static int Sealed_Box = 7255;
     // NPC
     private static final int NAMELESS_SPIRIT = 31453;
-
     private static final int GHOST_OF_WIGOTH_1 = 31452;
     private static final int GHOST_OF_WIGOTH_2 = 31454;
-
     private static final int CONQ_SM = 31921;
     private static final int EMPER_SM = 31922;
     private static final int SAGES_SM = 31923;
     private static final int JUDGE_SM = 31924;
-
     private static final int GHOST_CHAMBERLAIN_1 = 31919;
     private static final int GHOST_CHAMBERLAIN_2 = 31920;
-
     // ITEMS
     private static final int GRAVE_PASS = 7261;
     private static final int[] GOBLETS = new int[]{
@@ -45,29 +33,18 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
             7259
     };
     private static final int RELIC = 7254;
-    public final static int Sealed_Box = 7255;
-
     // REWARDS
     private static final int ANTIQUE_BROOCH = 7262;
-    private static final int[] RCP_REWARDS = new int[]{
-            6881,
-            6883,
-            6885,
-            6887,
-            6891,
-            6893,
-            6895,
-            6897,
-            6899,
-            7580
-    };
+    private static final List<Integer> RCP_REWARDS = Arrays.asList(
+            6881, 6883, 6885, 6887, 6891, 6893, 6895, 6897, 6899, 7580);
 
     public _620_FourGoblets() {
         super(false);
+        List<Integer> startNPCs = Arrays.asList(NAMELESS_SPIRIT, CONQ_SM, EMPER_SM, SAGES_SM, JUDGE_SM, GHOST_CHAMBERLAIN_1, GHOST_CHAMBERLAIN_2);
 
-        addStartNpc(NAMELESS_SPIRIT, CONQ_SM, EMPER_SM, SAGES_SM, JUDGE_SM, GHOST_CHAMBERLAIN_1, GHOST_CHAMBERLAIN_2);
+        addStartNpc(startNPCs);
 
-        addTalkId(GHOST_OF_WIGOTH_1, GHOST_OF_WIGOTH_2);
+        addTalkId(Arrays.asList(GHOST_OF_WIGOTH_1, GHOST_OF_WIGOTH_2));
 
         addQuestItem(Sealed_Box, GRAVE_PASS);
         addQuestItem(GOBLETS);
@@ -83,6 +60,18 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
             e.printStackTrace();
             return "Dont try to cheat with me!";
         }
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 
     @Override
@@ -179,7 +168,7 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
                 id = Integer.parseInt(event);
             } catch (Exception e) {
             }
-            if (ArrayUtils.contains(RCP_REWARDS, id)) {
+            if (RCP_REWARDS.contains(id)) {
                 st.takeItems(RELIC, 1000);
                 st.giveItems(id, 1);
                 return "31454-17.htm";

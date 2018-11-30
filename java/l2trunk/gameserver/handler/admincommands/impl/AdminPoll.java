@@ -20,7 +20,7 @@ public class AdminPoll implements IAdminCommandHandler {
      * Use file name like: admin_new_poll.htm
      */
     private static String getPageHtml(String fileName, Player activeChar) {
-        return HtmCache.getInstance().getNotNull(MAIN_FOLDER + fileName, activeChar);
+        return HtmCache.INSTANCE().getNotNull(MAIN_FOLDER + fileName, activeChar);
     }
 
     private static String getButton(String buttonText, String bypass) {
@@ -34,8 +34,7 @@ public class AdminPoll implements IAdminCommandHandler {
         if (!activeChar.getPlayerAccess().CanEditChar || !Config.ENABLE_POLL_SYSTEM)
             return false;
 
-        PollEngine engine = PollEngine.getInstance();
-        Poll currentPoll = engine.getPoll();
+        Poll currentPoll = PollEngine.INSTANCE.getPoll();
 
         String html = null;
 
@@ -48,12 +47,12 @@ public class AdminPoll implements IAdminCommandHandler {
                     return useAdminCommand(Commands.admin_poll_set_question, wordList, fullString, activeChar);
                 }
 
-                html = HtmCache.getInstance().getNotNull(MAIN_FOLDER + "admin_current_poll.htm", activeChar);
+                html = HtmCache.INSTANCE().getNotNull(MAIN_FOLDER + "admin_current_poll.htm", activeChar);
 
                 html = html.replace("%question%", currentPoll.getQuestion());
                 html = html.replace("%endDate%", currentPoll.getPollEndDate());
-                html = html.replace("%quietStartPause%", (engine.isActive() ? getButton("Pause votes", "admin_poll_end 1") : getButton("Start quietly", "admin_poll_start 1")));
-                html = html.replace("%startEndAndAnnounce%", (engine.isActive() ? getButton("End Poll and Announce", "admin_poll_end 2") : getButton("Start and Announce", "admin_poll_start 2")));
+                html = html.replace("%quietStartPause%", (PollEngine.INSTANCE.isActive() ? getButton("Pause votes", "admin_poll_end 1") : getButton("Start quietly", "admin_poll_start 1")));
+                html = html.replace("%startEndAndAnnounce%", (PollEngine.INSTANCE.isActive() ? getButton("End Poll and Announce", "admin_poll_end 2") : getButton("Start and Announce", "admin_poll_start 2")));
 
                 break;
             //Setting question for the existing or new poll
@@ -66,7 +65,7 @@ public class AdminPoll implements IAdminCommandHandler {
                 String question = fullString.substring("admin_poll_set_question".length()).trim();
                 question = correctQuestion(question);
                 if (currentPoll == null) {
-                    engine.addNewPollQuestion(question);
+                    PollEngine.INSTANCE.addNewPollQuestion(question);
                     html = getPageHtml("admin_new_poll_answers.htm", activeChar);
                 } else {
                     currentPoll.setQuestion(question);
@@ -121,7 +120,7 @@ public class AdminPoll implements IAdminCommandHandler {
             case admin_poll_start:
                 try {
                     int type = Integer.parseInt(wordList[1]);
-                    engine.startPoll((type == 2), true);
+                    PollEngine.INSTANCE.startPoll((type == 2), true);
                     activeChar.sendMessage("Voting started!");
                 } catch (Exception e) {
                     activeChar.sendMessage("Use just //poll");
@@ -132,7 +131,7 @@ public class AdminPoll implements IAdminCommandHandler {
             case admin_poll_end:
                 try {
                     int type = Integer.parseInt(wordList[1]);
-                    engine.stopPoll(type == 2);
+                    PollEngine.INSTANCE.stopPoll(type == 2);
                     activeChar.sendMessage("Voting finished!");
                 } catch (Exception e) {
                     activeChar.sendMessage("Use just //poll");
@@ -189,12 +188,11 @@ public class AdminPoll implements IAdminCommandHandler {
                 return useAdminCommand(Commands.admin_poll_current_answers, wordList, fullString, activeChar);
             //Deleting current poll if it isn't active
             case admin_poll_delete:
-                engine = PollEngine.getInstance();
-                if (engine.isActive()) {
+                if (PollEngine.INSTANCE.isActive()) {
                     activeChar.sendMessage("You cannot delete active Poll!");
                     break;
                 }
-                engine.deleteCurrentPoll();
+                PollEngine.INSTANCE.deleteCurrentPoll();
                 activeChar.sendMessage("Poll has been deleted!");
 
                 break;

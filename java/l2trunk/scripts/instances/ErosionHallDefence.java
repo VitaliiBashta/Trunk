@@ -21,6 +21,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.quests._697_DefendtheHallofErosion;
 
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -33,7 +34,7 @@ public class ErosionHallDefence extends Reflection {
     private static final int UnstableSeed = 32541;
     private static final int RegenerationCoffin = 18709;
     private static final int SoulWagon = 25636;
-    private final int[] zoneEventTriggers = ArrayUtils.createAscendingArray(14240001, 14240012);
+    private final List<Integer> zoneEventTriggers = ArrayUtils.createAscendingList(14240001, 14240012);
     private final ZoneListener startZoneListener = new ZoneListener();
     private boolean conquestBegun = false;
     private final DeathListener deathListener = new DeathListener();
@@ -68,14 +69,14 @@ public class ErosionHallDefence extends Reflection {
         spawnByGroup("soi_hoe_defence_mob_6");
         spawnByGroup("soi_hoe_defence_mob_7");
         spawnByGroup("soi_hoe_defence_mob_8");
-        agressionTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        agressionTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 if (!conquestEnded)
                     notifyAttackSeed();
             }
         }, 15000L, 25000L);
-        coffinSpawnTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        coffinSpawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 if (!conquestEnded)
@@ -83,7 +84,7 @@ public class ErosionHallDefence extends Reflection {
                         spawnCoffin(npc);
             }
         }, 1000L, 60000L);
-        aliveTumorSpawnTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        aliveTumorSpawnTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 if (!conquestEnded) {
@@ -98,7 +99,7 @@ public class ErosionHallDefence extends Reflection {
         }, tumorRespawnTime);
 
         startTime = System.currentTimeMillis();
-        timerTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
+        timerTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
     }
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
@@ -127,7 +128,7 @@ public class ErosionHallDefence extends Reflection {
                 self.deleteMe();
                 for (Player p : getPlayers())
                     p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_NEARBY_UNDEAD_THAT_WERE_ATTACKING_SEED_OF_LIFE_START_LOSING_THEIR_ENERGY_AND_RUN_AWAY, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId()));
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         deadTumor.deleteMe();
@@ -165,7 +166,7 @@ public class ErosionHallDefence extends Reflection {
             if (seed != null) {
                 if (npc.getAI().getIntention() == CtrlIntention.AI_INTENTION_ACTIVE) {
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, seed, 100);
-                    ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                    ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                         @Override
                         public void runImpl() {
 
@@ -244,7 +245,7 @@ public class ErosionHallDefence extends Reflection {
             failureTask.cancel(false);
             failureTask = null;
         }
-        failureTask = ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        failureTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 conquestConclusion(false);

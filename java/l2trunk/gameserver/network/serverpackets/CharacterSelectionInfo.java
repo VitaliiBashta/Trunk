@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.templates.PlayerTemplate;
 import l2trunk.gameserver.templates.StatsSet;
-import l2trunk.gameserver.utils.AutoBan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CharacterSelectionInfo extends L2GameServerPacket {
+public final class CharacterSelectionInfo extends L2GameServerPacket {
     // d (SdSddddddddddffdQdddddddddddddddddddddddddddddddddddddddffdddchhd)
     private static final Logger _log = LoggerFactory.getLogger(CharacterSelectionInfo.class);
 
@@ -151,7 +150,7 @@ public class CharacterSelectionInfo extends L2GameServerPacket {
                 points = 0;
             charInfoPackage.setVitalityPoints(points);
 
-            if (charInfoPackage.getAccessLevel() < 0 && !AutoBan.checkIsBanned(objectId))
+            if (charInfoPackage.getAccessLevel() < 0 )
                 charInfoPackage.setAccessLevel(0);
         } catch (SQLException e) {
             _log.error("SQLException in CharacterSelectionInfo ", e);

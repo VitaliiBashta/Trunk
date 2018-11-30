@@ -27,8 +27,6 @@ public class RequestTutorialPassCmdToServer extends L2GameClientPacket {
         if (player == null)
             return;
 
-        player.isntAfk();
-
         if (player.isInFightClub()) {
             FightClubEventManager.getInstance().requestEventPlayerMenuBypass(player, _bypass);
         }
@@ -57,9 +55,9 @@ public class RequestTutorialPassCmdToServer extends L2GameClientPacket {
                 else
                     page = Integer.parseInt(cm[2]);
 
-                Achievements.getInstance().generatePage(player, Integer.parseInt(cm[1]), page);
+                Achievements.INSTANCE.generatePage(player, Integer.parseInt(cm[1]), page);
             } else
-                Achievements.getInstance().onBypass(player, _bypass, cm);
+                Achievements.INSTANCE.onBypass(player, _bypass, cm);
         } else {
             Quest tutorial = QuestManager.getQuest(255);
 

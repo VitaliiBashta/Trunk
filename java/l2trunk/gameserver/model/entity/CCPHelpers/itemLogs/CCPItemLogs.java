@@ -45,7 +45,7 @@ public final class CCPItemLogs {
     private static String preparePage(Player player, int pageIndex) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
         HtmPropList props = HtmPropHolder.getList(Config.BBS_HOME_DIR + "pages/itemLogs.prop.htm");
-        String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/itemLogs.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/itemLogs.htm", player);
 
         List<ItemActionLog> wrongOrderAllLogs = ItemLogList.getInstance().getLogs(player);
         List<ItemActionLog> allLogs = changeOrder(wrongOrderAllLogs);

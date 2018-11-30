@@ -1,14 +1,13 @@
 package l2trunk.commons.lang;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Comparator;
+import java.util.*;
 
 public final class ArrayUtils {
-    private static final int INDEX_NOT_FOUND = -1;
     public static final int[] EMPTY_INT_ARRAY = new int[0];
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    private static final int INDEX_NOT_FOUND = -1;
 
     /**
      * Check if index is in valid range of array, if so return array value
@@ -23,20 +22,33 @@ public final class ArrayUtils {
         return array[index];
     }
 
+    public static <T extends Comparable<T>> boolean equalLists(List<T> one, List<T> two) {
+        if (one == null && two == null) {
+            return true;
+        }
+
+        if (one == null || two == null || one.size() != two.size()) {
+            return false;
+        }
+
+
+        one = new ArrayList<>(one);
+        two = new ArrayList<>(two);
+
+        Collections.sort(one);
+        Collections.sort(two);
+        return one.equals(two);
+    }
+
     /**
      * Enlarge and add element to array
+     *
      * @return new array with element
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> T[] add(T[] array, T element) {
         Class type = array != null ? array.getClass().getComponentType() : element != null ? element.getClass() : Object.class;
         T[] newArray = (T[]) copyArrayGrow(array, type);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    public static int[] add(int [] array, int element) {
-        int[] newArray = copyArrayGrow(array, element);
         newArray[newArray.length - 1] = element;
         return newArray;
     }
@@ -52,25 +64,26 @@ public final class ArrayUtils {
         return (T[]) Array.newInstance(type, 1);
     }
 
-    private static int [] copyArrayGrow(int[] array, int type) {
+    private static int[] copyArrayGrow(int[] array, int type) {
         if (array != null) {
-            int[] newArray = new int[array.length+1];
+            int[] newArray = new int[array.length + 1];
             System.arraycopy(array, 0, newArray, 0, array.length);
             return newArray;
         }
-        return new int[] {type};
+        return new int[]{type};
     }
 
-    public static <T> boolean contains(T[] array, T value) {
-        if (array == null)
-            return false;
-
-        for (T item : array)
-            if (value == item)
-                return true;
-        return false;
-    }
-
+    //    @Deprecated
+//    public static <T> boolean contains(T[] array, T value) {
+//        if (array == null)
+//            return false;
+//
+//        for (T item : array)
+//            if (value == item)
+//                return true;
+//        return false;
+//    }
+//    @Deprecated
     public static boolean contains(int[] array, int value) {
         if (array == null)
             return false;
@@ -91,8 +104,9 @@ public final class ArrayUtils {
 
         return INDEX_NOT_FOUND;
     }
+
     public static int indexOf(int[] array, int value) {
-            for (int i = 0; i < array.length; i++)
+        for (int i = 0; i < array.length; i++)
             if (value == array[i])
                 return i;
 
@@ -106,6 +120,7 @@ public final class ArrayUtils {
 
         return INDEX_NOT_FOUND;
     }
+
     @SuppressWarnings("unchecked")
     public static <T> T[] remove(T[] array, T value) {
         if (array == null)
@@ -277,12 +292,11 @@ public final class ArrayUtils {
         return ar;
     }
 
-    public static int[] createAscendingArray(int min, int max) {
-        int length = max - min;
-        int[] array = new int[length + 1];
-        int x = 0;
-        for (int i = min; i <= max; i++, x++)
-            array[x] = i;
-        return array;
+    public static List<Integer> createAscendingList(int min, int max) {
+        List<Integer> list = new ArrayList<>(max - min + 1);
+        int j = min;
+        while (j <= max)
+            list.add(j++);
+        return list;
     }
 }

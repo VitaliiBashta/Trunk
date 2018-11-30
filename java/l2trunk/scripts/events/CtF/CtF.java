@@ -174,7 +174,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
  
                         ServerVariables.set("CtF", "on");
                         _log.info("Event 'CtF' activated.");
-                        Announcements.getInstance().announceByCustomMessage("scripts.events.CtF.AnnounceEventStarted", null);
+                        Announcements.INSTANCE().announceByCustomMessage("scripts.events.CtF.AnnounceEventStarted", null);
                 }
                 else
                         player.sendMessage("Event 'CtF' already active.");
@@ -198,7 +198,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                         }
                         ServerVariables.unset("CtF");
                         _log.info("Event 'CtF' deactivated.");
-                        Announcements.getInstance().announceByCustomMessage("scripts.events.CtF.AnnounceEventStoped", null);
+                        Announcements.INSTANCE().announceByCustomMessage("scripts.events.CtF.AnnounceEventStoped", null);
                 }
                 else
                         player.sendMessage("Event 'CtF' not active.");
@@ -216,7 +216,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
     public String DialogAppend_31225(Integer val) {
                /* if(val == 0) {
                         Player player = (Player) getSelf();
-                        return HtmCache.getInstance().getNotNull("events/ctf/31225.html", player);
+                        return HtmCache.INSTANCE().getNotNull("events/ctf/31225.html", player);
                 }*/
         return "";
     }
@@ -226,7 +226,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 if(player.getTeam() != TeamType.BLUE)
                         return "";
                 if(val == 0)
-                        return HtmCache.getInstance().getNotNull("events/ctf/35423.html", player).replaceAll("n1", "" + Rnd.get(100, 999)).replaceAll("n2", "" + Rnd.get(100, 999));*/
+                        return HtmCache.INSTANCE().getNotNull("events/ctf/35423.html", player).replaceAll("n1", "" + Rnd.get(100, 999)).replaceAll("n2", "" + Rnd.get(100, 999));*/
         return "";
     }
 
@@ -236,7 +236,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                 if(player.getTeam() != TeamType.RED)
                         return "";
                 if(val == 0)
-                        return HtmCache.getInstance().getNotNull("events/ctf/35426.html", player).replaceAll("n1", "" + Rnd.get(100, 999)).replaceAll("n2", "" + Rnd.get(100, 999));*/
+                        return HtmCache.INSTANCE().getNotNull("events/ctf/35426.html", player).replaceAll("n1", "" + Rnd.get(100, 999)).replaceAll("n2", "" + Rnd.get(100, 999));*/
         return "";
     }
 
@@ -426,7 +426,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
     }
 
     public static void sayToAll(String address, String[] replacements) {
-        // Announcements.getInstance().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
+        // Announcements.INSTANCE().announceByCustomMessage(address, replacements, ChatType.CRITICAL_ANNOUNCE);
     }
 
     public static void question() {
@@ -692,12 +692,12 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
 
     public void scheduleEventStart() {
                 /*try {
-                        Calendar currentTime = Calendar.getInstance();
+                        Calendar currentTime = Calendar.INSTANCE();
                         Calendar nextStartTime = null;
                         Calendar testStartTime = null;
  
                         for (String timeOfDay : Config.EVENT_CtFStartTime) {
-                                testStartTime = Calendar.getInstance();
+                                testStartTime = Calendar.INSTANCE();
                                 testStartTime.setLenient(true);
  
                                 String[] splitTimeOfDay = timeOfDay.split(":");
@@ -715,7 +715,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                         _startTask.cancel(false);
                                         _startTask = null;
                                 }
-                                _startTask = ThreadPoolManager.getInstance().schedule(new StartTask(), nextStartTime.getTimeInMillis() - System.currentTimeMillis());                  
+                                _startTask = ThreadPoolManager.INSTANCE().schedule(new StartTask(), nextStartTime.getTimeInMillis() - System.currentTimeMillis());
                         }
                 currentTime = null;
                 nextStartTime = null;
@@ -1053,13 +1053,13 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 flag.setCustomFlags(0);
                                 player.getInventory().destroyItem(flag, 1);
                                 player.broadcastUserInfo(true);
-                                if(flag.getItemId() == 13560)
+                                if(flag.getItem_id() == 13560)
                                 {
                                         redFlag.setXYZ(player.getLoc().getX(), player.getLoc().getY(), player.getLoc().getZ());
                                         redFlag.setReflection(_reflection);
                                         redFlag.spawnMe();
                                 }
-                                else if(flag.getItemId() == 13561)
+                                else if(flag.getItem_id() == 13561)
                                 {
                                         blueFlag.setXYZ(player.getLoc().getX(), player.getLoc().getY(), player.getLoc().getZ());
                                         blueFlag.setReflection(_reflection);
@@ -1131,14 +1131,14 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
 
     public static void mageBuff(Player player) {
                /* for(int i = 0; i < mage_buffs.length; i++) {
-                        buff = SkillTable.getInstance().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
+                        buff = SkillTable.INSTANCE().getInfo(mage_buffs[i][0], mage_buffs[i][1]);
                         buff.getEffects(player, player, false, false);
                 }*/
     }
 
     public static void fighterBuff(Player player) {
                /* for(int i = 0; i < fighter_buffs.length; i++) {
-                        buff = SkillTable.getInstance().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
+                        buff = SkillTable.INSTANCE().getInfo(fighter_buffs[i][0], fighter_buffs[i][1]);
 /*                      for(EffectTemplate et : buff.getEffectTemplates()) {
                                 Env env = new Env(player, player, buff);
                 Effect effect = et.getEffect(env);
@@ -1206,7 +1206,7 @@ public class CtF extends Functions implements ScriptFile, OnDeathListener, OnPla
                                 return;
                         }
  
-                        for(Residence c : ResidenceHolder.getInstance().getResidenceList(Castle.class))
+                        for(Residence c : ResidenceHolder.INSTANCE().getResidenceList(Castle.class))
                                 if(c.getSiegeEvent() != null && c.getSiegeEvent().isInProgress()) {
                                         _log.debug("CtF not started: CastleSiege in progress");
                                         return;

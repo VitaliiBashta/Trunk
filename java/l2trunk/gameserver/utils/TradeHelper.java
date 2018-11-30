@@ -41,10 +41,8 @@ public final class TradeHelper {
 
         String BLOCK_ZONE = storeType == Player.STORE_PRIVATE_MANUFACTURE ? Zone.BLOCKED_ACTION_PRIVATE_WORKSHOP : Zone.BLOCKED_ACTION_PRIVATE_STORE;
         if (storeType != Player.STORE_PRIVATE_BUFF && player.isActionBlocked(BLOCK_ZONE)) {
-            if (!Config.SERVICES_NO_TRADE_ONLY_OFFLINE || Config.SERVICES_NO_TRADE_ONLY_OFFLINE && player.isInOfflineMode()) {
-                player.sendPacket(storeType == Player.STORE_PRIVATE_MANUFACTURE ? SystemMsg.YOU_CANNOT_OPEN_A_PRIVATE_WORKSHOP_HERE : SystemMsg.YOU_CANNOT_OPEN_A_PRIVATE_STORE_HERE);
-                return false;
-            }
+            player.sendPacket(storeType == Player.STORE_PRIVATE_MANUFACTURE ? SystemMsg.YOU_CANNOT_OPEN_A_PRIVATE_WORKSHOP_HERE : SystemMsg.YOU_CANNOT_OPEN_A_PRIVATE_STORE_HERE);
+            return false;
         }
 
         if (player.isCastingNow()) {
@@ -103,7 +101,7 @@ public final class TradeHelper {
         long tax = (long) (price * Config.SERVICES_TRADE_TAX / 100);
         if (seller.isInZone(Zone.ZoneType.offshore))
             tax = (long) (price * Config.SERVICES_OFFSHORE_TRADE_TAX / 100);
-        if (Config.SERVICES_TRADE_TAX_ONLY_OFFLINE && !seller.isInOfflineMode())
+        if (Config.SERVICES_TRADE_TAX_ONLY_OFFLINE)
             tax = 0;
         if (Config.SERVICES_PARNASSUS_NOTAX && seller.getReflection() == ReflectionManager.PARNASSUS)
             tax = 0;
@@ -113,11 +111,7 @@ public final class TradeHelper {
 
     public static void cancelStore(Player activeChar) {
         activeChar.setPrivateStoreType(Player.STORE_PRIVATE_NONE);
-        if (activeChar.isInOfflineMode()) {
-            activeChar.setOfflineMode(false);
-            activeChar.kick();
-        } else
-            activeChar.broadcastCharInfo();
+        activeChar.broadcastCharInfo();
     }
 
     public static void buyFromStore(Player seller, Player buyer, int _count, int[] _items, long[] _itemQ, long[] _itemP) {

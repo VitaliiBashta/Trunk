@@ -144,9 +144,6 @@ public class GameObjectTasks {
         }
     }
 
-    /**
-     * KickTask
-     */
     public static class KickTask extends RunnableImpl {
         private final HardReference<Player> _playerRef;
 
@@ -159,14 +156,10 @@ public class GameObjectTasks {
             Player player = _playerRef.get();
             if (player == null)
                 return;
-            player.setOfflineMode(false);
             player.kick();
         }
     }
 
-    /**
-     * UnJailTask
-     */
     public static class UnJailTask extends RunnableImpl {
         private final HardReference<Player> _playerRef;
         private final boolean _msg;
@@ -317,7 +310,6 @@ public class GameObjectTasks {
      * HitTask
      */
     public static class HitTask extends RunnableImpl {
-        private final HardReference<? extends Creature> _charRef, _targetRef;
         final boolean _crit;
         final boolean _miss;
         final boolean _shld;
@@ -325,6 +317,7 @@ public class GameObjectTasks {
         final boolean _unchargeSS;
         final boolean _notify;
         final int _damage;
+        private final HardReference<? extends Creature> _charRef, _targetRef;
 
         public HitTask(Creature cha, Creature target, int damage, boolean crit, boolean miss, boolean soulshot, boolean shld, boolean unchargeSS, boolean notify) {
             _charRef = cha.getRef();
@@ -358,8 +351,8 @@ public class GameObjectTasks {
      * Task launching the function onMagicUseTimer()
      */
     public static class MagicUseTask extends RunnableImpl {
-        private final HardReference<? extends Creature> _charRef;
         final boolean _forceUse;
+        private final HardReference<? extends Creature> _charRef;
 
         public MagicUseTask(Creature cha, boolean forceUse) {
             _charRef = cha.getRef();
@@ -385,8 +378,8 @@ public class GameObjectTasks {
      * MagicLaunchedTask
      */
     public static class MagicLaunchedTask extends RunnableImpl {
-        private final HardReference<? extends Creature> _charRef;
         final boolean _forceUse;
+        private final HardReference<? extends Creature> _charRef;
 
         public MagicLaunchedTask(Creature cha, boolean forceUse) {
             _charRef = cha.getRef();

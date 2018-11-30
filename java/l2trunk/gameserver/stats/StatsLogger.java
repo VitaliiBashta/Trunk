@@ -21,7 +21,7 @@ public class StatsLogger {
     private final Collection<SkillStat> statsToAdd = new CopyOnWriteArrayList<>();
 
     private StatsLogger() {
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new LogStatThread(), TimeUtils.MINUTE_IN_MILLIS, TimeUtils.MINUTE_IN_MILLIS);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new LogStatThread(), TimeUtils.MINUTE_IN_MILLIS, TimeUtils.MINUTE_IN_MILLIS);
     }
 
     private static StatsLogger getInstance() {

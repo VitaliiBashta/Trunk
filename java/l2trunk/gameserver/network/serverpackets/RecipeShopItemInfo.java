@@ -10,8 +10,8 @@ public class RecipeShopItemInfo extends L2GameServerPacket {
     private final int _shopId;
     private final int _curMp;
     private final int _maxMp;
-    private int _success = 0xFFFFFFFF;
     private final long _price;
+    private int _success = 0xFFFFFFFF;
 
     public RecipeShopItemInfo(Player activeChar, Player manufacturer, int recipeId, long price, int success) {
         _recipeId = recipeId;

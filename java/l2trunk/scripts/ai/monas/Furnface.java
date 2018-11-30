@@ -21,13 +21,13 @@ public final class Furnface extends DefaultAI {
         if (skill.getId() == 9059) {
             actor.setNpcState(1);
             actor.setTargetable(false);
-            actor.doCast(SkillTable.getInstance().getInfo(5144, 1), caster, true);
+            actor.doCast(SkillTable.INSTANCE().getInfo(5144, 1), caster, true);
             for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
                 if (npc != null && npc.getNpcId() == 32758 && actor.getDistance(npc) <= 1000)
                     ((SumielInstance) npc).setSCE_POT_ON(actor.getAISpawnParam());
             }
 
-            ThreadPoolManager.getInstance().schedule(() -> {
+            ThreadPoolManager.INSTANCE.schedule(() -> {
                 NpcInstance act = getActor();
                 act.setNpcState(2);
             }, 2 * 1000);

@@ -3,7 +3,7 @@ package l2trunk.scripts.ai.suspiciousmerchant;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class SuspiciousMerchantMarshland extends AbstractSuspiciousMerchant {
+public final class SuspiciousMerchantMarshland extends AbstractSuspiciousMerchant {
     private static final Location[] points = {
             new Location(71436, -58182, -2904),
             new Location(71731, -56949, -3080),

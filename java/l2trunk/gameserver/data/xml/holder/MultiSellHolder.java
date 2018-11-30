@@ -424,12 +424,12 @@ public final class MultiSellHolder {
     }
 
     public static class MultiSellListContainer {
+        private final List<MultiSellEntry> entries = new ArrayList<>();
         private int _listId;
         private boolean _showall = true;
         private boolean keep_enchanted = false;
         private boolean is_dutyfree = false;
         private boolean nokey = false;
-        private final List<MultiSellEntry> entries = new ArrayList<>();
 
         public int getListId() {
             return _listId;

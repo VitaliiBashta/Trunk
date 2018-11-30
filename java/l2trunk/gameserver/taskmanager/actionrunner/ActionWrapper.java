@@ -18,7 +18,7 @@ public abstract class ActionWrapper extends RunnableImpl {
     }
 
     public void schedule(long time) {
-        _scheduledFuture = ThreadPoolManager.getInstance().schedule(this, time);
+        _scheduledFuture = ThreadPoolManager.INSTANCE.schedule(this, time);
     }
 
     public void cancel() {
@@ -37,7 +37,7 @@ public abstract class ActionWrapper extends RunnableImpl {
         } catch (Exception e) {
             _log.info("ActionWrapper: Exception: " + e + "; name: " + name, e);
         } finally {
-            ActionRunner.getInstance().remove(name, this);
+            ActionRunner.INSTANCE.remove(name, this);
 
             _scheduledFuture = null;
         }

@@ -13,8 +13,8 @@ import l2trunk.gameserver.model.Player;
  * dddc dddh (ddc)
  */
 public class Attack extends L2GameServerPacket {
-    private final int _attackerId;
     public final boolean _soulshot;
+    private final int _attackerId;
     private final int _grade;
     private final int _x, _y, _z, _tx, _ty, _tz;
     private Hit[] hits;

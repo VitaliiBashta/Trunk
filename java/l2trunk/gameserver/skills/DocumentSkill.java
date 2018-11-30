@@ -11,16 +11,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
 
 public final class DocumentSkill extends DocumentBase {
     private static final Logger _log = LoggerFactory.getLogger(DocumentSkill.class);
     private final int skillToParse;
-    private Skill currentSkill;
     private final Set<String> usedTables = new HashSet<>();
     private final List<l2trunk.gameserver.model.Skill> skillsInFile = new LinkedList<>();
+    private Skill currentSkill;
 
     DocumentSkill(Path file, int... skillToParse) {
         super(file);
@@ -243,11 +242,11 @@ public final class DocumentSkill extends DocumentBase {
     }
 
     class Skill {
+        final List<l2trunk.gameserver.model.Skill> skills = new ArrayList<>();
         int id;
         String name;
         StatsSet[] sets;
         int currentLevel;
-        final List<l2trunk.gameserver.model.Skill> skills = new ArrayList<>();
         List<l2trunk.gameserver.model.Skill> currentSkills = new ArrayList<>();
     }
 }

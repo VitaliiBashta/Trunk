@@ -69,7 +69,7 @@ public class PatrollersNoWatch extends Fighter {
         npc.setRunning();
         try {
             if (Rnd.chance(30))
-                npc.altOnMagicUseTimer(npc, SkillTable.getInstance().getInfo(6757, 1));
+                npc.altOnMagicUseTimer(npc, SkillTable.INSTANCE().getInfo(6757, 1));
             addTaskMove(Location.findPointToStay(_points[_lastPoint], 250, npc.getGeoIndex()), true);
         } catch (Exception e) {
         }

@@ -68,7 +68,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         if (SetActive("Heart", true)) {
             spawnEventManagers();
             System.out.println("Event 'Change of Heart' started.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStarted", null);
         } else
             player.sendMessage("Event 'Change of Heart' already started.");
 
@@ -83,7 +83,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         if (SetActive("Heart", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'Change of Heart' stopped.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStoped", null);
         } else
             player.sendMessage("Event 'Change of Heart' not started.");
 
@@ -100,7 +100,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
 
         zeroGuesses(player);
         if (haveAllHearts(player))
-            show(link(HtmCache.getInstance().getNotNull("scripts/events/Heart/hearts_01.htm", player), isRus(player)), player);
+            show(link(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_01.htm", player), isRus(player)), player);
         else
             show("scripts/events/Heart/hearts_00.htm", player);
     }
@@ -138,7 +138,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         }
 
         if (var_player == var_cat) {
-            show(fillvars(HtmCache.getInstance().getNotNull("scripts/events/Heart/hearts_same.htm", player), var_player, var_cat, player), player);
+            show(fillvars(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_same.htm", player), var_player, var_cat, player), player);
             return;
         }
 
@@ -150,13 +150,13 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
                 reward(player, curr_guesses);
                 zeroGuesses(player);
             }
-            show(fillvars(HtmCache.getInstance().getNotNull("scripts/events/Heart/hearts_level_" + curr_guesses + ".htm", player), var_player, var_cat, player), player);
+            show(fillvars(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_level_" + curr_guesses + ".htm", player), var_player, var_cat, player), player);
             return;
         }
 
         takeHeartsSet(player);
         reward(player, getGuesses(player) - 1);
-        show(fillvars(HtmCache.getInstance().getNotNull("scripts/events/Heart/hearts_loose.htm", player), var_player, var_cat, player), player);
+        show(fillvars(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_loose.htm", player), var_player, var_cat, player), player);
         zeroGuesses(player);
     }
 
@@ -259,7 +259,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.ChangeofHeart.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.ChangeofHeart.AnnounceEventStarted", null);
     }
 
     private static boolean isActive() {

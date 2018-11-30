@@ -29,7 +29,7 @@ public final class IceKnightNormal extends Fighter {
         actor.block();
         aggroPlayers();
 
-        task = ThreadPoolManager.getInstance().schedule(new ReleaseFromIce(), 6000L);
+        task = ThreadPoolManager.INSTANCE.schedule(new ReleaseFromIce(), 6000L);
     }
 
     private void aggroPlayers() {

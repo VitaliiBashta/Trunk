@@ -41,10 +41,10 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         TAMED_DATA[5] = new AbstractMap.SimpleImmutableEntry<>(NpcString.SWIFT_S1, new int[]{6434, 6667});
     }
 
+    private final List<Skill> _skills = new ArrayList<>();
     private HardReference<Player> _playerRef = HardReferences.emptyRef();
     private int _foodSkillId, _remainingTime = MAX_DURATION;
     private Future<?> _durationCheckTask = null;
-    private final List<Skill> _skills = new ArrayList<>();
 
     public TamedBeastInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -88,7 +88,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
             // start the duration checks start the buff tasks
             if (_durationCheckTask != null)
                 _durationCheckTask.cancel(false);
-            _durationCheckTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new CheckDuration(this), DURATION_CHECK_INTERVAL, DURATION_CHECK_INTERVAL);
+            _durationCheckTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new CheckDuration(this), DURATION_CHECK_INTERVAL, DURATION_CHECK_INTERVAL);
         }
     }
 
@@ -99,7 +99,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         setName("#" + getNameNpcStringByNpcId().getId());
 
         for (int skillId : type.getValue()) {
-            Skill sk = SkillTable.getInstance().getInfo(skillId, 1);
+            Skill sk = SkillTable.INSTANCE.getInfo(skillId, 1);
             if (sk != null)
                 _skills.add(sk);
         }
@@ -128,7 +128,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
 
         int delay = 0;
         for (Skill skill : _skills) {
-            ThreadPoolManager.getInstance().schedule(new Buff(this, getPlayer(), skill), delay);
+            ThreadPoolManager.INSTANCE().schedule(new Buff(this, getPlayer(), skill), delay);
             delay = delay + skill.getHitTime() + 500;
         }
     }
@@ -171,7 +171,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     }
 
     public void despawnWithDelay(int delay) {
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
                 doDespawn();

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NurkaInstance extends SiegeGuardInstance {
-    private  final Skill SKILL = SkillTable.getInstance().getInfo(5456, 1);
+    private  final Skill SKILL = SkillTable.INSTANCE().getInfo(5456, 1);
 
     public NurkaInstance(int objectId, NpcTemplate template) {
         super(objectId, template);

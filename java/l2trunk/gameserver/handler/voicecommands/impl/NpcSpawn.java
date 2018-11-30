@@ -16,13 +16,11 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NpcSpawn extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS =
-            {
-                    "npcspawn", "spawnnpc"
-            };
+    private static final List<String> COMMANDS = Arrays.asList("npcspawn", "spawnnpc");
 
     private static final int[] NPCS = {37031, 37032, 37033, 37034, 37035, 37036, 37037, 37038, 37039, 37040, 32323, 30120, 37041};
 
@@ -118,7 +116,7 @@ public class NpcSpawn extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 }

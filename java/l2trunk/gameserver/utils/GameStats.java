@@ -22,10 +22,10 @@ public class GameStats {
     private static final AtomicLong _playerEnterGameCounter = new AtomicLong(0L);
 
     private static final AtomicLong _taxSum = new AtomicLong(0L);
-    private static long _taxLastUpdate;
     private static final AtomicLong _rouletteSum = new AtomicLong(0L);
-    private static long _rouletteLastUpdate;
     private static final AtomicLong _adenaSum = new AtomicLong(0L);
+    private static long _taxLastUpdate;
+    private static long _rouletteLastUpdate;
 
     static {
         _taxSum.set(ServerVariables.getLong("taxsum", 0));

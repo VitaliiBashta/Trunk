@@ -21,9 +21,9 @@ import java.util.List;
 
 public class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiegeClanObject> {
     public static final String TRYOUT_PART = "tryout_part";
-    private static final String CHALLENGER_RESTART_POINTS = "challenger_restart_points";
     public static final String FIRST_DOORS = "first_doors";
     public static final String SECOND_DOORS = "second_doors";
+    private static final String CHALLENGER_RESTART_POINTS = "challenger_restart_points";
     private static final String NEXT_STEP = "next_step";
 
     public ClanHallTeamBattleEvent(MultiValueSet<String> set) {
@@ -150,7 +150,7 @@ public class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiegeClanOb
 
     @Override
     public CTBSiegeClanObject newSiegeClan(String type, int clanId, long i, long date) {
-        Clan clan = ClanTable.getInstance().getClan(clanId);
+        Clan clan = ClanTable.INSTANCE.getClan(clanId);
         return clan == null ? null : new CTBSiegeClanObject(type, clan, i, date);
     }
 

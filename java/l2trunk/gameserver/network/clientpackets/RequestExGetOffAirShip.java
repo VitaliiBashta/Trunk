@@ -25,7 +25,7 @@ public class RequestExGetOffAirShip extends L2GameClientPacket {
 		if (activeChar == null)
 			return;
 
-		L2AirShip boat = (L2AirShip) L2VehicleManager.getInstance().getBoat(_id);
+		L2AirShip boat = (L2AirShip) L2VehicleManager.INSTANCE().getBoat(id);
 		if (boat == null || boat.isMoving) // Не даем слезть с лодки на ходу
 		{
 			activeChar.sendActionFailed();

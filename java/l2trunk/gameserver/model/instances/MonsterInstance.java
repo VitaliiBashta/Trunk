@@ -111,9 +111,7 @@ public class MonsterInstance extends NpcInstance {
 
     @Override
     public boolean isChampion() {
-        if (getChampion() > 0)
-            return true;
-        return false;
+        return getChampion() > 0;
     }
 
     public void setChampion(int level) {
@@ -121,7 +119,7 @@ public class MonsterInstance extends NpcInstance {
             removeSkillById(4407);
             _isChampion = 0;
         } else {
-            addSkill(SkillTable.getInstance().getInfo(4407, level));
+            addSkill(SkillTable.INSTANCE.getInfo(4407, level));
             _isChampion = level;
         }
     }
@@ -159,7 +157,7 @@ public class MonsterInstance extends NpcInstance {
                 minionMaintainTask.cancel(false);
                 minionMaintainTask = null;
             }
-            minionMaintainTask = ThreadPoolManager.getInstance().schedule(new MinionMaintainTask(), 1000L);
+            minionMaintainTask = ThreadPoolManager.INSTANCE.schedule(new MinionMaintainTask(), 1000L);
         }
 
         // Ady - Custom respawn message for certain mobs/raids
@@ -167,7 +165,7 @@ public class MonsterInstance extends NpcInstance {
             case 25725: // Drake Lord
             case 25726: // Behemoth Leader
             case 25727: // Dragon Beast
-                Announcements.getInstance().announceToAll(getName() + " has respawned", ChatType.COMMANDCHANNEL_COMMANDER);
+                Announcements.INSTANCE.announceToAll(getName() + " has respawned", ChatType.COMMANDCHANNEL_COMMANDER);
                 break;
         }
     }
@@ -243,7 +241,7 @@ public class MonsterInstance extends NpcInstance {
         calculateRewards(killer);
 
         // Alexander - Auto Raid Event
-        //AutoRaidEventManager.getInstance().onRaidDeath(this);
+        //AutoRaidEventManager.INSTANCE().onRaidDeath(this);
 
         // Alexander - Add a new raid killed stat to all that participated in it
 //		if (isRaid() && !isMinion())
@@ -418,7 +416,7 @@ public class MonsterInstance extends NpcInstance {
         }
 
         // Check the drop of a cursed weapon
-        CursedWeaponsManager.getInstance().dropAttackable(this, killer);
+        CursedWeaponsManager.INSTANCE.dropAttackable(this, killer);
 
         if (topDamager == null || !topDamager.isPlayable())
             return;
@@ -731,7 +729,7 @@ public class MonsterInstance extends NpcInstance {
         } else if (distance >= MIN_DISTANCE_FOR_USE_UD) {
             double chance = UD_USE_CHANCE / (getMaxHp() / damage);
             if (Rnd.chance(chance)) {
-                Skill skill = SkillTable.getInstance().getInfo(skillId, skillLvl);
+                Skill skill = SkillTable.INSTANCE().getInfo(skillId, skillLvl);
                 if (skill != null)
                     skill.getEffects(this, this, false, false);
             }

@@ -82,7 +82,7 @@ public class Patrollers extends Fighter {
 
         npc.setRunning();
         if (Rnd.chance(30))
-            npc.altOnMagicUseTimer(npc, SkillTable.getInstance().getInfo(6757, 1));
+            npc.altOnMagicUseTimer(npc, SkillTable.INSTANCE().getInfo(6757, 1));
         addTaskMove(Location.findPointToStay(_points[_lastPoint], 250, npc.getGeoIndex()), true);
         if (npc instanceof MonsterInstance) {
             MonsterInstance _monster = (MonsterInstance) npc;

@@ -14,16 +14,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class EffectList {
+    public static final int DEBUFF_LIMIT = 8;
+    public static final int MUSIC_LIMIT = 12;
+    public static final int TRIGGER_LIMIT = 12;
     private static final int NONE_SLOT_TYPE = -1;
     private static final int BUFF_SLOT_TYPE = 0;
     private static final int MUSIC_SLOT_TYPE = 1;
     private static final int TRIGGER_SLOT_TYPE = 2;
     private static final int DEBUFF_SLOT_TYPE = 3;
-
-    public static final int DEBUFF_LIMIT = 8;
-    public static final int MUSIC_LIMIT = 12;
-    public static final int TRIGGER_LIMIT = 12;
-
     private final Creature _actor;
     private final Lock lock = new ReentrantLock();
     private List<Effect> _effects;

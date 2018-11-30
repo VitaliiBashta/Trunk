@@ -45,15 +45,9 @@ public class AdminDisconnect implements IAdminCommandHandler {
 
                 activeChar.sendMessage("Character " + player.getName() + " disconnected from server.");
 
-                if (player.isInOfflineMode()) {
-                    player.setOfflineMode(false);
-                    player.kick();
-                    return true;
-                }
-
                 player.sendMessage(new CustomMessage("admincommandhandlers.AdminDisconnect.YoureKickedByGM", player));
                 player.sendPacket(SystemMsg.YOU_HAVE_BEEN_DISCONNECTED_FROM_THE_SERVER_);
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         player.kick();
@@ -65,7 +59,7 @@ public class AdminDisconnect implements IAdminCommandHandler {
                 int kickedCount = 0;
                 for (final Player playerToKick : GameObjectsStorage.getAllPlayersForIterate()) {
                     if (playerToKick.isOnline() && playerToKick.getNetConnection() != null && !playerToKick.equals(activeChar)) {
-                        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
                             @Override
                             public void runImpl() {
                                 playerToKick.kick();

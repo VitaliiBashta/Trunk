@@ -19,7 +19,7 @@ public abstract class AutomaticTask extends ActionWrapper {
         try {
             doTask();
         } finally {
-            ActionRunner.getInstance().register(reCalcTime(false), this);
+            ActionRunner.INSTANCE.register(reCalcTime(false), this);
         }
     }
 }

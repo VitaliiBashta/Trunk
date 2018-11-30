@@ -9,15 +9,10 @@ import java.util.List;
 
 
 public class GMViewPledgeInfo extends L2GameServerPacket {
-    private String char_name;
     private final String clan_name;
     private final String leader_name;
     private final String ally_name;
-    private int clan_id;
-    private int clan_crest_id;
-    private int clan_level;
     private final int rank;
-    private int rep;
     private final int ally_id;
     private final int ally_crest_id;
     private final int hasCastle;
@@ -25,6 +20,11 @@ public class GMViewPledgeInfo extends L2GameServerPacket {
     private final int hasFortress;
     private final int atWar;
     private final List<PledgeMemberInfo> infos = new ArrayList<>();
+    private String char_name;
+    private int clan_id;
+    private int clan_crest_id;
+    private int clan_level;
+    private int rep;
 
     public GMViewPledgeInfo(Player activeChar) {
         Clan clan = activeChar.getClan();

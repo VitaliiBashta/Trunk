@@ -11,6 +11,8 @@ import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
+import java.util.List;
+
 public final class ItemSkillsListener implements OnEquipListener {
     private static final ItemSkillsListener _instance = new ItemSkillsListener();
 
@@ -22,8 +24,8 @@ public final class ItemSkillsListener implements OnEquipListener {
     public void onUnequip(int slot, ItemInstance item, Playable actor) {
         Player player = (Player) actor;
 
-        Skill[] itemSkills = null;
-        Skill enchant4Skill = null;
+        List<Skill> itemSkills;
+        Skill enchant4Skill;
 
         ItemTemplate it = item.getTemplate();
 
@@ -33,13 +35,13 @@ public final class ItemSkillsListener implements OnEquipListener {
 
         player.removeTriggers(it);
 
-        if (itemSkills != null && itemSkills.length > 0)
+        if (itemSkills != null && itemSkills.size() > 0)
             for (Skill itemSkill : itemSkills)
                 if (itemSkill.getId() >= 26046 && itemSkill.getId() <= 26048) {
                     int level = player.getSkillLevel(itemSkill.getId());
                     int newlevel = level - 1;
                     if (newlevel > 0)
-                        player.addSkill(SkillTable.getInstance().getInfo(itemSkill.getId(), newlevel), false);
+                        player.addSkill(SkillTable.INSTANCE().getInfo(itemSkill.getId(), newlevel), false);
                     else
                         player.removeSkillById(itemSkill.getId());
                 } else {
@@ -49,7 +51,7 @@ public final class ItemSkillsListener implements OnEquipListener {
         if (enchant4Skill != null)
             player.removeSkill(enchant4Skill, false);
 
-        if (itemSkills.length > 0 || enchant4Skill != null) {
+        if (itemSkills.size() > 0 || enchant4Skill != null) {
             player.sendPacket(new SkillList(player));
             player.updateStats();
         }
@@ -59,12 +61,10 @@ public final class ItemSkillsListener implements OnEquipListener {
     public void onEquip(int slot, ItemInstance item, Playable actor) {
         Player player = (Player) actor;
 
-        Skill[] itemSkills = null;
+        ItemTemplate it = item.getTemplate();
+        List<Skill> itemSkills = it.getAttachedSkills();;
         Skill enchant4Skill = null;
 
-        ItemTemplate it = item.getTemplate();
-
-        itemSkills = it.getAttachedSkills();
 
         if (item.getEnchantLevel() >= 4)
             enchant4Skill = it.getEnchant4Skill();
@@ -76,18 +76,18 @@ public final class ItemSkillsListener implements OnEquipListener {
         player.addTriggers(it);
 
         boolean needSendInfo = false;
-        if (itemSkills.length > 0)
+        if (itemSkills.size() > 0)
             for (Skill itemSkill : itemSkills)
                 if (itemSkill.getId() >= 26046 && itemSkill.getId() <= 26048) {
                     int level = player.getSkillLevel(itemSkill.getId());
                     int newlevel = level;
                     if (level > 0) {
-                        if (SkillTable.getInstance().getInfo(itemSkill.getId(), level + 1) != null)
+                        if (SkillTable.INSTANCE().getInfo(itemSkill.getId(), level + 1) != null)
                             newlevel = level + 1;
                     } else
                         newlevel = 1;
                     if (newlevel != level) {
-                        player.addSkill(SkillTable.getInstance().getInfo(itemSkill.getId(), newlevel), false);
+                        player.addSkill(SkillTable.INSTANCE().getInfo(itemSkill.getId(), newlevel), false);
                     }
                 } else if (player.getSkillLevel(itemSkill.getId()) < itemSkill.getLevel()) {
                     player.addSkill(itemSkill, false);
@@ -106,7 +106,7 @@ public final class ItemSkillsListener implements OnEquipListener {
         if (enchant4Skill != null)
             player.addSkill(enchant4Skill, false);
 
-        if (itemSkills.length > 0 || enchant4Skill != null) {
+        if (itemSkills.size() > 0 || enchant4Skill != null) {
             player.sendPacket(new SkillList(player));
             player.updateStats();
             if (needSendInfo)

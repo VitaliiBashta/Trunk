@@ -212,8 +212,8 @@ public class BookMarkList {
     }
 
     public void store() {
-        try (Connection con = DatabaseFactory.getInstance().getConnection()){
-             PreparedStatement statement = con.prepareStatement("DELETE FROM `character_bookmarks` WHERE char_Id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement("DELETE FROM `character_bookmarks` WHERE char_Id=?");
             statement.setInt(1, owner.getObjectId());
             statement.execute();
 

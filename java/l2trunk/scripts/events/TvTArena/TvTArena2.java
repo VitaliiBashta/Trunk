@@ -132,8 +132,8 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
         if (val == 0) {
             Player player = getSelf();
             if (player.isGM())
-                return HtmCache.getInstance().getNotNull("scripts/events/TvTArena/31391.htm", player) + HtmCache.getInstance().getNotNull("scripts/events/TvTArena/31391-4.htm", player);
-            return HtmCache.getInstance().getNotNull("scripts/events/TvTArena/31391.htm", player);
+                return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31391.htm", player) + HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31391-4.htm", player);
+            return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31391.htm", player);
         }
         return "";
     }
@@ -196,7 +196,7 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
         if (SetActive("TvT Arena 2", true)) {
             spawnEventManagers();
             System.out.println("Event: TvT Arena 2 started.");
-            Announcements.getInstance().announceToAll("Started TvT Arena Event 2.");
+            Announcements.INSTANCE.announceToAll("Started TvT Arena Event 2.");
         } else
             player.sendMessage("TvT Arena 2 Event already started.");
 
@@ -216,7 +216,7 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
             unSpawnEventManagers();
             stop();
             System.out.println("TvT Arena 2 Event stopped.");
-            Announcements.getInstance().announceToAll("TvT Arena 2 Event is over.");
+            Announcements.INSTANCE.announceToAll("TvT Arena 2 Event is over.");
         } else
             player.sendMessage("TvT Arena 2 Event not started.");
 

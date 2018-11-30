@@ -14,6 +14,7 @@ public class Mail implements JdbcEntity, Comparable<Mail> {
     public static final int REJECTED = 2;
     private static final long serialVersionUID = -8704970972611917153L;
     private static final MailDAO _mailDAO = MailDAO.getInstance();
+    private final Set<ItemInstance> attachments = new HashSet<>();
     private int messageId;
     private int senderId;
     private String senderName;
@@ -25,7 +26,6 @@ public class Mail implements JdbcEntity, Comparable<Mail> {
     private long price;
     private SenderType _type = SenderType.NORMAL;
     private boolean isUnread;
-    private final Set<ItemInstance> attachments = new HashSet<>();
     private JdbcEntityState _state = JdbcEntityState.CREATED;
 
     public int getMessageId() {

@@ -23,7 +23,7 @@ public class RequestCursedWeaponLocation extends L2GameClientPacket {
             return;
 
         List<CursedWeaponInfo> list = new ArrayList<>();
-        for (CursedWeapon cw : CursedWeaponsManager.getInstance().getCursedWeapons()) {
+        for (CursedWeapon cw : CursedWeaponsManager.INSTANCE.getCursedWeapons()) {
             Location pos = cw.getWorldPosition();
             if (pos != null)
                 list.add(new CursedWeaponInfo(pos, cw.getItemId(), cw.isActivated() ? 1 : 0));

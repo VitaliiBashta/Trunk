@@ -20,7 +20,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Resurrect extends Skill {
+public final class Resurrect extends Skill {
     private final boolean _canPet;
 
     public Resurrect(StatsSet set) {
@@ -101,7 +101,7 @@ public class Resurrect extends Skill {
                         activeChar.sendPacket(Msg.SINCE_THE_MASTER_WAS_IN_THE_PROCESS_OF_BEING_RESURRECTED_THE_ATTEMPT_TO_RESURRECT_THE_PET_HAS_BEEN_CANCELLED);
                     return false;
                 }
-                if ((!this._canPet) && (this._targetType != Skill.SkillTargetType.TARGET_PET)) {
+                if ((!this._canPet) && (this.targetType != Skill.SkillTargetType.TARGET_PET)) {
                     player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                     return false;
                 }
@@ -116,7 +116,7 @@ public class Resurrect extends Skill {
                         activeChar.sendPacket(Msg.BETTER_RESURRECTION_HAS_BEEN_ALREADY_PROPOSED);
                     return false;
                 }
-                if (this._targetType == Skill.SkillTargetType.TARGET_PET) {
+                if (this.targetType == Skill.SkillTargetType.TARGET_PET) {
                     player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                     return false;
                 }
@@ -132,10 +132,10 @@ public class Resurrect extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        double percent = _power;
+        double percent = power;
 
         if (percent < 100 && !isHandler()) {
-            double wit_bonus = _power * (BaseStats.WIT.calcBonus(activeChar) - 1);
+            double wit_bonus = power * (BaseStats.WIT.calcBonus(activeChar) - 1);
             percent += wit_bonus > 20 ? 20 : wit_bonus;
             if (percent > 90)
                 percent = 90;
@@ -157,7 +157,7 @@ public class Resurrect extends Skill {
                     else
                         target.getPlayer().reviveRequest((Player) activeChar, percent, true);
                 } else if (target.isPlayer()) {
-                    if (_targetType == SkillTargetType.TARGET_PET)
+                    if (targetType == SkillTargetType.TARGET_PET)
                         continue;
 
                     Player targetPlayer = (Player) target;

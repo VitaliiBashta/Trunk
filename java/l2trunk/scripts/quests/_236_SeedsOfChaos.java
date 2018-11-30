@@ -113,14 +113,14 @@ public class _236_SeedsOfChaos extends Quest implements ScriptFile {
                 st.setCond(4);
             if (!KATENAR_SPAWNED) {
                 st.addSpawn(KATENAR, 120000);
-                ThreadPoolManager.getInstance().schedule(new OnDespawn(true), 120000);
+                ThreadPoolManager.INSTANCE().schedule(new OnDespawn(true), 120000);
                 KATENAR_SPAWNED = true;
             }
             return null;
         } else if (event.equalsIgnoreCase("32238-harkil") && _state == STARTED && (cond == 5 || cond == 13)) {
             if (!HARKILGAMED_SPAWNED) {
                 st.addSpawn(HARKILGAMED, 120000);
-                ThreadPoolManager.getInstance().schedule(new OnDespawn(false), 120000);
+                ThreadPoolManager.INSTANCE().schedule(new OnDespawn(false), 120000);
                 HARKILGAMED_SPAWNED = true;
             }
             return null;

@@ -70,7 +70,7 @@ public class SufferingHallAttack extends Reflection {
                     spawnRoom(6);
                 }
             } else if (self.getNpcId() == Yehan) {
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
                         spawnRoom(7);

@@ -14,22 +14,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public final class AwayManager {
-    private static final Logger _log = LoggerFactory.getLogger(AwayManager.class);
-    private static AwayManager _instance;
+public enum  AwayManager {
+    INSTANCE;
     private final Map<Player, RestoreData> _awayPlayers;
 
-    private AwayManager() {
+    AwayManager() {
         _awayPlayers = Collections.synchronizedMap(new WeakHashMap<>());
     }
 
-    public static AwayManager getInstance() {
-        if (_instance == null) {
-            _log.info("Away Manager: Initializing...");
-            _instance = new AwayManager();
-        }
-        return _instance;
-    }
 
     public void setAway(Player activeChar, String text) {
         activeChar.setAwayingMode(true);
@@ -39,14 +31,14 @@ public final class AwayManager {
         SetupGauge sg = new SetupGauge(activeChar, 0, Config.AWAY_TIMER * 1000);
         activeChar.sendPacket(sg);
         activeChar.startImmobilized();
-        ThreadPoolManager.getInstance().schedule(new setPlayerAwayTask(activeChar, text), Config.AWAY_TIMER * 1000);
+        ThreadPoolManager.INSTANCE.schedule(new setPlayerAwayTask(activeChar, text), Config.AWAY_TIMER * 1000);
     }
 
     public void setBack(Player activeChar) {
         activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.instancemanager.AwayManager.setBack", activeChar, new Object[]{Config.BACK_TIMER}));
         SetupGauge sg = new SetupGauge(activeChar, 0, Config.BACK_TIMER * 1000);
         activeChar.sendPacket(sg);
-        ThreadPoolManager.getInstance().schedule(new setPlayerBackTask(activeChar), Config.BACK_TIMER * 1000);
+        ThreadPoolManager.INSTANCE.schedule(new setPlayerBackTask(activeChar), Config.BACK_TIMER * 1000);
     }
 
     public void extraBack(Player activeChar) {

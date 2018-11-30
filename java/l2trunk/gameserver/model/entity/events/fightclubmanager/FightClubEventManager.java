@@ -143,7 +143,7 @@ public class FightClubEventManager {
 
         for (FightClubGameRoom room : _rooms)
             for (Player iPlayer : room.getAllPlayers())
-                if (iPlayer.equals(player) )
+                if (iPlayer.equals(player))
                     return true;
         return false;
     }
@@ -165,7 +165,7 @@ public class FightClubEventManager {
         sendToAllMsg(duplicatedEvent, "Registration to " + duplicatedEvent.getName() + " started!");
         sendEventInvitations(event);
 
-        ThreadPoolManager.getInstance().schedule(() -> {
+        ThreadPoolManager.INSTANCE.schedule(() -> {
             // After 2 minutes
             sendToAllMsg(duplicatedEvent, duplicatedEvent.getName() + " Event will start in 3 minutes!");
             try {
@@ -354,7 +354,7 @@ public class FightClubEventManager {
             if (event.isAutoTimed()) {
                 Calendar nextEventDate = getClosestEventDate(event.getAutoStartTimes());
 
-                ThreadPoolManager.getInstance().schedule(new EventRunThread(event), nextEventDate.getTimeInMillis() - System.currentTimeMillis());
+                ThreadPoolManager.INSTANCE.schedule(new EventRunThread(event), nextEventDate.getTimeInMillis() - System.currentTimeMillis());
 
                 // Closest Event
                 if (closestEventTime > nextEventDate.getTimeInMillis()) {
@@ -448,12 +448,6 @@ public class FightClubEventManager {
         if (player.isInJail()) {
             if (sendMessage)
                 sendErrorMessageToPlayer(player, "Players in Jail may not participate in Fight Club!");
-            return false;
-        }
-
-        if (player.isInOfflineMode()) {
-            if (sendMessage)
-                sendErrorMessageToPlayer(player, "Players in Offline mode may not participate in Fight Club!");
             return false;
         }
 
@@ -670,7 +664,7 @@ public class FightClubEventManager {
         }
 
         @Override
-        public void runImpl()  {
+        public void runImpl() {
             startEventCountdown(_event);
 
             if (!_event.isAutoTimed())
@@ -684,7 +678,7 @@ public class FightClubEventManager {
 
             Calendar nextEventDate = getClosestEventDate(_event.getAutoStartTimes());
 
-            ThreadPoolManager.getInstance().schedule(new EventRunThread(_event), nextEventDate.getTimeInMillis() - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(new EventRunThread(_event), nextEventDate.getTimeInMillis() - System.currentTimeMillis());
         }
     }
 

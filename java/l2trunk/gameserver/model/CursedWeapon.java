@@ -27,14 +27,14 @@ public class CursedWeapon {
 
     private CursedWeaponState _state = CursedWeaponState.NONE;
     private Location _loc = null;
-    private long _endTime = 0, _owner = 0;
+    private long _endTime = 0, owner = 0;
     private ItemInstance _item = null;
 
     public CursedWeapon(int itemId, int skillId, String name) {
         _name = name;
         _itemId = itemId;
         _skillId = skillId;
-        _skillMaxLevel = SkillTable.getInstance().getMaxLevel(_skillId);
+        _skillMaxLevel = SkillTable.INSTANCE().getMaxLevel(_skillId);
     }
 
     public void initWeapon() {
@@ -95,7 +95,7 @@ public class CursedWeapon {
         player.setTransformationName(null);
         player.validateLocation(0);
 
-        Skill skill = SkillTable.getInstance().getInfo(_skillId, player.getSkillLevel(_skillId));
+        Skill skill = SkillTable.INSTANCE().getInfo(_skillId, player.getSkillLevel(_skillId));
         if (skill != null)
             for (AddedSkill s : skill.getAddedSkills())
                 player.removeSkillById(s.id);
@@ -133,11 +133,11 @@ public class CursedWeapon {
         if (level > _skillMaxLevel)
             level = _skillMaxLevel;
 
-        Skill skill = SkillTable.getInstance().getInfo(_skillId, level);
+        Skill skill = SkillTable.INSTANCE().getInfo(_skillId, level);
         List<Skill> ret = new ArrayList<>();
         ret.add(skill);
         for (AddedSkill s : skill.getAddedSkills())
-            ret.add(SkillTable.getInstance().getInfo(s.id, s.level));
+            ret.add(SkillTable.INSTANCE().getInfo(s.id, s.level));
         return ret;
     }
 
@@ -250,7 +250,7 @@ public class CursedWeapon {
     }
 
     private void zeroOwner() {
-        _owner = 0;
+        owner = 0;
         _playerKarma = 0;
         _playerPkKills = 0;
     }
@@ -308,21 +308,21 @@ public class CursedWeapon {
     }
 
     public int getPlayerId() {
-        return _owner == 0 ? 0 : GameObjectsStorage.getStoredObjectId(_owner);
+        return owner == 0 ? 0 : GameObjectsStorage.getStoredObjectId(owner);
     }
 
     public void setPlayerId(int playerId) {
-        _owner = playerId == 0 ? 0 : GameObjectsStorage.objIdNoStore(playerId);
+        owner = playerId == 0 ? 0 : GameObjectsStorage.objIdNoStore(playerId);
     }
 
     public Player getPlayer() {
-        return _owner == 0 ? null : GameObjectsStorage.getAsPlayer(_owner);
+        return owner == 0 ? null : GameObjectsStorage.getAsPlayer(owner);
     }
 
     public void setPlayer(Player player) {
         if (player != null)
-            _owner = player.getStoredId();
-        else if (_owner != 0)
+            owner = player.getStoredId();
+        else if (owner != 0)
             setPlayerId(getPlayerId()); // для того что бы сохранить objId, но не искать игрока в хранилище
     }
 
@@ -407,7 +407,7 @@ public class CursedWeapon {
     }
 
     public boolean isOwned() {
-        return _owner != 0;
+        return owner != 0;
     }
 
     public enum CursedWeaponState {

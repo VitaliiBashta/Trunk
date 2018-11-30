@@ -67,27 +67,27 @@ public class KashaNegate implements ScriptFile {
             int message;
             Zone zone = ReflectionUtils.getZone(ZONE);
 
-            ThreadPoolManager.getInstance().schedule(new CampDestroyTask(zone), random);
+            ThreadPoolManager.INSTANCE().schedule(new CampDestroyTask(zone), random);
             if (random > 5 * 60000) {
                 message = random - 5 * 60000;
-                ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(0, zone), message);
+                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, zone), message);
             }
             if (random > 3 * 60000) {
                 message = random - 3 * 60000;
-                ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(0, zone), message);
+                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, zone), message);
             }
             if (random > 60000) {
                 message = random - 60000;
-                ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(0, zone), message);
+                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, zone), message);
             }
             if (random > 15000) {
                 message = random - 15000;
-                ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(1, zone), message);
+                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(1, zone), message);
             }
             zone.addListener(_zoneListener);
         }
 
-        _buffTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new BuffTask(), TICK_BUFF_DELAY, TICK_BUFF_DELAY);
+        _buffTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new BuffTask(), TICK_BUFF_DELAY, TICK_BUFF_DELAY);
     }
 
     @Override
@@ -132,12 +132,12 @@ public class KashaNegate implements ScriptFile {
                         if (m == mobs[0] && !c.isDead()) {
                             if (!_debuffed)
                                 for (Creature p : zone.getInsidePlayables()) {
-                                    addEffect((NpcInstance) c, p, SkillTable.getInstance().getInfo(_debuff, 1), false);
+                                    addEffect((NpcInstance) c, p, SkillTable.INSTANCE().getInfo(_debuff, 1), false);
                                     _debuffed = true;
                                 }
                             c.doDie(null);
                         }
-                        ThreadPoolManager.getInstance().schedule(new KashaRespawn((NpcInstance) c), 10000L);
+                        ThreadPoolManager.INSTANCE().schedule(new KashaRespawn((NpcInstance) c), 10000L);
                     }
     }
 
@@ -178,11 +178,11 @@ public class KashaNegate implements ScriptFile {
         @Override
         public void runImpl() {
             destroyKashaInCamp(_zone);
-            ThreadPoolManager.getInstance().schedule(new CampDestroyTask(_zone), 7 * 60000L + 40000L);
-            ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(0, _zone), 2 * 60000L + 40000L);
-            ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(0, _zone), 4 * 60000L + 40000L);
-            ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(0, _zone), 6 * 60000L + 40000L);
-            ThreadPoolManager.getInstance().schedule(new BroadcastMessageTask(1, _zone), 7 * 60000L + 20000L);
+            ThreadPoolManager.INSTANCE().schedule(new CampDestroyTask(_zone), 7 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, _zone), 2 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, _zone), 4 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, _zone), 6 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(1, _zone), 7 * 60000L + 20000L);
         }
     }
 
@@ -240,17 +240,17 @@ public class KashaNegate implements ScriptFile {
                         for (Creature cha : zone.getInsidePlayables()) {
                             boolean casted = false;
                             if (curseLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), SkillTable.getInstance().getInfo(_buffs[0], curseLvl), true);
+                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE().getInfo(_buffs[0], curseLvl), true);
                                 casted = true;
                             } else
                                 cha.getEffectList().stopEffect(_buffs[0]);
                             if (yearningLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), SkillTable.getInstance().getInfo(_buffs[1], yearningLvl), true);
+                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE().getInfo(_buffs[1], yearningLvl), true);
                                 casted = true;
                             } else
                                 cha.getEffectList().stopEffect(_buffs[1]);
                             if (despairLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), SkillTable.getInstance().getInfo(_buffs[2], despairLvl), true);
+                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE().getInfo(_buffs[2], despairLvl), true);
                                 casted = true;
                             } else
                                 cha.getEffectList().stopEffect(_buffs[2]);

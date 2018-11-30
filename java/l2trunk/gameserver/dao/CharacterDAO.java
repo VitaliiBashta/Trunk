@@ -25,15 +25,6 @@ public class CharacterDAO {
         return _instance;
     }
 
-    public void markTooOldChars() {
-        try (Connection con = DatabaseFactory.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement("UPDATE characters SET characters.deletetime=1 WHERE characters.onlinetime < 3600 and characters.lastAccess < 1376610861 LIMIT 500")) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            _log.error("Error while markTooOldChars! ", e);
-        }
-    }
-
     public void checkCharactersToDelete() {
         List<Integer> idsToDelete = new ArrayList<>();
         try (Connection con = DatabaseFactory.getInstance().getConnection();

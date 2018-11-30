@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.events.PiratesTreasure.PiratesTreasure;
 
-public class PiratesKing extends Fighter {
+public final class PiratesKing extends Fighter {
 
     public PiratesKing(NpcInstance actor) {
         super(actor);
@@ -25,9 +25,8 @@ public class PiratesKing extends Fighter {
         NpcInstance actor = getActor();
         actor.setTargetable(false); //Not yet found a pirate, take it to the Target can not be
 
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() // The problem of it OnDespawn
+        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() // The problem of it OnDespawn
         {
-            @SuppressWarnings("unused")
             @Override
             public void runImpl() {
                 NpcInstance actor = getActor();
@@ -45,8 +44,7 @@ public class PiratesKing extends Fighter {
 
         if (_wait_timeout < System.currentTimeMillis() && !isFind) {
             _wait_timeout = System.currentTimeMillis() + 60000;
-            ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-                @SuppressWarnings("unused")
+            ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     PiratesTreasure.annoncePointInfo();
@@ -67,7 +65,7 @@ public class PiratesKing extends Fighter {
         if (isFirst) {
             ItemFunctions.addItem((Playable) target, 6673, 5, true, "PirateKing"); // Awards first finder
             isFirst = false; // protection against cheating
-            Announcements.getInstance().announceToAll("The Pirate King of Darkness founded!");
+            Announcements.INSTANCE.announceToAll("The Pirate King of Darkness founded!");
         }
         isFind = true;
         super.onIntentionAttack(target);
@@ -75,7 +73,7 @@ public class PiratesKing extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        Announcements.getInstance().announceToAll("The Pirate King of Darkness is defeated!");
+        Announcements.INSTANCE.announceToAll("The Pirate King of Darkness is defeated!");
         super.onEvtDead(killer);
     }
 

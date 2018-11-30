@@ -84,8 +84,8 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             _active = true;
             spawnEventManagers();
             _log.info("Loaded Event: SavingSnowman [state: activated]");
-            _saveTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
-            _sayTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
+            _saveTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
+            _sayTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
             _snowmanState = SnowmanState.SAVED;
         } else
             _log.info("Loaded Event: SavingSnowman [state: deactivated]");
@@ -117,11 +117,11 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         if (SetActive("SavingSnowman", true)) {
             spawnEventManagers();
             System.out.println("Event 'SavingSnowman' started.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStarted", null);
             if (_saveTask == null)
-                _saveTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
+                _saveTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
             if (_sayTask == null)
-                _sayTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
+                _sayTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
             _snowmanState = SnowmanState.SAVED;
         } else
             player.sendMessage("Event 'SavingSnowman' already started.");
@@ -145,7 +145,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             if (_thomas != null)
                 _thomas.deleteMe();
             System.out.println("Event 'SavingSnowman' stopped.");
-            Announcements.getInstance().announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStoped", null);
             if (_saveTask != null) {
                 _saveTask.cancel(false);
                 _saveTask = null;
@@ -331,13 +331,13 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         }
 
         player.broadcastPacket(new MagicSkillUse(player, player, 23017, 1, 0, 0));
-        player.altOnMagicUseTimer(player, SkillTable.getInstance().getInfo(23017, 1));
+        player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(23017, 1));
         player.setVar("santaEventTime", String.valueOf(System.currentTimeMillis() + SANTA_BUFF_REUSE), -1);
 
         Summon pet = player.getPet();
         if (pet != null) {
             pet.broadcastPacket(new MagicSkillUse(pet, pet, 23017, 1, 0, 0));
-            pet.altOnMagicUseTimer(pet, SkillTable.getInstance().getInfo(23017, 1));
+            pet.altOnMagicUseTimer(pet, SkillTable.INSTANCE().getInfo(23017, 1));
         }
     }
 
@@ -457,11 +457,11 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceEventStarted", null);
     }
 
     private static Location getRandomSpawnPoint() {
-        //L2Territory[] locs = TerritoryTable.getInstance().getLocations();
+        //L2Territory[] locs = TerritoryTable.INSTANCE().getLocations();
         //L2Territory terr = locs[Rnd.get(locs.length)];
         //return new Location(terr.getRandomPoint());
         return new Location(0, 0, 0);
@@ -472,7 +472,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         Location spawnPoint = getRandomSpawnPoint();
 
         for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanCaptured", null, ChatType.CRITICAL_ANNOUNCE);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanCaptured", null, ChatType.CRITICAL_ANNOUNCE);
             player.sendPacket(new SystemMessage(SystemMessage.S2_S1).addZoneName(spawnPoint).addString("Look snowman in "));
             // Убираем и ставим флажок на карте и стрелку на компасе
             player.sendPacket(new RadarControl(2, 2, spawnPoint), new RadarControl(0, 1, spawnPoint));
@@ -521,7 +521,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             _snowmanShoutTask.cancel(false);
             _snowmanShoutTask = null;
         }
-        _snowmanShoutTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ShoutTask(), 1, SNOWMAN_SHOUT_INTERVAL);
+        _snowmanShoutTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new ShoutTask(), 1, SNOWMAN_SHOUT_INTERVAL);
 
         if (_eatTask != null) {
             _eatTask.cancel(false);
@@ -536,7 +536,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             return;
 
         for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanKilled", null, ChatType.CRITICAL_ANNOUNCE);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanKilled", null, ChatType.CRITICAL_ANNOUNCE);
 
         _snowmanState = SnowmanState.KILLED;
 
@@ -555,7 +555,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             return;
 
         for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            Announcements.getInstance().announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanSaved", null, ChatType.CRITICAL_ANNOUNCE);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanSaved", null, ChatType.CRITICAL_ANNOUNCE);
 
         _snowmanState = SnowmanState.SAVED;
 
@@ -574,7 +574,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         addItem(player, 20338, 1, "SavingSnowman"); // Rune of Experience Points 50%	10 Hour Expiration Period
         addItem(player, 20344, 1, "SavingSnowman"); // Rune of SP 50% 10 Hour Expiration Period
 
-        ThreadPoolManager.getInstance().execute(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().execute(new RunnableImpl() {
             @Override
             public void runImpl() {
                 _snowman.deleteMe();

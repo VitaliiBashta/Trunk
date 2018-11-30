@@ -86,19 +86,19 @@ public class ExtractStone extends Skill {
             case RedStarStone1:
             case RedStarStone2:
             case RedStarStone3:
-                if (_id == ExtractScrollSkill)
+                if (id == ExtractScrollSkill)
                     return ExtractedCoarseRedStarStone;
                 return ExtractedRedStarStone;
             case BlueStarStone1:
             case BlueStarStone2:
             case BlueStarStone3:
-                if (_id == ExtractScrollSkill)
+                if (id == ExtractScrollSkill)
                     return ExtractedCoarseBlueStarStone;
                 return ExtractedBlueStarStone;
             case GreenStarStone1:
             case GreenStarStone2:
             case GreenStarStone3:
-                if (_id == ExtractScrollSkill)
+                if (id == ExtractScrollSkill)
                     return ExtractedCoarseGreenStarStone;
                 return ExtractedGreenStarStone;
             case SeedFire:
@@ -126,8 +126,8 @@ public class ExtractStone extends Skill {
 
         for (Creature target : targets)
             if (target != null && getItemId(target.getNpcId()) != 0) {
-                double rate = Config.RATE_QUESTS_DROP * player.getBonus().getQuestDropRate();
-                long count = _id == ExtractScrollSkill ? 1 : Math.min(10, Rnd.get((int) (getLevel() * rate + 1)));
+                double rate = Config.RATE_QUESTS_DROP ;
+                long count = id == ExtractScrollSkill ? 1 : Math.min(10, Rnd.get((int) (getLevel() * rate + 1)));
                 int itemId = getItemId(target.getNpcId());
 
                 if (count > 0) {

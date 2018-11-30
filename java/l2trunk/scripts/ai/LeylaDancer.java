@@ -26,8 +26,8 @@ public final class LeylaDancer extends DefaultAI {
         if (actor == null)
             return;
 
-        ThreadPoolManager.getInstance().schedule(new ScheduleStart(), 5000);
-        ThreadPoolManager.getInstance().schedule(new ScheduleMoveFinish(), 220000);
+        ThreadPoolManager.INSTANCE().schedule(new ScheduleStart(), 5000);
+        ThreadPoolManager.INSTANCE().schedule(new ScheduleMoveFinish(), 220000);
         super.onEvtSpawn();
     }
 
@@ -39,7 +39,7 @@ public final class LeylaDancer extends DefaultAI {
                 if (count < 50) {
                     count++;
                     actor.broadcastPacket(new SocialAction(actor.getObjectId(), Rnd.get(1, 2)));
-                    ThreadPoolManager.getInstance().schedule(new ScheduleStart(), 3600);
+                    ThreadPoolManager.INSTANCE().schedule(new ScheduleStart(), 3600);
                 } else {
                     count = 0;
                 }

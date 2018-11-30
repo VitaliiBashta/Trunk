@@ -22,7 +22,7 @@ public final class PetSummon extends ScriptItemHandler implements ScriptFile {
         Player player = (Player) playable;
 
         player.setPetControlItem(item);
-        player.getAI().Cast(SkillTable.getInstance().getInfo(_skillId, 1), player, false, true);
+        player.getAI().Cast(SkillTable.INSTANCE().getInfo(_skillId, 1), player, false, true);
         return true;
     }
 

@@ -40,8 +40,6 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
      * Данные аккаунта
      */
     private String login;
-    private int _bonus = 0;
-    private int _bonusExpire;
     private Player _activeChar;
     private SessionKey _sessionKey;
     private String _ip = NO_IP;
@@ -160,7 +158,7 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
         Player oldPlayer = GameObjectsStorage.getPlayer(objectId);
 
         if (oldPlayer != null) {
-            if (oldPlayer.isInOfflineMode() || oldPlayer.isLogoutStarted()) {
+            if (oldPlayer.isLogoutStarted()) {
                 oldPlayer.kick();//Kicking Offline Shop Player
                 return null;
             } else {
@@ -298,22 +296,6 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
     public byte[] getDecryptedProtocol(byte[] key) {
         _crypt.setKey(key);
         return key;
-    }
-
-    public int getBonus() {
-        return _bonus;
-    }
-
-    public void setBonus(int bonus) {
-        _bonus = bonus;
-    }
-
-    public int getBonusExpire() {
-        return _bonusExpire;
-    }
-
-    public void setBonusExpire(int bonusExpire) {
-        _bonusExpire = bonusExpire;
     }
 
     public GameClientState getState() {

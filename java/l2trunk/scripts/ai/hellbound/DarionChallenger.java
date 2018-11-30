@@ -28,7 +28,7 @@ public final class DarionChallenger extends Fighter {
                 sp.setLoc(new Location(-12527, 279714, -11622, 16384));
                 sp.doSpawn(true);
                 sp.stopRespawn();
-                ThreadPoolManager.getInstance().schedule(new Unspawn(), 600 * 1000L); // 10 mins
+                ThreadPoolManager.INSTANCE.schedule(new Unspawn(), 600 * 1000L); // 10 mins
             } catch (RuntimeException e) {
                 LOG.error("Error on Darino Challanger Spawn", e);
             }

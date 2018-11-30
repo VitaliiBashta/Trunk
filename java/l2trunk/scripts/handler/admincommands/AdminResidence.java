@@ -29,7 +29,6 @@ import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.scripts.npc.model.residences.fortress.siege.BackupPowerUnitInstance;
 import l2trunk.scripts.npc.model.residences.fortress.siege.PowerControlUnitInstance;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -145,8 +144,8 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
                     msg.replace("%left_time%", String.valueOf(r.getCycleDelay()));
 
                     StringBuilder clans = new StringBuilder(100);
-                    for (Map.Entry<String, List<Serializable>> entry : event.getObjects().entrySet()) {
-                        for (Serializable o : entry.getValue()) {
+                    for (Map.Entry<String, List<Object>> entry : event.getObjects().entrySet()) {
+                        for (Object o : entry.getValue()) {
                             if (o instanceof SiegeClanObject) {
                                 SiegeClanObject siegeClanObject = (SiegeClanObject) o;
                                 clans.append("<tr>").append("<td>").append(siegeClanObject.getClan().getName()).append("</td>").append("<td>").append(siegeClanObject.getClan().getLeaderName()).append("</td>").append("<td>").append(siegeClanObject.getType()).append("</td>").append("</tr>");
@@ -172,10 +171,10 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 Clan clan = null;
                 String clanName = wordList[2];
                 if (!clanName.equalsIgnoreCase("npc")) {
-                    clan = ClanTable.getInstance().getClanByName(clanName);
+                    clan = ClanTable.INSTANCE.getClanByName(clanName);
                     if (clan == null) {
                         activeChar.sendPacket(SystemMsg.INCORRECT_NAME);
-                        AdminCommandHandler.getInstance().useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
+                        AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
                         return false;
                     }
                 }
@@ -233,7 +232,7 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 r.setJdbcState(JdbcEntityState.UPDATED);
                 r.update();
 
-                AdminCommandHandler.getInstance().useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
+                AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
                 break;
             case admin_quick_siege_start:
                 r = ResidenceHolder.getInstance().getResidence(Integer.parseInt(wordList[1]));
@@ -251,7 +250,7 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 r.setJdbcState(JdbcEntityState.UPDATED);
                 r.update();
 
-                AdminCommandHandler.getInstance().useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
+                AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
                 break;
             case admin_quick_siege_stop:
                 r = ResidenceHolder.getInstance().getResidence(Integer.parseInt(wordList[1]));
@@ -261,15 +260,9 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
                 event = r.getSiegeEvent();
 
                 event.clearActions();
-                ThreadPoolManager.getInstance().execute(new RunnableImpl() {
-                    @SuppressWarnings("unused")
-                    @Override
-                    public void runImpl() {
-                        event.stopEvent();
-                    }
-                });
+                ThreadPoolManager.INSTANCE.execute(event::stopEvent);
 
-                AdminCommandHandler.getInstance().useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
+                AdminCommandHandler.INSTANCE.useAdminCommandHandler(activeChar, "admin_residence " + r.getId());
                 break;
             case admin_start_dominion_war:
                 calendar = Calendar.getInstance();
@@ -298,21 +291,17 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
             case admin_stop_dominion_war:
                 runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.clearActions();
-                ThreadPoolManager.getInstance().execute(new RunnableImpl() {
-                    @SuppressWarnings("unused")
-                    @Override
-                    public void runImpl() {
-                        for (Fortress f : ResidenceHolder.getInstance().getResidenceList(Fortress.class)) {
-                            if (f.getSiegeEvent().isInProgress())
-                                f.getSiegeEvent().stopEvent();
-                        }
-
-                        for (Dominion d : runnerEvent.getRegisteredDominions()) {
-                            d.getSiegeEvent().clearActions();
-                            d.getSiegeEvent().stopEvent();
-                        }
-                        runnerEvent.stopEvent();
+                ThreadPoolManager.INSTANCE.execute(() -> {
+                    for (Fortress f : ResidenceHolder.getInstance().getResidenceList(Fortress.class)) {
+                        if (f.getSiegeEvent().isInProgress())
+                            f.getSiegeEvent().stopEvent();
                     }
+
+                    for (Dominion d : runnerEvent.getRegisteredDominions()) {
+                        d.getSiegeEvent().clearActions();
+                        d.getSiegeEvent().stopEvent();
+                    }
+                    runnerEvent.stopEvent();
                 });
                 break;
             case admin_restart_dominion_one_time:
@@ -383,7 +372,7 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
 
     @Override
     public void onLoad() {
-        AdminCommandHandler.getInstance().registerAdminCommandHandler(this);
+        AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
     }
 
     @Override

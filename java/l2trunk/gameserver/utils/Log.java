@@ -271,6 +271,7 @@ public class Log {
         }
 
     }
+
     private static String itemToString(ItemInstance item, long count) {
         if (item == null)
             return "";

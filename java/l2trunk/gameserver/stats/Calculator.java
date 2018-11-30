@@ -1,9 +1,12 @@
 package l2trunk.gameserver.stats;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.stats.funcs.FuncOwner;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A calculator is created to manage and dynamically calculate the effect of a character property (ex : MAX_HP, REGENERATE_HP_RATE...).
@@ -20,50 +23,47 @@ import l2trunk.gameserver.stats.funcs.FuncOwner;
 public final class Calculator {
     public final Stats _stat;
     private final Creature _character;
-    private Func[] _functions;
+    private List<Func> _functions;
     private double _base;
     private double _last;
 
     public Calculator(Stats stat, Creature character) {
         _stat = stat;
         _character = character;
-        _functions = Func.EMPTY_FUNC_ARRAY;
+        _functions = new ArrayList<>();
     }
 
     /**
      * Return the number of Funcs in the Calculator.<BR><BR>
      */
     public int size() {
-        return _functions.length;
+        return _functions.size();
     }
 
     /**
      * Add a Func to the Calculator.<BR><BR>
      */
     public void addFunc(Func f) {
-        _functions = ArrayUtils.add(_functions, f);
-        ArrayUtils.eqSort(_functions);
+        _functions.add(f);
+        Collections.sort(_functions);
     }
 
     /**
      * Remove a Func from the Calculator.<BR><BR>
      */
     public void removeFunc(Func f) {
-        _functions = ArrayUtils.remove(_functions, f);
-        if (_functions.length == 0)
-            _functions = Func.EMPTY_FUNC_ARRAY;
-        else
-            ArrayUtils.eqSort(_functions);
+        _functions.remove(f);
     }
 
     /**
      * Remove each Func with the specified owner of the Calculator.<BR><BR>
      */
     public void removeOwner(Object owner) {
-        Func[] tmp = _functions;
-        for (Func element : tmp)
-            if (element.owner == owner)
-                removeFunc(element);
+        List<Func> tmp = _functions;
+        _functions.removeIf(a->a.owner == owner);
+//        for (Func element : tmp)
+//            if (element.owner == owner)
+//                removeFunc(element);
     }
 
     /**
@@ -71,7 +71,7 @@ public final class Calculator {
      */
     @SuppressWarnings("unused")
     public void calc(Env env) {
-        Func[] funcs = _functions;
+        List<Func> funcs = _functions;
         _base = env.value;
 
         boolean overrideLimits = false;
@@ -101,7 +101,7 @@ public final class Calculator {
     /**
      * for debugging
      */
-    public Func[] getFunctions() {
+    public List<Func> getFunctions() {
         return _functions;
     }
 

@@ -39,7 +39,7 @@ public class RequestMagicSkillUse extends L2GameClientPacket {
         if (activeChar.getMacroSkill() != null) {
             this._magicId = activeChar.getMacroSkill().getId();
         }
-        Skill skill = SkillTable.getInstance().getInfo(this._magicId, activeChar.getSkillLevel(this._magicId));
+        Skill skill = SkillTable.INSTANCE().getInfo(this._magicId, activeChar.getSkillLevel(this._magicId));
 
         if (activeChar.isPendingOlyEnd()) {
             if ((skill != null) && (skill.isOffensive())) {

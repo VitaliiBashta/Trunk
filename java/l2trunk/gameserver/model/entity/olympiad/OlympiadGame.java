@@ -193,8 +193,8 @@ public class OlympiadGame {
 
         int pointDiff = 0;
 
-        TeamMember[] looserMembers = looseTeam.getMembers().toArray(new TeamMember[looseTeam.getMembers().size()]);
-        TeamMember[] winnerMembers = winnerTeam.getMembers().toArray(new TeamMember[winnerTeam.getMembers().size()]);
+        TeamMember[] looserMembers = looseTeam.getMembers().toArray(new TeamMember[0]);
+        TeamMember[] winnerMembers = winnerTeam.getMembers().toArray(new TeamMember[0]);
 
         for (int i = 0; i < Party.MAX_SIZE; i++) {
             TeamMember looserMember = ArrayUtils.valid(looserMembers, i);

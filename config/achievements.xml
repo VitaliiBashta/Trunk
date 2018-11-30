@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <list>
-	<!-- EXAMPLE:
-		<achievement id="45" cat="5" type="_treasure_box_opened" desc="Open %need% chests.">
-			<level id="1" name="Treasure searcher" icon="icon.skill0419" need="10" fame="0"/>
-			<level id="2" name="Treasure searcher" icon="icon.skill0419" need="100" fame="0"/>
-			<level id="2" name="Treasure searcher" icon="icon.skill0419" need="500" fame="0"/>
-			<level id="2" name="Treasure searcher" icon="icon.skill0419" need="1000" fame="0">
-				<reward id="14687" count="3" name="Greater Elixir of Life (S-Grade)"/>
-				<reward id="14699" count="5" name="Greater Elixir of CP (S-Grade"/>
-			</lvl>
-		</achievement>
-	-->
-	
+
 	<categories>
 		<cat id="1" name="Farming" desc="Monsters, Epics, Raids." icon="icon.skill5860"/>
 		<cat id="2" name="PvP" desc="Everything related to PvP - kills, deaths, etc." icon="icon.skilltransform2"/>

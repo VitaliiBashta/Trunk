@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.hellbound;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
@@ -30,7 +29,7 @@ public final class DarionFaithfulServant extends Fighter {
                 sp.setLoc(new Location(-11984, 278880, -13599, -4472));
                 sp.doSpawn(true);
                 sp.stopRespawn();
-                ThreadPoolManager.getInstance().schedule(() ->
+                ThreadPoolManager.INSTANCE.schedule(() ->
                                 GameObjectsStorage.getAllByNpcId(MysteriousAgent, true).forEach(GameObject::deleteMe)
                         , 600 * 1000L); // 10 mins
             } catch (RuntimeException e) {

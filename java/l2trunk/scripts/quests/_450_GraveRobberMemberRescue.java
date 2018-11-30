@@ -89,7 +89,7 @@ public class _450_GraveRobberMemberRescue extends Quest implements ScriptFile {
                 st.playSound(SOUND_ITEMGET);
                 npc.moveToLocation(new Location(npc.getX() + 200, npc.getY() + 200, npc.getZ()), 0, false);
 
-                ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
 
                     @Override
                     public void runImpl() {

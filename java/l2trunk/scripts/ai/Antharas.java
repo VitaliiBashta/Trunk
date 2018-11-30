@@ -176,7 +176,7 @@ public final class Antharas extends DefaultAI {
     }
 
     private Skill getSkill(int id, int level) {
-        return SkillTable.getInstance().getInfo(id, level);
+        return SkillTable.INSTANCE().getInfo(id, level);
     }
 
     @Override
@@ -220,7 +220,7 @@ public final class Antharas extends DefaultAI {
             HeralGiran.spawnMe(new Location(116824, 77400, -2722, 40959));
 
 
-            ThreadPoolManager.getInstance().schedule(
+            ThreadPoolManager.INSTANCE().schedule(
                     new DeSpawnScheduleTimerTask(HeralGiran, HeralAden, HeralGoddart, HeralRune, HeralDion, HeralOren,
                             HeralGludio, HeralGludin, HeralSchuttgart, HeralHein, HeralHunter), DESPAWN_TIME);
         } catch (Exception e) {

@@ -5,12 +5,11 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import l2trunk.gameserver.utils.Location;
-//import org.napile.primitive.maps.IntObjectMap;
 
 import java.util.List;
 import java.util.Map;
 
-public class InstantZone {
+public final class InstantZone {
     private final int _id;
     private final String _name;
     private final SchedulingPattern _resetReuse;
@@ -26,7 +25,7 @@ public class InstantZone {
     private final Location _returnCoords;
     private final int _mapx;
     private final int _mapy;
-    private final Map<Integer,DoorInfo> _doors;
+    private final Map<Integer, DoorInfo> _doors;
     private final Map<String, ZoneInfo> _zones;
     private final Map<String, SpawnInfo2> _spawns;
     private final List<SpawnInfo> _spawnsInfo;
@@ -41,15 +40,15 @@ public class InstantZone {
     private final boolean _setReuseUponEntry;
     private final StatsSet _addParams;
     private final InstantZoneEntryType _entryType;
-    private final boolean _dispelBuffs;
+    private final boolean dispelBuffs;
 
-    public InstantZone(int id, String name, SchedulingPattern resetReuse, int sharedReuseGroup, int timelimit, boolean dispelBuffs, int minLevel, int maxLevel, int minParty, int maxParty, int timer, boolean onPartyDismiss, List<Location> tele, Location ret, int mapx, int mapy, Map<Integer,DoorInfo> doors, Map<String, ZoneInfo> zones, Map<String, SpawnInfo2> spawns, List<SpawnInfo> spawnsInfo, int collapseIfEmpty, int maxChannels, int removedItemId, int removedItemCount, boolean removedItemNecessity, int giveItemId, int givedItemCount, int requiredQuestId, boolean setReuseUponEntry, StatsSet params) {
+    public InstantZone(int id, String name, SchedulingPattern resetReuse, int sharedReuseGroup, int timelimit, boolean dispelBuffs, int minLevel, int maxLevel, int minParty, int maxParty, int timer, boolean onPartyDismiss, List<Location> tele, Location ret, int mapx, int mapy, Map<Integer, DoorInfo> doors, Map<String, ZoneInfo> zones, Map<String, SpawnInfo2> spawns, List<SpawnInfo> spawnsInfo, int collapseIfEmpty, int maxChannels, int removedItemId, int removedItemCount, boolean removedItemNecessity, int giveItemId, int givedItemCount, int requiredQuestId, boolean setReuseUponEntry, StatsSet params) {
         _id = id;
         _name = name;
         _resetReuse = resetReuse;
         _sharedReuseGroup = sharedReuseGroup;
         _timelimit = timelimit;
-        _dispelBuffs = dispelBuffs;
+        this.dispelBuffs = dispelBuffs;
         _minLevel = minLevel;
         _maxLevel = maxLevel;
         _teleportCoords = tele;
@@ -98,7 +97,7 @@ public class InstantZone {
     }
 
     public boolean isDispelBuffs() {
-        return _dispelBuffs;
+        return dispelBuffs;
     }
 
     public int getTimelimit() {
@@ -197,7 +196,7 @@ public class InstantZone {
         return _entryType;
     }
 
-    public Map<Integer,DoorInfo> getDoors() {
+    public Map<Integer, DoorInfo> getDoors() {
         return _doors;
     }
 

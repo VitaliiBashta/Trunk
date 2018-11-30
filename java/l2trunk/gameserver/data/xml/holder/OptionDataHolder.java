@@ -9,7 +9,7 @@ import java.util.*;
 public final class OptionDataHolder extends AbstractHolder {
     private static final OptionDataHolder _instance = new OptionDataHolder();
 
-    private final Map<Integer,OptionDataTemplate> _templates = new HashMap<>();
+    private final Map<Integer, OptionDataTemplate> _templates = new HashMap<>();
 
     public static OptionDataHolder getInstance() {
         return _instance;
@@ -33,10 +33,6 @@ public final class OptionDataHolder extends AbstractHolder {
         _templates.clear();
     }
 
-    /**
-     * @param filter
-     * @return Ady - Devuelve todos las options de augmentations usando un filtro en especial
-     */
     public Collection<OptionDataTemplate> getUniqueOptions(AugmentationFilter filter) {
         if (filter == AugmentationFilter.NONE)
             return _templates.values();
@@ -79,7 +75,6 @@ public final class OptionDataHolder extends AbstractHolder {
                     if (option.getTriggerList().isEmpty())
                         continue;
 
-                    // Chequeamos que el lvl de esta skill si ya fue agregado, sea mayor al anterior
                     if (!options.containsKey(option.getTriggerList().get(0).getSkillId()) || options.get(option.getTriggerList().get(0).getSkillId()).getTriggerList().get(0).getSkillLevel() < option.getTriggerList().get(0).getSkillLevel())
                         options.put(option.getTriggerList().get(0).getSkillId(), option);
                 }
@@ -87,7 +82,6 @@ public final class OptionDataHolder extends AbstractHolder {
             }
             case STATS: {
                 for (OptionDataTemplate option : _templates.values()) {
-                    // La lista de opciones de stats es hardcoded porque no tenemos forma de saber sino, son solo 5
                     switch (option.getId()) {
                         case 16341: // +1 STR
                         case 16342: // +1 CON
@@ -101,7 +95,6 @@ public final class OptionDataHolder extends AbstractHolder {
             }
         }
 
-        // Ordenamos la lista de augmentations segun el id de su skill
         final List<OptionDataTemplate> augs = new ArrayList<>(options.values());
         Collections.sort(augs, new AugmentationComparator());
 

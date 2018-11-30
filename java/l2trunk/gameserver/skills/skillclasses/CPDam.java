@@ -33,7 +33,7 @@ public class CPDam extends Skill {
                 if (realTarget.isCurrentCpZero())
                     continue;
 
-                double damage = _power * realTarget.getCurrentCp();
+                double damage = power * realTarget.getCurrentCp();
 
                 if (damage < 1)
                     damage = 1;

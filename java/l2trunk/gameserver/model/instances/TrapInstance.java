@@ -56,7 +56,7 @@ public final class TrapInstance extends NpcInstance {
     protected void onSpawn() {
         super.onSpawn();
 
-        _destroyTask = ThreadPoolManager.getInstance().schedule(new GameObjectTasks.DeleteTask(this), 120000L);
+        _destroyTask = ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(this), 120000L);
 
         _targetTask = EffectTaskManager.getInstance().scheduleAtFixedRate(new CastTask(this), 250L, 250L);
     }

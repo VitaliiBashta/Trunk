@@ -6,18 +6,18 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Support for command: /instancezone
  */
-public class InstanceZone implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    114
-            };
+public final class InstanceZone implements IUserCommandHandler {
+    private static final int COMMAND_IDS = 114;
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (COMMAND_IDS[0] != id)
+        if (COMMAND_IDS != id)
             return false;
 
         if (activeChar.getActiveReflection() != null)
@@ -44,7 +44,7 @@ public class InstanceZone implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public final List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_IDS);
     }
 }

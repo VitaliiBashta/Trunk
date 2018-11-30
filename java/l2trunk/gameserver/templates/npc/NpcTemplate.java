@@ -1,6 +1,5 @@
 package l2trunk.gameserver.templates.npc;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.Skill;
@@ -25,10 +24,8 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public final class NpcTemplate extends CharTemplate {
-    @SuppressWarnings("unchecked")
-    private static final Constructor<NpcInstance> DEFAULT_TYPE_CONSTRUCTOR = (Constructor<NpcInstance>) NpcInstance.class.getConstructors()[0];
-    @SuppressWarnings("unchecked")
-    private static final Constructor<CharacterAI> DEFAULT_AI_CONSTRUCTOR = (Constructor<CharacterAI>) CharacterAI.class.getConstructors()[0];
+    private  final Constructor<NpcInstance> DEFAULT_TYPE_CONSTRUCTOR = (Constructor<NpcInstance>) NpcInstance.class.getConstructors()[0];
+    private  final Constructor<CharacterAI> DEFAULT_AI_CONSTRUCTOR = (Constructor<CharacterAI>) CharacterAI.class.getConstructors()[0];
     private static final Logger LOG = LoggerFactory.getLogger(NpcTemplate.class);
     public final int npcId;
     public final String name;
@@ -61,12 +58,12 @@ public final class NpcTemplate extends CharTemplate {
     private List<MinionData> _minions = Collections.emptyList();
     private List<AbsorbInfo> absorbInfo = Collections.emptyList();
     private List<ClassId> teachInfo = Collections.emptyList();
-    private Skill[] _damageSkills = Skill.EMPTY_ARRAY;
-    private Skill[] _dotSkills = Skill.EMPTY_ARRAY;
-    private Skill[] _debuffSkills = Skill.EMPTY_ARRAY;
-    private Skill[] _buffSkills = Skill.EMPTY_ARRAY;
-    private Skill[] _stunSkills = Skill.EMPTY_ARRAY;
-    private Skill[] _healSkills = Skill.EMPTY_ARRAY;
+    private List<Skill> _damageSkills = new ArrayList<>();
+    private List<Skill> _dotSkills = new ArrayList<>();
+    private List<Skill> _debuffSkills = new ArrayList<>();
+    private List<Skill> _buffSkills = new ArrayList<>();
+    private List<Skill> _stunSkills = new ArrayList<>();
+    private List<Skill> _healSkills = new ArrayList<>();
     private Class<NpcInstance> _classType = NpcInstance.class;
     private Constructor<NpcInstance> _constructorType = DEFAULT_TYPE_CONSTRUCTOR;
     private Class<CharacterAI> _classAI = CharacterAI.class;
@@ -129,7 +126,9 @@ public final class NpcTemplate extends CharTemplate {
      */
     public NpcInstance getNewInstance() {
         try {
-            return _constructorType.newInstance(IdFactory.getInstance().getNextId(), this);
+            int nextId = IdFactory.getInstance().getNextId();
+            NpcInstance npcInstance = _constructorType.newInstance(nextId, this);
+            return npcInstance;
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
             LOG.error("Unable to create instance of NPC " + npcId, e);
         }
@@ -164,7 +163,7 @@ public final class NpcTemplate extends CharTemplate {
 //            LOG.error("Not found type class for type: " + type + ". NpcId: " + npcId);
 //        else {
         _classType = classType;
-        if (Modifier.isAbstract( _classType.getModifiers() )) return;
+        if (Modifier.isAbstract(_classType.getModifiers())) return;
         try {
             Constructor<?>[] constructors = _classType.getConstructors();
             if (constructors.length == 0) return;
@@ -199,7 +198,7 @@ public final class NpcTemplate extends CharTemplate {
 //                System.exit(1);
 //            } else {
         _classAI = classAI;
-        if (Modifier.isAbstract( _classAI.getModifiers() )) return;
+        if (Modifier.isAbstract(_classAI.getModifiers())) return;
         try {
             Constructor<?>[] constructors = _classAI.getConstructors();
             if (constructors.length == 0) return;
@@ -295,20 +294,20 @@ public final class NpcTemplate extends CharTemplate {
                     for (EffectTemplate eff : skill.getEffectTemplates())
                         switch (eff.getEffectType()) {
                             case Stun:
-                                _stunSkills = ArrayUtils.add(_stunSkills, skill);
+                                _stunSkills.add(skill);
                                 added = true;
                                 break;
                             case DamOverTime:
                             case DamOverTimeLethal:
                             case ManaDamOverTime:
                             case LDManaDamOverTime:
-                                _dotSkills = ArrayUtils.add(_dotSkills, skill);
+                                _dotSkills.add(skill);
                                 added = true;
                                 break;
                         }
 
                 if (!added)
-                    _damageSkills = ArrayUtils.add(_damageSkills, skill);
+                    _damageSkills.add(skill);
 
                 break;
             }
@@ -316,7 +315,7 @@ public final class NpcTemplate extends CharTemplate {
             case MDOT:
             case POISON:
             case BLEED:
-                _dotSkills = ArrayUtils.add(_dotSkills, skill);
+                _dotSkills.add(skill);
                 break;
             case DEBUFF:
             case SLEEP:
@@ -325,45 +324,45 @@ public final class NpcTemplate extends CharTemplate {
             case MUTE:
             case TELEPORT_NPC:
             case AGGRESSION:
-                _debuffSkills = ArrayUtils.add(_debuffSkills, skill);
+                _debuffSkills.add(skill);
                 break;
             case BUFF:
-                _buffSkills = ArrayUtils.add(_buffSkills, skill);
+                _buffSkills.add(skill);
                 break;
             case STUN:
-                _stunSkills = ArrayUtils.add(_stunSkills, skill);
+                _stunSkills.add(skill);
                 break;
             case HEAL:
             case HEAL_PERCENT:
             case HOT:
-                _healSkills = ArrayUtils.add(_healSkills, skill);
+                _healSkills.add(skill);
                 break;
             default:
                 break;
         }
     }
 
-    public Skill[] getDamageSkills() {
+    public List<Skill> getDamageSkills() {
         return _damageSkills;
     }
 
-    public Skill[] getDotSkills() {
+    public List<Skill> getDotSkills() {
         return _dotSkills;
     }
 
-    public Skill[] getDebuffSkills() {
+    public List<Skill> getDebuffSkills() {
         return _debuffSkills;
     }
 
-    public Skill[] getBuffSkills() {
+    public List<Skill> getBuffSkills() {
         return _buffSkills;
     }
 
-    public Skill[] getStunSkills() {
+    public List<Skill> getStunSkills() {
         return _stunSkills;
     }
 
-    public Skill[] getHealSkills() {
+    public List<Skill> getHealSkills() {
         return _healSkills;
     }
 

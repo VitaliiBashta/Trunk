@@ -51,22 +51,22 @@ public class _10273_GoodDayToFly extends Quest implements ScriptFile {
                 return null;
             }
             st.set("transform", "1");
-            SkillTable.getInstance().getInfo(5982, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(5982, 1).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("32557-10.htm")) {
             if (player.getTransformation() != 0) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
-            SkillTable.getInstance().getInfo(5983, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(5983, 1).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("32557-13.htm")) {
             if (player.getTransformation() != 0) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             if (st.getInt("transform") == 1)
-                SkillTable.getInstance().getInfo(5982, 1).getEffects(player, player, false, false);
+                SkillTable.INSTANCE().getInfo(5982, 1).getEffects(player, player, false, false);
             else if (st.getInt("transform") == 2)
-                SkillTable.getInstance().getInfo(5983, 1).getEffects(player, player, false, false);
+                SkillTable.INSTANCE().getInfo(5983, 1).getEffects(player, player, false, false);
         }
         return event;
     }

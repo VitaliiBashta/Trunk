@@ -3,18 +3,18 @@ package l2trunk.gameserver.handler.usercommands.impl;
 import l2trunk.gameserver.handler.usercommands.IUserCommandHandler;
 import l2trunk.gameserver.model.Player;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Support for /resetname command
  */
-public class ResetName implements IUserCommandHandler {
-    private static final int[] COMMAND_IDS =
-            {
-                    117
-            };
+public final class ResetName implements IUserCommandHandler {
+    private static final int COMMAND_ID = 117;
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {
-        if (COMMAND_IDS[0] != id)
+        if (COMMAND_ID != id)
             return false;
 
         if (activeChar.getVar("oldtitle") != null) {
@@ -27,7 +27,7 @@ public class ResetName implements IUserCommandHandler {
     }
 
     @Override
-    public final int[] getUserCommandList() {
-        return COMMAND_IDS;
+    public final List<Integer> getUserCommandList() {
+        return Collections.singletonList(COMMAND_ID);
     }
 }

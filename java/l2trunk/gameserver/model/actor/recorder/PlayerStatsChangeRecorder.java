@@ -13,11 +13,11 @@ public final class PlayerStatsChangeRecorder extends CharStatsChangeRecorder<Pla
     public static final int SEND_MAX_LOAD = 32;
     public static final int SEND_CUR_LOAD = 64;
     public static final int BROADCAST_CHAR_INFO2 = 128;
+    private final int[] _attackElement = new int[6];
+    private final int[] _defenceElement = new int[6];
     private int _maxCp;
     private int _maxLoad;
     private int _curLoad;
-    private final int[] _attackElement = new int[6];
-    private final int[] _defenceElement = new int[6];
     private long _exp;
     private int _sp;
     private int _karma;

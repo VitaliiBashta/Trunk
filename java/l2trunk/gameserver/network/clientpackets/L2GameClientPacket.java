@@ -21,12 +21,12 @@ public abstract class L2GameClientPacket extends ReceivablePacket<GameClient> {
             readImpl();
             return true;
         } catch (BufferUnderflowException e) {
-            _client.onPacketReadFail();
-            // _log.error("Client: " + _client + " - Failed reading: " +
+            client.onPacketReadFail();
+            // _log.error("Client: " + client + " - Failed reading: " +
             // getType() + " - Server Version: " +
-            // GameServer.getInstance().getVersion().getRevisionNumber(), e);
+            // GameServer.INSTANCE().getVersion().getRevisionNumber(), e);
         } catch (RuntimeException e) {
-            _log.error("Client: " + _client + " - Failed reading: " + getType() + " - Server Version: ", e);
+            _log.error("Client: " + client + " - Failed reading: " + getType() + " - Server Version: ", e);
         }
 
         return false;
@@ -40,7 +40,7 @@ public abstract class L2GameClientPacket extends ReceivablePacket<GameClient> {
         try {
             runImpl();
         } catch (RuntimeException e) {
-            _log.error("Client: " + client + " - Failed running: " + getType() + " - Server Version: " , e);
+            _log.error("Client: " + client + " - Failed running: " + getType() + " - Server Version: ", e);
         }
     }
 

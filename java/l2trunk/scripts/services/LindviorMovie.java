@@ -24,7 +24,7 @@ public class LindviorMovie implements ScriptFile {
         Zone zone = ReflectionUtils.getZone("[keucereus_alliance_base_town_peace]");
         zone.setActive(true);
 
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new ShowLindviorMovie(zone), movieDelay, movieDelay);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new ShowLindviorMovie(zone), movieDelay, movieDelay);
     }
 
     public class ShowLindviorMovie extends RunnableImpl {

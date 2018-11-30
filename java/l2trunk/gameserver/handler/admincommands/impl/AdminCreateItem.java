@@ -58,7 +58,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                     long item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
                     List<Player> rewardedPlayers = new ArrayList<>();
                     for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                        if (!player.isInOfflineMode() && player.getNetConnection() != null && !player.isInStoreMode()) {
+                        if (player.getNetConnection() != null && !player.isInStoreMode()) {
                             rewardedPlayers.add(player);
                             createItem(player, item_id, item_count);
                             player.sendMessage("You have been rewarded!");
@@ -79,7 +79,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                     long item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
                     List<Player> rewardedPlayers = new ArrayList<>();
                     for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                        if (!player.isInOfflineMode() && player.getNetConnection() != null && !player.isInStoreMode()) {
+                        if ( player.getNetConnection() != null && !player.isInStoreMode()) {
                             rewardedPlayers.add(player);
                             createItem(player, item_id, item_count);
                         }
@@ -121,7 +121,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
                     List<Player> playersToReward = World.getAroundPlayers(activeChar, distance, 1000);
                     int rewardedCount = 0;
                     for (Player player : playersToReward)
-                        if (!player.isInOfflineMode() && !player.isInStoreMode()) {
+                        if (!player.isInStoreMode()) {
                             createItem(player, item_id, itemCount);
                             rewardedCount++;
                         }

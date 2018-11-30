@@ -5,11 +5,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPPassword;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Password extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS =
-            {
-                    "password"
-            };
+    private static final List<String> COMMANDS = Collections.singletonList("password");
 
     @Override
     public boolean useVoicedCommand(String command, Player player, String args) {
@@ -21,7 +21,7 @@ public class Password extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 }

@@ -31,7 +31,7 @@ public class BlacksmithInstance extends NpcInstance {
                 player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
                 player.sendActionFailed();
             } else {
-                if (CastleManorManager.getInstance().isDisabled()) {
+                if (CastleManorManager.INSTANCE.isDisabled()) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("npcdefault.htm");
                     player.sendPacket(html);
@@ -47,7 +47,7 @@ public class BlacksmithInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (CastleManorManager.getInstance().isDisabled()) {
+        if (CastleManorManager.INSTANCE.isDisabled()) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile("npcdefault.htm");
             player.sendPacket(html);
@@ -77,7 +77,7 @@ public class BlacksmithInstance extends NpcInstance {
         player.sendActionFailed();
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
 
-        if (CastleManorManager.getInstance().isDisabled()) {
+        if (CastleManorManager.INSTANCE.isDisabled()) {
             html.setFile("npcdefault.htm");
             player.sendPacket(html);
             return;

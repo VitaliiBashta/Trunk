@@ -100,7 +100,7 @@ public class ZoneTemplate {
         Skill skill = null;
         if (s != null) {
             String[] sk = s.split("[\\s,;]+");
-            skill = SkillTable.getInstance().getInfo(Integer.parseInt(sk[0]), Integer.parseInt(sk[1]));
+            skill = SkillTable.INSTANCE.getInfo(Integer.parseInt(sk[0]), Integer.parseInt(sk[1]));
         }
         _skill = skill;
         _skillProb = set.getInteger("skill_prob", 100);

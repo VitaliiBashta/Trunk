@@ -22,7 +22,8 @@ import java.util.concurrent.ScheduledFuture;
 
 import static l2trunk.gameserver.taskmanager.TaskTypes.*;
 
-public final class TaskManager {
+public enum TaskManager {
+    INSTANCE;
     private static final String[] SQL_STATEMENTS = {
             "SELECT id,task,type,last_activation,param1,param2,param3 FROM global_tasks",
             "UPDATE global_tasks SET last_activation=? WHERE id=?",
@@ -32,18 +33,20 @@ public final class TaskManager {
     private final List<ExecutedTask> _currentTasks = new ArrayList<>();
     private final Map<Integer, Task> _tasks = new ConcurrentHashMap<>();
 
-    private TaskManager() {
+    TaskManager() {
+         }
+    public void init() {
         initializate();
         startAllTasks();
-    }
 
-    public static boolean addUniqueTask(String task, TaskTypes type, String param1, String param2, String param3) {
+    }
+    public boolean addUniqueTask(String task, TaskTypes type, String param1, String param2, String param3) {
         return addUniqueTask(task, type, param1, param2, param3, 0);
     }
 
     private static boolean addUniqueTask(String task, TaskTypes type, String param1, String param2, String param3, long lastActivation) {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            boolean exists = false;
+            boolean exists;
             try (PreparedStatement statement = con.prepareStatement(SQL_STATEMENTS[2])) {
                 statement.setString(1, task);
                 try (ResultSet rset = statement.executeQuery()) {
@@ -92,10 +95,6 @@ public final class TaskManager {
         return false;
     }
 
-    public static TaskManager getInstance() {
-        return SingletonHolder._instance;
-    }
-
     private void initializate() {
         registerTask(new TaskEndHero());
         registerTask(new TaskRecom());
@@ -136,7 +135,6 @@ public final class TaskManager {
     }
 
     private boolean launchTask(ExecutedTask task) {
-        final ThreadPoolManager scheduler = ThreadPoolManager.getInstance();
         final TaskTypes type = task.getType();
 
         if (type == TYPE_STARTUP) {
@@ -144,20 +142,20 @@ public final class TaskManager {
             return false;
         } else if (type == TYPE_SHEDULED) {
             long delay = Long.valueOf(task.getParams()[0]);
-            task._scheduled = scheduler.schedule(task, delay);
+            task._scheduled = ThreadPoolManager.INSTANCE.schedule(task, delay);
             return true;
         } else if (type == TYPE_FIXED_SHEDULED) {
             long delay = Long.valueOf(task.getParams()[0]);
             long interval = Long.valueOf(task.getParams()[1]);
 
-            task._scheduled = scheduler.scheduleAtFixedRate(task, delay, interval);
+            task._scheduled = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(task, delay, interval);
             return true;
         } else if (type == TYPE_TIME)
             try {
                 Date desired = DateFormat.getInstance().parse(task.getParams()[0]);
                 long diff = desired.getTime() - System.currentTimeMillis();
                 if (diff >= 0) {
-                    task._scheduled = scheduler.schedule(task, diff);
+                    task._scheduled = ThreadPoolManager.INSTANCE.schedule(task, diff);
                     return true;
                 }
                 _log.info("Task " + task.getId() + " is obsoleted.");
@@ -197,7 +195,7 @@ public final class TaskManager {
             if (check.after(min) || delay < 0)
                 delay += interval;
 
-            task._scheduled = scheduler.scheduleAtFixedRate(task, delay, interval);
+            task._scheduled = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(task, delay, interval);
 
             return true;
         }
@@ -205,15 +203,11 @@ public final class TaskManager {
         return false;
     }
 
-    private static class SingletonHolder {
-        static final TaskManager _instance = new TaskManager();
-    }
-
     public class ExecutedTask extends RunnableImpl {
-        int _id;
-        long _lastActivation;
         final Task _task;
         final TaskTypes _type;
+        int _id;
+        long _lastActivation;
         String[] _params;
         ScheduledFuture<?> _scheduled;
 

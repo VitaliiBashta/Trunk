@@ -21,9 +21,9 @@ class CompStartTask extends RunnableImpl {
 
         new Thread(Olympiad._manager).start();
 
-        ThreadPoolManager.getInstance().schedule(new CompEndTask(), Olympiad.getMillisToCompEnd());
+        ThreadPoolManager.INSTANCE.schedule(new CompEndTask(), Olympiad.getMillisToCompEnd());
 
-        Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
+        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
         _log.info("Olympiad System: Olympiad Game Started");
     }
 }

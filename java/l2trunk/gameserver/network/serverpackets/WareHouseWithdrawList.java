@@ -16,8 +16,8 @@ import java.util.List;
 
 public class WareHouseWithdrawList extends L2GameServerPacket {
     private final long _adena;
-    private List<ItemInfo> _itemList = new ArrayList<>();
     private final int _type;
+    private List<ItemInfo> _itemList = new ArrayList<>();
 
     public WareHouseWithdrawList(Player player, WarehouseType type, ItemClass clss) {
         _adena = player.getAdena();

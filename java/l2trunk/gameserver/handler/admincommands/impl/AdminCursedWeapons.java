@@ -16,7 +16,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
         if (!activeChar.getPlayerAccess().Menu)
             return false;
 
-        CursedWeaponsManager cwm = CursedWeaponsManager.getInstance();
+        CursedWeaponsManager cwm = CursedWeaponsManager.INSTANCE;
 
         CursedWeapon cw = null;
         switch (command) {
@@ -29,7 +29,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                     activeChar.sendMessage("Вы не указали id");
                     return false;
                 }
-                for (CursedWeapon cwp : CursedWeaponsManager.getInstance().getCursedWeapons())
+                for (CursedWeapon cwp : CursedWeaponsManager.INSTANCE.getCursedWeapons())
                     if (cwp.getName().toLowerCase().contains(wordList[1].toLowerCase()))
                         cw = cwp;
                 if (cw == null) {
@@ -62,7 +62,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler {
                 activeChar.sendMessage("Cursed weapons can't be reloaded.");
                 break;
             case admin_cw_remove:
-                CursedWeaponsManager.getInstance().endOfLife(cw);
+                CursedWeaponsManager.INSTANCE.endOfLife(cw);
                 break;
             case admin_cw_goto:
                 activeChar.teleToLocation(cw.getLoc());

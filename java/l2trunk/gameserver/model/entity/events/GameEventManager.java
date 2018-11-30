@@ -61,7 +61,7 @@ public class GameEventManager {
         }
 
         _log.info("Event " + event.getName() + " started in " + Long.toString((time - System.currentTimeMillis() / 1000) / 60) + " mins.");
-        event_sched = ThreadPoolManager.getInstance().schedule(new EventStart(), time * 1000 - System.currentTimeMillis());
+        event_sched = ThreadPoolManager.INSTANCE().schedule(new EventStart(), time * 1000 - System.currentTimeMillis());
         return true;
     }
 

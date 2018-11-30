@@ -48,7 +48,7 @@ public final class DomainParser extends AbstractFileParser<MapRegionManager> {
                         Polygon shape = ZoneParser.parsePolygon(n);
 
                         if (!shape.validate())
-                            error("DomainParser: invalid territory data : " + shape + "!");
+                            LOG.error("DomainParser: invalid territory data : " + shape + "!");
 
                         if (territory == null)
                             territory = new Territory();

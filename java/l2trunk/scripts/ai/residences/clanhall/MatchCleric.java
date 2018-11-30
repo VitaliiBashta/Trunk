@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
 public final class MatchCleric extends MatchFighter {
-    private final Skill HEAL = SkillTable.getInstance().getInfo(4056, 6);
+    private final Skill HEAL = SkillTable.INSTANCE().getInfo(4056, 6);
 
     public MatchCleric(NpcInstance actor) {
         super(actor);

@@ -21,26 +21,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public final class PollEngine {
+public enum  PollEngine {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(PollEngine.class);
-    private static PollEngine _instance;
 
     private Poll _poll;
     private boolean _isActive = false;
     private ScheduledFuture<?> _endPollThread = null;
 
-    private PollEngine() {
+    PollEngine() {
         if (!Config.ENABLE_POLL_SYSTEM)
             return;
 
         loadPoll();
         startAnnounceThread();
-    }
-
-    public static PollEngine getInstance() {
-        if (_instance == null)
-            _instance = new PollEngine();
-        return _instance;
     }
 
     public void addNewPollQuestion(String question) {
@@ -91,14 +85,14 @@ public final class PollEngine {
 
     private void announcePoll(boolean active) {
         if (active) {
-            Announcements.getInstance().announceToAll("New poll has been opened! Use .poll to Vote!");
+            Announcements.INSTANCE.announceToAll("New poll has been opened! Use .poll to Vote!");
         } else {
-            Announcements.getInstance().announceToAll("Voting on the poll is now finished!");
+            Announcements.INSTANCE.announceToAll("Voting on the poll is now finished!");
 
             sortAnswers(getPoll().getAnswers());
 
             for (PollAnswer answer : getPoll().getAnswers())
-                Announcements.getInstance().announceToAll(getAnswerProcentage(answer) + "% players voted on \"" + answer.getAnswer() + "\"");
+                Announcements.INSTANCE.announceToAll(getAnswerProcentage(answer) + "% players voted on \"" + answer.getAnswer() + "\"");
         }
     }
 
@@ -107,7 +101,7 @@ public final class PollEngine {
             _endPollThread.cancel(false);
             _endPollThread = null;
         }
-        _endPollThread = ThreadPoolManager.getInstance().schedule(() -> {
+        _endPollThread = ThreadPoolManager.INSTANCE().schedule(() -> {
             if (getPoll() != null) {
                 stopPoll(true);
             }
@@ -115,13 +109,11 @@ public final class PollEngine {
     }
 
     private void startAnnounceThread() {
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(() -> {
             if (getActivePoll() != null) {
                 Say2 say = new Say2(0, ChatType.ANNOUNCEMENT, "", "You didn't vote on the poll yet! Write .poll to vote!");
                 for (Player onlinePlayer : GameObjectsStorage.getAllPlayersForIterate()) {
                     if (!onlinePlayer.isOnline())
-                        continue;
-                    if (onlinePlayer.isInOfflineMode())
                         continue;
                     onlinePlayer.sendPacket(say);
                 }

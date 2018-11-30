@@ -274,7 +274,7 @@ public class MultiValueSet<T> extends HashMap<T, Object> {
     public <E extends Enum<E>> E getEnum(T name, Class<E> enumClass) {
         Object val = get(name);
 
-        if (val != null && enumClass.isInstance(val))
+        if (enumClass.isInstance(val))
             return (E) val;
         if (val instanceof String)
             return Enum.valueOf(enumClass, (String) val);

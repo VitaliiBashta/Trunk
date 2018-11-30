@@ -16,10 +16,9 @@ public class HardSpawner extends Spawner {
      */
     private static final long serialVersionUID = -3566741484655685267L;
     private final SpawnTemplate _template;
+    private final List<NpcInstance> _reSpawned = new CopyOnWriteArrayList<>();
     private int _pointIndex;
     private int _npcIndex;
-
-    private final List<NpcInstance> _reSpawned = new CopyOnWriteArrayList<>();
 
     public HardSpawner(SpawnTemplate template) {
         _template = template;

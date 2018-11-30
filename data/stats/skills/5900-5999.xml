@@ -197,11 +197,6 @@
 		<set name="saveVs" val="MEN" />
 	</skill>
 	<skill id="5909" levels="1" name="Stronghold Attack" >
-		<!--
-
-			Last modify: 18.04.2010
-			Comment: Эффект с потолка
-		-->
 		<set name="magicType" val="MAGIC" />
 		<set name="icon" val="icon.skill0000" />
 		<set name="reuseDelay" val="1000" />
@@ -214,11 +209,6 @@
 		<set name="operateType" val="OP_ACTIVE" />
 	</skill>
 	<skill id="5910" levels="1" name="Stronghold Attack" >
-		<!--
-
-			Last modify: 18.04.2010
-			Comment: Эффект с потолка
-		-->
 		<set name="magicType" val="MAGIC" />
 		<set name="icon" val="icon.skill0000" />
 		<set name="reuseDelay" val="1000" />
@@ -1531,11 +1521,6 @@
 		<set name="operateType" val="OP_ACTIVE" />
 	</skill>
 	<skill id="5988" levels="1" name="Armor Maintenance" >
-		<!--  Automatically generated from The Gracia Final client files.
-		      Description: Maintains the armor in optimal condition to increase defense ability.
-		      Target is set to TARGET_NONE, skillType  to NOTDONE for server compatability.
-		      created 16-4-2009  22:35
-		-->
 		<set name="icon" val="icon.skill0828" />
 		<set name="coolTime" val="500" />
 		<set name="reuseDelay" val="6000" />

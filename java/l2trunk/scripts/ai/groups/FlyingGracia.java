@@ -4,6 +4,10 @@ import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public final class FlyingGracia implements IVoicedCommandHandler, ScriptFile {
     @Override
     public void onLoad() {
@@ -18,8 +22,8 @@ public final class FlyingGracia implements IVoicedCommandHandler, ScriptFile {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
-        return new String[]{};
+    public List<String> getVoicedCommandList() {
+        return Collections.emptyList();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class CatapultInstance extends SiegeToggleNpcInstance {
         if (siegeEvent == null)
             return;
 
-        ThreadPoolManager.getInstance().execute(new GameObjectTasks.NotifyAITask(this, CtrlEvent.EVT_DEAD, lastAttacker, null));
+        ThreadPoolManager.INSTANCE().execute(new GameObjectTasks.NotifyAITask(this, CtrlEvent.EVT_DEAD, lastAttacker, null));
 
         Player killer = lastAttacker.getPlayer();
         if (killer == null)

@@ -109,7 +109,7 @@ public class DragonValley implements ScriptFile, OnPlayerExitListener {
                 if (izp == null)
                     continue;
                 if (getBuffLevel(izp) > 0)
-                    izp.altOnMagicUseTimer(izp, SkillTable.getInstance().getInfo(6885, getBuffLevel(izp)));
+                    izp.altOnMagicUseTimer(izp, SkillTable.INSTANCE().getInfo(6885, getBuffLevel(izp)));
             }
             _isActive = false;
         }
@@ -174,7 +174,7 @@ public class DragonValley implements ScriptFile, OnPlayerExitListener {
         _zoneListener = new ZoneListener();
         zone = ReflectionUtils.getZone("[dragon_valley]");
         zone.addListener(_zoneListener);
-        buffTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new BuffTask(), 1000L, 60000L);
+        buffTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new BuffTask(), 1000L, 60000L);
         _isActive = false;
     }
 

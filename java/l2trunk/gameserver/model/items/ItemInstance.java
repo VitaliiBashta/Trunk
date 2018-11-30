@@ -41,23 +41,23 @@ import java.util.concurrent.ScheduledFuture;
 //import org.napile.primitive.sets.impl.HashIntSet;
 
 public final class ItemInstance extends GameObject implements JdbcEntity {
-    private static final int[] EMPTY_AUGMENTATIONS = new int[2];
     public static final int[] EMPTY_ENCHANT_OPTIONS = new int[3];
     public static final int CHARGED_NONE = 0;
     public static final int CHARGED_SOULSHOT = 1;
     public static final int CHARGED_SPIRITSHOT = 1;
     public static final int CHARGED_BLESSED_SPIRITSHOT = 2;
+    public static final int FLAG_NO_UNEQUIP = 1 << 6;
+    //public static final int FLAG_ALWAYS_DROP_ON_DIE = 1 << 7;
+    public static final int FLAG_EQUIP_ON_PICKUP = 1 << 7;
+    private static final int[] EMPTY_AUGMENTATIONS = new int[2];
     private static final int FLAG_NO_DROP = 1 << 0;
     private static final int FLAG_NO_TRADE = 1 << 1;
     private static final int FLAG_NO_TRANSFER = 1 << 2;
     private static final int FLAG_NO_CRYSTALLIZE = 1 << 3;
     private static final int FLAG_NO_ENCHANT = 1 << 4;
     private static final int FLAG_NO_DESTROY = 1 << 5;
-    public static final int FLAG_NO_UNEQUIP = 1 << 6;
-    //public static final int FLAG_ALWAYS_DROP_ON_DIE = 1 << 7;
-    public static final int FLAG_EQUIP_ON_PICKUP = 1 << 7;
     private static final long serialVersionUID = 3162753878915133228L;
-    private static final ItemsDAO _itemsDAO = ItemsDAO.getInstance();
+    private static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
     /**
      * ID of the owner
      */
@@ -411,7 +411,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         if (Events.onAction(player, this, shift))
             return;
 
-        if (player.isCursedWeaponEquipped() && CursedWeaponsManager.getInstance().isCursed(itemId))
+        if (player.isCursedWeaponEquipped() && CursedWeaponsManager.INSTANCE.isCursed(itemId))
             return;
 
         player.getAI().setIntention(CtrlIntention.AI_INTENTION_PICK_UP, this, null);
@@ -485,12 +485,12 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      *
      * @return Func[]
      */
-    public Func[] getStatFuncs() {
-        Func[] result = Func.EMPTY_FUNC_ARRAY;
+    public List<Func> getStatFuncs() {
+        List<Func> result = new ArrayList<>();
 
         List<Func> funcs = new ArrayList<>();
 
-        if (template.getAttachedFuncs().length > 0)
+        if (template.getAttachedFuncs().size() > 0)
             for (FuncTemplate t : template.getAttachedFuncs()) {
                 Func f = t.getFunc(this);
                 if (f != null)
@@ -505,7 +505,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         }
 
         if (!funcs.isEmpty())
-            result = funcs.toArray(new Func[funcs.size()]);
+            result = funcs;
 
         return result;
     }
@@ -1045,9 +1045,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * @return true если предмет является хербом
      */
     public boolean isHerb() {
-        if (getTemplate().isHerb())
-            return true;
-        return false;
+        return getTemplate().isHerb();
     }
 
     public Grade getCrystalType() {

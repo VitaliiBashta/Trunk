@@ -19,11 +19,10 @@ public class KrateisCubeRunnerEvent extends GlobalEvent {
     private static final String MANAGER = "manager";
     private static final String REGISTRATION = "registration";
     private static final SchedulingPattern DATE_PATTERN = new SchedulingPattern("0,30 * * * *");
-    private boolean _isInProgress;
-    private boolean _isRegistrationOver;
-
     private final List<KrateisCubeEvent> _cubes = new ArrayList<>(3);
     private final Calendar _calendar = Calendar.getInstance();
+    private boolean _isInProgress;
+    private boolean _isRegistrationOver;
 
     public KrateisCubeRunnerEvent(MultiValueSet<String> set) {
         super(set);

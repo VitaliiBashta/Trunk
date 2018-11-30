@@ -21,7 +21,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
+public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(ItemsDAO.class);
 
     private final static String RESTORE_ITEM = "SELECT object_id, owner_id, item_id, count, enchant_level, loc, loc_data, custom_type1, custom_type2, life_time, custom_flags, augmentation_id, attribute_fire, attribute_water, attribute_wind, attribute_earth, attribute_holy, attribute_unholy, agathion_energy, visual_item_id FROM items WHERE object_id = ?";
@@ -31,7 +32,7 @@ public class ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     private final static String UPDATE_ITEM = "UPDATE items SET owner_id = ?, item_id = ?, count = ?, enchant_level = ?, loc = ?, loc_data = ?, custom_type1 = ?, custom_type2 = ?, life_time = ?, custom_flags = ?, augmentation_id = ?, attribute_fire = ?, attribute_water = ?, attribute_wind = ?, attribute_earth = ?, attribute_holy = ?, attribute_unholy = ?, agathion_energy=?, visual_item_id=? WHERE object_id = ?";
     private final static String REMOVE_ITEM = "DELETE FROM items WHERE object_id = ?";
 
-    private final static ItemsDAO instance = new ItemsDAO();
+//    private final static ItemsDAO instance = new ItemsDAO();
     private final Cache cache;
     private final AtomicLong load = new AtomicLong();
     private final AtomicLong insert = new AtomicLong();
@@ -63,9 +64,9 @@ public class ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
         cache = CacheManager.getInstance().getCache(ItemInstance.class.getName());
     }
 
-    public static ItemsDAO getInstance() {
-        return instance;
-    }
+//    public static ItemsDAO INSTANCE() {
+//        return instance;
+//    }
 
     public Cache getCache() {
         return cache;

@@ -47,13 +47,13 @@ public final class SeducedInvestigator extends Fighter {
                 _reuse = System.currentTimeMillis();
                 int[] buffs = {5970, 5971, 5972, 5973};
                 if (actor.getNpcId() == 36562)
-                    actor.doCast(SkillTable.getInstance().getInfo(buffs[0], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[0], 1), player, true);
                 else if (actor.getNpcId() == 36563)
-                    actor.doCast(SkillTable.getInstance().getInfo(buffs[1], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[1], 1), player, true);
                 else if (actor.getNpcId() == 36564)
-                    actor.doCast(SkillTable.getInstance().getInfo(buffs[2], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[2], 1), player, true);
                 else
-                    actor.doCast(SkillTable.getInstance().getInfo(buffs[3], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[3], 1), player, true);
             }
         }
 

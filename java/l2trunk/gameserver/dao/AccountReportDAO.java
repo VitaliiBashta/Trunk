@@ -20,12 +20,12 @@
 //        loadBotPoints(accName);
 //    }
 //
-//    public static AccountReportDAO getInstance() {
+//    public static AccountReportDAO INSTANCE() {
 //        return _instance;
 //    }
 //
 //    private void loadBotPoints(String accName) {
-//        try (Connection con = LoginDatabaseFactory.getInstance().getConnection();
+//        try (Connection con = LoginDatabaseFactory.INSTANCE().getConnection();
 //             PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {
 //            statement.setString(1, accName);
 //
@@ -40,7 +40,7 @@
 //    }
 //
 //    public synchronized void updatePoints(String accName) {
-//        try (Connection con = LoginDatabaseFactory.getInstance().getConnection();
+//        try (Connection con = LoginDatabaseFactory.INSTANCE().getConnection();
 //             PreparedStatement statement = con.prepareStatement(UPDATE_SQL_QUERY)) {
 //            statement.setInt(1, _reportBotPoints);
 //            statement.setString(2, accName);

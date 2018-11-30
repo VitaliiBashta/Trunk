@@ -15,8 +15,6 @@ public final class RequestSkillList extends L2GameClientPacket {
     protected void runImpl() {
         Player cha = getClient().getActiveChar();
 
-        cha.isntAfk();
-
         if (cha != null)
             cha.sendPacket(new SkillList(cha));
     }

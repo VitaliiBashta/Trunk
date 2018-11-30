@@ -1,13 +1,9 @@
 package l2trunk.scripts.ai.suspiciousmerchant;
 
-import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-public final class SuspiciousMerchantShanty extends DefaultAI {
+public final class SuspiciousMerchantShanty extends AbstractSuspiciousMerchant {
     private static final Location[] points = {
             new Location(-58672, 154703, -2688),
             new Location(-58672, 154703, -2688),
@@ -30,100 +26,14 @@ public final class SuspiciousMerchantShanty extends DefaultAI {
             new Location(-60152, 156167, -2824),
             new Location(-58652, 154707, -2688)};
 
-    private int current_point = -1;
-    private long wait_timeout = 0;
-    private boolean wait = false;
 
     public SuspiciousMerchantShanty(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    public boolean isGlobalAI() {
-        return true;
-    }
-
-    @Override
     public boolean thinkActive() {
-        NpcInstance actor = getActor();
-        if (actor.isDead())
-            return true;
-
-        if (_def_think) {
-            doTask();
-            return true;
-        }
-
-        if (actor.isMoving)
-            return true;
-
-        if (System.currentTimeMillis() > wait_timeout && (current_point > -1 || Rnd.chance(5))) {
-            if (!wait)
-                switch (current_point) {
-                    case 0:
-                        wait_timeout = System.currentTimeMillis() + 30000;
-                        wait = true;
-                        return true;
-                    case 2:
-                        wait_timeout = System.currentTimeMillis() + 15000;
-                        switch (Rnd.get(4)) {
-                            case 0:
-                                Functions.npcSay(actor, "How's the weather??");
-                                break;
-                            case 1:
-                                Functions.npcSay(actor, "As life?");
-                                break;
-                            case 2:
-                                Functions.npcSay(actor, "The weather today is good.");
-                                break;
-                            case 3:
-                                Functions.npcSay(actor, "And you have strong doors?");
-                                break;
-                        }
-                        wait = true;
-                        return true;
-                    case 12:
-                        wait_timeout = System.currentTimeMillis() + 15000;
-                        Functions.npcSay(actor, "And where the road?");
-                        wait = true;
-                        return true;
-                }
-            else
-                switch (current_point) {
-                    case 0:
-                        Functions.npcSay(actor, "It is necessary to reconnoiter the situation ...");
-                        break;
-                    case 2:
-                        Functions.npcSay(actor, "It is necessary to explore the situation...");
-                        break;
-                    case 12:
-                        Functions.npcSay(actor, "Where the world is heading...");
-                        break;
-                }
-
-            wait_timeout = 0;
-            wait = false;
-            current_point++;
-
-            if (current_point >= points.length)
-                current_point = 0;
-
-            addTaskMove(points[current_point], false);
-            doTask();
-            return true;
-        }
-
-        if (randomAnimation())
-            return true;
-
-        return false;
+        return thinkActive0(points);
     }
 
-    @Override
-    public void onEvtAttacked(Creature attacker, int damage) {
-    }
-
-    @Override
-    public void onEvtAggression(Creature target, int aggro) {
-    }
 }

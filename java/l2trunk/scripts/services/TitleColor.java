@@ -27,8 +27,8 @@ class TitleColor extends Functions {
         final int perpage = 6;
         int counter = 0;
 
-        String html = HtmCache.getInstance().getNotNull("scripts/services/TitleColor/index.htm", player);
-        String template = HtmCache.getInstance().getNotNull("scripts/services/TitleColor/template.htm", player);
+        String html = HtmCache.INSTANCE().getNotNull("scripts/services/TitleColor/index.htm", player);
+        String template = HtmCache.INSTANCE().getNotNull("scripts/services/TitleColor/template.htm", player);
         String block = "";
         String list = "";
 

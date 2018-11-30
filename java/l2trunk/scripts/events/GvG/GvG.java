@@ -48,7 +48,7 @@ public class GvG extends Functions implements ScriptFile {
         @SuppressWarnings("unused")
         @Override
         public void runImpl() {
-            //Announcements.getInstance().announceToAll("GvG: Until the end of the applications for the tournament remains " + Integer.toString(_timer) + " min.");
+            //Announcements.INSTANCE().announceToAll("GvG: Until the end of the applications for the tournament remains " + Integer.toString(_timer) + " min.");
         }
     }
 
@@ -69,7 +69,7 @@ public class GvG extends Functions implements ScriptFile {
     @SuppressWarnings("unused")
     private static void initTimer() {
 		/*long day = 24 * 60 * 60 * 1000L;
-		Calendar ci = Calendar.getInstance();
+		Calendar ci = Calendar.INSTANCE();
 		ci.set(Calendar.HOUR_OF_DAY, everydayStartTime[0]);
 		ci.set(Calendar.MINUTE, everydayStartTime[1]);
 		ci.set(Calendar.SECOND, everydayStartTime[2]);
@@ -80,7 +80,7 @@ public class GvG extends Functions implements ScriptFile {
 
 		if (_globalTask != null)
 			_globalTask.cancel(true);
-		_globalTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Launch(), delay, day);*/
+		_globalTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new Launch(), delay, day);*/
     }
 
     public static class Launch extends RunnableImpl {
@@ -92,7 +92,7 @@ public class GvG extends Functions implements ScriptFile {
 
     @SuppressWarnings("unused")
     private static boolean canBeStarted() {
-		/*for(Castle c : ResidenceHolder.getInstance().getResidenceList(Castle.class))
+		/*for(Castle c : ResidenceHolder.INSTANCE().getResidenceList(Castle.class))
 			if (c.getSiegeEvent() != null && c.getSiegeEvent().isInProgress())
 				return false;*/
         return true;
@@ -107,19 +107,19 @@ public class GvG extends Functions implements ScriptFile {
     public static void activateEvent() {
 		/*if(!isActive() && canBeStarted())
 		{
-			_regTask = ThreadPoolManager.getInstance().schedule(new RegTask(), regActiveTime);
+			_regTask = ThreadPoolManager.INSTANCE().schedule(new RegTask(), regActiveTime);
 			if (regActiveTime > 2 * 60 * 1000L) //display countdown announcements only when timelimit for registration is more than 3 mins
 			{
 				if (regActiveTime > 5 * 60 * 1000L)
-					_countdownTask3 = ThreadPoolManager.getInstance().schedule(new Countdown(5), regActiveTime - 300 * 1000);
+					_countdownTask3 = ThreadPoolManager.INSTANCE().schedule(new Countdown(5), regActiveTime - 300 * 1000);
 
-				_countdownTask1 = ThreadPoolManager.getInstance().schedule(new Countdown(2), regActiveTime - 120 * 1000);
-				_countdownTask2 = ThreadPoolManager.getInstance().schedule(new Countdown(1), regActiveTime - 60 * 1000);
+				_countdownTask1 = ThreadPoolManager.INSTANCE().schedule(new Countdown(2), regActiveTime - 120 * 1000);
+				_countdownTask2 = ThreadPoolManager.INSTANCE().schedule(new Countdown(1), regActiveTime - 60 * 1000);
 			}
 			ServerVariables.set("GvG", "on");
 			_log.info("Event 'GvG' activated.");
-			Announcements.getInstance().announceToAll("Registration for GvG Tournament has begun! Community Board (Alt + B) -> Event -> GvG (registration, description)");
-			Announcements.getInstance().announceToAll("Applications will be accepted during the " + regActiveTime / 60000 + " minutes");
+			Announcements.INSTANCE().announceToAll("Registration for GvG Tournament has begun! Community Board (Alt + B) -> Event -> GvG (registration, description)");
+			Announcements.INSTANCE().announceToAll("Applications will be accepted during the " + regActiveTime / 60000 + " minutes");
 			_active = true;
 			_isRegistrationActive = true;
 		}*/
@@ -134,7 +134,7 @@ public class GvG extends Functions implements ScriptFile {
 			stopTimers();
 			ServerVariables.unset("GvG");
 			_log.info("Event 'GvG' canceled.");
-			Announcements.getInstance().announceToAll("GvG: Tournament canceled");
+			Announcements.INSTANCE().announceToAll("GvG: Tournament canceled");
 			_active = false;
 			_isRegistrationActive = false;
 			leaderList.clear();
@@ -306,11 +306,11 @@ public class GvG extends Functions implements ScriptFile {
 		if (leaderList.size() < 2)
 		{
 			leaderList.clear();
-			Announcements.getInstance().announceToAll("GvG: Tournament canceled due to lack of participants");
+			Announcements.INSTANCE().announceToAll("GvG: Tournament canceled due to lack of participants");
 			return;
 		}
 
-		Announcements.getInstance().announceToAll("GvG: Receipt of applications is completed. Starting the tournament.");
+		Announcements.INSTANCE().announceToAll("GvG: Receipt of applications is completed. Starting the tournament.");
 		start();*/
     }
 
@@ -419,7 +419,7 @@ public class GvG extends Functions implements ScriptFile {
     @SuppressWarnings("unused")
     private static void start() {
 		/*int instancedZoneId = 504;
-		InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(instancedZoneId);
+		InstantZone iz = InstantZoneHolder.INSTANCE().getInstantZone(instancedZoneId);
 		if (iz == null)
 		{
 			_log.warn("GvG: InstanceZone : " + instancedZoneId + " not found!");

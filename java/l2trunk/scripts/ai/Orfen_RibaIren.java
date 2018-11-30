@@ -21,7 +21,7 @@ public final class Orfen_RibaIren extends Fighter {
     public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
         super.onEvtClanAttacked(attacked_member, attacker, damage);
         NpcInstance actor = getActor();
-        if (_healSkills.length == 0)
+        if (_healSkills.size() == 0)
             return;
         if (attacked_member.isDead() || actor.isDead() || attacked_member.getCurrentHpPercents() > 50)
             return;
@@ -32,7 +32,7 @@ public final class Orfen_RibaIren extends Fighter {
         else
             heal_chance = attacked_member.getNpcId() == Orfen_id ? 90 : 10;
 
-        if (Rnd.chance(heal_chance) && canUseSkill(_healSkills[0], attacked_member, -1))
-            addTaskAttack(attacked_member, _healSkills[0], 1000000);
+        if (Rnd.chance(heal_chance) && canUseSkill(_healSkills.get(0), attacked_member, -1))
+            addTaskAttack(attacked_member, _healSkills.get(0), 1000000);
     }
 }

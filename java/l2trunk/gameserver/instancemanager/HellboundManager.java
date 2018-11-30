@@ -30,33 +30,24 @@ import java.util.StringTokenizer;
 
 /**
  * Manages 11 stages of Hellbound Island and all it's events
- *
- * @author pchayka
  */
 
-public class HellboundManager {
+public enum HellboundManager {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(HellboundManager.class);
     private static final long _taskDelay = 2 * 60 * 1000L; //30min
     private static ArrayList<HellboundSpawn> _list;
     private static List<SimpleSpawner> _spawnList;
-    private static HellboundManager _instance;
-    private static int _initialStage;
+    private static int _initialStage = getHellboundLevel();
     private final DeathListener _deathListener = new DeathListener();
 
-    private HellboundManager() {
+    HellboundManager() {
         getHellboundSpawn();
         spawnHellbound();
         doorHandler();
-        _initialStage = getHellboundLevel();
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new StageCheckTask(), _taskDelay, _taskDelay);
-        _log.info("Hellbound Manager: Loaded");
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new StageCheckTask(), _taskDelay, _taskDelay);
     }
 
-    public static HellboundManager getInstance() {
-        if (_instance == null)
-            _instance = new HellboundManager();
-        return _instance;
-    }
 
     public static long getConfidence() {
         return ServerVariables.getLong("HellboundConfidence", 0);
@@ -72,9 +63,7 @@ public class HellboundManager {
 
     public static void reduceConfidence(long value) {
         long i = getConfidence() - value;
-        if (i < 1)
-            i = 1;
-        ServerVariables.set("HellboundConfidence", i);
+        ServerVariables.set("HellboundConfidence", i < 1 ? 1 : i);
     }
 
     public static int getHellboundLevel() {
@@ -93,32 +82,31 @@ public class HellboundManager {
 
         if (confidence < 1)
             return 0;
-        else if (confidence >= 1 && confidence < 300000)
+        else if (confidence < 300000)
             return 1;
-        else if (confidence >= 300000 && confidence < 600000)
+        else if (confidence < 600000)
             return 2;
-        else if (confidence >= 600000 && confidence < 1000000)
+        else if (confidence < 1000000)
             return 3;
-        else if (confidence >= 1000000 && confidence < 1200000) {
+        else if (confidence < 1200000) {
             if (derekKilled && judesBoxes && bernardBoxes)
                 return 5;
             else if (!derekKilled && judesBoxes && bernardBoxes)
                 return 4;
-            else if (!derekKilled && (!judesBoxes || !bernardBoxes))
+            else if (!derekKilled)
                 return 3;
-        } else if (confidence >= 1200000 && confidence < 1500000)
+        } else if (confidence < 1500000)
             return 6;
-        else if (confidence >= 1500000 && confidence < 1800000)
+        else if (confidence < 1800000)
             return 7;
-        else if (confidence >= 1800000 && confidence < 2100000) {
+        else if (confidence < 2100000) {
             if (captainKilled)
                 return 9;
             else
                 return 8;
-        } else if (confidence >= 2100000 && confidence < 2200000)
+        } else if (confidence < 2200000)
             return 10;
-        else if (confidence >= 2200000)
-            return 11;
+        else return 11;
 
         return 0;
     }
@@ -199,28 +187,25 @@ public class HellboundManager {
         NpcTemplate template;
 
         for (HellboundSpawn hbsi : _list)
-            if (ArrayUtils.contains(hbsi.getStages(), getHellboundLevel()))
-                try {
-                    template = NpcHolder.getInstance().getTemplate(hbsi.getNpcId());
-                    for (int i = 0; i < hbsi.getAmount(); i++) {
-                        spawnDat = new SimpleSpawner(template);
-                        spawnDat.setAmount(1);
-                        if (hbsi.getLoc() != null)
-                            spawnDat.setLoc(hbsi.getLoc());
-                        if (hbsi.getSpawnTerritory() != null)
-                            spawnDat.setTerritory(hbsi.getSpawnTerritory());
-                        spawnDat.setReflection(ReflectionManager.DEFAULT);
-                        spawnDat.setRespawnDelay(hbsi.getRespawn(), hbsi.getRespawnRnd());
-                        spawnDat.setRespawnTime(0);
-                        spawnDat.doSpawn(true);
-                        spawnDat.getLastSpawn().addListener(_deathListener);
-                        spawnDat.startRespawn();
-                        _spawnList.add(spawnDat);
-                    }
-                } catch (RuntimeException e) {
-                    _log.error("Error while Spawning Hellbound! ", e);
+            if (hbsi.stages.contains(getHellboundLevel())) {
+                template = NpcHolder.getInstance().getTemplate(hbsi.getNpcId());
+                for (int i = 0; i < hbsi._amount; i++) {
+                    spawnDat = new SimpleSpawner(template);
+                    spawnDat.setAmount(1);
+                    if (hbsi.getLoc() != null)
+                        spawnDat.setLoc(hbsi.getLoc());
+                    if (hbsi.getSpawnTerritory() != null)
+                        spawnDat.setTerritory(hbsi.getSpawnTerritory());
+                    spawnDat.setReflection(ReflectionManager.DEFAULT);
+                    spawnDat.setRespawnDelay(hbsi.getRespawn(), hbsi.getRespawnRnd());
+                    spawnDat.setRespawnTime(0);
+                    spawnDat.doSpawn(true);
+                    spawnDat.getLastSpawn().addListener(_deathListener);
+                    spawnDat.startRespawn();
+                    _spawnList.add(spawnDat);
                 }
-        _log.info("HellboundManager: Spawned " + _spawnList.size() + " mobs and NPCs according to the current Hellbound stage");
+            }
+        System.err.println("HellboundManager: Spawned " + _spawnList.size() + " mobs and NPCs according to the current Hellbound stage");
     }
 
     private void getHellboundSpawn() {
@@ -257,10 +242,10 @@ public class HellboundManager {
                             Node att = d1.getAttributes().getNamedItem("stage");
                             StringTokenizer st = new StringTokenizer(att.getNodeValue(), ";");
                             int tokenCount = st.countTokens();
-                            int[] stages = new int[tokenCount];
+                            List<Integer> stages = new ArrayList<>(tokenCount);
                             for (int i = 0; i < tokenCount; i++) {
                                 Integer value = Integer.decode(st.nextToken().trim());
-                                stages[i] = value;
+                                stages.add(value);
                             }
 
                             Territory territory = null;
@@ -281,7 +266,6 @@ public class HellboundManager {
 
                                     if (!poly.validate()) {
                                         _log.error("HellboundManager: Invalid spawn territory : " + poly + '!');
-                                        continue;
                                     }
                                 }
 
@@ -294,11 +278,11 @@ public class HellboundManager {
                             _list.add(hbs);
                         }
 
-            _log.info("HellboundManager: Loaded " + counter + " spawn entries.");
+            System.out.println("HellboundManager: Loaded " + counter + " spawn entries.");
         } catch (NumberFormatException | DOMException | ParserConfigurationException | SAXException e) {
-            _log.warn("HellboundManager: Spawn table could not be initialized.", e);
+            System.err.println("HellboundManager: Spawn table could not be initialized." + e);
         } catch (IOException | IllegalArgumentException e) {
-            _log.warn("HellboundManager: IOException or IllegalArgumentException.", e);
+            System.err.println("HellboundManager: IOException or IllegalArgumentException." + e);
         }
     }
 
@@ -437,16 +421,16 @@ public class HellboundManager {
         private final Territory _spawnTerritory;
         private final int _respawn;
         private final int _respawnRnd;
-        private final int[] _stages;
+        private final List<Integer> stages;
 
-        HellboundSpawn(int npcId, Location loc, int amount, Territory spawnTerritory, int respawn, int respawnRnd, int[] stages) {
+        HellboundSpawn(int npcId, Location loc, int amount, Territory spawnTerritory, int respawn, int respawnRnd, List<Integer> stages) {
             _npcId = npcId;
             _loc = loc;
             _amount = amount;
             _spawnTerritory = spawnTerritory;
             _respawn = respawn;
             _respawnRnd = respawnRnd;
-            _stages = stages;
+            this.stages = stages;
         }
 
         int getNpcId() {
@@ -457,9 +441,6 @@ public class HellboundManager {
             return _loc;
         }
 
-        int getAmount() {
-            return _amount;
-        }
 
         Territory getSpawnTerritory() {
             return _spawnTerritory;
@@ -473,8 +454,6 @@ public class HellboundManager {
             return _respawnRnd;
         }
 
-        int[] getStages() {
-            return _stages;
-        }
+
     }
 }

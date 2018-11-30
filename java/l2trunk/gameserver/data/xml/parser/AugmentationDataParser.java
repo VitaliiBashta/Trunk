@@ -9,13 +9,14 @@ import l2trunk.gameserver.templates.augmentation.AugmentationInfo;
 import l2trunk.gameserver.templates.augmentation.OptionGroup;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.dom4j.Element;
+
+import java.nio.file.Path;
+import java.util.*;
+
 //import org.napile.primitive.lists.IntList;
 //import org.napile.primitive.lists.impl.ArrayIntList;
 //import org.napile.primitive.maps.IntObjectMap;
 //import org.napile.primitive.maps.impl.HashIntObjectMap;
-
-import java.nio.file.Path;
-import java.util.*;
 
 public final class AugmentationDataParser extends AbstractFileParser<AugmentationDataHolder> {
     private static final AugmentationDataParser _instance = new AugmentationDataParser();
@@ -41,7 +42,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
     @Override
     protected void readData(Element rootElement) {
         Map<String, int[]> items = new HashMap<>();
-        Map<Integer,RndSelector<OptionGroup>[][]> variants = new HashMap<>();
+        Map<Integer, RndSelector<OptionGroup>[][]> variants = new HashMap<>();
         for (Iterator<Element> iterator = rootElement.elementIterator("item_group"); iterator.hasNext(); ) {
             Element element = iterator.next();
 
@@ -54,7 +55,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
 
                 ItemTemplate itemTemplate = ItemHolder.getInstance().getTemplate(itemId);
                 if (itemTemplate == null) {
-                    warn("Not found item: " + itemId + "; item group: " + name);
+                    LOG.warn("Not found item: " + itemId + "; item group: " + name);
                 } else {
                     list.add(itemId);
                 }
@@ -83,7 +84,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
             String itemGroup = augmentElement.attributeValue("item_group");
             RndSelector<OptionGroup>[][] rndSelectors = variants.get(mineralId);
             if (rndSelectors == null) {
-                warn("Not find variants for mineral: " + mineralId);
+                LOG.warn("Not find variants for mineral: " + mineralId);
             } else {
                 getHolder().addStone(mineralId);
 
@@ -125,11 +126,11 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
                     optionGroup.addOptionWithChance(optionId, optionChance);
                 }
                 if ((allSubGroupChance != 1000000) && (val != 2)) {
-                    error("Sum of subgroups is not max, element: " + warElement.getName() + ", mineral: " + warElement.getParent().attributeValue("mineral_id"));
+                    LOG.error("Sum of subgroups is not max, element: " + warElement.getName() + ", mineral: " + warElement.getParent().attributeValue("mineral_id"));
                 }
             }
             if (allGroupChance != 1000000) {
-                error("Sum of groups is not max, element: " + warElement.getName() + ", mineral: " + warElement.getParent().attributeValue("mineral_id"));
+                LOG.error("Sum of groups is not max, element: " + warElement.getName() + ", mineral: " + warElement.getParent().attributeValue("mineral_id"));
             }
         }
         return sel;

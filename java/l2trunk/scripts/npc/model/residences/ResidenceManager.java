@@ -370,7 +370,7 @@ public abstract class ResidenceManager extends MerchantInstance {
     }
 
     private boolean useSkill(int id, int level, Player player) {
-        Skill skill = SkillTable.getInstance().getInfo(id, level);
+        Skill skill = SkillTable.INSTANCE().getInfo(id, level);
         if (skill == null) {
             player.sendMessage("Invalid skill " + id);
             return true;

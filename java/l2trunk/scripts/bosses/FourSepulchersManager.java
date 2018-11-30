@@ -93,22 +93,22 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
         if (currentTime >= _coolDownTimeEnd && currentTime < _entryTimeEnd) // entry time check
         {
             cleanUp();
-            _changeEntryTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeEntryTime(), 0);
+            _changeEntryTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeEntryTime(), 0);
             _log.info("FourSepulchersManager: Beginning in Entry time");
         } else if (currentTime >= _entryTimeEnd && currentTime < _warmUpTimeEnd) // warmup time check
         {
             cleanUp();
-            _changeWarmUpTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeWarmUpTime(), 0);
+            _changeWarmUpTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeWarmUpTime(), 0);
             _log.info("FourSepulchersManager: Beginning in WarmUp time");
         } else if (currentTime >= _warmUpTimeEnd && currentTime < _attackTimeEnd) // attack time check
         {
             cleanUp();
-            _changeAttackTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeAttackTime(), 0);
+            _changeAttackTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeAttackTime(), 0);
             _log.info("FourSepulchersManager: Beginning in Attack time");
         } else
         // else cooldown time and without cleanup because it's already implemented
         {
-            _changeCoolDownTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeCoolDownTime(), 0);
+            _changeCoolDownTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeCoolDownTime(), 0);
             _log.info("FourSepulchersManager: Beginning in Cooldown time");
         }
     }
@@ -232,7 +232,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
 
     private static void checkAnnihilated(final Player player) {
         if (isPlayersAnnihilated())
-            ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+            ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                 @Override
                 public void runImpl() {
                     if (player.getParty() != null)
@@ -297,7 +297,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
                 tmp.setTimeInMillis(System.currentTimeMillis() - _warmUpTimeEnd);
                 if (tmp.get(Calendar.MINUTE) + 5 < 50) {
                     managerSay(tmp.get(Calendar.MINUTE)); //byte because minute cannot be more than 59
-                    ThreadPoolManager.getInstance().schedule(new ManagerSay(), 5 * 60000);
+                    ThreadPoolManager.INSTANCE.schedule(new ManagerSay(), 5 * 60000);
                 }
                 // attack time ending chat
                 else if (tmp.get(Calendar.MINUTE) + 5 >= 50)
@@ -321,8 +321,8 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
             else
                 interval = 3 * 60000; // else use stupid method
             // launching saying process...
-            ThreadPoolManager.getInstance().execute(new ManagerSay());
-            _changeWarmUpTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeWarmUpTime(), interval);
+            ThreadPoolManager.INSTANCE.execute(new ManagerSay());
+            _changeWarmUpTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeWarmUpTime(), interval);
             if (_changeEntryTimeTask != null) {
                 _changeEntryTimeTask.cancel(false);
                 _changeEntryTimeTask = null;
@@ -343,7 +343,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
                 interval = _warmUpTimeEnd - System.currentTimeMillis();
             else
                 interval = 2 * 60000;
-            _changeAttackTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeAttackTime(), interval);
+            _changeAttackTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeAttackTime(), interval);
 
             if (_changeWarmUpTimeTask != null) {
                 _changeWarmUpTimeTask.cancel(false);
@@ -384,11 +384,11 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
                         _log.info(Calendar.getInstance().getTime() + " Atk announce scheduled to " + min + " minute of this hour.");
                         Calendar inter = Calendar.getInstance();
                         inter.set(Calendar.MINUTE, (int) min);
-                        ThreadPoolManager.getInstance().schedule(new ManagerSay(), inter.getTimeInMillis() - Calendar.getInstance().getTimeInMillis());
+                        ThreadPoolManager.INSTANCE.schedule(new ManagerSay(), inter.getTimeInMillis() - Calendar.getInstance().getTimeInMillis());
                         break;
                     }
             } else
-                ThreadPoolManager.getInstance().schedule(new ManagerSay(), 5 * 60400);
+                ThreadPoolManager.INSTANCE.schedule(new ManagerSay(), 5 * 60400);
 
             // searching time when attack time will be ended:
             // counting difference between time when attack time ends and current time and then launching change time task
@@ -396,7 +396,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
                 interval = _attackTimeEnd - System.currentTimeMillis();
             else
                 interval = 50 * 60000;
-            _changeCoolDownTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeCoolDownTime(), interval);
+            _changeCoolDownTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeCoolDownTime(), interval);
 
             if (_changeAttackTimeTask != null) {
                 _changeAttackTimeTask.cancel(false);
@@ -423,7 +423,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
                 _firstTimeRun = false; // cooldown phase ends event hour, so it will be not first run
 
             long interval = time.getTimeInMillis() - System.currentTimeMillis();
-            _changeEntryTimeTask = ThreadPoolManager.getInstance().schedule(new ChangeEntryTime(), interval);
+            _changeEntryTimeTask = ThreadPoolManager.INSTANCE.schedule(new ChangeEntryTime(), interval);
 
             if (_changeCoolDownTimeTask != null) {
                 _changeCoolDownTimeTask.cancel(false);

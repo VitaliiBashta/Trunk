@@ -274,19 +274,19 @@ public class AdminEditChar implements IAdminCommandHandler {
             if (player.isHero() || player.isFakeHero()) {
                 player.setHero(false);
                 player.updatePledgeClass();
-                player.removeSkill(SkillTable.getInstance().getInfo(395, 1));
-                player.removeSkill(SkillTable.getInstance().getInfo(396, 1));
-                player.removeSkill(SkillTable.getInstance().getInfo(1374, 1));
-                player.removeSkill(SkillTable.getInstance().getInfo(1375, 1));
-                player.removeSkill(SkillTable.getInstance().getInfo(1376, 1));
+                player.removeSkill(SkillTable.INSTANCE().getInfo(395, 1));
+                player.removeSkill(SkillTable.INSTANCE().getInfo(396, 1));
+                player.removeSkill(SkillTable.INSTANCE().getInfo(1374, 1));
+                player.removeSkill(SkillTable.INSTANCE().getInfo(1375, 1));
+                player.removeSkill(SkillTable.INSTANCE().getInfo(1376, 1));
             } else {
                 player.setHero(true);
                 player.updatePledgeClass();
-                player.addSkill(SkillTable.getInstance().getInfo(395, 1));
-                player.addSkill(SkillTable.getInstance().getInfo(396, 1));
-                player.addSkill(SkillTable.getInstance().getInfo(1374, 1));
-                player.addSkill(SkillTable.getInstance().getInfo(1375, 1));
-                player.addSkill(SkillTable.getInstance().getInfo(1376, 1));
+                player.addSkill(SkillTable.INSTANCE().getInfo(395, 1));
+                player.addSkill(SkillTable.INSTANCE().getInfo(396, 1));
+                player.addSkill(SkillTable.INSTANCE().getInfo(1374, 1));
+                player.addSkill(SkillTable.INSTANCE().getInfo(1375, 1));
+                player.addSkill(SkillTable.INSTANCE().getInfo(1376, 1));
             }
 
             player.sendPacket(new SkillList(player));

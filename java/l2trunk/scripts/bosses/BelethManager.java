@@ -105,20 +105,14 @@ public class BelethManager extends Functions implements ScriptFile {
     }
 
     private static boolean checkPlayer(Player player) {
-        if (player.isDead() || player.getLevel() < 80)
-            return false;
-
-        return true;
+        return !player.isDead() && player.getLevel() >= 80;
     }
 
     private static boolean checkBossSpawnCond() {
         if (_indexedPlayers.size() < Config.MIN_PLAYERS_TO_SPAWN_BELETH || _taskStarted) // 18 players
             return false;
 
-        if (ServerVariables.getLong("BelethKillTime", 0) > System.currentTimeMillis())
-            return false;
-
-        return true;
+        return ServerVariables.getLong("BelethKillTime", 0) <= System.currentTimeMillis();
     }
 
     public static class ZoneListener implements OnZoneEnterLeaveListener {
@@ -135,7 +129,7 @@ public class BelethManager extends Functions implements ScriptFile {
                     _indexedPlayers.add(player);
 
             if (checkBossSpawnCond()) {
-                ThreadPoolManager.getInstance().schedule(new BelethSpawnTask(), 10000L);
+                ThreadPoolManager.INSTANCE.schedule(new BelethSpawnTask(), 10000L);
                 _taskStarted = true;
             }
         }
@@ -147,8 +141,7 @@ public class BelethManager extends Functions implements ScriptFile {
 
             Player player = actor.getPlayer();
 
-            if (_indexedPlayers.contains(player))
-                _indexedPlayers.remove(player);
+            _indexedPlayers.remove(player);
         }
     }
 
@@ -172,8 +165,8 @@ public class BelethManager extends Functions implements ScriptFile {
         @Override
         public void runImpl() {
             _indexedPlayers.clear();
-            ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.start), 10000L);
-            ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.inactivity_check), _entityInactivityTime);
+            ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.start), 10000L);
+            ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.inactivity_check), _entityInactivityTime);
             initSpawnLocs();
         }
     }
@@ -206,16 +199,16 @@ public class BelethManager extends Functions implements ScriptFile {
         public void runImpl() {
             switch (_event) {
                 case start:
-                    ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.open_door), _doorWaitTimeDuration);
+                    ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.open_door), _doorWaitTimeDuration);
                     break;
                 case open_door:
                     ReflectionUtils.getDoor(DOOR).openMe();
-                    ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.close_door), _closeDoorTimeDuration);
+                    ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.close_door), _closeDoorTimeDuration);
                     break;
                 case close_door:
                     ReflectionUtils.getDoor(DOOR).closeMe();
                     _entryLocked = true;
-                    ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.beleth_spawn), _spawnWaitTimeDuration);
+                    ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.beleth_spawn), _spawnWaitTimeDuration);
                     break;
                 case beleth_spawn:
                     NpcInstance temp = spawn(VORTEX, VORTEXSPAWN[0], VORTEXSPAWN[1], VORTEXSPAWN[2], 16384);
@@ -223,9 +216,9 @@ public class BelethManager extends Functions implements ScriptFile {
                     _beleth = (RaidBossInstance) spawn(BELETH, BELSPAWN[0], BELSPAWN[1], BELSPAWN[2], BELSPAWN[3]);
                     _beleth.startImmobilized();
                     _belethAlive = true;
-                    ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.clone_spawn), 10); // initial clones
-                    ringSpawnTask = ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.spawn_ring), _ringSpawnTime); // inner ring
-                    lastSpawnTask = ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.spawn_extras), _lastSpawnTime); // last clones
+                    ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.clone_spawn), 10); // initial clones
+                    ringSpawnTask = ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.spawn_ring), _ringSpawnTime); // inner ring
+                    lastSpawnTask = ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.spawn_extras), _lastSpawnTime); // last clones
                     break;
                 case clone_spawn:
                     MonsterInstance clone;
@@ -234,7 +227,7 @@ public class BelethManager extends Functions implements ScriptFile {
                         _clones.put(clone, clone.getLoc());
                     }
                     if (_clonesRespawnTimeTimeDuration > 0)
-                        cloneRespawnTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new CloneRespawnTask(), _clonesRespawnTimeTimeDuration, _clonesRespawnTimeTimeDuration);
+                        cloneRespawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new CloneRespawnTask(), _clonesRespawnTimeTimeDuration, _clonesRespawnTimeTimeDuration);
                     break;
                 case spawn_ring:
                     for (int i = 32; i < 48; i++)
@@ -268,9 +261,9 @@ public class BelethManager extends Functions implements ScriptFile {
                     ServerVariables.set("BelethKillTime", System.currentTimeMillis() + _belethRespawnTime);
                     for (Player i : _zone.getInsidePlayers())
                         i.sendMessage("Beleth's Lair will push you out in 10 minutes");
-                    ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.clone_despawn), 10);
-                    ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.ring_unset), _ringAvailableTime);
-                    ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.entity_clear), _clearEntityTime);
+                    ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.clone_despawn), 10);
+                    ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.ring_unset), _ringAvailableTime);
+                    ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.entity_clear), _clearEntityTime);
                     break;
                 case ring_unset:
                     setRingAvailable(false);
@@ -301,7 +294,7 @@ public class BelethManager extends Functions implements ScriptFile {
                 case inactivity_check:
                     if (!_beleth.isDead()) {
                         _beleth.deleteMe();
-                        ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.entity_clear), 10);
+                        ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.entity_clear), 10);
                     }
                     break;
             }
@@ -318,7 +311,7 @@ public class BelethManager extends Functions implements ScriptFile {
 
     public static void setBelethDead() {
         if (_entryLocked && _belethAlive) {
-            ThreadPoolManager.getInstance().schedule(new eventExecutor(Event.beleth_dead), 10);
+            ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.beleth_dead), 10);
             checkElpySpawn();
         }
     }
@@ -405,7 +398,7 @@ public class BelethManager extends Functions implements ScriptFile {
 
     private static void checkElpySpawn() {
         if (ServerVariables.getLong("BelethKillTime", 0) > System.currentTimeMillis() && _elpyThread == null) {
-            _elpyThread = ThreadPoolManager.getInstance().schedule(() -> spawnElpy(), (ServerVariables.getLong("BelethKillTime", 0) - System.currentTimeMillis()));
+            _elpyThread = ThreadPoolManager.INSTANCE.schedule(() -> spawnElpy(), (ServerVariables.getLong("BelethKillTime", 0) - System.currentTimeMillis()));
         } else if (ServerVariables.getLong("BelethKillTime", 0) < System.currentTimeMillis() && _elpy == null) {
             spawnElpy();
         }
@@ -413,7 +406,7 @@ public class BelethManager extends Functions implements ScriptFile {
 
     public static void setElpyDead() {
         _elpy = null;
-        _elpyThread = ThreadPoolManager.getInstance().schedule(() -> checkElpySpawn(), 2 * 60 * 60 * 1000);
+        _elpyThread = ThreadPoolManager.INSTANCE.schedule(BelethManager::checkElpySpawn, 2 * 60 * 60 * 1000);
     }
 
     private static void spawnElpy() {

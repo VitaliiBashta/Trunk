@@ -95,7 +95,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         if (itemId == 5560)
             npc.setAI(new ctreeAI(npc));
 
-        ThreadPoolManager.getInstance().schedule(new DeSpawnScheduleTimerTask(spawn), (activeChar.isInPeaceZone() ? DESPAWN_TIME / 3 : DESPAWN_TIME));
+        ThreadPoolManager.INSTANCE().schedule(new DeSpawnScheduleTimerTask(spawn), (activeChar.isInPeaceZone() ? DESPAWN_TIME / 3 : DESPAWN_TIME));
         playable.sendMessage("Christmas Tree will stay here for 1 Hour!");
         return true;
     }

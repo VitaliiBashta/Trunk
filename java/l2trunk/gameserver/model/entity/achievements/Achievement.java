@@ -13,12 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author Midnex
- * @author Promo (htmls)
- * @author Nik (total rework)
- */
-public class Achievement {
+
+public final class Achievement {
     private final int _id;
     private final int _level;
     private final String _name;
@@ -48,7 +44,7 @@ public class Achievement {
     }
 
     public String getNotDoneHtml(Player pl, int playerPoints) {
-        String oneAchievement = HtmCache.getInstance().getNotNull("achievements/oneAchievement.htm", pl);
+        String oneAchievement = HtmCache.INSTANCE.getNotNull("achievements/oneAchievement.htm", pl);
 
         int greenbar = (int) (24 * (playerPoints * 100 / _pointsToComplete) / 100);
         greenbar = Math.max(greenbar, 0);
@@ -74,7 +70,7 @@ public class Achievement {
     }
 
     public String getDoneHtml() {
-        String oneAchievement = HtmCache.getInstance().getNullable("achievements/oneAchievement.htm", null);
+        String oneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm", null);
 
         oneAchievement = oneAchievement.replaceFirst("%fame%", "" + _fame);
         oneAchievement = oneAchievement.replaceAll("%bar1%", "24");

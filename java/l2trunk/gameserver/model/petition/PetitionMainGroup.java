@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PetitionMainGroup extends PetitionGroup {
-    private final Map<Integer,PetitionSubGroup> _subGroups = new HashMap<>();
+    private final Map<Integer, PetitionSubGroup> _subGroups = new HashMap<>();
 
     public PetitionMainGroup(int id) {
         super(id);

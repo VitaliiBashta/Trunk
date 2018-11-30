@@ -63,7 +63,6 @@ public class PartySmallWindowAll extends L2GameServerPacket {
 
     public static class PartySmallWindowMemberInfo {
         public final String _name;
-        String pet_Name;
         public final int _id;
         public final int curCp;
         public final int maxCp;
@@ -75,6 +74,7 @@ public class PartySmallWindowAll extends L2GameServerPacket {
         public final int class_id;
         public final int race_id;
         final int pet_id;
+        String pet_Name;
         int pet_NpcId;
         int pet_curHp;
         int pet_maxHp;

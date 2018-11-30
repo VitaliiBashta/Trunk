@@ -78,8 +78,8 @@ public class HeineFieldsHerbs implements ScriptFile {
 
     @Override
     public void onLoad() {
-        DropAncientHerbTask = ThreadPoolManager.getInstance().scheduleAtFixedDelay(new DropAncientHerbTask(), 10000L, Config.ANCIENT_HERB_RESPAWN_TIME);
-        DeleteAncientHerbTask = ThreadPoolManager.getInstance().scheduleAtFixedDelay(new DeleteAncientHerbTask(), 70000L, Config.ANCIENT_HERB_DESPAWN_TIME);
+        DropAncientHerbTask = ThreadPoolManager.INSTANCE.scheduleAtFixedDelay(new DropAncientHerbTask(), 10000L, Config.ANCIENT_HERB_RESPAWN_TIME);
+        DeleteAncientHerbTask = ThreadPoolManager.INSTANCE.scheduleAtFixedDelay(new DeleteAncientHerbTask(), 70000L, Config.ANCIENT_HERB_DESPAWN_TIME);
 
     }
 

@@ -50,7 +50,7 @@ public class AutoImageSenderManager {
      * Starting a Thread which sends Images to every player that didn't receive them yet
      */
     public static void startSendingImages() {
-        ThreadPoolManager.getInstance().schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
+        ThreadPoolManager.INSTANCE().schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
     }
 
     static class ImageSendThread implements Runnable {
@@ -89,7 +89,7 @@ public class AutoImageSenderManager {
                 }
             }
 
-            ThreadPoolManager.getInstance().schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
+            ThreadPoolManager.INSTANCE().schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
         }
     }
 }

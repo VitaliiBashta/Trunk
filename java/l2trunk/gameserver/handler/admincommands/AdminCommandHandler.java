@@ -1,24 +1,25 @@
 package l2trunk.gameserver.handler.admincommands;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.handler.admincommands.impl.*;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.utils.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class AdminCommandHandler extends AbstractHolder {
-    private static final AdminCommandHandler _instance = new AdminCommandHandler();
-    private final Map<String, IAdminCommandHandler> _datatable = new HashMap<>();
+public enum AdminCommandHandler {
+    INSTANCE;
+    private static final Logger LOG = LoggerFactory.getLogger(AdminCommandHandler.class);
+    private final Map<String, IAdminCommandHandler> datatable = new HashMap<>();
 
-    private AdminCommandHandler() {
+    AdminCommandHandler() {
         registerAdminCommandHandler(new AdminAdmin());
         registerAdminCommandHandler(new AdminAnnouncements());
         registerAdminCommandHandler(new AdminAttribute());
-        registerAdminCommandHandler(new AdminBan());
         registerAdminCommandHandler(new AdminCamera());
         registerAdminCommandHandler(new AdminCancel());
         registerAdminCommandHandler(new AdminClanHall());
@@ -78,23 +79,18 @@ public class AdminCommandHandler extends AbstractHolder {
         // Ady
         registerAdminCommandHandler(new AdminAugmentation());
         registerAdminCommandHandler(new AdminGmEvent());
-        registerAdminCommandHandler(new AdminPremium());
-    }
-
-    public static AdminCommandHandler getInstance() {
-        return _instance;
     }
 
     public void registerAdminCommandHandler(IAdminCommandHandler handler) {
         for (Enum<?> e : handler.getAdminCommandEnum())
-            _datatable.put(e.toString().toLowerCase(), handler);
+            datatable.put(e.toString().toLowerCase(), handler);
     }
 
     public IAdminCommandHandler getAdminCommandHandler(String adminCommand) {
         String command = adminCommand;
         if (adminCommand.contains(" "))
             command = adminCommand.substring(0, adminCommand.indexOf(" "));
-        return _datatable.get(command);
+        return datatable.get(command);
     }
 
     public void useAdminCommandHandler(Player activeChar, String adminCommand) {
@@ -104,7 +100,7 @@ public class AdminCommandHandler extends AbstractHolder {
         }
 
         String[] wordList = adminCommand.split(" ");
-        IAdminCommandHandler handler = _datatable.get(wordList[0]);
+        IAdminCommandHandler handler = datatable.get(wordList[0]);
         if (handler != null) {
             boolean success = false;
             try {
@@ -114,37 +110,26 @@ public class AdminCommandHandler extends AbstractHolder {
                         break;
                     }
             } catch (RuntimeException e) {
-                error("Error while using Admin Command! ", e);
+                LOG.error("Error while using Admin Command! ", e);
             }
 
             Log.LogCommand(activeChar, activeChar.getTarget(), adminCommand, success);
         }
     }
 
-
-    @Override
-    public void process() {
-
+    public void log() {
+        LOG.info(String.format("loaded %d %s(s) count.", size(), getClass().getSimpleName()));
     }
 
-
-    @Override
     public int size() {
-        return _datatable.size();
+        return datatable.size();
     }
 
-
-    @Override
     public void clear() {
-        _datatable.clear();
+        datatable.clear();
     }
 
-    /**
-     * Получение списка зарегистрированных админ команд
-     *
-     * @return список команд
-     */
     public Set<String> getAllCommands() {
-        return _datatable.keySet();
+        return datatable.keySet();
     }
 }

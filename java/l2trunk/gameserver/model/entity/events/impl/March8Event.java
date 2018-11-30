@@ -26,14 +26,14 @@ public class March8Event extends GlobalEvent {
     public void startEvent() {
         super.startEvent();
 
-        Announcements.getInstance().announceToAll("Test startEvent");
+        Announcements.INSTANCE.announceToAll("Test startEvent");
     }
 
     @Override
     public void stopEvent() {
         super.stopEvent();
 
-        Announcements.getInstance().announceToAll("Test stopEvent");
+        Announcements.INSTANCE.announceToAll("Test stopEvent");
     }
 
     @Override

@@ -105,12 +105,12 @@ public final class Frintezza extends Reflection {
     private class FrintezzaStart extends RunnableImpl {
         @Override
         public void runImpl() {
-            ThreadPoolManager.getInstance().schedule(new Spawn(1), 1000);
+            ThreadPoolManager.INSTANCE.schedule(new Spawn(1), 1000);
         }
     }
 
     private class Spawn extends RunnableImpl {
-        private int _taskId = 0;
+        private int _taskId;
 
         Spawn(int taskId) {
             _taskId = taskId;
@@ -122,7 +122,7 @@ public final class Frintezza extends Reflection {
                 switch (_taskId) {
                     case 1: // spawn.
                         _frintezzaDummy = spawn(new NpcLocation(-87784, -155096, -9080, 16048, 29059));
-                        ThreadPoolManager.getInstance().schedule(new Spawn(2), 1000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(2), 1000);
                         break;
                     case 2:
                         closeDoor(corridorBDoors[1]);
@@ -134,71 +134,71 @@ public final class Frintezza extends Reflection {
                             demons[i] = spawn(demonSpawns[i]);
                         }
                         blockAll(true);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(3), 6500);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(3), 6500);
                         break;
                     case 3:
                         showSocialActionMovie(_frintezzaDummy, 1800, 90, 8, 6500, 7000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(4), 900);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(4), 900);
                         break;
                     case 4:
                         showSocialActionMovie(_frintezzaDummy, 140, 90, 10, 2500, 4500, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(5), 4000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(5), 4000);
                         break;
                     case 5:
                         showSocialActionMovie(frintezza, 40, 75, -10, 0, 1000, 0);
                         showSocialActionMovie(frintezza, 40, 75, -10, 0, 12000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(6), 1350);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(6), 1350);
                         break;
                     case 6:
                         frintezza.broadcastPacket(new SocialAction(frintezza.getObjectId(), 2));
-                        ThreadPoolManager.getInstance().schedule(new Spawn(7), 7000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(7), 7000);
                         break;
                     case 7:
                         _frintezzaDummy.deleteMe();
                         _frintezzaDummy = null;
-                        ThreadPoolManager.getInstance().schedule(new Spawn(8), 1000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(8), 1000);
                         break;
                     case 8:
                         showSocialActionMovie(demons[0], 140, 0, 3, 22000, 3000, 1);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(9), 2800);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(9), 2800);
                         break;
                     case 9:
                         showSocialActionMovie(demons[1], 140, 0, 3, 22000, 3000, 1);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(10), 2800);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(10), 2800);
                         break;
                     case 10:
                         showSocialActionMovie(demons[2], 140, 180, 3, 22000, 3000, 1);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(11), 2800);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(11), 2800);
                         break;
                     case 11:
                         showSocialActionMovie(demons[3], 140, 180, 3, 22000, 3000, 1);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(12), 3000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(12), 3000);
                         break;
                     case 12:
                         showSocialActionMovie(frintezza, 240, 90, 0, 0, 1000, 0);
                         showSocialActionMovie(frintezza, 240, 90, 25, 5500, 10000, 3);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(13), 3000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(13), 3000);
                         break;
                     case 13:
                         showSocialActionMovie(frintezza, 100, 195, 35, 0, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(14), 700);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(14), 700);
                         break;
                     case 14:
                         showSocialActionMovie(frintezza, 100, 195, 35, 0, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(15), 1300);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(15), 1300);
                         break;
                     case 15:
                         showSocialActionMovie(frintezza, 120, 180, 45, 1500, 10000, 0);
                         frintezza.broadcastPacket(new MagicSkillUse(frintezza, frintezza, 5006, 1, 34000, 0));
-                        ThreadPoolManager.getInstance().schedule(new Spawn(16), 1500);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(16), 1500);
                         break;
                     case 16:
                         showSocialActionMovie(frintezza, 520, 135, 45, 8000, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(17), 7500);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(17), 7500);
                         break;
                     case 17:
                         showSocialActionMovie(frintezza, 1500, 110, 25, 10000, 13000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(18), 9500);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(18), 9500);
                         break;
                     case 18:
                         weakScarlet = spawn(scarletSpawnWeak);
@@ -209,30 +209,30 @@ public final class Frintezza extends Reflection {
                         for (Player pc : getPlayers())
                             pc.broadcastPacket(eq);
                         showSocialActionMovie(weakScarlet, 1000, 160, 20, 6000, 6000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(19), 5500);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(19), 5500);
                         break;
                     case 19:
                         showSocialActionMovie(weakScarlet, 800, 160, 5, 1000, 10000, 2);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(20), 2100);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(20), 2100);
                         break;
                     case 20:
                         showSocialActionMovie(weakScarlet, 300, 60, 8, 0, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(21), 2000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(21), 2000);
                         break;
                     case 21:
                         showSocialActionMovie(weakScarlet, 1000, 90, 10, 3000, 5000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Spawn(22), 3000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(22), 3000);
                         break;
                     case 22:
                         for (Player pc : getPlayers())
                             pc.leaveMovieMode();
-                        ThreadPoolManager.getInstance().schedule(new Spawn(23), 2000);
+                        ThreadPoolManager.INSTANCE.schedule(new Spawn(23), 2000);
                         break;
                     case 23:
                         blockAll(false);
                         spawn(new NpcLocation(-87904, -141296, -9168, 0, TeleportCube));
                         _scarletMorph = 1;
-                        musicTask = ThreadPoolManager.getInstance().schedule(new Music(), 5000);
+                        musicTask = ThreadPoolManager.INSTANCE.schedule(new Music(), 5000);
                         break;
                 }
             } catch (RuntimeException e) {
@@ -268,10 +268,10 @@ public final class Frintezza extends Reflection {
                 frintezza.broadcastPacket(new ExShowScreenMessage(song_name, 3000, ScreenMessageAlign.TOP_CENTER, true, 1, -1, true));
                 frintezza.broadcastPacket(new MagicSkillUse(frintezza, frintezza, 5007, song, _intervalOfFrintezzaSongs, 0));
                 // Launch the song's effects (they start about 10 seconds after he starts to play)
-                ThreadPoolManager.getInstance().schedule(new SongEffectLaunched(getSongTargets(song), song, 10000), 10000);
+                ThreadPoolManager.INSTANCE.schedule(new SongEffectLaunched(getSongTargets(song), song, 10000), 10000);
             }
             // Schedule a new song to be played in 30-40 seconds...
-            musicTask = ThreadPoolManager.getInstance().schedule(new Music(), _intervalOfFrintezzaSongs + Rnd.get(10000));
+            musicTask = ThreadPoolManager.INSTANCE.schedule(new Music(), _intervalOfFrintezzaSongs + Rnd.get(10000));
         }
 
         /**
@@ -357,8 +357,8 @@ public final class Frintezza extends Reflection {
                 return;
             // Skills are consecutive, so call them again
             SongEffectLaunched songLaunched = new SongEffectLaunched(_targets, _song, _currentTime + _intervalOfFrintezzaSongs / 10);
-            ThreadPoolManager.getInstance().schedule(songLaunched, _intervalOfFrintezzaSongs / 10);
-            frintezza.callSkill(SkillTable.getInstance().getInfo(5008, _song), _targets, false);
+            ThreadPoolManager.INSTANCE.schedule(songLaunched, _intervalOfFrintezzaSongs / 10);
+            frintezza.callSkill(SkillTable.INSTANCE.getInfo(5008, _song), _targets, false);
         }
     }
 
@@ -416,7 +416,7 @@ public final class Frintezza extends Reflection {
     }
 
     private class SecondMorph extends RunnableImpl {
-        private int _taskId = 0;
+        private int _taskId;
 
         SecondMorph(int taskId) {
             _taskId = taskId;
@@ -432,19 +432,19 @@ public final class Frintezza extends Reflection {
                             pc.enterMovieMode();
                         blockAll(true);
                         showSocialActionMovie(weakScarlet, 500, angle, 5, 500, 15000, 0);
-                        ThreadPoolManager.getInstance().schedule(new SecondMorph(2), 2000);
+                        ThreadPoolManager.INSTANCE.schedule(new SecondMorph(2), 2000);
                         break;
                     case 2:
                         weakScarlet.broadcastPacket(new SocialAction(weakScarlet.getObjectId(), 1));
-                        weakScarlet.setCurrentHp(weakScarlet.getMaxHp() * 3 / 4, false);
+                        weakScarlet.setCurrentHp(weakScarlet.getMaxHp() * 3 / 4., false);
                         weakScarlet.setRHandId(_frintezzasSwordId);
                         weakScarlet.broadcastCharInfo();
-                        ThreadPoolManager.getInstance().schedule(new SecondMorph(3), 5500);
+                        ThreadPoolManager.INSTANCE.schedule(new SecondMorph(3), 5500);
                         break;
                     case 3:
                         weakScarlet.broadcastPacket(new SocialAction(weakScarlet.getObjectId(), 4));
                         blockAll(false);
-                        Skill skill = SkillTable.getInstance().getInfo(5017, 1);
+                        Skill skill = SkillTable.INSTANCE.getInfo(5017, 1);
                         skill.getEffects(weakScarlet, weakScarlet, false, false);
                         for (Player pc : getPlayers())
                             pc.leaveMovieMode();
@@ -457,7 +457,7 @@ public final class Frintezza extends Reflection {
     }
 
     private class ThirdMorph extends RunnableImpl {
-        private int _taskId = 0;
+        private int _taskId;
         private int _angle = 0;
 
         ThirdMorph(int taskId) {
@@ -475,31 +475,31 @@ public final class Frintezza extends Reflection {
                         blockAll(true);
                         frintezza.broadcastPacket(new MagicSkillCanceled(frintezza.getObjectId()));
                         frintezza.broadcastPacket(new SocialAction(frintezza.getObjectId(), 4));
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(2), 100);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(2), 100);
                         break;
                     case 2:
                         showSocialActionMovie(frintezza, 250, 120, 15, 0, 1000, 0);
                         showSocialActionMovie(frintezza, 250, 120, 15, 0, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(3), 6500);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(3), 6500);
                         break;
                     case 3:
                         frintezza.broadcastPacket(new MagicSkillUse(frintezza, frintezza, 5006, 1, 34000, 0));
                         showSocialActionMovie(frintezza, 500, 70, 15, 3000, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(4), 3000);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(4), 3000);
                         break;
                     case 4:
                         showSocialActionMovie(frintezza, 2500, 90, 12, 6000, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(5), 3000);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(5), 3000);
                         break;
                     case 5:
                         showSocialActionMovie(weakScarlet, 250, _angle, 12, 0, 1000, 0);
                         showSocialActionMovie(weakScarlet, 250, _angle, 12, 0, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(6), 500);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(6), 500);
                         break;
                     case 6:
                         weakScarlet.doDie(weakScarlet);
                         showSocialActionMovie(weakScarlet, 450, _angle, 14, 8000, 8000, 0);
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(7), 6250);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(7), 6250);
                         break;
                     case 7:
                         NpcLocation loc = new NpcLocation();
@@ -511,13 +511,13 @@ public final class Frintezza extends Reflection {
                         strongScarlet.addListener(_deathListener);
                         block(strongScarlet, true);
                         showSocialActionMovie(strongScarlet, 450, _angle, 12, 500, 14000, 2);
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(9), 5000);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(9), 5000);
                         break;
                     case 9:
                         blockAll(false);
                         for (Player pc : getPlayers())
                             pc.leaveMovieMode();
-                        Skill skill = SkillTable.getInstance().getInfo(5017, 1);
+                        Skill skill = SkillTable.INSTANCE.getInfo(5017, 1);
                         skill.getEffects(strongScarlet, strongScarlet, false, false);
                         break;
                 }
@@ -528,7 +528,7 @@ public final class Frintezza extends Reflection {
     }
 
     private class Die extends RunnableImpl {
-        private int _taskId = 0;
+        private int _taskId;
 
         Die(int taskId) {
             _taskId = taskId;
@@ -543,18 +543,18 @@ public final class Frintezza extends Reflection {
                         int _angle = Math.abs((strongScarlet.getHeading() < 32768 ? 180 : 540) - (int) (strongScarlet.getHeading() / 182.044444444));
                         showSocialActionMovie(strongScarlet, 300, _angle - 180, 5, 0, 7000, 0);
                         showSocialActionMovie(strongScarlet, 200, _angle, 85, 4000, 10000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Die(2), 7500);
+                        ThreadPoolManager.INSTANCE.schedule(new Die(2), 7500);
                         break;
                     case 2:
                         showSocialActionMovie(frintezza, 100, 120, 5, 0, 7000, 0);
                         showSocialActionMovie(frintezza, 100, 90, 5, 5000, 15000, 0);
-                        ThreadPoolManager.getInstance().schedule(new Die(3), 6000);
+                        ThreadPoolManager.INSTANCE.schedule(new Die(3), 6000);
                         break;
                     case 3:
                         showSocialActionMovie(frintezza, 900, 90, 25, 7000, 10000, 0);
                         frintezza.doDie(frintezza);
                         frintezza = null;
-                        ThreadPoolManager.getInstance().schedule(new Die(4), 7000);
+                        ThreadPoolManager.INSTANCE.schedule(new Die(4), 7000);
                         break;
                     case 4:
                         for (Player pc : getPlayers())
@@ -601,13 +601,13 @@ public final class Frintezza extends Reflection {
                 case 1:
                     if (newHp < 0.75 * maxHp) {
                         _scarletMorph = 2;
-                        ThreadPoolManager.getInstance().schedule(new SecondMorph(1), 1100);
+                        ThreadPoolManager.INSTANCE.schedule(new SecondMorph(1), 1100);
                     }
                     break;
                 case 2:
                     if (newHp < 0.1 * maxHp) {
                         _scarletMorph = 3;
-                        ThreadPoolManager.getInstance().schedule(new ThirdMorph(1), 2000);
+                        ThreadPoolManager.INSTANCE.schedule(new ThirdMorph(1), 2000);
                     }
                     break;
             }
@@ -645,12 +645,11 @@ public final class Frintezza extends Reflection {
                         if ((ArrayUtils.contains(blockBNpcs, n.getNpcId()) || ArrayUtils.contains(blockANpcs, n.getNpcId())) && !n.isDead())
                             return;
                     for (int corridorBDoor : corridorBDoors) openDoor(corridorBDoor);
-                    ThreadPoolManager.getInstance().schedule(new FrintezzaStart(), battleStartDelay);
+                    ThreadPoolManager.INSTANCE.schedule(new FrintezzaStart(), battleStartDelay);
                 } else if (self.getNpcId() == _weakScarletId) {
                     self.decayMe();
-                    return;
                 } else if (self.getNpcId() == _strongScarletId) {
-                    ThreadPoolManager.getInstance().schedule(new Die(1), 10);
+                    ThreadPoolManager.INSTANCE.schedule(new Die(1), 10);
                     setReenterTime(System.currentTimeMillis());
                 }
             }

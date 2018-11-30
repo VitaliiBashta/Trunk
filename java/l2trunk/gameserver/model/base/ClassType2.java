@@ -1,9 +1,5 @@
 package l2trunk.gameserver.model.base;
 
-/**
- * @author VISTALL
- * @date 22:48/08.12.2010
- */
 public enum ClassType2 {
     None(10280, 10612),
     Warrior(10281, 10289),

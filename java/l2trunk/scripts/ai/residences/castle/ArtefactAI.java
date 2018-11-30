@@ -30,7 +30,7 @@ public final class ArtefactAI extends CharacterAI {
         SiegeClanObject siegeClan = siegeEvent1.getSiegeClan(SiegeEvent.ATTACKERS, player.getClan());
 
         if (siegeEvent2 == null || siegeEvent1 == siegeEvent2 && siegeClan != null)
-            ThreadPoolManager.getInstance().schedule(new notifyGuard(player), 1000);
+            ThreadPoolManager.INSTANCE().schedule(new notifyGuard(player), 1000);
     }
 
     private class notifyGuard extends RunnableImpl {
@@ -52,7 +52,7 @@ public final class ArtefactAI extends CharacterAI {
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000);
 
             if (attacker.getCastingSkill() != null && attacker.getCastingSkill().getTargetType() == Skill.SkillTargetType.TARGET_HOLY)
-                ThreadPoolManager.getInstance().schedule(this, 10000);
+                ThreadPoolManager.INSTANCE().schedule(this, 10000);
         }
     }
 }

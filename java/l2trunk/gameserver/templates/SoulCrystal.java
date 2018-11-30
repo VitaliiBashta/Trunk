@@ -1,31 +1,55 @@
 package l2trunk.gameserver.templates;
 
-public class SoulCrystal {
-    private final int _itemId;
-    private final int _level;
-    private final int _nextItemId;
-    private final int _cursedNextItemId;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
-    public SoulCrystal(int itemId, int level, int nextItemId, int cursedNextItemId) {
-        _itemId = itemId;
-        _level = level;
-        _nextItemId = nextItemId;
-        _cursedNextItemId = cursedNextItemId;
+@XmlAccessorType(XmlAccessType.FIELD)
+public class SoulCrystal {
+
+    @XmlAttribute(name = "item_id")
+    private int itemId;
+    @XmlAttribute(name = "level")
+    private int level;
+    @XmlAttribute(name = "next_item_id")
+    private int nextItemId;
+    @XmlAttribute(name= "cursed_next_item_id")
+    private int cursedNextItemId;
+
+    public SoulCrystal() {
     }
 
+    public SoulCrystal(int itemId, int level, int nextItemId, int cursedNextItemId) {
+        this.itemId = itemId;
+        this.level = level;
+        this.nextItemId = nextItemId;
+        this.cursedNextItemId = cursedNextItemId;
+    }
+
+
     public int getItemId() {
-        return _itemId;
+        return itemId;
     }
 
     public int getLevel() {
-        return _level;
+        return level;
     }
 
     public int getNextItemId() {
-        return _nextItemId;
+        return nextItemId;
     }
 
     public int getCursedNextItemId() {
-        return _cursedNextItemId;
+        return cursedNextItemId;
+    }
+
+    @Override
+    public String toString() {
+        return "SoulCrystal{" +
+                "itemId=" + itemId +
+                ", level=" + level +
+                ", nextItemId=" + nextItemId +
+                ", cursedNextItemId=" + cursedNextItemId +
+                '}';
     }
 }

@@ -9,10 +9,10 @@ public class RegenTaskManager extends SteppingRunnableQueueManager {
 
     private RegenTaskManager() {
         super(1000L);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 1000L, 1000L);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(this, 1000L, 1000L);
 
         // Очистка каждые 10 секунд
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 RegenTaskManager.this.purge();

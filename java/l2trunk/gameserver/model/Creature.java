@@ -61,8 +61,6 @@ import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.PositionUtils;
-//import org.napile.primitive.maps.IntObjectMap;
-//import org.napile.primitive.maps.impl.CHashIntObjectMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +77,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
+
 public abstract class Creature extends GameObject {
     public static final double HEADINGS_IN_PI = 10430.3783;
     public static final int INTERACTION_DISTANCE = 200;
@@ -90,6 +89,8 @@ public abstract class Creature extends GameObject {
      * HashMap(Integer, L2Skill) containing all skills of the L2Character
      */
     protected final Map<Integer, Skill> _skills = new ConcurrentSkipListMap<>();
+    final Map<Integer, TimeStamp> _skillReuses = new HashMap<>();
+    final CharTemplate _baseTemplate;
     private final Map<Integer, Long[]> receivedDebuffs;
     private final AtomicState _afraid = new AtomicState();
     private final AtomicState _muted = new AtomicState();
@@ -115,7 +116,7 @@ public abstract class Creature extends GameObject {
      */
     private final Location movingDestTempPos = new Location();
     private final List<List<Location>> _targetRecorder = new ArrayList<>();
-    private final Calculator[] _calculators;
+    private final List<Calculator> _calculators;
     private final Lock regenLock = new ReentrantLock();
     private final List<Zone> _zones = new ArrayList<>();
     /**
@@ -127,39 +128,37 @@ public abstract class Creature extends GameObject {
     private final Lock statusListenersLock = new ReentrantLock();
     // Функция для дизактивации умений персонажа (если умение не активно, то он не дает статтов и имеет серую иконку).
     private final Set<Integer> _unActiveSkills = new HashSet<>();
-    private int _scheduledCastCount;
-    private int _scheduledCastInterval;
+    private final AtomicBoolean isDead = new AtomicBoolean();
+    private final AtomicBoolean isTeleporting = new AtomicBoolean();
+    private final HardReference<? extends Creature> reference;
     public Future<?> _skillTask;
-    private Future<?> _skillLaunchedTask;
     public Future<?> _skillGeoCheckTask;
     public boolean isMoving;
     public boolean isFollow;
+    protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
+    protected boolean _isInvul;
+    protected CharTemplate template;
+    protected volatile CharacterAI _ai;
+    protected String _name;
+    protected volatile CharListenerList listeners;
+    protected Long _storedId;
+    double _currentMp = 1;
+    String title;
+    private int _scheduledCastCount;
+    private int _scheduledCastInterval;
+    private Future<?> _skillLaunchedTask;
     /**
      *
      */
     private long _reuseDelay = 0L;
     private double _currentCp = 0;
     private double _currentHp = 1;
-    double _currentMp = 1;
     private boolean _isAttackAborted;
     private long _attackEndTime;
     private long _attackReuseEndTime;
     private Map<TriggerType, Set<TriggerInfo>> _triggers;
-    final Map<Integer,TimeStamp> _skillReuses = new HashMap<>();
     private volatile EffectList _effectList;
-    protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
-    private final AtomicBoolean isDead = new AtomicBoolean();
-    private final AtomicBoolean isTeleporting = new AtomicBoolean();
-    protected boolean _isInvul;
-    protected CharTemplate _template;
-    final CharTemplate _baseTemplate;
-    protected volatile CharacterAI _ai;
-    protected String _name;
-    String title;
     private TeamType _team = TeamType.NONE;
-    protected volatile CharListenerList listeners;
-    protected Long _storedId;
-    private final HardReference<? extends Creature> reference;
     private Skill _castingSkill;
     private long _castInterruptTime;
     private long _animationEndTime;
@@ -213,10 +212,10 @@ public abstract class Creature extends GameObject {
 
         receivedDebuffs = new HashMap<>();
 
-        _template = template;
+        this.template = template;
         _baseTemplate = template;
 
-        _calculators = new Calculator[Stats.NUM_STATS];
+        _calculators = new ArrayList<>();
 
         StatFunctions.addPredefinedFuncs(this);
 
@@ -471,7 +470,7 @@ public abstract class Creature extends GameObject {
         return oldSkill;
     }
 
-    public Calculator[] getCalculators() {
+    public List<Calculator> getCalculators() {
         return _calculators;
     }
 
@@ -480,13 +479,14 @@ public abstract class Creature extends GameObject {
             return;
         int stat = f.stat.ordinal();
         synchronized (_calculators) {
-            if (_calculators[stat] == null)
-                _calculators[stat] = new Calculator(f.stat, this);
-            _calculators[stat].addFunc(f);
+            Calculator calculator = new Calculator(f.stat, this);
+            calculator.addFunc(f);
+            if (!_calculators.contains(calculator))
+                _calculators.add(calculator);
         }
     }
 
-    public final void addStatFuncs(Func[] funcs) {
+    public final void addStatFuncs(List<Func> funcs) {
         for (Func f : funcs)
             addStatFunc(f);
     }
@@ -496,14 +496,13 @@ public abstract class Creature extends GameObject {
             return;
         int stat = f.stat.ordinal();
         synchronized (_calculators) {
-            if (_calculators[stat] != null)
-                _calculators[stat].removeFunc(f);
+            if (_calculators.get(stat) != null)
+                _calculators.get(stat).removeFunc(f);
         }
     }
 
-    public final void removeStatFuncs(Func[] funcs) {
-        for (Func f : funcs)
-            removeStatFunc(f);
+    public final void removeStatFuncs(List<Func> funcs) {
+        funcs.forEach(this::removeStatFunc);
     }
 
     public final void removeStatsOwner(Object owner) {
@@ -599,7 +598,7 @@ public abstract class Creature extends GameObject {
         if (!skill.isHandler())
             disableSkill(skill, reuseDelay);
 
-        ThreadPoolManager.getInstance().schedule(new AltMagicUseTask(this, target, skill), skill.getHitTime());
+        ThreadPoolManager.INSTANCE.schedule(new AltMagicUseTask(this, target, skill), skill.getHitTime());
     }
 
     public void sendReuseMessage(Skill skill) {
@@ -745,9 +744,13 @@ public abstract class Creature extends GameObject {
 
     public final double calcStat(Stats stat, double init, Creature target, Skill skill) {
         int id = stat.ordinal();
-        Calculator c = _calculators[id];
-        if (c == null)
+
+        Calculator c = new Calculator(stat,target);
+        if (_calculators.contains(c))
             return init;
+//            c = _calculators.get(id);
+//        if (c == null)
+//            return init;
         Env env = new Env();
         env.character = this;
 
@@ -773,7 +776,7 @@ public abstract class Creature extends GameObject {
         }
         env.value = stat.getInit();
         int id = stat.ordinal();
-        Calculator c = _calculators[id];
+        Calculator c = _calculators.get(id);
         if (c != null)
             c.calc(env);
         return env.value;
@@ -897,8 +900,8 @@ public abstract class Creature extends GameObject {
             int displayId = 0, displayLevel = 0;
 
             if (skill.hasEffects()) {
-                displayId = skill.getEffectTemplates()[0]._displayId;
-                displayLevel = skill.getEffectTemplates()[0]._displayLevel;
+                displayId = skill.getEffectTemplates().get(0)._displayId;
+                displayLevel = skill.getEffectTemplates().get(0)._displayLevel;
             }
 
             if (displayId == 0)
@@ -998,7 +1001,7 @@ public abstract class Creature extends GameObject {
         _attackReuseEndTime = System.currentTimeMillis() + sAtk + reuse - 10;
 
         // Ready to act
-        ThreadPoolManager.getInstance().schedule(new NotifyAITask(this, CtrlEvent.EVT_READY_TO_ACT, null, null), sAtk + reuse);
+        ThreadPoolManager.INSTANCE.schedule(new NotifyAITask(this, CtrlEvent.EVT_READY_TO_ACT, null, null), sAtk + reuse);
 
         // DS: adjusted by 1/100 of a second since the AI task is called with a small error
         // Especially on slower machines and is broken by autoattacks isAttackingNow () == true
@@ -1084,7 +1087,7 @@ public abstract class Creature extends GameObject {
             crit1 = info.crit;
         }
 
-        ThreadPoolManager.getInstance().schedule(new HitTask(this, target, damage1, crit1, miss1, attack._soulshot, shld1, unchargeSS, notify), sAtk);
+        ThreadPoolManager.INSTANCE.schedule(new HitTask(this, target, damage1, crit1, miss1, attack._soulshot, shld1, unchargeSS, notify), sAtk);
 
         attack.addHit(target, damage1, miss1, crit1, shld1);
     }
@@ -1113,7 +1116,7 @@ public abstract class Creature extends GameObject {
             damage1 *= Math.min(range, getDistance(target)) / range * .4 + 0.8; // разброс 20% в обе стороны
         }
 
-        ThreadPoolManager.getInstance().schedule(new HitTask(this, target, damage1, crit1, miss1, attack._soulshot, shld1, true, true), sAtk);
+        ThreadPoolManager.INSTANCE.schedule(new HitTask(this, target, damage1, crit1, miss1, attack._soulshot, shld1, true, true), sAtk);
 
         attack.addHit(target, damage1, miss1, crit1, shld1);
     }
@@ -1144,8 +1147,8 @@ public abstract class Creature extends GameObject {
         }
 
         // Create a new hit task with Medium priority for hit 1 and for hit 2 with a higher delay
-        ThreadPoolManager.getInstance().schedule(new HitTask(this, target, damage1, crit1, miss1, attack._soulshot, shld1, true, false), sAtk / 2);
-        ThreadPoolManager.getInstance().schedule(new HitTask(this, target, damage2, crit2, miss2, attack._soulshot, shld2, false, true), sAtk);
+        ThreadPoolManager.INSTANCE.schedule(new HitTask(this, target, damage1, crit1, miss1, attack._soulshot, shld1, true, false), sAtk / 2);
+        ThreadPoolManager.INSTANCE.schedule(new HitTask(this, target, damage2, crit2, miss2, attack._soulshot, shld2, false, true), sAtk);
 
         attack.addHit(target, damage1, miss1, crit1, shld1);
         attack.addHit(target, damage2, miss2, crit2, shld2);
@@ -1203,8 +1206,6 @@ public abstract class Creature extends GameObject {
             for (String skillId : Config.EVENT_TvT_DISALLOWED_SKILLS) {
                 if (skill.getId() == Integer.parseInt(skillId))
                     disallowSkill = true;
-                else
-                    continue;
             }
         }
 
@@ -1212,8 +1213,6 @@ public abstract class Creature extends GameObject {
             for (String skillId : Config.EVENT_CtF_DISALLOWED_SKILLS) {
                 if (skill.getId() == Integer.parseInt(skillId))
                     disallowSkill = true;
-                else
-                    continue;
             }
         }
 
@@ -1335,12 +1334,12 @@ public abstract class Creature extends GameObject {
         _scheduledCastInterval = skill.getCastCount() > 0 ? skillTime / _scheduledCastCount : skillTime;
 
         // Create a task MagicUseTask with Medium priority to launch the MagicSkill at the end of the casting time
-        _skillLaunchedTask = ThreadPoolManager.getInstance().schedule(new MagicLaunchedTask(this, forceUse), skillInterruptTime);
-        _skillTask = ThreadPoolManager.getInstance().schedule(new MagicUseTask(this, forceUse), skill.getCastCount() > 0 ? skillTime / skill.getCastCount() : skillTime);
+        _skillLaunchedTask = ThreadPoolManager.INSTANCE.schedule(new MagicLaunchedTask(this, forceUse), skillInterruptTime);
+        _skillTask = ThreadPoolManager.INSTANCE.schedule(new MagicUseTask(this, forceUse), skill.getCastCount() > 0 ? skillTime / skill.getCastCount() : skillTime);
 
         _skillGeoCheckTask = null;
         if ((skill.getCastRange() < 32767) && (skill.getSkillType() != SkillType.TAKECASTLE) && (skill.getSkillType() != SkillType.TAKEFORTRESS) && (_scheduledCastInterval > 600)) {
-            _skillGeoCheckTask = ThreadPoolManager.getInstance().schedule(new MagicGeoCheckTask(this), (long) (_scheduledCastInterval * 0.5));
+            _skillGeoCheckTask = ThreadPoolManager.INSTANCE.schedule(new MagicGeoCheckTask(this), (long) (_scheduledCastInterval * 0.5));
         }
     }
 
@@ -1493,7 +1492,7 @@ public abstract class Creature extends GameObject {
         else if (isPlayable() && getPlayer().isInFightClub())
             getPlayer().getFightClubEvent().onKilled(killer, this);
 
-        ThreadPoolManager.getInstance().execute(new NotifyAITask(this, CtrlEvent.EVT_DEAD, killer, null));
+        ThreadPoolManager.INSTANCE.execute(new NotifyAITask(this, CtrlEvent.EVT_DEAD, killer, null));
 
         getListeners().onDeath(killer);
 
@@ -1568,7 +1567,7 @@ public abstract class Creature extends GameObject {
     }
 
     public int getCON() {
-        return (int) calcStat(Stats.STAT_CON, _template.baseCON, null, null);
+        return (int) calcStat(Stats.STAT_CON, template.baseCON, null, null);
     }
 
     /**
@@ -1579,7 +1578,7 @@ public abstract class Creature extends GameObject {
      * @return
      */
     public int getCriticalHit(Creature target, Skill skill) {
-        return (int) calcStat(Stats.CRITICAL_BASE, _template.baseCritRate, target, skill);
+        return (int) calcStat(Stats.CRITICAL_BASE, template.baseCritRate, target, skill);
     }
 
     /**
@@ -1671,7 +1670,7 @@ public abstract class Creature extends GameObject {
     }
 
     public int getDEX() {
-        return (int) calcStat(Stats.STAT_DEX, _template.baseDEX, null, null);
+        return (int) calcStat(Stats.STAT_DEX, template.baseDEX, null, null);
     }
 
     public int getEvasionRate(Creature target) {
@@ -1679,7 +1678,7 @@ public abstract class Creature extends GameObject {
     }
 
     public int getINT() {
-        return (int) calcStat(Stats.STAT_INT, _template.baseINT, null, null);
+        return (int) calcStat(Stats.STAT_INT, template.baseINT, null, null);
     }
 
     public List<Creature> getAroundCharacters(int radius, int height) {
@@ -1711,31 +1710,31 @@ public abstract class Creature extends GameObject {
     public int getMAtk(Creature target, Skill skill) {
         if (skill != null && skill.getMatak() > 0)
             return skill.getMatak();
-        return (int) calcStat(Stats.MAGIC_ATTACK, _template.baseMAtk, target, skill);
+        return (int) calcStat(Stats.MAGIC_ATTACK, template.baseMAtk, target, skill);
     }
 
     public int getMAtkSpd() {
-        return (int) (calcStat(Stats.MAGIC_ATTACK_SPEED, _template.baseMAtkSpd, null, null));
+        return (int) (calcStat(Stats.MAGIC_ATTACK_SPEED, template.baseMAtkSpd, null, null));
     }
 
     public final int getMaxCp() {
-        return (int) calcStat(Stats.MAX_CP, _template.baseCpMax, null, null);
+        return (int) calcStat(Stats.MAX_CP, template.baseCpMax, null, null);
     }
 
     public int getMaxHp() {
-        return (int) calcStat(Stats.MAX_HP, _template.baseHpMax, null, null);
+        return (int) calcStat(Stats.MAX_HP, template.baseHpMax, null, null);
     }
 
     public int getMaxMp() {
-        return (int) calcStat(Stats.MAX_MP, _template.baseMpMax, null, null);
+        return (int) calcStat(Stats.MAX_MP, template.baseMpMax, null, null);
     }
 
     public int getMDef(Creature target, Skill skill) {
-        return Math.max((int) calcStat(Stats.MAGIC_DEFENCE, _template.baseMDef, target, skill), 1);
+        return Math.max((int) calcStat(Stats.MAGIC_DEFENCE, template.baseMDef, target, skill), 1);
     }
 
     public int getMEN() {
-        return (int) calcStat(Stats.STAT_MEN, _template.baseMEN, null, null);
+        return (int) calcStat(Stats.STAT_MEN, template.baseMEN, null, null);
     }
 
     public double getMinDistance(GameObject obj) {
@@ -1748,7 +1747,7 @@ public abstract class Creature extends GameObject {
     }
 
     public double getMovementSpeedMultiplier() {
-        return getRunSpeed() * 1. / _template.baseRunSpd;
+        return getRunSpeed() * 1. / template.baseRunSpd;
     }
 
     @Override
@@ -1769,15 +1768,15 @@ public abstract class Creature extends GameObject {
     }
 
     public int getPAtk(Creature target) {
-        return (int) calcStat(Stats.POWER_ATTACK, _template.basePAtk, target, null);
+        return (int) calcStat(Stats.POWER_ATTACK, template.basePAtk, target, null);
     }
 
     public int getPAtkSpd() {
-        return (int) calcStat(Stats.POWER_ATTACK_SPEED, _template.basePAtkSpd, null, null);
+        return (int) calcStat(Stats.POWER_ATTACK_SPEED, template.basePAtkSpd, null, null);
     }
 
     public int getPDef(Creature target) {
-        return (int) calcStat(Stats.POWER_DEFENCE, _template.basePDef, target, null);
+        return (int) calcStat(Stats.POWER_DEFENCE, template.basePDef, target, null);
     }
 
     public final int getPhysicalAttackRange() {
@@ -1796,13 +1795,13 @@ public abstract class Creature extends GameObject {
     }
 
     public int getRunSpeed() {
-        return getSpeed(_template.baseRunSpd);
+        return getSpeed(template.baseRunSpd);
     }
 
     public final int getShldDef() {
         if (isPlayer())
             return (int) calcStat(Stats.SHIELD_DEFENCE, 0, null, null);
-        return (int) calcStat(Stats.SHIELD_DEFENCE, _template.baseShldDef, null, null);
+        return (int) calcStat(Stats.SHIELD_DEFENCE, template.baseShldDef, null, null);
     }
 
     public final int getSkillDisplayLevel(Integer skillId) {
@@ -1842,7 +1841,7 @@ public abstract class Creature extends GameObject {
     }
 
     public int getSTR() {
-        return (int) calcStat(Stats.STAT_STR, _template.baseSTR, null, null);
+        return (int) calcStat(Stats.STAT_STR, template.baseSTR, null, null);
     }
 
     public int getSwimSpeed() {
@@ -1873,7 +1872,7 @@ public abstract class Creature extends GameObject {
     }
 
     public CharTemplate getTemplate() {
-        return _template;
+        return template;
     }
 
     public CharTemplate getBaseTemplate() {
@@ -1891,11 +1890,11 @@ public abstract class Creature extends GameObject {
     public final int getWalkSpeed() {
         if (isInWater())
             return getSwimSpeed();
-        return getSpeed(_template.baseWalkSpd);
+        return getSpeed(template.baseWalkSpd);
     }
 
     public int getWIT() {
-        return (int) calcStat(Stats.STAT_WIT, _template.baseWIT, null, null);
+        return (int) calcStat(Stats.STAT_WIT, template.baseWIT, null, null);
     }
 
     public double headingToRadians(int heading) {
@@ -2297,7 +2296,7 @@ public abstract class Creature extends GameObject {
         if (_targetRecorder.isEmpty()) {
             CtrlEvent ctrlEvent = isFollow ? CtrlEvent.EVT_ARRIVED_TARGET : CtrlEvent.EVT_ARRIVED;
             stopMove(false, true);
-            ThreadPoolManager.getInstance().execute(new NotifyAITask(this, ctrlEvent));
+            ThreadPoolManager.INSTANCE.execute(new NotifyAITask(this, ctrlEvent));
             return;
         }
 
@@ -2318,7 +2317,7 @@ public abstract class Creature extends GameObject {
         _startMoveTime = _followTimestamp = System.currentTimeMillis();
         if (_moveTaskRunnable == null)
             _moveTaskRunnable = new MoveNextTask();
-        _moveTask = ThreadPoolManager.getInstance().schedule(_moveTaskRunnable.setDist(distance), getMoveTickInterval());
+        _moveTask = ThreadPoolManager.INSTANCE.schedule(_moveTaskRunnable.setDist(distance), getMoveTickInterval());
     }
 
     private int getMoveTickInterval() {
@@ -2419,7 +2418,7 @@ public abstract class Creature extends GameObject {
         if (isInObserverMode())
             return;
 
-        Zone[] zones = isVisible() ? getCurrentRegion().getZones() : Zone.EMPTY_L2ZONE_ARRAY;
+        List<Zone> zones = isVisible() ? getCurrentRegion().getZones() : new ArrayList<>();
 
         ArrayList<Zone> entering = null;
         ArrayList<Zone> leaving = null;
@@ -2433,7 +2432,7 @@ public abstract class Creature extends GameObject {
                 for (Zone _zone : _zones) {
                     zone = _zone;
                     // зоны больше нет в регионе, либо вышли за территорию зоны
-                    if (!ArrayUtils.contains(zones, zone) || !zone.checkIfInZone(getX(), getY(), getZ(), getReflection()))
+                    if (!zones.contains(zone) || !zone.checkIfInZone(getX(), getY(), getZ(), getReflection()))
                         leaving.add(zone);
                 }
 
@@ -2446,7 +2445,7 @@ public abstract class Creature extends GameObject {
                 }
             }
 
-            if (zones.length > 0) {
+            if (zones.size() > 0) {
                 entering = new ArrayList<>();
                 for (Zone zone2 : zones) {
                     zone = zone2;
@@ -2556,7 +2555,7 @@ public abstract class Creature extends GameObject {
     public Zone getZone(ZoneType type) {
         zonesRead.lock();
         try {
-            return _zones.stream().filter( z ->z.getType()==type).findFirst().orElse(null);
+            return _zones.stream().filter(z -> z.getType() == type).findFirst().orElse(null);
         } finally {
             zonesRead.unlock();
         }
@@ -2681,7 +2680,7 @@ public abstract class Creature extends GameObject {
 
         displayGiveDamageMessage(target, damage, crit, miss, shld, false);
 
-        ThreadPoolManager.getInstance().execute(new NotifyAITask(target, CtrlEvent.EVT_ATTACKED, this, damage));
+        ThreadPoolManager.INSTANCE.execute(new NotifyAITask(target, CtrlEvent.EVT_ATTACKED, this, damage));
 
         boolean checkPvP = checkPvP(target, null);
         // Reduce HP of the target and calculate reflection damage to reduce HP of attacker if necessary
@@ -2800,14 +2799,14 @@ public abstract class Creature extends GameObject {
 
         if (_scheduledCastCount > 0) {
             _scheduledCastCount--;
-            _skillLaunchedTask = ThreadPoolManager.getInstance().schedule(new MagicLaunchedTask(this, forceUse), _scheduledCastInterval);
-            _skillTask = ThreadPoolManager.getInstance().schedule(new MagicUseTask(this, forceUse), _scheduledCastInterval);
+            _skillLaunchedTask = ThreadPoolManager.INSTANCE.schedule(new MagicLaunchedTask(this, forceUse), _scheduledCastInterval);
+            _skillTask = ThreadPoolManager.INSTANCE.schedule(new MagicUseTask(this, forceUse), _scheduledCastInterval);
             return;
         }
 
         int skillCoolTime = Formulas.calcMAtkSpd(this, skill, skill.getCoolTime());
         if (skillCoolTime > 0)
-            ThreadPoolManager.getInstance().schedule(new CastEndTimeTask(this), skillCoolTime);
+            ThreadPoolManager.INSTANCE.schedule(new CastEndTimeTask(this), skillCoolTime);
         else
             onCastEndTime();
     }
@@ -4304,7 +4303,7 @@ public abstract class Creature extends GameObject {
                     }
                     if (isInRangeZ(follow, _offset) && GeoEngine.canSeeTarget(Creature.this, follow, false)) {
                         stopMove();
-                        ThreadPoolManager.getInstance().execute(new NotifyAITask(Creature.this, CtrlEvent.EVT_ARRIVED_TARGET));
+                        ThreadPoolManager.INSTANCE.execute(new NotifyAITask(Creature.this, CtrlEvent.EVT_ARRIVED_TARGET));
                         return;
                     }
                 }
@@ -4379,7 +4378,7 @@ public abstract class Creature extends GameObject {
 
                 _previousSpeed = speed;
                 _startMoveTime = now;
-                _moveTask = ThreadPoolManager.getInstance().schedule(this, getMoveTickInterval());
+                _moveTask = ThreadPoolManager.INSTANCE.schedule(this, getMoveTickInterval());
             } catch (RuntimeException e) {
                 _log.error("Error in Creature Moving! ", e);
             } finally {

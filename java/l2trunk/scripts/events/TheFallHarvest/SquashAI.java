@@ -354,7 +354,7 @@ public class SquashAI extends Fighter {
                     else
                         _npcId = High_Quality_Large_Squash;
 
-                _polimorphTask = ThreadPoolManager.getInstance().schedule(new PolimorphTask(), NECTAR_REUSE);
+                _polimorphTask = ThreadPoolManager.INSTANCE.schedule(new PolimorphTask(), NECTAR_REUSE);
                 break;
         }
     }

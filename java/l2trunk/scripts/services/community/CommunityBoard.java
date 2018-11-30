@@ -26,12 +26,14 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 
-public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
+public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityBoard.class);
 
     @Override
@@ -54,8 +56,8 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public String[] getBypassCommands() {
-        return new String[]{"_bbshome", "_bbsmultisell", "_bbssell", "_bbsaugment", "_bbsdeaugment", "_bbspage", "_bbsfile", "_bbsscripts"};
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_bbshome", "_bbsmultisell", "_bbssell", "_bbsaugment", "_bbsdeaugment", "_bbspage", "_bbsfile", "_bbsscripts");
     }
 
     @Override
@@ -72,10 +74,10 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
             StringTokenizer p = new StringTokenizer(Config.BBS_DEFAULT, "_");
             String dafault = p.nextToken();
             if (dafault.equals(cmd)) {
-                html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/index.htm", player);
+                html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/index.htm", player);
                 html = html.replaceFirst("%nick%", String.valueOf(player.getName()));
                 html = html.replace("<?fav_count?>", String.valueOf(0));
-                html = html.replace("<?clan_count?>", String.valueOf(ClanTable.getInstance().getClans().size()));
+                html = html.replace("<?clan_count?>", String.valueOf(ClanTable.INSTANCE.getClans().size()));
                 html = html.replace("<?market_count?>", String.valueOf(CommunityBoardManager.getInstance().getIntProperty("col_count")));
                 html = html.replace("<?player_name?>", String.valueOf(player.getName()));
                 html = html.replace("<?player_class?>", String.valueOf(Util.getFullClassName(player.getClassId().getId())));
@@ -84,12 +86,10 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
                 html = html.replace("<?player_noobless?>", String.valueOf(player.isNoble() ? "<font color=\"18FF00\">Yes</font>" : "<font color=\"FF0000\">No</font>"));
                 html = html.replace("<?online_time?>", TimeUtils.formatTime((int) player.getOnlineTime() / 1000, false));
                 html = html.replace("<?player_ip?>", String.valueOf(player.getIP()));
-                html = html.replace("<?player_premium?>", player.hasBonus() ? "<font color=\"18FF00\">Yes</font>" : "<font color=\"FF0000\">No</font>");
                 html = html.replace("<?server_uptime?>", String.valueOf(uptime()));
 
                 html = html.replace("<?time?>", String.valueOf(time()));
-                html = html.replace("<?online?>", online(false));
-                html = html.replace("<?offtrade?>", online(true));
+                html = html.replace("<?online?>", online());
                 ImagesCache.getInstance().sendUsedImages(html, player);
             } else {
                 onBypassCommand(player, Config.BBS_DEFAULT);
@@ -98,12 +98,12 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
         } else if (bypass.startsWith("_bbspage")) {
             String[] b = bypass.split(":");
             String page = b[1];
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/" + page + ".htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/" + page + ".htm", player);
             ImagesCache.getInstance().sendUsedImages(html, player);
 
             if (bypass.equals("_bbspage:information")) {
-                html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/information.htm", player);
-                html = html.replaceFirst("%nick%", String.valueOf(player.getName().toString()));
+                html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/information.htm", player);
+                html = html.replaceFirst("%nick%", String.valueOf(player.getName()));
                 html = html.replaceFirst("%prof%", String.valueOf(player.getActiveClass().toStringCB()));
                 html = html.replaceFirst("%lvl%", String.valueOf(player.getLevel()));
                 html = html.replaceFirst("%clan%", player.getClan() != null ? String.valueOf(player.getClan().getName()) : "<font color=\"FF0000\">No</font>");
@@ -114,10 +114,9 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
                 html = html.replaceFirst("%ip%", player.getIP());
                 html = html.replaceFirst("%mytime%", getTimeInServer(player));
                 html = html.replaceFirst("%online%", String.valueOf(GameObjectsStorage.getAllPlayersCount()));
-                html = html.replaceFirst("%trade%", String.valueOf(GameObjectsStorage.getAllTradablePlayersCount()));
             } else if (bypass.equals("_bbspage:HowToDonate")) {
-                html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "pages/HowToDonate.htm", player);
-                html = html.replaceFirst("%nick%", String.valueOf(player.getName().toString()));
+                html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/HowToDonate.htm", player);
+                html = html.replaceFirst("%nick%", String.valueOf(player.getName()));
 
             }
 
@@ -128,7 +127,7 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
         } else if (bypass.startsWith("_bbsfile")) {
             String[] b = bypass.split(":");
             String page = b[1];
-            html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + page + ".htm", player);
+            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + page + ".htm", player);
             ImagesCache.getInstance().sendUsedImages(html, player);
         } else if (Config.BBS_PVP_ALLOW_BUY && bypass.startsWith("_bbsmultisell")) {
             StringTokenizer st2 = new StringTokenizer(bypass, ";");
@@ -164,7 +163,7 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
         }
 //		else if (bypass.startsWith("_maillist_0_1_0_") || bypass.startsWith("_bbsPartyMatching"))
 //		{
-//			PartyMatchingBBSManager.getInstance().parsecmd(bypass, player);
+//			PartyMatchingBBSManager.INSTANCE().parsecmd(bypass, player);
 //		}
         else if (bypass.startsWith("_bbsdeaugment")) {
             if (Config.BBS_PVP_ALLOW_AUGMENT)
@@ -197,24 +196,16 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
 
     private static final SimpleDateFormat dataDateFormat = new SimpleDateFormat("hh:mm dd.MM.yyyy");
 
-    /**
-     * @return
-     */
     private static String uptime() {
         return dataDateFormat.format(GameServer.server_started);
     }
 
-    private String online(boolean off) {
+    private String online() {
         int i = 0;
-        int j = 0;
         for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
             i++;
-            if (player.isInOfflineMode()) {
-                j++;
-            }
         }
-
-        return Util.formatAdena(!off ? (i + j) : j);
+        return Util.formatAdena((i));
     }
 
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");

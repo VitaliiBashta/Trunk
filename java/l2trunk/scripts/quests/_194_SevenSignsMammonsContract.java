@@ -57,7 +57,7 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.getInstance().getInfo(6201, 1).getEffects(npc, player, false, false);
+            SkillTable.INSTANCE().getInfo(6201, 1).getEffects(npc, player, false, false);
         } else if (event.equalsIgnoreCase("frog_q194_2.htm")) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
@@ -74,7 +74,7 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
             negateSpeedBuffs(player);
-            SkillTable.getInstance().getInfo(6202, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(6202, 1).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("tess_q194_2.htm")) {
             st.setCond(8);
             st.giveItems(GrandmaTessCandyPouch, 1);
@@ -91,7 +91,7 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
             st.setCond(10);
             st.playSound(SOUND_MIDDLE);
             negateSpeedBuffs(player);
-            SkillTable.getInstance().getInfo(6203, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(6203, 1).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("kuta_q194_2.htm")) {
             st.setCond(11);
             st.giveItems(NativesGlove, 1);
@@ -114,21 +114,21 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.getInstance().getInfo(6201, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(6201, 1).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("colin_q194_12a.htm")) {
             if (player.getTransformation() != 0 || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.getInstance().getInfo(6202, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(6202, 1).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("colin_q194_13a.htm")) {
             if (player.getTransformation() != 0 || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.getInstance().getInfo(6203, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE().getInfo(6203, 1).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("colin_q194_0c.htm"))
             negateTransformations(player);
         return event;

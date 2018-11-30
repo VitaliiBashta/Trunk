@@ -157,7 +157,7 @@ public class RequestAquireSkill extends L2GameClientPacket {
         if ((trainer == null || player.getDistance(trainer.getX(), trainer.getY()) > Creature.INTERACTION_DISTANCE) && !player.isGM())
             return;
 
-        Skill skill = SkillTable.getInstance().getInfo(_id, _level);
+        Skill skill = SkillTable.INSTANCE().getInfo(_id, _level);
         if (skill == null)
             return;
 

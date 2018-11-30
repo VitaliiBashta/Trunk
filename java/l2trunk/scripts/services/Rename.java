@@ -451,7 +451,7 @@ class Rename extends Functions {
             player.sendPacket(Msg.CLAN_NAME_IS_INCORRECT);
             return;
         }
-        if (ClanTable.getInstance().getClanByName(param[0]) != null) {
+        if (ClanTable.INSTANCE.getClanByName(param[0]) != null) {
             player.sendPacket(Msg.THIS_NAME_ALREADY_EXISTS);
             return;
         }

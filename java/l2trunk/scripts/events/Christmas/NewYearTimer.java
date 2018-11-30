@@ -44,17 +44,17 @@ public class NewYearTimer implements ScriptFile {
         while (getDelay(c) < 0)
             c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
 
-        ThreadPoolManager.getInstance().schedule(new NewYearAnnouncer("С new, " + c.get(Calendar.YEAR) + ", year!!!"), getDelay(c));
+        ThreadPoolManager.INSTANCE().schedule(new NewYearAnnouncer("С new, " + c.get(Calendar.YEAR) + ", year!!!"), getDelay(c));
         c.add(Calendar.SECOND, -1);
-        ThreadPoolManager.getInstance().schedule(new NewYearAnnouncer("1"), getDelay(c));
+        ThreadPoolManager.INSTANCE().schedule(new NewYearAnnouncer("1"), getDelay(c));
         c.add(Calendar.SECOND, -1);
-        ThreadPoolManager.getInstance().schedule(new NewYearAnnouncer("2"), getDelay(c));
+        ThreadPoolManager.INSTANCE().schedule(new NewYearAnnouncer("2"), getDelay(c));
         c.add(Calendar.SECOND, -1);
-        ThreadPoolManager.getInstance().schedule(new NewYearAnnouncer("3"), getDelay(c));
+        ThreadPoolManager.INSTANCE().schedule(new NewYearAnnouncer("3"), getDelay(c));
         c.add(Calendar.SECOND, -1);
-        ThreadPoolManager.getInstance().schedule(new NewYearAnnouncer("4"), getDelay(c));
+        ThreadPoolManager.INSTANCE().schedule(new NewYearAnnouncer("4"), getDelay(c));
         c.add(Calendar.SECOND, -1);
-        ThreadPoolManager.getInstance().schedule(new NewYearAnnouncer("5"), getDelay(c));
+        ThreadPoolManager.INSTANCE().schedule(new NewYearAnnouncer("5"), getDelay(c));
     }
 
     private long getDelay(Calendar c) {
@@ -99,17 +99,16 @@ public class NewYearTimer implements ScriptFile {
             this.message = message;
         }
 
-        @SuppressWarnings("unused")
         @Override
         public void runImpl() {
-            Announcements.getInstance().announceToAll(message);
+            Announcements.INSTANCE.announceToAll(message);
 
             // Через жопу сделано, но не суть важно :)
             if (message.length() == 1)
                 return;
 
             for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-                Skill skill = SkillTable.getInstance().getInfo(3266, 1);
+                Skill skill = SkillTable.INSTANCE().getInfo(3266, 1);
                 MagicSkillUse msu = new MagicSkillUse(player, player, 3266, 1, skill.getHitTime(), 0);
                 player.broadcastPacket(msu);
             }

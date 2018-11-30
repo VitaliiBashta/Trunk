@@ -22,9 +22,9 @@ public class ItemHandler extends AbstractHolder {
         for (int itemId : ids) {
             ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
             if (template == null)
-                warn("Item not found: " + itemId + " handler: " + handler.getClass().getSimpleName());
+                LOG.warn("Item not found: " + itemId + " handler: " + handler.getClass().getSimpleName());
             else if (template.getHandler() != IItemHandler.NULL)
-                warn("Duplicate handler for item: " + itemId + "(" + template.getHandler().getClass().getSimpleName() + "," + handler.getClass().getSimpleName() + ")");
+                LOG.warn("Duplicate handler for item: " + itemId + "(" + template.getHandler().getClass().getSimpleName() + "," + handler.getClass().getSimpleName() + ")");
             else
                 template.setHandler(handler);
         }

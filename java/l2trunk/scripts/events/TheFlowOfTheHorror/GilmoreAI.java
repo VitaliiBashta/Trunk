@@ -110,7 +110,7 @@ public final class GilmoreAI extends Fighter {
                             actor.addStatFunc(new FuncMul(Stats.MAGIC_DAMAGE, 0x40, actor, 10));
                             actor.addStatFunc(new FuncMul(Stats.PHYSICAL_DAMAGE, 0x40, actor, 10));
                             actor.addStatFunc(new FuncMul(Stats.RUN_SPEED, 0x40, actor, 3));
-                            actor.addSkill(SkillTable.getInstance().getInfo(1467, 1));
+                            actor.addSkill(SkillTable.INSTANCE.getInfo(1467, 1));
                             actor.sendChanges();
                             step_stage2 = 4;
                             return true;

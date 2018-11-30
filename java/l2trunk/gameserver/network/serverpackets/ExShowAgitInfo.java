@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ExShowAgitInfo extends L2GameServerPacket {
-    private List<AgitInfo> _clanHalls = Collections.emptyList();
+public final class ExShowAgitInfo extends L2GameServerPacket {
+    private List<AgitInfo> _clanHalls;
 
     public ExShowAgitInfo() {
         List<ClanHall> chs = ResidenceHolder.getInstance().getResidenceList(ClanHall.class);
@@ -29,7 +29,7 @@ public class ExShowAgitInfo extends L2GameServerPacket {
             else
                 getType = 1;
 
-            Clan clan = ClanTable.getInstance().getClan(clanHall.getOwnerId());
+            Clan clan = ClanTable.INSTANCE.getClan(clanHall.getOwnerId());
             String clan_name = clanHall.getOwnerId() == 0 || clan == null ? StringUtils.EMPTY : clan.getName();
             String leader_name = clanHall.getOwnerId() == 0 || clan == null ? StringUtils.EMPTY : clan.getLeaderName();
             _clanHalls.add(new AgitInfo(clan_name, leader_name, ch_id, getType));

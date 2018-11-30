@@ -5,11 +5,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPCWHPrivilages;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class CWHPrivileges extends Functions implements IVoicedCommandHandler {
-    private static final String[] _commandList = new String[]
-            {
-                    "clan"
-            };
+    private static final List<String> _commandList = Collections.singletonList("clan");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
@@ -18,7 +19,7 @@ public class CWHPrivileges extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 }

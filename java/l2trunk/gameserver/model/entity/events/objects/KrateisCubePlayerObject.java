@@ -61,7 +61,7 @@ public class KrateisCubePlayerObject implements Serializable, Comparable<Krateis
         if (_ressurectTask != null)
             return;
 
-        _ressurectTask = ThreadPoolManager.getInstance().schedule(new RessurectTask(), 1000L);
+        _ressurectTask = ThreadPoolManager.INSTANCE.schedule(new RessurectTask(), 1000L);
     }
 
     public void stopRessurectTask() {
@@ -98,7 +98,7 @@ public class KrateisCubePlayerObject implements Serializable, Comparable<Krateis
                 _player.doRevive();
             } else {
                 _player.sendPacket(new SystemMessage2(SystemMsg.RESURRECTION_WILL_TAKE_PLACE_IN_THE_WAITING_ROOM_AFTER_S1_SECONDS).addInteger(_seconds));
-                _ressurectTask = ThreadPoolManager.getInstance().schedule(this, 1000L);
+                _ressurectTask = ThreadPoolManager.INSTANCE.schedule(this, 1000L);
             }
         }
     }

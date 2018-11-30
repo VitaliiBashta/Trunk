@@ -1,12 +1,13 @@
 package l2trunk.gameserver.taskmanager.actionrunner;
 
-import l2trunk.commons.logging.LoggerObject;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.taskmanager.actionrunner.tasks.AutomaticTask;
 import l2trunk.gameserver.taskmanager.actionrunner.tasks.DeleteExpiredMailTask;
 import l2trunk.gameserver.taskmanager.actionrunner.tasks.DeleteExpiredVarsTask;
 import l2trunk.gameserver.taskmanager.actionrunner.tasks.OlympiadSaveTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,21 +16,23 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public final class ActionRunner extends LoggerObject {
-    private static final ActionRunner INSTANCE = new ActionRunner();
+public enum  ActionRunner {
+    INSTANCE;
+    private static final Logger LOG = LoggerFactory.getLogger(ActionRunner.class);
+//    private static final ActionRunner INSTANCE = new ActionRunner();
     private final Lock _lock = new ReentrantLock();
     private final Map<String, List<ActionWrapper>> _futures = new HashMap<>();
 
-    private ActionRunner() {
+    ActionRunner() {
         if (Config.ENABLE_OLYMPIAD)
             register(new OlympiadSaveTask());
         register(new DeleteExpiredVarsTask());
         register(new DeleteExpiredMailTask());
     }
 
-    public static ActionRunner getInstance() {
-        return INSTANCE;
-    }
+//    public static ActionRunner INSTANCE() {
+//        return INSTANCE;
+//    }
 
     private void register(AutomaticTask task) {
         register(task.reCalcTime(true), task);
@@ -37,12 +40,12 @@ public final class ActionRunner extends LoggerObject {
 
     public void register(long time, ActionWrapper wrapper) {
         if (time == 0) {
-            info("Try register " + wrapper.getName() + " not defined time.");
+            LOG.info("Try register " + wrapper.getName() + " not defined time.");
             return;
         }
 
         if (time <= System.currentTimeMillis()) {
-            ThreadPoolManager.getInstance().execute(wrapper);
+            ThreadPoolManager.INSTANCE.execute(wrapper);
             return;
         }
 
@@ -86,6 +89,6 @@ public final class ActionRunner extends LoggerObject {
     }
 
     public synchronized void info() {
-        _futures.forEach((k, v) -> info("Name: " + k + "; size: " + v.size()));
+        _futures.forEach((k, v) -> LOG.info("Name: " + k + "; size: " + v.size()));
     }
 }

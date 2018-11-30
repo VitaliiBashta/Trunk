@@ -13,14 +13,10 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.templates.CubicTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Future;
 
-
-public class EffectCubic extends Effect {
+public final class EffectCubic extends Effect {
     private final CubicTemplate _template;
     private Future<?> _task = null;
 
@@ -39,15 +35,12 @@ public class EffectCubic extends Effect {
         if (!attacker.isInRangeZ(target, info.getSkill().getCastRange()))
             return false;
 
-        if (!target.isAutoAttackable(attacker))
-            return false;
-
-        return true;
+        return target.isAutoAttackable(attacker);
     }
 
     private static void doHeal(final Player player, CubicTemplate.SkillInfo info, final int delay) {
         final Skill skill = info.getSkill();
-        Creature target = null;
+        Player target = null;
         if (player.getParty() == null) {
             if (!player.isCurrentHpFull() && !player.isDead())
                 target = player;
@@ -75,14 +68,11 @@ public class EffectCubic extends Effect {
         final Creature aimTarget = target;
         player.broadcastPacket(new MagicSkillUse(player, aimTarget, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
         player.disableSkill(skill, delay * 1000L);
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                final List<Creature> targets = new ArrayList<>(1);
-                targets.add(aimTarget);
-                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), Collections.unmodifiableList(targets)));
-                player.callSkill(skill, targets, false);
-            }
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            final List<Creature> targets = new ArrayList<>(1);
+            targets.add(aimTarget);
+            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), Collections.unmodifiableList(targets)));
+            player.callSkill(skill, targets, false);
         }, skill.getHitTime());
     }
 
@@ -102,24 +92,20 @@ public class EffectCubic extends Effect {
         final Creature aimTarget = target;
         player.broadcastPacket(new MagicSkillUse(player, target, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
         player.disableSkill(skill, delay * 1000L);
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                final List<Creature> targets = new ArrayList<>(1);
-                targets.add(aimTarget);
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            final List<Creature> targets = Collections.singletonList(aimTarget);
 
-                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), Collections.unmodifiableList(targets)));
-                player.callSkill(skill, targets, false);
+            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
+            player.callSkill(skill, targets, false);
 
-                if (aimTarget.isNpc())
-                    if (aimTarget.paralizeOnAttack(player)) {
-                        if (Config.PARALIZE_ON_RAID_DIFF)
-                            player.paralizeMe(aimTarget);
-                    } else {
-                        int damage = skill.getEffectPoint() != 0 ? skill.getEffectPoint() : (int) skill.getPower();
-                        aimTarget.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, player, damage);
-                    }
-            }
+            if (aimTarget.isNpc())
+                if (aimTarget.paralizeOnAttack(player)) {
+                    if (Config.PARALIZE_ON_RAID_DIFF)
+                        player.paralizeMe(aimTarget);
+                } else {
+                    int damage = skill.getEffectPoint() != 0 ? skill.getEffectPoint() : (int) skill.getPower();
+                    aimTarget.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, player, damage);
+                }
         }, skill.getHitTime());
     }
 
@@ -139,12 +125,11 @@ public class EffectCubic extends Effect {
         final Creature aimTarget = target;
         player.broadcastPacket(new MagicSkillUse(player, target, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
         player.disableSkill(skill, delay * 1000L);
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
             @Override
             public void runImpl() {
-                final List<Creature> targets = new ArrayList<>(1);
-                targets.add(aimTarget);
-                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), Collections.unmodifiableList(targets)));
+                final List<Creature> targets = Collections.singletonList(aimTarget);
+                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
                 final boolean succ = Formulas.calcSkillSuccess(player, aimTarget, skill, info.getChance());
                 if (succ)
                     player.callSkill(skill, targets, false);
@@ -176,14 +161,10 @@ public class EffectCubic extends Effect {
 
         player.broadcastPacket(new MagicSkillUse(player, player, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
         player.disableSkill(skill, delay * 1000L);
-        ThreadPoolManager.getInstance().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                final List<Creature> targets = new ArrayList<>(1);
-                targets.add(player);
-                player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), Collections.unmodifiableList(targets)));
-                player.callSkill(skill, targets, false);
-            }
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            final List<Creature> targets = Collections.singletonList(player);
+            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
+            player.callSkill(skill, targets, false);
         }, skill.getHitTime());
     }
 
@@ -195,7 +176,7 @@ public class EffectCubic extends Effect {
             return;
 
         player.addCubic(this);
-        _task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ActionTask(), 1000L, 1000L);
+        _task = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ActionTask(), 1000L, 1000L);
     }
 
     @Override
@@ -253,10 +234,8 @@ public class EffectCubic extends Effect {
         if (effected.isAttackingNow())
             return true;
 
-        if (effected.isInOlympiadMode() || effected.isInDuel())
-            return true;
+        return effected.isInOlympiadMode() || effected.isInDuel();
 
-        return false;
     }
 
     @Override

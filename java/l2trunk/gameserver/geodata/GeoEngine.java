@@ -64,10 +64,12 @@ public final class GeoEngine {
     public static boolean canMoveToCoord(GameObject actor, Location location) {
         return canMoveToCoord(actor.getLoc(), location, actor.getGeoIndex());
     }
+
     public static boolean canMoveToCoord(Location prev, Location next, int geoIndex) {
-        return canMoveToCoord(prev.getX(),prev.getY(),prev.getZ(),
-                next.getX(),next.getY(),next.getZ(),geoIndex);
+        return canMoveToCoord(prev.getX(), prev.getY(), prev.getZ(),
+                next.getX(), next.getY(), next.getZ(), geoIndex);
     }
+
     public static boolean canMoveToCoord(int x, int y, int z, int tx, int ty, int tz, int geoIndex) {
         return canMove(x, y, z, tx, ty, tz, false, geoIndex) == 0;
     }

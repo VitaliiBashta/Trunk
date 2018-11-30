@@ -14,7 +14,7 @@ public class SiegeGuardMystic extends SiegeGuard {
 
     @Override
     public int getRatePHYS() {
-        return _damSkills.length == 0 ? 25 : 0;
+        return _damSkills.size() == 0 ? 25 : 0;
     }
 
     @Override

@@ -19,9 +19,9 @@ import l2trunk.gameserver.templates.StatsSet;
  * 4: [(cchh)]
  */
 public class SSQStatus extends L2GameServerPacket {
-    private Player _player;
     private final int _page;
     private final int period;
+    private Player _player;
 
     public SSQStatus(Player player, int recordPage) {
         _player = player;
@@ -113,7 +113,7 @@ public class SSQStatus extends L2GameServerPacket {
                 break;
             case 2:
                 // c cc ccc [cdQc(S) Qc]
-                writeH(/*SevenSigns.getInstance().isSealValidationPeriod() ? 0 : */1);
+                writeH(/*SevenSigns.INSTANCE().isSealValidationPeriod() ? 0 : */1);
                 writeC(5); // Total number of festivals
 
                 for (int i = 0; i < 5; i++) {

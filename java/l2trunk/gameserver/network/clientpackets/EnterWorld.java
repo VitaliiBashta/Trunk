@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 
-public class EnterWorld extends L2GameClientPacket {
+public final class EnterWorld extends L2GameClientPacket {
     private static final Object _lock = new Object();
 
     private static final Logger LOG = LoggerFactory.getLogger(EnterWorld.class);
@@ -198,20 +198,16 @@ public class EnterWorld extends L2GameClientPacket {
             activeChar.startTimers();
         }
 
-        boolean isPremium = activeChar.hasBonus();
-        activeChar.sendPacket(new ExBR_PremiumState(activeChar, isPremium));
-        if (!isPremium) {
-            activeChar.stopBonusTask(false);
-        }
+
         if (Config.ENTER_WORLD_ANNOUNCEMENTS_HERO_LOGIN) {
             if ((activeChar.isHero()) || (activeChar.isFakeHero())) {
-                Announcements.getInstance().announceToAll(new CustomMessage("Hero {0} entered the game.").addString(activeChar.getName()).toString());
+                Announcements.INSTANCE.announceToAll(new CustomMessage("Hero {0} entered the game.").addString(activeChar.getName()).toString());
             }
         }
         if (Config.ENTER_WORLD_ANNOUNCEMENTS_LORD_LOGIN) {
             if ((activeChar.getClan() != null) && (activeChar.isClanLeader()) && (activeChar.getClan().getCastle() != 0)) {
                 int id = activeChar.getCastle().getId();
-                Announcements.getInstance().announceToAll(new CustomMessage("Lord {0} the owner of the castle {1} entered the game.").addString(activeChar.getName()).addString(new CustomMessage("common.castle." + id, activeChar).toString()).toString());
+                Announcements.INSTANCE.announceToAll(new CustomMessage("Lord {0} the owner of the castle {1} entered the game.").addString(activeChar.getName()).addString(new CustomMessage("common.castle." + id, activeChar).toString()).toString());
             }
         }
         activeChar.getMacroses().sendUpdate();
@@ -242,14 +238,14 @@ public class EnterWorld extends L2GameClientPacket {
         }
 
         if (Config.HTML_WELCOME) {
-            String html = HtmCache.getInstance().getNotNull("welcome.htm", activeChar);
+            String html = HtmCache.INSTANCE.getNotNull("welcome.htm", activeChar);
             NpcHtmlMessage msg = new NpcHtmlMessage(5);
             html.replace("%name%", activeChar.getName());
             msg.setHtml(Strings.bbParse(html));
             activeChar.sendPacket(msg);
         }
 
-        Announcements.getInstance().showAnnouncements(activeChar);
+        Announcements.INSTANCE.showAnnouncements(activeChar);
 
         if (first)
             activeChar.getListeners().onEnter();
@@ -270,11 +266,11 @@ public class EnterWorld extends L2GameClientPacket {
                 if ((myBirthdayReceiveYear == 0 && create.get(Calendar.YEAR) != now.get(Calendar.YEAR)) || myBirthdayReceiveYear > 0 && myBirthdayReceiveYear != now.get(Calendar.YEAR)) {
                     Mail mail = new Mail();
                     mail.setSenderId(1);
-                    mail.setSenderName(StringHolder.getInstance().getNotNull(activeChar, "birthday.npc"));
+                    mail.setSenderName(StringHolder.INSTANCE.getNotNull(activeChar, "birthday.npc"));
                     mail.setReceiverId(activeChar.getObjectId());
                     mail.setReceiverName(activeChar.getName());
-                    mail.setTopic(StringHolder.getInstance().getNotNull(activeChar, "birthday.title"));
-                    mail.setBody(StringHolder.getInstance().getNotNull(activeChar, "birthday.text"));
+                    mail.setTopic(StringHolder.INSTANCE.getNotNull(activeChar, "birthday.title"));
+                    mail.setBody(StringHolder.INSTANCE.getNotNull(activeChar, "birthday.text"));
 
                     ItemInstance item = ItemFunctions.createItem(21169);
                     item.setLocation(ItemInstance.ItemLocation.MAIL);
@@ -297,12 +293,6 @@ public class EnterWorld extends L2GameClientPacket {
 
             activeChar.sendPacket(activeChar.getClan().listAll());
             activeChar.sendPacket(new PledgeShowInfoUpdate(activeChar.getClan()), new PledgeSkillList(activeChar.getClan()));
-        }
-
-        // engage and notify Partner
-        if (first && Config.ALLOW_WEDDING) {
-            CoupleManager.getInstance().engage(activeChar);
-            CoupleManager.getInstance().notifyPartner(activeChar);
         }
 
         if (first) {
@@ -382,7 +372,7 @@ public class EnterWorld extends L2GameClientPacket {
             try {
                 int var_gmspeed = Integer.parseInt(activeChar.getVar("gm_gmspeed"));
                 if (var_gmspeed >= 1 && var_gmspeed <= 4) {
-                    Skill skill = SkillTable.getInstance().getInfo(7029, var_gmspeed);
+                    Skill skill = SkillTable.INSTANCE.getInfo(7029, var_gmspeed);
                     activeChar.doCast(skill, activeChar, true);
                 }
             } catch (NumberFormatException e) {
@@ -420,7 +410,7 @@ public class EnterWorld extends L2GameClientPacket {
             sendPacket(new ConfirmDlg(SystemMsg.C1_IS_MAKING_AN_ATTEMPT_TO_RESURRECT_YOU_IF_YOU_CHOOSE_THIS_PATH_S2_EXPERIENCE_WILL_BE_RETURNED_FOR_YOU, 0).addString("Other player").addString("some"));
 
         if (activeChar.isCursedWeaponEquipped())
-            CursedWeaponsManager.getInstance().showUsageTime(activeChar, activeChar.getCursedWeaponEquippedId());
+            CursedWeaponsManager.INSTANCE.showUsageTime(activeChar, activeChar.getCursedWeaponEquippedId());
 
         if (first) {
             if (Config.BUFF_STORE_ENABLED)

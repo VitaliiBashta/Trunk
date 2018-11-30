@@ -72,7 +72,7 @@ public final class ClassesStatsBalancerParser implements IXmlReader {
                 }
             }
         }
-        _log.info(getClass().getSimpleName() + ": Loaded: " + classes + " balances for " + _balance.size() + " classes.");
+        _log.info(": Loaded: " + classes + " balances for " + _balance.size() + " classes.");
     }
 
     private void synchronizePlayers() {

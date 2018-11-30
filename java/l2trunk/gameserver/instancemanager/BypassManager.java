@@ -22,7 +22,7 @@ public class BypassManager {
             default:
                 if (Strings.matches(bypass, "^(_mrsl|_diary|_match|manor_menu_select|_match|_olympiad).*", Pattern.DOTALL))
                     return BypassType.SIMPLE;
-//				if (CommunityBoardManager.getInstance().getCommunityHandler(bypass) != null)
+//				if (CommunityBoardManager.INSTANCE().getCommunityHandler(bypass) != null)
 //					return BypassType.SIMPLE_BBS;
                 return BypassType.SIMPLE_DIRECT;
         }
@@ -92,8 +92,8 @@ public class BypassManager {
 
     public static class DecodedBypass {
         public String bypass;
-        boolean bbs;
         public ICommunityBoardHandler handler;
+        boolean bbs;
 
         public DecodedBypass(String _bypass, boolean _bbs) {
             bypass = _bypass;

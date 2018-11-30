@@ -107,7 +107,7 @@ public final class RainbowYeti extends CharacterAI {
                 if (zone == null)
                     return;
                 zone.setActive(true);
-                ThreadPoolManager.getInstance().schedule(new ZoneDeactive(zone), 60000L);
+                ThreadPoolManager.INSTANCE().schedule(new ZoneDeactive(zone), 60000L);
                 break;
         }
     }

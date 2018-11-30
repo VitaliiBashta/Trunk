@@ -23,7 +23,7 @@ public class SPHeal extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                target.getPlayer().addExpAndSp(0, (long) _power);
+                target.getPlayer().addExpAndSp(0, (long) power);
 
                 getEffects(activeChar, target, getActivateRate() > 0, false);
             }

@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
 public class EnchantHPBonusTable {
     private static final Logger _log = LoggerFactory.getLogger(EnchantHPBonusTable.class);
     private static EnchantHPBonusTable _instance = new EnchantHPBonusTable();
-    private final Map<Integer,Integer[]> _armorHPBonus = new HashMap<>();
+    private final Map<Integer, Integer[]> _armorHPBonus = new HashMap<>();
     private int _onepieceFactor = 100;
 
     private EnchantHPBonusTable() {

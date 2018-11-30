@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class InstantZoneHolder extends AbstractHolder {
     private static final InstantZoneHolder _instance = new InstantZoneHolder();
-    private final Map<Integer,InstantZone> _zones = new HashMap<>();
+    private final Map<Integer, InstantZone> _zones = new HashMap<>();
 
     public static InstantZoneHolder getInstance() {
         return _instance;

@@ -23,7 +23,7 @@ public final class AntharasMinion extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        getActor().doCast(SkillTable.getInstance().getInfo(5097, 1), getActor(), true);
+        getActor().doCast(SkillTable.INSTANCE.getInfo(5097, 1), getActor(), true);
         super.onEvtDead(killer);
     }
 }

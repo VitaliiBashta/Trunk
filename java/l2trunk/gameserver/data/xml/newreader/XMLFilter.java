@@ -1,14 +1,16 @@
 package l2trunk.gameserver.data.xml.newreader;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 
-public class XMLFilter implements FileFilter {
+public class XMLFilter implements PathMatcher {
     @Override
-    public boolean accept(File f) {
-        if ((f == null) || !f.isFile()) {
+    public boolean matches(Path path) {
+        if ((path == null) || !Files.isRegularFile(path)) {
             return false;
         }
-        return f.getName().toLowerCase().endsWith(".xml");
+        return path.toString().endsWith(".xml");
     }
+
 }

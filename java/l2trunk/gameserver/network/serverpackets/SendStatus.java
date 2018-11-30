@@ -21,7 +21,7 @@ public final class SendStatus extends L2GameServerPacket {
         int j = 0;
         for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
             i++;
-            if (player.isInStoreMode() && (!Config.SENDSTATUS_TRADE_JUST_OFFLINE || player.isInOfflineMode()))
+            if (player.isInStoreMode())
                 j++;
         }
         online_players = i;

@@ -43,18 +43,18 @@ public class NpcHtmlMessage extends L2GameServerPacket {
                 setFile(filename);
             }
 
-            String replaces = "";
+            StringBuilder replaces = new StringBuilder();
 
             Object[] scriptArgs = new Object[]{val};
             for (ScriptClassAndMethod append : appends) {
                 Object obj = Scripts.getInstance().callScripts(player, append.className, append.methodName, scriptArgs);
                 if (obj != null) {
-                    replaces += obj;
+                    replaces.append(obj);
                 }
             }
 
-            if (!replaces.equals("")) {
-                replace("</body>", "\n" + Strings.bbParse(replaces) + "</body>");
+            if (!replaces.toString().equals("")) {
+                replace("</body>", "\n" + Strings.bbParse(replaces.toString()) + "</body>");
             }
         } else {
             setFile(filename);
@@ -141,8 +141,8 @@ public class NpcHtmlMessage extends L2GameServerPacket {
         }
 
         if (_file != null) {
-            String content = HtmCache.getInstance().getNotNull(_file, player);
-            String content2 = HtmCache.getInstance().getNullable(_file, player);
+            String content = HtmCache.INSTANCE.getNotNull(_file, player);
+            String content2 = HtmCache.INSTANCE.getNullable(_file, player);
             if (content2 == null) {
                 setHtml(have_appends && _file.endsWith(".htm") ? "" : content);
             } else {

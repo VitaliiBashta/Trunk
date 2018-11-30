@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class PowderKeg extends DefaultAI {
+public final class PowderKeg extends DefaultAI {
     public PowderKeg(NpcInstance actor) {
         super(actor);
     }
@@ -17,7 +17,7 @@ public class PowderKeg extends DefaultAI {
             return;
 
         actor.setTarget(actor);
-        actor.doCast(SkillTable.getInstance().getInfo(5714, 1), attacker, true);
+        actor.doCast(SkillTable.INSTANCE.getInfo(5714, 1), attacker, true);
         actor.doDie(null);
         super.onEvtAttacked(attacker, damage);
     }

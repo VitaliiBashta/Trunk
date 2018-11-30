@@ -303,7 +303,7 @@ public class RequestExSendPost extends L2GameClientPacket {
         }
 
         // Ady - Add the new mail sent to the manager
-//        MailManager.getInstance().addNewMailSent(activeChar);
+//        MailManager.INSTANCE().addNewMailSent(activeChar);
 
         ItemLogHandler.getInstance().addLog(activeChar, attachments, this._recieverName, ItemActionType.MAIL);
     }

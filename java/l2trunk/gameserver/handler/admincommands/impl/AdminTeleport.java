@@ -220,8 +220,7 @@ public class AdminTeleport implements IAdminCommandHandler {
                     if (plr == null)
                         continue;
 
-                    if (plr.isInOfflineMode()
-                            || plr.isInBuffStore()
+                    if (plr.isInBuffStore()
                             || plr.isInStoreMode()
                             || !plr.isOnline()
                             || plr.isInOlympiadMode()
@@ -237,7 +236,7 @@ public class AdminTeleport implements IAdminCommandHandler {
                     targets.add(plr);
                 }
                 activeChar.sendMessage("Recalling " + targets.size() + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
-                recall(activeChar, true, true, targets.toArray(new Player[targets.size()]));
+                recall(activeChar, true, true, targets.toArray(new Player[0]));
                 break;
             case admin_setref: {
                 if (wordList.length < 2) {

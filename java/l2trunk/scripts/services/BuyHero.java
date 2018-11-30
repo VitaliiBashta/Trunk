@@ -18,12 +18,12 @@ class BuyHero extends Functions {
     public void list() {
         Player player = getSelf();
         if (!Config.SERVICES_HERO_SELL_ENABLED) {
-            show(HtmCache.getInstance().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
             return;
         }
         String html = null;
 
-        html = HtmCache.getInstance().getNotNull("scripts/services/BuyHero.htm", player);
+        html = HtmCache.INSTANCE().getNotNull("scripts/services/BuyHero.htm", player);
         String add = "";
         for (int i = 0; i < Config.SERVICES_HERO_SELL_DAY.length; i++)
             add += "<a action=\"bypass -h scripts_services.BuyHero:get " + i + "\">"
@@ -39,7 +39,7 @@ class BuyHero extends Functions {
     public void get(String[] param) {
         Player player = getSelf();
         if (!Config.SERVICES_HERO_SELL_ENABLED) {
-            show(HtmCache.getInstance().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
             return;
         }
         int i = Integer.parseInt(param[0]);
@@ -57,7 +57,7 @@ class BuyHero extends Functions {
                 List<StatsSet> heroesToBe = new ArrayList<>();
                 heroesToBe.add(hero);
 
-                Hero.getInstance().computeNewHeroes(heroesToBe);
+                Hero.INSTANCE.computeNewHeroes(heroesToBe);
                 player.setHero(true);
                 Hero.addSkills(player);
                 player.updatePledgeClass();

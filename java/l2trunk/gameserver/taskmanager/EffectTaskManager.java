@@ -19,10 +19,10 @@ public class EffectTaskManager extends SteppingRunnableQueueManager {
 
     private EffectTaskManager() {
         super(TICK);
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, Rnd.get(TICK), TICK);
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(this, Rnd.get(TICK), TICK);
 
         //Очистка каждые 30 секунд
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 EffectTaskManager.this.purge();

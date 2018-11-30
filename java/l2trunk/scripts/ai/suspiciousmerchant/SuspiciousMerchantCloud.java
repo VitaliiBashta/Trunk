@@ -1,12 +1,9 @@
 package l2trunk.scripts.ai.suspiciousmerchant;
 
-import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public final class SuspiciousMerchantCloud extends DefaultAI {
+public final class SuspiciousMerchantCloud extends AbstractSuspiciousMerchant {
     private static final Location[] points = {
             new Location(-56032, 86017, -3259),
             new Location(-57329, 86006, -3640),
@@ -24,96 +21,13 @@ public final class SuspiciousMerchantCloud extends DefaultAI {
             new Location(-57329, 86006, -3640),
             new Location(-56032, 86017, -3259)};
 
-    private int current_point = -1;
-    private long wait_timeout = 0;
-    private boolean wait = false;
-
     public SuspiciousMerchantCloud(NpcInstance actor) {
         super(actor);
     }
 
     @Override
-    public boolean isGlobalAI() {
-        return true;
-    }
-
-    @Override
     public boolean thinkActive() {
-        NpcInstance actor = getActor();
-        if (actor.isDead())
-            return true;
-
-        if (_def_think) {
-            doTask();
-            return true;
-        }
-
-        if (actor.isMoving)
-            return true;
-
-        if (System.currentTimeMillis() > wait_timeout && (current_point > -1 || Rnd.chance(5))) {
-            if (!wait)
-                switch (current_point) {
-                    case 0:
-                        wait_timeout = System.currentTimeMillis() + 30000;
-                        wait = true;
-                        return true;
-                    case 3:
-                        wait_timeout = System.currentTimeMillis() + 30000;
-                        wait = true;
-                        return true;
-                    case 5:
-                        wait_timeout = System.currentTimeMillis() + 20000;
-                        wait = true;
-                        return true;
-                    case 6:
-                        wait_timeout = System.currentTimeMillis() + 40000;
-                        wait = true;
-                        return true;
-                    case 7:
-                        wait_timeout = System.currentTimeMillis() + 60000;
-                        wait = true;
-                        return true;
-                    case 8:
-                        wait_timeout = System.currentTimeMillis() + 40000;
-                        wait = true;
-                        return true;
-                    case 9:
-                        wait_timeout = System.currentTimeMillis() + 20000;
-                        wait = true;
-                        return true;
-                    case 11:
-                        wait_timeout = System.currentTimeMillis() + 30000;
-                        wait = true;
-                        return true;
-                    case 14:
-                        wait_timeout = System.currentTimeMillis() + 30000;
-                        wait = true;
-                        return true;
-                }
-
-            wait_timeout = 0;
-            wait = false;
-
-            if (current_point >= points.length - 1)
-                current_point = -1;
-
-            current_point++;
-
-            addTaskMove(points[current_point], false);
-            doTask();
-            return true;
-        }
-
-        return randomAnimation();
-
+        return thinkActive0(points);
     }
 
-    @Override
-    public void onEvtAttacked(Creature attacker, int damage) {
-    }
-
-    @Override
-    public void onEvtAggression(Creature target, int aggro) {
-    }
 }

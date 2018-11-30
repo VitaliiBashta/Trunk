@@ -20,9 +20,6 @@ public class RequestTutorialQuestionMark extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-
-        player.isntAfk();
-
         if (player.isInFightClub()) {
             FightClubEventManager.getInstance().sendEventPlayerMenu(player);
         } else {
@@ -31,7 +28,7 @@ public class RequestTutorialQuestionMark extends L2GameClientPacket {
                 player.processQuestEvent(q.getName(), "QM" + _number, null);
 
             if (_number == player.getObjectId())
-                Achievements.getInstance().onBypass(player, "_bbs_achievements", null);
+                Achievements.INSTANCE.onBypass(player, "_bbs_achievements", null);
         }
     }
 }

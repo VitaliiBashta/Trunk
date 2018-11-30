@@ -5,7 +5,6 @@ import l2trunk.gameserver.network.GameClient;
 import l2trunk.gameserver.network.GameClient.GameClientState;
 import l2trunk.gameserver.network.serverpackets.ActionFail;
 import l2trunk.gameserver.network.serverpackets.CharSelected;
-import l2trunk.gameserver.utils.AutoBan;
 
 public class CharacterSelected extends L2GameClientPacket {
     private int _charSlot;
@@ -26,10 +25,6 @@ public class CharacterSelected extends L2GameClientPacket {
             return;
 
         int objId = client.getObjectIdForSlot(_charSlot);
-        if (AutoBan.checkIsBanned(objId)) {
-            sendPacket(ActionFail.STATIC);
-            return;
-        }
 
         Player activeChar = client.loadCharFromDisk(_charSlot, objId);
         if (activeChar == null) {

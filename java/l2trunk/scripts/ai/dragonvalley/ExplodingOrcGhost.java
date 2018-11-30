@@ -9,7 +9,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class ExplodingOrcGhost extends Fighter {
 
-    private final Skill SELF_DESTRUCTION = SkillTable.getInstance().getInfo(6850, 1);
+    private final Skill SELF_DESTRUCTION = SkillTable.INSTANCE().getInfo(6850, 1);
 
     public ExplodingOrcGhost(NpcInstance actor) {
         super(actor);
@@ -17,7 +17,7 @@ public final class ExplodingOrcGhost extends Fighter {
 
     @Override
     public void onEvtSpawn() {
-        ThreadPoolManager.getInstance().schedule(new StartSelfDestructionTimer(getActor()), 3000L);
+        ThreadPoolManager.INSTANCE().schedule(new StartSelfDestructionTimer(getActor()), 3000L);
         super.onEvtSpawn();
     }
 

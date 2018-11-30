@@ -2,8 +2,10 @@ package l2trunk.gameserver.handler.bbs;
 
 import l2trunk.gameserver.model.Player;
 
+import java.util.List;
+
 public interface ICommunityBoardHandler {
-    String[] getBypassCommands();
+    List<String> getBypassCommands();
 
     void onBypassCommand(Player player, String bypass);
 

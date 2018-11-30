@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("serial")
-public class SimpleSpawner extends Spawner implements Cloneable {
-    @SuppressWarnings("unused")
+public final class SimpleSpawner extends Spawner implements Cloneable {
     private static final Logger _log = LoggerFactory.getLogger(SimpleSpawner.class);
 
     private NpcTemplate _npcTemplate;

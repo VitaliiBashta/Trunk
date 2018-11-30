@@ -16,11 +16,11 @@ public final class SkillAcquireHolder extends AbstractHolder {
     private static final SkillAcquireHolder _instance = new SkillAcquireHolder();
     // классовые зависимости
 //    private final Map<Integer,List<SkillLearn>> _normalSkillTree = new HashMap<>();
-    private final Map<Integer,List<SkillLearn>> _normalSkillTree = new HashMap<>();
-    private final Map<Integer,List<SkillLearn>> _transferSkillTree = new HashMap<>();
+    private final Map<Integer, List<SkillLearn>> _normalSkillTree = new HashMap<>();
+    private final Map<Integer, List<SkillLearn>> _transferSkillTree = new HashMap<>();
     // расовые зависимости
-    private final Map<Integer,List<SkillLearn>> _fishingSkillTree = new HashMap<>();
-    private final Map<Integer,List<SkillLearn>> _transformationSkillTree = new HashMap<>();
+    private final Map<Integer, List<SkillLearn>> _fishingSkillTree = new HashMap<>();
+    private final Map<Integer, List<SkillLearn>> _transformationSkillTree = new HashMap<>();
     // без зависимостей
     private final List<SkillLearn> _certificationSkillTree = new ArrayList<>();
     private final List<SkillLearn> _collectionSkillTree = new ArrayList<>();
@@ -37,21 +37,21 @@ public final class SkillAcquireHolder extends AbstractHolder {
             case NORMAL:
                 skills = _normalSkillTree.get(player.getActiveClassId());
                 if (skills == null) {
-                    info("skill tree for class " + player.getActiveClassId() + " is not defined !");
+                    LOG.info("skill tree for class " + player.getActiveClassId() + " is not defined !");
                     return 0;
                 }
                 break;
             case TRANSFORMATION:
                 skills = _transformationSkillTree.get(player.getRace().ordinal());
                 if (skills == null) {
-                    info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return 0;
                 }
                 break;
             case FISHING:
                 skills = _fishingSkillTree.get(player.getRace().ordinal());
                 if (skills == null) {
-                    info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return 0;
                 }
                 break;
@@ -76,21 +76,17 @@ public final class SkillAcquireHolder extends AbstractHolder {
             case NORMAL:
                 skills = _normalSkillTree.get(player.getActiveClassId());
                 if (skills == null) {
-                    info("skill tree for class " + player.getActiveClassId() + " is not defined !");
+                    LOG.info("skill tree for class " + player.getActiveClassId() + " is not defined !");
                     return Collections.emptyList();
                 }
                 return getAvaliableList(skills, player.getAllSkills(), player.getLevel());
             case COLLECTION:
                 skills = _collectionSkillTree;
-                if (skills == null) {
-                    info("skill tree for class " + player.getActiveClassId() + " is not defined !");
-                    return Collections.emptyList();
-                }
                 return getAvaliableList(skills, player.getAllSkills(), player.getLevel());
             case TRANSFORMATION:
                 skills = _transformationSkillTree.get(player.getRace().ordinal());
                 if (skills == null) {
-                    info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return Collections.emptyList();
                 }
                 return getAvaliableList(skills, player.getAllSkills(), player.getLevel());
@@ -99,7 +95,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
             case TRANSFER_CARDINAL:
                 skills = _transferSkillTree.get(type.transferClassId());
                 if (skills == null) {
-                    info("skill tree for class " + type.transferClassId() + " is not defined !");
+                    LOG.info("skill tree for class " + type.transferClassId() + " is not defined !");
                     return Collections.emptyList();
                 }
                 if (player == null)
@@ -118,7 +114,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
             case FISHING:
                 skills = _fishingSkillTree.get(player.getRace().ordinal());
                 if (skills == null) {
-                    info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return Collections.emptyList();
                 }
                 return getAvaliableList(skills, player.getAllSkills(), player.getLevel());
@@ -149,21 +145,17 @@ public final class SkillAcquireHolder extends AbstractHolder {
             case NORMAL:
                 skills = _normalSkillTree.get(player.getActiveClassId());
                 if (skills == null) {
-                    info("skill tree for class " + player.getActiveClassId() + " is not defined !");
+                    LOG.info("skill tree for class " + player.getActiveClassId() + " is not defined !");
                     return Collections.emptyList();
                 }
                 return getAvaliableList(skills, player.getAllSkills(), level);
             case COLLECTION:
                 skills = _collectionSkillTree;
-                if (skills == null) {
-                    info("skill tree for class " + player.getActiveClassId() + " is not defined !");
-                    return Collections.emptyList();
-                }
                 return getAvaliableList(skills, player.getAllSkills(), level);
             case TRANSFORMATION:
                 skills = _transformationSkillTree.get(player.getRace().ordinal());
                 if (skills == null) {
-                    info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return Collections.emptyList();
                 }
                 return getAvaliableList(skills, player.getAllSkills(), level);
@@ -172,7 +164,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
             case TRANSFER_CARDINAL:
                 skills = _transferSkillTree.get(type.transferClassId());
                 if (skills == null) {
-                    info("skill tree for class " + type.transferClassId() + " is not defined !");
+                    LOG.info("skill tree for class " + type.transferClassId() + " is not defined !");
                     return Collections.emptyList();
                 }
                 if (player == null)
@@ -191,7 +183,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
             case FISHING:
                 skills = _fishingSkillTree.get(player.getRace().ordinal());
                 if (skills == null) {
-                    info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
                     return Collections.emptyList();
                 }
                 return getAvaliableList(skills, player.getAllSkills(), level);
@@ -221,7 +213,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
         for (SkillLearn temp : skillLearns)
             if (temp.getMinLevel() <= level) {
                 boolean knownSkill = false;
-                for (Skill skill : skills ) {
+                for (Skill skill : skills) {
                     if (knownSkill) continue;
                     if (skill.getId() == temp.getId()) {
                         knownSkill = true;
@@ -357,7 +349,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
 
     public List<SkillLearn> getAllNormalSkillTreeWithForgottenScrolls() {
         List<SkillLearn> a = new ArrayList<>();
-        for (Map.Entry<Integer, List<SkillLearn>> i : _normalSkillTree.entrySet() ) {
+        for (Map.Entry<Integer, List<SkillLearn>> i : _normalSkillTree.entrySet()) {
             for (SkillLearn learn : i.getValue())
                 if (learn.getItemId() > 0 && learn.isClicked())
                     a.add(learn);
@@ -366,7 +358,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
         return a;
     }
 
-    public void addAllNormalSkillLearns(Map<Integer,List<SkillLearn>> map) {
+    public void addAllNormalSkillLearns(Map<Integer, List<SkillLearn>> map) {
         int classID;
 
         for (ClassId classId : ClassId.VALUES) {
@@ -379,7 +371,7 @@ public final class SkillAcquireHolder extends AbstractHolder {
 
             temp = map.get(classID);
             if (temp == null) {
-                info("Not found NORMAL skill learn for class " + classID);
+                LOG.info("Not found NORMAL skill learn for class " + classID);
                 continue;
             }
 
@@ -434,14 +426,14 @@ public final class SkillAcquireHolder extends AbstractHolder {
 
     @Override
     public void log() {
-        info("load " + _normalSkillTree.size() + " normal learns for " + _normalSkillTree.size() + " classes.");
-        info("load " + _transferSkillTree.size() + " transfer learns for " + _transferSkillTree.size() + " classes.");
-        info("load " + _transformationSkillTree.size() + " transformation learns for " + _transformationSkillTree.size() + " races.");
-        info("load " + _fishingSkillTree.size() + " fishing learns for " + _fishingSkillTree.size() + " races.");
-        info("load " + _certificationSkillTree.size() + " certification learns.");
-        info("load " + _collectionSkillTree.size() + " collection learns.");
-        info("load " + _pledgeSkillTree.size() + " pledge learns.");
-        info("load " + _subUnitSkillTree.size() + " sub unit learns.");
+        LOG.info("load " + _normalSkillTree.size() + " normal learns for " + _normalSkillTree.size() + " classes.");
+        LOG.info("load " + _transferSkillTree.size() + " transfer learns for " + _transferSkillTree.size() + " classes.");
+        LOG.info("load " + _transformationSkillTree.size() + " transformation learns for " + _transformationSkillTree.size() + " races.");
+        LOG.info("load " + _fishingSkillTree.size() + " fishing learns for " + _fishingSkillTree.size() + " races.");
+        LOG.info("load " + _certificationSkillTree.size() + " certification learns.");
+        LOG.info("load " + _collectionSkillTree.size() + " collection learns.");
+        LOG.info("load " + _pledgeSkillTree.size() + " pledge learns.");
+        LOG.info("load " + _subUnitSkillTree.size() + " sub unit learns.");
     }
 
     @Deprecated

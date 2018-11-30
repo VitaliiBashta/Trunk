@@ -1,19 +1,20 @@
 package l2trunk.gameserver.handler.voicecommands;
 
-import l2trunk.scripts.handler.voicecommands.DragonStatus;
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.handler.voicecommands.impl.*;
-import l2trunk.gameserver.handler.voicecommands.impl.BotReport.ReportCommand;
+import l2trunk.scripts.handler.voicecommands.DragonStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class VoicedCommandHandler extends AbstractHolder {
-    private static final VoicedCommandHandler _instance = new VoicedCommandHandler();
-    private final Map<String, IVoicedCommandHandler> _datatable = new HashMap<>();
+public enum VoicedCommandHandler {
+    INSTANCE;
+    private static Logger LOG = LoggerFactory.getLogger(VoicedCommandHandler.class);
+    private final Map<String, IVoicedCommandHandler> datatable = new HashMap<>();
 
-    private VoicedCommandHandler() {
+    VoicedCommandHandler() {
         registerVoicedCommandHandler(new Away());
         registerVoicedCommandHandler(new Atod());
         registerVoicedCommandHandler(new AntiGrief());
@@ -25,24 +26,18 @@ public class VoicedCommandHandler extends AbstractHolder {
         registerVoicedCommandHandler(new Teleport());
         registerVoicedCommandHandler(new PollCommand());
         registerVoicedCommandHandler(new CWHPrivileges());
-        registerVoicedCommandHandler(new Offline());
         registerVoicedCommandHandler(new Password());
         registerVoicedCommandHandler(new Relocate());
-        registerVoicedCommandHandler(new ReportCommand());
         registerVoicedCommandHandler(new Repair());
         registerVoicedCommandHandler(new ServerInfo());
-        registerVoicedCommandHandler(new Wedding());
         registerVoicedCommandHandler(new WhoAmI());
         registerVoicedCommandHandler(new Debug());
-        registerVoicedCommandHandler(new Security());
-        registerVoicedCommandHandler(new ReportBot());
         registerVoicedCommandHandler(new res());
         registerVoicedCommandHandler(new FindParty());
         registerVoicedCommandHandler(new Ping());
         registerVoicedCommandHandler(new CommandSiege());
         registerVoicedCommandHandler(new LockPc());
         registerVoicedCommandHandler(new NpcSpawn());
-        registerVoicedCommandHandler(new Donate());
 
         if (Config.ENABLE_ACHIEVEMENTS)
             registerVoicedCommandHandler(new AchievementsVoice());
@@ -55,33 +50,16 @@ public class VoicedCommandHandler extends AbstractHolder {
         registerVoicedCommandHandler(new DragonStatus());
     }
 
-    public static VoicedCommandHandler getInstance() {
-        return _instance;
-    }
-
     public void registerVoicedCommandHandler(IVoicedCommandHandler handler) {
-        String[] ids = handler.getVoicedCommandList();
-        for (String element : ids) {
-            _datatable.put(element, handler);
-        }
+        handler.getVoicedCommandList().forEach(a -> datatable.put(a, handler));
     }
 
     public IVoicedCommandHandler getVoicedCommandHandler(String voicedCommand) {
-        String command = voicedCommand;
-        if (voicedCommand.contains(" ")) {
-            command = voicedCommand.substring(0, voicedCommand.indexOf(" "));
-        }
-
-        return _datatable.get(command);
+        String[] command = voicedCommand.split(" ");
+        return datatable.get(command[0]);
     }
 
-    @Override
-    public int size() {
-        return _datatable.size();
-    }
-
-    @Override
-    public void clear() {
-        _datatable.clear();
+    public void log() {
+        LOG.info(String.format("loaded %d %s(s) count.", datatable.size(), getClass().getSimpleName()));
     }
 }

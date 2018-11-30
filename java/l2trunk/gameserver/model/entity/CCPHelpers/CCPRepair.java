@@ -78,7 +78,7 @@ public class CCPRepair {
                     statement.execute();
                     DbUtils.close(statement);
 
-                    Collection<ItemInstance> items = ItemsDAO.getInstance().getItemsByOwnerIdAndLoc(objId, ItemLocation.PAPERDOLL);
+                    Collection<ItemInstance> items = ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objId, ItemLocation.PAPERDOLL);
                     for (ItemInstance item : items) {
                         if (item.isEquipped()) {
                             item.setEquipped(false);

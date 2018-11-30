@@ -6,11 +6,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * @author 4ipolino
- */
+import java.util.Arrays;
+import java.util.List;
+
 public class Teleport implements IVoicedCommandHandler {
-    private static final String[] _commandList = {"pvp"};
+    private static final List<String> _commandList = Arrays.asList("pvp", "farm", "farm_hard", "farm_low");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
@@ -117,7 +117,7 @@ public class Teleport implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return _commandList;
     }
 

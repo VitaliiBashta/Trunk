@@ -17,13 +17,13 @@ public abstract class AbstractFileParser<H extends AbstractHolder> extends Abstr
         Path file = getXMLFile();
 
         if (!Files.exists(file)) {
-            warn("file " + file.toAbsolutePath() + " not exists");
+            LOG.warn("file " + file.toAbsolutePath() + " not exists");
             return;
         }
 
         Path dtd = file.getParent().resolve(getDTDFileName());
         if (!Files.exists(dtd)) {
-            info("DTD file: " + dtd.toAbsolutePath() + " not exists.");
+            LOG.warn("DTD file: " + dtd.toAbsolutePath() + " not exists.");
             return;
         }
 
@@ -33,7 +33,7 @@ public abstract class AbstractFileParser<H extends AbstractHolder> extends Abstr
             parseCrypted(file);
             //parseDocument(new FileInputStream(file), file.getName());
         } catch (Exception e) {
-            error("Exception in AbstractFileParser ", e);
+            LOG.error("Exception in AbstractFileParser ", e);
         }
     }
 }

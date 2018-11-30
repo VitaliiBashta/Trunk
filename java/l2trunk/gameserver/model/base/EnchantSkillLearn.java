@@ -132,7 +132,7 @@ public final class EnchantSkillLearn {
             {561939, 1218690}, // 30, цифра неточная
     };
     // these two build the primary key
-    private final int _id;
+    private final int id;
     private final int _level;
     // not needed, just for easier debug
     private final String _name;
@@ -143,7 +143,7 @@ public final class EnchantSkillLearn {
     private final int _costMul;
 
     public EnchantSkillLearn(int id, int lvl, String name, String type, int minSkillLvl, int baseLvl, int maxLvl) {
-        _id = id;
+        this.id = id;
         _level = lvl;
         _baseLvl = baseLvl;
         _maxLvl = maxLvl;
@@ -153,12 +153,6 @@ public final class EnchantSkillLearn {
         _costMul = _maxLvl == 15 ? 5 : 1;
     }
 
-    /**
-     * @return Returns the id.
-     */
-    private int getId() {
-        return _id;
-    }
 
     /**
      * @return Returns the level.
@@ -181,9 +175,6 @@ public final class EnchantSkillLearn {
         return _minSkillLevel;
     }
 
-    /**
-     * @return Returns the name.
-     */
     public String getName() {
         return _name;
     }
@@ -200,7 +191,7 @@ public final class EnchantSkillLearn {
      * @return Returns the spCost.
      */
     public int[] getCost() {
-        return SkillTable.getInstance().getInfo(_id, 1).isOffensive() ? _priceCombat[_level % 100] : _priceBuff[_level % 100];
+        return SkillTable.INSTANCE().getInfo(id, 1).isOffensive() ? _priceCombat[_level % 100] : _priceBuff[_level % 100];
     }
 
     /**
@@ -224,7 +215,7 @@ public final class EnchantSkillLearn {
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
-        result = PRIME * result + _id;
+        result = PRIME * result + id;
         result = PRIME * result + _level;
         return result;
     }
@@ -240,6 +231,6 @@ public final class EnchantSkillLearn {
         if (!(obj instanceof EnchantSkillLearn))
             return false;
         EnchantSkillLearn other = (EnchantSkillLearn) obj;
-        return getId() == other.getId() && getLevel() == other.getLevel();
+        return id == other.id && getLevel() == other.getLevel();
     }
 }

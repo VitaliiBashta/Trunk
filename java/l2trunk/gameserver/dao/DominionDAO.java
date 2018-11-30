@@ -11,15 +11,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class DominionDAO {
+public enum  DominionDAO {
+    INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT lord_object_id, wards FROM dominion WHERE id=?";
     private static final String UPDATE_SQL_QUERY = "UPDATE dominion SET lord_object_id=?, wards=? WHERE id=?";
     private static final Logger _log = LoggerFactory.getLogger(DominionDAO.class);
-    private static final DominionDAO _instance = new DominionDAO();
-
-    public static DominionDAO getInstance() {
-        return _instance;
-    }
 
     public void select(Dominion dominion) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();

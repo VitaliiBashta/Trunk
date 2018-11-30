@@ -130,7 +130,7 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                                 org.dom4j.Element rewardElement = rewardIterator.next();
                                 RewardData data = parseReward(rewardElement, 1);
                                 if (type == RewardType.SWEEP || type == RewardType.NOT_RATED_NOT_GROUPED)
-                                    warn("Can't load rewardlist from group: " + npcId + "; type: " + type);
+                                    LOG.warn("Can't load rewardlist from group: " + npcId + "; type: " + type);
                                 else
                                     group.addData(data);
                             }
@@ -138,7 +138,7 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                             list.add(group);
                         } else if (nextName.equalsIgnoreCase("reward")) {
                             if (type != RewardType.SWEEP && type != RewardType.NOT_RATED_NOT_GROUPED) {
-                                warn("Reward can't be without group(and not grouped): " + npcId + "; type: " + type);
+                                LOG.warn("Reward can't be without group(and not grouped): " + npcId + "; type: " + type);
                                 continue;
                             }
                             RewardData data;
@@ -154,7 +154,7 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
 
                     if (type == RewardType.RATED_GROUPED || type == RewardType.NOT_RATED_GROUPED)
                         if (!list.validate())
-                            warn("Problems with rewardlist for npc: " + npcId + "; type: " + type);
+                            LOG.warn("Problems with rewardlist for npc: " + npcId + "; type: " + type);
 
                     template.putRewardList(type, list);
                 } else if (nodeName.equalsIgnoreCase("skills")) {
@@ -163,7 +163,7 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                         int id = Integer.parseInt(nextElement.attributeValue("id"));
                         int level = Integer.parseInt(nextElement.attributeValue("level"));
 
-                        Skill skill = SkillTable.getInstance().getInfo(id, level);
+                        Skill skill = SkillTable.INSTANCE().getInfo(id, level);
                         // Для определения расы используется скилл 4416
                         if (id == 4416) {
                             template.setRace(level);

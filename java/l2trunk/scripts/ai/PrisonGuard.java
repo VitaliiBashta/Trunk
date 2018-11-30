@@ -51,7 +51,7 @@ public final class PrisonGuard extends Fighter {
             else if (actor.getNpcId() == 18368)
                 Functions.npcSay(actor, "You're out of mind comming here...");
 
-            Skill petrification = SkillTable.getInstance().getInfo(4578, 1); // Petrification
+            Skill petrification = SkillTable.INSTANCE().getInfo(4578, 1); // Petrification
             actor.doCast(petrification, attacker, true);
             if (attacker.getPet() != null)
                 actor.doCast(petrification, attacker.getPet(), true);

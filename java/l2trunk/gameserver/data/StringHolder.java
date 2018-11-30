@@ -1,9 +1,10 @@
 package l2trunk.gameserver.data;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.utils.Language;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -13,16 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-public final class StringHolder extends AbstractHolder {
-    private static final StringHolder _instance = new StringHolder();
-    private final Map<Language, Map<String, String>> _strings = new HashMap<>();
-
-    private StringHolder() {
-    }
-
-    public static StringHolder getInstance() {
-        return _instance;
-    }
+public enum StringHolder {
+    INSTANCE;
+    private static final Logger LOG = LoggerFactory.getLogger(StringHolder.class);
+    private final Map<Language, Map<String, String>> strings = new HashMap<>();
 
     public String getNullable(Player player, String name) {
         Language lang = player == null ? Language.ENGLISH : player.getLanguage();
@@ -35,25 +30,25 @@ public final class StringHolder extends AbstractHolder {
         String text = get(lang, name);
         if (text == null && player != null) {
             text = "Not find string: " + name + "; for lang: " + lang;
-            _strings.get(lang).put(name, text);
+            strings.get(lang).put(name, text);
         }
 
         return text;
     }
 
     private String get(Language lang, String address) {
-        Map<String, String> strings = _strings.get(lang);
+        Map<String, String> strings = this.strings.get(lang);
 
         return strings.get(address);
     }
 
     public void load() {
         for (Language lang : Language.VALUES) {
-            _strings.put(lang, new HashMap<>());
+            strings.put(lang, new HashMap<>());
 
             Path f = Config.DATAPACK_ROOT.resolve("data/string/strings_" + lang.getShortName() + ".ini");
             if (!Files.exists(f)) {
-                warn("Not find file: " + f.toAbsolutePath());
+                LOG.warn("Not find file: " + f.toAbsolutePath());
                 continue;
             }
 
@@ -66,7 +61,7 @@ public final class StringHolder extends AbstractHolder {
 
                     StringTokenizer token = new StringTokenizer(line, "=");
                     if (token.countTokens() < 2) {
-                        error("Error on line: " + line + "; file: " + f.toAbsolutePath());
+                        LOG.error("Error on line: " + line + "; file: " + f.toAbsolutePath());
                         continue;
                     }
 
@@ -76,36 +71,19 @@ public final class StringHolder extends AbstractHolder {
                     while (token.hasMoreTokens())
                         value.append('=').append(token.nextToken());
 
-                    Map<String, String> strings = _strings.get(lang);
+                    Map<String, String> strings = this.strings.get(lang);
 
                     strings.put(name, value.toString());
                 }
             } catch (IOException e) {
-                error("Exception in StringHolder", e);
+                LOG.error("Exception in StringHolder", e);
             }
         }
-
-        log();
+        strings.forEach((key, value) -> LOG.info("loaded " + value.size()+" for " + key.getShortName() + " language"));
     }
 
     public void reload() {
-        clear();
+        strings.clear();
         load();
-    }
-
-    @Override
-    public void log() {
-        for (Map.Entry<Language, Map<String, String>> entry : _strings.entrySet())
-            info("load strings: " + entry.getValue().size() + " for lang: " + entry.getKey());
-    }
-
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-        _strings.clear();
     }
 }

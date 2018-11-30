@@ -117,26 +117,25 @@ public final class TarBeetle extends DefaultAI {
             int z = GeoEngine.getHeight(x, y, loc.z, actor.getReflection().getGeoIndex());
 
             actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 4671, 1, 500, 0));
-            ThreadPoolManager.getInstance().schedule(new Teleport(new Location(x, y, z)), 500);
+            ThreadPoolManager.INSTANCE.schedule(new Teleport(new Location(x, y, z)), 500);
             LAST_TELEPORT = System.currentTimeMillis();
             break;
         }
         return super.thinkActive();
     }
 
-    @SuppressWarnings("null")
     private void addEffect(NpcInstance actor, Player player) {
         List<Effect> effect = player.getEffectList().getEffectsBySkillId(6142);
         if (effect != null) {
             int level = effect.get(0).getSkill().getLevel();
             if (level < 3) {
                 effect.get(0).exit();
-                Skill skill = SkillTable.getInstance().getInfo(6142, level + 1);
+                Skill skill = SkillTable.INSTANCE().getInfo(6142, level + 1);
                 skill.getEffects(actor, player, false, false);
                 actor.broadcastPacket(new MagicSkillUse(actor, player, skill.getId(), level, skill.getHitTime(), 0));
             }
         } else {
-            Skill skill = SkillTable.getInstance().getInfo(6142, 1);
+            Skill skill = SkillTable.INSTANCE().getInfo(6142, 1);
             if (skill != null) {
                 skill.getEffects(actor, player, false, false);
                 actor.broadcastPacket(new MagicSkillUse(actor, player, skill.getId(), 1, skill.getHitTime(), 0));

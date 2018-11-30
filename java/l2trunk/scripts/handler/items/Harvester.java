@@ -58,7 +58,7 @@ public final class Harvester extends SimpleItemHandler implements ScriptFile {
             return false;
         }
 
-        Skill skill = SkillTable.getInstance().getInfo(2098, 1);
+        Skill skill = SkillTable.INSTANCE().getInfo(2098, 1);
         if (skill != null && skill.checkCondition(player, monster, false, false, true)) {
             player.getAI().Cast(skill, monster);
             return true;

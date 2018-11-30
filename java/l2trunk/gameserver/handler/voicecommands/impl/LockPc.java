@@ -6,11 +6,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CharacterControlPanel;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Collections;
+import java.util.List;
+
 public class LockPc extends Functions implements IVoicedCommandHandler {
-    private static final String[] COMMANDS =
-            {
-                    "lock"
-            };
+    private static final List<String> COMMANDS = Collections.singletonList("lock");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
@@ -20,7 +20,7 @@ public class LockPc extends Functions implements IVoicedCommandHandler {
             return true;
         String html = "command/" + nextPage;
 
-        String dialog = HtmCache.getInstance().getNotNull(html, activeChar);
+        String dialog = HtmCache.INSTANCE.getNotNull(html, activeChar);
 
         dialog = CharacterControlPanel.getInstance().replacePage(dialog, activeChar, "", "-h user_control ");
 
@@ -30,7 +30,7 @@ public class LockPc extends Functions implements IVoicedCommandHandler {
     }
 
     @Override
-    public String[] getVoicedCommandList() {
+    public List<String> getVoicedCommandList() {
         return COMMANDS;
     }
 

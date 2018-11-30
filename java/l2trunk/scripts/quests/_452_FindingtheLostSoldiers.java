@@ -1,30 +1,17 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
 
-public class _452_FindingtheLostSoldiers extends Quest implements ScriptFile {
+public final class _452_FindingtheLostSoldiers extends Quest implements ScriptFile {
     private static final int JAKAN = 32773;
     private static final int TAG_ID = 15513;
-    private static final int[] SOLDIER_CORPSES = {
-            32769,
-            32770,
-            32771,
-            32772
-    };
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
+    private static final List<Integer> SOLDIER_CORPSES = Arrays.asList(32769, 32770, 32771, 32772);
 
     public _452_FindingtheLostSoldiers() {
         super(false);
@@ -33,6 +20,15 @@ public class _452_FindingtheLostSoldiers extends Quest implements ScriptFile {
         addTalkId(JAKAN);
         addTalkId(SOLDIER_CORPSES);
         addQuestItem(TAG_ID);
+    }
+
+    public void onLoad() {
+    }
+
+    public void onReload() {
+    }
+
+    public void onShutdown() {
     }
 
     @Override
@@ -46,7 +42,7 @@ public class _452_FindingtheLostSoldiers extends Quest implements ScriptFile {
                 st.setCond(1);
                 st.playSound(SOUND_ACCEPT);
             }
-        } else if (ArrayUtils.contains(SOLDIER_CORPSES, npc.getNpcId()) && st.getCond() == 1) {
+        } else if (SOLDIER_CORPSES.contains(npc.getNpcId()) && st.getCond() == 1) {
             st.giveItems(TAG_ID, 1);
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
@@ -86,7 +82,7 @@ public class _452_FindingtheLostSoldiers extends Quest implements ScriptFile {
                     }
                     break;
             }
-        } else if (ArrayUtils.contains(SOLDIER_CORPSES, npc.getNpcId()))
+        } else if (SOLDIER_CORPSES.contains(npc.getNpcId()))
             if (st.getCond() == 1)
                 htmltext = "corpse-1.htm";
 

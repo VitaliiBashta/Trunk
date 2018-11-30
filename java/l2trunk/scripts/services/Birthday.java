@@ -79,7 +79,7 @@ class Birthday extends Functions {
 
         npc.setBusy(true);
 
-        ThreadPoolManager.getInstance().execute(new GameObjectTasks.DeleteTask(npc));
+        ThreadPoolManager.INSTANCE().execute(new GameObjectTasks.DeleteTask(npc));
     }
 
     /**

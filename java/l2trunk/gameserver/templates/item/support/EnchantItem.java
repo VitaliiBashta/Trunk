@@ -10,9 +10,8 @@ public class EnchantItem {
     private final int _itemId;
     private final int _chance;
     private final int _maxEnchant;
-
-    private Set<Integer> items = new HashSet<>();//Containers.EMPTY_INT_SET;
     private final Set<ItemTemplate.Grade> _grades = Collections.emptySet();
+    private Set<Integer> items = new HashSet<>();//Containers.EMPTY_INT_SET;
 
     EnchantItem(int itemId, int chance, int maxEnchant) {
         _itemId = itemId;

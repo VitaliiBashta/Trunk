@@ -28,7 +28,7 @@ class FakeHero extends Functions {
         NpcHtmlMessage html = null;
         if ((!player.isHero()) && (!player.isFakeHero())) {
             html = new NpcHtmlMessage(5).setFile("scripts/services/FakeHero/index.htm");
-            String template = HtmCache.getInstance().getNotNull("scripts/services/FakeHero/template.htm", player);
+            String template = HtmCache.INSTANCE().getNotNull("scripts/services/FakeHero/template.htm", player);
             String block = "";
             String list = "";
 

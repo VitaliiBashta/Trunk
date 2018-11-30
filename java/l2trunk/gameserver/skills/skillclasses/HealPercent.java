@@ -38,7 +38,7 @@ public class HealPercent extends Skill {
 
                 getEffects(activeChar, target, getActivateRate() > 0, false);
 
-                double hp = _power * target.getMaxHp() / 100.;
+                double hp = power * target.getMaxHp() / 100.;
                 double newHp = hp * (!_ignoreHpEff ? target.calcStat(Stats.HEAL_EFFECTIVNESS, 100., activeChar, this) : 100.) / 100.;
                 double addToHp = Math.max(0, Math.min(newHp, target.calcStat(Stats.HP_LIMIT, null, null) * target.getMaxHp() / 100. - target.getCurrentHp()));
 
