@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 
-public class Log {
+public final class Log {
     public static final PrintfFormat LOG_BOSS_KILLED = new PrintfFormat("%s: %s[%d] killed by %s at Loc(%d %d %d) in %s");
     public static final PrintfFormat LOG_BOSS_RESPAWN = new PrintfFormat("%s: %s[%d] scheduled for respawn in %s at %s");
     public static final String Create = "Create";
@@ -113,13 +113,8 @@ public class Log {
         if (!Config.LOG_SERVICES) {
             return;
         }
-        StringBuilder output = new StringBuilder();
-
-        output.append(cat);
-        output.append(": ");
-        output.append(text);
-
-        _logService.info(output.toString());
+        String output = cat + ": " + text;
+        _logService.info(output);
     }
 
     public static void LogEvents(String name, String action, String player, String target, String text) {

@@ -34,11 +34,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 15:10/06.03.2011
- */
-public class AdminResidence implements IAdminCommandHandler, ScriptFile {
+public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
     private enum Commands {
         admin_residence_list,
         admin_residence,
@@ -58,7 +54,6 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
         admin_fortress_spawn_flags
     }
 
-    @SuppressWarnings({"rawtypes", "incomplete-switch"})
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -364,7 +359,6 @@ public class AdminResidence implements IAdminCommandHandler, ScriptFile {
         return true;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public Enum[] getAdminCommandEnum() {
         return Commands.values();

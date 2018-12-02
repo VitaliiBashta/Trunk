@@ -135,7 +135,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
 
         for (Entry<Integer, StatsSet> entry : allBosses.entrySet()) {
             StatsSet boss = entry.getValue();
-            NpcTemplate temp = NpcHolder.getInstance().getTemplate(entry.getKey());
+            NpcTemplate temp = NpcHolder.getTemplate(entry.getKey());
 
             boolean isAlive = isBossAlive(boss);
 
@@ -177,7 +177,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
                 i++;
             } else {
                 StatsSet boss = entry.getValue();
-                NpcTemplate temp = NpcHolder.getInstance().getTemplate(entry.getKey());
+                NpcTemplate temp = NpcHolder.getTemplate(entry.getKey());
                 if (boss != null && temp != null) {
                     i++;
                     bossesToShow.put(entry.getKey(), entry.getValue());
@@ -208,7 +208,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
             return;
         }
 
-        NpcTemplate bossTemplate = NpcHolder.getInstance().getTemplate(bossId);
+        NpcTemplate bossTemplate = NpcHolder.getTemplate(bossId);
         NpcInstance bossInstance = getAliveBoss(bossId);
 
         html = getDetailedBossReplacements(html, bossSet, bossTemplate, bossInstance);
@@ -234,7 +234,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
                 break;
             case 2://Show Drops
                 if (Config.ALLOW_DROP_CALCULATOR)
-                    RewardListInfo.showInfo(player, NpcHolder.getInstance().getTemplate(bossId), true, false, 1.0);
+                    RewardListInfo.showInfo(player, NpcHolder.getTemplate(bossId), true, false, 1.0);
                 break;
             case 3://Go to Boss
                 if (!player.isInZonePeace() || Olympiad.isRegistered(player)) {
@@ -382,7 +382,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
             finalResult = RaidBossSpawnManager.getInstance().getAllBosses();
         } else {
             for (Entry<Integer, StatsSet> entry : RaidBossSpawnManager.getInstance().getAllBosses().entrySet()) {
-                NpcTemplate temp = NpcHolder.getInstance().getTemplate(entry.getKey());
+                NpcTemplate temp = NpcHolder.getTemplate(entry.getKey());
                 if (StringUtils.containsIgnoreCase(temp.getName(), search))
                     finalResult.put(entry.getKey(), entry.getValue());
             }
@@ -434,8 +434,8 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
          * @return result of comparing
          */
         private int sortById(Integer a, Integer b, SortType sorting) {
-            NpcTemplate temp1 = NpcHolder.getInstance().getTemplate(a);
-            NpcTemplate temp2 = NpcHolder.getInstance().getTemplate(b);
+            NpcTemplate temp1 = NpcHolder.getTemplate(a);
+            NpcTemplate temp2 = NpcHolder.getTemplate(b);
             StatsSet set1 = base.get(a);
             StatsSet set2 = base.get(b);
             switch (sorting) {

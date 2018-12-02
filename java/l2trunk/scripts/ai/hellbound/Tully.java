@@ -5,6 +5,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -29,9 +30,8 @@ public final class Tully extends Fighter {
             new Location(-10816, 274096, -9040, 14964),
             new Location(-13824, 275072, -9040, -24644),
             new Location(-11504, 271952, -9040, 9328),};
-
-    private boolean s = false;
     private static NpcInstance removableGhost = null;
+    private boolean s = false;
 
     private Tully(NpcInstance actor) {
         super(actor);
@@ -41,7 +41,7 @@ public final class Tully extends Fighter {
     public void onEvtDead(Creature killer) {
         for (Location aLocSD : locSD) {
             try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(32371));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(32371));
                 sp.setLoc(aLocSD);
                 sp.doSpawn(true);
                 if (!s) {
@@ -55,7 +55,7 @@ public final class Tully extends Fighter {
         }
         for (Location aLocFTT : locFTT) {
             try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(22392));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(22392));
                 sp.setLoc(aLocFTT);
                 sp.doSpawn(true);
             } catch (RuntimeException e) {
@@ -63,7 +63,7 @@ public final class Tully extends Fighter {
             }
         }
         try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(32370));
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(32370));
             sp.setLoc(new Location(-11984, 272928, -9040, 23644));
             sp.doSpawn(true);
             removableGhost = sp.getLastSpawn();
@@ -78,12 +78,8 @@ public final class Tully extends Fighter {
     private static class UnspawnAndExplode extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllByNpcId(32371, true))
-                npc.deleteMe();
-
-            for (NpcInstance npc : GameObjectsStorage.getAllByNpcId(22392, true))
-                npc.deleteMe();
-
+            GameObjectsStorage.getAllByNpcId(32371, true).forEach(GameObject::deleteMe);
+            GameObjectsStorage.getAllByNpcId(22392, true).forEach(GameObject::deleteMe);
             if (removableGhost != null)
                 removableGhost.deleteMe();
         }

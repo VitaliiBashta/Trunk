@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
@@ -61,15 +60,12 @@ public final class KrateisCubeWatcherBlue extends DefaultAI {
         super.onEvtDead(killer);
 
         actor.deleteMe();
-        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                NpcTemplate template = NpcHolder.getInstance().getTemplate(18601);
-                if (template != null) {
-                    NpcInstance a = template.getNewInstance();
-                    a.setCurrentHpMp(a.getMaxHp(), a.getMaxMp());
-                    a.spawnMe(actor.getLoc());
-                }
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            NpcTemplate template = NpcHolder.getTemplate(18601);
+            if (template != null) {
+                NpcInstance a = template.getNewInstance();
+                a.setCurrentHpMp(a.getMaxHp(), a.getMaxMp());
+                a.spawnMe(actor.getLoc());
             }
         }, 10000L);
     }

@@ -26,7 +26,7 @@ public final class ClawsOfSplendor extends Fighter {
         if (transformer > 0) {
             int chance = actor.getParameter("transformChance", 90);
             if (chance == 100 || ((MonsterInstance) actor).getChampion() == 0 && actor.getCurrentHpPercents() > 50 && Rnd.chance(chance)) {
-                MonsterInstance npc = (MonsterInstance) NpcHolder.getInstance().getTemplate(transformer).getNewInstance();
+                MonsterInstance npc = (MonsterInstance) NpcHolder.getTemplate(transformer).getNewInstance();
                 npc.setSpawnedLoc(actor.getLoc());
                 npc.setReflection(actor.getReflection());
                 npc.setChampion(((MonsterInstance) actor).getChampion());

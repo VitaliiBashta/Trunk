@@ -22,7 +22,7 @@ public final class Books extends SimpleItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override

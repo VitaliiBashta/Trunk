@@ -17,8 +17,8 @@ public class CTBTeamObject implements SpawnableObject {
     private CTBBossInstance _mob;
 
     public CTBTeamObject(int mobTemplate, int flagTemplate, Location flagLoc) {
-        _mobTemplate = NpcHolder.getInstance().getTemplate(mobTemplate);
-        _flagTemplate = NpcHolder.getInstance().getTemplate(flagTemplate);
+        _mobTemplate = NpcHolder.getTemplate(mobTemplate);
+        _flagTemplate = NpcHolder.getTemplate(flagTemplate);
         _flagLoc = flagLoc;
     }
 
@@ -30,7 +30,7 @@ public class CTBTeamObject implements SpawnableObject {
             _flag.setHasChatWindow(false);
             _flag.spawnMe(_flagLoc);
         } else if (_mob == null) {
-            NpcTemplate template = _siegeClan == null || _siegeClan.getParam() == 0 ? _mobTemplate : NpcHolder.getInstance().getTemplate((int) _siegeClan.getParam());
+            NpcTemplate template = _siegeClan == null || _siegeClan.getParam() == 0 ? _mobTemplate : NpcHolder.getTemplate((int) _siegeClan.getParam());
 
             _mob = (CTBBossInstance) template.getNewInstance();
             _mob.setCurrentHpMp(_mob.getMaxHp(), _mob.getMaxMp());

@@ -68,7 +68,7 @@ public class LogisticsOfficerInstance extends FacilityManagerInstance {
             if (fortress.getSupplyCount() > 0) {
                 filename = "residence2/fortress/fortress_supply_officer016.htm";
 
-                NpcInstance npc = NpcHolder.getInstance().getTemplate(SUPPLY_NPC[fortress.getSupplyCount() - 1]).getNewInstance();
+                NpcInstance npc = NpcHolder.getTemplate(SUPPLY_NPC[fortress.getSupplyCount() - 1]).getNewInstance();
                 npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp());
                 npc.spawnMe(new Location(getX() - 23, getY() + 41, getZ()));
 

@@ -9,12 +9,12 @@ import l2trunk.gameserver.network.serverpackets.SSQStatus;
  * packet type id 0xc8
  * format: cc
  */
-public class RequestSSQStatus extends L2GameClientPacket {
-    private int _page;
+public final class RequestSSQStatus extends L2GameClientPacket {
+    private int page;
 
     @Override
     protected void readImpl() {
-        _page = readC();
+        page = readC();
     }
 
     @Override
@@ -23,9 +23,9 @@ public class RequestSSQStatus extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        if ((SevenSigns.getInstance().isSealValidationPeriod() || SevenSigns.getInstance().isCompResultsPeriod()) && _page == 4)
+        if ((SevenSigns.INSTANCE.isSealValidationPeriod() || SevenSigns.INSTANCE.isCompResultsPeriod()) && page == 4)
             return;
 
-        activeChar.sendPacket(new SSQStatus(activeChar, _page));
+        activeChar.sendPacket(new SSQStatus(activeChar, page));
     }
 }

@@ -120,7 +120,7 @@ public abstract class L2GameServerPacket extends SendablePacket<GameClient> impl
             writeItemElements();
             return;
         }
-        ItemTemplate i = ItemHolder.getInstance().getTemplate(item.getItemId());
+        ItemTemplate i = ItemHolder.INSTANCE.getTemplate(item.getItemId());
         if (item.getItemAttributes().getValue() > 0) {
             if (i.isWeapon()) {
                 Element e = item.getItemAttributes().getElement();

@@ -140,7 +140,7 @@ public final class Tears extends DefaultAI {
         for (int i = 0; i < 9; i++)
             try {
                 pos = Location.findPointToStay(144298, 154420, -11854, 300, 320, actor.getGeoIndex());
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(Tears_Copy));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(Tears_Copy));
                 sp.setLoc(pos);
                 sp.setReflection(actor.getReflection());
                 NpcInstance copy = sp.doSpawn(true);

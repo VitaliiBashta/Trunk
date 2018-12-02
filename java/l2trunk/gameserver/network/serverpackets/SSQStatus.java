@@ -18,7 +18,7 @@ import l2trunk.gameserver.templates.StatsSet;
  * 3: [ccc (cccc)]
  * 4: [(cchh)]
  */
-public class SSQStatus extends L2GameServerPacket {
+public final class SSQStatus extends L2GameServerPacket {
     private final int _page;
     private final int period;
     private Player _player;
@@ -26,7 +26,7 @@ public class SSQStatus extends L2GameServerPacket {
     public SSQStatus(Player player, int recordPage) {
         _player = player;
         _page = recordPage;
-        period = SevenSigns.getInstance().getCurrentPeriod();
+        period = SevenSigns.INSTANCE.getCurrentPeriod();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SSQStatus extends L2GameServerPacket {
         switch (_page) {
             case 1:
                 // [ddd cc dd ddd c ddd c] // ddd cc QQ QQQ c QQQ c
-                writeD(SevenSigns.getInstance().getCurrentCycle());
+                writeD(SevenSigns.INSTANCE.getCurrentCycle());
 
                 switch (period) {
                     case SevenSigns.PERIOD_COMP_RECRUITING:
@@ -67,19 +67,19 @@ public class SSQStatus extends L2GameServerPacket {
                         break;
                 }
 
-                writeC(SevenSigns.getInstance().getPlayerCabal(_player));
-                writeC(SevenSigns.getInstance().getPlayerSeal(_player));
+                writeC(SevenSigns.INSTANCE.getPlayerCabal(_player));
+                writeC(SevenSigns.INSTANCE.getPlayerSeal(_player));
 
-                writeQ(SevenSigns.getInstance().getPlayerStoneContrib(_player));
-                writeQ(SevenSigns.getInstance().getPlayerAdenaCollect(_player));
+                writeQ(SevenSigns.INSTANCE.getPlayerStoneContrib(_player));
+                writeQ(SevenSigns.INSTANCE.getPlayerAdenaCollect(_player));
 
-                long dawnStoneScore = SevenSigns.getInstance().getCurrentStoneScore(SevenSigns.CABAL_DAWN);
-                long dawnFestivalScore = SevenSigns.getInstance().getCurrentFestivalScore(SevenSigns.CABAL_DAWN);
-                long dawnTotalScore = SevenSigns.getInstance().getCurrentScore(SevenSigns.CABAL_DAWN);
+                long dawnStoneScore = SevenSigns.INSTANCE.getCurrentStoneScore(SevenSigns.CABAL_DAWN);
+                long dawnFestivalScore = SevenSigns.INSTANCE.getCurrentFestivalScore(SevenSigns.CABAL_DAWN);
+                long dawnTotalScore = SevenSigns.INSTANCE.getCurrentScore(SevenSigns.CABAL_DAWN);
 
-                long duskStoneScore = SevenSigns.getInstance().getCurrentStoneScore(SevenSigns.CABAL_DUSK);
-                long duskFestivalScore = SevenSigns.getInstance().getCurrentFestivalScore(SevenSigns.CABAL_DUSK);
-                long duskTotalScore = SevenSigns.getInstance().getCurrentScore(SevenSigns.CABAL_DUSK);
+                long duskStoneScore = SevenSigns.INSTANCE.getCurrentStoneScore(SevenSigns.CABAL_DUSK);
+                long duskFestivalScore = SevenSigns.INSTANCE.getCurrentFestivalScore(SevenSigns.CABAL_DUSK);
+                long duskTotalScore = SevenSigns.INSTANCE.getCurrentScore(SevenSigns.CABAL_DUSK);
 
                 long totalStoneScore = duskStoneScore + dawnStoneScore;
                 totalStoneScore = totalStoneScore == 0 ? 1 : totalStoneScore; // Prevents divide by zero errors when competition begins.
@@ -120,13 +120,13 @@ public class SSQStatus extends L2GameServerPacket {
                     writeC(i + 1); // Current client-side festival ID
                     writeD(SevenSignsFestival.FESTIVAL_LEVEL_SCORES[i]);
 
-                    long duskScore = SevenSignsFestival.getInstance().getHighestScore(SevenSigns.CABAL_DUSK, i);
-                    long dawnScore = SevenSignsFestival.getInstance().getHighestScore(SevenSigns.CABAL_DAWN, i);
+                    long duskScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DUSK, i);
+                    long dawnScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DAWN, i);
 
                     // Dusk Score \\
                     writeQ(duskScore);
 
-                    StatsSet highScoreData = SevenSignsFestival.getInstance().getHighestScoreData(SevenSigns.CABAL_DUSK, i);
+                    StatsSet highScoreData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DUSK, i);
 
                     if (duskScore > 0) {
                         String[] partyMembers = highScoreData.getString("names").split(",");
@@ -139,7 +139,7 @@ public class SSQStatus extends L2GameServerPacket {
                     // Dawn Score \\
                     writeQ(dawnScore);
 
-                    highScoreData = SevenSignsFestival.getInstance().getHighestScoreData(SevenSigns.CABAL_DAWN, i);
+                    highScoreData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DAWN, i);
 
                     if (dawnScore > 0) {
                         String[] partyMembers = highScoreData.getString("names").split(",");
@@ -160,8 +160,8 @@ public class SSQStatus extends L2GameServerPacket {
                 int totalDuskProportion = 1;
 
                 for (int i = 1; i <= 3; i++) {
-                    totalDawnProportion += SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DAWN);
-                    totalDuskProportion += SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DUSK);
+                    totalDawnProportion += SevenSigns.INSTANCE.getSealProportion(i, SevenSigns.CABAL_DAWN);
+                    totalDuskProportion += SevenSigns.INSTANCE.getSealProportion(i, SevenSigns.CABAL_DUSK);
                 }
 
                 // Prevents divide by zero errors.
@@ -169,11 +169,11 @@ public class SSQStatus extends L2GameServerPacket {
                 totalDuskProportion = Math.max(1, totalDuskProportion);
 
                 for (int i = 1; i <= 3; i++) {
-                    int dawnProportion = SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DAWN);
-                    int duskProportion = SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DUSK);
+                    int dawnProportion = SevenSigns.INSTANCE.getSealProportion(i, SevenSigns.CABAL_DAWN);
+                    int duskProportion = SevenSigns.INSTANCE.getSealProportion(i, SevenSigns.CABAL_DUSK);
 
                     writeC(i);
-                    writeC(SevenSigns.getInstance().getSealOwner(i));
+                    writeC(SevenSigns.INSTANCE.getSealOwner(i));
                     writeC(duskProportion * 100 / totalDuskProportion);
                     writeC(dawnProportion * 100 / totalDawnProportion);
                 }
@@ -181,21 +181,21 @@ public class SSQStatus extends L2GameServerPacket {
             case 4:
                 // c cc [cc (ccD)] CT 2.3 update
 
-                int winningCabal = SevenSigns.getInstance().getCabalHighestScore();
+                int winningCabal = SevenSigns.INSTANCE.getCabalHighestScore();
                 writeC(winningCabal); // Overall predicted winner
                 writeC(3); // Total number of seals
 
-                int dawnTotalPlayers = SevenSigns.getInstance().getTotalMembers(SevenSigns.CABAL_DAWN);
-                int duskTotalPlayers = SevenSigns.getInstance().getTotalMembers(SevenSigns.CABAL_DUSK);
+                int dawnTotalPlayers = SevenSigns.INSTANCE.getTotalMembers(SevenSigns.CABAL_DAWN);
+                int duskTotalPlayers = SevenSigns.INSTANCE.getTotalMembers(SevenSigns.CABAL_DUSK);
 
                 for (int i = 1; i < 4; i++) {
                     writeC(i);
 
-                    int dawnSealPlayers = SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DAWN);
-                    int duskSealPlayers = SevenSigns.getInstance().getSealProportion(i, SevenSigns.CABAL_DUSK);
+                    int dawnSealPlayers = SevenSigns.INSTANCE.getSealProportion(i, SevenSigns.CABAL_DAWN);
+                    int duskSealPlayers = SevenSigns.INSTANCE.getSealProportion(i, SevenSigns.CABAL_DUSK);
                     int dawnProp = dawnTotalPlayers > 0 ? dawnSealPlayers * 100 / dawnTotalPlayers : 0;
                     int duskProp = duskTotalPlayers > 0 ? duskSealPlayers * 100 / duskTotalPlayers : 0;
-                    int curSealOwner = SevenSigns.getInstance().getSealOwner(i);
+                    int curSealOwner = SevenSigns.INSTANCE.getSealOwner(i);
 
                     if (Math.max(dawnProp, duskProp) < 10) // печать будет потеряна если занята
                     {

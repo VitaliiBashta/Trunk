@@ -250,7 +250,7 @@ public final class EnterWorld extends L2GameClientPacket {
         if (first)
             activeChar.getListeners().onEnter();
 
-        SevenSigns.getInstance().sendCurrentPeriodMsg(activeChar);
+        SevenSigns.INSTANCE.sendCurrentPeriodMsg(activeChar);
 
         if (first && activeChar.getCreateTime() > 0L) {
             Calendar create = Calendar.getInstance();

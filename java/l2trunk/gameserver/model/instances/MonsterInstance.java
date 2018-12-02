@@ -517,7 +517,7 @@ public class MonsterInstance extends NpcInstance {
             isSeeded = true;
             _altSeed = altSeed;
             _seederId = player.getObjectId();
-            _harvestItem = new RewardItem(Manor.getInstance().getCropType(seedId));
+            _harvestItem = new RewardItem(Manor.INSTANCE.getCropType(seedId));
             // Количество всходов от xHP до (xHP + xHP/2)
             if (getTemplate().rateHp > 1)
                 _harvestItem.count = Rnd.get(Math.round(getTemplate().rateHp), Math.round(1.5 * getTemplate().rateHp));

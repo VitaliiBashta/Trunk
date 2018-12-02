@@ -68,7 +68,7 @@ public class QueenAntInstance extends BossInstance {
     }
 
     private NpcInstance SpawnNPC(int npcId, Location loc) {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate template = NpcHolder.getTemplate(npcId);
         if (template == null) {
             System.out.println("WARNING! template is null for npc: " + npcId);
             Thread.dumpStack();

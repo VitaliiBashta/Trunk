@@ -29,7 +29,7 @@ public final class BloodyKarik extends Fighter {
         NpcInstance npc = getActor();
         if (Rnd.chance(BKARIK_D_M_CHANCE) && !spawned_minion.containsKey(npc.getObjectId())) {
             for (int x = 0; x < BLOODYKARIK_COUNT; x++) {
-                NpcInstance mob = NpcHolder.getInstance().getTemplate(BLOODYKARIK).getNewInstance();
+                NpcInstance mob = NpcHolder.getTemplate(BLOODYKARIK).getNewInstance();
                 mob.setSpawnedLoc(npc.getLoc());
                 mob.setReflection(npc.getReflection());
                 mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp(), true);

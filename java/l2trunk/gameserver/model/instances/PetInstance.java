@@ -44,7 +44,7 @@ public class PetInstance extends Summon {
     private PetData _data;
     private int _curFed;
     private Future<?> _feedTask;
-    private int _level;
+    private int level;
     private boolean _respawned;
     private int lostExp;
 
@@ -63,49 +63,44 @@ public class PetInstance extends Summon {
 
         _controlItemObjId = control.getObjectId();
         _exp = exp;
-        _level = control.getEnchantLevel();
+        level = control.getEnchantLevel();
 
-        if (_level <= 0) {
+        if (level <= 0) {
             if (template.npcId == PetDataTable.SIN_EATER_ID)
-                _level = owner.getLevel();
+                level = owner.getLevel();
             else
-                _level = template.level;
+                level = template.level;
             _exp = getExpForThisLevel();
         }
 
         int minLevel = PetDataTable.getMinLevel(template.npcId);
-        if (_level < minLevel)
-            _level = minLevel;
+        if (level < minLevel)
+            level = minLevel;
 
         if (_exp < getExpForThisLevel())
             _exp = getExpForThisLevel();
 
-        while (_exp >= getExpForNextLevel() && _level < Experience.getMaxLevel())
-            _level++;
+        while (_exp >= getExpForNextLevel() && level < Experience.getMaxLevel())
+            level++;
 
-        while (_exp < getExpForThisLevel() && _level > minLevel)
-            _level--;
+        while (_exp < getExpForThisLevel() && level > minLevel)
+            level--;
 
         if (PetDataTable.isVitaminPet(template.npcId)) {
-            _level = owner.getLevel();
+            level = owner.getLevel();
             _exp = getExpForNextLevel();
         }
 
-        _data = PetDataTable.getInstance().getInfo(template.npcId, _level);
+        _data = PetDataTable.getInstance().getInfo(template.npcId, level);
         _inventory = new PetInventory(this);
     }
 
     public static PetInstance restore(ItemInstance control, NpcTemplate template, Player owner) {
-        PetInstance pet = null;
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT objId, name, level, curHp, curMp, exp, sp, fed FROM pets WHERE item_obj_id=?");
+        PetInstance pet;
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT objId, name, level, curHp, curMp, exp, sp, fed FROM pets WHERE item_obj_id=?")) {
             statement.setInt(1, control.getObjectId());
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             if (!rset.next()) {
                 if (PetDataTable.isBabyPet(template.getNpcId()) || PetDataTable.isImprovedBabyPet(template.getNpcId()))
@@ -130,9 +125,7 @@ public class PetInstance extends Summon {
             pet.setCurrentFed(rset.getInt("fed"));
         } catch (SQLException e) {
             _log.error("Could not restore Pet data from item: " + control + '!', e);
-            return null;
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
+            throw new RuntimeException("Could not restore Pet data from item: " + control + '!', e);
         }
 
         return pet;
@@ -193,21 +186,21 @@ public class PetInstance extends Summon {
         if (addToExp > 0 || addToSp > 0)
             owner.sendPacket(new SystemMessage(SystemMessage.THE_PET_ACQUIRED_EXPERIENCE_POINTS_OF_S1).addNumber(addToExp));
 
-        int old_level = _level;
+        int old_level = level;
 
-        while (_exp >= getExpForNextLevel() && _level < Experience.getMaxLevel())
-            _level++;
+        while (_exp >= getExpForNextLevel() && level < Experience.getMaxLevel())
+            level++;
 
-        while (_exp < getExpForThisLevel() && _level > getMinLevel())
-            _level--;
+        while (_exp < getExpForThisLevel() && level > getMinLevel())
+            level--;
 
-        if (old_level < _level) {
-            owner.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2PetInstance.PetLevelUp", owner).addNumber(_level));
+        if (old_level < level) {
+            owner.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2PetInstance.PetLevelUp", owner).addNumber(level));
             broadcastPacket(new SocialAction(getObjectId(), SocialAction.LEVEL_UP));
             setCurrentHpMp(getMaxHp(), getMaxMp());
         }
 
-        if (old_level != _level) {
+        if (old_level != level) {
             updateControlItem();
             updateData();
         }
@@ -398,12 +391,12 @@ public class PetInstance extends Summon {
 
     @Override
     public long getExpForNextLevel() {
-        return PetDataTable.getInstance().getInfo(getNpcId(), _level + 1).getExp();
+        return PetDataTable.getInstance().getInfo(getNpcId(), level + 1).getExp();
     }
 
     @Override
     public long getExpForThisLevel() {
-        return PetDataTable.getInstance().getInfo(getNpcId(), _level).getExp();
+        return PetDataTable.getInstance().getInfo(getNpcId(), level).getExp();
     }
 
     private int getFoodId() {
@@ -426,11 +419,11 @@ public class PetInstance extends Summon {
 
     @Override
     public final int getLevel() {
-        return _level;
+        return level;
     }
 
     public void setLevel(int level) {
-        _level = level;
+        this.level = level;
     }
 
     @Override
@@ -616,7 +609,7 @@ public class PetInstance extends Summon {
                 setName("");
             }
             statement.setString(1, getName().equalsIgnoreCase(getTemplate().name) ? "" : getName());
-            statement.setInt(2, _level);
+            statement.setInt(2, level);
             statement.setDouble(3, getCurrentHp());
             statement.setDouble(4, getCurrentMp());
             statement.setLong(5, _exp);
@@ -655,7 +648,7 @@ public class PetInstance extends Summon {
         ItemInstance controlItem = getControlItem();
         if (controlItem == null)
             return;
-        controlItem.setEnchantLevel(_level);
+        controlItem.setEnchantLevel(level);
         controlItem.setCustomType2(isDefaultName() ? 0 : 1);
         controlItem.setJdbcState(JdbcEntityState.UPDATED);
         controlItem.update();
@@ -664,7 +657,7 @@ public class PetInstance extends Summon {
     }
 
     private void updateData() {
-        _data = PetDataTable.getInstance().getInfo(getTemplate().npcId, _level);
+        _data = PetDataTable.getInstance().getInfo(getTemplate().npcId, level);
     }
 
     @Override
@@ -731,7 +724,7 @@ public class PetInstance extends Summon {
     }
 
     public void changeTemplate(int npcId) {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate template = NpcHolder.getTemplate(npcId);
         if (template == null) {
             throw new NullPointerException("Not find npc: " + npcId);
         }

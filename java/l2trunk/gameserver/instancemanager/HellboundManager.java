@@ -188,7 +188,7 @@ public enum HellboundManager {
 
         for (HellboundSpawn hbsi : _list)
             if (hbsi.stages.contains(getHellboundLevel())) {
-                template = NpcHolder.getInstance().getTemplate(hbsi.getNpcId());
+                template = NpcHolder.getTemplate(hbsi.getNpcId());
                 for (int i = 0; i < hbsi._amount; i++) {
                     spawnDat = new SimpleSpawner(template);
                     spawnDat.setAmount(1);

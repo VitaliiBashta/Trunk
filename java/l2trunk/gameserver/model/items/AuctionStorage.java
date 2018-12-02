@@ -24,7 +24,7 @@ public class AuctionStorage extends ItemContainer {
     }
 
     private void deleteItemFromList(ItemInstance item) {
-        _items.remove(item);
+        items.remove(item);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class AuctionStorage extends ItemContainer {
 
         writeLock();
         try {
-            _items.add(item);
+            items.add(item);
             result = item;
             item.setJdbcState(JdbcEntityState.CREATED);
             onAddItem(result);
@@ -61,7 +61,7 @@ public class AuctionStorage extends ItemContainer {
 
         writeLock();
         try {
-            _items.add(item);
+            items.add(item);
             result = item;
             item.setJdbcState(JdbcEntityState.UPDATED);
             onAddItem(result);
@@ -130,10 +130,10 @@ public class AuctionStorage extends ItemContainer {
     private void restore() {
         writeLock();
         try {
-            _items.clear();
+            items.clear();
             Collection<ItemInstance> items = _itemsDAO.getItemsByLocation(ItemLocation.AUCTION);
 
-            _items.addAll(items);
+            this.items.addAll(items);
         } finally {
             writeUnlock();
         }

@@ -25,7 +25,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
     private static Set<Integer> _itemIds;
 
     public Seed() {
-        _itemIds = Manor.getInstance().getAllSeeds().keySet();
+        _itemIds = Manor.INSTANCE.getAllSeeds().keySet();
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -94,7 +94,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         DomainArea domain = MapRegionManager.getInstance().getRegionData(DomainArea.class, player);
         int castleId = domain == null ? 0 : domain.getId();
         // Несовпадение зоны
-        if (Manor.getInstance().getCastleIdForSeed(seedId) != castleId) {
+        if (Manor.INSTANCE.getCastleIdForSeed(seedId) != castleId) {
             player.sendPacket(SystemMsg.THIS_SEED_MAY_NOT_BE_SOWN_HERE);
             return false;
         }

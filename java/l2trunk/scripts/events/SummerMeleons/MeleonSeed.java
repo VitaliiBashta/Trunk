@@ -1,6 +1,5 @@
 package l2trunk.scripts.events.SummerMeleons;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
@@ -19,8 +18,8 @@ import l2trunk.scripts.npc.model.MeleonInstance;
 import java.util.Arrays;
 import java.util.List;
 
-public class MeleonSeed extends ScriptItemHandler implements ScriptFile {
-    private static final Integer[] _itemIds = {15366, // Watermelon seed
+public final class MeleonSeed extends ScriptItemHandler implements ScriptFile {
+    private static final Integer[] ITEM_IDS = {15366, // Watermelon seed
             15367 // Honey Watermelon Seed
     };
 
@@ -45,9 +44,9 @@ public class MeleonSeed extends ScriptItemHandler implements ScriptFile {
         NpcTemplate template = null;
 
         int itemId = item.getItemId();
-        for (int i = 0; i < _itemIds.length; i++)
-            if (_itemIds[i] == itemId) {
-                template = NpcHolder.getInstance().getTemplate(_npcIds[i]);
+        for (int i = 0; i < ITEM_IDS.length; i++)
+            if (ITEM_IDS[i] == itemId) {
+                template = NpcHolder.getTemplate(_npcIds[i]);
                 break;
             }
 
@@ -63,14 +62,14 @@ public class MeleonSeed extends ScriptItemHandler implements ScriptFile {
         npc.setAI(new MeleonAI(npc));
         ((MeleonInstance) npc).setSpawner(activeChar);
 
-        ThreadPoolManager.INSTANCE().schedule(new DeSpawnScheduleTimerTask(spawn), 180000);
+        ThreadPoolManager.INSTANCE.schedule(spawn::deleteAll, 180000);
 
         return true;
     }
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -83,19 +82,7 @@ public class MeleonSeed extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return Arrays.asList(ITEM_IDS);
     }
 
-    private class DeSpawnScheduleTimerTask extends RunnableImpl {
-        final SimpleSpawner spawnedPlant;
-
-        DeSpawnScheduleTimerTask(SimpleSpawner spawn) {
-            spawnedPlant = spawn;
-        }
-
-        @Override
-        public void runImpl() {
-            spawnedPlant.deleteAll();
-        }
-    }
 }

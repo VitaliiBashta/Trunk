@@ -168,9 +168,6 @@ public abstract class Inventory extends ItemContainer {
         sendAddItem(item);
         refreshWeight();
 
-        // Alexander - Add the new amount of adena to the stats. Will be registered only if bigger than the last
-//    	if (getActor() instanceof Player && item.getItem_id() == ItemTemplate.ITEM_ID_ADENA)
-//    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
     }
 
     @Override
@@ -180,10 +177,6 @@ public abstract class Inventory extends ItemContainer {
 
         sendModifyItem(item);
         refreshWeight();
-
-        // Alexander - Add the new amount of adena to the stats. Will be registered only if bigger than the last
-//    	if (getActor() instanceof Player && item.getItem_id() == ItemTemplate.ITEM_ID_ADENA)
-//    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
     }
 
     @Override
@@ -235,15 +228,13 @@ public abstract class Inventory extends ItemContainer {
 
     /**
      * Находит и возвращает пустой слот в инвентаре.
-     *
-     * @return
      */
     private int findSlot() {
         ItemInstance item;
-        int slot = 0;
+        int slot;
         loop:
-        for (slot = 0; slot < _items.size(); slot++) {
-            for (ItemInstance _item : _items) {
+        for (slot = 0; slot < items.size(); slot++) {
+            for (ItemInstance _item : items) {
                 item = _item;
                 if (item.isEquipped() || item.getTemplate().isQuest()) // игнорируем надетое и квестовые вещи
                     continue;
@@ -878,7 +869,7 @@ public abstract class Inventory extends ItemContainer {
         readLock();
         try {
             ItemInstance item;
-            for (ItemInstance _item : _items) {
+            for (ItemInstance _item : items) {
                 item = _item;
                 weight += item.getTemplate().getWeight() * item.getCount();
             }
@@ -908,7 +899,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public boolean validateCapacity(int itemId, long count) {
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(itemId);
         return validateCapacity(item, count);
     }
 
@@ -935,7 +926,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public boolean validateWeight(int itemId, long count) {
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(itemId);
         return validateWeight(item, count);
     }
 

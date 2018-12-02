@@ -304,7 +304,7 @@ public class AutoSpawnManager {
                 final int heading = locationList[locationIndex].h;
 
                 // Fetch the template for this NPC ID and create a new spawn.
-                NpcTemplate npcTemp = NpcHolder.getInstance().getTemplate(spawnInst.getNpcId());
+                NpcTemplate npcTemp = NpcHolder.getTemplate(spawnInst.getNpcId());
                 SimpleSpawner newSpawn = new SimpleSpawner(npcTemp);
 
                 newSpawn.setLocx(x);

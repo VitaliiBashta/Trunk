@@ -174,7 +174,7 @@ public class FeedableBeastInstance extends MonsterInstance {
             if (player.getTrainedBeasts().size() >= 7)
                 return;
 
-            NpcTemplate template = NpcHolder.getInstance().getTemplate(nextNpcId);
+            NpcTemplate template = NpcHolder.getTemplate(nextNpcId);
             TamedBeastInstance nextNpc = new TamedBeastInstance(IdFactory.getInstance().getNextId(), template);
 
             Location loc = player.getLoc();
@@ -215,7 +215,7 @@ public class FeedableBeastInstance extends MonsterInstance {
 
     private MonsterInstance spawn(int npcId, int x, int y, int z) {
         try {
-            MonsterInstance monster = (MonsterInstance) NpcHolder.getInstance().getTemplate(npcId).getInstanceConstructor().newInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(npcId));
+            MonsterInstance monster = (MonsterInstance) NpcHolder.getTemplate(npcId).getInstanceConstructor().newInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(npcId));
             monster.setSpawnedLoc(new Location(x, y, z));
             monster.spawnMe(monster.getSpawnedLoc());
             return monster;

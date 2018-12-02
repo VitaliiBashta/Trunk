@@ -48,7 +48,7 @@ public final class NaiaLock extends Fighter {
         if (!_attacked) {
             for (int i = 0; i < 4; i++)
                 try {
-                    SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(18493));
+                    SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(18493));
                     sp.setLoc(Location.findPointToStay(actor, 150, 250));
                     sp.setReflection(actor.getReflection());
                     sp.doSpawn(true);

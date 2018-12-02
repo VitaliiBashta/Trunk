@@ -16,9 +16,9 @@ public class PcRefund extends ItemContainer {
             item.update();
         }
 
-        if (_items.size() > 12) //FIXME [G1ta0] хардкод, достойны конфига
+        if (items.size() > 12) //FIXME [G1ta0] хардкод, достойны конфига
         {
-            destroyItem(_items.remove(0), null, null);
+            destroyItem(items.remove(0), null, null);
         }
     }
 
@@ -42,8 +42,8 @@ public class PcRefund extends ItemContainer {
     public void clear() {
         writeLock();
         try {
-            _itemsDAO.delete(_items);
-            _items.clear();
+            _itemsDAO.delete(items);
+            items.clear();
         } finally {
             writeUnlock();
         }

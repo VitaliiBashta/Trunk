@@ -24,7 +24,7 @@ public class ExShowSellCropList extends L2GameServerPacket {
         _castleCrops = new TreeMap<>();
         _cropsItems = new TreeMap<>();
 
-        List<Integer> allCrops = Manor.getInstance().getAllCrops();
+        List<Integer> allCrops = Manor.INSTANCE.getAllCrops();
         for (int cropId : allCrops) {
             ItemInstance item = player.getInventory().getItemByItemId(cropId);
             if (item != null)
@@ -47,13 +47,13 @@ public class ExShowSellCropList extends L2GameServerPacket {
         for (ItemInstance item : _cropsItems.values()) {
             writeD(item.getObjectId()); // Object id
             writeD(item.getItemId()); // crop id
-            writeD(Manor.getInstance().getSeedLevelByCrop(item.getItemId())); // seed level
+            writeD(Manor.INSTANCE.getSeedLevelByCrop(item.getItemId())); // seed level
 
             writeC(1);
-            writeD(Manor.getInstance().getRewardItem(item.getItemId(), 1)); // reward 1 id
+            writeD(Manor.INSTANCE.getRewardItem(item.getItemId(), 1)); // reward 1 id
 
             writeC(1);
-            writeD(Manor.getInstance().getRewardItem(item.getItemId(), 2)); // reward 2 id
+            writeD(Manor.INSTANCE.getRewardItem(item.getItemId(), 2)); // reward 2 id
 
             if (_castleCrops.containsKey(item.getItemId())) {
                 CropProcure crop = _castleCrops.get(item.getItemId());

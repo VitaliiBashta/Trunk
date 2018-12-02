@@ -92,7 +92,7 @@ public class Summon extends Skill {
 
                 if (activeChar.getTrapsCount() >= 5)
                     activeChar.destroyFirstTrap();
-                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(getNpcId()), activeChar, trapSkill);
+                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(getNpcId()), activeChar, trapSkill);
                 activeChar.addTrap(trap);
                 trap.spawnMe();
                 break;
@@ -116,7 +116,7 @@ public class Summon extends Skill {
                 if (activeChar.getPet() != null || activeChar.isMounted())
                     return;
 
-                NpcTemplate summonTemplate = NpcHolder.getInstance().getTemplate(getNpcId());
+                NpcTemplate summonTemplate = NpcHolder.getTemplate(getNpcId());
                 SummonInstance summon = new SummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, activeChar, _lifeTime, _itemConsumeIdInTime, _itemConsumeCountInTime, _itemConsumeDelay, this);
                 activeChar.setPet(summon);
 
@@ -151,7 +151,7 @@ public class Summon extends Skill {
                 if (activeChar.getPet() != null || activeChar.isMounted())
                     return;
 
-                NpcTemplate merchantTemplate = NpcHolder.getInstance().getTemplate(getNpcId());
+                NpcTemplate merchantTemplate = NpcHolder.getTemplate(getNpcId());
                 MerchantInstance merchant = new MerchantInstance(IdFactory.getInstance().getNextId(), merchantTemplate);
 
                 merchant.setCurrentHp(merchant.getMaxHp(), false);

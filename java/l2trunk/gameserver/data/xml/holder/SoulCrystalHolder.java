@@ -1,6 +1,5 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.templates.SoulCrystal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ import java.util.Map;
 
 @XmlRootElement(name = "list")
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class SoulCrystalHolder extends AbstractHolder {
+public final class SoulCrystalHolder {
     private static final Logger _log = LoggerFactory.getLogger(SoulCrystalHolder.class);
     private static SoulCrystalHolder instance;
     private static Path path = Paths.get("./data/soul_crystals.xml");
@@ -47,12 +46,10 @@ public final class SoulCrystalHolder extends AbstractHolder {
         return crystals.values();
     }
 
-    @Override
     public int size() {
         return crystals.size();
     }
 
-    @Override
     public void clear() {
         crystals.clear();
     }

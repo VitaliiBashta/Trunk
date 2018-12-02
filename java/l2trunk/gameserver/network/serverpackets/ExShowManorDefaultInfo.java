@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.Manor;
 
 import java.util.List;
 
-
 /**
  * format(packet 0xFE)
  * ch cd [ddddcdcd]
@@ -25,11 +24,11 @@ import java.util.List;
  * d  - reward 2 id
  * ]
  */
-public class ExShowManorDefaultInfo extends L2GameServerPacket {
-    private List<Integer> _crops = null;
+public final class ExShowManorDefaultInfo extends L2GameServerPacket {
+    private List<Integer> _crops;
 
     public ExShowManorDefaultInfo() {
-        _crops = Manor.getInstance().getAllCrops();
+        _crops = Manor.INSTANCE.getAllCrops();
     }
 
     @Override
@@ -39,13 +38,13 @@ public class ExShowManorDefaultInfo extends L2GameServerPacket {
         writeD(_crops.size());
         for (int cropId : _crops) {
             writeD(cropId); // crop Id
-            writeD(Manor.getInstance().getSeedLevelByCrop(cropId)); // level
-            writeD(Manor.getInstance().getSeedBasicPriceByCrop(cropId)); // seed price
-            writeD(Manor.getInstance().getCropBasicPrice(cropId)); // crop price
+            writeD(Manor.INSTANCE.getSeedLevelByCrop(cropId)); // level
+            writeD(Manor.INSTANCE.getSeedBasicPriceByCrop(cropId)); // seed price
+            writeD(Manor.INSTANCE.getCropBasicPrice(cropId)); // crop price
             writeC(1); // rewrad 1 Type
-            writeD(Manor.getInstance().getRewardItem(cropId, 1)); // Rewrad 1 Type Item Id
+            writeD(Manor.INSTANCE.getRewardItem(cropId, 1)); // Rewrad 1 Type Item Id
             writeC(1); // rewrad 2 Type
-            writeD(Manor.getInstance().getRewardItem(cropId, 2)); // Rewrad 2 Type Item Id
+            writeD(Manor.INSTANCE.getRewardItem(cropId, 2)); // Rewrad 2 Type Item Id
         }
     }
 }

@@ -45,7 +45,7 @@ public final class TurkaCommanderChief extends Fighter {
 
     private NpcInstance npcSpawn(int template) {
         NpcInstance actor = getActor();
-        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(template));
+        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(template));
         sp.setLoc(Location.findPointToStay(actor, 100, 120));
         return sp.doSpawn(true);
     }

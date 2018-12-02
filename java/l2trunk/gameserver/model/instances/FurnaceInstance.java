@@ -35,7 +35,7 @@ public class FurnaceInstance extends NpcInstance {
         try {
             int idm = 1;
             for (int[] loc : locs) {
-                NpcInstance burner = new NpcInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(MobsID));
+                NpcInstance burner = new NpcInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(MobsID));
                 burner.setSpawnedLoc(new Location(loc[0], loc[1], loc[2]));
                 burner.onSpawn();
                 {

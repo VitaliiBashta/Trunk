@@ -54,7 +54,7 @@ public final class ItemFunctions {
 
         Player player = playable.getPlayer();
 
-        ItemTemplate t = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate t = ItemHolder.INSTANCE.getTemplate(itemId);
         if (t.isStackable())
             player.getInventory().addItem(itemId, count, log);
         else
@@ -79,7 +79,7 @@ public final class ItemFunctions {
 
         Player player = playable.getPlayer();
 
-        ItemTemplate t = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate t = ItemHolder.INSTANCE.getTemplate(itemId);
         if (t.isStackable()) {
             if (player.getInventory().destroyItemByItemId(itemId, count, log))
                 removed = count;

@@ -55,12 +55,12 @@ public class Core extends Fighter {
         Functions.npcSay(actor, NpcString.CORE_);
 
         try {
-            NpcInstance cubic1 = NpcHolder.getInstance().getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
+            NpcInstance cubic1 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
             cubic1.setReflection(actor.getReflection());
             cubic1.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
             cubic1.spawnMe(CUBIC_1_POSITION);
 
-            NpcInstance cubic2 = NpcHolder.getInstance().getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
+            NpcInstance cubic2 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
             cubic2.setReflection(actor.getReflection());
             cubic2.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
             cubic2.spawnMe(CUBIC_2_POSITION);

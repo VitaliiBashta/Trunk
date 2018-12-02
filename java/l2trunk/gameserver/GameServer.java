@@ -135,7 +135,7 @@ public class GameServer {
         CharacterDAO.getInstance();
         ClanTable.INSTANCE.toString();
         printSection("Fish Table");
-        FishTable.getInstance();
+        FishTable.INSTANCE.init();
         printSection("Skills");
         SkillTreeTable.getInstance();
         printSection("Augmentation Data");
@@ -160,15 +160,15 @@ public class GameServer {
         LotteryManager.getInstance();
         PlayerMessageStack.getInstance();
         if (Config.AUTODESTROY_ITEM_AFTER > 0) {
-            ItemsAutoDestroy.getInstance();
+            ItemsAutoDestroy.INSTANCE.init();
         }
-        MonsterRace.getInstance();
+        MonsterRace.INSTANCE.toString();
         printSection("Seven Signs");
-        SevenSigns.getInstance();
-        SevenSignsFestival.getInstance();
-        SevenSigns.getInstance().updateFestivalScore();
+        SevenSigns.INSTANCE.init();
+        SevenSignsFestival.INSTANCE.restoreFestivalData();;
+        SevenSigns.INSTANCE.updateFestivalScore();
         AutoSpawnManager.getInstance();
-        SevenSigns.getInstance().spawnSevenSignsNPC();
+        SevenSigns.INSTANCE.spawnSevenSignsNPC();
         _log.info("===================[Loading Olympiad System]=======================");
         if (Config.ENABLE_OLYMPIAD) {
             Olympiad.load();
@@ -177,7 +177,7 @@ public class GameServer {
         _log.info("===================[Olympiad System Loaded]=======================");
         PetitionManager.getInstance();
         CursedWeaponsManager.INSTANCE.log();
-        ItemHandler.getInstance();
+        ItemHandler.INSTANCE.toString();
         _log.info("======================[Loading BALANCER]==========================");
         ClassesStatsBalancerParser.getInstance();
         _log.info("======================[Loading BALANCER]==========================");
@@ -212,7 +212,7 @@ public class GameServer {
         AuctionManager.getInstance();
         if (Config.ALLOW_DROP_CALCULATOR) {
             _log.info("Preparing Drop Calculator");
-            ItemHolder.getInstance().getDroppableTemplates();
+            ItemHolder.INSTANCE.getDroppableTemplates();
         }
         MiniGameScoreManager.getInstance();
 

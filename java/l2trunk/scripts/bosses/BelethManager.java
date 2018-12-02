@@ -91,7 +91,7 @@ public class BelethManager extends Functions implements ScriptFile {
 
     private static NpcInstance spawn(int npcId, int x, int y, int z, int h) {
         Location loc = new Location(x, y, z);
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate template = NpcHolder.getTemplate(npcId);
         NpcInstance npc = template.getNewInstance();
         npc.setSpawnedLoc(loc);
         npc.setLoc(loc);

@@ -573,7 +573,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
         switch (type) {
             case TO_VILLAGE:
                 // Если печатью владеют лорды Рассвета (Dawn), и в данном городе идет осада, то телепортирует во 2-й по счету город.
-                if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN) {
+                if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN) {
                     loc = _residence.getNotOwnerRestartPoint(player);
                 }
                 break;

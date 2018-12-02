@@ -148,7 +148,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                 String[] array = command.split(":");
                 int item = Integer.parseInt(array[3]);
 
-                String name = ItemHolder.getInstance().getTemplate(Config.BBS_FORGE_ENCHANT_ITEM).getName();
+                String name = ItemHolder.INSTANCE.getTemplate(Config.BBS_FORGE_ENCHANT_ITEM).getName();
 
                 if (name.isEmpty()) {
                     name = new CustomMessage("common.item.no.name", player).toString();
@@ -623,7 +623,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                     }
                     int item = Integer.parseInt(array[4]);
 
-                    String name = ItemHolder.getInstance().getTemplate(Config.BBS_FORGE_ENCHANT_ITEM).getName();
+                    String name = ItemHolder.INSTANCE.getTemplate(Config.BBS_FORGE_ENCHANT_ITEM).getName();
 
                     if (name.isEmpty()) {
                         name = new CustomMessage("common.item.no.name", player).toString();

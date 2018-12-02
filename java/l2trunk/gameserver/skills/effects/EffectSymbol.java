@@ -61,7 +61,7 @@ public final class EffectSymbol extends Effect {
             ((Player) _effected).setGroundSkillLoc(null);
         }
 
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(_skill.getSymbolId());
+        NpcTemplate template = NpcHolder.getTemplate(_skill.getSymbolId());
         if (getTemplate()._count <= 1)
             _symbol = new SymbolInstance(IdFactory.getInstance().getNextId(), template, _effected, skill);
         else

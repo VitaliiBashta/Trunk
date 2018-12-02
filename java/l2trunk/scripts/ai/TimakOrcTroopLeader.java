@@ -34,7 +34,7 @@ public final class TimakOrcTroopLeader extends Fighter {
             Functions.npcSay(actor, NpcString.SHOW_YOURSELVES);
             for (int bro : BROTHERS)
                 try {
-                    NpcInstance npc = NpcHolder.getInstance().getTemplate(bro).getNewInstance();
+                    NpcInstance npc = NpcHolder.getTemplate(bro).getNewInstance();
                     npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
                     npc.setReflection(actor.getReflection());
                     npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);

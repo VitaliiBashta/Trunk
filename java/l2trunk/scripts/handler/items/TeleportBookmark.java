@@ -21,7 +21,7 @@ public final class TeleportBookmark extends SimpleItemHandler implements ScriptF
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override

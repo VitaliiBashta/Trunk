@@ -3,10 +3,10 @@ package l2trunk.gameserver.model.base;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.model.items.ItemAttributes;
 
-public class MultiSellIngredient implements Cloneable {
-    private int _itemId;
+public final class MultiSellIngredient implements Cloneable {
+    private int itemId;
     private long _itemCount;
-    private int _itemEnchant;
+    private int itemEnchant;
     private ItemAttributes _itemAttributes;
     private boolean _mantainIngredient;
 
@@ -15,16 +15,16 @@ public class MultiSellIngredient implements Cloneable {
     }
 
     public MultiSellIngredient(int itemId, long itemCount, int enchant) {
-        _itemId = itemId;
+        this.itemId = itemId;
         _itemCount = itemCount;
-        _itemEnchant = enchant;
+        itemEnchant = enchant;
         _mantainIngredient = false;
         _itemAttributes = new ItemAttributes();
     }
 
     @Override
     public MultiSellIngredient clone() {
-        MultiSellIngredient mi = new MultiSellIngredient(_itemId, _itemCount, _itemEnchant);
+        MultiSellIngredient mi = new MultiSellIngredient(itemId, _itemCount, itemEnchant);
         mi.setMantainIngredient(_mantainIngredient);
         mi.setItemAttributes(_itemAttributes.clone());
         return mi;
@@ -34,14 +34,14 @@ public class MultiSellIngredient implements Cloneable {
      * @return Returns the itemId.
      */
     public int getItemId() {
-        return _itemId;
+        return itemId;
     }
 
     /**
      * @param itemId The itemId to set.
      */
     public void setItemId(int itemId) {
-        _itemId = itemId;
+        this.itemId = itemId;
     }
 
     /**
@@ -64,21 +64,21 @@ public class MultiSellIngredient implements Cloneable {
      * @return boolean
      */
     public boolean isStackable() {
-        return _itemId <= 0 || ItemHolder.getInstance().getTemplate(_itemId).isStackable();
+        return itemId <= 0 || ItemHolder.INSTANCE.getTemplate(itemId).isStackable();
     }
 
     /**
      * @return Returns the itemEnchant.
      */
     public int getItemEnchant() {
-        return _itemEnchant;
+        return itemEnchant;
     }
 
     /**
      * @param itemEnchant The itemEnchant to set.
      */
     public void setItemEnchant(int itemEnchant) {
-        _itemEnchant = itemEnchant;
+        this.itemEnchant = itemEnchant;
     }
 
     public ItemAttributes getItemAttributes() {
@@ -96,8 +96,8 @@ public class MultiSellIngredient implements Cloneable {
         result = prime * result + (int) (_itemCount ^ _itemCount >>> 32);
         for (Element e : Element.VALUES)
             result = prime * result + _itemAttributes.getValue(e);
-        result = prime * result + _itemEnchant;
-        result = prime * result + _itemId;
+        result = prime * result + itemEnchant;
+        result = prime * result + itemId;
         return result;
     }
 
@@ -110,11 +110,11 @@ public class MultiSellIngredient implements Cloneable {
         if (getClass() != obj.getClass())
             return false;
         MultiSellIngredient other = (MultiSellIngredient) obj;
-        if (_itemId != other._itemId)
+        if (itemId != other.itemId)
             return false;
         if (_itemCount != other._itemCount)
             return false;
-        if (_itemEnchant != other._itemEnchant)
+        if (itemEnchant != other.itemEnchant)
             return false;
         for (Element e : Element.VALUES)
             if (_itemAttributes.getValue(e) != other._itemAttributes.getValue(e))

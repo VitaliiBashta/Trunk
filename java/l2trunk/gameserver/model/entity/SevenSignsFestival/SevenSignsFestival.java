@@ -26,7 +26,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SevenSignsFestival {
+public enum SevenSignsFestival {
+    INSTANCE;
     public static final int FESTIVAL_MANAGER_START = 120000; // 2 mins
     public static final int FESTIVAL_FIRST_SPAWN = 120000; // 2 mins
     public static final int FESTIVAL_FIRST_SWARM = 300000; // 5 mins
@@ -46,12 +47,9 @@ public class SevenSignsFestival {
     private static final int FESTIVAL_CYCLE_LENGTH = 2280000; // 38 mins
     public static final int FESTIVAL_SIGNUP_TIME = FESTIVAL_CYCLE_LENGTH - FESTIVAL_LENGTH;
     private static final Logger _log = LoggerFactory.getLogger(SevenSignsFestival.class);
-    private static final SevenSigns _signsInstance = SevenSigns.getInstance();
-    private static SevenSignsFestival _instance;
-    private static boolean _festivalInitialized;
-    private static long[] _accumulatedBonuses; // The total bonus available (in Ancient Adena)
-    private static Map<Integer, Long> _dawnFestivalScores, _duskFestivalScores;
-
+    private static boolean festivalInitialized;
+    private static Map<Integer, Long> _dawnFestivalScores = new ConcurrentHashMap<>();
+    private static Map<Integer, Long> _duskFestivalScores = new ConcurrentHashMap<>();
     /**
      * _festivalData is essentially an instance of the seven_signs_festival table and
      * should be treated as such.
@@ -60,20 +58,11 @@ public class SevenSignsFestival {
      * offset = FESTIVAL_COUNT + festivalId
      * (Data for Dawn is always accessed by offset > FESTIVAL_COUNT)
      */
-    private final Map<Integer, Map<Integer, StatsSet>> _festivalData;
+    private final Map<Integer, Map<Integer, StatsSet>> _festivalData = new ConcurrentHashMap<>();
+    private long[] _accumulatedBonuses = new long[FESTIVAL_COUNT]; // The total bonus available (in Ancient Adena)
 
-    private SevenSignsFestival() {
-        _accumulatedBonuses = new long[FESTIVAL_COUNT];
-        _dawnFestivalScores = new ConcurrentHashMap<>();
-        _duskFestivalScores = new ConcurrentHashMap<>();
-        _festivalData = new ConcurrentHashMap<>();
+    SevenSignsFestival() {
         restoreFestivalData();
-    }
-
-    public static SevenSignsFestival getInstance() {
-        if (_instance == null)
-            _instance = new SevenSignsFestival();
-        return _instance;
     }
 
     /**
@@ -177,16 +166,14 @@ public class SevenSignsFestival {
      * Restores saved festival data, basic settings from the properties file
      * and past high score data from the database.
      */
-    private void restoreFestivalData() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+    public void restoreFestivalData() {
+        PreparedStatement statement;
+        ResultSet rset;
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             statement = con.prepareStatement("SELECT festivalId, cabal, cycle, date, score, members, names FROM seven_signs_festival");
             rset = statement.executeQuery();
             while (rset.next()) {
-                int cycle = _signsInstance.getCurrentCycle();
+                int cycle = SevenSigns.INSTANCE.getCurrentCycle();
                 int festivalId = rset.getInt("festivalId");
                 int cabal = SevenSigns.getCabalNumber(rset.getString("cabal"));
                 StatsSet festivalDat = new StatsSet();
@@ -205,12 +192,11 @@ public class SevenSignsFestival {
                 tempData.put(festivalId, festivalDat);
                 _festivalData.put(cycle, tempData);
             }
-            DbUtils.close(statement, rset);
 
             StringBuilder query = new StringBuilder("SELECT festival_cycle, ");
             for (int i = 0; i < FESTIVAL_COUNT - 1; i++)
-                query.append("accumulated_bonus" + String.valueOf(i) + ", ");
-            query.append("accumulated_bonus" + String.valueOf(FESTIVAL_COUNT - 1) + " ");
+                query.append("accumulated_bonus").append(String.valueOf(i)).append(", ");
+            query.append("accumulated_bonus").append(String.valueOf(FESTIVAL_COUNT - 1)).append(" ");
             query.append("FROM seven_signs_status");
 
             statement = con.prepareStatement(query.toString());
@@ -220,17 +206,12 @@ public class SevenSignsFestival {
                     _accumulatedBonuses[i] = rset.getInt("accumulated_bonus" + String.valueOf(i));
         } catch (SQLException e) {
             _log.error("SevenSignsFestival: Failed to load configuration: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
     /**
      * Stores current festival data, basic settings to the properties file
      * and past high score data to the database.
-     *
-     * @param updateSettings
-     * @throws Exception
      */
     public synchronized void saveFestivalData(boolean updateSettings) {
         Connection con = null;
@@ -275,7 +256,7 @@ public class SevenSignsFestival {
         }
         // Updates Seven Signs DB data also, so call only if really necessary.
         if (updateSettings)
-            _signsInstance.saveSevenSignsData(0, true);
+            SevenSigns.INSTANCE.saveSevenSignsData(0, true);
     }
 
     /**
@@ -352,7 +333,7 @@ public class SevenSignsFestival {
             // Create a new StatsSet with "default" data for Dusk
             StatsSet tempStats = new StatsSet();
             tempStats.set("festivalId", festivalId);
-            tempStats.set("cycle", _signsInstance.getCurrentCycle());
+            tempStats.set("cycle", SevenSigns.INSTANCE.getCurrentCycle());
             tempStats.set("date", "0");
             tempStats.set("score", 0);
             tempStats.set("members", "");
@@ -363,7 +344,7 @@ public class SevenSignsFestival {
             newData.put(i, tempStats);
         }
         // Add the newly created cycle data to the existing festival data, and subsequently save it to the database.
-        _festivalData.put(_signsInstance.getCurrentCycle(), newData);
+        _festivalData.put(SevenSigns.INSTANCE.getCurrentCycle(), newData);
         saveFestivalData(updateSettings);
         // Remove any unused blood offerings from online players.
         for (Player onlinePlayer : GameObjectsStorage.getAllPlayers())
@@ -372,15 +353,15 @@ public class SevenSignsFestival {
     }
 
     public boolean isFestivalInitialized() {
-        return _festivalInitialized;
+        return festivalInitialized;
     }
 
-    public static void setFestivalInitialized(boolean isInitialized) {
-        _festivalInitialized = isInitialized;
-    }
+//    public static void setFestivalInitialized(boolean isInitialized) {
+//        festivalInitialized = isInitialized;
+//    }
 
     public String getTimeToNextFestivalStr() {
-        if (_signsInstance.isSealValidationPeriod())
+        if (SevenSigns.INSTANCE.isSealValidationPeriod())
             return "<font color=\"FF0000\">This is the Seal Validation period. Festivals will resume next week.</font>";
         return "<font color=\"FF0000\">The next festival is ready to start.</font>";
     }
@@ -404,10 +385,10 @@ public class SevenSignsFestival {
         // Attempt to retrieve existing score data (if found), otherwise create a new blank data set and display a console warning.
         StatsSet currData = null;
         try {
-            currData = _festivalData.get(_signsInstance.getCurrentCycle()).get(offsetId);
+            currData = _festivalData.get(SevenSigns.INSTANCE.getCurrentCycle()).get(offsetId);
         } catch (RuntimeException e) {
             _log.info("SSF: Error while getting scores");
-            _log.info("oracle=" + oracle + " festivalId=" + festivalId + " offsetId" + offsetId + " _signsCycle" + _signsInstance.getCurrentCycle());
+            _log.info("oracle=" + oracle + " festivalId=" + festivalId + " offsetId" + offsetId + " _signsCycle" + SevenSigns.INSTANCE.getCurrentCycle());
             _log.info("_festivalData=" + _festivalData.toString());
             _log.error("Error while getting Seven Signs highest score data", e);
         }
@@ -415,7 +396,9 @@ public class SevenSignsFestival {
             currData = new StatsSet();
             currData.set("score", 0);
             currData.set("members", "");
-            _log.warn("SevenSignsFestival: Data missing for " + SevenSigns.getCabalName(oracle) + ", FestivalID = " + festivalId + " (Current Cycle " + _signsInstance.getCurrentCycle() + ")");
+            _log.warn("SevenSignsFestival: Data missing for "
+                    + SevenSigns.getCabalName(oracle) + ", FestivalID = " + festivalId
+                    + " (Current Cycle " + SevenSigns.INSTANCE.getCurrentCycle() + ")");
         }
         return currData;
     }
@@ -455,8 +438,8 @@ public class SevenSignsFestival {
         List<Player> partyMembers = party.getMembers();
         long currDawnHighScore = getHighestScore(SevenSigns.CABAL_DAWN, festivalId);
         long currDuskHighScore = getHighestScore(SevenSigns.CABAL_DUSK, festivalId);
-        long thisCabalHighScore = 0;
-        long otherCabalHighScore = 0;
+        long thisCabalHighScore;
+        long otherCabalHighScore;
         if (oracle == SevenSigns.CABAL_DAWN) {
             thisCabalHighScore = currDawnHighScore;
             otherCabalHighScore = currDuskHighScore;
@@ -479,7 +462,7 @@ public class SevenSignsFestival {
             currFestData.set("names", implodeString(partyMembers));
             // Only add the score to the cabal's overall if it's higher than the other cabal's score.
             if (offeringScore > otherCabalHighScore)
-                _signsInstance.updateFestivalScore();
+                SevenSigns.INSTANCE.updateFestivalScore();
             saveFestivalData(true);
             return true;
         }
@@ -541,7 +524,7 @@ public class SevenSignsFestival {
                 String[] members = membersString.split(",");
                 long count = (_accumulatedBonuses[i] + add) / members.length;
                 for (String pIdStr : members)
-                    SevenSigns.getInstance().addPlayerStoneContrib(Integer.parseInt(pIdStr), 0, 0, count / 10);
+                    SevenSigns.INSTANCE.addPlayerStoneContrib(Integer.parseInt(pIdStr), 0, 0, count / 10);
             }
     }
 }

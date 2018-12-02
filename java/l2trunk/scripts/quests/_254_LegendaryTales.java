@@ -143,7 +143,7 @@ public class _254_LegendaryTales extends Quest implements ScriptFile {
 
             if ((var & mask) == 0) // этого босса еще не убивали
             {
-                String name = NpcHolder.getInstance().getTemplate(i).getName();
+                String name = NpcHolder.getTemplate(i).getName();
                 player.sendMessage(name);
             }
         }

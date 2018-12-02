@@ -29,17 +29,17 @@ public final class Darnel extends DefaultAI {
             // Спавним 10 ловушек
             TrapInstance trap;
             for (int i = 0; i < 10; i++) {
-                trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(13037), actor, trapSkills[Rnd.get(trapSkills.length)], new Location(Rnd.get(151896, 153608), Rnd.get(145032, 146808), -12584));
+                trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(13037), actor, trapSkills[Rnd.get(trapSkills.length)], new Location(Rnd.get(151896, 153608), Rnd.get(145032, 146808), -12584));
                 trap.spawnMe();
             }
         }
     }
 
     private final Skill[] trapSkills = new Skill[]{
-            SkillTable.INSTANCE().getInfo(5267, 1),
-            SkillTable.INSTANCE().getInfo(5268, 1),
-            SkillTable.INSTANCE().getInfo(5269, 1),
-            SkillTable.INSTANCE().getInfo(5270, 1)};
+            SkillTable.INSTANCE.getInfo(5267, 1),
+            SkillTable.INSTANCE.getInfo(5268, 1),
+            SkillTable.INSTANCE.getInfo(5269, 1),
+            SkillTable.INSTANCE.getInfo(5270, 1)};
 
     private final Skill Poison;
     private final Skill Paralysis;

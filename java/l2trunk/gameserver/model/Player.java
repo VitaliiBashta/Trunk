@@ -178,7 +178,7 @@ public final class Player extends Playable implements PlayerGroup {
     public final AntiFlood antiFlood = new AntiFlood();
     public final GameEvent _event = null;
     final Map<Integer, Skill> _transformationSkills = new HashMap<>();
-    private final PcInventory _inventory = new PcInventory(this);
+    private final PcInventory inventory = new PcInventory(this);
     private final Warehouse _warehouse = new PcWarehouse(this);
     private final ItemContainer _refund = new PcRefund(this);
     private final PcFreight _freight = new PcFreight(this);
@@ -506,7 +506,7 @@ public final class Player extends Playable implements PlayerGroup {
      * <BR>
      * <li>Call the L2Character constructor to create an empty skills slot and copy basic Calculator set to this L2Player</li>
      * <li>Create a l2fadar object</li>
-     * <li>Retrieve from the database all items of this L2Player and add them to _inventory</li>
+     * <li>Retrieve from the database all items of this L2Player and add them to inventory</li>
      * <p/>
      * <FONT COLOR=#FF0000><B> <U>Caution</U> : This method DOESN'T SET the account name of the L2Player</B></FONT><BR>
      * <BR>
@@ -738,7 +738,7 @@ public final class Player extends Playable implements PlayerGroup {
 
                 Quest.restoreQuestStates(player, con);
 
-                player._inventory.restore();
+                player.inventory.restore();
 
                 restoreCharSubClasses(player, con);
 
@@ -862,7 +862,7 @@ public final class Player extends Playable implements PlayerGroup {
                                 AuctionManager.getInstance().removePlayerStores(player);
                             }
                             for (TradeItem item : player._sellList) {
-                                ItemInstance itemToSell = player._inventory.getItemByItemId(item.getItemId());
+                                ItemInstance itemToSell = player.inventory.getItemByItemId(item.getItemId());
                                 Auction a = AuctionManager.getInstance().addNewStore(player, itemToSell, item.getOwnersPrice(), item.getCount());
                                 item.setAuctionId(a.getAuctionId());
                             }
@@ -2045,7 +2045,7 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         if (skillUpdate) {
-            _inventory.validateItemsSkills();
+            inventory.validateItemsSkills();
 
             sendPacket(new SkillList(this));
             sendEtcStatusUpdate();
@@ -2253,47 +2253,47 @@ public final class Player extends Playable implements PlayerGroup {
     private WeaponTemplate findFistsWeaponItem(final int classId) {
         // human fighter fists
         if ((classId >= 0x00) && (classId <= 0x09)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(246);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(246);
         }
 
         // human mage fists
         if ((classId >= 0x0a) && (classId <= 0x11)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(251);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(251);
         }
 
         // elven fighter fists
         if ((classId >= 0x12) && (classId <= 0x18)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(244);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(244);
         }
 
         // elven mage fists
         if ((classId >= 0x19) && (classId <= 0x1e)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(249);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(249);
         }
 
         // dark elven fighter fists
         if ((classId >= 0x1f) && (classId <= 0x25)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(245);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(245);
         }
 
         // dark elven mage fists
         if ((classId >= 0x26) && (classId <= 0x2b)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(250);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(250);
         }
 
         // orc fighter fists
         if ((classId >= 0x2c) && (classId <= 0x30)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(248);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(248);
         }
 
         // orc mage fists
         if ((classId >= 0x31) && (classId <= 0x34)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(252);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(252);
         }
 
         // dwarven fists
         if ((classId >= 0x35) && (classId <= 0x39)) {
-            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(247);
+            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(247);
         }
 
         return null;
@@ -2701,12 +2701,12 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public PcInventory getInventory() {
-        return _inventory;
+        return inventory;
     }
 
     @Override
     public long getWearedMask() {
-        return _inventory.getWearedMask();
+        return inventory.getWearedMask();
     }
 
     public PcFreight getFreight() {
@@ -4332,7 +4332,7 @@ public final class Player extends Playable implements PlayerGroup {
 
         bookmarks.clear();
 
-        _inventory.clear();
+        inventory.clear();
         _warehouse.clear();
         _summon = null;
         _arrowItem = null;
@@ -4468,7 +4468,7 @@ public final class Player extends Playable implements PlayerGroup {
             _pledgeClass = 0;
             _powerGrade = 0;
             _apprentice = 0;
-            _inventory.validateItems();
+            inventory.validateItems();
 
             if (getEvent(CastleSiegeEvent.class) != null)
                 removeEvent(getEvent(CastleSiegeEvent.class));
@@ -7472,8 +7472,8 @@ public final class Player extends Playable implements PlayerGroup {
 
         sendPacket(new SkillList(this));
 
-        _inventory.refreshEquip();
-        _inventory.validateItems();
+        inventory.refreshEquip();
+        inventory.validateItems();
 
         for (int i = 0; i < 3; i++) {
             _henna[i] = null;
@@ -8923,7 +8923,7 @@ public final class Player extends Playable implements PlayerGroup {
             } else {
                 final int template = getTransformationTemplate();
                 if (template != 0) {
-                    final NpcTemplate npcTemplate = NpcHolder.getInstance().getTemplate(template);
+                    final NpcTemplate npcTemplate = NpcHolder.getTemplate(template);
                     if (npcTemplate != null) {
                         return npcTemplate.collisionRadius;
                     }
@@ -8932,7 +8932,7 @@ public final class Player extends Playable implements PlayerGroup {
         } else if (isMounted()) {
             final int mountTemplate = getMountNpcId();
             if (mountTemplate != 0) {
-                final NpcTemplate mountNpcTemplate = NpcHolder.getInstance().getTemplate(mountTemplate);
+                final NpcTemplate mountNpcTemplate = NpcHolder.getTemplate(mountTemplate);
                 if (mountNpcTemplate != null) {
                     return mountNpcTemplate.collisionRadius;
                 }
@@ -8949,7 +8949,7 @@ public final class Player extends Playable implements PlayerGroup {
             } else {
                 final int template = getTransformationTemplate();
                 if (template != 0) {
-                    final NpcTemplate npcTemplate = NpcHolder.getInstance().getTemplate(template);
+                    final NpcTemplate npcTemplate = NpcHolder.getTemplate(template);
                     if (npcTemplate != null) {
                         return npcTemplate.collisionHeight;
                     }
@@ -8958,7 +8958,7 @@ public final class Player extends Playable implements PlayerGroup {
         } else if (isMounted()) {
             final int mountTemplate = getMountNpcId();
             if (mountTemplate != 0) {
-                final NpcTemplate mountNpcTemplate = NpcHolder.getInstance().getTemplate(mountTemplate);
+                final NpcTemplate mountNpcTemplate = NpcHolder.getTemplate(mountTemplate);
                 if (mountNpcTemplate != null) {
                     return mountNpcTemplate.collisionHeight;
                 }
@@ -9382,7 +9382,7 @@ public final class Player extends Playable implements PlayerGroup {
             return;
         }
 
-        NpcTemplate petTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate petTemplate = NpcHolder.getTemplate(npcId);
         if (petTemplate == null) {
             return;
         }
@@ -9629,11 +9629,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void sendItemList(boolean show) {
-        ItemInstance[] items = getInventory().getItems();
+        List<ItemInstance> items = getInventory().getItems();
         LockType lockType = getInventory().getLockType();
         int[] lockItems = getInventory().getLockItems();
 
-        int allSize = items.length;
+        int allSize = items.size();
         int questItemsSize = 0;
         int agathionItemsSize = 0;
         for (ItemInstance item : items) {
@@ -9865,7 +9865,7 @@ public final class Player extends Playable implements PlayerGroup {
         item.setAgathionEnergy(val);
         item.setJdbcState(JdbcEntityState.UPDATED);
 
-        sendPacket(new ExBR_AgathionEnergyInfo(1, item));
+        sendPacket(new ExBR_AgathionEnergyInfo(1, Collections.singletonList(item)));
     }
 
     public boolean hasPrivilege(Privilege privilege) {

@@ -113,7 +113,7 @@ public final class FafurionKindred extends Fighter {
         @Override
         public void runImpl() {
             NpcInstance actor = getActor();
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(id));
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(id));
             sp.setLoc(Location.findPointToStay(actor, 100, 120));
             sp.setRespawnDelay(30, 40);
             sp.doSpawn(true);

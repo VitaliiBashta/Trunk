@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Future;
 
-public class DarknessFestival extends Reflection {
+public final class DarknessFestival extends Reflection {
     private static final int FESTIVAL_LENGTH = 1080000; // 18 mins
     private static final int FESTIVAL_FIRST_SPAWN = 60000; // 1 min
     private static final int FESTIVAL_SECOND_SPAWN = 540000; // 9 mins
@@ -60,7 +60,7 @@ public class DarknessFestival extends Reflection {
         }
 
         scheduleNext();
-        NpcTemplate witchTemplate = NpcHolder.getInstance().getTemplate(_witchSpawn.npcId);
+        NpcTemplate witchTemplate = NpcHolder.getTemplate(_witchSpawn.npcId);
         // Spawn the festival witch for this arena
         try {
             SimpleSpawner npcSpawn = new SimpleSpawner(witchTemplate);
@@ -132,7 +132,7 @@ public class DarknessFestival extends Reflection {
         if (spawns != null)
             for (int[] element : spawns) {
                 FestivalSpawn currSpawn = new FestivalSpawn(element);
-                NpcTemplate npcTemplate = NpcHolder.getInstance().getTemplate(currSpawn.npcId);
+                NpcTemplate npcTemplate = NpcHolder.getTemplate(currSpawn.npcId);
 
                 SimpleSpawner npcSpawn;
                 npcSpawn = new SimpleSpawner(npcTemplate);
@@ -172,14 +172,14 @@ public class DarknessFestival extends Reflection {
             _spawnTimerTask = null;
         }
 
-        if (SevenSigns.getInstance().getCurrentPeriod() == SevenSigns.PERIOD_COMPETITION && getParty() != null) {
+        if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_COMPETITION && getParty() != null) {
             Player player = getParty().getLeader();
             ItemInstance bloodOfferings = player.getInventory().getItemByItemId(SevenSignsFestival.FESTIVAL_BLOOD_OFFERING);
             long offeringCount = bloodOfferings == null ? 0 : bloodOfferings.getCount();
             // Check if the player collected any blood offerings during the festival.
             if (player.getInventory().destroyItem(bloodOfferings, "DarknessFestival")) {
                 long offeringScore = offeringCount * SevenSignsFestival.FESTIVAL_OFFERING_VALUE;
-                boolean isHighestScore = SevenSignsFestival.getInstance().setFinalScore(getParty(), _cabal, _levelRange, offeringScore);
+                boolean isHighestScore = SevenSignsFestival.INSTANCE.setFinalScore(getParty(), _cabal, _levelRange, offeringScore);
                 // Send message that the contribution score has increased.
                 player.sendPacket(new SystemMessage(SystemMessage.YOUR_CONTRIBUTION_SCORE_IS_INCREASED_BY_S1).addNumber(offeringScore));
 

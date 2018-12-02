@@ -70,7 +70,7 @@ class clanhall extends Functions {
         int npcId = PetDataTable.getSummonId(collar);
         if (npcId == 0)
             return;
-        NpcTemplate petTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate petTemplate = NpcHolder.getTemplate(npcId);
         if (petTemplate == null)
             return;
         PetInstance pet = PetInstance.restore(collar, petTemplate, player);
@@ -115,7 +115,7 @@ class clanhall extends Functions {
         int npcId = PetDataTable.getSummonId(collar);
         if (npcId == 0)
             return;
-        NpcTemplate petTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate petTemplate = NpcHolder.getTemplate(npcId);
         if (petTemplate == null)
             return;
         PetInstance pet = PetInstance.restore(collar, petTemplate, player);
@@ -160,7 +160,7 @@ class clanhall extends Functions {
         int npcId = PetDataTable.getSummonId(collar);
         if (npcId == 0)
             return;
-        NpcTemplate petTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate petTemplate = NpcHolder.getTemplate(npcId);
         if (petTemplate == null)
             return;
         PetInstance pet = PetInstance.restore(collar, petTemplate, player);
@@ -205,7 +205,7 @@ class clanhall extends Functions {
         int npcId = PetDataTable.getSummonId(collar);
         if (npcId == 0)
             return;
-        NpcTemplate petTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate petTemplate = NpcHolder.getTemplate(npcId);
         if (petTemplate == null)
             return;
         PetInstance pet = PetInstance.restore(collar, petTemplate, player);
@@ -250,7 +250,7 @@ class clanhall extends Functions {
         int npcId = PetDataTable.getSummonId(collar);
         if (npcId == 0)
             return;
-        NpcTemplate petTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate petTemplate = NpcHolder.getTemplate(npcId);
         if (petTemplate == null)
             return;
         PetInstance pet = PetInstance.restore(collar, petTemplate, player);
@@ -295,7 +295,7 @@ class clanhall extends Functions {
         int npcId = PetDataTable.getSummonId(collar);
         if (npcId == 0)
             return;
-        NpcTemplate petTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate petTemplate = NpcHolder.getTemplate(npcId);
         if (petTemplate == null)
             return;
         PetInstance pet = PetInstance.restore(collar, petTemplate, player);

@@ -39,7 +39,7 @@ public final class FrostBuffalo extends Fighter {
             _mobsNotSpawned = false;
             for (int i = 0; i < MOBS_COUNT; i++)
                 try {
-                    SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(MOBS));
+                    SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(MOBS));
                     sp.setLoc(Location.findPointToStay(actor, 100, 120));
                     NpcInstance npc = sp.doSpawn(true);
                     if (caster.isPet() || caster.isSummon())

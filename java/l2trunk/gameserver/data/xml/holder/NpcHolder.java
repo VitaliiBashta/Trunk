@@ -1,7 +1,8 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,48 +10,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class NpcHolder extends AbstractHolder {
-    private static final NpcHolder _instance = new NpcHolder();
+public final class NpcHolder {
+    private static final Logger LOG = LoggerFactory.getLogger(NpcHolder.class);
 
-    private final Map<Integer, NpcTemplate> _npcs = new HashMap<>(20000);
+    private static final Map<Integer, NpcTemplate> npcs = new HashMap<>(20000);
 
     private NpcHolder() {
     }
 
-    public static NpcHolder getInstance() {
-        return _instance;
+    public static void addTemplate(NpcTemplate template) {
+        npcs.put(template.npcId, template);
     }
 
-    public void addTemplate(NpcTemplate template) {
-        _npcs.put(template.npcId, template);
-    }
-
-    public NpcTemplate getTemplate(int id) {
-        if (!_npcs.containsKey(id)) {
+    public static NpcTemplate getTemplate(int id) {
+        if (!npcs.containsKey(id)) {
             LOG.warn("Not defined npc id : " + id + ", or out of range!", new Exception());
         }
-        return _npcs.get(id);
+        return npcs.get(id);
     }
 
-    public NpcTemplate getTemplateByName(String NpcName) {
-        return _npcs.values().stream().filter(a -> a.name.equals(NpcName)).findFirst().orElse(null);
+    public static NpcTemplate getTemplateByName(String NpcName) {
+        return npcs.values().stream().filter(a -> a.name.equals(NpcName)).findFirst().orElse(null);
     }
 
-    public List<NpcTemplate> getAllOfLevel(int lvl) {
-        return _npcs.values().stream().filter(entry -> entry.level == lvl).collect(Collectors.toList());
+    public static Collection<NpcTemplate> getAll() {
+        return npcs.values();
     }
 
-    public Collection<NpcTemplate> getAll() {
-        return _npcs.values();
+    public static List<NpcTemplate> getAllOfLevel(int lvl) {
+        return npcs.values().stream().filter(entry -> entry.level == lvl).collect(Collectors.toList());
     }
 
-    @Override
     public int size() {
-        return _npcs.size();
+        return npcs.size();
     }
 
-    @Override
     public void clear() {
-        _npcs.clear();
+        npcs.clear();
     }
 }

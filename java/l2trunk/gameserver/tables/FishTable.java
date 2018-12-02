@@ -13,19 +13,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class FishTable {
-    private static final Logger _log = LoggerFactory.getLogger(FishTable.class);
+public enum FishTable {
+    INSTANCE;
+    private static final Logger LOG = LoggerFactory.getLogger(FishTable.class);
 
-    private static final FishTable _instance = new FishTable();
     private Map<Integer, List<FishTemplate>> _fishes;
     private Map<Integer, List<RewardData>> _fishRewards;
 
-    private FishTable() {
-        load();
-    }
 
-    public static FishTable getInstance() {
-        return _instance;
+    public void init() {
+        load();
     }
 
     public void reload() {
@@ -65,7 +62,7 @@ public class FishTable {
 
             DbUtils.close(statement, resultSet);
 
-            _log.info("FishTable: Loaded " + count + " fishes.");
+            LOG.info("FishTable: Loaded " + count + " fishes.");
 
             count = 0;
 
@@ -89,9 +86,9 @@ public class FishTable {
                 count++;
             }
 
-            _log.info("FishTable: Loaded " + count + " fish rewards.");
+            LOG.info("FishTable: Loaded " + count + " fish rewards.");
         } catch (SQLException e) {
-            _log.error("Error while loading Fishes", e);
+            LOG.error("Error while loading Fishes", e);
         }
     }
 
@@ -104,7 +101,7 @@ public class FishTable {
 
         List<FishTemplate> fishs = _fishes.get(group);
         if (fishs == null) {
-            _log.warn("No fishes defined for group : " + group + "!");
+            LOG.warn("No fishes defined for group : " + group + "!");
             return null;
         }
 
@@ -118,7 +115,7 @@ public class FishTable {
         }
 
         if (result.isEmpty())
-            _log.warn("No fishes for group : " + group + " type: " + type + " level: " + lvl + "!");
+            LOG.warn("No fishes for group : " + group + " type: " + type + " level: " + lvl + "!");
 
         return result;
     }
@@ -126,12 +123,12 @@ public class FishTable {
     public List<RewardData> getFishReward(int fishid) {
         List<RewardData> result = _fishRewards.get(fishid);
         if (_fishRewards == null) {
-            _log.warn("No fish rewards defined for fish id: " + fishid + "!");
+            LOG.warn("No fish rewards defined for fish id: " + fishid + "!");
             return null;
         }
 
         if (result.isEmpty())
-            _log.warn("No fish rewards for fish id: " + fishid + "!");
+            LOG.warn("No fish rewards for fish id: " + fishid + "!");
 
         return result;
     }

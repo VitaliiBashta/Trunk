@@ -251,20 +251,20 @@ public class Util extends Functions {
         }
 
         if (type > 0) {
-            int player_cabal = SevenSigns.getInstance().getPlayerCabal(player);
-            int period = SevenSigns.getInstance().getCurrentPeriod();
+            int player_cabal = SevenSigns.INSTANCE.getPlayerCabal(player);
+            int period = SevenSigns.INSTANCE.getCurrentPeriod();
             if (period == SevenSigns.PERIOD_COMPETITION && player_cabal == SevenSigns.CABAL_NULL) {
                 player.sendPacket(Msg.USED_ONLY_DURING_A_QUEST_EVENT_PERIOD);
                 return;
             }
 
             int winner;
-            if (period == SevenSigns.PERIOD_SEAL_VALIDATION && (winner = SevenSigns.getInstance().getCabalHighestScore()) != SevenSigns.CABAL_NULL) {
+            if (period == SevenSigns.PERIOD_SEAL_VALIDATION && (winner = SevenSigns.INSTANCE.getCabalHighestScore()) != SevenSigns.CABAL_NULL) {
                 if (winner != player_cabal)
                     return;
-                if (type == 1 && SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_AVARICE) != player_cabal)
+                if (type == 1 && SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_AVARICE) != player_cabal)
                     return;
-                if (type == 2 && SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_GNOSIS) != player_cabal)
+                if (type == 2 && SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_GNOSIS) != player_cabal)
                     return;
             }
         }

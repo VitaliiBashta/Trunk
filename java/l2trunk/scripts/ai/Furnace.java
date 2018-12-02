@@ -74,7 +74,7 @@ public final class Furnace extends Fighter {
             NpcInstance actor = getActor();
             SimpleSpawner spawn;
             try {
-                spawn = new SimpleSpawner(NpcHolder.getInstance().getTemplate(npcId));
+                spawn = new SimpleSpawner(NpcHolder.getTemplate(npcId));
                 spawn.setLoc(Location.coordsRandomize(actor.getLoc(), 50, 200));
                 spawn.doSpawn(true);
             } catch (RuntimeException e) {

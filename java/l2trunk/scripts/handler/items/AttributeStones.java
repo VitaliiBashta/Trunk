@@ -50,7 +50,7 @@ public final class AttributeStones extends ScriptItemHandler implements ScriptFi
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override

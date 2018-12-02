@@ -30,7 +30,7 @@ public final class SimpleSpawner extends Spawner implements Cloneable {
     }
 
     public SimpleSpawner(int npcId) {
-        NpcTemplate mobTemplate = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate mobTemplate = NpcHolder.getTemplate(npcId);
         if (mobTemplate == null)
             throw new NullPointerException("Not find npc: " + npcId);
 

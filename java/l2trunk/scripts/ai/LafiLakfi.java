@@ -74,7 +74,7 @@ public class LafiLakfi extends DefaultAI {
                 _firstSaid = false;
 
                 if (i_ai2 == 2 && getFirstSpawned(actor)) {
-                    NpcInstance npc = NpcHolder.getInstance().getTemplate(getCurrActor(actor)).getNewInstance();
+                    NpcInstance npc = NpcHolder.getTemplate(getCurrActor(actor)).getNewInstance();
                     npc.setLevel(actor.getLevel());
                     npc.setSpawnedLoc(actor.getLoc());
                     npc.setReflection(actor.getReflection());

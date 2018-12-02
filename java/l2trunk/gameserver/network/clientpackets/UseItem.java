@@ -13,6 +13,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.TimeStamp;
 import l2trunk.gameserver.tables.PetDataTable;
 
+import java.util.List;
+
 public class UseItem extends L2GameClientPacket {
     private int _objectId;
     private boolean _ctrlPressed;
@@ -149,13 +151,13 @@ public class UseItem extends L2GameClientPacket {
             }
 
             // Update Inventory
-            ItemInstance[] items = owner.getInventory().getItems();
+            List<ItemInstance> items = owner.getInventory().getItems();
             int questSize = 0;
             for (ItemInstance i : items)
                 if (i.getTemplate().isQuest())
                     questSize++;
 
-            activeChar.sendPacket(new GMViewItemList(owner, items, items.length - questSize));
+            activeChar.sendPacket(new GMViewItemList(owner, items, items.size() - questSize));
             activeChar.sendPacket(new ExGMViewQuestItemList(owner, items, questSize));
             activeChar.sendPacket(new GMHennaInfo(owner));
         }

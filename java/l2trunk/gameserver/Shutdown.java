@@ -185,8 +185,8 @@ public class Shutdown extends Thread {
     private void saveData() {
         try {
             // Seven Signs data is now saved along with Festival data.
-            if (!SevenSigns.getInstance().isSealValidationPeriod()) {
-                SevenSignsFestival.getInstance().saveFestivalData(false);
+            if (!SevenSigns.INSTANCE.isSealValidationPeriod()) {
+                SevenSignsFestival.INSTANCE.saveFestivalData(false);
                 _log.info("SevenSignsFestival: Data saved.");
             }
         } catch (RuntimeException e) {
@@ -194,7 +194,7 @@ public class Shutdown extends Thread {
         }
 
         try {
-            SevenSigns.getInstance().saveSevenSignsData(0, true);
+            SevenSigns.INSTANCE.saveSevenSignsData(0, true);
             _log.info("SevenSigns: Data saved.");
         } catch (RuntimeException e) {
             _log.error("Error while saving Seven Signs Data! ", e);

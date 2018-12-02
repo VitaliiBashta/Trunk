@@ -21,21 +21,14 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class Manor {
+public enum Manor {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(Manor.class);
-    private static Manor _instance;
 
-    private static Map<Integer, SeedData> _seeds;
+    private static Map<Integer, SeedData> _seeds= new ConcurrentHashMap<>();;
 
-    private Manor() {
-        _seeds = new ConcurrentHashMap<>();
+    Manor() {
         parseData();
-    }
-
-    public static Manor getInstance() {
-        if (_instance == null)
-            _instance = new Manor();
-        return _instance;
     }
 
     public List<Integer> getAllCrops() {
@@ -51,7 +44,7 @@ public final class Manor {
     }
 
     public int getSeedBasicPrice(int seedId) {
-        ItemTemplate seedItem = ItemHolder.getInstance().getTemplate(seedId);
+        ItemTemplate seedItem = ItemHolder.INSTANCE.getTemplate(seedId);
         if (seedItem != null)
             return seedItem.getReferencePrice();
         return 0;
@@ -65,7 +58,7 @@ public final class Manor {
     }
 
     public int getCropBasicPrice(int cropId) {
-        ItemTemplate cropItem = ItemHolder.getInstance().getTemplate(cropId);
+        ItemTemplate cropItem = ItemHolder.INSTANCE.getTemplate(cropId);
         if (cropItem != null)
             return cropItem.getReferencePrice();
         return 0;

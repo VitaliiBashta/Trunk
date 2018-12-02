@@ -73,7 +73,7 @@ public class RequestRestart extends L2GameClientPacket {
         // and it is in progress, otherwise notify party members that the player
         // is not longer a participant.
         if (activeChar.isFestivalParticipant()) {
-            if (SevenSignsFestival.getInstance().isFestivalInitialized()) {
+            if (SevenSignsFestival.INSTANCE.isFestivalInitialized()) {
                 activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestRestart.Festival", activeChar));
                 activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);
                 return;

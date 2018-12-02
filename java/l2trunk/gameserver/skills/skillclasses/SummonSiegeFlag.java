@@ -112,7 +112,7 @@ public class SummonSiegeFlag extends Skill {
                     return;
 
                 // 35062/36590
-                SiegeFlagInstance flag = (SiegeFlagInstance) NpcHolder.getInstance().getTemplate(_flagType == FlagType.OUTPOST ? 36590 : 35062).getNewInstance();
+                SiegeFlagInstance flag = (SiegeFlagInstance) NpcHolder.getTemplate(_flagType == FlagType.OUTPOST ? 36590 : 35062).getNewInstance();
                 flag.setClan(siegeClan);
                 flag.addEvent(siegeEvent);
 

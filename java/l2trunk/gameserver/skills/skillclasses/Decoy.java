@@ -48,7 +48,7 @@ public class Decoy extends Skill {
     public void useSkill(Creature caster, List<Creature> targets) {
         Player activeChar = caster.getPlayer();
 
-        NpcTemplate DecoyTemplate = NpcHolder.getInstance().getTemplate(getNpcId());
+        NpcTemplate DecoyTemplate = NpcHolder.getTemplate(getNpcId());
         DecoyInstance decoy = new DecoyInstance(IdFactory.getInstance().getNextId(), DecoyTemplate, activeChar, _lifeTime);
 
         decoy.setCurrentHp(decoy.getMaxHp(), false);

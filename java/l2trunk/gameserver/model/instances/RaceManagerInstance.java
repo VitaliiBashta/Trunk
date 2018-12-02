@@ -75,7 +75,7 @@ public class RaceManagerInstance extends NpcInstance {
 
     public void removeKnownPlayer(Player player) {
         for (int i = 0; i < 8; i++)
-            player.sendPacket(new DeleteObject(MonsterRace.getInstance().getMonsters()[i]));
+            player.sendPacket(new DeleteObject(MonsterRace.INSTANCE.getMonsters()[i]));
     }
 
     private void makeAnnouncement(int type) {
@@ -110,8 +110,8 @@ public class RaceManagerInstance extends NpcInstance {
             case SystemMessage.FIRST_PRIZE_GOES_TO_THE_PLAYER_IN_LANE_S1_SECOND_PRIZE_GOES_TO_THE_PLAYER_IN_LANE_S2:
                 //_log.info.println("Placing");
                 state = RACE_END;
-                sm.addNumber(MonsterRace.getInstance().getFirstPlace());
-                sm.addNumber(MonsterRace.getInstance().getSecondPlace());
+                sm.addNumber(MonsterRace.INSTANCE.getFirstPlace());
+                sm.addNumber(MonsterRace.INSTANCE.getSecondPlace());
                 break;
         }
 
@@ -135,7 +135,7 @@ public class RaceManagerInstance extends NpcInstance {
     }
 
     private void startRace() {
-        MonsterRace race = MonsterRace.getInstance();
+        MonsterRace race = MonsterRace.INSTANCE;
         if (state == STARTING_RACE) {
             //state++;
             PlaySound SRace = new PlaySound("S_Race");
@@ -203,7 +203,7 @@ public class RaceManagerInstance extends NpcInstance {
         for (int i = 0; i < 8; i++) {
             int n = i + 1;
             search = "Mob" + n;
-            html.replace(search, MonsterRace.getInstance().getMonsters()[i].getTemplate().name);
+            html.replace(search, MonsterRace.INSTANCE.getMonsters()[i].getTemplate().name);
         }
         html.replace("1race", String.valueOf(_raceNumber));
         player.sendPacket(html);
@@ -219,7 +219,7 @@ public class RaceManagerInstance extends NpcInstance {
         for (int i = 0; i < 8; i++) {
             int n = i + 1;
             search = "Mob" + n;
-            html.replace(search, MonsterRace.getInstance().getMonsters()[i].getTemplate().name);
+            html.replace(search, MonsterRace.INSTANCE.getMonsters()[i].getTemplate().name);
         }
         player.sendPacket(html);
         player.sendActionFailed();
@@ -237,7 +237,7 @@ public class RaceManagerInstance extends NpcInstance {
             for (int i = 0; i < 8; i++) {
                 int n = i + 1;
                 search = "Mob" + n;
-                html.replace(search, MonsterRace.getInstance().getMonsters()[i].getTemplate().name);
+                html.replace(search, MonsterRace.INSTANCE.getMonsters()[i].getTemplate().name);
             }
             search = "No1";
             if (val == 0)
@@ -253,7 +253,7 @@ public class RaceManagerInstance extends NpcInstance {
             html.setFile(filename);
             html.replace("0place", "" + player.getRace(0));
             search = "Mob1";
-            replace = MonsterRace.getInstance().getMonsters()[player.getRace(0) - 1].getTemplate().name;
+            replace = MonsterRace.INSTANCE.getMonsters()[player.getRace(0) - 1].getTemplate().name;
             html.replace(search, replace);
             search = "0adena";
             if (val == 10)
@@ -269,7 +269,7 @@ public class RaceManagerInstance extends NpcInstance {
             html.setFile(filename);
             html.replace("0place", "" + player.getRace(0));
             search = "Mob1";
-            replace = MonsterRace.getInstance().getMonsters()[player.getRace(0) - 1].getTemplate().name;
+            replace = MonsterRace.INSTANCE.getMonsters()[player.getRace(0) - 1].getTemplate().name;
             html.replace(search, replace);
             search = "0adena";
             int price = cost[player.getRace(1) - 1];
@@ -370,7 +370,7 @@ public class RaceManagerInstance extends NpcInstance {
     class RunRace extends RunnableImpl {
         @Override
         public void runImpl() {
-            packet = new MonRaceInfo(codes[2][0], codes[2][1], MonsterRace.getInstance().getMonsters(), MonsterRace.getInstance().getSpeeds());
+            packet = new MonRaceInfo(codes[2][0], codes[2][1], MonsterRace.INSTANCE.getMonsters(), MonsterRace.INSTANCE.getSpeeds());
             sendMonsterInfo();
             ThreadPoolManager.INSTANCE().schedule(new RunEnd(), 30000);
         }
@@ -385,7 +385,7 @@ public class RaceManagerInstance extends NpcInstance {
             ServerVariables.set("monster_race", _raceNumber);
 
             for (int i = 0; i < 8; i++)
-                broadcast(new DeleteObject(MonsterRace.getInstance().getMonsters()[i]));
+                broadcast(new DeleteObject(MonsterRace.INSTANCE.getMonsters()[i]));
         }
     }
 }

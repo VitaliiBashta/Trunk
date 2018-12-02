@@ -33,15 +33,12 @@ public final class Darion extends Fighter {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
-        for (int i = 0; i < 5; i++)
-            try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(Rnd.get(25614, 25615)));
-                sp.setLoc(Location.findPointToStay(actor, 400, 900));
-                sp.doSpawn(true);
-                sp.stopRespawn();
-            } catch (RuntimeException e) {
-                LOG.error("Error on Darion Spawn", e);
-            }
+        for (int i = 0; i < 5; i++) {
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(Rnd.get(25614, 25615)));
+            sp.setLoc(Location.findPointToStay(actor, 400, 900));
+            sp.doSpawn(true);
+            sp.stopRespawn();
+        }
 
         //Doors
         for (int door1 : doors) {

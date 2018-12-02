@@ -27,7 +27,7 @@ public class Sowing extends Skill {
 
         Player player = (Player) activeChar;
         int seedId = player.getUseSeed();
-        boolean altSeed = ItemHolder.getInstance().getTemplate(seedId).isAltSeed();
+        boolean altSeed = ItemHolder.INSTANCE.getTemplate(seedId).isAltSeed();
 
         // remove seed from inventory
         if (!player.getInventory().destroyItemByItemId(seedId, 1L, "Sowing")) {
@@ -47,7 +47,7 @@ public class Sowing extends Skill {
                 double SuccessRate = Config.MANOR_SOWING_BASIC_SUCCESS;
 
                 double diffPlayerTarget = Math.abs(activeChar.getLevel() - target.getLevel());
-                double diffSeedTarget = Math.abs(Manor.getInstance().getSeedLevel(seedId) - target.getLevel());
+                double diffSeedTarget = Math.abs(Manor.INSTANCE.getSeedLevel(seedId) - target.getLevel());
 
                 // Штраф, на разницу уровней между мобом и игроком
                 // 5% на каждый уровень при разнице >5 - по умолчанию

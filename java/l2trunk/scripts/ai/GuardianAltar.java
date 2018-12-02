@@ -50,7 +50,7 @@ public final class GuardianAltar extends DefaultAI {
                     }
 
             try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(DarkShamanVarangka));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(DarkShamanVarangka));
                 sp.setLoc(Location.findPointToStay(actor, 400, 420));
                 NpcInstance npc = sp.doSpawn(true);
                 if (attacker.isPet() || attacker.isSummon())
@@ -69,7 +69,7 @@ public final class GuardianAltar extends DefaultAI {
 
             for (int i = 0; i < 2; i++)
                 try {
-                    SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(22702));
+                    SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(22702));
                     sp.setLoc(Location.findPointToStay(actor, 150, 160));
                     NpcInstance npc = sp.doSpawn(true);
                     if (attacker.isPet() || attacker.isSummon())

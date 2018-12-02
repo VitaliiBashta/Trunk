@@ -369,7 +369,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
                 break;
             case TO_VILLAGE:
                 // If the Lords of Dawn's own seal (Dawn), and in the siege of the city is, then teleport in the 2nd in a row the city.
-                if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
+                if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
                     loc = _residence.getNotOwnerRestartPoint(player);
                 break;
         }

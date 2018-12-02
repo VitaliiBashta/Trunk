@@ -137,7 +137,7 @@ public class SiegeGuard extends Fighter {
             }
 
             if (!aggroList.isEmpty()) {
-                Collections.sort(aggroList, _nearestTargetComparator);
+                aggroList.sort(_nearestTargetComparator);
 
                 for (Creature cha : aggroList) {
                     if (cha != null && !cha.isDead()) {

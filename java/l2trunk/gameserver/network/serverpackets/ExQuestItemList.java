@@ -3,18 +3,20 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.LockType;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @date 1:02/23.02.2011
  */
-public class ExQuestItemList extends L2GameServerPacket {
+public final class ExQuestItemList extends L2GameServerPacket {
     private final int _size;
-    private final ItemInstance[] _items;
+    private final List<ItemInstance> _items;
 
     private final LockType _lockType;
     private final int[] _lockItems;
 
-    public ExQuestItemList(int size, ItemInstance[] t, LockType lockType, int[] lockItems) {
+    public ExQuestItemList(int size, List<ItemInstance> t, LockType lockType, int[] lockItems) {
         _size = size;
         _items = t;
         _lockType = lockType;

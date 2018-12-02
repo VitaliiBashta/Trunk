@@ -11,34 +11,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Clase muy eficiente para manejar los decays de todos los npcs. Basado en el de l2j
- *
- * @author GipsyGrierosu Andrei
- */
-public final class DecayTaskManager {
+public enum DecayTaskManager {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(NpcInstance.class);
 
-    private final Map<Creature, Long> _decayTasks = new ConcurrentHashMap<>();
+    private final Map<Creature, Long> decayTasks = new ConcurrentHashMap<>();
 
-    private DecayTaskManager() {
+    DecayTaskManager() {
         ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DecayScheduler(), 10000, 5000);
     }
 
-    public static DecayTaskManager getInstance() {
-        return SingletonHolder._instance;
-    }
-
     public void addDecayTask(Creature actor, long interval) {
-        _decayTasks.put(actor, System.currentTimeMillis() + interval);
+        decayTasks.put(actor, System.currentTimeMillis() + interval);
     }
 
     public void cancelDecayTask(Creature actor) {
-        _decayTasks.remove(actor);
-    }
-
-    private static class SingletonHolder {
-        static final DecayTaskManager _instance = new DecayTaskManager();
+        decayTasks.remove(actor);
     }
 
     class DecayScheduler implements Runnable {
@@ -46,24 +34,16 @@ public final class DecayTaskManager {
         public void run() {
             final long current = System.currentTimeMillis();
             try {
-                final Iterator<Entry<Creature, Long>> it = _decayTasks.entrySet().iterator();
+                final Iterator<Entry<Creature, Long>> it = decayTasks.entrySet().iterator();
                 Entry<Creature, Long> e;
-                Creature actor;
-                Long next;
                 while (it.hasNext()) {
                     e = it.next();
-                    actor = e.getKey();
-                    next = e.getValue();
-                    if (actor == null || next == null)
-                        continue;
-
-                    if (current > next) {
-                        actor.doDecay();
+                    if (current > e.getValue()) {
+                        e.getKey().doDecay();
                         it.remove();
                     }
                 }
-            } catch (Exception e) {
-                // TODO: Find out the reason for exception. Unless caught here, mob decay would stop.
+            } catch (RuntimeException e) {
                 _log.warn("Error in DecayScheduler: " + e.getMessage(), e);
             }
         }

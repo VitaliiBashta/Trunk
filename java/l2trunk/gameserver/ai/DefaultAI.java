@@ -927,7 +927,7 @@ public class DefaultAI extends CharacterAI {
         if (transformer > 0) {
             int chance = actor.getParameter("transformChance", 5);
             if ((chance == 100) || ((((MonsterInstance) actor).getChampion() == 0) && (actor.getCurrentHpPercents() > 50) && Rnd.chance(chance))) {
-                MonsterInstance npc = (MonsterInstance) NpcHolder.getInstance().getTemplate(transformer).getNewInstance();
+                MonsterInstance npc = (MonsterInstance) NpcHolder.getTemplate(transformer).getNewInstance();
                 npc.setSpawnedLoc(actor.getLoc());
                 npc.setReflection(actor.getReflection());
                 npc.setChampion(((MonsterInstance) actor).getChampion());
@@ -945,9 +945,9 @@ public class DefaultAI extends CharacterAI {
         Player player = attacker.getPlayer();
 
         if (player != null) { // FIXME Plugs 7 seals, the 7 seals attacking monster teleports the character to the nearest town
-            if (((SevenSigns.getInstance().isSealValidationPeriod()) || (SevenSigns.getInstance().isCompResultsPeriod())) && (actor.isSevenSignsMonster()) && (Config.RETAIL_SS)) {
-                int pcabal = SevenSigns.getInstance().getPlayerCabal(player);
-                int wcabal = SevenSigns.getInstance().getCabalHighestScore();
+            if (((SevenSigns.INSTANCE.isSealValidationPeriod()) || (SevenSigns.INSTANCE.isCompResultsPeriod())) && (actor.isSevenSignsMonster()) && (Config.RETAIL_SS)) {
+                int pcabal = SevenSigns.INSTANCE.getPlayerCabal(player);
+                int wcabal = SevenSigns.INSTANCE.getCabalHighestScore();
                 if ((pcabal != wcabal) && (wcabal != SevenSigns.CABAL_NULL)) {
                     player.sendMessage("You have been teleported to the nearest town because you not signed for winning cabal.");
                     player.teleToClosestTown();
@@ -1584,21 +1584,21 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    private static class TaskComparator implements Comparator<Task> {
-        private static final Comparator<Task> instance = new TaskComparator();
-
-        static Comparator<Task> getInstance() {
-            return instance;
-        }
-
-        @Override
-        public int compare(Task o1, Task o2) {
-            if ((o1 == null) || (o2 == null)) {
-                return 0;
-            }
-            return Integer.compare(o2.weight, o1.weight);
-        }
-    }
+//    private static class TaskComparator implements Comparator<Task> {
+//        private static final Comparator<Task> instance = new TaskComparator();
+//
+//        static Comparator<Task> getInstance() {
+//            return instance;
+//        }
+//
+//        @Override
+//        public int compare(Task o1, Task o2) {
+//            if ((o1 == null) || (o2 == null)) {
+//                return 0;
+//            }
+//            return Integer.compare(o2.weight, o1.weight);
+//        }
+//    }
 
     static class NearestTargetComparator implements Comparator<Creature> {
         private final Creature actor;

@@ -47,7 +47,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         int itemId = item.getItemId();
         for (int i = 0; i < _itemIds.length; i++)
             if (_itemIds[i] == itemId) {
-                template = NpcHolder.getInstance().getTemplate(_npcIds[i]);
+                template = NpcHolder.getTemplate(_npcIds[i]);
                 break;
             }
 
@@ -63,14 +63,14 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         npc.setAI(new SquashAI(npc));
         ((SquashInstance) npc).setSpawner(activeChar);
 
-        ThreadPoolManager.INSTANCE().schedule(new DeSpawnScheduleTimerTask(spawn), 180000);
+        ThreadPoolManager.INSTANCE.schedule(spawn::deleteAll, 180000);
 
         return true;
     }
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -88,17 +88,4 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         return Arrays.asList(_itemIds);
     }
 
-    public class DeSpawnScheduleTimerTask extends RunnableImpl {
-        final SimpleSpawner spawnedPlant;
-
-        DeSpawnScheduleTimerTask(SimpleSpawner spawn) {
-            spawnedPlant = spawn;
-        }
-
-        @SuppressWarnings("unused")
-        @Override
-        public void runImpl() {
-            spawnedPlant.deleteAll();
-        }
-    }
 }

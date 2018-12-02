@@ -186,37 +186,37 @@ public final class Antharas extends DefaultAI {
                 n.deleteMe();
         //Спавним Вестника Невитта
         try {
-            NpcInstance HeralGiran = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralGiran = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(82152, 148488, -3492, 60699));
 
-            NpcInstance HeralAden = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralAden = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(147048, 25608, -2038, 16383));
 
-            NpcInstance HeralGoddart = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralGoddart = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(147384, -55400, -2759, 57343));
 
-            NpcInstance HeralRune = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralRune = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(42904, -47912, -822, 49151));
 
-            NpcInstance HeralDion = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralDion = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(15736, 142744, -2731, 16383));
 
-            NpcInstance HeralOren = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralOren = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(82120, 53224, -1521, 16383));
 
-            NpcInstance HeralGludio = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralGludio = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(-14168, 121192, -3014, 16383));
 
-            NpcInstance HeralGludin = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralGludin = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(80920, 149464, -3069, 16383));
 
-            NpcInstance HeralSchuttgart = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralSchuttgart = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(87608, -141320, -1364, 49151));
 
-            NpcInstance HeralHein = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralHein = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(110552, 219848, -3696, 57343));
 
-            NpcInstance HeralHunter = NpcHolder.getInstance().getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
+            NpcInstance HeralHunter = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
             HeralGiran.spawnMe(new Location(116824, 77400, -2722, 40959));
 
 

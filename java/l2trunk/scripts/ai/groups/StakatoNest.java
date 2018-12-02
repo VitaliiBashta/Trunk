@@ -166,7 +166,7 @@ public final class StakatoNest extends Fighter {
         actor.doDie(null);
         actor.endDecayTask();
         try {
-            NpcInstance mob = NpcHolder.getInstance().getTemplate(CANNIBALISTIC_STAKATO_CHIEF).getNewInstance();
+            NpcInstance mob = NpcHolder.getTemplate(CANNIBALISTIC_STAKATO_CHIEF).getNewInstance();
             mob.setSpawnedLoc(actor.getLoc());
             mob.setReflection(actor.getReflection());
             mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp(), true);
@@ -215,7 +215,7 @@ public final class StakatoNest extends Fighter {
 
     private void spawnMonster(NpcInstance actor, Creature killer, int mobId) {
         try {
-            NpcInstance npc = NpcHolder.getInstance().getTemplate(mobId).getNewInstance();
+            NpcInstance npc = NpcHolder.getTemplate(mobId).getNewInstance();
             npc.setSpawnedLoc(actor.getSpawnedLoc());
             npc.setReflection(actor.getReflection());
             npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);

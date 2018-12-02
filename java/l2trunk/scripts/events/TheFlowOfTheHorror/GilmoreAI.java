@@ -23,7 +23,7 @@ public final class GilmoreAI extends Fighter {
             new Location(72463, 118401, -3694),
             new Location(72912, 117895, -3723)};
 
-    private static final Location[] points_stage2 = {new Location(73615, 117629, -3765)};
+    private static final Location points_stage2 = new Location(73615, 117629, -3765);
 
     private static final String[] text_stage1 = {"Text1", "Text2", "Text3", "Text4", "Text5", "Text6", "Text7"};
 
@@ -95,7 +95,7 @@ public final class GilmoreAI extends Fighter {
                     switch (step_stage2) {
                         case 1:
                             Functions.npcSay(actor, text_stage2[1]);
-                            addTaskMove(points_stage2[0], true);
+                            addTaskMove(points_stage2, true);
                             doTask();
                             step_stage2 = 2;
                             return true;

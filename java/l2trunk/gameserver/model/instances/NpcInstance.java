@@ -508,8 +508,6 @@ public class NpcInstance extends Creature {
     /**
      * Return True if the L2NpcInstance is aggressive (ex : L2MonsterInstance in function of aggroRange).<BR>
      * <BR>
-     *
-     * @return
      */
     public boolean isAggressive() {
         return getAggroRange() > 0;
@@ -538,8 +536,6 @@ public class NpcInstance extends Creature {
 
     /**
      * Возвращает группу социальности
-     *
-     * @return
      */
     public Faction getFaction() {
         return getTemplate().getFaction();
@@ -622,18 +618,17 @@ public class NpcInstance extends Creature {
     /**
      * Запустить задачу "исчезновения" после смерти
      *
-     * @param delay
      */
     private void startDecay(long delay) {
         stopDecay();
-        DecayTaskManager.getInstance().addDecayTask(this, delay);
+        DecayTaskManager.INSTANCE.addDecayTask(this, delay);
     }
 
     /**
      * Отменить задачу "исчезновения" после смерти
      */
     public void stopDecay() {
-        DecayTaskManager.getInstance().cancelDecayTask(this);
+        DecayTaskManager.INSTANCE.cancelDecayTask(this);
     }
 
     /**
@@ -682,7 +677,7 @@ public class NpcInstance extends Creature {
         }
 
         // Get the weapon item equipped in the right hand of the L2NpcInstance
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(getTemplate().rhand);
+        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(getTemplate().rhand);
 
         if (!(item instanceof WeaponTemplate)) {
             return null;
@@ -707,7 +702,7 @@ public class NpcInstance extends Creature {
         }
 
         // Get the weapon item equipped in the right hand of the L2NpcInstance
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(getTemplate().lhand);
+        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(getTemplate().lhand);
 
         if (!(item instanceof WeaponTemplate)) {
             return null;
@@ -1299,9 +1294,9 @@ public class NpcInstance extends Creature {
         int npcId = getNpcId();
         switch (npcId) {
             case 31111: // Gatekeeper Spirit (Disciples)
-                int sealAvariceOwner = SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_AVARICE);
-                int playerCabal = SevenSigns.getInstance().getPlayerCabal(player);
-                int compWinner = SevenSigns.getInstance().getCabalHighestScore();
+                int sealAvariceOwner = SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_AVARICE);
+                int playerCabal = SevenSigns.INSTANCE.getPlayerCabal(player);
+                int compWinner = SevenSigns.INSTANCE.getCabalHighestScore();
                 if ((playerCabal == sealAvariceOwner) && (playerCabal == compWinner)) {
                     switch (sealAvariceOwner) {
                         case SevenSigns.CABAL_DAWN:

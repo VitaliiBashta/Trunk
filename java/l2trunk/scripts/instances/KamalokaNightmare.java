@@ -130,7 +130,7 @@ public class KamalokaNightmare extends Reflection {
                         if (iz != null) {
                             String loc = iz.getAddParams().getString("pathfinder_loc", null);
                             if (loc != null) {
-                                PathfinderInstance npc = new PathfinderInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(PATHFINDER));
+                                PathfinderInstance npc = new PathfinderInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(PATHFINDER));
                                 npc.setSpawnedLoc(Location.parseLoc(loc));
                                 npc.setReflection(KamalokaNightmare.this);
                                 npc.spawnMe(npc.getSpawnedLoc());

@@ -102,12 +102,12 @@ public class RequestProcureCrop extends L2GameClientPacket {
                 if (crop == null)
                     return;
 
-                int rewradItemId = Manor.getInstance().getRewardItem(itemId, castle.getCrop(itemId, CastleManorManager.PERIOD_CURRENT).getReward());
-                long rewradItemCount = Manor.getInstance().getRewardAmountPerCrop(castle.getId(), itemId, castle.getCropRewardType(itemId));
+                int rewradItemId = Manor.INSTANCE.getRewardItem(itemId, castle.getCrop(itemId, CastleManorManager.PERIOD_CURRENT).getReward());
+                long rewradItemCount = Manor.INSTANCE.getRewardAmountPerCrop(castle.getId(), itemId, castle.getCropRewardType(itemId));
 
                 rewradItemCount = SafeMath.mulAndCheck(count, rewradItemCount);
 
-                ItemTemplate template = ItemHolder.getInstance().getTemplate(rewradItemId);
+                ItemTemplate template = ItemHolder.INSTANCE.getTemplate(rewradItemId);
                 if (template == null)
                     return;
 
@@ -138,8 +138,8 @@ public class RequestProcureCrop extends L2GameClientPacket {
                 int itemId = _items[i];
                 long count = _itemQ[i];
 
-                int rewardItemId = Manor.getInstance().getRewardItem(itemId, castle.getCrop(itemId, CastleManorManager.PERIOD_CURRENT).getReward());
-                long rewardItemCount = Manor.getInstance().getRewardAmountPerCrop(castle.getId(), itemId, castle.getCropRewardType(itemId));
+                int rewardItemId = Manor.INSTANCE.getRewardItem(itemId, castle.getCrop(itemId, CastleManorManager.PERIOD_CURRENT).getReward());
+                long rewardItemCount = Manor.INSTANCE.getRewardAmountPerCrop(castle.getId(), itemId, castle.getCropRewardType(itemId));
 
                 rewardItemCount = SafeMath.mulAndCheck(count, rewardItemCount);
 

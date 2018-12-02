@@ -49,7 +49,7 @@ public class PrivateStoreManageListSell extends L2GameServerPacket {
             si.setCount(Math.min(item.getCount(), si.getCount()));
         }
 
-        ItemInstance[] items = seller.getInventory().getItems();
+        List<ItemInstance> items = seller.getInventory().getItems();
         // Проверяем список вещей в инвентаре, если вещь остутствует в списке продажи, добавляем в список доступных для продажи
         loop:
         for (ItemInstance item : items)

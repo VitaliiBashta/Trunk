@@ -246,13 +246,13 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
             SimpleSpawner tempSpawn;
 
             // Statue of Baium
-            _statueSpawn = new SimpleSpawner(NpcHolder.getInstance().getTemplate(BAIUM_NPC));
+            _statueSpawn = new SimpleSpawner(NpcHolder.getTemplate(BAIUM_NPC));
             _statueSpawn.setAmount(1);
             _statueSpawn.setLoc(STATUE_LOCATION);
             _statueSpawn.stopRespawn();
 
             // Baium
-            tempSpawn = new SimpleSpawner(NpcHolder.getInstance().getTemplate(BAIUM));
+            tempSpawn = new SimpleSpawner(NpcHolder.getTemplate(BAIUM));
             tempSpawn.setAmount(1);
             _monsterSpawn.put(BAIUM, tempSpawn);
         } catch (RuntimeException e) {
@@ -261,7 +261,7 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
 
         // Teleport Cube
         try {
-            NpcTemplate Cube = NpcHolder.getInstance().getTemplate(TELEPORT_CUBE);
+            NpcTemplate Cube = NpcHolder.getTemplate(TELEPORT_CUBE);
             _teleportCubeSpawn = new SimpleSpawner(Cube);
             _teleportCubeSpawn.setAmount(1);
             _teleportCubeSpawn.setLoc(CUBE_LOCATION);
@@ -272,7 +272,7 @@ public class BaiumManager extends Functions implements ScriptFile, OnDeathListen
 
         // Archangels
         try {
-            NpcTemplate angel = NpcHolder.getInstance().getTemplate(ARCHANGEL);
+            NpcTemplate angel = NpcHolder.getTemplate(ARCHANGEL);
             SimpleSpawner spawnDat;
             _angelSpawns.clear();
 

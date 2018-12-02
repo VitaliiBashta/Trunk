@@ -61,7 +61,7 @@ public class Spawn extends Skill {
 
         if (caster.getPlayer() != null && caster.getPlayer().getBoat() != null) return;
 
-        final NpcTemplate template = NpcHolder.getInstance().getTemplate(_npcId);
+        final NpcTemplate template = NpcHolder.getTemplate(_npcId);
         if (template == null) {
             _log.warn("Spawn of the nonexisting NPC ID:" + _npcId + ", skill ID:" + getId());
             return;

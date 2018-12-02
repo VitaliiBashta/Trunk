@@ -29,7 +29,7 @@ public final class EnchantScrolls extends ScriptItemHandler implements ScriptFil
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override

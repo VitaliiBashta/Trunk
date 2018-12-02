@@ -223,7 +223,7 @@ public enum FishingChampionShipManager {
             strBuilder.append("<td width=80 align=center>").append(getCurrentFishLength(x)).append("</td></tr>");
         }
         html.replace("%TABLE%", strBuilder.toString());
-        html.replace("%prizeItem%", ItemHolder.getInstance().getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
+        html.replace("%prizeItem%", ItemHolder.INSTANCE.getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
         html.replace("%prizeFirst%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_1));
         html.replace("%prizeTwo%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_2));
         html.replace("%prizeThree%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_3));
@@ -243,7 +243,7 @@ public enum FishingChampionShipManager {
             strBuilder.append("<td width=80 align=center>").append(getFishLength(x)).append("</td></tr>");
         }
         html.replace("%TABLE%", strBuilder.toString());
-        html.replace("%prizeItem%", ItemHolder.getInstance().getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
+        html.replace("%prizeItem%", ItemHolder.INSTANCE.getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
         html.replace("%prizeFirst%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_1));
         html.replace("%prizeTwo%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_2));
         html.replace("%prizeThree%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_3));

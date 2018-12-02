@@ -3,15 +3,17 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.LockType;
 
+import java.util.List;
+
 public class ItemList extends L2GameServerPacket {
     private final int _size;
-    private final ItemInstance[] _items;
+    private final List<ItemInstance> _items;
     private final boolean _showWindow;
 
     private final LockType _lockType;
     private final int[] _lockItems;
 
-    public ItemList(int size, ItemInstance[] items, boolean showWindow, LockType lockType, int[] lockItems) {
+    public ItemList(int size, List<ItemInstance> items, boolean showWindow, LockType lockType, int[] lockItems) {
         _size = size;
         _items = items;
         _showWindow = showWindow;

@@ -19,8 +19,9 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.Collection;
+import java.util.Collections;
 
-public class PcInventory extends Inventory {
+public final class PcInventory extends Inventory {
     private static final int[][] arrows = {
             //
             {17}, // NG
@@ -39,7 +40,7 @@ public class PcInventory extends Inventory {
             {9636, 22147}, // A
             {9637, 22148}, // S
     };
-    private final Player _owner;
+    private final Player owner;
     /**
      * FIXME Hack to update skills to equip when changing subclass
      */
@@ -52,7 +53,7 @@ public class PcInventory extends Inventory {
 
     public PcInventory(Player owner) {
         super(owner.getObjectId());
-        _owner = owner;
+        this.owner = owner;
 
         addListener(ItemSkillsListener.getInstance());
         addListener(ItemAugmentationListener.getInstance());
@@ -64,7 +65,7 @@ public class PcInventory extends Inventory {
 
     @Override
     public Player getActor() {
-        return _owner;
+        return owner;
     }
 
     @Override
@@ -255,7 +256,7 @@ public class PcInventory extends Inventory {
             needSort = true;
         }
         if (needSort) {
-            _items.sort(ItemOrderComparator.getInstance());
+            items.sort(ItemOrderComparator.getInstance());
         }
     }
 
@@ -418,15 +419,15 @@ public class PcInventory extends Inventory {
             Collection<ItemInstance> items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getBaseLocation());
 
             for (ItemInstance item : items) {
-                _items.add(item);
+                this.items.add(item);
                 onRestoreItem(item);
             }
-            _items.sort(ItemOrderComparator.getInstance());
+            this.items.sort(ItemOrderComparator.getInstance());
 
             items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getEquipLocation());
 
             for (ItemInstance item : items) {
-                _items.add(item);
+                this.items.add(item);
                 onRestoreItem(item);
                 if (item.getEquipSlot() >= PAPERDOLL_MAX) {
                     // Invalid slot - item returned to inventory.
@@ -448,7 +449,7 @@ public class PcInventory extends Inventory {
     public void store() {
         writeLock();
         try {
-            _itemsDAO.update(_items);
+            _itemsDAO.update(items);
         } finally {
             writeUnlock();
         }
@@ -460,7 +461,7 @@ public class PcInventory extends Inventory {
 
         actor.sendPacket(new InventoryUpdate().addNewItem(item));
         if (item.getTemplate().getAgathionEnergy() > 0) {
-            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, item));
+            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, Collections.singletonList(item)));
         }
     }
 
@@ -470,7 +471,7 @@ public class PcInventory extends Inventory {
 
         actor.sendPacket(new InventoryUpdate().addModifiedItem(item));
         if (item.getTemplate().getAgathionEnergy() > 0) {
-            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, item));
+            actor.sendPacket(new ExBR_AgathionEnergyInfo(1, Collections.singletonList(item)));
         }
     }
 
@@ -480,43 +481,43 @@ public class PcInventory extends Inventory {
     }
 
     public boolean destroyItem(ItemInstance item, long count, String log) {
-        return destroyItem(item, count, _owner.toString(), log);
+        return destroyItem(item, count, owner.toString(), log);
     }
 
     public boolean destroyItem(ItemInstance item, String log) {
-        return destroyItem(item, _owner.toString(), log);
+        return destroyItem(item, owner.toString(), log);
     }
 
     public boolean destroyItemByItemId(int itemId, long count, String log) {
-        return destroyItemByItemId(itemId, count, _owner.toString(), log);
+        return destroyItemByItemId(itemId, count, owner.toString(), log);
     }
 
     public boolean destroyItemByObjectId(int objectId, long count, String log) {
-        return destroyItemByObjectId(objectId, count, _owner.toString(), log);
+        return destroyItemByObjectId(objectId, count, owner.toString(), log);
     }
 
     public ItemInstance addItem(ItemInstance item, String log) {
-        return addItem(item, _owner.toString(), log);
+        return addItem(item, owner.toString(), log);
     }
 
     public ItemInstance addItem(int itemId, long count, String log) {
-        return addItem(itemId, count, _owner.toString(), log);
+        return addItem(itemId, count, owner.toString(), log);
     }
 
     public ItemInstance removeItem(ItemInstance item, long count, String log) {
-        return removeItem(item, count, _owner.toString(), log);
+        return removeItem(item, count, owner.toString(), log);
     }
 
     public ItemInstance removeItem(ItemInstance item, String log) {
-        return removeItem(item, _owner.toString(), log);
+        return removeItem(item, owner.toString(), log);
     }
 
     public ItemInstance removeItemByItemId(int itemId, long count, String log) {
-        return removeItemByItemId(itemId, count, _owner.toString(), log);
+        return removeItemByItemId(itemId, count, owner.toString(), log);
     }
 
     public ItemInstance removeItemByObjectId(int objectId, long count, String log) {
-        return removeItemByObjectId(objectId, count, _owner.toString(), log);
+        return removeItemByObjectId(objectId, count, owner.toString(), log);
     }
 
     public void startTimers() {
@@ -553,10 +554,10 @@ public class PcInventory extends Inventory {
                 }
 
                 // Refund the price paid for this set so he can pay for it again
-                ItemFunctions.addItem(_owner, dress.getPriceId(), dress.getPriceCount(), true, "DressMeRefund");
+                ItemFunctions.addItem(owner, dress.getPriceId(), dress.getPriceCount(), true, "DressMeRefund");
 
                 // Send message
-                _owner.sendPacket(new Say2(_owner.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "DressMe", "You have destroyed a part of a dressMe set, for that you will be refunded with the original price, so you can make it again"));
+                owner.sendPacket(new Say2(owner.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "DressMe", "You have destroyed a part of a dressMe set, for that you will be refunded with the original price, so you can make it again"));
             }
         }
 

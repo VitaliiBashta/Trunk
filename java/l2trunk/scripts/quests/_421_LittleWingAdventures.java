@@ -285,7 +285,7 @@ public class _421_LittleWingAdventures extends Quest implements ScriptFile {
         private int tiks = 0;
 
         GuardiansSpawner(NpcInstance npc, QuestState st, int _count) {
-            NpcTemplate template = NpcHolder.getInstance().getTemplate(Soul_of_Tree_Guardian);
+            NpcTemplate template = NpcHolder.getTemplate(Soul_of_Tree_Guardian);
             if (template == null)
                 return;
             try {

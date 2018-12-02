@@ -78,7 +78,7 @@ public class _350_EnhanceYourWeapon extends Quest implements ScriptFile {
         addStartNpc(Gideon);
         addStartNpc(Winonin);
 
-        for (NpcTemplate template : NpcHolder.getInstance().getAll()) {
+        for (NpcTemplate template : NpcHolder.getAll()) {
             if (template != null && !template.getAbsorbInfo().isEmpty())
                 addKillId(template.npcId);
         }
@@ -199,7 +199,7 @@ public class _350_EnhanceYourWeapon extends Quest implements ScriptFile {
 
             boolean resonation = false;
             SoulCrystal soulCrystal = null;
-            ItemInstance[] items = targetPlayer.getInventory().getItems();
+            List<ItemInstance> items = targetPlayer.getInventory().getItems();
             for (ItemInstance item : items) {
                 SoulCrystal crystal = SoulCrystalHolder.getInstance().getCrystal(item.getItemId());
                 if (crystal == null)

@@ -6,10 +6,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.InventoryUpdate;
 
+import java.util.List;
+
 public class FixEnchantOlympiad {
     public static void storeEnchantItemsOly(Player player) {
-        ItemInstance[] arr = player.getInventory().getItems();
-        int len = arr.length;
+        List<ItemInstance> arr = player.getInventory().getItems();
+        int len = arr.size();
         StringBuilder items = new StringBuilder();
 
         for (ItemInstance _item : arr) {

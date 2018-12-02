@@ -47,7 +47,7 @@ public final class CabaleBuffer extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        int winningCabal = SevenSigns.getInstance().getCabalHighestScore();
+        int winningCabal = SevenSigns.INSTANCE.getCabalHighestScore();
 
         if (winningCabal == SevenSigns.CABAL_NULL)
             return true;
@@ -81,7 +81,7 @@ public final class CabaleBuffer extends DefaultAI {
             for (Player player : World.getAroundPlayers(actor, 300, 200)) {
                 if (player == null)
                     continue;
-                int playerCabal = SevenSigns.getInstance().getPlayerCabal(player);
+                int playerCabal = SevenSigns.INSTANCE.getPlayerCabal(player);
                 int i0 = Rnd.get(100);
                 int i1 = Rnd.get(10000);
                 if (playerCabal == winningCabal && actor.getNpcId() == SevenSigns.ORATOR_NPC_ID) {

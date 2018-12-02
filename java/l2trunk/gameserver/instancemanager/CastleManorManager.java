@@ -177,7 +177,7 @@ public enum CastleManorManager {
                         count = 1;
 
                     if (count >= 1) {
-                        int id = Manor.getInstance().getMatureCrop(crop.getId());
+                        int id = Manor.INSTANCE.getMatureCrop(crop.getId());
                         ItemInstance item = cwh.addItem(id, count, "CastleManorPeriod");
                         Log.LogAddItem(clan, "Manor Period Start", item, count);
                     }
@@ -253,7 +253,7 @@ public enum CastleManorManager {
 
     private List<SeedProduction> getNewSeedsList(int castleId) {
         List<SeedProduction> seeds = new ArrayList<>();
-        List<Integer> seedsIds = Manor.getInstance().getSeedsForCastle(castleId);
+        List<Integer> seedsIds = Manor.INSTANCE.getSeedsForCastle(castleId);
         for (int sd : seedsIds)
             seeds.add(new SeedProduction(sd));
         return seeds;
@@ -261,9 +261,8 @@ public enum CastleManorManager {
 
     private List<CropProcure> getNewCropsList(int castleId) {
         List<CropProcure> crops = new ArrayList<>();
-        List<Integer> cropsIds = Manor.getInstance().getCropsForCastle(castleId);
-        for (int cr : cropsIds)
-            crops.add(new CropProcure(cr));
+        List<Integer> cropsIds = Manor.INSTANCE.getCropsForCastle(castleId);
+        cropsIds.forEach(cr -> crops.add(new CropProcure(cr)));
         return crops;
     }
 

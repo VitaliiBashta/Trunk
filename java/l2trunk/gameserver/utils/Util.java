@@ -927,11 +927,11 @@ public class Util {
         else if (itemId == ItemTemplate.ITEM_ID_CLAN_REPUTATION_SCORE)
             return "Clan reputation";
         else
-            return ItemHolder.getInstance().getTemplate(itemId).getName();
+            return ItemHolder.INSTANCE.getTemplate(itemId).getName();
     }
 
     public static String getItemIcon(int itemId) {
-        return ItemHolder.getInstance().getTemplate(itemId).getIcon();
+        return ItemHolder.INSTANCE.getTemplate(itemId).getIcon();
     }
 
     public static String formatPay(Player player, long count, int item) {

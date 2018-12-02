@@ -29,7 +29,7 @@ public final class IsleOfPrayerFighter extends Fighter {
             if (party != null && party.size() > 2) {
                 _penaltyMobsNotSpawned = false;
                 for (int i = 0; i < 2; i++) {
-                    MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(PENALTY_MOBS[Rnd.get(PENALTY_MOBS.length)]));
+                    MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(PENALTY_MOBS[Rnd.get(PENALTY_MOBS.length)]));
                     npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
                     npc.setReflection(actor.getReflection());
                     npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);

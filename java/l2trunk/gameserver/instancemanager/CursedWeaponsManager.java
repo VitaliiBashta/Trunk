@@ -83,8 +83,8 @@ public enum CursedWeaponsManager {
                             String name = "Unknown cursed weapon";
                             if (attrs.getNamedItem("name") != null)
                                 name = attrs.getNamedItem("name").getNodeValue();
-                            else if (ItemHolder.getInstance().getTemplate(id) != null)
-                                name = ItemHolder.getInstance().getTemplate(id).getName();
+                            else if (ItemHolder.INSTANCE.getTemplate(id) != null)
+                                name = ItemHolder.INSTANCE.getTemplate(id).getName();
 
                             if (id == 0)
                                 continue;

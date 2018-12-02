@@ -43,7 +43,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
 
     public TerritoryWardObject(int itemId, int npcId, Location location) {
         _itemId = itemId;
-        _template = NpcHolder.getInstance().getTemplate(npcId);
+        _template = NpcHolder.getTemplate(npcId);
         _location = location;
     }
 

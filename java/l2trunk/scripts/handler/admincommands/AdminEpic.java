@@ -108,7 +108,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
 
         for (EpicBossState epic : EpicBossState.getEpics()) {
             int id = epic.getBossId();
-            NpcTemplate template = NpcHolder.getInstance().getTemplate(id);
+            NpcTemplate template = NpcHolder.getTemplate(id);
 
             html = html.replace("<?id_" + i + "?>", String.valueOf(id));
             html = html.replace("<?name_" + i + "?>", template.getName());
@@ -128,7 +128,7 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
         EpicBossState boss = EpicBossState.getState(epic);
 
         int id = boss.getBossId();
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(id);
+        NpcTemplate template = NpcHolder.getTemplate(id);
 
         html = html.replace("<?id?>", String.valueOf(id));
 

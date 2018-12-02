@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MinionList {
-    private final Set<MinionData> _minionData;
+public final class MinionList {
+    private final Set<MinionData> minionData;
     private final Set<MinionInstance> _minions;
     private final Lock lock;
     private final MonsterInstance _master;
@@ -22,8 +22,8 @@ public class MinionList {
     public MinionList(MonsterInstance master) {
         _master = master;
         _minions = new HashSet<>();
-        _minionData = new HashSet<>();
-        _minionData.addAll(_master.getTemplate().getMinionData());
+        minionData = new HashSet<>();
+        minionData.addAll(_master.getTemplate().getMinionData());
         lock = new ReentrantLock();
     }
 
@@ -35,7 +35,7 @@ public class MinionList {
     public boolean addMinion(MinionData m) {
         lock.lock();
         try {
-            return _minionData.add(m);
+            return minionData.add(m);
         } finally {
             lock.unlock();
         }
@@ -72,7 +72,7 @@ public class MinionList {
     }
 
     public boolean hasMinions() {
-        return _minionData.size() > 0;
+        return minionData.size() > 0;
     }
 
     /**
@@ -101,7 +101,7 @@ public class MinionList {
         try {
             int minionCount;
             int minionId;
-            for (MinionData minion : _minionData) {
+            for (MinionData minion : minionData) {
                 minionId = minion.getMinionId();
                 minionCount = minion.getAmount();
 
@@ -116,7 +116,7 @@ public class MinionList {
                 }
 
                 for (int i = 0; i < minionCount; i++) {
-                    MinionInstance m = new MinionInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(minionId));
+                    MinionInstance m = new MinionInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(minionId));
                     m.setLeader(_master);
                     _master.spawnMinion(m);
                     _minions.add(m);

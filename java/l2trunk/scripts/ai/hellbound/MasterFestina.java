@@ -58,14 +58,14 @@ public final class MasterFestina extends Fighter {
         NpcInstance actor = getActor();
         // Спауним охрану
         for (Location loc : _mysticSpawnPoints) {
-            MonsterInstance mob = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(FOUNDRY_MYSTIC_ID));
+            MonsterInstance mob = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(FOUNDRY_MYSTIC_ID));
             mob.setSpawnedLoc(loc);
             mob.setReflection(actor.getReflection());
             mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp(), true);
             mob.spawnMe(mob.getSpawnedLoc());
         }
         for (Location loc : _spiritGuardSpawnPoints) {
-            MonsterInstance mob = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(FOUNDRY_SPIRIT_GUARD_ID));
+            MonsterInstance mob = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(FOUNDRY_SPIRIT_GUARD_ID));
             mob.setSpawnedLoc(loc);
             mob.setReflection(actor.getReflection());
             mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp(), true);

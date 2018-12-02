@@ -25,7 +25,7 @@ public class CalculateRewardChances {
     public static List<NpcTemplate> getNpcsContainingString(String name) {
         List<NpcTemplate> templates = new ArrayList<>();
 
-        for (NpcTemplate template : NpcHolder.getInstance().getAll())
+        for (NpcTemplate template : NpcHolder.getAll())
             if (templateExists(template) && StringUtils.containsIgnoreCase(template.getName(), name))
                 if (isDroppingAnything(template))
                     templates.add(template);
@@ -42,7 +42,7 @@ public class CalculateRewardChances {
 
         int dropCount = 0;
         int spoilCount = 0;
-        for (NpcTemplate template : NpcHolder.getInstance().getAll())
+        for (NpcTemplate template : NpcHolder.getAll())
             if (templateExists(template)) {
                 for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
                     for (RewardGroup group : rewardEntry.getValue())
@@ -77,7 +77,7 @@ public class CalculateRewardChances {
 
     public static List<ItemTemplate> getDroppableItems() {
         List<ItemTemplate> items = new ArrayList<>();
-        for (NpcTemplate template : NpcHolder.getInstance().getAll())
+        for (NpcTemplate template : NpcHolder.getAll())
             if (templateExists(template)) {
                 for (Map.Entry<RewardType, RewardList> rewardEntry : template.getRewards().entrySet())
                     for (RewardGroup group : rewardEntry.getValue())
@@ -96,7 +96,7 @@ public class CalculateRewardChances {
      */
     public static List<NpcTemplateDrops> getNpcsByDropOrSpoil(int itemId) {
         List<NpcTemplateDrops> templates = new ArrayList<>();
-        for (NpcTemplate template : NpcHolder.getInstance().getAll()) {
+        for (NpcTemplate template : NpcHolder.getAll()) {
             if (template == null)
                 continue;
             if (SpawnManager.getInstance().getSpawnedCountByNpc(template.getNpcId()) == 0)

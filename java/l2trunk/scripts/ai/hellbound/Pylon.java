@@ -23,7 +23,7 @@ public final class Pylon extends Fighter {
         NpcInstance actor = getActor();
         for (int i = 0; i < 7; i++)
             try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(22422));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(22422));
                 sp.setLoc(Location.findPointToStay(actor, 150, 550));
                 sp.doSpawn(true);
                 sp.stopRespawn();

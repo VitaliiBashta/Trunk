@@ -209,7 +209,7 @@ public class TvTArena3 extends Functions implements ScriptFile, OnDeathListener,
     }
 
     private void spawnEventManagers() {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(31392);
+        NpcTemplate template = NpcHolder.getTemplate(31392);
 
         SimpleSpawner sp = new SimpleSpawner(template);
         sp.setLoc(new Location(82840, 148936, -3472, 0));

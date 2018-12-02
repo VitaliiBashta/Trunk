@@ -35,7 +35,7 @@ public class Logout extends L2GameClientPacket {
         }
 
         if (activeChar.isFestivalParticipant())
-            if (SevenSignsFestival.getInstance().isFestivalInitialized()) {
+            if (SevenSignsFestival.INSTANCE.isFestivalInitialized()) {
                 activeChar.sendMessage("You cannot log out while you are a participant in a festival.");
                 activeChar.sendActionFailed();
                 return;

@@ -9,7 +9,7 @@ public class ShowMiniMap extends L2GameServerPacket {
 
     public ShowMiniMap(Player player, int mapId) {
         _mapId = mapId;
-        _period = SevenSigns.getInstance().getCurrentPeriod();
+        _period = SevenSigns.INSTANCE.getCurrentPeriod();
     }
 
     @Override

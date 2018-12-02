@@ -67,7 +67,7 @@ public final class SignsPriestInstance extends NpcInstance {
         }
 
         if ((getNpcId() == 31113) || (getNpcId() == 31126)) {
-            if ((SevenSigns.getInstance().getPlayerCabal(player) == SevenSigns.CABAL_NULL) && !player.isGM()) {
+            if ((SevenSigns.INSTANCE.getPlayerCabal(player) == SevenSigns.CABAL_NULL) && !player.isGM()) {
                 return;
             }
         }
@@ -123,12 +123,12 @@ public final class SignsPriestInstance extends NpcInstance {
                     break;
                 case 3: // Join Cabal Intro 1
                 case 8: // Festival of Darkness Intro - SevenSigns x [0]1
-                    cabal = SevenSigns.getInstance().getPriestCabal(getNpcId());
+                    cabal = SevenSigns.INSTANCE.getPriestCabal(getNpcId());
                     showChatWindow(player, val, SevenSigns.getCabalShortName(cabal), false);
                     break;
                 case 10: // Teleport Locations List
-                    cabal = SevenSigns.getInstance().getPriestCabal(getNpcId());
-                    if (SevenSigns.getInstance().isSealValidationPeriod()) {
+                    cabal = SevenSigns.INSTANCE.getPriestCabal(getNpcId());
+                    if (SevenSigns.INSTANCE.isSealValidationPeriod()) {
                         showChatWindow(player, val, "", false);
                     } else {
                         showChatWindow(player, val, this.getParameters().getString("town", "no"), false);
@@ -136,7 +136,7 @@ public final class SignsPriestInstance extends NpcInstance {
                     break;
                 case 4: // Join a Cabal - SevenSigns 4 [0]1 x
                     int newSeal = Integer.parseInt(command.substring(15));
-                    int oldCabal = SevenSigns.getInstance().getPlayerCabal(player);
+                    int oldCabal = SevenSigns.INSTANCE.getPlayerCabal(player);
 
                     if (oldCabal != SevenSigns.CABAL_NULL) {
                         player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2SignsPriestInstance.AlreadyMember", player).addString(SevenSigns.getCabalName(cabal)));
@@ -179,7 +179,7 @@ public final class SignsPriestInstance extends NpcInstance {
                         }
                     }
 
-                    SevenSigns.getInstance().setPlayerInfo(player.getObjectId(), cabal, newSeal);
+                    SevenSigns.INSTANCE.setPlayerInfo(player.getObjectId(), cabal, newSeal);
                     if (cabal == SevenSigns.CABAL_DAWN) {
                         player.sendPacket(Msg.YOU_WILL_PARTICIPATE_IN_THE_SEVEN_SIGNS_AS_A_MEMBER_OF_THE_LORDS_OF_DAWN); // Joined Dawn
                     } else {
@@ -208,7 +208,7 @@ public final class SignsPriestInstance extends NpcInstance {
                     long greenStoneCount = greenStones == null ? 0 : greenStones.getCount();
                     ItemInstance blueStones = player.getInventory().getItemByItemId(SevenSigns.SEAL_STONE_BLUE_ID);
                     long blueStoneCount = blueStones == null ? 0 : blueStones.getCount();
-                    long contribScore = SevenSigns.getInstance().getPlayerContribScore(player);
+                    long contribScore = SevenSigns.INSTANCE.getPlayerContribScore(player);
                     boolean stonesFound = false;
 
                     if (contribScore == SevenSigns.MAXIMUM_PLAYER_CONTRIB) {
@@ -277,7 +277,7 @@ public final class SignsPriestInstance extends NpcInstance {
                             return;
                         }
 
-                        contribScore = SevenSigns.getInstance().addPlayerStoneContrib(player, blueContribCount, greenContribCount, redContribCount);
+                        contribScore = SevenSigns.INSTANCE.addPlayerStoneContrib(player, blueContribCount, greenContribCount, redContribCount);
                         sm = new SystemMessage(SystemMessage.YOUR_CONTRIBUTION_SCORE_IS_INCREASED_BY_S1);
                         sm.addNumber(contribScore);
                         player.sendPacket(sm);
@@ -306,11 +306,11 @@ public final class SignsPriestInstance extends NpcInstance {
                     }
                     break;
                 case 9: // Receive Contribution Rewards
-                    int playerCabal = SevenSigns.getInstance().getPlayerCabal(player);
-                    int winningCabal = SevenSigns.getInstance().getCabalHighestScore();
+                    int playerCabal = SevenSigns.INSTANCE.getPlayerCabal(player);
+                    int winningCabal = SevenSigns.INSTANCE.getCabalHighestScore();
 
-                    if (SevenSigns.getInstance().isSealValidationPeriod() && (playerCabal == winningCabal)) {
-                        int ancientAdenaReward = SevenSigns.getInstance().getAncientAdenaReward(player, true);
+                    if (SevenSigns.INSTANCE.isSealValidationPeriod() && (playerCabal == winningCabal)) {
+                        int ancientAdenaReward = SevenSigns.INSTANCE.getAncientAdenaReward(player, true);
 
                         if (ancientAdenaReward < 3) {
                             showChatWindow(player, 9, "b", false);
@@ -477,7 +477,7 @@ public final class SignsPriestInstance extends NpcInstance {
                     StringBuilder contentBuffer = new StringBuilder("<html><body><font color=\"LEVEL\">[Seal Status]</font><br>");
 
                     for (int i = 1; i < 4; i++) {
-                        int sealOwner = SevenSigns.getInstance().getSealOwner(i);
+                        int sealOwner = SevenSigns.INSTANCE.getSealOwner(i);
                         if (sealOwner != SevenSigns.CABAL_NULL) {
                             contentBuffer.append("[" + SevenSigns.getSealName(i, false) + ": " + SevenSigns.getCabalName(sealOwner) + "]<br>");
                         } else {
@@ -560,11 +560,11 @@ public final class SignsPriestInstance extends NpcInstance {
 
         String filename = SevenSigns.SEVEN_SIGNS_HTML_PATH;
 
-        int sealAvariceOwner = SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_AVARICE);
-        int sealGnosisOwner = SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_GNOSIS);
-        int playerCabal = SevenSigns.getInstance().getPlayerCabal(player);
-        boolean isSealValidationPeriod = SevenSigns.getInstance().isSealValidationPeriod();
-        int compWinner = SevenSigns.getInstance().getCabalHighestScore();
+        int sealAvariceOwner = SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_AVARICE);
+        int sealGnosisOwner = SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_GNOSIS);
+        int playerCabal = SevenSigns.INSTANCE.getPlayerCabal(player);
+        boolean isSealValidationPeriod = SevenSigns.INSTANCE.isSealValidationPeriod();
+        int compWinner = SevenSigns.INSTANCE.getCabalHighestScore();
 
         switch (npcId) {
             case 31078:

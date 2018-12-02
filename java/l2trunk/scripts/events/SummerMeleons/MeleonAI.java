@@ -27,10 +27,10 @@ public final class MeleonAI extends Fighter {
             MeleonInstance actor = getActor();
             if (actor == null)
                 return;
-            SimpleSpawner spawn = null;
+            SimpleSpawner spawn;
 
             try {
-                spawn = new SimpleSpawner(NpcHolder.getInstance().getTemplate(_npcId));
+                spawn = new SimpleSpawner(NpcHolder.getTemplate(_npcId));
                 spawn.setLoc(actor.getLoc());
                 NpcInstance npc = spawn.doSpawn(true);
                 npc.setAI(new MeleonAI(npc));

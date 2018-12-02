@@ -124,7 +124,7 @@ public class FishingSkill extends Skill {
         int type = l2trunk.gameserver.model.Fishing.getRandomFishType(lureId);
         int lvl = l2trunk.gameserver.model.Fishing.getRandomFishLvl(player);
 
-        List<FishTemplate> fishs = FishTable.getInstance().getFish(group, type, lvl);
+        List<FishTemplate> fishs = FishTable.INSTANCE.getFish(group, type, lvl);
         if (fishs == null || fishs.size() == 0) {
             player.sendPacket(SystemMsg.SYSTEM_ERROR);
             return;

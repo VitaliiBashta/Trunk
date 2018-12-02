@@ -36,7 +36,7 @@ class BuyWashPk extends Functions {
     }
 
     private static String getPkButton(int i) {
-        return "<a action=\"bypass -h scripts_services.BuyWashPk:get " + i + "\"> for " + i + " PK - " + Config.SERVICES_WASH_PK_PRICE * i + " " + ItemHolder.getInstance().getTemplate(Config.SERVICES_WASH_PK_ITEM).getName() + "</a><br>";
+        return "<a action=\"bypass -h scripts_services.BuyWashPk:get " + i + "\"> for " + i + " PK - " + Config.SERVICES_WASH_PK_PRICE * i + " " + ItemHolder.INSTANCE.getTemplate(Config.SERVICES_WASH_PK_ITEM).getName() + "</a><br>";
     }
 
     public void get(String[] param) {

@@ -258,7 +258,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             spawnLoc = Location.findPointToStay(rewarded, 300, 400);
 
         // Спауним
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(EVENT_REWARDER_ID);
+        NpcTemplate template = NpcHolder.getTemplate(EVENT_REWARDER_ID);
         if (template == null) {
             System.out.println("WARNING! events.SavingSnowman.spawnRewarder template is null for npc: " + EVENT_REWARDER_ID);
             Thread.dumpStack();
@@ -479,7 +479,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         }
 
         // Спауним снеговика
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(SNOWMAN_ID);
+        NpcTemplate template = NpcHolder.getTemplate(SNOWMAN_ID);
         if (template == null) {
             System.out.println("WARNING! events.SavingSnowman.captureSnowman template is null for npc: " + SNOWMAN_ID);
             Thread.dumpStack();
@@ -496,7 +496,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             return;
 
         // Спауним Томаса
-        template = NpcHolder.getInstance().getTemplate(THOMAS_ID);
+        template = NpcHolder.getTemplate(THOMAS_ID);
         if (template == null) {
             System.out.println("WARNING! events.SavingSnowman.captureSnowman template is null for npc: " + THOMAS_ID);
             Thread.dumpStack();

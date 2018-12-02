@@ -18,7 +18,10 @@ import l2trunk.gameserver.templates.item.support.MerchantGuard;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class MercTicket extends ScriptItemHandler implements ScriptFile {
     @Override
@@ -28,7 +31,7 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -124,8 +127,7 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
         Set<Integer> set = new HashSet<>(100);
         ResidenceHolder residenceList = ResidenceHolder.getInstance();
         List<Castle> castles = residenceList.getResidenceList(Castle.class);
-        for (Castle c : castles)
-            set.addAll(c.getMerchantGuards().keySet());
+        castles.forEach(c -> set.addAll(c.getMerchantGuards().keySet()));
         return new ArrayList<>(set);
     }
 }

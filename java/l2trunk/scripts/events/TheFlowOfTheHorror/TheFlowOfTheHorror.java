@@ -19,14 +19,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TheFlowOfTheHorror extends Functions implements ScriptFile {
-    private static final Logger _log = LoggerFactory.getLogger(TheFlowOfTheHorror.class);
+public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
+    private static final Logger LOG = LoggerFactory.getLogger(TheFlowOfTheHorror.class);
     private static final int Gilmore = 30754;
     private static final int Shackle = 20235;
 
     private static HardReference<NpcInstance> _oldGilmoreRef = HardReferences.emptyRef();
 
-    private static int _stage = 1;
+    private static int stage = 1;
 
     private static final List<MonsterInstance> _spawns = new ArrayList<>();
 
@@ -126,9 +126,9 @@ public class TheFlowOfTheHorror extends Functions implements ScriptFile {
 
         if (isActive()) {
             activateAI();
-            _log.info("Loaded Event: The Flow Of The Horror [state: activated]");
+            LOG.info("Loaded Event: The Flow Of The Horror [state: activated]");
         } else
-            _log.info("Loaded Event: The Flow Of The Horror [state: deactivated]");
+            LOG.info("Loaded Event: The Flow Of The Horror [state: deactivated]");
     }
 
     public static void spawnNewWave() {
@@ -142,11 +142,11 @@ public class TheFlowOfTheHorror extends Functions implements ScriptFile {
         spawn(Shackle, points32);
         spawn(Shackle, points33);
 
-        _stage = 2;
+        stage = 2;
     }
 
     private static void spawn(int id, List<Location> points) {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(id);
+        NpcTemplate template = NpcHolder.getTemplate(id);
         MonsterInstance monster = new MonsterInstance(IdFactory.getInstance().getNextId(), template);
         monster.setCurrentHpMp(monster.getMaxHp(), monster.getMaxMp(), true);
         monster.setXYZ(points.get(0).x, points.get(0).y, points.get(0).z);
@@ -163,7 +163,7 @@ public class TheFlowOfTheHorror extends Functions implements ScriptFile {
             _oldGilmoreRef = target.getRef();
             target.decayMe();
 
-            NpcTemplate template = NpcHolder.getInstance().getTemplate(Gilmore);
+            NpcTemplate template = NpcHolder.getTemplate(Gilmore);
             MonsterInstance monster = new MonsterInstance(IdFactory.getInstance().getNextId(), template);
             monster.setCurrentHpMp(monster.getMaxHp(), monster.getMaxMp(), true);
             monster.setXYZ(73329, 117705, -3741);
@@ -184,18 +184,10 @@ public class TheFlowOfTheHorror extends Functions implements ScriptFile {
             GilmoreInstance.spawnMe();
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return ServerVariables.getString("TheFlowOfTheHorror", "off").equalsIgnoreCase("on");
     }
 
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -211,9 +203,6 @@ public class TheFlowOfTheHorror extends Functions implements ScriptFile {
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -239,10 +228,10 @@ public class TheFlowOfTheHorror extends Functions implements ScriptFile {
     }
 
     public static int getStage() {
-        return _stage;
+        return stage;
     }
 
-    public static void setStage(int stage) {
-        _stage = stage;
-    }
+//    public static void setStage(int stage) {
+//        TheFlowOfTheHorror.stage = stage;
+//    }
 }

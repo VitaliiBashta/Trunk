@@ -4,32 +4,32 @@ import l2trunk.gameserver.model.entity.SevenSigns;
 
 import java.util.Set;
 
-public class MerchantGuard {
-    private final int _itemId;
-    private final int _npcId;
-    private final int _max;
-    private final Set<Integer> _ssq;
+public final class MerchantGuard {
+    private final int itemId;
+    private final int npcId;
+    private final int max;
+    private final Set<Integer> ssq;
 
     public MerchantGuard(int itemId, int npcId, int max, Set<Integer> ssq) {
-        _itemId = itemId;
-        _npcId = npcId;
-        _max = max;
-        _ssq = ssq;
+        this.itemId = itemId;
+        this.npcId = npcId;
+        this.max = max;
+        this.ssq = ssq;
     }
 
     public int getItemId() {
-        return _itemId;
+        return itemId;
     }
 
     public int getNpcId() {
-        return _npcId;
+        return npcId;
     }
 
     public int getMax() {
-        return _max;
+        return max;
     }
 
     public boolean isValidSSQPeriod() {
-        return SevenSigns.getInstance().getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION && _ssq.contains(SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE));
+        return SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION && ssq.contains(SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE));
     }
 }

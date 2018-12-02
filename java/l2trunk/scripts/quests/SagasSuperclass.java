@@ -329,7 +329,7 @@ public abstract class SagasSuperclass extends Quest {
     }
 
     private NpcInstance spawn(int id, Location loc) {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(id);
+        NpcTemplate template = NpcHolder.getTemplate(id);
         SimpleSpawner spawn;
         try {
             spawn = new SimpleSpawner(template);

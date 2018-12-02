@@ -82,7 +82,7 @@ public final class FestivalGuideInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (SevenSigns.getInstance().getPlayerCabal(player) == SevenSigns.CABAL_NULL) {
+        if (SevenSigns.INSTANCE.getPlayerCabal(player) == SevenSigns.CABAL_NULL) {
             player.sendMessage("You must be Seven Signs participant.");
             return;
         }
@@ -100,13 +100,13 @@ public final class FestivalGuideInstance extends NpcInstance {
                     break;
                 case 2: // Festival 2 xxxx
                     // Check if the festival period is active, if not then don't allow registration.
-                    if (SevenSigns.getInstance().getCurrentPeriod() != SevenSigns.PERIOD_COMPETITION) {
+                    if (SevenSigns.INSTANCE.getCurrentPeriod() != SevenSigns.PERIOD_COMPETITION) {
                         showChatWindow(player, 2, "a", false);
                         return;
                     }
 
                     // Check if a festival is in progress, then don't allow registration yet.
-                    if (SevenSignsFestival.getInstance().isFestivalInitialized()) {
+                    if (SevenSignsFestival.INSTANCE.isFestivalInitialized()) {
                         player.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2FestivalGuideInstance.InProgress", player));
                         return;
                     }
@@ -129,7 +129,7 @@ public final class FestivalGuideInstance extends NpcInstance {
                         if (p.getLevel() > maxlevel) {
                             showChatWindow(player, 2, "d", false);
                             return;
-                        } else if (SevenSigns.getInstance().getPlayerCabal(p) == SevenSigns.CABAL_NULL) {
+                        } else if (SevenSigns.INSTANCE.getPlayerCabal(p) == SevenSigns.CABAL_NULL) {
                             showChatWindow(player, 2, "g", false);
                             return;
                         }
@@ -148,18 +148,18 @@ public final class FestivalGuideInstance extends NpcInstance {
                     }
 
                     player.sendPacket(SystemMessage2.removeItems(stoneType, stonesNeeded));
-                    SevenSignsFestival.getInstance().addAccumulatedBonus(_festivalType, stoneType, stonesNeeded);
+                    SevenSignsFestival.INSTANCE.addAccumulatedBonus(_festivalType, stoneType, stonesNeeded);
 
-                    new DarknessFestival(player.getParty(), SevenSigns.getInstance().getPlayerCabal(player), _festivalType);
+                    new DarknessFestival(player.getParty(), SevenSigns.INSTANCE.getPlayerCabal(player), _festivalType);
 
                     showChatWindow(player, 2, "e", false);
                     break;
                 case 4: // Current High Scores
                     StringBuilder strBuffer = new StringBuilder("<html><body>Festival Guide:<br>These are the top scores of the week, for the ");
 
-                    final StatsSet dawnData = SevenSignsFestival.getInstance().getHighestScoreData(SevenSigns.CABAL_DAWN, _festivalType);
-                    final StatsSet duskData = SevenSignsFestival.getInstance().getHighestScoreData(SevenSigns.CABAL_DUSK, _festivalType);
-                    final StatsSet overallData = SevenSignsFestival.getInstance().getOverallHighestScoreData(_festivalType);
+                    final StatsSet dawnData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DAWN, _festivalType);
+                    final StatsSet duskData = SevenSignsFestival.INSTANCE.getHighestScoreData(SevenSigns.CABAL_DUSK, _festivalType);
+                    final StatsSet overallData = SevenSignsFestival.INSTANCE.getOverallHighestScoreData(_festivalType);
 
                     final int dawnScore = dawnData.getInteger("score");
                     final int duskScore = duskData.getInteger("score");
@@ -308,8 +308,8 @@ public final class FestivalGuideInstance extends NpcInstance {
 
         // Get the scores for each of the festival level ranges (types).
         for (int i = 0; i < 5; i++) {
-            long dawnScore = SevenSignsFestival.getInstance().getHighestScore(SevenSigns.CABAL_DAWN, i);
-            long duskScore = SevenSignsFestival.getInstance().getHighestScore(SevenSigns.CABAL_DUSK, i);
+            long dawnScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DAWN, i);
+            long duskScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DUSK, i);
             String festivalName = SevenSignsFestival.getFestivalName(i);
             String winningCabal = "Children of Dusk";
 
@@ -329,7 +329,7 @@ public final class FestivalGuideInstance extends NpcInstance {
 
         // Get the accumulated scores for each of the festival level ranges (types).
         for (int i = 0; i < 5; i++) {
-            long accumScore = SevenSignsFestival.getInstance().getAccumulatedBonus(i);
+            long accumScore = SevenSignsFestival.INSTANCE.getAccumulatedBonus(i);
             String festivalName = SevenSignsFestival.getFestivalName(i);
 
             tableHtml.append("<tr><td align=\"center\" width=\"150\">" + festivalName + "</td><td align=\"center\" width=\"150\">" + accumScore + "</td></tr>");

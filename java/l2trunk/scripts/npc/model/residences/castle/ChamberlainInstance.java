@@ -250,10 +250,10 @@ public class ChamberlainInstance extends ResidenceManager {
                 // По умолчанию налог не более 15%
                 int maxTax = 15;
                 // Если печатью SEAL_STRIFE владеют DUSK то налог можно выставлять не более 5%
-                if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
+                if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
                     maxTax = 5;
                     // Если печатью SEAL_STRIFE владеют DAWN то налог можно выставлять не более 25%
-                else if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
+                else if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
                     maxTax = 25;
 
                 int tax = Integer.parseInt(val);
@@ -402,9 +402,9 @@ public class ChamberlainInstance extends ResidenceManager {
                 return;
             }
             NpcString ssq_period;
-            if (SevenSigns.getInstance().getCurrentPeriod() == 1)
+            if (SevenSigns.INSTANCE.getCurrentPeriod() == 1)
                 ssq_period = NpcString.COMPETITION;
-            else if (SevenSigns.getInstance().getCurrentPeriod() == 3)
+            else if (SevenSigns.INSTANCE.getCurrentPeriod() == 3)
                 ssq_period = NpcString.SEAL_VALIDATION;
             else
                 ssq_period = NpcString.PREPARATION;
@@ -477,7 +477,7 @@ public class ChamberlainInstance extends ResidenceManager {
                 showChatWindow(player, "residence2/castle/chamberlain_saius063.htm");
             else if (castle.getDomainFortressContract() == 0)
                 showChatWindow(player, "residence2/castle/chamberlain_saius069.htm");
-            else if (SevenSigns.getInstance().getCurrentPeriod() != SevenSigns.PERIOD_SEAL_VALIDATION)
+            else if (SevenSigns.INSTANCE.getCurrentPeriod() != SevenSigns.PERIOD_SEAL_VALIDATION)
                 showChatWindow(player, "residence2/castle/chamberlain_saius068.htm");
             else
                 showChatWindow(player, "residence2/castle/chamberlain_saius052.htm");
@@ -522,7 +522,7 @@ public class ChamberlainInstance extends ResidenceManager {
     }
 
     private NpcString getSealOwner(int seal) {
-        switch (SevenSigns.getInstance().getSealOwner(seal)) {
+        switch (SevenSigns.INSTANCE.getSealOwner(seal)) {
             case SevenSigns.CABAL_DUSK:
                 return NpcString.DUSK;
             case SevenSigns.CABAL_DAWN:
@@ -585,7 +585,7 @@ public class ChamberlainInstance extends ResidenceManager {
         int SSQ_DrawFactor_door = 100;
         int SSQ_DuskFactor_door = 300;
 
-        switch (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE)) {
+        switch (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE)) {
             case SevenSigns.CABAL_DUSK:
                 price = price * SSQ_DuskFactor_door / 100;
                 break;

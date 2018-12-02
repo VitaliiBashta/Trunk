@@ -65,7 +65,7 @@ public final class BossRandom extends Functions implements ScriptFile {
         if (!Config.RANDOM_BOSS_ENABLE)
             return;
 
-        if (NpcHolder.getInstance().getTemplate(BossId) == null) {
+        if (NpcHolder.getTemplate(BossId) == null) {
             isActiveBossRandom = false;
         }
         if (isActiveBossRandom) {

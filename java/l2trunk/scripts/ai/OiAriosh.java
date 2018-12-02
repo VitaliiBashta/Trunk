@@ -41,7 +41,7 @@ public class OiAriosh extends Fighter {
     private void spawnMob(Creature attacker) {
         NpcInstance actor = getActor();
         try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(MOB));
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(MOB));
             sp.setLoc(Location.findPointToStay(actor, 100, 120));
             sp.setReflection(actor.getReflection());
             NpcInstance npc = sp.doSpawn(true);

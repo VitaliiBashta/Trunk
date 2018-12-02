@@ -693,7 +693,7 @@ public class Reflection {
     }
 
     public NpcInstance addSpawnWithRespawn(int npcId, Location loc, int randomOffset, int respawnDelay) {
-        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(npcId));
+        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(npcId));
         sp.setLoc(randomOffset > 0 ? Location.findPointToStay(loc, 0, randomOffset, getGeoIndex()) : loc);
         sp.setReflection(this);
         sp.setAmount(1);

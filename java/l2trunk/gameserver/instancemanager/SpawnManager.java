@@ -39,7 +39,7 @@ public final class SpawnManager {
         }
 
         GameTimeController.getInstance().addListener(_listeners);
-        SevenSigns.getInstance().addListener(_listeners);
+        SevenSigns.INSTANCE.addListener(_listeners);
     }
 
     public static SpawnManager getInstance() {
@@ -60,7 +60,7 @@ public final class SpawnManager {
             HardSpawner spawner = new HardSpawner(template);
             spawnerList.add(spawner);
 
-            NpcTemplate npcTemplate = NpcHolder.getInstance().getTemplate(spawner.getCurrentNpcId());
+            NpcTemplate npcTemplate = NpcHolder.getTemplate(spawner.getCurrentNpcId());
 
             int toAdd;
             if ((Config.RATE_MOB_SPAWN > 1) && (npcTemplate.getInstanceClass() == MonsterInstance.class) && (npcTemplate.level >= Config.RATE_MOB_SPAWN_MIN_LEVEL) && (npcTemplate.level <= Config.RATE_MOB_SPAWN_MAX_LEVEL)) {
@@ -176,8 +176,8 @@ public final class SpawnManager {
 
         // FIXME [VISTALL] come up with another way to
         int mode = 0;
-        if (SevenSigns.getInstance().getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION) {
-            mode = SevenSigns.getInstance().getCabalHighestScore();
+        if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION) {
+            mode = SevenSigns.INSTANCE.getCabalHighestScore();
         }
 
         _listeners.onPeriodChange(mode);

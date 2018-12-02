@@ -50,7 +50,7 @@ public final class DarkWaterDragon extends Fighter {
         NpcInstance actor = getActor();
         for (int i = 0; i < MOBS_COUNT; i++)
             try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(MOBS[Rnd.get(MOBS.length)]));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(MOBS[Rnd.get(MOBS.length)]));
                 sp.setLoc(Location.findPointToStay(actor, 100, 120));
                 NpcInstance npc = sp.doSpawn(true);
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
@@ -64,7 +64,7 @@ public final class DarkWaterDragon extends Fighter {
         _mobsSpawned = 0;
         NpcInstance actor = getActor();
         try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(FAFURION));
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(FAFURION));
             sp.setLoc(Location.findPointToStay(actor, 100, 120));
             sp.doSpawn(true);
         } catch (RuntimeException e) {

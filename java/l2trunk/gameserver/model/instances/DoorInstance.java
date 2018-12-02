@@ -339,7 +339,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
     @Override
     public int getPDef(Creature target) {
-        switch (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE)) {
+        switch (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE)) {
             case SevenSigns.CABAL_DAWN:
                 return (int) (super.getPDef(target) * 1.2);
             case SevenSigns.CABAL_DUSK:
@@ -351,7 +351,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
     @Override
     public int getMDef(Creature target, Skill skill) {
-        switch (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE)) {
+        switch (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE)) {
             case SevenSigns.CABAL_DAWN:
                 return (int) (super.getMDef(target, skill) * 1.2);
             case SevenSigns.CABAL_DUSK:

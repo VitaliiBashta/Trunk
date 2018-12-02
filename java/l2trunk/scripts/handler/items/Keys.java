@@ -30,7 +30,7 @@ public final class Keys extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override

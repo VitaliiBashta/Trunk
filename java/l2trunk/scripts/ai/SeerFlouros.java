@@ -44,7 +44,7 @@ public final class SeerFlouros extends Mystic {
         NpcInstance actor = getActor();
         for (int i = 0; i < MOBS_COUNT; i++)
             try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(MOB));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(MOB));
                 sp.setLoc(Location.findPointToStay(actor, 100, 120));
                 sp.setReflection(actor.getReflection());
                 NpcInstance npc = sp.doSpawn(true);

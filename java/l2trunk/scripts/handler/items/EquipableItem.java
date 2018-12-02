@@ -28,7 +28,7 @@ public class EquipableItem extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EquipableItem extends ScriptItemHandler implements ScriptFile {
 
     public EquipableItem() {
         Set<Integer> set = new HashSet<>();
-        for (ItemTemplate template : ItemHolder.getInstance().getAllTemplates()) {
+        for (ItemTemplate template : ItemHolder.INSTANCE.getAllTemplates()) {
             if (template == null)
                 continue;
             if (template.isEquipable())

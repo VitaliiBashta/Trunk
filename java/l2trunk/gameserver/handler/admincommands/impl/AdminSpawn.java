@@ -237,7 +237,11 @@ public class AdminSpawn implements IAdminCommandHandler {
                         if (!f.exists())
                             f.createNewFile();
                         FileWriter writer = new FileWriter(f, true);
-                        writer.write("<spawn count=\"1\" respawn=\"60\" respawn_random=\"0\" period_of_day=\"none\">\n\t" + "<point x=\"" + activeChar.getLoc().x + "\" y=\"" + activeChar.getLoc().y + "\" z=\"" + activeChar.getLoc().z + "\" h=\"" + activeChar.getLoc().h + "\" />\n\t" + "<npc id=\"" + Integer.parseInt(id3) + "\" /><!--" + NpcHolder.getInstance().getTemplate(Integer.parseInt(id3)).getName() + "-->\n" + "</spawn>\n");
+                        writer.write("<spawn count=\"1\" respawn=\"60\" respawn_random=\"0\" period_of_day=\"none\">\n\t"
+                                + "<point x=\"" + activeChar.getLoc().x + "\" y=\"" + activeChar.getLoc().y
+                                + "\" z=\"" + activeChar.getLoc().z + "\" h=\"" + activeChar.getLoc().h
+                                + "\" />\n\t" + "<npc id=\"" + Integer.parseInt(id3) + "\" /><!--"
+                                + NpcHolder.getTemplate(Integer.parseInt(id3)).getName() + "-->\n" + "</spawn>\n");
                         writer.close();
                     } catch (Exception e) {
 
@@ -266,11 +270,11 @@ public class AdminSpawn implements IAdminCommandHandler {
         if (regexp.matches()) {
             // First parameter was an ID number
             int monsterTemplate = Integer.parseInt(monsterId);
-            template = NpcHolder.getInstance().getTemplate(monsterTemplate);
+            template = NpcHolder.getTemplate(monsterTemplate);
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            template = NpcHolder.getInstance().getTemplateByName(monsterId);
+            template = NpcHolder.getTemplateByName(monsterId);
         }
 
         if (template == null) {

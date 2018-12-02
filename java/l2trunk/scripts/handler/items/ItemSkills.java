@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ItemSkills extends ScriptItemHandler implements ScriptFile {
+public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
     private final Set<Integer> _itemIds;
 
 
@@ -28,7 +28,7 @@ public class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
     public ItemSkills() {
         Set<Integer> set = new HashSet<>();
-        for (ItemTemplate template : ItemHolder.getInstance().getAllTemplates()) {
+        for (ItemTemplate template : ItemHolder.INSTANCE.getAllTemplates()) {
             if (template == null)
                 continue;
 

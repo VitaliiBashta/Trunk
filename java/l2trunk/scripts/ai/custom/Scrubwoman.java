@@ -45,7 +45,7 @@ public final class Scrubwoman extends DefaultAI {
                 Functions.npcSay(actor, "What a mess! Already throw things! Neither shame nor conscience!");
 
                 if (getFirstSpawned(actor)) {
-                    NpcInstance npc = NpcHolder.getInstance().getTemplate(getCurrActor(actor)).getNewInstance();
+                    NpcInstance npc = NpcHolder.getTemplate(getCurrActor(actor)).getNewInstance();
                     npc.setLevel(actor.getLevel());
                     npc.setSpawnedLoc(actor.getLoc());
                     npc.setReflection(actor.getReflection());

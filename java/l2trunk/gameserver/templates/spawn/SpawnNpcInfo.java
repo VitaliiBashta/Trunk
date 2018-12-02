@@ -10,7 +10,7 @@ public class SpawnNpcInfo {
     private final MultiValueSet<String> _parameters;
 
     public SpawnNpcInfo(int npcId, int max, MultiValueSet<String> set) {
-        _template = NpcHolder.getInstance().getTemplate(npcId);
+        _template = NpcHolder.getTemplate(npcId);
         _max = max;
         _parameters = set;
     }

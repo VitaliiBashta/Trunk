@@ -11,30 +11,22 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class MonsterRace {
+public enum  MonsterRace {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(MonsterRace.class);
     private static MonsterRace _instance;
     private final NpcInstance[] monsters;
-    private final int[] first;
-    private final int[] second;
+    private final int[] first= new int[2];
+    private final int[] second= new int[2];
     private Constructor<?> _constructor;
-    private int[][] speeds;
+    private int[][] speeds =new int[8][20];
 
-    private MonsterRace() {
+    MonsterRace() {
         monsters = new NpcInstance[8];
-        speeds = new int[8][20];
-        first = new int[2];
-        second = new int[2];
-    }
-
-    public static MonsterRace getInstance() {
-        if (_instance == null)
-            _instance = new MonsterRace();
-        return _instance;
     }
 
     public void newRace() {
-        int random = 0;
+        int random;
 
         for (int i = 0; i < 8; i++) {
             int id = 31003;
@@ -43,7 +35,7 @@ public class MonsterRace {
                 if (monsters[j].getTemplate().npcId == id + random)
                     random = Rnd.get(24);
             try {
-                NpcTemplate template = NpcHolder.getInstance().getTemplate(id + random);
+                NpcTemplate template = NpcHolder.getTemplate(id + random);
                 _constructor = template.getInstanceConstructor();
                 int objectId = IdFactory.getInstance().getNextId();
                 monsters[i] = (NpcInstance) _constructor.newInstance(objectId, template);
@@ -80,16 +72,10 @@ public class MonsterRace {
         }
     }
 
-    /**
-     * @return Returns the monsters.
-     */
     public NpcInstance[] getMonsters() {
         return monsters;
     }
 
-    /**
-     * @return Returns the speeds.
-     */
     public int[][] getSpeeds() {
         return speeds;
     }

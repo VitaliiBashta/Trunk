@@ -61,7 +61,7 @@ public class AdminClientSupport implements IAdminCommandHandler {
                         if (target == null)
                             target = player;
 
-                        NpcTemplate template = NpcHolder.getInstance().getTemplate(id - 1000000);
+                        NpcTemplate template = NpcHolder.getTemplate(id - 1000000);
 
                         for (int i = 0; i < count; i++) {
                             NpcInstance npc = template.getNewInstance();
@@ -77,7 +77,7 @@ public class AdminClientSupport implements IAdminCommandHandler {
                         if (!target.isPlayer())
                             return false;
 
-                        ItemTemplate template = ItemHolder.getInstance().getTemplate(id);
+                        ItemTemplate template = ItemHolder.INSTANCE.getTemplate(id);
                         if (template == null)
                             return false;
 

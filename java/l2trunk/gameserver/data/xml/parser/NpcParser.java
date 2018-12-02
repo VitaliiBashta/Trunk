@@ -18,34 +18,34 @@ import l2trunk.gameserver.templates.npc.Faction;
 import l2trunk.gameserver.templates.npc.MinionData;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class NpcParser extends AbstractDirParser<NpcHolder> {
+public final class NpcParser /*extends AbstractDirParser<NpcHolder>*/ {
     private static final NpcParser _instance = new NpcParser();
+    private final static Logger LOG = LoggerFactory.getLogger(NpcParser.class);
 
     private NpcParser() {
-        super(NpcHolder.getInstance());
+//        super(NpcHolder.getInstance());
     }
 
     public static NpcParser getInstance() {
         return _instance;
     }
 
-    @Override
     public Path getXMLDir() {
         return Config.DATAPACK_ROOT.resolve("data/npc/");
     }
 
-    @Override
     public String getDTDFileName() {
         return "npc.dtd";
     }
 
-    @Override
     protected void readData(org.dom4j.Element rootElement) {
         for (Iterator<org.dom4j.Element> npcIterator = rootElement.elementIterator(); npcIterator.hasNext(); ) {
             org.dom4j.Element npcElement = npcIterator.next();
@@ -226,7 +226,7 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                 }
             }
 
-            getHolder().addTemplate(template);
+            NpcHolder.addTemplate(template);
         }
     }
 

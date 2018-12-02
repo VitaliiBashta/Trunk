@@ -284,7 +284,7 @@ public class Functions {
     // @Deprecated
     // TODO [VISTALL] use NpcUtils
     protected static void SpawnNPCs(int npcId, int[][] locations, List<SimpleSpawner> list) {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate template = NpcHolder.getTemplate(npcId);
         if (template == null) {
             _log.warn("WARNING! Functions.SpawnNPCs template is null for npc: " + npcId);
             Thread.dumpStack();
@@ -302,7 +302,7 @@ public class Functions {
     }
 
     protected static void SpawnNPCs(int npcId, int[][] locations, List<SimpleSpawner> list, int respawn) {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate template = NpcHolder.getTemplate(npcId);
         if (template == null) {
             _log.warn("WARNING! Functions.SpawnNPCs template is null for npc: " + npcId);
             Thread.dumpStack();

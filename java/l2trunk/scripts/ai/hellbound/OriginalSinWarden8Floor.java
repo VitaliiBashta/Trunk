@@ -24,7 +24,7 @@ public final class OriginalSinWarden8Floor extends Fighter {
         if (Rnd.chance(15))
             try {
                 Location loc = actor.getLoc();
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(DarionsFaithfulServants[Rnd.get(DarionsFaithfulServants.length - 1)]));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(DarionsFaithfulServants[Rnd.get(DarionsFaithfulServants.length - 1)]));
                 sp.setLoc(Location.findPointToStay(actor, 150, 350));
                 sp.doSpawn(true);
                 sp.stopRespawn();

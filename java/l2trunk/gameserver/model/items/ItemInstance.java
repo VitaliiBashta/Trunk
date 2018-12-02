@@ -36,10 +36,6 @@ import l2trunk.gameserver.utils.Location;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
-//import org.napile.primitive.Containers;
-//import org.napile.primitive.sets.IntSet;
-//import org.napile.primitive.sets.impl.HashIntSet;
-
 public final class ItemInstance extends GameObject implements JdbcEntity {
     public static final int[] EMPTY_ENCHANT_OPTIONS = new int[3];
     public static final int CHARGED_NONE = 0;
@@ -163,7 +159,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     public void setItemId(int id) {
         itemId = id;
-        template = ItemHolder.getInstance().getTemplate(id);
+        template = ItemHolder.INSTANCE.getTemplate(id);
         setCustomFlags(getCustomFlags());
     }
 
@@ -844,16 +840,13 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
         // Add drop to auto destroy item task
         if (isHerb())
-            ItemsAutoDestroy.getInstance().addHerb(this);
+            ItemsAutoDestroy.INSTANCE.addHerb(this);
         else if (Config.AUTODESTROY_ITEM_AFTER > 0 && !isCursed() && _attachment == null)
-            ItemsAutoDestroy.getInstance().addItem(this, Config.AUTODESTROY_ITEM_AFTER * 1000L);
+            ItemsAutoDestroy.INSTANCE.addItem(this, Config.AUTODESTROY_ITEM_AFTER * 1000L);
     }
 
     /**
      * Бросает вещь на землю туда, где ее можно поднять
-     *
-     * @param dropper
-     * @param dropPos
      */
     public void dropToTheGround(Creature dropper, Location dropPos) {
         if (GeoEngine.canMoveToCoord(dropper, dropPos))
@@ -864,9 +857,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     /**
      * Бросает вещь на землю из инвентаря туда, где ее можно поднять
-     *
-     * @param dropper
-     * @param dropPos
      */
     public void dropToTheGround(Playable dropper, Location dropPos) {
         setLocation(ItemLocation.VOID);
@@ -882,7 +872,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
         // Add drop to auto destroy item task from player items.
         if (Config.AUTODESTROY_PLAYER_ITEM_AFTER > 0 && _attachment == null)
-            ItemsAutoDestroy.getInstance().addItem(this, Config.AUTODESTROY_PLAYER_ITEM_AFTER * 1000L);
+            ItemsAutoDestroy.INSTANCE.addItem(this, Config.AUTODESTROY_PLAYER_ITEM_AFTER * 1000L);
     }
 
     /**
@@ -912,9 +902,9 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
         spawnMe0(loc, dropper);
         if (isHerb()) {
-            ItemsAutoDestroy.getInstance().addHerb(this);
+            ItemsAutoDestroy.INSTANCE.addHerb(this);
         } else if ((Config.AUTODESTROY_ITEM_AFTER > 0) && (!isCursed())) {
-            ItemsAutoDestroy.getInstance().addItem(this, 100000L);
+            ItemsAutoDestroy.INSTANCE.addItem(this, 100000L);
         }
     }
 

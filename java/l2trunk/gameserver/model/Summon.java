@@ -250,11 +250,11 @@ public abstract class Summon extends Playable {
 
     protected void startDecay(long delay) {
         stopDecay();
-        DecayTaskManager.getInstance().addDecayTask(this, delay);
+        DecayTaskManager.INSTANCE.addDecayTask(this, delay);
     }
 
     protected void stopDecay() {
-        DecayTaskManager.getInstance().cancelDecayTask(this);
+        DecayTaskManager.INSTANCE.cancelDecayTask(this);
     }
 
     @Override

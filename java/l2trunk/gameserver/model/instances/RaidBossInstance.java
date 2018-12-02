@@ -123,7 +123,7 @@ public class RaidBossInstance extends MonsterInstance {
         }
 
         if (boxId != 0) {
-            NpcTemplate boxTemplate = NpcHolder.getInstance().getTemplate(boxId);
+            NpcTemplate boxTemplate = NpcHolder.getTemplate(boxId);
             if (boxTemplate != null) {
                 final NpcInstance box = new NpcInstance(IdFactory.getInstance().getNextId(), boxTemplate);
                 box.spawnMe(getLoc());

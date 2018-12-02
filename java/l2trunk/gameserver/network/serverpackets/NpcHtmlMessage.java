@@ -26,11 +26,11 @@ import java.util.regex.Pattern;
 public class NpcHtmlMessage extends L2GameServerPacket {
     static final Pattern objectId = Pattern.compile("%objectId%");
     static final Pattern playername = Pattern.compile("%playername%");
-    private static final Logger _log = LoggerFactory.getLogger(NpcHtmlMessage.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NpcHtmlMessage.class);
     final List<String> _replaces = new ArrayList<>();
     int _npcObjId;
     String _html;
-    String _file = null;
+    String file = null;
     boolean have_appends = false;
 
     public NpcHtmlMessage(Player player, int npcId, String filename, int val) {
@@ -72,7 +72,7 @@ public class NpcHtmlMessage extends L2GameServerPacket {
         replace("%npcname%", npc.getName());
         replace("%nick%", player.getName());
         replace("%class%", player.getClassId().getLevel());
-        replace("%festivalMins%", SevenSignsFestival.getInstance().getTimeToNextFestivalStr());
+        replace("%festivalMins%", SevenSignsFestival.INSTANCE.getTimeToNextFestivalStr());
     }
 
     public NpcHtmlMessage(Player player, NpcInstance npc) {
@@ -98,10 +98,10 @@ public class NpcHtmlMessage extends L2GameServerPacket {
     }
 
     public final NpcHtmlMessage setFile(String file) {
-        _file = file;
-        if (_file.startsWith("data/html/")) {
-            _log.info("NpcHtmlMessage: need fix : " + file, new Exception());
-            _file = _file.replace("data/html/", "");
+        this.file = file;
+        if (this.file.startsWith("data/html/")) {
+            LOG.info("NpcHtmlMessage: need fix : " + file, new Exception());
+            this.file = this.file.replace("data/html/", "");
         }
         return this;
     }
@@ -140,11 +140,11 @@ public class NpcHtmlMessage extends L2GameServerPacket {
             return;
         }
 
-        if (_file != null) {
-            String content = HtmCache.INSTANCE.getNotNull(_file, player);
-            String content2 = HtmCache.INSTANCE.getNullable(_file, player);
+        if (file != null) {
+            String content = HtmCache.INSTANCE.getNotNull(file, player);
+            String content2 = HtmCache.INSTANCE.getNullable(file, player);
             if (content2 == null) {
-                setHtml(have_appends && _file.endsWith(".htm") ? "" : content);
+                setHtml(have_appends && file.endsWith(".htm") ? "" : content);
             } else {
                 setHtml(content);
             }

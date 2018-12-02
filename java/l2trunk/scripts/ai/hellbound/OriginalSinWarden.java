@@ -30,7 +30,7 @@ public final class OriginalSinWarden extends Fighter {
                 for (int aServants1 : servants1)
                     try {
                         //Location loc = actor.getLoc();
-                        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(aServants1));
+                        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(aServants1));
                         sp.setLoc(Location.findPointToStay(actor, 150, 350));
                         sp.doSpawn(true);
                         sp.stopRespawn();
@@ -43,7 +43,7 @@ public final class OriginalSinWarden extends Fighter {
                 for (int aServants2 : servants2)
                     try {
                         //Location loc = actor.getLoc();
-                        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(aServants2));
+                        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(aServants2));
                         sp.setLoc(Location.findPointToStay(actor, 150, 350));
                         sp.doSpawn(true);
                         sp.stopRespawn();
@@ -64,7 +64,7 @@ public final class OriginalSinWarden extends Fighter {
         if (Rnd.chance(15))
             try {
                 //Location loc = actor.getLoc();
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(DarionsFaithfulServants[Rnd.get(DarionsFaithfulServants.length - 1)]));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(DarionsFaithfulServants[Rnd.get(DarionsFaithfulServants.length - 1)]));
                 sp.setLoc(Location.findPointToStay(actor, 150, 350));
                 sp.doSpawn(true);
                 sp.stopRespawn();

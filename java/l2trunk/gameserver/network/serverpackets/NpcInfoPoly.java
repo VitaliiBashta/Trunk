@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class NpcInfoPoly extends L2GameServerPacket {
+public final class NpcInfoPoly extends L2GameServerPacket {
     //   ddddddddddddddddddffffdddcccccSSddd dddddccffddddccd
     private final Creature _obj;
     private final int _x;
@@ -40,7 +40,7 @@ public class NpcInfoPoly extends L2GameServerPacket {
     public NpcInfoPoly(Player cha) {
         _obj = cha;
         _npcId = cha.getPolyId();
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(_npcId);
+        NpcTemplate template = NpcHolder.getTemplate(_npcId);
         _rhand = 0;
         _lhand = 0;
         _isSummoned = false;
@@ -108,15 +108,9 @@ public class NpcInfoPoly extends L2GameServerPacket {
         writeD(_lhand); // left hand weapon
         writeC(1); // name above char 1=true ... ??
         writeC(_isRunning ? 1 : 0);
-        writeC(_isInCombat
-                ? 1
-                : 0);
-        writeC(_isAlikeDead
-                ? 1
-                : 0);
-        writeC(_isSummoned
-                ? 2
-                : 0); // invisible ?? 0=false  1=true   2=summoned (only works if model has a summon animation)
+        writeC(_isInCombat ? 1 : 0);
+        writeC(_isAlikeDead ? 1 : 0);
+        writeC(_isSummoned ? 2 : 0); // invisible ?? 0=false  1=true   2=summoned (only works if model has a summon animation)
         writeD(-1); // High Five NPCString ID
         writeS(_name);
         writeD(-1); // High Five NPCString ID

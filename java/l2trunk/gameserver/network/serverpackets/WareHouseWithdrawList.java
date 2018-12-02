@@ -50,10 +50,10 @@ public class WareHouseWithdrawList extends L2GameServerPacket {
         _adena = 0;
         _type = WarehouseType.CLAN.ordinal();
 
-        ItemInstance[] items = clan == null ? new ItemInstance[0] : clan.getWarehouse().getItems();
+        List<ItemInstance> items = clan == null ? new ArrayList<>() : clan.getWarehouse().getItems();
 
-        _itemList = new ArrayList<>(items.length);
-        ArrayUtils.eqSort(items, ItemClassComparator.getInstance());
+        _itemList = new ArrayList<>(items.size());
+        items.sort(ItemClassComparator.getInstance());
         for (ItemInstance item : items)
             _itemList.add(new ItemInfo(item));
     }

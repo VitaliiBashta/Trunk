@@ -35,7 +35,7 @@ public class NpcUtils {
     }
 
     public static NpcInstance spawnSingle(int npcId, Location loc, Reflection reflection, long despawnTime) {
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(npcId);
+        NpcTemplate template = NpcHolder.getTemplate(npcId);
         if (template == null)
             throw new NullPointerException("Npc template id : " + npcId + " not found!");
 

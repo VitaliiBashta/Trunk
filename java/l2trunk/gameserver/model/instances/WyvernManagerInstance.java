@@ -46,7 +46,7 @@ public final class WyvernManagerInstance extends NpcInstance {
                     html.setFile("wyvern/havenot_cry.htm");
                     html.replace("%npcname%", "Wyvern Manager " + getName());
                     player.sendPacket(html);
-                } else if (SevenSigns.getInstance().getCurrentPeriod() == 3 && SevenSigns.getInstance().getCabalHighestScore() == 3) {
+                } else if (SevenSigns.INSTANCE.getCurrentPeriod() == 3 && SevenSigns.INSTANCE.getCabalHighestScore() == 3) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("wyvern/no_ride_dusk.htm");
                     html.replace("%npcname%", "Wyvern Manager " + getName());

@@ -36,7 +36,7 @@ public abstract class SiegeToggleNpcInstance extends NpcInstance {
     }
 
     public void initFake(int fakeNpcId) {
-        _fakeInstance = NpcHolder.getInstance().getTemplate(fakeNpcId).getNewInstance();
+        _fakeInstance = NpcHolder.getTemplate(fakeNpcId).getNewInstance();
         _fakeInstance.setCurrentHpMp(1, _fakeInstance.getMaxMp());
         _fakeInstance.setHasChatWindow(false);
     }

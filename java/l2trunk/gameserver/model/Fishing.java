@@ -81,7 +81,7 @@ public class Fishing {
     private static void spawnPenaltyMonster(Player fisher) {
         int npcId = 18319 + Math.min(fisher.getLevel() / 11, 7); // 18319-18326
 
-        MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(npcId));
+        MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(npcId));
         npc.setSpawnedLoc(Location.findPointToStay(fisher, 100, 120));
         npc.setReflection(fisher.getReflection());
         npc.setHeading(fisher.getHeading() - 32768);

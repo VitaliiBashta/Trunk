@@ -254,9 +254,9 @@ public class Quest {
 
     protected static NpcInstance addSpawnToInstance(int npcId, Location loc, int randomOffset, int refId) {
         try {
-            NpcTemplate template = NpcHolder.getInstance().getTemplate(npcId);
+            NpcTemplate template = NpcHolder.getTemplate(npcId);
             if (template != null) {
-                NpcInstance npc = NpcHolder.getInstance().getTemplate(npcId).getNewInstance();
+                NpcInstance npc = NpcHolder.getTemplate(npcId).getNewInstance();
                 npc.setReflection(refId);
                 npc.setSpawnedLoc(randomOffset > 50 ? Location.findPointToStay(loc, 50, randomOffset, npc.getGeoIndex()) : loc);
                 npc.spawnMe(npc.getSpawnedLoc());
@@ -277,7 +277,7 @@ public class Quest {
         for (int id : ids)
             if (id != 0) {
                 ItemTemplate i;
-                i = ItemHolder.getInstance().getTemplate(id);
+                i = ItemHolder.INSTANCE.getTemplate(id);
 
                 if (_questItems.contains(id))
                     _log.warn("Item " + i + " multiple times in quest drop in " + getName());
@@ -314,7 +314,7 @@ public class Quest {
      */
     private NpcTemplate addEventId(int npcId, QuestEventType eventType) {
         try {
-            NpcTemplate t = NpcHolder.getInstance().getTemplate(npcId);
+            NpcTemplate t = NpcHolder.getTemplate(npcId);
             if (t != null)
                 t.addQuestEvent(eventType, this);
             return t;

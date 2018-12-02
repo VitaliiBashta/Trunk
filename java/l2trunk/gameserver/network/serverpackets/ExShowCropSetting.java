@@ -14,7 +14,7 @@ import java.util.List;
  * dd[ddc[d]c[d]ddddddcddc]
  * dd[ddc[d]c[d]ddddQQcQQc] - Gracia Final
  */
-public class ExShowCropSetting extends L2GameServerPacket {
+public final class ExShowCropSetting extends L2GameServerPacket {
     private final int _manorId;
     private final int _count;
     private final long[] _cropData; // data to send, size:_count*14
@@ -22,19 +22,19 @@ public class ExShowCropSetting extends L2GameServerPacket {
     public ExShowCropSetting(int manorId) {
         _manorId = manorId;
         Castle c = ResidenceHolder.getInstance().getResidence(Castle.class, _manorId);
-        List<Integer> crops = Manor.getInstance().getCropsForCastle(_manorId);
+        List<Integer> crops = Manor.INSTANCE.getCropsForCastle(_manorId);
         _count = crops.size();
         _cropData = new long[_count * 14];
         int i = 0;
         for (int cr : crops) {
             _cropData[i * 14 + 0] = cr;
-            _cropData[i * 14 + 1] = Manor.getInstance().getSeedLevelByCrop(cr);
-            _cropData[i * 14 + 2] = Manor.getInstance().getRewardItem(cr, 1);
-            _cropData[i * 14 + 3] = Manor.getInstance().getRewardItem(cr, 2);
-            _cropData[i * 14 + 4] = Manor.getInstance().getCropPuchaseLimit(cr);
+            _cropData[i * 14 + 1] = Manor.INSTANCE.getSeedLevelByCrop(cr);
+            _cropData[i * 14 + 2] = Manor.INSTANCE.getRewardItem(cr, 1);
+            _cropData[i * 14 + 3] = Manor.INSTANCE.getRewardItem(cr, 2);
+            _cropData[i * 14 + 4] = Manor.INSTANCE.getCropPuchaseLimit(cr);
             _cropData[i * 14 + 5] = 0; // Looks like not used
-            _cropData[i * 14 + 6] = Manor.getInstance().getCropBasicPrice(cr) * 60 / 100;
-            _cropData[i * 14 + 7] = Manor.getInstance().getCropBasicPrice(cr) * 10;
+            _cropData[i * 14 + 6] = Manor.INSTANCE.getCropBasicPrice(cr) * 60 / 100;
+            _cropData[i * 14 + 7] = Manor.INSTANCE.getCropBasicPrice(cr) * 10;
             CropProcure cropPr = c.getCrop(cr, CastleManorManager.PERIOD_CURRENT);
             if (cropPr != null) {
                 _cropData[i * 14 + 8] = cropPr.getStartAmount();

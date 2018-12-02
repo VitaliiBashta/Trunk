@@ -8,24 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PrivateStoreListBuy extends L2GameServerPacket {
+public final class PrivateStoreListBuy extends L2GameServerPacket {
     private final int _buyerId;
     private final long _adena;
     private final List<TradeItem> _sellList;
 
-    /**
-     * Список вещей в личном магазине покупки, показываемый продающему
-     *
-     * @param seller
-     * @param buyer
-     */
     public PrivateStoreListBuy(Player seller, Player buyer) {
         _adena = seller.getAdena();
         _buyerId = buyer.getObjectId();
         _sellList = new ArrayList<>();
 
         List<TradeItem> buyList = buyer.getBuyList();
-        ItemInstance[] items = seller.getInventory().getItems();
+        List<ItemInstance> items = seller.getInventory().getItems();
 
         for (TradeItem bi : buyList) {
             TradeItem si = null;

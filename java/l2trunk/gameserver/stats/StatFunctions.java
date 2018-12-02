@@ -548,8 +548,8 @@ public class StatFunctions {
         @Override
         public void calc(Env env) {
             double cpSSmod = 1;
-            int sealOwnedBy = SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE);
-            int playerCabal = SevenSigns.getInstance().getPlayerCabal((Player) env.character);
+            int sealOwnedBy = SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE);
+            int playerCabal = SevenSigns.INSTANCE.getPlayerCabal((Player) env.character);
 
             if (sealOwnedBy != SevenSigns.CABAL_NULL)
                 if (playerCabal == sealOwnedBy)

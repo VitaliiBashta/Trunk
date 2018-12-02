@@ -3,7 +3,7 @@ package l2trunk.gameserver.model;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-public class ProductItemComponent {
+public final class ProductItemComponent {
     private final int _itemId;
     private final int _count;
 
@@ -14,7 +14,7 @@ public class ProductItemComponent {
         _itemId = item_id;
         _count = count;
 
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(item_id);
+        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(item_id);
         if (item != null) {
             _weight = item.getWeight();
             _dropable = item.isDropable();

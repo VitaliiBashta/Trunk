@@ -33,7 +33,7 @@ public final class CharChangePotions extends ScriptItemHandler implements Script
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override

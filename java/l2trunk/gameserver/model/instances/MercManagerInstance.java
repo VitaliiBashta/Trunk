@@ -51,10 +51,10 @@ public final class MercManagerInstance extends MerchantInstance {
         if (condition == COND_BUSY_BECAUSE_OF_SIEGE)
             filename = "castle/mercmanager/mercmanager-busy.htm"; // Busy because of siege
         else if (condition == COND_OWNER)
-            if (SevenSigns.getInstance().getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION) {
-                if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
+            if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION) {
+                if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
                     filename = "castle/mercmanager/mercmanager_dawn.htm";
-                else if (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
+                else if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
                     filename = "castle/mercmanager/mercmanager_dusk.htm";
                 else
                     filename = "castle/mercmanager/mercmanager.htm";

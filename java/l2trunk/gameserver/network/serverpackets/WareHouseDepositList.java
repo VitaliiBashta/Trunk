@@ -20,9 +20,9 @@ public class WareHouseDepositList extends L2GameServerPacket {
         _whtype = whtype.ordinal();
         _adena = cha.getAdena();
 
-        ItemInstance[] items = cha.getInventory().getItems();
-        ArrayUtils.eqSort(items, ItemClassComparator.getInstance());
-        _itemList = new ArrayList<>(items.length);
+        List<ItemInstance> items = cha.getInventory().getItems();
+        items.sort(ItemClassComparator.getInstance());
+        _itemList = new ArrayList<>(items.size());
         for (ItemInstance item : items)
             if (_whtype == 1) {
                 if (item.canBeStored(cha, true))

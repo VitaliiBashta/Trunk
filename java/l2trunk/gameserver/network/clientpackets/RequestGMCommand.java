@@ -4,6 +4,8 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.*;
+
+import java.util.List;
 //import l2trunk.gameserver.network.serverpackets.ShortCutInit;
 //import l2trunk.gameserver.network.serverpackets.SkillCoolTime;
 //import l2trunk.gameserver.network.serverpackets.SkillList;
@@ -44,12 +46,11 @@ public class RequestGMCommand extends L2GameClientPacket {
                 player.sendPacket(new GMViewQuestInfo(target));
                 break;
             case 5:
-                ItemInstance[] items = target.getInventory().getItems();
-                int questSize = 0;
-                for (ItemInstance item : items)
-                    if (item.getTemplate().isQuest())
-                        questSize++;
-                player.sendPacket(new GMViewItemList(target, items, items.length - questSize));
+                List<ItemInstance> items = target.getInventory().getItems();
+                int questSize = (int) items.stream()
+                        .filter(item -> item.getTemplate().isQuest())
+                        .count();
+                player.sendPacket(new GMViewItemList(target, items, items.size() - questSize));
                 player.sendPacket(new ExGMViewQuestItemList(target, items, questSize));
 
                 player.sendPacket(new GMHennaInfo(target));

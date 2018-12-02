@@ -16,6 +16,8 @@ import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
+import java.util.List;
+
 public class RequestDestroyItem extends L2GameClientPacket {
     private int _objectId;
     private long _count;
@@ -115,13 +117,11 @@ public class RequestDestroyItem extends L2GameClientPacket {
             if (owner != null) {
                 // If item is successfully deleted, show updated target inventory.
                 if (owner.getInventory().destroyItemByObjectId(_objectId, count, "GMDelete")) {
-                    ItemInstance[] items = owner.getInventory().getItems();
-                    int questSize = 0;
-                    for (ItemInstance i : items)
-                        if (i.getTemplate().isQuest())
-                            questSize++;
-
-                    activeChar.sendPacket(new GMViewItemList(owner, items, items.length - questSize));
+                    List<ItemInstance> items = owner.getInventory().getItems();
+                    int questSize = (int) items.stream()
+                            .filter(i -> i.getTemplate().isStackable())
+                            .count();
+                    activeChar.sendPacket(new GMViewItemList(owner, items, items.size() - questSize));
                     activeChar.sendPacket(new ExGMViewQuestItemList(owner, items, questSize));
                     activeChar.sendPacket(new GMHennaInfo(owner));
                 } else {

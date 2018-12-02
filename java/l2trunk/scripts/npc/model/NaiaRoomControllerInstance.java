@@ -257,7 +257,7 @@ public class NaiaRoomControllerInstance extends NpcInstance {
 
     private void spawnExactToRoom(int mobId, Location loc, int roomId) {
         try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(mobId));
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(mobId));
             sp.setLoc(loc);
             sp.doSpawn(true);
             sp.stopRespawn();

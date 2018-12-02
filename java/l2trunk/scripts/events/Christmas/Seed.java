@@ -23,7 +23,7 @@ import java.util.List;
 public final class Seed extends ScriptItemHandler implements ScriptFile {
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -69,7 +69,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         int itemId = item.getItemId();
         for (int i = 0; i < _itemIds.length; i++)
             if (_itemIds[i] == itemId) {
-                template = NpcHolder.getInstance().getTemplate(_npcIds[i]);
+                template = NpcHolder.getTemplate(_npcIds[i]);
                 break;
             }
 

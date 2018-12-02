@@ -52,7 +52,7 @@ public final class RequestWithDrawPremiumItem extends L2GameClientPacket {
         if (_item == null) {
             return;
         }
-        boolean stackable = ItemHolder.getInstance().getTemplate(_item.getItemId()).isStackable();
+        boolean stackable = ItemHolder.INSTANCE.getTemplate(_item.getItemId()).isStackable();
         if (_item.getCount() < _itemcount) {
             return;
         }

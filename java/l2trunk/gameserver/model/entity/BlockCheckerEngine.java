@@ -393,7 +393,7 @@ public final class BlockCheckerEngine {
             // if != 0, will spawn a blue block
             byte random = 2;
             // common template
-            final NpcTemplate template = NpcHolder.getInstance().getTemplate(18672);
+            final NpcTemplate template = NpcHolder.getTemplate(18672);
             // Spawn blocks
             try {
                 // Creates 50 new blocks
@@ -417,7 +417,7 @@ public final class BlockCheckerEngine {
 
             // Spawn the block carrying girl
             if (_round == 1 || _round == 2) {
-                NpcTemplate girl = NpcHolder.getInstance().getTemplate(18676);
+                NpcTemplate girl = NpcHolder.getTemplate(18676);
                 try {
                     final SimpleSpawner girlSpawn = new SimpleSpawner(girl);
                     girlSpawn.setLocx(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400));

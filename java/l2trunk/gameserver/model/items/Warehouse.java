@@ -32,7 +32,7 @@ public abstract class Warehouse extends ItemContainer {
         readLock();
         try {
             ItemInstance item;
-            for (ItemInstance _item : _items) {
+            for (ItemInstance _item : items) {
                 item = _item;
                 if ((itemClass == null || itemClass == ItemClass.ALL) || item.getItemClass() == itemClass)
                     result.add(item);
@@ -86,7 +86,7 @@ public abstract class Warehouse extends ItemContainer {
             Collection<ItemInstance> items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getItemLocation());
 
             for (ItemInstance item : items)
-                _items.add(item);
+                this.items.add(item);
         } finally {
             writeUnlock();
         }
@@ -102,7 +102,6 @@ public abstract class Warehouse extends ItemContainer {
 
     public static class ItemClassComparator implements Comparator<ItemInstance>, Serializable {
         private static final Comparator<ItemInstance> instance = new ItemClassComparator();
-        private static final long serialVersionUID = 1936136265154026060L;
 
         public static Comparator<ItemInstance> getInstance() {
             return instance;

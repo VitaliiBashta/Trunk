@@ -42,7 +42,7 @@ public class AdminMonsterRace implements IAdminCommandHandler {
          */
 
         int[][] codes = {{-1, 0}, {0, 15322}, {13765, -1}, {-1, 0}};
-        MonsterRace race = MonsterRace.getInstance();
+        MonsterRace race = MonsterRace.INSTANCE;
 
         if (state == -1) {
             state++;
@@ -86,7 +86,7 @@ public class AdminMonsterRace implements IAdminCommandHandler {
              * _log.info.println("Total speed for "+(i+1)+" = "+speed[i]); }
              */
 
-            activeChar.broadcastPacket(new MonRaceInfo(codes[2][0], codes[2][1], MonsterRace.getInstance().getMonsters(), MonsterRace.getInstance().getSpeeds()));
+            activeChar.broadcastPacket(new MonRaceInfo(codes[2][0], codes[2][1], MonsterRace.INSTANCE.getMonsters(), MonsterRace.INSTANCE.getSpeeds()));
             ThreadPoolManager.INSTANCE.schedule(new RunEnd(activeChar), 30000);
         }
     }
@@ -103,7 +103,7 @@ public class AdminMonsterRace implements IAdminCommandHandler {
             NpcInstance obj;
 
             for (int i = 0; i < 8; i++) {
-                obj = MonsterRace.getInstance().getMonsters()[i];
+                obj = MonsterRace.INSTANCE.getMonsters()[i];
                 // FIXME i don't know, if it's needed (Styx)
                 // L2World.removeObject(obj);
                 activeChar.broadcastPacket(new DeleteObject(obj));

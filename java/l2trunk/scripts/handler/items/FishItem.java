@@ -16,7 +16,7 @@ import l2trunk.gameserver.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FishItem extends ScriptItemHandler implements ScriptFile {
+public final class FishItem extends ScriptItemHandler implements ScriptFile {
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
         return true;
@@ -24,7 +24,7 @@ public class FishItem extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class FishItem extends ScriptItemHandler implements ScriptFile {
         }
 
         int count = 0;
-        List<RewardData> rewards = FishTable.getInstance().getFishReward(item.getItemId());
+        List<RewardData> rewards = FishTable.INSTANCE.getFishReward(item.getItemId());
         for (RewardData d : rewards) {
             long roll = Util.rollDrop(d.getMinDrop(), d.getMaxDrop(), d.getChance() * Config.RATE_FISH_DROP_COUNT * Config.RATE_DROP_ITEMS * player.getRateItems(), false);
             if (roll > 0) {
@@ -69,6 +69,6 @@ public class FishItem extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return new ArrayList<>(FishTable.getInstance().getFishIds());
+        return new ArrayList<>(FishTable.INSTANCE.getFishIds());
     }
 }

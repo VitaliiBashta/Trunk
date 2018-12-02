@@ -347,7 +347,7 @@ public final class QuestState {
             count = 1;
 
         // Get template of item
-        ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate template = ItemHolder.INSTANCE.getTemplate(itemId);
         if (template == null)
             return;
 

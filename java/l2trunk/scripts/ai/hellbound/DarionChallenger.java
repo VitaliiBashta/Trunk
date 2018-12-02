@@ -24,7 +24,7 @@ public final class DarionChallenger extends Fighter {
     public void onEvtDead(Creature killer) {
         if (checkAllDestroyed())
             try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(TeleportCube));
+                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(TeleportCube));
                 sp.setLoc(new Location(-12527, 279714, -11622, 16384));
                 sp.doSpawn(true);
                 sp.stopRespawn();

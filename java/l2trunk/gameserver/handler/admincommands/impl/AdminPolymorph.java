@@ -28,7 +28,7 @@ public class AdminPolymorph implements IAdminCommandHandler {
                 }
                 try {
                     int id = Integer.parseInt(wordList[1]);
-                    if (NpcHolder.getInstance().getTemplate(id) != null) {
+                    if (NpcHolder.getTemplate(id) != null) {
                         ((Player) target).setPolyId(id);
                         ((Player) target).broadcastCharInfo();
                     }

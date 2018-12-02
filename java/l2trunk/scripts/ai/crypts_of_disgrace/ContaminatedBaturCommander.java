@@ -22,7 +22,7 @@ public final class ContaminatedBaturCommander extends Fighter {
         if (Rnd.chance(CHANCE)) {
             // Спауним
             NpcInstance actor = getActor();
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getInstance().getTemplate(TurkaCommanderChief));
+            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(TurkaCommanderChief));
             sp.setLoc(Location.findPointToStay(actor, 100, 120));
             NpcInstance npc = sp.doSpawn(true);
 

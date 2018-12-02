@@ -24,7 +24,7 @@ public final class NevitVoice extends SimpleItemHandler implements ScriptFile {
 
     @Override
     public void onLoad() {
-        ItemHandler.getInstance().registerItemHandler(this);
+        ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
     @Override
@@ -39,17 +39,13 @@ public final class NevitVoice extends SimpleItemHandler implements ScriptFile {
 
     @Override
     protected boolean useItemImpl(Player player, ItemInstance item, boolean ctrl) {
-        int itemId = item.getItemId();
-
         if (!useItem(player, item, 1))
             return false;
 
-        switch (itemId) {
-            case 17094:
-                player.addRecomHave(10);
-                break;
-            default:
-                return false;
+        if (item.getItemId() != ITEM_IDS) {
+            return false;
+        } else {
+            player.addRecomHave(10);
         }
 
         return true;

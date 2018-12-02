@@ -236,7 +236,7 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
                 }
         };
 
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(31391);
+        NpcTemplate template = NpcHolder.getTemplate(31391);
         for (int[] element : EVENT_MANAGERS) {
             SimpleSpawner sp = new SimpleSpawner(template);
             sp.setLocx(element[0]);

@@ -25,7 +25,7 @@ import l2trunk.gameserver.utils.Log;
 
 import java.util.Set;
 
-public class TeamMember {
+public final class TeamMember {
 
     private final int _objId;
     private final OlympiadGame _game;

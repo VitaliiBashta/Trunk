@@ -8,14 +8,16 @@ import l2trunk.gameserver.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 public abstract class ItemContainer {
     static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
 
-    final List<ItemInstance> _items = new ArrayList<>();
+    final List<ItemInstance> items = new ArrayList<>();
     /**
      * Блокировка для чтения/записи вещей из списка и внешних операций
      */
@@ -28,25 +30,15 @@ public abstract class ItemContainer {
     }
 
     public int getSize() {
-        return _items.size();
+        return items.size();
     }
 
-    public ItemInstance[] getItems() {
-        readLock();
-        try {
-            return _items.toArray(new ItemInstance[_items.size()]);
-        } finally {
-            readUnlock();
-        }
+    public synchronized List<ItemInstance> getItems() {
+        return new ArrayList<>(items);
     }
 
-    public void clear() {
-        writeLock();
-        try {
-            _items.clear();
-        } finally {
-            writeUnlock();
-        }
+    public synchronized void clear() {
+        items.clear();
     }
 
     public final void writeLock() {
@@ -75,7 +67,7 @@ public abstract class ItemContainer {
         readLock();
         try {
             ItemInstance item;
-            for (ItemInstance _item : _items) {
+            for (ItemInstance _item : items) {
                 item = _item;
                 if (item.getObjectId() == objectId)
                     return item;
@@ -93,44 +85,16 @@ public abstract class ItemContainer {
      * @param itemId
      * @return вещь, если найдена, либо null если не найдена
      */
-    public ItemInstance getItemByItemId(int itemId) {
-        readLock();
-        try {
-            ItemInstance item;
-            for (ItemInstance _item : _items) {
-                item = _item;
-                if (item.getItemId() == itemId)
-                    return item;
-            }
-        } finally {
-            readUnlock();
-        }
-
-        return null;
+    public synchronized ItemInstance getItemByItemId(int itemId) {
+        return items.stream()
+                .filter(item -> item.getItemId() == itemId)
+                .findFirst().orElse(null);
     }
 
-    /**
-     * Найти все вещи по itemId
-     *
-     * @param itemId
-     * @return Список найденых вещей
-     */
-    public List<ItemInstance> getItemsByItemId(int itemId) {
-        List<ItemInstance> result = new ArrayList<>();
-
-        readLock();
-        try {
-            ItemInstance item;
-            for (ItemInstance _item : _items) {
-                item = _item;
-                if (item.getItemId() == itemId)
-                    result.add(item);
-            }
-        } finally {
-            readUnlock();
-        }
-
-        return result;
+    public synchronized List<ItemInstance> getItemsByItemId(int itemId) {
+        return items.stream()
+                .filter(item -> item.getItemId() == itemId)
+                .collect(Collectors.toList());
     }
 
     public long getCountOf(int itemId) {
@@ -138,7 +102,7 @@ public abstract class ItemContainer {
         readLock();
         try {
             ItemInstance item;
-            for (ItemInstance _item : _items) {
+            for (ItemInstance _item : items) {
                 item = _item;
                 if (item.getItemId() == itemId)
                     count = SafeMath.addAndLimit(count, item.getCount());
@@ -161,23 +125,20 @@ public abstract class ItemContainer {
             return null;
 
         ItemInstance item;
-
         writeLock();
         try {
             item = getItemByItemId(itemId);
 
-            if (item != null && item.isStackable())
-                synchronized (item) {
-                    item.setCount(SafeMath.addAndLimit(item.getCount(), count));
-                    onModifyItem(item);
-                    if (owner != null)
-                        Log.LogAddItem(owner, log, item, count);
-                }
-            else {
+            if (item !=null && item.isStackable()) {
+                item.setCount(SafeMath.addAndLimit(item.getCount(), count));
+                onModifyItem(item);
+                if (owner != null)
+                    Log.LogAddItem(owner, log, item, count);
+            } else {
                 item = ItemFunctions.createItem(itemId);
                 item.setCount(count);
 
-                _items.add(item);
+                items.add(item);
                 onAddItem(item);
 
                 if (owner != null)
@@ -186,7 +147,6 @@ public abstract class ItemContainer {
         } finally {
             writeUnlock();
         }
-
         return item;
     }
 
@@ -227,7 +187,7 @@ public abstract class ItemContainer {
             }
 
             if (result == null) {
-                _items.add(item);
+                items.add(item);
                 result = item;
 
                 onAddItem(result);
@@ -322,7 +282,7 @@ public abstract class ItemContainer {
 
         writeLock();
         try {
-            if (!_items.contains(item))
+            if (!items.contains(item))
                 return null;
 
             if (item.getCount() > count) {
@@ -358,7 +318,7 @@ public abstract class ItemContainer {
 
         writeLock();
         try {
-            if (!_items.remove(item))
+            if (!items.remove(item))
                 return null;
 
             onRemoveItem(item);
@@ -436,7 +396,7 @@ public abstract class ItemContainer {
 
         writeLock();
         try {
-            if (!_items.contains(item))
+            if (!items.contains(item))
                 return false;
 
             if (item.getCount() > count) {
@@ -468,7 +428,7 @@ public abstract class ItemContainer {
 
         writeLock();
         try {
-            if (!_items.remove(item))
+            if (!items.remove(item))
                 return false;
 
             if (owner != null)

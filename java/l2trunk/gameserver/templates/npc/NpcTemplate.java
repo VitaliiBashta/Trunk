@@ -131,9 +131,8 @@ public final class NpcTemplate extends CharTemplate {
             return npcInstance;
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
             LOG.error("Unable to create instance of NPC " + npcId, e);
+            throw new RuntimeException("Can't create instance " + e);
         }
-
-        return null;
     }
 
     public CharacterAI getNewAI(NpcInstance npc) {

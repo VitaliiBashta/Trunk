@@ -78,7 +78,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
         NpcTemplate target;
         double mod = 1.;
         if (id == 0) {
-            List<NpcTemplate> monsters = NpcHolder.getInstance().getAllOfLevel(player.getLevel());
+            List<NpcTemplate> monsters = NpcHolder.getAllOfLevel(player.getLevel());
             if (monsters == null || monsters.isEmpty()) {
                 show(new CustomMessage("scripts.events.bountyhunters.NoTargets", player), player);
                 return;
@@ -93,7 +93,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
             }
             target = targets.get(Rnd.get(targets.size()));
         } else {
-            target = NpcHolder.getInstance().getTemplate(id);
+            target = NpcHolder.getTemplate(id);
             if (target == null || !checkTarget(target)) {
                 show(new CustomMessage("scripts.events.bountyhunters.WrongTarget", player), player);
                 return;
@@ -133,7 +133,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
             else
                 crystal = 1462; // S
             player.setVar("bhRewardId", String.valueOf(crystal), -1);
-            player.setVar("bhRewardCount", String.valueOf(adenarewardvalue / ItemHolder.getInstance().getTemplate(crystal).getReferencePrice()), -1);
+            player.setVar("bhRewardCount", String.valueOf(adenarewardvalue / ItemHolder.INSTANCE.getTemplate(crystal).getReferencePrice()), -1);
         }
         show(new CustomMessage("scripts.events.bountyhunters.TaskGiven", player).addNumber(mobcount).addString(target.name), player);
     }
@@ -188,7 +188,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
             if (activeChar.getVar("bhMonstersId") != null) {
                 int mobid = Integer.parseInt(activeChar.getVar("bhMonstersId"));
                 int mobcount = Integer.parseInt(activeChar.getVar("bhMonstersNeeded")) - Integer.parseInt(activeChar.getVar("bhMonstersKilled"));
-                show(new CustomMessage("scripts.events.bountyhunters.TaskGiven", activeChar).addNumber(mobcount).addString(NpcHolder.getInstance().getTemplate(mobid).name), activeChar);
+                show(new CustomMessage("scripts.events.bountyhunters.TaskGiven", activeChar).addNumber(mobcount).addString(NpcHolder.getTemplate(mobid).name), activeChar);
                 return true;
             }
             int id = 0;

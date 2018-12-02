@@ -17,18 +17,18 @@ public class AdminSS implements IAdminCommandHandler {
                 if (wordList.length > 2) {
                     int period = Integer.parseInt(wordList[1]);
                     int minutes = Integer.parseInt(wordList[2]);
-                    SevenSigns.getInstance().changePeriod(period, minutes * 60);
+                    SevenSigns.INSTANCE.changePeriod(period, minutes * 60);
                 } else if (wordList.length > 1) {
                     int period = Integer.parseInt(wordList[1]);
-                    SevenSigns.getInstance().changePeriod(period);
+                    SevenSigns.INSTANCE.changePeriod(period);
                 } else
-                    SevenSigns.getInstance().changePeriod();
+                    SevenSigns.INSTANCE.changePeriod();
                 break;
             }
             case admin_ssq_time: {
                 if (wordList.length > 1) {
                     int time = Integer.parseInt(wordList[1]);
-                    SevenSigns.getInstance().setTimeToNextPeriodChange(time);
+                    SevenSigns.INSTANCE.setTimeToNextPeriodChange(time);
                 }
                 break;
             }
@@ -37,7 +37,7 @@ public class AdminSS implements IAdminCommandHandler {
                     int player = Integer.parseInt(wordList[1]); // player objectid
                     int cabal = Integer.parseInt(wordList[2]); // null dusk dawn
                     int seal = Integer.parseInt(wordList[3]); // null avarice gnosis strife
-                    SevenSigns.getInstance().setPlayerInfo(player, cabal, seal);
+                    SevenSigns.INSTANCE.setPlayerInfo(player, cabal, seal);
                 }
                 break;
             }

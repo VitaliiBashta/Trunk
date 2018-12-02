@@ -27,7 +27,7 @@ public class LostCaptainInstance extends ReflectionBossInstance {
         if (iz != null) {
             String tele_device_loc = iz.getAddParams().getString("tele_device_loc", null);
             if (tele_device_loc != null) {
-                KamalokaGuardInstance npc = new KamalokaGuardInstance(IdFactory.getInstance().getNextId(), NpcHolder.getInstance().getTemplate(TELE_DEVICE_ID));
+                KamalokaGuardInstance npc = new KamalokaGuardInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(TELE_DEVICE_ID));
                 npc.setSpawnedLoc(Location.parseLoc(tele_device_loc));
                 npc.setReflection(r);
                 npc.spawnMe(npc.getSpawnedLoc());

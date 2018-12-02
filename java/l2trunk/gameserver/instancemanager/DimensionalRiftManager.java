@@ -151,7 +151,7 @@ public class DimensionalRiftManager {
                                             delay = Integer.parseInt(attrs.getNamedItem("delay").getNodeValue());
                                             count = Integer.parseInt(attrs.getNamedItem("count").getNodeValue());
 
-                                            template = NpcHolder.getInstance().getTemplate(mobId);
+                                            template = NpcHolder.getTemplate(mobId);
                                             if (template == null)
                                                 LOG.warn("Template " + mobId + " not found!");
                                             if (!_rooms.containsKey(type))

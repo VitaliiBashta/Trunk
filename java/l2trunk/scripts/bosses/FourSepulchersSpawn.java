@@ -290,7 +290,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
         _managers = new ArrayList<>();
         for (int i = 31921; i <= 31924; i++)
             try {
-                NpcTemplate template = NpcHolder.getInstance().getTemplate(i);
+                NpcTemplate template = NpcHolder.getTemplate(i);
                 Location loc = null;
                 switch (i) {
                     case 31921: // conquerors
@@ -337,7 +337,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
         NpcLocation loc = _shadowSpawns.get(npcId);
         if (loc == null)
             return;
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(loc.npcId);
+        NpcTemplate template = NpcHolder.getTemplate(loc.npcId);
         SepulcherRaidInstance mob = new SepulcherRaidInstance(IdFactory.getInstance().getNextId(), template);
         mob.setSpawnedLoc(loc);
         mob.spawnMe(loc);
@@ -364,8 +364,8 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
         List<NpcLocation> monsterList = _emperorsGraveNpcs.get(npcId);
         if (monsterList != null)
             for (NpcLocation loc : monsterList) {
-                NpcTemplate template = NpcHolder.getInstance().getTemplate(loc.npcId);
-                NpcInstance npc = null;
+                NpcTemplate template = NpcHolder.getTemplate(loc.npcId);
+                NpcInstance npc;
                 if (template.isInstanceOf(SepulcherMonsterInstance.class))
                     npc = new SepulcherMonsterInstance(IdFactory.getInstance().getNextId(), template);
                 else
@@ -385,7 +385,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
         if (monsterList == null)
             return;
         for (NpcLocation loc : monsterList) {
-            NpcTemplate template = NpcHolder.getInstance().getTemplate(loc.npcId);
+            NpcTemplate template = NpcHolder.getTemplate(loc.npcId);
             SepulcherMonsterInstance mob = new SepulcherMonsterInstance(IdFactory.getInstance().getNextId(), template);
             mob.setSpawnedLoc(loc);
             mob.spawnMe(loc);
@@ -398,7 +398,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
     public static void spawnExecutionerOfHalisha(NpcInstance npc) {
         if (!FourSepulchersManager.isAttackTime())
             return;
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(_victim.get(npc.getNpcId()));
+        NpcTemplate template = NpcHolder.getTemplate(_victim.get(npc.getNpcId()));
         SepulcherMonsterInstance npc2 = new SepulcherMonsterInstance(IdFactory.getInstance().getNextId(), template);
         npc2.setSpawnedLoc(npc.getLoc());
         npc2.spawnMe(npc.getLoc());
@@ -408,7 +408,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
     public static void spawnKeyBox(NpcInstance npc) {
         if (!FourSepulchersManager.isAttackTime())
             return;
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(_keyBoxNpc.get(npc.getNpcId()));
+        NpcTemplate template = NpcHolder.getTemplate(_keyBoxNpc.get(npc.getNpcId()));
         SepulcherNpcInstance npc2 = new SepulcherNpcInstance(IdFactory.getInstance().getNextId(), template);
         npc2.setSpawnedLoc(npc.getLoc());
         npc2.spawnMe(npc.getLoc());
@@ -447,7 +447,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
                             break;
                     }
 
-                NpcTemplate template = NpcHolder.getInstance().getTemplate(spawnKeyBoxMob ? 18149 : loc.npcId);
+                NpcTemplate template = NpcHolder.getTemplate(spawnKeyBoxMob ? 18149 : loc.npcId);
                 SepulcherMonsterInstance mob = new SepulcherMonsterInstance(IdFactory.getInstance().getNextId(), template);
                 mob.setSpawnedLoc(loc);
                 mob.spawnMe(loc);
@@ -490,7 +490,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
             return;
         if (_mysteriousBoxSpawns.get(npcId) == null)
             return;
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(_mysteriousBoxSpawns.get(npcId).npcId);
+        NpcTemplate template = NpcHolder.getTemplate(_mysteriousBoxSpawns.get(npcId).npcId);
         SepulcherNpcInstance npc = new SepulcherNpcInstance(IdFactory.getInstance().getNextId(), template);
         npc.setSpawnedLoc(_mysteriousBoxSpawns.get(npcId));
         npc.spawnMe(npc.getSpawnedLoc());
@@ -553,7 +553,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
         GateKeeper(int npcId, int _x, int _y, int _z, int _h, int doorId) {
             super(_x, _y, _z, _h);
             door = ReflectionUtils.getDoor(doorId);
-            template = NpcHolder.getInstance().getTemplate(npcId);
+            template = NpcHolder.getTemplate(npcId);
             if (template == null)
                 LOG.warn("FourGoblets::Sepulcher::RoomLock npc_template " + npcId + " undefined");
             if (door == null)

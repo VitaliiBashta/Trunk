@@ -21,14 +21,13 @@ import l2trunk.gameserver.model.entity.SevenSigns;
  * 1 0
  * 0 1
  *
- * @author SYS
  */
-public class SSQInfo extends L2GameServerPacket {
+public final class SSQInfo extends L2GameServerPacket {
     private int _state = 0;
 
     public SSQInfo() {
-        int compWinner = SevenSigns.getInstance().getCabalHighestScore();
-        if (SevenSigns.getInstance().isSealValidationPeriod())
+        int compWinner = SevenSigns.INSTANCE.getCabalHighestScore();
+        if (SevenSigns.INSTANCE.isSealValidationPeriod())
             if (compWinner == SevenSigns.CABAL_DAWN)
                 _state = 2;
             else if (compWinner == SevenSigns.CABAL_DUSK)

@@ -2,14 +2,13 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.items.ItemInstance;
 
-/**
- * @author VISTALL
- */
-public class ExBR_AgathionEnergyInfo extends L2GameServerPacket {
-    private final int _size;
-    private ItemInstance[] _itemList = null;
+import java.util.List;
 
-    public ExBR_AgathionEnergyInfo(int size, ItemInstance... item) {
+public final class ExBR_AgathionEnergyInfo extends L2GameServerPacket {
+    private final int _size;
+    private List<ItemInstance> _itemList;
+
+    public ExBR_AgathionEnergyInfo(int size, List<ItemInstance> item) {
         _itemList = item;
         _size = size;
     }

@@ -128,7 +128,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_fish: {
-                FishTable.getInstance().reload();
+                FishTable.INSTANCE.reload();
                 break;
             }
             case admin_reload_translit: {

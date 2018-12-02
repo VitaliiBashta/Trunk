@@ -113,7 +113,7 @@ public final class DecoyInstance extends NpcInstance {
         if (player == null)
             return 0;
         if (player.getTransformation() != 0 && player.getTransformationTemplate() != 0)
-            return NpcHolder.getInstance().getTemplate(player.getTransformationTemplate()).collisionRadius;
+            return NpcHolder.getTemplate(player.getTransformationTemplate()).collisionRadius;
         return player.getBaseTemplate().collisionRadius;
     }
 
@@ -123,7 +123,7 @@ public final class DecoyInstance extends NpcInstance {
         if (player == null)
             return 0;
         if (player.getTransformation() != 0 && player.getTransformationTemplate() != 0)
-            return NpcHolder.getInstance().getTemplate(player.getTransformationTemplate()).collisionHeight;
+            return NpcHolder.getTemplate(player.getTransformationTemplate()).collisionHeight;
         return player.getBaseTemplate().collisionHeight;
     }
 

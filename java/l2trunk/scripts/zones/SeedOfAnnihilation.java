@@ -118,7 +118,7 @@ public class SeedOfAnnihilation extends Functions implements ScriptFile {
 
     private void startEffectZonesControl() {
         for (SeedRegion sr : _regionsData) {
-            NpcTemplate template = NpcHolder.getInstance().getTemplate(ANNIHILATION_FURNACE);
+            NpcTemplate template = NpcHolder.getTemplate(ANNIHILATION_FURNACE);
             for (int i = 0; i < sr.af_spawns.length; i++) {
                 NpcInstance npc = template.getNewInstance();
                 npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp());

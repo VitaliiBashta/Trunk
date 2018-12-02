@@ -18,7 +18,7 @@ public final class ItemParser extends StatParser<ItemHolder> {
     private static final ItemParser _instance = new ItemParser();
 
     private ItemParser() {
-        super(ItemHolder.getInstance());
+        super(ItemHolder.INSTANCE);
     }
 
     public static ItemParser getInstance() {

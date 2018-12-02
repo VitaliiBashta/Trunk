@@ -208,7 +208,7 @@ public final class Castle extends Residence {
 
     public int getTaxPercent() {
         // Если печатью SEAL_STRIFE владеют DUSK то налог можно выставлять не более 5%
-        if (_TaxPercent > 5 && SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
+        if (_TaxPercent > 5 && SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
             _TaxPercent = 5;
         return _TaxPercent;
     }
@@ -313,7 +313,7 @@ public final class Castle extends Residence {
 
     public double getTaxRate() {
         // Если печатью SEAL_STRIFE владеют DUSK то налог можно выставлять не более 5%
-        if (_TaxRate > 0.05 && SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
+        if (_TaxRate > 0.05 && SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DUSK)
             _TaxRate = 0.05;
         return _TaxRate;
     }
@@ -377,7 +377,7 @@ public final class Castle extends Residence {
         long total = 0;
         if (production != null)
             for (SeedProduction seed : production)
-                total += Manor.getInstance().getSeedBuyPrice(seed.getId()) * seed.getStartProduce();
+                total += Manor.INSTANCE.getSeedBuyPrice(seed.getId()) * seed.getStartProduce();
         if (procure != null)
             for (CropProcure crop : procure)
                 total += crop.getPrice() * crop.getStartAmount();

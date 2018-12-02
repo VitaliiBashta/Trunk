@@ -7,17 +7,15 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TradeStart extends L2GameServerPacket {
+public final class TradeStart extends L2GameServerPacket {
     private final List<ItemInfo> _tradelist = new ArrayList<>();
     private final int targetId;
 
     public TradeStart(Player player, Player target) {
         targetId = target.getObjectId();
-
-        ItemInstance[] items = player.getInventory().getItems();
-        for (ItemInstance item : items)
-            if (item.canBeTraded(player))
-                _tradelist.add(new ItemInfo(item));
+        player.getInventory().getItems().stream()
+                .filter(item -> item.canBeTraded(player))
+                .forEach(item -> _tradelist.add(new ItemInfo(item)));
     }
 
     @Override
@@ -25,7 +23,6 @@ public class TradeStart extends L2GameServerPacket {
         writeC(0x14);
         writeD(targetId);
         writeH(_tradelist.size());
-        for (ItemInfo item : _tradelist)
-            writeItemInfo(item);
+        _tradelist.forEach(this::writeItemInfo);
     }
 }

@@ -7,7 +7,10 @@ import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.handler.bbs.CommunityBoardManager;
 import l2trunk.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2trunk.gameserver.instancemanager.SpawnManager;
+import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.entity.olympiad.Olympiad;
+import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.reward.CalculateRewardChances;
 import l2trunk.gameserver.network.serverpackets.RadarControl;
 import l2trunk.gameserver.network.serverpackets.Say2;
@@ -32,92 +35,6 @@ import java.util.*;
 public final class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityDropCalculator.class);
 
-    @Override
-    public void onLoad() {
-        if (Config.COMMUNITYBOARD_ENABLED) {
-            _log.info("CommunityBoard: Drop Calculator service loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
-        }
-    }
-
-    @Override
-    public void onReload() {
-        if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    @Override
-    public List<String> getBypassCommands() {
-        return Arrays.asList("_friendlist_", "_dropCalc", "_dropItemsByName", "_dropMonstersByItem", "_dropMonstersByName", "_dropMonsterDetailsByItem", "_dropMonsterDetailsByName");
-    }
-
-    @Override
-    public void onBypassCommand(Player player, String bypass) {
-        StringTokenizer st = new StringTokenizer(bypass, "_");
-        String cmd = st.nextToken();
-        player.setSessionVar("add_fav", null);
-
-        if (!Config.ALLOW_DROP_CALCULATOR) {
-            String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcOff.htm", player);
-            ShowBoard.separateAndSend(html, player);
-            return;
-        }
-
-        switch (cmd) {
-            case "dropCalc":
-            case "friendlist":
-                showMainPage(player);
-                break;
-            case "dropItemsByName":
-                if (!st.hasMoreTokens()) {
-                    showMainPage(player);
-                    return;
-                }
-                StringBuilder itemName = new StringBuilder();
-                while (st.countTokens() > 1)
-                    itemName.append(" ").append(st.nextToken());
-
-                int itemsPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
-                showDropItemsByNamePage(player, itemName.toString().trim(), itemsPage);
-                break;
-            case "dropMonstersByItem":
-                int itemId = Integer.parseInt(st.nextToken());
-                int monstersPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
-                showDropMonstersByItem(player, itemId, monstersPage);
-                break;
-            case "dropMonsterDetailsByItem":
-                int monsterId = Integer.parseInt(st.nextToken());
-                if (st.hasMoreTokens())
-                    manageButton(player, Integer.parseInt(st.nextToken()), monsterId);
-                showdropMonsterDetailsByItem(player, monsterId);
-                break;
-            case "dropMonstersByName":
-                if (!st.hasMoreTokens()) {
-                    showMainPage(player);
-                    return;
-                }
-                StringBuilder monsterName = new StringBuilder();
-                while (st.countTokens() > 1)
-                    monsterName.append(" ").append(st.nextToken());
-
-                int monsterPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
-                showDropMonstersByName(player, monsterName.toString().trim(), monsterPage);
-                break;
-            case "dropMonsterDetailsByName":
-                int chosenMobId = Integer.parseInt(st.nextToken());
-                if (st.hasMoreTokens())
-                    manageButton(player, Integer.parseInt(st.nextToken()), chosenMobId);
-                showDropMonsterDetailsByName(player, chosenMobId);
-                break;
-            default:
-                break;
-        }
-    }
-
     private static void showMainPage(Player player) {
         String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcMain.htm", player);
         ShowBoard.separateAndSend(html, player);
@@ -134,7 +51,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static String replaceItemsByNamePage(String html, String itemName, int page) {
         String newHtml = html;
 
-        List<ItemTemplate> itemsByName = ItemHolder.getInstance().getItemsByNameContainingString(itemName, true);
+        List<ItemTemplate> itemsByName = ItemHolder.INSTANCE.getItemsByNameContainingString(itemName, true);
         itemsByName.sort(new ItemComparator(itemName));
 
         int itemIndex = 0;
@@ -219,7 +136,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         String newHtml = html;
 
         int itemId = player.getQuickVarI("DCItemId");
-        NpcTemplate template = NpcHolder.getInstance().getTemplate(monsterId);
+        NpcTemplate template = NpcHolder.getTemplate(monsterId);
         if (template == null)
             return newHtml;
 
@@ -312,56 +229,38 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
                     player.sendPacket(new RadarControl(0, 1, loc));
                 break;
             case 2:// Show Drops
-                RewardListInfo.showInfo(player, NpcHolder.getInstance().getTemplate(monsterId), false, false, 1.0);
+                RewardListInfo.showInfo(player, NpcHolder.getTemplate(monsterId), false, false, 1.0);
                 break;
-//			case 3:// Teleport To Monster
-//				if (!canTeleToMonster(player, monsterId, true))
-//				{
-//					return;
-//				}
-//				List<NpcInstance> aliveInstance = GameObjectsStorage.getAllByNpcId(monsterId, true);
-//				if (!aliveInstance.isEmpty())
-//					player.teleToLocation(aliveInstance.get(0).getLoc());
-//				else
-//					player.sendMessage("Monster isn't alive!");
-//				break;
+            case 3:// Teleport To Monster
+                if (!canTeleToMonster(player, monsterId, true)) {
+                    return;
+                }
+                List<NpcInstance> aliveInstance = GameObjectsStorage.getAllByNpcId(monsterId, true);
+                if (!aliveInstance.isEmpty())
+                    player.teleToLocation(aliveInstance.get(0).getLoc());
+                else
+                    player.sendMessage("Monster isn't alive!");
+                break;
             default:
                 break;
         }
     }
 
-//	private static boolean canTeleToMonster(Player player, int monsterId, boolean sendMessage)
-//	{
-//		if (!player.isInZonePeace())
-//		{
-//			if (sendMessage)
-//				player.sendMessage("You can do it only in safe zone!");
-//			return false;
-//		}
-//
-//		if (Olympiad.isRegistered(player) || player.isInOlympiadMode())
-//		{
-//			if (sendMessage)
-//				player.sendMessage("You cannot do it while being registered in Olympiad Battle!");
-//			return false;
-//		}
-//
-//		if (Arrays.binarySearch(Config.DROP_CALCULATOR_DISABLED_TELEPORT, monsterId) >= 0)
-//		{
-//			if (sendMessage)
-//				player.sendMessage("You cannot teleport to this Npc!");
-//			return false;
-//		}
-//
-//		return true;
-//	}
+    private static boolean canTeleToMonster(Player player, int monsterId, boolean sendMessage) {
+        if (!player.isInZonePeace()) {
+            if (sendMessage)
+                player.sendMessage("You can do it only in safe zone!");
+            return false;
+        }
 
-//if (!player.reduceAdena(1000000, true, "TeleportToMonster"))	
-    //      {
-    //        if(sendMessage)	
-    //          player.sendMessage("You do not have enough adena!");
-    //    return false;
-    // }
+        if (Olympiad.isRegistered(player) || player.isInOlympiadMode()) {
+            if (sendMessage)
+                player.sendMessage("You cannot do it while being registered in Olympiad Battle!");
+            return false;
+        }
+
+        return true;
+    }
 
     private static CharSequence getItemIcon(ItemTemplate template) {
         return "<img src=\"" + template.getIcon() + "\" width=32 height=32>";
@@ -392,6 +291,13 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         return formatDropChance(chance);
     }
 
+//if (!player.reduceAdena(1000000, true, "TeleportToMonster"))	
+    //      {
+    //        if(sendMessage)	
+    //          player.sendMessage("You do not have enough adena!");
+    //    return false;
+    // }
+
     public static String formatDropChance(String chance) {
         String realChance = chance;
         if (realChance.length() - realChance.indexOf('.') > 6)
@@ -401,6 +307,101 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             realChance = realChance.substring(0, realChance.length() - 2);
 
         return realChance + '%';
+    }
+
+    private static List<NpcTemplate> sortMonsters(List<NpcTemplate> npcTemplates, String monsterName) {
+        npcTemplates.sort(new MonsterComparator(monsterName));
+        return npcTemplates;
+    }
+
+    @Override
+    public void onLoad() {
+        if (Config.COMMUNITYBOARD_ENABLED) {
+            _log.info("CommunityBoard: Drop Calculator service loaded.");
+            CommunityBoardManager.getInstance().registerHandler(this);
+        }
+    }
+
+    @Override
+    public void onReload() {
+        if (Config.COMMUNITYBOARD_ENABLED)
+            CommunityBoardManager.getInstance().removeHandler(this);
+    }
+
+    @Override
+    public void onShutdown() {
+    }
+
+    @Override
+    public List<String> getBypassCommands() {
+        return Arrays.asList("_friendlist_", "_dropCalc", "_dropItemsByName", "_dropMonstersByItem", "_dropMonstersByName", "_dropMonsterDetailsByItem", "_dropMonsterDetailsByName");
+    }
+
+    @Override
+    public void onBypassCommand(Player player, String bypass) {
+        StringTokenizer st = new StringTokenizer(bypass, "_");
+        String cmd = st.nextToken();
+        player.setSessionVar("add_fav", null);
+
+        if (!Config.ALLOW_DROP_CALCULATOR) {
+            String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcOff.htm", player);
+            ShowBoard.separateAndSend(html, player);
+            return;
+        }
+
+        switch (cmd) {
+            case "dropCalc":
+            case "friendlist":
+                showMainPage(player);
+                break;
+            case "dropItemsByName":
+                if (!st.hasMoreTokens()) {
+                    showMainPage(player);
+                    return;
+                }
+                StringBuilder itemName = new StringBuilder();
+                while (st.countTokens() > 1)
+                    itemName.append(" ").append(st.nextToken());
+
+                int itemsPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
+                showDropItemsByNamePage(player, itemName.toString().trim(), itemsPage);
+                break;
+            case "dropMonstersByItem":
+                int itemId = Integer.parseInt(st.nextToken());
+                int monstersPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
+                showDropMonstersByItem(player, itemId, monstersPage);
+                break;
+            case "dropMonsterDetailsByItem":
+                int monsterId = Integer.parseInt(st.nextToken());
+                if (st.hasMoreTokens())
+                    manageButton(player, Integer.parseInt(st.nextToken()), monsterId);
+                showdropMonsterDetailsByItem(player, monsterId);
+                break;
+            case "dropMonstersByName":
+                if (!st.hasMoreTokens()) {
+                    showMainPage(player);
+                    return;
+                }
+                StringBuilder monsterName = new StringBuilder();
+                while (st.countTokens() > 1)
+                    monsterName.append(" ").append(st.nextToken());
+
+                int monsterPage = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
+                showDropMonstersByName(player, monsterName.toString().trim(), monsterPage);
+                break;
+            case "dropMonsterDetailsByName":
+                int chosenMobId = Integer.parseInt(st.nextToken());
+                if (st.hasMoreTokens())
+                    manageButton(player, Integer.parseInt(st.nextToken()), chosenMobId);
+                showDropMonsterDetailsByName(player, chosenMobId);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
     }
 
     private static class ItemComparator implements Comparator<ItemTemplate>, Serializable {
@@ -449,13 +450,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         }
     }
 
-    private static List<NpcTemplate> sortMonsters(List<NpcTemplate> npcTemplates, String monsterName) {
-        Collections.sort(npcTemplates, new MonsterComparator(monsterName));
-        return npcTemplates;
-    }
-
-    private static class MonsterComparator implements Comparator<NpcTemplate>, Serializable {
-        private static final long serialVersionUID = 2116090903265145828L;
+    private static class MonsterComparator implements Comparator<NpcTemplate> {
         private final String search;
 
         private MonsterComparator(String search) {
@@ -473,9 +468,5 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
 
             return o2.getName().compareTo(o2.getName());
         }
-    }
-
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
     }
 }

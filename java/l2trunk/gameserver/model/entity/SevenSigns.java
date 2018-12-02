@@ -34,7 +34,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
-public class SevenSigns {
+public enum SevenSigns {
+    INSTANCE;
     // Basic Seven Signs Constants \\
     public static final String SEVEN_SIGNS_HTML_PATH = "seven_signs/";
     public static final int CABAL_NULL = 0;
@@ -87,14 +88,14 @@ public class SevenSigns {
     private static final Logger _log = LoggerFactory.getLogger(SevenSigns.class);
     private static SevenSigns _instance;
     private final Calendar _calendar = Calendar.getInstance();
-    private final Map<Integer, StatsSet> _signsPlayerData;
-    private final Map<Integer, Integer> _signsSealOwners;
-    private final Map<Integer, Integer> _signsDuskSealTotals;
-    private final Map<Integer, Integer> _signsDawnSealTotals;
+    private final Map<Integer, StatsSet> _signsPlayerData = new ConcurrentHashMap<>();
+    private final Map<Integer, Integer> _signsSealOwners = new ConcurrentHashMap<>();
+    private final Map<Integer, Integer> _signsDuskSealTotals = new ConcurrentHashMap<>();
+    private final Map<Integer, Integer> _signsDawnSealTotals = new ConcurrentHashMap<>();
     private final SSListenerList _listenerList = new SSListenerList();
     protected int _compWinner;
     private int _activePeriod;
-    private int _currentCycle;
+    private int currentCycle;
     private long _dawnStoneScore;
     private long _duskStoneScore;
     private long _dawnFestivalScore;
@@ -102,19 +103,11 @@ public class SevenSigns {
     private int _previousWinner;
     private ScheduledFuture<?> _periodChange;
 
-    private SevenSigns() {
+    SevenSigns() {
         GameServer.getInstance().addListener(new OnStartListenerImpl());
-
-        _signsPlayerData = new ConcurrentHashMap<>();
-        _signsSealOwners = new ConcurrentHashMap<>();
-        _signsDuskSealTotals = new ConcurrentHashMap<>();
-        _signsDawnSealTotals = new ConcurrentHashMap<>();
-
-        try {
-            restoreSevenSignsData();
-        } catch (RuntimeException e) {
-            _log.error("SevenSigns: Failed to load configuration: ", e);
-        }
+          }
+    public void init(){
+        restoreSevenSignsData();
 
         _log.info("SevenSigns: Currently in the " + getCurrentPeriodName() + " period!");
         initializeSeals();
@@ -151,14 +144,8 @@ public class SevenSigns {
 
         if (Config.SS_ANNOUNCE_PERIOD > 0)
             ThreadPoolManager.INSTANCE.schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
-    }
 
-    public static SevenSigns getInstance() {
-        if (_instance == null)
-            _instance = new SevenSigns();
-        return _instance;
     }
-
     private static long calcContributionScore(long blueCount, long greenCount, long redCount) {
         long contrib = blueCount * BLUE_CONTRIB_POINTS;
         contrib += greenCount * GREEN_CONTRIB_POINTS;
@@ -224,6 +211,7 @@ public class SevenSigns {
     /**
      * Used to capitalize the first letter of every "word" in a string.<br>
      * (Ported from the idea in Perl and PHP)
+     *
      * @return String containing the modified string.
      */
     public static String capitalizeWords(String str) {
@@ -354,7 +342,7 @@ public class SevenSigns {
     }
 
     public final int getCurrentCycle() {
-        return _currentCycle;
+        return currentCycle;
     }
 
     public final int getCurrentPeriod() {
@@ -564,11 +552,9 @@ public class SevenSigns {
      * Restores all Seven Signs data and settings, usually called at server startup.
      */
     private void restoreSevenSignsData() {
-        Connection con = null;
         PreparedStatement statement = null;
         ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             statement = con.prepareStatement("SELECT char_obj_id, cabal, seal, dawn_red_stones, dawn_green_stones, dawn_blue_stones, dawn_ancient_adena_amount, dawn_contribution_score, dusk_red_stones, dusk_green_stones, dusk_blue_stones, dusk_ancient_adena_amount, dusk_contribution_score FROM seven_signs");
             rset = statement.executeQuery();
             while (rset.next()) {
@@ -597,7 +583,7 @@ public class SevenSigns {
             rset = statement.executeQuery();
 
             while (rset.next()) {
-                _currentCycle = rset.getInt("current_cycle");
+                currentCycle = rset.getInt("current_cycle");
                 _activePeriod = rset.getInt("active_period");
                 _previousWinner = rset.getInt("previous_winner");
 
@@ -624,8 +610,6 @@ public class SevenSigns {
             statement.execute();
         } catch (SQLException e) {
             _log.error("Unable to load Seven Signs Data: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
         // Festival data is loaded now after the Seven Signs engine data.
     }
@@ -663,7 +647,7 @@ public class SevenSigns {
                 buf.append("date=?");
 
                 statement = con.prepareStatement(buf.toString());
-                statement.setInt(1, _currentCycle);
+                statement.setInt(1, currentCycle);
                 statement.setInt(2, _activePeriod);
                 statement.setInt(3, _previousWinner);
                 statement.setLong(4, _dawnStoneScore);
@@ -682,7 +666,7 @@ public class SevenSigns {
 
                 statement.setInt(17, getCurrentCycle());
                 for (int i = 0; i < SevenSignsFestival.FESTIVAL_COUNT; i++)
-                    statement.setLong(18 + i, SevenSignsFestival.getInstance().getAccumulatedBonus(i));
+                    statement.setLong(18 + i, SevenSignsFestival.INSTANCE.getAccumulatedBonus(i));
                 statement.setInt(18 + SevenSignsFestival.FESTIVAL_COUNT, Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
                 statement.executeUpdate();
             }
@@ -738,6 +722,7 @@ public class SevenSigns {
 
     /**
      * Tests whether the specified player has joined a cabal in the past.
+     *
      * @return boolean hasRegistered
      */
     private boolean hasRegisteredBefore(int charObjId) {
@@ -912,8 +897,8 @@ public class SevenSigns {
         _duskFestivalScore = 0;
         _dawnFestivalScore = 0;
         for (int i = 0; i < SevenSignsFestival.FESTIVAL_COUNT; i++) {
-            long dusk = SevenSignsFestival.getInstance().getHighestScore(CABAL_DUSK, i);
-            long dawn = SevenSignsFestival.getInstance().getHighestScore(CABAL_DAWN, i);
+            long dusk = SevenSignsFestival.INSTANCE.getHighestScore(CABAL_DUSK, i);
+            long dawn = SevenSignsFestival.INSTANCE.getHighestScore(CABAL_DAWN, i);
             if (dusk > dawn)
                 _duskFestivalScore += SevenSignsFestival.FESTIVAL_LEVEL_SCORES[i];
             else if (dusk < dawn)
@@ -1195,8 +1180,8 @@ public class SevenSigns {
     protected class SSListenerList extends ListenerList<GameServer> {
         void onPeriodChange() {
             int mode = 0;
-            if (SevenSigns.getInstance().getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION)
-                mode = SevenSigns.getInstance().getCabalHighestScore();
+            if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION)
+                mode = SevenSigns.INSTANCE.getCabalHighestScore();
 
             for (Listener<GameServer> listener : getListeners())
                 if (listener instanceof OnSSPeriodListener)
@@ -1238,9 +1223,9 @@ public class SevenSigns {
                     _previousWinner = compWinner;
                     break;
                 case PERIOD_COMP_RESULTS: // Seal Validation
-                    SevenSignsFestival.getInstance().distribAccumulatedBonus();
+                    SevenSignsFestival.INSTANCE.distribAccumulatedBonus();
                     // reward highest ranking members from cycle
-                    SevenSignsFestival.getInstance().rewardHighestRanked();
+                    SevenSignsFestival.INSTANCE.rewardHighestRanked();
                     // Perform initial Seal Validation set up.
                     initializeSeals();
                     // раздаем награды за рейдов, к печатям не относится но чтобы не заводить еще один таймер...
@@ -1261,9 +1246,9 @@ public class SevenSigns {
                     _duskStoneScore = 0;
                     _dawnFestivalScore = 0;
                     _duskFestivalScore = 0;
-                    _currentCycle++;
+                    currentCycle++;
                     // Reset all Festival-related data and remove any unused blood offerings.
-                    SevenSignsFestival.getInstance().resetFestivalData(false);
+                    SevenSignsFestival.INSTANCE.resetFestivalData(false);
                     break;
             }
             // Make sure all Seven Signs data is saved for future use.

@@ -222,7 +222,7 @@ public final class MultiSellHolder {
                     mi.getItemAttributes().setUnholy(Integer.parseInt(d.getAttributes().getNamedItem("unholyAttr").getNodeValue()));
 
                 if (!Config.ALT_ALLOW_SHADOW_WEAPONS && id > 0) {
-                    ItemTemplate item = ItemHolder.getInstance().getTemplate(id);
+                    ItemTemplate item = ItemHolder.INSTANCE.getTemplate(id);
                     if (item != null && item.isShadowItem() && item.isWeapon() && !Config.ALT_ALLOW_SHADOW_WEAPONS)
                         return null;
                 }
@@ -236,7 +236,7 @@ public final class MultiSellHolder {
         }
 
         if (entry.getIngredients().size() == 1 && entry.getProduction().size() == 1 && entry.getIngredients().get(0).getItemId() == 57) {
-            ItemTemplate item = ItemHolder.getInstance().getTemplate(entry.getProduction().get(0).getItemId());
+            ItemTemplate item = ItemHolder.INSTANCE.getTemplate(entry.getProduction().get(0).getItemId());
             if (item == null) {
                 _log.warn("MultiSell [" + multiSellId + "] Production [" + entry.getProduction().get(0).getItemId() + "] not found!");
                 return null;
@@ -309,7 +309,7 @@ public final class MultiSellHolder {
         list.setNoTax(notax);
         list.setNoKey(nokey);
 
-        ItemInstance[] items = player.getInventory().getItems();
+        List<ItemInstance> items = player.getInventory().getItems();
         for (MultiSellEntry origEntry : container.getEntries()) {
             MultiSellEntry ent = origEntry.clone();
 
@@ -334,7 +334,7 @@ public final class MultiSellHolder {
                     if (i.getItemId() < 1)
                         continue;
 
-                    ItemTemplate item = ItemHolder.getInstance().getTemplate(i.getItemId());
+                    ItemTemplate item = ItemHolder.INSTANCE.getTemplate(i.getItemId());
                     if (item.isStackable())
                         tax += item.getReferencePrice() * i.getItemCount() * taxRate;
                 }
@@ -361,7 +361,7 @@ public final class MultiSellHolder {
                         containsMammonVarnishEnhancer = true;
                 // Проверка наличия у игрока ингридиентов
                 for (MultiSellIngredient ingredient : ingridients) {
-                    ItemTemplate template = ingredient.getItemId() <= 0 ? null : ItemHolder.getInstance().getTemplate(ingredient.getItemId());
+                    ItemTemplate template = ingredient.getItemId() <= 0 ? null : ItemHolder.INSTANCE.getTemplate(ingredient.getItemId());
                     if (ingredient.getItemId() <= 0 || nokey || template.isEquipment() || containsMammonVarnishEnhancer) {
                         if (ingredient.getItemId() == 12374) // Mammon's Varnish Enhancer
                             continue;
@@ -397,7 +397,7 @@ public final class MultiSellHolder {
                                 MultiSellEntry possibleEntry = new MultiSellEntry(enchant ? ent.getEntryId() + item.getEnchantLevel() * 100000 : ent.getEntryId());
 
                                 for (MultiSellIngredient p : ent.getProduction()) {
-                                    if (enchant && template.canBeEnchanted(true) && ItemHolder.getInstance().getTemplate(p.getItemId()).getCrystalType().equals(item.getCrystalType())) {
+                                    if (enchant && template.canBeEnchanted(true) && ItemHolder.INSTANCE.getTemplate(p.getItemId()).getCrystalType().equals(item.getCrystalType())) {
                                         p.setItemEnchant(item.getEnchantLevel());
                                         p.setItemAttributes(item.getAttributes().clone());
                                     }
@@ -405,7 +405,7 @@ public final class MultiSellHolder {
                                 }
 
                                 for (MultiSellIngredient ig : ingridients) {
-                                    if (enchant && ig.getItemId() > 0 && ItemHolder.getInstance().getTemplate(ig.getItemId()).canBeEnchanted(true)) {
+                                    if (enchant && ig.getItemId() > 0 && ItemHolder.INSTANCE.getTemplate(ig.getItemId()).canBeEnchanted(true)) {
                                         ig.setItemEnchant(item.getEnchantLevel());
                                         ig.setItemAttributes(item.getAttributes().clone());
                                     }

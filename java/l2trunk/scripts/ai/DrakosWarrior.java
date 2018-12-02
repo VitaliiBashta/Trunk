@@ -32,7 +32,7 @@ public final class DrakosWarrior extends Fighter {
             //Functions.npcSay(actor, "Now I Know Why You Wanna Hate Me");
             for (int bro : CLONES)
                 try {
-                    MonsterInstance npc = (MonsterInstance) NpcHolder.getInstance().getTemplate(bro).getNewInstance();
+                    MonsterInstance npc = (MonsterInstance) NpcHolder.getTemplate(bro).getNewInstance();
                     npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
                     npc.setReflection(actor.getReflection());
                     npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);

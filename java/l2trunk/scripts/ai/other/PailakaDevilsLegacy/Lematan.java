@@ -50,7 +50,7 @@ public final class Lematan extends Fighter {
 
             try {
                 for (Location loc : _position) {
-                    spawn = new SimpleSpawner(NpcHolder.getInstance().getTemplate(LEMATAN_FOLLOWER));
+                    spawn = new SimpleSpawner(NpcHolder.getTemplate(LEMATAN_FOLLOWER));
                     spawn.setLoc(loc);
                     spawn.setAmount(1);
                     spawn.setHeading(actor.getHeading());
