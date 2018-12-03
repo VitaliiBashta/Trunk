@@ -608,7 +608,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                 return null;
             }
 
-            ItemTemplate item = ItemHolder.INSTANCE.getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
+            ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
             ItemInstance pay = player.getInventory().getItemByItemId(item.getItemId());
             if (pay != null && pay.getCount() >= price) {
                 player.getInventory().destroyItem(pay, price, "_255_Tutorial");

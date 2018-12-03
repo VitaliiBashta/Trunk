@@ -81,14 +81,14 @@ public class CharacterCreate extends L2GameClientPacket {
         for (ClassId cid : ClassId.VALUES)
             if (cid.getId() == _classId && cid.getLevel() != 1)
                 return;
-        if (CharacterDAO.getInstance().accountCharNumber(getClient().getLogin()) >= 8) {
+        if (CharacterDAO.accountCharNumber(getClient().getLogin()) >= 8) {
             sendPacket(CharacterCreateFail.REASON_TOO_MANY_CHARACTERS);
             return;
         }
         if (!checkName(_name) || _name.length() > 16) {
             sendPacket(CharacterCreateFail.REASON_16_ENG_CHARS);
             return;
-        } else if (CharacterDAO.getInstance().getObjectIdByName(_name) > 0) {
+        } else if (CharacterDAO.getObjectIdByName(_name) > 0) {
             sendPacket(CharacterCreateFail.REASON_NAME_ALREADY_EXISTS);
             return;
         }

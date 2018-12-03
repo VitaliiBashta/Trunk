@@ -14,7 +14,7 @@ public final class EffectBuff extends Effect {
 
         // Ady - Hardcoded buff immunity for Day of Doom debuff (Prevents from receiving buff)
         if (getSkill().getId() == 5145)
-            _effected.startBuffImmunity();
+            effected.startBuffImmunity();
     }
 
     @Override
@@ -23,7 +23,7 @@ public final class EffectBuff extends Effect {
 
         // Ady - Hardcoded buff immunity for Day of Doom debuff (Prevents from receiving buff)
         if (getSkill().getId() == 5145)
-            _effected.stopBuffImmunity();
+            effected.stopBuffImmunity();
     }
 
     @Override

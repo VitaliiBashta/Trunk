@@ -6,15 +6,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-public class _252_GoodSmell extends Quest implements ScriptFile {
+public final class _252_GoodSmell extends Quest implements ScriptFile {
     private static final int GuardStan = 30200;
     private static final int[] SelMahums = {
-            22786,
-            22787,
-            22788
+            22786, 22787, 22788
     };
     private static final int SelChef = 18908;
     private static final int SelMahumDiary = 15500;

@@ -99,7 +99,7 @@ public class LastManStandingEvent extends AbstractFightClub {
 
             ThreadPoolManager.INSTANCE.schedule(this::endRound, 5000L);
             if (_winner != null)
-                FightClubEventManager.getInstance().sendToAllMsg(this, _winner.getPlayer().getName() + " Won Last Hero Event!");
+                FightClubEventManager.INSTANCE.sendToAllMsg(this, _winner.getPlayer().getName() + " Won Last Hero Event!");
             return true;
         }
         return false;

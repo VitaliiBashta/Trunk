@@ -11,19 +11,27 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EpicBossState {
+public final class EpicBossState {
     private static final Logger LOG = LoggerFactory.getLogger(EpicBossState.class);
-
-    public enum State {
-        NOTSPAWN,
-        ALIVE,
-        DEAD,
-        INTERVAL
-    }
-
+    // Synerge - Support for storing the bosses status here in a static array
+    private static final Map<Integer, EpicBossState> EPICS = new HashMap<>();
     private int bossId;
     private long respawnDate;
     private State state;
+
+    public EpicBossState(int bossId) {
+        this.bossId = bossId;
+        load();
+        EPICS.put(bossId, this);
+    }
+
+    public static Collection<EpicBossState> getEpics() {
+        return EPICS.values();
+    }
+
+    public static EpicBossState getState(int epicId) {
+        return EPICS.get(epicId);
+    }
 
     public int getBossId() {
         return bossId;
@@ -51,18 +59,6 @@ public class EpicBossState {
 
     public void setRespawnDateFull(long time) {
         respawnDate = time;
-    }
-
-    public EpicBossState(int bossId) {
-        this(bossId, true);
-    }
-
-    private EpicBossState(int bossId, boolean isDoLoad) {
-        this.bossId = bossId;
-        if (isDoLoad)
-            load();
-
-        EPICS.put(bossId, this);
     }
 
     private void load() {
@@ -146,14 +142,10 @@ public class EpicBossState {
         return interval > 0 ? interval : 0;
     }
 
-    // Synerge - Support for storing the bosses status here in a static array
-    private static final Map<Integer, EpicBossState> EPICS = new HashMap<>();
-
-    public static Collection<EpicBossState> getEpics() {
-        return EPICS.values();
-    }
-
-    public static EpicBossState getState(int epicId) {
-        return EPICS.get(epicId);
+    public enum State {
+        NOTSPAWN,
+        ALIVE,
+        DEAD,
+        INTERVAL
     }
 }

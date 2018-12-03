@@ -8,7 +8,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Aggression extends Skill {
+public final class Aggression extends Skill {
     private final boolean _unaggring;
     private final boolean _silent;
     private final boolean ignorePlayables;

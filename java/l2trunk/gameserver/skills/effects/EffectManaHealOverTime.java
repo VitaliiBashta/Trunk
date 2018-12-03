@@ -14,15 +14,15 @@ public class EffectManaHealOverTime extends Effect {
 
     @Override
     public boolean onActionTime() {
-        if (_effected.isHealBlocked())
+        if (effected.isHealBlocked())
             return true;
 
         double mp = calc();
-        double newMp = mp * (!_ignoreMpEff ? _effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
-        double addToMp = Math.max(0, Math.min(newMp, _effected.calcStat(Stats.MP_LIMIT, null, null) * _effected.getMaxMp() / 100. - _effected.getCurrentMp()));
+        double newMp = mp * (!_ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
+        double addToMp = Math.max(0, Math.min(newMp, effected.calcStat(Stats.MP_LIMIT, null, null) * effected.getMaxMp() / 100. - effected.getCurrentMp()));
 
         if (addToMp > 0)
-            _effected.setCurrentMp(_effected.getCurrentMp() + addToMp);
+            effected.setCurrentMp(effected.getCurrentMp() + addToMp);
 
         return true;
     }

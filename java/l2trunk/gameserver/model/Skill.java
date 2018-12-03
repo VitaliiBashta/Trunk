@@ -153,7 +153,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private final int _condCharges;
     private final int _coolTime;
     private final int _delayedEffect;
-    private final int _energyConsume;
+    private final int energyConsume;
     private final int _elementPower;
     private final int _flyRadius;
     private final int _vitConsume;
@@ -221,7 +221,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _isAltUse = set.getBool("altUse", false);
         _mpConsume1 = set.getInteger("mpConsume1", 0);
         _mpConsume2 = set.getInteger("mpConsume2", 0);
-        _energyConsume = set.getInteger("energyConsume", 0);
+        energyConsume = set.getInteger("energyConsume", 0);
         _vitConsume = set.getInteger("vitConsume", 0);
         _hpConsume = set.getInteger("hpConsume", 0);
         soulsConsume = set.getInteger("soulsConsume", 0);
@@ -557,7 +557,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         // Warp (628) && Shadow Step (821) can be used while rooted
         //if (activeChar.isMovementDisabled() && getFlyType() != FlyType.NONE && getFlyType() != FlyType.DUMMY)
         // Alexander - Dont allow using warp inside events when the player is rooted they dont bug anything
-        if (getFlyType() != FlyType.NONE && (FightClubEventManager.getInstance().isPlayerRegistered(player) || (getId() != 628 && getId() != 821)) && (activeChar.isImmobilized() || activeChar.isRooted())) {
+        if (getFlyType() != FlyType.NONE && (FightClubEventManager.INSTANCE.isPlayerRegistered(player) || (getId() != 628 && getId() != 821)) && (activeChar.isImmobilized() || activeChar.isRooted())) {
             activeChar.getPlayer().sendPacket(SystemMsg.YOUR_TARGET_IS_OUT_OF_RANGE);
             return false;
         }
@@ -930,7 +930,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     int playerArena = player.getBlockCheckerArena();
 
                     if (playerArena != -1) {
-                        ArenaParticipantsHolder holder = HandysBlockCheckerManager.getInstance().getHolder(playerArena);
+                        ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(playerArena);
                         int team = holder.getPlayerTeam(player);
                         // Aura attack
                         for (Player actor : World.getAroundPlayers(activeChar, 250, 100)) {
@@ -2254,7 +2254,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public int getEnergyConsume() {
-        return _energyConsume;
+        return energyConsume;
     }
 
     private boolean isCubicSkill() {

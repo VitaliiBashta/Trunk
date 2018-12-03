@@ -14,13 +14,13 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractAI extends RunnableImpl {
     protected static final Logger _log = LoggerFactory.getLogger(AbstractAI.class);
 
-    protected final Creature _actor;
+    protected final Creature actor;
     private HardReference<? extends Creature> _attackTarget = HardReferences.emptyRef();
 
     private CtrlIntention _intention = CtrlIntention.AI_INTENTION_IDLE;
 
     AbstractAI(Creature actor) {
-        _actor = actor;
+        this.actor = actor;
     }
 
     public void runImpl() {
@@ -184,7 +184,7 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     public Creature getActor() {
-        return _actor;
+        return actor;
     }
 
     public CtrlIntention getIntention() {

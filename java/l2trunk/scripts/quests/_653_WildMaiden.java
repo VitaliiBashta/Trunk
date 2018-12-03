@@ -13,7 +13,6 @@ import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class _653_WildMaiden extends Quest implements ScriptFile {
     // Npc
     private final int SUKI = 32013;
@@ -43,11 +42,11 @@ public class _653_WildMaiden extends Quest implements ScriptFile {
         addTalkId(GALIBREDO);
     }
 
-    private NpcInstance findNpc(int npcId, Player player) {
+    private NpcInstance findNpc(Player player) {
         NpcInstance instance = null;
         List<NpcInstance> npclist = new ArrayList<>();
-        for (Spawner spawn : SpawnManager.getInstance().getSpawners(PeriodOfDay.NONE.name()))
-            if (spawn.getCurrentNpcId() == npcId) {
+        for (Spawner spawn : SpawnManager.INSTANCE.getSpawners(PeriodOfDay.NONE.name()))
+            if (spawn.getCurrentNpcId() == 32013) {
                 instance = spawn.getLastSpawn();
                 npclist.add(instance);
             }
@@ -70,7 +69,7 @@ public class _653_WildMaiden extends Quest implements ScriptFile {
                 st.playSound(SOUND_ACCEPT);
                 st.takeItems(SOE, 1);
                 htmltext = "spring_girl_sooki_q0653_04a.htm";
-                NpcInstance n = findNpc(SUKI, player);
+                NpcInstance n = findNpc(player);
                 n.broadcastPacket(new MagicSkillUse(n, n, 2013, 1, 20000, 0));
                 st.startQuestTimer("suki_timer", 20000);
             }
@@ -78,7 +77,7 @@ public class _653_WildMaiden extends Quest implements ScriptFile {
             st.exitCurrentQuest(false);
             st.playSound(SOUND_GIVEUP);
         } else if (event.equalsIgnoreCase("suki_timer")) {
-            NpcInstance n = findNpc(SUKI, player);
+            NpcInstance n = findNpc(player);
             n.deleteMe();
             htmltext = null;
         }

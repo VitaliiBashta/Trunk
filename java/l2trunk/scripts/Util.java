@@ -563,122 +563,122 @@ public class Util extends Functions {
         show(page, player);
     }
 
-    public void MakeEchoCrystal(String[] param) {
-        if (param.length < 2)
-            throw new IllegalArgumentException();
+//    public void MakeEchoCrystal(String[] param) {
+//        if (param.length < 2)
+//            throw new IllegalArgumentException();
+//
+//        Player player = getSelf();
+//        if (player == null)
+//            return;
+//
+//        if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
+//            return;
+//
+//        int crystal = Integer.parseInt(param[0]);
+//        int score = Integer.parseInt(param[1]);
+//
+//        if (crystal < 4411 || crystal > 4417)
+//            return;
+//
+//        if (getItemCount(player, score) == 0) {
+//            player.getLastNpc().onBypassFeedback(player, "Chat 1");
+//            return;
+//        }
+//
+//        if (getItemCount(player, 57) < 200) {
+//            player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
+//            return;
+//        }
+//
+//        removeItem(player, 57, 200, "MakeEchoCrystal");
+//        addItem(player, crystal, 1, "MakeEchoCrystal");
+//    }
 
-        Player player = getSelf();
-        if (player == null)
-            return;
+//    public void TakeNewbieWeaponCoupon() {
+//        Player player = getSelf();
+//        if (player == null)
+//            return;
+//        if (!Config.ALT_ALLOW_SHADOW_WEAPONS) {
+//            show(new CustomMessage("common.Disabled", player), player);
+//            return;
+//        }
+//        if (player.getLevel() > 19 || player.getClassId().getLevel() > 1) {
+//            show("Your level is too high!", player);
+//            return;
+//        }
+//        if (player.getLevel() < 6) {
+//            show("Your level is too low!", player);
+//            return;
+//        }
+//        if (player.getVarB("newbieweapon")) {
+//            show("Your already got your newbie weapon!", player);
+//            return;
+//        }
+//        addItem(player, 7832, 5, "TakeNewbieWeaponCoupon");
+//        player.setVar("newbieweapon", "true", -1);
+//    }
 
-        if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
-            return;
+//    public void TakeAdventurersArmorCoupon() {
+//        Player player = getSelf();
+//        if (player == null)
+//            return;
+//        if (!Config.ALT_ALLOW_SHADOW_WEAPONS) {
+//            show(new CustomMessage("common.Disabled", player), player);
+//            return;
+//        }
+//        if (player.getLevel() > 39 || player.getClassId().getLevel() > 2) {
+//            show("Your level is too high!", player);
+//            return;
+//        }
+//        if (player.getLevel() < 20 || player.getClassId().getLevel() < 2) {
+//            show("Your level is too low!", player);
+//            return;
+//        }
+//        if (player.getVarB("newbiearmor")) {
+//            show("Your already got your newbie weapon!", player);
+//            return;
+//        }
+//        addItem(player, 7833, 1, "TakeAdventurersArmorCoupon");
+//        player.setVar("newbiearmor", "true", -1);
+//    }
 
-        int crystal = Integer.parseInt(param[0]);
-        int score = Integer.parseInt(param[1]);
+//    public void enter_dc() {
+//        Player player = getSelf();
+//        NpcInstance npc = getNpc();
+//        if (player == null || npc == null)
+//            return;
+//
+//        if (!NpcInstance.canBypassCheck(player, npc))
+//            return;
+//
+//        player.setVar("DCBackCoords", player.getLoc().toXYZString(), -1);
+//        player.teleToLocation(-114582, -152635, -6742);
+//    }
 
-        if (crystal < 4411 || crystal > 4417)
-            return;
+//    public void exit_dc() {
+//        Player player = getSelf();
+//        NpcInstance npc = getNpc();
+//        if (player == null || npc == null)
+//            return;
+//
+//        if (!NpcInstance.canBypassCheck(player, npc))
+//            return;
+//
+//        String var = player.getVar("DCBackCoords");
+//        if (var == null || var.isEmpty()) {
+//            player.teleToLocation(new Location(43768, -48232, -800), 0);
+//            return;
+//        }
+//        player.teleToLocation(Location.parseLoc(var), 0);
+//        player.unsetVar("DCBackCoords");
+//    }
 
-        if (getItemCount(player, score) == 0) {
-            player.getLastNpc().onBypassFeedback(player, "Chat 1");
-            return;
-        }
-
-        if (getItemCount(player, 57) < 200) {
-            player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-            return;
-        }
-
-        removeItem(player, 57, 200, "MakeEchoCrystal");
-        addItem(player, crystal, 1, "MakeEchoCrystal");
-    }
-
-    public void TakeNewbieWeaponCoupon() {
-        Player player = getSelf();
-        if (player == null)
-            return;
-        if (!Config.ALT_ALLOW_SHADOW_WEAPONS) {
-            show(new CustomMessage("common.Disabled", player), player);
-            return;
-        }
-        if (player.getLevel() > 19 || player.getClassId().getLevel() > 1) {
-            show("Your level is too high!", player);
-            return;
-        }
-        if (player.getLevel() < 6) {
-            show("Your level is too low!", player);
-            return;
-        }
-        if (player.getVarB("newbieweapon")) {
-            show("Your already got your newbie weapon!", player);
-            return;
-        }
-        addItem(player, 7832, 5, "TakeNewbieWeaponCoupon");
-        player.setVar("newbieweapon", "true", -1);
-    }
-
-    public void TakeAdventurersArmorCoupon() {
-        Player player = getSelf();
-        if (player == null)
-            return;
-        if (!Config.ALT_ALLOW_SHADOW_WEAPONS) {
-            show(new CustomMessage("common.Disabled", player), player);
-            return;
-        }
-        if (player.getLevel() > 39 || player.getClassId().getLevel() > 2) {
-            show("Your level is too high!", player);
-            return;
-        }
-        if (player.getLevel() < 20 || player.getClassId().getLevel() < 2) {
-            show("Your level is too low!", player);
-            return;
-        }
-        if (player.getVarB("newbiearmor")) {
-            show("Your already got your newbie weapon!", player);
-            return;
-        }
-        addItem(player, 7833, 1, "TakeAdventurersArmorCoupon");
-        player.setVar("newbiearmor", "true", -1);
-    }
-
-    public void enter_dc() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-        if (player == null || npc == null)
-            return;
-
-        if (!NpcInstance.canBypassCheck(player, npc))
-            return;
-
-        player.setVar("DCBackCoords", player.getLoc().toXYZString(), -1);
-        player.teleToLocation(-114582, -152635, -6742);
-    }
-
-    public void exit_dc() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-        if (player == null || npc == null)
-            return;
-
-        if (!NpcInstance.canBypassCheck(player, npc))
-            return;
-
-        String var = player.getVar("DCBackCoords");
-        if (var == null || var.isEmpty()) {
-            player.teleToLocation(new Location(43768, -48232, -800), 0);
-            return;
-        }
-        player.teleToLocation(Location.parseLoc(var), 0);
-        player.unsetVar("DCBackCoords");
-    }
-
-    public void addPlayerToTvT() {
-        Player player = getSelf();
-
-        AbstractFightClub event = (AbstractFightClub) EventHolder.getInstance().getEvent(EventType.FIGHT_CLUB_EVENT, 2);
-
-
-        FightClubEventManager.getInstance().trySignForEvent(player, event, true);
-    }
+//    public void addPlayerToTvT() {
+//        Player player = getSelf();
+//
+//        AbstractFightClub event = (AbstractFightClub) EventHolder.INSTANCE().getEvent(EventType.FIGHT_CLUB_EVENT, 2);
+//
+//
+//        FightClubEventManager.INSTANCE.trySignForEvent(player, event, true);
+//    }
 }

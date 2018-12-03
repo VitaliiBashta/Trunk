@@ -399,7 +399,7 @@ public class Functions {
             return false;
 
         Player receiver = GameObjectsStorage.getPlayer(receiverName);
-        int objectId = receiver != null ? receiver.getObjectId() : CharacterDAO.getInstance().getObjectIdByName(receiverName);
+        int objectId = receiver != null ? receiver.getObjectId() : CharacterDAO.getObjectIdByName(receiverName);
 
         if (objectId <= 0)
             return false;

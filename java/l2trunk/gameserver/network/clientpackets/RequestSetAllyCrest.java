@@ -28,9 +28,9 @@ public class RequestSetAllyCrest extends L2GameClientPacket {
             int crestId = 0;
 
             if (_data != null)
-                crestId = CrestCache.getInstance().saveAllyCrest(ally.getAllyId(), _data);
+                crestId = CrestCache.saveAllyCrest(ally.getAllyId(), _data);
             else if (ally.hasAllyCrest())
-                CrestCache.getInstance().removeAllyCrest(ally.getAllyId());
+                CrestCache.removeAllyCrest(ally.getAllyId());
 
             ally.setAllyCrestId(crestId);
             ally.broadcastAllyStatus();

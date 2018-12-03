@@ -83,7 +83,7 @@ public class SoDManager {
         // spawns
         // handle zone + task
         _log.info("Seed of Destruction Manager: Opening the seed for " + Util.formatTime((int) timelimit / 1000));
-        SpawnManager.getInstance().spawn(SPAWN_GROUP);
+        SpawnManager.INSTANCE.spawn(SPAWN_GROUP);
         handleDoors(true);
 
         ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
@@ -100,7 +100,7 @@ public class SoDManager {
         _isOpened = false;
         _log.info("Seed of Destruction Manager: Closing the seed.");
         ServerVariables.unset("SoD_opened");
-        SpawnManager.getInstance().despawn(SPAWN_GROUP);
+        SpawnManager.INSTANCE.despawn(SPAWN_GROUP);
         // Телепортируем всех внутри СоДа наружу
         for (Playable p : getZone().getInsidePlayables())
             p.teleToLocation(getZone().getRestartPoints().get(0));

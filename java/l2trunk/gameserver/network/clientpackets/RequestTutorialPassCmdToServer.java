@@ -28,7 +28,7 @@ public class RequestTutorialPassCmdToServer extends L2GameClientPacket {
             return;
 
         if (player.isInFightClub()) {
-            FightClubEventManager.getInstance().requestEventPlayerMenuBypass(player, _bypass);
+            FightClubEventManager.INSTANCE.requestEventPlayerMenuBypass(player, _bypass);
         }
 
         // Alexander - Support for handling scripts events on tutorial windows

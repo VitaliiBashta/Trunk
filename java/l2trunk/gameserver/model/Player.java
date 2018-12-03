@@ -129,6 +129,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import static l2trunk.gameserver.network.serverpackets.ExSetCompassZoneCode.*;
 
@@ -196,11 +197,11 @@ public final class Player extends Playable implements PlayerGroup {
     /**
      * The table containing all Quests began by the L2Player
      */
-    private final Map<String, QuestState> _quests = new HashMap<>();
+    private final Map<String, QuestState> quests = new ConcurrentHashMap<>();
     /**
      * The list containing all shortCuts of this L2Player
      */
-    private final ShortCutList _shortCuts = new ShortCutList(this);
+    private final ShortCutList shortCuts = new ShortCutList(this);
     /**
      * The list containing all macroses of this L2Player
      */
@@ -210,7 +211,7 @@ public final class Player extends Playable implements PlayerGroup {
      */
     private final Henna[] _henna = new Henna[3];
     private final AtomicBoolean _isLogout = new AtomicBoolean();
-    private final Set<Integer> _activeSoulShots = new CopyOnWriteArraySet<>();
+    private final Set<Integer> activeSoulShots = new CopyOnWriteArraySet<>();
     private final AtomicInteger _observerMode = new AtomicInteger(0);
     private final Map<Integer, String> _blockList = new ConcurrentSkipListMap<>(); // characters blocked with '/block <charname>' cmd
     private final FriendList _friendList = new FriendList(this);
@@ -563,7 +564,7 @@ public final class Player extends Playable implements PlayerGroup {
         player.setCreateTime(System.currentTimeMillis());
 
         // Add the player in the characters table of the database
-        if (!CharacterDAO.getInstance().insert(player)) {
+        if (!CharacterDAO.insert(player)) {
             return null;
         }
 
@@ -1456,13 +1457,8 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
-    public QuestState getQuestState(String quest) {
-        questRead.lock();
-        try {
-            return _quests.get(quest);
-        } finally {
-            questRead.unlock();
-        }
+    public synchronized QuestState getQuestState(String quest) {
+        return quests.get(quest);
     }
 
     public QuestState getQuestState(Class<?> quest) {
@@ -1480,45 +1476,22 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void setQuestState(QuestState qs) {
-        questWrite.lock();
-        try {
-            _quests.put(qs.getQuest().getName(), qs);
-        } finally {
-            questWrite.unlock();
-        }
+        quests.put(qs.getQuest().getName(), qs);
     }
 
     public void removeQuestState(String quest) {
-        questWrite.lock();
-        try {
-            _quests.remove(quest);
-        } finally {
-            questWrite.unlock();
-        }
+        quests.remove(quest);
     }
 
-    public Quest[] getAllActiveQuests() {
-        List<Quest> quests = new ArrayList<>(_quests.size());
-        questRead.lock();
-        try {
-            for (final QuestState qs : _quests.values()) {
-                if (qs.isStarted()) {
-                    quests.add(qs.getQuest());
-                }
-            }
-        } finally {
-            questRead.unlock();
-        }
-        return quests.toArray(new Quest[quests.size()]);
+    public List<Quest> getAllActiveQuests() {
+        return this.quests.values().stream()
+                .filter(QuestState::isStarted)
+                .map(QuestState::getQuest)
+                .collect(Collectors.toList());
     }
 
-    public QuestState[] getAllQuestsStates() {
-        questRead.lock();
-        try {
-            return _quests.values().toArray(new QuestState[_quests.size()]);
-        } finally {
-            questRead.unlock();
-        }
+    public Collection<QuestState> getAllQuestsStates() {
+        return quests.values();
     }
 
     public List<QuestState> getQuestsForEvent(NpcInstance npc, QuestEventType event) {
@@ -1578,25 +1551,19 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     private void resumeQuestTimers() {
-        for (QuestState qs : getAllQuestsStates()) {
-            qs.resumeQuestTimers();
-        }
+        quests.values().forEach(QuestState::resumeQuestTimers);
     }
 
     public Collection<ShortCut> getAllShortCuts() {
-        return _shortCuts.getAllShortCuts();
-    }
-
-    public ShortCut getShortCut(int slot, int page) {
-        return _shortCuts.getShortCut(slot, page);
+        return shortCuts.getAllShortCuts();
     }
 
     public void registerShortCut(ShortCut shortcut) {
-        _shortCuts.registerShortCut(shortcut);
+        shortCuts.registerShortCut(shortcut);
     }
 
     public void deleteShortCut(int slot, int page) {
-        _shortCuts.deleteShortCut(slot, page);
+        shortCuts.deleteShortCut(slot, page);
     }
 
     public void registerMacro(Macro macro) {
@@ -2253,47 +2220,47 @@ public final class Player extends Playable implements PlayerGroup {
     private WeaponTemplate findFistsWeaponItem(final int classId) {
         // human fighter fists
         if ((classId >= 0x00) && (classId <= 0x09)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(246);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(246);
         }
 
         // human mage fists
         if ((classId >= 0x0a) && (classId <= 0x11)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(251);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(251);
         }
 
         // elven fighter fists
         if ((classId >= 0x12) && (classId <= 0x18)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(244);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(244);
         }
 
         // elven mage fists
         if ((classId >= 0x19) && (classId <= 0x1e)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(249);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(249);
         }
 
         // dark elven fighter fists
         if ((classId >= 0x1f) && (classId <= 0x25)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(245);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(245);
         }
 
         // dark elven mage fists
         if ((classId >= 0x26) && (classId <= 0x2b)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(250);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(250);
         }
 
         // orc fighter fists
         if ((classId >= 0x2c) && (classId <= 0x30)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(248);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(248);
         }
 
         // orc mage fists
         if ((classId >= 0x31) && (classId <= 0x34)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(252);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(252);
         }
 
         // dwarven fists
         if ((classId >= 0x35) && (classId <= 0x39)) {
-            return (WeaponTemplate) ItemHolder.INSTANCE.getTemplate(247);
+            return (WeaponTemplate) ItemHolder.getInstance().getTemplate(247);
         }
 
         return null;
@@ -2714,11 +2681,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void removeItemFromShortCut(final int objectId) {
-        _shortCuts.deleteShortCutByObjectId(objectId);
+        shortCuts.deleteShortCutByObjectId(objectId);
     }
 
     private void removeSkillFromShortCut(final int skillId) {
-        _shortCuts.deleteShortCutBySkillId(skillId);
+        shortCuts.deleteShortCutBySkillId(skillId);
     }
 
     public boolean isSitting() {
@@ -3031,7 +2998,10 @@ public final class Player extends Playable implements PlayerGroup {
             return;
         }
 
-        _userInfoTask = ThreadPoolManager.INSTANCE.schedule(new UserInfoTask(), Config.USER_INFO_INTERVAL);
+        _userInfoTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            sendUserInfoImpl();
+            _userInfoTask = null;
+        }, Config.USER_INFO_INTERVAL);
     }
 
     @Override
@@ -4304,7 +4274,6 @@ public final class Player extends Playable implements PlayerGroup {
      * a minute to make him invulnerable. <br>
      * make a binding time to the context for areas with a time limit to leave the game on all the time in the zone. <br>
      * <br>
-
      */
     private void scheduleDelete(long time) {
         broadcastCharInfo();
@@ -5692,7 +5661,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void autoShot() {
-        for (Integer shotId : _activeSoulShots) {
+        for (Integer shotId : activeSoulShots) {
             ItemInstance item = getInventory().getItemByItemId(shotId);
             if (item == null) {
                 removeAutoSoulShot(shotId);
@@ -5727,15 +5696,15 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void addAutoSoulShot(Integer itemId) {
-        _activeSoulShots.add(itemId);
+        activeSoulShots.add(itemId);
     }
 
     public void removeAutoSoulShot(Integer itemId) {
-        _activeSoulShots.remove(itemId);
+        activeSoulShots.remove(itemId);
     }
 
     public Set<Integer> getAutoSoulShot() {
-        return _activeSoulShots;
+        return activeSoulShots;
     }
 
     @Override
@@ -6108,7 +6077,7 @@ public final class Player extends Playable implements PlayerGroup {
             return;
         }
 
-        int charId = CharacterDAO.getInstance().getObjectIdByName(charName);
+        int charId = CharacterDAO.getObjectIdByName(charName);
 
         if (charId == 0) {
             sendPacket(Msg.YOU_HAVE_FAILED_TO_REGISTER_THE_USER_TO_YOUR_IGNORE_LIST);
@@ -6613,15 +6582,8 @@ public final class Player extends Playable implements PlayerGroup {
         return _nameColor;
     }
 
-    public void setNameColor(String RGB) {
-        if (RGB.length() == 6) {
-            RGB = RGB.substring(4, 6) + RGB.substring(2, 4) + RGB.substring(0, 2);
-        }
-        setNameColor(Integer.decode("0x" + RGB));
-    }
-
     public void setNameColor(final int nameColor) {
-        if ((nameColor != Config.NORMAL_NAME_COLOUR) && (nameColor != Config.CLANLEADER_NAME_COLOUR) && (nameColor != Config.GM_NAME_COLOUR) ) {
+        if ((nameColor != Config.NORMAL_NAME_COLOUR) && (nameColor != Config.CLANLEADER_NAME_COLOUR) && (nameColor != Config.GM_NAME_COLOUR)) {
             setVar("namecolor", Integer.toHexString(nameColor), -1);
         } else if (nameColor == Config.NORMAL_NAME_COLOUR) {
             unsetVar("namecolor");
@@ -6629,9 +6591,16 @@ public final class Player extends Playable implements PlayerGroup {
         _nameColor = nameColor;
     }
 
+    public void setNameColor(String RGB) {
+        if (RGB.length() == 6) {
+            RGB = RGB.substring(4, 6) + RGB.substring(2, 4) + RGB.substring(0, 2);
+        }
+        setNameColor(Integer.decode("0x" + RGB));
+    }
+
     public void setNameColor(final int red, final int green, final int blue) {
         _nameColor = (red & 0xFF) + ((green & 0xFF) << 8) + ((blue & 0xFF) << 16);
-        if ((_nameColor != Config.NORMAL_NAME_COLOUR) && (_nameColor != Config.CLANLEADER_NAME_COLOUR) && (_nameColor != Config.GM_NAME_COLOUR) ) {
+        if ((_nameColor != Config.NORMAL_NAME_COLOUR) && (_nameColor != Config.CLANLEADER_NAME_COLOUR) && (_nameColor != Config.GM_NAME_COLOUR)) {
             setVar("namecolor", Integer.toHexString(_nameColor), -1);
         } else {
             unsetVar("namecolor");
@@ -6683,7 +6652,7 @@ public final class Player extends Playable implements PlayerGroup {
         PlayerVar pv = getVarObject(name);
 
         if (pv == null) {
-            return "";
+            return null;
         }
 
         return pv.getValue();
@@ -7488,11 +7457,10 @@ public final class Player extends Playable implements PlayerGroup {
         setCurrentHpMp(sub.getHp(), sub.getMp());
         setCurrentCp(sub.getCp());
 
-        _shortCuts.restore();
+        shortCuts.restore();
         sendPacket(new ShortCutInit(this));
-        for (int shotId : _activeSoulShots) {
-            sendPacket(new ExAutoSoulShot(shotId, true));
-        }
+        activeSoulShots.forEach(shotId -> sendPacket(new ExAutoSoulShot(shotId, true)));
+
         sendPacket(new SkillCoolTime(this));
 
         broadcastPacket(new SocialAction(getObjectId(), SocialAction.LEVEL_UP));
@@ -8023,7 +7991,7 @@ public final class Player extends Playable implements PlayerGroup {
     public void checkDayNightMessages() {
         int level = getSkillLevel(294);
         if (level > 0) {
-            if (GameTimeController.getInstance().isNowNight()) {
+            if (GameTimeController.INSTANCE.isNowNight()) {
                 sendPacket(new SystemMessage(SystemMessage.IT_IS_NOW_MIDNIGHT_AND_THE_EFFECT_OF_S1_CAN_BE_FELT).addSkillName(294, level));
             } else {
                 sendPacket(new SystemMessage(SystemMessage.IT_IS_DAWN_AND_THE_EFFECT_OF_S1_WILL_NOW_DISAPPEAR).addSkillName(294, level));
@@ -8301,7 +8269,7 @@ public final class Player extends Playable implements PlayerGroup {
             }
             if (getBlockCheckerArena() != -1) {
                 result |= RelationChanged.RELATION_INSIEGE;
-                ArenaParticipantsHolder holder = HandysBlockCheckerManager.getInstance().getHolder(getBlockCheckerArena());
+                ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(getBlockCheckerArena());
                 if (holder.getPlayerTeam(this) == 0) {
                     result |= RelationChanged.RELATION_ENEMY;
                 } else {
@@ -9947,12 +9915,9 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public Reflection getActiveReflection() {
-        for (Reflection r : ReflectionManager.getInstance().getAll()) {
-            if ((r != null) && r.getVisitors().contains(getObjectId())) {
-                return r;
-            }
-        }
-        return null;
+        return ReflectionManager.INSTANCE.getAll().stream()
+                .filter(r -> r.getVisitors().contains(getObjectId()))
+                .findFirst().orElse(null);
     }
 
     public boolean canEnterInstance(int instancedZoneId) {
@@ -9962,7 +9927,7 @@ public final class Player extends Playable implements PlayerGroup {
             return false;
         }
 
-        if (ReflectionManager.getInstance().size() > Config.MAX_REFLECTIONS_COUNT) {
+        if (ReflectionManager.INSTANCE.size() > Config.MAX_REFLECTIONS_COUNT) {
             sendPacket(SystemMsg.THE_MAXIMUM_NUMBER_OF_INSTANCE_ZONES_HAS_BEEN_EXCEEDED);
             return false;
         }
@@ -9972,7 +9937,7 @@ public final class Player extends Playable implements PlayerGroup {
             return false;
         }
 
-        if (ReflectionManager.getInstance().getCountByIzId(instancedZoneId) >= iz.getMaxChannels()) {
+        if (ReflectionManager.INSTANCE.getCountByIzId(instancedZoneId) >= iz.getMaxChannels()) {
             sendPacket(SystemMsg.THE_MAXIMUM_NUMBER_OF_INSTANCE_ZONES_HAS_BEEN_EXCEEDED);
             return false;
         }

@@ -12,14 +12,14 @@ public final class EffectVitalityStop extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        Player player = _effected.getPlayer();
+        Player player = effected.getPlayer();
         player.VitalityStop(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        Player player = _effected.getPlayer();
+        Player player = effected.getPlayer();
         player.VitalityStop(false);
     }
 

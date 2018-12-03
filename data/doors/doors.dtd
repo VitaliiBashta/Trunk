@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE list [
         <!ELEMENT list (door)*>
-        <!ELEMENT door (pos|shape|set)*>
+        <!ELEMENT door (pos|shape|set|ai_params)*>
         <!ATTLIST door
                 hp CDATA #REQUIRED
                 id CDATA #REQUIRED
                 mdef CDATA #REQUIRED
                 name CDATA #REQUIRED
-                pdef CDATA #REQUIRED>
+                pdef CDATA #REQUIRED
+                type CDATA #IMPLIED>
         <!ELEMENT pos (#PCDATA)>
         <!ATTLIST pos
                 x CDATA #REQUIRED
@@ -29,4 +30,5 @@
         <!ATTLIST set
                 name CDATA #REQUIRED
                 value CDATA #REQUIRED>
+        <!ELEMENT ai_params (set)*>
         ]>

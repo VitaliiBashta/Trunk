@@ -15,11 +15,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import java.util.List;
 import java.util.StringTokenizer;
 
-/**
- * @author VISTALL
- * @date 15:52/19.11.2010
- */
-public class KrateisCubeManagerInstance extends NpcInstance {
+public final class KrateisCubeManagerInstance extends NpcInstance {
     public KrateisCubeManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -56,7 +52,7 @@ public class KrateisCubeManagerInstance extends NpcInstance {
             else
                 showChatWindow(player, 5);
         } else if (command.startsWith("Kratei_Register")) {
-            if (Olympiad.isRegistered(player) || HandysBlockCheckerManager.isRegistered(player)) {
+            if (Olympiad.isRegistered(player) || HandysBlockCheckerManager.INSTANCE.isRegistered(player)) {
                 player.sendPacket(SystemMsg.YOU_CANNOT_BE_SIMULTANEOUSLY_REGISTERED_FOR_PVP_MATCHES_SUCH_AS_THE_OLYMPIAD_UNDERGROUND_COLISEUM_AERIAL_CLEFT_KRATEIS_CUBE_AND_HANDYS_BLOCK_CHECKERS);
                 return;
             }

@@ -12,10 +12,10 @@ public class EffectVitalityDamOverTime extends Effect {
     }
 
     public boolean onActionTime() {
-        if ((this._effected.isDead()) || (!this._effected.isPlayer())) {
+        if ((this.effected.isDead()) || (!this.effected.isPlayer())) {
             return false;
         }
-        Player _pEffected = (Player) this._effected;
+        Player _pEffected = (Player) this.effected;
 
         double vitDam = calc();
         if ((vitDam > _pEffected.getVitality()) && (getSkill().isToggle())) {

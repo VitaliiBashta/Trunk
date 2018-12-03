@@ -13,17 +13,17 @@ public class EffectMutePhisycal extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (!_effected.startPMuted()) {
-            Skill castingSkill = _effected.getCastingSkill();
+        if (!effected.startPMuted()) {
+            Skill castingSkill = effected.getCastingSkill();
             if (castingSkill != null && (!castingSkill.isMagic() || (!Config.SHIELD_SLAM_BLOCK_IS_MUSIC && castingSkill.isMusic())))
-                _effected.abortCast(true, true);
+                effected.abortCast(true, true);
         }
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopPMuted();
+        effected.stopPMuted();
     }
 
     @Override

@@ -261,31 +261,6 @@ public final class EnterWorld extends L2GameClientPacket {
             if (create.get(Calendar.MONTH) == Calendar.FEBRUARY && day == 29)
                 day = 28;
 
-            int myBirthdayReceiveYear = activeChar.getVarInt(Player.MY_BIRTHDAY_RECEIVE_YEAR, 0);
-            if (create.get(Calendar.MONTH) == now.get(Calendar.MONTH) && create.get(Calendar.DAY_OF_MONTH) == day) {
-                if ((myBirthdayReceiveYear == 0 && create.get(Calendar.YEAR) != now.get(Calendar.YEAR)) || myBirthdayReceiveYear > 0 && myBirthdayReceiveYear != now.get(Calendar.YEAR)) {
-                    Mail mail = new Mail();
-                    mail.setSenderId(1);
-                    mail.setSenderName(StringHolder.INSTANCE.getNotNull(activeChar, "birthday.npc"));
-                    mail.setReceiverId(activeChar.getObjectId());
-                    mail.setReceiverName(activeChar.getName());
-                    mail.setTopic(StringHolder.INSTANCE.getNotNull(activeChar, "birthday.title"));
-                    mail.setBody(StringHolder.INSTANCE.getNotNull(activeChar, "birthday.text"));
-
-                    ItemInstance item = ItemFunctions.createItem(21169);
-                    item.setLocation(ItemInstance.ItemLocation.MAIL);
-                    item.setCount(1L);
-                    item.save();
-
-                    mail.addAttachment(item);
-                    mail.setUnread(true);
-                    mail.setType(Mail.SenderType.BIRTHDAY);
-                    mail.setExpireTime(720 * 3600 + (int) (System.currentTimeMillis() / 1000L));
-                    mail.save();
-
-                    activeChar.setVar(Player.MY_BIRTHDAY_RECEIVE_YEAR, String.valueOf(now.get(Calendar.YEAR)), -1);
-                }
-            }
         }
 
         if (activeChar.getClan() != null) {

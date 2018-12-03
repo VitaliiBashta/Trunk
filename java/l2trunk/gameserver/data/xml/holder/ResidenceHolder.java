@@ -12,7 +12,6 @@ public final class ResidenceHolder extends AbstractHolder {
 
     private final Map<Integer, Residence> _residences = new TreeMap<>();
 
-    @SuppressWarnings("rawtypes")
     private final Map<Class, List<Residence>> _fastResidencesByType = new HashMap<>(4);
 
     private ResidenceHolder() {

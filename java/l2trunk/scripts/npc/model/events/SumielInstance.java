@@ -292,7 +292,7 @@ public final class SumielInstance extends NpcInstance {
     private class HURRY_UP extends RunnableImpl {
         @Override
         public void runImpl() {
-            NpcInstance npc = GameObjectsStorage.getAsNpc(_storedId);
+            NpcInstance npc = GameObjectsStorage.getAsNpc(storedId);
             Functions.npcShout(npc, NpcString.FURNFACE2);
             switch (getAISpawnParam()) {
                 case 1:
@@ -308,7 +308,7 @@ public final class SumielInstance extends NpcInstance {
     private class HURRY_UP2 extends RunnableImpl {
         @Override
         public void runImpl() {
-            NpcInstance npc = GameObjectsStorage.getAsNpc(_storedId);
+            NpcInstance npc = GameObjectsStorage.getAsNpc(storedId);
             Functions.npcShout(npc, NpcString.FURNFACE3);
             GAME_TIME_EXPIRED = ThreadPoolManager.INSTANCE.schedule(new GAME_TIME_EXPIRED(), 10 * 1000);
         }
@@ -317,7 +317,7 @@ public final class SumielInstance extends NpcInstance {
     private class PC_TURN extends RunnableImpl {
         @Override
         public void runImpl() {
-            NpcInstance npc1 = GameObjectsStorage.getAsNpc(_storedId);
+            NpcInstance npc1 = GameObjectsStorage.getAsNpc(storedId);
             Functions.npcShout(npc1, NpcString.FURNFACE4);
             for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
@@ -330,7 +330,7 @@ public final class SumielInstance extends NpcInstance {
     private class GAME_TIME_EXPIRED extends RunnableImpl {
         @Override
         public void runImpl() {
-            NpcInstance npc1 = GameObjectsStorage.getAsNpc(_storedId);
+            NpcInstance npc1 = GameObjectsStorage.getAsNpc(storedId);
             Functions.npcShout(npc1, NpcString.FURNFACE5);
             for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
                 if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)

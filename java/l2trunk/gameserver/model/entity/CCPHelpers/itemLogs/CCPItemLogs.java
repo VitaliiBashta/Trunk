@@ -132,11 +132,11 @@ public final class CCPItemLogs {
                         return table.replace("%items%", itemsBuilder.toString());
                     }
 
-                    ItemTemplate template = ItemHolder.INSTANCE.getTemplate(item.getItemTemplateId());
+                    ItemTemplate template = ItemHolder.getInstance().getTemplate(item.getItemTemplateId());
                     String itemText = props.getText("item");
                     itemText = itemText.replace("%itemTableColor%", itemIndex % 2 == 0 ? props.getText("item_table_color_0") : props.getText("item_table_color_1"));
                     itemText = itemText.replace("%icon%", template.getIcon());
-                    String itemName = new StringBuilder().append(template.getName()).append(item.getItemEnchantLevel() > 0 ? new StringBuilder().append(" + ").append(item.getItemEnchantLevel()).toString() : "").append(item.getItemCount() > 1L ? new StringBuilder().append(" x ").append(item.getItemCount()).toString() : "").toString();
+                    String itemName = template.getName() + (item.getItemEnchantLevel() > 0 ? new StringBuilder().append(" + ").append(item.getItemEnchantLevel()).toString() : "") + (item.getItemCount() > 1L ? new StringBuilder().append(" x ").append(item.getItemCount()).toString() : "");
                     itemText = itemText.replace("%itemName%", itemName);
                     itemText = itemText.replace("%time%", date);
                     String receiverName = (item.getReceiverName() != null) && (!item.getReceiverName().isEmpty()) ? item.getReceiverName() : "Nobody";

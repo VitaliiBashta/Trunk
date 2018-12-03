@@ -16,9 +16,9 @@ public final class EffectInvisible extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (!_effected.isPlayer())
+        if (!effected.isPlayer())
             return false;
-        Player player = (Player) _effected;
+        Player player = (Player) effected;
         if (player.isInvisible())
             return false;
         if (player.getActiveWeaponFlagAttachment() != null)
@@ -29,7 +29,7 @@ public final class EffectInvisible extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        Player player = (Player) _effected;
+        Player player = (Player) effected;
 
         _invisibleType = player.getInvisibleType();
 
@@ -46,7 +46,7 @@ public final class EffectInvisible extends Effect {
     @Override
     public void onExit() {
         super.onExit();
-        Player player = (Player) _effected;
+        Player player = (Player) effected;
         if (!player.isInvisible())
             return;
 

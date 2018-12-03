@@ -11,7 +11,7 @@ public final class EffectDestroySummon extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (!_effected.isSummon())
+        if (!effected.isSummon())
             return false;
         return super.checkCondition();
     }
@@ -19,7 +19,7 @@ public final class EffectDestroySummon extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        ((Summon) _effected).unSummon();
+        ((Summon) effected).unSummon();
     }
 
     @Override

@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _268_TracesOfEvil extends Quest implements ScriptFile {
+public final class _268_TracesOfEvil extends Quest implements ScriptFile {
     //NPC
     private final int KUNAI = 30559;
     //MOBS
@@ -46,7 +46,7 @@ public class _268_TracesOfEvil extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         if (st.getCond() == 0)
             if (st.getPlayer().getLevel() < 15) {
                 htmltext = "trader_kunai_q0268_02.htm";

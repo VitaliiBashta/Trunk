@@ -100,7 +100,7 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
 
     private void stopEndTask() {
         _endTask.cancel(false);
-        _endTask = ThreadPoolManager.INSTANCE().schedule(new EndTask(), 3000);
+        _endTask = ThreadPoolManager.INSTANCE.schedule(new EndTask(), 3000);
     }
 
     /**

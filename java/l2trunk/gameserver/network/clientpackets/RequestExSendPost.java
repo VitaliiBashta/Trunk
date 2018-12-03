@@ -208,7 +208,7 @@ public class RequestExSendPost extends L2GameClientPacket {
                 return;
             }
         } else {
-            recieverId = CharacterDAO.getInstance().getObjectIdByName(_recieverName);
+            recieverId = CharacterDAO.getObjectIdByName(_recieverName);
             if (recieverId > 0)
                 //TODO [G1ta0] adjust _recieverName
                 if (mysql.simple_get_int("target_Id", "character_blocklist", "obj_Id=" + recieverId + " AND target_Id=" + activeChar.getObjectId()) > 0) // goal blocked senders

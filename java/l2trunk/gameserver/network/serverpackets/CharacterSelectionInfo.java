@@ -134,7 +134,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
                     deleteTime = System.currentTimeMillis() / 1000 - deleteTime;
                     deleteDays = (int) (deleteTime / 3600 / 24);
                     if (deleteDays >= Config.DELETE_DAYS) {
-                        CharacterDAO.getInstance().deleteCharByObjId(objectId);
+                        CharacterDAO.deleteCharByObjId(objectId);
                         return null;
                     }
                     deleteTime = Config.DELETE_DAYS * 3600L * 24L - deleteTime;

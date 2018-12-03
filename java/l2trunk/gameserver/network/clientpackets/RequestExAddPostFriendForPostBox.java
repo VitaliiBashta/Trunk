@@ -24,7 +24,7 @@ public class RequestExAddPostFriendForPostBox extends L2GameClientPacket {
         if (player == null)
             return;
 
-        int targetObjectId = CharacterDAO.getInstance().getObjectIdByName(_name);
+        int targetObjectId = CharacterDAO.getObjectIdByName(_name);
         if (targetObjectId == 0) {
             player.sendPacket(new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.NAME_IS_NOT_EXISTS));
             return;
@@ -47,7 +47,7 @@ public class RequestExAddPostFriendForPostBox extends L2GameClientPacket {
         }
 
         CharacterPostFriendDAO.getInstance().insert(player, targetObjectId);
-        postFriend.put(targetObjectId, CharacterDAO.getInstance().getNameByObjectId(targetObjectId));
+        postFriend.put(targetObjectId, CharacterDAO.getNameByObjectId(targetObjectId));
 
         player.sendPacket(new SystemMessage2(SystemMsg.S1_WAS_SUCCESSFULLY_ADDED_TO_YOUR_CONTACT_LIST).addString(_name), new ExConfirmAddingPostFriend(_name, ExConfirmAddingPostFriend.SUCCESS));
     }

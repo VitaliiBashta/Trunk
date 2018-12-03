@@ -11,14 +11,14 @@ public final class EffectRoot extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startRooted();
-        _effected.stopMove();
+        effected.startRooted();
+        effected.stopMove();
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopRooted();
+        effected.stopRooted();
     }
 
     @Override

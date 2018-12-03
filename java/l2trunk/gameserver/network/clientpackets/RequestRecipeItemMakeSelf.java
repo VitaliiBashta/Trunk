@@ -78,7 +78,7 @@ public class RequestRecipeItemMakeSelf extends L2GameClientPacket {
                 if (recipe.getQuantity() == 0)
                     continue;
 
-                if (Config.ALT_GAME_UNREGISTER_RECIPE && ItemHolder.INSTANCE.getTemplate(recipe.getItemId()).getItemType() == EtcItemType.RECIPE) {
+                if (Config.ALT_GAME_UNREGISTER_RECIPE && ItemHolder.getInstance().getTemplate(recipe.getItemId()).getItemType() == EtcItemType.RECIPE) {
                     Recipe rp = RecipeHolder.getInstance().getRecipeByRecipeItem(recipe.getItemId());
                     if (activeChar.hasRecipe(rp))
                         continue;
@@ -95,7 +95,7 @@ public class RequestRecipeItemMakeSelf extends L2GameClientPacket {
 
             for (RecipeComponent recipe : recipes)
                 if (recipe.getQuantity() != 0)
-                    if (Config.ALT_GAME_UNREGISTER_RECIPE && ItemHolder.INSTANCE.getTemplate(recipe.getItemId()).getItemType() == EtcItemType.RECIPE)
+                    if (Config.ALT_GAME_UNREGISTER_RECIPE && ItemHolder.getInstance().getTemplate(recipe.getItemId()).getItemType() == EtcItemType.RECIPE)
                         activeChar.unregisterRecipe(RecipeHolder.getInstance().getRecipeByRecipeItem(recipe.getItemId()).getId());
                     else {
                         if (!activeChar.getInventory().destroyItemByItemId(recipe.getItemId(), recipe.getQuantity(), "RecipeMakeSelf"))

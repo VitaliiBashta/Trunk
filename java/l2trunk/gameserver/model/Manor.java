@@ -23,9 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum Manor {
     INSTANCE;
-    private static final Logger _log = LoggerFactory.getLogger(Manor.class);
+    private final Logger _log = LoggerFactory.getLogger(Manor.class);
 
-    private static Map<Integer, SeedData> _seeds= new ConcurrentHashMap<>();;
+    private  Map<Integer, SeedData> seeds = new ConcurrentHashMap<>();
 
     Manor() {
         parseData();
@@ -33,39 +33,39 @@ public enum Manor {
 
     public List<Integer> getAllCrops() {
         List<Integer> crops = new ArrayList<>();
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (!crops.contains(seed.getCrop()) && seed.getCrop() != 0 && !crops.contains(seed.getCrop()))
                 crops.add(seed.getCrop());
         return crops;
     }
 
     public Map<Integer, SeedData> getAllSeeds() {
-        return _seeds;
+        return seeds;
     }
 
     public int getSeedBasicPrice(int seedId) {
-        ItemTemplate seedItem = ItemHolder.INSTANCE.getTemplate(seedId);
+        ItemTemplate seedItem = ItemHolder.getInstance().getTemplate(seedId);
         if (seedItem != null)
             return seedItem.getReferencePrice();
         return 0;
     }
 
     public int getSeedBasicPriceByCrop(int cropId) {
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getCrop() == cropId)
                 return getSeedBasicPrice(seed.getId());
         return 0;
     }
 
     public int getCropBasicPrice(int cropId) {
-        ItemTemplate cropItem = ItemHolder.INSTANCE.getTemplate(cropId);
+        ItemTemplate cropItem = ItemHolder.getInstance().getTemplate(cropId);
         if (cropItem != null)
             return cropItem.getReferencePrice();
         return 0;
     }
 
     public int getMatureCrop(int cropId) {
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getCrop() == cropId)
                 return seed.getMature();
         return 0;
@@ -80,49 +80,49 @@ public enum Manor {
     }
 
     public int getSeedMinLevel(int seedId) {
-        SeedData seed = _seeds.get(seedId);
+        SeedData seed = seeds.get(seedId);
         if (seed != null)
             return seed.getLevel() - 5;
         return -1;
     }
 
     public int getSeedMaxLevel(int seedId) {
-        SeedData seed = _seeds.get(seedId);
+        SeedData seed = seeds.get(seedId);
         if (seed != null)
             return seed.getLevel() + 5;
         return -1;
     }
 
     public int getSeedLevelByCrop(int cropId) {
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getCrop() == cropId)
                 return seed.getLevel();
         return 0;
     }
 
     public int getSeedLevel(int seedId) {
-        SeedData seed = _seeds.get(seedId);
+        SeedData seed = seeds.get(seedId);
         if (seed != null)
             return seed.getLevel();
         return -1;
     }
 
     public boolean isAlternative(int seedId) {
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getId() == seedId)
                 return seed.isAlternative();
         return false;
     }
 
     public int getCropType(int seedId) {
-        SeedData seed = _seeds.get(seedId);
+        SeedData seed = seeds.get(seedId);
         if (seed != null)
             return seed.getCrop();
         return -1;
     }
 
     public synchronized int getRewardItem(int cropId, int type) {
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getCrop() == cropId)
                 return seed.getReward(type); // there can be several
         // seeds with same crop, but
@@ -133,14 +133,14 @@ public enum Manor {
 
     public synchronized long getRewardAmountPerCrop(int castle, int cropId, int type) {
         final CropProcure cs = ResidenceHolder.getInstance().getResidence(Castle.class, castle).getCropProcure(CastleManorManager.PERIOD_CURRENT).get(cropId);
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getCrop() == cropId)
                 return cs.getPrice() / getCropBasicPrice(seed.getReward(type));
         return -1;
     }
 
     public synchronized int getRewardItemBySeed(int seedId, int type) {
-        SeedData seed = _seeds.get(seedId);
+        SeedData seed = seeds.get(seedId);
         if (seed != null)
             return seed.getReward(type);
         return 0;
@@ -151,7 +151,7 @@ public enum Manor {
      */
     public List<Integer> getCropsForCastle(int castleId) {
         List<Integer> crops = new ArrayList<>();
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getManorId() == castleId && !crops.contains(seed.getCrop()))
                 crops.add(seed.getCrop());
         return crops;
@@ -165,7 +165,7 @@ public enum Manor {
      */
     public List<Integer> getSeedsForCastle(int castleId) {
         List<Integer> seedsID = new ArrayList<>();
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getManorId() == castleId && !seedsID.contains(seed.getId()))
                 seedsID.add(seed.getId());
         return seedsID;
@@ -175,21 +175,21 @@ public enum Manor {
      * Returns castle id where seed can be sowned<br>
      */
     public int getCastleIdForSeed(int seedId) {
-        SeedData seed = _seeds.get(seedId);
+        SeedData seed = seeds.get(seedId);
         if (seed != null)
             return seed.getManorId();
         return 0;
     }
 
     public long getSeedSaleLimit(int seedId) {
-        SeedData seed = _seeds.get(seedId);
+        SeedData seed = seeds.get(seedId);
         if (seed != null)
             return seed.getSeedLimit();
         return 0;
     }
 
     public long getCropPuchaseLimit(int cropId) {
-        for (SeedData seed : _seeds.values())
+        for (SeedData seed : seeds.values())
             if (seed.getCrop() == cropId)
                 return seed.getCropLimit();
         return 0;
@@ -203,10 +203,10 @@ public enum Manor {
                 if (line.trim().length() == 0 || line.startsWith("#"))
                     continue;
                 SeedData seed = parseList(line);
-                _seeds.put(seed.getId(), seed);
+                seeds.put(seed.getId(), seed);
             }
 
-            _log.info("ManorManager: Loaded " + _seeds.size() + " seeds");
+            _log.info("ManorManager: Loaded " + seeds.size() + " seeds");
         } catch (FileNotFoundException e) {
             _log.info("seeds.csv is missing in data folder!", e);
         } catch (IOException e) {

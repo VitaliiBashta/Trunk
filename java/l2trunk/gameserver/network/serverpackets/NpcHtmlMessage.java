@@ -166,7 +166,7 @@ public class NpcHtmlMessage extends L2GameServerPacket {
         _html = playername.matcher(_html).replaceAll(player.getName());
 
         // Alexander - Replace and send all images and crests of this html
-        _html = ImagesCache.getInstance().sendUsedImages(_html, player);
+        _html = ImagesCache.sendUsedImages(_html, player);
         if (_html.startsWith("CREST"))
             _html = _html.substring(5);
 

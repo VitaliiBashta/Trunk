@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class LuckyCreaturesEvent extends AbstractFightClub {
+public final class LuckyCreaturesEvent extends AbstractFightClub {
     private final int _monstersCount;
     private final int[] _monsterTemplates;
     private final int _respawnSeconds;

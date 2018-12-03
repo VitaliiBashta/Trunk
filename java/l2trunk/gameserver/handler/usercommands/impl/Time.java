@@ -33,11 +33,11 @@ public final class Time implements IUserCommandHandler {
         if (COMMAND_ID != id)
             return false;
 
-        int h = GameTimeController.getInstance().getGameHour();
-        int m = GameTimeController.getInstance().getGameMin();
+        int h = GameTimeController.INSTANCE.getGameHour();
+        int m = GameTimeController.INSTANCE.getGameMin();
 
         SystemMessage2 sm;
-        if (GameTimeController.getInstance().isNowNight())
+        if (GameTimeController.INSTANCE.isNowNight())
             sm = new SystemMessage2(SystemMsg.THE_CURRENT_TIME_IS_S1S2_);
         else
             sm = new SystemMessage2(SystemMsg.THE_CURRENT_TIME_IS_S1S2);

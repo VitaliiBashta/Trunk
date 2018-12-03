@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 
-public final class HandysBlockCheckerManager {
+public enum HandysBlockCheckerManager {
+    INSTANCE;
     /*
      * This class manage the player add/remove, team change and
      * event arena status, as the clearance of the participants
@@ -26,35 +27,28 @@ public final class HandysBlockCheckerManager {
      */
 
     // Arena votes to start the game
-    private static final Map<Integer, Integer> _arenaVotes = new HashMap<>();
+    private  final Map<Integer, Integer> _arenaVotes = new HashMap<>();
     // Registration request penalty (10 seconds)
-    private static final List<Integer> _registrationPenalty = new ArrayList<>();
+    private  final List<Integer> _registrationPenalty = new ArrayList<>();
     // All the participants and their team classifed by arena
-    private static ArenaParticipantsHolder[] arenaPlayers;
+    private  List<ArenaParticipantsHolder> arenaPlayers = new ArrayList<>();
     // Arena Status, True = is being used, otherwise, False
-    private static Map<Integer, Boolean> _arenaStatus;
+    private Map<Integer, Boolean> _arenaStatus = new HashMap<>();
 
-    private HandysBlockCheckerManager() {
-        // Initialize arena status
-        if (_arenaStatus == null) {
-            _arenaStatus = new HashMap<>();
-            _arenaStatus.put(0, false);
-            _arenaStatus.put(1, false);
-            _arenaStatus.put(2, false);
-            _arenaStatus.put(3, false);
-        }
+    HandysBlockCheckerManager() {
+        _arenaStatus.put(0, false);
+        _arenaStatus.put(1, false);
+        _arenaStatus.put(2, false);
+        _arenaStatus.put(3, false);
     }
 
-    public static boolean isRegistered(Player player) {
+    public boolean isRegistered(Player player) {
         for (int i = 0; i < 4; i++)
-            if (arenaPlayers[i].getAllPlayers().contains(player))
+            if (arenaPlayers.get(i).getAllPlayers().contains(player))
                 return true;
         return false;
     }
 
-    public static HandysBlockCheckerManager getInstance() {
-        return SingletonHolder._instance;
-    }
 
     /**
      * Return the number of event-start votes for the specified
@@ -70,7 +64,7 @@ public final class HandysBlockCheckerManager {
      */
     public synchronized void increaseArenaVotes(int arena) {
         int newVotes = _arenaVotes.get(arena) + 1;
-        ArenaParticipantsHolder holder = arenaPlayers[arena];
+        ArenaParticipantsHolder holder = arenaPlayers.get(arena);
 
         if (newVotes > holder.getAllPlayers().size() / 2 && !holder.getEvent().isStarted()) {
             clearArenaVotes(arena);
@@ -95,17 +89,15 @@ public final class HandysBlockCheckerManager {
      * Returns the players holder
      */
     public ArenaParticipantsHolder getHolder(int arena) {
-        return arenaPlayers[arena];
+        return arenaPlayers.get(arena);
     }
 
     /**
      * Initializes the participants holder
      */
     public void startUpParticipantsQueue() {
-        arenaPlayers = new ArenaParticipantsHolder[4];
-
         for (int i = 0; i < 4; ++i)
-            arenaPlayers[i] = new ArenaParticipantsHolder(i);
+            arenaPlayers.add(new ArenaParticipantsHolder(i));
     }
 
     /**
@@ -113,9 +105,9 @@ public final class HandysBlockCheckerManager {
      * arena manager) and send the needed server ->  client packets
      */
     public boolean addPlayerToArena(Player player, int arenaId) {
-        ArenaParticipantsHolder holder = arenaPlayers[arenaId];
+        ArenaParticipantsHolder holder = arenaPlayers.get(arenaId);
 
-        synchronized (arenaPlayers[arenaId]) {
+        synchronized (arenaPlayers.get(arenaId)) {
             boolean isRed;
 
             if (isRegistered(player)) {
@@ -168,8 +160,8 @@ public final class HandysBlockCheckerManager {
      * his team mates / enemy team mates
      */
     public void removePlayer(Player player, int arenaId, int team) {
-        ArenaParticipantsHolder holder = arenaPlayers[arenaId];
-        synchronized (arenaPlayers[arenaId]) {
+        ArenaParticipantsHolder holder = arenaPlayers.get(arenaId);
+        synchronized (arenaPlayers.get(arenaId)) {
             boolean isRed = team == 0;
 
             holder.removePlayer(player, team);
@@ -192,9 +184,9 @@ public final class HandysBlockCheckerManager {
      * and will send the needed packets
      */
     public void changePlayerToTeam(Player player, int arena, int team) {
-        ArenaParticipantsHolder holder = arenaPlayers[arena];
+        ArenaParticipantsHolder holder = arenaPlayers.get(arena);
 
-        synchronized (arenaPlayers[arena]) {
+        synchronized (arenaPlayers.get(arena)) {
             boolean isFromRed = holder._redPlayers.contains(player);
 
             if (isFromRed && holder.getBlueTeamSize() == 6) {
@@ -220,7 +212,7 @@ public final class HandysBlockCheckerManager {
      * Will erase all participants from the specified holder
      */
     public synchronized void clearPaticipantQueueByArenaId(int arenaId) {
-        arenaPlayers[arenaId].clearPlayers();
+        arenaPlayers.get(arenaId).clearPlayers();
     }
 
     /**
@@ -249,10 +241,6 @@ public final class HandysBlockCheckerManager {
 
     private void schedulePenaltyRemoval(int objId) {
         ThreadPoolManager.INSTANCE.schedule(new PenaltyRemove(objId), 10000);
-    }
-
-    private static class SingletonHolder {
-        private static final HandysBlockCheckerManager _instance = new HandysBlockCheckerManager();
     }
 
     public class ArenaParticipantsHolder {

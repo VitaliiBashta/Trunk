@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Player;
 import java.util.*;
 
 
-public class ExBR_MiniGameLoadScores extends L2GameServerPacket {
+public final class ExBR_MiniGameLoadScores extends L2GameServerPacket {
     private final Map<Integer, List<Map.Entry<String, Integer>>> _entries = new TreeMap<>();
     private int _place;
     private int _score;
@@ -16,7 +16,7 @@ public class ExBR_MiniGameLoadScores extends L2GameServerPacket {
         int lastBig = 0;
         int i = 1;
 
-        for (Map.Entry<Integer, Set<String>> entry : MiniGameScoreManager.getInstance().getScores().entrySet()) {
+        for (Map.Entry<Integer, Set<String>> entry : MiniGameScoreManager.INSTANCE.getScores().entrySet()) {
             for (String name : entry.getValue()) {
                 List<Map.Entry<String, Integer>> set = _entries.computeIfAbsent(i, k -> new ArrayList<>());
 

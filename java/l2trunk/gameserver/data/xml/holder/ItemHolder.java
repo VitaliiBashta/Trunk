@@ -1,5 +1,6 @@
 package l2trunk.gameserver.data.xml.holder;
 
+import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.model.reward.CalculateRewardChances;
 import l2trunk.gameserver.templates.item.ItemTemplate;
@@ -8,12 +9,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public enum ItemHolder {
-    INSTANCE;
+public class ItemHolder extends AbstractHolder {
+//    instance;
     private final Map<Integer, ItemTemplate> items = new HashMap<>();
     private List<ItemTemplate> droppableTemplates;
     private static final Logger LOG = LoggerFactory.getLogger(ItemHolder.class);
+    private static ItemHolder instance = new ItemHolder();
 
+    public static ItemHolder getInstance() {
+        return instance;
+    }
 
     public void addItem(ItemTemplate template) {
         items.put(template.getItemId(), template);
@@ -46,4 +51,13 @@ public enum ItemHolder {
         return droppableTemplates;
     }
 
+    @Override
+    protected int size() {
+        return items.size();
+    }
+
+    @Override
+    public void clear() {
+        items.clear();
+    }
 }

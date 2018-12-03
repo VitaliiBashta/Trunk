@@ -22,9 +22,6 @@ public abstract class L2GameClientPacket extends ReceivablePacket<GameClient> {
             return true;
         } catch (BufferUnderflowException e) {
             client.onPacketReadFail();
-            // _log.error("Client: " + client + " - Failed reading: " +
-            // getType() + " - Server Version: " +
-            // GameServer.INSTANCE().getVersion().getRevisionNumber(), e);
         } catch (RuntimeException e) {
             _log.error("Client: " + client + " - Failed reading: " + getType() + " - Server Version: ", e);
         }

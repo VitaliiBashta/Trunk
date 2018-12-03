@@ -10,7 +10,7 @@ public final class EffectHealBlock extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (_effected.isHealBlocked())
+        if (effected.isHealBlocked())
             return false;
         return super.checkCondition();
     }
@@ -18,13 +18,13 @@ public final class EffectHealBlock extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startHealBlocked();
+        effected.startHealBlocked();
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopHealBlocked();
+        effected.stopHealBlocked();
     }
 
     @Override

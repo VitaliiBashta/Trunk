@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -18,13 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Valakas extends Fighter {
+    final Skill s_regen = getSkill(4691, 1);
     // Self skills
     private final Skill s_lava_skin = getSkill(4680, 1);
     private final Skill s_fear = getSkill(4689, 1);
     private final Skill s_defence_down = getSkill(5864, 1);
     private final Skill s_berserk = getSkill(5865, 1);
-    final Skill s_regen = getSkill(4691, 1);
-
     // Offensive damage skills
     private final Skill s_tremple_left = getSkill(4681, 1);
     private final Skill s_tremple_right = getSkill(4682, 1);
@@ -37,13 +35,10 @@ public final class Valakas extends Fighter {
     // Offensive percentage skills
     private final Skill s_destroy_body = getSkill(5860, 1);
     private final Skill s_destroy_soul = getSkill(5861, 1); /* s_destroy_body2 = getSkill(5862, 1), s_destroy_soul2 = getSkill(5863, 1) */
-
-    // Timers
-    private long defenceDownTimer = Long.MAX_VALUE;
-
     // Timer reuses
     private final long defenceDownReuse = 120000L;
-
+    // Timers
+    private long defenceDownTimer = Long.MAX_VALUE;
     // Vars
     private double _rangedAttacksIndex, _counterAttackIndex, _attacksIndex;
     private int _hpStage = 0;
@@ -121,15 +116,9 @@ public final class Valakas extends Fighter {
                 if (randomHated != null) {
                     setAttackTarget(randomHated);
                     actor.startConfused();
-                    ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                        @SuppressWarnings("unused")
-                        @Override
-                        public void runImpl() {
-                            NpcInstance actor = getActor();
-                            if (actor != null)
-                                actor.stopConfused();
-                            _madnessTask = null;
-                        }
+                    ThreadPoolManager.INSTANCE.schedule(() -> {
+                        getActor().stopConfused();
+                        _madnessTask = null;
                     }, 20000L);
                 }
                 ValakasManager.broadcastScreenMessage(NpcString.VALAKAS_RANGED_ATTACKS_ENRAGED_TARGET_FREE);

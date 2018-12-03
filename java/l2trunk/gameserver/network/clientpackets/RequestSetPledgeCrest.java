@@ -34,9 +34,9 @@ public class RequestSetPledgeCrest extends L2GameClientPacket {
             int crestId = 0;
 
             if (_data != null)
-                crestId = CrestCache.getInstance().savePledgeCrest(clan.getClanId(), _data);
+                crestId = CrestCache.savePledgeCrest(clan.getClanId(), _data);
             else if (clan.hasCrest())
-                CrestCache.getInstance().removePledgeCrest(clan.getClanId());
+                CrestCache.removePledgeCrest(clan.getClanId());
 
             clan.setCrestId(crestId);
             clan.broadcastClanStatus(false, true, false);

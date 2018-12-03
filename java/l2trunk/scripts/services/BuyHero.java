@@ -29,7 +29,7 @@ class BuyHero extends Functions {
             add += "<a action=\"bypass -h scripts_services.BuyHero:get " + i + "\">"
                     + "for " + Config.SERVICES_HERO_SELL_DAY[i] +
                     " days - " + Config.SERVICES_HERO_SELL_PRICE[i] +
-                    " " + ItemHolder.INSTANCE.getTemplate(Config.SERVICES_HERO_SELL_ITEM[i]).getName() + "</a><br>";
+                    " " + ItemHolder.getInstance().getTemplate(Config.SERVICES_HERO_SELL_ITEM[i]).getName() + "</a><br>";
         html = html.replaceFirst("%toreplace%", add);
 
 

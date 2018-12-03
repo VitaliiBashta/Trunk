@@ -253,19 +253,13 @@ public class Quest {
     }
 
     protected static NpcInstance addSpawnToInstance(int npcId, Location loc, int randomOffset, int refId) {
-        try {
-            NpcTemplate template = NpcHolder.getTemplate(npcId);
-            if (template != null) {
-                NpcInstance npc = NpcHolder.getTemplate(npcId).getNewInstance();
-                npc.setReflection(refId);
-                npc.setSpawnedLoc(randomOffset > 50 ? Location.findPointToStay(loc, 50, randomOffset, npc.getGeoIndex()) : loc);
-                npc.spawnMe(npc.getSpawnedLoc());
-                return npc;
-            }
-        } catch (RuntimeException e) {
-            _log.warn("Could not spawn Npc " + npcId, e);
-        }
-        return null;
+        NpcInstance npc = NpcHolder.getTemplate(npcId).getNewInstance();
+        npc.setReflection(refId);
+        npc.setSpawnedLoc(randomOffset > 50 ? Location.findPointToStay(loc, 50, randomOffset, npc.getGeoIndex()) : loc);
+        npc.spawnMe(npc.getSpawnedLoc());
+        return npc;
+
+
     }
 
     /**
@@ -277,7 +271,7 @@ public class Quest {
         for (int id : ids)
             if (id != 0) {
                 ItemTemplate i;
-                i = ItemHolder.INSTANCE.getTemplate(id);
+                i = ItemHolder.getInstance().getTemplate(id);
 
                 if (_questItems.contains(id))
                     _log.warn("Item " + i + " multiple times in quest drop in " + getName());
@@ -341,7 +335,6 @@ public class Quest {
             addKillId(killid);
         }
     }
-
 
 
     /**
@@ -556,7 +549,7 @@ public class Quest {
     }
 
     public void notifyKill(Player target, QuestState qs) {
-        String res = null;
+        String res;
         try {
             res = onKill(target, qs);
         } catch (RuntimeException e) {

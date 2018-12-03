@@ -141,7 +141,7 @@ public abstract class Creature extends GameObject {
     protected volatile CharacterAI _ai;
     protected String _name;
     protected volatile CharListenerList listeners;
-    protected Long _storedId;
+    protected Long storedId;
     double _currentMp = 1;
     String title;
     private int _scheduledCastCount;
@@ -221,11 +221,11 @@ public abstract class Creature extends GameObject {
 
         reference = new L2Reference<>(this);
 
-        _storedId = GameObjectsStorage.put(this);
+        storedId = GameObjectsStorage.put(this);
     }
 
     public final Long getStoredId() {
-        return _storedId;
+        return storedId;
     }
 
     @Override
@@ -3755,7 +3755,7 @@ public abstract class Creature extends GameObject {
     }
 
     void teleToLocation(int x, int y, int z, int refId) {
-        Reflection r = ReflectionManager.getInstance().get(refId);
+        Reflection r = ReflectionManager.INSTANCE.get(refId);
         if (r == null)
             return;
         teleToLocation(x, y, z, r);
@@ -3881,7 +3881,7 @@ public abstract class Creature extends GameObject {
 
     @Override
     protected void onDelete() {
-        GameObjectsStorage.remove(_storedId);
+        GameObjectsStorage.remove(storedId);
 
         getEffectList().stopAllEffects();
 

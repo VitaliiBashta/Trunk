@@ -1256,7 +1256,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             int[] item = data.itemIdAndEnchantForSlot.get(i);
             ItemTemplate template = null;
             if (item != null && item[0] > 0)
-                template = ItemHolder.INSTANCE.getTemplate(item[0]);
+                template = ItemHolder.getInstance().getTemplate(item[0]);
             inventory += "<td><table><tr><td height=40>";
             inventory += template != null ? "<img src=" + template.getIcon() + " width=32 height=32>" : "<img src=\"Icon.low_tab\" width=32 height=32>";
             inventory += "</td><td width=150><font color=\"bc7420\">";

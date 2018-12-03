@@ -1533,7 +1533,7 @@ class ItemBroker extends Functions {
                     continue;
                 if (tempItem.enchant < minEnchant)
                     continue;
-                ItemTemplate temp = tempItem.item != null ? tempItem.item.getItem() : ItemHolder.INSTANCE.getTemplate(tempItem.itemId);
+                ItemTemplate temp = tempItem.item != null ? tempItem.item.getItem() : ItemHolder.getInstance().getTemplate(tempItem.itemId);
                 if (temp == null || (rare > 0 && !tempItem.rare))
                     continue;
                 if ((itemClass == null) != temp.isCommonItem())
@@ -1592,7 +1592,7 @@ class ItemBroker extends Functions {
             ListIterator<Item> iter = items.listIterator((currentPage - 1) * MAX_ITEMS_PER_PAGE);
             while (iter.hasNext() && count < MAX_ITEMS_PER_PAGE) {
                 Item item = iter.next();
-                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.INSTANCE.getTemplate(item.itemId);
+                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.getInstance().getTemplate(item.itemId);
                 if (temp == null)
                     continue;
 
@@ -1682,7 +1682,7 @@ class ItemBroker extends Functions {
             return;
         }
 
-        ItemTemplate template = ItemHolder.INSTANCE.getTemplate(itemId);
+        ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
         if (template == null) {
             show("Error - itemId not specified.", player, npc);
             return;
@@ -1758,7 +1758,7 @@ class ItemBroker extends Functions {
             ListIterator<Item> iter = items.listIterator((currentPage - 1) * MAX_ITEMS_PER_PAGE);
             while (iter.hasNext() && count < MAX_ITEMS_PER_PAGE) {
                 Item item = iter.next();
-                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.INSTANCE.getTemplate(item.itemId);
+                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.getInstance().getTemplate(item.itemId);
                 if (temp == null)
                     continue;
 
@@ -1839,7 +1839,7 @@ class ItemBroker extends Functions {
             return;
         }
 
-        ItemTemplate temp = ItemHolder.INSTANCE.getTemplate(itemId);
+        ItemTemplate temp = ItemHolder.getInstance().getTemplate(itemId);
         if (temp == null) {
             show("Error - itemId not specified.", player, npc);
             return;
@@ -2034,7 +2034,7 @@ class ItemBroker extends Functions {
                             if (recipe == null)
                                 continue;
 
-                            ItemTemplate temp = ItemHolder.INSTANCE.getTemplate(recipe.getItemId());
+                            ItemTemplate temp = ItemHolder.getInstance().getTemplate(recipe.getItemId());
                             if (temp == null)
                                 continue;
                             TreeMap<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
@@ -2159,7 +2159,7 @@ class ItemBroker extends Functions {
             ListIterator<Item> iter = items.listIterator((currentPage - 1) * MAX_ITEMS_PER_PAGE);
             while (iter.hasNext() && count < MAX_ITEMS_PER_PAGE) {
                 item = iter.next();
-                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.INSTANCE.getTemplate(item.itemId);
+                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.getInstance().getTemplate(item.itemId);
                 if (temp == null)
                     continue;
 

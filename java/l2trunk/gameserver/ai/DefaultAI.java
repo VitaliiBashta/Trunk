@@ -1341,8 +1341,8 @@ public class DefaultAI extends CharacterAI {
         return (NpcInstance) super.getActor();
     }
 
-    boolean defaultThinkBuff(int rateSelf) {
-        return defaultThinkBuff(rateSelf, 0);
+    boolean defaultThinkBuff() {
+        return defaultThinkBuff(10, 0);
     }
 
     /**
@@ -1587,7 +1587,7 @@ public class DefaultAI extends CharacterAI {
 //    private static class TaskComparator implements Comparator<Task> {
 //        private static final Comparator<Task> instance = new TaskComparator();
 //
-//        static Comparator<Task> getInstance() {
+//        static Comparator<Task> INSTANCE() {
 //            return instance;
 //        }
 //

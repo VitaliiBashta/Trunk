@@ -176,8 +176,8 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         }
 
         clan.restoreRankPrivs();
-        clan.setCrestId(CrestCache.getInstance().getPledgeCrestId(clanId));
-        clan.setCrestLargeId(CrestCache.getInstance().getPledgeCrestLargeId(clanId));
+        clan.setCrestId(CrestCache.getPledgeCrestId(clanId));
+        clan.setCrestLargeId(CrestCache.getPledgeCrestLargeId(clanId));
 
         // Synerge - Restore all clan stats from the database
         // clan.getStats().restoreClanStats();

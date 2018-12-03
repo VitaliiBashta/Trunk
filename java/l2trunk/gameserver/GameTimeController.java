@@ -14,16 +14,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 
-public class GameTimeController {
+public enum GameTimeController {
+    INSTANCE;
     private static final int TICKS_PER_SECOND = 10;
     private static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
-    private static final Logger _log = LoggerFactory.getLogger(GameTimeController.class);
-    private static final GameTimeController _instance = new GameTimeController();
-    private final long _gameStartTime;
+    private final Logger _log = LoggerFactory.getLogger(GameTimeController.class);
+    private long _gameStartTime;
     private final GameTimeListenerList listenerEngine = new GameTimeListenerList();
     private final Runnable _dayChangeNotify = new CheckSunState();
 
-    private GameTimeController() {
+    public void init() {
         _gameStartTime = getDayStartTime();
 
         GameServer.getInstance().addListener(new OnStartListenerImpl());
@@ -56,12 +56,8 @@ public class GameTimeController {
         dayStart -= System.currentTimeMillis() - _gameStartTime;
         nightStart -= System.currentTimeMillis() - _gameStartTime;
 
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
-    }
-
-    public static GameTimeController getInstance() {
-        return _instance;
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(_dayChangeNotify, nightStart, 4 * 60 * 60 * 1000L);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(_dayChangeNotify, dayStart, 4 * 60 * 60 * 1000L);
     }
 
     /**
@@ -117,7 +113,7 @@ public class GameTimeController {
     private class OnStartListenerImpl implements OnStartListener {
         @Override
         public void onStart() {
-            ThreadPoolManager.INSTANCE().execute(_dayChangeNotify);
+            ThreadPoolManager.INSTANCE.execute(_dayChangeNotify);
         }
     }
 
@@ -125,9 +121,9 @@ public class GameTimeController {
         @Override
         public void runImpl() {
             if (isNowNight())
-                getInstance().getListenerEngine().onNight();
+                INSTANCE.getListenerEngine().onNight();
             else
-                getInstance().getListenerEngine().onDay();
+                INSTANCE.getListenerEngine().onDay();
 
             for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
                 player.checkDayNightMessages();
@@ -139,13 +135,13 @@ public class GameTimeController {
     protected class GameTimeListenerList extends ListenerList<GameServer> {
         void onDay() {
             for (Listener<GameServer> listener : getListeners())
-                if (OnDayNightChangeListener.class.isInstance(listener))
+                if (listener instanceof OnDayNightChangeListener)
                     ((OnDayNightChangeListener) listener).onDay();
         }
 
         void onNight() {
             for (Listener<GameServer> listener : getListeners())
-                if (OnDayNightChangeListener.class.isInstance(listener))
+                if (listener instanceof OnDayNightChangeListener)
                     ((OnDayNightChangeListener) listener).onNight();
         }
     }

@@ -33,7 +33,7 @@ public final class ExplodingOrcGhost extends Fighter {
         public void runImpl() {
             _npc.abortAttack(true, false);
             _npc.abortCast(true, false);
-            _npc.doCast(SELF_DESTRUCTION, _actor, true);
+            _npc.doCast(SELF_DESTRUCTION, actor, true);
         }
     }
 

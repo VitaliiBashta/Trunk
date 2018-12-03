@@ -27,7 +27,7 @@ public final class RequestInfoItemAuction extends L2GameClientPacket {
 
         activeChar.getAndSetLastItemAuctionRequest();
 
-        final ItemAuctionInstance instance = ItemAuctionManager.getInstance().getManagerInstance(_instanceId);
+        final ItemAuctionInstance instance = ItemAuctionManager.INSTANCE.getManagerInstance(_instanceId);
         if (instance == null)
             return;
 

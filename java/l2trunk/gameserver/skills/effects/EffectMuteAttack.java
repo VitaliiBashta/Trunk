@@ -12,16 +12,16 @@ public class EffectMuteAttack extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (!_effected.startAMuted()) {
-            _effected.abortCast(true, true);
-            _effected.abortAttack(true, true);
+        if (!effected.startAMuted()) {
+            effected.abortCast(true, true);
+            effected.abortAttack(true, true);
         }
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopAMuted();
+        effected.stopAMuted();
     }
 
     @Override

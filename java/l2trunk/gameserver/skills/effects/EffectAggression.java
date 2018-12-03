@@ -12,15 +12,15 @@ public class EffectAggression extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (_effected.isPlayer() && _effected != _effector)
-            ((PlayerAI) _effected.getAI()).lockTarget(_effector);
+        if (effected.isPlayer() && effected != _effector)
+            ((PlayerAI) effected.getAI()).lockTarget(_effector);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        if (_effected.isPlayer() && _effected != _effector)
-            ((PlayerAI) _effected.getAI()).lockTarget(null);
+        if (effected.isPlayer() && effected != _effector)
+            ((PlayerAI) effected.getAI()).lockTarget(null);
     }
 
     @Override

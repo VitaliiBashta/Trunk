@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.SkyshadowMeadow;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
@@ -48,22 +47,14 @@ public final class Fire extends DefaultAI {
                     if (actor.getNpcState() < 1)
                         actor.setNpcState((byte) 1); // Зажигаем кастер.
                     NpcUtils.spawnSingle(FEED, new Location(actor.getX(), actor.getY(), actor.getZ()), 0);
-                    ThreadPoolManager.INSTANCE().schedule(new SpawnStart(), 20000); // Время паузы
+                    ThreadPoolManager.INSTANCE.schedule(() -> {
+                        if (getActor() == null) return;
+                        _firstTime = true;
+                    }, 20000); // Время паузы
                 }
             }
         }
         return true;
     }
 
-    private class SpawnStart extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            if (actor == null)
-                return;
-
-            // Выключаем паузу
-            _firstTime = true;
-        }
-    }
 }

@@ -6,19 +6,18 @@ import l2trunk.gameserver.cache.ImagesCache;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Class containing Thread which sends most important images to the server with {@value #DELAY_BETWEEN_PICTURE} delay between each image
  */
-public class AutoImageSenderManager {
-    //protected static final int[] IMAGES_SENT_ORDER = { 9011, 9012, 9013, 9021, 9022, 9023, 9811, 9812, 9813, 9821, 9822, 9823, 9311, 9312, 9313, 9321, 9322, 9323, 9211,
-    //													 9212, 9213, 9221, 9222, 9223, 9111, 9112, 9113, 9121, 9122, 9123, 9511, 9512, 9513, 9521, 9522, 9523, 9611, 9612,
-    //													 9613, 9621, 9622, 9623, 9911, 9912, 9913, 9921, 9922, 9923, 9711, 9712, 9713, 9721, 9722, 9723, };
-    private static final int[] IMAGES_SENT_ORDER = {10000, 10001, 10002};
+public final class AutoImageSenderManager {
+    private static final List<Integer> IMAGES_SENT_ORDER = Arrays.asList(10000, 10001, 10002);
 
     private static final long DELAY_BETWEEN_PICTURE = 1000L;
 
     private AutoImageSenderManager() {
-        // Clean
     }
 
     /**
@@ -29,11 +28,7 @@ public class AutoImageSenderManager {
      * @return should player wait for the Image Thread?
      */
     public static boolean isImageAutoSendable(int imageId) {
-        for (int spendableId : IMAGES_SENT_ORDER) {
-            if (spendableId == imageId)
-                return true;
-        }
-        return false;
+        return IMAGES_SENT_ORDER.contains(imageId);
     }
 
     /**
@@ -43,7 +38,7 @@ public class AutoImageSenderManager {
      * @return were those images sent already?
      */
     public static boolean wereAllImagesSent(Player player) {
-        return !Config.ALLOW_SENDING_IMAGES || player.getLoadedImagesSize() >= IMAGES_SENT_ORDER.length;
+        return !Config.ALLOW_SENDING_IMAGES || player.getLoadedImagesSize() >= IMAGES_SENT_ORDER.size();
     }
 
     /**
@@ -83,13 +78,13 @@ public class AutoImageSenderManager {
                         int pictureToLoad = getNextPicture(player);
 
                         if (pictureToLoad != -1) {
-                            ImagesCache.getInstance().sendImageToPlayer(player, pictureToLoad);
+                            ImagesCache.sendImageToPlayer(player, pictureToLoad);
                         }
                     }
                 }
             }
 
-            ThreadPoolManager.INSTANCE().schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
+            ThreadPoolManager.INSTANCE.schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
         }
     }
 }

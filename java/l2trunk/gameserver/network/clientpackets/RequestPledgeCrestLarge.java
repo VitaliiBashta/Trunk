@@ -4,25 +4,24 @@ import l2trunk.gameserver.cache.CrestCache;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExPledgeCrestLarge;
 
-public class RequestPledgeCrestLarge extends L2GameClientPacket {
+public final class RequestPledgeCrestLarge extends L2GameClientPacket {
     // format: chd
-    private int _crestId;
+    private int crestId;
 
     @Override
     protected void readImpl() {
-        _crestId = readD();
+        crestId = readD();
     }
 
     @Override
     protected void runImpl() {
-        Player activeChar = getClient().getActiveChar();
-        if (activeChar == null)
+        if (getClient().getActiveChar() == null)
             return;
-        if (_crestId == 0)
+        if (crestId == 0)
             return;
-        byte[] data = CrestCache.getInstance().getPledgeCrestLarge(_crestId);
+        byte[] data = CrestCache.getPledgeCrestLarge(crestId);
         if (data != null) {
-            ExPledgeCrestLarge pcl = new ExPledgeCrestLarge(_crestId, data);
+            ExPledgeCrestLarge pcl = new ExPledgeCrestLarge(crestId, data);
             sendPacket(pcl);
         }
     }

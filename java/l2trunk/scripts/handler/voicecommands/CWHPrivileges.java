@@ -95,7 +95,7 @@ public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
             if (!Config.SERVICES_EXPAND_CWH_ENABLED)
                 dialog = dialog.replaceFirst("%whextprice%", "service disabled");
             else
-                dialog = dialog.replaceFirst("%whextprice%", Config.SERVICES_EXPAND_CWH_PRICE + " " + ItemHolder.INSTANCE.getTemplate(Config.SERVICES_EXPAND_CWH_ITEM).getName());
+                dialog = dialog.replaceFirst("%whextprice%", Config.SERVICES_EXPAND_CWH_PRICE + " " + ItemHolder.getInstance().getTemplate(Config.SERVICES_EXPAND_CWH_ITEM).getName());
             Functions.show(dialog, activeChar, null);
             return true;
         }

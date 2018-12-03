@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
+public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     private static final int INCSTANCED_ZONE_ID = 9;
 
     // Items
@@ -39,10 +39,10 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     private static final int SC = 22402; // Shadow Column
 
     // Mobs
-    private static final int[] CCG = new int[]{18369, 18370}; // Chromatic Crystal Golem
-    private static final int[] BM = new int[]{22272, 22273, 22274}; // Beleth's Minions
-    private static final int[] HG = new int[]{22264, 22265}; // [22318,22319] // Hall Guards
-    private static final int[] BS = new int[]{18371, 18372, 18373, 18374, 18375, 18376, 18377}; // Beleth's Samples
+    private static final int[] CCG = {18369, 18370}; // Chromatic Crystal Golem
+    private static final int[] BM = {22272, 22273, 22274}; // Beleth's Minions
+    private static final int[] HG = {22264, 22265}; // [22318,22319] // Hall Guards
+    private static final int[] BS = {18371, 18372, 18373, 18374, 18375, 18376, 18377}; // Beleth's Samples
 
     // Doors/Walls
     private static final int D1 = 24230001; // Starting Room
@@ -62,7 +62,7 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 	 */
 
     // Second room - random monolith order
-    private static final int[][] order = new int[][]{
+    private static final int[][] order = {
             {1, 2, 3, 4, 5, 6},
             {6, 5, 4, 3, 2, 1},
             {4, 5, 6, 3, 2, 1},
@@ -80,7 +80,7 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
             {5, 4, 3, 1, 6, 2}};
 
     // Second room - golem spawn locatons - random
-    private static final int[][] golems = new int[][]{
+    private static final int[][] golems ={
             {CCG[0], 148060, 181389},
             {CCG[1], 147910, 181173},
             {CCG[0], 147810, 181334},
@@ -90,10 +90,10 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
             {CCG[0], 147805, 181281}};
 
     // forth room - random shadow column
-    private static final int[][] rows = new int[][]{{1, 1, 0, 1, 0}, {0, 1, 1, 0, 1}, {1, 0, 1, 1, 0}, {0, 1, 0, 1, 1}, {1, 0, 1, 0, 1}};
+    private static final int[][] rows = {{1, 1, 0, 1, 0}, {0, 1, 1, 0, 1}, {1, 0, 1, 1, 0}, {0, 1, 0, 1, 1}, {1, 0, 1, 0, 1}};
 
     // Fifth room - beleth order
-    private static final int[][] beleths = new int[][]{
+    private static final int[][] beleths = {
             {1, 0, 1, 0, 1, 0, 0},
             {0, 0, 1, 0, 1, 1, 0},
             {0, 0, 0, 1, 0, 1, 1},
@@ -296,13 +296,13 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 
     private void runHall(World world) {
         world.status = 1;
-        ReflectionManager.getInstance().get(world.instanceId).openDoor(D1);
+        ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D1);
         spawnHall(world);
     }
 
     private void runFirstRoom(World world) {
         world.status = 2;
-        ReflectionManager.getInstance().get(world.instanceId).openDoor(D2);
+        ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D2);
         world.FirstRoom = new Room();
         world.FirstRoom.npclist = new HashMap<>();
         NpcInstance newNpc = addSpawnToInstance(HG[1], new Location(147842, 179837, -6117), 0, world.instanceId);
@@ -321,9 +321,10 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     }
 
     private void runSecondRoom(World world) {
-        NpcInstance newNpc = addSpawnToInstance(SOFaith, new Location(147818, 179643, -6117), 0, world.instanceId);
+        addSpawnToInstance(SOFaith, new Location(147818, 179643, -6117), 0, world.instanceId);
+        NpcInstance newNpc;
         world.status = 4;
-        ReflectionManager.getInstance().get(world.instanceId).openDoor(D3);
+        ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D3);
         world.SecondRoom = new Room();
         world.SecondRoom.monolith = new ArrayList<>();
         int i = Rnd.get(order.length);
@@ -350,7 +351,7 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 
     private void runThirdRoom(World world) {
         world.status = 6;
-        ReflectionManager.getInstance().get(world.instanceId).openDoor(D4);
+        ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D4);
         world.ThirdRoom = new Room();
         world.ThirdRoom.npclist = new HashMap<>();
         NpcInstance newNpc = addSpawnToInstance(BM[1], new Location(148765, 180450, -6117), 0, world.instanceId);
@@ -369,7 +370,7 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 
     private void runForthRoom(World world) {
         world.status = 7;
-        ReflectionManager.getInstance().get(world.instanceId).openDoor(D5);
+        ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D5);
         world.ForthRoom = new Room();
         world.ForthRoom.npclist2 = new ArrayList<>();
         world.ForthRoom.counter = 0;
@@ -406,7 +407,7 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 
     private void runFifthRoom(World world) {
         world.status = 8;
-        ReflectionManager.getInstance().get(world.instanceId).openDoor(D6);
+        ReflectionManager.INSTANCE.get(world.instanceId).openDoor(D6);
         world.FifthRoom = new Room();
         addSpawnToInstance(SOAdventure, new Location(148910, 178397, -6117, 16383), 0, world.instanceId);
         spawnBelethSample(world);
@@ -506,7 +507,7 @@ public class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     }
 
     private void chkShadowColumn(World world, NpcInstance npc) {
-        Reflection ref = ReflectionManager.getInstance().get(world.instanceId);
+        Reflection ref = ReflectionManager.INSTANCE.get(world.instanceId);
         for (long[] mob : world.ForthRoom.npclist2)
             if (mob[0] == npc.getStoredId())
                 for (int i = 0; i <= 7; i++)

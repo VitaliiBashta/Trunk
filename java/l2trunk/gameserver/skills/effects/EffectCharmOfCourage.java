@@ -11,14 +11,14 @@ public class EffectCharmOfCourage extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (_effected.isPlayer())
-            _effected.getPlayer().setCharmOfCourage(true);
+        if (effected.isPlayer())
+            effected.getPlayer().setCharmOfCourage(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.getPlayer().setCharmOfCourage(false);
+        effected.getPlayer().setCharmOfCourage(false);
     }
 
     @Override

@@ -87,7 +87,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             return;
         }
 
-        if (CharacterDAO.getInstance().getObjectIdByName(newName) > 0) {
+        if (CharacterDAO.getObjectIdByName(newName) > 0) {
             player.sendMessage(new CustomMessage("scripts.services.Rename.Thisnamealreadyexists", player));
             return;
         }
@@ -151,7 +151,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + path, player);
 
         if (sendImages)
-            ImagesCache.getInstance().sendUsedImages(html, player);
+            ImagesCache.sendUsedImages(html, player);
 
         for (int i = 0; i < replacements.length; i += 2) {
             String toReplace = replacements[i + 1];

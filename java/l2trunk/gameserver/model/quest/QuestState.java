@@ -347,7 +347,7 @@ public final class QuestState {
             count = 1;
 
         // Get template of item
-        ItemTemplate template = ItemHolder.INSTANCE.getTemplate(itemId);
+        ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
         if (template == null)
             return;
 
@@ -680,7 +680,7 @@ public final class QuestState {
     public void showTutorialHTML(String html) {
         if (_player != null) {
             // Alexander - Added support for showing crest images on tutorial windows
-            html = ImagesCache.getInstance().sendUsedImages(html, _player);
+            html = ImagesCache.sendUsedImages(html, _player);
 
             // Alexander - If the html has crests then we should delay the tutorial html so the images reach their destination before the htm
             if (html.startsWith("CREST")) {
@@ -892,7 +892,7 @@ public final class QuestState {
     }
 
     public NpcInstance findTemplate(int npcId) {
-        for (Spawner spawn : SpawnManager.getInstance().getSpawners(PeriodOfDay.NONE.name()))
+        for (Spawner spawn : SpawnManager.INSTANCE.getSpawners(PeriodOfDay.NONE.name()))
             if (spawn != null && spawn.getCurrentNpcId() == npcId)
                 return spawn.getLastSpawn();
         return null;

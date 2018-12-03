@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
@@ -11,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class GuardoftheGrave extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(GuardoftheGrave.class);
-
     private static final int DESPAWN_TIME = 2 * 45 * 1000;
     private static final int CHIEFTAINS_TREASURE_CHEST = 18816;
 
@@ -25,7 +22,11 @@ public final class GuardoftheGrave extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.INSTANCE().schedule(new DeSpawnTask(), DESPAWN_TIME + Rnd.get(1, 30));
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            NpcInstance actor = getActor();
+            spawnChest(actor);
+            actor.deleteMe();
+        }, DESPAWN_TIME + Rnd.get(1, 30));
     }
 
     @Override
@@ -39,22 +40,10 @@ public final class GuardoftheGrave extends Fighter {
     }
 
     private void spawnChest(NpcInstance actor) {
-        try {
-            NpcInstance npc = NpcHolder.getTemplate(CHIEFTAINS_TREASURE_CHEST).getNewInstance();
-            npc.setSpawnedLoc(actor.getLoc());
-            npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
-            npc.spawnMe(npc.getSpawnedLoc());
-        } catch (RuntimeException e) {
-            LOG.error("Error while Spawning Chest from GuardOfTheGrave", e);
-        }
+        NpcInstance npc = NpcHolder.getTemplate(CHIEFTAINS_TREASURE_CHEST).getNewInstance();
+        npc.setSpawnedLoc(actor.getLoc());
+        npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+        npc.spawnMe(npc.getSpawnedLoc());
     }
 
-    private class DeSpawnTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            spawnChest(actor);
-            actor.deleteMe();
-        }
-    }
 }

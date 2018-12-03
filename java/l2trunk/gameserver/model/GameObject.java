@@ -104,7 +104,7 @@ public abstract class GameObject extends EventOwner {
     }
 
     public void setReflection(int reflectionId) {
-        Reflection r = ReflectionManager.getInstance().get(reflectionId);
+        Reflection r = ReflectionManager.INSTANCE.get(reflectionId);
         if (r == null) {
             Log.debug("Trying to set unavailable reflection: " + reflectionId + " for object: " + this + "!", new Throwable().fillInStackTrace());
             return;

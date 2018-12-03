@@ -39,7 +39,7 @@ public final class AdminFunctions {
 
         if (player != null)
             charName = player.getName();
-        else if (CharacterDAO.getInstance().getObjectIdByName(charName) == 0)
+        else if (CharacterDAO.getObjectIdByName(charName) == 0)
             return "Player " + charName + " not found.";
 
         if ((adminName == null || adminName.isEmpty()) && adminChar != null)

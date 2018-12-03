@@ -20,7 +20,7 @@ public final class SpawnExObject implements SpawnableObject {
 
     public SpawnExObject(String name) {
         _name = name;
-        _spawns = SpawnManager.getInstance().getSpawners(_name);
+        _spawns = SpawnManager.INSTANCE.getSpawners(_name);
         if (_spawns.isEmpty())
             _log.info("SpawnExObject: not found spawn group: " + name);
     }

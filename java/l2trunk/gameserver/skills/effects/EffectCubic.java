@@ -171,7 +171,7 @@ public final class EffectCubic extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        Player player = _effected.getPlayer();
+        Player player = effected.getPlayer();
         if (player == null)
             return;
 
@@ -182,7 +182,7 @@ public final class EffectCubic extends Effect {
     @Override
     public void onExit() {
         super.onExit();
-        Player player = _effected.getPlayer();
+        Player player = effected.getPlayer();
         if (player == null)
             return;
 
@@ -220,10 +220,10 @@ public final class EffectCubic extends Effect {
     }
 
     private boolean canAttack() {
-        if (_effected.getPlayer() == null)
+        if (effected.getPlayer() == null)
             return true;
 
-        Player effected = _effected.getPlayer();
+        Player effected = this.effected.getPlayer();
 
         if (effected.isInCombat() || effected.getPvpFlag() > 0)
             return true;
@@ -263,7 +263,7 @@ public final class EffectCubic extends Effect {
             if (!isActive())
                 return;
 
-            Player player = _effected != null && _effected.isPlayer() ? (Player) _effected : null;
+            Player player = effected != null && effected.isPlayer() ? (Player) effected : null;
             if (player == null)
                 return;
 

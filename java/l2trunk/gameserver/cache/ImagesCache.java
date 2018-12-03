@@ -23,33 +23,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-/**
- * Class containing Map of Images sent from Server to Client Images are located in ./data/images/id_by_name They are sent to client by PledgeCrest packet
- */
-public class ImagesCache {
+public final class ImagesCache {
     private static final Pattern HTML_PATTERN = Pattern.compile("%image:(.*?)%", 32);
     private static final Logger _log = LoggerFactory.getLogger(ImagesCache.class);
     private static final int[] SIZES =
-            {
-                    1,
-                    2,
-                    4,
-                    8,
-                    16,
-                    32,
-                    64,
-                    128,
-                    256,
-                    512,
-                    1024
-            };
+            {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
     private static final int MAX_SIZE = SIZES[(SIZES.length - 1)];
     private static final String CREST_IMAGE_KEY_WORD = "Crest.crest_";
-    private final Map<Integer, byte[]> _images = new HashMap<>();
-    private final Map<String, Integer> _imagesId = new HashMap<>();
+    private static final Map<Integer, byte[]> _images = new HashMap<>();
+    private static final Map<String, Integer> _imagesId = new HashMap<>();
 
     private ImagesCache() {
+    }
+
+    public static void init() {
         loadImages();
     }
 
@@ -163,17 +150,11 @@ public class ImagesCache {
         return stop;
     }
 
-    /**
-     * @return the only instance of ImagesCache
-     */
-    public static ImagesCache getInstance() {
-        return ImagesCacheHolder.instance;
-    }
 
     /**
      * Loading all the images from ./data/images/id_by_name Path and adding them to images map
      */
-    private void loadImages() {
+    private static void loadImages() {
         Map<Integer, Path> imagesToLoad = getImagesToLoad();
 
         for (Map.Entry<Integer, Path> image : imagesToLoad.entrySet()) {
@@ -193,7 +174,7 @@ public class ImagesCache {
      * @param player that will receive images
      * @return Returns true if images were sent to the player
      */
-    public String sendUsedImages(String html, Player player) {
+    public static String sendUsedImages(String html, Player player) {
         if (!Config.ALLOW_SENDING_IMAGES)
             return html;
 
@@ -243,7 +224,7 @@ public class ImagesCache {
      * @param player  that will receive image
      * @param imageId Id of the image
      */
-    public void sendImageToPlayer(Player player, int imageId) {
+    public static void sendImageToPlayer(Player player, int imageId) {
         if (!Config.ALLOW_SENDING_IMAGES)
             return;
 
@@ -261,7 +242,4 @@ public class ImagesCache {
 //		}
     }
 
-    private static class ImagesCacheHolder {
-        static final ImagesCache instance = new ImagesCache();
-    }
 }

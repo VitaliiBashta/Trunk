@@ -35,7 +35,7 @@ public final class Parsers {
         SpawnParser.getInstance().load();
         InstantZoneParser.getInstance().load();
 
-        ReflectionManager.getInstance();
+        ReflectionManager.INSTANCE.init();
 
         //
         AirshipDockParser.getInstance().load();

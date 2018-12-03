@@ -16,7 +16,7 @@ public class EffectManaHeal extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (_effected.isHealBlocked())
+        if (effected.isHealBlocked())
             return false;
         return super.checkCondition();
     }
@@ -25,17 +25,17 @@ public class EffectManaHeal extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (_effected.isHealBlocked())
+        if (effected.isHealBlocked())
             return;
 
         double mp = calc();
-        double newMp = Math.min(mp * 1.7, mp * (!_ignoreMpEff ? _effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.);
-        double addToMp = Math.max(0, Math.min(newMp, _effected.calcStat(Stats.MP_LIMIT, null, null) * _effected.getMaxMp() / 100. - _effected.getCurrentMp()));
+        double newMp = Math.min(mp * 1.7, mp * (!_ignoreMpEff ? effected.calcStat(Stats.MANAHEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.);
+        double addToMp = Math.max(0, Math.min(newMp, effected.calcStat(Stats.MP_LIMIT, null, null) * effected.getMaxMp() / 100. - effected.getCurrentMp()));
 
-        _effected.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
+        effected.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(addToMp)));
 
         if (addToMp > 0)
-            _effected.setCurrentMp(addToMp + _effected.getCurrentMp());
+            effected.setCurrentMp(addToMp + effected.getCurrentMp());
     }
 
     @Override

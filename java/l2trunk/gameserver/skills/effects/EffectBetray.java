@@ -14,8 +14,8 @@ public class EffectBetray extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (_effected != null && _effected.isSummon()) {
-            Summon summon = (Summon) _effected;
+        if (effected != null && effected.isSummon()) {
+            Summon summon = (Summon) effected;
             summon.setDepressed(true);
             summon.getAI().Attack(summon.getPlayer(), true, false);
         }
@@ -24,8 +24,8 @@ public class EffectBetray extends Effect {
     @Override
     public void onExit() {
         super.onExit();
-        if (_effected != null && _effected.isSummon()) {
-            Summon summon = (Summon) _effected;
+        if (effected != null && effected.isSummon()) {
+            Summon summon = (Summon) effected;
             summon.setDepressed(false);
             summon.getAI().setIntention(AI_INTENTION_ACTIVE);
         }

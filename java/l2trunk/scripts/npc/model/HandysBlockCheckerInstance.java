@@ -12,15 +12,12 @@ import l2trunk.gameserver.network.serverpackets.ExCubeGameTeamList;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @authors BiggBoss, Gigiikun, n0nam3
- */
-public class HandysBlockCheckerInstance extends NpcInstance {
+public final class HandysBlockCheckerInstance extends NpcInstance {
     public HandysBlockCheckerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         if (!Config.ALT_ENABLE_BLOCK_CHECKER_EVENT)
             return;
-        HandysBlockCheckerManager.getInstance().startUpParticipantsQueue();
+        HandysBlockCheckerManager.INSTANCE.startUpParticipantsQueue();
     }
 
     // Arena Managers
@@ -56,12 +53,12 @@ public class HandysBlockCheckerInstance extends NpcInstance {
                 player.sendPacket(new SystemMessage(SystemMessage.YOU_CANNOT_REGISTER_BECAUSE_CAPACITY_HAS_BEEN_EXCEEDED));
                 return;
             }
-            if (HandysBlockCheckerManager.getInstance().arenaIsBeingUsed(arena)) {
+            if (HandysBlockCheckerManager.INSTANCE.arenaIsBeingUsed(arena)) {
                 player.sendPacket(new SystemMessage(SystemMessage.THE_MATCH_IS_BEING_PREPARED_PLEASE_TRY_AGAIN_LATER));
                 return;
             }
-            if (HandysBlockCheckerManager.getInstance().addPlayerToArena(player, arena)) {
-                ArenaParticipantsHolder holder = HandysBlockCheckerManager.getInstance().getHolder(arena);
+            if (HandysBlockCheckerManager.INSTANCE.addPlayerToArena(player, arena)) {
+                ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(arena);
 
                 final ExCubeGameTeamList tl = new ExCubeGameTeamList(holder.getRedPlayers(), holder.getBluePlayers(), arena);
 
@@ -82,8 +79,6 @@ public class HandysBlockCheckerInstance extends NpcInstance {
     }
 
     private boolean eventIsFull(int arena) {
-        if (HandysBlockCheckerManager.getInstance().getHolder(arena).getAllPlayers().size() == 12)
-            return true;
-        return false;
+        return HandysBlockCheckerManager.INSTANCE.getHolder(arena).getAllPlayers().size() == 12;
     }
 }

@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * packet type id 0x56
  * format:		cddc
  */
-public class RequestActionUse extends L2GameClientPacket {
+public final class RequestActionUse extends L2GameClientPacket {
     private static final Logger _log = LoggerFactory.getLogger(RequestActionUse.class);
 
     private int _actionId;
@@ -495,7 +495,7 @@ public class RequestActionUse extends L2GameClientPacket {
             return;
         }
 
-        int skillLevel = PetSkillsTable.getInstance().getAvailableLevel(pet, skillId);
+        int skillLevel = PetSkillsTable.INSTANCE.getAvailableLevel(pet, skillId);
         if (skillLevel == 0) {
             activeChar.sendActionFailed();
             return;

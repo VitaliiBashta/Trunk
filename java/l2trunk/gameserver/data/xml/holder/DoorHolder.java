@@ -1,8 +1,16 @@
 package l2trunk.gameserver.data.xml.holder;
 
 import l2trunk.commons.data.xml.AbstractHolder;
+import l2trunk.commons.lang.FileUtils;
+import l2trunk.gameserver.Config;
 import l2trunk.gameserver.templates.DoorTemplate;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,5 +44,22 @@ public final class DoorHolder extends AbstractHolder {
     @Override
     public void clear() {
         doors.clear();
+    }
+
+    public static void main(String[] args) {
+        Path dir = Paths.get("c:/projects/Trunk/data/doors/");
+        Collection<Path> files = FileUtils.getAllFiles(dir, true, ".xml");
+        StringBuilder builder = new StringBuilder();
+        for (Path file :files) {
+            builder.append(FileUtils.readFileToString(file));
+
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(dir.resolve("doors.xml")))
+        {
+            writer.write(builder.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

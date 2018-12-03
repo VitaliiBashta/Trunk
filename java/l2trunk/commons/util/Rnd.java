@@ -49,10 +49,6 @@ public final class Rnd {
         return rnd().nextDouble();
     }
 
-    public static double nextGaussian() {
-        return rnd().nextGaussian();
-    }
-
     public static boolean nextBoolean() {
         return rnd().nextBoolean();
     }

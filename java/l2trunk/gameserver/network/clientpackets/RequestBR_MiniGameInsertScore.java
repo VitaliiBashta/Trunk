@@ -18,6 +18,6 @@ public class RequestBR_MiniGameInsertScore extends L2GameClientPacket {
         if (player == null || !Config.EX_JAPAN_MINIGAME)
             return;
 
-        MiniGameScoreManager.getInstance().insertScore(player, _score);
+        MiniGameScoreManager.INSTANCE.insertScore(player, _score);
     }
 }

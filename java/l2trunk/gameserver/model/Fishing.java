@@ -538,9 +538,9 @@ public class Fishing {
             return;
 
         int mode;
-        if (skillType == SkillType.REELING && !GameTimeController.getInstance().isNowNight())
+        if (skillType == SkillType.REELING && !GameTimeController.INSTANCE.isNowNight())
             mode = 1;
-        else if (skillType == SkillType.PUMPING && GameTimeController.getInstance().isNowNight())
+        else if (skillType == SkillType.PUMPING && GameTimeController.INSTANCE.isNowNight())
             mode = 1;
         else
             mode = 0;
@@ -593,7 +593,7 @@ public class Fishing {
                 return;
             }
 
-            if (!GameTimeController.getInstance().isNowNight() && isNightLure(_lureId)) {
+            if (!GameTimeController.INSTANCE.isNowNight() && isNightLure(_lureId)) {
                 _fisher.sendPacket(SystemMsg.BAITS_HAVE_BEEN_LOST_BECAUSE_THE_FISH_GOT_AWAY);
                 stopFishingTask();
                 endFishing(false);

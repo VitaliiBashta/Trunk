@@ -14,7 +14,7 @@ public final class ProductItemComponent {
         _itemId = item_id;
         _count = count;
 
-        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(item_id);
+        ItemTemplate item = ItemHolder.getInstance().getTemplate(item_id);
         if (item != null) {
             _weight = item.getWeight();
             _dropable = item.isDropable();

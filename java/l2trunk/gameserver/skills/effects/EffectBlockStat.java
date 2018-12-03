@@ -12,13 +12,13 @@ public class EffectBlockStat extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.addBlockStats(((NegateStats) _skill).getNegateStats());
+        effected.addBlockStats(((NegateStats) _skill).getNegateStats());
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.removeBlockStats(((NegateStats) _skill).getNegateStats());
+        effected.removeBlockStats(((NegateStats) _skill).getNegateStats());
     }
 
     @Override

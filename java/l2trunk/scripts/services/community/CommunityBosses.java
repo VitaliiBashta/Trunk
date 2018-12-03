@@ -215,7 +215,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
         html = getNormalReplacements(html, page, sort, search, bossId);
 
         if (!AutoImageSenderManager.isImageAutoSendable(bossId))
-            ImagesCache.getInstance().sendImageToPlayer(player, bossId);
+            ImagesCache.sendImageToPlayer(player, bossId);
 
         ShowBoard.separateAndSend(html, player);
     }

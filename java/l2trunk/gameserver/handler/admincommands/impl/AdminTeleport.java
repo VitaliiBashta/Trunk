@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdminTeleport implements IAdminCommandHandler {
+public final class AdminTeleport implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -103,8 +103,7 @@ public class AdminTeleport implements IAdminCommandHandler {
                     x -= val;
                 else if (command == Commands.admin_gosouth)
                     y += val;
-                else if (command == Commands.admin_gonorth)
-                    y -= val;
+                else y -= val;
 
                 activeChar.teleToLocation(x, y, z);
                 showTeleportWindow(activeChar);
@@ -186,7 +185,7 @@ public class AdminTeleport implements IAdminCommandHandler {
                     return true;
                 }
 
-                int obj_id = CharacterDAO.getInstance().getObjectIdByName(targetName);
+                int obj_id = CharacterDAO.getObjectIdByName(targetName);
                 if (obj_id > 0) {
                     teleportCharacter_offline(obj_id, activeChar.getLoc());
                     activeChar.sendMessage(targetName + " is offline. Offline teleport used...");
@@ -245,7 +244,7 @@ public class AdminTeleport implements IAdminCommandHandler {
                 }
 
                 int ref_id = Integer.parseInt(wordList[1]);
-                if (ref_id != 0 && ReflectionManager.getInstance().get(ref_id) == null) {
+                if (ref_id != 0 && ReflectionManager.INSTANCE.get(ref_id) == null) {
                     activeChar.sendMessage("Reflection <" + ref_id + "> not found.");
                     return false;
                 }

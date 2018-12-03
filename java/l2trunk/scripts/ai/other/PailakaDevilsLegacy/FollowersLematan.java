@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.other.PailakaDevilsLegacy;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
@@ -24,11 +23,10 @@ public final class FollowersLematan extends Fighter {
         NpcInstance minion = getActor();
         if (minion == null)
             return;
+        World.getAroundNpc(minion, 1000, 1000).stream()
+                .filter(target -> target.getNpcId() == LEMATAN && target.getCurrentHpPercents() < 65)
+                .forEach(target -> minion.doCast(SkillTable.INSTANCE.getInfo(5712, 1), target, true));
 
-        for (NpcInstance target : World.getAroundNpc(minion, 1000, 1000)) {
-            if (target.getNpcId() == LEMATAN && target.getCurrentHpPercents() < 65)
-                minion.doCast(SkillTable.INSTANCE().getInfo(5712, 1), target, true);
-        }
     }
 
     private void startSkillTimer() {
@@ -37,12 +35,9 @@ public final class FollowersLematan extends Fighter {
     }
 
     private void ScheduleTimerTask(long time) {
-        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                findBoss();
-                startSkillTimer();
-            }
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            findBoss();
+            startSkillTimer();
         }, time);
     }
 

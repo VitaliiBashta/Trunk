@@ -11,15 +11,15 @@ public final class EffectHourglass extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (_effected.isPlayer())
-            _effected.getPlayer().startHourglassEffect();
+        if (effected.isPlayer())
+            effected.getPlayer().startHourglassEffect();
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        if (_effected.isPlayer())
-            _effected.getPlayer().stopHourglassEffect();
+        if (effected.isPlayer())
+            effected.getPlayer().stopHourglassEffect();
     }
 
     @Override

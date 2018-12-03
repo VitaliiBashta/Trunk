@@ -226,7 +226,7 @@ public class Alliance {
                 }
             }
 
-            setAllyCrestId(CrestCache.getInstance().getAllyCrestId(getAllyId()));
+            setAllyCrestId(CrestCache.getAllyCrestId(getAllyId()));
         } catch (SQLException e) {
             _log.warn("error while restoring ally", e);
         }

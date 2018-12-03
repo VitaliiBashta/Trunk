@@ -354,7 +354,7 @@ public class Reflection {
 
             onCollapse();
         } finally {
-            ReflectionManager.getInstance().remove(this);
+            ReflectionManager.INSTANCE.remove(this);
             GeoEngine.FreeGeoIndex(getGeoIndex());
         }
     }
@@ -743,7 +743,7 @@ public class Reflection {
     }
 
     protected void onCreate() {
-        ReflectionManager.getInstance().add(this);
+        ReflectionManager.INSTANCE.add(this);
     }
 
     public void init(InstantZone instantZone) {

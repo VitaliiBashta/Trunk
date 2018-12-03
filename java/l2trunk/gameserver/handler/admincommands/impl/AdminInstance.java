@@ -32,7 +32,7 @@ public class AdminInstance implements IAdminCommandHandler {
             case admin_collapse:
                 Reflection r = activeChar.getReflection();
                 if (wordList.length > 1)
-                    r = ReflectionManager.getInstance().get(Integer.parseInt(wordList[1]));
+                    r = ReflectionManager.INSTANCE.get(Integer.parseInt(wordList[1]));
                 if (r != null && !r.isDefault())
                     r.collapse();
                 else if (r == null)
@@ -107,7 +107,7 @@ public class AdminInstance implements IAdminCommandHandler {
         replyMSG.append("<td width=40><button value=\"Back\" action=\"bypass -h admin_admin\" width=40 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("</tr></table><br><br>");
 
-        for (Reflection reflection : ReflectionManager.getInstance().getAll()) {
+        for (Reflection reflection : ReflectionManager.INSTANCE.getAll()) {
             if (reflection == null || reflection.isDefault() || reflection.isCollapseStarted())
                 continue;
             int countPlayers = 0;
@@ -124,7 +124,7 @@ public class AdminInstance implements IAdminCommandHandler {
     }
 
     private void listOfCharsForInstance(Player activeChar, String sid) {
-        Reflection reflection = ReflectionManager.getInstance().get(Integer.parseInt(sid));
+        Reflection reflection = ReflectionManager.INSTANCE.get(Integer.parseInt(sid));
 
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
         StringBuilder replyMSG = new StringBuilder("<html><title>Instance Menu</title><body><br>");

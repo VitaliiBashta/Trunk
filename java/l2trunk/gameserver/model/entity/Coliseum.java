@@ -47,7 +47,7 @@ public final class Coliseum {
     }
 
     public static void register(Player player, int minLevel, int maxLevel) {
-        Coliseum coli = UnderGroundColliseumManager.getInstance().getColiseumByLevelLimit(maxLevel);
+        Coliseum coli = UnderGroundColliseumManager.INSTANCE.getColiseumByLevelLimit(maxLevel);
         if (coli == null) {
             player.sendMessage("this is not work now, if you have any information about it, contact as");
             return;
@@ -93,16 +93,16 @@ public final class Coliseum {
     private void startBattle(Party party, Party party2) {
         if (!isInUse()) {
             if (getPreviusWinners() == null) {
-                ThreadPoolManager.INSTANCE().schedule(new StartBattle(party, party2), 10000L);
+                ThreadPoolManager.INSTANCE.schedule(new StartBattle(party, party2), 10000L);
             } else {
-                ThreadPoolManager.INSTANCE().schedule(new StartBattle(party, getPreviusWinners()), 10000L);
+                ThreadPoolManager.INSTANCE.schedule(new StartBattle(party, getPreviusWinners()), 10000L);
                 setIsWaitingRoom1Free(true);
                 Location teleloc = getFreeWaitingRoom();
                 setIsWaitingRoom2Free(true);
                 teleportToWaitingRoom(party2, teleloc);
             }
         } else {
-            ThreadPoolManager.INSTANCE().schedule(new TryStart(party, party2), 300000L);
+            ThreadPoolManager.INSTANCE.schedule(new TryStart(party, party2), 300000L);
         }
     }
 

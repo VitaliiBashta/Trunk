@@ -104,33 +104,33 @@ public class SoIManager {
         _log.info("Seed of Infinity Manager: Closing the seed.");
         ServerVariables.unset("SoI_opened");
         //Despawning tumors / seeds
-        SpawnManager.getInstance().despawn("soi_hos_middle_seeds");
-        SpawnManager.getInstance().despawn("soi_hoe_middle_seeds");
-        SpawnManager.getInstance().despawn("soi_hoi_middle_seeds");
-        SpawnManager.getInstance().despawn("soi_all_middle_stable_tumor");
+        SpawnManager.INSTANCE.despawn("soi_hos_middle_seeds");
+        SpawnManager.INSTANCE.despawn("soi_hoe_middle_seeds");
+        SpawnManager.INSTANCE.despawn("soi_hoi_middle_seeds");
+        SpawnManager.INSTANCE.despawn("soi_all_middle_stable_tumor");
         ReflectionUtils.getDoor(14240102).closeMe();
         for (Playable p : getZone().getInsidePlayables())
             p.teleToLocation(getZone().getRestartPoints().get(0));
     }
 
     private static void checkStageAndSpawn() {
-        SpawnManager.getInstance().despawn("soi_world_closedmouths");
-        SpawnManager.getInstance().despawn("soi_world_mouths");
-        SpawnManager.getInstance().despawn("soi_world_abyssgaze2");
-        SpawnManager.getInstance().despawn("soi_world_abyssgaze1");
+        SpawnManager.INSTANCE.despawn("soi_world_closedmouths");
+        SpawnManager.INSTANCE.despawn("soi_world_mouths");
+        SpawnManager.INSTANCE.despawn("soi_world_abyssgaze2");
+        SpawnManager.INSTANCE.despawn("soi_world_abyssgaze1");
         switch (getCurrentStage()) {
             case 1:
             case 4:
-                SpawnManager.getInstance().spawn("soi_world_mouths");
-                SpawnManager.getInstance().spawn("soi_world_abyssgaze2");
+                SpawnManager.INSTANCE.spawn("soi_world_mouths");
+                SpawnManager.INSTANCE.spawn("soi_world_abyssgaze2");
                 break;
             case 5:
-                SpawnManager.getInstance().spawn("soi_world_closedmouths");
-                SpawnManager.getInstance().spawn("soi_world_abyssgaze2");
+                SpawnManager.INSTANCE.spawn("soi_world_closedmouths");
+                SpawnManager.INSTANCE.spawn("soi_world_abyssgaze2");
                 break;
             default:
-                SpawnManager.getInstance().spawn("soi_world_closedmouths");
-                SpawnManager.getInstance().spawn("soi_world_abyssgaze1");
+                SpawnManager.INSTANCE.spawn("soi_world_closedmouths");
+                SpawnManager.INSTANCE.spawn("soi_world_abyssgaze1");
                 break;
         }
     }
@@ -191,10 +191,10 @@ public class SoIManager {
     }
 
     private static void spawnOpenedSeed() {
-        SpawnManager.getInstance().spawn("soi_hos_middle_seeds");
-        SpawnManager.getInstance().spawn("soi_hoe_middle_seeds");
-        SpawnManager.getInstance().spawn("soi_hoi_middle_seeds");
-        SpawnManager.getInstance().spawn("soi_all_middle_stable_tumor");
+        SpawnManager.INSTANCE.spawn("soi_hos_middle_seeds");
+        SpawnManager.INSTANCE.spawn("soi_hoe_middle_seeds");
+        SpawnManager.INSTANCE.spawn("soi_hoi_middle_seeds");
+        SpawnManager.INSTANCE.spawn("soi_all_middle_stable_tumor");
     }
 
     public static void teleportInSeed(Player p) {

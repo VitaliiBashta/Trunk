@@ -15,16 +15,12 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class _10285_MeetingSirra extends Quest implements ScriptFile {
+public final class _10285_MeetingSirra extends Quest implements ScriptFile {
     private static final int Rafforty = 32020;
     private static final int Jinia = 32760;
     private static final int Jinia2 = 32781;
     private static final int Kegor = 32761;
     private static final int Sirra = 32762;
-    private static Map<Integer,Integer> _instances = new HashMap<>();
 
     public _10285_MeetingSirra() {
         super(false);
@@ -134,8 +130,20 @@ public class _10285_MeetingSirra extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(izId)) {
             Reflection newInstance = ReflectionUtils.enterReflection(player, izId);
             if (izId == 137)
-                ThreadPoolManager.INSTANCE().schedule(new FreyaSpawn(newInstance, player), 2 * 60 * 1000L);
+                ThreadPoolManager.INSTANCE.schedule(new FreyaSpawn(newInstance, player), 2 * 60 * 1000L);
         }
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 
     private class FreyaSpawn extends RunnableImpl {
@@ -151,7 +159,7 @@ public class _10285_MeetingSirra extends Quest implements ScriptFile {
         public void runImpl() {
             if (_r != null) {
                 NpcInstance freya = _r.addSpawnWithoutRespawn(18847, new Location(114720, -117085, -11088, 15956), 0);
-                ThreadPoolManager.INSTANCE().schedule(new FreyaMovie(_player, _r, freya), 2 * 60 * 1000L);
+                ThreadPoolManager.INSTANCE.schedule(new FreyaMovie(_player, _r, freya), 2 * 60 * 1000L);
             }
         }
     }
@@ -169,40 +177,16 @@ public class _10285_MeetingSirra extends Quest implements ScriptFile {
 
         @Override
         public void runImpl() {
-            for (Spawner sp : _r.getSpawns())
-                sp.deleteAll();
+            _r.getSpawns().forEach(Spawner::deleteAll);
+
             if (_npc != null && !_npc.isDead())
                 _npc.deleteMe();
             _player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_FORCED_DEFEAT);
-            ThreadPoolManager.INSTANCE().schedule(new ResetInstance(_player, _r), 23000L);
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                _player.getQuestState(_10285_MeetingSirra.class).setCond(10);
+                _r.collapse();
+            }, 23000L);
         }
     }
 
-    private class ResetInstance extends RunnableImpl {
-        final Player _player;
-        final Reflection _r;
-
-        ResetInstance(Player player, Reflection r) {
-            _player = player;
-            _r = r;
-        }
-
-        @Override
-        public void runImpl() {
-            _player.getQuestState(_10285_MeetingSirra.class).setCond(10);
-            _r.collapse();
-        }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

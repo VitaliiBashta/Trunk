@@ -37,11 +37,14 @@ public enum ClanTable {
     private final Map<Integer, Alliance> alliances = new ConcurrentHashMap<>();
 
     ClanTable() {
+    }
+
+    public void init() {
         restoreClans();
         restoreAllies();
         restoreWars();
-    }
 
+    }
 
     public List<Clan> getClans() {
         List<Clan> result = new ArrayList<>(clans.values());

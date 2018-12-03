@@ -32,7 +32,7 @@ public class AdminEvents implements IAdminCommandHandler {
                     return false;
                 }
                 AbstractFightClub event = EventHolder.getInstance().getEvent(EventType.FIGHT_CLUB_EVENT, id);
-                FightClubEventManager.getInstance().startEventCountdown(event);
+                FightClubEventManager.INSTANCE.startEventCountdown(event);
                 activeChar.sendMessage("Event Started!");
                 break;
         }

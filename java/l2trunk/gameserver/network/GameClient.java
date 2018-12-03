@@ -146,7 +146,7 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
             return;
         }
 
-        CharacterDAO.getInstance().deleteCharByObjId(objid);
+        CharacterDAO.deleteCharByObjId(objid);
     }
 
     public Player loadCharFromDisk(int charSlot, int objectId) {

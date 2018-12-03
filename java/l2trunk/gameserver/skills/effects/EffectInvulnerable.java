@@ -12,9 +12,9 @@ public final class EffectInvulnerable extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (_effected.isInvul())
+        if (effected.isInvul())
             return false;
-        Skill skill = _effected.getCastingSkill();
+        Skill skill = effected.getCastingSkill();
         if (skill != null && (skill.getSkillType() == SkillType.TAKECASTLE || skill.getSkillType() == SkillType.TAKEFORTRESS || skill.getSkillType() == SkillType.TAKEFLAG))
             return false;
         return super.checkCondition();
@@ -23,15 +23,15 @@ public final class EffectInvulnerable extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startHealBlocked();
-        _effected.setIsInvul(true);
+        effected.startHealBlocked();
+        effected.setIsInvul(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopHealBlocked();
-        _effected.setIsInvul(false);
+        effected.stopHealBlocked();
+        effected.setIsInvul(false);
     }
 
     @Override

@@ -16,9 +16,9 @@ public final class EffectTransformation extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (!_effected.isPlayer())
+        if (!effected.isPlayer())
             return false;
-        if (isFlyingTransform && _effected.getX() > -166168)
+        if (isFlyingTransform && effected.getX() > -166168)
             return false;
         return super.checkCondition();
     }
@@ -26,7 +26,7 @@ public final class EffectTransformation extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        Player player = (Player) _effected;
+        Player player = (Player) effected;
         player.setTransformationTemplate(getSkill().getNpcId());
         if (getSkill() instanceof Transformation)
             player.setTransformationName(((Transformation) getSkill()).transformationName);
@@ -51,8 +51,8 @@ public final class EffectTransformation extends Effect {
     public void onExit() {
         super.onExit();
 
-        if (_effected.isPlayer()) {
-            Player player = (Player) _effected;
+        if (effected.isPlayer()) {
+            Player player = (Player) effected;
 
             if (getSkill() instanceof Transformation)
                 player.setTransformationName(null);

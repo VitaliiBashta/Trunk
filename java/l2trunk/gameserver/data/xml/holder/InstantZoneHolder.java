@@ -6,12 +6,9 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.templates.InstantZone;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- * @author VISTALL
- * @date 1:35/30.06.2011
- */
-public class InstantZoneHolder extends AbstractHolder {
+public final class InstantZoneHolder extends AbstractHolder {
     private static final InstantZoneHolder _instance = new InstantZoneHolder();
     private final Map<Integer, InstantZone> _zones = new HashMap<>();
 
@@ -56,13 +53,13 @@ public class InstantZoneHolder extends AbstractHolder {
 
 
     private List<Integer> getSharedReuseInstanceIds(int id) {
-        if (getInstantZone(id).getSharedReuseGroup() < 1)
-            return null;
-        List<Integer> sharedInstanceIds = new ArrayList<>();
-        for (InstantZone iz : _zones.values())
-            if (iz.getSharedReuseGroup() > 0 && getInstantZone(id).getSharedReuseGroup() > 0 && iz.getSharedReuseGroup() == getInstantZone(id).getSharedReuseGroup())
-                sharedInstanceIds.add(iz.getId());
-        return sharedInstanceIds;
+        return _zones.values().stream()
+                .filter(iz -> iz.getSharedReuseGroup() > 0)
+                .filter(iz -> getInstantZone(id).getSharedReuseGroup() > 0)
+                .filter(iz -> iz.getSharedReuseGroup() == getInstantZone(id).getSharedReuseGroup())
+                .map(InstantZone::getId)
+                .collect(Collectors.toList());
+
     }
 
     public List<Integer> getSharedReuseInstanceIdsByGroup(int groupId) {

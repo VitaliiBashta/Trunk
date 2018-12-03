@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _270_TheOneWhoEndsSilence extends Quest implements ScriptFile {
+public final class _270_TheOneWhoEndsSilence extends Quest implements ScriptFile {
     private static final int Greymore = 32757;
     private static final int TatteredMonkClothes = 15526;
     private static final int[] LowMobs = {

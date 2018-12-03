@@ -12,10 +12,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-public class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile {
+public final class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile {
     private static final int Eris = 32792;
     private static final int ElcardiaInzone1 = 32787;
     private static final int EtisEtina = 18949;
@@ -44,7 +41,10 @@ public class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile
         } else if (event.equalsIgnoreCase("start_scene")) {
             st.setCond(2);
             teleportElcardia(player, hiddenLoc);
-            ThreadPoolManager.INSTANCE().schedule(new Teleport(player), 60500L);
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                player.teleToLocation(new Location(76736, -241021, -10832));
+                teleportElcardia(player);
+            }, 60500L);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_BOSS_OPENING);
             return null;
         } else if (event.equalsIgnoreCase("teleport_back")) {
@@ -56,7 +56,7 @@ public class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile
         } else if (event.equalsIgnoreCase("hardin_q10296_3.htm")) {
             st.setCond(5);
         } else if (event.equalsIgnoreCase("enter_instance")) {
-            enterInstance(player, 146);
+            enterInstance(player);
             return null;
         } else if (event.equalsIgnoreCase("franz_q10296_3.htm")) {
             if (player.getLevel() >= 81) {
@@ -135,7 +135,7 @@ public class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile
             for (NpcInstance n : st.getPlayer().getReflection().getNpcs())
                 if (n.getNpcId() == ElcardiaInzone1)
                     n.teleToLocation(new Location(120664, -86968, -3392));
-            ThreadPoolManager.INSTANCE().schedule(new ElcardiaTeleport(st.getPlayer()), 60500L);
+            ThreadPoolManager.INSTANCE.schedule(() -> teleportElcardia(st.getPlayer()), 60500L);
             st.getPlayer().showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_BOSS_CLOSING);
 
         }
@@ -159,40 +159,13 @@ public class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile
             }
     }
 
-    private class Teleport extends RunnableImpl {
-        final Player _player;
-
-        Teleport(Player player) {
-            _player = player;
-        }
-
-        @Override
-        public void runImpl() {
-            _player.teleToLocation(new Location(76736, -241021, -10832));
-            teleportElcardia(_player);
-        }
-    }
-
-    private class ElcardiaTeleport extends RunnableImpl {
-        final Player _player;
-
-        ElcardiaTeleport(Player player) {
-            _player = player;
-        }
-
-        @Override
-        public void runImpl() {
-            teleportElcardia(_player);
-        }
-    }
-
-    private void enterInstance(Player player, int instancedZoneId) {
+    private void enterInstance(Player player) {
         Reflection r = player.getActiveReflection();
         if (r != null) {
-            if (player.canReenterInstance(instancedZoneId))
+            if (player.canReenterInstance(146))
                 player.teleToLocation(r.getTeleportLoc(), r);
-        } else if (player.canEnterInstance(instancedZoneId)) {
-            ReflectionUtils.enterReflection(player, instancedZoneId);
+        } else if (player.canEnterInstance(146)) {
+            ReflectionUtils.enterReflection(player, 146);
         }
     }
 
@@ -207,4 +180,5 @@ public class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile
     @Override
     public void onShutdown() {
     }
+
 }

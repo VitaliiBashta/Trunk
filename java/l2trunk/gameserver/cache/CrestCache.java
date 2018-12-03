@@ -15,30 +15,23 @@ public final class CrestCache {
 
     private static final Logger _log = LoggerFactory.getLogger(CrestCache.class);
 
-    private static CrestCache _instance;
     /**
      * Требуется для получения ID значка по ID клана
      */
-    private final Map<Integer, Integer> _pledgeCrestId = new HashMap<>();
-    private final Map<Integer, Integer> _pledgeCrestLargeId = new HashMap<>();
-    private final Map<Integer, Integer> _allyCrestId = new HashMap<>();
+    private static final Map<Integer, Integer> _pledgeCrestId = new HashMap<>();
+    private static final Map<Integer, Integer> _pledgeCrestLargeId = new HashMap<>();
+    private static final Map<Integer, Integer> _allyCrestId = new HashMap<>();
     /**
      * Получение значка по ID
      */
-    private final Map<Integer, byte[]> _pledgeCrest = new HashMap<>();
-    private final Map<Integer, byte[]> _pledgeCrestLarge = new HashMap<>();
-    private final Map<Integer, byte[]> _allyCrest = new HashMap<>();
+    private static final Map<Integer, byte[]> _pledgeCrest = new HashMap<>();
+    private static final Map<Integer, byte[]> _pledgeCrestLarge = new HashMap<>();
+    private static final Map<Integer, byte[]> _allyCrest = new HashMap<>();
 
-    private CrestCache() {
+    public static void init() {
         load();
     }
 
-    public static CrestCache getInstance() {
-        if (_instance != null)
-            return _instance;
-        _instance = new CrestCache();
-        return _instance;
-    }
 
     /**
      * Генерирует уникальный положительный ID на основе данных: ID клана/альянса и значка
@@ -51,7 +44,7 @@ public final class CrestCache {
         return pledgeId;
     }
 
-    private void load() {
+    private static void load() {
         int count = 0;
         int pledgeId, crestId;
         byte[] crest;
@@ -107,35 +100,35 @@ public final class CrestCache {
         _log.info("CrestCache: Loaded " + count + " crests");
     }
 
-    public synchronized byte[] getPledgeCrest(int crestId) {
+    public static synchronized byte[] getPledgeCrest(int crestId) {
         return _pledgeCrest.get(crestId);
     }
 
-    public synchronized byte[] getPledgeCrestLarge(int crestId) {
+    public static synchronized byte[] getPledgeCrestLarge(int crestId) {
         return _pledgeCrestLarge.get(crestId);
     }
 
-    public byte[] getAllyCrest(int crestId) {
+    public static byte[] getAllyCrest(int crestId) {
         return _allyCrest.get(crestId);
     }
 
-    public synchronized int getPledgeCrestId(int pledgeId) {
+    public static synchronized int getPledgeCrestId(int pledgeId) {
         if (_pledgeCrest.containsKey(pledgeId))
             return _pledgeCrestId.get(pledgeId);
         return 0;
     }
 
-    public synchronized int getPledgeCrestLargeId(int pledgeId) {
+    public static synchronized int getPledgeCrestLargeId(int pledgeId) {
         if (_pledgeCrestLargeId.containsKey(pledgeId))
         return _pledgeCrestLargeId.get(pledgeId);
         return 0;
     }
 
-    public synchronized int getAllyCrestId(int pledgeId) {
+    public static synchronized int getAllyCrestId(int pledgeId) {
         return _allyCrestId.get(pledgeId);
     }
 
-    public synchronized void removePledgeCrest(int pledgeId) {
+    public static synchronized void removePledgeCrest(int pledgeId) {
         _pledgeCrest.remove(_pledgeCrestId.remove(pledgeId));
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET crest=? WHERE clan_id=?")) {
@@ -147,7 +140,7 @@ public final class CrestCache {
         }
     }
 
-    public void removePledgeCrestLarge(int pledgeId) {
+    public static void removePledgeCrestLarge(int pledgeId) {
         _pledgeCrestLarge.remove(_pledgeCrestLargeId.remove(pledgeId));
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET largecrest=? WHERE clan_id=?")) {
@@ -159,7 +152,7 @@ public final class CrestCache {
         }
     }
 
-    public synchronized void removeAllyCrest(int pledgeId) {
+    public static synchronized void removeAllyCrest(int pledgeId) {
         _allyCrest.remove(_allyCrestId.remove(pledgeId));
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET crest=? WHERE ally_id=?")) {
@@ -171,7 +164,7 @@ public final class CrestCache {
         }
     }
 
-    public synchronized int savePledgeCrest(int pledgeId, byte[] crest) {
+    public static synchronized int savePledgeCrest(int pledgeId, byte[] crest) {
         int crestId = getCrestId(pledgeId, crest);
         _pledgeCrestId.put(pledgeId, crestId);
         _pledgeCrest.put(crestId, crest);
@@ -187,7 +180,7 @@ public final class CrestCache {
         return crestId;
     }
 
-    public synchronized int savePledgeCrestLarge(int pledgeId, byte[] crest) {
+    public static synchronized int savePledgeCrestLarge(int pledgeId, byte[] crest) {
         int crestId = getCrestId(pledgeId, crest);
         _pledgeCrestLargeId.put(pledgeId, crestId);
         _pledgeCrestLarge.put(crestId, crest);
@@ -204,7 +197,7 @@ public final class CrestCache {
         return crestId;
     }
 
-    public synchronized int saveAllyCrest(int pledgeId, byte[] crest) {
+    public static synchronized int saveAllyCrest(int pledgeId, byte[] crest) {
         int crestId = getCrestId(pledgeId, crest);
         _allyCrestId.put(pledgeId, crestId);
         _allyCrest.put(crestId, crest);

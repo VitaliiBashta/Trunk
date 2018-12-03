@@ -12,12 +12,12 @@ public class EffectCPDamPercent extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (_effected.isDead())
+        if (effected.isDead())
             return;
 
-        double newCp = (100. - calc()) * _effected.getMaxCp() / 100.;
-        newCp = Math.min(_effected.getCurrentCp(), Math.max(0, newCp));
-        _effected.setCurrentCp(newCp);
+        double newCp = (100. - calc()) * effected.getMaxCp() / 100.;
+        newCp = Math.min(effected.getCurrentCp(), Math.max(0, newCp));
+        effected.setCurrentCp(newCp);
     }
 
     @Override

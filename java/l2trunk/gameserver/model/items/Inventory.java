@@ -899,7 +899,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public boolean validateCapacity(int itemId, long count) {
-        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(itemId);
+        ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId);
         return validateCapacity(item, count);
     }
 
@@ -926,7 +926,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public boolean validateWeight(int itemId, long count) {
-        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(itemId);
+        ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId);
         return validateWeight(item, count);
     }
 

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.InstantZoneHolder;
 import l2trunk.gameserver.instancemanager.DimensionalRiftManager;
@@ -13,7 +12,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.concurrent.Future;
 
-public class DelusionChamber extends DimensionalRift {
+public final class DelusionChamber extends DimensionalRift {
     private Future<?> killRiftTask;
 
     public DelusionChamber(Party party, int type, int room) {
@@ -27,20 +26,17 @@ public class DelusionChamber extends DimensionalRift {
             killRiftTask = null;
         }
 
-        killRiftTask = ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                if (getParty() != null && !getParty().getMembers().isEmpty())
-                    for (Player p : getParty().getMembers())
-                        if (p.getReflection() == DelusionChamber.this) {
-                            String var = p.getVar("backCoords");
-                            if (var == null || var.equals(""))
-                                continue;
-                            p.teleToLocation(Location.parseLoc(var), ReflectionManager.DEFAULT);
-                            p.unsetVar("backCoords");
-                        }
-                collapse();
-            }
+        killRiftTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            if (getParty() != null && !getParty().getMembers().isEmpty())
+                for (Player p : getParty().getMembers())
+                    if (p.getReflection() == DelusionChamber.this) {
+                        String var = p.getVar("backCoords");
+                        if (var == null || var.equals(""))
+                            continue;
+                        p.teleToLocation(Location.parseLoc(var), ReflectionManager.DEFAULT);
+                        p.unsetVar("backCoords");
+                    }
+            collapse();
         }, 100L);
     }
 
@@ -48,7 +44,6 @@ public class DelusionChamber extends DimensionalRift {
     public void partyMemberExited(Player player) {
         if (getPlayersInside(false) < 2 || getPlayersInside(true) == 0) {
             createNewKillRiftTimer();
-            return;
         }
     }
 

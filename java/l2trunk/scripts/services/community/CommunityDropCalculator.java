@@ -51,7 +51,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static String replaceItemsByNamePage(String html, String itemName, int page) {
         String newHtml = html;
 
-        List<ItemTemplate> itemsByName = ItemHolder.INSTANCE.getItemsByNameContainingString(itemName, true);
+        List<ItemTemplate> itemsByName = ItemHolder.getInstance().getItemsByNameContainingString(itemName, true);
         itemsByName.sort(new ItemComparator(itemName));
 
         int itemIndex = 0;
@@ -153,7 +153,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         }
         newHtml = newHtml.replace("%monsterDropAll%", String.valueOf(CalculateRewardChances.getDrops(template, true, false).size()));
         newHtml = newHtml.replace("%monsterSpoilAll%", String.valueOf(CalculateRewardChances.getDrops(template, false, true).size()));
-        newHtml = newHtml.replace("%spawnCount%", String.valueOf(SpawnManager.getInstance().getSpawnedCountByNpc(monsterId)));
+        newHtml = newHtml.replace("%spawnCount%", String.valueOf(SpawnManager.INSTANCE.getSpawnedCountByNpc(monsterId)));
         newHtml = newHtml.replace("%minions%", String.valueOf(template.getMinionData().size()));
         newHtml = newHtml.replace("%expReward%", String.valueOf(template.rewardExp));
         newHtml = newHtml.replace("%maxHp%", String.valueOf(template.baseHpMax));
@@ -218,7 +218,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static void manageButton(Player player, int buttonId, int monsterId) {
         switch (buttonId) {
             case 1:// Show Monster on Map
-                final List<Location> locs = SpawnManager.getInstance().getRandomSpawnsByNpc(monsterId);
+                final List<Location> locs = SpawnManager.INSTANCE.getRandomSpawnsByNpc(monsterId);
                 if (locs == null || locs.isEmpty())
                     return;
 

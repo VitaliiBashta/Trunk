@@ -119,12 +119,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_spawn: {
-                ThreadPoolManager.INSTANCE.execute(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        SpawnManager.getInstance().reloadAll();
-                    }
-                });
+                ThreadPoolManager.INSTANCE.execute(SpawnManager.INSTANCE::reloadAll);
                 break;
             }
             case admin_reload_fish: {

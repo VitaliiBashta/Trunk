@@ -186,10 +186,6 @@ public enum SceneMovie implements IStaticPacket {
         return id;
     }
 
-    public int getDuration() {
-        return duration;
-    }
-
     @Override
     public L2GameServerPacket packet(Player player) {
         return packet;

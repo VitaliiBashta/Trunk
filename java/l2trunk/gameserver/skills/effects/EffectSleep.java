@@ -11,16 +11,16 @@ public final class EffectSleep extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startSleeping();
-        _effected.abortAttack(true, true);
-        _effected.abortCast(true, true);
-        _effected.stopMove();
+        effected.startSleeping();
+        effected.abortAttack(true, true);
+        effected.abortCast(true, true);
+        effected.stopMove();
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopSleeping();
+        effected.stopSleeping();
     }
 
     @Override

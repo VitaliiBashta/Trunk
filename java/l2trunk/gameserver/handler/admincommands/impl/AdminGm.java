@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Player;
 /**
  * This class handles following admin commands: - gm = turns gm mode on/off
  */
-public class AdminGm implements IAdminCommandHandler {
+public final class AdminGm implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;

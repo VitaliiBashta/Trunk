@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.actor.instances.player;
 
-import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExAutoSoulShot;
@@ -16,7 +15,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ShortCutList {
+public final class ShortCutList {
     private static final Logger _log = LoggerFactory.getLogger(ShortCutList.class);
 
     private final Player player;
@@ -30,26 +29,13 @@ public class ShortCutList {
         return _shortCuts.values();
     }
 
-    public void validate() {
-        // Проверка ярлыков
-        for (ShortCut sc : _shortCuts.values())
-            // Удаляем ярлыки на предметы, которых нету в инвентаре
-            if (sc.getType() == ShortCut.TYPE_ITEM)
-                if (player.getInventory().getItemByObjectId(sc.getId()) == null)
-                    deleteShortCut(sc.getSlot(), sc.getPage());
-    }
-
-    public ShortCut getShortCut(int slot, int page) {
-        ShortCut sc = _shortCuts.get(slot + page * 12);
-        // verify shortcut
-        if (sc != null && sc.getType() == ShortCut.TYPE_ITEM)
-            if (player.getInventory().getItemByObjectId(sc.getId()) == null) {
-                player.sendPacket(Msg.THERE_ARE_NO_MORE_ITEMS_IN_THE_SHORTCUT);
-                deleteShortCut(sc.getSlot(), sc.getPage());
-                sc = null;
-            }
-        return sc;
-    }
+//    public void validate() {
+//        // Проверка ярлыков
+//        _shortCuts.values().stream()
+//                .filter(sc -> sc.getType() == ShortCut.TYPE_ITEM)
+//                .filter(sc -> player.getInventory().getItemByObjectId(sc.getId()) == null)
+//                .forEach(sc -> deleteShortCut(sc.getSlot(), sc.getPage()));
+//    }
 
     public void registerShortCut(ShortCut shortcut) {
         ShortCut oldShortCut = _shortCuts.put(shortcut.getSlot() + 12 * shortcut.getPage(), shortcut);

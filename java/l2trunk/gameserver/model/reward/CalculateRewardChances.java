@@ -65,7 +65,7 @@ public class CalculateRewardChances {
     private static boolean templateExists(NpcTemplate template) {
         if (template == null)
             return false;
-        return SpawnManager.getInstance().getSpawnedCountByNpc(template.getNpcId()) != 0;
+        return SpawnManager.INSTANCE.getSpawnedCountByNpc(template.getNpcId()) != 0;
     }
 
     public static boolean isItemDroppable(int itemId) {
@@ -99,7 +99,7 @@ public class CalculateRewardChances {
         for (NpcTemplate template : NpcHolder.getAll()) {
             if (template == null)
                 continue;
-            if (SpawnManager.getInstance().getSpawnedCountByNpc(template.getNpcId()) == 0)
+            if (SpawnManager.INSTANCE.getSpawnedCountByNpc(template.getNpcId()) == 0)
                 continue;
 
             boolean[] dropSpoil = templateContainsItemId(template, itemId);

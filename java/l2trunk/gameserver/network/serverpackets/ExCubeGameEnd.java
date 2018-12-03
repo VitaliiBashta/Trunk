@@ -4,11 +4,11 @@ package l2trunk.gameserver.network.serverpackets;
  * Format: (chd) ddd
  * d: winner team
  */
-public class ExCubeGameEnd extends L2GameServerPacket {
-    private final boolean _isRedTeamWin;
+public final class ExCubeGameEnd extends L2GameServerPacket {
+    private final boolean isRedTeamWin;
 
     public ExCubeGameEnd(boolean isRedTeamWin) {
-        _isRedTeamWin = isRedTeamWin;
+        this.isRedTeamWin = isRedTeamWin;
     }
 
     @Override
@@ -16,6 +16,6 @@ public class ExCubeGameEnd extends L2GameServerPacket {
         writeEx(0x98);
         writeD(0x01);
 
-        writeD(_isRedTeamWin ? 0x01 : 0x00);
+        writeD(isRedTeamWin ? 0x01 : 0x00);
     }
 }

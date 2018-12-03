@@ -8,9 +8,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 
-/**
- * @author n0nam3
- */
 public final class RequestBidItemAuction extends L2GameClientPacket {
     private int _instanceId;
     private long _bid;
@@ -30,7 +27,7 @@ public final class RequestBidItemAuction extends L2GameClientPacket {
         if (adena == null || _bid < 0 || _bid > adena.getCount())
             return;
 
-        final ItemAuctionInstance instance = ItemAuctionManager.getInstance().getManagerInstance(_instanceId);
+        final ItemAuctionInstance instance = ItemAuctionManager.INSTANCE.getManagerInstance(_instanceId);
         NpcInstance broker = activeChar.getLastNpc();
         if (broker == null || broker.getNpcId() != _instanceId || activeChar.getDistance(broker.getX(), broker.getY()) > Creature.INTERACTION_DISTANCE)
             return;

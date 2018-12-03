@@ -18,17 +18,17 @@ public class EffectSummonHealPercent extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (_effected.isHealBlocked())
+        if (effected.isHealBlocked())
             return;
 
-        double hp = calc() * _effected.getMaxHp() / 100.;
-        double newHp = hp * (!_ignoreHpEff ? _effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
-        double addToHp = Math.max(0, Math.min(newHp, _effected.calcStat(Stats.HP_LIMIT, null, null) * _effected.getMaxHp() / 100. - _effected.getCurrentHp()));
+        double hp = calc() * effected.getMaxHp() / 100.;
+        double newHp = hp * (!_ignoreHpEff ? effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
+        double addToHp = Math.max(0, Math.min(newHp, effected.calcStat(Stats.HP_LIMIT, null, null) * effected.getMaxHp() / 100. - effected.getCurrentHp()));
 
-        _effected.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(addToHp)));
+        effected.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(addToHp)));
 
         if (addToHp > 0)
-            _effected.setCurrentHp(addToHp + _effected.getCurrentHp(), false);
+            effected.setCurrentHp(addToHp + effected.getCurrentHp(), false);
     }
 
     @Override

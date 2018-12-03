@@ -11,9 +11,9 @@ public final class EffectParalyze extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (_effected.isParalyzeImmune())
+        if (effected.isParalyzeImmune())
             return false;
-        if (_effector.getPet() != null && _effected == _effector.getPet()) {
+        if (_effector.getPet() != null && effected == _effector.getPet()) {
             _effector.getPlayer().sendPacket(new SystemMessage(SystemMessage.THAT_IS_THE_INCORRECT_TARGET));
             return false;
         }
@@ -24,15 +24,15 @@ public final class EffectParalyze extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startParalyzed();
-        _effected.abortAttack(true, true);
-        _effected.abortCast(true, true);
+        effected.startParalyzed();
+        effected.abortAttack(true, true);
+        effected.abortCast(true, true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopParalyzed();
+        effected.stopParalyzed();
     }
 
     @Override

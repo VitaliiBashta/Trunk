@@ -11,7 +11,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _232_TestOfLord extends Quest implements ScriptFile {
+public final class _232_TestOfLord extends Quest implements ScriptFile {
     // NPCs
     private static final int Somak = 30510;
     private static final int Manakia = 30515;
@@ -102,8 +102,7 @@ public class _232_TestOfLord extends Quest implements ScriptFile {
         DROPLIST.put(Marsh_Spider, new Drop(1, 10, 100).addItem(MARSH_SPIDER_FEELER).addItem(MARSH_SPIDER_FEET));
         DROPLIST.put(Enchanted_Monstereye, new Drop(1, 20, 90).addItem(CORNEA_OF_EN_MONSTEREYE));
 
-        for (int kill_id : DROPLIST.keySet())
-            addKillId(kill_id);
+        DROPLIST.keySet().forEach(this::addKillId);
 
         for (Drop drop : DROPLIST.values())
             for (int item_id : drop.itemList)

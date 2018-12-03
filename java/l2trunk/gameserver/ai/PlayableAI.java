@@ -643,7 +643,7 @@ public class PlayableAI extends CharacterAI {
             return;
         }
 
-        // _actor.stopMove(null);
+        // actor.stopMove(null);
         _forceUse = forceUse;
         _dontMove = dontMove;
         clearNextAction();
@@ -713,9 +713,9 @@ public class PlayableAI extends CharacterAI {
         @Override
         public void runImpl() {
             if (_target.isDoor()) {
-                _actor.moveToLocation(_target.getLoc(), 40, true);
+                actor.moveToLocation(_target.getLoc(), 40, true);
             } else {
-                _actor.followToCharacter(_target, _range, true);
+                actor.followToCharacter(_target, _range, true);
             }
         }
     }

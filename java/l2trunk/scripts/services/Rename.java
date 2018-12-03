@@ -347,7 +347,7 @@ class Rename extends Functions {
             return;
         }
 
-        if (CharacterDAO.getInstance().getObjectIdByName(name) > 0) {
+        if (CharacterDAO.getObjectIdByName(name) > 0) {
             player.sendMessage("Name allready exist, try another name!");
             return;
         }

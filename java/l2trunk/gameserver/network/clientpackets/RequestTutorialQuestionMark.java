@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.entity.achievements.Achievements;
 import l2trunk.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
 import l2trunk.gameserver.model.quest.Quest;
 
-public class RequestTutorialQuestionMark extends L2GameClientPacket {
+public final class RequestTutorialQuestionMark extends L2GameClientPacket {
     // format: cd
     private int _number = 0;
 
@@ -21,7 +21,7 @@ public class RequestTutorialQuestionMark extends L2GameClientPacket {
         if (player == null)
             return;
         if (player.isInFightClub()) {
-            FightClubEventManager.getInstance().sendEventPlayerMenu(player);
+            FightClubEventManager.INSTANCE.sendEventPlayerMenu(player);
         } else {
             Quest q = QuestManager.getQuest(255);
             if (q != null)

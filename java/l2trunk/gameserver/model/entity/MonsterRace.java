@@ -13,16 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 
 public enum  MonsterRace {
     INSTANCE;
-    private static final Logger _log = LoggerFactory.getLogger(MonsterRace.class);
-    private static MonsterRace _instance;
-    private final NpcInstance[] monsters;
+    private final Logger _log = LoggerFactory.getLogger(MonsterRace.class);
+    private final NpcInstance[] monsters=new NpcInstance[8];
     private final int[] first= new int[2];
     private final int[] second= new int[2];
     private Constructor<?> _constructor;
     private int[][] speeds =new int[8][20];
 
     MonsterRace() {
-        monsters = new NpcInstance[8];
     }
 
     public void newRace() {

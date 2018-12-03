@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _240_ImTheOnlyOneYouCanTrust extends Quest implements ScriptFile {
+public final class _240_ImTheOnlyOneYouCanTrust extends Quest implements ScriptFile {
     @Override
     public void onLoad() {
     }

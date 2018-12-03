@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.network.serverpackets.components.SceneMovie;
 
-public class ExStartScenePlayer extends L2GameServerPacket {
+public final class ExStartScenePlayer extends L2GameServerPacket {
     public static final int SCENE_LINDVIOR = 1;
     public static final int SCENE_ECHMUS_OPENING = 2;
     public static final int SCENE_ECHMUS_SUCCESS = 3;
@@ -33,20 +33,20 @@ public class ExStartScenePlayer extends L2GameServerPacket {
     public static final int SCENE_SSQ2_ELYSS_NARRATION = 28;
     public static final int SCENE_SSQ2_BOSS_OPENING = 29;
     public static final int SCENE_SSQ2_BOSS_CLOSING = 30;
-    private final int _sceneId;
+    private final int sceneId;
 
 
     public ExStartScenePlayer(int sceneId) {
-        _sceneId = sceneId;
+        this.sceneId = sceneId;
     }
 
     public ExStartScenePlayer(SceneMovie scene) {
-        _sceneId = scene.getId();
+        sceneId = scene.getId();
     }
 
     @Override
     protected void writeImpl() {
         writeEx(0x99);
-        writeD(_sceneId);
+        writeD(sceneId);
     }
 }

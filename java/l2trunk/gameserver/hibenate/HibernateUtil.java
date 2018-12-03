@@ -10,15 +10,18 @@ public class HibernateUtil {
 
     private static SessionFactory sessionFactory ;
 
-    static {
-        Configuration configuration = new Configuration();
-//        configuration.configure(new File("hibernate.cfg.xml"));
-        configuration.configure();
-        configuration.setProperty("autocommit", "true");
-        sessionFactory = configuration.buildSessionFactory();
-    }
+//    static {
+//
+//    }
 
     public static Session getSession() {
+        if (sessionFactory == null) {
+            Configuration configuration = new Configuration();
+            configuration.configure("hibernate.cfg.xml");
+//        configuration.configure();
+            configuration.setProperty("autocommit", "true");
+            sessionFactory = configuration.buildSessionFactory();
+        }
         return sessionFactory.openSession();
     }
 }

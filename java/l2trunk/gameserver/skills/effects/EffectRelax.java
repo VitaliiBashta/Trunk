@@ -15,7 +15,7 @@ public class EffectRelax extends Effect {
 
     @Override
     public boolean checkCondition() {
-        Player player = _effected.getPlayer();
+        Player player = effected.getPlayer();
         if (player == null)
             return false;
         if (player.isMounted()) {
@@ -28,7 +28,7 @@ public class EffectRelax extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        Player player = _effected.getPlayer();
+        Player player = effected.getPlayer();
         if (player.isMoving)
             player.stopMove();
         _isWereSitting = player.isSitting();
@@ -39,12 +39,12 @@ public class EffectRelax extends Effect {
     public void onExit() {
         super.onExit();
         if (!_isWereSitting)
-            _effected.getPlayer().standUp();
+            effected.getPlayer().standUp();
     }
 
     @Override
     public boolean onActionTime() {
-        Player player = _effected.getPlayer();
+        Player player = effected.getPlayer();
         if (player.isAlikeDead() || player == null)
             return false;
 
@@ -57,13 +57,13 @@ public class EffectRelax extends Effect {
         }
 
         double manaDam = calc();
-        if (manaDam > _effected.getCurrentMp())
+        if (manaDam > effected.getCurrentMp())
             if (getSkill().isToggle()) {
                 player.sendPacket(SystemMsg.NOT_ENOUGH_MP, new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(getSkill().getId(), getSkill().getDisplayLevel()));
                 return false;
             }
 
-        _effected.reduceCurrentMp(manaDam, null);
+        effected.reduceCurrentMp(manaDam, null);
 
         return true;
     }

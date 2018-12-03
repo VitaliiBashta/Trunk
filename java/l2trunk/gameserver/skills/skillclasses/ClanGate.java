@@ -11,7 +11,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class ClanGate extends Skill {
+public final class ClanGate extends Skill {
     public ClanGate(StatsSet set) {
         super(set);
     }

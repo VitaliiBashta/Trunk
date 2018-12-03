@@ -39,7 +39,7 @@ public class SellPcService extends Functions implements ScriptFile {
         int itemId = Integer.parseInt(param[1]);    //ид предмета, который взымается
         int itemCount = Integer.parseInt(param[2]); //количество предмета, который взымается
 
-        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(itemId); //id итема
+        ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId); //id итема
 
         if (item == null)
             return;

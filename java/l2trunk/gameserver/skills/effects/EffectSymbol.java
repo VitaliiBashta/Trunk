@@ -55,20 +55,20 @@ public final class EffectSymbol extends Effect {
 
         skill.setMagicType(getSkill().getMagicType());
 
-        Location loc = _effected.getLoc();
-        if (_effected.isPlayer() && ((Player) _effected).getGroundSkillLoc() != null) {
-            loc = ((Player) _effected).getGroundSkillLoc();
-            ((Player) _effected).setGroundSkillLoc(null);
+        Location loc = effected.getLoc();
+        if (effected.isPlayer() && ((Player) effected).getGroundSkillLoc() != null) {
+            loc = ((Player) effected).getGroundSkillLoc();
+            ((Player) effected).setGroundSkillLoc(null);
         }
 
         NpcTemplate template = NpcHolder.getTemplate(_skill.getSymbolId());
         if (getTemplate()._count <= 1)
-            _symbol = new SymbolInstance(IdFactory.getInstance().getNextId(), template, _effected, skill);
+            _symbol = new SymbolInstance(IdFactory.getInstance().getNextId(), template, effected, skill);
         else
             _symbol = new NpcInstance(IdFactory.getInstance().getNextId(), template);
 
-        _symbol.setLevel(_effected.getLevel());
-        _symbol.setReflection(_effected.getReflection());
+        _symbol.setLevel(effected.getLevel());
+        _symbol.setReflection(effected.getReflection());
         _symbol.spawnMe(loc);
     }
 

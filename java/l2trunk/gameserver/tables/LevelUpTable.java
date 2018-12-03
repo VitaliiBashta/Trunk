@@ -1,6 +1,5 @@
 package l2trunk.gameserver.tables;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.LvlupData;
 import l2trunk.gameserver.model.base.ClassId;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LevelUpTable {
+public final class LevelUpTable {
     private static final String SELECT_ALL = "SELECT classid, defaulthpbase, defaulthpadd, defaulthpmod, defaultcpbase, defaultcpadd, defaultcpmod, defaultmpbase, defaultmpadd, defaultmpmod, class_lvl FROM lvlupgain";
     private static final String CLASS_LVL = "class_lvl";
     private static final String MP_MOD = "defaultmpmod";
@@ -30,20 +29,16 @@ public class LevelUpTable {
 
     private static final Logger _log = LoggerFactory.getLogger(LevelUpTable.class);
 
-    private static LevelUpTable _instance;
+    private static final Map<Integer, LvlupData> _lvltable = new HashMap<>();
 
-    private final Map<Integer, LvlupData> _lvltable;
+    public static LvlupData getTemplate(int classId) {
+        return _lvltable.get(classId);
+    }
 
-    private LevelUpTable() {
-        _lvltable = new HashMap<>();
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(SELECT_ALL);
-            rset = statement.executeQuery();
+    public static void init() {
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_ALL);
+             ResultSet rset = statement.executeQuery()) {
             LvlupData lvlDat;
 
             while (rset.next()) {
@@ -66,23 +61,7 @@ public class LevelUpTable {
             _log.info("LevelUpData: Loaded " + _lvltable.size() + " Character Level Up Templates.");
         } catch (SQLException e) {
             _log.warn("Error while creating Lvl up data table", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
-    }
-
-    public static LevelUpTable getInstance() {
-        if (_instance == null)
-            _instance = new LevelUpTable();
-        return _instance;
-    }
-
-    /**
-     * @param template id
-     * @return
-     */
-    public LvlupData getTemplate(int classId) {
-        return _lvltable.get(classId);
     }
 
     public LvlupData getTemplate(ClassId classId) {

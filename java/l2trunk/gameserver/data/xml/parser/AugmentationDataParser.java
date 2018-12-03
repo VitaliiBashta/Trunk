@@ -53,7 +53,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
             for (Element itemElement : itemElements) {
                 int itemId = Integer.parseInt(itemElement.attributeValue("id"));
 
-                ItemTemplate itemTemplate = ItemHolder.INSTANCE.getTemplate(itemId);
+                ItemTemplate itemTemplate = ItemHolder.getInstance().getTemplate(itemId);
                 if (itemTemplate == null) {
                     LOG.warn("Not found item: " + itemId + "; item group: " + name);
                 } else {
@@ -93,7 +93,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
 
                 int[] array = items.get(itemGroup);
                 for (int i : array) {
-                    ItemHolder.INSTANCE.getTemplate(i).addAugmentationInfo(augmentationInfo);
+                    ItemHolder.getInstance().getTemplate(i).addAugmentationInfo(augmentationInfo);
                 }
             }
         }

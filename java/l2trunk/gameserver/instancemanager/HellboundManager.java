@@ -1,7 +1,6 @@
 package l2trunk.gameserver.instancemanager;
 
 import l2trunk.commons.geometry.Polygon;
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -34,21 +33,21 @@ import java.util.StringTokenizer;
 
 public enum HellboundManager {
     INSTANCE;
-    private static final Logger _log = LoggerFactory.getLogger(HellboundManager.class);
+    private final Logger LOG = LoggerFactory.getLogger(HellboundManager.class);
     private static final long _taskDelay = 2 * 60 * 1000L; //30min
     private static ArrayList<HellboundSpawn> _list;
     private static List<SimpleSpawner> _spawnList;
     private static int _initialStage = getHellboundLevel();
     private final DeathListener _deathListener = new DeathListener();
 
-    HellboundManager() {
+
+    public void init(){
         getHellboundSpawn();
         spawnHellbound();
         doorHandler();
         ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new StageCheckTask(), _taskDelay, _taskDelay);
+
     }
-
-
     public static long getConfidence() {
         return ServerVariables.getLong("HellboundConfidence", 0);
     }
@@ -205,7 +204,7 @@ public enum HellboundManager {
                     _spawnList.add(spawnDat);
                 }
             }
-        System.err.println("HellboundManager: Spawned " + _spawnList.size() + " mobs and NPCs according to the current Hellbound stage");
+        LOG.info("HellboundManager: Spawned " + _spawnList.size() + " mobs and NPCs according to the current Hellbound stage");
     }
 
     private void getHellboundSpawn() {
@@ -265,12 +264,12 @@ public enum HellboundManager {
                                     territory = new Territory().add(poly);
 
                                     if (!poly.validate()) {
-                                        _log.error("HellboundManager: Invalid spawn territory : " + poly + '!');
+                                        LOG.error("HellboundManager: Invalid spawn territory : " + poly + '!');
                                     }
                                 }
 
                             if (spawnLoc == null && territory == null) {
-                                _log.error("HellboundManager: no spawn data for npc id : " + npcId + '!');
+                                LOG.error("HellboundManager: no spawn data for npc id : " + npcId + '!');
                                 continue;
                             }
 
@@ -278,11 +277,11 @@ public enum HellboundManager {
                             _list.add(hbs);
                         }
 
-            System.out.println("HellboundManager: Loaded " + counter + " spawn entries.");
+            LOG.info("HellboundManager: Loaded " + counter + " spawn entries.");
         } catch (NumberFormatException | DOMException | ParserConfigurationException | SAXException e) {
-            System.err.println("HellboundManager: Spawn table could not be initialized." + e);
+            LOG.info("HellboundManager: Spawn table could not be initialized." + e);
         } catch (IOException | IllegalArgumentException e) {
-            System.err.println("HellboundManager: IOException or IllegalArgumentException." + e);
+            LOG.info("HellboundManager: IOException or IllegalArgumentException." + e);
         }
     }
 

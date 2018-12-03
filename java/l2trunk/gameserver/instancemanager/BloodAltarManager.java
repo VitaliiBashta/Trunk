@@ -6,11 +6,9 @@ import l2trunk.gameserver.ThreadPoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author pchayka
- */
-public class BloodAltarManager {
-    private static final Logger _log = LoggerFactory.getLogger(BloodAltarManager.class);
+public enum  BloodAltarManager {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(BloodAltarManager.class);
     private static final long delay = 30 * 60 * 1000L;
     private static final String[] bossGroups = {"bloodaltar_boss_aden",
             "bloodaltar_boss_darkelf",
@@ -24,14 +22,14 @@ public class BloodAltarManager {
             "bloodaltar_boss_orc",
             "bloodaltar_boss_oren",
             "bloodaltar_boss_schutgart"};
-    private static BloodAltarManager _instance;
     private static long bossRespawnTimer = 0;
     private static boolean bossesSpawned = false;
 
-    private BloodAltarManager() {
-        _log.info("Blood Altar Manager: Initializing...");
+
+    public void init() {
+        LOG.info("Blood Altar Manager: Initializing...");
         manageNpcs(true);
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new RunnableImpl() {
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new RunnableImpl() {
             @Override
             public void runImpl() {
                 if (Rnd.chance(30) && bossRespawnTimer < System.currentTimeMillis())
@@ -47,31 +45,24 @@ public class BloodAltarManager {
             }
         }, delay, delay);
     }
-
-    public static BloodAltarManager getInstance() {
-        if (_instance == null)
-            _instance = new BloodAltarManager();
-        return _instance;
-    }
-
     private static void manageNpcs(boolean spawnAlive) {
         if (spawnAlive) {
-            SpawnManager.getInstance().despawn("bloodaltar_dead_npc");
-            SpawnManager.getInstance().spawn("bloodaltar_alive_npc");
+            SpawnManager.INSTANCE.despawn("bloodaltar_dead_npc");
+            SpawnManager.INSTANCE.spawn("bloodaltar_alive_npc");
         } else {
-            SpawnManager.getInstance().despawn("bloodaltar_alive_npc");
-            SpawnManager.getInstance().spawn("bloodaltar_dead_npc");
+            SpawnManager.INSTANCE.despawn("bloodaltar_alive_npc");
+            SpawnManager.INSTANCE.spawn("bloodaltar_dead_npc");
         }
     }
 
     private static void manageBosses(boolean spawn) {
         if (spawn)
             for (String s : bossGroups)
-                SpawnManager.getInstance().spawn(s);
+                SpawnManager.INSTANCE.spawn(s);
         else {
             bossRespawnTimer = System.currentTimeMillis() + 4 * 3600 * 1000L;
             for (String s : bossGroups)
-                SpawnManager.getInstance().despawn(s);
+                SpawnManager.INSTANCE.despawn(s);
         }
     }
 }

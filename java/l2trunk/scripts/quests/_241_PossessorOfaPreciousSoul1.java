@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _241_PossessorOfaPreciousSoul1 extends Quest implements ScriptFile {
+public final class _241_PossessorOfaPreciousSoul1 extends Quest implements ScriptFile {
 
     @Override
     public void onLoad() {
@@ -49,14 +49,12 @@ public class _241_PossessorOfaPreciousSoul1 extends Quest implements ScriptFile 
         addKillId(21511);
         addKillId(20669);
 
-        addQuestItem(new int[]{
-                LEGENG_OF_SEVENTEEN,
+        addQuestItem(LEGENG_OF_SEVENTEEN,
                 MALRUK_SUCCUBUS_CLAW,
                 FADED_POETRY_BOOK,
                 ECHO_CRYSTAL,
                 MEDICINE,
-                CRIMSON_MOSS
-        });
+                CRIMSON_MOSS);
     }
 
     @Override

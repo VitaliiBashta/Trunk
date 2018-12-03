@@ -10,7 +10,7 @@ public final class EffectDummy3 extends Effect {
     }
 
     public boolean checkCondition() {
-        if (this._effected.isParalyzeImmune())
+        if (this.effected.isParalyzeImmune())
             return false;
         return super.checkCondition();
     }
@@ -22,14 +22,14 @@ public final class EffectDummy3 extends Effect {
         }
         super.onStart();
 
-        this._effected.startParalyzed();
-        this._effected.abortAttack(true, true);
-        this._effected.abortCast(true, true);
+        this.effected.startParalyzed();
+        this.effected.abortAttack(true, true);
+        this.effected.abortCast(true, true);
     }
 
     public void onExit() {
         super.onExit();
-        this._effected.stopParalyzed();
+        this.effected.stopParalyzed();
     }
 
     public boolean onActionTime() {

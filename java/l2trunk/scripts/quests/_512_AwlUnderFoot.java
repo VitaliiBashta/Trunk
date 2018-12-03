@@ -124,7 +124,7 @@ public class _512_AwlUnderFoot extends Quest implements ScriptFile {
                             st.playSound(SOUND_ITEMGET);
                             st.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
                         }
-                        Reflection r = ReflectionManager.getInstance().get(prison.getReflectionId());
+                        Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
                         if (r != null)
                             r.startCollapseTimer(300000); // Всех боссов убили, запускаем коллапс через 5 минут
                         break;
@@ -168,7 +168,7 @@ public class _512_AwlUnderFoot extends Quest implements ScriptFile {
 
                 // Synerge - Add the player to the instance again
                 if (prison != null) {
-                    Reflection r = ReflectionManager.getInstance().get(prison.getReflectionId());
+                    Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
                     if (r != null) {
                         player.setReflection(r);
                         player.teleToLocation(iz.getTeleportCoord());
@@ -182,7 +182,7 @@ public class _512_AwlUnderFoot extends Quest implements ScriptFile {
             prison = new Prison(castle.getId(), iz);
             _prisons.put(prison.getCastleId(), prison);
 
-            Reflection r = ReflectionManager.getInstance().get(prison.getReflectionId());
+            Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
 
             r.setReturnLoc(player.getLoc());
 

@@ -38,16 +38,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public abstract class Playable extends Creature {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    /**
-     * Блокировка для чтения/записи состояний квестов
-     */
-    private final ReadWriteLock questLock = new ReentrantReadWriteLock();
-    final Lock questRead = questLock.readLock();
-    final Lock questWrite = questLock.writeLock();
+
     private final AtomicState isSilentMoving = new AtomicState();
     private boolean isPendingRevive;
     private long nonAggroTime;
@@ -59,7 +50,6 @@ public abstract class Playable extends Creature {
         nonAggroTime = 0L;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public HardReference<? extends Playable> getRef() {
         return (HardReference<? extends Playable>) super.getRef();

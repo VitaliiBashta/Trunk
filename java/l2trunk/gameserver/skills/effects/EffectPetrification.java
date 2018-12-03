@@ -10,7 +10,7 @@ public final class EffectPetrification extends Effect {
 
     @Override
     public boolean checkCondition() {
-        if (_effected.isParalyzeImmune())
+        if (effected.isParalyzeImmune())
             return false;
         return super.checkCondition();
     }
@@ -18,21 +18,21 @@ public final class EffectPetrification extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startParalyzed();
-        _effected.startDebuffImmunity();
-        _effected.startBuffImmunity();
-        _effected.startDamageBlocked();
-        _effected.abortAttack(true, true);
-        _effected.abortCast(true, true);
+        effected.startParalyzed();
+        effected.startDebuffImmunity();
+        effected.startBuffImmunity();
+        effected.startDamageBlocked();
+        effected.abortAttack(true, true);
+        effected.abortCast(true, true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopParalyzed();
-        _effected.stopDebuffImmunity();
-        _effected.stopBuffImmunity();
-        _effected.stopDamageBlocked();
+        effected.stopParalyzed();
+        effected.stopDebuffImmunity();
+        effected.stopBuffImmunity();
+        effected.stopDamageBlocked();
     }
 
     @Override

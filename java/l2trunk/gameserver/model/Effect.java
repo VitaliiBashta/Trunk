@@ -40,7 +40,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     /**
      * One on whom the effect is applied
      */
-    protected final Creature _effected;
+    protected final Creature effected;
 
     protected final Skill _skill;
     protected final EffectTemplate _template;
@@ -65,7 +65,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     protected Effect(Env env, EffectTemplate template) {
         _skill = env.skill;
         _effector = env.character;
-        _effected = env.target;
+        effected = env.target;
 
         _template = template;
         _value = template._value;
@@ -191,7 +191,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
     }
 
     public Creature getEffected() {
-        return _effected;
+        return effected;
     }
 
     public double calc() {
@@ -379,7 +379,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
             if (getSkill().getDelayedEffect() > 0) {
                 Skill delayErrects = SkillTable.INSTANCE.getInfo(getSkill().getDelayedEffect(), 1);
                 if (delayErrects != null) {
-                    delayErrects.getEffects(_effector, _effected, false, false);
+                    delayErrects.getEffects(_effector, effected, false, false);
                 }
             }
             boolean msg = !isHidden() && getEffected().getEffectList().getEffectsCountForSkill(getSkill().getId()) == 1;

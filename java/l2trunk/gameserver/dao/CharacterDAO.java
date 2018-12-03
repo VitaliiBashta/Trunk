@@ -16,16 +16,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CharacterDAO {
+public final class CharacterDAO {
     private static final Logger _log = LoggerFactory.getLogger(CharacterDAO.class);
 
-    private static final CharacterDAO _instance = new CharacterDAO();
-
-    public static CharacterDAO getInstance() {
-        return _instance;
+    private CharacterDAO() {
     }
 
-    public void checkCharactersToDelete() {
+    public static void checkCharactersToDelete() {
         List<Integer> idsToDelete = new ArrayList<>();
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT obj_Id FROM characters WHERE deletetime > 0 AND deletetime < ?")) {
@@ -53,7 +50,7 @@ public class CharacterDAO {
         }
     }
 
-    public void deleteCharByObjId(int... objids) {
+    public static void deleteCharByObjId(int... objids) {
         if (objids.length == 0 || objids.length == 1 && objids[0] < 0)
             return;
 
@@ -185,7 +182,7 @@ public class CharacterDAO {
         }
     }
 
-    public boolean insert(Player player) {
+    public static boolean insert(Player player) {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO `characters` (account_name, obj_Id, char_name, face, hairStyle, hairColor, sex, karma, pvpkills, pkkills, clanid, createtime, deletetime, title, accesslevel, online, leaveclan, deleteclan, nochannel, pledge_type, pledge_rank, lvl_joined_academy, apprentice) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
                 statement.setString(1, player.getAccountName());
@@ -296,7 +293,7 @@ public class CharacterDAO {
         mysql.set("UPDATE `characters` SET `x`=?, `y`=?, `z`=? WHERE `obj_id`=? LIMIT 1", x, y, z, objId);
     }
 
-    public int getObjectIdByName(String name) {
+    public static int getObjectIdByName(String name) {
         int result = 0;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -314,7 +311,7 @@ public class CharacterDAO {
         return result;
     }
 
-    public String getNameByObjectId(int objectId) {
+    public static String getNameByObjectId(int objectId) {
         String result = StringUtils.EMPTY;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -332,7 +329,7 @@ public class CharacterDAO {
         return result;
     }
 
-    public int accountCharNumber(String account) {
+    public static int accountCharNumber(String account) {
         int number = 0;
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();

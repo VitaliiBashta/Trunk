@@ -120,7 +120,7 @@ public class RequestBuySeed extends L2GameClientPacket {
 
                 totalPrice = SafeMath.addAndCheck(totalPrice, SafeMath.mulAndCheck(count, price));
 
-                ItemTemplate item = ItemHolder.INSTANCE.getTemplate(seedId);
+                ItemTemplate item = ItemHolder.getInstance().getTemplate(seedId);
                 if (item == null)
                     return;
 

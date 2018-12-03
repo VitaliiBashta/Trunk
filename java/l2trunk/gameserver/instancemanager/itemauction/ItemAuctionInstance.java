@@ -67,7 +67,7 @@ public final class ItemAuctionInstance {
                     if (auction != null) {
                         _auctions.put(auctionId, auction);
                     } else {
-                        ItemAuctionManager.getInstance().deleteAuction(auctionId);
+                        ItemAuctionManager.INSTANCE.deleteAuction(auctionId);
                     }
                 } catch (SQLException e) {
                     _log.warn("ItemAuction: Failed loading auction: " + auctionId, e);
@@ -254,7 +254,7 @@ public final class ItemAuctionInstance {
         AuctionItem auctionItem = _items.get(Rnd.get(_items.size()));
         long startingTime = _dateTime.next(after);
         long endingTime = startingTime + TimeUnit.MILLISECONDS.convert(auctionItem.getAuctionLength(), TimeUnit.MINUTES);
-        int auctionId = ItemAuctionManager.getInstance().getNextId();
+        int auctionId = ItemAuctionManager.INSTANCE.getNextId();
         ItemAuction auction = new ItemAuction(auctionId, _instanceId, startingTime, endingTime, auctionItem, ItemAuctionState.CREATED);
 
         auction.store();

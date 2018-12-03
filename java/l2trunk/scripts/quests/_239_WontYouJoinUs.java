@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _239_WontYouJoinUs extends Quest implements ScriptFile {
+public final class _239_WontYouJoinUs extends Quest implements ScriptFile {
     @Override
     public void onLoad() {
     }

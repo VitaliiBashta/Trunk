@@ -21,29 +21,26 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class SpawnManager {
+public enum  SpawnManager {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(SpawnManager.class);
     private static final String DAWN_GROUP = "dawn_spawn";
     private static final String DUSK_GROUP = "dusk_spawn";
     private static final String DAWN_GROUP2 = "dawn_spawn2";
     private static final String DUSK_GROUP2 = "dusk_spawn2";
-    private static final SpawnManager _instance = new SpawnManager();
+//    private static final SpawnManager _instance = new SpawnManager();
     private final Map<String, List<Spawner>> _spawns = new ConcurrentHashMap<>();
     private final Listeners _listeners = new Listeners();
     private final Map<Integer, Integer> spawnCountByNpcId = new HashMap<>();
     private final Map<Integer, List<Location>> spawnLocationsByNpcId = new HashMap<>();
 
-    private SpawnManager() {
+    SpawnManager() {
         for (Map.Entry<String, List<SpawnTemplate>> entry : SpawnHolder.getInstance().getSpawns().entrySet()) {
             fillSpawn(entry.getKey(), entry.getValue());
         }
 
-        GameTimeController.getInstance().addListener(_listeners);
+        GameTimeController.INSTANCE.addListener(_listeners);
         SevenSigns.INSTANCE.addListener(_listeners);
-    }
-
-    public static SpawnManager getInstance() {
-        return _instance;
     }
 
     private List<Spawner> fillSpawn(String group, List<SpawnTemplate> templateList) {
@@ -182,7 +179,7 @@ public final class SpawnManager {
 
         _listeners.onPeriodChange(mode);
 
-        if (GameTimeController.getInstance().isNowNight()) {
+        if (GameTimeController.INSTANCE.isNowNight()) {
             _listeners.onNight();
         } else {
             _listeners.onDay();

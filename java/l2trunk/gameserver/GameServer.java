@@ -111,29 +111,29 @@ public class GameServer {
 
         CacheManager.getInstance();
 
-        ThreadPoolManager.INSTANCE.toString();
+        ThreadPoolManager.INSTANCE.init();
         _log.info("===============[Loading Scripts]==================");
         Scripts.getInstance();
         BalancerConfig.LoadConfig();
         GeoEngine.load();
         Strings.reload();
-        GameTimeController.getInstance();
+        GameTimeController.INSTANCE.init();
         printSection("Lineage World");
         World.init();
         printSection("");
         Parsers.parseAll();
-        ItemsDAO.INSTANCE.toString();
+        ItemsDAO.INSTANCE.init();
         printSection("Clan Crests");
-        CrestCache.getInstance();
+        CrestCache.init();
         // Alexander - Load all the information for the Server Ranking
         //_log.info("===================[Ranking]=======================");
         //ServerRanking.INSTANCE();
         //CharacterMonthlyRanking.INSTANCE();
         _log.info("===============[Loading Images]==================");
-        ImagesCache.getInstance();
+        ImagesCache.init();
         printSection("");
-        CharacterDAO.getInstance();
-        ClanTable.INSTANCE.toString();
+//        CharacterDAO.INSTANCE.toString();
+        ClanTable.INSTANCE.init();
         printSection("Fish Table");
         FishTable.INSTANCE.init();
         printSection("Skills");
@@ -142,13 +142,14 @@ public class GameServer {
         AugmentationData.getInstance();
         EnchantHPBonusTable.getInstance();
         printSection("Level Up Table");
-        LevelUpTable.getInstance();
-        PetSkillsTable.getInstance();
+        LevelUpTable.init();
+        PetSkillsTable.INSTANCE.load();
         printSection("Auctioneer");
-        ItemAuctionManager.getInstance();
+        ItemAuctionManager.INSTANCE.init();
+        NaiaTowerManager.init();
         _log.info("===============[Adding handlers to scripts]==================");
         Scripts.getInstance().init2();
-        SpawnManager.getInstance().spawnAll();
+        SpawnManager.INSTANCE.spawnAll();
         printSection("Boats");
         BoatHolder.getInstance().spawnAll();
         StaticObjectHolder.getInstance().spawnAll();
@@ -165,7 +166,7 @@ public class GameServer {
         MonsterRace.INSTANCE.toString();
         printSection("Seven Signs");
         SevenSigns.INSTANCE.init();
-        SevenSignsFestival.INSTANCE.restoreFestivalData();;
+        SevenSignsFestival.INSTANCE.restoreFestivalData();
         SevenSigns.INSTANCE.updateFestivalScore();
         AutoSpawnManager.getInstance();
         SevenSigns.INSTANCE.spawnSevenSignsNPC();
@@ -201,20 +202,19 @@ public class GameServer {
             FishingChampionShipManager.INSTANCE.toString();
         }
         printSection("Hellbound");
-        HellboundManager.INSTANCE.toString();
-
-        NaiaTowerManager.getInstance();
+        HellboundManager.INSTANCE.init();
+//        NaiaTowerManager.init();
         NaiaCoreManager.getInstance();
         printSection("");
         SoDManager.getInstance();
         SoIManager.getInstance();
-        BloodAltarManager.getInstance();
+        BloodAltarManager.INSTANCE.init();
         AuctionManager.getInstance();
         if (Config.ALLOW_DROP_CALCULATOR) {
             _log.info("Preparing Drop Calculator");
-            ItemHolder.INSTANCE.getDroppableTemplates();
+            ItemHolder.getInstance().getDroppableTemplates();
         }
-        MiniGameScoreManager.getInstance();
+        MiniGameScoreManager.INSTANCE.init();
 
         if (Config.BUFF_STORE_ENABLED) {
             printSection("Offline Buffers");
@@ -225,9 +225,9 @@ public class GameServer {
         _log.info(">>>>>>>>>> GameServer Started <<<<<<<<<");
         _log.info("Maximum Numbers of Connected Players: " + Config.MAXIMUM_ONLINE_USERS);
         _log.info("===============[Protection Database]==================");
-        CharacterDAO.getInstance().checkCharactersToDelete();
+        CharacterDAO.checkCharactersToDelete();
         printSection("");
-        FightClubEventManager.getInstance();
+        FightClubEventManager.INSTANCE.init();
         GamePacketHandler gph = new GamePacketHandler();
         InetAddress serverAddr = Config.GAMESERVER_HOSTNAME.equalsIgnoreCase("*") ? null : InetAddress.getByName(Config.GAMESERVER_HOSTNAME);
         int arrayLen = Config.GAMEIPS.isEmpty() ? Config.PORTS_GAME.length : Config.PORTS_GAME.length + Config.GAMEIPS.size();

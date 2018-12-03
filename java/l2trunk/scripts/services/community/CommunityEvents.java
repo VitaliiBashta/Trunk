@@ -68,19 +68,19 @@ public class CommunityEvents implements ScriptFile, ICommunityBoardHandler {
             html = BbsUtil.htmlAll(html, player);
             ShowBoard.separateAndSend(html, player);
         } else if ("bbseventUnregister".equals(cmd)) {
-            FightClubEventManager.getInstance().unsignFromEvent(player);
+            FightClubEventManager.INSTANCE.unsignFromEvent(player);
             onBypassCommand(player, "_bbsevent");
         } else if ("bbseventRegister".equals(cmd)) {
-            AbstractFightClub event = FightClubEventManager.getInstance().getNextEvent();
-            FightClubEventManager.getInstance().trySignForEvent(player, event, true);
+            AbstractFightClub event = FightClubEventManager.INSTANCE.getNextEvent();
+            FightClubEventManager.INSTANCE.trySignForEvent(player, event, true);
             onBypassCommand(player, "_bbsevent");
         }
     }
 
     private String getEventInfo(String html, Player player) {
-        AbstractFightClub event = FightClubEventManager.getInstance().getNextEvent();
+        AbstractFightClub event = FightClubEventManager.INSTANCE.getNextEvent();
         if (event == null) {
-            event = FightClubEventManager.getInstance().getNextEvent();
+            event = FightClubEventManager.INSTANCE.getNextEvent();
         }
         if (event != null) {
             html = html.replace("%eventIcon%", event.getIcon());
@@ -96,10 +96,10 @@ public class CommunityEvents implements ScriptFile, ICommunityBoardHandler {
         if (event == null) {
             register = "<font color=\"FF0000\">Event not loaded yet!</font>";
         } else {
-            if (!FightClubEventManager.getInstance().isRegistrationOpened(event)) {
+            if (!FightClubEventManager.INSTANCE.isRegistrationOpened(event)) {
                 register = "<font color=\"FF0000\">Registration Closed</font>";
             } else {
-                if (FightClubEventManager.getInstance().isPlayerRegistered(player)) {
+                if (FightClubEventManager.INSTANCE.isPlayerRegistered(player)) {
                     register = "<button value=\"Unregister from Event\" action=\"bypass _bbseventUnregister\" back=\"L2UI_CT1.OlympiadWnd_DF_Fight3None_Down\" width=200 height=30 fore=\"L2UI_CT1.OlympiadWnd_DF_Fight3None\">";
                 } else {
                     register = "<button value=\"Register to Event\" action=\"bypass _bbseventRegister\" back=\"L2UI_CT1.OlympiadWnd_DF_Fight3None_Down\" width=200 height=30 fore=\"L2UI_CT1.OlympiadWnd_DF_Fight3None\">";

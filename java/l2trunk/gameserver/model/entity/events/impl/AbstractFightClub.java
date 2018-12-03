@@ -177,7 +177,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
      */
     @Deprecated
     public static boolean teleportWholeRoomTimer(int eventObjId, int secondsLeft) {
-        AbstractFightClub event = FightClubEventManager.getInstance().getEventByObjId(eventObjId);
+        AbstractFightClub event = FightClubEventManager.INSTANCE.getEventByObjId(eventObjId);
         if (secondsLeft == 0) {
             event._dontLetAnyoneIn = true;
             event.startEvent();
@@ -357,20 +357,19 @@ public abstract class AbstractFightClub extends GlobalEvent {
             showScores(player);
         }
 
-        ThreadPoolManager.INSTANCE().schedule(() ->
+        ThreadPoolManager.INSTANCE.schedule(() ->
         {
-            for (Player player : getAllFightingPlayers()) {
+            getAllFightingPlayers().forEach(player -> {
                 leaveEvent(player, true);
                 player.sendPacket(new ExShowScreenMessage("", 10, ExShowScreenMessage.ScreenMessageAlign.TOP_LEFT, false));
-            }
+            });
             destroyMe();
         }, 10 * 1000);
     }
 
     private void destroyMe() {
         if (getReflection() != null) {
-            for (Zone zone : getReflection().getZones())
-                zone.removeListener(_zoneListener);
+            getReflection().getZones().forEach(zone -> zone.removeListener(_zoneListener));
             getReflection().collapse();
         }
         if (_timer != null)
@@ -1152,14 +1151,14 @@ public abstract class AbstractFightClub extends GlobalEvent {
         for (FightClubPlayer fPlayer : topKillers)
             if (fPlayer != null) {
                 String message = fPlayer.getPlayer().getName() + " had most kills" /*+ (_teamed ? " from " + fPlayer.getTeam().getName() + " Team" : "")*/ + " on " + getName() + " Event!";
-                FightClubEventManager.getInstance().sendToAllMsg(this, message);
+                FightClubEventManager.INSTANCE.sendToAllMsg(this, message);
             }
     }
 
-    protected void sendMessageToFightingAndRegistered(MESSAGE_TYPES type, String msg) {
-        sendMessageToFighting(type, msg, false);
-        sendMessageToRegistered(type, msg);
-    }
+//    protected void sendMessageToFightingAndRegistered(MESSAGE_TYPES type, String msg) {
+//        sendMessageToFighting(type, msg, false);
+//        sendMessageToRegistered(type, msg);
+//    }
 
     protected void sendMessageToTeam(FightClubTeam team, MESSAGE_TYPES type, String msg) {
         //Team Members
@@ -1445,7 +1444,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
      * Spreading Players in team into List of Partys(Party = List<Player> with 9 as MAX Count)
      *
      * @param team team to create Partys
-     * @return List<Party       (       List       <       Player>)>
+     * @return List<Party                                                               (                                                               List                                                               <                                                               Player>)>
      */
     protected List<List<Player>> spreadTeamInPartys(FightClubTeam team) {
         //Creating Map<Class, List of Players>
@@ -1779,18 +1778,9 @@ public abstract class AbstractFightClub extends GlobalEvent {
      * @return player meets criteria
      */
     private boolean checkIfRegisteredPlayerMeetCriteria(FightClubPlayer fPlayer) {
-        if (!FightClubEventManager.getInstance().canPlayerParticipate(fPlayer.getPlayer(), true, true)) {
-            return false;
-        } else {
-            return true;
-        }
+        return FightClubEventManager.INSTANCE.canPlayerParticipate(fPlayer.getPlayer(), true, true);
     }
 
-    /**
-     * Removing all debuffs
-     *
-     * @param playable
-     */
     private void cancelNegativeEffects(Playable playable) {
         List<Effect> _buffList = new ArrayList<>();
 

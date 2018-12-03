@@ -23,15 +23,15 @@ public class EffectHealOverTime extends Effect {
 
     @Override
     public boolean onActionTime() {
-        if (_effected.isHealBlocked())
+        if (effected.isHealBlocked())
             return true;
 
         double hp = calc();
-        double newHp = hp * (!_ignoreHpEff ? _effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
-        double addToHp = Math.max(0, Math.min(newHp, _effected.calcStat(Stats.HP_LIMIT, null, null) * _effected.getMaxHp() / 100. - _effected.getCurrentHp()));
+        double newHp = hp * (!_ignoreHpEff ? effected.calcStat(Stats.HEAL_EFFECTIVNESS, 100., _effector, getSkill()) : 100.) / 100.;
+        double addToHp = Math.max(0, Math.min(newHp, effected.calcStat(Stats.HP_LIMIT, null, null) * effected.getMaxHp() / 100. - effected.getCurrentHp()));
 
         if (addToHp > 0)
-            getEffected().setCurrentHp(_effected.getCurrentHp() + addToHp, false);
+            getEffected().setCurrentHp(effected.getCurrentHp() + addToHp, false);
 
         return true;
     }

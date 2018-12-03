@@ -11,15 +11,15 @@ public final class EffectMeditation extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startParalyzed();
-        _effected.setMeditated(true);
+        effected.startParalyzed();
+        effected.setMeditated(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopParalyzed();
-        _effected.setMeditated(false);
+        effected.stopParalyzed();
+        effected.setMeditated(false);
     }
 
     @Override

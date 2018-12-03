@@ -38,7 +38,7 @@ class TitleColor extends Functions {
             block = block.replace("{bypass}", "bypass -h scripts_services.TitleColor:change " + color);
             block = block.replace("{color}", (color.substring(4, 6) + color.substring(2, 4) + color.substring(0, 2)));
             block = block.replace("{count}", Util.formatAdena(Config.SERVICES_CHANGE_Title_COLOR_PRICE));
-            block = block.replace("{item}", ItemHolder.INSTANCE.getTemplate(Config.SERVICES_CHANGE_Title_COLOR_ITEM).getName());
+            block = block.replace("{item}", ItemHolder.getInstance().getTemplate(Config.SERVICES_CHANGE_Title_COLOR_ITEM).getName());
             list += block;
 
             counter++;

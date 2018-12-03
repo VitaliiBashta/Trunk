@@ -22,7 +22,7 @@ public class CaptchaPunishmentDAO {
     }
 
     public int loadReportCount(String name) {
-        int obj = CharacterDAO.getInstance().getObjectIdByName(name);
+        int obj = CharacterDAO.getObjectIdByName(name);
         if (obj == 0) {
             _log.info("CaptchaPunishmentDAO.loadReportCount(name): cannot find character obj_id by name -> " + name);
             return -1;
@@ -45,7 +45,7 @@ public class CaptchaPunishmentDAO {
     }
 
     public synchronized void updateReportCount(String name, int count) {
-        int obj = CharacterDAO.getInstance().getObjectIdByName(name);
+        int obj = CharacterDAO.getObjectIdByName(name);
         if (obj == 0) {
             _log.info("CaptchaPunishmentDAO.updateReportCount(name): don't find character obj by name " + name);
             return;
@@ -62,7 +62,7 @@ public class CaptchaPunishmentDAO {
     }
 
     public void insertReportCount(String name, int count) {
-        int obj = CharacterDAO.getInstance().getObjectIdByName(name);
+        int obj = CharacterDAO.getObjectIdByName(name);
         if (obj == 0) {
             _log.info("CaptchaPunishmentDAO.insertReportCount(name,count): don't find character obj by name " + name);
             return;

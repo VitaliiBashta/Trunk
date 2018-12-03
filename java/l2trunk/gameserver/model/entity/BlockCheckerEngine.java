@@ -275,7 +275,7 @@ public final class BlockCheckerEngine {
          */
         private void setUpPlayers() {
             // Set current arena as being used
-            HandysBlockCheckerManager.getInstance().setArenaBeingUsed(_arena);
+            HandysBlockCheckerManager.INSTANCE.setArenaBeingUsed(_arena);
             // Initialize packets avoiding create a new one per player
             _redPoints = _spawns.size() / 2;
             _bluePoints = _spawns.size() / 2;
@@ -491,7 +491,7 @@ public final class BlockCheckerEngine {
     class EndEvent extends RunnableImpl {
         // Garbage collector and arena free setter
         private void clearMe() {
-            HandysBlockCheckerManager.getInstance().clearPaticipantQueueByArenaId(_arena);
+            HandysBlockCheckerManager.INSTANCE.clearPaticipantQueueByArenaId(_arena);
             for (Player player : _holder.getAllPlayers()) {
                 if (player == null)
                     continue;
@@ -501,7 +501,7 @@ public final class BlockCheckerEngine {
             _holder.clearPlayers();
             _blueTeamPoints.clear();
             _redTeamPoints.clear();
-            HandysBlockCheckerManager.getInstance().setArenaFree(_arena);
+            HandysBlockCheckerManager.INSTANCE.setArenaFree(_arena);
 
             for (SimpleSpawner spawn : _spawns)
                 spawn.deleteAll();
@@ -672,8 +672,8 @@ public final class BlockCheckerEngine {
             player.setTransformation(0);
             player.getEffectList().stopAllEffects();
             int arena = player.getBlockCheckerArena();
-            int team = HandysBlockCheckerManager.getInstance().getHolder(arena).getPlayerTeam(player);
-            HandysBlockCheckerManager.getInstance().removePlayer(player, arena, team);
+            int team = HandysBlockCheckerManager.INSTANCE.getHolder(arena).getPlayerTeam(player);
+            HandysBlockCheckerManager.INSTANCE.removePlayer(player, arena, team);
             // Remove team aura
             player.setTeam(TeamType.NONE);
             player.broadcastCharInfo();

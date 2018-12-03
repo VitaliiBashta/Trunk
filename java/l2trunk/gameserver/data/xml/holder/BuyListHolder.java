@@ -85,7 +85,7 @@ public final class BuyListHolder {
                                                 for (Node i = d2.getFirstChild(); i != null; i = i.getNextSibling())
                                                     if ("item".equalsIgnoreCase(i.getNodeName())) {
                                                         final int itemId = Integer.parseInt(i.getAttributes().getNamedItem("id").getNodeValue());
-                                                        final ItemTemplate template = ItemHolder.INSTANCE.getTemplate(itemId);
+                                                        final ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
                                                         if (template == null) {
                                                             _log.warn("Template not found for itemId: " + itemId + " for shop " + shop_id);
                                                             continue;

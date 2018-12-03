@@ -677,7 +677,7 @@ public class NpcInstance extends Creature {
         }
 
         // Get the weapon item equipped in the right hand of the L2NpcInstance
-        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(getTemplate().rhand);
+        ItemTemplate item = ItemHolder.getInstance().getTemplate(getTemplate().rhand);
 
         if (!(item instanceof WeaponTemplate)) {
             return null;
@@ -702,7 +702,7 @@ public class NpcInstance extends Creature {
         }
 
         // Get the weapon item equipped in the right hand of the L2NpcInstance
-        ItemTemplate item = ItemHolder.INSTANCE.getTemplate(getTemplate().lhand);
+        ItemTemplate item = ItemHolder.getInstance().getTemplate(getTemplate().lhand);
 
         if (!(item instanceof WeaponTemplate)) {
             return null;
@@ -1556,7 +1556,7 @@ public class NpcInstance extends Creature {
 
     public void refreshID() {
         objectId = IdFactory.getInstance().getNextId();
-        _storedId = GameObjectsStorage.refreshId(this);
+        storedId = GameObjectsStorage.refreshId(this);
     }
 
     public boolean isUnderground() {

@@ -4,26 +4,25 @@ import l2trunk.gameserver.cache.CrestCache;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.PledgeCrest;
 
-public class RequestPledgeCrest extends L2GameClientPacket {
+public final class RequestPledgeCrest extends L2GameClientPacket {
     // format: cd
 
-    private int _crestId;
+    private int crestId;
 
     @Override
     protected void readImpl() {
-        _crestId = readD();
+        crestId = readD();
     }
 
     @Override
     protected void runImpl() {
-        Player activeChar = getClient().getActiveChar();
-        if (activeChar == null)
+        if (getClient().getActiveChar() == null)
             return;
-        if (_crestId == 0)
+        if (crestId == 0)
             return;
-        byte[] data = CrestCache.getInstance().getPledgeCrest(_crestId);
+        byte[] data = CrestCache.getPledgeCrest(crestId);
         if (data != null) {
-            PledgeCrest pc = new PledgeCrest(_crestId, data);
+            PledgeCrest pc = new PledgeCrest(crestId, data);
             sendPacket(pc);
         }
     }

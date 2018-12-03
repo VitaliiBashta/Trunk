@@ -14,12 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author pchayka
- */
 public final class NaiaTowerManager {
     private static final Logger _log = LoggerFactory.getLogger(NaiaTowerManager.class);
-    private static final NaiaTowerManager _instance = new NaiaTowerManager();
     private static final Map<Integer, List<Player>> _groupList = new HashMap<>();
     private static final Map<Integer, List<Player>> _roomsDone = new HashMap<>();
     private static final Map<Integer, Long> _groupTimer = new HashMap<>();
@@ -29,7 +25,7 @@ public final class NaiaTowerManager {
     private static long _towerAccessible = 0;
     private static int _index = 0;
 
-    private NaiaTowerManager() {
+    public static void init() {
         if (lockedRooms == null) {
             lockedRooms = new HashMap<>();
             for (int i = 18494; i <= 18505; i++)
@@ -43,11 +39,7 @@ public final class NaiaTowerManager {
 
             _log.info("Naia Tower Manager: Loaded 12 rooms");
         }
-        ThreadPoolManager.INSTANCE().schedule(new GroupTowerTimer(), 30 * 1000L);
-    }
-
-    public static NaiaTowerManager getInstance() {
-        return _instance;
+        ThreadPoolManager.INSTANCE.schedule(new GroupTowerTimer(), 30 * 1000L);
     }
 
     public static void startNaiaTower(Player leader) {
@@ -144,7 +136,7 @@ public final class NaiaTowerManager {
         _roomMobs.get(roomId).clear();
     }
 
-    private class GroupTowerTimer extends RunnableImpl {
+    private static class GroupTowerTimer extends RunnableImpl {
         @Override
         public void runImpl() {
             ThreadPoolManager.INSTANCE().schedule(new GroupTowerTimer(), 30 * 1000L);

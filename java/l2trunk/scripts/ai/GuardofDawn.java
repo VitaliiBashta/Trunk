@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.geodata.GeoEngine;
@@ -18,13 +17,10 @@ import l2trunk.gameserver.utils.Location;
  * - Если находят чара в радиусе 120, то кричат в чат и отправляют на точку старта
  * - Видят и цепляют тех, кто находится в хайде
  * - Никогда и никого не атакуют
- *
- * @author n0nam3
- * @date 20/09/2010 19:03
  */
 public final class GuardofDawn extends DefaultAI {
     private static final int _aggrorange = 150;
-    private final Skill _skill = SkillTable.INSTANCE().getInfo(5978, 1);
+    private final Skill _skill = SkillTable.INSTANCE.getInfo(5978, 1);
     private Location _locStart = null;
     private Location _locEnd = null;
     private Location _locTele = null;
@@ -37,23 +33,6 @@ public final class GuardofDawn extends DefaultAI {
         setStartPoint(actor.getSpawnedLoc()); // точка старта, по сути место спавна.
         setEndPoint(locationEnd);
         setTelePoint(telePoint);
-    }
-
-    public class Teleportation extends RunnableImpl {
-
-        Location _telePoint = null;
-        Playable _target = null;
-
-        Teleportation(Location telePoint, Playable target) {
-            _telePoint = telePoint;
-            _target = target;
-        }
-
-        @Override
-        public void runImpl() {
-            _target.teleToLocation(_telePoint);
-            noCheckPlayers = false;
-        }
     }
 
     @Override
@@ -92,35 +71,38 @@ public final class GuardofDawn extends DefaultAI {
                 actor.doCast(_skill, target, true);
                 Functions.npcSay(actor, "Intruder! Protect the Priests of Dawn!");
                 noCheckPlayers = true;
-                ThreadPoolManager.INSTANCE().schedule(new Teleportation(getTelePoint(), target), 3000);
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    target.teleToLocation(getTelePoint());
+                    noCheckPlayers = false;
+                }, 3000);
                 return true;
             }
         }
         return false;
     }
 
-    private void setStartPoint(Location loc) {
-        _locStart = loc;
-    }
-
-    private void setEndPoint(Location loc) {
-        _locEnd = loc;
-    }
-
-    private void setTelePoint(Location loc) {
-        _locTele = loc;
-    }
-
     private Location getStartPoint() {
         return _locStart;
+    }
+
+    private void setStartPoint(Location loc) {
+        _locStart = loc;
     }
 
     private Location getEndPoint() {
         return _locEnd;
     }
 
+    private void setEndPoint(Location loc) {
+        _locEnd = loc;
+    }
+
     private Location getTelePoint() {
         return _locTele;
+    }
+
+    private void setTelePoint(Location loc) {
+        _locTele = loc;
     }
 
     @Override

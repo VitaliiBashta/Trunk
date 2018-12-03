@@ -15,24 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class PetSkillsTable {
-    private static final Logger _log = LoggerFactory.getLogger(PetSkillsTable.class);
-    private static PetSkillsTable _instance = new PetSkillsTable();
-    private final Map<Integer, List<SkillLearn>> _skillTrees = new HashMap<>();
-
-    private PetSkillsTable() {
-        load();
-    }
-
-    public static PetSkillsTable getInstance() {
-        return _instance;
-    }
+public enum  PetSkillsTable {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(PetSkillsTable.class);
+    private final Map<Integer, List<SkillLearn>> skillTrees = new HashMap<>();
 
     public void reload() {
-        _instance = new PetSkillsTable();
+//        _instance = new PetSkillsTable();
     }
 
-    private void load() {
+    public void load() {
         int npcId = 0;
         int count = 0;
 
@@ -46,21 +38,21 @@ public final class PetSkillsTable {
                 int lvl = rset.getInt("skillLvl");
                 int minLvl = rset.getInt("minLvl");
 
-                List<SkillLearn> list = _skillTrees.computeIfAbsent(npcId, k -> new ArrayList<>());
+                List<SkillLearn> list = skillTrees.computeIfAbsent(npcId, k -> new ArrayList<>());
 
                 SkillLearn skillLearn = new SkillLearn(id, lvl, minLvl, 0, 0, 0, false);
                 list.add(skillLearn);
                 count++;
             }
         } catch (SQLException e) {
-            _log.error("Error while creating pet skill tree (Pet ID " + npcId + ')', e);
+            LOG.error("Error while creating pet skill tree (Pet ID " + npcId + ')', e);
         }
 
-        _log.info("PetSkillsTable: Loaded " + count + " skills.");
+        LOG.info("PetSkillsTable: Loaded " + count + " skills.");
     }
 
     public int getAvailableLevel(Summon cha, int skillId) {
-        List<SkillLearn> skills = _skillTrees.get(cha.getNpcId());
+        List<SkillLearn> skills = skillTrees.get(cha.getNpcId());
         if (skills == null)
             return 0;
 
@@ -77,7 +69,7 @@ public final class PetSkillsTable {
                     lvl = 7 + (cha.getLevel() - 70) / 5;
 
                 // formula usable for skill that have 10 or more skill levels
-                int maxLvl = SkillTable.INSTANCE().getMaxLevel(temp.getId());
+                int maxLvl = SkillTable.INSTANCE.getMaxLevel(temp.getId());
                 if (lvl > maxLvl)
                     lvl = maxLvl;
                 break;

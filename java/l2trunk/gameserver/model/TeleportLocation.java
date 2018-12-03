@@ -17,7 +17,7 @@ public final class TeleportLocation extends Location {
         _name = name;
         _stringName = StringName;
         _stringNameLang = StringNameLang;
-        _item = ItemHolder.INSTANCE.getTemplate(item);
+        _item = ItemHolder.getInstance().getTemplate(item);
         _castleId = castleId;
     }
 

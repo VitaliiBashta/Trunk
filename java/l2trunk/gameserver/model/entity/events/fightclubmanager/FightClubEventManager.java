@@ -28,26 +28,22 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class FightClubEventManager {
+public enum FightClubEventManager {
+    INSTANCE;
 
     public static final Location RETURN_LOC = new Location(83208, 147672, -3494, 0);
     public static final int FIGHT_CLUB_BADGE_ID = 6673;
     private static final String BYPASS = "_fightclub";
     private static final Logger LOG = LoggerFactory.getLogger(FightClubEventManager.class);
-    private static FightClubEventManager _instance;
     private final Map<Integer, AbstractFightClub> _activeEvents = new ConcurrentHashMap<>();
     private final List<FightClubGameRoom> _rooms = new CopyOnWriteArrayList<>();
     private final boolean _shutDown = false;
     private AbstractFightClub _nextEvent = null;
 
-    private FightClubEventManager() {
-        startAutoEventsTasks();
-    }
 
-    public static FightClubEventManager getInstance() {
-        if (_instance == null)
-            _instance = new FightClubEventManager();
-        return _instance;
+    public void init() {
+
+        startAutoEventsTasks();
     }
 
     public boolean serverShuttingDown() {

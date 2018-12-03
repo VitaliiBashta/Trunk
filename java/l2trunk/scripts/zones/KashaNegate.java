@@ -18,16 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-/**
- * @author n0nam3
- * @date 22/07/2010 18:08
- * @comment off-like KashaEye AI and Zones
- */
-public class KashaNegate implements ScriptFile {
+
+public final class KashaNegate implements ScriptFile {
     private static final int[] _buffs = {
-            6150,
-            6152,
-            6154
+            6150, 6152, 6154
     };
     private static final String[] ZONES = {
             "[kasha1]",
@@ -45,13 +39,10 @@ public class KashaNegate implements ScriptFile {
             18814
     };
     private static final int _debuff = 6149;
-
-    private static Future<?> _buffTask;
     private static final long TICK_BUFF_DELAY = 10000L;
-
-    private static ZoneListener _zoneListener;
-
     private static final Map<Integer, Integer> KASHARESPAWN = new HashMap<>();
+    private static Future<?> _buffTask;
+    private static ZoneListener _zoneListener;
 
     static {
         KASHARESPAWN.put(18812, 18813);
@@ -63,31 +54,31 @@ public class KashaNegate implements ScriptFile {
     public void onLoad() {
         _zoneListener = new ZoneListener();
         for (String ZONE : ZONES) {
-            int random = Rnd.get(60 * 1000 * 1, 60 * 1000 * 7);
+            int random = Rnd.get(60 * 1000, 60 * 1000 * 7);
             int message;
             Zone zone = ReflectionUtils.getZone(ZONE);
 
-            ThreadPoolManager.INSTANCE().schedule(new CampDestroyTask(zone), random);
+            ThreadPoolManager.INSTANCE.schedule(new CampDestroyTask(zone), random);
             if (random > 5 * 60000) {
                 message = random - 5 * 60000;
-                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, zone), message);
+                ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(0, zone), message);
             }
             if (random > 3 * 60000) {
                 message = random - 3 * 60000;
-                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, zone), message);
+                ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(0, zone), message);
             }
             if (random > 60000) {
                 message = random - 60000;
-                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, zone), message);
+                ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(0, zone), message);
             }
             if (random > 15000) {
                 message = random - 15000;
-                ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(1, zone), message);
+                ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(1, zone), message);
             }
             zone.addListener(_zoneListener);
         }
 
-        _buffTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new BuffTask(), TICK_BUFF_DELAY, TICK_BUFF_DELAY);
+        _buffTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new BuffTask(), TICK_BUFF_DELAY, TICK_BUFF_DELAY);
     }
 
     @Override
@@ -132,7 +123,7 @@ public class KashaNegate implements ScriptFile {
                         if (m == mobs[0] && !c.isDead()) {
                             if (!_debuffed)
                                 for (Creature p : zone.getInsidePlayables()) {
-                                    addEffect((NpcInstance) c, p, SkillTable.INSTANCE().getInfo(_debuff, 1), false);
+                                    addEffect((NpcInstance) c, p, SkillTable.INSTANCE.getInfo(_debuff, 1), false);
                                     _debuffed = true;
                                 }
                             c.doDie(null);
@@ -151,6 +142,34 @@ public class KashaNegate implements ScriptFile {
                     c.sendPacket(Msg.KASHA_S_EYE_PITCHES_AND_TOSSES_LIKE_IT_S_ABOUT_TO_EXPLODE);
                     break;
             }
+    }
+
+    private NpcInstance getKasha(Zone zone) {
+        List<NpcInstance> mob = new ArrayList<>();
+        for (Creature c : zone.getObjects())
+            if (c.isMonster() && !c.isDead())
+                for (int k : mobs)
+                    if (k == getRealNpcId((NpcInstance) c))
+                        mob.add((NpcInstance) c);
+        return mob.size() > 0 ? mob.get(Rnd.get(mob.size())) : null;
+    }
+
+    private void addEffect(NpcInstance actor, Creature player, Skill skill, boolean animation) {
+        List<Effect> effect = player.getEffectList().getEffectsBySkillId(skill.getId());
+        if (skill.getLevel() > 0) {
+            if (effect != null)
+                effect.get(0).exit();
+            skill.getEffects(actor, player, false, false);
+            if (animation)
+                actor.broadcastPacket(new MagicSkillUse(actor, player, skill.getId(), skill.getLevel(), skill.getHitTime(), 0));
+        }
+    }
+
+    private int getRealNpcId(NpcInstance npc) {
+        if (npc.getDisplayId() > 0)
+            return npc.getDisplayId();
+        else
+            return npc.getNpcId();
     }
 
     private class KashaRespawn extends RunnableImpl {
@@ -178,11 +197,11 @@ public class KashaNegate implements ScriptFile {
         @Override
         public void runImpl() {
             destroyKashaInCamp(_zone);
-            ThreadPoolManager.INSTANCE().schedule(new CampDestroyTask(_zone), 7 * 60000L + 40000L);
-            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, _zone), 2 * 60000L + 40000L);
-            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, _zone), 4 * 60000L + 40000L);
-            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(0, _zone), 6 * 60000L + 40000L);
-            ThreadPoolManager.INSTANCE().schedule(new BroadcastMessageTask(1, _zone), 7 * 60000L + 20000L);
+            ThreadPoolManager.INSTANCE.schedule(new CampDestroyTask(_zone), 7 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(0, _zone), 2 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(0, _zone), 4 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(0, _zone), 6 * 60000L + 40000L);
+            ThreadPoolManager.INSTANCE.schedule(new BroadcastMessageTask(1, _zone), 7 * 60000L + 20000L);
         }
     }
 
@@ -224,7 +243,7 @@ public class KashaNegate implements ScriptFile {
             for (String ZONE : ZONES) {
                 Zone zone = ReflectionUtils.getZone(ZONE);
                 NpcInstance npc = getKasha(zone);
-                if (npc != null && zone != null) {
+                if (npc != null) {
                     int curseLvl = 0;
                     int yearningLvl = 0;
                     int despairLvl = 0;
@@ -238,55 +257,23 @@ public class KashaNegate implements ScriptFile {
                                 despairLvl++;
                     if (yearningLvl > 0 || curseLvl > 0 || despairLvl > 0)
                         for (Creature cha : zone.getInsidePlayables()) {
-                            boolean casted = false;
                             if (curseLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE().getInfo(_buffs[0], curseLvl), true);
-                                casted = true;
+                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE.getInfo(_buffs[0], curseLvl), true);
                             } else
                                 cha.getEffectList().stopEffect(_buffs[0]);
                             if (yearningLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE().getInfo(_buffs[1], yearningLvl), true);
-                                casted = true;
+                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE.getInfo(_buffs[1], yearningLvl), true);
                             } else
                                 cha.getEffectList().stopEffect(_buffs[1]);
                             if (despairLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE().getInfo(_buffs[2], despairLvl), true);
-                                casted = true;
+                                addEffect(npc, cha.getPlayer(), SkillTable.INSTANCE.getInfo(_buffs[2], despairLvl), true);
                             } else
                                 cha.getEffectList().stopEffect(_buffs[2]);
-                            if (casted && Rnd.chance(10))
+                            if (Rnd.chance(10))
                                 cha.sendPacket(Msg.THE_KASHA_S_EYE_GIVES_YOU_A_STRANGE_FEELING);
                         }
                 }
             }
         }
-    }
-
-    private NpcInstance getKasha(Zone zone) {
-        List<NpcInstance> mob = new ArrayList<>();
-        for (Creature c : zone.getObjects())
-            if (c.isMonster() && !c.isDead())
-                for (int k : mobs)
-                    if (k == getRealNpcId((NpcInstance) c))
-                        mob.add((NpcInstance) c);
-        return mob.size() > 0 ? mob.get(Rnd.get(mob.size())) : null;
-    }
-
-    private void addEffect(NpcInstance actor, Creature player, Skill skill, boolean animation) {
-        List<Effect> effect = player.getEffectList().getEffectsBySkillId(skill.getId());
-        if (skill.getLevel() > 0) {
-            if (effect != null)
-                effect.get(0).exit();
-            skill.getEffects(actor, player, false, false);
-            if (animation)
-                actor.broadcastPacket(new MagicSkillUse(actor, player, skill.getId(), skill.getLevel(), skill.getHitTime(), 0));
-        }
-    }
-
-    private int getRealNpcId(NpcInstance npc) {
-        if (npc.getDisplayId() > 0)
-            return npc.getDisplayId();
-        else
-            return npc.getNpcId();
     }
 }

@@ -159,7 +159,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     public void setItemId(int id) {
         itemId = id;
-        template = ItemHolder.INSTANCE.getTemplate(id);
+        template = ItemHolder.getInstance().getTemplate(id);
         setCustomFlags(getCustomFlags());
     }
 

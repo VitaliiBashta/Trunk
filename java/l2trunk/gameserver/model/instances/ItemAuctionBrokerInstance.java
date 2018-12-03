@@ -40,7 +40,7 @@ public final class ItemAuctionBrokerInstance extends NpcInstance {
                 break;
             case "auction":
                 if (_instance == null) {
-                    _instance = ItemAuctionManager.getInstance().getManagerInstance(getTemplate().npcId);
+                    _instance = ItemAuctionManager.INSTANCE.getManagerInstance(getTemplate().npcId);
                     if (_instance == null)
                         //_log.error("L2ItemAuctionBrokerInstance: Missing instance for: " + getTemplate().npcId);
                         return;

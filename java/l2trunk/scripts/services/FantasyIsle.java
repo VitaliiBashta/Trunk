@@ -1,6 +1,5 @@
 package l2trunk.scripts.services;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.GameTimeController;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -14,10 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-public class FantasyIsle extends Functions implements ScriptFile {
-    private static ScheduledFuture<?> _startTask;
-    private static boolean _isStarted;
-
+public final class FantasyIsle extends Functions implements ScriptFile {
     private static final int MC = 32433;
     private static final int singer1 = 32431;
     private static final int singer2 = 32432;
@@ -34,8 +30,33 @@ public class FantasyIsle extends Functions implements ScriptFile {
     private static final int showstuff3 = 32426;
     private static final int showstuff4 = 32427;
     private static final int showstuff5 = 32428;
-
     private static final Map<String, Walk> WALKS = new HashMap<>();
+    private static final String[] TEXT = new String[]{
+            "How come people are not here... We are about to start the show.. Hmm",
+            "Ugh, I have butterflies in my stomach.. The show starts soon...",
+            "Thank you all for coming here tonight.",
+            "It is an honor to have the special show today.",
+            "Our Fantasy Isle is fully committed to your happiness.",
+            "Now I'd like to introduce the most beautiful singer in Aden. Please welcome Leyla Mira!",
+            "Here she comes!",
+            "Thank you very much, Leyla. Next is",
+            "It was very difficult to invite this first group that just came back from their world tour. Let's welcome the Fantasy Isle Circus!",
+            "Come on ~ everyone",
+            "Did you like it? That was so amazing.",
+            "Now we also invited individuals with special talents.",
+            "Let's welcome the first person here!",
+            ";;;;;;Oh",
+            "Okay, now here comes the next person. Come on up please.",
+            "Oh, it looks like something great is going to happen, right?",
+            "Oh, my ;;;;",
+            "That's g- .. great. Now, here comes the last person.",
+            "Now this is the end of today's show.",
+            "How was it? I am not sure if you really enjoyed it.",
+            "Please remember that Fantasy Isle is always planning a lot of great shows for you.",
+            "Well, I wish I could continue all night long, but this is it for today. Thank you."};
+    private static final Map<String, Talk> TALKS = new HashMap<>();
+    private static ScheduledFuture<?> _startTask;
+    private static boolean _isStarted;
 
     static {
         WALKS.put("npc1_1", new Walk(-56546, -56384, -2008, "npc1_2", 1200));
@@ -128,32 +149,6 @@ public class FantasyIsle extends Functions implements ScriptFile {
         WALKS.put("27", new Walk(-56702, -56340, -2008, "29", 1800));
     }
 
-    private static final String[] TEXT = new String[]{
-            "How come people are not here... We are about to start the show.. Hmm",
-            "Ugh, I have butterflies in my stomach.. The show starts soon...",
-            "Thank you all for coming here tonight.",
-            "It is an honor to have the special show today.",
-            "Our Fantasy Isle is fully committed to your happiness.",
-            "Now I'd like to introduce the most beautiful singer in Aden. Please welcome Leyla Mira!",
-            "Here she comes!",
-            "Thank you very much, Leyla. Next is",
-            "It was very difficult to invite this first group that just came back from their world tour. Let's welcome the Fantasy Isle Circus!",
-            "Come on ~ everyone",
-            "Did you like it? That was so amazing.",
-            "Now we also invited individuals with special talents.",
-            "Let's welcome the first person here!",
-            ";;;;;;Oh",
-            "Okay, now here comes the next person. Come on up please.",
-            "Oh, it looks like something great is going to happen, right?",
-            "Oh, my ;;;;",
-            "That's g- .. great. Now, here comes the last person.",
-            "Now this is the end of today's show.",
-            "How was it? I am not sure if you really enjoyed it.",
-            "Please remember that Fantasy Isle is always planning a lot of great shows for you.",
-            "Well, I wish I could continue all night long, but this is it for today. Thank you."};
-
-    private static final Map<String, Talk> TALKS = new HashMap<>();
-
     static {
         TALKS.put("1", new Talk(TEXT[1], "2", 1000));
         TALKS.put("2", new Talk(TEXT[2], "3", 6000));
@@ -174,9 +169,33 @@ public class FantasyIsle extends Functions implements ScriptFile {
         TALKS.put("26", new Talk(TEXT[21], "27", 5400));
     }
 
+    private static boolean isStarted() {
+        return _isStarted;
+    }
+
+    private static NpcInstance addSpawn(int npcId, int x, int y, int z, int heading) {
+        return Functions.spawn(new Location(x, y, z, heading), npcId);
+    }
+
+    private static void startQuestTimer(String event, int time, NpcInstance temp_npc) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("npc", temp_npc.getRef());
+        executeTask("services.FantasyIsle", "start", new Object[]{event}, variables, time);
+    }
+
     @Override
     public void onLoad() {
-        _startTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new StartTask(), 60000, 60000);
+        _startTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> {
+            if (!isStarted()) {
+                int gameTime = GameTimeController.INSTANCE.getGameTime();
+                int h = gameTime / 60 % 24;
+                int m = gameTime % 60;
+                if (h == 20 && m >= 27 && m <= 33) {
+                    _isStarted = true;
+                    start("Start");
+                }
+            }
+        }, 60000, 60000);
     }
 
     @Override
@@ -190,35 +209,6 @@ public class FantasyIsle extends Functions implements ScriptFile {
 
     @Override
     public void onShutdown() {
-    }
-
-    private static boolean isStarted() {
-        return _isStarted;
-    }
-
-    public class StartTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            if (!isStarted()) {
-                int gameTime = GameTimeController.getInstance().getGameTime();
-                int h = gameTime / 60 % 24;
-                int m = gameTime % 60;
-                if (h == 20 && m >= 27 && m <= 33) {
-                    _isStarted = true;
-                    start("Start");
-                }
-            }
-        }
-    }
-
-    private static NpcInstance addSpawn(int npcId, int x, int y, int z, int heading) {
-        return Functions.spawn(new Location(x, y, z, heading), npcId);
-    }
-
-    private static void startQuestTimer(String event, int time, NpcInstance temp_npc) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("npc", temp_npc.getRef());
-        executeTask("services.FantasyIsle", "start", new Object[]{event}, variables, time);
     }
 
     public void manualStart() {

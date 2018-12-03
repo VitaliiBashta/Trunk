@@ -9,7 +9,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReflectionManager {
+public enum  ReflectionManager {
+    INSTANCE;
     public static final Reflection DEFAULT = Reflection.createReflection(0);
     public static final Reflection PARNASSUS = Reflection.createReflection(-1);
     public static final Reflection GIRAN_HARBOR = Reflection.createReflection(-2);
@@ -17,10 +18,9 @@ public class ReflectionManager {
     public static final int FIGHT_CLUB_REFLECTION_ID = 400;
     private static final Reflection CTF_EVENT = Reflection.createReflection(-4);
     private static final Reflection TVT_EVENT = Reflection.createReflection(-5);
-    private static final ReflectionManager INSTANCE = new ReflectionManager();
     private final Map<Integer, Reflection> reflections = new HashMap<>();
 
-    private ReflectionManager() {
+    public void init() {
         add(DEFAULT);
         add(PARNASSUS);
         add(GIRAN_HARBOR);
@@ -32,10 +32,6 @@ public class ReflectionManager {
         DEFAULT.init(DoorHolder.getInstance().getDoors(), ZoneHolder.getInstance().getZones());
 
         JAIL.setCoreLoc(new Location(-114648, -249384, -2984));
-    }
-
-    public static ReflectionManager getInstance() {
-        return INSTANCE;
     }
 
     public synchronized Reflection get(int id) {

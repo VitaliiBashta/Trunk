@@ -445,7 +445,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
         }
 
         long diff = (getResidence().getOwnDate().getTimeInMillis() + DAY_IN_MILISECONDS) - System.currentTimeMillis();
-        _nextSiegeDateSetTask = ThreadPoolManager.INSTANCE().schedule(new NextSiegeDateSet(), diff);
+        _nextSiegeDateSetTask = ThreadPoolManager.INSTANCE.schedule(this::setNextSiegeTime, diff);
     }
 
     // ========================================================================================================================================================================
@@ -588,10 +588,4 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
         return loc;
     }
 
-    private class NextSiegeDateSet extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            setNextSiegeTime();
-        }
-    }
 }

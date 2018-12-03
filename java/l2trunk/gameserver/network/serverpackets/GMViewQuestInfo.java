@@ -4,7 +4,9 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-public class GMViewQuestInfo extends L2GameServerPacket {
+import java.util.List;
+
+public final class GMViewQuestInfo extends L2GameServerPacket {
     private final Player _cha;
 
     public GMViewQuestInfo(Player cha) {
@@ -16,15 +18,15 @@ public class GMViewQuestInfo extends L2GameServerPacket {
         writeC(0x99);
         writeS(_cha.getName());
 
-        Quest[] quests = _cha.getAllActiveQuests();
+        List<Quest> quests = _cha.getAllActiveQuests();
 
-        if (quests.length == 0) {
+        if (quests.size() == 0) {
             writeH(0);
             writeH(0);
             return;
         }
 
-        writeH(quests.length);
+        writeH(quests.size());
         for (Quest q : quests) {
             writeD(q.getQuestIntId());
             QuestState qs = _cha.getQuestState(q.getName());

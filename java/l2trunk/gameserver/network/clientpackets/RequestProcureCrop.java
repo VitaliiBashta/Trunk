@@ -107,7 +107,7 @@ public class RequestProcureCrop extends L2GameClientPacket {
 
                 rewradItemCount = SafeMath.mulAndCheck(count, rewradItemCount);
 
-                ItemTemplate template = ItemHolder.INSTANCE.getTemplate(rewradItemId);
+                ItemTemplate template = ItemHolder.getInstance().getTemplate(rewradItemId);
                 if (template == null)
                     return;
 

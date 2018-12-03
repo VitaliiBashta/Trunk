@@ -35,7 +35,7 @@ public final class HandysBlock extends DefaultAI {
 
         if (player.getTarget() == actor)
             if (skill.getId() == 5852 || skill.getId() == 5853) {
-                ArenaParticipantsHolder holder = HandysBlockCheckerManager.getInstance().getHolder(arena);
+                ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(arena);
 
                 if (holder.getPlayerTeam(player) == 0 && !actor.isRed()) {
                     actor.changeColor();

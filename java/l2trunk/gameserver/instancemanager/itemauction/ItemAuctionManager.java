@@ -29,24 +29,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public final class ItemAuctionManager {
-    private static final Logger LOG = LoggerFactory.getLogger(ItemAuctionManager.class);
+public enum ItemAuctionManager {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(ItemAuctionManager.class);
 
-    private static ItemAuctionManager _instance;
     private final Map<Integer, ItemAuctionInstance> _managerInstances = new HashMap<>();
     private final AtomicInteger _nextId = new AtomicInteger();
 
-    private ItemAuctionManager() {
+    public void init() {
         LOG.info("Initializing ItemAuctionManager");
-    }
-
-    public static ItemAuctionManager getInstance() {
-        if (_instance == null) {
-            _instance = new ItemAuctionManager();
-            if (Config.ALT_ITEM_AUCTION_ENABLED)
-                _instance.load();
-        }
-        return _instance;
+        if (Config.ALT_ITEM_AUCTION_ENABLED)
+            load();
     }
 
     private void load() {

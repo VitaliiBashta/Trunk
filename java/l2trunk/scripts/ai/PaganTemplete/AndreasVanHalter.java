@@ -3,10 +3,7 @@ package l2trunk.scripts.ai.PaganTemplete;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
@@ -16,6 +13,8 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -25,9 +24,6 @@ import java.util.concurrent.ScheduledFuture;
  * - AI is tested and works.
  */
 public final class AndreasVanHalter extends Fighter {
-    private boolean _firstTimeMove = true;
-    private static ScheduledFuture<?> _movieTask = null;
-
     private static final int TriolsRevelation1 = 32058;
     private static final int TriolsRevelation2 = 32059;
     private static final int TriolsRevelation3 = 32060;
@@ -47,6 +43,8 @@ public final class AndreasVanHalter extends Fighter {
     private static final int AndreasRoyalGuards1 = 22192;
     private static final int AndreasRoyalGuards2 = 22193;
     private static final int AndreasRoyalGuards3 = 22176;
+    private static ScheduledFuture<?> _movieTask = null;
+    private boolean _firstTimeMove = true;
 
     public AndreasVanHalter(NpcInstance actor) {
         super(actor);
@@ -54,8 +52,7 @@ public final class AndreasVanHalter extends Fighter {
 
     @Override
     public void onEvtSpawn() {
-        NpcInstance actor = getActor();
-        if (actor == null)
+        if (getActor() == null)
             return;
 
         // Спавним НПЦ и Монстров
@@ -82,12 +79,12 @@ public final class AndreasVanHalter extends Fighter {
         if (!door1.isOpen() && !door2.isOpen() && door3.isOpen() && door4.isOpen() && _firstTimeMove) {
             _firstTimeMove = false;
             // Запускаем показ видео
-            _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(1), 3000);
+            _movieTask = ThreadPoolManager.INSTANCE.schedule(new Movie(1), 3000);
             // Запускаем музыку
             actor.broadcastPacket(new PlaySound("BS04_A"));
             // Вдруг мы не пошли бить РБ, нужно сделать перереспавн и поменять открытие и закрытие дверей местами.
             // Запускаем проверку через 1 час
-            ThreadPoolManager.INSTANCE().schedule(new CheckAttack(), 3600000);
+            ThreadPoolManager.INSTANCE.schedule(new CheckAttack(), 3600000);
         }
 
         return true;
@@ -114,165 +111,13 @@ public final class AndreasVanHalter extends Fighter {
         super.onEvtAttacked(attacker, damage);
     }
 
-    private class Movie extends RunnableImpl {
-        private final int _distance = 10000;
-        private final int _taskId;
-
-        Movie(int taskId) {
-            _taskId = taskId;
-        }
-
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            actor.setHeading(16384);
-
-            // Спавним камеру
-            NpcInstance camera = NpcUtils.spawnSingle(13014, new Location(-16362, -53754, -10439));
-            switch (_taskId) {
-                case 1:
-                    // Ищем жертву для приношения
-                    NpcInstance npc1 = GameObjectsStorage.getByNpcId(RitualOffering);
-                    // Ставим таргет на жертву
-                    actor.setTarget(npc1);
-                    // Нашли, теперь можно кастонуть на неё скилом
-                    actor.doCast(SkillTable.INSTANCE().getInfo(1168, 7), npc1, false);
-
-                    // Включаем на всякие пажарные запрет хождения что бы не испортить мувик
-                    actor.startImmobilized();
-                    // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 1500, 88, 89, 0, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
-
-                    if (_movieTask != null)
-                        _movieTask.cancel(false);
-                    _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(2), 300);
-                    break;
-                case 2:
-                    // Ищем заного жертву
-                    NpcInstance npc2 = GameObjectsStorage.getByNpcId(RitualOffering);
-                    // Показываем социалку о том что мы умерли
-                    npc2.sendPacket(new SocialAction(npc2.getObjectId(), 1));
-                    // Стави жертве ХП 0
-                    npc2.setCurrentHp(0, true);
-                    // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 1500, 88, 89, 0, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
-
-                    if (_movieTask != null)
-                        _movieTask.cancel(false);
-                    _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(3), 300);
-                    break;
-                case 3:
-                    // Удаляем жертву
-                    NpcInstance npc3 = GameObjectsStorage.getByNpcId(RitualOffering);
-                    npc3.deleteMe();
-                    // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 450, 88, 3, 5500, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
-
-                    if (_movieTask != null)
-                        _movieTask.cancel(false);
-                    _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(4), 9400);
-                    break;
-                case 4:
-                    // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 500, 88, 4, 5000, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
-
-                    if (_movieTask != null)
-                        _movieTask.cancel(false);
-                    _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(5), 5000);
-                    break;
-                case 5:
-                    // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 3000, 88, 4, 6000, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
-
-                    if (_movieTask != null)
-                        _movieTask.cancel(false);
-                    _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(6), 6000);
-                    break;
-                case 6:
-                    // Сбрасываем режим мувиков
-                    for (Player player : World.getAroundPlayers(actor))
-                        player.leaveMovieMode();
-
-                    // Спавним монстров возле Алтаря
-                    SpawnNpc2();
-                    // Выключаем запрет на хождения
-                    actor.stopImmobilized();
-                    if (_movieTask != null)
-                        _movieTask.cancel(false);
-                    _movieTask = null;
-                    break;
-            }
-        }
-    }
-
-    private class CheckAttack extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            if (!actor.isAttackingNow()) {
-                // Сбрасываем переменную на показ видео
-                _firstTimeMove = true;
-
-                // Удаляем всех кого заспавнили при спавне (тех кто остался еще жить).
-                DeleteNpc();
-
-                // Даём задание заспавнить заного всех через 10 секунд
-                ThreadPoolManager.INSTANCE().schedule(new NewSpawn(), 10000);
-                ThreadPoolManager.INSTANCE().schedule(new CheckAttack(), 3600000);
-            }
-        }
-    }
-
-    private class NewSpawn extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            // Спавним НПЦ и Монстров
-            SpawnNpc1();
-        }
-    }
-
     @Override
     public void onEvtDead(Creature killer) {
         // Сбрасываем переменную на показ видео
         _firstTimeMove = true;
 
         // Удаляем всех кого заспавнили при спавне (тех кто остался еще жить).
-        DeleteNpc();
+        deleteNpc();
         super.onEvtDead(killer);
     }
 
@@ -410,15 +255,15 @@ public final class AndreasVanHalter extends Fighter {
 
     }
 
-    private void DeleteNpc() {
-        int[] npcs = {TriolsRevelation1, TriolsRevelation2, TriolsRevelation3, TriolsRevelation4, TriolsRevelation5, TriolsRevelation6, TriolsRevelation7, TriolsRevelation8, TriolsRevelation9, TriolsRevelation10, TriolsRevelation11, RitualOffering, AltarGatekeeper, AndreasCaptainRoyalGuard1, AndreasCaptainRoyalGuard2, AndreasCaptainRoyalGuard3, AndreasRoyalGuards1, AndreasRoyalGuards2, AndreasRoyalGuards3};
-
-        for (int npcId : npcs) {
-            // Ищем во всем мире
-            NpcInstance npc = GameObjectsStorage.getByNpcId(npcId);
-            if (npc != null)
-                npc.deleteMe();
-        }
+    private void deleteNpc() {
+        List<Integer> npcs = Arrays.asList(
+                TriolsRevelation1, TriolsRevelation2, TriolsRevelation3, TriolsRevelation4, TriolsRevelation5,
+                TriolsRevelation6, TriolsRevelation7, TriolsRevelation8, TriolsRevelation9, TriolsRevelation10,
+                TriolsRevelation11, RitualOffering, AltarGatekeeper, AndreasCaptainRoyalGuard1,
+                AndreasCaptainRoyalGuard2, AndreasCaptainRoyalGuard3, AndreasRoyalGuards1, AndreasRoyalGuards2, AndreasRoyalGuards3);
+        npcs.stream()
+                .map(GameObjectsStorage::getByNpcId)
+                .forEach(GameObject::deleteMe);
 
         // Двери на балкон
         DoorInstance door1 = ReflectionUtils.getDoor(19160014);
@@ -434,4 +279,150 @@ public final class AndreasVanHalter extends Fighter {
         door3.closeMe();
         door4.closeMe();
     }
+
+    private class Movie extends RunnableImpl {
+        private final int _distance = 10000;
+        private final int _taskId;
+
+        Movie(int taskId) {
+            _taskId = taskId;
+        }
+
+        @Override
+        public void runImpl() {
+            NpcInstance actor = getActor();
+            actor.setHeading(16384);
+
+            // Спавним камеру
+            NpcInstance camera = NpcUtils.spawnSingle(13014, new Location(-16362, -53754, -10439));
+            switch (_taskId) {
+                case 1:
+                    // Ищем жертву для приношения
+                    NpcInstance npc1 = GameObjectsStorage.getByNpcId(RitualOffering);
+                    // Ставим таргет на жертву
+                    actor.setTarget(npc1);
+                    // Нашли, теперь можно кастонуть на неё скилом
+                    actor.doCast(SkillTable.INSTANCE().getInfo(1168, 7), npc1, false);
+
+                    // Включаем на всякие пажарные запрет хождения что бы не испортить мувик
+                    actor.startImmobilized();
+                    // Ищем игроков в радиусе и показываем мувик
+                    for (Player player : World.getAroundPlayers(actor)) {
+                        if (player.getDistance(camera) <= _distance) {
+                            player.enterMovieMode();
+                            player.specialCamera(camera, 1500, 88, 89, 0, 5000);
+                        } else
+                            player.leaveMovieMode();
+                    }
+
+                    if (_movieTask != null)
+                        _movieTask.cancel(false);
+                    _movieTask = null;
+                    _movieTask = ThreadPoolManager.INSTANCE.schedule(new Movie(2), 300);
+                    break;
+                case 2:
+                    // Ищем заного жертву
+                    NpcInstance npc2 = GameObjectsStorage.getByNpcId(RitualOffering);
+                    // Показываем социалку о том что мы умерли
+                    npc2.sendPacket(new SocialAction(npc2.getObjectId(), 1));
+                    // Стави жертве ХП 0
+                    npc2.setCurrentHp(0, true);
+                    // Ищем игроков в радиусе и показываем мувик
+                    for (Player player : World.getAroundPlayers(actor)) {
+                        if (player.getDistance(camera) <= _distance) {
+                            player.enterMovieMode();
+                            player.specialCamera(camera, 1500, 88, 89, 0, 5000);
+                        } else
+                            player.leaveMovieMode();
+                    }
+
+                    if (_movieTask != null)
+                        _movieTask.cancel(false);
+                    _movieTask = null;
+                    _movieTask = ThreadPoolManager.INSTANCE.schedule(new Movie(3), 300);
+                    break;
+                case 3:
+                    // Удаляем жертву
+                    NpcInstance npc3 = GameObjectsStorage.getByNpcId(RitualOffering);
+                    npc3.deleteMe();
+                    // Ищем игроков в радиусе и показываем мувик
+                    for (Player player : World.getAroundPlayers(actor)) {
+                        if (player.getDistance(camera) <= _distance) {
+                            player.enterMovieMode();
+                            player.specialCamera(camera, 450, 88, 3, 5500, 5000);
+                        } else
+                            player.leaveMovieMode();
+                    }
+
+                    if (_movieTask != null)
+                        _movieTask.cancel(false);
+                    _movieTask = null;
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(4), 9400);
+                    break;
+                case 4:
+                    // Ищем игроков в радиусе и показываем мувик
+                    for (Player player : World.getAroundPlayers(actor)) {
+                        if (player.getDistance(camera) <= _distance) {
+                            player.enterMovieMode();
+                            player.specialCamera(camera, 500, 88, 4, 5000, 5000);
+                        } else
+                            player.leaveMovieMode();
+                    }
+
+                    if (_movieTask != null)
+                        _movieTask.cancel(false);
+                    _movieTask = null;
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(5), 5000);
+                    break;
+                case 5:
+                    // Ищем игроков в радиусе и показываем мувик
+                    for (Player player : World.getAroundPlayers(actor)) {
+                        if (player.getDistance(camera) <= _distance) {
+                            player.enterMovieMode();
+                            player.specialCamera(camera, 3000, 88, 4, 6000, 5000);
+                        } else
+                            player.leaveMovieMode();
+                    }
+
+                    if (_movieTask != null)
+                        _movieTask.cancel(false);
+                    _movieTask = null;
+                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(6), 6000);
+                    break;
+                case 6:
+                    // Сбрасываем режим мувиков
+                    for (Player player : World.getAroundPlayers(actor))
+                        player.leaveMovieMode();
+
+                    // Спавним монстров возле Алтаря
+                    SpawnNpc2();
+                    // Выключаем запрет на хождения
+                    actor.stopImmobilized();
+                    if (_movieTask != null)
+                        _movieTask.cancel(false);
+                    _movieTask = null;
+                    break;
+            }
+        }
+    }
+
+    private class CheckAttack extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            NpcInstance actor = getActor();
+            if (!actor.isAttackingNow()) {
+                // Сбрасываем переменную на показ видео
+                _firstTimeMove = true;
+
+                // Удаляем всех кого заспавнили при спавне (тех кто остался еще жить).
+                deleteNpc();
+
+                // Даём задание заспавнить заного всех через 10 секунд
+                // Спавним НПЦ и Монстров
+                ThreadPoolManager.INSTANCE.schedule(AndreasVanHalter.this::SpawnNpc1, 10000);
+                ThreadPoolManager.INSTANCE.schedule(new CheckAttack(), 3600000);
+            }
+        }
+    }
+
 }

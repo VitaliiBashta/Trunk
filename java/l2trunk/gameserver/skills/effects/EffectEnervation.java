@@ -12,8 +12,8 @@ public class EffectEnervation extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (_effected.isNpc())
-            ((NpcInstance) _effected).setParameter("DebuffIntention", 0.5);
+        if (effected.isNpc())
+            ((NpcInstance) effected).setParameter("DebuffIntention", 0.5);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class EffectEnervation extends Effect {
     @Override
     public void onExit() {
         super.onExit();
-        if (_effected.isNpc())
-            ((NpcInstance) _effected).setParameter("DebuffIntention", 1.);
+        if (effected.isNpc())
+            ((NpcInstance) effected).setParameter("DebuffIntention", 1.);
     }
 }

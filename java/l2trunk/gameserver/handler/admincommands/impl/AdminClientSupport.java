@@ -77,7 +77,7 @@ public class AdminClientSupport implements IAdminCommandHandler {
                         if (!target.isPlayer())
                             return false;
 
-                        ItemTemplate template = ItemHolder.INSTANCE.getTemplate(id);
+                        ItemTemplate template = ItemHolder.getInstance().getTemplate(id);
                         if (template == null)
                             return false;
 

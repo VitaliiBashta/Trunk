@@ -4,7 +4,7 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.Experience;
 
-public class SubClass {
+public final class SubClass {
     public static final int CERTIFICATION_65 = 1;
     public static final int CERTIFICATION_70 = 1 << 1;
     public static final int CERTIFICATION_75 = 1 << 2;
@@ -15,7 +15,7 @@ public class SubClass {
     private int _sp = 0;
     private int _level = Config.ALT_GAME_START_LEVEL_TO_SUBCLASS, certification;
     private double _Hp = 1, _Mp = 1, _Cp = 1;
-    private boolean _active = false, _isBase = false;
+    private boolean _active = false, base = false;
     private DeathPenalty deathPenalty;
 
     public SubClass() {
@@ -101,13 +101,13 @@ public class SubClass {
     }
 
     public boolean isBase() {
-        return _isBase;
+        return base;
     }
 
     public void setBase(final boolean base) {
-        _isBase = base;
-        minExp = Experience.LEVEL[_isBase ? 1 : Config.ALT_GAME_START_LEVEL_TO_SUBCLASS];
-        maxExp = Experience.LEVEL[(_isBase ? Experience.getMaxLevel() : Experience.getMaxSubLevel()) + 1] - 1;
+        this.base = base;
+        minExp = Experience.LEVEL[this.base ? 1 : Config.ALT_GAME_START_LEVEL_TO_SUBCLASS];
+        maxExp = Experience.LEVEL[(this.base ? Experience.getMaxLevel() : Experience.getMaxSubLevel()) + 1] - 1;
     }
 
     DeathPenalty getDeathPenalty(Player player) {

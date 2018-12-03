@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.Collections;
 import java.util.List;
 
-public class Atod extends Functions implements IVoicedCommandHandler {
+public final class Atod extends Functions implements IVoicedCommandHandler {
     private static final List<String> COMMANDS = Collections.singletonList("openatod");
 
     @Override

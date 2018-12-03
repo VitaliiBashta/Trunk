@@ -1,6 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.GameObject;
@@ -10,7 +9,13 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class AdminDisconnect implements IAdminCommandHandler {
+enum Commands {
+    admin_disconnect,
+    admin_kick,
+    admin_kick_count
+}
+
+public final class AdminDisconnect implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -47,24 +52,14 @@ public class AdminDisconnect implements IAdminCommandHandler {
 
                 player.sendMessage(new CustomMessage("admincommandhandlers.AdminDisconnect.YoureKickedByGM", player));
                 player.sendPacket(SystemMsg.YOU_HAVE_BEEN_DISCONNECTED_FROM_THE_SERVER_);
-                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        player.kick();
-                    }
-                }, 500);
+                ThreadPoolManager.INSTANCE.schedule(player::kick, 500);
                 break;
             case admin_kick_count:
                 int toKickCount = Integer.parseInt(wordList[1]);
                 int kickedCount = 0;
                 for (final Player playerToKick : GameObjectsStorage.getAllPlayersForIterate()) {
                     if (playerToKick.isOnline() && playerToKick.getNetConnection() != null && !playerToKick.equals(activeChar)) {
-                        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                            @Override
-                            public void runImpl() {
-                                playerToKick.kick();
-                            }
-                        }, 500);
+                        ThreadPoolManager.INSTANCE.schedule(playerToKick::kick, 500);
                         kickedCount++;
                         if (toKickCount <= kickedCount)
                             break;
@@ -79,11 +74,5 @@ public class AdminDisconnect implements IAdminCommandHandler {
     @Override
     public Enum[] getAdminCommandEnum() {
         return Commands.values();
-    }
-
-    private enum Commands {
-        admin_disconnect,
-        admin_kick,
-        admin_kick_count
     }
 }

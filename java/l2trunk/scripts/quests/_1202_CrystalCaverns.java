@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class _1202_CrystalCaverns extends Quest implements ScriptFile {
+public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private static final int INCSTANCED_ZONE_ID = 10;
     // Items
     //private static final int CONTAMINATED_CRYSTAL = 9690;
@@ -259,7 +259,7 @@ public class _1202_CrystalCaverns extends Quest implements ScriptFile {
         }
 
         if (npcId == ORACLE_GUIDE2) {
-            Reflection r = ReflectionManager.getInstance().get(world.instanceId);
+            Reflection r = ReflectionManager.INSTANCE.get(world.instanceId);
             r.openDoor(DOOR5);
             r.openDoor(DOOR6);
         } else if (npcId == OG1)
@@ -752,7 +752,7 @@ public class _1202_CrystalCaverns extends Quest implements ScriptFile {
         NpcInstance newNpc;
         newNpc = addSpawnToInstance(DARNEL, new Location(152759, 145949, -12588, 21592), 0, world.instanceId);
         world.DarnelRoom.npclist.put(newNpc, false);
-        Reflection r = ReflectionManager.getInstance().get(world.instanceId);
+        Reflection r = ReflectionManager.INSTANCE.get(world.instanceId);
         r.openDoor(DOOR3);
         r.openDoor(DOOR4);
     }

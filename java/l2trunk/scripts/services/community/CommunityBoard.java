@@ -90,7 +90,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
 
                 html = html.replace("<?time?>", String.valueOf(time()));
                 html = html.replace("<?online?>", online());
-                ImagesCache.getInstance().sendUsedImages(html, player);
+                ImagesCache.sendUsedImages(html, player);
             } else {
                 onBypassCommand(player, Config.BBS_DEFAULT);
                 return;
@@ -99,7 +99,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
             String[] b = bypass.split(":");
             String page = b[1];
             html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/" + page + ".htm", player);
-            ImagesCache.getInstance().sendUsedImages(html, player);
+            ImagesCache.sendUsedImages(html, player);
 
             if (bypass.equals("_bbspage:information")) {
                 html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/information.htm", player);
@@ -128,7 +128,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
             String[] b = bypass.split(":");
             String page = b[1];
             html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + page + ".htm", player);
-            ImagesCache.getInstance().sendUsedImages(html, player);
+            ImagesCache.sendUsedImages(html, player);
         } else if (Config.BBS_PVP_ALLOW_BUY && bypass.startsWith("_bbsmultisell")) {
             StringTokenizer st2 = new StringTokenizer(bypass, ";");
             String[] mBypass = st2.nextToken().split(":");
@@ -233,9 +233,9 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
     }
 
     private String getTimeInServer(Player player) {
-        int h = GameTimeController.getInstance().getGameHour();
-        int m = GameTimeController.getInstance().getGameMin();
-        if (GameTimeController.getInstance().isNowNight()) {
+        int h = GameTimeController.INSTANCE.getGameHour();
+        int m = GameTimeController.INSTANCE.getGameMin();
+        if (GameTimeController.INSTANCE.isNowNight()) {
             String nd = player.isLangRus() ? "Night." : "Night.";
         } else {
             String nd = player.isLangRus() ? "Day." : "Day.";

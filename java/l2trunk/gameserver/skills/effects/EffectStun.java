@@ -17,16 +17,16 @@ public final class EffectStun extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startStunning();
-        _effected.abortAttack(true, true);
-        _effected.abortCast(true, true);
-        _effected.stopMove();
+        effected.startStunning();
+        effected.abortAttack(true, true);
+        effected.abortCast(true, true);
+        effected.stopMove();
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopStunning();
+        effected.stopStunning();
     }
 
     @Override

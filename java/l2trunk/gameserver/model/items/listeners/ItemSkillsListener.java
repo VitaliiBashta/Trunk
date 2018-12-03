@@ -24,14 +24,11 @@ public final class ItemSkillsListener implements OnEquipListener {
     public void onUnequip(int slot, ItemInstance item, Playable actor) {
         Player player = (Player) actor;
 
-        List<Skill> itemSkills;
-        Skill enchant4Skill;
-
         ItemTemplate it = item.getTemplate();
 
-        itemSkills = it.getAttachedSkills();
+        List<Skill> itemSkills = it.getAttachedSkills();
 
-        enchant4Skill = it.getEnchant4Skill();
+        Skill enchant4Skill = it.getEnchant4Skill();
 
         player.removeTriggers(it);
 
@@ -41,7 +38,7 @@ public final class ItemSkillsListener implements OnEquipListener {
                     int level = player.getSkillLevel(itemSkill.getId());
                     int newlevel = level - 1;
                     if (newlevel > 0)
-                        player.addSkill(SkillTable.INSTANCE().getInfo(itemSkill.getId(), newlevel), false);
+                        player.addSkill(SkillTable.INSTANCE.getInfo(itemSkill.getId(), newlevel), false);
                     else
                         player.removeSkillById(itemSkill.getId());
                 } else {

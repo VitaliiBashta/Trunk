@@ -99,7 +99,7 @@ public class RequestPreviewItem extends L2GameClientPacket {
                     return;
                 }
 
-                ItemTemplate template = ItemHolder.INSTANCE.getTemplate(itemId);
+                ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
                 if (template == null)
                     continue;
 

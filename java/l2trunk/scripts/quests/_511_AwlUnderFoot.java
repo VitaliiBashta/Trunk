@@ -22,7 +22,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class _511_AwlUnderFoot extends Quest implements ScriptFile {
+public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
     private final static int INSTANCE_ZONE_ID = 22; // Fortress Dungeon
 
     private final static int DungeonLeaderMark = 9797;
@@ -123,7 +123,7 @@ public class _511_AwlUnderFoot extends Quest implements ScriptFile {
                             st.playSound(SOUND_ITEMGET);
                             st.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
                         }
-                        Reflection r = ReflectionManager.getInstance().get(prison.getReflectionId());
+                        Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
                         if (r != null)
                             r.startCollapseTimer(300000); // Всех боссов убили, запускаем коллапс через 5 минут
                         break;
@@ -141,9 +141,7 @@ public class _511_AwlUnderFoot extends Quest implements ScriptFile {
         Clan clan = player.getClan();
         if (clan == null)
             return false;
-        if (clan.getClanId() != fort.getOwnerId())
-            return false;
-        return true;
+        return clan.getClanId() == fort.getOwnerId();
     }
 
     private String enterPrison(Player player) {
@@ -169,7 +167,7 @@ public class _511_AwlUnderFoot extends Quest implements ScriptFile {
 
                 // Synerge - Add the player to the instance again
                 if (prison != null) {
-                    Reflection r = ReflectionManager.getInstance().get(prison.getReflectionId());
+                    Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
                     if (r != null) {
                         player.setReflection(r);
                         player.teleToLocation(iz.getTeleportCoord());
@@ -182,7 +180,7 @@ public class _511_AwlUnderFoot extends Quest implements ScriptFile {
             prison = new Prison(fort.getId(), iz);
             _prisons.put(prison.getFortId(), prison);
 
-            Reflection r = ReflectionManager.getInstance().get(prison.getReflectionId());
+            Reflection r = ReflectionManager.INSTANCE.get(prison.getReflectionId());
 
             r.setReturnLoc(player.getLoc());
 
@@ -236,7 +234,7 @@ public class _511_AwlUnderFoot extends Quest implements ScriptFile {
         }
 
         void initSpawn(int npcId, boolean first) {
-            ThreadPoolManager.INSTANCE().schedule(new PrisonSpawnTask(npcId), first ? 60000 : 180000);
+            ThreadPoolManager.INSTANCE.schedule(()  -> addSpawnToInstance(npcId, new Location(53304, 245992, -6576, 25958), 0, _reflectionId), first ? 60000 : 180000);
         }
 
         int getReflectionId() {

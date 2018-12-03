@@ -13,6 +13,9 @@ public class Strings {
     private static String[] trb;
     private static String[] trcode;
 
+    private Strings() {
+    }
+
     public static String stripSlashes(String s) {
         if (s == null)
             return "";

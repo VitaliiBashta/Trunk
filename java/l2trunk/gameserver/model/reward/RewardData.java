@@ -21,7 +21,7 @@ public class RewardData implements Cloneable {
     private double _chanceInGroup;
 
     public RewardData(int itemId) {
-        _item = ItemHolder.INSTANCE.getTemplate(itemId);
+        _item = ItemHolder.getInstance().getTemplate(itemId);
         if (_item.isArrow() // стрелы не рейтуются
                 || (Config.NO_RATE_EQUIPMENT && _item.isEquipment()) // отключаемая рейтовка эквипа
                 || (Config.NO_RATE_KEY_MATERIAL && _item.isKeyMatherial()) // отключаемая рейтовка ключевых материалов

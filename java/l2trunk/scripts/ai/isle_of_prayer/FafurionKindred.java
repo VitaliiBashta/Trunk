@@ -48,11 +48,21 @@ public final class FafurionKindred extends Fighter {
         ThreadPoolManager.INSTANCE.schedule(new SpawnTask(DETRACTOR1), 500);
         ThreadPoolManager.INSTANCE.schedule(new SpawnTask(DETRACTOR2), 500);
 
-        poisonTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(() -> {
+        poisonTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> {
             NpcInstance actor = getActor();
             actor.reduceCurrentHp(500, actor, null, true, false, true, false, false, false, false); // Травим дракошу ядом
         }, 3000, 3000);
-        despawnTask = ThreadPoolManager.INSTANCE().schedule(new DeSpawnTask(), 300000);
+        despawnTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            NpcInstance actor = getActor();
+
+            // Если продержались 5 минут, то выдаем награду, и деспавним
+            dropItem(actor, Water_Dragon_Scale, Rnd.get(1, 2));
+            if (Rnd.chance(36))
+                dropItem(actor, Water_Dragon_Claw, Rnd.get(1, 3));
+
+            cleanUp();
+            actor.deleteMe();
+        }, 300000);
     }
 
     @Override
@@ -121,26 +131,4 @@ public final class FafurionKindred extends Fighter {
         }
     }
 
-    private class PoisonTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            actor.reduceCurrentHp(500, actor, null, true, false, true, false, false, false, false); // Травим дракошу ядом
-        }
-    }
-
-    private class DeSpawnTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-
-            // Если продержались 5 минут, то выдаем награду, и деспавним
-            dropItem(actor, Water_Dragon_Scale, Rnd.get(1, 2));
-            if (Rnd.chance(36))
-                dropItem(actor, Water_Dragon_Claw, Rnd.get(1, 3));
-
-            cleanUp();
-            actor.deleteMe();
-        }
-    }
 }

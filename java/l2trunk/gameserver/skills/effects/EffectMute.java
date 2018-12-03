@@ -13,10 +13,10 @@ public class EffectMute extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (!_effected.startMuted()) {
-            Skill castingSkill = _effected.getCastingSkill();
+        if (!effected.startMuted()) {
+            Skill castingSkill = effected.getCastingSkill();
             if (castingSkill != null && castingSkill.isMagic())
-                _effected.abortCast(true, true);
+                effected.abortCast(true, true);
         }
     }
 
@@ -28,6 +28,6 @@ public class EffectMute extends Effect {
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopMuted();
+        effected.stopMuted();
     }
 }

@@ -11,16 +11,16 @@ public class EffectMuteAll extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startMuted();
-        _effected.startPMuted();
-        _effected.abortCast(true, true);
+        effected.startMuted();
+        effected.startPMuted();
+        effected.abortCast(true, true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopMuted();
-        _effected.stopPMuted();
+        effected.stopMuted();
+        effected.stopPMuted();
     }
 
     @Override

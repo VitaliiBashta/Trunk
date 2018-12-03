@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.StringTokenizer;
 
-@SuppressWarnings("serial")
 public class UndergroundColiseumInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(UndergroundColiseumInstance.class);
 
@@ -97,7 +96,7 @@ public class UndergroundColiseumInstance extends NpcInstance {
              * }
              */
             if (st.hasMoreTokens()) {
-                Coliseum coliseum = UnderGroundColliseumManager.getInstance().getColiseumByLevelLimit(getMaxLevel());
+                Coliseum coliseum = UnderGroundColliseumManager.INSTANCE.getColiseumByLevelLimit(getMaxLevel());
                 if (coliseum == null) {
                     showChatWindow(player, 3);
                     return;
@@ -117,7 +116,6 @@ public class UndergroundColiseumInstance extends NpcInstance {
                     }
                 }
                 Coliseum.register(player, getMinLevel(), getMaxLevel());
-                return;
             } else {
                 _log.info("Wrong data or cheater? try to register whithout lvl", "Coliseum");
             }
@@ -125,7 +123,7 @@ public class UndergroundColiseumInstance extends NpcInstance {
             int count = 0;
             String filename = "Coliseum/" + 5 + ".htm";
             NpcHtmlMessage html = new NpcHtmlMessage(player, this, filename, 5);
-            Coliseum coliseum = UnderGroundColliseumManager.getInstance().getColiseumByLevelLimit(getMaxLevel());
+            Coliseum coliseum = UnderGroundColliseumManager.INSTANCE.getColiseumByLevelLimit(getMaxLevel());
             if (coliseum != null) {
                 for (Party team : coliseum.getWaitingPartys()) {
                     if (team != null) {

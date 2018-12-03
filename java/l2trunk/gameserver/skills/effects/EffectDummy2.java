@@ -19,21 +19,21 @@ public final class EffectDummy2 extends Effect {
     }
 
     public boolean checkCondition() {
-        if (this._effected.isFearImmune()) {
+        if (this.effected.isFearImmune()) {
             getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return false;
         }
 
-        Player player = this._effected.getPlayer();
+        Player player = this.effected.getPlayer();
         if (player != null) {
             SiegeEvent siegeEvent = (SiegeEvent) player.getEvent(SiegeEvent.class);
-            if ((this._effected.isSummon()) && (siegeEvent != null) && (siegeEvent.containsSiegeSummon((SummonInstance) this._effected))) {
+            if ((this.effected.isSummon()) && (siegeEvent != null) && (siegeEvent.containsSiegeSummon((SummonInstance) this.effected))) {
                 getEffector().sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
                 return false;
             }
         }
 
-        if (this._effected.isInZonePeace()) {
+        if (this.effected.isInZonePeace()) {
             getEffector().sendPacket(Msg.YOU_MAY_NOT_ATTACK_IN_A_PEACEFUL_ZONE);
             return false;
         }
@@ -48,10 +48,10 @@ public final class EffectDummy2 extends Effect {
         }
         super.onStart();
 
-        if (!this._effected.startFear()) {
-            this._effected.abortAttack(true, true);
-            this._effected.abortCast(true, true);
-            this._effected.stopMove();
+        if (!this.effected.startFear()) {
+            this.effected.abortAttack(true, true);
+            this.effected.abortCast(true, true);
+            this.effected.stopMove();
         }
 
         onActionTime();
@@ -59,18 +59,18 @@ public final class EffectDummy2 extends Effect {
 
     public void onExit() {
         super.onExit();
-        this._effected.stopFear();
-        this._effected.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+        this.effected.stopFear();
+        this.effected.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
     }
 
     protected boolean onActionTime() {
-        double angle = Math.toRadians(PositionUtils.calculateAngleFrom(this._effector, this._effected));
-        int oldX = this._effected.getX();
-        int oldY = this._effected.getY();
+        double angle = Math.toRadians(PositionUtils.calculateAngleFrom(this._effector, this.effected));
+        int oldX = this.effected.getX();
+        int oldY = this.effected.getY();
         int x = oldX + (int) (900.0D * Math.cos(angle));
         int y = oldY + (int) (900.0D * Math.sin(angle));
-        this._effected.setRunning();
-        this._effected.moveToLocation(GeoEngine.moveCheck(oldX, oldY, this._effected.getZ(), x, y, this._effected.getGeoIndex()), 0, false);
+        this.effected.setRunning();
+        this.effected.moveToLocation(GeoEngine.moveCheck(oldX, oldY, this.effected.getZ(), x, y, this.effected.getGeoIndex()), 0, false);
         return true;
     }
 }

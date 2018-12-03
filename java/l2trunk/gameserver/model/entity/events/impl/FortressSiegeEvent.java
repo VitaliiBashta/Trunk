@@ -227,7 +227,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
                 LOG.info("Last siege: " + TimeUtils.toSimpleFormat(getResidence().getLastSiegeDate()) + ", own date: " + TimeUtils.toSimpleFormat(getResidence().getOwnDate()) + ", siege date: " + TimeUtils.toSimpleFormat(getResidence().getSiegeDate()));
 
             spawnAction(ENVOY, true);
-            _envoyTask = ThreadPoolManager.INSTANCE().schedule(new EnvoyDespawn(), diff);
+            _envoyTask = ThreadPoolManager.INSTANCE.schedule(this::despawnEnvoy, diff);
         } else if (getResidence().getContractState() == Fortress.NOT_DECIDED) {
             getResidence().setFortState(Fortress.INDEPENDENT, 0);
             getResidence().setJdbcState(JdbcEntityState.UPDATED);
@@ -256,7 +256,11 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
         long needDate = getResidence().getLastSiegeDate().getTimeInMillis() + SIEGE_WAIT_PERIOD;
         long diff = needDate - System.currentTimeMillis();
         if (diff > 0)
-            _merchantSpawnTask = ThreadPoolManager.INSTANCE().schedule(new MerchantSpawnTask(), diff);
+            _merchantSpawnTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+                setRegistrationOver(false);
+                spawnAction(MERCHANT, true);
+                _merchantSpawnTask = null;
+            }, diff);
         else {
             setRegistrationOver(false);
             spawnAction(MERCHANT, true);
@@ -402,22 +406,6 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
 
             if (getResidence().getOwner() != null)
                 getResidence().getOwner().broadcastToOnlineMembers(SystemMsg.ENEMY_BLOOD_PLEDGES_HAVE_INTRUDED_INTO_THE_FORTRESS);
-        }
-    }
-
-    private class EnvoyDespawn extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            despawnEnvoy();
-        }
-    }
-
-    private class MerchantSpawnTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            setRegistrationOver(false);
-            spawnAction(MERCHANT, true);
-            _merchantSpawnTask = null;
         }
     }
 

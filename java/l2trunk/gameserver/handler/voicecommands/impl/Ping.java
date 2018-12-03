@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Ping extends Functions implements IVoicedCommandHandler {
+public final class Ping extends Functions implements IVoicedCommandHandler {
     private static final List<String> COMMANDS = Collections.singletonList("ping");
 
     @Override

@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
@@ -21,14 +20,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author SYS
  */
-public class Core extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(Core.class);
-
-    private boolean _firstTimeAttacked = true;
+public final class Core extends Fighter {
     private static final int TELEPORTATION_CUBIC_ID = 31842;
     private static final Location CUBIC_1_POSITION = new Location(16502, 110165, -6394, 0);
     private static final Location CUBIC_2_POSITION = new Location(18948, 110165, -6394, 0);
     private static final int CUBIC_DESPAWN_TIME = 15 * 60 * 1000; // 15 min
+    private boolean _firstTimeAttacked = true;
 
     private Core(NpcInstance actor) {
         super(actor);
@@ -54,39 +51,23 @@ public class Core extends Fighter {
         Functions.npcSay(actor, NpcString.SYSTEM_IS_BEING_SHUT_DOWN);
         Functions.npcSay(actor, NpcString.CORE_);
 
-        try {
-            NpcInstance cubic1 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
-            cubic1.setReflection(actor.getReflection());
-            cubic1.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
-            cubic1.spawnMe(CUBIC_1_POSITION);
+        NpcInstance cubic1 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
+        cubic1.setReflection(actor.getReflection());
+        cubic1.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
+        cubic1.spawnMe(CUBIC_1_POSITION);
 
-            NpcInstance cubic2 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
-            cubic2.setReflection(actor.getReflection());
-            cubic2.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
-            cubic2.spawnMe(CUBIC_2_POSITION);
+        NpcInstance cubic2 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
+        cubic2.setReflection(actor.getReflection());
+        cubic2.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
+        cubic2.spawnMe(CUBIC_2_POSITION);
 
-            ThreadPoolManager.INSTANCE().schedule(new DeSpawnScheduleTimerTask(cubic1, cubic2), CUBIC_DESPAWN_TIME);
-        } catch (RuntimeException e) {
-            LOG.error("Error on Core Death ", e);
-        }
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            cubic1.deleteMe();
+            cubic2.deleteMe();
+        }, CUBIC_DESPAWN_TIME);
 
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }
 
-    class DeSpawnScheduleTimerTask extends RunnableImpl {
-        final NpcInstance cubic1;
-        final NpcInstance cubic2;
-
-        DeSpawnScheduleTimerTask(NpcInstance cubic1, NpcInstance cubic2) {
-            this.cubic1 = cubic1;
-            this.cubic2 = cubic2;
-        }
-
-        @Override
-        public void runImpl() {
-            cubic1.deleteMe();
-            cubic2.deleteMe();
-        }
-    }
 }

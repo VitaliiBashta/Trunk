@@ -4,13 +4,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.quest.QuestState;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
 /**
  * format: h[dd]b
  */
-public class QuestList extends L2GameServerPacket {
+public final class QuestList extends L2GameServerPacket {
     private static final byte[] unk = new byte[128];
     /**
      * This text was wrote by XaKa
@@ -46,8 +47,8 @@ public class QuestList extends L2GameServerPacket {
     private final List<int[]> questlist;
 
     public QuestList(Player player) {
-        QuestState[] allQuestStates = player.getAllQuestsStates();
-        questlist = new ArrayList<>(allQuestStates.length);
+        Collection<QuestState> allQuestStates = player.getAllQuestsStates();
+        questlist = new ArrayList<>(allQuestStates.size());
         for (QuestState quest : allQuestStates)
             if (quest.getQuest().isVisible() && quest.isStarted())
                 questlist.add(new int[]{quest.getQuest().getQuestIntId(), quest.getInt(QuestState.VAR_COND)});
@@ -57,10 +58,10 @@ public class QuestList extends L2GameServerPacket {
     protected final void writeImpl() {
         writeC(0x86);
         writeH(questlist.size());
-        for (int[] q : questlist) {
+        questlist.forEach(q -> {
             writeD(q[0]);
             writeD(q[1]);
-        }
+        });
         writeB(unk);
     }
 }

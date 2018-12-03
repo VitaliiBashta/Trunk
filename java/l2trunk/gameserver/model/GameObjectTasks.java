@@ -16,7 +16,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import java.util.Collections;
 import java.util.List;
 
-public class GameObjectTasks {
+public final class GameObjectTasks {
     public static class DeleteTask extends RunnableImpl {
         private final HardReference<? extends Creature> _ref;
 

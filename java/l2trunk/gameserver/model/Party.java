@@ -631,7 +631,7 @@ public final class Party implements PlayerGroup {
     }
 
     public DimensionalRift getDimensionalRift() {
-        return _dimentionalRift == 0 ? null : (DimensionalRift) ReflectionManager.getInstance().get(_dimentionalRift);
+        return _dimentionalRift == 0 ? null : (DimensionalRift) ReflectionManager.INSTANCE.get(_dimentionalRift);
     }
 
     public void setDimensionalRift(DimensionalRift dr) {

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _289_DeliciousFoodsAreMine extends Quest implements ScriptFile {
+public final class _289_DeliciousFoodsAreMine extends Quest implements ScriptFile {
     private static final int GuardStan = 30200;
     private static final int FoulFruit = 15507;
     private static final int FullBarrelofSoup = 15712;

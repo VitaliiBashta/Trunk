@@ -9,19 +9,16 @@ import l2trunk.gameserver.model.instances.NpcInstance;
  * АИ для мобов, меняющих агресивность в ночное время.<BR>
  * Наследуется на прямую от Mystic.
  *
- * @Author: Death
- * @Date: 23/11/2007
- * @Time: 8:40:10
  */
-public class NightAgressionMystic extends Mystic {
+public final class NightAgressionMystic extends Mystic {
     public NightAgressionMystic(NpcInstance actor) {
         super(actor);
-        GameTimeController.getInstance().addListener(new NightAgressionDayNightListener());
+        GameTimeController.INSTANCE.addListener(new NightAgressionDayNightListener());
     }
 
     private class NightAgressionDayNightListener implements OnDayNightChangeListener {
         private NightAgressionDayNightListener() {
-            if (GameTimeController.getInstance().isNowNight())
+            if (GameTimeController.INSTANCE.isNowNight())
                 onNight();
             else
                 onDay();

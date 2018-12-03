@@ -14,7 +14,7 @@ public enum ItemHandler {
     public void registerItemHandler(IItemHandler handler) {
         List<Integer> ids = handler.getItemIds();
         for (int itemId : ids) {
-            ItemTemplate template = ItemHolder.INSTANCE.getTemplate(itemId);
+            ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
             if (template == null)
                 LOG.warn("Item not found: " + itemId + " handler: " + handler.getClass().getSimpleName());
             else if (template.getHandler() != IItemHandler.NULL)

@@ -116,7 +116,7 @@ public final class ElcardiaAssistant extends DefaultAI {
             _followTask = null;
         }
 
-        _followTask = ThreadPoolManager.INSTANCE().schedule(new ThinkFollow(), 250L);
+        _followTask = ThreadPoolManager.INSTANCE.schedule(new ThinkFollow(), 250L);
 
         // -----------------
         Reflection ref = actor.getReflection();
@@ -247,7 +247,7 @@ public final class ElcardiaAssistant extends DefaultAI {
                 Location loc = new Location(target.getX() + Rnd.get(-60, 60), target.getY() + Rnd.get(-60, 60), target.getZ());
                 actor.followToCharacter(loc, target, Config.FOLLOW_RANGE, false);
             }
-            _followTask = ThreadPoolManager.INSTANCE().schedule(this, 250L);
+            _followTask = ThreadPoolManager.INSTANCE.schedule(this, 250L);
         }
     }
 

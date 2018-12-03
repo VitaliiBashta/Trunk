@@ -130,7 +130,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
 
                 int rewardItemId = Manor.INSTANCE.getRewardItem(cropId, crop.getReward());
 
-                ItemTemplate template = ItemHolder.INSTANCE.getTemplate(rewardItemId);
+                ItemTemplate template = ItemHolder.getInstance().getTemplate(rewardItemId);
                 if (template == null)
                     return;
 
@@ -185,7 +185,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
 
                 int rewardItemId = Manor.INSTANCE.getRewardItem(cropId, crop.getReward());
                 long sellPrice = count * crop.getPrice();
-                long rewardPrice = ItemHolder.INSTANCE.getTemplate(rewardItemId).getReferencePrice();
+                long rewardPrice = ItemHolder.getInstance().getTemplate(rewardItemId).getReferencePrice();
 
                 if (rewardPrice == 0)
                     continue;

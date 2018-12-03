@@ -11,14 +11,14 @@ public final class EffectImmobilize extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        _effected.startImmobilized();
-        _effected.stopMove();
+        effected.startImmobilized();
+        effected.stopMove();
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.stopImmobilized();
+        effected.stopImmobilized();
     }
 
     @Override

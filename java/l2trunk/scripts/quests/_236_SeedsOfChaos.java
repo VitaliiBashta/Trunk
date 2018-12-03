@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -10,7 +9,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _236_SeedsOfChaos extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _236_SeedsOfChaos extends Quest implements ScriptFile {
     // NPCs
     private final static int KEKROPUS = 32138;
     private final static int WIZARD = 31522;
@@ -21,34 +23,10 @@ public class _236_SeedsOfChaos extends Quest implements ScriptFile {
     private final static int RODENPICULA = 32237;
     private final static int NORNIL = 32239;
     // Mobs
-    private final static int[] NEEDLE_STAKATO_DRONES = {
-            21516,
-            21517
-    };
-    private final static int[] SPLENDOR_MOBS = {
-            21520,
-            21521,
-            21522,
-            21523,
-            21524,
-            21525,
-            21526,
-            21527,
-            21528,
-            21529,
-            21530,
-            21531,
-            21532,
-            21533,
-            21534,
-            21535,
-            21536,
-            21537,
-            21538,
-            21539,
-            21540,
-            21541
-    };
+    private final static List<Integer> NEEDLE_STAKATO_DRONES = Arrays.asList(21516, 21517);
+    private final static List<Integer> SPLENDOR_MOBS = Arrays.asList(
+            21520, 21521, 21522, 21523, 21524, 21525, 21526, 21527, 21528, 21529, 21530,
+            21531, 21532, 21533, 21534, 21535, 21536, 21537, 21538, 21539, 21540, 21541);
     // Items
     private final static int STAR_OF_DESTINY = 5011;
     private final static int SCROLL_ENCHANT_WEAPON_A = 729;
@@ -113,14 +91,14 @@ public class _236_SeedsOfChaos extends Quest implements ScriptFile {
                 st.setCond(4);
             if (!KATENAR_SPAWNED) {
                 st.addSpawn(KATENAR, 120000);
-                ThreadPoolManager.INSTANCE().schedule(new OnDespawn(true), 120000);
+                ThreadPoolManager.INSTANCE.schedule(() -> KATENAR_SPAWNED = false, 120000);
                 KATENAR_SPAWNED = true;
             }
             return null;
         } else if (event.equalsIgnoreCase("32238-harkil") && _state == STARTED && (cond == 5 || cond == 13)) {
             if (!HARKILGAMED_SPAWNED) {
                 st.addSpawn(HARKILGAMED, 120000);
-                ThreadPoolManager.INSTANCE().schedule(new OnDespawn(false), 120000);
+                ThreadPoolManager.INSTANCE.schedule(() -> HARKILGAMED_SPAWNED = false, 120000);
                 HARKILGAMED_SPAWNED = true;
             }
             return null;
@@ -259,13 +237,13 @@ public class _236_SeedsOfChaos extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int cond = qs.getCond();
 
-        if (IsInIntArray(npcId, NEEDLE_STAKATO_DRONES)) {
+        if (NEEDLE_STAKATO_DRONES.contains(npcId)) {
             if (cond == 2 && qs.getQuestItemsCount(BLACK_ECHO_CRYSTAL) == 0 && Rnd.chance(BLACK_ECHO_CRYSTAL_CHANCE)) {
                 qs.giveItems(BLACK_ECHO_CRYSTAL, 1);
                 qs.setCond(3);
                 qs.playSound(SOUND_MIDDLE);
             }
-        } else if (IsInIntArray(npcId, SPLENDOR_MOBS))
+        } else if (SPLENDOR_MOBS.contains(npcId))
             if (cond == 12 && qs.getQuestItemsCount(SHINING_MEDALLION) < 62 && Rnd.chance(SHINING_MEDALLION_CHANCE)) {
                 qs.giveItems(SHINING_MEDALLION, 1);
                 if (qs.getQuestItemsCount(SHINING_MEDALLION) < 62)
@@ -277,13 +255,6 @@ public class _236_SeedsOfChaos extends Quest implements ScriptFile {
             }
 
         return null;
-    }
-
-    private static boolean IsInIntArray(int i, int[] a) {
-        for (int _i : a)
-            if (_i == i)
-                return true;
-        return false;
     }
 
     @Override
@@ -298,19 +269,4 @@ public class _236_SeedsOfChaos extends Quest implements ScriptFile {
     public void onShutdown() {
     }
 
-    public static class OnDespawn extends RunnableImpl {
-        private final boolean _SUBJ_KATENAR;
-
-        OnDespawn(boolean SUBJ_KATENAR) {
-            _SUBJ_KATENAR = SUBJ_KATENAR;
-        }
-
-        @Override
-        public void runImpl() {
-            if (_SUBJ_KATENAR)
-                KATENAR_SPAWNED = false;
-            else
-                HARKILGAMED_SPAWNED = false;
-        }
-    }
 }

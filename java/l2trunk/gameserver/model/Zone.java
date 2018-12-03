@@ -25,26 +25,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public final class Zone {
-    public static final Zone[] EMPTY_L2ZONE_ARRAY = new Zone[0];
     public static final String BLOCKED_ACTION_PRIVATE_STORE = "open_private_store";
     public static final String BLOCKED_ACTION_PRIVATE_WORKSHOP = "open_private_workshop";
     public static final String BLOCKED_ACTION_DROP_MERCHANT_GUARD = "drop_merchant_guard";
-    public static final String BLOCKED_ACTION_SAVE_BOOKMARK = "save_bookmark";
-    public static final String BLOCKED_ACTION_USE_BOOKMARK = "use_bookmark";
     public static final String BLOCKED_ACTION_MINIMAP = "open_minimap";
     /**
      * Ордер в зонах, с ним мы и добавляем/убираем статы.
      * TODO: сравнить ордер с оффом, пока от фонаря
      */
     private final static int ZONE_STATS_ORDER = 0x40;
-    @SuppressWarnings("unused")
     private static final Logger _log = LoggerFactory.getLogger(Zone.class);
     private final MultiValueSet<String> _params;
     private final ZoneTemplate template;
     private final ZoneListenerList listeners = new ZoneListenerList();
-    private final List<Creature> _objects = new CopyOnWriteArrayList<>();
+    private final List<Creature> objects = new CopyOnWriteArrayList<>();
     // Ady - Better implementation for zone effects and damage threads
     private Future<?> _effectThread = null;
     private Future<?> _damageThread = null;
@@ -201,7 +198,7 @@ public final class Zone {
     }
 
     public boolean checkIfInZone(Creature cha) {
-        return _objects.contains(cha);
+        return objects.contains(cha);
     }
 
     public final double findDistanceToZone(GameObject obj, boolean includeZAxis) {
@@ -222,8 +219,8 @@ public final class Zone {
     public void doEnter(Creature cha) {
         boolean added = false;
 
-        if (!_objects.contains(cha))
-            added = _objects.add(cha);
+        if (!objects.contains(cha))
+            added = objects.add(cha);
 
         if (added)
             onZoneEnter(cha);
@@ -270,7 +267,7 @@ public final class Zone {
     public void doLeave(Creature cha) {
         boolean removed = false;
 
-        removed = _objects.remove(cha);
+        removed = objects.remove(cha);
 
         if (removed)
             onZoneLeave(cha);
@@ -416,27 +413,22 @@ public final class Zone {
         return true;
     }
 
-    public Creature[] getObjects() {
-        return _objects.toArray(new Creature[_objects.size()]);
+    public List<Creature> getObjects() {
+        return new ArrayList<>(objects);
     }
 
     public List<Player> getInsidePlayers() {
-        final List<Player> result = new ArrayList<>();
-
-        Creature cha;
-        for (Creature _object : _objects) {
-            if ((cha = _object) != null && cha.isPlayer())
-                result.add((Player) cha);
-        }
-
-        return result;
+        return objects.stream()
+                .filter(GameObject::isPlayer)
+                .map(o -> (Player) o)
+                .collect(Collectors.toList());
     }
 
     public List<Playable> getInsidePlayables() {
         final List<Playable> result = new ArrayList<>();
 
         Creature cha;
-        for (Creature _object : _objects) {
+        for (Creature _object : objects) {
             if ((cha = _object) != null && cha.isPlayable())
                 result.add((Playable) cha);
         }
@@ -448,7 +440,7 @@ public final class Zone {
         List<NpcInstance> result = new ArrayList<>();
 
         Creature cha;
-        for (Creature _object : _objects) {
+        for (Creature _object : objects) {
             if ((cha = _object) != null && cha.isNpc())
                 result.add((NpcInstance) cha);
         }

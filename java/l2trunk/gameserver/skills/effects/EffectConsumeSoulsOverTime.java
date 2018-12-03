@@ -10,18 +10,18 @@ public class EffectConsumeSoulsOverTime extends Effect {
 
     @Override
     public boolean onActionTime() {
-        if (_effected.isDead())
+        if (effected.isDead())
             return false;
 
-        if (_effected.getConsumedSouls() < 0)
+        if (effected.getConsumedSouls() < 0)
             return false;
 
         int damage = (int) calc();
 
-        if (_effected.getConsumedSouls() < damage)
-            _effected.setConsumedSouls(0, null);
+        if (effected.getConsumedSouls() < damage)
+            effected.setConsumedSouls(0, null);
         else
-            _effected.setConsumedSouls(_effected.getConsumedSouls() - damage, null);
+            effected.setConsumedSouls(effected.getConsumedSouls() - damage, null);
 
         return true;
     }

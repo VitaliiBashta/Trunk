@@ -56,7 +56,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
     // Vars
     private static EpicBossState _state;
-    private static Zone _zone;
+    private static Zone zone;
     private static long _lastAttackTime = 0;
     private static final int FWA_LIMITUNTILSLEEP = 15 * 60000;
     private static final int FWA_APPTIMEOFANTHARAS = 15 * 60000;
@@ -65,17 +65,17 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
     private static class AntharasSpawn extends RunnableImpl {
         private final int _distance = 3000;
-        private int _taskId;
+        private int taskId;
         private final List<Player> _players = getPlayersInside();
 
         AntharasSpawn(int taskId) {
-            _taskId = taskId;
+            this.taskId = taskId;
         }
 
         @Override
         public void runImpl() {
             _entryLocked = true;
-            switch (_taskId) {
+            switch (taskId) {
                 case 1:
                     _antharas = (BossInstance) Functions.spawn(_antharasLocation, ANTHARAS_STRONG);
                     _antharas.setAggroRange(0);// * (Config.BAIUM_DEFAULT_SPAWN_HOURS * 60 * 60000 + Rnd.get(0, Config.BAIUM_RANDOM_SPAWN_HOURS * 60 * 60000)));
@@ -92,7 +92,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                             pc.specialCamera(_antharas, 700, 13, -19, 0, 20000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(3), 3000);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(3), 3000);
                     break;
                 case 3:
                     // do social.
@@ -105,7 +105,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                             pc.specialCamera(_antharas, 700, 13, 0, 6000, 20000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(4), 10000);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(4), 10000);
                     break;
                 case 4:
                     _antharas.broadcastPacket(new SocialAction(_antharas.getObjectId(), 2));
@@ -116,7 +116,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                             pc.specialCamera(_antharas, 3700, 0, -3, 0, 10000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(5), 200);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(5), 200);
                     break;
                 case 5:
                     // set camera.
@@ -126,7 +126,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                             pc.specialCamera(_antharas, 1100, 0, -3, 22000, 30000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(6), 10800);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(6), 10800);
                     break;
                 case 6:
                     // set camera.
@@ -136,7 +136,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                             pc.specialCamera(_antharas, 1100, 0, -3, 300, 7000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(7), 7000);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(7), 7000);
                     break;
                 case 7:
                     // reset camera.
@@ -148,7 +148,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     _antharas.setAggroRange(_antharas.getTemplate().aggroRange);
                     _antharas.setRunning();
                     _antharas.moveToLocation(new Location(179011, 114871, -7704), 0, false);
-                    _sleepCheckTask = ThreadPoolManager.INSTANCE().schedule(new CheckLastAttack(), 600000);
+                    _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 600000);
                     break;
                 case 8:
                     for (Player pc : _players)
@@ -157,12 +157,12 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                             pc.specialCamera(_antharas, 1200, 20, -10, 0, 13000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(9), 13000);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(9), 13000);
                     break;
                 case 9:
                     for (Player pc : _players) {
                         pc.leaveMovieMode();
-                        pc.altOnMagicUseTimer(pc, SkillTable.INSTANCE().getInfo(23312, 1));
+                        pc.altOnMagicUseTimer(pc, SkillTable.INSTANCE.getInfo(23312, 1));
                     }
                     broadcastScreenMessage(NpcString.ANTHARAS_THE_EVIL_LAND_DRAGON_ANTHARAS_DEFEATED);
                     onAntharasDie();
@@ -178,7 +178,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                 if (_lastAttackTime + FWA_LIMITUNTILSLEEP < System.currentTimeMillis())
                     sleep();
                 else
-                    _sleepCheckTask = ThreadPoolManager.INSTANCE().schedule(new CheckLastAttack(), 60000);
+                    _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 60000);
         }
     }
 
@@ -209,11 +209,11 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
     private synchronized static void checkAnnihilated() {
         if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.INSTANCE().schedule(new onAnnihilated(), 5000);
+            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(AntharasManager::sleep, 5000);
     }
 
     private static List<Player> getPlayersInside() {
-        return getZone().getInsidePlayers();
+        return zone.getInsidePlayers();
     }
 
     private static long getRespawnInterval() {
@@ -221,7 +221,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
     }
 
     public static Zone getZone() {
-        return _zone;
+        return zone;
     }
 
     private static boolean isPlayersAnnihilated() {
@@ -247,7 +247,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && _zone != null && _zone.checkIfInZone(self.getX(), self.getY()))
+        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
         else if (self.isNpc() && self.getNpcId() == ANTHARAS_STRONG)
             ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(8), 10);
@@ -314,7 +314,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
     private void init() {
         _state = new EpicBossState(ANTHARAS_STRONG);
-        _zone = ReflectionUtils.getZone("[antharas_epic]");
+        zone = ReflectionUtils.getZone("[antharas_epic]");
 
         CharListenerList.addGlobal(this);
         _log.info("AntharasManager: State of Antharas is " + _state.getState() + ".");

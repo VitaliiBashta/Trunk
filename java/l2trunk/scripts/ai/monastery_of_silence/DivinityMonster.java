@@ -6,10 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.List;
 
-/**
- * @author Bonux
- **/
-public class DivinityMonster extends Fighter {
+public final class DivinityMonster extends Fighter {
     private final boolean _isDefault;
     private final String _nextMakerName;
 
@@ -23,9 +20,9 @@ public class DivinityMonster extends Fighter {
     @Override
     public void onEvtDeSpawn() {
         if (_isDefault) {
-            List<NpcInstance> maker = SpawnManager.getInstance().getAllSpawned(_nextMakerName);
+            List<NpcInstance> maker = SpawnManager.INSTANCE.getAllSpawned(_nextMakerName);
             if (maker.isEmpty())
-                SpawnManager.getInstance().spawn(_nextMakerName);
+                SpawnManager.INSTANCE.spawn(_nextMakerName);
         }
         super.onEvtDeSpawn();
     }

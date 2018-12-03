@@ -26,12 +26,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class NpcParser /*extends AbstractDirParser<NpcHolder>*/ {
+public final class NpcParser extends AbstractDirParser<NpcHolder> {
     private static final NpcParser _instance = new NpcParser();
     private final static Logger LOG = LoggerFactory.getLogger(NpcParser.class);
 
     private NpcParser() {
-//        super(NpcHolder.getInstance());
+        super(NpcHolder.getInstance());
     }
 
     public static NpcParser getInstance() {

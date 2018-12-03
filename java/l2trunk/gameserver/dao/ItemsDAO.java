@@ -33,7 +33,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     private final static String REMOVE_ITEM = "DELETE FROM items WHERE object_id = ?";
 
 //    private final static ItemsDAO instance = new ItemsDAO();
-    private final Cache cache;
+    private Cache cache;
     private final AtomicLong load = new AtomicLong();
     private final AtomicLong insert = new AtomicLong();
     private final AtomicLong update = new AtomicLong();
@@ -60,7 +60,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
         }
     };
 
-    private ItemsDAO() {
+    public void init() {
         cache = CacheManager.getInstance().getCache(ItemInstance.class.getName());
     }
 

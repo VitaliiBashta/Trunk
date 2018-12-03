@@ -12,7 +12,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
 
-public class LevelPanel extends Functions {
+public final class LevelPanel extends Functions {
     public void show() {
         final Player player = getSelf();
         if (player == null)
@@ -88,7 +88,7 @@ public class LevelPanel extends Functions {
             }
             if (Util.getPay(_player, Config.SERVICES_LEVEL_UP[0], 10, true)) {
                 _player.sendMessage(new CustomMessage("level.change").addNumber(_player.getLevel()).addNumber(level));
-                Long exp = Experience.getExpForLevel(level) - _player.getExp();
+                long exp = Experience.getExpForLevel(level) - _player.getExp();
                 _player.addExpAndSp(exp, 899999999);
             }
         }
@@ -100,9 +100,6 @@ public class LevelPanel extends Functions {
     }
 
     private static boolean correct(int level, boolean base) {
-        if (level >= 1) {
-            //
-        }
         return level <= (base ? Experience.getMaxLevel() : Experience.getMaxSubLevel());
     }
 }

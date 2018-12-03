@@ -1,5 +1,6 @@
 package l2trunk.gameserver.data.xml.holder;
 
+import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class NpcHolder {
+public final class NpcHolder extends AbstractHolder {
     private static final Logger LOG = LoggerFactory.getLogger(NpcHolder.class);
-
+    private static NpcHolder instance = new NpcHolder();
     private static final Map<Integer, NpcTemplate> npcs = new HashMap<>(20000);
+
+    public static NpcHolder getInstance() {
+        return instance;
+    }
 
     private NpcHolder() {
     }

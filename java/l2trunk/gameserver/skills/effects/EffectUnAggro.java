@@ -12,15 +12,15 @@ public class EffectUnAggro extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        if (_effected.isNpc())
-            ((NpcInstance) _effected).setUnAggred(true);
+        if (effected.isNpc())
+            ((NpcInstance) effected).setUnAggred(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        if (_effected.isNpc())
-            ((NpcInstance) _effected).setUnAggred(false);
+        if (effected.isNpc())
+            ((NpcInstance) effected).setUnAggred(false);
     }
 
     @Override

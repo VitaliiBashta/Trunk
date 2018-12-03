@@ -1,6 +1,5 @@
 package l2trunk.gameserver.skills.effects;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -93,7 +92,7 @@ public final class EffectDispelEffects extends Effect {
             negated++;
 
             // We estimate the success of the cancel on this effect if currentCancelChance is not 100 it makes 100
-            if (calcEachChance && currentCancelChance < 100 && !calcCancelSuccess(_effector, _effected, effect, getSkill(), currentCancelChance)) {
+            if (calcEachChance && currentCancelChance < 100 && !calcCancelSuccess(_effector, effected, effect, getSkill(), currentCancelChance)) {
                 continue;
             }
 
@@ -103,7 +102,7 @@ public final class EffectDispelEffects extends Effect {
             }
 
             effect.exit();
-            _effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(effect.getSkill().getId(), effect.getSkill().getLevel()));
+            effected.sendPacket(new SystemMessage2(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(effect.getSkill().getId(), effect.getSkill().getLevel()));
             count++;
 
             // Alexander - For each buff we reduce the chances by 15%, starting from 100%
@@ -117,14 +116,14 @@ public final class EffectDispelEffects extends Effect {
         }
 
         if (!oldEff.isEmpty())
-            ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.ReturnTask(_effected, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
+            ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.ReturnTask(effected, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
     }
 
     private List<Effect> createEffectList() {
         final List<Effect> musicList = new ArrayList<>();
         final List<Effect> buffList = new ArrayList<>();
 
-        for (Effect e : _effected.getEffectList().getAllEffects()) {
+        for (Effect e : effected.getEffectList().getAllEffects()) {
             switch (dispelType) {
                 case "cancellation":
                     if (!e.isOffensive() && !e.getSkill().isToggle() && e.isCancelable()) {

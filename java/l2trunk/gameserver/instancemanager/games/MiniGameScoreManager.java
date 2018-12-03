@@ -13,20 +13,14 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class MiniGameScoreManager {
-    private static final Logger _log = LoggerFactory.getLogger(MiniGameScoreManager.class);
-    private static final MiniGameScoreManager _instance = new MiniGameScoreManager();
+public enum MiniGameScoreManager {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(MiniGameScoreManager.class);
     private final Map<Integer, Set<String>> scores = new TreeMap<>((o1, o2) -> o2 - o1);
-
-    private MiniGameScoreManager() {
+    public void init(){
         if (Config.EX_JAPAN_MINIGAME)
             load();
     }
-
-    public static MiniGameScoreManager getInstance() {
-        return _instance;
-    }
-
     private void load() {
         Connection con = null;
         Statement statement = null;
@@ -42,7 +36,7 @@ public class MiniGameScoreManager {
                 addScore(name, score);
             }
         } catch (SQLException e) {
-            _log.info("SQLException while loading MiniGameScore: " + e, e);
+            LOG.info("SQLException while loading MiniGameScore: " + e, e);
         } finally {
             DbUtils.closeQuietly(con, statement, rset);
         }
@@ -59,7 +53,7 @@ public class MiniGameScoreManager {
                 statement.setInt(2, score);
                 statement.execute();
             } catch (SQLException e) {
-                _log.info("SQLException in insertScore: ", e);
+                LOG.info("SQLException in insertScore: ", e);
             } finally {
                 DbUtils.closeQuietly(con, statement);
             }

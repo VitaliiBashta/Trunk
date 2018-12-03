@@ -63,7 +63,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
             new Location(154243, 141411, -12741, 55500)};
     private static final int[] doors = {24220009, 24220011, 24220012, 24220014, 24220015, 24220016, 24220017, 24220019};
     // Instance of monsters
-    private static final NpcInstance[] _crystaline = new NpcInstance[8];
+    private static final List<NpcInstance> _crystaline = new ArrayList<>();
     private static final int FWBA_ACTIVITYTIMEOFMOBS = 120 * 60000;
     private static final int FWBA_FIXINTERVALOFBAYLORSPAWN = Config.FIXINTERVALOFBAYLORSPAWN_HOUR * 60 * 60000;
     private static final int FWBA_RANDOMINTERVALOFBAYLORSPAWN = Config.RANDOMINTERVALOFBAYLORSPAWN * 60 * 60000;
@@ -124,9 +124,9 @@ public final class BaylorManager extends Functions implements ScriptFile {
         if (pc.getReflection() != null)
             pc.getReflection().startCollapseTimer(30 * 60 * 1000L);
 
-        ReflectionManager.getInstance().get(currentReflection).closeDoor(24220008);
-        ThreadPoolManager.INSTANCE().schedule(new BaylorSpawn(CrystalPrisonGuard), 20000);
-        ThreadPoolManager.INSTANCE().schedule(new BaylorSpawn(Baylor), 40000);
+        ReflectionManager.INSTANCE.get(currentReflection).closeDoor(24220008);
+        ThreadPoolManager.INSTANCE.schedule(new BaylorSpawn(CrystalPrisonGuard), 20000);
+        ThreadPoolManager.INSTANCE.schedule(new BaylorSpawn(Baylor), 40000);
 
         if (pc.getParty() == null) {
             pc.teleToLocation(153569 + Rnd.get(-80, 80), 142075 + Rnd.get(-80, 80), -12732);
@@ -215,7 +215,10 @@ public final class BaylorManager extends Functions implements ScriptFile {
             _state.update();
         }
 
-        _intervalEndTask = ThreadPoolManager.INSTANCE().schedule(new IntervalEnd(), _state.getInterval());
+        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            _state.setState(EpicBossState.State.NOTSPAWN);
+            _state.update();
+        }, _state.getInterval());
     }
 
     // Clean up Baylor's lair.
@@ -246,7 +249,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
 
     private static void startCollapse() {
         if (currentReflection > 0) {
-            Reflection reflection = ReflectionManager.getInstance().get(currentReflection);
+            Reflection reflection = ReflectionManager.INSTANCE.get(currentReflection);
             if (reflection != null)
                 reflection.startCollapseTimer(300000);
             currentReflection = 0;
@@ -267,13 +270,6 @@ public final class BaylorManager extends Functions implements ScriptFile {
     public void onShutdown() {
     }
 
-    private static class ActivityTimeEnd extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            setIntervalEndTask();
-        }
-    }
-
     private static class BaylorSpawn extends RunnableImpl {
         private final int _npcId;
         private final Location _pos = new Location(153569, 142075, -12711, 44732);
@@ -287,15 +283,15 @@ public final class BaylorManager extends Functions implements ScriptFile {
             switch (_npcId) {
                 case CrystalPrisonGuard:
 
-                    Reflection ref = ReflectionManager.getInstance().get(currentReflection);
+                    Reflection ref = ReflectionManager.INSTANCE.get(currentReflection);
                     for (int doorId : doors)
                         ref.openDoor(doorId);
 
                     for (int i = 0; i < _crystalineLocation.length; i++) {
-                        _crystaline[i] = spawn(_crystalineLocation[i], CrystalPrisonGuard);
-                        _crystaline[i].setRunning();
-                        _crystaline[i].moveToLocation(_pos, 300, false);
-                        ThreadPoolManager.INSTANCE().schedule(new Social(_crystaline[i], 2), 15000);
+                        _crystaline.add(spawn(_crystalineLocation[i], CrystalPrisonGuard));
+                        _crystaline.get(i).setRunning();
+                        _crystaline.get(i).moveToLocation(_pos, 300, false);
+                        ThreadPoolManager.INSTANCE.schedule(new Social(_crystaline.get(i), 2), 15000);
                     }
 
                     break;
@@ -319,25 +315,16 @@ public final class BaylorManager extends Functions implements ScriptFile {
                         _endSceneTask.cancel(false);
                         _endSceneTask = null;
                     }
-                    _endSceneTask = ThreadPoolManager.INSTANCE().schedule(new EndScene(), 23000);
+                    _endSceneTask = ThreadPoolManager.INSTANCE.schedule(new EndScene(), 23000);
 
                     if (_activityTimeEndTask != null) {
                         _activityTimeEndTask.cancel(false);
                         _activityTimeEndTask = null;
                     }
-                    _activityTimeEndTask = ThreadPoolManager.INSTANCE().schedule(new ActivityTimeEnd(), FWBA_ACTIVITYTIMEOFMOBS);
+                    _activityTimeEndTask = ThreadPoolManager.INSTANCE.schedule(BaylorManager::setIntervalEndTask, FWBA_ACTIVITYTIMEOFMOBS);
 
                     break;
             }
-        }
-    }
-
-    // Interval end.
-    private static class IntervalEnd extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            _state.setState(EpicBossState.State.NOTSPAWN);
-            _state.update();
         }
     }
 

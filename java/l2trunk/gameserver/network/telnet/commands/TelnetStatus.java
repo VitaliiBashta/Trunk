@@ -47,7 +47,7 @@ public class TelnetStatus implements TelnetCommandHolder {
                 sb.append("Minions: ................. ").append(stats[17]).append("\n");
                 sb.append("Doors: ................... ").append(stats[19]).append("\n");
                 sb.append("Items: ................... ").append(stats[20]).append("\n");
-                sb.append("Reflections: ............. ").append(ReflectionManager.getInstance().getAll().size()).append("\n");
+                sb.append("Reflections: ............. ").append(ReflectionManager.INSTANCE.getAll().size()).append("\n");
                 sb.append("Regions: ................. ").append(stats[0]).append("\n");
                 sb.append("     Active: ............. ").append(stats[1]).append("\n");
                 sb.append("     Inactive: ........... ").append(stats[2]).append("\n");
@@ -67,7 +67,7 @@ public class TelnetStatus implements TelnetCommandHolder {
     }
 
     private static String getGameTime() {
-        int t = GameTimeController.getInstance().getGameTime();
+        int t = GameTimeController.INSTANCE.getGameTime();
         int h = t / 60;
         int m = t % 60;
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");

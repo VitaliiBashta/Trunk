@@ -133,7 +133,7 @@ public class HuntersGuild extends Functions implements ScriptFile, IVoicedComman
             else
                 crystal = 1462; // S
             player.setVar("bhRewardId", String.valueOf(crystal), -1);
-            player.setVar("bhRewardCount", String.valueOf(adenarewardvalue / ItemHolder.INSTANCE.getTemplate(crystal).getReferencePrice()), -1);
+            player.setVar("bhRewardCount", String.valueOf(adenarewardvalue / ItemHolder.getInstance().getTemplate(crystal).getReferencePrice()), -1);
         }
         show(new CustomMessage("scripts.events.bountyhunters.TaskGiven", player).addNumber(mobcount).addString(target.name), player);
     }

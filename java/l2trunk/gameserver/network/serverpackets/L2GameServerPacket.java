@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class L2GameServerPacket extends SendablePacket<GameClient> implements IStaticPacket {
-    private static final Logger _log = LoggerFactory.getLogger(L2GameServerPacket.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L2GameServerPacket.class);
 
     @Override
     public final boolean write() {
@@ -23,7 +23,7 @@ public abstract class L2GameServerPacket extends SendablePacket<GameClient> impl
             writeImpl();
             return true;
         } catch (RuntimeException e) {
-            _log.error("Client: " + getClient() + " - Failed writing: " + getType() + " - Server Version: ", e);
+            LOG.error("Client: " + getClient() + " - Failed writing: " + getType() + " - Server Version: ", e);
         }
         return false;
     }
@@ -120,7 +120,7 @@ public abstract class L2GameServerPacket extends SendablePacket<GameClient> impl
             writeItemElements();
             return;
         }
-        ItemTemplate i = ItemHolder.INSTANCE.getTemplate(item.getItemId());
+        ItemTemplate i = ItemHolder.getInstance().getTemplate(item.getItemId());
         if (item.getItemAttributes().getValue() > 0) {
             if (i.isWeapon()) {
                 Element e = item.getItemAttributes().getElement();

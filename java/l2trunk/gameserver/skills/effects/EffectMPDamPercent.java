@@ -12,12 +12,12 @@ public class EffectMPDamPercent extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (_effected.isDead())
+        if (effected.isDead())
             return;
 
-        double newMp = (100. - calc()) * _effected.getMaxMp() / 100.;
-        newMp = Math.min(_effected.getCurrentMp(), Math.max(0, newMp));
-        _effected.setCurrentMp(newMp);
+        double newMp = (100. - calc()) * effected.getMaxMp() / 100.;
+        newMp = Math.min(effected.getCurrentMp(), Math.max(0, newMp));
+        effected.setCurrentMp(newMp);
     }
 
     @Override

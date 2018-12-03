@@ -230,7 +230,6 @@ public class GameObjectsStorage {
     /**
      * кладет объект в хранилище и возвращает уникальный индентификатор по которому его можно будет найти в хранилище
      */
-    @SuppressWarnings("unchecked")
     public static long put(GameObject o) {
         int STORAGE_ID = selectStorageID(o);
         return o.getObjectId() & 0xFFFFFFFFL | (STORAGE_ID & 0x1FL) << 32 | (storages[STORAGE_ID].add(o) & 0xFFFFFFFFL) << 37;

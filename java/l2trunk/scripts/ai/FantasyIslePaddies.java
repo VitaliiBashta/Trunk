@@ -8,15 +8,15 @@ import l2trunk.gameserver.model.entity.events.EventType;
 import l2trunk.gameserver.model.entity.events.impl.FantasiIsleParadEvent;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class FantasyIslePaddies extends CharacterAI {
+public final class FantasyIslePaddies extends CharacterAI {
     public FantasyIslePaddies(NpcInstance actor) {
         super(actor);
-        GameTimeController.getInstance().addListener(new StartEvent());
+        GameTimeController.INSTANCE.addListener(new StartEvent());
     }
 
     private class StartEvent implements OnDayNightChangeListener {
         private StartEvent() {
-            if (GameTimeController.getInstance().isNowNight())
+            if (GameTimeController.INSTANCE.isNowNight())
                 onNight();
             else
                 onDay();

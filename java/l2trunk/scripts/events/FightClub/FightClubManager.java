@@ -61,7 +61,7 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
         _restoreCoord = new HashMap<>();
         _inBattle = new ArrayList<>();
         _inList = new ArrayList<>();
-        _reflectionManager = ReflectionManager.getInstance();
+        _reflectionManager = ReflectionManager.INSTANCE;
         _itemsList = new StringBuilder();
         _allowedItems = new HashMap<>();
         _player1loc = new Location(-80696, -44296, -11496);

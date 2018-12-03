@@ -25,19 +25,19 @@ public final class EffectCurseOfLifeFlow extends Effect {
     public void onStart() {
         super.onStart();
         _listener = new CurseOfLifeFlowListener();
-        _effected.addListener(_listener);
+        effected.addListener(_listener);
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        _effected.removeListener(_listener);
+        effected.removeListener(_listener);
         _listener = null;
     }
 
     @Override
     public boolean onActionTime() {
-        if (_effected.isDead())
+        if (effected.isDead())
             return false;
 
         for (Map.Entry<Integer, HardReference<? extends Creature>> dmg : _damageList.entrySet()) {
@@ -65,7 +65,7 @@ public final class EffectCurseOfLifeFlow extends Effect {
     private class CurseOfLifeFlowListener implements OnCurrentHpDamageListener {
         @Override
         public void onCurrentHpDamage(Creature actor, double damage, Creature attacker, Skill skill) {
-            if (attacker == actor || attacker == _effected)
+            if (attacker == actor || attacker == effected)
                 return;
             HardReference<? extends Creature> ref = attacker.getRef();
             Optional<Map.Entry<Integer, HardReference<? extends Creature>>> findDamager = _damageList.entrySet().stream().filter(entry -> entry.getValue() != ref).findAny();

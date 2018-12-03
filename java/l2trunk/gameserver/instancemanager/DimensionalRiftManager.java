@@ -189,13 +189,6 @@ public class DimensionalRiftManager {
         LOG.info("DimensionalRiftManager: Loaded " + countGood + " DimensionalRift spawns, " + countBad + " errors.");
     }
 
-    public void reload() {
-        for (int b : _rooms.keySet())
-            _rooms.get(b).clear();
-
-        _rooms.clear();
-        load();
-    }
 
     public boolean checkIfInRiftZone(Location loc, boolean ignorePeaceZone) {
         if (ignorePeaceZone)
