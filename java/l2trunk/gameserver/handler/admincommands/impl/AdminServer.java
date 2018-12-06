@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.RaidBossInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -144,36 +143,26 @@ public class AdminServer implements IAdminCommandHandler {
 
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher regexp = pattern.matcher(monsterId);
-        NpcTemplate template;
+        int templateId;
         if (regexp.matches()) {
             // First parameter was an ID number
-            int monsterTemplate = Integer.parseInt(monsterId);
-            template = NpcHolder.getTemplate(monsterTemplate);
+            templateId = Integer.parseInt(monsterId);
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            template = NpcHolder.getTemplateByName(monsterId);
+            templateId = NpcHolder.getTemplateByName(monsterId).npcId;
         }
 
-        if (template == null) {
-            activeChar.sendMessage("Incorrect monster template.");
-            return;
-        }
 
-        try {
-            SimpleSpawner spawn = new SimpleSpawner(template);
-            spawn.setLoc(target.getLoc());
-            spawn.setAmount(mobCount);
-            spawn.setHeading(activeChar.getHeading());
-            spawn.setRespawnDelay(respawnTime);
-            spawn.setReflection(activeChar.getReflection());
-            spawn.init();
-            if (respawnTime == 0)
-                spawn.stopRespawn();
-            activeChar.sendMessage("Created " + template.name + " on " + target.getObjectId() + ".");
-        } catch (Exception e) {
-            activeChar.sendMessage("Target is not ingame.");
-        }
+        SimpleSpawner spawn = new SimpleSpawner(templateId);
+        spawn.setLoc(target.getLoc())
+                .setAmount(mobCount)
+                .setRespawnDelay(respawnTime)
+                .setReflection(activeChar.getReflection())
+                .init();
+        if (respawnTime == 0)
+            spawn.stopRespawn();
+        activeChar.sendMessage("Created " + templateId + " on " + target.getObjectId() + ".");
     }
 
     private enum Commands {

@@ -11,21 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 //TODO [G1ta0] переписать
-public class SpawnTaskManager {
-    private static SpawnTaskManager _instance;
+public enum SpawnTaskManager {
+    INSTANCE;
     private final Object spawnTasks_lock = new Object();
     private SpawnTask[] _spawnTasks = new SpawnTask[500];
     private int _spawnTasksSize = 0;
 
-    private SpawnTaskManager() {
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SpawnScheduler(), 2000, 2000);
-    }
-
-    public static SpawnTaskManager getInstance() {
-        if (_instance == null)
-            _instance = new SpawnTaskManager();
-
-        return _instance;
+    SpawnTaskManager() {
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SpawnScheduler(), 2000, 2000);
     }
 
     public void addSpawnTask(NpcInstance actor, long interval) {
@@ -52,8 +45,7 @@ public class SpawnTaskManager {
         synchronized (spawnTasks_lock) {
             if (_spawnTasksSize >= _spawnTasks.length) {
                 SpawnTask[] temp = new SpawnTask[_spawnTasks.length * 2];
-                for (int i = 0; i < _spawnTasksSize; i++)
-                    temp[i] = _spawnTasks[i];
+                System.arraycopy(_spawnTasks, 0, temp, 0, _spawnTasksSize);
                 _spawnTasks = temp;
             }
 
@@ -86,7 +78,7 @@ public class SpawnTaskManager {
         public void runImpl() {
             if (_spawnTasksSize > 0)
                 try {
-                    List<NpcInstance> works = new ArrayList<>();
+                    List<NpcInstance> tasks = new ArrayList<>();
 
                     synchronized (spawnTasks_lock) {
                         long current = System.currentTimeMillis();
@@ -99,7 +91,7 @@ public class SpawnTaskManager {
                                 if (container != null && container.endtime > 0 && current > container.endtime) {
                                     NpcInstance actor = container.getActor();
                                     if (actor != null && actor.getSpawn() != null)
-                                        works.add(actor);
+                                        tasks.add(actor);
 
                                     container.endtime = -1;
                                 }
@@ -120,14 +112,14 @@ public class SpawnTaskManager {
                             }
                     }
 
-                    for (NpcInstance work : works) {
+                    tasks.stream()
+                    .filter(task -> task.getSpawn() !=null)
+                    .forEach(work ->{
                         Spawner spawn = work.getSpawn();
-                        if (spawn == null)
-                            continue;
                         spawn.decreaseScheduledCount();
                         if (spawn.isDoRespawn())
                             spawn.respawnNpc(work);
-                    }
+                    });
                 } catch (RuntimeException e) {
                     _log.error("SpawnScheduler", e);
                 }

@@ -26,12 +26,12 @@ public class AdminCamera implements IAdminCommandHandler {
                 int mode = Integer.parseInt(fullString);
                 if (mode == 1) {
                     activeChar.setInvisibleType(InvisibleType.NORMAL);
-                    activeChar.setIsInvul(true);
+                    activeChar.setInvul(true);
                     activeChar.setNoChannel(-1);
                     activeChar.setFlying(true);
                 } else {
                     activeChar.setInvisibleType(InvisibleType.NONE);
-                    activeChar.setIsInvul(false);
+                    activeChar.setInvul(false);
                     activeChar.setNoChannel(0);
                     activeChar.setFlying(false);
                 }

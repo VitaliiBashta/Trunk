@@ -331,8 +331,7 @@ public final class ItemAuctionInstance {
 
                     _log.info("ItemAuction: Auction " + auction.getAuctionId() + " has started for instance " + auction.getInstanceId());
                     if (Config.ALT_ITEM_AUCTION_START_ANNOUNCE) {
-                        String[] params = {};
-                        Announcements.INSTANCE.announceByCustomMessage("l2trunk.gameserver.model.instances.L2ItemAuctionBrokerInstance.announce." + auction.getInstanceId(), params);
+                        Announcements.INSTANCE.announceByCustomMessage("l2trunk.gameserver.model.instances.L2ItemAuctionBrokerInstance.announce." + auction.getInstanceId());
                     }
                     checkAndSetCurrentAndNextAuction();
                     break;

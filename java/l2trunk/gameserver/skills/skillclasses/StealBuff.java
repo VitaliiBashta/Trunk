@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StealBuff extends Skill {
+public final class StealBuff extends Skill {
     private final int stealCount;
     private final int stealChance;
 
@@ -32,15 +32,14 @@ public class StealBuff extends Skill {
         final List<Effect> musicList = new ArrayList<>();
         final List<Effect> buffList = new ArrayList<>();
 
-        for (Effect e : target.getEffectList().getAllEffects()) {
-            if (!canBeStolen(e))
-                continue;
-
-            if (e.getSkill().isMusic())
-                musicList.add(e);
-            else
-                buffList.add(e);
-        }
+        target.getEffectList().getAllEffects().stream()
+                .filter(StealBuff::canBeStolen)
+                .forEach(e -> {
+                    if (e.getSkill().isMusic())
+                        musicList.add(e);
+                    else
+                        buffList.add(e);
+                });
 
         // Alexander - Instead of puttin all the songs/dances before the buffs, we put 1 song 1 buff, alternated so the steal is better
         Collections.reverse(musicList);
@@ -71,9 +70,7 @@ public class StealBuff extends Skill {
             return false;
         if (e.getEffectType() == EffectType.Vitality || e.getEffectType() == EffectType.VitalityMaintenance)
             return false;
-        if (e.getTemplate()._applyOnCaster)
-            return false;
-        return true;
+        return !e.getTemplate()._applyOnCaster;
     }
 
     private static Effect cloneEffect(Creature cha, Effect eff) {
@@ -140,7 +137,7 @@ public class StealBuff extends Skill {
                     break;
             }
             if (!oldEff.isEmpty()) {
-                ThreadPoolManager.INSTANCE().schedule(new GameObjectTasks.ReturnTask(target, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
+                ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.ReturnTask(target, oldEff, timeLeft), Config.ALT_AFTER_CANCEL_RETURN_SKILLS_TIME * 1000);
             }
             getEffects(activeChar, target, getActivateRate() > 0, false);
         }

@@ -13,8 +13,6 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.MyTargetSelected;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,16 +20,15 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 public final class DecoyInstance extends NpcInstance {
-    private static final Logger _log = LoggerFactory.getLogger(DecoyInstance.class);
 
-    private final HardReference<Player> _playerRef;
+    private final HardReference<Player> playerRef;
     private int _lifeTime, _timeRemaining;
     private ScheduledFuture<?> _decoyLifeTask, _hateSpam;
 
     public DecoyInstance(int objectId, NpcTemplate template, Player owner, int lifeTime) {
         super(objectId, template);
 
-        _playerRef = owner.getRef();
+        playerRef = owner.getRef();
         _lifeTime = lifeTime;
         _timeRemaining = _lifeTime;
         int skilllevel = getNpcId() < 13257 ? getNpcId() - 13070 : getNpcId() - 13250;
@@ -75,7 +72,7 @@ public final class DecoyInstance extends NpcInstance {
 
     @Override
     public Player getPlayer() {
-        return _playerRef.get();
+        return playerRef.get();
     }
 
     @Override
@@ -141,7 +138,7 @@ public final class DecoyInstance extends NpcInstance {
 
     @Override
     public boolean isInvul() {
-        return _isInvul;
+        return invul;
     }
 
     class DecoyLifetime extends RunnableImpl {

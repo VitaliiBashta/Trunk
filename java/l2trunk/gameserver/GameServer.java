@@ -102,7 +102,9 @@ public class GameServer {
 //        Class.forName(Config.DATABASE_DRIVER).newInstance();
         DatabaseFactory.getInstance().getConnection().close();
         LoginDatabaseFactory.getInstance().getConnection().close();
+        ThreadPoolManager.INSTANCE.init();
         _log.info("=======[Loading Protection Configuration]========");
+
         IdFactory idFactory = IdFactory.getInstance();
         if (!idFactory.isInitialized()) {
             _log.error("Could not read object IDs from DB. Please Check Your Data.", new Exception("Could not initialize the ID factory"));
@@ -111,9 +113,9 @@ public class GameServer {
 
         CacheManager.getInstance();
 
-        ThreadPoolManager.INSTANCE.init();
+
         _log.info("===============[Loading Scripts]==================");
-        Scripts.getInstance();
+//        Scripts.INSTANCE.init2();
         BalancerConfig.LoadConfig();
         GeoEngine.load();
         Strings.reload();
@@ -148,7 +150,7 @@ public class GameServer {
         ItemAuctionManager.INSTANCE.init();
         NaiaTowerManager.init();
         _log.info("===============[Adding handlers to scripts]==================");
-        Scripts.getInstance().init2();
+        Scripts.INSTANCE.init2();
         SpawnManager.INSTANCE.spawnAll();
         printSection("Boats");
         BoatHolder.getInstance().spawnAll();
@@ -156,7 +158,7 @@ public class GameServer {
         _log.info("===============[Spawn Manager]==================");
         RaidBossSpawnManager.getInstance();
         printSection("Dimensional Rift");
-        DimensionalRiftManager.getInstance();
+        DimensionalRiftManager.INSTANCE.init();
         Announcements.INSTANCE.loadAnnouncements();
         LotteryManager.getInstance();
         PlayerMessageStack.getInstance();
@@ -204,7 +206,7 @@ public class GameServer {
         printSection("Hellbound");
         HellboundManager.INSTANCE.init();
 //        NaiaTowerManager.init();
-        NaiaCoreManager.getInstance();
+        NaiaCoreManager.INSTANCE.init();
         printSection("");
         SoDManager.getInstance();
         SoIManager.getInstance();

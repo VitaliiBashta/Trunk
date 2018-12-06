@@ -20,15 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class BuyListHolder {
-    private static final Logger _log = LoggerFactory.getLogger(BuyListHolder.class);
+public enum  BuyListHolder {
+    INSTANCE;
+    private final Logger _log = LoggerFactory.getLogger(BuyListHolder.class);
     private static BuyListHolder _instance;
 
-    private final Map<Integer, NpcTradeList> _lists;
+    private final Map<Integer, NpcTradeList> _lists = new HashMap<>();
 
-    private BuyListHolder() {
-        _lists = new HashMap<>();
-
+    public void init() {
         try {
             Path filelists = Config.DATAPACK_ROOT.resolve("data/merchant_filelists.xml");
             DocumentBuilderFactory factory1 = DocumentBuilderFactory.newInstance();
@@ -120,14 +119,8 @@ public final class BuyListHolder {
         }
     }
 
-    public static BuyListHolder getInstance() {
-        if (_instance == null)
-            _instance = new BuyListHolder();
-        return _instance;
-    }
-
-    public static void reload() {
-        _instance = new BuyListHolder();
+    public  void reload() {
+        init();
     }
 
     private boolean checkItem(ItemTemplate template) {

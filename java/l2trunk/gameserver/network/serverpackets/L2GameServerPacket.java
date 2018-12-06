@@ -14,6 +14,8 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public abstract class L2GameServerPacket extends SendablePacket<GameClient> implements IStaticPacket {
     private static final Logger LOG = LoggerFactory.getLogger(L2GameServerPacket.class);
 
@@ -42,26 +44,16 @@ public abstract class L2GameServerPacket extends SendablePacket<GameClient> impl
     /**
      * Отсылает число позиций + массив
      */
-    void writeDD(int[] values, boolean sendCount) {
-        if (sendCount)
-            getByteBuffer().putInt(values.length);
-        for (int value : values)
-            getByteBuffer().putInt(value);
-    }
-
-    protected void writeDD(int[] values) {
-        writeDD(values, false);
+    void writeDD(List<Integer> values) {
+        getByteBuffer().putInt(values.size());
+        values.forEach(value -> getByteBuffer().putInt(value));
     }
 
     void writeItemInfo(ItemInstance item) {
-        writeItemInfo(item, item.getCount());
-    }
-
-    private void writeItemInfo(ItemInstance item, long count) {
         writeD(item.getObjectId());
         writeD(item.getItemId());
         writeD(item.getEquipSlot());
-        writeQ(count);
+        writeQ(item.getCount());
         writeH(item.getTemplate().getType2ForPackets());
         writeH(item.getCustomType1());
         writeH(item.isEquipped() ? 1 : 0);

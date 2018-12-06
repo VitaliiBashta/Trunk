@@ -37,7 +37,7 @@ public final class TiatsTrap extends DefaultAI {
             else
                 return false;
             actor.doCast(skill, actor, true);
-            ThreadPoolManager.INSTANCE().schedule(() -> getActor().doDie(null), 5000);
+            ThreadPoolManager.INSTANCE.schedule(() -> getActor().doDie(null), 5000);
             return true;
         }
         return true;

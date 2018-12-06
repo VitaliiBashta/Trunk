@@ -34,9 +34,9 @@ public final class SSQInfo extends L2GameServerPacket {
                 _state = 1;
     }
 
-    public SSQInfo(int state) {
-        _state = state;
-    }
+//    public SSQInfo(int state) {
+//        _state = state;
+//    }
 
     @Override
     protected final void writeImpl() {

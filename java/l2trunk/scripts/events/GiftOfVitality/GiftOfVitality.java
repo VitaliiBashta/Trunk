@@ -119,7 +119,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
         if (SetActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: 'Gift Of Vitality' started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'Gift Of Vitality' already started.");
 
@@ -136,7 +136,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
         if (SetActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: 'Gift Of Vitality' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.GiftOfVitality.AnnounceEventStoped");
         } else
             player.sendMessage("Event: 'Gift Of Vitality' not started.");
 

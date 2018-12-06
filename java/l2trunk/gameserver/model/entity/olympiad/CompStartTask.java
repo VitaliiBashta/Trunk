@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class CompStartTask extends RunnableImpl {
+public class CompStartTask extends RunnableImpl {
     private static final Logger _log = LoggerFactory.getLogger(CompStartTask.class);
 
     @Override

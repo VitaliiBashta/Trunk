@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
@@ -8,13 +7,16 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class _423_TakeYourBestShot extends Quest implements ScriptFile {
     private static final int Johnny = 32744;
     private static final int Batracos = 32740;
     private static final int TantaGuard = 18862;
     private static final int SeerUgorosPass = 15496;
-    private static final int[] TantaClan = {
-            22768, 22769, 22770, 22771, 22772, 22773, 22774};
+    private static final List<Integer> TantaClan = Arrays.asList(
+            22768, 22769, 22770, 22771, 22772, 22773, 22774);
 
     public _423_TakeYourBestShot() {
         super(true);
@@ -69,9 +71,8 @@ public final class _423_TakeYourBestShot extends Quest implements ScriptFile {
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        int cond = st.getCond();
-        if (cond == 1) {
-            if (ArrayUtils.contains(TantaClan, npcId) && Rnd.chance(2)) {
+        if (st.getCond() == 1) {
+            if (TantaClan.contains(npcId) && Rnd.chance(2)) {
                 Location loc = st.getPlayer().getLoc();
                 addSpawn(TantaGuard, loc.x, loc.y, loc.z, 0, 100, 120000);
             } else if (npcId == TantaGuard && st.getQuestItemsCount(SeerUgorosPass) < 1)

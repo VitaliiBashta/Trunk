@@ -4,7 +4,6 @@ import l2trunk.commons.net.nio.impl.SelectorThread;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.commons.time.cron.SchedulingPattern.InvalidPatternException;
 import l2trunk.gameserver.database.DatabaseFactory;
-//import l2trunk.gameserver.instancemanager.CoupleManager;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
 import l2trunk.gameserver.instancemanager.games.FishingChampionShipManager;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -27,6 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+//import l2trunk.gameserver.instancemanager.CoupleManager;
 
 //import Elemental.datatables.CharacterMonthlyRanking;
 
@@ -52,12 +53,7 @@ public class Shutdown extends Thread {
     }
 
     private static void disconnectAllPlayers() {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            try {
-                player.logout();
-            } catch (RuntimeException e) {
-                _log.info("Error while disconnecting: " + player + '!', e);
-            }
+        GameObjectsStorage.getAllPlayers().forEach(Player::logout);
     }
 
     private static void removeVoidItems() {

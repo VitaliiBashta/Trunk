@@ -5,10 +5,12 @@ import javafx.util.Pair;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.MailDAO;
-import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
-import l2trunk.gameserver.instancemanager.*;
+import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
+import l2trunk.gameserver.instancemanager.PetitionManager;
+import l2trunk.gameserver.instancemanager.PlayerMessageStack;
+import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;
 import l2trunk.gameserver.model.*;
@@ -132,11 +134,11 @@ public final class EnterWorld extends L2GameClientPacket {
         }
 
         int myObjectId = activeChar.getObjectId();
-        Long myStoreId = activeChar.getStoredId();
+        int myStoreId = activeChar.getStoredId();
 
         synchronized (_lock)// TODO [G1ta0] Th is for garbage, and why is it here?
         {
-            for (Player cha : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player cha : GameObjectsStorage.getAllPlayers()) {
                 if (myStoreId == cha.getStoredId())
                     continue;
                 try {
@@ -155,8 +157,7 @@ public final class EnterWorld extends L2GameClientPacket {
         boolean first = activeChar.entering;
 
         if (!activeChar.isHero() || !activeChar.isFakeHero()) {
-            for (ItemInstance item : activeChar.getInventory().getItems())
-                ItemFunctions.removeItem(activeChar, 6842, 1, true, "RemoveCirclet");
+            ItemFunctions.removeItem(activeChar, 6842, 1, true, "RemoveCirclet");
             ItemFunctions.removeItem(activeChar, 37032, 1, true, "removeCloak");
         }
 
@@ -360,7 +361,7 @@ public final class EnterWorld extends L2GameClientPacket {
             }
             // invul
             if (activeChar.getVarB("gm_invul")) {
-                activeChar.setIsInvul(true);
+                activeChar.setInvul(true);
                 activeChar.sendMessage(activeChar.getName() + " is now Spartan !!!");
             }
         }

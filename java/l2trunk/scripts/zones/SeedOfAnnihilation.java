@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class SeedOfAnnihilation extends Functions implements ScriptFile {
+public final class SeedOfAnnihilation extends Functions implements ScriptFile {
     private static final int ANNIHILATION_FURNACE = 18928;
     private static final int[][] ZONE_BUFFS_LIST = {{1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 2, 1}, {3, 1, 2}};
     private static final Map<String, Location> _teleportZones = new HashMap<>();
@@ -121,7 +121,7 @@ public class SeedOfAnnihilation extends Functions implements ScriptFile {
             NpcTemplate template = NpcHolder.getTemplate(ANNIHILATION_FURNACE);
             for (int i = 0; i < sr.af_spawns.length; i++) {
                 NpcInstance npc = template.getNewInstance();
-                npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp());
+                npc.setFullHpMp();
                 npc.spawnMe(new Location(sr.af_spawns[i][0], sr.af_spawns[i][1], sr.af_spawns[i][2], sr.af_spawns[i][3]));
                 npc.setNpcState(sr.activeBuff);
                 sr.af_npcs[i] = npc;

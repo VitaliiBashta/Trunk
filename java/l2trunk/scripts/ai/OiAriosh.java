@@ -2,7 +2,6 @@ package l2trunk.scripts.ai;
 
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -17,11 +16,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author n0nam3
  */
-public class OiAriosh extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(OiAriosh.class);
+public final class OiAriosh extends Fighter {
     private static final int MOB = 18556;
-    private int _hpCount = 0;
     private static final int[] _hps = {80, 60, 40, 30, 20, 10, 5, -5};
+    private int _hpCount = 0;
 
     private OiAriosh(NpcInstance actor) {
         super(actor);
@@ -40,15 +38,11 @@ public class OiAriosh extends Fighter {
 
     private void spawnMob(Creature attacker) {
         NpcInstance actor = getActor();
-        try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(MOB));
-            sp.setLoc(Location.findPointToStay(actor, 100, 120));
-            sp.setReflection(actor.getReflection());
-            NpcInstance npc = sp.doSpawn(true);
-            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 100);
-        } catch (RuntimeException e) {
-            LOG.error("Error while spawning Mobs of Oi Ariosh", e);
-        }
+        SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(MOB)
+                .setLoc(Location.findPointToStay(actor, 100, 120))
+                .setReflection(actor.getReflection());
+        NpcInstance npc = sp.doSpawn(true);
+        npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 100);
     }
 
     @Override

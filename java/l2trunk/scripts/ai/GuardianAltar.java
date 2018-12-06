@@ -3,15 +3,12 @@ package l2trunk.scripts.ai;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -20,16 +17,13 @@ import java.util.List;
  * - если у игрока есть Protection Souls Pendant 14848 - спавнит мини-рб
  * - не использует random walk
  * - не отвечает на атаки
- *
- * @author pchayka
  */
 public final class GuardianAltar extends DefaultAI {
-    private static final Logger LOG = LoggerFactory.getLogger(GuardianAltar.class);
     private static final int DarkShamanVarangka = 18808;
 
     private GuardianAltar(NpcInstance actor) {
         super(actor);
-        actor.setIsInvul(true);
+        actor.setInvul(true);
     }
 
     @Override
@@ -49,16 +43,12 @@ public final class GuardianAltar extends DefaultAI {
                         return;
                     }
 
-            try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(DarkShamanVarangka));
-                sp.setLoc(Location.findPointToStay(actor, 400, 420));
-                NpcInstance npc = sp.doSpawn(true);
-                if (attacker.isPet() || attacker.isSummon())
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(2, 100));
-                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker.getPlayer(), Rnd.get(1, 100));
-            } catch (RuntimeException e) {
-                LOG.error("Error while Spawning Monsters of Guardian Altar", e);
-            }
+            SimpleSpawner sp = new SimpleSpawner(DarkShamanVarangka);
+            sp.setLoc(Location.findPointToStay(actor, 400, 420));
+            NpcInstance npc = sp.doSpawn(true);
+            if (attacker.isPet() || attacker.isSummon())
+                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(2, 100));
+            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker.getPlayer(), Rnd.get(1, 100));
 
         } else if (Rnd.chance(5)) {
             List<NpcInstance> around = actor.getAroundNpc(1000, 300);
@@ -67,17 +57,14 @@ public final class GuardianAltar extends DefaultAI {
                     if (npc.getNpcId() == 22702)
                         return;
 
-            for (int i = 0; i < 2; i++)
-                try {
-                    SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(22702));
-                    sp.setLoc(Location.findPointToStay(actor, 150, 160));
-                    NpcInstance npc = sp.doSpawn(true);
-                    if (attacker.isPet() || attacker.isSummon())
-                        npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(2, 100));
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker.getPlayer(), Rnd.get(1, 100));
-                } catch (RuntimeException e) {
-                    LOG.error("Error while spawning Rare Monsters of Guardian Altar", e);
-                }
+            for (int i = 0; i < 2; i++) {
+                SimpleSpawner sp = new SimpleSpawner(22702);
+                sp.setLoc(Location.findPointToStay(actor, 150, 160));
+                NpcInstance npc = sp.doSpawn(true);
+                if (attacker.isPet() || attacker.isSummon())
+                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(2, 100));
+                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker.getPlayer(), Rnd.get(1, 100));
+            }
         }
     }
 

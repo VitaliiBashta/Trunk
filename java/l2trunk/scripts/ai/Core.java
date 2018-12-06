@@ -53,12 +53,12 @@ public final class Core extends Fighter {
 
         NpcInstance cubic1 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
         cubic1.setReflection(actor.getReflection());
-        cubic1.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
+        cubic1.setFullHpMp();
         cubic1.spawnMe(CUBIC_1_POSITION);
 
         NpcInstance cubic2 = NpcHolder.getTemplate(TELEPORTATION_CUBIC_ID).getNewInstance();
         cubic2.setReflection(actor.getReflection());
-        cubic2.setCurrentHpMp(cubic1.getMaxHp(), cubic1.getMaxMp(), true);
+        cubic2.setFullHpMp();
         cubic2.spawnMe(CUBIC_2_POSITION);
 
         ThreadPoolManager.INSTANCE.schedule(() -> {

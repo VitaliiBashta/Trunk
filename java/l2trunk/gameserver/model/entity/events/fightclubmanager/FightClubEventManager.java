@@ -290,10 +290,11 @@ public enum FightClubEventManager {
      * @param event event player have to join
      */
     private void sendEventInvitations(AbstractFightClub event) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            if (canPlayerParticipate(player, false, true) && (player.getEvent(AbstractFightClub.class) == null)) {
-                player.ask(new ConfirmDlg(SystemMsg.S1, 60000).addString("Would you like to join " + event.getName() + " event?"), new AnswerEventInvitation(player, event));
-            }
+        GameObjectsStorage.getAllPlayers().stream()
+                .filter(player -> canPlayerParticipate(player, false, true))
+                .filter(player -> player.getEvent(AbstractFightClub.class) == null)
+                .forEach(player -> player.ask(new ConfirmDlg(SystemMsg.S1, 60000).addString("Would you like to join " + event.getName() + " event?"), new AnswerEventInvitation(player, event)));
+
     }
 
     private FightClubGameRoom createRoom(AbstractFightClub event) {
@@ -316,15 +317,13 @@ public enum FightClubEventManager {
 
     public void sendToAllMsg(AbstractFightClub event, String msg) {
         Say2 packet = new Say2(0, ChatType.CRITICAL_ANNOUNCE, event.getName(), msg);
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            player.sendPacket(packet);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(packet));
     }
 
     private AbstractFightClub prepareNewEvent(AbstractFightClub event) {
         MultiValueSet<String> set = event.getSet();
         AbstractFightClub duplicatedEvent = null;
         try {
-            @SuppressWarnings("unchecked")
             Class<GlobalEvent> eventClass = (Class<GlobalEvent>) Class.forName(set.getString("eventClass"));
             Constructor<GlobalEvent> constructor = eventClass.getConstructor(MultiValueSet.class);
             duplicatedEvent = (AbstractFightClub) constructor.newInstance(set);
@@ -522,7 +521,7 @@ public enum FightClubEventManager {
 
         switch (action) {
             case "leave":
-                askQuestion(player, "Are you sure You want to leave the event?");
+                askQuestion(player);
                 break;
             case "buffer":
                 SchemeBufferInstance.showWindow(player);
@@ -541,50 +540,46 @@ public enum FightClubEventManager {
         // Player is viewing main event page now
         fPlayer.setShowTutorial(true);
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("<html><head><title>").append(event.getName()).append("</title></head>");
-        builder.append("<body>");
-        builder.append("<br1><img src=\"L2UI.squaregray\" width=\"290\" height=\"1\">");
-        builder.append("<table height=20 fixwidth=\"290\" bgcolor=29241d>");
-        builder.append("	<tr>");
-        builder.append("		<td height=20 width=290>");
-        builder.append("			<center><font name=\"hs12\" color=913d3d>").append(event.getName()).append("</font></center>");
-        builder.append("		</td>");
-        builder.append("	</tr>");
-        builder.append("</table>");
-        builder.append("<br1><img src=\"L2UI.squaregray\" width=\"290\" height=\"1\">");
-        builder.append("<br>");
-        builder.append("<table fixwidth=290 bgcolor=29241d>");
-        builder.append("	<tr>");
-        builder.append("		<td valign=top width=280>");
-        builder.append("			<font color=388344>").append(event.getDescription()).append("<br></font>");
-        builder.append("		</td>");
-        builder.append("	</tr>");
-        builder.append("</table>");
-        builder.append("<br1><img src=\"L2UI.squaregray\" width=\"290\" height=\"1\">");
-        builder.append("<br>");
-
-        builder.append("<table width=270>");
-        builder.append("	<tr>");
-        builder.append("		<td>");
-        builder.append("			<center><button value = \"Buffer\" action=\"bypass -h ").append(BYPASS).append(" buffer\" back=\"l2ui_ct1.button.OlympiadWnd_DF_Back_Down\" width=200 height=30 fore=\"l2ui_ct1.button.OlympiadWnd_DF_Back\"></center>");
-        builder.append("		</td>");
-        builder.append("	</tr>");
-        builder.append("	<tr>");
-        builder.append("		<td>");
-        builder.append("			<center><button value = \"Leave Event\" action=\"bypass -h ").append(BYPASS).append(" leave\" back=\"l2ui_ct1.button.OlympiadWnd_DF_Back_Down\" width=200 height=30 fore=\"l2ui_ct1.button.OlympiadWnd_DF_Back\"></center>");
-        builder.append("		</td>");
-        builder.append("	</tr>");
-        builder.append("	<tr>");
-        builder.append("		<td>");
-        builder.append("			<center><button value = \"Close\" action=\"bypass -h ").append(BYPASS).append(" close\" back=\"l2ui_ct1.button.OlympiadWnd_DF_Info_Down\" width=200 height=30 fore=\"l2ui_ct1.button.OlympiadWnd_DF_Info\"></center>");
-        builder.append("		</td>");
-        builder.append("	</tr>");
-        builder.append("</table>");
-
-        builder.append("</body></html>");
-
-        player.sendPacket(new TutorialShowHtml(builder.toString()));
+        String builder = "<html><head><title>" + event.getName() + "</title></head>" +
+                "<body>" +
+                "<br1><img src=\"L2UI.squaregray\" width=\"290\" height=\"1\">" +
+                "<table height=20 fixwidth=\"290\" bgcolor=29241d>" +
+                "	<tr>" +
+                "		<td height=20 width=290>" +
+                "			<center><font name=\"hs12\" color=913d3d>" + event.getName() + "</font></center>" +
+                "		</td>" +
+                "	</tr>" +
+                "</table>" +
+                "<br1><img src=\"L2UI.squaregray\" width=\"290\" height=\"1\">" +
+                "<br>" +
+                "<table fixwidth=290 bgcolor=29241d>" +
+                "	<tr>" +
+                "		<td valign=top width=280>" +
+                "			<font color=388344>" + event.getDescription() + "<br></font>" +
+                "		</td>" +
+                "	</tr>" +
+                "</table>" +
+                "<br1><img src=\"L2UI.squaregray\" width=\"290\" height=\"1\">" +
+                "<br>" +
+                "<table width=270>" +
+                "	<tr>" +
+                "		<td>" +
+                "			<center><button value = \"Buffer\" action=\"bypass -h " + BYPASS + " buffer\" back=\"l2ui_ct1.button.OlympiadWnd_DF_Back_Down\" width=200 height=30 fore=\"l2ui_ct1.button.OlympiadWnd_DF_Back\"></center>" +
+                "		</td>" +
+                "	</tr>" +
+                "	<tr>" +
+                "		<td>" +
+                "			<center><button value = \"Leave Event\" action=\"bypass -h " + BYPASS + " leave\" back=\"l2ui_ct1.button.OlympiadWnd_DF_Back_Down\" width=200 height=30 fore=\"l2ui_ct1.button.OlympiadWnd_DF_Back\"></center>" +
+                "		</td>" +
+                "	</tr>" +
+                "	<tr>" +
+                "		<td>" +
+                "			<center><button value = \"Close\" action=\"bypass -h " + BYPASS + " close\" back=\"l2ui_ct1.button.OlympiadWnd_DF_Info_Down\" width=200 height=30 fore=\"l2ui_ct1.button.OlympiadWnd_DF_Info\"></center>" +
+                "		</td>" +
+                "	</tr>" +
+                "</table>" +
+                "</body></html>";
+        player.sendPacket(new TutorialShowHtml(builder));
         player.sendPacket(new TutorialShowQuestionMark(100));
     }
 
@@ -597,8 +592,8 @@ public enum FightClubEventManager {
             player.sendMessage("You have left the event!");
     }
 
-    private void askQuestion(Player player, String question) {
-        ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 60000).addString(question);
+    private void askQuestion(Player player) {
+        ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 60000).addString("Are you sure You want to leave the event?");
         player.ask(packet, new AskQuestionAnswerListener(player));
     }
 

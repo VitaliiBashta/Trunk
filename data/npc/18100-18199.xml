@@ -1510,7 +1510,7 @@
 			<skill id="4589" level="9" />	<!--Decrease Speed-->
 			<skill id="4618" level="1" />	<!--NPC Cancel PC Target-->
 			<skill id="4657" level="9" />	<!--Hold-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<attributes>
 			<attack attribute="unholy" value="20" />
@@ -1714,7 +1714,7 @@
 			<skill id="4589" level="9" />	<!--Decrease Speed-->
 			<skill id="4618" level="1" />	<!--NPC Cancel PC Target-->
 			<skill id="4657" level="9" />	<!--Hold-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<attributes>
 			<attack attribute="unholy" value="20" />
@@ -1918,7 +1918,7 @@
 			<skill id="4589" level="9" />	<!--Decrease Speed-->
 			<skill id="4618" level="1" />	<!--NPC Cancel PC Target-->
 			<skill id="4657" level="9" />	<!--Hold-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<attributes>
 			<attack attribute="unholy" value="20" />
@@ -2122,7 +2122,7 @@
 			<skill id="4589" level="9" />	<!--Decrease Speed-->
 			<skill id="4618" level="1" />	<!--NPC Cancel PC Target-->
 			<skill id="4657" level="9" />	<!--Hold-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<attributes>
 			<attack attribute="unholy" value="20" />

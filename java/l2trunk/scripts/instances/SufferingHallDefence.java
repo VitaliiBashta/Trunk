@@ -1,7 +1,5 @@
 package l2trunk.scripts.instances;
 
-import l2trunk.commons.lang.ArrayUtils;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
@@ -13,24 +11,22 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-/**
- * @author pchayka
- */
-
-public class SufferingHallDefence extends Reflection {
+public final class SufferingHallDefence extends Reflection {
     private static final int AliveTumor = 18704;
     private static final int DeadTumor = 18705;
     private static final int Yehan = 25665;
     private static final int RegenerationCoffin = 18706;
+    private static final List<Integer> monsters = Arrays.asList(22509, 22510, 22511, 22512, 22513, 22514, 22515, AliveTumor);
+    private static final Location roomCenter = new Location(-173704, 218092, -9562, 27768);
+    private final DeathListener _deathListener = new DeathListener();
     public int timeSpent;
     private int tumorIndex = 300;
     private boolean doCountCoffinNotifications = false;
-    private static final int[] monsters = {22509, 22510, 22511, 22512, 22513, 22514, 22515, AliveTumor};
-    private static final Location roomCenter = new Location(-173704, 218092, -9562, 27768);
     private long _savedTime = 0;
-    private final DeathListener _deathListener = new DeathListener();
     private ScheduledFuture<?> coffinSpawnTask;
     private ScheduledFuture<?> monstersSpawnTask;
     private int stage = 1;
@@ -46,65 +42,12 @@ public class SufferingHallDefence extends Reflection {
     private void startDefence() {
         spawnByGroup("soi_hos_defence_tumor");
         doCountCoffinNotifications = true;
-        coffinSpawnTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                addSpawnWithoutRespawn(RegenerationCoffin, new Location(-173704, 218092, -9562, Location.getRandomHeading()), 250);
-            }
-        }, 1000L, 10000L);
-        monstersSpawnTask = ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                spawnMonsters();
-            }
-        }, 60000L);
-    }
-
-    private class DeathListener implements OnDeathListener {
-        @Override
-        public void onDeath(Creature self, Creature killer) {
-            if (!self.isNpc())
-                return;
-            if (ArrayUtils.contains(monsters, self.getNpcId()) && !checkAliveMonsters()) {
-                if (monstersSpawnTask != null)
-                    monstersSpawnTask.cancel(false);
-                monstersSpawnTask = ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        spawnMonsters();
-                    }
-                }, 40000L);
-            }
-            if (self.getNpcId() == AliveTumor) {
-                self.deleteMe();
-                addSpawnWithoutRespawn(DeadTumor, roomCenter, 0);
-                tumorIndex = 300;
-                doCountCoffinNotifications = true;
-            } else if (self.getNpcId() == Yehan) {
-                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        if (monstersSpawnTask != null)
-                            monstersSpawnTask.cancel(false);
-                        if (coffinSpawnTask != null)
-                            coffinSpawnTask.cancel(false);
-                        clearReflection(5, true);
-                        spawnByGroup("soi_hos_defence_tepios");
-
-                        setReenterTime(System.currentTimeMillis());
-                        for (Player p : getPlayers())
-                            p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0));
-
-                        timeSpent = (int) (System.currentTimeMillis() - _savedTime) / 1000;
-                    }
-                }, 10000L);
-            }
-        }
+        coffinSpawnTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> addSpawnWithoutRespawn(RegenerationCoffin, new Location(-173704, 218092, -9562, Location.getRandomHeading()), 250), 1000L, 10000L);
+        monstersSpawnTask = ThreadPoolManager.INSTANCE.schedule(this::spawnMonsters, 60000L);
     }
 
     private void invokeDeathListener() {
-        for (NpcInstance npc : getNpcs())
-            npc.addListener(_deathListener);
+        getNpcs().forEach(npc -> npc.addListener(_deathListener));
     }
 
     public void notifyCoffinActivity() {
@@ -118,8 +61,8 @@ public class SufferingHallDefence extends Reflection {
             for (Player p : getPlayers())
                 p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_FEEL_THE_SURGING_ENERGY_OF_DEATH_FROM_THE_TUMOR, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
         if (tumorIndex <= 0) {
-            if (getTumor(DeadTumor) != null)
-                getTumor(DeadTumor).deleteMe();
+            if (getTumor() != null)
+                getTumor().deleteMe();
             NpcInstance alivetumor = addSpawnWithoutRespawn(AliveTumor, roomCenter, 0);
             alivetumor.setCurrentHp(alivetumor.getMaxHp() * .4, false);
             doCountCoffinNotifications = false;
@@ -178,7 +121,7 @@ public class SufferingHallDefence extends Reflection {
         if (group != null)
             spawnByGroup(group);
         for (NpcInstance n : getNpcs())
-            if (n.isMonster() && ArrayUtils.contains(monsters, n.getNpcId())) {
+            if (n.isMonster() && (monsters.contains(n.getNpcId()))) {
                 n.setRunning();
                 n.moveToLocation(roomCenter, 200, false);
             }
@@ -186,17 +129,16 @@ public class SufferingHallDefence extends Reflection {
     }
 
     private boolean checkAliveMonsters() {
-        for (NpcInstance n : getNpcs())
-            if (ArrayUtils.contains(monsters, n.getNpcId()) && !n.isDead())
-                return true;
-        return false;
+        return getNpcs().stream()
+                .filter(n -> monsters.contains(n.getNpcId()))
+                .allMatch(Creature::isDead);
     }
 
-    private NpcInstance getTumor(int id) {
-        for (NpcInstance npc : getNpcs())
-            if (npc.getNpcId() == id && !npc.isDead())
-                return npc;
-        return null;
+    private NpcInstance getTumor() {
+        return getNpcs().stream()
+                .filter(npc -> npc.getNpcId() == SufferingHallDefence.DeadTumor)
+                .filter(npc -> !npc.isDead())
+                .findFirst().orElse(null);
     }
 
     @Override
@@ -218,6 +160,40 @@ public class SufferingHallDefence extends Reflection {
         if (monstersSpawnTask != null)
             monstersSpawnTask.cancel(false);
         super.onCollapse();
+    }
+
+    private class DeathListener implements OnDeathListener {
+        @Override
+        public void onDeath(Creature self, Creature killer) {
+            if (!self.isNpc())
+                return;
+            if (monsters.contains(self.getNpcId()) && !checkAliveMonsters()) {
+                if (monstersSpawnTask != null)
+                    monstersSpawnTask.cancel(false);
+                monstersSpawnTask = ThreadPoolManager.INSTANCE.schedule(SufferingHallDefence.this::spawnMonsters, 40000L);
+            }
+            if (self.getNpcId() == AliveTumor) {
+                self.deleteMe();
+                addSpawnWithoutRespawn(DeadTumor, roomCenter, 0);
+                tumorIndex = 300;
+                doCountCoffinNotifications = true;
+            } else if (self.getNpcId() == Yehan) {
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    if (monstersSpawnTask != null)
+                        monstersSpawnTask.cancel(false);
+                    if (coffinSpawnTask != null)
+                        coffinSpawnTask.cancel(false);
+                    clearReflection(5, true);
+                    spawnByGroup("soi_hos_defence_tepios");
+
+                    setReenterTime(System.currentTimeMillis());
+                    for (Player p : getPlayers())
+                        p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0));
+
+                    timeSpent = (int) (System.currentTimeMillis() - _savedTime) / 1000;
+                }, 10000L);
+            }
+        }
     }
 
 

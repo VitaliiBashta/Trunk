@@ -15,21 +15,15 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class SpawnTable {
-    private static final Logger _log = LoggerFactory.getLogger(SpawnTable.class);
-    private static SpawnTable _instance;
+public enum SpawnTable {
+    INSTANCE;
+    private final Logger _log = LoggerFactory.getLogger(SpawnTable.class);
 
-    private SpawnTable() {
-        _instance = this;
+    public void init() {
         if (Config.LOAD_CUSTOM_SPAWN)
             fillCustomSpawnTable();
-    }
-
-    public static SpawnTable getInstance() {
-        if (_instance == null)
-            new SpawnTable();
-        return _instance;
     }
 
     private void fillCustomSpawnTable() {
@@ -52,7 +46,7 @@ public class SpawnTable {
                 template.addSpawnRange(new Location(x, y, z, h));
                 SpawnHolder.getInstance().addSpawn(PeriodOfDay.NONE.name(), template);
             }
-        } catch (Exception e1) {
+        } catch (SQLException e1) {
             _log.warn("custom_spawnlist couldnt be initialized:" + e1);
             e1.printStackTrace();
         }
@@ -64,13 +58,13 @@ public class SpawnTable {
             statement.setString(1, "");
             statement.setInt(2, spawn.getAmount());
             statement.setInt(3, spawn.getCurrentNpcId());
-            statement.setInt(4, spawn.getLocx());
-            statement.setInt(5, spawn.getLocy());
-            statement.setInt(6, spawn.getLocz());
-            statement.setInt(7, spawn.getHeading());
+            statement.setInt(4, spawn.getLoc().x);
+            statement.setInt(5, spawn.getLoc().y);
+            statement.setInt(6, spawn.getLoc().z);
+            statement.setInt(7, spawn.getLoc().h);
             statement.setInt(8, spawn.getRespawnDelay());
             statement.execute();
-        } catch (Exception e1) {
+        } catch (SQLException e1) {
             _log.warn("spawn couldnt be stored in db:" + e1);
         }
     }

@@ -50,7 +50,7 @@ public class MasterOfEnchanting extends Functions implements ScriptFile, OnPlaye
         if (SetActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: Master of Enchanting started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.MasOfEnch.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.MasOfEnch.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'Master of Enchanting' already started.");
 
@@ -65,7 +65,7 @@ public class MasterOfEnchanting extends Functions implements ScriptFile, OnPlaye
         if (SetActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: Master of Enchanting stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.MasOfEnch.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.MasOfEnch.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'Master of Enchanting' not started.");
 
@@ -97,7 +97,7 @@ public class MasterOfEnchanting extends Functions implements ScriptFile, OnPlaye
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.MasOfEnch.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.MasOfEnch.AnnounceEventStarted");
     }
 
 }

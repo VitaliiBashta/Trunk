@@ -29,7 +29,7 @@ public final class FangOfSplendor extends Fighter {
             npc.setSpawnedLoc(actor.getLoc());
             npc.setReflection(actor.getReflection());
             npc.setChampion(((MonsterInstance) actor).getChampion());
-            npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+            npc.setFullHpMp();
             npc.spawnMe(npc.getSpawnedLoc());
             npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 100);
             actor.doDie(actor);

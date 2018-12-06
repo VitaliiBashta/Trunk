@@ -1,6 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.mysql;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
@@ -740,7 +739,7 @@ public class AdminEditChar implements IAdminCommandHandler {
         replyMSG.append("</tr></table><br></center>");
         replyMSG.append("<table width=270>");
 
-        replyMSG.append("<tr><td width=90><button value=\"Teleport\" action=\"bypass -h admin_teleportto " + player.getName() + "\" width=85 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+        replyMSG.append("<tr><td width=90><button value=\"teleport\" action=\"bypass -h admin_teleportto " + player.getName() + "\" width=85 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td width=90><button value=\"Recall\" action=\"bypass -h admin_recall " + player.getName() + "\" width=85 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td width=90><button value=\"Quests\" action=\"bypass -h admin_quests " + player.getName() + "\" width=85 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
 
@@ -762,13 +761,18 @@ public class AdminEditChar implements IAdminCommandHandler {
         replyMSG.append("</tr></table>");
         replyMSG.append("<br><br>");
 
-        for (Player element : GameObjectsStorage.getAllPlayersForIterate())
-            if (StringUtils.containsIgnoreCase(element.getName(), CharacterToFind)) {
+        for (Player element : GameObjectsStorage.getAllPlayers())
+            if (element.getName().toLowerCase().contains(CharacterToFind.toLowerCase())) {
                 CharactersFound = CharactersFound + 1;
-                replyMSG.append("<table width=270>");
-                replyMSG.append("<tr><td width=80>Name</td><td width=110>Class</td><td width=40>Level</td></tr>");
-                replyMSG.append("<tr><td width=80><a action=\"bypass -h admin_character_list " + element.getName() + "\">" + element.getName() + "</a></td><td width=110>" + element.getTemplate().className + "</td><td width=40>" + element.getLevel() + "</td></tr>");
-                replyMSG.append("</table>");
+                replyMSG.append("<table width=270>")
+                        .append("<tr><td width=80>Name</td><td width=110>Class</td><td width=40>Level</td></tr>")
+                        .append("<tr><td width=80><a action=\"bypass -h admin_character_list ")
+                        .append(element.getName()).append("\">")
+                        .append(element.getName())
+                        .append("</a></td><td width=110>")
+                        .append(element.getTemplate().className)
+                        .append("</td><td width=40>").append(element.getLevel()).append("</td></tr>")
+                        .append("</table>");
             }
 
         if (CharactersFound == 0) {
@@ -780,7 +784,9 @@ public class AdminEditChar implements IAdminCommandHandler {
             replyMSG.append("<edit var=\"character_name\" width=80></td><td><button value=\"Find\" action=\"bypass -h admin_find_character $character_name\" width=40 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
             replyMSG.append("</td></tr></table></center>");
         } else {
-            replyMSG.append("<center><br>Found " + CharactersFound + " character");
+            replyMSG.append("<center><br>Found ")
+                    .append(CharactersFound)
+                    .append(" character");
 
             if (CharactersFound == 1)
                 replyMSG.append(".");

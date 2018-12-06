@@ -19,8 +19,7 @@ import l2trunk.scripts.quests._731_ProtectTheMilitaryAssociationLeader;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class MilitaryAssociationLeader extends SiegeGuardFighter {
+public final class MilitaryAssociationLeader extends SiegeGuardFighter {
     private static final Map<Integer,NpcString[]> MESSAGES = new HashMap<>(9);
 
     static {
@@ -75,7 +74,7 @@ public class MilitaryAssociationLeader extends SiegeGuardFighter {
             actor.setParameter("dominion_first_attack", false);
             NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
             Quest q = QuestManager.getQuest(_731_ProtectTheMilitaryAssociationLeader.class);
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
                     player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 
@@ -99,7 +98,7 @@ public class MilitaryAssociationLeader extends SiegeGuardFighter {
             return;
 
         NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
                 player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 

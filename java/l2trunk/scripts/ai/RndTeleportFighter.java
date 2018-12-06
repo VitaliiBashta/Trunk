@@ -12,7 +12,7 @@ import l2trunk.gameserver.templates.spawn.SpawnRange;
 import l2trunk.gameserver.utils.Location;
 
 public class RndTeleportFighter extends Fighter {
-    private long _lastTeleport;
+    private long lastTeleport;
 
     RndTeleportFighter(NpcInstance actor) {
         super(actor);
@@ -21,7 +21,7 @@ public class RndTeleportFighter extends Fighter {
     @Override
     public boolean maybeMoveToHome() {
         NpcInstance actor = getActor();
-        if (System.currentTimeMillis() - _lastTeleport < 10000)
+        if (System.currentTimeMillis() - lastTeleport < 10000)
             return false;
 
         boolean randomWalk = actor.hasRandomWalk();
@@ -50,8 +50,8 @@ public class RndTeleportFighter extends Fighter {
 
         if (isInside) {
             actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 4671, 1, 500, 0));
-            ThreadPoolManager.INSTANCE().schedule(new Teleport(new Location(x, y, z)), 500);
-            _lastTeleport = System.currentTimeMillis();
+            ThreadPoolManager.INSTANCE.schedule(new Teleport(new Location(x, y, z)), 500);
+            lastTeleport = System.currentTimeMillis();
         }
         return isInside;
     }

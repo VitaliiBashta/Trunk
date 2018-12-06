@@ -190,7 +190,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private List<Condition> _preCondition = new ArrayList<>();
     private int _baseLevel;
     private int _castRange;
-    private int _hitTime;
+    private int hitTime;
     private int _hpConsume;
     private int _magicLevel;
     private int _skillInterruptTime;
@@ -274,7 +274,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _coolTime = set.getInteger("coolTime", 0);
         _skillInterruptTime = set.getInteger("hitCancelTime", 0);
         _reuseDelay = set.getLong("reuseDelay", 0);
-        _hitTime = set.getInteger("hitTime", 0);
+        hitTime = set.getInteger("hitTime", 0);
         _skillRadius = set.getInteger("skillRadius", 80);
         targetType = set.getEnum("target", SkillTargetType.class);
         _magicType = set.getEnum("magicType", SkillMagicType.class, SkillMagicType.PHYSIC);
@@ -1566,11 +1566,11 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public final int getHitTime() {
-        return _hitTime;
+        return hitTime;
     }
 
     public void setHitTime(int hitTime) {
-        _hitTime = hitTime;
+        this.hitTime = hitTime;
     }
 
     public final int getVitConsume() {
@@ -2238,7 +2238,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                 min = 5000;
                 break;
         }
-        return Math.max(Math.max(_hitTime + _coolTime, _reuseDelay), min);
+        return Math.max(Math.max(hitTime + _coolTime, _reuseDelay), min);
     }
 
     public double getAbsorbPart() {

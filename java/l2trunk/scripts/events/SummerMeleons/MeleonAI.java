@@ -4,7 +4,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Skill;
@@ -20,30 +19,80 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 public final class MeleonAI extends Fighter {
-    public class PolimorphTask extends RunnableImpl {
-        @SuppressWarnings("unused")
-        @Override
-        public void runImpl() {
-            MeleonInstance actor = getActor();
-            if (actor == null)
-                return;
-            SimpleSpawner spawn;
-
-            try {
-                spawn = new SimpleSpawner(NpcHolder.getTemplate(_npcId));
-                spawn.setLoc(actor.getLoc());
-                NpcInstance npc = spawn.doSpawn(true);
-                npc.setAI(new MeleonAI(npc));
-                ((MeleonInstance) npc).setSpawner(actor.getSpawner());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            _timeToUnspawn = Long.MAX_VALUE;
-            actor.deleteMe();
-        }
-    }
-
+    private final static int Young_Watermelon = 13271;
+    private final static int Rain_Watermelon = 13273;
+    private final static int Defective_Watermelon = 13272;
+    private final static int Young_Honey_Watermelon = 13275;
+    private final static int Rain_Honey_Watermelon = 13277;
+    private final static int Defective_Honey_Watermelon = 13276;
+    private final static int Large_Rain_Watermelon = 13274;
+    private final static int Large_Rain_Honey_Watermelon = 13278;
+    private final static int Squash_Level_up = 4513;
+    private final static int Squash_Poisoned = 4514;
+    private static final String[] textOnSpawn = new String[]{
+            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.0",
+            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.1",
+            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.2"};
+    private static final String[] textOnAttack = new String[]{
+            "Who me bites? Ah! Ouch! Hey you, now I'm going to ask you!",
+            "Ha-ha-ha, I grew all the envy, look!",
+            "You do muff? Get into the fruit can not!",
+            "That's what you calculate their punches? Look for better targeting teachers ...",
+            "Do not waste your time, I'm immortal!",
+            "Ha! True pleasant sound?",
+            "As long as you attack me growth, and grow up, you'll be up to two times!",
+            "You beat or tickle? Can not make it ... pathetic attempts!",
+            "Only musical weapon opens watermelon. Thy blunt weapon is not help!"};
+    private static final String[] textTooFast = new String[]{
+            "This is a blow! That's technique!",
+            "Hey you! Your skills are deplorable, my grandmother fights better! Ha-ha-ha!",
+            "Come on strike once more, and again!",
+            "I am your house Shatal pipe!",
+            "Hey, and Semyon is? A five adena? A call? Hahaha!",
+            "What kind of obscenity! Come without these jokes!",
+            "Show imagination, come back, what are you trample!",
+            "Wake as you leave, you are quite dull and boring ..."};
+    private static final String[] textSuccess0 = new String[]{
+            "Watermelon grows well if the water it thoroughly, you know this secret, is not it?",
+            "That's what I nectar, and there is always some slop!",
+            "I see, I see, this is China, O my God, I'm a Chinese watermelon!",
+            "Let's pour more, between the first and second pereryvchik small!",
+            "Refueling on the fly! quite dull and boring ... "};
+    private static final String[] textFail0 = new String[]{
+            "Are you deaf? Nectar I need, not what you lesh!",
+            "You're such a loser, and you look like a cheerful! I need nectar, pour quality, not to get shish!",
+            "Once again, fail, how long can? You want me to laugh?"};
+    private static final String[] textSuccess1 = new String[]{
+            "Now sing! Arbuuuuuu-uh-uh!",
+            "That's so good, so very good, do not stop!",
+            "I rise quickly, have time to rebound? Ha!",
+            "You're a master of his craft! Go on, please!"};
+    private static final String[] textFail1 = new String[]{
+            "Strike while the iron on the spot! Otherwise, no you gingerbread.",
+            "Wally! Ignoramus! Boobies! Loser! Again you fed me slop!",
+            "Let's activity changes hill, watering properly, what kind of pathetic attempts?",
+            "You want me to so he died? Come Grow Right!"};
+    private static final String[] textSuccess2 = new String[]{
+            "There! There! Come on, and soon I will love you forever!",
+            "At this rate, I will be the emperor of watermelons!",
+            "Very good, I put you credit for the agricultural economy, you have the mind to grow!"};
+    private static final String[] textFail2 = new String[]{
+            "And you do local? Watermelon you've seen in your eyes? It is a failure!",
+            "I'll give you a sign Loser of the Year, only the loser may well fail in doing so easy!",
+            "Well, Feed me, huh? Normally only, not here this dubious nectar ...",
+            "And you're not a terrorist event? Could you have hunger morish? What do you want?"};
+    private static final String[] textSuccess3 = new String[]{
+            "Life is getting better, do not be sorry lei!",
+            "You taught this mom do you have a great work!",
+            "And why do you have of growth? Are you? I will be very juicy watermelon!"};
+    private static final String[] textFail3 = new String[]{
+            "Is that water lapped the sewer? Do you understand what the nectar!",
+            "Gods, save me from this sad sack, he's all the spoils!"};
+    private static final String[] textSuccess4 = new String[]{
+            "That's a charge! Have you slipped into nectar? There are exactly 40 degrees! Ahahaha, I get drunk!",
+            "You're risking not grow watermelon, and the whole rocket! Pours, come again!"};
+    private static final String[] textFail4 = new String[]{"Oh how I want to drink ... Nectar, please ... ", " Lay nectar here and see what happens!"};
+    private static final int NECTAR_REUSE = 3000;
     private final RewardData[] _dropList = new RewardData[]{new RewardData(1539, 1, 5, 15000), // Greater Healing Potion
             new RewardData(1374, 1, 3, 15000), // Greater Haste Potion
 
@@ -132,95 +181,6 @@ public final class MeleonAI extends Fighter {
             new RewardData(959, 1, 1, 50), // EWS           0.005%
             new RewardData(960, 1, 1, 300) // EAS          0.03%
     };
-
-    private final static int Young_Watermelon = 13271;
-    private final static int Rain_Watermelon = 13273;
-    private final static int Defective_Watermelon = 13272;
-    private final static int Young_Honey_Watermelon = 13275;
-    private final static int Rain_Honey_Watermelon = 13277;
-    private final static int Defective_Honey_Watermelon = 13276;
-    private final static int Large_Rain_Watermelon = 13274;
-    private final static int Large_Rain_Honey_Watermelon = 13278;
-
-    private final static int Squash_Level_up = 4513;
-    private final static int Squash_Poisoned = 4514;
-
-    private static final String[] textOnSpawn = new String[]{
-            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.0",
-            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.1",
-            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.2"};
-
-    private static final String[] textOnAttack = new String[]{
-            "Who me bites? Ah! Ouch! Hey you, now I'm going to ask you!",
-            "Ha-ha-ha, I grew all the envy, look!",
-            "You do muff? Get into the fruit can not!",
-            "That's what you calculate their punches? Look for better targeting teachers ...",
-            "Do not waste your time, I'm immortal!",
-            "Ha! True pleasant sound?",
-            "As long as you attack me growth, and grow up, you'll be up to two times!",
-            "You beat or tickle? Can not make it ... pathetic attempts!",
-            "Only musical weapon opens watermelon. Thy blunt weapon is not help!"};
-
-    private static final String[] textTooFast = new String[]{
-            "This is a blow! That's technique!",
-            "Hey you! Your skills are deplorable, my grandmother fights better! Ha-ha-ha!",
-            "Come on strike once more, and again!",
-            "I am your house Shatal pipe!",
-            "Hey, and Semyon is? A five adena? A call? Hahaha!",
-            "What kind of obscenity! Come without these jokes!",
-            "Show imagination, come back, what are you trample!",
-            "Wake as you leave, you are quite dull and boring ..."};
-
-    private static final String[] textSuccess0 = new String[]{
-            "Watermelon grows well if the water it thoroughly, you know this secret, is not it?",
-            "That's what I nectar, and there is always some slop!",
-            "I see, I see, this is China, O my God, I'm a Chinese watermelon!",
-            "Let's pour more, between the first and second pereryvchik small!",
-            "Refueling on the fly! quite dull and boring ... "};
-
-    private static final String[] textFail0 = new String[]{
-            "Are you deaf? Nectar I need, not what you lesh!",
-            "You're such a loser, and you look like a cheerful! I need nectar, pour quality, not to get shish!",
-            "Once again, fail, how long can? You want me to laugh?"};
-
-    private static final String[] textSuccess1 = new String[]{
-            "Now sing! Arbuuuuuu-uh-uh!",
-            "That's so good, so very good, do not stop!",
-            "I rise quickly, have time to rebound? Ha!",
-            "You're a master of his craft! Go on, please!"};
-
-    private static final String[] textFail1 = new String[]{
-            "Strike while the iron on the spot! Otherwise, no you gingerbread.",
-            "Wally! Ignoramus! Boobies! Loser! Again you fed me slop!",
-            "Let's activity changes hill, watering properly, what kind of pathetic attempts?",
-            "You want me to so he died? Come Grow Right!"};
-
-    private static final String[] textSuccess2 = new String[]{
-            "There! There! Come on, and soon I will love you forever!",
-            "At this rate, I will be the emperor of watermelons!",
-            "Very good, I put you credit for the agricultural economy, you have the mind to grow!"};
-
-    private static final String[] textFail2 = new String[]{
-            "And you do local? Watermelon you've seen in your eyes? It is a failure!",
-            "I'll give you a sign Loser of the Year, only the loser may well fail in doing so easy!",
-            "Well, Feed me, huh? Normally only, not here this dubious nectar ...",
-            "And you're not a terrorist event? Could you have hunger morish? What do you want?"};
-
-    private static final String[] textSuccess3 = new String[]{
-            "Life is getting better, do not be sorry lei!",
-            "You taught this mom do you have a great work!",
-            "And why do you have of growth? Are you? I will be very juicy watermelon!"};
-
-    private static final String[] textFail3 = new String[]{
-            "Is that water lapped the sewer? Do you understand what the nectar!",
-            "Gods, save me from this sad sack, he's all the spoils!"};
-
-    private static final String[] textSuccess4 = new String[]{
-            "That's a charge! Have you slipped into nectar? There are exactly 40 degrees! Ahahaha, I get drunk!",
-            "You're risking not grow watermelon, and the whole rocket! Pours, come again!"};
-
-    private static final String[] textFail4 = new String[]{"Oh how I want to drink ... Nectar, please ... ", " Lay nectar here and see what happens!"};
-
     private int _npcId;
     private int _nectar;
     private int _tryCount;
@@ -228,8 +188,6 @@ public final class MeleonAI extends Fighter {
     private long _timeToUnspawn;
 
     private ScheduledFuture<?> _polimorphTask;
-
-    private static final int NECTAR_REUSE = 3000;
 
     public MeleonAI(NpcInstance actor) {
         super(actor);
@@ -418,7 +376,7 @@ public final class MeleonAI extends Fighter {
             if (_polimorphTask != null) {
                 _polimorphTask.cancel(false);
                 _polimorphTask = null;
-                Log.add("SummerMeleons :: Player " + actor.getSpawner().getName() + " tried to use cheat (SquashAI clone): killed " + actor + " after polymorfing started", "illegal-actions");
+                Log.add("SummerMeleons :: Player " + actor.getSpawner().getName() + " tried to use cheat (SquashAI newInstance): killed " + actor + " after polymorfing started", "illegal-actions");
                 return; // при таких вариантах ничего не даем
             }
 
@@ -443,5 +401,23 @@ public final class MeleonAI extends Fighter {
     @Override
     public MeleonInstance getActor() {
         return (MeleonInstance) super.getActor();
+    }
+
+    public class PolimorphTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            MeleonInstance actor = getActor();
+            if (actor == null)
+                return;
+            SimpleSpawner spawn;
+
+            spawn = new SimpleSpawner(_npcId).setLoc(actor.getLoc());
+            NpcInstance npc = spawn.doSpawn(true);
+            npc.setAI(new MeleonAI(npc));
+            ((MeleonInstance) npc).setSpawner(actor.getSpawner());
+
+            _timeToUnspawn = Long.MAX_VALUE;
+            actor.deleteMe();
+        }
     }
 }

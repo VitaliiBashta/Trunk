@@ -3,7 +3,6 @@ package l2trunk.scripts.ai.crypts_of_disgrace;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -45,8 +44,8 @@ public final class TurkaCommanderChief extends Fighter {
 
     private NpcInstance npcSpawn(int template) {
         NpcInstance actor = getActor();
-        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(template));
-        sp.setLoc(Location.findPointToStay(actor, 100, 120));
+        SimpleSpawner sp = new SimpleSpawner(template)
+                .setLoc(Location.findPointToStay(actor, 100, 120));
         return sp.doSpawn(true);
     }
 }

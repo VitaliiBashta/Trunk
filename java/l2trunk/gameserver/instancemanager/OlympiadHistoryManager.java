@@ -17,21 +17,16 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class OlympiadHistoryManager {
-    private static final OlympiadHistoryManager _instance = new OlympiadHistoryManager();
-
+public enum OlympiadHistoryManager {
+    INSTANCE;
     private final Map<Integer, List<OlympiadHistory>> _historyNew = new HashMap<>();
     private final Map<Integer, List<OlympiadHistory>> _historyOld = new HashMap<>();
 
-    private OlympiadHistoryManager() {
+    public void  init() {
         Map<Boolean, List<OlympiadHistory>> historyList = OlympiadHistoryDAO.getInstance().select();
         for (Map.Entry<Boolean, List<OlympiadHistory>> entry : historyList.entrySet())
             for (OlympiadHistory history : entry.getValue())
                 addHistory(entry.getKey(), history);
-    }
-
-    public static OlympiadHistoryManager getInstance() {
-        return _instance;
     }
 
     /**

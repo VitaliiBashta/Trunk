@@ -77,7 +77,7 @@ public final class ClassesStatsBalancerParser implements IXmlReader {
 
     private void synchronizePlayers() {
         try {
-            for (Player onlinePlayer : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player onlinePlayer : GameObjectsStorage.getAllPlayers()) {
                 onlinePlayer.updateStats();
                 onlinePlayer.broadcastUserInfo(true);
                 onlinePlayer.broadcastCharInfo();
@@ -85,7 +85,7 @@ public final class ClassesStatsBalancerParser implements IXmlReader {
                 UserInfo info2 = new UserInfo(onlinePlayer);
                 onlinePlayer.sendPacket(info2);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
         _log.info(getClass().getSimpleName() + ": Synchronize Players in game done.");

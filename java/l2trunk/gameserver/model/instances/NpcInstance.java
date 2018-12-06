@@ -87,7 +87,7 @@ public class NpcInstance extends Creature {
     private boolean _hasChatWindow;
     private boolean _unAggred = false;
     private int _personalAggroRange = -1;
-    private int _level = 0;
+    private int level = 0;
     private long _dieTime = 0L;
     private int _aiSpawnParam;
     private int currentLHandId;
@@ -104,7 +104,7 @@ public class NpcInstance extends Creature {
     private Dominion _nearestDominion;
     private NpcString _nameNpcString = NpcString.NONE;
     private NpcString _titleNpcString = NpcString.NONE;
-    private Spawner _spawn;
+    private Spawner spawn;
     private Location spawnedLoc = new Location();
     private SpawnRange _spawnRange;
     private MultiValueSet<String> _parameters = StatsSet.EMPTY;
@@ -112,15 +112,10 @@ public class NpcInstance extends Creature {
     private ScheduledFuture<?> _broadcastCharInfoTask;
     private boolean _isBusy;
     private String _busyMessage = "";
-    private boolean _isUnderground = false;
+    private boolean isUnderground = false;
 
     public NpcInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-
-        if (template == null) {
-            throw new NullPointerException("No template for Npc. Please check your datapack is setup correctly.");
-        }
-
         setParameters(template.getAIParams());
 
         _hasRandomAnimation = !getParameter(NO_RANDOM_ANIMATION, false) && (Config.MAX_NPC_ANIMATION > 0);
@@ -269,10 +264,6 @@ public class NpcInstance extends Creature {
         return _ai;
     }
 
-    public void setCustomTitle(Location loc) {
-        spawnedLoc = loc;
-    }
-
     /**
      * Return the position of the spawned point.<BR>
      * <BR>
@@ -282,8 +273,9 @@ public class NpcInstance extends Creature {
         return spawnedLoc;
     }
 
-    public void setSpawnedLoc(Location loc) {
+    public NpcInstance setSpawnedLoc(Location loc) {
         spawnedLoc = loc;
+        return this;
     }
 
     public int getRightHandItem() {
@@ -586,8 +578,8 @@ public class NpcInstance extends Creature {
     @Override
     protected void onDelete() {
         stopDecay();
-        if (_spawn != null) {
-            _spawn.stopRespawn();
+        if (spawn != null) {
+            spawn.stopRespawn();
         }
         setSpawn(null);
 
@@ -595,11 +587,11 @@ public class NpcInstance extends Creature {
     }
 
     public Spawner getSpawn() {
-        return _spawn;
+        return spawn;
     }
 
     public void setSpawn(Spawner spawn) {
-        _spawn = spawn;
+        this.spawn = spawn;
     }
 
     @Override
@@ -608,8 +600,8 @@ public class NpcInstance extends Creature {
 
         _spawnAnimation = 2;
 
-        if (_spawn != null) {
-            _spawn.decreaseCount(this);
+        if (spawn != null) {
+            spawn.decreaseCount(this);
         } else {
             deleteMe(); // Если этот моб заспавнен не через стандартный механизм спавна значит посмертие ему не положено и он умирает насовсем
         }
@@ -617,7 +609,6 @@ public class NpcInstance extends Creature {
 
     /**
      * Запустить задачу "исчезновения" после смерти
-     *
      */
     private void startDecay(long delay) {
         stopDecay();
@@ -646,11 +637,11 @@ public class NpcInstance extends Creature {
 
     @Override
     public int getLevel() {
-        return _level == 0 ? getTemplate().level : _level;
+        return level == 0 ? getTemplate().level : level;
     }
 
     public void setLevel(int level) {
-        _level = level;
+        this.level = level;
     }
 
     public int getDisplayId() {
@@ -886,13 +877,11 @@ public class NpcInstance extends Creature {
                 showBusyWindow(player);
             } else if (isHasChatWindow()) {
                 boolean flag = false;
-                Quest[] qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
-                if ((qlst != null) && (qlst.length > 0)) {
-                    for (Quest element : qlst) {
-                        QuestState qs = player.getQuestState(element.getName());
-                        if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
-                            flag = true;
-                        }
+                List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
+                for (Quest element : qlst) {
+                    QuestState qs = player.getQuestState(element.getName());
+                    if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
+                        flag = true;
                     }
                 }
                 if (!flag) {
@@ -934,16 +923,14 @@ public class NpcInstance extends Creature {
                 Quest q = QuestManager.getQuest(questId);
                 if (q != null) {
                     // check for start point
-                    Quest[] qlst = getTemplate().getEventQuests(QuestEventType.QUEST_START);
-                    if ((qlst != null) && (qlst.length > 0)) {
-                        for (Quest element : qlst) {
-                            if (element == q) {
-                                qs = q.newQuestState(player, Quest.CREATED);
-                                if (qs.getQuest().notifyTalk(this, qs)) {
-                                    return;
-                                }
-                                break;
+                    List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.QUEST_START);
+                    for (Quest element : qlst) {
+                        if (element == q) {
+                            qs = q.newQuestState(player, Quest.CREATED);
+                            if (qs.getQuest().notifyTalk(this, qs)) {
+                                return;
                             }
+                            break;
                         }
                     }
                 }
@@ -1043,18 +1030,18 @@ public class NpcInstance extends Creature {
 
                 int b1 = Integer.parseInt(st.nextToken()); // type
 
-                DimensionalRiftManager.getInstance().start(player, b1, this);
+                DimensionalRiftManager.INSTANCE.start(player, b1, this);
             } else if (command.startsWith("ChangeRiftRoom")) {
                 if (player.isInParty() && player.getParty().isInReflection() && (player.getParty().getReflection() instanceof DimensionalRift)) {
                     ((DimensionalRift) player.getParty().getReflection()).manualTeleport(player, this);
                 } else {
-                    DimensionalRiftManager.getInstance().teleportToWaitingRoom(player);
+                    DimensionalRiftManager.INSTANCE.teleportToWaitingRoom(player);
                 }
             } else if (command.startsWith("ExitRift")) {
                 if (player.isInParty() && player.getParty().isInReflection() && (player.getParty().getReflection() instanceof DimensionalRift)) {
                     ((DimensionalRift) player.getParty().getReflection()).manualExitRift(player, this);
                 } else {
-                    DimensionalRiftManager.getInstance().teleportToWaitingRoom(player);
+                    DimensionalRiftManager.INSTANCE.teleportToWaitingRoom(player);
                 }
             } else if (command.equalsIgnoreCase("SkillList")) {
                 showSkillList(player);
@@ -1080,7 +1067,7 @@ public class NpcInstance extends Creature {
                 }
             } else if (command.startsWith("Link")) {
                 showChatWindow(player, command.substring(5));
-            } else if (command.startsWith("Teleport")) {
+            } else if (command.startsWith("teleport")) {
                 int cmdChoice = Integer.parseInt(command.substring(9, 10).trim());
                 TeleportLocation[] list = getTemplate().getTeleportList(cmdChoice);
                 if (list != null) {
@@ -1226,7 +1213,7 @@ public class NpcInstance extends Creature {
         List<Quest> options = new ArrayList<>();
 
         List<QuestState> awaits = player.getQuestsForEvent(this, QuestEventType.QUEST_TALK);
-        Quest[] starts = getTemplate().getEventQuests(QuestEventType.QUEST_START);
+        List<Quest> starts = getTemplate().getEventQuests(QuestEventType.QUEST_START);
 
         if (awaits != null) {
             for (QuestState x : awaits) {
@@ -1238,19 +1225,15 @@ public class NpcInstance extends Creature {
             }
         }
 
-        if (starts != null) {
-            for (Quest x : starts) {
-                if (!options.contains(x)) {
-                    if (x.getQuestIntId() > 0) {
-                        options.add(x);
-                    }
-                }
-            }
-        }
+        starts.stream()
+                .filter(x -> !options.contains(x))
+                .filter(x -> x.getQuestIntId() > 0)
+                .forEach(options::add);
+
 
         // Display a QuestChooseWindow (if several quests are available) or QuestWindow
         if (options.size() > 1) {
-            showQuestChooseWindow(player, options.toArray(new Quest[options.size()]));
+            showQuestChooseWindow(player, options);
         } else if (options.size() == 1) {
             showQuestWindow(player, options.get(0).getName());
         } else {
@@ -1258,7 +1241,7 @@ public class NpcInstance extends Creature {
         }
     }
 
-    private void showQuestChooseWindow(Player player, Quest[] quests) {
+    private void showQuestChooseWindow(Player player, List<Quest> quests) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<html><body><title>Talk about:</title><br>");
@@ -1556,15 +1539,15 @@ public class NpcInstance extends Creature {
 
     public void refreshID() {
         objectId = IdFactory.getInstance().getNextId();
-        storedId = GameObjectsStorage.refreshId(this);
+        storedId = objectId;
     }
 
     public boolean isUnderground() {
-        return _isUnderground;
+        return isUnderground;
     }
 
     public void setUnderground(boolean b) {
-        _isUnderground = b;
+        isUnderground = b;
     }
 
     protected boolean isTargetable() {

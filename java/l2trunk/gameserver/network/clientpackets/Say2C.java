@@ -61,7 +61,7 @@ public final class Say2C extends L2GameClientPacket {
         int ry = MapUtils.regionY(activeChar);
         int offset = Config.SHOUT_OFFSET;
 
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player == activeChar || activeChar.getReflection() != player.getReflection() || player.isBlockAll() || player.isInBlockList(activeChar))
                 continue;
 
@@ -74,12 +74,12 @@ public final class Say2C extends L2GameClientPacket {
     }
 
     private static void announce(Player activeChar, Say2 cs) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-            if (player == activeChar || activeChar.getReflection() != player.getReflection() || player.isBlockAll() || player.isInBlockList(activeChar))
-                continue;
-
-            player.sendPacket(cs);
-        }
+        GameObjectsStorage.getAllPlayers().stream()
+                .filter(player -> player != activeChar)
+                .filter(player -> activeChar.getReflection() == player.getReflection())
+                .filter(player -> !player.isBlockAll())
+                .filter(player -> !player.isInBlockList(activeChar))
+                .forEach(player -> player.sendPacket(cs));
     }
 
     @Override
@@ -225,17 +225,13 @@ public final class Say2C extends L2GameClientPacket {
 
         Log.LogChat(_type.name(), activeChar.getName(), _target, _text);
 
-        Say2 cs;
-        if (activeChar.isInFightClub() && activeChar.getFightClubEvent().isHidePersonality())
-            cs = new Say2(0, _type, "Player", _text);
-        else
-            cs = new Say2(activeChar.getObjectId(), _type, activeChar.getName(), _text);
+        final Say2 cs = new Say2(activeChar.getObjectId(), _type, activeChar.getName(), _text);
 
         switch (_type) {
             case TELL:
                 if ((receiver == null)) {
-                    cs = new Say2(activeChar.getObjectId(), _type, "->" + _target, _text);
-                    activeChar.sendPacket(cs);
+                    Say2 cs1 = new Say2(activeChar.getObjectId(), _type, "->" + _target, _text);
+                    activeChar.sendPacket(cs1);
                     return;
                 }
 
@@ -246,8 +242,8 @@ public final class Say2C extends L2GameClientPacket {
 
                         checkAutoRecall(activeChar, receiver);
 
-                        cs = new Say2(activeChar.getObjectId(), _type, "->" + receiver.getName(), _text);
-                        activeChar.sendPacket(cs);
+                        Say2 cs2 = new Say2(activeChar.getObjectId(), _type, "->" + receiver.getName(), _text);
+                        activeChar.sendPacket(cs2);
                     } else
                         activeChar.sendPacket(SystemMsg.THAT_PERSON_IS_IN_MESSAGE_REFUSAL_MODE);
                 } else
@@ -303,38 +299,39 @@ public final class Say2C extends L2GameClientPacket {
                 activeChar.sendPacket(cs);
                 break;
             case ALL:
-                if (activeChar.isCursedWeaponEquipped())
-                    cs = new Say2(activeChar.getObjectId(), _type, activeChar.getTransformationName(), _text);
+                if (activeChar.isCursedWeaponEquipped()) {
+                    Say2 cs3 = new Say2(activeChar.getObjectId(), _type, activeChar.getTransformationName(), _text);
 
-                List<Player> list = null;
+                    List<Player> list = null;
 
-                if (activeChar.isInObserverMode() && activeChar.getObserverRegion() != null && activeChar.getOlympiadObserveGame() != null) {
-                    OlympiadGame game = activeChar.getOlympiadObserveGame();
-                    list = game.getAllPlayers();
-                } else if (activeChar.isInOlympiadMode()) {
-                    OlympiadGame game = activeChar.getOlympiadGame();
-                    if (game != null)
+                    if (activeChar.isInObserverMode() && activeChar.getObserverRegion() != null && activeChar.getOlympiadObserveGame() != null) {
+                        OlympiadGame game = activeChar.getOlympiadObserveGame();
                         list = game.getAllPlayers();
-                } else if (activeChar.isInFightClub()) {
-                    list = activeChar.getFightClubEvent().getAllFightingPlayers();
-                } else
-                    list = World.getAroundPlayers(activeChar);
+                    } else if (activeChar.isInOlympiadMode()) {
+                        OlympiadGame game = activeChar.getOlympiadGame();
+                        if (game != null)
+                            list = game.getAllPlayers();
+                    } else if (activeChar.isInFightClub()) {
+                        list = activeChar.getFightClubEvent().getAllFightingPlayers();
+                    } else
+                        list = World.getAroundPlayers(activeChar);
 
-                if (list != null) {
-                    final boolean isGmInvis = activeChar.isInvisible() && activeChar.getAccessLevel() > 0;
-                    for (Player player : list) {
-                        if (player == activeChar || player.getReflection() != activeChar.getReflection() || player.isBlockAll() || player.isInBlockList(activeChar))
-                            continue;
+                    if (list != null) {
+                        final boolean isGmInvis = activeChar.isInvisible() && activeChar.getAccessLevel() > 0;
+                        for (Player player : list) {
+                            if (player == activeChar || player.getReflection() != activeChar.getReflection() || player.isBlockAll() || player.isInBlockList(activeChar))
+                                continue;
 
-                        // Ady - If a gm talks in all when he is invisible, only other gms will be able to read him
-                        if (isGmInvis && player.getAccessLevel() < 1)
-                            continue;
+                            // Ady - If a gm talks in all when he is invisible, only other gms will be able to read him
+                            if (isGmInvis && player.getAccessLevel() < 1)
+                                continue;
 
-                        player.sendPacket(cs);
+                            player.sendPacket(cs3);
+                        }
                     }
-                }
 
-                activeChar.sendPacket(cs);
+                    activeChar.sendPacket(cs3);
+                }
                 break;
             case CLAN:
                 if (activeChar.getClan() != null)
@@ -386,9 +383,10 @@ public final class Say2C extends L2GameClientPacket {
                             activeChar.sendMessage("Hero chat is allowed once per 10 seconds.");
                             return;
                         }
-                    for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                        if (!player.isInBlockList(activeChar) && !player.isBlockAll())
-                            player.sendPacket(cs);
+                    GameObjectsStorage.getAllPlayers().stream()
+                            .filter(player -> !player.isInBlockList(activeChar))
+                            .filter(player -> !player.isBlockAll())
+                            .forEach(player -> player.sendPacket(cs));
                 }
                 break;
             case PETITION_PLAYER:
@@ -402,17 +400,17 @@ public final class Say2C extends L2GameClientPacket {
                 break;
             case BATTLEFIELD:
                 if (activeChar.isInFightClub()) {
-                    list = activeChar.getFightClubEvent().getMyTeamFightingPlayers(activeChar);
-                    for (Player player : list)
-                        player.sendPacket(cs);
+                    activeChar.getFightClubEvent().getMyTeamFightingPlayers(activeChar).forEach(player -> player.sendPacket(cs));
                     return;
                 }
                 if (activeChar.getBattlefieldChatId() == 0)
                     return;
 
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    if (!player.isInBlockList(activeChar) && !player.isBlockAll() && player.getBattlefieldChatId() == activeChar.getBattlefieldChatId())
-                        player.sendPacket(cs);
+                GameObjectsStorage.getAllPlayers().stream()
+                        .filter(player -> !player.isInBlockList(activeChar))
+                        .filter(player -> !player.isBlockAll())
+                        .filter(player -> player.getBattlefieldChatId() == activeChar.getBattlefieldChatId())
+                        .forEach(player -> player.sendPacket(cs));
                 break;
             case MPCC_ROOM:
                 MatchingRoom r2 = activeChar.getMatchingRoom();

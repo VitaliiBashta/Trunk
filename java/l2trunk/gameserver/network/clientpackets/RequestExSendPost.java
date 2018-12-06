@@ -35,7 +35,7 @@ import java.util.Map;
  * @see RequestExPostItemList
  * @see RequestExRequestReceivedPostList
  */
-public class RequestExSendPost extends L2GameClientPacket {
+public final class RequestExSendPost extends L2GameClientPacket {
     private int _messageType;
     private String _recieverName, _topic, _body;
     private int _count;
@@ -100,9 +100,9 @@ public class RequestExSendPost extends L2GameClientPacket {
                     map.put(item.getItemId(), _itemQ[i]);
                 }
 
-            for (Player p : GameObjectsStorage.getAllPlayersForIterate())
-                if (p != null && p.isOnline())
-                    Functions.sendSystemMail(p, _topic, _body, map);
+            GameObjectsStorage.getAllPlayers().stream()
+                    .filter(Player::isOnline)
+                    .forEach(p -> Functions.sendSystemMail(p, _topic, _body, map));
 
             activeChar.sendPacket(ExReplyWritePost.STATIC_TRUE);
             activeChar.sendPacket(SystemMsg.MAIL_SUCCESSFULLY_SENT);
@@ -302,8 +302,6 @@ public class RequestExSendPost extends L2GameClientPacket {
             target.sendPacket(SystemMsg.THE_MAIL_HAS_ARRIVED);
         }
 
-        // Ady - Add the new mail sent to the manager
-//        MailManager.INSTANCE().addNewMailSent(activeChar);
 
         ItemLogHandler.getInstance().addLog(activeChar, attachments, this._recieverName, ItemActionType.MAIL);
     }

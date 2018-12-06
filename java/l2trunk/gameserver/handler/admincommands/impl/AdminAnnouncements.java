@@ -20,7 +20,7 @@ import java.util.List;
  * startup announcements - del_announcement id = deletes announcement with
  * respective id
  */
-public class AdminAnnouncements implements IAdminCommandHandler {
+public final class AdminAnnouncements implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(@SuppressWarnings("rawtypes") Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -39,8 +39,7 @@ public class AdminAnnouncements implements IAdminCommandHandler {
                 listAnnouncements(activeChar);
                 break;
             case admin_announce_announcements:
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    Announcements.INSTANCE.showAnnouncements(player);
+                GameObjectsStorage.getAllPlayers().forEach(Announcements.INSTANCE::showAnnouncements);
                 listAnnouncements(activeChar);
                 break;
             case admin_add_announcement:
@@ -89,8 +88,7 @@ public class AdminAnnouncements implements IAdminCommandHandler {
                 String text = activeChar.getName() + ": " + fullString.replaceFirst("admin_toscreen ", "").replaceFirst("admin_s ", "");
                 int time = 3000 + text.length() * 100; // 3 секунды + 100мс на символ
                 ExShowScreenMessage sm = new ExShowScreenMessage(text, time, ScreenMessageAlign.TOP_CENTER, text.length() < 64);
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    player.sendPacket(sm);
+                GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
                 break;
             case admin_reload_announcements:
                 Announcements.INSTANCE.loadAnnouncements();

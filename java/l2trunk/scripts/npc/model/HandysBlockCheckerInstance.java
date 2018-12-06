@@ -72,7 +72,7 @@ public final class HandysBlockCheckerInstance extends NpcInstance {
                     holder.updateEvent();
                     holder.broadCastPacketToTeam(new ExCubeGameRequestReady());
                     holder.broadCastPacketToTeam(new ExCubeGameChangeTimeToStart(10));
-                    ThreadPoolManager.INSTANCE().schedule(holder.getEvent().new StartEvent(), 10100L);
+                    ThreadPoolManager.INSTANCE.schedule(holder.getEvent().new StartEvent(), 10100L);
                 }
             }
         }

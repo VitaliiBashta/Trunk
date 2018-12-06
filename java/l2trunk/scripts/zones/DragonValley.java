@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-public class DragonValley implements ScriptFile, OnPlayerExitListener {
-    private static ZoneListener _zoneListener;
-    private static Zone zone;
+public final class DragonValley implements ScriptFile, OnPlayerExitListener {
     private static final Map<ClassId, Double> weight = new HashMap<>();
     private static final List<Player> inzone = new ArrayList<>();
+    private static ZoneListener _zoneListener;
+    private static Zone zone;
     private static ScheduledFuture<?> buffTask;
     private static boolean _isActive;
 
@@ -67,28 +67,6 @@ public class DragonValley implements ScriptFile, OnPlayerExitListener {
         weight.put(ClassId.femaleSoulhound, 0.3);
     }
 
-    public class ZoneListener implements OnZoneEnterLeaveListener {
-        @Override
-        public void onZoneEnter(Zone zone, Creature cha) {
-            if (cha.isPlayer()) {
-                if (!_isActive)
-                    inzone.add(cha.getPlayer());
-                else
-                    Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{cha.getPlayer()}, 5000);
-            }
-        }
-
-        @Override
-        public void onZoneLeave(Zone zone, Creature cha) {
-            if (cha.isPlayer() && inzone.contains(cha.getPlayer())) {
-                if (!_isActive)
-                    inzone.remove(cha.getPlayer());
-                else
-                    Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{cha.getPlayer()}, 5000);
-            }
-        }
-    }
-
     @Override
     public void onPlayerExit(Player player) {
         if (player == null)
@@ -98,20 +76,6 @@ public class DragonValley implements ScriptFile, OnPlayerExitListener {
                 inzone.remove(player.getPlayer());
             else
                 Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{player}, 5000);
-        }
-    }
-
-    private class BuffTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            _isActive = true;
-            for (Player izp : inzone) {
-                if (izp == null)
-                    continue;
-                if (getBuffLevel(izp) > 0)
-                    izp.altOnMagicUseTimer(izp, SkillTable.INSTANCE().getInfo(6885, getBuffLevel(izp)));
-            }
-            _isActive = false;
         }
     }
 
@@ -174,7 +138,7 @@ public class DragonValley implements ScriptFile, OnPlayerExitListener {
         _zoneListener = new ZoneListener();
         zone = ReflectionUtils.getZone("[dragon_valley]");
         zone.addListener(_zoneListener);
-        buffTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new BuffTask(), 1000L, 60000L);
+        buffTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new BuffTask(), 1000L, 60000L);
         _isActive = false;
     }
 
@@ -187,5 +151,38 @@ public class DragonValley implements ScriptFile, OnPlayerExitListener {
     @Override
     public void onShutdown() {
 
+    }
+
+    public class ZoneListener implements OnZoneEnterLeaveListener {
+        @Override
+        public void onZoneEnter(Zone zone, Creature cha) {
+            if (cha.isPlayer()) {
+                if (!_isActive)
+                    inzone.add(cha.getPlayer());
+                else
+                    Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{cha.getPlayer()}, 5000);
+            }
+        }
+
+        @Override
+        public void onZoneLeave(Zone zone, Creature cha) {
+            if (cha.isPlayer() && inzone.contains(cha.getPlayer())) {
+                if (!_isActive)
+                    inzone.remove(cha.getPlayer());
+                else
+                    Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{cha.getPlayer()}, 5000);
+            }
+        }
+    }
+
+    private class BuffTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            _isActive = true;
+            inzone.stream()
+                    .filter(izp -> getBuffLevel(izp) > 0)
+                    .forEach(izp -> izp.altOnMagicUseTimer(izp, SkillTable.INSTANCE.getInfo(6885, getBuffLevel(izp))));
+            _isActive = false;
+        }
     }
 }

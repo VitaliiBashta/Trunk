@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.List;
 
@@ -49,12 +48,9 @@ public final class KrateisCubeWatcherRed extends DefaultAI {
 
         actor.deleteMe();
         ThreadPoolManager.INSTANCE.schedule(() -> {
-            NpcTemplate template = NpcHolder.getTemplate(18602);
-            if (template != null) {
-                NpcInstance a = template.getNewInstance();
-                a.setCurrentHpMp(a.getMaxHp(), a.getMaxMp());
-                a.spawnMe(actor.getLoc());
-            }
+            NpcInstance a = NpcHolder.getTemplate(18602).getNewInstance();
+            a.setFullHpMp();
+            a.spawnMe(actor.getLoc());
         }, 10000L);
     }
 }

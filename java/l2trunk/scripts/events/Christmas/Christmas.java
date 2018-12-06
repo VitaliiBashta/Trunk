@@ -87,7 +87,7 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         if (SetActive("Christmas", true)) {
             spawnEventManagers();
             System.out.println("Event 'Christmas' started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.Christmas.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.Christmas.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'Christmas' already started.");
 
@@ -103,7 +103,7 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         if (SetActive("Christmas", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'Christmas' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.Christmas.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.Christmas.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'Christmas' not started.");
 
@@ -241,6 +241,6 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.Christmas.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.Christmas.AnnounceEventStarted");
     }
 }

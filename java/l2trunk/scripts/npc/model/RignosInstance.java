@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -11,19 +10,11 @@ import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.concurrent.Future;
 
-public class RignosInstance extends NpcInstance {
+public final class RignosInstance extends NpcInstance {
 
-    private class EndRaceTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            _raceTask = null;
-        }
-    }
-
-    private final Skill SKILL_EVENT_TIMER = SkillTable.INSTANCE().getInfo(5239, 5);
     private static final int RACE_STAMP = 10013;
     private static final int SECRET_KEY = 9694;
-
+    private final Skill SKILL_EVENT_TIMER = SkillTable.INSTANCE.getInfo(5239, 5);
     private Future<?> _raceTask;
 
     public RignosInstance(int objectId, NpcTemplate template) {
@@ -41,7 +32,7 @@ public class RignosInstance extends NpcInstance {
 
             altUseSkill(SKILL_EVENT_TIMER, player);
             ItemFunctions.removeItem(player, RACE_STAMP, ItemFunctions.getItemCount(player, RACE_STAMP), true, "RignosInstance");
-            _raceTask = ThreadPoolManager.INSTANCE().schedule(new EndRaceTask(), 30 * 60 * 1000L);
+            _raceTask = ThreadPoolManager.INSTANCE.schedule(() -> _raceTask = null, 30 * 60 * 1000L);
         } else if (command.equalsIgnoreCase("endRace")) {
             if (_raceTask == null)
                 return;

@@ -30,7 +30,7 @@ public final class DelustionGatekeeperInstance extends NpcInstance {
         if (command.startsWith("enterDC")) {
             int izId = Integer.parseInt(command.substring(8));
             int type = izId - 120;
-            Map<Integer, DimensionalRiftRoom> rooms = DimensionalRiftManager.getInstance().getRooms(type);
+            Map<Integer, DimensionalRiftRoom> rooms = DimensionalRiftManager.INSTANCE.getRooms(type);
             if (rooms == null) {
                 player.sendPacket(Msg.SYSTEM_ERROR);
                 return;

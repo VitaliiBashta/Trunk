@@ -66,7 +66,7 @@ public class AdminClientSupport implements IAdminCommandHandler {
                         for (int i = 0; i < count; i++) {
                             NpcInstance npc = template.getNewInstance();
                             npc.setSpawnedLoc(target.getLoc());
-                            npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+                            npc.setFullHpMp();
 
                             npc.spawnMe(npc.getSpawnedLoc());
                         }

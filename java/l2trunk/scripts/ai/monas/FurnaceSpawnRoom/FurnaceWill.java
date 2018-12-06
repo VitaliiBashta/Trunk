@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.monas.FurnaceSpawnRoom;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
@@ -21,7 +20,7 @@ import l2trunk.gameserver.scripts.Functions;
  *  * 		   - Event starts and the room with the monsters spawn soldiers.
  *  * 		   - AI is tested and works.
  */
-public class FurnaceWill extends DefaultAI {
+public final class FurnaceWill extends DefaultAI {
     private boolean _firstTimeAttacked = true;
 
     public FurnaceWill(NpcInstance actor) {
@@ -45,20 +44,11 @@ public class FurnaceWill extends DefaultAI {
             actor.setNpcState((byte) 1);
             Functions.npcShout(actor, NpcString.FURN1);
             furnace.registerActions();
-            ThreadPoolManager.INSTANCE().schedule(new ScheduleTimerTask(), 15000);
+            ThreadPoolManager.INSTANCE.schedule(() -> EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, getActor().getAISpawnParam())
+                    .spawnAction(MonasteryFurnaceEvent.FIGHTER_ROOM, true), 15000);
         }
 
         super.onEvtAttacked(attacker, damage);
-    }
-
-    private class ScheduleTimerTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            int event_id = actor.getAISpawnParam();
-            MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
-            furnace.spawnAction(MonasteryFurnaceEvent.FIGHTER_ROOM, true);
-        }
     }
 
     @Override
@@ -66,4 +56,5 @@ public class FurnaceWill extends DefaultAI {
         _firstTimeAttacked = true;
         super.onEvtDead(killer);
     }
+
 }

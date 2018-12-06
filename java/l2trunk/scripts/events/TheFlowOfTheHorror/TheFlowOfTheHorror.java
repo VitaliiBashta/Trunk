@@ -148,7 +148,7 @@ public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
     private static void spawn(int id, List<Location> points) {
         NpcTemplate template = NpcHolder.getTemplate(id);
         MonsterInstance monster = new MonsterInstance(IdFactory.getInstance().getNextId(), template);
-        monster.setCurrentHpMp(monster.getMaxHp(), monster.getMaxMp(), true);
+        monster.setFullHpMp();
         monster.setXYZ(points.get(0).x, points.get(0).y, points.get(0).z);
         MonstersAI ai = new MonstersAI(monster);
         ai.setPoints(points);
@@ -165,7 +165,7 @@ public final class TheFlowOfTheHorror extends Functions implements ScriptFile {
 
             NpcTemplate template = NpcHolder.getTemplate(Gilmore);
             MonsterInstance monster = new MonsterInstance(IdFactory.getInstance().getNextId(), template);
-            monster.setCurrentHpMp(monster.getMaxHp(), monster.getMaxMp(), true);
+            monster.setFullHpMp();
             monster.setXYZ(73329, 117705, -3741);
             GilmoreAI ai = new GilmoreAI(monster);
             monster.setAI(ai);

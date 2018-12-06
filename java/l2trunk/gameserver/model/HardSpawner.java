@@ -22,7 +22,7 @@ public class HardSpawner extends Spawner {
 
     public HardSpawner(SpawnTemplate template) {
         _template = template;
-        _spawned = new CopyOnWriteArrayList<>();
+        spawned = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class HardSpawner extends Spawner {
         oldNpc.setSpawn(null); // [VISTALL] нужно убирать спавн что бы не вызвать зацикливания, и остановки спавна
         oldNpc.deleteMe();
 
-        _spawned.remove(oldNpc);
+        spawned.remove(oldNpc);
 
         SpawnNpcInfo npcInfo = getNextNpcInfo();
 
@@ -94,7 +94,7 @@ public class HardSpawner extends Spawner {
         SpawnNpcInfo npcInfo = _template.getNpcId(old);
         if (npcInfo.getMax() > 0) {
             int count = 0;
-            for (NpcInstance npc : _spawned)
+            for (NpcInstance npc : spawned)
                 if (npc.getNpcId() == npcInfo.getTemplate().getNpcId())
                     count++;
 
@@ -114,8 +114,8 @@ public class HardSpawner extends Spawner {
     @Override
     public HardSpawner clone() {
         HardSpawner spawnDat = new HardSpawner(_template);
-        spawnDat.setAmount(_maximumCount);
-        spawnDat.setRespawnDelay(_respawnDelay, _respawnDelayRandom);
+        spawnDat.setAmount(maximumCount);
+        spawnDat.setRespawnDelay(respawnDelay, _respawnDelayRandom);
         spawnDat.setRespawnTime(0);
         return spawnDat;
     }

@@ -17,7 +17,7 @@ public abstract class AbstractAI extends RunnableImpl {
     protected final Creature actor;
     private HardReference<? extends Creature> _attackTarget = HardReferences.emptyRef();
 
-    private CtrlIntention _intention = CtrlIntention.AI_INTENTION_IDLE;
+    private CtrlIntention intention = CtrlIntention.AI_INTENTION_IDLE;
 
     AbstractAI(Creature actor) {
         this.actor = actor;
@@ -28,7 +28,7 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     public void changeIntention(CtrlIntention intention, Object arg0, Object arg1) {
-        _intention = intention;
+        this.intention = intention;
         if (intention != CtrlIntention.AI_INTENTION_CAST && intention != CtrlIntention.AI_INTENTION_ATTACK)
             setAttackTarget(null);
     }
@@ -44,7 +44,7 @@ public abstract class AbstractAI extends RunnableImpl {
         Creature actor = getActor();
 
         if (!actor.isVisible()) {
-            if (_intention == CtrlIntention.AI_INTENTION_IDLE)
+            if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
                 return;
 
             intention = CtrlIntention.AI_INTENTION_IDLE;
@@ -99,7 +99,6 @@ public abstract class AbstractAI extends RunnableImpl {
         notifyEvent(evt, new Object[]{arg0, arg1, arg2});
     }
 
-    @SuppressWarnings("incomplete-switch")
     public void notifyEvent(CtrlEvent evt, Object[] args) {
         Creature actor = getActor();
         if (actor == null || !actor.isVisible())
@@ -188,7 +187,7 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     public CtrlIntention getIntention() {
-        return _intention;
+        return intention;
     }
 
     public final void setIntention(CtrlIntention intention) {
@@ -200,7 +199,7 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     public void setAttackTarget(Creature target) {
-        _attackTarget = target == null ? HardReferences.<Creature>emptyRef() : target.getRef();
+        _attackTarget = target == null ? HardReferences.emptyRef() : target.getRef();
     }
 
     /**

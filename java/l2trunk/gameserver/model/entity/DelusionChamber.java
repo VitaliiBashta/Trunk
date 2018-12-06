@@ -53,7 +53,7 @@ public final class DelusionChamber extends DimensionalRift {
             return;
 
         if (!player.getParty().isLeader(player)) {
-            DimensionalRiftManager.getInstance().showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
+            DimensionalRiftManager.INSTANCE.showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
             return;
         }
 

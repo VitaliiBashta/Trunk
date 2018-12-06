@@ -2,7 +2,6 @@ package l2trunk.scripts.npc.model;
 
 import l2trunk.commons.geometry.Rectangle;
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.instancemanager.naia.NaiaTowerManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
@@ -16,7 +15,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NaiaRoomControllerInstance extends NpcInstance {
+public final class NaiaRoomControllerInstance extends NpcInstance {
     private static final Territory _room1territory = new Territory().add(new Rectangle(-46652, 245576, -45735, 246648).setZmin(-9175).setZmax(-9075));
     private static final Territory _room3territory = new Territory().add(new Rectangle(-52088, 245667, -51159, 246609).setZmin(-10037).setZmax(-9837));
     private static final Territory _room5territory = new Territory().add(new Rectangle(-46652, 245596, -45737, 246626).setZmin(-10032).setZmax(-9832));
@@ -27,9 +26,6 @@ public class NaiaRoomControllerInstance extends NpcInstance {
     private static final Territory _room10territory = new Territory().add(new Rectangle(-49252, 247894, -48587, 248519).setZmin(-11757).setZmax(-11757));
     private static final Territory _room11territory = new Territory().add(new Rectangle(-52080, 245665, -51174, 246660).setZmin(-12619).setZmax(-12419));
     private static final Territory _room12territory = new Territory().add(new Rectangle(-48732, 243186, -47752, 244097).setZmin(-13423).setZmax(-13223));
-
-    private static List<NpcInstance> _roomMobList;
-
     private static final Location[] _room2locs = {
             new Location(-48146, 249597, -9124, -16280),
             new Location(-48144, 248711, -9124, 16368),
@@ -39,7 +35,6 @@ public class NaiaRoomControllerInstance extends NpcInstance {
             new Location(-49714, 248696, -9104, 15932),
             new Location(-49225, 248710, -9104, 16512),
             new Location(-48705, 248708, -9104, 16576),};
-
     private static final Location[] _room4locs = {
             new Location(-49754, 243866, -9968, -16328),
             new Location(-49754, 242940, -9968, 16336),
@@ -49,6 +44,7 @@ public class NaiaRoomControllerInstance extends NpcInstance {
             new Location(-49268, 243869, -9968, -16448),
             new Location(-48186, 242934, -9968, 16576),
             new Location(-48185, 243855, -9968, -16448),};
+    private static List<NpcInstance> _roomMobList;
 
     public NaiaRoomControllerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -240,28 +236,21 @@ public class NaiaRoomControllerInstance extends NpcInstance {
 
     private void spawnToRoom(int mobId, int count, Territory territory, int roomId) {
         for (int i = 0; i < count; i++) {
-            try {
-                SimpleSpawner sp = new SimpleSpawner(mobId);
-                sp.setLoc(Territory.getRandomLoc(territory).setH(Rnd.get(65535)));
-                sp.doSpawn(true);
-                sp.stopRespawn();
-                _roomMobList.add(sp.getLastSpawn());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(mobId)
+            .setLoc(Territory.getRandomLoc(territory).setH(Rnd.get(65535)))
+            .stopRespawn();
+            sp.doSpawn(true);
+            _roomMobList.add(sp.getLastSpawn());
+
         }
     }
 
     private void spawnExactToRoom(int mobId, Location loc, int roomId) {
-        try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(mobId));
-            sp.setLoc(loc);
-            sp.doSpawn(true);
-            sp.stopRespawn();
-            _roomMobList.add(sp.getLastSpawn());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(mobId)
+                .setLoc(loc)
+                .stopRespawn();
+        sp.doSpawn(true);
+        _roomMobList.add(sp.getLastSpawn());
     }
 
     @Override

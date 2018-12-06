@@ -440,7 +440,7 @@ public class World {
         return result;
     }
 
-    public static List<Playable> getAroundPlayables(GameObject object) {
+    static List<Playable> getAroundPlayables(GameObject object) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
             return Collections.emptyList();

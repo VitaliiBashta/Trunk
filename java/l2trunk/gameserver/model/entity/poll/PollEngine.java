@@ -11,17 +11,17 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public enum  PollEngine {
+public enum PollEngine {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(PollEngine.class);
 
@@ -101,7 +101,7 @@ public enum  PollEngine {
             _endPollThread.cancel(false);
             _endPollThread = null;
         }
-        _endPollThread = ThreadPoolManager.INSTANCE().schedule(() -> {
+        _endPollThread = ThreadPoolManager.INSTANCE.schedule(() -> {
             if (getPoll() != null) {
                 stopPoll(true);
             }
@@ -109,14 +109,12 @@ public enum  PollEngine {
     }
 
     private void startAnnounceThread() {
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(() -> {
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> {
             if (getActivePoll() != null) {
                 Say2 say = new Say2(0, ChatType.ANNOUNCEMENT, "", "You didn't vote on the poll yet! Write .poll to vote!");
-                for (Player onlinePlayer : GameObjectsStorage.getAllPlayersForIterate()) {
-                    if (!onlinePlayer.isOnline())
-                        continue;
-                    onlinePlayer.sendPacket(say);
-                }
+                GameObjectsStorage.getAllPlayers().stream()
+                        .filter(Player::isOnline)
+                        .forEach(p -> p.sendPacket(say));
             }
         }, Config.ANNOUNCE_POLL_EVERY_X_MIN * 60000, Config.ANNOUNCE_POLL_EVERY_X_MIN * 60000);
 
@@ -142,11 +140,10 @@ public enum  PollEngine {
         List<PollAnswer> answers = new ArrayList<>();
         long endTime = 0;
 
-        ResultSet rset = null;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             try (PreparedStatement statement = con.prepareStatement("SELECT * FROM poll")) {
                 statement.execute();
-                rset = statement.getResultSet();
+                ResultSet rset = statement.getResultSet();
 
                 while (rset.next()) {
 
@@ -200,18 +197,15 @@ public enum  PollEngine {
     }
 
     private void deleteAllPlayerVotes() {
-        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            //updating data
-            try (PreparedStatement statement = con.prepareStatement("UPDATE hwid SET poll_answer=-1")) {
-                statement.execute();
-            }
-        } catch (Exception e) {
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE hwid SET poll_answer=-1")) {
+            statement.execute();
+        } catch (SQLException e) {
             _log.error("could not deleteAllPlayerVotes:", e);
         }
     }
 
-    private static class AnswersComparator implements Comparator<PollAnswer>, Serializable {
-        private static final long serialVersionUID = 3963758588280527442L;
+    private static class AnswersComparator implements Comparator<PollAnswer> {
 
         @Override
         public int compare(PollAnswer o1, PollAnswer o2) {

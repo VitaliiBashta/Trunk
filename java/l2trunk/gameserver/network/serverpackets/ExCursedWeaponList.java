@@ -2,6 +2,8 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public final class ExCursedWeaponList extends L2GameServerPacket {
@@ -14,7 +16,7 @@ public final class ExCursedWeaponList extends L2GameServerPacket {
     @Override
     protected final void writeImpl() {
         writeEx(0x46);
-        int[] ids = cursedWeapon_ids.stream().mapToInt(i -> i).toArray();
-        writeDD(ids, true);
+        List<Integer> ids = new ArrayList<>(cursedWeapon_ids);
+        writeDD(ids);
     }
 }

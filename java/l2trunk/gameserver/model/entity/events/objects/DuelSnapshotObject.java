@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.events.objects;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Effect;
@@ -13,7 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DuelSnapshotObject implements Serializable {
+public final class DuelSnapshotObject implements Serializable {
     private final TeamType _team;
     private final Player _player;
     private final List<Effect> _effects;
@@ -35,10 +34,10 @@ public class DuelSnapshotObject implements Serializable {
 
         List<Effect> effectList = player.getEffectList().getAllEffects();
         _effects = new ArrayList<>(effectList.size());
-        for (Effect $effect : effectList) {
-            Effect effect = $effect.getTemplate().getEffect(new Env($effect.getEffector(), $effect.getEffected(), $effect.getSkill()));
-            effect.setCount($effect.getCount());
-            effect.setPeriod($effect.getCount() == 1 ? $effect.getPeriod() - $effect.getTime() : $effect.getPeriod());
+        for (Effect eff : effectList) {
+            Effect effect = eff.getTemplate().getEffect(new Env(eff.getEffector(), eff.getEffected(), eff.getSkill()));
+            effect.setCount(eff.getCount());
+            effect.setPeriod(eff.getCount() == 1 ? eff.getPeriod() - eff.getTime() : eff.getPeriod());
 
             _effects.add(effect);
         }
@@ -63,12 +62,7 @@ public class DuelSnapshotObject implements Serializable {
         if (_player.isFrozen())
             _player.stopFrozen();
 
-        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                _player.teleToLocation(_returnLoc, ReflectionManager.DEFAULT);
-            }
-        }, 5000L);
+        ThreadPoolManager.INSTANCE.schedule(() -> _player.teleToLocation(_returnLoc, ReflectionManager.DEFAULT), 5000L);
     }
 
     public Player getPlayer() {

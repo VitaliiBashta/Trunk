@@ -22,7 +22,7 @@ public class ScriptAnswerListener implements OnAnswerListener {
         if (player == null)
             return;
 
-        Scripts.getInstance().callScripts(player, _scriptName.split(":")[0], _scriptName.split(":")[1], _arg);
+        Scripts.INSTANCE.callScripts(player, _scriptName.split(":")[0], _scriptName.split(":")[1], _arg);
     }
 
     @Override

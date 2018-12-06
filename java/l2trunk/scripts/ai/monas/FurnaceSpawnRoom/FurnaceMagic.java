@@ -35,7 +35,7 @@ public final class FurnaceMagic extends DefaultAI {
             actor.setNpcState((byte) 1);
             Functions.npcShout(actor, NpcString.FURN1);
             furnace.registerActions();
-            ThreadPoolManager.INSTANCE().schedule(new ScheduleTimerTask(), 15000);
+            ThreadPoolManager.INSTANCE.schedule(new ScheduleTimerTask(), 15000);
         }
 
         super.onEvtAttacked(attacker, damage);

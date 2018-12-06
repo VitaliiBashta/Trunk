@@ -16,17 +16,12 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-/*
- * Author DRiN, Last Updated: 2008/04/13
- */
-public class _421_LittleWingAdventures extends Quest implements ScriptFile {
+public final class _421_LittleWingAdventures extends Quest implements ScriptFile {
     // NPCs
     private static final int Cronos = 30610;
     private static final int Mimyu = 30747;
@@ -99,9 +94,7 @@ public class _421_LittleWingAdventures extends Quest implements ScriptFile {
         ItemInstance dragonflute = GetDragonflute(st);
         if (dragonflute == null)
             return false;
-        if (PetDataTable.getControlItemId(_pet.getNpcId()) != dragonflute.getItemId())
-            return false;
-        return true;
+        return PetDataTable.getControlItemId(_pet.getNpcId()) == dragonflute.getItemId();
     }
 
     private static boolean CheckTree(QuestState st, int Fairy_Tree_id) {
@@ -261,7 +254,7 @@ public class _421_LittleWingAdventures extends Quest implements ScriptFile {
 
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
-        ThreadPoolManager.INSTANCE().schedule(new GuardiansSpawner(npc, st, Rnd.get(15, 20)), 1000);
+        ThreadPoolManager.INSTANCE.schedule(new GuardiansSpawner(npc, st, Rnd.get(15, 20)), 1000);
         return null;
     }
 
@@ -278,26 +271,18 @@ public class _421_LittleWingAdventures extends Quest implements ScriptFile {
     }
 
     public class GuardiansSpawner extends RunnableImpl {
-        private SimpleSpawner _spawn = null;
+        private SimpleSpawner _spawn;
         private String agressor;
         private String agressors_pet = null;
         private List<String> agressors_party = null;
         private int tiks = 0;
 
         GuardiansSpawner(NpcInstance npc, QuestState st, int _count) {
-            NpcTemplate template = NpcHolder.getTemplate(Soul_of_Tree_Guardian);
-            if (template == null)
-                return;
-            try {
-                _spawn = new SimpleSpawner(template);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            _spawn = new SimpleSpawner(Soul_of_Tree_Guardian);
             for (int i = 0; i < _count; i++) {
-                _spawn.setLoc(Location.findPointToStay(npc, 50, 200));
-                _spawn.setHeading(Rnd.get(0, 0xFFFF));
-                _spawn.setAmount(1);
-                _spawn.doSpawn(true);
+                _spawn.setLoc(Location.findPointToStay(npc, 50, 200))
+                        .setAmount(1)
+                        .doSpawn(true);
 
                 agressor = st.getPlayer().getName();
                 if (st.getPlayer().getPet() != null)
@@ -340,7 +325,7 @@ public class _421_LittleWingAdventures extends Quest implements ScriptFile {
             tiks++;
             if (tiks < 600) {
                 updateAgression();
-                ThreadPoolManager.INSTANCE().schedule(this, 1000);
+                ThreadPoolManager.INSTANCE.schedule(this, 1000);
                 return;
             }
             _spawn.deleteAll();

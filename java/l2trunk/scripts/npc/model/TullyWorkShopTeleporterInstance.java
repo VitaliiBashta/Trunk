@@ -30,25 +30,25 @@ public class TullyWorkShopTeleporterInstance extends NpcInstance {
         }
 
         if (command.equalsIgnoreCase("01_up")) {
-            player.getParty().Teleport(new Location(-12700, 273340, -13600));
+            player.getParty().teleport(new Location(-12700, 273340, -13600));
             return;
         } else if (command.equalsIgnoreCase("02_up")) {
-            player.getParty().Teleport(new Location(-13246, 275740, -11936));
+            player.getParty().teleport(new Location(-13246, 275740, -11936));
             return;
         } else if (command.equalsIgnoreCase("02_down")) {
-            player.getParty().Teleport(new Location(-12894, 273900, -15296));
+            player.getParty().teleport(new Location(-12894, 273900, -15296));
             return;
         } else if (command.equalsIgnoreCase("03_up")) {
-            player.getParty().Teleport(new Location(-12798, 273458, -10496));
+            player.getParty().teleport(new Location(-12798, 273458, -10496));
             return;
         } else if (command.equalsIgnoreCase("03_down")) {
-            player.getParty().Teleport(new Location(-12718, 273490, -13600));
+            player.getParty().teleport(new Location(-12718, 273490, -13600));
             return;
         } else if (command.equalsIgnoreCase("04_up")) {
-            player.getParty().Teleport(new Location(-13500, 275912, -9032));
+            player.getParty().teleport(new Location(-13500, 275912, -9032));
             return;
         } else if (command.equalsIgnoreCase("04_down")) {
-            player.getParty().Teleport(new Location(-13246, 275740, -11936));
+            player.getParty().teleport(new Location(-13246, 275740, -11936));
             return;
         } else
             super.onBypassFeedback(player, command);

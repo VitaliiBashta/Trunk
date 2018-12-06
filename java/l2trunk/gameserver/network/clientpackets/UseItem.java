@@ -15,16 +15,15 @@ import l2trunk.gameserver.tables.PetDataTable;
 
 import java.util.List;
 
-public class UseItem extends L2GameClientPacket {
+public final class UseItem extends L2GameClientPacket {
     private int _objectId;
     private boolean _ctrlPressed;
-    private long _timeSent;
 
     @Override
     protected void readImpl() {
         _objectId = readD();
         _ctrlPressed = readD() == 1;
-        _timeSent = System.currentTimeMillis();
+        System.currentTimeMillis();
     }
 
     @Override
@@ -38,7 +37,7 @@ public class UseItem extends L2GameClientPacket {
         ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
         if (item == null)    // Support for GMs deleting items from alt+g inventory.
         {
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) // There is no way to get item by objectId!!! Or im very stupid to not know such.
+            for (Player player : GameObjectsStorage.getAllPlayers()) // There is no way to get item by objectId!!! Or im very stupid to not know such.
             {
                 if ((item = player.getInventory().getItemByObjectId(_objectId)) != null)
                     break;
@@ -83,7 +82,7 @@ public class UseItem extends L2GameClientPacket {
         }
 
         if (activeChar.isInAwayingMode()) {
-            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", activeChar, new Object[0]));
+            activeChar.sendMessage(new CustomMessage("Away.ActionFailed", activeChar));
             return;
         }
 

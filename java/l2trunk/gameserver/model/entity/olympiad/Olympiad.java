@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
-public class Olympiad {
+public final class Olympiad {
     public static final String OLYMPIAD_HTML_PATH = "olympiad/";
     public static final String CHAR_ID = "char_id";
     public static final String CLASS_ID = "class_id";
@@ -96,8 +96,8 @@ public class Olympiad {
 
         initStadiums();
 
-        OlympiadHistoryManager.getInstance();
-        OlympiadNobleDAO.getInstance().select();
+        OlympiadHistoryManager.INSTANCE.init();
+        OlympiadNobleDAO.select();
         OlympiadDatabase.loadNoblesRank();
 
         switch (_period) {
@@ -130,8 +130,8 @@ public class Olympiad {
         else
             milliToEnd = getMillisToValidationEnd();
 
-        double numSecs = milliToEnd / 1000 % 60;
-        double countDown = (milliToEnd / 1000 - numSecs) / 60;
+        double numSecs = milliToEnd / 1000. % 60;
+        double countDown = (milliToEnd / 1000. - numSecs) / 60;
         int numMins = (int) Math.floor(countDown % 60);
         countDown = (countDown - numMins) / 60;
         int numHours = (int) Math.floor(countDown % 24);
@@ -144,8 +144,8 @@ public class Olympiad {
 
             milliToEnd = getMillisToWeekChange();
 
-            double numSecs2 = milliToEnd / 1000 % 60;
-            double countDown2 = (milliToEnd / 1000 - numSecs2) / 60;
+            double numSecs2 = milliToEnd / 1000. % 60;
+            double countDown2 = (milliToEnd / 1000. - numSecs2) / 60;
             int numMins2 = (int) Math.floor(countDown2 % 60);
             countDown2 = (countDown2 - numMins2) / 60;
             int numHours2 = (int) Math.floor(countDown2 % 24);
@@ -184,13 +184,13 @@ public class Olympiad {
 
         if (_scheduledOlympiadEnd != null)
             _scheduledOlympiadEnd.cancel(false);
-        _scheduledOlympiadEnd = ThreadPoolManager.INSTANCE().schedule(new OlympiadEndTask(), getMillisToOlympiadEnd());
+        _scheduledOlympiadEnd = ThreadPoolManager.INSTANCE.schedule(new OlympiadEndTask(), getMillisToOlympiadEnd());
 
         updateCompStatus();
 
         if (_scheduledWeeklyTask != null)
             _scheduledWeeklyTask.cancel(false);
-        _scheduledWeeklyTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
+        _scheduledWeeklyTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
     }
 
     public static synchronized boolean registerNoble(Player noble, CompType type) {
@@ -406,7 +406,7 @@ public class Olympiad {
         _log.info("Olympiad System: Competition Period Starts in " + numDays + " days, " + numHours + " hours and " + numMins + " mins.");
         _log.info("Olympiad System: Event starts/started: " + _compStart.getTime());
 
-        ThreadPoolManager.INSTANCE().schedule(new CompStartTask(), getMillisToCompBegin());
+        ThreadPoolManager.INSTANCE.schedule(new CompStartTask(), getMillisToCompBegin());
     }
 
     private static long getMillisToOlympiadEnd() {

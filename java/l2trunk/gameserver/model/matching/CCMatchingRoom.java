@@ -94,14 +94,11 @@ public class CCMatchingRoom extends MatchingRoom {
             return MatchingRoom.WAIT_NORMAL;
         else if (member.getParty() == party || commandChannel.getParties().contains(member.getParty()))
             return MatchingRoom.UNION_PARTY;
-        else if (member.getParty() != null)
-            return MatchingRoom.WAIT_PARTY;
-        else
-            return MatchingRoom.WAIT_NORMAL;
+        else return MatchingRoom.WAIT_PARTY;
     }
 
     @Override
-    public void setReflection(Reflection reflection) {
-        // Does it have to do something?
+    public CCMatchingRoom setReflection(Reflection reflection) {
+        return this;
     }
 }

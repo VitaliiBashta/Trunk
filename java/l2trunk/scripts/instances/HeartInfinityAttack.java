@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class HeartInfinityAttack extends Reflection {
+public final class HeartInfinityAttack extends Reflection {
     private static final int AliveTumor = 18708;
     private static final int DeadTumor = 32535;
     private static final int Ekimus = 29150;
@@ -103,7 +103,7 @@ public class HeartInfinityAttack extends Reflection {
         }
         invokeDeathListener();
         startTime = System.currentTimeMillis();
-        timerTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
+        timerTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new TimerTask(), 298 * 1000L, 5 * 60 * 1000L);
     }
 
     private void invokeDeathListener() {
@@ -269,9 +269,9 @@ public class HeartInfinityAttack extends Reflection {
                 self.deleteMe();
                 notifyTumorDeath();
                 //Schedule tumor revival
-                ThreadPoolManager.INSTANCE().schedule(new TumorRevival(deadTumor), tumorRespawnTime);
+                ThreadPoolManager.INSTANCE.schedule(new TumorRevival(deadTumor), tumorRespawnTime);
                 // Schedule regeneration coffins spawn
-                ThreadPoolManager.INSTANCE().schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
+                ThreadPoolManager.INSTANCE.schedule(new RegenerationCoffinSpawn(deadTumor), 20000L);
             } else if (self.getNpcId() == Ekimus) {
                 conquestConclusion(true);
                 SoIManager.notifyEkimusKill();
@@ -323,8 +323,8 @@ public class HeartInfinityAttack extends Reflection {
             else {
                 if (time == 20)
                     spawnByGroup("soi_hoi_attack_bosses");
-                for (Player p : getPlayers())
-                    p.sendPacket(new ExShowScreenMessage(NpcString.S1_MINUTES_ARE_REMAINING, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, String.valueOf((startTime + 25 * 60 * 1000L - System.currentTimeMillis()) / 60000)));
+                ExShowScreenMessage msg = new ExShowScreenMessage(NpcString.S1_MINUTES_ARE_REMAINING, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, String.valueOf((startTime + 25 * 60 * 1000L - System.currentTimeMillis()) / 60000));
+                getPlayers().forEach(p -> p.sendPacket(msg));
             }
         }
     }

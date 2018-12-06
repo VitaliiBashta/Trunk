@@ -9,24 +9,21 @@ import java.util.List;
 
 
 public final class PrivateStoreListBuy extends L2GameServerPacket {
-    private final int _buyerId;
-    private final long _adena;
-    private final List<TradeItem> _sellList;
+    private final int buyerId;
+    private final long adena;
+    private final List<TradeItem> sellList;
 
     public PrivateStoreListBuy(Player seller, Player buyer) {
-        _adena = seller.getAdena();
-        _buyerId = buyer.getObjectId();
-        _sellList = new ArrayList<>();
+        adena = seller.getAdena();
+        buyerId = buyer.getObjectId();
+        sellList = new ArrayList<>();
 
-        List<TradeItem> buyList = buyer.getBuyList();
-        List<ItemInstance> items = seller.getInventory().getItems();
-
-        for (TradeItem bi : buyList) {
+        for (TradeItem bi : buyer.getBuyList()) {
             TradeItem si = null;
-            for (ItemInstance item : items)
+            for (ItemInstance item : seller.getInventory().getItems())
                 if (item.getItemId() == bi.getItemId() && item.canBeTraded(seller)) {
                     si = new TradeItem(item);
-                    _sellList.add(si);
+                    sellList.add(si);
                     si.setOwnersPrice(bi.getOwnersPrice());
                     si.setCount(bi.getCount());
                     si.setCurrentValue(Math.min(bi.getCount(), item.getCount()));
@@ -37,7 +34,7 @@ public final class PrivateStoreListBuy extends L2GameServerPacket {
                 si.setOwnersPrice(bi.getOwnersPrice());
                 si.setCount(bi.getCount());
                 si.setCurrentValue(0);
-                _sellList.add(si);
+                sellList.add(si);
             }
         }
     }
@@ -46,15 +43,15 @@ public final class PrivateStoreListBuy extends L2GameServerPacket {
     protected final void writeImpl() {
         writeC(0xBE);
 
-        writeD(_buyerId);
-        writeQ(_adena);
-        writeD(_sellList.size());
-        for (TradeItem si : _sellList) {
+        writeD(buyerId);
+        writeQ(adena);
+        writeD(sellList.size());
+        sellList.forEach(si -> {
             writeItemInfo(si, si.getCurrentValue());
             writeD(si.getObjectId());
             writeQ(si.getOwnersPrice());
             writeQ(si.getStorePrice());
             writeQ(si.getCount()); // maximum possible tradecount
-        }
+        });
     }
 }

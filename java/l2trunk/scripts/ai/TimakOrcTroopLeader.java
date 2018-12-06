@@ -20,7 +20,7 @@ public final class TimakOrcTroopLeader extends Fighter {
             20770 // Timak Orc Troop Archer
     };
 
-    private boolean _firstTimeAttacked = true;
+    private boolean firstTimeAttacked = true;
 
     private TimakOrcTroopLeader(NpcInstance actor) {
         super(actor);
@@ -29,19 +29,17 @@ public final class TimakOrcTroopLeader extends Fighter {
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
-        if (!actor.isDead() && _firstTimeAttacked) {
-            _firstTimeAttacked = false;
+        if (!actor.isDead() && firstTimeAttacked) {
+            firstTimeAttacked = false;
             Functions.npcSay(actor, NpcString.SHOW_YOURSELVES);
             for (int bro : BROTHERS)
-                try {
+                {
                     NpcInstance npc = NpcHolder.getTemplate(bro).getNewInstance();
                     npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
                     npc.setReflection(actor.getReflection());
-                    npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+                    npc.setFullHpMp();
                     npc.spawnMe(npc.getSpawnedLoc());
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
-                } catch (RuntimeException e) {
-                    LOG.error("Error while spawning brothers of Timak Orc Troop Leader", e);
                 }
         }
         super.onEvtAttacked(attacker, damage);
@@ -49,7 +47,7 @@ public final class TimakOrcTroopLeader extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        _firstTimeAttacked = true;
+        firstTimeAttacked = true;
         super.onEvtDead(killer);
     }
 }

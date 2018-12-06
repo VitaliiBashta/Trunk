@@ -25,50 +25,8 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
     private static final int SPIRITSHOT_NOVICE = 5790;
     private static final int BLUE_GEM = 6353;
     private static final int DIPLOMA = 9881;
-
-    private static class Event {
-        final String htm;
-        final int radarX;
-        final int radarY;
-        final int radarZ;
-        final int item;
-        final int classId1;
-        final int gift1;
-        final int count1;
-        final int classId2;
-        final int gift2;
-        final int count2;
-
-        Event(String htm, int radarX, int radarY, int radarZ, int item, int classId1, int gift1, int count1, int classId2, int gift2, int count2) {
-            this.htm = htm;
-            this.radarX = radarX;
-            this.radarY = radarY;
-            this.radarZ = radarZ;
-            this.item = item;
-            this.classId1 = classId1;
-            this.gift1 = gift1;
-            this.count1 = count1;
-            this.classId2 = classId2;
-            this.gift2 = gift2;
-            this.count2 = count2;
-        }
-    }
-
-    private static class Talk {
-        final int raceId;
-        final String[] htmlfiles;
-        final int npcTyp;
-        final int item;
-
-        Talk(int raceId, String[] htmlfiles, int npcTyp, int item) {
-            this.raceId = raceId;
-            this.htmlfiles = htmlfiles;
-            this.npcTyp = npcTyp;
-            this.item = item;
-        }
-    }
-
     private static final Map<String, Event> events = new HashMap<>();
+    private static final Map<Integer, Talk> talks = new HashMap<>();
 
     static {
         events.put("32133_02", new Event("32133-03.htm", -119692, 44504, 380, DIPLOMA, 0x7b, SOULSHOT_NOVICE, 200, 0x7c, SOULSHOT_NOVICE, 200));
@@ -85,8 +43,6 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
         events.put("30573_02", new Event("30573-03.htm", 0, 0, 0, VOUCHER_OF_FLAME, 0x31, SPIRITSHOT_NOVICE, 100, 0x2c, SOULSHOT_NOVICE, 200));
         events.put("30573_04", new Event("30573-04.htm", -45067, -113549, -235, 0, 0x31, 0, 0, 0x2c, 0, 0));
     }
-
-    private static final Map<Integer, Talk> talks = new HashMap<>();
 
     static {
         talks.put(30017, new Talk(0, new String[]{
@@ -234,15 +190,6 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
         }, 1, DIPLOMA));
     }
 
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
     public _999_T1Tutorial() {
         super(false);
         List<Integer> startNPCs = Arrays.asList(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
@@ -253,17 +200,26 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
         addKillId(18342, 20001);
     }
 
+    public void onLoad() {
+    }
+
+    public void onReload() {
+    }
+
+    public void onShutdown() {
+    }
+
     @Override
     public String onEvent(String event, final QuestState st, NpcInstance npc) {
         QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
-        if (qs == null || st == null)
+        if (qs == null)
             return null;
 
         final Player player = st.getPlayer();
         if (player == null)
             return null;
 
-        String htmltext = event;
+        String htmltext;
         int Ex = qs.getInt("Ex");
         int classId = player.getClassId().getId();
         boolean isMage = (player.getClassId().getRace() != Race.orc) && player.getClassId().isMage();
@@ -317,12 +273,7 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
             }
 
             if (e.radarX != 0) {
-                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        st.addRadarWithMap(e.radarX, e.radarY, e.radarZ);
-                    }
-                }, 100L);
+                ThreadPoolManager.INSTANCE.schedule(() -> st.addRadarWithMap(e.radarX, e.radarY, e.radarZ), 100L);
             }
         }
         return htmltext;
@@ -425,29 +376,71 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
             qs.set("Ex", "2");
         }
         if (Ex <= 2 && st.getQuestItemsCount(BLUE_GEM) < 1)
-            ThreadPoolManager.INSTANCE().schedule(new DropGem(npc, st), 3000);
+            ThreadPoolManager.INSTANCE.schedule(new DropGem(npc, st), 3000);
         return null;
-    }
-
-    public static class DropGem extends RunnableImpl {
-        private final NpcInstance _npc;
-        private final QuestState _st;
-
-        DropGem(NpcInstance npc, QuestState st) {
-            _npc = npc;
-            _st = st;
-        }
-
-        public void runImpl() {
-            if (_st != null && _npc != null) {
-                _npc.dropItem(_st.getPlayer(), BLUE_GEM, 1);
-                _st.playSound(SOUND_TUTORIAL);
-            }
-        }
     }
 
     @Override
     public boolean isVisible() {
         return false;
+    }
+
+    private static class Event {
+        final String htm;
+        final int radarX;
+        final int radarY;
+        final int radarZ;
+        final int item;
+        final int classId1;
+        final int gift1;
+        final int count1;
+        final int classId2;
+        final int gift2;
+        final int count2;
+
+        Event(String htm, int radarX, int radarY, int radarZ, int item, int classId1, int gift1, int count1, int classId2, int gift2, int count2) {
+            this.htm = htm;
+            this.radarX = radarX;
+            this.radarY = radarY;
+            this.radarZ = radarZ;
+            this.item = item;
+            this.classId1 = classId1;
+            this.gift1 = gift1;
+            this.count1 = count1;
+            this.classId2 = classId2;
+            this.gift2 = gift2;
+            this.count2 = count2;
+        }
+    }
+
+    private static class Talk {
+        final int raceId;
+        final String[] htmlfiles;
+        final int npcTyp;
+        final int item;
+
+        Talk(int raceId, String[] htmlfiles, int npcTyp, int item) {
+            this.raceId = raceId;
+            this.htmlfiles = htmlfiles;
+            this.npcTyp = npcTyp;
+            this.item = item;
+        }
+    }
+
+    public static class DropGem extends RunnableImpl {
+        private final NpcInstance npc;
+        private final QuestState st;
+
+        DropGem(NpcInstance npc, QuestState st) {
+            this.npc = npc;
+            this.st = st;
+        }
+
+        public void runImpl() {
+            if (st != null && npc != null) {
+                npc.dropItem(st.getPlayer(), BLUE_GEM, 1);
+                st.playSound(SOUND_TUTORIAL);
+            }
+        }
     }
 }

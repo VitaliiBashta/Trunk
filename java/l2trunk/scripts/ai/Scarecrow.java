@@ -8,7 +8,7 @@ public final class Scarecrow extends Fighter {
     public Scarecrow(NpcInstance actor) {
         super(actor);
         actor.block();
-        actor.setIsInvul(true);
+        actor.setInvul(true);
     }
 
     @Override

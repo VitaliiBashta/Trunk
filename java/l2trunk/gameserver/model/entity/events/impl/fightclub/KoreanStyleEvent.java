@@ -17,21 +17,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class KoreanStyleEvent extends AbstractFightClub {
+public final class KoreanStyleEvent extends AbstractFightClub {
     private static final long MAX_FIGHT_TIME = 90000L;
-    private final FightClubPlayer[] _fightingPlayers;
-    private final int[] lastTeamChosenSpawn;
+    private final List<FightClubPlayer> _fightingPlayers = new ArrayList<>();
+    private final int[] lastTeamChosenSpawn=  {0, 0};
     private long _lastKill;
 
     public KoreanStyleEvent(MultiValueSet<String> set) {
         super(set);
         _lastKill = 0L;
-        _fightingPlayers = new FightClubPlayer[2];
-        lastTeamChosenSpawn = new int[]
-                {
-                        0,
-                        0
-                };
     }
 
     private static void healFull(Playable playable) {
@@ -157,8 +151,8 @@ public class KoreanStyleEvent extends AbstractFightClub {
         if (getState() == EVENT_STATE.OVER || getState() == EVENT_STATE.NOT_ACTIVE)
             return;
         boolean changed = false;
-        for (int i = 0; i < _fightingPlayers.length; i++) {
-            FightClubPlayer oldPlayer = _fightingPlayers[i];
+        for (int i = 0; i < _fightingPlayers.size(); i++) {
+            FightClubPlayer oldPlayer = _fightingPlayers.get(i);
             if (oldPlayer == null || !isPlayerActive(oldPlayer.getPlayer()) || getFightClubPlayer(oldPlayer.getPlayer()) == null) {
                 if (oldPlayer != null && !oldPlayer.getPlayer().isDead()) {
                     oldPlayer.getPlayer().doDie(null);
@@ -174,17 +168,17 @@ public class KoreanStyleEvent extends AbstractFightClub {
                     endRound();
                     return;
                 }
-                _fightingPlayers[i] = newPlayer;
+                _fightingPlayers.set(i, newPlayer);
                 changed = true;
             }
         }
 
         if (changed) {
             StringBuilder msg = new StringBuilder();
-            for (int i = 0; i < _fightingPlayers.length; i++) {
+            for (int i = 0; i < _fightingPlayers.size(); i++) {
                 if (i > 0)
                     msg.append(" VS ");
-                msg.append(_fightingPlayers[i].getPlayer().getName());
+                msg.append(_fightingPlayers.get(i).getPlayer().getName());
             }
             sendMessageToFighting(MESSAGE_TYPES.SCREEN_BIG, msg.toString(), false);
             preparePlayers();
@@ -207,8 +201,8 @@ public class KoreanStyleEvent extends AbstractFightClub {
     }
 
     private void preparePlayers() {
-        for (int i = 0; i < _fightingPlayers.length; i++) {
-            FightClubPlayer fPlayer = _fightingPlayers[i];
+        for (int i = 0; i < _fightingPlayers.size(); i++) {
+            FightClubPlayer fPlayer = _fightingPlayers.get(i);
             Player player = fPlayer.getPlayer();
             try {
                 if (player.isBlocked())
@@ -228,7 +222,7 @@ public class KoreanStyleEvent extends AbstractFightClub {
 
             fPlayer.setLastDamageTime();
 
-            // Teleport to the zone directly so they can start preparing for the battle
+            // teleport to the zone directly so they can start preparing for the battle
             Location loc = getMap().getKeyLocations()[i];
             player.teleToLocation(loc, getReflection());
 
@@ -236,7 +230,7 @@ public class KoreanStyleEvent extends AbstractFightClub {
         }
 
         // Alexander - Unroot the players 10 seconds after the teleport so they can start fighting
-        ThreadPoolManager.INSTANCE().schedule(() -> {
+        ThreadPoolManager.INSTANCE.schedule(() -> {
             for (FightClubPlayer fPlayer : _fightingPlayers) {
                 Player player = fPlayer.getPlayer();
 
@@ -374,7 +368,7 @@ public class KoreanStyleEvent extends AbstractFightClub {
                     playerToKill.doDie(null);
             }
 
-            ThreadPoolManager.INSTANCE().schedule(this, 5000L);
+            ThreadPoolManager.INSTANCE.schedule(this, 5000L);
         }
     }
 }

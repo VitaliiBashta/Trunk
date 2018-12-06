@@ -24,14 +24,14 @@ public final class EffectInvulnerable extends Effect {
     public void onStart() {
         super.onStart();
         effected.startHealBlocked();
-        effected.setIsInvul(true);
+        effected.setInvul(true);
     }
 
     @Override
     public void onExit() {
         super.onExit();
         effected.stopHealBlocked();
-        effected.setIsInvul(false);
+        effected.setInvul(false);
     }
 
     @Override

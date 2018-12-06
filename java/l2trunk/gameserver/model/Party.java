@@ -20,11 +20,9 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
-import l2trunk.gameserver.utils.Util;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public final class Party implements PlayerGroup {
     public static final int MAX_SIZE = 9;
@@ -36,8 +34,8 @@ public final class Party implements PlayerGroup {
     public static final int ITEM_ORDER_SPOIL = 4;
     private static final int[] LOOT_SYSSTRINGS = {487, 488, 798, 799, 800};
     // Ady - Static party manager
-    private static final Map<Long, Party> _parties = new ConcurrentHashMap<>();
-    private final List<Player> _members = new CopyOnWriteArrayList<>();
+    private static final Map<Integer, Party> parties = new ConcurrentHashMap<>();
+    private final List<Player> members = new CopyOnWriteArrayList<>();
     public double _rateExp;
     public double _rateSp;
     public double _rateDrop;
@@ -47,8 +45,8 @@ public final class Party implements PlayerGroup {
     private int _itemDistribution;
     private int _itemOrder = 0;
     private int _dimentionalRift;
-    private Reflection _reflection;
-    private CommandChannel _commandChannel;
+    private Reflection reflection;
+    private CommandChannel commandChannel;
     private ScheduledFuture<?> positionTask;
     private int _requestChangeLoot = -1;
     private long _requestChangeLootTimer = 0;
@@ -63,7 +61,7 @@ public final class Party implements PlayerGroup {
      */
     public Party(Player leader, int itemDistribution) {
         _itemDistribution = itemDistribution;
-        _members.add(leader);
+        members.add(leader);
         _partyLvl = leader.getLevel();
         _rateExp = 1;
         _rateSp = 1;
@@ -72,11 +70,11 @@ public final class Party implements PlayerGroup {
         _rateSpoil = 1;
 
         // Ady - Add this party to the static manager
-        getParties().put(leader.getStoredId(), this);
+        parties.put(leader.getStoredId(), this);
     }
 
     private static void TeleportParty(List<Player> members, Location dest) {
-        members.forEach( pl -> pl.teleToLocation(dest));
+        members.forEach(pl -> pl.teleToLocation(dest));
     }
 
     private static void TeleportParty(List<Player> members, Territory territory, Location dest) {
@@ -111,39 +109,27 @@ public final class Party implements PlayerGroup {
             member.teleToLocation(Territory.getRandomLoc(territory, member.getGeoIndex()));
     }
 
-    public static Map<Long, Party> getParties() {
-        return _parties;
+    public static Map<Integer, Party> getParties() {
+        return parties;
     }
 
-    /**
-     * @return all party members
-     */
+
     @Override
-    public List<Player> getMembers(Player... excluded) {
-        if (excluded != null && excluded.length > 0)
-            return _members.stream().filter(member -> !Util.arrayContains(excluded, member)).collect(Collectors.toList());
-
-        return _members;
+    public List<Player> getMembers() {
+        return members;
     }
 
-    /**
-     * @param player
-     * @param item
-     * @param range
-     * @return next item looter
-     */
-    @SuppressWarnings("unused")
     private Player getNextLooterInRange(Player player, ItemInstance item, int range) {
-        synchronized (_members) {
-            int antiloop = _members.size();
+        synchronized (members) {
+            int antiloop = members.size();
             while (--antiloop > 0) {
                 int looter = _itemOrder;
                 _itemOrder++;
-                if (_itemOrder > (_members.size() - 1)) {
+                if (_itemOrder > (members.size() - 1)) {
                     _itemOrder = 0;
                 }
 
-                Player ret = looter < _members.size() ? _members.get(looter) : player;
+                Player ret = looter < members.size() ? members.get(looter) : player;
 
                 if ((ret != null) && ret.isInRangeZ(player, range) && ret.getInventory().validateCapacity(item) && ret.getInventory().validateWeight(item)) {
                     return ret;
@@ -155,7 +141,7 @@ public final class Party implements PlayerGroup {
 
     @Override
     public boolean containsMember(Player player) {
-        return _members.contains(player);
+        return members.contains(player);
     }
 
     public boolean isFull() {
@@ -173,14 +159,14 @@ public final class Party implements PlayerGroup {
         if (leader == null)
             return false;
 
-        synchronized (_members) {
-            if (_members.isEmpty())
+        synchronized (members) {
+            if (members.isEmpty())
                 return false;
-            if (_members.contains(player))
+            if (members.contains(player))
                 return false;
-            if (_members.size() == MAX_SIZE)
+            if (members.size() == MAX_SIZE)
                 return false;
-            _members.add(player);
+            members.add(player);
         }
 
         if (_requestChangeLoot != -1)
@@ -190,7 +176,7 @@ public final class Party implements PlayerGroup {
         player.getListeners().onPartyInvite();
 
         Summon pet;
-        List<L2GameServerPacket> addInfo = new ArrayList<>(4 + (_members.size() * 4));
+        List<L2GameServerPacket> addInfo = new ArrayList<>(4 + (members.size() * 4));
         List<L2GameServerPacket> pplayer = new ArrayList<>(20);
 
         // sends new member party window for all members
@@ -207,7 +193,7 @@ public final class Party implements PlayerGroup {
 
         PartyMemberPosition pmp = new PartyMemberPosition();
         List<L2GameServerPacket> pmember;
-        for (Player member : _members) {
+        for (Player member : members) {
             if (member != player) {
                 pmember = new ArrayList<>(addInfo.size() + 4);
                 pmember.addAll(addInfo);
@@ -246,16 +232,16 @@ public final class Party implements PlayerGroup {
      */
     private void dissolveParty() {
         // Ady - Remove this party from the static manager
-        if (getParties() != null && getLeader() != null)
-            getParties().remove(getLeader().getStoredId());
+        if (getLeader() != null)
+            parties.remove(getLeader().getStoredId());
 
-        for (Player p : _members) {
+        for (Player p : members) {
             p.sendPacket(PartySmallWindowDeleteAll.STATIC);
             p.setParty(null);
         }
 
-        synchronized (_members) {
-            _members.clear();
+        synchronized (members) {
+            members.clear();
         }
 
         setDimensionalRift(null);
@@ -275,10 +261,10 @@ public final class Party implements PlayerGroup {
         boolean isLeader = isLeader(player);
         boolean dissolve;
 
-        synchronized (_members) {
-            if (!_members.remove(player))
+        synchronized (members) {
+            if (!members.remove(player))
                 return false;
-            dissolve = _members.size() == 1;
+            dissolve = members.size() == 1;
         }
 
         player.getListeners().onPartyLeave();
@@ -286,7 +272,7 @@ public final class Party implements PlayerGroup {
         player.setParty(null);
         recalculatePartyData();
 
-        List<L2GameServerPacket> pplayer = new ArrayList<>(4 + _members.size() * 2);
+        List<L2GameServerPacket> pplayer = new ArrayList<>(4 + members.size() * 2);
 
         // Отсылаемы вышедшему пакет закрытия СС
         if (isInCommandChannel())
@@ -308,7 +294,7 @@ public final class Party implements PlayerGroup {
             outsInfo.add(new SystemMessage2(SystemMsg.S1_HAS_LEFT_THE_PARTY).addName(player));
 
         List<L2GameServerPacket> pmember;
-        for (Player member : _members) {
+        for (Player member : members) {
             pmember = new ArrayList<>(2 + outsInfo.size());
             pmember.addAll(outsInfo);
             pmember.add(RelationChanged.update(member, player, member));
@@ -333,7 +319,7 @@ public final class Party implements PlayerGroup {
             synchronized (this) {
                 // Если в партии остался 1 человек, то удаляем ее из СС
                 if (isInCommandChannel())
-                    _commandChannel.removeParty(this);
+                    commandChannel.removeParty(this);
                 else if (reflection != null) {
                     //lastMember.teleToLocation(getReflection().getReturnLoc(), 0);
                     //getReflection().stopCollapseTimer();
@@ -349,8 +335,8 @@ public final class Party implements PlayerGroup {
                 dissolveParty();
             }
         } else {
-            if (isInCommandChannel() && _commandChannel.isLeader(player))
-                _commandChannel.setChannelLeader(leader);
+            if (isInCommandChannel() && commandChannel.isLeader(player))
+                commandChannel.setChannelLeader(leader);
 
             if (isLeader)
                 updateLeaderInfo();
@@ -368,18 +354,18 @@ public final class Party implements PlayerGroup {
         Player leader = getLeader();
 
         // Меняем местами нового и текущего лидера
-        synchronized (_members) {
-            int index = _members.indexOf(player);
+        synchronized (members) {
+            int index = members.indexOf(player);
             if (index == -1)
                 return false;
-            _members.set(0, player);
-            _members.set(index, leader);
+            members.set(0, player);
+            members.set(index, leader);
         }
 
         updateLeaderInfo();
 
-        if (isInCommandChannel() && _commandChannel.isLeader(leader))
-            _commandChannel.setChannelLeader(player);
+        if (isInCommandChannel() && commandChannel.isLeader(leader))
+            commandChannel.setChannelLeader(player);
 
         return true;
     }
@@ -391,7 +377,7 @@ public final class Party implements PlayerGroup {
 
         SystemMessage2 msg = new SystemMessage2(SystemMsg.C1_HAS_BECOME_THE_PARTY_LEADER).addName(leader);
 
-        for (Player member : _members) {
+        for (Player member : members) {
             // индивидуальные пакеты - удаления и инициализация пати
             member.sendPacket(PartySmallWindowDeleteAll.STATIC, // Удаляем все окошки
                     new PartySmallWindowAll(this, member), // Показываем окошки
@@ -399,7 +385,7 @@ public final class Party implements PlayerGroup {
         }
 
         // броадкасты состояний
-        for (Player member : _members) {
+        for (Player member : members) {
             sendPacket(member, new PartySpelled(member, true)); // Показываем иконки
             if (member.getPet() != null)
                 this.sendPacket(new ExPartyPetWindowAdd(member.getPet())); // Показываем окошки петов
@@ -426,8 +412,8 @@ public final class Party implements PlayerGroup {
                 switch (_itemDistribution) {
                     case ITEM_RANDOM:
                     case ITEM_RANDOM_SPOIL:
-                        ret = new ArrayList<>(_members.size());
-                        for (Player member : _members)
+                        ret = new ArrayList<>(members.size());
+                        for (Player member : members)
                             if (member.isInRangeZ(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) && !member.isDead() && member.getInventory().validateCapacity(item) && member.getInventory().validateWeight(item))
                                 ret.add(member);
 
@@ -435,8 +421,8 @@ public final class Party implements PlayerGroup {
                         break;
                     case ITEM_ORDER:
                     case ITEM_ORDER_SPOIL:
-                        synchronized (_members) {
-                            ret = new CopyOnWriteArrayList<>(_members);
+                        synchronized (members) {
+                            ret = new CopyOnWriteArrayList<>(members);
                             while (target == null && !ret.isEmpty()) {
                                 int looter = _itemOrder;
                                 _itemOrder++;
@@ -488,10 +474,10 @@ public final class Party implements PlayerGroup {
 
         List<Player> membersInRange = new ArrayList<>();
 
-        if (item.getCount() < _members.size()) {
+        if (item.getCount() < members.size()) {
             membersInRange.add(player);
         } else {
-            for (Player member : _members) {
+            for (Player member : members) {
                 if (((member == player) || player.isInRangeZ(member, Config.ALT_PARTY_DISTRIBUTION_RANGE)) && ItemFunctions.canAddItem(player, item)) {
                     membersInRange.add(member);
                 }
@@ -590,7 +576,7 @@ public final class Party implements PlayerGroup {
         double minRateSpoil = Double.MAX_VALUE;
         int count = 0;
 
-        for (Player member : _members) {
+        for (Player member : members) {
             int level = member.getLevel();
             _partyLvl = Math.max(_partyLvl, level);
             count++;
@@ -639,36 +625,37 @@ public final class Party implements PlayerGroup {
     }
 
     public boolean isInReflection() {
-        if (_reflection != null)
+        if (reflection != null)
             return true;
-        if (_commandChannel != null)
-            return _commandChannel.isInReflection();
+        if (commandChannel != null)
+            return commandChannel.isInReflection();
         return false;
     }
 
     public Reflection getReflection() {
-        if (_reflection != null)
-            return _reflection;
-        if (_commandChannel != null)
-            return _commandChannel.getReflection();
+        if (reflection != null)
+            return reflection;
+        if (commandChannel != null)
+            return commandChannel.getReflection();
         return null;
     }
 
     @Override
-    public void setReflection(Reflection reflection) {
-        _reflection = reflection;
+    public Party setReflection(Reflection reflection) {
+        this.reflection = reflection;
+        return this;
     }
 
     public boolean isInCommandChannel() {
-        return _commandChannel != null;
+        return commandChannel != null;
     }
 
     public CommandChannel getCommandChannel() {
-        return _commandChannel;
+        return commandChannel;
     }
 
-    public void setCommandChannel(CommandChannel channel) {
-        _commandChannel = channel;
+    void setCommandChannel(CommandChannel channel) {
+        commandChannel = channel;
     }
 
     /**
@@ -676,16 +663,11 @@ public final class Party implements PlayerGroup {
      *
      * @param dest
      */
-    public void Teleport(Location dest) {
+    public void teleport(Location dest) {
         TeleportParty(getMembers(), dest);
     }
 
-    /**
-     * Телепорт всей пати на территорию, игроки расставляются рандомно по территории
-     *
-     * @param territory
-     */
-    public void Teleport(Territory territory) {
+    public void teleport(Territory territory) {
         RandomTeleportParty(getMembers(), territory);
     }
 
@@ -756,21 +738,17 @@ public final class Party implements PlayerGroup {
 
     @Override
     public Iterator<Player> iterator() {
-        return _members.iterator();
+        return members.iterator();
     }
 
     @Override
     public int size() {
-        return _members.size();
+        return members.size();
     }
 
     @Override
     public Player getLeader() {
-        synchronized (_members) {
-            if (_members.size() == 0)
-                return null;
-            return _members.get(0);
-        }
+        return members.get(0);
     }
 
     private class UpdatePositionTask extends RunnableImpl {
@@ -778,7 +756,7 @@ public final class Party implements PlayerGroup {
         public void runImpl() {
             List<Player> update = new ArrayList<>();
 
-            for (Player member : _members) {
+            for (Player member : members) {
                 Location loc = member.getLastPartyPosition();
                 if (loc == null || member.getDistance(loc) > 256) //TODO подкорректировать
                 {
@@ -788,7 +766,7 @@ public final class Party implements PlayerGroup {
             }
 
             if (!update.isEmpty())
-                for (Player member : _members) {
+                for (Player member : members) {
                     PartyMemberPosition pmp = new PartyMemberPosition();
                     for (Player m : update)
                         if (m != member)

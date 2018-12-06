@@ -2,18 +2,15 @@ package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.gameserver.model.Player;
 
-//import l2trunk.gameserver.network.l2.Pinger;
 
-public class NetPing extends L2GameClientPacket {
-    private int playerId;
+public final class NetPing extends L2GameClientPacket {
     private int ping;
-    private int mtu;
 
     @Override
     protected void readImpl() {
-        playerId = readD();
+        int playerId = readD();
         ping = readD();
-        mtu = readD();
+        int mtu = readD();
     }
 
     @Override

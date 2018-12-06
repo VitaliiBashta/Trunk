@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OlympiadTeam {
     private final OlympiadGame _game;
-    private final Map<Integer, TeamMember> _members;
+    private final Map<Integer, TeamMember> members;
     private final int _side;
     private String _name = "";
     private double _damage;
@@ -24,7 +24,7 @@ public class OlympiadTeam {
     public OlympiadTeam(OlympiadGame game, int side) {
         _game = game;
         _side = side;
-        _members = new ConcurrentHashMap<>();
+        members = new ConcurrentHashMap<>();
     }
 
     public void addMember(int obj_id) {
@@ -38,7 +38,7 @@ public class OlympiadTeam {
                 player_name = noble.getString(Olympiad.CHAR_NAME, "");
         }
 
-        _members.put(obj_id, new TeamMember(obj_id, player_name, player, _game, _side));
+        members.put(obj_id, new TeamMember(obj_id, player_name, player, _game, _side));
 
         _name = player_name;
     }
@@ -46,7 +46,7 @@ public class OlympiadTeam {
     public void addDamage(Player player, double damage) {
         _damage += damage;
 
-        TeamMember member = _members.get(player.getObjectId());
+        TeamMember member = members.get(player.getObjectId());
         member.addDamage(damage);
     }
 
@@ -59,34 +59,34 @@ public class OlympiadTeam {
     }
 
     public void portPlayersToArena() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.portPlayerToArena();
     }
 
     public void portPlayersBack() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.portPlayerBack();
     }
 
     public void heal() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.heal();
     }
 
     public void removeBuffs(boolean fromSummon) {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.removeBuffs(fromSummon);
     }
 
     public void preparePlayers() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.preparePlayer();
 
-        if (_members.size() <= 1)
+        if (members.size() <= 1)
             return;
 
         List<Player> list = new ArrayList<>();
-        for (TeamMember member : _members.values()) {
+        for (TeamMember member : members.values()) {
             Player player = member.getPlayer();
             if (player != null) {
                 list.add(player);
@@ -110,41 +110,41 @@ public class OlympiadTeam {
     }
 
     public void startComp() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.startComp();
     }
 
     public void stopComp() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.stopComp();
     }
 
     public void takePointsForCrash() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             member.takePointsForCrash();
     }
 
     public boolean checkPlayers() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             if (member.checkPlayer())
                 return true;
         return false;
     }
 
     private boolean isAllDead() {
-        for (TeamMember member : _members.values())
+        for (TeamMember member : members.values())
             if (!member.isDead() && member.checkPlayer())
                 return false;
         return true;
     }
 
     public boolean contains(int objId) {
-        return _members.containsKey(objId);
+        return members.containsKey(objId);
     }
 
     public List<Player> getPlayers() {
-        List<Player> players = new ArrayList<>(_members.size());
-        for (TeamMember member : _members.values()) {
+        List<Player> players = new ArrayList<>(members.size());
+        for (TeamMember member : members.values()) {
             Player player = member.getPlayer();
             if (player != null)
                 players.add(player);
@@ -153,19 +153,15 @@ public class OlympiadTeam {
     }
 
     public Collection<TeamMember> getMembers() {
-        return _members.values();
+        return members.values();
     }
 
     public void broadcast(L2GameServerPacket p) {
-        for (TeamMember member : _members.values()) {
-            Player player = member.getPlayer();
-            if (player != null)
-                player.sendPacket(p);
-        }
+        members.values().forEach(member -> member.getPlayer().sendPacket(p));
     }
 
     public void broadcast(IStaticPacket p) {
-        for (TeamMember member : _members.values()) {
+        for (TeamMember member : members.values()) {
             Player player = member.getPlayer();
             if (player != null)
                 player.sendPacket(p);
@@ -173,7 +169,7 @@ public class OlympiadTeam {
     }
 
     public void broadcastInfo() {
-        for (TeamMember member : _members.values()) {
+        for (TeamMember member : members.values()) {
             Player player = member.getPlayer();
             if (player != null)
                 player.broadcastPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()));
@@ -182,7 +178,7 @@ public class OlympiadTeam {
 
     public boolean logout(Player player) {
         if (player != null) {
-            for (TeamMember member : _members.values()) {
+            for (TeamMember member : members.values()) {
                 Player pl = member.getPlayer();
                 if (pl != null && pl == player)
                     member.logout();
@@ -193,7 +189,7 @@ public class OlympiadTeam {
 
     public boolean doDie(Player player) {
         if (player != null)
-            for (TeamMember member : _members.values()) {
+            for (TeamMember member : members.values()) {
                 Player pl = member.getPlayer();
                 if (pl != null && pl == player)
                     member.doDie();
@@ -201,8 +197,7 @@ public class OlympiadTeam {
         return isAllDead();
     }
 
-    public void saveNobleData() {
-        for (TeamMember member : _members.values())
-            member.saveNobleData();
+    void saveNobleData() {
+        members.values().forEach(TeamMember::saveNobleData);
     }
 }

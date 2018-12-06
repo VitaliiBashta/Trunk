@@ -1,15 +1,17 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class _902_ReclaimOurEra extends Quest implements ScriptFile {
     private static final int Mathias = 31340;
-    private static final int[] OrcsSilenos = {25309, 25312, 25315, 25299, 25302, 25305};
-    private static final int[] CannibalisticStakatoChief = {25667, 25668, 25669, 25670};
+    private static final List<Integer> OrcsSilenos = Arrays.asList(25309, 25312, 25315, 25299, 25302, 25305);
+    private static final List<Integer> CannibalisticStakatoChief = Arrays.asList(25667, 25668, 25669, 25670);
     private static final int Anais = 25701;
 
     private static final int ShatteredBones = 21997;
@@ -94,10 +96,10 @@ public final class _902_ReclaimOurEra extends Quest implements ScriptFile {
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
-        if (cond == 2 && ArrayUtils.contains(OrcsSilenos, npc.getNpcId())) {
+        if (cond == 2 && OrcsSilenos.contains(npc.getNpcId())) {
             st.giveItems(ShatteredBones, 1);
             st.setCond(5);
-        } else if (cond == 3 && ArrayUtils.contains(CannibalisticStakatoChief, npc.getNpcId())) {
+        } else if (cond == 3 && CannibalisticStakatoChief.contains(npc.getNpcId())) {
             st.giveItems(CannibalisticStakatoLeaderClaw, 1);
             st.setCond(5);
         } else if (cond == 4 && npc.getNpcId() == Anais) {

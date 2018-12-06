@@ -35,6 +35,29 @@ import java.util.concurrent.TimeUnit;
 
 public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityBoard.class);
+    private static final SimpleDateFormat dataDateFormat = new SimpleDateFormat("hh:mm dd.MM.yyyy");
+    private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+
+    private static String uptime() {
+        return dataDateFormat.format(GameServer.server_started);
+    }
+
+    private static String time() {
+        return TIME_FORMAT.format(new Date(System.currentTimeMillis()));
+    }
+
+    public static String getOnlineTime(Player player) {
+        long total = player.getOnlineTime() + (System.currentTimeMillis() / 1000 - player.getOnlineBeginTime());
+
+        long days = total / (60 * 60 * 24) % 7;
+        long hours = (total - TimeUnit.DAYS.toSeconds(days)) / (60 * 60) % 24;
+        long minutes = (total - TimeUnit.DAYS.toSeconds(days) - TimeUnit.HOURS.toSeconds(hours)) / 60;
+
+        if (days >= 1)
+            return days + " d. " + hours + " h. " + minutes + " min";
+        else
+            return hours + " hours " + player.getOnlineTime();
+    }
 
     @Override
     public void onLoad() {
@@ -151,7 +174,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
                 if (handler != null)
                     handler.onBypassCommand(player, pBypass);
             }
-            NpcTradeList list = BuyListHolder.getInstance().getBuyList(-1);
+            NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(-1);
             player.sendPacket(new ExBuySellList.BuyList(list, player, 0.), new ExBuySellList.SellRefundList(player, false));
             return;
         } else if (bypass.startsWith("_bbsaugment")) {
@@ -187,44 +210,15 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
             if (path.length != 2)
                 return;
 
-            Scripts.getInstance().callScripts(player, path[0], path[1], word.length == 1 ? new Object[]{} : new Object[]{args});
+            Scripts.INSTANCE.callScripts(player, path[0], path[1], word.length == 1 ? new Object[]{} : new Object[]{args});
             return;
         }
 
         ShowBoard.separateAndSend(html, player);
     }
 
-    private static final SimpleDateFormat dataDateFormat = new SimpleDateFormat("hh:mm dd.MM.yyyy");
-
-    private static String uptime() {
-        return dataDateFormat.format(GameServer.server_started);
-    }
-
     private String online() {
-        int i = 0;
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-            i++;
-        }
-        return Util.formatAdena((i));
-    }
-
-    private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
-
-    private static String time() {
-        return TIME_FORMAT.format(new Date(System.currentTimeMillis()));
-    }
-
-    public static String getOnlineTime(Player player) {
-        long total = player.getOnlineTime() + (System.currentTimeMillis() / 1000 - player.getOnlineBeginTime());
-
-        long days = total / (60 * 60 * 24) % 7;
-        long hours = (total - TimeUnit.DAYS.toSeconds(days)) / (60 * 60) % 24;
-        long minutes = (total - TimeUnit.DAYS.toSeconds(days) - TimeUnit.HOURS.toSeconds(hours)) / 60;
-
-        if (days >= 1)
-            return days + " d. " + hours + " h. " + minutes + " min";
-        else
-            return hours + " hours " + player.getOnlineTime();
+        return Util.formatAdena(GameObjectsStorage.getAllPlayers().size());
     }
 
     @Override

@@ -38,8 +38,8 @@ public final class SelMahumShef extends Fighter {
                     if (_firstTime) {
                         // Включаем паузу что бы не зафлудить чат.
                         _firstTime = false;
-                        Functions.npcSay(actor, _text[Rnd.get(_text.length)]);
-                        ThreadPoolManager.INSTANCE().schedule(new NewText(), 20000); // Время паузы
+                        Functions.npcSay(actor, Rnd.get(_text));
+                        ThreadPoolManager.INSTANCE.schedule(new NewText(), 20000); // Время паузы
                     }
                 }
             }

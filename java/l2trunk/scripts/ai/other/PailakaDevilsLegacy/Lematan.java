@@ -1,28 +1,24 @@
 package l2trunk.scripts.ai.other.PailakaDevilsLegacy;
 
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
 
 public final class Lematan extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(Lematan.class);
-    private boolean _teleported = false;
-
     private static final int LEMATAN_FOLLOWER = 18634;
-
-    private static final Location[] _position = {
+    private static final List<Location> _position = Arrays.asList(
             new Location(84840, -208488, -3336, 0),
             new Location(85160, -208488, -3336, 0),
             new Location(84696, -208744, -3336, 0),
             new Location(85264, -208744, -3336, 0),
             new Location(84840, -209000, -3336, 0),
-            new Location(85160, -209000, -3336, 0)
-    };
+            new Location(85160, -209000, -3336, 0));
+    private boolean _teleported = false;
 
     private Lematan(NpcInstance actor) {
         super(actor);
@@ -46,22 +42,14 @@ public final class Lematan extends Fighter {
             attacker.teleToLocation(new Location(85128, -208744, -3336));
 
             _teleported = true;
-            SimpleSpawner spawn;
 
-            try {
-                for (Location loc : _position) {
-                    spawn = new SimpleSpawner(NpcHolder.getTemplate(LEMATAN_FOLLOWER));
-                    spawn.setLoc(loc);
-                    spawn.setAmount(1);
-                    spawn.setHeading(actor.getHeading());
-                    spawn.setRespawnDelay(30);
-                    spawn.setReflection(actor.getReflection());
-                    spawn.init();
-                }
-            } catch (RuntimeException e) {
-                LOG.error("Error on Lematan Death", e);
-            }
+            _position.forEach(loc -> new SimpleSpawner(LEMATAN_FOLLOWER)
+                    .setLoc(loc)
+                    .setAmount(1)
+                    .setRespawnDelay(30)
+                    .setReflection(actor.getReflection())
+                    .init());
+            super.onEvtAttacked(attacker, damage);
         }
-        super.onEvtAttacked(attacker, damage);
     }
 }

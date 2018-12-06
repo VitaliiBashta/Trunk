@@ -27,7 +27,8 @@ public class CursedWeapon {
 
     private CursedWeaponState _state = CursedWeaponState.NONE;
     private Location _loc = null;
-    private long _endTime = 0, owner = 0;
+    private long _endTime = 0;
+    private int owner = 0;
     private ItemInstance _item = null;
 
     public CursedWeapon(int itemId, int skillId, String name) {
@@ -64,8 +65,7 @@ public class CursedWeapon {
             // RedSky and Earthquake
             L2GameServerPacket redSky = new ExRedSky(10);
             L2GameServerPacket eq = new Earthquake(killer.getLoc(), 30, 12);
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                player.sendPacket(redSky, eq);
+            GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(redSky, eq));
         }
     }
 
@@ -199,7 +199,7 @@ public class CursedWeapon {
 
         giveSkill(player);
 
-        player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
+        player.setFullHpMp();
         player.setCurrentCp(player.getMaxCp());
         player.broadcastUserInfo(true);
     }
@@ -308,15 +308,15 @@ public class CursedWeapon {
     }
 
     public int getPlayerId() {
-        return owner == 0 ? 0 : GameObjectsStorage.getStoredObjectId(owner);
+        return owner;
     }
 
     public void setPlayerId(int playerId) {
-        owner = playerId == 0 ? 0 : GameObjectsStorage.objIdNoStore(playerId);
+        owner = playerId;
     }
 
     public Player getPlayer() {
-        return owner == 0 ? null : GameObjectsStorage.getAsPlayer(owner);
+        return owner == 0 ? null : GameObjectsStorage.getPlayer(owner);
     }
 
     public void setPlayer(Player player) {

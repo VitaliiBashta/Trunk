@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
@@ -14,7 +13,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
+import l2trunk.gameserver.utils.Location;
 
 public final class _625_TheFinestIngredientsPart2 extends Quest implements ScriptFile {
     // NPCs
@@ -29,12 +28,16 @@ public final class _625_TheFinestIngredientsPart2 extends Quest implements Scrip
     private static final int Reward_First = 4589;
     private static final int Reward_Last = 4594;
 
-    public  _625_TheFinestIngredientsPart2() {
+    public _625_TheFinestIngredientsPart2() {
         super(true);
         addStartNpc(Jeremy);
         addTalkId(Yetis_Table);
         addKillId(RB_Icicle_Emperor_Bumbalump);
         addQuestItem(Food_for_Bumbalump, Special_Yeti_Meat);
+    }
+
+    private static boolean BumbalumpSpawned() {
+        return GameObjectsStorage.getByNpcId(RB_Icicle_Emperor_Bumbalump) != null;
     }
 
     @Override
@@ -66,7 +69,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest implements Scrip
                 return "yetis_table_q0625_0202.htm";
             st.takeItems(Food_for_Bumbalump, 1);
             st.setCond(2);
-            ThreadPoolManager.INSTANCE().schedule(new BumbalumpSpawner(), 1000);
+            ThreadPoolManager.INSTANCE.schedule(new BumbalumpSpawner(), 1000);
         }
 
         return event;
@@ -112,7 +115,7 @@ public final class _625_TheFinestIngredientsPart2 extends Quest implements Scrip
             if (cond == 2) {
                 if (BumbalumpSpawned())
                     return "yetis_table_q0625_0202.htm";
-                ThreadPoolManager.INSTANCE().schedule(new BumbalumpSpawner(), 1000);
+                ThreadPoolManager.INSTANCE.schedule(new BumbalumpSpawner(), 1000);
                 return "yetis_table_q0625_0201.htm";
             }
             if (cond == 3)
@@ -120,13 +123,6 @@ public final class _625_TheFinestIngredientsPart2 extends Quest implements Scrip
         }
 
         return "noquest";
-    }
-
-    private static class DeathListener implements OnDeathListener {
-        @Override
-        public void onDeath(Creature actor, Creature killer) {
-            ServerVariables.set(_625_TheFinestIngredientsPart2.class.getSimpleName(), String.valueOf(System.currentTimeMillis()));
-        }
     }
 
     @Override
@@ -155,55 +151,46 @@ public final class _625_TheFinestIngredientsPart2 extends Quest implements Scrip
     public void onShutdown() {
     }
 
-    private static boolean BumbalumpSpawned() {
-        return GameObjectsStorage.getByNpcId(RB_Icicle_Emperor_Bumbalump) != null;
+    private static class DeathListener implements OnDeathListener {
+        @Override
+        public void onDeath(Creature actor, Creature killer) {
+            ServerVariables.set(_625_TheFinestIngredientsPart2.class.getSimpleName(), String.valueOf(System.currentTimeMillis()));
+        }
     }
 
     public class BumbalumpSpawner extends RunnableImpl {
-        private SimpleSpawner _spawn = null;
+        private SimpleSpawner spawn = null;
         private int tiks = 0;
 
         BumbalumpSpawner() {
             if (BumbalumpSpawned())
                 return;
-            NpcTemplate template = NpcHolder.getTemplate(RB_Icicle_Emperor_Bumbalump);
-            if (template == null)
-                return;
-            try {
-                _spawn = new SimpleSpawner(template);
-            } catch (Exception E) {
-                return;
-            }
-            _spawn.setLocx(158240);
-            _spawn.setLocy(-121536);
-            _spawn.setLocz(-2253);
-            _spawn.setHeading(Rnd.get(0, 0xFFFF));
-            _spawn.setAmount(1);
-            _spawn.doSpawn(true);
-            _spawn.stopRespawn();
-            for (NpcInstance _npc : _spawn.getAllSpawned())
-                _npc.addListener(new DeathListener());
+            spawn = (SimpleSpawner) new SimpleSpawner(RB_Icicle_Emperor_Bumbalump)
+                    .setLoc(new Location(158240, -121536, -2253, Rnd.get(0, 0xFFFF)))
+                    .setAmount(1)
+                    .stopRespawn();
+            spawn.doSpawn(true);
+            spawn.getAllSpawned().forEach(npc -> npc.addListener(new DeathListener()));
         }
 
-        void Say(String test) {
-            for (NpcInstance _npc : _spawn.getAllSpawned())
-                Functions.npcSay(_npc, test);
+        void say(String test) {
+            spawn.getAllSpawned().forEach(npc -> Functions.npcSay(npc, test));
         }
 
         @Override
         public void runImpl() {
-            if (_spawn == null)
+            if (spawn == null)
                 return;
             if (tiks == 0)
-                Say("I will crush you!");
+                say("I will crush you!");
             if (tiks < 1200 && BumbalumpSpawned()) {
                 tiks++;
                 if (tiks == 1200)
-                    Say("May the gods forever condemn you! Your power weakens!");
-                ThreadPoolManager.INSTANCE().schedule(this, 1000);
+                    say("May the gods forever condemn you! Your power weakens!");
+                ThreadPoolManager.INSTANCE.schedule(this, 1000);
                 return;
             }
-            _spawn.deleteAll();
+            spawn.deleteAll();
         }
     }
 }

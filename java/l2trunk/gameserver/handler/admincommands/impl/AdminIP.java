@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 
-public class AdminIP implements IAdminCommandHandler {
+public final class AdminIP implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -50,9 +50,9 @@ public class AdminIP implements IAdminCommandHandler {
 
                 activeChar.sendMessage("IP:" + target.getIP());
 
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    if (player.getIP().equals(target.getIP()))
-                        activeChar.sendMessage("Player with same IP:" + player.getName());
+                GameObjectsStorage.getAllPlayers().stream()
+                        .filter(player -> player.getIP().equals(target.getIP())).forEach(player ->
+                        activeChar.sendMessage("Player with same IP:" + player.getName()));
                 break;
         }
         return true;

@@ -14,10 +14,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class LafiLakfi extends DefaultAI {
+public final class LafiLakfi extends DefaultAI {
     private static final int MAX_RADIUS = 500;
-    private  final Skill s_display_bug_of_fortune1 = SkillTable.INSTANCE().getInfo(6045, 1);
-    private  final Skill s_display_jackpot_firework = SkillTable.INSTANCE().getInfo(5778, 1);
+    private  final Skill s_display_bug_of_fortune1 = SkillTable.INSTANCE.getInfo(6045, 1);
+    private  final Skill s_display_jackpot_firework = SkillTable.INSTANCE.getInfo(5778, 1);
 
     private long _nextEat;
     private int i_ai2, actor_lvl, prev_st;
@@ -74,11 +74,11 @@ public class LafiLakfi extends DefaultAI {
                 _firstSaid = false;
 
                 if (i_ai2 == 2 && getFirstSpawned(actor)) {
-                    NpcInstance npc = NpcHolder.getTemplate(getCurrActor(actor)).getNewInstance();
+                    NpcInstance npc = NpcHolder.getTemplate(getCurrActor()).getNewInstance();
                     npc.setLevel(actor.getLevel());
                     npc.setSpawnedLoc(actor.getLoc());
                     npc.setReflection(actor.getReflection());
-                    npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+                    npc.setFullHpMp();
                     npc.spawnMe(npc.getSpawnedLoc());
                     actor.doDie(actor);
                     actor.deleteMe();
@@ -88,7 +88,7 @@ public class LafiLakfi extends DefaultAI {
                 i_ai2++;
 
                 _nextEat = System.currentTimeMillis() + 60 * 1000;
-            } else if (closestItem != null && closestItem.getCount() < 15000 && !_firstSaid) {
+            } else if (closestItem != null && !_firstSaid) {
                 Functions.npcShout(actor, "Is this all? I want More!!! I won't eat below 15.000 Adena!!!");
                 _firstSaid = true;
             }
@@ -96,12 +96,10 @@ public class LafiLakfi extends DefaultAI {
     }
 
     private boolean getFirstSpawned(NpcInstance actor) {
-        if (actor.getNpcId() == 2503 || actor.getNpcId() == 2502)
-            return false;
-        return true;
+        return actor.getNpcId() != 2503 && actor.getNpcId() != 2502;
     }
 
-    private int getCurrActor(NpcInstance npc) {
+    private int getCurrActor() {
         if (Rnd.chance(20))
             return 2503;
         return 2502;
@@ -181,16 +179,15 @@ public class LafiLakfi extends DefaultAI {
 
                         if (random <= 16)
                             actor.dropItem(killer.getPlayer(), 5577, 1);
-                        else if (random > 16 && random < 32)
+                        else if (random <= 32)
                             actor.dropItem(killer.getPlayer(), 5578, 1);
-                        else if (random > 32 && random < 48)
+                        else if (random <= 48)
                             actor.dropItem(killer.getPlayer(), 5579, 2);
-                        else if (random > 48 && random < 64)
+                        else if (random <= 64)
                             actor.dropItem(killer.getPlayer(), 5577, 1);
-                        else if (random > 64 && random < 80)
+                        else if (random <= 80)
                             actor.dropItem(killer.getPlayer(), 5578, 1);
-                        else if (random > 80)
-                            actor.dropItem(killer.getPlayer(), 5579, 1);
+                        else actor.dropItem(killer.getPlayer(), 5579, 1);
 
                     } else if (actor.getNpcId() == 2503)
                         actor.dropItem(killer.getPlayer(), 14679, 1);
@@ -199,28 +196,27 @@ public class LafiLakfi extends DefaultAI {
 
                         if (random <= 8)
                             actor.dropItem(killer.getPlayer(), 9552, 1);
-                        else if (random > 8 && random < 16)
+                        else if (random <= 16)
                             actor.dropItem(killer.getPlayer(), 9552, 2);
-                        else if (random > 16 && random < 24)
+                        else if (random <= 24)
                             actor.dropItem(killer.getPlayer(), 9554, 1);
-                        else if (random > 24 && random < 32)
+                        else if (random <= 32)
                             actor.dropItem(killer.getPlayer(), 9554, 2);
-                        else if (random > 32 && random < 40)
+                        else if (random <= 40)
                             actor.dropItem(killer.getPlayer(), 9556, 1);
-                        else if (random > 40 && random < 48)
+                        else if (random <= 48)
                             actor.dropItem(killer.getPlayer(), 9556, 2);
-                        else if (random > 48 && random <= 56)
+                        else if (random <= 56)
                             actor.dropItem(killer.getPlayer(), 9553, 1);
-                        else if (random > 56 && random < 64)
+                        else if (random <= 64)
                             actor.dropItem(killer.getPlayer(), 9553, 2);
-                        else if (random > 64 && random < 72)
+                        else if (random <= 72)
                             actor.dropItem(killer.getPlayer(), 9555, 1);
-                        else if (random > 72 && random < 80)
+                        else if (random <= 80)
                             actor.dropItem(killer.getPlayer(), 9555, 2);
-                        else if (random > 80 && random < 90)
+                        else if (random <= 90)
                             actor.dropItem(killer.getPlayer(), 9557, 1);
-                        else if (random > 90)
-                            actor.dropItem(killer.getPlayer(), 9557, 2);
+                        else actor.dropItem(killer.getPlayer(), 9557, 2);
 
                     } else if (actor.getNpcId() == 2503)
                         actor.dropItem(killer.getPlayer(), 14680, 1);

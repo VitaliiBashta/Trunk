@@ -31,7 +31,7 @@ public final class Parsers {
         StaticObjectParser.getInstance().load();
 
 
-        SpawnTable.getInstance();
+        SpawnTable.INSTANCE.init();
         SpawnParser.getInstance().load();
         InstantZoneParser.getInstance().load();
 
@@ -50,7 +50,7 @@ public final class Parsers {
         // support(cubic & agathion)
         CubicParser.getInstance().load();
         //
-        BuyListHolder.getInstance();
+        BuyListHolder.INSTANCE.init();
         RecipeHolder.getInstance();
         MultiSellHolder.getInstance();
         ProductHolder.getInstance();

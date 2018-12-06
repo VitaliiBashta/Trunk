@@ -15,11 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 19:28/23.06.2011
- */
-public class QuestSiegeGuardInstance extends SiegeGuardInstance {
+public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
     public QuestSiegeGuardInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -34,8 +30,8 @@ public class QuestSiegeGuardInstance extends SiegeGuardInstance {
 
         Map<Playable, AggroList.HateInfo> aggroMap = getAggroList().getPlayableMap();
 
-        Quest[] quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
-        if (quests != null && quests.length > 0) {
+        List<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
+        if (!quests.isEmpty()) {
             List<Player> players = null; // массив с игроками, которые могут быть заинтересованы в квестах
             if (isRaid() && Config.ALT_NO_LASTHIT) // Для альта на ластхит берем всех игроков вокруг
             {

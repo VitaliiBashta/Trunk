@@ -74,7 +74,7 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
         if (SetActive("CofferofShadows", true)) {
             spawnEventManagers();
             System.out.println("Event: Coffer of Shadows started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.CofferofShadows.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.CofferofShadows.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'Coffer of Shadows' already started.");
 
@@ -92,7 +92,7 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
         if (SetActive("CofferofShadows", false)) {
             unSpawnEventManagers();
             System.out.println("Event: Coffer of Shadows stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.CofferofShadows.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.CofferofShadows.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'Coffer of Shadows' not started.");
 
@@ -178,6 +178,6 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.CofferofShadows.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.CofferofShadows.AnnounceEventStarted");
     }
 }

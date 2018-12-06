@@ -34,25 +34,25 @@ public final class Kama63Minion extends Fighter {
 
     @Override
     public void onEvtSpawn() {
-        _boss = findBoss(BOSS_ID);
+        _boss = findBoss();
         super.onEvtSpawn();
     }
 
     @Override
     public boolean thinkActive() {
         if (_boss == null)
-            _boss = findBoss(BOSS_ID);
+            _boss = findBoss();
         else if (!_spawned) {
             _spawned = true;
             Functions.npcSayCustomMessage(_boss, "Kama63Boss");
             NpcInstance minion = getActor();
             minion.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _boss.getAggroList().getRandomHated(), Rnd.get(1, 100));
-            _dieTask = ThreadPoolManager.INSTANCE().schedule(new DieScheduleTimerTask(minion, _boss), MINION_DIE_TIME);
+            _dieTask = ThreadPoolManager.INSTANCE.schedule(new DieScheduleTimerTask(minion, _boss), MINION_DIE_TIME);
         }
         return super.thinkActive();
     }
 
-    private NpcInstance findBoss(int npcId) {
+    private NpcInstance findBoss() {
         // Ищем боса не чаще, чем раз в 15 секунд, если по каким-то причинам его нету
         if (System.currentTimeMillis() < _wait_timeout)
             return null;
@@ -64,7 +64,7 @@ public final class Kama63Minion extends Fighter {
             return null;
 
         for (NpcInstance npc : World.getAroundNpc(minion))
-            if (npc.getNpcId() == npcId)
+            if (npc.getNpcId() == Kama63Minion.BOSS_ID)
                 return npc;
         return null;
     }

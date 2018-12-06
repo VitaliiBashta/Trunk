@@ -18,7 +18,7 @@ import l2trunk.gameserver.utils.MapUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoatWayEvent extends GlobalEvent {
+public final class BoatWayEvent extends GlobalEvent {
     public static final String BOAT_POINTS = "boat_points";
 
     private final int _ticketId;
@@ -118,7 +118,7 @@ public class BoatWayEvent extends GlobalEvent {
             int ry = MapUtils.regionY(_boat.getY());
             int offset = Config.SHOUT_OFFSET;
 
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (player.getReflection() != _boat.getReflection())
                     continue;
 

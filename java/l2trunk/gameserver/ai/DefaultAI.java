@@ -63,7 +63,7 @@ public class DefaultAI extends CharacterAI {
     protected long _checkAggroTimestamp = 0;
     protected long _minFactionNotifyInterval = 10000;
     private long AI_TASK_DELAY_CURRENT = AI_TASK_ACTIVE_DELAY;
-    private ScheduledFuture<?> _runningTask;
+    private ScheduledFuture<?> runningTask;
     private long _randomAnimationEnd;
     private long _lastActiveCheck;
     /**
@@ -731,7 +731,7 @@ public class DefaultAI extends CharacterAI {
                     _pathfindFails = 0;
                     actor.teleToLocation(currentTask.loc);
                     // actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 2036, 1, 500, 600000));
-                    // ThreadPoolManager.INSTANCE().scheduleAi(new Teleport(currentTask.loc), 500, false);
+                    // ThreadPoolManager.INSTANCE().scheduleAi(new teleport(currentTask.loc), 500, false);
                     return maybeNextTask(currentTask);
                 }
             }
@@ -931,7 +931,7 @@ public class DefaultAI extends CharacterAI {
                 npc.setSpawnedLoc(actor.getLoc());
                 npc.setReflection(actor.getReflection());
                 npc.setChampion(((MonsterInstance) actor).getChampion());
-                npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+                npc.setFullHpMp();
                 npc.spawnMe(npc.getSpawnedLoc());
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 100);
                 actor.doDie(actor);
@@ -1316,8 +1316,8 @@ public class DefaultAI extends CharacterAI {
      */
     protected void startRunningTask(long interval) {
         NpcInstance actor = getActor();
-        if ((actor != null) && (_runningTask == null) && !actor.isRunning()) {
-            _runningTask = ThreadPoolManager.INSTANCE.schedule(new RunningTask(), interval);
+        if ((actor != null) && (runningTask == null) && !actor.isRunning()) {
+            runningTask = ThreadPoolManager.INSTANCE.schedule(new RunningTask(), interval);
         }
     }
 
@@ -1584,22 +1584,6 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-//    private static class TaskComparator implements Comparator<Task> {
-//        private static final Comparator<Task> instance = new TaskComparator();
-//
-//        static Comparator<Task> INSTANCE() {
-//            return instance;
-//        }
-//
-//        @Override
-//        public int compare(Task o1, Task o2) {
-//            if ((o1 == null) || (o2 == null)) {
-//                return 0;
-//            }
-//            return Integer.compare(o2.weight, o1.weight);
-//        }
-//    }
-
     static class NearestTargetComparator implements Comparator<Creature> {
         private final Creature actor;
 
@@ -1609,7 +1593,6 @@ public class DefaultAI extends CharacterAI {
 
         @Override
         public int compare(Creature o1, Creature o2) {
-            // double diff = actor.getDistance3D(o1) - actor.getDistance3D(o2);
             double diff = actor.getDistance3DNoRoot(o1) - actor.getDistance3DNoRoot(o2);
             if (diff < 0.0) {
                 return -1;
@@ -1619,17 +1602,17 @@ public class DefaultAI extends CharacterAI {
     }
 
     protected class Teleport extends RunnableImpl {
-        final Location _destination;
+        final Location destination;
 
         public Teleport(Location destination) {
-            _destination = destination;
+            this.destination = destination;
         }
 
         @Override
         public void runImpl() {
             NpcInstance actor = getActor();
             if (actor != null) {
-                actor.teleToLocation(_destination);
+                actor.teleToLocation(destination);
             }
         }
     }
@@ -1641,7 +1624,7 @@ public class DefaultAI extends CharacterAI {
             if (actor != null) {
                 actor.setRunning();
             }
-            _runningTask = null;
+            runningTask = null;
         }
     }
 

@@ -7,7 +7,6 @@ import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.GameObjectTasks;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public class NpcUtils {
     public static NpcInstance spawnSingle(int npcId, int x, int y, int z) {
@@ -35,20 +34,15 @@ public class NpcUtils {
     }
 
     public static NpcInstance spawnSingle(int npcId, Location loc, Reflection reflection, long despawnTime) {
-        NpcTemplate template = NpcHolder.getTemplate(npcId);
-        if (template == null)
-            throw new NullPointerException("Npc template id : " + npcId + " not found!");
+        NpcInstance npc = NpcHolder.getTemplate(npcId).getNewInstance();
+        npc.setSpawnedLoc(loc)
+                .setFullHpMp()
+                .setHeading(loc.h < 0 ? Rnd.get(0xFFFF) : loc.h)
+                .setReflection(reflection)
+                .spawnMe(npc.getSpawnedLoc());
 
-        NpcInstance npc = template.getNewInstance();
-        if (npc == null) return null;
-        npc.setHeading(loc.h < 0 ? Rnd.get(0xFFFF) : loc.h);
-        npc.setSpawnedLoc(loc);
-        npc.setReflection(reflection);
-        npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
-
-        npc.spawnMe(npc.getSpawnedLoc());
         if (despawnTime > 0)
-            ThreadPoolManager.INSTANCE().schedule(new GameObjectTasks.DeleteTask(npc), despawnTime);
+            ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(npc), despawnTime);
         return npc;
     }
 }

@@ -23,27 +23,21 @@ public class AchievementNotification {
     private AchievementNotification(int intervalInMiliseconds) {
         _globalNotification = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() ->
         {
-            try {
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-                    if (player == null)
+            for (Player player : GameObjectsStorage.getAllPlayers()) {
+
+                for (Entry<Integer, Integer> arco : player.getAchievements().entrySet()) {
+                    int achievementId = arco.getKey();
+                    int achievementLevel = arco.getValue();
+                    if (Achievements.INSTANCE.getMaxLevel(achievementId) <= achievementLevel)
                         continue;
 
-                    for (Entry<Integer, Integer> arco : player.getAchievements().entrySet()) {
-                        int achievementId = arco.getKey();
-                        int achievementLevel = arco.getValue();
-                        if (Achievements.INSTANCE.getMaxLevel(achievementId) <= achievementLevel)
-                            continue;
-
-                        Achievement nextLevelAchievement = Achievements.INSTANCE.getAchievement(achievementId, ++achievementLevel);
-                        if (nextLevelAchievement != null && nextLevelAchievement.isDone(player.getCounters().getPoints(nextLevelAchievement.getType()))) {
-                            // Make a question mark button.
-                            player.sendPacket(new TutorialShowQuestionMark(player.getObjectId()));
-                            break;
-                        }
+                    Achievement nextLevelAchievement = Achievements.INSTANCE.getAchievement(achievementId, ++achievementLevel);
+                    if (nextLevelAchievement != null && nextLevelAchievement.isDone(player.getCounters().getPoints(nextLevelAchievement.getType()))) {
+                        // Make a question mark button.
+                        player.sendPacket(new TutorialShowQuestionMark(player.getObjectId()));
+                        break;
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
         }, intervalInMiliseconds, intervalInMiliseconds);

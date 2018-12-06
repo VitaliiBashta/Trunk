@@ -33,26 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class SavingSnowman extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+public final class SavingSnowman extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(SavingSnowman.class);
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
-
-    private static ScheduledFuture<?> _snowmanShoutTask;
-    private static ScheduledFuture<?> _saveTask;
-    private static ScheduledFuture<?> _sayTask;
-    private static ScheduledFuture<?> _eatTask;
-
-    private static SnowmanState _snowmanState;
-
-    private static NpcInstance _snowman;
-    private static Creature _thomas;
-
-    public enum SnowmanState {
-        CAPTURED,
-        KILLED,
-        SAVED;
-    }
-
     private static final int INITIAL_SAVE_DELAY = 10 * 60 * 1000; // 10 мин
     private static final int SAVE_INTERVAL = 60 * 60 * 1000; // 60 мин
     private static final int SNOWMAN_SHOUT_INTERVAL = 1 * 60 * 1000; // 1 мин
@@ -63,10 +46,8 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
     private static final int EVENT_REWARDER_ID = 13186;
     private static final int SNOWMAN_ID = 13160;
     private static final int THOMAS_ID = 13183;
-
     private static final int SANTA_BUFF_REUSE = 12 * 3600 * 1000; // 12 hours
     private static final int SANTA_LOTTERY_REUSE = 3 * 3600 * 1000; // 3 hours
-
     // Оружие для обмена купонов
     private static final int WEAPONS[][] = {{20109, 20110, 20111, 20112, 20113, 20114, 20115, 20116, 20117, 20118, 20119, 20120, 20121, 20122}, // D
             {20123, 20124, 20125, 20126, 20127, 20128, 20129, 20130, 20131, 20132, 20133, 20134, 20135, 20136}, // C
@@ -74,8 +55,138 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             {20151, 20152, 20153, 20154, 20155, 20156, 20157, 20158, 20159, 20160, 20161, 20162, 20163, 20164}, // A
             {20165, 20166, 20167, 20168, 20169, 20170, 20171, 20172, 20173, 20174, 20175, 20176, 20177, 20178} // S
     };
-
+    private static ScheduledFuture<?> _snowmanShoutTask;
+    private static ScheduledFuture<?> _saveTask;
+    private static ScheduledFuture<?> _sayTask;
+    private static ScheduledFuture<?> _eatTask;
+    private static SnowmanState _snowmanState;
+    private static NpcInstance _snowman;
+    private static Creature _thomas;
     private static boolean _active = false;
+
+
+    private static boolean isActive() {
+        return isActive("SavingSnowman");
+    }
+
+    private static void spawnRewarder(Player rewarded) {
+        // Два санты рядом не должно быть
+        for (NpcInstance npc : rewarded.getAroundNpc(1500, 300))
+            if (npc.getNpcId() == EVENT_REWARDER_ID)
+                return;
+
+        // Санта появляется в зоне прямой видимости
+        Location spawnLoc = Location.findPointToStay(rewarded, 300, 400);
+        for (int i = 0; i < 20 && !GeoEngine.canSeeCoord(rewarded, spawnLoc.x, spawnLoc.y, spawnLoc.z, false); i++)
+            spawnLoc = Location.findPointToStay(rewarded, 300, 400);
+
+        // Спауним
+        NpcTemplate template = NpcHolder.getTemplate(EVENT_REWARDER_ID);
+        if (template == null) {
+            System.out.println("WARNING! events.SavingSnowman.spawnRewarder template is null for npc: " + EVENT_REWARDER_ID);
+            Thread.dumpStack();
+            return;
+        }
+
+        NpcInstance rewarder = new NpcInstance(IdFactory.getInstance().getNextId(), template);
+        rewarder.setLoc(spawnLoc);
+        rewarder.setHeading((int) (Math.atan2(spawnLoc.y - rewarded.getY(), spawnLoc.x - rewarded.getX()) * Creature.HEADINGS_IN_PI) + 32768); // Лицом к игроку
+        rewarder.spawnMe();
+
+        Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase1");
+
+        Location targetLoc = Location.findFrontPosition(rewarded, rewarded, 40, 50);
+        rewarder.setSpawnedLoc(targetLoc);
+        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), rewarder.getLoc(), targetLoc));
+
+        executeTask("events.SavingSnowman.SavingSnowman", "reward", new Object[]{rewarder, rewarded}, 5000);
+    }
+
+    public static void reward(NpcInstance rewarder, Player rewarded) {
+        if (!_active || rewarder == null || rewarded == null)
+            return;
+        Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase2", rewarded.getName());
+        Functions.addItem(rewarded, 14616, 1, "SavingSnowman"); // Gift from Santa Claus
+        executeTask("events.SavingSnowman.SavingSnowman", "removeRewarder", new Object[]{rewarder}, 5000);
+    }
+
+    public static void removeRewarder(NpcInstance rewarder) {
+        if (!_active || rewarder == null)
+            return;
+
+        Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase3");
+
+        Location loc = rewarder.getSpawnedLoc();
+
+        double radian = PositionUtils.convertHeadingToRadian(rewarder.getHeading());
+        int x = loc.x - (int) (Math.sin(radian) * 300);
+        int y = loc.y + (int) (Math.cos(radian) * 300);
+        int z = loc.z;
+
+        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), loc, new Location(x, y, z)));
+
+        executeTask("events.SavingSnowman.SavingSnowman", "unspawnRewarder", new Object[]{rewarder}, 2000);
+    }
+
+    public static void unspawnRewarder(NpcInstance rewarder) {
+        if (!_active || rewarder == null)
+            return;
+        rewarder.deleteMe();
+    }
+
+    private static Location getRandomSpawnPoint() {
+        //L2Territory[] locs = TerritoryTable.INSTANCE().getLocations();
+        //L2Territory terr = locs[Rnd.get(locs.length)];
+        //return new Location(terr.getRandomPoint());
+        return new Location(0, 0, 0);
+    }
+
+    // Индюк захавывает снеговика
+    public static void eatSnowman() {
+        if (_snowman == null || _thomas == null)
+            return;
+
+        GameObjectsStorage.getAllPlayers().forEach(player ->
+                Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanKilled", null, ChatType.CRITICAL_ANNOUNCE));
+
+        _snowmanState = SnowmanState.KILLED;
+
+        if (_snowmanShoutTask != null) {
+            _snowmanShoutTask.cancel(false);
+            _snowmanShoutTask = null;
+        }
+
+        _snowman.deleteMe();
+        _thomas.deleteMe();
+    }
+
+    // Индюк умер, освобождаем снеговика
+    public static void freeSnowman(Creature topDamager) {
+        if (_snowman == null || topDamager == null || !topDamager.isPlayable())
+            return;
+
+        GameObjectsStorage.getAllPlayers().forEach(player ->
+                Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanSaved", null, ChatType.CRITICAL_ANNOUNCE));
+
+        _snowmanState = SnowmanState.SAVED;
+
+        if (_snowmanShoutTask != null) {
+            _snowmanShoutTask.cancel(false);
+            _snowmanShoutTask = null;
+        }
+        if (_eatTask != null) {
+            _eatTask.cancel(false);
+            _eatTask = null;
+        }
+
+        Player player = topDamager.getPlayer();
+        Functions.npcSayCustomMessage(_snowman, "scripts.events.SavingSnowman.SnowmanSayTnx", player.getName());
+        addItem(player, 20034, 3, "SavingSnowman"); // Revita-Pop
+        addItem(player, 20338, 1, "SavingSnowman"); // Rune of Experience Points 50%	10 Hour Expiration Period
+        addItem(player, 20344, 1, "SavingSnowman"); // Rune of SP 50% 10 Hour Expiration Period
+
+        ThreadPoolManager.INSTANCE.execute(() -> _snowman.deleteMe());
+    }
 
     @Override
     public void onLoad() {
@@ -84,44 +195,26 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             _active = true;
             spawnEventManagers();
             _log.info("Loaded Event: SavingSnowman [state: activated]");
-            _saveTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
-            _sayTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
+            _saveTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
+            _sayTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
             _snowmanState = SnowmanState.SAVED;
         } else
             _log.info("Loaded Event: SavingSnowman [state: deactivated]");
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
-    private static boolean isActive() {
-        return isActive("SavingSnowman");
-    }
-
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
             return;
 
-        /* FIXME */
-        if (Boolean.FALSE) {
-            player.sendMessage("Event is currently disabled");
-            return;
-        }
-
         if (SetActive("SavingSnowman", true)) {
             spawnEventManagers();
             System.out.println("Event 'SavingSnowman' started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStarted");
             if (_saveTask == null)
-                _saveTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
+                _saveTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SaveTask(), INITIAL_SAVE_DELAY, SAVE_INTERVAL);
             if (_sayTask == null)
-                _sayTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
+                _sayTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SayTask(), SATNA_SAY_INTERVAL, SATNA_SAY_INTERVAL);
             _snowmanState = SnowmanState.SAVED;
         } else
             player.sendMessage("Event 'SavingSnowman' already started.");
@@ -145,7 +238,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             if (_thomas != null)
                 _thomas.deleteMe();
             System.out.println("Event 'SavingSnowman' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SavingSnowman.AnnounceEventStoped");
             if (_saveTask != null) {
                 _saveTask.cancel(false);
                 _saveTask = null;
@@ -244,71 +337,6 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
                 spawnRewarder(players.get(Rnd.get(players.size())));
             }
         }
-    }
-
-    private static void spawnRewarder(Player rewarded) {
-        // Два санты рядом не должно быть
-        for (NpcInstance npc : rewarded.getAroundNpc(1500, 300))
-            if (npc.getNpcId() == EVENT_REWARDER_ID)
-                return;
-
-        // Санта появляется в зоне прямой видимости
-        Location spawnLoc = Location.findPointToStay(rewarded, 300, 400);
-        for (int i = 0; i < 20 && !GeoEngine.canSeeCoord(rewarded, spawnLoc.x, spawnLoc.y, spawnLoc.z, false); i++)
-            spawnLoc = Location.findPointToStay(rewarded, 300, 400);
-
-        // Спауним
-        NpcTemplate template = NpcHolder.getTemplate(EVENT_REWARDER_ID);
-        if (template == null) {
-            System.out.println("WARNING! events.SavingSnowman.spawnRewarder template is null for npc: " + EVENT_REWARDER_ID);
-            Thread.dumpStack();
-            return;
-        }
-
-        NpcInstance rewarder = new NpcInstance(IdFactory.getInstance().getNextId(), template);
-        rewarder.setLoc(spawnLoc);
-        rewarder.setHeading((int) (Math.atan2(spawnLoc.y - rewarded.getY(), spawnLoc.x - rewarded.getX()) * Creature.HEADINGS_IN_PI) + 32768); // Лицом к игроку
-        rewarder.spawnMe();
-
-        Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase1");
-
-        Location targetLoc = Location.findFrontPosition(rewarded, rewarded, 40, 50);
-        rewarder.setSpawnedLoc(targetLoc);
-        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), rewarder.getLoc(), targetLoc));
-
-        executeTask("events.SavingSnowman.SavingSnowman", "reward", new Object[]{rewarder, rewarded}, 5000);
-    }
-
-    public static void reward(NpcInstance rewarder, Player rewarded) {
-        if (!_active || rewarder == null || rewarded == null)
-            return;
-        Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase2", rewarded.getName());
-        Functions.addItem(rewarded, 14616, 1, "SavingSnowman"); // Gift from Santa Claus
-        executeTask("events.SavingSnowman.SavingSnowman", "removeRewarder", new Object[]{rewarder}, 5000);
-    }
-
-    public static void removeRewarder(NpcInstance rewarder) {
-        if (!_active || rewarder == null)
-            return;
-
-        Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase3");
-
-        Location loc = rewarder.getSpawnedLoc();
-
-        double radian = PositionUtils.convertHeadingToRadian(rewarder.getHeading());
-        int x = loc.x - (int) (Math.sin(radian) * 300);
-        int y = loc.y + (int) (Math.cos(radian) * 300);
-        int z = loc.z;
-
-        rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), loc, new Location(x, y, z)));
-
-        executeTask("events.SavingSnowman.SavingSnowman", "unspawnRewarder", new Object[]{rewarder}, 2000);
-    }
-
-    public static void unspawnRewarder(NpcInstance rewarder) {
-        if (!_active || rewarder == null)
-            return;
-        rewarder.deleteMe();
     }
 
     public void buff() {
@@ -457,62 +485,39 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceEventStarted", null);
-    }
-
-    private static Location getRandomSpawnPoint() {
-        //L2Territory[] locs = TerritoryTable.INSTANCE().getLocations();
-        //L2Territory terr = locs[Rnd.get(locs.length)];
-        //return new Location(terr.getRandomPoint());
-        return new Location(0, 0, 0);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceEventStarted");
     }
 
     // Индюк захватывает снеговика
     private void captureSnowman() {
         Location spawnPoint = getRandomSpawnPoint();
 
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        GameObjectsStorage.getAllPlayers().forEach(player -> {
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanCaptured", null, ChatType.CRITICAL_ANNOUNCE);
             player.sendPacket(new SystemMessage(SystemMessage.S2_S1).addZoneName(spawnPoint).addString("Look snowman in "));
             // Убираем и ставим флажок на карте и стрелку на компасе
             player.sendPacket(new RadarControl(2, 2, spawnPoint), new RadarControl(0, 1, spawnPoint));
-        }
+        });
 
         // Спауним снеговика
-        NpcTemplate template = NpcHolder.getTemplate(SNOWMAN_ID);
-        if (template == null) {
-            System.out.println("WARNING! events.SavingSnowman.captureSnowman template is null for npc: " + SNOWMAN_ID);
-            Thread.dumpStack();
-            return;
-        }
 
-        SimpleSpawner sp = new SimpleSpawner(template);
-        sp.setLoc(spawnPoint);
-        sp.setAmount(1);
-        sp.setRespawnDelay(0);
+        SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(SNOWMAN_ID)
+                .setLoc(spawnPoint)
+                .setAmount(1)
+                .setRespawnDelay(0);
         _snowman = sp.doSpawn(true);
 
         if (_snowman == null)
             return;
 
         // Спауним Томаса
-        template = NpcHolder.getTemplate(THOMAS_ID);
-        if (template == null) {
-            System.out.println("WARNING! events.SavingSnowman.captureSnowman template is null for npc: " + THOMAS_ID);
-            Thread.dumpStack();
-            return;
-        }
-
         Location pos = Location.findPointToStay(_snowman, 100, 120);
 
-        sp = new SimpleSpawner(template);
-        sp.setLoc(pos);
-        sp.setAmount(1);
-        sp.setRespawnDelay(0);
+        sp = (SimpleSpawner) new SimpleSpawner(THOMAS_ID)
+                .setLoc(pos)
+                .setAmount(1)
+                .setRespawnDelay(0);
         _thomas = sp.doSpawn(true);
-
-        if (_thomas == null)
-            return;
 
         _snowmanState = SnowmanState.CAPTURED;
 
@@ -521,7 +526,7 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
             _snowmanShoutTask.cancel(false);
             _snowmanShoutTask = null;
         }
-        _snowmanShoutTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new ShoutTask(), 1, SNOWMAN_SHOUT_INTERVAL);
+        _snowmanShoutTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ShoutTask(), 1, SNOWMAN_SHOUT_INTERVAL);
 
         if (_eatTask != null) {
             _eatTask.cancel(false);
@@ -530,57 +535,10 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         _eatTask = executeTask("events.SavingSnowman.SavingSnowman", "eatSnowman", new Object[0], THOMAS_EAT_DELAY);
     }
 
-    // Индюк захавывает снеговика
-    public static void eatSnowman() {
-        if (_snowman == null || _thomas == null)
-            return;
-
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanKilled", null, ChatType.CRITICAL_ANNOUNCE);
-
-        _snowmanState = SnowmanState.KILLED;
-
-        if (_snowmanShoutTask != null) {
-            _snowmanShoutTask.cancel(false);
-            _snowmanShoutTask = null;
-        }
-
-        _snowman.deleteMe();
-        _thomas.deleteMe();
-    }
-
-    // Индюк умер, освобождаем снеговика
-    public static void freeSnowman(Creature topDamager) {
-        if (_snowman == null || topDamager == null || !topDamager.isPlayable())
-            return;
-
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanSaved", null, ChatType.CRITICAL_ANNOUNCE);
-
-        _snowmanState = SnowmanState.SAVED;
-
-        if (_snowmanShoutTask != null) {
-            _snowmanShoutTask.cancel(false);
-            _snowmanShoutTask = null;
-        }
-        if (_eatTask != null) {
-            _eatTask.cancel(false);
-            _eatTask = null;
-        }
-
-        Player player = topDamager.getPlayer();
-        Functions.npcSayCustomMessage(_snowman, "scripts.events.SavingSnowman.SnowmanSayTnx", player.getName());
-        addItem(player, 20034, 3, "SavingSnowman"); // Revita-Pop
-        addItem(player, 20338, 1, "SavingSnowman"); // Rune of Experience Points 50%	10 Hour Expiration Period
-        addItem(player, 20344, 1, "SavingSnowman"); // Rune of SP 50% 10 Hour Expiration Period
-
-        ThreadPoolManager.INSTANCE().execute(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                _snowman.deleteMe();
-            }
-
-        });
+    public enum SnowmanState {
+        CAPTURED,
+        KILLED,
+        SAVED;
     }
 
     public class SayTask extends RunnableImpl {
@@ -600,7 +558,6 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         public void runImpl() {
             if (!_active || _snowman == null || _snowmanState != SnowmanState.CAPTURED)
                 return;
-
             Functions.npcShoutCustomMessage(_snowman, "scripts.events.SavingSnowman.SnowmanShout");
         }
     }
@@ -610,7 +567,6 @@ public class SavingSnowman extends Functions implements ScriptFile, OnDeathListe
         public void runImpl() {
             if (!_active || _snowmanState == SnowmanState.CAPTURED)
                 return;
-
             captureSnowman();
         }
     }

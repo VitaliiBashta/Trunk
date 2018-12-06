@@ -10,31 +10,27 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 
-public class MatchingRoomManager {
-    private static final MatchingRoomManager _instance = new MatchingRoomManager();
+public enum  MatchingRoomManager {
+    INSTANCE;
     private final RoomsHolder[] _holder = new RoomsHolder[2];
-    private final Set<Player> _players = new CopyOnWriteArraySet<>();
+    private final Set<Player> players = new CopyOnWriteArraySet<>();
 
     private MatchingRoomManager() {
         _holder[MatchingRoom.PARTY_MATCHING] = new RoomsHolder();
         _holder[MatchingRoom.CC_MATCHING] = new RoomsHolder();
     }
 
-    public static MatchingRoomManager getInstance() {
-        return _instance;
-    }
-
     public void addToWaitingList(Player player) {
-        _players.add(player);
+        players.add(player);
     }
 
     public void removeFromWaitingList(Player player) {
-        _players.remove(player);
+        players.remove(player);
     }
 
     public List<Player> getWaitingList(int minLevel, int maxLevel, int[] classes) {
         List<Player> res = new ArrayList<>();
-        for (Player $member : _players)
+        for (Player $member : players)
             if ($member.getLevel() >= minLevel && $member.getLevel() <= maxLevel)
                 if (classes.length == 0 || ArrayUtils.contains(classes, $member.getClassId().getId()))
                     res.add($member);
@@ -47,7 +43,7 @@ public class MatchingRoomManager {
         for (MatchingRoom room : _holder[type]._rooms.values()) {
             if (region > 0 && room.getLocationId() != region)
                 continue;
-            else if (region == -2 && room.getLocationId() != MatchingRoomManager.getInstance().getLocation(activeChar))
+            else if (region == -2 && room.getLocationId() != MatchingRoomManager.INSTANCE.getLocation(activeChar))
                 continue;
             if (!allLevels && (room.getMinLevel() > activeChar.getLevel() || room.getMaxLevel() < activeChar.getLevel()))
                 continue;

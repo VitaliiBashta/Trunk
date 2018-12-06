@@ -2675,7 +2675,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="8" />	<!--Angels-->
 			<skill id="4641" level="6" />	<!--NPC Super Strike-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -2802,7 +2802,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="8" />	<!--Angels-->
 			<skill id="4641" level="6" />	<!--NPC Super Strike-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -3553,7 +3553,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="8" />	<!--Angels-->
 			<skill id="4641" level="6" />	<!--NPC Super Strike-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -4549,7 +4549,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="8" />	<!--Angels-->
 			<skill id="4641" level="6" />	<!--NPC Super Strike-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -4678,7 +4678,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="8" />	<!--Angels-->
 			<skill id="4641" level="6" />	<!--NPC Super Strike-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -5371,7 +5371,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -5753,7 +5753,7 @@
 			<skill id="4415" level="7" />	<!--Daggers-->
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -6013,7 +6013,7 @@
 			<skill id="4415" level="7" />	<!--Daggers-->
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -6266,7 +6266,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -7150,7 +7150,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -8261,7 +8261,7 @@
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4592" level="6" />	<!--Decrease P. Def.-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -9233,7 +9233,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4649" level="7" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 			<skill id="4789" level="2" />	<!--NPC High Level-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
@@ -10508,7 +10508,7 @@
 			<skill id="4561" level="7" />	<!--NPC Fire Burn - Magic-->
 			<skill id="4596" level="7" />	<!--Bleed-->
 			<skill id="4664" level="7" />	<!--NPC 100% HP Drain-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 			<skill id="4789" level="3" />	<!--NPC High Level-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
@@ -10641,7 +10641,7 @@
 			<skill id="4596" level="7" />	<!--Bleed-->
 			<skill id="4622" level="7" />	<!--NPC AE - 80% HP Drain - Magic-->
 			<skill id="4664" level="7" />	<!--NPC 100% HP Drain-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 			<skill id="4789" level="3" />	<!--NPC High Level-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
@@ -11627,7 +11627,7 @@
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4592" level="6" />	<!--Decrease P. Def.-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">
@@ -11715,7 +11715,7 @@
 			<skill id="4415" level="3" />	<!--One-handed Sword-->
 			<skill id="4416" level="1" />	<!--Undead-->
 			<skill id="4649" level="6" />	<!--Poison-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
 			<group chance="70.0">

@@ -94,7 +94,7 @@ public class _196_SevenSignsSealoftheEmperor extends Quest implements ScriptFile
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ_SEALING_EMPEROR_1ST);
             player.sendPacket(new SystemMessage(SystemMessage.IN_ORDER_TO_HELP_ANAKIM_ACTIVATE_THE_SEALING_DEVICE_OF_THE_EMPEROR_WHO_IS_POSSESED_BY_THE_EVIL));
             ref.openDoor(door11);
-            ThreadPoolManager.INSTANCE().schedule(new SpawnLilithRoom(ref), 17000);
+            ThreadPoolManager.INSTANCE.schedule(new SpawnLilithRoom(ref), 17000);
             return null;
         } else if (event.equalsIgnoreCase("shunaiman_q196_4.htm")) {
             st.setCond(5);
@@ -190,22 +190,22 @@ public class _196_SevenSignsSealoftheEmperor extends Quest implements ScriptFile
     }
 
     private class SpawnLilithRoom extends RunnableImpl {
-        final Reflection _r;
+        final Reflection reflection;
 
         SpawnLilithRoom(Reflection r) {
-            _r = r;
+            reflection = r;
         }
 
         @Override
         public void runImpl() {
-            if (_r != null) {
-                _r.addSpawnWithoutRespawn(32715, new Location(-83175, 217021, -7504, 49151), 0); //Lilith
-                _r.addSpawnWithoutRespawn(32718, new Location(-83179, 216479, -7504, 16384), 0); //Anakim
-                _r.addSpawnWithoutRespawn(32717, new Location(-83222, 217055, -7504, 49151), 0); //liliths_shadow_guard_ssq
-                _r.addSpawnWithoutRespawn(32716, new Location(-83127, 217056, -7504, 49151), 0); //liliths_agent_wizard_ssq
-                _r.addSpawnWithoutRespawn(32719, new Location(-83227, 216443, -7504, 16384), 0); //anakims_holly_ssq
-                _r.addSpawnWithoutRespawn(32721, new Location(-83179, 216432, -7504, 16384), 0); //anakims_sacred_ssq
-                _r.addSpawnWithoutRespawn(32720, new Location(-83134, 216443, -7504, 16384), 0); //anakims_divine_ssq
+            if (reflection != null) {
+                reflection.addSpawnWithoutRespawn(32715, new Location(-83175, 217021, -7504, 49151), 0); //Lilith
+                reflection.addSpawnWithoutRespawn(32718, new Location(-83179, 216479, -7504, 16384), 0); //Anakim
+                reflection.addSpawnWithoutRespawn(32717, new Location(-83222, 217055, -7504, 49151), 0); //liliths_shadow_guard_ssq
+                reflection.addSpawnWithoutRespawn(32716, new Location(-83127, 217056, -7504, 49151), 0); //liliths_agent_wizard_ssq
+                reflection.addSpawnWithoutRespawn(32719, new Location(-83227, 216443, -7504, 16384), 0); //anakims_holly_ssq
+                reflection.addSpawnWithoutRespawn(32721, new Location(-83179, 216432, -7504, 16384), 0); //anakims_sacred_ssq
+                reflection.addSpawnWithoutRespawn(32720, new Location(-83134, 216443, -7504, 16384), 0); //anakims_divine_ssq
             }
         }
     }

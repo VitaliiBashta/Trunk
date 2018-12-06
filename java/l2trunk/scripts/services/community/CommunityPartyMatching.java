@@ -171,7 +171,7 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
                     allPlayers.add(member);
             }
         } else {
-            for (Player singlePlayer : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player singlePlayer : GameObjectsStorage.getAllPlayers()) {
                 String party_checker = canJoinParty(singlePlayer);
                 if (party_checker.isEmpty()) {
                     if (!isClassTestPassed(singlePlayer, classSortType)) {
@@ -183,7 +183,7 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
             }
         }
 
-        Collections.sort(allPlayers, new CharComparator(sortType, classSortType, asc));
+        allPlayers.sort(new CharComparator(sortType, classSortType, asc));
         return allPlayers;
     }
 

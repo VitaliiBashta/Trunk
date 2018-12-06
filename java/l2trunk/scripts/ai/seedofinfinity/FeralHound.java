@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 public final class FeralHound extends Fighter {
     public FeralHound(NpcInstance actor) {
         super(actor);
-        actor.setIsInvul(true);
+        actor.setInvul(true);
     }
 
     @Override

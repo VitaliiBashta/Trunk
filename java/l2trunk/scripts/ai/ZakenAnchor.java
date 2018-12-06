@@ -32,7 +32,7 @@ public final class ZakenAnchor extends DefaultAI {
             } else if (actor.getReflection().getInstancedZoneId() == 135) {
                 for (NpcInstance npc : actor.getReflection().getNpcs())
                     if (npc.getNpcId() == UltraDayZaken) {
-                        npc.setIsInvul(false);
+                        npc.setInvul(false);
                         npc.teleToLocation(actor.getLoc());
                     }
                 //actor.getReflection().addSpawnWithoutRespawn(UltraDayZaken, actor.getLoc(), 0);

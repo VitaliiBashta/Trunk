@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
@@ -10,6 +9,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
+
+import static l2trunk.scripts.ai.ZakenDaytime.scheduleTeleport;
+import static l2trunk.scripts.ai.ZakenDaytime83.zakenTele;
 
 public final class ZakenNightly extends Fighter {
     private static final int doll_blader_b = 29023;
@@ -34,10 +36,9 @@ public final class ZakenNightly extends Fighter {
             new Location(54248, 220136, -2952),
             new Location(56296, 220136, -2952)
     };
-
-    private long _teleportSelfTimer = 0L;
     private final long _teleportSelfReuse = 30000L;          // 30 secs
     private final NpcInstance actor = getActor();
+    private long _teleportSelfTimer = 0L;
     private int _stage = 0;
 
     public ZakenNightly(NpcInstance actor) {
@@ -47,19 +48,7 @@ public final class ZakenNightly extends Fighter {
 
     @Override
     public void thinkAttack() {
-        if (_teleportSelfTimer + _teleportSelfReuse < System.currentTimeMillis()) {
-            _teleportSelfTimer = System.currentTimeMillis();
-            if (Rnd.chance(20)) {
-                actor.doCast(SkillTable.INSTANCE().getInfo(4222, 1), actor, false);
-                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        actor.teleToLocation(_locations[Rnd.get(_locations.length)]);
-                        actor.getAggroList().clear(true);
-                    }
-                }, 500);
-            }
-        }
+        scheduleTeleport(_teleportSelfTimer, _teleportSelfReuse, actor);
 
         double actor_hp_precent = actor.getCurrentHpPercents();
         Reflection r = actor.getReflection();
@@ -139,6 +128,5 @@ public final class ZakenNightly extends Fighter {
 
     @Override
     public void teleportHome() {
-        return;
     }
 }

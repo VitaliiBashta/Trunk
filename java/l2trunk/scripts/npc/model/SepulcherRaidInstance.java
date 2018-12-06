@@ -13,7 +13,7 @@ import l2trunk.scripts.bosses.FourSepulchersSpawn;
 
 import java.util.concurrent.Future;
 
-public class SepulcherRaidInstance extends RaidBossInstance {
+public final class SepulcherRaidInstance extends RaidBossInstance {
     public int mysteriousBoxId = 0;
     private Future<?> _onDeadEventTask = null;
 
@@ -30,7 +30,7 @@ public class SepulcherRaidInstance extends RaidBossInstance {
             giveCup(player);
         if (_onDeadEventTask != null)
             _onDeadEventTask.cancel(false);
-        _onDeadEventTask = ThreadPoolManager.INSTANCE().schedule(new OnDeadEvent(this), 8500);
+        _onDeadEventTask = ThreadPoolManager.INSTANCE.schedule(new OnDeadEvent(this), 8500);
     }
 
     @Override

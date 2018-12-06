@@ -75,7 +75,7 @@ public class _088_SagaOfTheArchmage extends SagasSuperclass implements ScriptFil
                 "Paying homage to those who disrupt the orderly will be PLAYERNAME's death!",
                 "Now, my soul freed from the shackles of the millennium, Halixia, to the back side I come ...",
                 "Why do you interfere others' battles?",
-                "This is a waste of time.. Say goodbye...!",
+                "This is a waste of time.. say goodbye...!",
                 "...That is the enemy",
                 "...Goodness! PLAYERNAME you are still looking?",
                 "PLAYERNAME ... Not just to whom the victory. Only personnel involved in the fighting are eligible to share in the victory.",

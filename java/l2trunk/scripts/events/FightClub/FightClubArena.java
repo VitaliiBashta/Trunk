@@ -28,10 +28,8 @@ import java.util.concurrent.ScheduledFuture;
 public class FightClubArena extends FightClubManager implements OnDeathListener, OnPlayerExitListener {
     private static final int[] doors = new int[]{17160020, 17160019, 17160024, 17160023};
     private static final String CLASS_NAME = "events.FightClub.FightClubManager";
-
-    private ScheduledFuture<?> _endTask;
     private static ScheduledFuture<?> _startTask;
-
+    private ScheduledFuture<?> _endTask;
     private boolean _isEnded = false;
     private Player player1;
     private Player player2;
@@ -41,7 +39,7 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
     private ZoneListener _zoneListener;
     private Zone _zone;
     private Map<String, ZoneTemplate> _zones;
-    private Map<Integer,DoorTemplate> _doors;
+    private Map<Integer, DoorTemplate> _doors;
 
     public FightClubArena(Player player1, Player player2, int itemId, int itemCount, Reflection reflection) {
         //Подключаем листенеры персонажа
@@ -76,6 +74,9 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
         initBattle();
     }
 
+    public FightClubArena() {
+    }
+
     /**
      * Вызывается при выходе игрока
      */
@@ -108,8 +109,8 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
      */
     private void initBattle() {
         final Object[] args = {player1, player2, reflection};
-        _startTask = ThreadPoolManager.INSTANCE().scheduleAtFixedDelay(new StartTask(player1, player2), Config.ARENA_TELEPORT_DELAY * 1000, 1000);
-        _endTask = ThreadPoolManager.INSTANCE().schedule(new EndTask(), ((Config.ARENA_TELEPORT_DELAY + Config.FIGHT_TIME)) * 1000);
+        _startTask = ThreadPoolManager.INSTANCE.scheduleAtFixedDelay(new StartTask(player1, player2), Config.ARENA_TELEPORT_DELAY * 1000, 1000);
+        _endTask = ThreadPoolManager.INSTANCE.schedule(new EndTask(), ((Config.ARENA_TELEPORT_DELAY + Config.FIGHT_TIME)) * 1000);
         sayToPlayers("scripts.events.fightclub.TeleportThrough", Config.ARENA_TELEPORT_DELAY, false, player1, player2);
         executeTask(CLASS_NAME, "resurrectPlayers", args, Config.ARENA_TELEPORT_DELAY * 1000 - 600);
         executeTask(CLASS_NAME, "healPlayers", args, Config.ARENA_TELEPORT_DELAY * 1000 - 500);
@@ -219,6 +220,18 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
         executeTask(CLASS_NAME, "deleteArena", arg, delay);
     }
 
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
+    }
+
     protected static class StartTask extends RunnableImpl {
 
         private final Player player1;
@@ -292,8 +305,7 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
 
             Player player = actor.getPlayer();
             if (!_inBattle.contains(player.getStoredId()))
-                ;
-            ThreadPoolManager.INSTANCE().schedule(new TeleportTask(player, new Location(147451, 46728, -3410)), 3000);
+                ThreadPoolManager.INSTANCE.schedule(new TeleportTask(player, new Location(147451, 46728, -3410)), 3000);
         }
 
         @Override
@@ -308,23 +320,8 @@ public class FightClubArena extends FightClubManager implements OnDeathListener,
                 int x = (int) (actor.getX() + 50 * Math.sin(radian));
                 int y = (int) (actor.getY() - 50 * Math.cos(radian));
                 int z = actor.getZ();
-                ThreadPoolManager.INSTANCE().schedule(new TeleportTask(player, new Location(x, y, z)), 3000);
+                ThreadPoolManager.INSTANCE.schedule(new TeleportTask(player, new Location(x, y, z)), 3000);
             }
         }
-    }
-
-    public FightClubArena() {
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model.residences.clanhall;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
@@ -16,11 +15,7 @@ import l2trunk.gameserver.utils.NpcUtils;
 
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 12:39/21.05.2011
- */
-public class RainbowGourdInstance extends NpcInstance {
+public final class RainbowGourdInstance extends NpcInstance {
     private CMGSiegeClanObject _winner;
 
     public RainbowGourdInstance(int objectId, NpcTemplate template) {
@@ -109,18 +104,12 @@ public class RainbowGourdInstance extends NpcInstance {
         miniGameEvent.removeBanishItems();
 
         final NpcInstance npc = NpcUtils.spawnSingle(35600, loc.x, loc.y, loc.z, 0);
-        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                List<Player> around = World.getAroundPlayers(npc, 750, 100);
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            npc.deleteMe();
+            World.getAroundPlayers(npc, 750, 100).forEach(player ->
+                    player.teleToLocation(miniGameEvent.getResidence().getOwnerRestartPoint()));
 
-                npc.deleteMe();
-
-                for (Player player : around)
-                    player.teleToLocation(miniGameEvent.getResidence().getOwnerRestartPoint());
-
-                miniGameEvent.processStep(_winner.getClan());
-            }
+            miniGameEvent.processStep(_winner.getClan());
         }, 10000L);
     }
 

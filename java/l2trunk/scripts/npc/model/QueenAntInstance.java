@@ -1,7 +1,6 @@
 package l2trunk.scripts.npc.model;
 
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
@@ -18,8 +17,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class QueenAntInstance extends BossInstance {
+public final class QueenAntInstance extends BossInstance {
     private static final int Queen_Ant_Larva = 29002;
 
     private final List<SimpleSpawner> _spawns = new ArrayList<>();
@@ -31,7 +29,7 @@ public class QueenAntInstance extends BossInstance {
 
     public NpcInstance getLarva() {
         if (Larva == null) {
-            Larva = SpawnNPC(Queen_Ant_Larva, new Location(-21600, 179482, -5846, Rnd.get(0, 0xFFFF)));
+            Larva = SpawnLarva(new Location(-21600, 179482, -5846, Rnd.get(0, 0xFFFF)));
         }
         return Larva;
     }
@@ -58,32 +56,16 @@ public class QueenAntInstance extends BossInstance {
         // Synerge - On Queen Ant spawn teleport every player that is inside the zone to the closest town
         final Zone zone = getZone(ZoneType.epic);
         if (zone != null) {
-            for (Player player : zone.getInsidePlayers()) {
-                if (player == null)
-                    continue;
-
-                player.teleToClosestTown();
-            }
+            zone.getInsidePlayers().forEach(Player::teleToClosestTown);
         }
     }
 
-    private NpcInstance SpawnNPC(int npcId, Location loc) {
-        NpcTemplate template = NpcHolder.getTemplate(npcId);
-        if (template == null) {
-            System.out.println("WARNING! template is null for npc: " + npcId);
-            Thread.dumpStack();
-            return null;
-        }
-        try {
-            SimpleSpawner sp = new SimpleSpawner(template);
-            sp.setLoc(loc);
-            sp.setAmount(1);
-            sp.setRespawnDelay(0);
-            _spawns.add(sp);
-            return sp.spawnOne();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    private NpcInstance SpawnLarva(Location loc) {
+        SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(QueenAntInstance.Queen_Ant_Larva)
+                .setLoc(loc)
+                .setAmount(1)
+                .setRespawnDelay(0);
+        _spawns.add(sp);
+        return sp.spawnOne();
     }
 }

@@ -45,7 +45,7 @@ public final class FurnaceBalance extends DefaultAI {
             actor.setNpcState((byte) 1);
             Functions.npcShout(actor, NpcString.FURN1);
             furnace.registerActions();
-            ThreadPoolManager.INSTANCE().schedule(new ScheduleTimerTask(), 15000);
+            ThreadPoolManager.INSTANCE.schedule(new ScheduleTimerTask(), 15000);
         }
 
         super.onEvtAttacked(attacker, damage);
@@ -54,8 +54,7 @@ public final class FurnaceBalance extends DefaultAI {
     private class ScheduleTimerTask extends RunnableImpl {
         @Override
         public void runImpl() {
-            NpcInstance actor = getActor();
-            int event_id = actor.getAISpawnParam();
+            int event_id = getActor().getAISpawnParam();
             MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
             furnace.spawnAction(MonasteryFurnaceEvent.STANDART_ROOM, true);
         }

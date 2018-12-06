@@ -1,9 +1,7 @@
 package l2trunk.scripts.ai.hellbound;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -11,11 +9,8 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class Tully extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(Tully.class);
     // 32371
     private static final Location[] locSD = {
             new Location(-12524, 273932, -9014, 49151),
@@ -40,48 +35,32 @@ public final class Tully extends Fighter {
     @Override
     public void onEvtDead(Creature killer) {
         for (Location aLocSD : locSD) {
-            try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(32371));
-                sp.setLoc(aLocSD);
-                sp.doSpawn(true);
-                if (!s) {
-                    Functions.npcShout(sp.getLastSpawn(), "Self Destruction mechanism launched: 10 minutes to " +
-                            "explosion");
-                    s = true;
-                }
-            } catch (RuntimeException e) {
-                LOG.error("Error on Tully Death, Self Destruction", e);
+            SimpleSpawner sp = new SimpleSpawner(32371)
+            .setLoc(aLocSD);
+            sp.doSpawn(true);
+            if (!s) {
+                Functions.npcShout(sp.getLastSpawn(), "Self Destruction mechanism launched: 10 minutes to " +
+                        "explosion");
+                s = true;
             }
+
         }
         for (Location aLocFTT : locFTT) {
-            try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(22392));
-                sp.setLoc(aLocFTT);
-                sp.doSpawn(true);
-            } catch (RuntimeException e) {
-                LOG.error("Error on Tully Death Spawn Monster", e);
-            }
-        }
-        try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(32370));
-            sp.setLoc(new Location(-11984, 272928, -9040, 23644));
-            sp.doSpawn(true);
-            removableGhost = sp.getLastSpawn();
-        } catch (RuntimeException e) {
-            LOG.error("Error on Tully Death Spawn Removable Ghost", e);
-        }
-        ThreadPoolManager.INSTANCE().schedule(new UnspawnAndExplode(), 600 * 1000L); // 10 mins
+            new SimpleSpawner(22392)
+                    .setLoc(aLocFTT)
+                    .doSpawn(true);
 
-        super.onEvtDead(killer);
-    }
-
-    private static class UnspawnAndExplode extends RunnableImpl {
-        @Override
-        public void runImpl() {
+        }
+        SimpleSpawner sp = new SimpleSpawner(32370)
+                .setLoc(new Location(-11984, 272928, -9040, 23644));
+        sp.doSpawn(true);
+        removableGhost = sp.getLastSpawn();
+        ThreadPoolManager.INSTANCE.schedule(() -> {
             GameObjectsStorage.getAllByNpcId(32371, true).forEach(GameObject::deleteMe);
             GameObjectsStorage.getAllByNpcId(22392, true).forEach(GameObject::deleteMe);
-            if (removableGhost != null)
-                removableGhost.deleteMe();
-        }
+            if (removableGhost != null) removableGhost.deleteMe();
+        }, 600 * 1000L); // 10 mins
+
+        super.onEvtDead(killer);
     }
 }

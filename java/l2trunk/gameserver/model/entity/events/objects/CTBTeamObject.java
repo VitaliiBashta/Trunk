@@ -26,14 +26,14 @@ public class CTBTeamObject implements SpawnableObject {
     public void spawnObject(GlobalEvent event) {
         if (_flag == null) {
             _flag = new NpcInstance(IdFactory.getInstance().getNextId(), _flagTemplate);
-            _flag.setCurrentHpMp(_flag.getMaxHp(), _flag.getMaxMp());
+            _flag.setFullHpMp();;
             _flag.setHasChatWindow(false);
             _flag.spawnMe(_flagLoc);
         } else if (_mob == null) {
             NpcTemplate template = _siegeClan == null || _siegeClan.getParam() == 0 ? _mobTemplate : NpcHolder.getTemplate((int) _siegeClan.getParam());
 
             _mob = (CTBBossInstance) template.getNewInstance();
-            _mob.setCurrentHpMp(_mob.getMaxHp(), _mob.getMaxMp());
+            _mob.setFullHpMp();
             _mob.setMatchTeamObject(this);
             _mob.addEvent(event);
 

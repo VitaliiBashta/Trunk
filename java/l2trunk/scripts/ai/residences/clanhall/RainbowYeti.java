@@ -19,19 +19,6 @@ import l2trunk.scripts.npc.model.residences.clanhall.RainbowYetiInstance;
 import java.util.List;
 
 public final class RainbowYeti extends CharacterAI {
-    private static class ZoneDeactive extends RunnableImpl {
-        private final ZoneObject _zone;
-
-        ZoneDeactive(ZoneObject zone) {
-            _zone = zone;
-        }
-
-        @Override
-        public void runImpl() {
-            _zone.setActive(false);
-        }
-    }
-
     public RainbowYeti(NpcInstance actor) {
         super(actor);
     }
@@ -107,7 +94,7 @@ public final class RainbowYeti extends CharacterAI {
                 if (zone == null)
                     return;
                 zone.setActive(true);
-                ThreadPoolManager.INSTANCE().schedule(new ZoneDeactive(zone), 60000L);
+                ThreadPoolManager.INSTANCE.schedule(() -> zone.setActive(false), 60000L);
                 break;
         }
     }
@@ -129,5 +116,18 @@ public final class RainbowYeti extends CharacterAI {
         }
 
         return rnd;
+    }
+
+    private static class ZoneDeactive extends RunnableImpl {
+        private final ZoneObject zone;
+
+        ZoneDeactive(ZoneObject zone) {
+            this.zone = zone;
+        }
+
+        @Override
+        public void runImpl() {
+            zone.setActive(false);
+        }
     }
 }

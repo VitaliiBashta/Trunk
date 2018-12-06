@@ -16,11 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 6:11/07.06.2011
- */
-public class CatapultInstance extends SiegeToggleNpcInstance {
+public final class CatapultInstance extends SiegeToggleNpcInstance {
     public CatapultInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -31,7 +27,7 @@ public class CatapultInstance extends SiegeToggleNpcInstance {
         if (siegeEvent == null)
             return;
 
-        ThreadPoolManager.INSTANCE().execute(new GameObjectTasks.NotifyAITask(this, CtrlEvent.EVT_DEAD, lastAttacker, null));
+        ThreadPoolManager.INSTANCE.execute(new GameObjectTasks.NotifyAITask(this, CtrlEvent.EVT_DEAD, lastAttacker, null));
 
         Player killer = lastAttacker.getPlayer();
         if (killer == null)
@@ -39,8 +35,8 @@ public class CatapultInstance extends SiegeToggleNpcInstance {
 
         Map<Playable, AggroList.HateInfo> aggroMap = getAggroList().getPlayableMap();
 
-        Quest[] quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
-        if (quests != null && quests.length > 0) {
+        List<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
+        if (!quests.isEmpty()) {
             List<Player> players = null; // массив с игроками, которые могут быть заинтересованы в квестах
             if (isRaid() && Config.ALT_NO_LASTHIT) // Для альта на ластхит берем всех игроков вокруг
             {

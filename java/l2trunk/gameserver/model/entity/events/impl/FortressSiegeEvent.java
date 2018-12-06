@@ -425,7 +425,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
                     spawner.doSpawn(true);
                 else {
                     NpcInstance npc = spawner.getAllSpawned().get(0);
-                    npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp());
+                    npc.setFullHpMp();
                 }
             }
 

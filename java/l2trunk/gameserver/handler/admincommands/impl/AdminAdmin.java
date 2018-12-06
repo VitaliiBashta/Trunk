@@ -346,12 +346,9 @@ public class AdminAdmin implements IAdminCommandHandler {
                     _log.info("=================================================");
                     break;
                 case admin_gath_tele:
-                    for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-                        if (player == activeChar)
-                            continue;
-
-                        player.ask(new ConfirmDlg(SystemMsg.S1, 60000).addString("Would you like teleport to Admin Recall?"), new AnswerGathTeleInvitation(player, activeChar));
-                    }
+                    GameObjectsStorage.getAllPlayers().stream()
+                            .filter(player -> player != activeChar)
+                            .forEach(player -> player.ask(new ConfirmDlg(SystemMsg.S1, 60000).addString("Would you like teleport to Admin Recall?"), new AnswerGathTeleInvitation(player, activeChar)));
                     break;
                 case admin_openme:
                     activeChar.setGMVisible(true);

@@ -6,7 +6,6 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -70,41 +69,13 @@ public final class Kanabion extends Fighter {
         if (spawnPossible && nextId > 0) {
             Creature player = null;
             if (!killer.isPlayer()) // На оффе если убить саммоном или петом, то следующий канабион агрится не на пета, а на хозяина.
-                for (Player pl : World.getAroundPlayers(actor)) {
-                    player = pl;
-                    break;
-                }
+                player = World.getAroundPlayers(actor).stream().findFirst().orElse(null);
             if (player == null)
                 player = killer;
-            ThreadPoolManager.INSTANCE().schedule(new SpawnNext(actor, player, nextId), 5000);
+            ThreadPoolManager.INSTANCE.schedule(new SpawnNext(actor, player, nextId), 5000);
         }
 
         super.onEvtDead(killer);
-    }
-
-    public static class SpawnNext extends RunnableImpl {
-        private final NpcInstance _actor;
-        private final Creature _player;
-        private final int _nextId;
-
-        SpawnNext(NpcInstance actor, Creature player, int nextId) {
-            _actor = actor;
-            _player = player;
-            _nextId = nextId;
-        }
-
-        @SuppressWarnings("unused")
-        @Override
-        public void runImpl() {
-            SimpleSpawner sp = new SimpleSpawner(_nextId);
-            sp.setLocx(_actor.getX());
-            sp.setLocy(_actor.getY());
-            sp.setLocz(_actor.getZ());
-            sp.setReflection(_actor.getReflection());
-            NpcInstance npc = sp.doSpawn(true);
-            npc.setHeading(PositionUtils.calculateHeadingFrom(npc, _player));
-            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _player, 1000);
-        }
     }
 
     private int getNextDoppler(int npcId) {
@@ -228,6 +199,28 @@ public final class Kanabion extends Fighter {
 
             default:
                 return 0; // такого быть не должно
+        }
+    }
+
+    public static class SpawnNext extends RunnableImpl {
+        private final NpcInstance _actor;
+        private final Creature _player;
+        private final int _nextId;
+
+        SpawnNext(NpcInstance actor, Creature player, int nextId) {
+            _actor = actor;
+            _player = player;
+            _nextId = nextId;
+        }
+
+        @Override
+        public void runImpl() {
+            SimpleSpawner sp = new SimpleSpawner(_nextId);
+            sp.setLoc(_actor.getLoc());
+            sp.setReflection(_actor.getReflection());
+            NpcInstance npc = sp.doSpawn(true);
+            npc.setHeading(PositionUtils.calculateHeadingFrom(npc, _player));
+            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _player, 1000);
         }
     }
 }

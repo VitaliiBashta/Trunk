@@ -204,7 +204,7 @@ public class CharacterCreate extends L2GameClientPacket {
 
         startTutorialQuest(newChar);
 
-        newChar.setCurrentHpMp(newChar.getMaxHp(), newChar.getMaxMp());
+        newChar.setFullHpMp();
         newChar.setCurrentCp(0); // retail
         newChar.setOnlineStatus(false);
 

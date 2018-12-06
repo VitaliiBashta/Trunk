@@ -536,7 +536,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                     player.unblock();
                 }
 
-                player.setIsInvul(false);
+                player.setInvul(false);
 
                 // Synerge - Show the premium htm and message
                 if (Config.ENTER_WORLD_SHOW_HTML_PREMIUM_BUY) {
@@ -1267,7 +1267,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                     st.showTutorialHTML(HtmCache.INSTANCE.getNotNull("SpecialTutorial/Level8.htm", player));
                 }
             }
-            // Teleport events
+            // teleport events
             else if (event_id == 42) {
                 // Synerge - Shows the level41Ready htm when teleporting after lvl 40
                 if (player.getVarInt("lvl") == 41) {

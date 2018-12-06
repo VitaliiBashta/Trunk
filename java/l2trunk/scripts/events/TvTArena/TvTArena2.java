@@ -2,7 +2,6 @@ package l2trunk.scripts.events.TvTArena;
 
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.data.htm.HtmCache;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.listener.actor.player.OnPlayerExitListener;
@@ -15,7 +14,6 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
@@ -27,62 +25,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener {
     private static final Logger _log = LoggerFactory.getLogger(TvTArena2.class);
-
-    private static class TvTArena2Impl extends TvTTemplate {
-        @Override
-        protected void onLoad() {
-            _managerId = 31391;
-            _className = "TvTArena2";
-            _status = 0;
-
-            _team1list = new CopyOnWriteArrayList<>();
-            _team2list = new CopyOnWriteArrayList<>();
-            _team1live = new CopyOnWriteArrayList<>();
-            _team2live = new CopyOnWriteArrayList<>();
-
-            _zoneListener = new ZoneListener();
-            _zone = ReflectionUtils.getZone("[tvt_arena2]");
-            _zone.addListener(_zoneListener);
-
-            _team1points = new ArrayList<>();
-            _team2points = new ArrayList<>();
-
-            _team1points.add(new Location(-77724, -47901, -11518, -11418));
-            _team1points.add(new Location(-77718, -48080, -11518, -11418));
-            _team1points.add(new Location(-77699, -48280, -11518, -11418));
-            _team1points.add(new Location(-77777, -48442, -11518, -11418));
-            _team1points.add(new Location(-77863, -48622, -11518, -11418));
-            _team1points.add(new Location(-78002, -48714, -11518, -11418));
-            _team1points.add(new Location(-78168, -48835, -11518, -11418));
-            _team1points.add(new Location(-78353, -48851, -11518, -11418));
-            _team1points.add(new Location(-78543, -48864, -11518, -11418));
-            _team1points.add(new Location(-78709, -48784, -11518, -11418));
-            _team1points.add(new Location(-78881, -48702, -11518, -11418));
-            _team1points.add(new Location(-78981, -48555, -11518, -11418));
-            _team2points.add(new Location(-79097, -48400, -11518, -11418));
-            _team2points.add(new Location(-79107, -48214, -11518, -11418));
-            _team2points.add(new Location(-79125, -48027, -11518, -11418));
-            _team2points.add(new Location(-79047, -47861, -11518, -11418));
-            _team2points.add(new Location(-78965, -47689, -11518, -11418));
-            _team2points.add(new Location(-78824, -47594, -11518, -11418));
-            _team2points.add(new Location(-78660, -47474, -11518, -11418));
-            _team2points.add(new Location(-78483, -47456, -11518, -11418));
-            _team2points.add(new Location(-78288, -47440, -11518, -11418));
-            _team2points.add(new Location(-78125, -47515, -11518, -11418));
-            _team2points.add(new Location(-77953, -47599, -11518, -11418));
-            _team2points.add(new Location(-77844, -47747, -11518, -11418));
-        }
-
-        @Override
-        protected void onReload() {
-            if (_status > 0)
-                template_stop();
-            _zone.removeListener(_zoneListener);
-        }
-
-    }
-
     private static TvTTemplate _instance;
+    private final List<NpcInstance> _spawns = new ArrayList<>();
 
     private static TvTTemplate getInstance() {
         if (_instance == null)
@@ -174,8 +118,6 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
         getInstance().template_timeOut();
     }
 
-    private final List<NpcInstance> _spawns = new ArrayList<>();
-
     /**
      * Читает статус эвента из базы.
      *
@@ -227,27 +169,12 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
      * Спавнит эвент менеджеров
      */
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {
-                {
-                        82840,
-                        149048,
-                        -3472,
-                        0
-                }
-        };
-
-        NpcTemplate template = NpcHolder.getTemplate(31391);
-        for (int[] element : EVENT_MANAGERS) {
-            SimpleSpawner sp = new SimpleSpawner(template);
-            sp.setLocx(element[0]);
-            sp.setLocy(element[1]);
-            sp.setLocz(element[2]);
-            sp.setHeading(element[3]);
-            NpcInstance npc = sp.doSpawn(true);
-            npc.setName("Arena 2");
-            npc.setTitle("TvT Event");
-            _spawns.add(npc);
-        }
+        SimpleSpawner sp = new SimpleSpawner(31391);
+        sp.setLoc(new Location(82840, 149048, -3472, 0));
+        NpcInstance npc = (NpcInstance) sp.doSpawn(true)
+                .setName("Arena 2")
+                .setTitle("TvT Event");
+        _spawns.add(npc);
     }
 
     /**
@@ -257,5 +184,59 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
         for (NpcInstance npc : _spawns)
             npc.deleteMe();
         _spawns.clear();
+    }
+
+    private static class TvTArena2Impl extends TvTTemplate {
+        @Override
+        protected void onLoad() {
+            _managerId = 31391;
+            _className = "TvTArena2";
+            _status = 0;
+
+            _team1list = new CopyOnWriteArrayList<>();
+            _team2list = new CopyOnWriteArrayList<>();
+            _team1live = new CopyOnWriteArrayList<>();
+            _team2live = new CopyOnWriteArrayList<>();
+
+            _zoneListener = new ZoneListener();
+            _zone = ReflectionUtils.getZone("[tvt_arena2]");
+            _zone.addListener(_zoneListener);
+
+            _team1points = new ArrayList<>();
+            _team2points = new ArrayList<>();
+
+            _team1points.add(new Location(-77724, -47901, -11518, -11418));
+            _team1points.add(new Location(-77718, -48080, -11518, -11418));
+            _team1points.add(new Location(-77699, -48280, -11518, -11418));
+            _team1points.add(new Location(-77777, -48442, -11518, -11418));
+            _team1points.add(new Location(-77863, -48622, -11518, -11418));
+            _team1points.add(new Location(-78002, -48714, -11518, -11418));
+            _team1points.add(new Location(-78168, -48835, -11518, -11418));
+            _team1points.add(new Location(-78353, -48851, -11518, -11418));
+            _team1points.add(new Location(-78543, -48864, -11518, -11418));
+            _team1points.add(new Location(-78709, -48784, -11518, -11418));
+            _team1points.add(new Location(-78881, -48702, -11518, -11418));
+            _team1points.add(new Location(-78981, -48555, -11518, -11418));
+            _team2points.add(new Location(-79097, -48400, -11518, -11418));
+            _team2points.add(new Location(-79107, -48214, -11518, -11418));
+            _team2points.add(new Location(-79125, -48027, -11518, -11418));
+            _team2points.add(new Location(-79047, -47861, -11518, -11418));
+            _team2points.add(new Location(-78965, -47689, -11518, -11418));
+            _team2points.add(new Location(-78824, -47594, -11518, -11418));
+            _team2points.add(new Location(-78660, -47474, -11518, -11418));
+            _team2points.add(new Location(-78483, -47456, -11518, -11418));
+            _team2points.add(new Location(-78288, -47440, -11518, -11418));
+            _team2points.add(new Location(-78125, -47515, -11518, -11418));
+            _team2points.add(new Location(-77953, -47599, -11518, -11418));
+            _team2points.add(new Location(-77844, -47747, -11518, -11418));
+        }
+
+        @Override
+        protected void onReload() {
+            if (_status > 0)
+                template_stop();
+            _zone.removeListener(_zoneListener);
+        }
+
     }
 }

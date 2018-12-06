@@ -12529,7 +12529,7 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         capsulate(player, items, chances);
     }
 
-    // My Teleport Spellbook 1-Sheet Pack
+    // My teleport Spellbook 1-Sheet Pack
     private void use13079(Player player, boolean ctrl) {
         int items[][] = new int[][]
                 {
@@ -12546,7 +12546,7 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         capsulate(player, items, chances);
     }
 
-    // My Teleport Scroll 30-Sheet Pack
+    // My teleport Scroll 30-Sheet Pack
     private void use13080(Player player, boolean ctrl) {
         int items[][] = new int[][]
                 {

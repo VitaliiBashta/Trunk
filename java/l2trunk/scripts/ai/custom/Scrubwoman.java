@@ -49,12 +49,12 @@ public final class Scrubwoman extends DefaultAI {
                     npc.setLevel(actor.getLevel());
                     npc.setSpawnedLoc(actor.getLoc());
                     npc.setReflection(actor.getReflection());
-                    npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+                    npc.setFullHpMp();
                     npc.spawnMe(npc.getSpawnedLoc());
                     actor.doDie(actor);
                     actor.deleteMe();
                 }
-                _nextEat = System.currentTimeMillis() + 1 * 1000;
+                _nextEat = System.currentTimeMillis() +  1000;
             }
 
         }

@@ -139,7 +139,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     public String onFirstTalk(NpcInstance npc, Player player) {
         World world = worlds.get(player.getReflectionId());
         if (world.status == 4) {
-            for (long[] npcObj : world.SecondRoom.monolith)
+            for (int[] npcObj : world.SecondRoom.monolith)
                 if (npcObj[0] == npc.getStoredId())
                     checkStone(npc, world.SecondRoom.monolithOrder, npcObj, world);
             if (allStonesDone(world)) {
@@ -223,7 +223,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
         Player player = st.getPlayer();
         World world = worlds.get(player.getReflectionId());
         if (world != null && world.status == 7)
-            for (long[] mob : world.ForthRoom.npclist2)
+            for (int[] mob : world.ForthRoom.npclist2)
                 if (mob[0] == npc.getStoredId())
                     if (Rnd.chance(12) && npc.isBusy())
                         addSpawnToInstance(BM[Rnd.get(BM.length)], player.getLoc(), 100, world.instanceId);
@@ -330,17 +330,17 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
         int i = Rnd.get(order.length);
         world.SecondRoom.monolithOrder = new int[]{1, 0, 0, 0, 0, 0, 0};
         newNpc = addSpawnToInstance(BSM, new Location(147800, 181150, -6117), 0, world.instanceId);
-        world.SecondRoom.monolith.add(new long[]{newNpc.getStoredId(), order[i][0], 0});
+        world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][0], 0});
         newNpc = addSpawnToInstance(BSM, new Location(147900, 181215, -6117), 0, world.instanceId);
-        world.SecondRoom.monolith.add(new long[]{newNpc.getStoredId(), order[i][1], 0});
+        world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][1], 0});
         newNpc = addSpawnToInstance(BSM, new Location(147900, 181345, -6117), 0, world.instanceId);
-        world.SecondRoom.monolith.add(new long[]{newNpc.getStoredId(), order[i][2], 0});
+        world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][2], 0});
         newNpc = addSpawnToInstance(BSM, new Location(147800, 181410, -6117), 0, world.instanceId);
-        world.SecondRoom.monolith.add(new long[]{newNpc.getStoredId(), order[i][3], 0});
+        world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][3], 0});
         newNpc = addSpawnToInstance(BSM, new Location(147700, 181345, -6117), 0, world.instanceId);
-        world.SecondRoom.monolith.add(new long[]{newNpc.getStoredId(), order[i][4], 0});
+        world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][4], 0});
         newNpc = addSpawnToInstance(BSM, new Location(147700, 181215, -6117), 0, world.instanceId);
-        world.SecondRoom.monolith.add(new long[]{newNpc.getStoredId(), order[i][5], 0});
+        world.SecondRoom.monolith.add(new int[]{newNpc.getStoredId(), order[i][5], 0});
     }
 
     private void runHall3(World world) {
@@ -398,7 +398,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
                     newNpc.addStatFunc(new FuncMul(Stats.POWER_DEFENCE, 0x30, this, 1000));
                 }
 
-                world.ForthRoom.npclist2.add(new long[]{newNpc.getStoredId(), templist[yy][xx], yy});
+                world.ForthRoom.npclist2.add(new int[]{newNpc.getStoredId(), templist[yy][xx], yy});
                 yy += 1;
             }
             xx += 1;
@@ -421,7 +421,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
         int idx = 0;
         for (int x = 148720; x <= 149110; x += 65) {
             NpcInstance newNpc = addSpawnToInstance(BS[idx], new Location(x, 182145, -6117, 48810), 0, world.instanceId);
-            world.FifthRoom.npclist2.add(new long[]{newNpc.getStoredId(), idx, beleth[idx]});
+            world.FifthRoom.npclist2.add(new int[]{newNpc.getStoredId(), idx, beleth[idx]});
             idx += 1;
         }
     }
@@ -443,7 +443,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
         addSpawnToInstance(id, new Location(x, y, -6117), 0, world.instanceId);
     }
 
-    private void checkStone(NpcInstance npc, int[] order, long[] npcObj, World world) {
+    private void checkStone(NpcInstance npc, int[] order, int[] npcObj, World world) {
         for (int i = 1; i <= 6; i++)
             if (order[i] == 0 && order[i - 1] != 0)
                 if (npcObj[1] == i && npcObj[2] == 0) {
@@ -456,7 +456,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     }
 
     private void BelethSampleAttacked(World world, NpcInstance npc, Player player) {
-        for (long[] list : world.FifthRoom.npclist2)
+        for (int[] list : world.FifthRoom.npclist2)
             if (list[0] == npc.getStoredId()) {
                 if (list[2] == 1) {
                     Functions.npcSay(npc, "You have done well!");
@@ -474,7 +474,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     }
 
     private void BelethSampleKilled(World world, NpcInstance npc, Player player) {
-        for (long[] list : world.FifthRoom.npclist2)
+        for (int[] list : world.FifthRoom.npclist2)
             if (list[0] == npc.getStoredId()) {
                 world.FifthRoom.counter = 0;
                 unspawnBelethSample(world);
@@ -484,23 +484,20 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     }
 
     private void unspawnBelethSample(World world) {
-        for (long[] list : world.FifthRoom.npclist2) {
-            NpcInstance npc = GameObjectsStorage.getAsNpc(list[0]);
-            if (npc != null)
-                npc.decayMe();
+        for (int[] list : world.FifthRoom.npclist2) {
+            GameObjectsStorage.getAsNpc(list[0]).decayMe();
         }
     }
 
     private void removeMonoliths(World world) {
-        for (long[] list : world.SecondRoom.monolith) {
-            NpcInstance npc = GameObjectsStorage.getAsNpc(list[0]);
-            if (npc != null)
-                npc.decayMe();
+        for (int[] list : world.SecondRoom.monolith) {
+            GameObjectsStorage.getAsNpc(list[0]).decayMe();
+
         }
     }
 
     private boolean allStonesDone(World world) {
-        for (long[] list : world.SecondRoom.monolith)
+        for (int[] list : world.SecondRoom.monolith)
             if (list[2] != 1)
                 return false;
         return true;
@@ -508,7 +505,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 
     private void chkShadowColumn(World world, NpcInstance npc) {
         Reflection ref = ReflectionManager.INSTANCE.get(world.instanceId);
-        for (long[] mob : world.ForthRoom.npclist2)
+        for (int[] mob : world.ForthRoom.npclist2)
             if (mob[0] == npc.getStoredId())
                 for (int i = 0; i <= 7; i++)
                     if (mob[2] == i && world.ForthRoom.counter == i) {
@@ -522,7 +519,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
     class World {
         int instanceId;
         int status;
-        List<Long> rewarded;
+        List<Integer> rewarded;
         Room StartRoom;
         Room Hall;
         Room FirstRoom;
@@ -534,8 +531,8 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 
     public class Room {
         Map<NpcInstance, Boolean> npclist;
-        List<long[]> npclist2;
-        List<long[]> monolith;
+        List<int[]> npclist2;
+        List<int[]> monolith;
         int[] monolithOrder;
         List<int[]> belethOrder;
         int counter;

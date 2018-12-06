@@ -230,7 +230,7 @@ public class OlympiadGame {
                 int diff = (int) ((System.currentTimeMillis() - _startTime) / 1000L);
                 OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member2.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, team, _type.ordinal());
 
-                OlympiadHistoryManager.getInstance().saveHistory(h);
+                OlympiadHistoryManager.INSTANCE.saveHistory(h);
             }
         }
 
@@ -263,12 +263,8 @@ public class OlympiadGame {
 
         // Alexander - Announce on critical to all players in the world, who won this match
         IStaticPacket criticalAnn = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", "Olympiad: " + _team1.getName() + " VS " + _team2.getName() + ". Winner is: " + winnerTeam.getName() + "!");
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-            if (player == null)
-                continue;
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(criticalAnn));
 
-            player.sendPacket(criticalAnn);
-        }
 
         Log.add("Olympiad Result: " + winnerTeam.getName() + " vs " + looseTeam.getName() + " ... (" + (int) winnerTeam.getDamage() + " vs " + (int) looseTeam.getDamage() + ") " + winnerTeam.getName() + " win " + pointDiff + " points", "olympiad");
     }
@@ -310,7 +306,7 @@ public class OlympiadGame {
                 int diff = (int) ((System.currentTimeMillis() - _startTime) / 1000L);
                 OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member1.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, 0, _type.ordinal());
 
-                OlympiadHistoryManager.getInstance().saveHistory(h);
+                OlympiadHistoryManager.INSTANCE.saveHistory(h);
             }
         }
 

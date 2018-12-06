@@ -21,7 +21,7 @@ public class RequestExJoinMpccRoom extends L2GameClientPacket {
         if (player.getMatchingRoom() != null)
             return;
 
-        MatchingRoom room = MatchingRoomManager.getInstance().getMatchingRoom(MatchingRoom.CC_MATCHING, _roomId);
+        MatchingRoom room = MatchingRoomManager.INSTANCE.getMatchingRoom(MatchingRoom.CC_MATCHING, _roomId);
         if (room == null)
             return;
 

@@ -5,23 +5,15 @@ import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.SimpleSpawner;
-import l2trunk.gameserver.model.Territory;
-import l2trunk.gameserver.model.Zone;
-import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author pchayka
- */
-public final class NaiaCoreManager {
-    private static final Logger _log = LoggerFactory.getLogger(NaiaTowerManager.class);
-    private static final NaiaCoreManager _instance = new NaiaCoreManager();
+public enum NaiaCoreManager {
+    INSTANCE;
     private static final Territory _coreTerritory = new Territory().add(new Polygon().add(-44789, 246305).add(-44130, 247452).add(-46092, 248606).add(-46790, 247414).add(-46139, 246304).setZmin(-14220).setZmax(-13800));
     //Spores
     private static final int fireSpore = 25605;
@@ -40,15 +32,7 @@ public final class NaiaCoreManager {
     private static Zone _zone;
     private static boolean _active = false;
     private static boolean _bossSpawned = false;
-
-    private NaiaCoreManager() {
-        _zone = ReflectionUtils.getZone("[naia_core_poison]");
-        _log.info("Naia Core Manager: Loaded");
-    }
-
-    public static NaiaCoreManager getInstance() {
-        return _instance;
-    }
+    private final Logger _log = LoggerFactory.getLogger(NaiaTowerManager.class);
 
     public static void launchNaiaCore() {
         if (isActive())
@@ -58,7 +42,7 @@ public final class NaiaCoreManager {
         ReflectionUtils.getDoor(18250025).closeMe();
         _zone.setActive(true);
         spawnSpores();
-        ThreadPoolManager.INSTANCE().schedule(new ClearCore(), coreClearTime);
+        ThreadPoolManager.INSTANCE.schedule(new ClearCore(), coreClearTime);
     }
 
     private static boolean isActive() {
@@ -70,10 +54,10 @@ public final class NaiaCoreManager {
     }
 
     private static void spawnSpores() {
-        spawnToRoom(fireSpore, 10, _coreTerritory);
-        spawnToRoom(waterSpore, 10, _coreTerritory);
-        spawnToRoom(windSpore, 10, _coreTerritory);
-        spawnToRoom(earthSpore, 10, _coreTerritory);
+        spawnToRoom(fireSpore);
+        spawnToRoom(waterSpore);
+        spawnToRoom(windSpore);
+        spawnToRoom(earthSpore);
     }
 
     public static void spawnEpidos(int index) {
@@ -100,15 +84,11 @@ public final class NaiaCoreManager {
             default:
                 break;
         }
-        try {
-            SimpleSpawner sp = new SimpleSpawner(epidostospawn);
-            sp.setLoc(spawnLoc);
-            sp.doSpawn(true);
-            sp.stopRespawn();
-            _bossSpawned = true;
-        } catch (RuntimeException e) {
-            _log.error("Error while spawning Epidos!", e);
-        }
+        SimpleSpawner sp = new SimpleSpawner(epidostospawn);
+        sp.setLoc(spawnLoc);
+        sp.doSpawn(true);
+        sp.stopRespawn();
+        _bossSpawned = true;
     }
 
     public static boolean isBossSpawned() {
@@ -126,32 +106,28 @@ public final class NaiaCoreManager {
                 windSpore,
                 earthSpore
         };
-        for (NpcInstance spore : GameObjectsStorage.getAllByNpcId(spores, false))
-            spore.deleteMe();
-        try {
-            SimpleSpawner sp = new SimpleSpawner(teleCube);
-            sp.setLoc(spawnLoc);
+        GameObjectsStorage.getAllByNpcId(spores, false).forEach(GameObject::deleteMe);
+        Spawner sp = new SimpleSpawner(teleCube)
+                .setLoc(spawnLoc)
+                .stopRespawn();
+        sp.doSpawn(true);
+        Functions.npcShout(sp.getLastSpawn(), "Teleportation to Beleth Throne Room is available for 5 minutes");
+    }
+
+    private static void spawnToRoom(int mobId) {
+        for (int i = 0; i < 10; i++) {
+            SimpleSpawner sp = new SimpleSpawner(mobId);
+            sp.setLoc(Territory.getRandomLoc(NaiaCoreManager._coreTerritory).setH(Rnd.get(65535)));
+            sp.setRespawnDelay(respawnDelay, 30);
+            sp.setAmount(1);
             sp.doSpawn(true);
-            sp.stopRespawn();
-            Functions.npcShout(sp.getLastSpawn(), "Teleportation to Beleth Throne Room is available for 5 minutes");
-        } catch (RuntimeException e) {
-            _log.error("Error while removing Spores and Spawn Cube in NaiaCore!", e);
+            sp.startRespawn();
         }
     }
 
-    private static void spawnToRoom(int mobId, int count, Territory territory) {
-        for (int i = 0; i < count; i++) {
-            try {
-                SimpleSpawner sp = new SimpleSpawner(mobId);
-                sp.setLoc(Territory.getRandomLoc(territory).setH(Rnd.get(65535)));
-                sp.setRespawnDelay(respawnDelay, 30);
-                sp.setAmount(1);
-                sp.doSpawn(true);
-                sp.startRespawn();
-            } catch (RuntimeException e) {
-                _log.error("Error while Spawning Naia Core!", e);
-            }
-        }
+    public void init() {
+        _zone = ReflectionUtils.getZone("[naia_core_poison]");
+        _log.info("Naia Core Manager: Loaded");
     }
 
     private static class ClearCore extends RunnableImpl {
@@ -169,10 +145,8 @@ public final class NaiaCoreManager {
                     windEpidos,
                     earthEpidos
             };
-            for (NpcInstance spore : GameObjectsStorage.getAllByNpcId(spores, false))
-                spore.deleteMe();
-            for (NpcInstance epidos : GameObjectsStorage.getAllByNpcId(epidoses, false))
-                epidos.deleteMe();
+            GameObjectsStorage.getAllByNpcId(spores, false).forEach(GameObject::deleteMe);
+            GameObjectsStorage.getAllByNpcId(epidoses, false).forEach(GameObject::deleteMe);
 
             _active = false;
             ReflectionUtils.getDoor(18250025).openMe();

@@ -266,42 +266,31 @@ public class AdminSpawn implements IAdminCommandHandler {
 
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher regexp = pattern.matcher(monsterId);
-        NpcTemplate template;
+        int templateId;
         if (regexp.matches()) {
             // First parameter was an ID number
-            int monsterTemplate = Integer.parseInt(monsterId);
-            template = NpcHolder.getTemplate(monsterTemplate);
+            templateId = Integer.parseInt(monsterId);
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            template = NpcHolder.getTemplateByName(monsterId);
+            templateId = NpcHolder.getTemplateByName(monsterId).npcId;
         }
 
-        if (template == null) {
-            activeChar.sendMessage("Incorrect monster template.");
-            return;
-        }
+        SimpleSpawner spawn = new SimpleSpawner(templateId);
+        spawn.setLoc(target.getLoc())
+                .setAmount(mobCount)
+                .setRespawnDelay(respawnTime)
+                .setReflection(activeChar.getReflection());
 
-        try {
-            SimpleSpawner spawn = new SimpleSpawner(template);
-            spawn.setLoc(target.getLoc());
-            spawn.setAmount(mobCount);
-            spawn.setHeading(activeChar.getHeading());
-            spawn.setRespawnDelay(respawnTime);
-            spawn.setReflection(activeChar.getReflection());
-
-            if (RaidBossSpawnManager.getInstance().isDefined(template.getNpcId()))
-                activeChar.sendMessage("Raid Boss " + template.name + " already spawned.");
-            else {
-                if (Config.SAVE_GM_SPAWN)
-                    SpawnTable.getInstance().addNewSpawn(spawn);
-                spawn.init();
-                if (respawnTime == 0)
-                    spawn.stopRespawn();
-                activeChar.sendMessage("Created " + template.name + " on " + target.getObjectId() + ".");
-            }
-        } catch (Exception e) {
-            activeChar.sendMessage("Target is not ingame.");
+        if (RaidBossSpawnManager.getInstance().isDefined(templateId))
+            activeChar.sendMessage("Raid Boss " + templateId + " already spawned.");
+        else {
+            if (Config.SAVE_GM_SPAWN)
+                SpawnTable.INSTANCE.addNewSpawn(spawn);
+            spawn.init();
+            if (respawnTime == 0)
+                spawn.stopRespawn();
+            activeChar.sendMessage("Created " + templateId + " on " + target.getObjectId() + ".");
         }
     }
 

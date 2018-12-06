@@ -18,7 +18,7 @@ public final class ExListMpccWaiting extends L2GameServerPacket {
         int first = (page - 1) * PAGE_SIZE;
         int firstNot = page * PAGE_SIZE;
         int i = 0;
-        Collection<MatchingRoom> all = MatchingRoomManager.getInstance().getMatchingRooms(MatchingRoom.CC_MATCHING, location, allLevels, player);
+        Collection<MatchingRoom> all = MatchingRoomManager.INSTANCE.getMatchingRooms(MatchingRoom.CC_MATCHING, location, allLevels, player);
         _fullSize = all.size();
         _list = new ArrayList<>(PAGE_SIZE);
         for (MatchingRoom c : all) {

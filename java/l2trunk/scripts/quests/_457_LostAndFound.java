@@ -16,6 +16,7 @@ import java.util.concurrent.ScheduledFuture;
 public class _457_LostAndFound extends Quest implements ScriptFile {
     private static final int RESET_HOUR = 6;
     private static final int RESET_MIN = 30;
+    private static final int GUMIEL =32759;
 
     private ScheduledFuture<?> FollowTask;
 
@@ -48,7 +49,7 @@ public class _457_LostAndFound extends Quest implements ScriptFile {
                 if (FollowTask != null)
                     FollowTask.cancel(false);
                 FollowTask = null;
-                FollowTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new Follow(npc, player, st), 10, 1000);
+                FollowTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new Follow(npc, player, st), 10, 1000);
             }
         }
         return event;
@@ -60,7 +61,7 @@ public class _457_LostAndFound extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int state = st.getState();
         int cond = st.getCond();
-        if (npcId == 32759) {
+        if (npcId == GUMIEL) {
             if (state == 1) {
                 if (DefaultAI.namechar != null && DefaultAI.namechar != player.getName())
                     return "lost_villager_q0457_01a.htm";
@@ -96,8 +97,8 @@ public class _457_LostAndFound extends Quest implements ScriptFile {
         return "noquest";
     }
 
-    private void checkInRadius(int id, QuestState st, NpcInstance npc) {
-        NpcInstance quest0457 = GameObjectsStorage.getByNpcId(id);
+    private void checkInRadius(QuestState st, NpcInstance npc) {
+        NpcInstance quest0457 = GameObjectsStorage.getByNpcId(_457_LostAndFound.GUMIEL);
         if (npc.getRealDistance3D(quest0457) <= 150) {
             st.setCond(2);
             if (FollowTask != null)
@@ -108,20 +109,20 @@ public class _457_LostAndFound extends Quest implements ScriptFile {
     }
 
     private class Follow implements Runnable {
-        private final NpcInstance _npc;
+        private final NpcInstance npc;
         private final Player player;
         private final QuestState st;
 
-        private Follow(NpcInstance npc, Player pl, QuestState _st) {
-            _npc = npc;
+        private Follow(NpcInstance npc, Player pl, QuestState questState) {
+            this.npc = npc;
             player = pl;
-            st = _st;
+            st = questState;
         }
 
         @Override
         public void run() {
-            _npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, 150);
-            checkInRadius(32764, st, _npc);
+            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, 150);
+            checkInRadius(st, npc);
         }
     }
 }

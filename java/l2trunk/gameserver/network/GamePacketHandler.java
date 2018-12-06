@@ -1286,6 +1286,6 @@ public final class GamePacketHandler implements IPacketHandler<GameClient>, ICli
 
     @Override
     public void execute(Runnable r) {
-        ThreadPoolManager.INSTANCE().execute(r);
+        ThreadPoolManager.INSTANCE.execute(r);
     }
 }

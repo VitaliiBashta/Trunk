@@ -38,12 +38,12 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
 
     private static final Logger _log = LoggerFactory.getLogger(FightClubManager.class);
 
-    private static Map<Long, Rate> _ratesMap;
+    private static Map<Integer, Rate> _ratesMap;
     private static List<FightClubArena> _fights;
     private static ReflectionManager _reflectionManager;
-    static List<Long> _inBattle;
-    private static Map<Long, Location> _restoreCoord;
-    private static List<Long> _inList;
+    static List<Integer> _inBattle;
+    private static Map<Integer, Location> _restoreCoord;
+    private static List<Integer> _inList;
     private static StringBuilder _itemsList;
     private static Map<String, Integer> _allowedItems;
     private static Location _player1loc;
@@ -97,17 +97,11 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
                 _ratesMap.remove(player.getStoredId());
                 _inList.remove(player.getStoredId());
             }
-            if (_restoreCoord.containsKey(player.getStoredId()))
-                ;
             _restoreCoord.remove(player.getStoredId());
         }
     }
 
-    public static Location getRestoreLocation(Player player) {
-        return _restoreCoord.get(player.getStoredId());
-    }
-
-    public static Player getPlayer(long playerStoredI) {
+    public static Player getPlayer(int playerStoredI) {
         return GameObjectsStorage.getAsPlayer(playerStoredI);
     }
 
@@ -508,9 +502,9 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
      */
     public void healPlayers(Player player1, Player player2, Object obj) {
         player1.setCurrentCp(player1.getMaxCp());
-        player1.setCurrentHpMp(player1.getMaxHp(), player1.getMaxMp());
+        player1.setFullHpMp();;
         player2.setCurrentCp(player2.getMaxCp());
-        player2.setCurrentHpMp(player2.getMaxHp(), player2.getMaxMp());
+        player2.setFullHpMp();;
     }
 
     /**
@@ -601,13 +595,12 @@ public class FightClubManager extends Functions implements ScriptFile, OnPlayerE
         private final Player player;
         private final Location location;
 
-        public TeleportTask(Player player, Location location) {
+        TeleportTask(Player player, Location location) {
             this.player = player;
             this.location = location;
             player.block();
         }
 
-        @SuppressWarnings("unused")
         @Override
         public void runImpl() {
             player.teleToLocation(location);

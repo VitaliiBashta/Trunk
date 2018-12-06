@@ -1,28 +1,20 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class _270_TheOneWhoEndsSilence extends Quest implements ScriptFile {
     private static final int Greymore = 32757;
     private static final int TatteredMonkClothes = 15526;
-    private static final int[] LowMobs = {
-            22791,
-            22790,
-            22793
-    };
-    private static final int[] HighMobs = {
-            22794,
-            22795,
-            22797,
-            22798,
-            22799,
-            22800
-    };
+    private static final List<Integer> LowMobs = Arrays.asList(22791, 22790, 22793);
+    private static final List<Integer> HighMobs = Arrays.asList(
+            22794, 22795, 22797, 22798, 22799, 22800);
 
     public _270_TheOneWhoEndsSilence() {
         super(false);
@@ -459,9 +451,9 @@ public final class _270_TheOneWhoEndsSilence extends Quest implements ScriptFile
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            if (ArrayUtils.contains(LowMobs, npc.getNpcId()) && Rnd.chance(40))
+            if (LowMobs.contains(npc.getNpcId()) && Rnd.chance(40))
                 st.giveItems(TatteredMonkClothes, 1, true);
-            else if (ArrayUtils.contains(HighMobs, npc.getNpcId()))
+            else if (HighMobs.contains(npc.getNpcId()))
                 st.giveItems(TatteredMonkClothes, 1, true);
         }
         return null;

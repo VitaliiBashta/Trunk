@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.SevenSignsFestival;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -214,13 +213,9 @@ public enum SevenSignsFestival {
      * and past high score data to the database.
      */
     public synchronized void saveFestivalData(boolean updateSettings) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        PreparedStatement statement2 = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE seven_signs_festival SET date=?, score=?, members=?, names=? WHERE cycle=? AND cabal=? AND festivalId=?");
-            statement2 = con.prepareStatement("INSERT INTO seven_signs_festival (festivalId, cabal, cycle, date, score, members, names) VALUES (?,?,?,?,?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE seven_signs_festival SET date=?, score=?, members=?, names=? WHERE cycle=? AND cabal=? AND festivalId=?");
+             PreparedStatement statement2 = con.prepareStatement("INSERT INTO seven_signs_festival (festivalId, cabal, cycle, date, score, members, names) VALUES (?,?,?,?,?,?,?)")) {
             for (Map<Integer, StatsSet> currCycleData : _festivalData.values())
                 for (StatsSet festivalDat : currCycleData.values()) {
                     int festivalCycle = festivalDat.getInteger("cycle");
@@ -251,8 +246,6 @@ public enum SevenSignsFestival {
                 }
         } catch (NumberFormatException | SQLException e) {
             _log.error("SevenSignsFestival: Failed to save configuration!", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
         // Updates Seven Signs DB data also, so call only if really necessary.
         if (updateSettings)
@@ -285,14 +278,10 @@ public enum SevenSignsFestival {
                 player.getClan().broadcastToOnlineMembers(sm);
             }
         } else {
-            Connection con = null;
-            PreparedStatement statement = null;
-            ResultSet rset = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                statement = con.prepareStatement("SELECT char_name, clanid FROM characters WHERE obj_Id = ?");
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement("SELECT char_name, clanid FROM characters WHERE obj_Id = ?")) {
                 statement.setString(1, playerId);
-                rset = statement.executeQuery();
+                ResultSet rset = statement.executeQuery();
                 if (rset.next()) {
                     int clanId = rset.getInt("clanid");
                     if (clanId > 0) {
@@ -309,8 +298,6 @@ public enum SevenSignsFestival {
                 }
             } catch (SQLException e) {
                 _log.warn("Could not get clan name of " + playerId, e);
-            } finally {
-                DbUtils.closeQuietly(con, statement, rset);
             }
         }
     }

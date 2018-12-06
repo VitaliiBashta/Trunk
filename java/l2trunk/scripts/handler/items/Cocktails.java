@@ -97,7 +97,7 @@ public final class Cocktails extends SimpleItemHandler implements ScriptFile {
             case 20394:
                 for (int skill : fresh_list) {
                     player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(skill, 1));
+                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill, 1));
                 }
                 break;
             //Event - Fresh Milk

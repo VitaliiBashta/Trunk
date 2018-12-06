@@ -119,7 +119,7 @@ public class PetInstance extends Summon {
 
             String name = rset.getString("name");
             pet.setName(name == null || name.isEmpty() ? template.name : name);
-            pet.setCurrentHpMp(rset.getDouble("curHp"), rset.getInt("curMp"), true);
+            pet.setFullHpMp();
             pet.setCurrentCp(pet.getMaxCp());
             pet.setSp(rset.getInt("sp"));
             pet.setCurrentFed(rset.getInt("fed"));
@@ -197,7 +197,7 @@ public class PetInstance extends Summon {
         if (old_level < level) {
             owner.sendMessage(new CustomMessage("l2trunk.gameserver.model.instances.L2PetInstance.PetLevelUp", owner).addNumber(level));
             broadcastPacket(new SocialAction(getObjectId(), SocialAction.LEVEL_UP));
-            setCurrentHpMp(getMaxHp(), getMaxMp());
+            setFullHpMp();
         }
 
         if (old_level != level) {
@@ -715,7 +715,7 @@ public class PetInstance extends Summon {
     }
 
     public boolean isDefaultName() {
-        return StringUtils.isEmpty(_name) || getName().equalsIgnoreCase(getTemplate().name);
+        return StringUtils.isEmpty(name) || getName().equalsIgnoreCase(getTemplate().name);
     }
 
     @Override

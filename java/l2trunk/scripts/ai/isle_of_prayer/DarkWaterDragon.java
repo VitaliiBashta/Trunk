@@ -3,7 +3,6 @@ package l2trunk.scripts.ai.isle_of_prayer;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
@@ -13,14 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class DarkWaterDragon extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(DarkWaterDragon.class);
-    private int _mobsSpawned = 0;
     private static final int FAFURION = 18482;
     private static final int SHADE1 = 22268;
     private static final int SHADE2 = 22269;
     private static final int MOBS[] = {SHADE1, SHADE2};
     private static final int MOBS_COUNT = 5;
     private static final int RED_CRYSTAL = 9596;
+    private int _mobsSpawned = 0;
 
     private DarkWaterDragon(NpcInstance actor) {
         super(actor);
@@ -48,28 +46,21 @@ public final class DarkWaterDragon extends Fighter {
 
     private void spawnShades(Creature attacker) {
         NpcInstance actor = getActor();
-        for (int i = 0; i < MOBS_COUNT; i++)
-            try {
-                SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(MOBS[Rnd.get(MOBS.length)]));
-                sp.setLoc(Location.findPointToStay(actor, 100, 120));
-                NpcInstance npc = sp.doSpawn(true);
-                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
-            } catch (RuntimeException e) {
-                LOG.error("Error on Dark Water Dragon Spawning Shades", e);
-            }
+        for (int i = 0; i < MOBS_COUNT; i++) {
+            SimpleSpawner sp = new SimpleSpawner(MOBS[Rnd.get(MOBS.length)]);
+            sp.setLoc(Location.findPointToStay(actor, 100, 120));
+            NpcInstance npc = sp.doSpawn(true);
+            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
+        }
     }
 
     @Override
     public void onEvtDead(Creature killer) {
         _mobsSpawned = 0;
         NpcInstance actor = getActor();
-        try {
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(FAFURION));
-            sp.setLoc(Location.findPointToStay(actor, 100, 120));
-            sp.doSpawn(true);
-        } catch (RuntimeException e) {
-            LOG.error("Error on Dark Water Dragon Death", e);
-        }
+        SimpleSpawner sp = new SimpleSpawner(FAFURION);
+        sp.setLoc(Location.findPointToStay(actor, 100, 120));
+        sp.doSpawn(true);
         if (killer != null) {
             final Player player = killer.getPlayer();
             if (player != null)

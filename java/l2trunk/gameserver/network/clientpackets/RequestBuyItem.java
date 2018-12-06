@@ -12,8 +12,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.TradeItem;
 import l2trunk.gameserver.network.serverpackets.ExBuySellList;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +19,7 @@ import java.util.List;
 /**
  * format:		cddb, b - array of (dd)
  */
-public class RequestBuyItem extends L2GameClientPacket {
-    private static final Logger _log = LoggerFactory.getLogger(RequestBuyItem.class);
-
+public final class RequestBuyItem extends L2GameClientPacket {
     private int _listId;
     private int _count;
     private int[] _items;
@@ -89,12 +85,12 @@ public class RequestBuyItem extends L2GameClientPacket {
 
         NpcInstance merchant = activeChar.getLastNpc();
         boolean isValidMerchant = merchant != null && merchant.isMerchantNpc();
-        if (!activeChar.isGM() && (merchant == null || !isValidMerchant || !activeChar.isInRange(merchant, Creature.INTERACTION_DISTANCE))) {
+        if (!activeChar.isGM() && (!isValidMerchant || !activeChar.isInRange(merchant, Creature.INTERACTION_DISTANCE))) {
             activeChar.sendActionFailed();
             return;
         }
 
-        NpcTradeList list = BuyListHolder.getInstance().getBuyList(_listId);
+        NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(_listId);
         if (list == null) {
             //TODO audit
             activeChar.sendActionFailed();

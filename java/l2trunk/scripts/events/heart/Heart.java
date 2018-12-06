@@ -68,7 +68,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         if (SetActive("Heart", true)) {
             spawnEventManagers();
             System.out.println("Event 'Change of Heart' started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'Change of Heart' already started.");
 
@@ -83,7 +83,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         if (SetActive("Heart", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'Change of Heart' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.ChangeofHeart.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'Change of Heart' not started.");
 
@@ -259,7 +259,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.ChangeofHeart.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.ChangeofHeart.AnnounceEventStarted");
     }
 
     private static boolean isActive() {

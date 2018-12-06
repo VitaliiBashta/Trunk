@@ -18,14 +18,14 @@ import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.List;
 
-public class RequestDestroyItem extends L2GameClientPacket {
-    private int _objectId;
-    private long _count;
+public final class RequestDestroyItem extends L2GameClientPacket {
+    private int objectId;
+    private long count;
 
     @Override
     protected void readImpl() {
-        _objectId = readD();
-        _count = readQ();
+        objectId = readD();
+        count = readQ();
     }
 
     @Override
@@ -54,16 +54,16 @@ public class RequestDestroyItem extends L2GameClientPacket {
             return;
         }
 
-        long count = _count;
+        long count = this.count;
 
-        ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
-        if (item == null)    // Support for GMs deleting items from alt+g inventory.
-        {
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) // There is no way to get item by objectId!!! Or im very stupid to not know such.
-            {
-                if ((item = player.getInventory().getItemByObjectId(_objectId)) != null)
-                    break;
-            }
+        ItemInstance item2 = activeChar.getInventory().getItemByObjectId(objectId);
+        ItemInstance item = item2;
+        if (item2 == null) {  // Support for GMs deleting items from alt+g inventory.
+            item = GameObjectsStorage.getAllPlayers().stream()
+                    .filter(player -> item2 == player.getInventory().getItemByObjectId(objectId))
+                    .map(p -> p.getInventory().getItemByObjectId(objectId))
+                    .findFirst().orElse(null);
+
         }
 
         if (item == null) {
@@ -91,7 +91,7 @@ public class RequestDestroyItem extends L2GameClientPacket {
             return;
         }
 
-        if (_count > item.getCount())
+        if (this.count > item.getCount())
             count = item.getCount();
 
         boolean crystallize = item.canBeCrystallized(activeChar);
@@ -105,7 +105,7 @@ public class RequestDestroyItem extends L2GameClientPacket {
         }
 
         if (item.getOwnerId() == activeChar.getObjectId()) {
-            if (!activeChar.getInventory().destroyItemByObjectId(_objectId, count, "Delete")) {
+            if (!activeChar.getInventory().destroyItemByObjectId(objectId, count, "Delete")) {
                 activeChar.sendActionFailed();
                 return;
             } else if (item.isAdena()) {
@@ -114,20 +114,18 @@ public class RequestDestroyItem extends L2GameClientPacket {
         } else // Support for GM item deletion through Alt+G inventory.
         {
             Player owner = World.getPlayer(item.getOwnerId());
-            if (owner != null) {
-                // If item is successfully deleted, show updated target inventory.
-                if (owner.getInventory().destroyItemByObjectId(_objectId, count, "GMDelete")) {
-                    List<ItemInstance> items = owner.getInventory().getItems();
-                    int questSize = (int) items.stream()
-                            .filter(i -> i.getTemplate().isStackable())
-                            .count();
-                    activeChar.sendPacket(new GMViewItemList(owner, items, items.size() - questSize));
-                    activeChar.sendPacket(new ExGMViewQuestItemList(owner, items, questSize));
-                    activeChar.sendPacket(new GMHennaInfo(owner));
-                } else {
-                    activeChar.sendActionFailed();
-                    return;
-                }
+            // If item is successfully deleted, show updated target inventory.
+            if (owner.getInventory().destroyItemByObjectId(objectId, count, "GMDelete")) {
+                List<ItemInstance> items = owner.getInventory().getItems();
+                int questSize = (int) items.stream()
+                        .filter(i -> i.getTemplate().isStackable())
+                        .count();
+                activeChar.sendPacket(new GMViewItemList(owner, items, items.size() - questSize));
+                activeChar.sendPacket(new ExGMViewQuestItemList(owner, items, questSize));
+                activeChar.sendPacket(new GMHennaInfo(owner));
+            } else {
+                activeChar.sendActionFailed();
+                return;
             }
         }
 

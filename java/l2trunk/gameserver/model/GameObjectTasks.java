@@ -18,15 +18,15 @@ import java.util.List;
 
 public final class GameObjectTasks {
     public static class DeleteTask extends RunnableImpl {
-        private final HardReference<? extends Creature> _ref;
+        private final HardReference<? extends Creature> hardReference;
 
         public DeleteTask(Creature c) {
-            _ref = c.getRef();
+            hardReference = c.getRef();
         }
 
         @Override
         public void runImpl() {
-            Creature c = _ref.get();
+            Creature c = hardReference.get();
 
             if (c != null)
                 c.deleteMe();

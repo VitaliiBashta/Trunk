@@ -45,9 +45,7 @@ public enum ThreadPoolManager {
     }
 
     public ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long initial, long delay) {
-        long del = validate(delay);
-        ScheduledFuture<?> scheduledFuture = _scheduledExecutor.scheduleAtFixedRate(wrap(r), validate(initial), del, TimeUnit.MILLISECONDS);
-        return scheduledFuture;
+        return _scheduledExecutor.scheduleAtFixedRate(wrap(r), validate(initial), validate(delay), TimeUnit.MILLISECONDS);
     }
 
     public ScheduledFuture<?> scheduleAtFixedDelay(Runnable r, long initial, long delay) {

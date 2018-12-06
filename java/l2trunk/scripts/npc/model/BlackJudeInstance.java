@@ -6,11 +6,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 10:50/24.06.2011
- */
-public class BlackJudeInstance extends NpcInstance {
+public final class BlackJudeInstance extends NpcInstance {
     public BlackJudeInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

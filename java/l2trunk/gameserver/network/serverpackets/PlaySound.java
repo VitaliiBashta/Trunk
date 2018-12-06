@@ -2,17 +2,17 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.utils.Location;
 
-public class PlaySound extends L2GameServerPacket {
+public final class PlaySound extends L2GameServerPacket {
     public static final L2GameServerPacket SIEGE_VICTORY = new PlaySound("Siege_Victory");
     public static final L2GameServerPacket B04_S01 = new PlaySound("B04_S01");
     public static final L2GameServerPacket HB01 = new PlaySound(PlaySound.Type.MUSIC, "HB01", 0, 0, 0, 0, 0);
-    private final Type _type;
+    private final Type type;
     private final String _soundFile;
-    private final int _hasCenterObject;
-    private final int _objectId;
-    private final int _x;
-    private final int _y;
-    private final int _z;
+    private final int hasCenterObject;
+    private final int objectId;
+    private final int x;
+    private final int y;
+    private final int z;
 
     public PlaySound(String soundFile) {
         this(Type.SOUND, soundFile, 0, 0, 0, 0, 0);
@@ -23,26 +23,26 @@ public class PlaySound extends L2GameServerPacket {
     }
 
     public PlaySound(Type type, String soundFile, int c, int objectId, int x, int y, int z) {
-        _type = type;
+        this.type = type;
         _soundFile = soundFile;
-        _hasCenterObject = c;
-        _objectId = objectId;
-        _x = x;
-        _y = y;
-        _z = z;
+        hasCenterObject = c;
+        this.objectId = objectId;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x9e);
         //dSdddddd
-        writeD(_type.ordinal()); //0 for quest and ship, c4 toturial = 2
+        writeD(type.ordinal()); //0 for quest and ship, c4 toturial = 2
         writeS(_soundFile);
-        writeD(_hasCenterObject); //0 for quest; 1 for ship;
-        writeD(_objectId); //0 for quest; objectId of ship
-        writeD(_x); //x
-        writeD(_y); //y
-        writeD(_z); //z
+        writeD(hasCenterObject); //0 for quest; 1 for ship;
+        writeD(objectId); //0 for quest; objectId of ship
+        writeD(x); //x
+        writeD(y); //y
+        writeD(z); //z
     }
 
     public enum Type {

@@ -4,7 +4,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Skill;
@@ -19,31 +18,81 @@ import l2trunk.scripts.npc.model.SquashInstance;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class SquashAI extends Fighter {
-    public class PolimorphTask extends RunnableImpl {
-        @SuppressWarnings("unused")
-        @Override
-        public void runImpl() {
-            SquashInstance actor = getActor();
-            if (actor == null)
-                return;
-            SimpleSpawner spawn;
-
-            try {
-                spawn = new SimpleSpawner(NpcHolder.getTemplate(_npcId));
-                spawn.setLoc(actor.getLoc());
-                NpcInstance npc = spawn.doSpawn(true);
-                npc.setAI(new SquashAI(npc));
-                ((SquashInstance) npc).setSpawner(actor.getSpawner());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            _timeToUnspawn = Long.MAX_VALUE;
-            actor.deleteMe();
-        }
-    }
-
+public final class SquashAI extends Fighter {
+    private final static int Young_Squash = 12774;
+    private final static int High_Quality_Squash = 12775;
+    private final static int Low_Quality_Squash = 12776;
+    private final static int Large_Young_Squash = 12777;
+    private final static int High_Quality_Large_Squash = 12778;
+    private final static int Low_Quality_Large_Squash = 12779;
+    private final static int King_Squash = 13016;
+    private final static int Emperor_Squash = 13017;
+    private final static int Squash_Level_up = 4513;
+    private final static int Squash_Poisoned = 4514;
+    private static final String[] textOnSpawn = new String[]{
+            "scripts.events.TheFallHarvest.SquashAI.textOnSpawn.0",
+            "scripts.events.TheFallHarvest.SquashAI.textOnSpawn.1",
+            "scripts.events.TheFallHarvest.SquashAI.textOnSpawn.2"};
+    private static final String[] textOnAttack = new String[]{
+            "Bites rat-a-tat... to change... body...!",
+            "Ha ha, grew up! Completely on all!",
+            "Cannot to aim all? Had a look all to flow out...",
+            "Is that also calculated hit? Look for person which has the strength!",
+            "Don't waste your time!",
+            "Ha, this sound is really pleasant to hear?",
+            "I eat your attack to grow!",
+            "Time to hit again! Come again!",
+            "Only useful music can open big pumpkin... It can not be opened with weapon!"};
+    private static final String[] textTooFast = new String[]{
+            "heh heh,looks well hit!",
+            "yo yo? Your skill is mediocre?",
+            "Time to hit again! Come again!",
+            "I eat your attack to grow!",
+            "Make an effort... to get down like this, I walked...",
+            "What is this kind of degree to want to open me? Really is indulges in fantasy!",
+            "Good fighting method. Evidently flies away the fly also can overcome.",
+            "Strives to excel strength oh! But waste your time..."};
+    private static final String[] textSuccess0 = new String[]{
+            "The lovely pumpkin young fruit start to glisten when taken to the threshing ground! From now on will be able to grow healthy and strong!",
+            "Oh, Haven't seen for a long time?",
+            "Suddenly, thought as soon as to see my beautiful appearance?",
+            "Well! This is something! Is the nectar?",
+            "Refuels! Drink 5 bottles to be able to grow into the big pumpkin oh!"};
+    private static final String[] textFail0 = new String[]{
+            "If I drink nectar, I can grow up faster!",
+            "Come, believe me, sprinkle a nectar! I can certainly turn the big pumpkin!!!",
+            "Take nectar to come, pumpkin nectar!"};
+    private static final String[] textSuccess1 = new String[]{
+            "Wish the big pumpkin!",
+            "completely became the recreation area! Really good!",
+            "Guessed I am mature or am rotten?",
+            "Nectar is just the best! Ha! Ha! Ha!"};
+    private static final String[] textFail1 = new String[]{
+            "oh! Randomly missed! Too quickly sprinkles the nectar?",
+            "If I die like this, you only could get young pumpkin...",
+            "Cultivate a bit faster! The good speech becomes the big pumpkin, the young pumpkin is not good!",
+            "The such small pumpkin you all must eat? Bring the nectar, I can be bigger!"};
+    private static final String[] textSuccess2 = new String[]{
+            "Young pumpkin wishing! Has how already grown up?",
+            "Already grew up! Quickly sneaked off...",
+            "Graciousness, is very good. Come again to see, now felt more and more well"};
+    private static final String[] textFail2 = new String[]{
+            "Hey! Was not there! Here is! Here! Not because I can not properly care? Small!",
+            "Wow, stops? Like this got down to have to thank",
+            "Hungry for a nectar oh...",
+            "Do you want the big pumpkin? But I like young pumpkin..."};
+    private static final String[] textSuccess3 = new String[]{
+            "Big pumpkin wishing! Ask, to sober!",
+            "Rumble rumble... it's really tasty! Hasn't it?",
+            "Cultivating me just to eat? Good, is casual your... not to give the manna on the suicide!"};
+    private static final String[] textFail3 = new String[]{
+            "Isn't it the water you add? What flavor?",
+            "Master, rescue my... I don't have the nectar flavor, I must die..."};
+    private static final String[] textSuccess4 = new String[]{
+            "is very good, does extremely well! Knew what next step should make?",
+            "If you catch me, I give you 10 million adena!!! Agree?"};
+    private static final String[] textFail4 = new String[]{"Hungry for a nectar oh...", "If I drink nectar, I can grow up faster!"};
+    private static final int NECTAR_REUSE = 3000;
     private final RewardData[] _dropList = new RewardData[]
             {
                     new RewardData(1539, 1, 5, 15000), // Greater Healing Potion
@@ -134,96 +183,7 @@ public class SquashAI extends Fighter {
                     new RewardData(959, 1, 1, 50), // EWS           0.005%
                     new RewardData(960, 1, 1, 300), // EAS          0.03%
             };
-
-    private final static int Young_Squash = 12774;
-    private final static int High_Quality_Squash = 12775;
-    private final static int Low_Quality_Squash = 12776;
-    private final static int Large_Young_Squash = 12777;
-    private final static int High_Quality_Large_Squash = 12778;
-    private final static int Low_Quality_Large_Squash = 12779;
-    private final static int King_Squash = 13016;
-    private final static int Emperor_Squash = 13017;
-
-    private final static int Squash_Level_up = 4513;
-    private final static int Squash_Poisoned = 4514;
-
-    private static final String[] textOnSpawn = new String[]{
-            "scripts.events.TheFallHarvest.SquashAI.textOnSpawn.0",
-            "scripts.events.TheFallHarvest.SquashAI.textOnSpawn.1",
-            "scripts.events.TheFallHarvest.SquashAI.textOnSpawn.2"};
-
-    private static final String[] textOnAttack = new String[]{
-            "Bites rat-a-tat... to change... body...!",
-            "Ha ha, grew up! Completely on all!",
-            "Cannot to aim all? Had a look all to flow out...",
-            "Is that also calculated hit? Look for person which has the strength!",
-            "Don't waste your time!",
-            "Ha, this sound is really pleasant to hear?",
-            "I eat your attack to grow!",
-            "Time to hit again! Come again!",
-            "Only useful music can open big pumpkin... It can not be opened with weapon!"};
-
-    private static final String[] textTooFast = new String[]{
-            "heh heh,looks well hit!",
-            "yo yo? Your skill is mediocre?",
-            "Time to hit again! Come again!",
-            "I eat your attack to grow!",
-            "Make an effort... to get down like this, I walked...",
-            "What is this kind of degree to want to open me? Really is indulges in fantasy!",
-            "Good fighting method. Evidently flies away the fly also can overcome.",
-            "Strives to excel strength oh! But waste your time..."};
-
-    private static final String[] textSuccess0 = new String[]{
-            "The lovely pumpkin young fruit start to glisten when taken to the threshing ground! From now on will be able to grow healthy and strong!",
-            "Oh, Haven't seen for a long time?",
-            "Suddenly, thought as soon as to see my beautiful appearance?",
-            "Well! This is something! Is the nectar?",
-            "Refuels! Drink 5 bottles to be able to grow into the big pumpkin oh!"};
-
-    private static final String[] textFail0 = new String[]{
-            "If I drink nectar, I can grow up faster!",
-            "Come, believe me, sprinkle a nectar! I can certainly turn the big pumpkin!!!",
-            "Take nectar to come, pumpkin nectar!"};
-
-    private static final String[] textSuccess1 = new String[]{
-            "Wish the big pumpkin!",
-            "completely became the recreation area! Really good!",
-            "Guessed I am mature or am rotten?",
-            "Nectar is just the best! Ha! Ha! Ha!"};
-
-    private static final String[] textFail1 = new String[]{
-            "oh! Randomly missed! Too quickly sprinkles the nectar?",
-            "If I die like this, you only could get young pumpkin...",
-            "Cultivate a bit faster! The good speech becomes the big pumpkin, the young pumpkin is not good!",
-            "The such small pumpkin you all must eat? Bring the nectar, I can be bigger!"};
-
-    private static final String[] textSuccess2 = new String[]{
-            "Young pumpkin wishing! Has how already grown up?",
-            "Already grew up! Quickly sneaked off...",
-            "Graciousness, is very good. Come again to see, now felt more and more well"};
-
-    private static final String[] textFail2 = new String[]{
-            "Hey! Was not there! Here is! Here! Not because I can not properly care? Small!",
-            "Wow, stops? Like this got down to have to thank",
-            "Hungry for a nectar oh...",
-            "Do you want the big pumpkin? But I like young pumpkin..."};
-
-    private static final String[] textSuccess3 = new String[]{
-            "Big pumpkin wishing! Ask, to sober!",
-            "Rumble rumble... it's really tasty! Hasn't it?",
-            "Cultivating me just to eat? Good, is casual your... not to give the manna on the suicide!"};
-
-    private static final String[] textFail3 = new String[]{
-            "Isn't it the water you add? What flavor?",
-            "Master, rescue my... I don't have the nectar flavor, I must die..."};
-
-    private static final String[] textSuccess4 = new String[]{
-            "is very good, does extremely well! Knew what next step should make?",
-            "If you catch me, I give you 10 million adena!!! Agree?"};
-
-    private static final String[] textFail4 = new String[]{"Hungry for a nectar oh...", "If I drink nectar, I can grow up faster!"};
-
-    private int _npcId;
+    private int npcId;
     private int _nectar;
     private int _tryCount;
     private long _lastNectarUse;
@@ -231,11 +191,9 @@ public class SquashAI extends Fighter {
 
     private ScheduledFuture<?> _polimorphTask;
 
-    private static final int NECTAR_REUSE = 3000;
-
     public SquashAI(NpcInstance actor) {
         super(actor);
-        _npcId = getActor().getNpcId();
+        npcId = getActor().getNpcId();
         Functions.npcSayCustomMessage(getActor(), textOnSpawn[Rnd.get(textOnSpawn.length)]);
         _timeToUnspawn = System.currentTimeMillis() + 120000;
     }
@@ -339,20 +297,20 @@ public class SquashAI extends Fighter {
                     Functions.npcSay(actor, textFail4[Rnd.get(textFail4.length)]);
                     actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Poisoned, 1, NECTAR_REUSE, 0));
                 }
-                if (_npcId == Young_Squash) {
+                if (npcId == Young_Squash) {
                     if (_nectar < 3)
-                        _npcId = Low_Quality_Squash;
+                        npcId = Low_Quality_Squash;
                     else if (_nectar == 5)
-                        _npcId = King_Squash;
+                        npcId = King_Squash;
                     else
-                        _npcId = High_Quality_Squash;
-                } else if (_npcId == Large_Young_Squash)
+                        npcId = High_Quality_Squash;
+                } else if (npcId == Large_Young_Squash)
                     if (_nectar < 3)
-                        _npcId = Low_Quality_Large_Squash;
+                        npcId = Low_Quality_Large_Squash;
                     else if (_nectar == 5)
-                        _npcId = Emperor_Squash;
+                        npcId = Emperor_Squash;
                     else
-                        _npcId = High_Quality_Large_Squash;
+                        npcId = High_Quality_Large_Squash;
 
                 _polimorphTask = ThreadPoolManager.INSTANCE.schedule(new PolimorphTask(), NECTAR_REUSE);
                 break;
@@ -375,7 +333,7 @@ public class SquashAI extends Fighter {
 
         double dropMod = 1.5;
 
-        switch (_npcId) {
+        switch (npcId) {
             case Low_Quality_Squash:
                 dropMod *= 1;
                 Functions.npcSay(actor, "The pampkin opens!!!");
@@ -419,7 +377,7 @@ public class SquashAI extends Fighter {
             if (_polimorphTask != null) {
                 _polimorphTask.cancel(false);
                 _polimorphTask = null;
-                Log.add("TheFallHarvest :: Player " + actor.getSpawner().getName() + " tried to use cheat (SquashAI clone): killed " + actor + " after polymorfing started", "illegal-actions");
+                Log.add("TheFallHarvest :: Player " + actor.getSpawner().getName() + " tried to use cheat (SquashAI newInstance): killed " + actor + " after polymorfing started", "illegal-actions");
                 return; // при таких вариантах ничего не даем
             }
 
@@ -444,5 +402,22 @@ public class SquashAI extends Fighter {
     @Override
     public SquashInstance getActor() {
         return (SquashInstance) super.getActor();
+    }
+
+    public class PolimorphTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            SquashInstance actor = getActor();
+            if (actor == null)
+                return;
+            SimpleSpawner spawn = new SimpleSpawner(npcId)
+                    .setLoc(actor.getLoc());
+            NpcInstance npc = spawn.doSpawn(true);
+            npc.setAI(new SquashAI(npc));
+            ((SquashInstance) npc).setSpawner(actor.getSpawner());
+
+            _timeToUnspawn = Long.MAX_VALUE;
+            actor.deleteMe();
+        }
     }
 }

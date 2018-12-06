@@ -7,10 +7,11 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
+import java.util.Arrays;
 import java.util.List;
 
 public final class SSQAnakimMinion extends Fighter {
-    private final int[] _enemies = {32717, 32716};
+    private final List<Integer> enemies = Arrays.asList(32717, 32716);
 
     public SSQAnakimMinion(NpcInstance actor) {
         super(actor);
@@ -20,7 +21,7 @@ public final class SSQAnakimMinion extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.INSTANCE().schedule(new Attack(), 3000);
+        ThreadPoolManager.INSTANCE.schedule(new Attack(), 3000);
     }
 
     public class Attack extends RunnableImpl {
@@ -32,12 +33,9 @@ public final class SSQAnakimMinion extends Fighter {
     }
 
     private NpcInstance getEnemy() {
-        List<NpcInstance> around = getActor().getAroundNpc(1000, 300);
-        if (around != null && !around.isEmpty())
-            for (NpcInstance npc : around)
-                if (ArrayUtils.contains(_enemies, npc.getNpcId()))
-                    return npc;
-        return null;
+        return  getActor().getAroundNpc(1000, 300).stream()
+                .filter( npc -> enemies.contains(npc.getNpcId()))
+                .findFirst().orElse(null);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package l2trunk.scripts.bosses;
 
-import l2trunk.scripts.bosses.EpicBossState.State;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -23,6 +22,7 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.gameserver.utils.TimeUtils;
+import l2trunk.scripts.bosses.EpicBossState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +40,12 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
     private static final Location TELEPORT_POSITION = new Location(179892, 114915, -7704);
     private static final Location _teleportCubeLocation = new Location(177615, 114941, -7709, 0);
     private static final Location _antharasLocation = new Location(181911, 114835, -7678, 32542);
-
+    private static final List<NpcInstance> _spawnedMinions = new ArrayList<>();
+    private static final int FWA_LIMITUNTILSLEEP = 15 * 60000;
+    private static final int FWA_APPTIMEOFANTHARAS = 15 * 60000;
     // Models
     private static BossInstance _antharas;
     private static NpcInstance _teleCube;
-    private static final List<NpcInstance> _spawnedMinions = new ArrayList<>();
-
     // tasks.
     private static ScheduledFuture<?> _monsterSpawnTask;
     private static ScheduledFuture<?> _intervalEndTask;
@@ -53,20 +53,222 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
     private static ScheduledFuture<?> _moveAtRandomTask;
     private static ScheduledFuture<?> _sleepCheckTask;
     private static ScheduledFuture<?> _onAnnihilatedTask;
-
     // Vars
     private static EpicBossState _state;
     private static Zone zone;
     private static long _lastAttackTime = 0;
-    private static final int FWA_LIMITUNTILSLEEP = 15 * 60000;
-    private static final int FWA_APPTIMEOFANTHARAS = 15 * 60000;
     private static boolean Dying = false;
     private static boolean _entryLocked = false;
 
+    private static void banishForeigners() {
+        for (Player player : getPlayersInside())
+            player.teleToClosestTown();
+    }
+
+    private synchronized static void checkAnnihilated() {
+        if (_onAnnihilatedTask == null && isPlayersAnnihilated())
+            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(AntharasManager::sleep, 5000);
+    }
+
+    private static List<Player> getPlayersInside() {
+        return zone.getInsidePlayers();
+    }
+
+    private static long getRespawnInterval() {
+        return (long) (Config.ALT_RAID_RESPAWN_MULTIPLIER * (Config.ANTHARAS_DEFAULT_SPAWN_HOURS * 60 * 60000 + Rnd.get(0, Config.ANTHARAS_RANDOM_SPAWN_HOURS * 60 * 60000)));
+    }
+
+    public static Zone getZone() {
+        return zone;
+    }
+
+    private static boolean isPlayersAnnihilated() {
+        for (Player pc : getPlayersInside())
+            if (!pc.isDead())
+                return false;
+        return true;
+    }
+
+    private static void onAntharasDie() {
+        if (Dying)
+            return;
+
+        Dying = true;
+        _state.setRespawnDate(getRespawnInterval());
+        _state.setState(State.INTERVAL);
+        _state.update();
+
+        _entryLocked = false;
+        _teleCube = Functions.spawn(_teleportCubeLocation, _teleportCubeId);
+        Log.add("Antharas died", "bosses");
+    }
+
+    private static void setIntervalEndTask() {
+        setUnspawn();
+
+        if (_state.getState().equals(State.ALIVE)) {
+            _state.setState(State.NOTSPAWN);
+            _state.update();
+            return;
+        }
+
+        if (!_state.getState().equals(State.INTERVAL)) {
+            _state.setRespawnDate(getRespawnInterval());
+            _state.setState(State.INTERVAL);
+            _state.update();
+        }
+
+        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(new IntervalEnd(), _state.getInterval());
+    }
+
+    // clean Antharas's lair.
+    private static void setUnspawn() {
+        // eliminate players.
+        banishForeigners();
+
+        if (_antharas != null)
+            _antharas.deleteMe();
+        for (NpcInstance npc : _spawnedMinions)
+            npc.deleteMe();
+        if (_teleCube != null)
+            _teleCube.deleteMe();
+
+        _entryLocked = false;
+
+        // not executed tasks is canceled.
+        if (_monsterSpawnTask != null) {
+            _monsterSpawnTask.cancel(false);
+            _monsterSpawnTask = null;
+        }
+        if (_intervalEndTask != null) {
+            _intervalEndTask.cancel(false);
+            _intervalEndTask = null;
+        }
+        if (_socialTask != null) {
+            _socialTask.cancel(false);
+            _socialTask = null;
+        }
+        if (_moveAtRandomTask != null) {
+            _moveAtRandomTask.cancel(false);
+            _moveAtRandomTask = null;
+        }
+        if (_sleepCheckTask != null) {
+            _sleepCheckTask.cancel(false);
+            _sleepCheckTask = null;
+        }
+        if (_onAnnihilatedTask != null) {
+            _onAnnihilatedTask.cancel(false);
+            _onAnnihilatedTask = null;
+        }
+    }
+
+    private static void sleep() {
+        setUnspawn();
+        if (_state.getState().equals(State.ALIVE)) {
+            _state.setState(State.NOTSPAWN);
+            _state.update();
+        }
+    }
+
+    public static void setLastAttackTime() {
+        _lastAttackTime = System.currentTimeMillis();
+    }
+
+    // setting Antharas spawn task.
+    private synchronized static void setAntharasSpawnTask() {
+        if (_monsterSpawnTask == null)
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(1), FWA_APPTIMEOFANTHARAS);
+        //_entryLocked = true;
+    }
+
+    private static void broadcastScreenMessage(NpcString npcs) {
+        for (Player p : getPlayersInside())
+            p.sendPacket(new ExShowScreenMessage(npcs, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false));
+    }
+
+    public static void addSpawnedMinion(NpcInstance npc) {
+        _spawnedMinions.add(npc);
+    }
+
+    public static void enterTheLair(Player player) {
+        if (player == null)
+            return;
+        // teleport allow only for Command Channel
+        if (player.getParty() == null || !player.getParty().isInCommandChannel()) {
+            player.sendPacket(Msg.YOU_CANNOT_ENTER_BECAUSE_YOU_ARE_NOT_IN_A_CURRENT_COMMAND_CHANNEL);
+            return;
+        }
+
+        CommandChannel cc = player.getParty().getCommandChannel();
+        if (cc.size() > 200) {
+            player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
+            return;
+        }
+        if (getPlayersInside().size() > 200) {
+            player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
+            return;
+        }
+        if (_state.getState() != State.NOTSPAWN) {
+            player.sendMessage("Antharas is still reborning. You cannot invade the nest now");
+            return;
+        }
+        if (_entryLocked || _state.getState() == State.ALIVE) {
+            player.sendMessage("Antharas has already been reborned and is being attacked. The entrance is sealed.");
+            return;
+        }
+
+        if (player.isDead() || player.isFlying() || player.isCursedWeaponEquipped() || player.getInventory().getCountOf(PORTAL_STONE) < 1) {
+            player.sendMessage("You doesn't meet the requirements to enter the nest");
+            return;
+        }
+
+        player.teleToLocation(TELEPORT_POSITION);
+        setAntharasSpawnTask();
+
+    }
+
+    public static EpicBossState getState() {
+        return _state;
+    }
+
+    @Override
+    public void onDeath(Creature self, Creature killer) {
+        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
+            checkAnnihilated();
+        else if (self.isNpc() && self.getNpcId() == ANTHARAS_STRONG)
+            ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(8), 10);
+    }
+
+    private void init() {
+        _state = new EpicBossState(ANTHARAS_STRONG);
+        zone = ReflectionUtils.getZone("[antharas_epic]");
+
+        CharListenerList.addGlobal(this);
+        _log.info("AntharasManager: State of Antharas is " + _state.getState() + ".");
+        if (!_state.getState().equals(State.NOTSPAWN))
+            setIntervalEndTask();
+
+        _log.info("AntharasManager: Next spawn date of Antharas is " + TimeUtils.toSimpleFormat(_state.getRespawnDate()) + ".");
+    }
+
+    @Override
+    public void onLoad() {
+        init();
+    }
+
+    @Override
+    public void onReload() {
+        sleep();
+    }
+
+    @Override
+    public void onShutdown() {
+    }
+
     private static class AntharasSpawn extends RunnableImpl {
         private final int _distance = 3000;
-        private int taskId;
         private final List<Player> _players = getPlayersInside();
+        private int taskId;
 
         AntharasSpawn(int taskId) {
             this.taskId = taskId;
@@ -82,7 +284,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     _state.setRespawnDate(getRespawnInterval());
                     _state.setState(State.ALIVE);
                     _state.update();
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(2), 2000);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(2), 2000);
                     break;
                 case 2:
                     // set camera.
@@ -189,9 +391,9 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
             _state.setState(State.NOTSPAWN);
             _state.update();
             //Earthquake
-            for (Player p : GameObjectsStorage.getAllPlayersForIterate()) {
-                p.broadcastPacket(new Earthquake(new Location(185708, 114298, -8221), 20, 10));
-            }
+            Location loc = new Location(185708, 114298, -8221);
+            GameObjectsStorage.getAllPlayers().forEach(p -> p.broadcastPacket(new Earthquake(loc, 20, 10)));
+
         }
     }
 
@@ -200,210 +402,5 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
         public void runImpl() {
             sleep();
         }
-    }
-
-    private static void banishForeigners() {
-        for (Player player : getPlayersInside())
-            player.teleToClosestTown();
-    }
-
-    private synchronized static void checkAnnihilated() {
-        if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(AntharasManager::sleep, 5000);
-    }
-
-    private static List<Player> getPlayersInside() {
-        return zone.getInsidePlayers();
-    }
-
-    private static long getRespawnInterval() {
-        return (long) (Config.ALT_RAID_RESPAWN_MULTIPLIER * (Config.ANTHARAS_DEFAULT_SPAWN_HOURS * 60 * 60000 + Rnd.get(0, Config.ANTHARAS_RANDOM_SPAWN_HOURS * 60 * 60000)));
-    }
-
-    public static Zone getZone() {
-        return zone;
-    }
-
-    private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
-    }
-
-    private static void onAntharasDie() {
-        if (Dying)
-            return;
-
-        Dying = true;
-        _state.setRespawnDate(getRespawnInterval());
-        _state.setState(State.INTERVAL);
-        _state.update();
-
-        _entryLocked = false;
-        _teleCube = Functions.spawn(_teleportCubeLocation, _teleportCubeId);
-        Log.add("Antharas died", "bosses");
-    }
-
-    @Override
-    public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
-            checkAnnihilated();
-        else if (self.isNpc() && self.getNpcId() == ANTHARAS_STRONG)
-            ThreadPoolManager.INSTANCE().schedule(new AntharasSpawn(8), 10);
-    }
-
-    private static void setIntervalEndTask() {
-        setUnspawn();
-
-        if (_state.getState().equals(State.ALIVE)) {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
-            return;
-        }
-
-        if (!_state.getState().equals(State.INTERVAL)) {
-            _state.setRespawnDate(getRespawnInterval());
-            _state.setState(State.INTERVAL);
-            _state.update();
-        }
-
-        _intervalEndTask = ThreadPoolManager.INSTANCE().schedule(new IntervalEnd(), _state.getInterval());
-    }
-
-    // clean Antharas's lair.
-    private static void setUnspawn() {
-        // eliminate players.
-        banishForeigners();
-
-        if (_antharas != null)
-            _antharas.deleteMe();
-        for (NpcInstance npc : _spawnedMinions)
-            npc.deleteMe();
-        if (_teleCube != null)
-            _teleCube.deleteMe();
-
-        _entryLocked = false;
-
-        // not executed tasks is canceled.
-        if (_monsterSpawnTask != null) {
-            _monsterSpawnTask.cancel(false);
-            _monsterSpawnTask = null;
-        }
-        if (_intervalEndTask != null) {
-            _intervalEndTask.cancel(false);
-            _intervalEndTask = null;
-        }
-        if (_socialTask != null) {
-            _socialTask.cancel(false);
-            _socialTask = null;
-        }
-        if (_moveAtRandomTask != null) {
-            _moveAtRandomTask.cancel(false);
-            _moveAtRandomTask = null;
-        }
-        if (_sleepCheckTask != null) {
-            _sleepCheckTask.cancel(false);
-            _sleepCheckTask = null;
-        }
-        if (_onAnnihilatedTask != null) {
-            _onAnnihilatedTask.cancel(false);
-            _onAnnihilatedTask = null;
-        }
-    }
-
-    private void init() {
-        _state = new EpicBossState(ANTHARAS_STRONG);
-        zone = ReflectionUtils.getZone("[antharas_epic]");
-
-        CharListenerList.addGlobal(this);
-        _log.info("AntharasManager: State of Antharas is " + _state.getState() + ".");
-        if (!_state.getState().equals(State.NOTSPAWN))
-            setIntervalEndTask();
-
-        _log.info("AntharasManager: Next spawn date of Antharas is " + TimeUtils.toSimpleFormat(_state.getRespawnDate()) + ".");
-    }
-
-    private static void sleep() {
-        setUnspawn();
-        if (_state.getState().equals(State.ALIVE)) {
-            _state.setState(State.NOTSPAWN);
-            _state.update();
-        }
-    }
-
-    public static void setLastAttackTime() {
-        _lastAttackTime = System.currentTimeMillis();
-    }
-
-    // setting Antharas spawn task.
-    private synchronized static void setAntharasSpawnTask() {
-        if (_monsterSpawnTask == null)
-            _monsterSpawnTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(1), FWA_APPTIMEOFANTHARAS);
-        //_entryLocked = true;
-    }
-
-    private static void broadcastScreenMessage(NpcString npcs) {
-        for (Player p : getPlayersInside())
-            p.sendPacket(new ExShowScreenMessage(npcs, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false));
-    }
-
-    public static void addSpawnedMinion(NpcInstance npc) {
-        _spawnedMinions.add(npc);
-    }
-
-    public static void enterTheLair(Player player) {
-        if (player == null)
-            return;
-        // Teleport allow only for Command Channel
-        if (player.getParty() == null || !player.getParty().isInCommandChannel()) {
-            player.sendPacket(Msg.YOU_CANNOT_ENTER_BECAUSE_YOU_ARE_NOT_IN_A_CURRENT_COMMAND_CHANNEL);
-            return;
-        }
-
-        CommandChannel cc = player.getParty().getCommandChannel();
-        if (cc.size() > 200) {
-            player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
-            return;
-        }
-        if (getPlayersInside().size() > 200) {
-            player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
-            return;
-        }
-        if (_state.getState() != State.NOTSPAWN) {
-            player.sendMessage("Antharas is still reborning. You cannot invade the nest now");
-            return;
-        }
-        if (_entryLocked || _state.getState() == State.ALIVE) {
-            player.sendMessage("Antharas has already been reborned and is being attacked. The entrance is sealed.");
-            return;
-        }
-
-        if (player.isDead() || player.isFlying() || player.isCursedWeaponEquipped() || player.getInventory().getCountOf(PORTAL_STONE) < 1) {
-            player.sendMessage("You doesn't meet the requirements to enter the nest");
-            return;
-        }
-
-        player.teleToLocation(TELEPORT_POSITION);
-        setAntharasSpawnTask();
-
-    }
-
-    public static EpicBossState getState() {
-        return _state;
-    }
-
-    @Override
-    public void onLoad() {
-        init();
-    }
-
-    @Override
-    public void onReload() {
-        sleep();
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

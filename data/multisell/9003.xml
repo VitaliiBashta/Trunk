@@ -343,7 +343,7 @@
 		<production id="5575" count="100000000"/>
 	</item>
 	
-	<!-- My Teleport Flag-->
+	<!-- My teleport Flag-->
 	<item>
 		<ingredient id="37000" count="2"/>
 		<production id="20033" count="1"/>

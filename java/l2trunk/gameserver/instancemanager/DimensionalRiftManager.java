@@ -33,22 +33,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DimensionalRiftManager {
-    private static final Logger LOG = LoggerFactory.getLogger(DimensionalRiftManager.class);
+public enum DimensionalRiftManager {
+    INSTANCE;
     private final static int DIMENSIONAL_FRAGMENT_ITEM_ID = 7079;
-    private static DimensionalRiftManager _instance;
+    private final Logger LOG = LoggerFactory.getLogger(DimensionalRiftManager.class);
     private final Map<Integer, Map<Integer, DimensionalRiftRoom>> _rooms = new ConcurrentHashMap<>();
-
-    private DimensionalRiftManager() {
-        load();
-    }
-
-    public static DimensionalRiftManager getInstance() {
-        if (_instance == null)
-            _instance = new DimensionalRiftManager();
-
-        return _instance;
-    }
 
     public static void teleToLocation(Player player, Location loc, Reflection ref) {
         if (player.isTeleporting() || player.isDeleted())
@@ -76,6 +65,10 @@ public class DimensionalRiftManager {
         player.sendPacket(new TeleportToLocation(player, loc));
     }
 
+    public void init() {
+        load();
+    }
+
     public DimensionalRiftRoom getRoom(int type, int room) {
         return _rooms.get(type).get(room);
     }
@@ -101,9 +94,8 @@ public class DimensionalRiftManager {
             int roomId;
             int mobId, delay, count;
             SimpleSpawner spawnDat;
-            NpcTemplate template;
             Location tele = new Location();
-            int xMin = 0, xMax = 0, yMin = 0, yMax = 0, zMin = 0, zMax = 0;
+            int xMin, xMax, yMin, yMax, zMin, zMax;
             boolean isBossRoom;
 
             for (Node rift = doc.getFirstChild(); rift != null; rift = rift.getNextSibling())
@@ -151,20 +143,16 @@ public class DimensionalRiftManager {
                                             delay = Integer.parseInt(attrs.getNamedItem("delay").getNodeValue());
                                             count = Integer.parseInt(attrs.getNamedItem("count").getNodeValue());
 
-                                            template = NpcHolder.getTemplate(mobId);
-                                            if (template == null)
-                                                LOG.warn("Template " + mobId + " not found!");
                                             if (!_rooms.containsKey(type))
                                                 LOG.warn("Type " + type + " not found!");
                                             else if (!_rooms.get(type).containsKey(roomId))
                                                 LOG.warn("Room " + roomId + " in Type " + type + " not found!");
 
-                                            if (template != null && _rooms.containsKey(type) && _rooms.get(type).containsKey(roomId)) {
-                                                spawnDat = new SimpleSpawner(template);
-                                                spawnDat.setTerritory(territory);
-                                                spawnDat.setHeading(-1);
-                                                spawnDat.setRespawnDelay(delay);
-                                                spawnDat.setAmount(count);
+                                            if (_rooms.containsKey(type) && _rooms.get(type).containsKey(roomId)) {
+                                                spawnDat = new SimpleSpawner(mobId);
+                                                spawnDat.setTerritory(territory)
+                                                        .setRespawnDelay(delay)
+                                                        .setAmount(count);
                                                 _rooms.get(type).get(roomId).getSpawns().add(spawnDat);
                                                 countGood++;
                                             } else

@@ -15,23 +15,15 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AprilFoolsDay extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+public final class AprilFoolsDay extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(AprilFoolsDay.class);
     private static final int[] HERBS = new int[]{20923, 20924, 20925}; // Хербы
     private static boolean _active = false;
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return isActive("AprilFoolsDay");
     }
 
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -40,8 +32,7 @@ public class AprilFoolsDay extends Functions implements ScriptFile, OnDeathListe
         if (SetActive("AprilFoolsDay", true)) {
             System.out.println("Event: 'April Fools Day' started.");
             ExBR_BroadcastEventState es = new ExBR_BroadcastEventState(ExBR_BroadcastEventState.APRIL_FOOLS, 1);
-            for (Player p : GameObjectsStorage.getAllPlayersForIterate())
-                p.sendPacket(es);
+            GameObjectsStorage.getAllPlayers().forEach(p -> p.sendPacket(es));
         } else
             player.sendMessage("Event 'April Fools Day' already started.");
 

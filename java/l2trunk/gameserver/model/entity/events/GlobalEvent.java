@@ -42,7 +42,7 @@ public abstract class GlobalEvent {
     private final List<EventAction> _onInitActions = new ArrayList<>(0);
     // objects
     private final Map<String, List<Object>> _objects = new HashMap<>(0);
-    private final int _id;
+    private final int id;
     private final String _name;
     private final String _timerName;
     private final ListenerListImpl _listenerList = new ListenerListImpl();
@@ -53,15 +53,13 @@ public abstract class GlobalEvent {
     }
 
     protected GlobalEvent(int id, String name) {
-        _id = id;
+        this.id = id;
         _name = name;
         _timerName = id + "_" + name.toLowerCase().replace(" ", "_");
     }
 
     protected static void broadcastToWorld(L2GameServerPacket packet) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            if (player != null)
-                player.sendPacket(packet);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(packet));
     }
 
     public void initEvent() {
@@ -313,20 +311,15 @@ public abstract class GlobalEvent {
 
     protected abstract long startTimeMillis();
 
-    // ===============================================================================================================
-    // Broadcast
-    // ===============================================================================================================
     protected void broadcastToWorld(IStaticPacket packet) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            if (player != null)
-                player.sendPacket(packet);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(packet));
     }
 
     // ===============================================================================================================
     // Getters & Setters
     // ===============================================================================================================
     public int getId() {
-        return _id;
+        return id;
     }
 
     public String getName() {

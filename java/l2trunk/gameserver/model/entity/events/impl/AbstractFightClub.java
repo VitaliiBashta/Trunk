@@ -40,6 +40,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public abstract class AbstractFightClub extends GlobalEvent {
     public static final String LOGGED_OFF_PLAYERS = "logged_off_players";
@@ -74,7 +77,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
     private final int[][] _mageBuffs;
     private final boolean _rootBetweenRounds;
     private final CLASSES[] _excludedClasses;
-    private final int[] _excludedSkills;
+    private final List<Integer> _excludedSkills;
     private final boolean _roundEvent;
     private final int _rounds;
     private final int _respawnTime;//in seconds
@@ -196,7 +199,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
      * - Getting map
      * - Saving room
      * - Saving all players from Room as Registered in Event
-     * - Starting Teleport Timer
+     * - Starting teleport Timer
      *
      * @param room of the event
      */
@@ -382,8 +385,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
         _set = null;
         _room = null;
         _zoneListener = null;
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            player.removeListener(_exitListener);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.removeListener(_exitListener));
         _exitListener = null;
     }
 
@@ -434,13 +436,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
             FightClubPlayer targetFPlayer = getFightClubPlayer(target);
             FightClubPlayer attackerFPlayer = getFightClubPlayer(attacker);
 
-            if (targetFPlayer == null || attackerFPlayer == null || targetFPlayer.getTeam().equals(attackerFPlayer.getTeam()))
-                return false;
-        }
-
-        //if (isInvisible(player, player))
-        {
-            //	return false;
+            return targetFPlayer != null && attackerFPlayer != null && !targetFPlayer.getTeam().equals(attackerFPlayer.getTeam());
         }
 
         return true;
@@ -470,21 +466,21 @@ public abstract class AbstractFightClub extends GlobalEvent {
         return _ressAllowed;
     }
 
-    /**
-     * @param player
-     * @return -1 if it have to be unchanged
-     */
-    public int getMySpeed(Player player) {
-        return -1;
-    }
-
-    /**
-     * @param player
-     * @return -1 if it have to be unchanged
-     */
-    public int getPAtkSpd(Player player) {
-        return -1;
-    }
+//    /**
+//     * @param player
+//     * @return -1 if it have to be unchanged
+//     */
+//    public int getMySpeed(Player player) {
+//        return -1;
+//    }
+//
+//    /**
+//     * @param player
+//     * @return -1 if it have to be unchanged
+//     */
+//    public int getPAtkSpd(Player player) {
+//        return -1;
+//    }
 
     /**
      * Removing window that appears after death
@@ -737,11 +733,11 @@ public abstract class AbstractFightClub extends GlobalEvent {
         }
 
         if (healAndRess) {
-            player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp(), true);
+            player.setFullHpMp();
             player.setCurrentCp(player.getMaxCp());
             if (player.getPet() != null && !player.getPet().isDead()) {
                 Playable pet = player.getPet();
-                pet.setCurrentHpMp(pet.getMaxHp(), player.getMaxMp(), false);
+                pet.setFullHpMp();
                 pet.broadcastCharInfo();
             }
             player.broadcastUserInfo(true);
@@ -1106,19 +1102,10 @@ public abstract class AbstractFightClub extends GlobalEvent {
         return spawnNpc(id, getSafeLocation(locs), respawnInSeconds);
     }
 
-    /**
-     * Set @respawnInSeconds to 0 if you don't want them to respawn
-     *
-     * @param id
-     * @param loc
-     * @param respawnInSeconds
-     * @return
-     */
     protected NpcInstance spawnNpc(int id, Location loc, int respawnInSeconds) {
         SimpleSpawner spawn = new SimpleSpawner(id);
         spawn.setLoc(loc);
         spawn.setAmount(1);
-        spawn.setHeading(loc.h);
         spawn.setRespawnDelay(Math.max(0, respawnInSeconds));
         spawn.setReflection(getReflection());
         List<NpcInstance> npcs = spawn.initAndReturn();
@@ -1444,7 +1431,7 @@ public abstract class AbstractFightClub extends GlobalEvent {
      * Spreading Players in team into List of Partys(Party = List<Player> with 9 as MAX Count)
      *
      * @param team team to create Partys
-     * @return List<Party                                                               (                                                               List                                                               <                                                               Player>)>
+     * @return List<Party                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               (                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               List                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Player>)>
      */
     protected List<List<Player>> spreadTeamInPartys(FightClubTeam team) {
         //Creating Map<Class, List of Players>
@@ -1748,7 +1735,6 @@ public abstract class AbstractFightClub extends GlobalEvent {
     }
 
     /**
-     * @param loc
      * @return checking if nobody is near(CLOSE_LOCATIONS_VALUE) loc
      */
     private boolean nobodyIsClose(Location loc) {
@@ -1771,12 +1757,6 @@ public abstract class AbstractFightClub extends GlobalEvent {
         }
     }
 
-    /**
-     * If he doesn't, unregistering player
-     *
-     * @param fPlayer
-     * @return player meets criteria
-     */
     private boolean checkIfRegisteredPlayerMeetCriteria(FightClubPlayer fPlayer) {
         return FightClubEventManager.INSTANCE.canPlayerParticipate(fPlayer.getPlayer(), true, true);
     }
@@ -1811,17 +1791,14 @@ public abstract class AbstractFightClub extends GlobalEvent {
         return realTypes;
     }
 
-    protected int[] parseExcludedSkills(String ids) {
+    protected List<Integer> parseExcludedSkills(String ids) {
         if (ids == null || ids.isEmpty())
             return null;
-        StringTokenizer st = new StringTokenizer(ids, ";");
-        int[] realIds = new int[st.countTokens()];
-        int index = 0;
-        while (st.hasMoreTokens()) {
-            realIds[index] = Integer.parseInt(st.nextToken());
-            index++;
-        }
-        return realIds;
+        String[] split = ids.split(";");
+        List<String> strings = Arrays.asList(split);
+        return strings.stream()
+                .map(i -> toInt(i, 0))
+                .collect(Collectors.toList());
     }
 
     private int[][] parseAutoStartTimes(String times) {

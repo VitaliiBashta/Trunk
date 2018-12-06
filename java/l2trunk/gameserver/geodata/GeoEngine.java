@@ -1550,7 +1550,7 @@ public final class GeoEngine {
      * i += 2) { newblock[i + 1] = (byte) (height >> 8); newblock[i] = (byte)
      * (height & 0x00ff); } region[blockIndex][0] = newblock; break; default: if
      * (Config.COMPACT_GEO) region[blockIndex][0] =
-     * region[blockIndex][0].clone(); break; } }
+     * region[blockIndex][0].newInstance(); break; } }
      */
     public static void removeGeoCollision(GeoCollision collision, int geoIndex) {
         Shape shape = collision.getShape();

@@ -45,10 +45,10 @@ public final class AutoImageSenderManager {
      * Starting a Thread which sends Images to every player that didn't receive them yet
      */
     public static void startSendingImages() {
-        ThreadPoolManager.INSTANCE().schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
+        ThreadPoolManager.INSTANCE.schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
     }
 
-    static class ImageSendThread implements Runnable {
+    private static class ImageSendThread implements Runnable {
         /**
          * If player didn't receive every Image yet, getting next Image Id to receive from {@link #IMAGES_SENT_ORDER} array
          *
@@ -71,19 +71,15 @@ public final class AutoImageSenderManager {
         @Override
         public void run() {
             if (Config.ALLOW_SENDING_IMAGES && Config.COMMUNITYBOARD_ENABLED) {
-                final Iterable<Player> players = GameObjectsStorage.getAllPlayersForIterate();
-                for (Player player : players) {
-                    if (player != null && player.isOnline())//Check in case of No-Carrier System
-                    {
-                        int pictureToLoad = getNextPicture(player);
-
-                        if (pictureToLoad != -1) {
-                            ImagesCache.sendImageToPlayer(player, pictureToLoad);
-                        }
-                    }
-                }
+                GameObjectsStorage.getAllPlayers().stream()
+                        .filter(Player::isOnline)
+                        .forEach(player -> {//Check in case of No-Carrier System
+                            int pictureToLoad = getNextPicture(player);
+                            if (pictureToLoad != -1) {
+                                ImagesCache.sendImageToPlayer(player, pictureToLoad);
+                            }
+                        });
             }
-
             ThreadPoolManager.INSTANCE.schedule(new ImageSendThread(), DELAY_BETWEEN_PICTURE);
         }
     }

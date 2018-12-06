@@ -61,7 +61,7 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
             loadMultiSell();
             spawnEventManagers();
             System.out.println("Event 'Summer Meleons' started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SummerMeleons.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SummerMeleons.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'Summer Meleons' already started.");
 
@@ -80,7 +80,7 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
         if (SetActive("SummerMeleons", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'Summer Meleons' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SummerMeleons.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.SummerMeleons.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'Summer Meleons' not started.");
 
@@ -150,6 +150,6 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SummerMeleons.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SummerMeleons.AnnounceEventStarted");
     }
 }

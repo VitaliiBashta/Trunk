@@ -14,7 +14,7 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CCPSmallCommands {
+public final class CCPSmallCommands {
     private static final int DECREASE_LEVEL_REQUIREMENT_ID = 6673;
     private static final long DECREASE_LEVEL_REQUIREMENT_COUNT = 1L;
 
@@ -62,7 +62,7 @@ public class CCPSmallCommands {
     }
 
     public static void setAntiGrief(Player activeChar) {
-        if (activeChar.getVarB("antigrief", false) == false) {
+        if (!activeChar.getVarB("antigrief", false)) {
             activeChar.setVar("antigrief", "true", -1);
             activeChar.sendMessage("You are now PROTECTED from unwanted buffs!");
         } else {
@@ -72,18 +72,13 @@ public class CCPSmallCommands {
     }
 
     public static String showOnlineCount() {
-
-        int i = 0;
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-            i++;
-        }
-        return "Players Online: " + (i ) ;
+        return "Players Online: " + GameObjectsStorage.getAllPlayers().size();
     }
 
     public static boolean getPing(Player activeChar) {
         activeChar.sendMessage("Processing request...");
         activeChar.sendPacket(new NetPingPacket(activeChar));
-        ThreadPoolManager.INSTANCE().schedule(new AnswerTask(activeChar), 3000L);
+        ThreadPoolManager.INSTANCE.schedule(new AnswerTask(activeChar), 3000L);
         return true;
     }
 
@@ -168,19 +163,19 @@ public class CCPSmallCommands {
     }
 
     private static final class AnswerTask implements Runnable {
-        private final Player _player;
+        private final Player player;
 
         AnswerTask(Player player) {
-            _player = player;
+            this.player = player;
         }
 
         @Override
         public void run() {
-            int ping = _player.getPing();
+            int ping = player.getPing();
             if (ping != -1) {
-                _player.sendMessage("Current ping: " + ping + " ms.");
+                player.sendMessage("Current ping: " + ping + " ms.");
             } else {
-                _player.sendMessage("The data from the client was not received.");
+                player.sendMessage("The data from the client was not received.");
             }
         }
     }

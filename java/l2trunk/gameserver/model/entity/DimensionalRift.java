@@ -95,22 +95,19 @@ public class DimensionalRift extends Reflection {
             spawnTask = null;
         }
 
-        final DimensionalRiftRoom riftRoom = DimensionalRiftManager.getInstance().getRoom(_roomType, room);
+        final DimensionalRiftRoom riftRoom = DimensionalRiftManager.INSTANCE.getRoom(_roomType, room);
 
-        spawnTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                for (SimpleSpawner s : riftRoom.getSpawns()) {
-                    SimpleSpawner sp = s.clone();
-                    sp.setReflection(DimensionalRift.this);
-                    addSpawn(sp);
-                    if (!isBossRoom)
-                        sp.startRespawn();
-                    for (int i = 0; i < sp.getAmount(); i++)
-                        sp.doSpawn(true);
-                }
-                DimensionalRift.this.addSpawnWithoutRespawn(getManagerId(), riftRoom.getTeleportCoords(), 0);
+        spawnTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            for (SimpleSpawner s : riftRoom.getSpawns()) {
+                SimpleSpawner sp = s.newInstance();
+                sp.setReflection(DimensionalRift.this);
+                addSpawn(sp);
+                if (!isBossRoom)
+                    sp.startRespawn();
+                for (int i = 0; i < sp.getAmount(); i++)
+                    sp.doSpawn(true);
             }
+            DimensionalRift.this.addSpawnWithoutRespawn(getManagerId(), riftRoom.getTeleportCoords(), 0);
         }, Config.RIFT_SPAWN_DELAY);
     }
 
@@ -120,16 +117,14 @@ public class DimensionalRift extends Reflection {
             killRiftTask = null;
         }
 
-        killRiftTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                if (isCollapseStarted())
-                    return;
-                for (Player p : getParty().getMembers())
-                    if (p != null && p.getReflection() == DimensionalRift.this)
-                        DimensionalRiftManager.getInstance().teleportToWaitingRoom(p);
+        killRiftTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            if (isCollapseStarted())
+                return;
+            getParty().getMembers().forEach(p -> {
+                if (p != null && p.getReflection() == DimensionalRift.this)
+                    DimensionalRiftManager.INSTANCE.teleportToWaitingRoom(p);
                 DimensionalRift.this.collapse();
-            }
+            });
         }, 100L);
     }
 
@@ -147,13 +142,13 @@ public class DimensionalRift extends Reflection {
             return;
 
         if (!player.getParty().isLeader(player)) {
-            DimensionalRiftManager.getInstance().showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
+            DimensionalRiftManager.INSTANCE.showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
             return;
         }
 
         if (!isBossRoom) {
             if (_hasJumped) {
-                DimensionalRiftManager.getInstance().showHtmlFile(player, "rift/AlreadyTeleported.htm", npc);
+                DimensionalRiftManager.INSTANCE.showHtmlFile(player, "rift/AlreadyTeleported.htm", npc);
                 return;
             }
             _hasJumped = true;
@@ -170,7 +165,7 @@ public class DimensionalRift extends Reflection {
             return;
 
         if (!player.getParty().isLeader(player)) {
-            DimensionalRiftManager.getInstance().showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
+            DimensionalRiftManager.INSTANCE.showHtmlFile(player, "rift/NotPartyLeader.htm", npc);
             return;
         }
 
@@ -183,7 +178,7 @@ public class DimensionalRift extends Reflection {
         for (Spawner s : getSpawns())
             s.deleteAll();
 
-        int size = DimensionalRiftManager.getInstance().getRooms(_roomType).size();
+        int size = DimensionalRiftManager.INSTANCE.getRooms(_roomType).size();
 		/*
 		if (jumps_current < getMaxJumps())
 			size--; // комната босса может быть только последней
@@ -258,11 +253,11 @@ public class DimensionalRift extends Reflection {
     }
 
     private void checkBossRoom(int room) {
-        isBossRoom = DimensionalRiftManager.getInstance().getRoom(_roomType, room).isBossRoom();
+        isBossRoom = DimensionalRiftManager.INSTANCE.getRoom(_roomType, room).isBossRoom();
     }
 
     private Location getRoomCoord(int room) {
-        return DimensionalRiftManager.getInstance().getRoom(_roomType, room).getTeleportCoords();
+        return DimensionalRiftManager.INSTANCE.getRoom(_roomType, room).getTeleportCoords();
     }
 
     /**

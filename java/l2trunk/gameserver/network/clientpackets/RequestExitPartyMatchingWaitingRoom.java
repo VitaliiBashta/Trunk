@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Player;
 /**
  * Format: (ch)
  */
-public class RequestExitPartyMatchingWaitingRoom extends L2GameClientPacket {
+public final class RequestExitPartyMatchingWaitingRoom extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }
@@ -17,6 +17,6 @@ public class RequestExitPartyMatchingWaitingRoom extends L2GameClientPacket {
         if (player == null)
             return;
 
-        MatchingRoomManager.getInstance().removeFromWaitingList(player);
+        MatchingRoomManager.INSTANCE.removeFromWaitingList(player);
     }
 }

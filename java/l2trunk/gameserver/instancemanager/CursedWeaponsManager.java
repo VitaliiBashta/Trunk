@@ -445,8 +445,7 @@ public enum CursedWeaponsManager {
     }
 
     private void announce(SystemMessage sm) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            player.sendPacket(sm);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
     }
 
     public void showUsageTime(Player player, int itemId) {
@@ -487,7 +486,7 @@ public enum CursedWeaponsManager {
         public void runImpl() {
             cursedWeaponsMap.values().stream()
                     .filter(CursedWeapon::isActive)
-                    .filter( cw -> cw.getTimeLeft() <=0)
+                    .filter(cw -> cw.getTimeLeft() <= 0)
                     .forEach(CursedWeaponsManager.this::endOfLife);
         }
     }

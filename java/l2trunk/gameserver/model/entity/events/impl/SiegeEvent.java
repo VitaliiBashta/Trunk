@@ -57,7 +57,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     final int _dayOfWeek;
     final int _hourOfDay;
     private final List<HardReference<SummonInstance>> _siegeSummons = new ArrayList<>();
-    R _residence;
+    R residence;
     Clan _oldOwner;
     OnKillListener _killListener = new KillListener();
     OnDeathListener _doorDeathListener = new DoorDeathListener();
@@ -308,7 +308,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     @Override
     @SuppressWarnings("unchecked")
     public void initEvent() {
-        _residence = (R) ResidenceHolder.getInstance().getResidence(getId());
+        residence = (R) ResidenceHolder.getInstance().getResidence(getId());
 
         loadSiegeClans();
 
@@ -370,7 +370,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
             case TO_VILLAGE:
                 // If the Lords of Dawn's own seal (Dawn), and in the siege of the city is, then teleport in the 2nd in a row the city.
                 if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
-                    loc = _residence.getNotOwnerRestartPoint(player);
+                    loc = residence.getNotOwnerRestartPoint(player);
                 break;
         }
 
@@ -515,7 +515,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     // Getters & Setters
     // ========================================================================================================================================================================
     public R getResidence() {
-        return _residence;
+        return residence;
     }
 
     public boolean isRegistrationOver() {

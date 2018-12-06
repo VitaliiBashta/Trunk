@@ -3,6 +3,7 @@ package l2trunk.scripts.ai;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
@@ -11,6 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
 public final class ZakenDaytime83 extends Fighter {
     private long _teleportSelfTimer = 0L;
     private final long _teleportSelfReuse = 120000L; // 120 secs
+    static Skill zakenTele = SkillTable.INSTANCE.getInfo(4222, 1);
     private final NpcInstance actor = getActor();
 
     public ZakenDaytime83(NpcInstance actor) {
@@ -23,7 +25,7 @@ public final class ZakenDaytime83 extends Fighter {
         if (_teleportSelfTimer + _teleportSelfReuse < System.currentTimeMillis()) {
             _teleportSelfTimer = System.currentTimeMillis();
             if (Rnd.chance(20)) {
-                actor.doCast(SkillTable.INSTANCE().getInfo(4222, 1), actor, false);
+                actor.doCast(zakenTele, actor, false);
             }
         }
         super.thinkAttack();

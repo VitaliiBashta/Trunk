@@ -17,6 +17,9 @@ import l2trunk.gameserver.utils.Location;
 import java.util.concurrent.ScheduledFuture;
 
 public final class SumielInstance extends NpcInstance {
+    private final int i_quest9 = 0;
+    private final int interval_time = 3;
+    private final long storage;
     private Player c_ai0 = null;
     private Player c_ai1 = null;
     private int i_ai0 = 0;
@@ -32,8 +35,6 @@ public final class SumielInstance extends NpcInstance {
     private int i_quest0 = 0;
     private int i_quest1 = 0;
     private int i_quest2 = 0;
-    private final int i_quest9 = 0;
-    private final int interval_time = 3;
     private ScheduledFuture<?> HURRY_UP_1;
     private ScheduledFuture<?> HURRY_UP2_1;
     private ScheduledFuture<?> HURRY_UP_2;
@@ -51,7 +52,6 @@ public final class SumielInstance extends NpcInstance {
     private ScheduledFuture<?> TIMER_7;
     private ScheduledFuture<?> TIMER_8;
     private ScheduledFuture<?> TIMER_9;
-    private final long storage;
 
     public SumielInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -154,7 +154,7 @@ public final class SumielInstance extends NpcInstance {
                             HURRY_UP_2 = ThreadPoolManager.INSTANCE.schedule(new HURRY_UP(), 2 * 60 * 1000);
                             break;
                     }
-                    GAME_TIME = ThreadPoolManager.INSTANCE.schedule(new GAME_TIME(), 3 * 60 * 1000 + 10 * 1000);
+                    GAME_TIME = ThreadPoolManager.INSTANCE.schedule(() -> i_quest2 = 0, 3 * 60 * 1000 + 10 * 1000);
                     TIMER_0 = ThreadPoolManager.INSTANCE.schedule(new TIMER_0(), 1000);
                 } else if (command.equals("restart")) {
                     i_quest1 = 1;
@@ -176,6 +176,122 @@ public final class SumielInstance extends NpcInstance {
             default:
                 super.onBypassFeedback(player, command);
                 break;
+        }
+    }
+
+    public void setSCE_POT_ON(int i) {
+        if (i == i_ai1 && i_ai0 == 1) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 2;
+        } else if (i == i_ai2 && i_ai0 == 2) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 3;
+        } else if (i == i_ai3 && i_ai0 == 3) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 4;
+        } else if (i == i_ai4 && i_ai0 == 4) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 5;
+        } else if (i == i_ai5 && i_ai0 == 5) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 6;
+        } else if (i == i_ai6 && i_ai0 == 6) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 7;
+        } else if (i == i_ai7 && i_ai0 == 7) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 8;
+        } else if (i == i_ai8 && i_ai0 == 8) {
+            if (i_quest9 == 1) {
+            }
+            i_ai0 = 9;
+        } else if (i == i_ai9 && i_ai0 == 9) {
+            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
+                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
+                    ((FurnfaceInstance) npc).setSCE_GAME_END();
+            }
+
+            SimpleSpawner sp = new SimpleSpawner(18934);
+            switch (getAISpawnParam()) {
+                case 1:
+                    sp.setLoc(new Location(110772, -82063, -1584));
+                    break;
+                case 2:
+                    sp.setLoc(new Location(114915, -70998, -544));
+                    break;
+            }
+            sp.doSpawn(true);
+            Functions.npcShout(this, NpcString.FURNFACE6);
+            switch (getAISpawnParam()) {
+                case 1:
+                    if (HURRY_UP_1 != null) {
+                        HURRY_UP_1.cancel(false);
+                        HURRY_UP_1 = null;
+                    }
+                    if (HURRY_UP2_1 != null) {
+                        HURRY_UP2_1.cancel(false);
+                        HURRY_UP2_1 = null;
+                    }
+                    break;
+                case 2:
+                    if (HURRY_UP_2 != null) {
+                        HURRY_UP_2.cancel(false);
+                        HURRY_UP_2 = null;
+                    }
+                    if (HURRY_UP2_2 != null) {
+                        HURRY_UP2_2.cancel(false);
+                        HURRY_UP2_2 = null;
+                    }
+                    break;
+            }
+            c_ai0 = null;
+            i_quest0 = 0;
+            i_quest1 = 0;
+        } else {
+            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
+                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
+                    ((FurnfaceInstance) npc).setSCE_GAME_FAILURE();
+            }
+            if (i_quest9 == 1) {
+            } else if (i_quest0 < 2) {
+                i_quest0 = i_quest0 + 1;
+                Functions.npcShout(this, NpcString.FURNFACE7);
+                i_quest1 = 0;
+            } else {
+                switch (getAISpawnParam()) {
+                    case 1:
+                        if (HURRY_UP_1 != null) {
+                            HURRY_UP_1.cancel(false);
+                            HURRY_UP_1 = null;
+                        }
+                        if (HURRY_UP2_1 != null) {
+                            HURRY_UP2_1.cancel(false);
+                            HURRY_UP2_1 = null;
+                        }
+                        break;
+                    case 2:
+                        if (HURRY_UP_2 != null) {
+                            HURRY_UP_2.cancel(false);
+                            HURRY_UP_2 = null;
+                        }
+                        if (HURRY_UP2_2 != null) {
+                            HURRY_UP2_2.cancel(false);
+                            HURRY_UP2_2 = null;
+                        }
+                        break;
+                }
+                Functions.npcShout(this, NpcString.FURNFACE8);
+                c_ai0 = null;
+                i_quest0 = 0;
+                i_quest1 = 0;
+            }
         }
     }
 
@@ -342,128 +458,4 @@ public final class SumielInstance extends NpcInstance {
         }
     }
 
-    private class GAME_TIME extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            i_quest2 = 0;
-        }
-    }
-
-    public void setSCE_POT_ON(int i) {
-        if (i == i_ai1 && i_ai0 == 1) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 2;
-        } else if (i == i_ai2 && i_ai0 == 2) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 3;
-        } else if (i == i_ai3 && i_ai0 == 3) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 4;
-        } else if (i == i_ai4 && i_ai0 == 4) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 5;
-        } else if (i == i_ai5 && i_ai0 == 5) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 6;
-        } else if (i == i_ai6 && i_ai0 == 6) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 7;
-        } else if (i == i_ai7 && i_ai0 == 7) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 8;
-        } else if (i == i_ai8 && i_ai0 == 8) {
-            if (i_quest9 == 1) {
-            }
-            i_ai0 = 9;
-        } else if (i == i_ai9 && i_ai0 == 9) {
-            if (i_quest9 == 1) {
-            }
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setSCE_GAME_END();
-            }
-
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(18934));
-            switch (getAISpawnParam()) {
-                case 1:
-                    sp.setLoc(new Location(110772, -82063, -1584));
-                    break;
-                case 2:
-                    sp.setLoc(new Location(114915, -70998, -544));
-                    break;
-            }
-            sp.doSpawn(true);
-            Functions.npcShout(this, NpcString.FURNFACE6);
-            switch (getAISpawnParam()) {
-                case 1:
-                    if (HURRY_UP_1 != null) {
-                        HURRY_UP_1.cancel(false);
-                        HURRY_UP_1 = null;
-                    }
-                    if (HURRY_UP2_1 != null) {
-                        HURRY_UP2_1.cancel(false);
-                        HURRY_UP2_1 = null;
-                    }
-                    break;
-                case 2:
-                    if (HURRY_UP_2 != null) {
-                        HURRY_UP_2.cancel(false);
-                        HURRY_UP_2 = null;
-                    }
-                    if (HURRY_UP2_2 != null) {
-                        HURRY_UP2_2.cancel(false);
-                        HURRY_UP2_2 = null;
-                    }
-                    break;
-            }
-            c_ai0 = null;
-            i_quest0 = 0;
-            i_quest1 = 0;
-        } else {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setSCE_GAME_FAILURE();
-            }
-            if (i_quest9 == 1) {
-            } else if (i_quest0 < 2) {
-                i_quest0 = i_quest0 + 1;
-                Functions.npcShout(this, NpcString.FURNFACE7);
-                i_quest1 = 0;
-            } else {
-                switch (getAISpawnParam()) {
-                    case 1:
-                        if (HURRY_UP_1 != null) {
-                            HURRY_UP_1.cancel(false);
-                            HURRY_UP_1 = null;
-                        }
-                        if (HURRY_UP2_1 != null) {
-                            HURRY_UP2_1.cancel(false);
-                            HURRY_UP2_1 = null;
-                        }
-                        break;
-                    case 2:
-                        if (HURRY_UP_2 != null) {
-                            HURRY_UP_2.cancel(false);
-                            HURRY_UP_2 = null;
-                        }
-                        if (HURRY_UP2_2 != null) {
-                            HURRY_UP2_2.cancel(false);
-                            HURRY_UP2_2 = null;
-                        }
-                        break;
-                }
-                Functions.npcShout(this, NpcString.FURNFACE8);
-                c_ai0 = null;
-                i_quest0 = 0;
-                i_quest1 = 0;
-            }
-        }
-    }
 }

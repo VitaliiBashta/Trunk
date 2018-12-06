@@ -57,7 +57,7 @@ public class BelethManager extends Functions implements ScriptFile {
     private static final int ELF = 29128; // Elf corpse.
     private static final int COFFIN = 32470; // Beleth's coffin.
     private static final int BELETH = 29118; // Beleth.
-    private static final int CLONE = 29119; // Beleth's clone.
+    private static final int CLONE = 29119; // Beleth's newInstance.
 
     private static final int locZ = -9353; // Z value for all of npcs
 
@@ -327,7 +327,7 @@ public class BelethManager extends Functions implements ScriptFile {
         double angle = Math.toRadians(22.5);
         int radius = 700;
 
-        // Inner clone circle
+        // Inner newInstance circle
         for (int i = 0; i < 16; i++) {
             if (i % 2 == 0)
                 radius -= 50;
@@ -335,7 +335,7 @@ public class BelethManager extends Functions implements ScriptFile {
                 radius += 50;
             _cloneLoc[i] = new Location(centerX + (int) (radius * Math.sin(i * angle)), centerY + (int) (radius * Math.cos(i * angle)), PositionUtils.convertDegreeToClientHeading(270 - i * 22.5));
         }
-        // Outer clone square
+        // Outer newInstance square
         radius = 1340;
         angle = Math.asin(1 / Math.sqrt(3));
         int mulX = 1, mulY = 1, addH = 3;

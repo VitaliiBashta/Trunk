@@ -5,7 +5,6 @@ import l2trunk.commons.listener.ListenerList;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.database.mysql;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.idfactory.IdFactory;
@@ -541,7 +540,7 @@ public class Reflection {
         for (DoorTemplate template : doors.values()) {
             DoorInstance door = new DoorInstance(IdFactory.getInstance().getNextId(), template);
             door.setReflection(this);
-            door.setIsInvul(true);
+            door.setInvul(true);
             door.spawnMe(template.getLoc());
             if (template.isOpened()) {
                 door.openMe();
@@ -589,7 +588,7 @@ public class Reflection {
         for (InstantZone.DoorInfo info : doors.values()) {
             DoorInstance door = new DoorInstance(IdFactory.getInstance().getNextId(), info.getTemplate());
             door.setReflection(this);
-            door.setIsInvul(info.isInvul());
+            door.setInvul(info.isInvul());
             door.spawnMe(info.getTemplate().getLoc());
             if (info.isOpened()) {
                 door.openMe();
@@ -693,7 +692,7 @@ public class Reflection {
     }
 
     public NpcInstance addSpawnWithRespawn(int npcId, Location loc, int randomOffset, int respawnDelay) {
-        SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(npcId));
+        SimpleSpawner sp = new SimpleSpawner(npcId);
         sp.setLoc(randomOffset > 0 ? Location.findPointToStay(loc, 0, randomOffset, getGeoIndex()) : loc);
         sp.setReflection(this);
         sp.setAmount(1);

@@ -38,17 +38,16 @@ public final class StakatoNest extends Fighter {
 
     private static final int FAIL_COCOON_CHANCE = 6;
     private static final int ABSORB_MINION_CHANCE = 20;
-
+    private static boolean _debuffed = false;
     // Queen Shyeed Management
     private final Zone _zone_mob_buff = ReflectionUtils.getZone("[stakato_mob_buff]");
-    private  final Zone _zone_mob_buff_pc_display = ReflectionUtils.getZone("[stakato_mob_buff_display]");
-    private  final Zone _zone_pc_buff = ReflectionUtils.getZone("[stakato_pc_buff]");
-    private static boolean _debuffed = false;
+    private final Zone _zone_mob_buff_pc_display = ReflectionUtils.getZone("[stakato_mob_buff_display]");
+    private final Zone _zone_pc_buff = ReflectionUtils.getZone("[stakato_pc_buff]");
 
     private StakatoNest(NpcInstance actor) {
         super(actor);
         if (ArrayUtils.contains(BIZARRE_COCOON, actor.getNpcId())) {
-            actor.setIsInvul(true);
+            actor.setInvul(true);
             actor.startImmobilized();
         }
     }
@@ -111,7 +110,7 @@ public final class StakatoNest extends Fighter {
             case SPIKED_STAKATO_BABY:
                 _leader = ((MinionInstance) actor).getLeader();
                 if (_leader != null && !_leader.isDead())
-                    ThreadPoolManager.INSTANCE().schedule(new ChangeMonster(SPIKE_STAKATO_NURSE_CHANGED, actor, killer), 3000L);
+                    ThreadPoolManager.INSTANCE.schedule(new ChangeMonster(SPIKE_STAKATO_NURSE_CHANGED, actor, killer), 3000L);
                 break;
             case MALE_SPIKED_STAKATO:
                 if (_minion == null)
@@ -123,7 +122,7 @@ public final class StakatoNest extends Fighter {
             case FEMALE_SPIKED_STAKATO:
                 _leader = ((MinionInstance) actor).getLeader();
                 if (_leader != null && !_leader.isDead())
-                    ThreadPoolManager.INSTANCE().schedule(new ChangeMonster(MALE_SPIKED_STAKATO_2, actor, killer), 3000L);
+                    ThreadPoolManager.INSTANCE.schedule(new ChangeMonster(MALE_SPIKED_STAKATO_2, actor, killer), 3000L);
                 break;
 			/*
 			case CANNIBALISTIC_STAKATO_CHIEF:
@@ -165,17 +164,51 @@ public final class StakatoNest extends Fighter {
         }
         actor.doDie(null);
         actor.endDecayTask();
-        try {
-            NpcInstance mob = NpcHolder.getTemplate(CANNIBALISTIC_STAKATO_CHIEF).getNewInstance();
-            mob.setSpawnedLoc(actor.getLoc());
-            mob.setReflection(actor.getReflection());
-            mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp(), true);
-            mob.spawnMe(mob.getSpawnedLoc());
-            mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, caster.getPlayer(), Rnd.get(1, 100));
-        } catch (RuntimeException e) {
-            LOG.error("Error on StakatoNext Monster See Spell", e);
-        }
+        NpcInstance mob = (NpcInstance) NpcHolder.getTemplate(CANNIBALISTIC_STAKATO_CHIEF).getNewInstance()
+                .setSpawnedLoc(actor.getLoc())
+                .setFullHpMp()
+                .setReflection(actor.getReflection());
+        mob.spawnMe(mob.getSpawnedLoc());
+        mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, caster.getPlayer(), Rnd.get(1, 100));
         super.onEvtSeeSpell(skill, caster);
+    }
+
+    private MinionInstance getAliveMinion(NpcInstance npc) {
+        MinionList ml = npc.getMinionList();
+        if (ml != null && ml.hasAliveMinions())
+            return ml.getAliveMinions().get(0);
+
+        return null;
+    }
+
+    private void spawnMonster(NpcInstance actor, Creature killer, int mobId) {
+        NpcInstance npc = (NpcInstance) NpcHolder.getTemplate(mobId).getNewInstance()
+                .setSpawnedLoc(actor.getSpawnedLoc())
+                .setFullHpMp()
+                .setReflection(actor.getReflection());
+        npc.spawnMe(actor.getSpawnedLoc());
+        if (killer != null)
+            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, Rnd.get(1, 100));
+    }
+
+	/*
+		private void giveCocoon(L2Player player)
+		{
+			if (Rnd.chance(20))
+				player.getInventory().addItem(LARGE_STAKATO_COCOON, 1);
+			else
+				player.getInventory().addItem(SMALL_STAKATO_COCOON, 1);
+		}
+	 */
+
+    @Override
+    public boolean randomWalk() {
+        return !(ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId()) || getActor().getNpcId() == QUEEN_SHYEED);
+    }
+
+    @Override
+    public boolean randomAnimation() {
+        return !ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId());
     }
 
     private class ChangeMonster extends RunnableImpl {
@@ -193,47 +226,5 @@ public final class StakatoNest extends Fighter {
         public void runImpl() {
             spawnMonster(_npc, _killer, _monsterId);
         }
-    }
-
-    private MinionInstance getAliveMinion(NpcInstance npc) {
-        MinionList ml = npc.getMinionList();
-        if (ml != null && ml.hasAliveMinions())
-            for (MinionInstance minion : ml.getAliveMinions())
-                return minion;
-        return null;
-    }
-
-	/*
-		private void giveCocoon(L2Player player)
-		{
-			if (Rnd.chance(20))
-				player.getInventory().addItem(LARGE_STAKATO_COCOON, 1);
-			else
-				player.getInventory().addItem(SMALL_STAKATO_COCOON, 1);
-		}
-	 */
-
-    private void spawnMonster(NpcInstance actor, Creature killer, int mobId) {
-        try {
-            NpcInstance npc = NpcHolder.getTemplate(mobId).getNewInstance();
-            npc.setSpawnedLoc(actor.getSpawnedLoc());
-            npc.setReflection(actor.getReflection());
-            npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
-            npc.spawnMe(actor.getSpawnedLoc());
-            if (killer != null)
-                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, Rnd.get(1, 100));
-        } catch (RuntimeException e) {
-            LOG.error("Error on StakatoNest spawn Monster", e);
-        }
-    }
-
-    @Override
-    public boolean randomWalk() {
-        return !(ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId()) || getActor().getNpcId() == QUEEN_SHYEED);
-    }
-
-    @Override
-    public boolean randomAnimation() {
-        return !ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId());
     }
 }

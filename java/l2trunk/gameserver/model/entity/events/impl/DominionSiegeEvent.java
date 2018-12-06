@@ -309,9 +309,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
 
         List<Integer> players = getObjects(DEFENDER_PLAYERS);
         for (int i : players) {
-            Player player = GameObjectsStorage.getPlayer(i);
-            if (player != null)
-                player.sendPacket(packet);
+            GameObjectsStorage.getPlayer(i).sendPacket(packet);
         }
     }
 

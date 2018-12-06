@@ -2,7 +2,6 @@ package l2trunk.gameserver.model.entity.events.impl;
 
 import l2trunk.commons.collections.MultiValueSet;
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.dao.CastleDamageZoneDAO;
@@ -241,8 +240,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
                     ownerClan.incReputation(Config.SIEGE_WINNER_REPUTATION_REWARD / 2, false, "SiegeWinnerCustomReward");
             } else {
                 L2GameServerPacket packet = new Say2(0, ChatType.CRITICAL_ANNOUNCE, getResidence().getName() + " Castle", "Clan " + ownerClan.getName() + " is victorious over " + getResidence().getName() + "'s castle siege!");
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    player.sendPacket(packet);
+                GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(packet));
 
                 ownerClan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.SINCE_YOUR_CLAN_EMERGED_VICTORIOUS_FROM_THE_SIEGE_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLANS_REPUTATION_SCORE).addInteger(ownerClan.incReputation(3000, false, toString())));
 
@@ -281,10 +279,10 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
 
                 String msg = "20.000 Clan Reputation Points has been added to " + ownerClan.getName() + " clan for capturing " + getResidence().getName() + " of castle!";
                 L2GameServerPacket packet = new Say2(0, ChatType.CRITICAL_ANNOUNCE, getResidence().getName() + " Castle", msg);
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+                GameObjectsStorage.getAllPlayers().forEach(player -> {
                     player.sendPacket(packet);
                     player.sendPacket(new ExShowScreenMessage(msg, 3000, ScreenMessageAlign.TOP_CENTER, false));
-                }
+                });
             }
         } else {
             broadcastToWorld(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_HAS_ENDED_IN_A_DRAW).addResidenceName(getResidence()));
@@ -505,8 +503,8 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
         return !_firstStep;
     }
 
-    public int[] getNextSiegeTimes() {
-        return _nextSiegeTimes.stream().mapToInt(Number::intValue).toArray();
+    public List<Integer> getNextSiegeTimes() {
+        return new ArrayList<>(_nextSiegeTimes);
     }
 
     @Override
@@ -574,7 +572,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
             case TO_VILLAGE:
                 // Если печатью владеют лорды Рассвета (Dawn), и в данном городе идет осада, то телепортирует во 2-й по счету город.
                 if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN) {
-                    loc = _residence.getNotOwnerRestartPoint(player);
+                    loc = residence.getNotOwnerRestartPoint(player);
                 }
                 break;
             case TO_FLAG:

@@ -97,21 +97,16 @@ public final class NpcSpawn extends Functions implements IVoicedCommandHandler {
     }
 
     private void spawnNpc(Player player, int npcId) {
-        NpcTemplate template = NpcHolder.getTemplate(npcId);
-        if (template == null)
-            return;
-
-        SimpleSpawner spawn = new SimpleSpawner(template);
-        spawn.setLoc(player.getLoc());
-        spawn.setAmount(1);
-        spawn.setHeading(player.getHeading());
-        spawn.setRespawnDelay(69); // Setting respawnDelay to 69 so it can be easily located in the database.
-        spawn.init();
-        SpawnTable.getInstance().addNewSpawn(spawn);
+        SimpleSpawner spawn = new SimpleSpawner(npcId);
+        spawn.setLoc(player.getLoc())
+                .setAmount(1)
+                .setRespawnDelay(69) // Setting respawnDelay to 69 so it can be easily located in the database.
+                .init();
+        SpawnTable.INSTANCE.addNewSpawn(spawn);
     }
 
     private void unspawnNpc(NpcInstance npc) {
-        SpawnTable.getInstance().deleteSpawn(npc.getLoc(), npc.getNpcId());
+        SpawnTable.INSTANCE.deleteSpawn(npc.getLoc(), npc.getNpcId());
         npc.deleteMe();
     }
 

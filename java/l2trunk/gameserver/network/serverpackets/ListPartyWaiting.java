@@ -22,7 +22,7 @@ public class ListPartyWaiting extends L2GameServerPacket {
         _rooms = new ArrayList<>();
 
         int i = 0;
-        List<MatchingRoom> temp = MatchingRoomManager.getInstance().getMatchingRooms(MatchingRoom.PARTY_MATCHING, region, allLevels, activeChar);
+        List<MatchingRoom> temp = MatchingRoomManager.INSTANCE.getMatchingRooms(MatchingRoom.PARTY_MATCHING, region, allLevels, activeChar);
         _fullSize = temp.size();
         for (MatchingRoom room : temp) {
             if (i < first || i >= firstNot)

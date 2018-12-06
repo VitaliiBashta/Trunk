@@ -200,7 +200,7 @@ public final class OlympiadDatabase {
     }
 
     public static synchronized void saveNobleData(int nobleId) {
-        OlympiadNobleDAO.getInstance().replace(nobleId);
+        OlympiadNobleDAO.replace(nobleId);
     }
 
     public static synchronized void saveNobleData() {

@@ -114,7 +114,7 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
                 return "31453-19.htm";
             return "31453-13.htm";
         }
-        // Ghost Chamberlain of Elmoreden: Teleport to 4th sepulcher
+        // Ghost Chamberlain of Elmoreden: teleport to 4th sepulcher
         else if (event.equalsIgnoreCase("15")) {
             if (st.getQuestItemsCount(ANTIQUE_BROOCH) >= 1) {
                 st.getPlayer().teleToLocation(178298, -84574, -7216);
@@ -127,7 +127,7 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
             }
             return "" + str(npc.getNpcId()) + "-0.htm";
         }
-        // Ghost Chamberlain of Elmoreden: Teleport to Imperial Tomb entrance
+        // Ghost Chamberlain of Elmoreden: teleport to Imperial Tomb entrance
         else if (event.equalsIgnoreCase("16")) {
             if (st.getQuestItemsCount(ANTIQUE_BROOCH) >= 1) {
                 st.getPlayer().teleToLocation(186942, -75602, -2834);
@@ -140,7 +140,7 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
             }
             return "" + str(npc.getNpcId()) + "-0.htm";
         }
-        // Teleport to Pilgrims Temple
+        // teleport to Pilgrims Temple
         else if (event.equalsIgnoreCase("17")) {
             if (st.getQuestItemsCount(ANTIQUE_BROOCH) >= 1)
                 st.getPlayer().teleToLocation(169590, -90218, -2914);

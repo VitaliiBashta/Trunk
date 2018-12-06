@@ -12,7 +12,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class TakeCastle extends Skill {
+public final class TakeCastle extends Skill {
     public TakeCastle(StatsSet set) {
         super(set);
     }
@@ -72,11 +72,11 @@ public class TakeCastle extends Skill {
                 if (siegeEvent != null) {
                     IStaticPacket lostPacket = siegeEvent.getResidence().getOwner() != null ? new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + siegeEvent.getResidence().getOwner().getName() + " has lost " + siegeEvent.getResidence().getName() + " Castle") : null;
                     IStaticPacket winPacket = new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + player.getClan().getName() + " has taken " + siegeEvent.getResidence().getName() + " Castle");
-                    for (Player playerToSeeMsg : GameObjectsStorage.getAllPlayersForIterate()) {
+                    GameObjectsStorage.getAllPlayers().forEach(pl -> {
                         if (lostPacket != null)
-                            playerToSeeMsg.sendPacket(lostPacket);
-                        playerToSeeMsg.sendPacket(winPacket);
-                    }
+                            pl.sendPacket(lostPacket);
+                        pl.sendPacket(winPacket);
+                    });
                     siegeEvent.processStep(player.getClan());
                 }
             }

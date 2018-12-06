@@ -55,7 +55,7 @@ public class AdminShop implements IAdminCommandHandler {
 
         }
 
-        NpcTradeList list = BuyListHolder.getInstance().getBuyList(val);
+        NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(val);
 
         if (list != null)
             activeChar.sendPacket(new ExBuySellList.BuyList(list, activeChar, 0.), new ExBuySellList.SellRefundList(activeChar, false));

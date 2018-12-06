@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class SailrenManager extends Functions implements ScriptFile, OnDeathListener {
+public final class SailrenManager extends Functions implements ScriptFile, OnDeathListener {
     private static final Logger _log = LoggerFactory.getLogger(SailrenManager.class);
     private static final int Sailren = 29065;
     private static final int Velociraptor = 22198;
@@ -52,8 +52,8 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
     private static ScheduledFuture<?> _activityTimeEndTask = null;
     private static ScheduledFuture<?> _onAnnihilatedTask = null;
     private static EpicBossState _state;
-    private static Zone _zone;
-    private static boolean _isAlreadyEnteredOtherParty = false;
+    private static Zone zone;
+    private static boolean isAlreadyEnteredOtherParty = false;
     private static boolean Dying = false;
 
     private static void banishForeigners() {
@@ -66,25 +66,19 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
     }
 
     private static List<Player> getPlayersInside() {
-        return getZone().getInsidePlayers();
+        return zone.getInsidePlayers();
     }
 
     private static int getRespawnInterval() {
         return (int) (Config.ALT_RAID_RESPAWN_MULTIPLIER * (FWS_FIXINTERVALOFSAILRENSPAWN + Rnd.get(0, FWS_RANDOMINTERVALOFSAILRENSPAWN)));
     }
 
-    private static Zone getZone() {
-        return _zone;
-    }
-
     private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
+        return getPlayersInside().stream().allMatch(Player::isDead);
+
     }
 
-    private static void onSailrenDie(Creature killer) {
+    private static void onSailrenDie() {
         if (Dying)
             return;
 
@@ -197,7 +191,7 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
     public static int canIntoSailrenLair(Player pc) {
         if (!FWS_ENABLESINGLEPLAYER && pc.getParty() == null)
             return 4;
-        else if (_isAlreadyEnteredOtherParty)
+        else if (isAlreadyEnteredOtherParty)
             return 2;
         else if (_state.getState().equals(State.NOTSPAWN))
             return 0;
@@ -217,17 +211,17 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
             for (Player mem : pc.getParty().getMembers())
                 if (mem != null && !mem.isDead() && mem.isInRange(pc, 1000))
                     members.add(mem);
-            for (Player mem : members)
-                mem.teleToLocation(Location.findPointToStay(_enter, 80, mem.getGeoIndex()));
+            members.forEach(mem ->
+                mem.teleToLocation(Location.findPointToStay(_enter, 80, mem.getGeoIndex())));
         }
-        _isAlreadyEnteredOtherParty = true;
+        isAlreadyEnteredOtherParty = true;
     }
 
     private void init() {
         CharListenerList.addGlobal(this);
 
         _state = new EpicBossState(Sailren);
-        _zone = ReflectionUtils.getZone("[sailren_epic]");
+        zone = ReflectionUtils.getZone("[sailren_epic]");
 
         _log.info("SailrenManager: State of Sailren is " + _state.getState() + ".");
         if (!_state.getState().equals(State.NOTSPAWN))
@@ -238,22 +232,22 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
 
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && _zone != null && _zone.checkIfInZone(self.getX(), self.getY()))
+        if (self.isPlayer() && _state != null && _state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
         else if (self == _velociraptor) {
             if (_monsterSpawnTask != null)
                 _monsterSpawnTask.cancel(false);
-            _monsterSpawnTask = ThreadPoolManager.INSTANCE().schedule(new SailrenSpawn(Pterosaur), FWS_INTERVALOFNEXTMONSTER);
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE.schedule(new SailrenSpawn(Pterosaur), FWS_INTERVALOFNEXTMONSTER);
         } else if (self == _pterosaur) {
             if (_monsterSpawnTask != null)
                 _monsterSpawnTask.cancel(false);
-            _monsterSpawnTask = ThreadPoolManager.INSTANCE().schedule(new SailrenSpawn(Tyrannosaurus), FWS_INTERVALOFNEXTMONSTER);
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE.schedule(new SailrenSpawn(Tyrannosaurus), FWS_INTERVALOFNEXTMONSTER);
         } else if (self == _tyranno) {
             if (_monsterSpawnTask != null)
                 _monsterSpawnTask.cancel(false);
-            _monsterSpawnTask = ThreadPoolManager.INSTANCE().schedule(new SailrenSpawn(Sailren), FWS_INTERVALOFNEXTMONSTER);
+            _monsterSpawnTask = ThreadPoolManager.INSTANCE.schedule(new SailrenSpawn(Sailren), FWS_INTERVALOFNEXTMONSTER);
         } else if (self == _sailren) {
-            onSailrenDie(killer);
+            onSailrenDie();
         }
     }
 
@@ -279,28 +273,27 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
     }
 
     private static class Social extends RunnableImpl {
-        private final int _action;
-        private final NpcInstance _npc;
+        private final int action;
+        private final NpcInstance npc;
 
         Social(NpcInstance npc, int actionId) {
-            _npc = npc;
-            _action = actionId;
+            this.npc = npc;
+            action = actionId;
         }
 
         @Override
         public void runImpl() {
-            _npc.broadcastPacket(new SocialAction(_npc.getObjectId(), _action));
+            npc.broadcastPacket(new SocialAction(npc.getObjectId(), action));
         }
     }
 
 
-    // Do spawn Valakas.
     private static class SailrenSpawn extends RunnableImpl {
-        private final int _npcId;
+        private final int npcId;
         private final Location _pos = new Location(27628, -6109, -1982, 44732);
 
         SailrenSpawn(int npcId) {
-            _npcId = npcId;
+            this.npcId = npcId;
         }
 
         @Override
@@ -310,7 +303,7 @@ public class SailrenManager extends Functions implements ScriptFile, OnDeathList
                 _socialTask = null;
             }
 
-            switch (_npcId) {
+            switch (npcId) {
                 case Velociraptor:
                     _velociraptor = spawn(new Location(27852, -5536, -1983, 44732), Velociraptor);
                     ((DefaultAI) _velociraptor.getAI()).addTaskMove(_pos, false);

@@ -32,17 +32,14 @@ public final class BladeOfSplendor extends RndTeleportFighter {
         if ((!actor.isDead()) && (this._firstTimeAttacked)) {
             this._firstTimeAttacked = false;
             Functions.npcSay(actor, "Now I Know Why You Wanna Hate Me");
-            for (int bro : CLONES)
-                try {
-                    MonsterInstance npc = (MonsterInstance) NpcHolder.getTemplate(bro).getNewInstance();
-                    npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
-                    npc.setReflection(actor.getReflection());
-                    npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
-                    npc.spawnMe(npc.getSpawnedLoc());
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 1000));
-                } catch (RuntimeException e) {
-                    LOG.error("Error while creating BladeOfSplendor", e);
-                }
+            for (int bro : CLONES) {
+                MonsterInstance npc = (MonsterInstance) NpcHolder.getTemplate(bro).getNewInstance();
+                npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
+                npc.setReflection(actor.getReflection());
+                npc.setFullHpMp();
+                npc.spawnMe(npc.getSpawnedLoc());
+                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 1000));
+            }
         }
         super.onEvtAttacked(attacker, damage);
     }

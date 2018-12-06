@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -8,7 +7,25 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _312_TakeAdvantageOfTheCrisis extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class _312_TakeAdvantageOfTheCrisis extends Quest implements ScriptFile {
+    private static final int FILAUR = 30535;
+    private static final int MINERAL_FRAGMENT = 14875;
+    private static final int DROP_CHANCE = 40;
+    private static final List<Integer> MINE_MOBS = Arrays.asList(
+            22678, 22679, 22680, 22681, 22682, 22683, 22684, 22685, 22686, 22687, 22688, 22689, 22690);
+
+    public _312_TakeAdvantageOfTheCrisis() {
+        super(false);
+
+        addStartNpc(FILAUR);
+        addKillId(MINE_MOBS);
+    }
+
     @Override
     public void onLoad() {
     }
@@ -21,34 +38,6 @@ public class _312_TakeAdvantageOfTheCrisis extends Quest implements ScriptFile {
     public void onShutdown() {
     }
 
-    private static final int FILAUR = 30535;
-
-    private static final int MINERAL_FRAGMENT = 14875;
-    private static final int DROP_CHANCE = 40;
-
-    private static final int[] MINE_MOBS = new int[]{
-            22678,
-            22679,
-            22680,
-            22681,
-            22682,
-            22683,
-            22684,
-            22685,
-            22686,
-            22687,
-            22688,
-            22689,
-            22690
-    };
-
-    public _312_TakeAdvantageOfTheCrisis() {
-        super(false);
-
-        addStartNpc(FILAUR);
-        addKillId(MINE_MOBS);
-    }
-
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("30535-06.htm")) {
@@ -59,12 +48,7 @@ public class _312_TakeAdvantageOfTheCrisis extends Quest implements ScriptFile {
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
         } else {
-            int id = 0;
-            try {
-                id = Integer.parseInt(event);
-            } catch (Exception e) {
-            }
-
+            int id = toInt(event, 0);
             if (id > 0) {
                 int count = 0;
                 switch (id) {
@@ -136,12 +120,9 @@ public class _312_TakeAdvantageOfTheCrisis extends Quest implements ScriptFile {
 
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
-        int npcId = npc.getNpcId();
-        int cond = st.getCond();
-
-        if (cond == 1 && ArrayUtils.contains(MINE_MOBS, npcId))
+        if (st.getCond() == 1 && MINE_MOBS.contains(npc.getNpcId()))
             if (Rnd.chance(DROP_CHANCE)) {
-                st.giveItems(MINERAL_FRAGMENT, (int) Config.RATE_QUESTS_REWARD * 1);
+                st.giveItems(MINERAL_FRAGMENT, (int) Config.RATE_QUESTS_REWARD);
                 st.playSound(SOUND_ITEMGET);
             }
         return null;

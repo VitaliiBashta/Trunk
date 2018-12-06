@@ -4,7 +4,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Skill;
@@ -123,10 +122,10 @@ public final class FafurionKindred extends Fighter {
         @Override
         public void runImpl() {
             NpcInstance actor = getActor();
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(id));
-            sp.setLoc(Location.findPointToStay(actor, 100, 120));
-            sp.setRespawnDelay(30, 40);
-            sp.doSpawn(true);
+            SimpleSpawner sp = new SimpleSpawner(id);
+            sp.setLoc(Location.findPointToStay(actor, 100, 120))
+                    .setRespawnDelay(30, 40)
+                    .doSpawn(true);
             spawns.add(sp);
         }
     }

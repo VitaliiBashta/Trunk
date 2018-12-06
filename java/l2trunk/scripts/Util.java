@@ -351,7 +351,7 @@ public class Util extends Functions {
             return;
         }
 
-        BuyListHolder.NpcTradeList list = BuyListHolder.getInstance().getBuyList(0);
+        BuyListHolder.NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(0);
         if (list == null)
             getSelf().sendPacket(new ExBuySellList.BuyList(list, getSelf(), 0), new ExBuySellList.SellRefundList(getSelf(), false));
     }

@@ -4,7 +4,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
@@ -16,7 +15,6 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -80,7 +78,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private static NpcInstance _npcBaium;
     private static NpcInstance _teleportCube = null;
     private static SimpleSpawner _teleportCubeSpawn = null;
-    private static Zone _zone;
+    private static Zone zone;
     private static boolean Dying = false;
 
     private static void banishForeigners() {
@@ -95,27 +93,25 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
     // Archangel ascension.
     private static void deleteArchangels() {
-        for (NpcInstance angel : _angels)
-            if (angel != null && angel.getSpawn() != null) {
-                angel.getSpawn().stopRespawn();
-                angel.deleteMe();
-            }
+        _angels.stream()
+                .filter(angel -> angel.getSpawn() != null)
+                .forEach(angel -> {
+                    angel.getSpawn().stopRespawn();
+                    angel.deleteMe();
+                });
         _angels.clear();
     }
 
     private static List<Player> getPlayersInside() {
-        return getZone().getInsidePlayers();
+        return zone.getInsidePlayers();
     }
 
     public static Zone getZone() {
-        return _zone;
+        return zone;
     }
 
     private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
+        return getPlayersInside().stream().allMatch(Player::isDead);
     }
 
     private static void onBaiumDie(Creature creature) {
@@ -150,7 +146,13 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
             state.update();
         }
 
-        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(new IntervalEnd(), state.getInterval());
+        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            state.setState(State.NOTSPAWN);
+            state.update();
+
+            // statue of Baium respawn.
+            _statueSpawn.doSpawn(true);
+        }, state.getInterval());
     }
 
     public static void setLastAttackTime() {
@@ -282,62 +284,51 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
     private void init() {
         state = new EpicBossState(BAIUM);
-        _zone = ReflectionUtils.getZone("[baium_epic]");
+        zone = ReflectionUtils.getZone("[baium_epic]");
 
         CharListenerList.addGlobal(this);
         try {
             SimpleSpawner tempSpawn;
 
             // Statue of Baium
-            _statueSpawn = new SimpleSpawner(NpcHolder.getTemplate(BAIUM_NPC));
-            _statueSpawn.setAmount(1);
-            _statueSpawn.setLoc(STATUE_LOCATION);
-            _statueSpawn.stopRespawn();
+            _statueSpawn = new SimpleSpawner(BAIUM_NPC);
+            _statueSpawn.setLoc(STATUE_LOCATION)
+                    .setAmount(1)
+                    .stopRespawn();
 
             // Baium
-            tempSpawn = new SimpleSpawner(NpcHolder.getTemplate(BAIUM));
+            tempSpawn = new SimpleSpawner(BAIUM);
             tempSpawn.setAmount(1);
             _monsterSpawn.put(BAIUM, tempSpawn);
         } catch (RuntimeException e) {
             LOG.error("Error on Baium Init", e);
         }
 
-        // Teleport Cube
-        try {
-            NpcTemplate Cube = NpcHolder.getTemplate(TELEPORT_CUBE);
-            _teleportCubeSpawn = new SimpleSpawner(Cube);
-            _teleportCubeSpawn.setAmount(1);
-            _teleportCubeSpawn.setLoc(CUBE_LOCATION);
-            _teleportCubeSpawn.setRespawnDelay(60);
-        } catch (RuntimeException e) {
-            LOG.error("Error on Baium Teleport Cube Init", e);
-        }
+        // teleport Cube
+        _teleportCubeSpawn = (SimpleSpawner) new SimpleSpawner(TELEPORT_CUBE)
+                .setLoc(CUBE_LOCATION)
+                .setAmount(1)
+                .setRespawnDelay(60);
 
         // Archangels
-        try {
-            NpcTemplate angel = NpcHolder.getTemplate(ARCHANGEL);
-            SimpleSpawner spawnDat;
-            _angelSpawns.clear();
+        _angelSpawns.clear();
 
-            // 5 random numbers of 10, no duplicates
-            List<Integer> random = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                int r = -1;
-                while (r == -1 || random.contains(r))
-                    r = Rnd.get(10);
-                random.add(r);
-            }
-
-            for (int i : random) {
-                spawnDat = new SimpleSpawner(angel);
-                spawnDat.setAmount(1);
-                spawnDat.setLoc(ANGEL_LOCATION[i]);
-                spawnDat.setRespawnDelay(300000);
-                _angelSpawns.add(spawnDat);
-            }
-        } catch (RuntimeException e) {
-            LOG.error("Error on Baium Archangels Init", e);
+        // 5 random numbers of 10, no duplicates
+        List<Integer> random = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            int r = -1;
+            while (r == -1 || random.contains(r))
+                r = Rnd.get(10);
+            random.add(r);
         }
+
+        random.forEach(i -> {
+            SimpleSpawner spawnDat = (SimpleSpawner) new SimpleSpawner(ARCHANGEL)
+                    .setLoc(ANGEL_LOCATION[i])
+                    .setAmount(1)
+                    .setRespawnDelay(300000);
+            _angelSpawns.add(spawnDat);
+        });
 
         LOG.info("BaiumManager: State of Baium is " + state.getState() + '.');
         if (state.getState().equals(State.NOTSPAWN))
@@ -354,7 +345,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
     @Override
     public void onDeath(Creature actor, Creature killer) {
-        if (actor.isPlayer() && state != null && state.getState() == State.ALIVE && _zone != null && _zone.checkIfInZone(actor))
+        if (actor.isPlayer() && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(actor))
             checkAnnihilated();
         else if (actor.isNpc() && actor.getNpcId() == BAIUM)
             onBaiumDie(actor);
@@ -394,18 +385,6 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         }
     }
 
-
-    // at end of interval.
-    public static class IntervalEnd extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            state.setState(State.NOTSPAWN);
-            state.update();
-
-            // statue of Baium respawn.
-            _statueSpawn.doSpawn(true);
-        }
-    }
 
     // kill pc
     public static class KillPc extends RunnableImpl {

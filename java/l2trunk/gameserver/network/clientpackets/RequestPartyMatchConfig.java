@@ -42,7 +42,7 @@ public class RequestPartyMatchConfig extends L2GameClientPacket {
         else if (party != null && !party.isLeader(player))
             player.sendPacket(SystemMsg.THE_LIST_OF_PARTY_ROOMS_CAN_ONLY_BE_VIEWED_BY_A_PERSON_WHO_IS_NOT_PART_OF_A_PARTY);
         else {
-            MatchingRoomManager.getInstance().addToWaitingList(player);
+            MatchingRoomManager.INSTANCE.addToWaitingList(player);
             player.sendPacket(new ListPartyWaiting(_region, _allLevels == 1, _page, player));
         }
     }

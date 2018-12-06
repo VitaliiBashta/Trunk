@@ -1,14 +1,16 @@
 package l2trunk.scripts.quests;
 
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
     //NPC
     private static final int Dilios = 32549;
     private static final int Kutran = 32550;
@@ -27,83 +29,16 @@ public class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
     private static final int FleetSteedTroupsCharm = 13841;
     private static final int SpiritStoneFragment = 15486;
 
-    private static final int[] SOD = {
-            22552,
-            22541,
-            22550,
-            22551,
-            22596,
-            22544,
-            22540,
-            22547,
-            22542,
-            22543,
-            22539,
-            22546,
-            22548,
-            22536,
-            22538,
-            22537
-    };
-    private static final int[] SOI = {
-            22509,
-            22510,
-            22511,
-            22512,
-            22513,
-            22514,
-            22515,
-            22520,
-            22522,
-            22527,
-            22531,
-            22535,
-            22516,
-            22517,
-            22518,
-            22519,
-            22521,
-            22524,
-            22528,
-            22532,
-            22530,
-            22535
-    };
+    private static final List<Integer> SOD = Arrays.asList(
+            22552, 22541, 22550, 22551, 22596, 22544, 22540, 22547,
+            22542, 22543, 22539, 22546, 22548, 22536, 22538, 22537);
+    private static final List<Integer> SOI = Arrays.asList(
+            22509, 22510, 22511, 22512, 22513, 22514, 22515, 22520, 22522, 22527, 22531,
+            22535, 22516, 22517, 22518, 22519, 22521, 22524, 22528, 22532, 22530, 22535);
 
-    private static final int[] SOA = {
-            22746,
-            22747,
-            22748,
-            22749,
-            22750,
-            22751,
-            22752,
-            22753,
-            22754,
-            22755,
-            22756,
-            22757,
-            22758,
-            22759,
-            22760,
-            22761,
-            22762,
-            22763,
-            22764,
-            22765
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final List<Integer> SOA = Arrays.asList(
+            22746, 22747, 22748, 22749, 22750, 22751, 22752, 22753, 22754, 22755,
+            22756, 22757, 22758, 22759, 22760, 22761, 22762, 22763, 22764, 22765);
 
     public _692_HowtoOpposeEvil() {
         super(true);
@@ -116,6 +51,18 @@ public class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
 
         addQuestItem(NucleusofanIncompleteSoul, FleetSteedTroupsTotem, PortionofaSoul);
         addQuestItem(BreathofTiat, ConcentratedSpiritEnergy, SpiritStoneDust);
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 
     @Override
@@ -225,12 +172,12 @@ public class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 3) {
-            if (ArrayUtils.contains(SOD, npcId))
-                st.rollAndGive(FleetSteedTroupsTotem, (int) Config.RATE_QUESTS_REWARD * 1, 17); //Шанс на глаз и с потолка. Умножается на рейт квестов и делится на кол-во членов группы. Для нас это (nRate*3)/9
-            else if (ArrayUtils.contains(SOI, npcId))
-                st.rollAndGive(NucleusofanIncompleteSoul, (int) Config.RATE_QUESTS_REWARD * 1, 17); //Шанс на глаз и с потолка. Умножается на рейт квестов и делится на кол-во членов группы. Для нас это (nRate*3)/9
-            else if (ArrayUtils.contains(SOA, npcId))
-                st.rollAndGive(SpiritStoneDust, (int) Config.RATE_QUESTS_REWARD * 1, 20); //Шанс на глаз и с потолка. Умножается на рейт квестов и делится на кол-во членов группы. Для нас это (nRate*3)/9
+            if (SOD.contains(npcId))
+                st.rollAndGive(FleetSteedTroupsTotem, (int) Config.RATE_QUESTS_REWARD, 17); //Шанс на глаз и с потолка. Умножается на рейт квестов и делится на кол-во членов группы. Для нас это (nRate*3)/9
+            else if (SOI.contains(npcId))
+                st.rollAndGive(NucleusofanIncompleteSoul, (int) Config.RATE_QUESTS_REWARD, 17); //Шанс на глаз и с потолка. Умножается на рейт квестов и делится на кол-во членов группы. Для нас это (nRate*3)/9
+            else if (SOA.contains(npcId))
+                st.rollAndGive(SpiritStoneDust, (int) Config.RATE_QUESTS_REWARD, 20); //Шанс на глаз и с потолка. Умножается на рейт квестов и делится на кол-во членов группы. Для нас это (nRate*3)/9
         }
         return null;
     }

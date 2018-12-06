@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.PartyRoomInfo;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class PartyMatchingRoom extends MatchingRoom {
+public final class PartyMatchingRoom extends MatchingRoom {
     public PartyMatchingRoom(Player leader, int minLevel, int maxLevel, int maxMemberSize, int lootType, String topic) {
         super(leader, minLevel, maxLevel, maxMemberSize, lootType, topic);
 
@@ -79,7 +79,7 @@ public class PartyMatchingRoom extends MatchingRoom {
     }
 
     @Override
-    public void setReflection(Reflection reflection) {
-        // Nothing to set here
+    public PartyMatchingRoom setReflection(Reflection reflection) {
+        return this;
     }
 }

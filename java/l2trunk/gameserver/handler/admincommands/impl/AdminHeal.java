@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class AdminHeal implements IAdminCommandHandler {
+public final class AdminHeal implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -47,7 +47,7 @@ public class AdminHeal implements IAdminCommandHandler {
             else {
                 int radius = Math.max(Integer.parseInt(player), 100);
                 for (Creature character : activeChar.getAroundCharacters(radius, 200)) {
-                    character.setCurrentHpMp(character.getMaxHp(), character.getMaxMp());
+                    character.setFullHpMp();
                     if (character.isPlayer())
                         character.setCurrentCp(character.getMaxCp());
                 }
@@ -61,7 +61,7 @@ public class AdminHeal implements IAdminCommandHandler {
 
         if (obj instanceof Creature) {
             Creature target = (Creature) obj;
-            target.setCurrentHpMp(target.getMaxHp(), target.getMaxMp());
+            target.setFullHpMp();
             if (target.isPlayer())
                 target.setCurrentCp(target.getMaxCp());
         } else

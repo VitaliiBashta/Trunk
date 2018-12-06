@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class RaceManagerInstance extends NpcInstance {
+public final class RaceManagerInstance extends NpcInstance {
     public static final int LANES = 8;
     public static final int WINDOW_START = 0;
     private static final int[][] codes = {{-1, 0}, {0, 15322}, {13765, -1}};
@@ -372,7 +372,7 @@ public class RaceManagerInstance extends NpcInstance {
         public void runImpl() {
             packet = new MonRaceInfo(codes[2][0], codes[2][1], MonsterRace.INSTANCE.getMonsters(), MonsterRace.INSTANCE.getSpeeds());
             sendMonsterInfo();
-            ThreadPoolManager.INSTANCE().schedule(new RunEnd(), 30000);
+            ThreadPoolManager.INSTANCE.schedule(new RunEnd(), 30000);
         }
     }
 

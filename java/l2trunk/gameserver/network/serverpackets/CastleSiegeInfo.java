@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.serverpackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.CastleSiegeEvent;
@@ -10,7 +9,9 @@ import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.model.pledge.Alliance;
 import l2trunk.gameserver.model.pledge.Clan;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Shows the Siege Info<BR>
@@ -42,7 +43,7 @@ public class CastleSiegeInfo extends L2GameServerPacket {
     private String _ownerName = "No owner";
     private String _leaderName = StringUtils.EMPTY;
     private String _allyName = StringUtils.EMPTY;
-    private int[] _nextTimeMillis = ArrayUtils.EMPTY_INT_ARRAY;
+    private List<Integer> _nextTimeMillis = new ArrayList<>();
 
     public CastleSiegeInfo(Castle castle, Player player) {
         this((Residence) castle, player);
@@ -90,6 +91,6 @@ public class CastleSiegeInfo extends L2GameServerPacket {
         writeD((int) (Calendar.getInstance().getTimeInMillis() / 1000));
         writeD((int) _startTime);
         if (_startTime == 0) // If zero is the cycle
-            writeDD(_nextTimeMillis, true);
+            writeDD(_nextTimeMillis);
     }
 }

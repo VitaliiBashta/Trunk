@@ -88,7 +88,7 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
         if (SetActive("trickoftrans", true)) {
             spawnEventManagers();
             System.out.println("Event 'Trick of Transmutation' started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.TrickOfTrans.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.TrickOfTrans.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'Trick of Transmutation' already started.");
 
@@ -107,7 +107,7 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
         if (SetActive("trickoftrans", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'Trick of Transmutation' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.TrickOfTrans.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.TrickOfTrans.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'Trick of Transmutation' not started.");
 
@@ -122,7 +122,7 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
     @Override
     public void onPlayerEnter(final Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.TrickOfTrans.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.TrickOfTrans.AnnounceEventStarted");
     }
 
     @Override

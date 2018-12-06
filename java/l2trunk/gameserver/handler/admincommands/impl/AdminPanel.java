@@ -15,7 +15,10 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.tables.GmListTable;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.List;
 import java.util.StringTokenizer;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class AdminPanel implements IAdminCommandHandler {
     private static void CppanelMainPage(Player activeChar) {
@@ -52,7 +55,7 @@ public class AdminPanel implements IAdminCommandHandler {
             if (i == 391)
                 lvl = 1;
 
-            Skill skill = SkillTable.INSTANCE().getInfo(i, lvl);
+            Skill skill = SkillTable.INSTANCE.getInfo(i, lvl);
 
             html.append("<tr>");
             html.append("<td width=230 align=left>");
@@ -82,12 +85,10 @@ public class AdminPanel implements IAdminCommandHandler {
 
         NpcHtmlMessage html;
         String text = null;
-        GameObject target = null;
+        GameObject target;
         Player caster = null;
-        Party p = null;
-        final Iterable<Player> world;
-        boolean no_token = false;
-        String char_name;
+        Party p;
+        final List<Player> world = GameObjectsStorage.getAllPlayers();
 
         switch (command) {
             case admin_panel:
@@ -129,11 +130,11 @@ public class AdminPanel implements IAdminCommandHandler {
 
             case admin_sendexmsg:
 
-                text = fullString.substring(15);
+                String text2 = fullString.substring(15);
 
-                if (!text.equals("")) {
-                    for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                        player.sendPacket(new ExShowScreenMessage(text, 5000, ScreenMessageAlign.TOP_CENTER, true));
+                if (!text2.isEmpty()) {
+                    GameObjectsStorage.getAllPlayers().forEach(player ->
+                            player.sendPacket(new ExShowScreenMessage(text2, 5000, ScreenMessageAlign.TOP_CENTER, true)));
                 }
 
                 html = new NpcHtmlMessage(5);
@@ -146,10 +147,8 @@ public class AdminPanel implements IAdminCommandHandler {
                 text = fullString.substring(15);
 
                 if (!text.equals("")) {
-                    text = text.substring(1);
-                    world = GameObjectsStorage.getAllPlayersForIterate();
-                    for (Player player : world)
-                        player.sendPacket(new CreatureSay(0, 15, activeChar.getName(), text));
+                    String text3 = text.substring(1);
+                    GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(new CreatureSay(0, 15, activeChar.getName(), text3)));
                 }
 
 
@@ -219,21 +218,18 @@ public class AdminPanel implements IAdminCommandHandler {
                 activeChar.sendPacket(html);
                 break;
             case admin_smallfirework:
-                world = GameObjectsStorage.getAllPlayersForIterate();
                 for (Player player : world) {
                     MagicSkillUse MSU = new MagicSkillUse(player, player, 2023, 1, 1, 0);
                     player.broadcastPacket(MSU);
                 }
                 break;
             case admin_mediumfirework:
-                world = GameObjectsStorage.getAllPlayersForIterate();
                 for (Player player : world) {
                     MagicSkillUse MSU = new MagicSkillUse(player, player, 2024, 1, 1, 0);
                     player.broadcastPacket(MSU);
                 }
                 break;
             case admin_bigfirework:
-                world = GameObjectsStorage.getAllPlayersForIterate();
                 for (Player player : world) {
                     MagicSkillUse MSU = new MagicSkillUse(player, player, 2025, 1, 1, 0);
                     player.broadcastPacket(MSU);
@@ -244,14 +240,7 @@ public class AdminPanel implements IAdminCommandHandler {
                 break;
             case admin_changevaluescppanel:
                 if (st.hasMoreTokens()) {
-                    int value = 0;
-                    try {
-                        value = Integer.parseInt(st.nextToken());
-                    } catch (NumberFormatException e) {
-                        activeChar.sendMessage("Invalid Character in fill.");
-                        return false;
-                    }
-
+                    int value = toInt(st.nextToken(), 0);
                     ServerVariables.set("fake_players", value);
 
                     activeChar.sendMessage("You put " + value + " fakeplayers on database.");

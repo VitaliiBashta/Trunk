@@ -4,7 +4,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.instancemanager.games.HandysBlockCheckerManager;
 import l2trunk.gameserver.instancemanager.games.HandysBlockCheckerManager.ArenaParticipantsHolder;
 import l2trunk.gameserver.listener.actor.player.OnPlayerExitListener;
@@ -17,10 +16,8 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.PcInventory;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
+import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +27,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
 public final class BlockCheckerEngine {
-    private static final Logger _log = LoggerFactory.getLogger(BlockCheckerEngine.class);
     // The needed arena coordinates
     // Arena X: team1X, team1Y, team2X, team2Y, ArenaCenterX, ArenaCenterY
     private static final int[][] _arenaCoordinates = {
@@ -56,7 +52,7 @@ public final class BlockCheckerEngine {
     private final List<ItemInstance> _drops = new ArrayList<>();
     private final OnExitPlayerListener _listener = new OnExitPlayerListener();
     // The object which holds all basic members info
-    private HandysBlockCheckerManager.ArenaParticipantsHolder _holder;
+    private HandysBlockCheckerManager.ArenaParticipantsHolder holder;
     // The initial points of the event
     private int _redPoints = 15;
     private int _bluePoints = 15;
@@ -76,7 +72,7 @@ public final class BlockCheckerEngine {
     private boolean _abnormalEnd = false;
 
     public BlockCheckerEngine(HandysBlockCheckerManager.ArenaParticipantsHolder holder, int arena) {
-        _holder = holder;
+        this.holder = holder;
         if (arena > -1 && arena < 4)
             _arena = arena;
 
@@ -90,10 +86,9 @@ public final class BlockCheckerEngine {
      * Updates the player holder before the event starts
      * to synchronize all info
      *
-     * @param holder
      */
     public void updatePlayersOnStart(ArenaParticipantsHolder holder) {
-        _holder = holder;
+        this.holder = holder;
     }
 
     /**
@@ -103,7 +98,7 @@ public final class BlockCheckerEngine {
      * @return HandysBlockCheckerManager.ArenaParticipantsHolder
      */
     public ArenaParticipantsHolder getHolder() {
-        return _holder;
+        return holder;
     }
 
     /**
@@ -131,21 +126,12 @@ public final class BlockCheckerEngine {
      *
      * @return int
      */
-    public int getRedPoints() {
-        synchronized (this) {
-            return _redPoints;
-        }
+    public synchronized int getRedPoints() {
+        return _redPoints;
     }
 
-    /**
-     * Returns the current blue team points
-     *
-     * @return int
-     */
-    public int getBluePoints() {
-        synchronized (this) {
+    public synchronized int getBluePoints() {
             return _bluePoints;
-        }
     }
 
     /**
@@ -214,7 +200,7 @@ public final class BlockCheckerEngine {
      * the relation info
      */
     private void broadcastRelationChanged(Player plr) {
-        for (Player p : _holder.getAllPlayers())
+        for (Player p : holder.getAllPlayers())
             p.sendPacket(RelationChanged.update(plr, p, plr));
     }
 
@@ -223,19 +209,15 @@ public final class BlockCheckerEngine {
      * will end.
      */
     public void endEventAbnormally() {
-        try {
-            synchronized (this) {
-                _isStarted = false;
+        synchronized (this) {
+            _isStarted = false;
 
-                if (_task != null)
-                    _task.cancel(true);
+            if (_task != null)
+                _task.cancel(true);
 
-                _abnormalEnd = true;
+            _abnormalEnd = true;
 
-                ThreadPoolManager.INSTANCE.execute(new EndEvent());
-            }
-        } catch (RuntimeException e) {
-            _log.error("Couldnt end Block Checker event at " + _arena, e);
+            ThreadPoolManager.INSTANCE.execute(new EndEvent());
         }
     }
 
@@ -282,24 +264,24 @@ public final class BlockCheckerEngine {
             final ExCubeGameChangePoints initialPoints = new ExCubeGameChangePoints(300, _bluePoints, _redPoints);
             ExCubeGameExtendedChangePoints clientSetUp;
 
-            for (Player player : _holder.getAllPlayers()) {
+            for (Player player : holder.getAllPlayers()) {
                 if (player == null)
                     continue;
 
                 player.addListener(_listener);
 
                 // Send the secret client packet set up
-                boolean isRed = _holder.getRedPlayers().contains(player);
+                boolean isRed = holder.getRedPlayers().contains(player);
 
                 clientSetUp = new ExCubeGameExtendedChangePoints(300, _bluePoints, _redPoints, isRed, player, 0);
                 player.sendPacket(clientSetUp);
 
                 player.sendActionFailed();
 
-                // Teleport Player - Array access
+                // teleport Player - Array access
                 // Team 0 * 2 = 0; 0 = 0, 0 + 1 = 1.
                 // Team 1 * 2 = 2; 2 = 2, 2 + 1 = 3
-                int tc = _holder.getPlayerTeam(player) * 2;
+                int tc = holder.getPlayerTeam(player) * 2;
                 // Get x and y coordinates
                 int x = _arenaCoordinates[_arena][tc];
                 int y = _arenaCoordinates[_arena][tc + 1];
@@ -321,7 +303,7 @@ public final class BlockCheckerEngine {
                 // Freeze
                 _freeze.getEffects(player, player, false, false);
                 // Tranformation
-                if (_holder.getPlayerTeam(player) == 0)
+                if (holder.getPlayerTeam(player) == 0)
                     _transformationRed.getEffects(player, player, false, false);
                 else
                     _transformationBlue.getEffects(player, player, false, false);
@@ -393,54 +375,39 @@ public final class BlockCheckerEngine {
             // if != 0, will spawn a blue block
             byte random = 2;
             // common template
-            final NpcTemplate template = NpcHolder.getTemplate(18672);
             // Spawn blocks
-            try {
-                // Creates 50 new blocks
-                for (int i = 0; i < _numOfBoxes; i++) {
-                    SimpleSpawner spawn = new SimpleSpawner(template);
-                    spawn.setLocx(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400));
-                    spawn.setLocy(_arenaCoordinates[_arena][5] + Rnd.get(-400, 400));
-                    spawn.setLocz(_zCoord);
-                    spawn.setAmount(1);
-                    spawn.setHeading(1);
-                    spawn.setRespawnDelay(1);
-                    BlockInstance blockInstance = (BlockInstance) spawn.doSpawn(true);
-                    blockInstance.setRed(random % 2 == 0);
+            // Creates 50 new blocks
+            for (int i = 0; i < _numOfBoxes; i++) {
+                SimpleSpawner spawn = new SimpleSpawner(18672);
+                spawn.setLoc(new Location(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400),
+                        _arenaCoordinates[_arena][5] + Rnd.get(-400, 400),
+                        _zCoord, 1));
+                spawn.setAmount(1);
+                spawn.setRespawnDelay(1);
+                BlockInstance blockInstance = (BlockInstance) spawn.doSpawn(true);
+                blockInstance.setRed(random % 2 == 0);
 
-                    _spawns.add(spawn);
-                    random++;
-                }
-            } catch (RuntimeException e) {
-                _log.error("Error while Spawning Block Checker!", e);
+                _spawns.add(spawn);
+                random++;
             }
 
             // Spawn the block carrying girl
             if (_round == 1 || _round == 2) {
-                NpcTemplate girl = NpcHolder.getTemplate(18676);
-                try {
-                    final SimpleSpawner girlSpawn = new SimpleSpawner(girl);
-                    girlSpawn.setLocx(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400));
-                    girlSpawn.setLocy(_arenaCoordinates[_arena][5] + Rnd.get(-400, 400));
-                    girlSpawn.setLocz(_zCoord);
-                    girlSpawn.setAmount(1);
-                    girlSpawn.setHeading(1);
-                    girlSpawn.setRespawnDelay(1);
-                    girlSpawn.doSpawn(true);
-                    girlSpawn.init();
-                    _girlNpc = girlSpawn.getLastSpawn();
-                    // Schedule his deletion after 9 secs of spawn
-                    ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                        @Override
-                        public void runImpl() {
-                            if (_girlNpc == null)
-                                return;
-                            _girlNpc.deleteMe();
-                        }
-                    }, 9000);
-                } catch (RuntimeException e) {
-                    _log.warn("Couldnt Spawn Block Checker NPCs! Wrong instance type at npc table?", e);
-                }
+                final SimpleSpawner girlSpawn = new SimpleSpawner(18676);
+                girlSpawn.setLoc(new Location(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400),
+                        _arenaCoordinates[_arena][5] + Rnd.get(-400, 400),
+                        _zCoord, 1))
+                        .setAmount(1)
+                        .setRespawnDelay(1)
+                        .init();
+                girlSpawn.doSpawn(true);
+                _girlNpc = girlSpawn.getLastSpawn();
+                // Schedule his deletion after 9 secs of spawn
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    if (_girlNpc == null)
+                        return;
+                    _girlNpc.deleteMe();
+                }, 9000);
             }
 
             _redPoints += _numOfBoxes / 2;
@@ -459,19 +426,19 @@ public final class BlockCheckerEngine {
         public void runImpl() {
             switch (seconds) {
                 case 5:
-                    _holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_5_SECONDS));
+                    holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_5_SECONDS));
                     break;
                 case 4:
-                    _holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_4_SECONDS));
+                    holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_4_SECONDS));
                     break;
                 case 3:
-                    _holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_3_SECONDS));
+                    holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_3_SECONDS));
                     break;
                 case 2:
-                    _holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_2_SECONDS));
+                    holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_2_SECONDS));
                     break;
                 case 1:
-                    _holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_1_SECOND));
+                    holder.broadCastPacketToTeam(new SystemMessage(SystemMessage.BLOCK_CHECKER_WILL_END_IN_1_SECOND));
                     break;
             }
 
@@ -492,13 +459,13 @@ public final class BlockCheckerEngine {
         // Garbage collector and arena free setter
         private void clearMe() {
             HandysBlockCheckerManager.INSTANCE.clearPaticipantQueueByArenaId(_arena);
-            for (Player player : _holder.getAllPlayers()) {
+            for (Player player : holder.getAllPlayers()) {
                 if (player == null)
                     continue;
 
                 player.removeListener(_listener);
             }
-            _holder.clearPlayers();
+            holder.clearPlayers();
             _blueTeamPoints.clear();
             _redTeamPoints.clear();
             HandysBlockCheckerManager.INSTANCE.setArenaFree(_arena);
@@ -530,22 +497,19 @@ public final class BlockCheckerEngine {
             if (_redPoints == _bluePoints)
                 return;
 
-            _isRedWinner = _redPoints > _bluePoints ? true : false;
+            _isRedWinner = _redPoints > _bluePoints;
 
             if (_isRedWinner) {
                 rewardAsWinner(true);
                 rewardAsLooser(false);
                 SystemMessage msg = new SystemMessage(SystemMessage.THE_C1_TEAM_HAS_WON).addString("Red Team");
 
-                _holder.broadCastPacketToTeam(msg);
-            } else if (_bluePoints > _redPoints) {
+                holder.broadCastPacketToTeam(msg);
+            } else {
                 rewardAsWinner(false);
                 rewardAsLooser(true);
                 SystemMessage msg = new SystemMessage(SystemMessage.THE_C1_TEAM_HAS_WON).addString("Blue Team");
-                _holder.broadCastPacketToTeam(msg);
-            } else {
-                rewardAsLooser(true);
-                rewardAsLooser(false);
+                holder.broadCastPacketToTeam(msg);
             }
         }
 
@@ -602,8 +566,6 @@ public final class BlockCheckerEngine {
          * predefined rewards
          * Player got >= 10 points: 2 coins
          * Player got < 10 points: 0 coins
-         *
-         * @param isRed
          */
         private void rewardAsLooser(boolean isRed) {
             Map<Player, Integer> tempPoints = isRed ? _redTeamPoints : _blueTeamPoints;
@@ -620,7 +582,7 @@ public final class BlockCheckerEngine {
         private void setPlayersBack() {
             final ExCubeGameEnd end = new ExCubeGameEnd(_isRedWinner);
 
-            for (Player player : _holder.getAllPlayers()) {
+            for (Player player : holder.getAllPlayers()) {
                 if (player == null)
                     continue;
 
@@ -634,7 +596,7 @@ public final class BlockCheckerEngine {
                 inv.destroyItemByItemId(13787, inv.getCountOf(13787), "Block Checker");
                 inv.destroyItemByItemId(13788, inv.getCountOf(13788), "Block Checker");
                 broadcastRelationChanged(player);
-                // Teleport Back
+                // teleport Back
                 player.teleToLocation(-57478, -60367, -2370);
                 // Send end packet
                 player.sendPacket(end);

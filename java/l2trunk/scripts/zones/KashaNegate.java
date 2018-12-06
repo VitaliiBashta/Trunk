@@ -128,7 +128,7 @@ public final class KashaNegate implements ScriptFile {
                                 }
                             c.doDie(null);
                         }
-                        ThreadPoolManager.INSTANCE().schedule(new KashaRespawn((NpcInstance) c), 10000L);
+                        ThreadPoolManager.INSTANCE.schedule(new KashaRespawn((NpcInstance) c), 10000L);
                     }
     }
 
@@ -173,17 +173,17 @@ public final class KashaNegate implements ScriptFile {
     }
 
     private class KashaRespawn extends RunnableImpl {
-        private final NpcInstance _n;
+        private final NpcInstance n;
 
         KashaRespawn(NpcInstance n) {
-            _n = n;
+            this.n = n;
         }
 
         @Override
         public void runImpl() {
-            int npcId = getRealNpcId(_n);
+            int npcId = getRealNpcId(n);
             if (KASHARESPAWN.containsKey(npcId))
-                changeAura(_n, KASHARESPAWN.get(npcId));
+                changeAura(n, KASHARESPAWN.get(npcId));
         }
     }
 

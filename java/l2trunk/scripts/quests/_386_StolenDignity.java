@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _386_StolenDignity extends Quest implements ScriptFile {
+public final class _386_StolenDignity extends Quest implements ScriptFile {
     // NPCs
     private final static int Romp = 30843;
     // Items

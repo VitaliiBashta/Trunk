@@ -1,6 +1,5 @@
 package l2trunk.scripts.events.TvTArena;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -31,22 +30,20 @@ public abstract class TvTTemplate extends Functions {
     private static final boolean ALLOW_CLAN_SKILL = true;
     private static final boolean ALLOW_HERO_SKILL = false;
 
-	/*
-	Config.EVENT_TVT_ARENA_ITEM_ID;
-	Config.EVENT_TVT_ARENA_ITEM_NAME;
-	Config.EVENT_TVT_ARENA_MAX_LENGTH_TEAM;
-	Config.EVENT_TVT_ARENA_ALLOW_BUFFS;
-	Config.EVENT_TVT_ARENA_ALLOW_CLAN_SKILL;
-	Config.EVENT_TVT_ARENA_ALLOW_HERO_SKILL;
-	 */
-
+    protected int _CharacterFound = 0;
     int _managerId;
     String _className;
-
-    private Long _creatorId;
-    private NpcInstance _manager;
     int _status = 0;
-    protected int _CharacterFound = 0;
+    List<Location> _team1points;
+    List<Location> _team2points;
+    List<Integer> _team1list;
+    List<Integer> _team2list;
+    List<Integer> _team1live;
+    List<Integer> _team2live;
+    Zone _zone;
+    ZoneListener _zoneListener;
+    private int _creatorId;
+    private NpcInstance _manager;
     private int _price = 10000;
     private int _team1count = 1;
     private int _team2count = 1;
@@ -56,17 +53,6 @@ public abstract class TvTTemplate extends Functions {
     private int _team2max = 85;
     private int _timeToStart = 10;
     private boolean _timeOutTask;
-
-    List<Location> _team1points;
-    List<Location> _team2points;
-
-    List<Long> _team1list;
-    List<Long> _team2list;
-    List<Long> _team1live;
-    List<Long> _team2live;
-
-    Zone _zone;
-    ZoneListener _zoneListener;
 
     protected abstract void onLoad();
 
@@ -268,7 +254,7 @@ public abstract class TvTTemplate extends Functions {
         }
     }
 
-    public void template_announce() {
+    void template_announce() {
         Player creator = GameObjectsStorage.getAsPlayer(_creatorId);
 
         if (_status != 1 || creator == null)
@@ -289,7 +275,7 @@ public abstract class TvTTemplate extends Functions {
         }
     }
 
-    public void template_prepare() {
+    void template_prepare() {
         if (_status != 1)
             return;
 
@@ -313,7 +299,7 @@ public abstract class TvTTemplate extends Functions {
         executeTask("events.TvTArena." + _className, "start", new Object[0], 30000);
     }
 
-    public void template_start() {
+    void template_start() {
         if (_status != 2)
             return;
 
@@ -381,11 +367,11 @@ public abstract class TvTTemplate extends Functions {
 
     private void healPlayers() {
         for (Player player : getPlayers(_team1list)) {
-            player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
+            player.setFullHpMp();
             player.setCurrentCp(player.getMaxCp());
         }
         for (Player player : getPlayers(_team2list)) {
-            player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
+            player.setFullHpMp();
             player.setCurrentCp(player.getMaxCp());
         }
     }
@@ -704,12 +690,39 @@ public abstract class TvTTemplate extends Functions {
             onPlayerExit(player);
     }
 
+    private void removePlayer(Player player) {
+        if (player != null) {
+            _team1list.remove(player.getStoredId());
+            _team2list.remove(player.getStoredId());
+            _team1live.remove(player.getStoredId());
+            _team2live.remove(player.getStoredId());
+            player.setTeam(TeamType.NONE);
+        }
+    }
+
+    private List<Player> getPlayers(List<Integer> list) {
+        List<Player> result = new ArrayList<>();
+        for (int storeId : list) {
+            Player player = GameObjectsStorage.getAsPlayer(storeId);
+            if (player != null)
+                result.add(player);
+        }
+        return result;
+    }
+
+    private void sayToAll(String text) {
+        Announcements.INSTANCE.announceToAll(_manager.getName() + ": " + text, ChatType.CRITICAL_ANNOUNCE);
+    }
+
     public class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
         public void onZoneEnter(Zone zone, Creature cha) {
             Player player = cha.getPlayer();
             if (_status >= 2 && player != null && !(_team1list.contains(player.getStoredId()) || _team2list.contains(player.getStoredId())))
-                ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, _zone.getSpawn()), 3000);
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    cha.unblock();
+                    cha.teleToLocation(_zone.getSpawn());
+                }, 3000);
         }
 
         @Override
@@ -721,49 +734,12 @@ public abstract class TvTTemplate extends Functions {
                 int x = (int) (cha.getX() + 50 * Math.sin(radian));
                 int y = (int) (cha.getY() - 50 * Math.cos(radian));
                 int z = cha.getZ();
-                ThreadPoolManager.INSTANCE().schedule(new TeleportTask(cha, new Location(x, y, z)), 3000);
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    cha.unblock();
+                    cha.teleToLocation(new Location(x, y, z));
+                }, 3000);
             }
         }
     }
 
-    public class TeleportTask extends RunnableImpl {
-        final Location loc;
-        final Creature target;
-
-        TeleportTask(Creature target, Location loc) {
-            this.target = target;
-            this.loc = loc;
-            target.block();
-        }
-
-        @Override
-        public void runImpl() {
-            target.unblock();
-            target.teleToLocation(loc);
-        }
-    }
-
-    private void removePlayer(Player player) {
-        if (player != null) {
-            _team1list.remove(player.getStoredId());
-            _team2list.remove(player.getStoredId());
-            _team1live.remove(player.getStoredId());
-            _team2live.remove(player.getStoredId());
-            player.setTeam(TeamType.NONE);
-        }
-    }
-
-    private List<Player> getPlayers(List<Long> list) {
-        List<Player> result = new ArrayList<>();
-        for (Long storeId : list) {
-            Player player = GameObjectsStorage.getAsPlayer(storeId);
-            if (player != null)
-                result.add(player);
-        }
-        return result;
-    }
-
-    private void sayToAll(String text) {
-        Announcements.INSTANCE.announceToAll(_manager.getName() + ": " + text, ChatType.CRITICAL_ANNOUNCE);
-    }
 }

@@ -96,7 +96,7 @@ public class FFATreasureHuntEvent extends AbstractFightClub {
         updatePlayerScore(fPlayer);
         player.sendUserInfo();
 
-        ThreadPoolManager.INSTANCE().schedule(new SpawnChest(this), timeForRespawningChest * 1000L);
+        ThreadPoolManager.INSTANCE.schedule(new SpawnChest(this), timeForRespawningChest * 1000L);
 
         spawnedChests.remove(npc);
 

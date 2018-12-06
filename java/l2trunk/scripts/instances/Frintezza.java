@@ -412,7 +412,7 @@ public final class Frintezza extends Reflection {
             npc.block();
         } else
             npc.unblock();
-        npc.setIsInvul(flag);
+        npc.setInvul(flag);
     }
 
     private class SecondMorph extends RunnableImpl {
@@ -582,10 +582,10 @@ public final class Frintezza extends Reflection {
             if (ArrayUtils.contains(npcArray, n.getNpcId())) {
                 if (block) {
                     n.block();
-                    n.setIsInvul(true);
+                    n.setInvul(true);
                 } else {
                     n.unblock();
-                    n.setIsInvul(false);
+                    n.setInvul(false);
                 }
             }
     }
@@ -666,7 +666,7 @@ public final class Frintezza extends Reflection {
             if (cha.isNpc() && (cha.getNpcId() == _weakScarletId || cha.getNpcId() == _strongScarletId)) {
                 cha.teleToLocation(new Location(-87784, -153304, -9176));
                 ((NpcInstance) cha).getAggroList().clear(true);
-                cha.setCurrentHpMp(cha.getMaxHp(), cha.getMaxMp());
+                cha.setFullHpMp();
                 cha.broadcastCharInfo();
             }
         }

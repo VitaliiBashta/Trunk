@@ -34,7 +34,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MonsterInstance extends NpcInstance {
-    private static final int MONSTER_MAINTENANCE_INTERVAL = 1000;
     private final MinionList minionList;
     private final Lock harvestLock = new ReentrantLock();
     private final Lock absorbLock = new ReentrantLock();
@@ -68,7 +67,7 @@ public class MonsterInstance extends NpcInstance {
      * Table containing all Items that a Dwarf can Sweep on this L2NpcInstance
      */
     private List<RewardItem> _sweepItems;
-    private int _isChampion;
+    private int isChampion;
 
     public MonsterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -84,17 +83,17 @@ public class MonsterInstance extends NpcInstance {
 
     @Override
     public boolean isLethalImmune() {
-        return _isChampion > 0 || getNpcId() == 22215 || getNpcId() == 22216 || getNpcId() == 22217 || super.isLethalImmune();
+        return isChampion > 0 || getNpcId() == 22215 || getNpcId() == 22216 || getNpcId() == 22217 || super.isLethalImmune();
     }
 
     @Override
     public boolean isFearImmune() {
-        return _isChampion > 0 || super.isFearImmune();
+        return isChampion > 0 || super.isFearImmune();
     }
 
     @Override
     public boolean isParalyzeImmune() {
-        return _isChampion > 0 || super.isParalyzeImmune();
+        return isChampion > 0 || super.isParalyzeImmune();
     }
 
     /**
@@ -106,7 +105,7 @@ public class MonsterInstance extends NpcInstance {
     }
 
     public int getChampion() {
-        return _isChampion;
+        return isChampion;
     }
 
     @Override
@@ -117,10 +116,10 @@ public class MonsterInstance extends NpcInstance {
     public void setChampion(int level) {
         if (level == 0) {
             removeSkillById(4407);
-            _isChampion = 0;
+            isChampion = 0;
         } else {
             addSkill(SkillTable.INSTANCE.getInfo(4407, level));
-            _isChampion = level;
+            isChampion = level;
         }
     }
 
@@ -149,15 +148,17 @@ public class MonsterInstance extends NpcInstance {
     @Override
     protected void onSpawn() {
         super.onSpawn();
-
-        setCurrentHpMp(getMaxHp(), getMaxMp(), true);
+        setFullHpMp();
 
         if (getMinionList().hasMinions()) {
             if (minionMaintainTask != null) {
                 minionMaintainTask.cancel(false);
                 minionMaintainTask = null;
             }
-            minionMaintainTask = ThreadPoolManager.INSTANCE.schedule(new MinionMaintainTask(), 1000L);
+            minionMaintainTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+                if (isDead()) return;
+                getMinionList().spawnMinions();
+            }, 1000L);
         }
 
         // Ady - Custom respawn message for certain mobs/raids
@@ -201,7 +202,7 @@ public class MonsterInstance extends NpcInstance {
         else
             minion.setChampion(0);
         minion.setHeading(getHeading());
-        minion.setCurrentHpMp(minion.getMaxHp(), minion.getMaxMp(), true);
+        minion.setFullHpMp();
         minion.spawnMe(getMinionPosition());
     }
 
@@ -211,12 +212,13 @@ public class MonsterInstance extends NpcInstance {
     }
 
     @Override
-    public void setReflection(Reflection reflection) {
+    public MonsterInstance setReflection(Reflection reflection) {
         super.setReflection(reflection);
 
         if (hasMinions())
             for (MinionInstance m : getMinionList().getAliveMinions())
                 m.setReflection(reflection);
+        return this;
     }
 
     @Override
@@ -239,20 +241,6 @@ public class MonsterInstance extends NpcInstance {
         }
 
         calculateRewards(killer);
-
-        // Alexander - Auto Raid Event
-        //AutoRaidEventManager.INSTANCE().onRaidDeath(this);
-
-        // Alexander - Add a new raid killed stat to all that participated in it
-//		if (isRaid() && !isMinion())
-//		{
-//			for (HateInfo ai : getAggroList().getPlayableMap().values())
-//			{
-//				final Player player = ai.attacker.getPlayer();
-//				if (player != null && ai.hate > 0)
-//					player.addPlayerStats(Ranking.STAT_TOP_RAIDS_KILLED);
-//			}
-//		}
 
         super.onDeath(killer);
     }
@@ -293,8 +281,8 @@ public class MonsterInstance extends NpcInstance {
 
         Map<Playable, HateInfo> aggroMap = getAggroList().getPlayableMap();
 
-        Quest[] quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
-        if (quests != null && quests.length > 0) {
+        List<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
+        if (!quests.isEmpty()) {
             List<Player> players = null; // массив с игроками, которые могут быть заинтересованы в квестах
             if (isRaid() && Config.ALT_NO_LASTHIT) // Для альта на ластхит берем всех игроков вокруг
             {
@@ -359,10 +347,9 @@ public class MonsterInstance extends NpcInstance {
                 reward.addDamage(info.damage);
         }
 
-        Player[] attackers = rewards.keySet().toArray(new Player[rewards.size()]);
         double[] xpsp = new double[2];
 
-        for (Player attacker : attackers) {
+        for (Player attacker : rewards.keySet()) {
             if (attacker.isDead())
                 continue;
 
@@ -748,7 +735,7 @@ public class MonsterInstance extends NpcInstance {
 
     @Override
     public boolean isInvul() {
-        return _isInvul;
+        return invul;
     }
 
     static final class RewardInfo {

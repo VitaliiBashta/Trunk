@@ -1,8 +1,6 @@
 package l2trunk.scripts.events.TheFallHarvest;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
@@ -11,7 +9,6 @@ import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.handler.items.ScriptItemHandler;
 import l2trunk.scripts.npc.model.SquashInstance;
@@ -20,12 +17,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Seed extends ScriptItemHandler implements ScriptFile {
-    private static final Integer[] _itemIds = {6389, // small seed
+    private static final List<Integer> ITEM_IDS = Arrays.asList(6389, // small seed
             6390 // large seed
-    };
-    private static final int[] _npcIds = {12774, // Young Pumpkin
+    );
+    private static final List<Integer> NPC_IDS = Arrays.asList(12774, // Young Pumpkin
             12777 // Large Young Pumpkin
-    };
+    );
 
     @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
@@ -42,23 +39,14 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
             return false;
         }
 
-        NpcTemplate template = null;
-
-        int itemId = item.getItemId();
-        for (int i = 0; i < _itemIds.length; i++)
-            if (_itemIds[i] == itemId) {
-                template = NpcHolder.getTemplate(_npcIds[i]);
-                break;
-            }
-
-        if (template == null)
-            return false;
+        int npcId = NPC_IDS.get(0);
+        if (item.getItemId() == ITEM_IDS.get(1)) npcId = NPC_IDS.get(1);
 
         if (!activeChar.getInventory().destroyItem(item, 1L, "useSeed"))
             return false;
 
-        SimpleSpawner spawn = new SimpleSpawner(template);
-        spawn.setLoc(Location.findPointToStay(activeChar, 30, 70));
+        SimpleSpawner spawn = new SimpleSpawner(npcId)
+                .setLoc(Location.findPointToStay(activeChar, 30, 70));
         NpcInstance npc = spawn.doSpawn(true);
         npc.setAI(new SquashAI(npc));
         ((SquashInstance) npc).setSpawner(activeChar);
@@ -85,7 +73,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 
 }

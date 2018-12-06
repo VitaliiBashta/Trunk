@@ -287,7 +287,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
     private void showTeleportWindow(Player activeChar) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 
-        StringBuilder replyMSG = new StringBuilder("<html><title>Teleport Menu</title>");
+        StringBuilder replyMSG = new StringBuilder("<html><title>teleport Menu</title>");
         replyMSG.append("<body>");
 
         replyMSG.append("<br>");
@@ -321,7 +321,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
         }
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 
-        StringBuilder replyMSG = new StringBuilder("<html><title>Teleport Character</title>");
+        StringBuilder replyMSG = new StringBuilder("<html><title>teleport Character</title>");
         replyMSG.append("<body>");
         replyMSG.append("The character you will teleport is " + player.getName() + ".");
         replyMSG.append("<br>");
@@ -332,8 +332,8 @@ public final class AdminTeleport implements IAdminCommandHandler {
         replyMSG.append("<edit var=\"char_cord_y\" width=110>");
         replyMSG.append("Co-ordinate z");
         replyMSG.append("<edit var=\"char_cord_z\" width=110>");
-        replyMSG.append("<button value=\"Teleport\" action=\"bypass -h admin_teleport_character $char_cord_x $char_cord_y $char_cord_z\" width=60 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
-        replyMSG.append("<button value=\"Teleport near you\" action=\"bypass -h admin_teleport_character " + activeChar.getX() + " " + activeChar.getY() + " " + activeChar.getZ() + "\" width=115 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
+        replyMSG.append("<button value=\"teleport\" action=\"bypass -h admin_teleport_character $char_cord_x $char_cord_y $char_cord_z\" width=60 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
+        replyMSG.append("<button value=\"teleport near you\" action=\"bypass -h admin_teleport_character " + activeChar.getX() + " " + activeChar.getY() + " " + activeChar.getZ() + "\" width=115 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
         replyMSG.append("<center><button value=\"Back\" action=\"bypass -h admin_current_player\" width=40 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>");
         replyMSG.append("</body></html>");
 

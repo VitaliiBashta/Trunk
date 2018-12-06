@@ -79,7 +79,7 @@ public class SiegeFlagInstance extends NpcInstance {
 
     @Override
     public boolean isInvul() {
-        return _isInvul;
+        return invul;
     }
 
     @Override

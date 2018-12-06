@@ -4216,7 +4216,7 @@
 			<skill id="4415" level="11" />	<!--Spears-->
 			<skill id="4416" level="11" />	<!--Giants-->
 			<skill id="5203" level="4" />	<!--Fear-->
-			<skill id="5218" level="1" />	<!--Production: Event Teleport-->
+			<skill id="5218" level="1" />	<!--Production: Event teleport-->
 			<skill id="5597" level="1" />	<!--Invalid Skill cancel-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">

@@ -357,7 +357,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(4), 9400);
+                    _movieTask = ThreadPoolManager.INSTANCE.schedule(new Movie(4), 9400);
                     break;
                 case 4:
                     // Ищем игроков в радиусе и показываем мувик
@@ -372,7 +372,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(5), 5000);
+                    _movieTask = ThreadPoolManager.INSTANCE.schedule(new Movie(5), 5000);
                     break;
                 case 5:
                     // Ищем игроков в радиусе и показываем мувик
@@ -387,7 +387,7 @@ public final class AndreasVanHalter extends Fighter {
                     if (_movieTask != null)
                         _movieTask.cancel(false);
                     _movieTask = null;
-                    _movieTask = ThreadPoolManager.INSTANCE().schedule(new Movie(6), 6000);
+                    _movieTask = ThreadPoolManager.INSTANCE.schedule(new Movie(6), 6000);
                     break;
                 case 6:
                     // Сбрасываем режим мувиков

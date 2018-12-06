@@ -47,6 +47,6 @@ public class OlympiadEndTask extends RunnableImpl {
 
         if (Olympiad._scheduledValdationTask != null)
             Olympiad._scheduledValdationTask.cancel(false);
-        Olympiad._scheduledValdationTask = ThreadPoolManager.INSTANCE().schedule(new ValidationTask(), Olympiad.getMillisToValidationEnd());
+        Olympiad._scheduledValdationTask = ThreadPoolManager.INSTANCE.schedule(new ValidationTask(), Olympiad.getMillisToValidationEnd());
     }
 }

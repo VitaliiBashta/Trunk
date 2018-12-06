@@ -1,8 +1,6 @@
 package l2trunk.scripts.npc.model.birthday;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -11,23 +9,8 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.concurrent.Future;
 
-
-@SuppressWarnings("serial")
-public class BirthDayCakeInstance extends NpcInstance {
-    private final Skill SKILL = SkillTable.INSTANCE().getInfo(22035, 1);
-
-    private class CastTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            for (Player player : World.getAroundPlayers(BirthDayCakeInstance.this, 500, 100)) {
-                if (player.getEffectList().getEffectsBySkill(SKILL) != null)
-                    continue;
-
-                SKILL.getEffects(BirthDayCakeInstance.this, player, false, false);
-            }
-        }
-    }
-
+public final class BirthDayCakeInstance extends NpcInstance {
+    private final Skill SKILL = SkillTable.INSTANCE.getInfo(22035, 1);
     private Future<?> _castTask;
 
     public BirthDayCakeInstance(int objectId, NpcTemplate template) {
@@ -39,7 +22,11 @@ public class BirthDayCakeInstance extends NpcInstance {
     public void onSpawn() {
         super.onSpawn();
 
-        _castTask = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new CastTask(), 1000L, 1000L);
+        _castTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> {
+            World.getAroundPlayers(BirthDayCakeInstance.this, 500, 100).stream()
+                    .filter(player -> player.getEffectList().getEffectsBySkill(SKILL) == null)
+                    .forEach(player -> SKILL.getEffects(BirthDayCakeInstance.this, player, false, false));
+        }, 1000L, 1000L);
     }
 
     @Override

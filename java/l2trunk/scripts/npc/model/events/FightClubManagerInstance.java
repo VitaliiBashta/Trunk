@@ -88,7 +88,7 @@ public final class FightClubManagerInstance extends NpcInstance {
             } else if (pageName.equalsIgnoreCase("tryaccept")) {
                 player.sendPacket(makeAcceptHtml(player, Long.parseLong(st.nextToken())));
             } else if (pageName.equalsIgnoreCase("accept")) {
-                accept(player, Long.parseLong(st.nextToken()));
+                accept(player, Integer.parseInt(st.nextToken()));
             }
         }
     }
@@ -164,7 +164,7 @@ public final class FightClubManagerInstance extends NpcInstance {
         return html;
     }
 
-    private void accept(Player player, long storedId) {
+    private void accept(Player player, int storedId) {
         final Object[] data = {GameObjectsStorage.getAsPlayer(storedId), player};
         if (player.getStoredId() == storedId) {
             sendResult(player, "Error!", "You can not call the fight itself.");

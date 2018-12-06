@@ -1309,7 +1309,7 @@
 	</spawn>
 	<spawn count="1" respawn="60" respawn_random="0" period_of_day="none">
 		<point x="173147" y="-173762" z="3480" h="51272"/>
-		<npc id="32652"/><!--Teleport Crystal-->
+		<npc id="32652"/><!--teleport Crystal-->
 	</spawn>
 	<spawn count="1" respawn="60" respawn_random="0" period_of_day="none">
 		<point x="174172" y="-175790" z="736" h="52424"/>

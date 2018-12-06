@@ -44,7 +44,7 @@ public class _195_SevenSignsSecretRitualofthePriests extends Quest implements Sc
 
     // SPAWNS
     private static final Location[][] guardsOfDawn1 = { // ID: 18835
-            // Spawn Location, move End Location, Teleport player Location
+            // Spawn Location, move End Location, teleport player Location
             //1st checkpoint
             {new Location(-75208, 212600, -7320), new Location(-75208, 212248, -7320), new Location(-75992, 213416, -7148)},
             {new Location(-74616, 212600, -7320), new Location(-74616, 212248, -7320), new Location(-75992, 213416, -7148)},
@@ -92,7 +92,7 @@ public class _195_SevenSignsSecretRitualofthePriests extends Quest implements Sc
             {new Location(-81544, 206168, -7984, 49152), new Location(-77688, 209112, -7608)},};
 
     private static final Location[][] guardsOfDawn2 = { // ID: 18834
-            // Spawn Location, move End Location, Teleport player Location
+            // Spawn Location, move End Location, teleport player Location
             {new Location(-75464, 210216, -7416), new Location(-74456, 210216, -7416), new Location(-75992, 213416, -7148)},
             {new Location(-74456, 209752, -7416), new Location(-75464, 209752, -7416), new Location(-75992, 213416, -7148)},
 

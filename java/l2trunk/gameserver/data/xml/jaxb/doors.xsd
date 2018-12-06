@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="list" type="listType"/>
+    <xs:complexType name="posType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="x"/>
+                <xs:attribute type="xs:string" name="y"/>
+                <xs:attribute type="xs:string" name="z"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="shapeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="ax"/>
+                <xs:attribute type="xs:string" name="ay"/>
+                <xs:attribute type="xs:string" name="bx"/>
+                <xs:attribute type="xs:string" name="by"/>
+                <xs:attribute type="xs:string" name="cx"/>
+                <xs:attribute type="xs:string" name="cy"/>
+                <xs:attribute type="xs:string" name="dx"/>
+                <xs:attribute type="xs:string" name="dy"/>
+                <xs:attribute type="xs:string" name="minz"/>
+                <xs:attribute type="xs:string" name="maxz"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="setType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name"/>
+                <xs:attribute type="xs:string" name="value"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="doorType">
+        <xs:sequence>
+            <xs:element type="posType" name="pos"/>
+            <xs:element type="shapeType" name="shape"/>
+            <xs:element type="setType" name="set" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="hp"/>
+        <xs:attribute type="xs:string" name="pdef"/>
+        <xs:attribute type="xs:string" name="mdef"/>
+    </xs:complexType>
+    <xs:complexType name="listType">
+        <xs:sequence>
+            <xs:element type="doorType" name="door" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

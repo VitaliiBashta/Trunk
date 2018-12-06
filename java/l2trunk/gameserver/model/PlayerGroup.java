@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -17,11 +16,11 @@ public interface PlayerGroup extends Iterable<Player> {
 
     Player getLeader();
 
-    List<Player> getMembers(Player... excluded);
+    List<Player> getMembers();
 
     boolean containsMember(Player player);
 
-    void setReflection(Reflection reflection);
+    PlayerGroup setReflection(Reflection reflection);
 
     /**
      * Badly implemented. Iterates on every call. Useful only for singleton usage, else overriding is suggested.
@@ -42,10 +41,6 @@ public interface PlayerGroup extends Iterable<Player> {
 
     default void sendPacket(Player exclude, IStaticPacket... packets) {
         stream().filter(p -> p != exclude).forEach(p -> p.sendPacket(packets));
-    }
-
-    default void sendPacketInRange(GameObject obj, int range, IStaticPacket... packets) {
-        stream().filter(p -> p.isInRangeZ(obj, range)).forEach(p -> p.sendPacket(packets));
     }
 
     default void sendMessage(String message) {
@@ -91,18 +86,8 @@ public interface PlayerGroup extends Iterable<Player> {
         return (int) stream().filter(member -> member.isInRangeZ(obj, range)).count();
     }
 
-    default List<Integer> getMembersObjIds(Player... excluded) {
-        return getMembers(excluded).stream().map(Player::getObjectId).collect(Collectors.toList());
-    }
-
-    default List<Playable> getMembersWithPets(Player... excluded) {
-        List<Playable> result = new ArrayList<>();
-        for (Player member : getMembers(excluded)) {
-            result.add(member);
-            if (member.getPet() != null)
-                result.add(member.getPet());
-        }
-        return result;
+    default List<Integer> getMembersObjIds() {
+        return getMembers().stream().map(Player::getObjectId).collect(Collectors.toList());
     }
 
     default Player getPlayerByName(String name) {

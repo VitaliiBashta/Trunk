@@ -420,7 +420,7 @@ public final class GvGInstance extends Reflection {
     }
 
     /**
-     * Handles any Teleport action of any player inside
+     * Handles any teleport action of any player inside
      */
     private class TeleportListener implements OnTeleportListener {
         @Override

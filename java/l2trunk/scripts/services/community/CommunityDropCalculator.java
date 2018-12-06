@@ -231,7 +231,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
             case 2:// Show Drops
                 RewardListInfo.showInfo(player, NpcHolder.getTemplate(monsterId), false, false, 1.0);
                 break;
-            case 3:// Teleport To Monster
+            case 3:// teleport To Monster
                 if (!canTeleToMonster(player, monsterId, true)) {
                     return;
                 }

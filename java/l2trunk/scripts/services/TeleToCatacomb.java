@@ -78,7 +78,7 @@ class TeleToCatacomb extends Functions {
 
         append += "<br>";
 
-        append += "Teleport to catacomb or necropolis.<br1> ";
+        append += "teleport to catacomb or necropolis.<br1> ";
         append += "You may teleport to any of the following hunting locations.<br>";
 
         if (player.getLevel() <= Config.GATEKEEPER_FREE) {

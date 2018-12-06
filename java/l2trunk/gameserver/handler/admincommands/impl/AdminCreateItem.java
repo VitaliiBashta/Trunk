@@ -15,7 +15,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdminCreateItem implements IAdminCommandHandler {
@@ -56,13 +55,13 @@ public class AdminCreateItem implements IAdminCommandHandler {
 
                     int item_id = Integer.parseInt(wordList[1]);
                     long item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
-                    List<Player> rewardedPlayers = new ArrayList<>();
-                    for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                        if (player.getNetConnection() != null && !player.isInStoreMode()) {
-                            rewardedPlayers.add(player);
-                            createItem(player, item_id, item_count);
-                            player.sendMessage("You have been rewarded!");
-                        }
+                    GameObjectsStorage.getAllPlayers().stream()
+                            .filter(player -> player.getNetConnection() != null)
+                            .filter(player -> !player.isInStoreMode())
+                            .forEach(player -> {
+                                createItem(player, item_id, item_count);
+                                player.sendMessage("You have been rewarded!");
+                            });
                 } catch (NumberFormatException nfe) {
                     activeChar.sendMessage("USAGE: create_item id [count]");
                 }
@@ -77,12 +76,10 @@ public class AdminCreateItem implements IAdminCommandHandler {
 
                     int item_id = Integer.parseInt(wordList[1]);
                     long item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
-                    List<Player> rewardedPlayers = new ArrayList<>();
-                    for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                        if ( player.getNetConnection() != null && !player.isInStoreMode()) {
-                            rewardedPlayers.add(player);
-                            createItem(player, item_id, item_count);
-                        }
+                    GameObjectsStorage.getAllPlayers().stream()
+                            .filter(player -> player.getNetConnection() != null)
+                            .filter(player -> !player.isInStoreMode())
+                            .forEach(player -> createItem(player, item_id, item_count));
                 } catch (NumberFormatException nfe) {
                     activeChar.sendMessage("USAGE: create_item id [count]");
                 }

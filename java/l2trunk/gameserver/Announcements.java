@@ -46,7 +46,7 @@ public enum Announcements {
         int ry = MapUtils.regionY(activeChar);
         int offset = Config.SHOUT_OFFSET;
 
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player == activeChar || activeChar.getReflection() != player.getReflection())
                 continue;
 
@@ -120,32 +120,27 @@ public enum Announcements {
 
     public void announceToAll(String text, ChatType type) {
         Say2 cs = new Say2(0, type, "", text);
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            player.sendPacket(cs);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(cs));
     }
 
     /**
      * Отправляет анонсом CustomMessage, приминимо к примеру в шатдауне.
      *
      * @param address      адрес в {@link l2trunk.gameserver.network.serverpackets.components.CustomMessage}
-     * @param replacements массив String-ов которые атоматически добавятся в сообщения
      */
-    public void announceByCustomMessage(String address, String[] replacements) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            announceToPlayerByCustomMessage(player, address, replacements);
+    public void announceByCustomMessage(String address) {
+        GameObjectsStorage.getAllPlayers().forEach(player ->
+                announceToPlayerByCustomMessage(player, address));
     }
 
     public void announceByCustomMessage(String address, String[] replacements, ChatType type) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            announceToPlayerByCustomMessage(player, address, replacements, type);
+        GameObjectsStorage.getAllPlayers().forEach(player ->
+                announceToPlayerByCustomMessage(player, address, replacements, type));
     }
 
-    public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements) {
+    public void announceToPlayerByCustomMessage(Player player, String address) {
         CustomMessage cm = new CustomMessage(address, player);
-        if (replacements != null)
-            for (String s : replacements)
-                cm.addString(s);
-        player.sendPacket(new Say2(0, ChatType.ANNOUNCEMENT, "", cm.toString()));
+                player.sendPacket(new Say2(0, ChatType.ANNOUNCEMENT, "", cm.toString()));
     }
 
     public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements, ChatType type) {
@@ -157,8 +152,7 @@ public enum Announcements {
     }
 
     public void announceToAll(SystemMessage2 sm) {
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            player.sendPacket(sm);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
     }
 
     public class Announce extends RunnableImpl {
@@ -179,7 +173,7 @@ public enum Announcements {
         public void runImpl() {
             IStaticPacket csNoQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", announce);
             IStaticPacket csQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", announce + getQuestionMark(id));
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (player.containsQuickVar("DisabledAnnounce" + id))
                     continue;
                 int newValue = player.getQuickVarI("Announce: " + id, 0) + 1;

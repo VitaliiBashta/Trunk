@@ -9,11 +9,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
-/**
- * @author L2Mythras
- */
 
-@SuppressWarnings("serial")
 public final class DragonVortexInstance extends NpcInstance {
     private final int[] bosses = {25718, 25719, 25720, 25721, 25722, 25723, 25724};
     private NpcInstance boss;
@@ -36,7 +32,7 @@ public final class DragonVortexInstance extends NpcInstance {
             if (ItemFunctions.getItemCount(player, 17248) > 0) {
                 ItemFunctions.removeItem(player, 17248, 1, true, "DragonVortex");
                 boss = NpcUtils.spawnSingle(bosses[Rnd.get(bosses.length)], Location.coordsRandomize(getLoc(), 300, 600), getReflection());
-                ThreadPoolManager.INSTANCE().schedule(() -> {
+                ThreadPoolManager.INSTANCE.schedule(() -> {
                     if (getBoss() != null && !getBoss().isDead())
                         setBoss(null);
                 }, 1800000);

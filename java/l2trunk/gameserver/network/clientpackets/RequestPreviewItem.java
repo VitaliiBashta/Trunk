@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.BuyListHolder;
@@ -23,19 +22,16 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestPreviewItem extends L2GameClientPacket {
+public final class RequestPreviewItem extends L2GameClientPacket {
     // format: cdddb
-    private static final Logger _log = LoggerFactory.getLogger(RequestPreviewItem.class);
 
-    @SuppressWarnings("unused")
-    private int _unknow;
     private int _listId;
     private int _count;
     private int[] _items;
 
     @Override
     protected void readImpl() {
-        _unknow = readD();
+        int _unknow = readD();
         _listId = readD();
         _count = readD();
         if (_count * 4 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
@@ -75,19 +71,18 @@ public class RequestPreviewItem extends L2GameClientPacket {
 
         NpcInstance merchant = activeChar.getLastNpc();
         boolean isValidMerchant = merchant != null && merchant.isMerchantNpc();
-        if (!activeChar.isGM() && (merchant == null || !isValidMerchant || !activeChar.isInRange(merchant, Creature.INTERACTION_DISTANCE))) {
+        if (!activeChar.isGM() && (!isValidMerchant || !activeChar.isInRange(merchant, Creature.INTERACTION_DISTANCE))) {
             activeChar.sendActionFailed();
             return;
         }
 
-        NpcTradeList list = BuyListHolder.getInstance().getBuyList(_listId);
+        NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(_listId);
         if (list == null) {
             //TODO audit
             activeChar.sendActionFailed();
             return;
         }
 
-        int slots = 0;
         long totalPrice = 0; // Цена на примерку каждого итема 10 Adena.
 
         Map<Integer, Integer> itemList = new HashMap<>();
@@ -139,21 +134,11 @@ public class RequestPreviewItem extends L2GameClientPacket {
         if (!itemList.isEmpty()) {
             activeChar.sendPacket(new ShopPreviewInfo(itemList));
             // Schedule task
-            ThreadPoolManager.INSTANCE().schedule(new RemoveWearItemsTask(activeChar), Config.WEAR_DELAY * 1000);
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                activeChar.sendPacket(SystemMsg.YOU_ARE_NO_LONGER_TRYING_ON_EQUIPMENT_);
+                activeChar.sendUserInfo(true);
+            }, Config.WEAR_DELAY * 1000);
         }
     }
 
-    public static class RemoveWearItemsTask extends RunnableImpl {
-        private final Player _activeChar;
-
-        public RemoveWearItemsTask(Player activeChar) {
-            _activeChar = activeChar;
-        }
-
-        @Override
-        public void runImpl() {
-            _activeChar.sendPacket(SystemMsg.YOU_ARE_NO_LONGER_TRYING_ON_EQUIPMENT_);
-            _activeChar.sendUserInfo(true);
-        }
-    }
 }

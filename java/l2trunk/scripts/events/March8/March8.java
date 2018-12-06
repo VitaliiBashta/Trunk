@@ -70,7 +70,7 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
         if (SetActive(EVENT_NAME, true)) {
             spawnEventManagers();
             System.out.println("Event: March 8 started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'March 8' already started.");
 
@@ -88,7 +88,7 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
         if (SetActive(EVENT_NAME, false)) {
             unSpawnEventManagers();
             System.out.println("Event: March 8 stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.March8.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'March 8' not started.");
 
@@ -155,7 +155,7 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.March8.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.March8.AnnounceEventStarted");
     }
 
     /**

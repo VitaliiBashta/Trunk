@@ -632,7 +632,7 @@ public enum NpcString {
     THE_DEVICE_LOCATED_IN_THE_ROOM_IN_FRONT_OF_THE_GUARDIAN_OF_THE_SEAL_IS_DEFINITELY_THE_BARRIER_THAT_CONTROLS_THE_GUARDIANS_POWER(1029551),
     // Text: To remove the barrier, you must find the relics that fit the barrier and activate the device.
     TO_REMOVE_THE_BARRIER_YOU_MUST_FIND_THE_RELICS_THAT_FIT_THE_BARRIER_AND_ACTIVATE_THE_DEVICE(1029552),
-    // Text: All the guardians were defeated, and the seal was removed. Teleport to the center.
+    // Text: All the guardians were defeated, and the seal was removed. teleport to the center.
     ALL_THE_GUARDIANS_WERE_DEFEATED_AND_THE_SEAL_WAS_REMOVED(1029553),
     // Text: What took so long? I waited for ever.
     WHAT_TOOK_SO_LONG_I_WAITED_FOR_EVER(1029350),

@@ -72,7 +72,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             //Dewdrop of Destruction
             case 8556:
                 return use8556(player, ctrl);
-            // My Teleport Spellbook
+            // My teleport Spellbook
             case 13015:
                 return use13015(player, ctrl);
             //DestroyedDarknessFragmentPowder -> DestroyedLightFragmentPowder
@@ -373,7 +373,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         return true;
     }
 
-    // My Teleport SpellBook (Capacity added + 3)
+    // My teleport SpellBook (Capacity added + 3)
     private boolean use13015(Player player, boolean ctrl) {
         if (player == null || !(player instanceof Player)) {
             player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);

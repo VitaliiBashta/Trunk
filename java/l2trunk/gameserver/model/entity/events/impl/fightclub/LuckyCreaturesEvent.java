@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class LuckyCreaturesEvent extends AbstractFightClub {
     private final int _monstersCount;
-    private final int[] _monsterTemplates;
+    private final List<Integer> _monsterTemplates;
     private final int _respawnSeconds;
 
     private final List<NpcInstance> _monsters = new CopyOnWriteArrayList<>();

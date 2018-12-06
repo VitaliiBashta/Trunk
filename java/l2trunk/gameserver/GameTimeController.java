@@ -7,7 +7,6 @@ import l2trunk.gameserver.listener.GameListener;
 import l2trunk.gameserver.listener.game.OnDayNightChangeListener;
 import l2trunk.gameserver.listener.game.OnStartListener;
 import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ClientSetTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +18,9 @@ public enum GameTimeController {
     private static final int TICKS_PER_SECOND = 10;
     private static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
     private final Logger _log = LoggerFactory.getLogger(GameTimeController.class);
-    private long _gameStartTime;
     private final GameTimeListenerList listenerEngine = new GameTimeListenerList();
     private final Runnable _dayChangeNotify = new CheckSunState();
+    private long _gameStartTime;
 
     public void init() {
         _gameStartTime = getDayStartTime();
@@ -125,10 +124,10 @@ public enum GameTimeController {
             else
                 INSTANCE.getListenerEngine().onDay();
 
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            GameObjectsStorage.getAllPlayers().forEach(player -> {
                 player.checkDayNightMessages();
                 player.sendPacket(new ClientSetTime());
-            }
+            });
         }
     }
 

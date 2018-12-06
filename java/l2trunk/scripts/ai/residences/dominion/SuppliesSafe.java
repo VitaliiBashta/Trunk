@@ -19,7 +19,7 @@ import l2trunk.scripts.quests._730_ProtectTheSuppliesSafe;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SuppliesSafe extends DefaultAI {
+public final class SuppliesSafe extends DefaultAI {
     private static final Map<Integer,NpcString[]> MESSAGES = new HashMap<>(9);
 
     static {
@@ -77,7 +77,7 @@ public class SuppliesSafe extends DefaultAI {
             actor.setParameter("dominion_first_attack", false);
             NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
             Quest q = QuestManager.getQuest(_730_ProtectTheSuppliesSafe.class);
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
                     player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 
@@ -92,7 +92,6 @@ public class SuppliesSafe extends DefaultAI {
 
     @Override
     public void onEvtAggression(Creature attacker, int d) {
-        //
     }
 
     @Override
@@ -104,7 +103,7 @@ public class SuppliesSafe extends DefaultAI {
             return;
 
         NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
                 player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 

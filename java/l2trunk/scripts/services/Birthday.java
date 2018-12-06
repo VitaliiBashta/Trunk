@@ -18,7 +18,7 @@ import java.util.Calendar;
  * <p>
  * High Five: Exchanges Explorer Hat for Birthday Hat
  */
-class Birthday extends Functions {
+public final class Birthday extends Functions {
     private static final int EXPLORERHAT = 10250;
     private static final int HAT = 13488; // Birthday Hat
     private static final int NPC_ALEGRIA = 32600; // Alegria
@@ -79,25 +79,7 @@ class Birthday extends Functions {
 
         npc.setBusy(true);
 
-        ThreadPoolManager.INSTANCE().execute(new GameObjectTasks.DeleteTask(npc));
+        ThreadPoolManager.INSTANCE.execute(new GameObjectTasks.DeleteTask(npc));
     }
 
-    /**
-     * Вернет true если у чара сегодня день рождения
-     *
-     * @param player
-     * @return
-     */
-    @SuppressWarnings("unused")
-    private boolean isBirthdayToday(Player player) {
-        if (player.getCreateTime() == 0)
-            return false;
-
-        Calendar create = Calendar.getInstance();
-        create.setTimeInMillis(player.getCreateTime());
-        Calendar now = Calendar.getInstance();
-        now.setTimeInMillis(System.currentTimeMillis());
-
-        return create.get(Calendar.MONTH) == now.get(Calendar.MONTH) && create.get(Calendar.DAY_OF_MONTH) == now.get(Calendar.DAY_OF_MONTH) && create.get(Calendar.YEAR) != now.get(Calendar.YEAR);
-    }
 }

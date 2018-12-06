@@ -20,8 +20,9 @@ import l2trunk.gameserver.utils.Log;
 import java.util.Collection;
 import java.util.List;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class AdminSkill implements IAdminCommandHandler {
+public final class AdminSkill implements IAdminCommandHandler {
 
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
@@ -84,12 +85,15 @@ public class AdminSkill implements IAdminCommandHandler {
                 activeChar.sendPacket(new SkillList(activeChar));
                 break;
             case admin_people_having_effect:
-                int skillId = Integer.parseInt(wordList[1]);
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    for (Effect e : player.getEffectList().getAllEffects())
-                        if (e.getSkill().getId() == skillId)
-                            activeChar.sendMessage("Player: " + player.getName() + " Level:" + e.getSkill().getLevel());
-                activeChar.sendMessage("Finished!");
+                int skillId = toInt(wordList[1]);
+                GameObjectsStorage.getAllPlayers().forEach(player -> {
+                    player.getEffectList().getAllEffects().stream()
+                            .filter(e -> e.getSkill().getId() == skillId)
+                            .forEach(e -> {
+                                activeChar.sendMessage("Player: " + player.getName() + " Level:" + e.getSkill().getLevel());
+                                activeChar.sendMessage("Finished!");
+                            });
+                });
                 break;
         }
 

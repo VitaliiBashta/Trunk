@@ -140,7 +140,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                     int slot = info.getKey();
                     String[] array = info.getValue();
                     content = content.replace(new StringBuilder().append("<?").append(slot).append("_icon?>").toString(), array[0]);
-                    content = content.replace(new StringBuilder().append("<?").append(slot).append("_name?>").toString(), array[1]);
+                    content = content.replace(new StringBuilder().append("<?").append(slot).append("name?>").toString(), array[1]);
                     content = content.replace(new StringBuilder().append("<?").append(slot).append("_button?>").toString(), array[2]);
                     content = content.replace(new StringBuilder().append("<?").append(slot).append("_pic?>").toString(), array[3]);
                 }
@@ -268,7 +268,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                     int slot = info.getKey();
                     String[] array = info.getValue();
                     content = content.replace("<?" + slot + "_icon?>", array[0]);
-                    content = content.replace("<?" + slot + "_name?>", array[1]);
+                    content = content.replace("<?" + slot + "name?>", array[1]);
                     content = content.replace(new StringBuilder().append("<?").append(slot).append("_button?>").toString(), array[2]);
                     content = content.replace(new StringBuilder().append("<?").append(slot).append("_pic?>").toString(), array[3]);
                 }
@@ -446,7 +446,7 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
                         int slot = info.getKey();
                         String[] array = info.getValue();
                         content = content.replace(new StringBuilder().append("<?").append(slot).append("_icon?>").toString(), array[0]);
-                        content = content.replace(new StringBuilder().append("<?").append(slot).append("_name?>").toString(), array[1]);
+                        content = content.replace(new StringBuilder().append("<?").append(slot).append("name?>").toString(), array[1]);
                         content = content.replace(new StringBuilder().append("<?").append(slot).append("_button?>").toString(), array[2]);
                         content = content.replace(new StringBuilder().append("<?").append(slot).append("_pic?>").toString(), array[3]);
                     }

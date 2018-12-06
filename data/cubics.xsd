@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="list" type="listType">
+    <xs:annotation>
+      <xs:documentation>Created by VISTALL
+1. Storm Cubic - DONE
+2. Vampiric Cubic - DONE
+3. Life Cubic - DONE
+4. Viper Cubic - DONE
+5. Phantom Cubic - DONE
+6. Binding Cubic - DONE
+7. Aqua Cubic - DONE
+8. Spark Cubic - DONE
+9. Attractive Cubic - DONE
+10. Smart Cubic - DONE
+11. Smart Cubic - DONE
+12. Smart Cubic - DONE
+13. Smart Cubic - DONE
+14. Smart Cubic - DONE</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="skillType" mixed="true">
+    <xs:sequence>
+      <xs:element type="chanceType" name="chance" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic HealCubic Heal</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id" use="optional"/>
+    <xs:attribute type="xs:string" name="level" use="optional"/>
+    <xs:attribute type="xs:string" name="action_type" use="optional"/>
+    <xs:attribute type="xs:string" name="chance" use="optional"/>
+    <xs:attribute type="xs:string" name="can_attack_door" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="skillsType">
+    <xs:sequence>
+      <xs:element type="skillType" name="skill"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="chance" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="cubicType">
+    <xs:sequence>
+      <xs:element type="skillsType" name="skills" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainCubic DrainPoisonPoisonPoisonPoisonPoisonPoisonPoisonPoisonPoisonPoisonPoisonPoisonPoisonPoisonDecrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.Decrease P. Atk.Decrease P. Def.Decrease Atk. Spd.ParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisParalysisIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirIcy AirStunStunStunStunStunStunStunStunStunStunStunStunStunStunStunStunStunCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldCubic HateCubic HateCubic HoldIcy AirDecrease P. Atk.Cubic CureCubic HateCubic DrainCubic CureIcy AirCubic CureCubic DrainStunCubic CureCubic DrainPoisonCubic Cure</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id" use="optional"/>
+    <xs:attribute type="xs:string" name="level" use="optional"/>
+    <xs:attribute type="xs:string" name="delay" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="chanceType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="min" use="optional"/>
+        <xs:attribute type="xs:string" name="max" use="optional"/>
+        <xs:attribute type="xs:string" name="value" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="listType">
+    <xs:sequence>
+      <xs:element type="cubicType" name="cubic" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Storm CubicsVampiric CubicsLife CubicsViper CubicsPhantom CubicsBinding CubicsAqua CubicsSpark CubicsAttractive CubicsSmart Cubics</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

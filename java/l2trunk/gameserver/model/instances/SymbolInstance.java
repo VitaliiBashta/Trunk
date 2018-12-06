@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Creature;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class SymbolInstance extends NpcInstance {
+public final class SymbolInstance extends NpcInstance {
     private final Creature _owner;
     private final Skill _skill;
     private ScheduledFuture<?> _targetTask;
@@ -39,26 +38,22 @@ public class SymbolInstance extends NpcInstance {
     protected void onSpawn() {
         super.onSpawn();
 
-        _destroyTask = ThreadPoolManager.INSTANCE().schedule(new GameObjectTasks.DeleteTask(this), 120000L);
+        _destroyTask = ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(this), 120000L);
 
-        _targetTask = EffectTaskManager.getInstance().scheduleAtFixedRate(new RunnableImpl() {
+        _targetTask = EffectTaskManager.getInstance().scheduleAtFixedRate(() -> {
+            for (Creature target : getAroundCharacters(200, 200))
+                if (_skill.checkTarget(_owner, target, null, false, false) == null) {
+                    List<Creature> targets = new ArrayList<>();
 
-            @Override
-            public void runImpl() {
-                for (Creature target : getAroundCharacters(200, 200))
-                    if (_skill.checkTarget(_owner, target, null, false, false) == null) {
-                        List<Creature> targets = new ArrayList<>();
+                    if (!_skill.isAoE())
+                        targets.add(target);
+                    else
+                        for (Creature t : getAroundCharacters(_skill.getSkillRadius(), 128))
+                            if (_skill.checkTarget(_owner, t, null, false, false) == null)
+                                targets.add(target);
 
-                        if (!_skill.isAoE())
-                            targets.add(target);
-                        else
-                            for (Creature t : getAroundCharacters(_skill.getSkillRadius(), 128))
-                                if (_skill.checkTarget(_owner, t, null, false, false) == null)
-                                    targets.add(target);
-
-                        _skill.useSkill(SymbolInstance.this, targets);
-                    }
-            }
+                    _skill.useSkill(SymbolInstance.this, targets);
+                }
         }, 1000L, Rnd.get(4000L, 7000L));
     }
 

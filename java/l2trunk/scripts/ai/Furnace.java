@@ -1,36 +1,32 @@
 package l2trunk.scripts.ai;
 
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public final class Furnace extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(Furnace.class);
-    private static final long NextAtack = 10L * 1000L; // 10 seconds supposedly TODO
+    private static final long NEXT_ATACK = 10 * 1000L; // 10 seconds supposedly
+    private static final List<Integer> Magic_Power = Arrays.asList(
+            22800, 22800, 22800, 22800, 22800, 22800, 22800, 22800, 22800,
+            22800, 22800, 22800, 22800, 22800, 22798, 22798, 22799, 22799);
+    private static final List<Integer> Protection = Arrays.asList(
+            22798, 22798, 22798, 22798, 22798, 22798, 22798, 22798, 22798,
+            22798, 22798, 22798, 22798, 22798, 22800, 22800, 22799, 22799);
+    private static final List<Integer> Fighting_Spirit = Arrays.asList(
+            22799, 22799, 22799, 22799, 22799, 22799, 22799, 22799, 22799,
+            22799, 22799, 22799, 22799, 22799, 22800, 22800, 22798, 22798);
+    private static final List<Integer> Balance = Arrays.asList(
+            22800, 22800, 22800, 22800, 22800, 22800, 22798, 22798, 22798,
+            22798, 22798, 22798, 22799, 22799, 22799, 22799, 22799, 22799);
     private long _lastAttackTime = 0;
-
-    private static final int[] Magic_Power = {22800, 22800, 22800, 22800, 22800,
-            22800, 22800, 22800, 22800, 22800,
-            22800, 22800, 22800, 22800, 22798,
-            22798, 22799, 22799};
-    private static final int[] Protection = {22798, 22798, 22798, 22798, 22798,
-            22798, 22798, 22798, 22798, 22798,
-            22798, 22798, 22798, 22798, 22800,
-            22800, 22799, 22799};
-    private static final int[] Fighting_Spirit = {22799, 22799, 22799, 22799, 22799,
-            22799, 22799, 22799, 22799, 22799,
-            22799, 22799, 22799, 22799, 22800,
-            22800, 22798, 22798};
-    private static final int[] Balance = {22800, 22800, 22800, 22800, 22800, 22800,
-            22798, 22798, 22798, 22798, 22798, 22798,
-            22799, 22799, 22799, 22799, 22799, 22799,};
 
     private Furnace(NpcInstance actor) {
         super(actor);
@@ -40,7 +36,7 @@ public final class Furnace extends Fighter {
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
-        if (_lastAttackTime + NextAtack < System.currentTimeMillis() && actor.getTitle() != null) {
+        if (_lastAttackTime + NEXT_ATACK < System.currentTimeMillis() && actor.getTitle() != null) {
             if ("Furnace of Magic Power".equals(actor.getTitle())) {
                 changestate(actor, 1);
                 unSpawnMob();
@@ -61,35 +57,23 @@ public final class Furnace extends Fighter {
                 unSpawnMob();
                 spawnMob(Balance);
                 _lastAttackTime = System.currentTimeMillis();
-            } else {
-
             }
 
         }
         super.onEvtAttacked(attacker, damage);
     }
 
-    private void spawnMob(int[] mob) {
-        for (int npcId : mob) {
-            NpcInstance actor = getActor();
-            SimpleSpawner spawn;
-            try {
-                spawn = new SimpleSpawner(NpcHolder.getTemplate(npcId));
-                spawn.setLoc(Location.coordsRandomize(actor.getLoc(), 50, 200));
-                spawn.doSpawn(true);
-            } catch (RuntimeException e) {
-                LOG.error("Error while Spawning Furnace", e);
-            }
-        }
+    private void spawnMob(List<Integer> mobs) {
+        mobs.forEach(id -> new SimpleSpawner(id)
+                .setLoc(Location.coordsRandomize(getActor().getLoc(), 50, 200))
+                .doSpawn(true));
     }
 
     private void unSpawnMob() {
         NpcInstance actor = getActor();
-        for (NpcInstance npc : World.getAroundNpc(actor, 500, 100)) {
-            if (npc.getNpcId() == 22799 || npc.getNpcId() == 22798 || npc.getNpcId() == 22800) {
-                npc.decayMe();
-            }
-        }
+        World.getAroundNpc(actor, 500, 100).stream()
+                .filter(npc -> (npc.getNpcId() == 22799 || npc.getNpcId() == 22798 || npc.getNpcId() == 22800))
+                .forEach(GameObject::decayMe);
     }
 
     @Override
@@ -98,18 +82,23 @@ public final class Furnace extends Fighter {
         if (actor == null || actor.isDead())
             return true;
 
-        if (_lastAttackTime != 0 && _lastAttackTime + NextAtack < System.currentTimeMillis()) {
+        if (_lastAttackTime != 0 && _lastAttackTime + NEXT_ATACK < System.currentTimeMillis()) {
 
-            if (actor.getTitle() == "Furnace of Magic Power") {
-                changestate(actor, 2);
-            } else if (actor.getTitle() == "Furnace of Fighting Spirit") {
-                changestate(actor, 2);
-            } else if (actor.getTitle() == "Furnace of Protection") {
-                changestate(actor, 2);
-            } else if (actor.getTitle() == "Furnace of Balance") {
-                changestate(actor, 2);
-            } else {
-                return false;
+            switch (actor.getTitle()) {
+                case "Furnace of Magic Power":
+                    changestate(actor, 2);
+                    break;
+                case "Furnace of Fighting Spirit":
+                    changestate(actor, 2);
+                    break;
+                case "Furnace of Protection":
+                    changestate(actor, 2);
+                    break;
+                case "Furnace of Balance":
+                    changestate(actor, 2);
+                    break;
+                default:
+                    return false;
             }
             _lastAttackTime = 0;
         }

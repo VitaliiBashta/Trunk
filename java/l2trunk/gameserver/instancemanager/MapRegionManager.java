@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.Location;
  *
  * @author G1ta0
  */
-public class MapRegionManager extends AbstractHolder {
+public final class MapRegionManager extends AbstractHolder {
     private static final MapRegionManager _instance = new MapRegionManager();
     private final RegionData[][][] map = new RegionData[World.WORLD_SIZE_X][World.WORLD_SIZE_Y][0];
 
@@ -46,7 +46,6 @@ public class MapRegionManager extends AbstractHolder {
         return getRegionData(clazz, loc.getX(), loc.getY(), loc.getZ());
     }
 
-    @SuppressWarnings("unchecked")
     private <T extends RegionData> T getRegionData(Class<T> clazz, int x, int y, int z) {
         for (RegionData rd : map[regionX(x)][regionY(y)]) {
             if (rd.getClass() != clazz)

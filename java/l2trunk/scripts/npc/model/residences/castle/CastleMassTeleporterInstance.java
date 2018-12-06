@@ -17,25 +17,9 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author VISTALL
- * @date 17:46/12.07.2011
- */
-public class CastleMassTeleporterInstance extends NpcInstance {
-    private class TeleportTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            Functions.npcShout(CastleMassTeleporterInstance.this, NpcString.THE_DEFENDERS_OF_S1_CASTLE_WILL_BE_TELEPORTED_TO_THE_INNER_CASTLE, "#" + getCastle().getNpcStringName().getId());
-
-            for (Player p : World.getAroundPlayers(CastleMassTeleporterInstance.this, 200, 50))
-                p.teleToLocation(Location.findPointToStay(_teleportLoc, 10, 100, p.getGeoIndex()));
-
-            _teleportTask = null;
-        }
-    }
-
-    private ScheduledFuture<?> _teleportTask = null;
+public final class CastleMassTeleporterInstance extends NpcInstance {
     private final Location _teleportLoc;
+    private ScheduledFuture<?> _teleportTask = null;
 
     public CastleMassTeleporterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -52,7 +36,7 @@ public class CastleMassTeleporterInstance extends NpcInstance {
             return;
         }
 
-        _teleportTask = ThreadPoolManager.INSTANCE().schedule(new TeleportTask(), isAllTowersDead() ? 480000L : 30000L);
+        _teleportTask = ThreadPoolManager.INSTANCE.schedule(new TeleportTask(), isAllTowersDead() ? 480000L : 30000L);
 
         showChatWindow(player, "residence2/castle/CastleTeleportDelayed.htm", "%teleportIn%", getSecondsToTP());
     }
@@ -85,10 +69,18 @@ public class CastleMassTeleporterInstance extends NpcInstance {
             return false;
 
         List<SiegeToggleNpcObject> towers = siegeEvent.getObjects(CastleSiegeEvent.CONTROL_TOWERS);
-        for (SiegeToggleNpcObject t : towers)
-            if (t.isAlive())
-                return false;
+        return towers.stream().noneMatch(SiegeToggleNpcObject::isAlive);
+    }
 
-        return true;
+    private class TeleportTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            Functions.npcShout(CastleMassTeleporterInstance.this, NpcString.THE_DEFENDERS_OF_S1_CASTLE_WILL_BE_TELEPORTED_TO_THE_INNER_CASTLE, "#" + getCastle().getNpcStringName().getId());
+
+            World.getAroundPlayers(CastleMassTeleporterInstance.this, 200, 50).forEach(p ->
+                    p.teleToLocation(Location.findPointToStay(_teleportLoc, 10, 100, p.getGeoIndex())));
+
+            _teleportTask = null;
+        }
     }
 }

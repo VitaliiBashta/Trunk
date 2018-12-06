@@ -82,7 +82,7 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
             loadMultiSell();
             spawnEventManagers();
             System.out.println("Event 'L2 Medal Collection Event' started.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStarted");
         } else
             player.sendMessage("Event 'L2 Medal Collection Event' already started.");
 
@@ -101,7 +101,7 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
         if (SetActive("glitter", false)) {
             unSpawnEventManagers();
             System.out.println("Event 'L2 Medal Collection Event' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStoped", null);
+            Announcements.INSTANCE.announceByCustomMessage("scripts.events.glitmedal.AnnounceEventStoped");
         } else
             player.sendMessage("Event 'L2 Medal Collection Event' not started.");
 
@@ -113,7 +113,7 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.glitmedal.AnnounceEventStarted", null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.glitmedal.AnnounceEventStarted");
     }
 
     /**

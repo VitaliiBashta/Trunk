@@ -4,7 +4,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.SimpleSpawner;
@@ -13,7 +12,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.mapregion.RestartArea;
 import l2trunk.gameserver.templates.mapregion.RestartPoint;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -304,15 +302,10 @@ public class AutoSpawnManager {
                 final int heading = locationList[locationIndex].h;
 
                 // Fetch the template for this NPC ID and create a new spawn.
-                NpcTemplate npcTemp = NpcHolder.getTemplate(spawnInst.getNpcId());
-                SimpleSpawner newSpawn = new SimpleSpawner(npcTemp);
+                SimpleSpawner newSpawn = new SimpleSpawner(spawnInst.getNpcId());
 
-                newSpawn.setLocx(x);
-                newSpawn.setLocy(y);
-                newSpawn.setLocz(z);
-                if (heading != -1)
-                    newSpawn.setHeading(heading);
-                newSpawn.setAmount(spawnInst.getSpawnCount());
+                newSpawn.setLoc(new Location(x, y, z, heading))
+                        .setAmount(spawnInst.getSpawnCount());
                 if (spawnInst._desDelay == 0)
                     newSpawn.setRespawnDelay(spawnInst.resDelay);
 

@@ -10,12 +10,12 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class TameControl extends Skill {
-    private final int _type;
+public final class TameControl extends Skill {
+    private final int type;
 
     public TameControl(StatsSet set) {
         super(set);
-        _type = set.getInteger("type", 0);
+        type = set.getInteger("type", 0);
     }
 
     @Override
@@ -31,21 +31,19 @@ public class TameControl extends Skill {
         if (player.getTrainedBeasts() == null)
             return;
 
-        if (_type == 0) {
-            for (Creature target : targets)
-                if (target != null && target instanceof TamedBeastInstance)
-                    if (player.getTrainedBeasts().get(target.getObjectId()) != null)
-                        ((TamedBeastInstance) target).despawnWithDelay(1000);
-        } else if (_type > 0) {
-            if (_type == 1) // Приказать бежать за хозяином.
-                for (TamedBeastInstance tamedBeast : player.getTrainedBeasts().values())
-                    tamedBeast.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE);
-            else if (_type == 3) // Использовать особое умение
-                for (TamedBeastInstance tamedBeast : player.getTrainedBeasts().values())
-                    tamedBeast.buffOwner();
-            else if (_type == 4) // Отпустить всех зверей.
-                for (TamedBeastInstance tamedBeast : player.getTrainedBeasts().values())
-                    tamedBeast.doDespawn();
-        }
+        if (type == 0)
+            targets.stream()
+                    .filter(target -> target instanceof TamedBeastInstance)
+                    .filter(target -> player.getTrainedBeasts().get(target.getObjectId()) != null)
+                    .map(target -> (TamedBeastInstance) target)
+                    .forEach(t -> t.despawnWithDelay(1000));
+        if (type == 1) // Приказать бежать за хозяином.
+            player.getTrainedBeasts().values().forEach(tamedBeast ->
+                    tamedBeast.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE));
+        else if (type == 3) // Использовать особое умение
+            player.getTrainedBeasts().values().forEach(TamedBeastInstance::buffOwner);
+        else if (type == 4) // Отпустить всех зверей.
+            player.getTrainedBeasts().values().forEach(TamedBeastInstance::doDespawn);
     }
+
 }

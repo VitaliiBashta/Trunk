@@ -13,7 +13,6 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.scripts.Events;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
-import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +28,6 @@ public abstract class GameObject extends EventOwner {
     private static final int CREATED = 0;
     private static final int VISIBLE = 1;
     private static final int DELETED = -1;
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     private static final Logger _log = LoggerFactory.getLogger(GameObject.class);
     /**
      * Состояние объекта
@@ -42,14 +37,14 @@ public abstract class GameObject extends EventOwner {
      * Идентификатор объекта
      */
     protected int objectId;
-    private Reflection _reflection = ReflectionManager.DEFAULT;
+    private Reflection reflection = ReflectionManager.DEFAULT;
     /**
      * Позиция объекта в мире
      */
     private int x;
     private int y;
     private int z;
-    private WorldRegion _currentRegion;
+    private WorldRegion currentRegion;
 
     protected GameObject() {
 
@@ -75,32 +70,7 @@ public abstract class GameObject extends EventOwner {
     }
 
     public Reflection getReflection() {
-        return _reflection;
-    }
-
-    public void setReflection(Reflection reflection) {
-        if (_reflection == reflection)
-            return;
-
-        boolean respawn = false;
-        if (isVisible()) {
-            decayMe();
-            respawn = true;
-        }
-
-        Reflection r = getReflection();
-        if (!r.isDefault()) {
-            r.removeObject(this);
-        }
-
-        _reflection = reflection;
-
-        if (!reflection.isDefault()) {
-            reflection.addObject(this);
-        }
-
-        if (respawn)
-            spawnMe();
+        return reflection;
     }
 
     public void setReflection(int reflectionId) {
@@ -113,22 +83,47 @@ public abstract class GameObject extends EventOwner {
         setReflection(r);
     }
 
+    public GameObject setReflection(Reflection reflection) {
+        if (this.reflection == reflection)
+            return this;
+
+        boolean respawn = false;
+        if (isVisible()) {
+            decayMe();
+            respawn = true;
+        }
+
+        Reflection r = getReflection();
+        if (!r.isDefault()) {
+            r.removeObject(this);
+        }
+
+        this.reflection = reflection;
+
+        if (!reflection.isDefault()) {
+            reflection.addObject(this);
+        }
+
+        if (respawn)
+            spawnMe();
+        return this;
+    }
+
     public int getReflectionId() {
-        return _reflection.getId();
+        return reflection.getId();
     }
 
     public int getGeoIndex() {
-        return _reflection.getGeoIndex();
+        return reflection.getGeoIndex();
     }
 
     /**
      * Return the identifier of the L2Object.<BR><BR>
      */
-    @Override
-    public final int hashCode() {
-        return objectId;
-    }
-
+//    @Override
+//    public final int hashCode() {
+//        return objectId;
+//    }
     public final int getObjectId() {
         return objectId;
     }
@@ -167,17 +162,6 @@ public abstract class GameObject extends EventOwner {
         return GeoEngine.getHeight(loc, getGeoIndex());
     }
 
-    private void setXYZInvisible(int x, int y, int z) {
-        this.x = World.validCoordX(x);
-        this.y = World.validCoordY(y);
-        this.z = World.validCoordZ(z);
-
-        World.removeVisibleObject(this);
-    }
-
-    public void setXYZInvisible(Location loc) {
-        setXYZInvisible(loc.x, loc.y, loc.z);
-    }
 
     public void setXYZ(int x, int y, int z) {
         this.x = World.validCoordX(x);
@@ -233,13 +217,6 @@ public abstract class GameObject extends EventOwner {
         World.addVisibleObject(this, dropper);
 
         onSpawn();
-    }
-
-    public void toggleVisible() {
-        if (isVisible())
-            decayMe();
-        else
-            spawnMe();
     }
 
     /**
@@ -326,10 +303,6 @@ public abstract class GameObject extends EventOwner {
     private long getZDeltaSq(int z) {
         long dz = z - getZ();
         return dz * dz;
-    }
-
-    public final long getZDeltaSq(Location loc) {
-        return getZDeltaSq(loc.z);
     }
 
     private long getXYZDeltaSq(int x, int y, int z) {
@@ -440,16 +413,6 @@ public abstract class GameObject extends EventOwner {
         return distance > 0 ? distance : 0;
     }
 
-    public final long getSqDistance(int x, int y) {
-        return getXYDeltaSq(x, y);
-    }
-
-    public final long getSqDistance(GameObject obj) {
-        if (obj == null)
-            return 0;
-        return getXYDeltaSq(obj.getLoc());
-    }
-
     /**
      * Возвращает L2Player управляющий даным обьектом.<BR>
      * <li>Для L2Player это сам игрок.</li>
@@ -470,11 +433,11 @@ public abstract class GameObject extends EventOwner {
     }
 
     public WorldRegion getCurrentRegion() {
-        return _currentRegion;
+        return currentRegion;
     }
 
-    public void setCurrentRegion(WorldRegion region) {
-        _currentRegion = region;
+    void setCurrentRegion(WorldRegion region) {
+        currentRegion = region;
     }
 
     public boolean isInObserverMode() {
@@ -537,11 +500,6 @@ public abstract class GameObject extends EventOwner {
         return false;
     }
 
-    /**
-     * True для l2RaidBossInstance, но False для KamalokaBossInstance
-     *
-     * @return
-     */
     public boolean isRaid() {
         return false;
     }
@@ -550,20 +508,10 @@ public abstract class GameObject extends EventOwner {
         return false;
     }
 
-    /**
-     * True для L2BossInstance
-     *
-     * @return
-     */
     public boolean isBoss() {
         return false;
     }
 
-    /**
-     * True для L2TrapInstance
-     *
-     * @return
-     */
     public boolean isTrap() {
         return false;
     }
@@ -572,20 +520,10 @@ public abstract class GameObject extends EventOwner {
         return false;
     }
 
-    /**
-     * True для L2ArtefactInstance
-     *
-     * @return
-     */
     public boolean isArtefact() {
         return false;
     }
 
-    /**
-     * True для L2SiegeGuardInstance
-     *
-     * @return
-     */
     public boolean isSiegeGuard() {
         return false;
     }
@@ -614,20 +552,12 @@ public abstract class GameObject extends EventOwner {
         return getClass().getSimpleName() + ":" + objectId;
     }
 
-    public String dump() {
-        return dump(true);
-    }
-
-    private String dump(boolean simpleTypes) {
-        return Util.dumpObject(this, simpleTypes, true, true);
-    }
-
     protected List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
         return Collections.emptyList();
     }
 
     public List<L2GameServerPacket> deletePacketList() {
-        return Collections.<L2GameServerPacket>singletonList(new DeleteObject(this));
+        return Collections.singletonList(new DeleteObject(this));
     }
 
     @Override

@@ -21,7 +21,7 @@ public final class Events {
             if (handler == null) {
                 return false;
             }
-            return Strings.parseBoolean(Scripts.getInstance().callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
+            return Strings.parseBoolean(Scripts.INSTANCE.callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
         } else {
             ScriptClassAndMethod handler = Scripts.onAction.get(obj.getL2ClassShortName());
             if ((handler == null) && obj.isDoor()) {
@@ -30,7 +30,7 @@ public final class Events {
             if (handler == null) {
                 return false;
             }
-            return Strings.parseBoolean(Scripts.getInstance().callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
+            return Strings.parseBoolean(Scripts.INSTANCE.callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
         }
     }
 }

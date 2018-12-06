@@ -1,11 +1,9 @@
 package l2trunk.scripts.npc.model;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.ClassId;
-import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -16,20 +14,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-//import org.napile.primitive.maps.IntObjectMap;
-//import org.napile.primitive.maps.impl.HashIntObjectMap;
-//import org.napile.primitive.sets.IntSet;
-//import org.napile.primitive.sets.impl.HashIntSet;
-
 
 /**
  * Открывает двери 5го этажа Tully Workshop
  *
- * @author pchayka
  */
-public class WorkshopGatekeeperInstance extends NpcInstance {
-    private static long doorRecharge = 0;
+public final class WorkshopGatekeeperInstance extends NpcInstance {
     private static final Map<Integer, Set<Integer>> doors = new HashMap<>();
+    private static long doorRecharge = 0;
 
     static {
         Set<Integer> list = new HashSet<>();
@@ -149,26 +141,9 @@ public class WorkshopGatekeeperInstance extends NpcInstance {
     }
 
     private void openDoor(int npcId) {
-        Set<Integer> set = doors.get(npcId);
-        if (set != null) {
-            for (int i : set) {
-                DoorInstance doorToOpen = ReflectionUtils.getDoor(i);
-                doorToOpen.openMe();
-                ThreadPoolManager.INSTANCE().schedule(new DoorClose(doorToOpen), 120 * 1000L);
-            }
-        }
-    }
-
-    private class DoorClose extends RunnableImpl {
-        final DoorInstance _door;
-
-        DoorClose(DoorInstance door) {
-            _door = door;
-        }
-
-        @Override
-        public void runImpl() {
-            _door.closeMe();
-        }
+        doors.get(npcId).forEach(i -> {
+            ReflectionUtils.getDoor(i).openMe();
+            ThreadPoolManager.INSTANCE.schedule(() -> ReflectionUtils.getDoor(i).closeMe(), 120 * 1000L);
+        });
     }
 }

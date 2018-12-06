@@ -37,7 +37,7 @@ public final class GroupAI extends Fighter {
                 npc = NpcHolder.getTemplate(RANDOM_SPAWN_MOBS[Rnd.get(RANDOM_SPAWN_MOBS.length)]).getNewInstance();
                 npc.setSpawnedLoc(actor.getLoc());
                 npc.setReflection(actor.getReflection());
-                npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+                npc.setFullHpMp();
                 npc.spawnMe(npc.getSpawnedLoc());
                 npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, Rnd.get(1, 100));
             } catch (RuntimeException e) {

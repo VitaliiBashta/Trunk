@@ -105,7 +105,7 @@ public final class RequestActionUse extends L2GameClientPacket {
             }
             activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), action.value));
             if (Config.ALT_SOCIAL_ACTION_REUSE) {
-                ThreadPoolManager.INSTANCE().schedule(new SocialTask(activeChar), 2600);
+                ThreadPoolManager.INSTANCE.schedule(new SocialTask(activeChar), 2600);
                 activeChar.startParalyzed();
             }
             return;
@@ -143,7 +143,7 @@ public final class RequestActionUse extends L2GameClientPacket {
             pcTarget.sendPacket(new ExAskCoupleAction(activeChar.getObjectId(), action.value));
 
             if (Config.ALT_SOCIAL_ACTION_REUSE) {
-                ThreadPoolManager.INSTANCE().schedule(new SocialTask(activeChar), 2600);
+                ThreadPoolManager.INSTANCE.schedule(new SocialTask(activeChar), 2600);
                 activeChar.startParalyzed();
             }
             return;
@@ -202,7 +202,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                     return;
                 }
                 if (!activeChar.isSitting()) {
-                    if (target != null && target instanceof StaticObjectInstance && ((StaticObjectInstance) target).getType() == 1 && activeChar.getDistance3D(target) <= Creature.INTERACTION_DISTANCE)
+                    if (target instanceof StaticObjectInstance && ((StaticObjectInstance) target).getType() == 1 && activeChar.getDistance3D(target) <= Creature.INTERACTION_DISTANCE)
                         activeChar.sitDown((StaticObjectInstance) target);
                     else
                         activeChar.sitDown(null);
@@ -719,15 +719,15 @@ public final class RequestActionUse extends L2GameClientPacket {
     }
 
     static class SocialTask extends RunnableImpl {
-        final Player _player;
+        final Player player;
 
         SocialTask(Player player) {
-            _player = player;
+            this.player = player;
         }
 
         @Override
         public void runImpl() {
-            _player.stopParalyzed();
+            player.stopParalyzed();
         }
     }
 }

@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
@@ -20,18 +19,12 @@ public final class Furance extends DefaultAI {
         NpcInstance actor = getActor();
         if (Rnd.chance(50))
             actor.setNpcState(1);
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new Switch(), 5 * 60 * 1000L, 5 * 60 * 1000L);
-    }
-
-    public class Switch extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> {
             if (actor.getNpcState() == 1)
                 actor.setNpcState(2);
             else
                 actor.setNpcState(1);
-        }
+        }, 5 * 60 * 1000L, 5 * 60 * 1000L);
     }
 
     @Override
@@ -51,4 +44,5 @@ public final class Furance extends DefaultAI {
     public boolean isGlobalAI() {
         return true;
     }
+
 }

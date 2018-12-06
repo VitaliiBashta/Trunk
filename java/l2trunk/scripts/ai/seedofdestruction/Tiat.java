@@ -1,14 +1,13 @@
 package l2trunk.scripts.ai.seedofdestruction;
 
 import l2trunk.commons.lang.ArrayUtils;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.instancemanager.SoDManager;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -21,8 +20,6 @@ import l2trunk.gameserver.utils.Location;
 
 public final class Tiat extends Fighter {
     private static final int TIAT_TRANSFORMATION_SKILL_ID = 5974;
-    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.INSTANCE().getInfo(TIAT_TRANSFORMATION_SKILL_ID, 1);
-    private boolean _notUsedTransform = true;
     private static final int TRAPS_COUNT = 4;
     private static final Location[] TRAP_LOCS = {
             new Location(-252022, 210130, -11995, 16384),
@@ -30,10 +27,12 @@ public final class Tiat extends Fighter {
             new Location(-248782, 206875, -11995, 16384),
             new Location(-252022, 206875, -11995, 16384)};
     private static final long COLLAPSE_BY_INACTIVITY_INTERVAL = 10 * 60 * 1000; // 10 мин
-    private long _lastAttackTime = 0;
     private static final int TRAP_NPC_ID = 18696;
     private static final int[] TIAT_MINION_IDS = {29162, 22538, 22540, 22547, 22542, 22548};
     private static final String[] TIAT_TEXT = {"You'll regret challenging me!", "You shall die in pain!", "I will wipe out your entire kind!"};
+    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.INSTANCE().getInfo(TIAT_TRANSFORMATION_SKILL_ID, 1);
+    private boolean _notUsedTransform = true;
+    private long _lastAttackTime = 0;
     private long _lastFactionNotifyTime = 0;
     private boolean _immobilized;
     private boolean _failed = false;
@@ -63,14 +62,11 @@ public final class Tiat extends Fighter {
             actor.abortAttack(true, false);
             actor.abortCast(true, false);
             // Transform skill cast [custom: making Tiat invul while casting]
-            actor.setIsInvul(true);
+            actor.setInvul(true);
             actor.doCast(TIAT_TRANSFORMATION_SKILL, actor, true);
-            ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                @Override
-                public void runImpl() {
-                    getActor().setCurrentHpMp(getActor().getMaxHp(), getActor().getMaxMp());
-                    getActor().setIsInvul(false);
-                }
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                getActor().setFullHpMp();
+                getActor().setInvul(false);
             }, TIAT_TRANSFORMATION_SKILL.getHitTime());
         }
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
@@ -96,13 +92,9 @@ public final class Tiat extends Fighter {
             _failed = true;
 
             // Показываем финальный ролик при фейле серез секунду после очистки инстанса
-            ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                @Override
-                public void runImpl() {
-                    for (Player pl : r.getPlayers())
-                        pl.showQuestMovie(ExStartScenePlayer.SCENE_TIAT_FAIL);
-                    r.clearReflection(5, true);
-                }
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                r.getPlayers().forEach(pl -> pl.showQuestMovie(ExStartScenePlayer.SCENE_TIAT_FAIL));
+                r.clearReflection(5, true);
             }, 1000);
             return true;
         }
@@ -115,20 +107,13 @@ public final class Tiat extends Fighter {
         _lastAttackTime = 0;
         _lastFactionNotifyTime = 0;
 
-        NpcInstance actor = getActor();
         SoDManager.addTiatKill();
-        final Reflection r = actor.getReflection();
+        final Reflection r = getActor().getReflection();
         r.setReenterTime(System.currentTimeMillis());
-        for (NpcInstance n : r.getNpcs())
-            n.deleteMe();
+        r.getNpcs().forEach(GameObject::deleteMe);
         // Показываем финальный ролик серез секунду после очистки инстанса
-        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                for (Player pl : r.getPlayers())
-                    if (pl != null)
-                        pl.showQuestMovie(ExStartScenePlayer.SCENE_TIAT_SUCCESS);
-            }
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            r.getPlayers().forEach(pl -> pl.showQuestMovie(ExStartScenePlayer.SCENE_TIAT_SUCCESS));
         }, 1000);
     }
 

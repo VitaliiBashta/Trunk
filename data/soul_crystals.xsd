@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="list" type="listType">
+    <xs:annotation>
+      <xs:documentation>Blue 17 - 18</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="crystalType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="level" use="optional"/>
+        <xs:attribute type="xs:string" name="item_id" use="optional"/>
+        <xs:attribute type="xs:string" name="next_item_id" use="optional"/>
+        <xs:attribute type="xs:string" name="cursed_next_item_id" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="listType">
+    <xs:sequence>
+      <xs:element type="crystalType" name="crystal" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Red crystal'sRed 0 - 1Red 1 - 2Red 2 - 3Red 3 - 4Red 4 - 5Red 5 - 6Red 6 - 7Red 7 - 8Red 8 - 9Red 9 - 10Red 10 - 11Red 11 - 12Red 12 - 13Red 13 - 14(C)Red 14 - 15Red 15 - 16Red 16 - 17Red 17 - 18Green crystal'sGreen 0 - 1Green 1 - 2Green 2 - 3Green 3 - 4Green 4 - 5Green 5 - 6Green 6 - 7Green 7 - 8Green 8 - 9Green 9 - 10Green 10 - 11Green 11 - 12Green 12 - 13Green 13 - 14(C)Green 14 - 15Green 15 - 16Green 16 - 17Green 17 - 18Blue crystal'sBlue 0 - 1Blue 1 - 2Blue 2 - 3Blue 3 - 4Blue 4 - 5Blue 5 - 6Blue 6 - 7Blue 7 - 8Blue 8 - 9Blue 9 - 10Blue 10 - 11Blue 11 - 12Blue 12 - 13Blue 13 - 14(C)Blue 14 - 15Blue 15 - 16Blue 16 - 17</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

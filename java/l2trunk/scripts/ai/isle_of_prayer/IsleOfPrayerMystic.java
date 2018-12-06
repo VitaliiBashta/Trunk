@@ -11,12 +11,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class IsleOfPrayerMystic extends Mystic {
-    private boolean _penaltyMobsNotSpawned = true;
+public final class IsleOfPrayerMystic extends Mystic {
     private static final int PENALTY_MOBS[] = {18364, 18365, 18366};
     private static final int YELLOW_CRYSTAL = 9593;
     private static final int GREEN_CRYSTAL = 9594;
     private static final int RED_CRYSTAL = 9596;
+    private boolean _penaltyMobsNotSpawned = true;
 
     public IsleOfPrayerMystic(NpcInstance actor) {
         super(actor);
@@ -29,17 +29,14 @@ public class IsleOfPrayerMystic extends Mystic {
             Party party = attacker.getPlayer().getParty();
             if (party != null && party.size() > 2) {
                 _penaltyMobsNotSpawned = false;
-                for (int i = 0; i < 2; i++)
-                    try {
-                        MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(PENALTY_MOBS[Rnd.get(PENALTY_MOBS.length)]));
-                        npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
-                        npc.setReflection(actor.getReflection());
-                        npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
-                        npc.spawnMe(npc.getSpawnedLoc());
-                        npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                for (int i = 0; i < 2; i++) {
+                    MonsterInstance npc = new MonsterInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(PENALTY_MOBS[Rnd.get(PENALTY_MOBS.length)]));
+                    npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
+                    npc.setReflection(actor.getReflection());
+                    npc.setFullHpMp();
+                    npc.spawnMe(npc.getSpawnedLoc());
+                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
+                }
             }
         }
 

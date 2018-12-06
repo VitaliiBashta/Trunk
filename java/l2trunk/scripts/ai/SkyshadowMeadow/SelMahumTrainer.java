@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.SkyshadowMeadow;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -22,11 +21,10 @@ import java.util.List;
  * - AI is tested and works.
  */
 public final class SelMahumTrainer extends Fighter {
-    private long _wait_timeout = System.currentTimeMillis() + 20000;
-    private final List<NpcInstance> _arm = new ArrayList<>();
-    private boolean _firstTimeAttacked = true;
-
     private static final NpcString[] _text = {NpcString.SCHOOL7, NpcString.SCHOOL8};
+    private final List<NpcInstance> _arm = new ArrayList<>();
+    private long _wait_timeout = System.currentTimeMillis() + 20000;
+    private boolean _firstTimeAttacked = true;
 
     public SelMahumTrainer(NpcInstance actor) {
         super(actor);
@@ -52,13 +50,10 @@ public final class SelMahumTrainer extends Fighter {
 
             int time = 2000;
             for (int i = 0; i <= 2; i++) {
-                ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        for (NpcInstance voin : _arm) {
-                            voin.setHeading(voin.getSpawnedLoc().h);
-                            voin.broadcastPacket(new SocialAction(voin.getObjectId(), social));
-                        }
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    for (NpcInstance voin : _arm) {
+                        voin.setHeading(voin.getSpawnedLoc().h);
+                        voin.broadcastPacket(new SocialAction(voin.getObjectId(), social));
                     }
                 }, time);
                 time += 2000;

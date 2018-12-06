@@ -1,13 +1,12 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
@@ -21,35 +20,30 @@ import java.util.List;
 import java.util.Map;
 
 public final class Antharas extends DefaultAI {
-    // debuffs
-    private final Skill s_fear = getSkill(4108, 1);
-    private final Skill s_fear2 = getSkill(5092, 1);
-    private final Skill s_curse = getSkill(4109, 1);
-    private final Skill s_paralyze = getSkill(4111, 1);
-
-    // damage skills
-    private final Skill s_shock = getSkill(4106, 1);
-    private final Skill s_shock2 = getSkill(4107, 1);
-    private final Skill s_antharas_ordinary_attack = getSkill(4112, 1);
-    private final Skill s_antharas_ordinary_attack2 = getSkill(4113, 1);
-    private final Skill s_meteor = getSkill(5093, 1);
-    private final Skill s_breath = getSkill(4110, 1);
-
-    // regen skills
-    private final Skill s_regen1 = getSkill(4239, 1);
-    private final Skill s_regen2 = getSkill(4240, 1);
-    private final Skill s_regen3 = getSkill(4241, 1);
-
     private static final int FWA_INTERVAL_MINION_NORMAL = 5 * 60000;
-
-    // Vars
-    private int _hpStage = 0;
-    private static long _minionsSpawnDelay = 0;
-    private final List<NpcInstance> minions = new ArrayList<>();
-
     //Вестника Невитта и длительность его спавна
     private static final int INVOKER_NEVIT_HERALD = 4326;
     private static final int DESPAWN_TIME = 180 * 60 * 1000; // 3 часа = 180 минут
+    private static long _minionsSpawnDelay = 0;
+    // debuffs
+    private final Skill s_fear = getSkill(4108);
+    private final Skill s_fear2 = getSkill(5092);
+    private final Skill s_curse = getSkill(4109);
+    private final Skill s_paralyze = getSkill(4111);
+    // damage skills
+    private final Skill s_shock = getSkill(4106);
+    private final Skill s_shock2 = getSkill(4107);
+    private final Skill s_antharas_ordinary_attack = getSkill(4112);
+    private final Skill s_antharas_ordinary_attack2 = getSkill(4113);
+    private final Skill s_meteor = getSkill(5093);
+    private final Skill s_breath = getSkill(4110);
+    // regen skills
+    private final Skill s_regen1 = getSkill(4239);
+    private final Skill s_regen2 = getSkill(4240);
+    private final Skill s_regen3 = getSkill(4241);
+    private final List<NpcInstance> minions = new ArrayList<>();
+    // Vars
+    private int _hpStage = 0;
     private int DAMAGE_COUNTER = 0;
 
 
@@ -64,8 +58,7 @@ public final class Antharas extends DefaultAI {
             actor.getAI().startAITask();
 
         AntharasManager.setLastAttackTime();
-        for (Playable p : AntharasManager.getZone().getInsidePlayables())
-            notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 1);
+        AntharasManager.getZone().getInsidePlayables().forEach(p -> notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 1));
         DAMAGE_COUNTER++;
         super.onEvtAttacked(attacker, damage);
     }
@@ -168,110 +161,39 @@ public final class Antharas extends DefaultAI {
     }
 
     private int getAliveMinionsCount() {
-        int i = 0;
-        for (NpcInstance n : minions)
-            if (n != null && !n.isDead())
-                i++;
-        return i;
+        return (int) minions.stream()
+                .filter(n -> !n.isDead())
+                .count();
     }
 
-    private Skill getSkill(int id, int level) {
-        return SkillTable.INSTANCE().getInfo(id, level);
+    private Skill getSkill(int id) {
+        return SkillTable.INSTANCE.getInfo(id, 1);
     }
 
     @Override
     public void onEvtDead(Creature killer) {
         if (minions != null && !minions.isEmpty())
-            for (NpcInstance n : minions)
-                n.deleteMe();
+            minions.forEach(GameObject::deleteMe);
         //Спавним Вестника Невитта
-        try {
-            NpcInstance HeralGiran = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(82152, 148488, -3492, 60699));
-
-            NpcInstance HeralAden = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(147048, 25608, -2038, 16383));
-
-            NpcInstance HeralGoddart = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(147384, -55400, -2759, 57343));
-
-            NpcInstance HeralRune = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(42904, -47912, -822, 49151));
-
-            NpcInstance HeralDion = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(15736, 142744, -2731, 16383));
-
-            NpcInstance HeralOren = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(82120, 53224, -1521, 16383));
-
-            NpcInstance HeralGludio = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(-14168, 121192, -3014, 16383));
-
-            NpcInstance HeralGludin = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(80920, 149464, -3069, 16383));
-
-            NpcInstance HeralSchuttgart = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(87608, -141320, -1364, 49151));
-
-            NpcInstance HeralHein = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(110552, 219848, -3696, 57343));
-
-            NpcInstance HeralHunter = NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance();
-            HeralGiran.spawnMe(new Location(116824, 77400, -2722, 40959));
-
-
-            ThreadPoolManager.INSTANCE().schedule(
-                    new DeSpawnScheduleTimerTask(HeralGiran, HeralAden, HeralGoddart, HeralRune, HeralDion, HeralOren,
-                            HeralGludio, HeralGludin, HeralSchuttgart, HeralHein, HeralHunter), DESPAWN_TIME);
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<NpcInstance> heralds = new ArrayList<>();
+        for (int i = 0; i < 11; i++) {
+            heralds.add(NpcHolder.getTemplate(INVOKER_NEVIT_HERALD).getNewInstance());
         }
+        heralds.get(0).spawnMe(new Location(82152, 148488, -3492, 60699));//Giran
+        heralds.get(1).spawnMe(new Location(147048, 25608, -2038, 16383)); //Aden
+        heralds.get(2).spawnMe(new Location(147384, -55400, -2759, 57343)); //Goddard
+        heralds.get(3).spawnMe(new Location(42904, -47912, -822, 49151)); //Rune
+        heralds.get(4).spawnMe(new Location(15736, 142744, -2731, 16383)); //Dion
+        heralds.get(5).spawnMe(new Location(82120, 53224, -1521, 16383)); //Oren
+        heralds.get(6).spawnMe(new Location(-14168, 121192, -3014, 16383));//Gludio
+        heralds.get(7).spawnMe(new Location(80920, 149464, -3069, 16383));//Gludin
+        heralds.get(8).spawnMe(new Location(87608, -141320, -1364, 49151)); //Schuttgart
+        heralds.get(9).spawnMe(new Location(110552, 219848, -3696, 57343));//Hein
+        heralds.get(10).spawnMe(new Location(116824, 77400, -2722, 40959));//Hunter
+
+
+        ThreadPoolManager.INSTANCE.schedule(() -> heralds.forEach(GameObject::deleteMe), DESPAWN_TIME);
         super.onEvtDead(killer);
     }
 
-    // По истечению времени удаляем Вестника Невитта
-    class DeSpawnScheduleTimerTask extends RunnableImpl {
-        final NpcInstance HeralGiran;
-        final NpcInstance HeralAden;
-        final NpcInstance HeralGoddart;
-        final NpcInstance HeralRune;
-        final NpcInstance HeralDion;
-        final NpcInstance HeralOren;
-        final NpcInstance HeralGludio;
-        final NpcInstance HeralGludin;
-        final NpcInstance HeralSchuttgart;
-        final NpcInstance HeralHein;
-        final NpcInstance HeralHunter;
-
-        DeSpawnScheduleTimerTask(NpcInstance HeralGiran, NpcInstance HeralAden, NpcInstance HeralGoddart, NpcInstance HeralRune,
-                                 NpcInstance HeralDion, NpcInstance HeralOren, NpcInstance HeralGludio, NpcInstance HeralGludin,
-                                 NpcInstance HeralSchuttgart, NpcInstance HeralHein, NpcInstance HeralHunter) {
-            this.HeralGiran = HeralGiran;
-            this.HeralAden = HeralAden;
-            this.HeralGoddart = HeralGoddart;
-            this.HeralRune = HeralRune;
-            this.HeralDion = HeralDion;
-            this.HeralOren = HeralOren;
-            this.HeralGludio = HeralGludio;
-            this.HeralGludin = HeralGludin;
-            this.HeralSchuttgart = HeralSchuttgart;
-            this.HeralHein = HeralHein;
-            this.HeralHunter = HeralHunter;
-        }
-
-        @Override
-        public void runImpl() {
-            HeralGiran.deleteMe();
-            HeralAden.deleteMe();
-            HeralGoddart.deleteMe();
-            HeralRune.deleteMe();
-            HeralDion.deleteMe();
-            HeralOren.deleteMe();
-            HeralGludio.deleteMe();
-            HeralGludin.deleteMe();
-            HeralSchuttgart.deleteMe();
-            HeralHein.deleteMe();
-            HeralHunter.deleteMe();
-        }
-    }
 }

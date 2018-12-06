@@ -1,6 +1,5 @@
 package l2trunk.scripts.events.Viktorina;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.Config;
@@ -30,42 +29,40 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
-public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHandler, OnPlayerEnterListener {
+public final class Viktorina extends Functions implements ScriptFile, IVoicedCommandHandler, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(Viktorina.class);
-    private final List<String> _commandList = Arrays.asList("o", "voff", "von", "vhelp", "vtop", "v", "vo");
-    private final ArrayList<String> questions = new ArrayList<>();
     private static final ArrayList<Player> playerList = new ArrayList<>();
-    private static ScheduledFuture<?> _taskViktorinaStart;
     private static final ArrayList<RewardList> _items = new ArrayList<>();
+    private final static String GET_LIST_FASTERS = "SELECT `obj_id`,`value` FROM `character_variables` WHERE `name`='viktorinafirst' ORDER BY `value` DESC LIMIT 0,10";
+    private final static String GET_LIST_TOP = "SELECT `obj_id`,`value` FROM `character_variables` WHERE `name`='viktorinaschet' ORDER BY `value` DESC LIMIT 0,10";
+    private static final boolean DEBUG_VIKROINA = true;
+    private static ScheduledFuture<?> _taskViktorinaStart;
     private static ScheduledFuture<?> _taskStartQuestion;
     private static ScheduledFuture<?> _taskStopQuestion;
-    private long _timeStopViktorina = 0;
     private static boolean status = false;
     private static boolean _questionStatus = false;
     private static int index;
     private static String question;
     private static String answer;
-    private final static String GET_LIST_FASTERS = "SELECT `obj_id`,`value` FROM `character_variables` WHERE `name`='viktorinafirst' ORDER BY `value` DESC LIMIT 0,10";
-    private final static String GET_LIST_TOP = "SELECT `obj_id`,`value` FROM `character_variables` WHERE `name`='viktorinaschet' ORDER BY `value` DESC LIMIT 0,10";
     private static Viktorina instance;
-    private static final boolean DEBUG_VIKROINA = true;
+    private final List<String> _commandList = Arrays.asList("o", "voff", "von", "vhelp", "vtop", "v", "vo");
+    private final ArrayList<String> questions = new ArrayList<>();
+    private long _timeStopViktorina = 0;
     //Перменные ниже, перенес в конфиг.
-/*	private static boolean VIKTORINA_ENABLED = false;// false;
-	private static boolean VIKTORINA_REMOVE_QUESTION = false;//false;;
-	private static boolean VIKTORINA_REMOVE_QUESTION_NO_ANSWER = false;//= false;
-	private static int VIKTORINA_START_TIME_HOUR;// 16;
-	private static int VIKTORINA_START_TIME_MIN;// 16;
-	private static int VIKTORINA_WORK_TIME;//2;
-	private static int VIKTORINA_TIME_ANSER;//1;
-	private static int VIKTORINA_TIME_PAUSE;//1;*/
-
-    //private static String REWARD_FERST = ScriptConfig.get("Victorina_Reward_Ferst");//"57,1,100;57,2,100;";
-    //private static String REWARD_OTHER = ScriptConfig.get("Victorina_Reward_Other");//"57,1,100;57,2,100;";
 
     public static Viktorina getInstance() {
         if (instance == null)
             instance = new Viktorina();
         return instance;
+    }
+
+    public static boolean isRunned() {
+        return status;
+    }
+
+    public static void preLoad() {
+        if (Config.VIKTORINA_ENABLED)
+            executeTask("events.Viktorina.Viktorina", "Start", new Object[0], 5000);
     }
 
     /**
@@ -127,21 +124,16 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         }
     }
 
-    /**
-     * Анонс вопроса викторины.
-     *
-     * @param text
-     */
     private void announseViktorina(String text) {
         Say2 cs = new Say2(0, ChatType.TELL, "quiz", text);
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            if (player.getVar("viktorina") == "on")
-                player.sendPacket(cs);
+        GameObjectsStorage.getAllPlayers().stream()
+                .filter(player -> ("on".equals(player.getVar("viktorina"))))
+                .forEach(player -> player.sendPacket(cs));
     }
 
     private void checkPlayers() {
         Say2 cs = new Say2(0, ChatType.TELL, "Quiz ", " to refuse to participate in a quiz type .voff, a reference type .vhelp");
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
+        for (Player player : GameObjectsStorage.getAllPlayers())
             if (player.getVar("viktorina") == null) {
                 player.sendPacket(cs);
                 player.setVar("viktorina", "on", -1);
@@ -205,18 +197,18 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         long currentTime = System.currentTimeMillis();
         // Если время виторины еще не наступило
         if (_timeStartViktorina.getTimeInMillis() >= currentTime) {
-            _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
+            _taskViktorinaStart = ThreadPoolManager.INSTANCE.schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
         }
         // Если как раз идет время викторины - стартуем викторину
         else if (currentTime > _timeStartViktorina.getTimeInMillis() && currentTime < _timeStopViktorina.getTimeInMillis()) {
-            _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), 1000);
+            _taskViktorinaStart = ThreadPoolManager.INSTANCE.schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), 1000);
         }
         // сегодня олим уже не должен запускаться, значит нада стартовать викторину
         // на след день, прибавляем 24 часа
         else {
             _timeStartViktorina.add(Calendar.HOUR_OF_DAY, 24);
             _timeStopViktorina.add(Calendar.HOUR_OF_DAY, 24);
-            _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
+            _taskViktorinaStart = ThreadPoolManager.INSTANCE.schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
         }
 
         if (DEBUG_VIKROINA)
@@ -243,139 +235,10 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         _timeStartViktorina.add(Calendar.HOUR_OF_DAY, 24);
         _timeStopViktorina.add(Calendar.HOUR_OF_DAY, 24);
         long currentTime = System.currentTimeMillis();
-        _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
+        _taskViktorinaStart = ThreadPoolManager.INSTANCE.schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), _timeStartViktorina.getTimeInMillis() - currentTime);
         if (DEBUG_VIKROINA)
             _log.info("Continue Viktorina: " + _timeStartViktorina.getTime() + "|Stop Viktorina: " + _timeStopViktorina.getTime());
 
-    }
-
-    /**
-     * Запуск викторины в ручную!!
-     * запускается на время указанное в настройках.
-     */
-    public void ForseStart() {
-        if (_taskViktorinaStart != null)
-            _taskViktorinaStart.cancel(true);
-        Calendar _timeStartViktorina = Calendar.getInstance();
-        Calendar _timeStopViktorina = Calendar.getInstance();
-        _timeStopViktorina.setTimeInMillis(_timeStartViktorina.getTimeInMillis());
-        _timeStopViktorina.add(Calendar.HOUR_OF_DAY, Config.VIKTORINA_WORK_TIME);
-        _log.info("Viktorina Started");
-        _taskViktorinaStart = ThreadPoolManager.INSTANCE().schedule(new ViktorinaStart(_timeStopViktorina.getTimeInMillis()), 1000);
-        if (DEBUG_VIKROINA)
-            _log.info("Start Viktorina: " + _timeStartViktorina.getTime());
-        _log.info("Stop Viktorina: " + _timeStopViktorina.getTime());
-
-    }
-
-    /**
-     * Стартуем викторину
-     *
-     * @author Sevil
-     */
-    class ViktorinaStart implements Runnable {
-
-        ViktorinaStart(long timeStopViktorina) {
-            _timeStopViktorina = timeStopViktorina;
-        }
-
-        @Override
-        public void run() {
-            try {
-                //if(isStatus())
-                //{
-                //	if (DEBUG_VIKROINA)
-                //		_log.info("Viktoryna is already starter, WTF ??? \n" + Util.dumpStack());
-                //	return;
-                //}
-                if (_taskStartQuestion != null)
-                    _taskStartQuestion.cancel(true);
-                _taskStartQuestion = ThreadPoolManager.INSTANCE().schedule(new startQuestion(_timeStopViktorina), 5000);
-                Announcements.INSTANCE.announceToAll("Quiz started!");
-                Announcements.INSTANCE.announceToAll("For help, typе .vhelp");
-                loadQuestions();
-                setStatus(true);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Задаем вопрос, ждем время, запускаем стоп вопроса.
-     *
-     * @author Sevil
-     */
-    class startQuestion implements Runnable {
-        long _timeStopViktorina = 0;
-
-        startQuestion(long timeStopViktorina) {
-            _timeStopViktorina = timeStopViktorina;
-        }
-
-        @Override
-        public void run() {
-            long currentTime = Calendar.getInstance().getTimeInMillis();
-            if (currentTime > _timeStopViktorina) {
-                _log.info("Viktorina time off...", "Viktorina");
-                playerList.clear();
-                setStatus(false);
-                setQuestionStatus(false);
-                announseViktorina("Opening hours of the quiz is up, all the participants have fun!");
-                Announcements.INSTANCE.announceToAll("The quiz is over.!");
-                return;
-            }
-            if (!playerList.isEmpty()) {
-                _log.info("Wtf? why, when I ask the question, list the correct answers is not empty!?!?", "Viktorina");
-                playerList.clear();
-                return;
-            }
-            if (!isStatus()) {
-                _log.info("Wtf? Why do I have to ask the question, when a quiz is not running???", "Viktorina");
-                return;
-            }
-            if (!isQuestionStatus()) {
-                parseQuestion();
-                checkPlayers();
-                announseViktorina(question);
-                if (_taskStopQuestion != null)
-                    _taskStopQuestion.cancel(true);
-                _taskStopQuestion = ThreadPoolManager.INSTANCE().schedule(new stopQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_ANSER * 1000);
-                setQuestionStatus(true);
-            } else {
-                _log.info("Wtf?? Why is the status question true?? when should be false!!!!", "Viktorina");
-            }
-        }
-    }
-
-    /**
-     * Стоп вопроса: подсчитываем правильные ответы, и кто дал правильный ответ быстрее всех.
-     * запускаем следующий вопрос.
-     *
-     * @author Sevil
-     */
-    class stopQuestion implements Runnable {
-        long _timeStopViktorina = 0;
-
-        stopQuestion(long timeStopViktorina) {
-            _timeStopViktorina = timeStopViktorina;
-        }
-
-        @Override
-        public void run() {
-            if (!isStatus()) {
-                _log.info("Wtf? Why should I consider the winners and give out rewards when the quiz is not running???", "Viktorina");
-                return;
-            }
-            setQuestionStatus(false);
-            winners();
-            rewarding();
-            playerList.clear();
-            if (_taskStartQuestion != null)
-                _taskStartQuestion.cancel(true);
-            _taskStartQuestion = ThreadPoolManager.INSTANCE().schedule(new startQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_PAUSE * 1000);
-        }
     }
 
     /**
@@ -515,12 +378,12 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         show(top.toString(), player);
     }
 
-    private void setQuestionStatus(boolean b) {
-        _questionStatus = b;
-    }
-
     private boolean isQuestionStatus() {
         return _questionStatus;
+    }
+
+    private void setQuestionStatus(boolean b) {
+        _questionStatus = b;
     }
 
     @Override
@@ -685,50 +548,7 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         return true;
     }
 
-    private class RewardList {
-        int _productId;
-        int _count;
-        int _chance;
-        boolean _first;
-
-        private void setProductId(int productId) {
-            _productId = productId;
-        }
-
-        private void setChance(int chance) {
-            _chance = chance;
-        }
-
-        private void setCount(int count) {
-            _count = count;
-        }
-
-        private void setFirst(boolean first) {
-            _first = first;
-        }
-
-        private int getProductId() {
-            return _productId;
-        }
-
-        private int getChance() {
-            return _chance;
-        }
-
-        private int getCount() {
-            return _count;
-        }
-
-        private boolean getFirst() {
-            return _first;
-        }
-    }
-
     private boolean isStatus() {
-        return status;
-    }
-
-    public static boolean isRunned() {
         return status;
     }
 
@@ -737,101 +557,46 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         this.status = status;
     }
 
-    /**
-     * Возвращаем имя чара по его obj_Id
-     *
-     * @param char_id
-     * @return
-     */
     private String getName(int char_id) {
         String name = null;
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
 
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT char_name FROM characters WHERE obj_Id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT char_name FROM characters WHERE obj_Id=?")) {
             statement.setInt(1, char_id);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
             rset.next();
             name = rset.getString("char_name");
             //return name;
-        } catch (final SQLException e) {
+        } catch (SQLException e) {
             _log.info("AAA! HAZARD, I can not find a player with such a obj_Id:" + e.getMessage());
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
         return name;
     }
 
-    /**
-     * Возвращаем лист имен.
-     *
-     * @param first
-     * @return
-     */
     private List<Scores> getList(final boolean first) {
         final List<Scores> names = new ArrayList<>();
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
 
-        String GET_LIST = null;
+        String GET_LIST = GET_LIST_TOP;
         if (first)
             GET_LIST = GET_LIST_FASTERS;
-        else
-            GET_LIST = GET_LIST_TOP;
 
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(GET_LIST);
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(GET_LIST);
+             ResultSet rset = statement.executeQuery()) {
 
             while (rset.next()) {
-                final String name = (getName(rset.getInt("obj_id")));
+                final String name = getName(rset.getInt("obj_id"));
                 final int score = rset.getInt("value");
-                Scores scores = new Scores();
-                scores.setName(name);
-                scores.setScore(score);
+                Scores scores = new Scores(name, score);
                 names.add(scores);
             }
             return names;
-        } catch (final SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
 
         return names;
-    }
-
-    private class Scores {
-        String _name;
-        int _score;
-
-        private void setName(String name) {
-            _name = name;
-        }
-
-        private void setScore(int score) {
-            _score = score;
-        }
-
-        private String getName() {
-            return _name;
-        }
-
-        private int getScore() {
-            return _score;
-        }
-    }
-
-    public static void preLoad() {
-
-        if (Config.VIKTORINA_ENABLED)
-            executeTask("events.Viktorina.Viktorina", "Start", new Object[0], 5000);
     }
 
     @Override
@@ -839,5 +604,156 @@ public class Viktorina extends Functions implements ScriptFile, IVoicedCommandHa
         Say2 cs = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "Quiz", "Active event Quiz! To participate, type the command .von! for the record .vhelp!");
         if (isStatus())
             player.sendPacket(cs);
+    }
+
+    private class ViktorinaStart implements Runnable {
+
+        ViktorinaStart(long timeStopViktorina) {
+            _timeStopViktorina = timeStopViktorina;
+        }
+
+        @Override
+        public void run() {
+            if (_taskStartQuestion != null)
+                _taskStartQuestion.cancel(true);
+            _taskStartQuestion = ThreadPoolManager.INSTANCE.schedule(new startQuestion(_timeStopViktorina), 5000);
+            Announcements.INSTANCE.announceToAll("Quiz started!");
+            Announcements.INSTANCE.announceToAll("For help, typе .vhelp");
+            loadQuestions();
+            setStatus(true);
+        }
+    }
+
+    /**
+     * Задаем вопрос, ждем время, запускаем стоп вопроса.
+     */
+    class startQuestion implements Runnable {
+        long _timeStopViktorina;
+
+        startQuestion(long timeStopViktorina) {
+            _timeStopViktorina = timeStopViktorina;
+        }
+
+        @Override
+        public void run() {
+            long currentTime = Calendar.getInstance().getTimeInMillis();
+            if (currentTime > _timeStopViktorina) {
+                _log.info("Viktorina time off...", "Viktorina");
+                playerList.clear();
+                setStatus(false);
+                setQuestionStatus(false);
+                announseViktorina("Opening hours of the quiz is up, all the participants have fun!");
+                Announcements.INSTANCE.announceToAll("The quiz is over.!");
+                return;
+            }
+            if (!playerList.isEmpty()) {
+                _log.info("Wtf? why, when I ask the question, list the correct answers is not empty!?!?", "Viktorina");
+                playerList.clear();
+                return;
+            }
+            if (!isStatus()) {
+                _log.info("Wtf? Why do I have to ask the question, when a quiz is not running???", "Viktorina");
+                return;
+            }
+            if (!isQuestionStatus()) {
+                parseQuestion();
+                checkPlayers();
+                announseViktorina(question);
+                if (_taskStopQuestion != null)
+                    _taskStopQuestion.cancel(true);
+                _taskStopQuestion = ThreadPoolManager.INSTANCE.schedule(new stopQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_ANSER * 1000);
+                setQuestionStatus(true);
+            } else {
+                _log.info("Wtf?? Why is the status question true?? when should be false!!!!", "Viktorina");
+            }
+        }
+    }
+
+    /**
+     * Стоп вопроса: подсчитываем правильные ответы, и кто дал правильный ответ быстрее всех.
+     * запускаем следующий вопрос.
+     *
+     * @author Sevil
+     */
+    class stopQuestion implements Runnable {
+        long _timeStopViktorina;
+
+        stopQuestion(long timeStopViktorina) {
+            _timeStopViktorina = timeStopViktorina;
+        }
+
+        @Override
+        public void run() {
+            if (!isStatus()) {
+                _log.info("Wtf? Why should I consider the winners and give out rewards when the quiz is not running???", "Viktorina");
+                return;
+            }
+            setQuestionStatus(false);
+            winners();
+            rewarding();
+            playerList.clear();
+            if (_taskStartQuestion != null)
+                _taskStartQuestion.cancel(true);
+            _taskStartQuestion = ThreadPoolManager.INSTANCE.schedule(new startQuestion(_timeStopViktorina), Config.VIKTORINA_TIME_PAUSE * 1000);
+        }
+    }
+
+    private class RewardList {
+        int _productId;
+        int _count;
+        int _chance;
+        boolean _first;
+
+        private int getProductId() {
+            return _productId;
+        }
+
+        private void setProductId(int productId) {
+            _productId = productId;
+        }
+
+        private int getChance() {
+            return _chance;
+        }
+
+        private void setChance(int chance) {
+            _chance = chance;
+        }
+
+        private int getCount() {
+            return _count;
+        }
+
+        private void setCount(int count) {
+            _count = count;
+        }
+
+        private boolean getFirst() {
+            return _first;
+        }
+
+        private void setFirst(boolean first) {
+            _first = first;
+        }
+    }
+
+    private class Scores {
+        String name;
+        int score;
+
+
+        public Scores(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+
+        private String getName() {
+            return name;
+        }
+
+        private int getScore() {
+            return score;
+        }
+
     }
 }

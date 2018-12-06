@@ -6,8 +6,6 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class GuardoftheGrave extends Fighter {
     private static final int DESPAWN_TIME = 2 * 45 * 1000;
@@ -15,7 +13,7 @@ public final class GuardoftheGrave extends Fighter {
 
     private GuardoftheGrave(NpcInstance actor) {
         super(actor);
-        actor.setIsInvul(true);
+        actor.setInvul(true);
         actor.startImmobilized();
     }
 
@@ -42,7 +40,7 @@ public final class GuardoftheGrave extends Fighter {
     private void spawnChest(NpcInstance actor) {
         NpcInstance npc = NpcHolder.getTemplate(CHIEFTAINS_TREASURE_CHEST).getNewInstance();
         npc.setSpawnedLoc(actor.getLoc());
-        npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+        npc.setFullHpMp();
         npc.spawnMe(npc.getSpawnedLoc());
     }
 

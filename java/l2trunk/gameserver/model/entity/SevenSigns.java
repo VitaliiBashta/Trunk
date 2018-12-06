@@ -105,47 +105,8 @@ public enum SevenSigns {
 
     SevenSigns() {
         GameServer.getInstance().addListener(new OnStartListenerImpl());
-          }
-    public void init(){
-        restoreSevenSignsData();
-
-        _log.info("SevenSigns: Currently in the " + getCurrentPeriodName() + " period!");
-        initializeSeals();
-
-        if (isSealValidationPeriod()) {
-            if (getCabalHighestScore() == CABAL_NULL)
-                _log.info("SevenSigns: The Competition last week ended with a tie.");
-            else
-                _log.info("SevenSigns: The " + getCabalName(getCabalHighestScore()) + " were victorious last week.");
-        } else if (getCabalHighestScore() == CABAL_NULL)
-            _log.info("SevenSigns: The Competition this week, if the trend continue, will end with a tie.");
-        else
-            _log.info("SevenSigns: The " + getCabalName(getCabalHighestScore()) + " are in the lead this week.");
-
-        int numMins = 0;
-        int numHours = 0;
-        int numDays = 0;
-
-        setCalendarForNextPeriodChange();
-        long milliToChange = getMilliToPeriodChange();
-        if (milliToChange < 10)
-            milliToChange = 10;
-        // Schedule a time for the next period change.
-        _periodChange = ThreadPoolManager.INSTANCE.schedule(new SevenSignsPeriodChange(), milliToChange);
-
-        double numSecs = milliToChange / 1000. % 60;
-        double countDown = (milliToChange / 1000. - numSecs) / 60;
-        numMins = (int) Math.floor(countDown % 60);
-        countDown = (countDown - numMins) / 60;
-        numHours = (int) Math.floor(countDown % 24);
-        numDays = (int) Math.floor((countDown - numHours) / 24);
-
-        _log.info("SevenSigns: Next period begins in " + numDays + " days, " + numHours + " hours and " + numMins + " mins.");
-
-        if (Config.SS_ANNOUNCE_PERIOD > 0)
-            ThreadPoolManager.INSTANCE.schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
-
     }
+
     private static long calcContributionScore(long blueCount, long greenCount, long redCount) {
         long contrib = blueCount * BLUE_CONTRIB_POINTS;
         contrib += greenCount * GREEN_CONTRIB_POINTS;
@@ -245,6 +206,47 @@ public enum SevenSigns {
         statement.setInt(12, sevenDat.getInteger("dusk_contribution_score"));
         statement.setInt(13, sevenDat.getInteger("char_obj_id"));
         statement.executeUpdate();
+    }
+
+    public void init() {
+        restoreSevenSignsData();
+
+        _log.info("SevenSigns: Currently in the " + getCurrentPeriodName() + " period!");
+        initializeSeals();
+
+        if (isSealValidationPeriod()) {
+            if (getCabalHighestScore() == CABAL_NULL)
+                _log.info("SevenSigns: The Competition last week ended with a tie.");
+            else
+                _log.info("SevenSigns: The " + getCabalName(getCabalHighestScore()) + " were victorious last week.");
+        } else if (getCabalHighestScore() == CABAL_NULL)
+            _log.info("SevenSigns: The Competition this week, if the trend continue, will end with a tie.");
+        else
+            _log.info("SevenSigns: The " + getCabalName(getCabalHighestScore()) + " are in the lead this week.");
+
+        int numMins = 0;
+        int numHours = 0;
+        int numDays = 0;
+
+        setCalendarForNextPeriodChange();
+        long milliToChange = getMilliToPeriodChange();
+        if (milliToChange < 10)
+            milliToChange = 10;
+        // Schedule a time for the next period change.
+        _periodChange = ThreadPoolManager.INSTANCE.schedule(new SevenSignsPeriodChange(), milliToChange);
+
+        double numSecs = milliToChange / 1000. % 60;
+        double countDown = (milliToChange / 1000. - numSecs) / 60;
+        numMins = (int) Math.floor(countDown % 60);
+        countDown = (countDown - numMins) / 60;
+        numHours = (int) Math.floor(countDown % 24);
+        numDays = (int) Math.floor((countDown - numHours) / 24);
+
+        _log.info("SevenSigns: Next period begins in " + numDays + " days, " + numHours + " hours and " + numMins + " mins.");
+
+        if (Config.SS_ANNOUNCE_PERIOD > 0)
+            ThreadPoolManager.INSTANCE.schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
+
     }
 
     public void spawnSevenSignsNPC() {
@@ -935,8 +937,7 @@ public enum SevenSigns {
      */
     private void sendMessageToAll(int sysMsgId) {
         SystemMessage sm = new SystemMessage(sysMsgId);
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            player.sendPacket(sm);
+        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
     }
 
     /**
@@ -1191,8 +1192,7 @@ public enum SevenSigns {
 
     public class SevenSignsAnnounce extends RunnableImpl {
         public void runImpl() {
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                sendCurrentPeriodMsg(player);
+            GameObjectsStorage.getAllPlayers().forEach(SevenSigns.this::sendCurrentPeriodMsg);
             ThreadPoolManager.INSTANCE.schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
         }
     }
@@ -1258,8 +1258,7 @@ public enum SevenSigns {
                 _log.info("SevenSigns: Change Catacomb spawn...");
                 getListenerEngine().onPeriodChange();
                 SSQInfo ss = new SSQInfo();
-                for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                    player.sendPacket(ss);
+                GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(ss));
                 _log.info("SevenSigns: Spawning NPCs...");
                 spawnSevenSignsNPC();
                 _log.info("SevenSigns: The " + getCurrentPeriodName() + " period has begun!");

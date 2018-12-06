@@ -21,6 +21,8 @@ public class TeleToGH extends Functions implements ScriptFile {
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
 
     private static final Zone _zone = ReflectionUtils.getZone("[giran_harbor_offshore]");
+    private static final String en = "<br>[scripts_services.TeleToGH:toGH @811;Giran Harbor|\"I want free admission to Giran Harbor.\"]";
+    private static final String en2 = "<br>[scripts_services.ManaRegen:DoManaRegen|Full MP Regeneration. (1 MP for 5 Adena)]<br>[scripts_services.TeleToGH:fromGH @811;From Giran Harbor|\"Exit the Giran Harbor.\"]<br>";
     private static ZoneListener _zoneListener;
 
     @Override
@@ -32,98 +34,74 @@ public class TeleToGH extends Functions implements ScriptFile {
 
         // spawn wh keeper
         SimpleSpawner spawn = new SimpleSpawner(30086);
-        spawn.setLocx(48059);
-        spawn.setLocy(186791);
-        spawn.setLocz(-3512);
-        spawn.setAmount(1);
-        spawn.setHeading(42000);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
+        spawn.setLoc(new Location(48059, 186791, -3512, 42000))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR);
         spawn.init();
         _spawns.add(spawn);
 
         // spawn grocery trader
         spawn = new SimpleSpawner(32169);
-        spawn.setLocx(48146);
-        spawn.setLocy(186753);
-        spawn.setLocz(-3512);
-        spawn.setAmount(1);
-        spawn.setHeading(42000);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
-        spawn.init();
+        spawn.setLoc(new Location(48146, 186753, -3512, 42000))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR)
+                .init();
         _spawns.add(spawn);
 
         // spawn gk
         spawn = new SimpleSpawner(13129);
-        spawn.setLocx(47984);
-        spawn.setLocy(186832);
-        spawn.setLocz(-3445);
-        spawn.setAmount(1);
-        spawn.setHeading(42000);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
-        spawn.init();
+        spawn.setLoc(new Location(47984, 186832, -3445, 42000))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR)
+                .init();
         _spawns.add(spawn);
 
         // spawn Orion the Cat
         spawn = new SimpleSpawner(31860);
-        spawn.setLocx(48129);
-        spawn.setLocy(186828);
-        spawn.setLocz(-3512);
-        spawn.setAmount(1);
-        spawn.setHeading(45452);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
-        spawn.init();
+        spawn.setLoc(new Location(48129, 186828, -3512, 45452))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR)
+                .init();
         _spawns.add(spawn);
 
         // spawn blacksmith (Pushkin)
         spawn = new SimpleSpawner(30300);
-        spawn.setLocx(48102);
-        spawn.setLocy(186772);
-        spawn.setLocz(-3512);
-        spawn.setAmount(1);
-        spawn.setHeading(42000);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
-        spawn.init();
+        spawn.setLoc(new Location(48102, 186772, -3512, 42000))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR)
+                .init();
         _spawns.add(spawn);
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLocx(47772);
-        spawn.setLocy(186905);
-        spawn.setLocz(-3480);
-        spawn.setAmount(1);
-        spawn.setHeading(42000);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
-        spawn.init();
+        spawn.setLoc(new Location(47772, 186905, -3480, 42000))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR)
+                .init();
         _spawns.add(spawn);
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLocx(46360);
-        spawn.setLocy(187672);
-        spawn.setLocz(-3480);
-        spawn.setAmount(1);
-        spawn.setHeading(42000);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
-        spawn.init();
+        spawn.setLoc(new Location(46360, 187672, -3480, 42000))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR)
+                .init();
         _spawns.add(spawn);
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLocx(49016);
-        spawn.setLocy(185960);
-        spawn.setLocz(-3480);
-        spawn.setAmount(1);
-        spawn.setHeading(42000);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.GIRAN_HARBOR);
-        spawn.init();
+        spawn.setLoc(new Location(49016, 185960, -3480, 42000))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.GIRAN_HARBOR)
+                .init();
         _spawns.add(spawn);
 
         _zoneListener = new ZoneListener();
@@ -265,8 +243,6 @@ public class TeleToGH extends Functions implements ScriptFile {
         return getHtmlAppends(val);
     }
 
-    private static final String en = "<br>[scripts_services.TeleToGH:toGH @811;Giran Harbor|\"I want free admission to Giran Harbor.\"]";
-
     private String getHtmlAppends(Integer val) {
         if (val != 0 || !Config.SERVICES_GIRAN_HARBOR_ENABLED)
             return "";
@@ -279,8 +255,6 @@ public class TeleToGH extends Functions implements ScriptFile {
     public String DialogAppend_13129(Integer val) {
         return getHtmlAppends2(val);
     }
-
-    private static final String en2 = "<br>[scripts_services.ManaRegen:DoManaRegen|Full MP Regeneration. (1 MP for 5 Adena)]<br>[scripts_services.TeleToGH:fromGH @811;From Giran Harbor|\"Exit the Giran Harbor.\"]<br>";
 
     private String getHtmlAppends2(Integer val) {
         if (val != 0 || !Config.SERVICES_GIRAN_HARBOR_ENABLED)

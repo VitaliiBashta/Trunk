@@ -22,7 +22,7 @@ import l2trunk.gameserver.utils.PositionUtils;
  *
  * @author pchayka, n0nam3
  */
-public class GuardofDawnFemale extends DefaultAI {
+public final class GuardofDawnFemale extends DefaultAI {
     private static final int _aggrorange = 300;
     private final Skill _skill = SkillTable.INSTANCE().getInfo(5978, 1);
     private Location _locTele = null;
@@ -71,7 +71,7 @@ public class GuardofDawnFemale extends DefaultAI {
                 actor.doCast(_skill, target, true);
                 Functions.npcSay(actor, "Who are you?! A new face like you can't approach this place!");
                 noCheckPlayers = true;
-                ThreadPoolManager.INSTANCE().schedule(new Teleportation(getTelePoint(), target), 3000);
+                ThreadPoolManager.INSTANCE.schedule(new Teleportation(getTelePoint(), target), 3000);
                 return true;
             }
         }

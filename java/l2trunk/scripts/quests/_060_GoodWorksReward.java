@@ -14,7 +14,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _060_GoodWorksReward extends Quest implements ScriptFile {
+public final class _060_GoodWorksReward extends Quest implements ScriptFile {
     // NPCs
     private final static int Daeger = 31435;
     private final static int Helvetia = 30081;
@@ -31,7 +31,7 @@ public class _060_GoodWorksReward extends Quest implements ScriptFile {
     private final static String diePursuer_return = "You have good luck. I shall return.";
     private final static PrintfFormat Mammon_dialog = new PrintfFormat("<html><body>Black Marketeer of Mammon:<br>Forget about the money!<br>I will help you complete the class transfer, which is far more valuable! Which class would you like to be? Choose one.<br>%s</body></html>");
 
-    private static long Last_Spawned_Pursuer = 0;
+    private static int Last_Spawned_Pursuer = 0;
 
     public _060_GoodWorksReward() {
         super(false);
@@ -45,7 +45,7 @@ public class _060_GoodWorksReward extends Quest implements ScriptFile {
     }
 
     private boolean IsPursuerSpawned() {
-        return GameObjectsStorage.contains(Last_Spawned_Pursuer);
+        return GameObjectsStorage.get(Last_Spawned_Pursuer) != null;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.Player;
@@ -13,7 +12,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
     private static final int Crosby = 35142;
     private static final int Rouke = 31418;
     private static final int Sophia = 30735;
@@ -21,17 +23,8 @@ public class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
     private static final int MandragoraRoot = 13849;
     private static final int Epaulette = 13850;
 
-    private static final int[] OlMahums = {
-            20208,
-            20209,
-            20210,
-            20211
-    };
-    private static final int[] Manragoras = {
-            20154,
-            20155,
-            20156
-    };
+    private static final List<Integer> OlMahums = Arrays.asList(20208, 20209, 20210, 20211);
+    private static final List<Integer> Manragoras = Arrays.asList(20154, 20155, 20156);
 
     private static final int DionCastle = 2;
 
@@ -51,36 +44,44 @@ public class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
-        if (event.equals("crosby_q709_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("crosby_q709_06.htm")) {
-            if (isLordAvailable(2, st)) {
-                castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                castleOwner.getQuestState(getClass()).setCond(3);
+        switch (event) {
+            case "crosby_q709_03.htm":
                 st.setState(STARTED);
-            } else
-                htmltext = "crosby_q709_05a.htm";
-        } else if (event.equals("rouke_q709_03.htm")) {
-            if (isLordAvailable(3, st)) {
-                castleOwner.getQuestState(getClass()).setCond(4);
-            } else
-                htmltext = "crosby_q709_05a.htm";
-        } else if (event.equals("sophia_q709_02.htm")) {
-            st.setCond(6);
-        } else if (event.equals("sophia_q709_05.htm")) {
-            st.setCond(8);
-        } else if (event.equals("rouke_q709_05.htm")) {
-            if (isLordAvailable(8, st)) {
-                st.takeAllItems(MandragoraRoot);
-                castleOwner.getQuestState(getClass()).setCond(9);
-            }
-        } else if (event.equals("crosby_q709_10.htm")) {
-            Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_DION, st.getPlayer().getName());
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "crosby_q709_06.htm":
+                if (isLordAvailable(2, st)) {
+                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                    castleOwner.getQuestState(getClass()).setCond(3);
+                    st.setState(STARTED);
+                } else
+                    htmltext = "crosby_q709_05a.htm";
+                break;
+            case "rouke_q709_03.htm":
+                if (isLordAvailable(3, st)) {
+                    castleOwner.getQuestState(getClass()).setCond(4);
+                } else
+                    htmltext = "crosby_q709_05a.htm";
+                break;
+            case "sophia_q709_02.htm":
+                st.setCond(6);
+                break;
+            case "sophia_q709_05.htm":
+                st.setCond(8);
+                break;
+            case "rouke_q709_05.htm":
+                if (isLordAvailable(8, st)) {
+                    st.takeAllItems(MandragoraRoot);
+                    castleOwner.getQuestState(getClass()).setCond(9);
+                }
+                break;
+            case "crosby_q709_10.htm":
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_DION, st.getPlayer().getName());
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return htmltext;
     }
@@ -89,7 +90,6 @@ public class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        int id = st.getState();
         int cond = st.getCond();
         Castle castle = ResidenceHolder.getInstance().getResidence(DionCastle);
         if (castle.getOwner() == null)
@@ -157,13 +157,13 @@ public class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
 
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
-        if (st.getCond() == 6 && ArrayUtils.contains(OlMahums, npc.getNpcId())) {
+        if (st.getCond() == 6 && OlMahums.contains(npc.getNpcId())) {
             if (Rnd.chance(10)) {
                 st.giveItems(Epaulette, 1);
                 st.setCond(7);
             }
         }
-        if (st.getState() == STARTED && st.getCond() == 0 && isLordAvailable(8, st) && ArrayUtils.contains(Manragoras, npc.getNpcId())) {
+        if (st.getState() == STARTED && st.getCond() == 0 && isLordAvailable(8, st) && Manragoras.contains(npc.getNpcId())) {
             if (st.getQuestItemsCount(MandragoraRoot) < 100)
                 st.giveItems(MandragoraRoot, 1);
         }
@@ -175,8 +175,7 @@ public class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
-            if (castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond)
-                return true;
+            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
         return false;
     }
 

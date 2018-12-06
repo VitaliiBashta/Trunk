@@ -1,6 +1,5 @@
 package l2trunk.scripts.bosses;
 
-import l2trunk.scripts.bosses.FourSepulchersSpawn.GateKeeper;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -17,6 +16,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
+import l2trunk.scripts.bosses.FourSepulchersSpawn.GateKeeper;
 import l2trunk.scripts.npc.model.SepulcherNpcInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,62 +28,23 @@ import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
 public class FourSepulchersManager extends Functions implements ScriptFile, OnDeathListener {
-    private static final Logger _log = LoggerFactory.getLogger(FourSepulchersManager.class);
-
     public static final String QUEST_ID = "_620_FourGoblets";
-
+    private static final Logger _log = LoggerFactory.getLogger(FourSepulchersManager.class);
     private static final Zone[] _zone = new Zone[4];
 
     private static final int ENTRANCE_PASS = 7075;
     private static final int USED_PASS = 7261;
     private static final int CHAPEL_KEY = 7260;
     private static final int ANTIQUE_BROOCH = 7262;
-
+    private static final int _newCycleMin = 55;
     private static boolean _inEntryTime = false;
     private static boolean _inAttackTime = false;
-
     private static ScheduledFuture<?> _changeCoolDownTimeTask = null, _changeEntryTimeTask = null, _changeWarmUpTimeTask = null, _changeAttackTimeTask = null;
-
     private static long _coolDownTimeEnd = 0;
     private static long _entryTimeEnd = 0;
     private static long _warmUpTimeEnd = 0;
     private static long _attackTimeEnd = 0;
-
-    private static final int _newCycleMin = 55;
-
     private static boolean _firstTimeRun;
-
-    private void init() {
-        CharListenerList.addGlobal(this);
-
-        _zone[0] = ReflectionUtils.getZone("[FourSepulchers1]");
-        _zone[1] = ReflectionUtils.getZone("[FourSepulchers2]");
-        _zone[2] = ReflectionUtils.getZone("[FourSepulchers3]");
-        _zone[3] = ReflectionUtils.getZone("[FourSepulchers4]");
-
-        if (_changeCoolDownTimeTask != null)
-            _changeCoolDownTimeTask.cancel(false);
-        if (_changeEntryTimeTask != null)
-            _changeEntryTimeTask.cancel(false);
-        if (_changeWarmUpTimeTask != null)
-            _changeWarmUpTimeTask.cancel(false);
-        if (_changeAttackTimeTask != null)
-            _changeAttackTimeTask.cancel(false);
-
-        _changeCoolDownTimeTask = null;
-        _changeEntryTimeTask = null;
-        _changeWarmUpTimeTask = null;
-        _changeAttackTimeTask = null;
-
-        _inEntryTime = false;
-        _inAttackTime = false;
-
-        _firstTimeRun = true;
-
-        FourSepulchersSpawn.init();
-
-        timeSelector();
-    }
 
     // phase getBonuses on server launch
     private static void timeSelector() {
@@ -224,12 +185,6 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
         FourSepulchersSpawn._hallInUse.put(npcId, true);
     }
 
-    @Override
-    public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && self.getZ() >= -7250 && self.getZ() <= -6841 && checkIfInZone(self))
-            checkAnnihilated((Player) self);
-    }
-
     private static void checkAnnihilated(final Player player) {
         if (isPlayersAnnihilated())
             ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
@@ -287,6 +242,96 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
                 npc.sayInShout(msg2);
             }
         }
+    }
+
+    public static GateKeeper getHallGateKeeper(int npcId) {
+        return FourSepulchersSpawn._GateKeepers.stream()
+                .filter(gk -> gk.template.npcId == npcId)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("no hallGatekeeper with id:" + npcId));
+    }
+
+    private static void showHtmlFile(Player player, String file, NpcInstance npc, Player member) {
+        NpcHtmlMessage html = new NpcHtmlMessage(npc.getObjectId());
+        html.setFile("SepulcherNpc/" + file);
+        if (member != null)
+            html.replace("%member%", member.getName());
+        player.sendPacket(html);
+    }
+
+    private static boolean isPlayersAnnihilated() {
+        for (Player pc : getPlayersInside())
+            if (!pc.isDead())
+                return false;
+        return true;
+    }
+
+    private static List<Player> getPlayersInside() {
+        List<Player> result = new ArrayList<>();
+        for (Zone zone : getZones())
+            result.addAll(zone.getInsidePlayers());
+        return result;
+    }
+
+    private static boolean checkIfInZone(Creature cha) {
+        for (Zone zone : getZones())
+            if (zone.checkIfInZone(cha))
+                return true;
+        return false;
+    }
+
+    private static Zone[] getZones() {
+        return _zone;
+    }
+
+    private void init() {
+        CharListenerList.addGlobal(this);
+
+        _zone[0] = ReflectionUtils.getZone("[FourSepulchers1]");
+        _zone[1] = ReflectionUtils.getZone("[FourSepulchers2]");
+        _zone[2] = ReflectionUtils.getZone("[FourSepulchers3]");
+        _zone[3] = ReflectionUtils.getZone("[FourSepulchers4]");
+
+        if (_changeCoolDownTimeTask != null)
+            _changeCoolDownTimeTask.cancel(false);
+        if (_changeEntryTimeTask != null)
+            _changeEntryTimeTask.cancel(false);
+        if (_changeWarmUpTimeTask != null)
+            _changeWarmUpTimeTask.cancel(false);
+        if (_changeAttackTimeTask != null)
+            _changeAttackTimeTask.cancel(false);
+
+        _changeCoolDownTimeTask = null;
+        _changeEntryTimeTask = null;
+        _changeWarmUpTimeTask = null;
+        _changeAttackTimeTask = null;
+
+        _inEntryTime = false;
+        _inAttackTime = false;
+
+        _firstTimeRun = true;
+
+        FourSepulchersSpawn.init();
+
+        timeSelector();
+    }
+
+    @Override
+    public void onDeath(Creature self, Creature killer) {
+        if (self.isPlayer() && self.getZ() >= -7250 && self.getZ() <= -6841 && checkIfInZone(self))
+            checkAnnihilated((Player) self);
+    }
+
+    @Override
+    public void onLoad() {
+        init();
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 
     private static class ManagerSay extends RunnableImpl {
@@ -430,58 +475,5 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
                 _changeCoolDownTimeTask = null;
             }
         }
-    }
-
-    public static GateKeeper getHallGateKeeper(int npcId) {
-        for (GateKeeper gk : FourSepulchersSpawn._GateKeepers)
-            if (gk.template.npcId == npcId)
-                return gk;
-        return null;
-    }
-
-    private static void showHtmlFile(Player player, String file, NpcInstance npc, Player member) {
-        NpcHtmlMessage html = new NpcHtmlMessage(npc.getObjectId());
-        html.setFile("SepulcherNpc/" + file);
-        if (member != null)
-            html.replace("%member%", member.getName());
-        player.sendPacket(html);
-    }
-
-    private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
-    }
-
-    private static List<Player> getPlayersInside() {
-        List<Player> result = new ArrayList<>();
-        for (Zone zone : getZones())
-            result.addAll(zone.getInsidePlayers());
-        return result;
-    }
-
-    private static boolean checkIfInZone(Creature cha) {
-        for (Zone zone : getZones())
-            if (zone.checkIfInZone(cha))
-                return true;
-        return false;
-    }
-
-    private static Zone[] getZones() {
-        return _zone;
-    }
-
-    @Override
-    public void onLoad() {
-        init();
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

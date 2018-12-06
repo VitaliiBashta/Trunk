@@ -29,8 +29,7 @@ public class TelnetWorld implements TelnetCommandHolder {
                 if (args.length == 0)
                     return null;
 
-                Iterable<Player> players = GameObjectsStorage.getAllPlayersForIterate();
-                Iterator<Player> itr = players.iterator();
+                Iterator<Player> itr = GameObjectsStorage.getAllPlayers().iterator();
                 StringBuilder sb = new StringBuilder();
                 int count = 0;
                 Player player;

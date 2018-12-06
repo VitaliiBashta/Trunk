@@ -30,7 +30,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment {
+public final class TerritoryWardObject implements SpawnableObject, FlagItemAttachment {
     private static final long RETURN_FLAG_DELAY = 120000L;
     private final Location _location;
     private final int _itemId;
@@ -54,7 +54,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
 
         _wardNpcInstance = new TerritoryWardInstance(IdFactory.getInstance().getNextId(), _template, this);
         _wardNpcInstance.addEvent(event);
-        _wardNpcInstance.setCurrentHpMp(_wardNpcInstance.getMaxHp(), _wardNpcInstance.getMaxMp());
+        _wardNpcInstance.setFullHpMp();
         _wardNpcInstance.spawnMe(_location);
         _startTimerTask = null;
         _isOutOfZone = false;
@@ -63,7 +63,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
             _wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
         }
 
-        ThreadPoolManager.INSTANCE().schedule(() -> {
+        ThreadPoolManager.INSTANCE.schedule(() -> {
             if (_wardNpcInstance.getZone(ZoneType.SIEGE) != null) {
                 _wardNpcInstance.getZone(ZoneType.SIEGE).addListener(new OnZoneEnterLeaveListenerImpl());
             }
@@ -84,10 +84,8 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
             return;
 
         Player owner = GameObjectsStorage.getPlayer(_wardItemInstance.getOwnerId());
-        if (owner != null) {
-            owner.getInventory().destroyItem(_wardItemInstance, "Territory Ward");
-            owner.sendDisarmMessage(_wardItemInstance);
-        }
+        owner.getInventory().destroyItem(_wardItemInstance, "Territory Ward");
+        owner.sendDisarmMessage(_wardItemInstance);
 
         if (teleportBackTask != null)
             teleportBackTask.cancel(true);
@@ -121,7 +119,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
         _wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
         _wardItemInstance.update();
 
-        _wardNpcInstance.setCurrentHpMp(_wardNpcInstance.getMaxHp(), _wardNpcInstance.getMaxMp(), true);
+        _wardNpcInstance.setFullHpMp();
         _wardNpcInstance.spawnMe(_location);
 
 
@@ -149,10 +147,10 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
 
         DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
 
-        _wardNpcInstance.setCurrentHpMp(_wardNpcInstance.getMaxHp(), _wardNpcInstance.getMaxMp(), true);
+        _wardNpcInstance.setFullHpMp();
         if (owner.isInZone(ZoneType.SIEGE)) {
             _wardNpcInstance.spawnMe(loc);
-            teleportBackTask = ThreadPoolManager.INSTANCE().schedule(new ReturnFlagThread(), RETURN_FLAG_DELAY);
+            teleportBackTask = ThreadPoolManager.INSTANCE.schedule(new ReturnFlagThread(), RETURN_FLAG_DELAY);
         } else {
             _wardNpcInstance.spawnMe(_location);
             runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
@@ -200,7 +198,7 @@ public class TerritoryWardObject implements SpawnableObject, FlagItemAttachment 
             _startTimerTask.cancel(false);
             _startTimerTask = null;
         }
-        _startTimerTask = ThreadPoolManager.INSTANCE().schedule(new DropFlagInstance(player), Config.INTERVAL_FLAG_DROP * 1000);
+        _startTimerTask = ThreadPoolManager.INSTANCE.schedule(new DropFlagInstance(player), Config.INTERVAL_FLAG_DROP * 1000);
 
         player.sendMessage("You've leaved the battle zone! The flag will dissapear in " + Config.INTERVAL_FLAG_DROP + " seconds!");
 

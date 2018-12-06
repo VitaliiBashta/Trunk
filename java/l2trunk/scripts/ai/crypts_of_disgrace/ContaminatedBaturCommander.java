@@ -3,7 +3,6 @@ package l2trunk.scripts.ai.crypts_of_disgrace;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -22,8 +21,8 @@ public final class ContaminatedBaturCommander extends Fighter {
         if (Rnd.chance(CHANCE)) {
             // Спауним
             NpcInstance actor = getActor();
-            SimpleSpawner sp = new SimpleSpawner(NpcHolder.getTemplate(TurkaCommanderChief));
-            sp.setLoc(Location.findPointToStay(actor, 100, 120));
+            SimpleSpawner sp = new SimpleSpawner(TurkaCommanderChief)
+                    .setLoc(Location.findPointToStay(actor, 100, 120));
             NpcInstance npc = sp.doSpawn(true);
 
             // Натравливаем на атакующего

@@ -172,7 +172,6 @@ public final class Config {
     public static long BROADCAST_CHAR_INFO_INTERVAL;
     public static int EFFECT_TASK_MANAGER_COUNT;
     public static int MAXIMUM_ONLINE_USERS;
-    public static int ONLINE_PLUS;
     public static boolean DONTLOADSPAWN;
     public static boolean DONTLOADQUEST;
 
@@ -1893,8 +1892,6 @@ public final class Config {
         AUTOSAVE = serverSettings.getProperty("Autosave", true);
 
         MAXIMUM_ONLINE_USERS = serverSettings.getProperty("MaximumOnlineUsers", 3000);
-        ONLINE_PLUS = serverSettings.getProperty("OnlineUsersPlus", 1);
-
         DATABASE_DRIVER = serverSettings.getProperty("Driver", "com.mysql.jdbc.Driver");
         DATABASE_MAX_CONNECTIONS = serverSettings.getProperty("MaximumDbConnections", 10);
         DATABASE_MAX_IDLE_TIMEOUT = serverSettings.getProperty("MaxIdleConnectionTimeout", 600);

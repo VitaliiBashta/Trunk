@@ -119,7 +119,7 @@ public class SummonSiegeFlag extends Skill {
                 if (_flagType == FlagType.ADVANCED)
                     flag.addStatFunc(new FuncMul(Stats.MAX_HP, 0x50, flag, _advancedMult));
 
-                flag.setCurrentHpMp(flag.getMaxHp(), flag.getMaxMp(), true);
+                flag.setFullHpMp();
                 flag.setHeading(player.getHeading());
 
                 // Ставим флаг перед чаром

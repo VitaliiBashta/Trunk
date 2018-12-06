@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 public final class Kama56Minion extends Fighter {
     public Kama56Minion(NpcInstance actor) {
         super(actor);
-        actor.setIsInvul(true);
+        actor.setInvul(true);
     }
 
     @Override

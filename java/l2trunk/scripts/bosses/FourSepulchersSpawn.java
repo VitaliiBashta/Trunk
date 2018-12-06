@@ -5,6 +5,7 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.idfactory.IdFactory;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
@@ -28,46 +29,27 @@ import java.util.List;
 import java.util.Map;
 
 public class FourSepulchersSpawn extends Functions implements ScriptFile {
+    public static final Map<Integer, Location> _startHallSpawns = new HashMap<>();
+    public static final Map<Integer, Boolean> _hallInUse = new HashMap<>();
+    public static final List<GateKeeper> _GateKeepers = new ArrayList<>();
+    public static final Map<Integer, Boolean> _archonSpawned = new HashMap<>();
+    public static final List<NpcInstance> _allMobs = new ArrayList<>();
     private static final Logger LOG = LoggerFactory.getLogger(FourSepulchersSpawn.class);
-
     private static final Map<Integer, NpcLocation> _shadowSpawns = new HashMap<>();
     private static final Map<Integer, NpcLocation> _mysteriousBoxSpawns = new HashMap<>();
     private static final Map<Integer, List<NpcLocation>> _dukeFinalMobs = new HashMap<>();
     private static final Map<Integer, List<NpcLocation>> _emperorsGraveNpcs = new HashMap<>();
     private static final Map<Integer, List<NpcLocation>> _magicalMonsters = new HashMap<>();
     private static final Map<Integer, List<NpcLocation>> _physicalMonsters = new HashMap<>();
-    public static final Map<Integer, Location> _startHallSpawns = new HashMap<>();
-    public static final Map<Integer, Boolean> _hallInUse = new HashMap<>();
-    public static final List<GateKeeper> _GateKeepers = new ArrayList<>();
     private static final Map<Integer, Integer> _keyBoxNpc = new HashMap<>();
     private static final Map<Integer, Integer> _victim = new HashMap<>();
-    public static final Map<Integer, Boolean> _archonSpawned = new HashMap<>();
-
     private static final Map<Integer, List<SepulcherMonsterInstance>> _dukeMobs = new HashMap<>();
     private static final Map<Integer, List<SepulcherMonsterInstance>> _viscountMobs = new HashMap<>();
-
-    public static List<SepulcherNpcInstance> _managers;
-
-    public static final List<NpcInstance> _allMobs = new ArrayList<>();
-
-    static class NpcLocation extends Location {
-        int npcId;
-
-        NpcLocation() {
-        }
-
-        NpcLocation(int x, int y, int z, int heading, int npcId) {
-            super(x, y, z, heading);
-            this.npcId = npcId;
-        }
-    }
-
     private static final Location[] _startHallSpawn = {
             new Location(181632, -85587, -7218),
             new Location(179963, -88978, -7218),
             new Location(173217, -86132, -7218),
             new Location(175608, -82296, -7218)};
-
     private static final NpcLocation[][] _shadowSpawnLoc = {
             {
                     // x, y, z, heading, npcId
@@ -90,6 +72,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
                     new NpcLocation(189534, -88969, -7216, 32768, 25346),
                     new NpcLocation(173195, -76560, -7215, 49277, 25342),
                     new NpcLocation(175591, -72744, -7215, 49317, 25339)}};
+    public static List<SepulcherNpcInstance> _managers;
 
     public static void init() {
         initFixedInfo();
@@ -325,9 +308,8 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
             }
     }
 
-    public static void deleteAllMobs() {
-        for (NpcInstance mob : _allMobs)
-            mob.deleteMe();
+    static void deleteAllMobs() {
+        _allMobs.forEach(GameObject::deleteMe);
         _allMobs.clear();
     }
 
@@ -544,6 +526,18 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
 
     @Override
     public void onShutdown() {
+    }
+
+    static class NpcLocation extends Location {
+        int npcId;
+
+        NpcLocation() {
+        }
+
+        NpcLocation(int x, int y, int z, int heading, int npcId) {
+            super(x, y, z, heading);
+            this.npcId = npcId;
+        }
     }
 
     public static class GateKeeper extends Location {

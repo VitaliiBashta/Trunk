@@ -4523,7 +4523,7 @@ public enum SystemMsg implements IStaticPacket {
     THE_PREMIUM_ACCOUNT_HAS_BEEN_TERMINATED(6048),
     // Message: The number of my teleports slots has been increased
     THE_NUMBER_OF_MY_TELEPORTS_SLOTS_HAS_BEEN_INCREASED(2409),
-    // Message: You cannot bookmark this location because you do not have a My Teleport Flag.
+    // Message: You cannot bookmark this location because you do not have a My teleport Flag.
     YOU_CANNOT_BOOKMARK_THIS_LOCATION_BECAUSE_YOU_DO_NOT_HAVE_A_MY_TELEPORT_FLAG(6501),
     // Вы попали в мистическое место.
     YOU_HAVE_ENTERED_A_LAND_WITH_MYSTERIOUS_POWERS(1054),

@@ -302,7 +302,7 @@ public final class TeamMember {
         if (player == null)
             return;
 
-        player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
+        player.setFullHpMp();
         player.setCurrentCp(player.getMaxCp());
         player.broadcastUserInfo(true);
 

@@ -45,7 +45,7 @@ public final class NpcTemplate extends CharTemplate {
     private final StatsSet AIParams;
     private final int castleId;
     private final Map<Integer, TeleportLocation[]> teleportList = new HashMap<>();
-    private final Map<QuestEventType, Quest[]> _questEvents = new HashMap<>();
+    private final Map<QuestEventType, List<Quest>> questEvents = new HashMap<>();
     private final Map<Integer, Skill> skills = new HashMap<>();
     private final String _htmRoot;
     public boolean isRaid = false;
@@ -127,8 +127,7 @@ public final class NpcTemplate extends CharTemplate {
     public NpcInstance getNewInstance() {
         try {
             int nextId = IdFactory.getInstance().getNextId();
-            NpcInstance npcInstance = _constructorType.newInstance(nextId, this);
-            return npcInstance;
+            return _constructorType.newInstance(nextId, this);
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
             LOG.error("Unable to create instance of NPC " + npcId, e);
             throw new RuntimeException("Can't create instance " + e);
@@ -374,28 +373,20 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public void addQuestEvent(QuestEventType EventType, Quest q) {
-        if (_questEvents.get(EventType) == null)
-            _questEvents.put(EventType, new Quest[]{q});
+        if (questEvents.get(EventType) == null) {
+            List<Quest> newList = new ArrayList<>();
+            newList.add(q);
+            questEvents.put(EventType, newList);
+        }
         else {
-            Quest[] _quests = _questEvents.get(EventType);
-            int len = _quests.length;
-
-            Quest[] tmp = new Quest[len + 1];
-            for (int i = 0; i < len; i++) {
-                if (_quests[i].getName().equals(q.getName())) {
-                    _quests[i] = q;
-                    return;
-                }
-                tmp[i] = _quests[i];
-            }
-            tmp[len] = q;
-
-            _questEvents.put(EventType, tmp);
+            List<Quest> _quests = questEvents.get(EventType);
+            if (_quests.contains(q)) return;
+            _quests.add(q);
         }
     }
 
-    public Quest[] getEventQuests(QuestEventType EventType) {
-        return _questEvents.get(EventType);
+    public List<Quest> getEventQuests(QuestEventType EventType) {
+        return questEvents.get(EventType);
     }
 
     public int getRace() {
@@ -440,8 +431,8 @@ public final class NpcTemplate extends CharTemplate {
         return castleId;
     }
 
-    public Map<QuestEventType, Quest[]> getQuestEvents() {
-        return _questEvents;
+    public Map<QuestEventType, List<Quest>> getQuestEvents() {
+        return questEvents;
     }
 
     public String getHtmRoot() {

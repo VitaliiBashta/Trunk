@@ -26,7 +26,7 @@ public class AdminDelete implements IAdminCommandHandler {
                 if (obj != null && obj.isNpc()) {
                     NpcInstance target = (NpcInstance) obj;
                     if (Config.SAVE_GM_SPAWN)
-                        SpawnTable.getInstance().deleteSpawn(target.getSpawnedLoc(), target.getNpcId());
+                        SpawnTable.INSTANCE.deleteSpawn(target.getSpawnedLoc(), target.getNpcId());
                     target.deleteMe();
 
                     Spawner spawn = target.getSpawn();

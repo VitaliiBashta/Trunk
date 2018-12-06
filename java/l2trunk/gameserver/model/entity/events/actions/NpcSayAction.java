@@ -12,7 +12,7 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.MapUtils;
 
-public class NpcSayAction implements EventAction {
+public final class NpcSayAction implements EventAction {
     private final int _npcId;
     private final int _range;
     private final ChatType _chatType;
@@ -36,7 +36,7 @@ public class NpcSayAction implements EventAction {
             int ry = MapUtils.regionY(npc);
             int offset = Config.SHOUT_OFFSET;
 
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (npc.getReflection() != player.getReflection())
                     continue;
 

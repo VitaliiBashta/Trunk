@@ -71,7 +71,7 @@ public class AdminRes implements IAdminCommandHandler {
         } else if (target.isNpc())
             ((NpcInstance) target).stopDecay();
 
-        target.setCurrentHpMp(target.getMaxHp(), target.getMaxMp(), true);
+        target.setFullHpMp();
         target.setCurrentCp(target.getMaxCp());
     }
 

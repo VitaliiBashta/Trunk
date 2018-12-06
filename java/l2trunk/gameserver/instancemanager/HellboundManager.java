@@ -4,12 +4,10 @@ import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Territory;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
@@ -33,21 +31,13 @@ import java.util.StringTokenizer;
 
 public enum HellboundManager {
     INSTANCE;
-    private final Logger LOG = LoggerFactory.getLogger(HellboundManager.class);
     private static final long _taskDelay = 2 * 60 * 1000L; //30min
-    private static ArrayList<HellboundSpawn> _list;
-    private static List<SimpleSpawner> _spawnList;
+    private static List<HellboundSpawn> _list = new ArrayList<>();
+    private static List<SimpleSpawner> _spawnList = new ArrayList<>();
     private static int _initialStage = getHellboundLevel();
+    private final Logger LOG = LoggerFactory.getLogger(HellboundManager.class);
     private final DeathListener _deathListener = new DeathListener();
 
-
-    public void init(){
-        getHellboundSpawn();
-        spawnHellbound();
-        doorHandler();
-        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new StageCheckTask(), _taskDelay, _taskDelay);
-
-    }
     public static long getConfidence() {
         return ServerVariables.getLong("HellboundConfidence", 0);
     }
@@ -181,15 +171,21 @@ public enum HellboundManager {
         }
     }
 
+    public void init() {
+        getHellboundSpawn();
+        spawnHellbound();
+        doorHandler();
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new StageCheckTask(), _taskDelay, _taskDelay);
+
+    }
+
     private void spawnHellbound() {
         SimpleSpawner spawnDat;
-        NpcTemplate template;
 
         for (HellboundSpawn hbsi : _list)
             if (hbsi.stages.contains(getHellboundLevel())) {
-                template = NpcHolder.getTemplate(hbsi.getNpcId());
                 for (int i = 0; i < hbsi._amount; i++) {
-                    spawnDat = new SimpleSpawner(template);
+                    spawnDat = new SimpleSpawner(hbsi.getNpcId());
                     spawnDat.setAmount(1);
                     if (hbsi.getLoc() != null)
                         spawnDat.setLoc(hbsi.getLoc());
@@ -208,9 +204,6 @@ public enum HellboundManager {
     }
 
     private void getHellboundSpawn() {
-        _list = new ArrayList<>();
-        _spawnList = new ArrayList<>();
-
         try {
             File file = new File(Config.DATAPACK_ROOT + "/data/hellbound_spawnlist.xml");
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

@@ -5,11 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author Bonux
- * http://l2wiki.info/Драгоценный_камень_дракона_огня
- */
-public class _10505_JewelOfValakas extends Quest implements ScriptFile {
+public final class _10505_JewelOfValakas extends Quest implements ScriptFile {
     //NPC's
     private static final int KLEIN = 31540;
     private static final int VALAKAS = 29028;

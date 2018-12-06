@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
-public final class Rnd {
+public  final class Rnd {
     private static final Random random = new Random();
     private static final ThreadLocal<RandomGenerator> rnd = new ThreadLocalGeneratorHolder();
     private static final AtomicLong seedUniquifier = new AtomicLong(8682522807148012L);

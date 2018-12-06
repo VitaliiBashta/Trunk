@@ -2,7 +2,6 @@ package l2trunk.gameserver.model;
 
 import l2trunk.commons.collections.JoinedIterator;
 import l2trunk.gameserver.model.entity.Reflection;
-import l2trunk.gameserver.model.instances.NpcFriendInstance;
 import l2trunk.gameserver.model.matching.MatchingRoom;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
@@ -12,28 +11,27 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 
-public class CommandChannel implements PlayerGroup {
+public final class CommandChannel implements PlayerGroup {
     public static final int STRATEGY_GUIDE_ID = 8871;
     public static final int CLAN_IMPERIUM_ID = 391;
 
-    private final List<Party> _commandChannelParties = new CopyOnWriteArrayList<>();
-    private Player _commandChannelLeader;
-    private int _commandChannelLvl;
-    private Reflection _reflection;
+    private final List<Party> commandChannelParties = new CopyOnWriteArrayList<>();
+    private Player commandChannelLeader;
+    private int commandChannelLvl;
+    private Reflection reflection;
 
-    private MatchingRoom _matchingRoom;
+    private MatchingRoom matchingRoom;
 
     /**
      * Creates a New Command Channel and Add the Leaders party to the CC
-     *
-     * @param CommandChannelLeader
      */
     public CommandChannel(Player leader) {
-        _commandChannelLeader = leader;
-        _commandChannelParties.add(leader.getParty());
-        _commandChannelLvl = leader.getParty().getLevel();
+        commandChannelLeader = leader;
+        commandChannelParties.add(leader.getParty());
+        commandChannelLvl = leader.getParty().getLevel();
         leader.getParty().setCommandChannel(this);
         sendPacket(ExMPCCOpen.STATIC);
     }
@@ -64,44 +62,38 @@ public class CommandChannel implements PlayerGroup {
 
     /**
      * Adds a Party to the Command Channel
-     *
-     * @param Party
      */
     public void addParty(Party party) {
         sendPacket(new ExMPCCPartyInfoUpdate(party, 1));
-        _commandChannelParties.add(party);
+        commandChannelParties.add(party);
         refreshLevel();
         party.setCommandChannel(this);
 
         for (Player $member : party) {
             $member.sendPacket(ExMPCCOpen.STATIC);
-            if (_matchingRoom != null)
-                _matchingRoom.broadcastPlayerUpdate($member);
+            if (matchingRoom != null)
+                matchingRoom.broadcastPlayerUpdate($member);
         }
     }
 
     /**
      * Removes a Party from the Command Channel
-     *
-     * @param Party
      */
     public void removeParty(Party party) {
-        _commandChannelParties.remove(party);
+        commandChannelParties.remove(party);
         refreshLevel();
         party.setCommandChannel(null);
         party.sendPacket(ExMPCCClose.STATIC);
-        Reflection reflection = getReflection();
         if (reflection != null)
-            for (Player player : party)
-                player.teleToLocation(reflection.getReturnLoc(), 0);
+            party.forEach(player -> player.teleToLocation(reflection.getReturnLoc(), 0));
 
-        if (_commandChannelParties.size() < 2)
+        if (commandChannelParties.size() < 2)
             disbandChannel();
         else {
             for (Player $member : party) {
                 $member.sendPacket(new ExMPCCPartyInfoUpdate(party, 0));
-                if (_matchingRoom != null)
-                    _matchingRoom.broadcastPlayerUpdate($member);
+                if (matchingRoom != null)
+                    matchingRoom.broadcastPlayerUpdate($member);
             }
         }
     }
@@ -111,7 +103,7 @@ public class CommandChannel implements PlayerGroup {
      */
     public void disbandChannel() {
         sendPacket(new SystemMessage2(SystemMsg.THE_COMMAND_CHANNEL_HAS_BEEN_DISBANDED));
-        for (Party party : _commandChannelParties) {
+        for (Party party : commandChannelParties) {
             party.setCommandChannel(null);
             party.sendPacket(ExMPCCClose.STATIC);
             if (isInReflection())
@@ -123,168 +115,106 @@ public class CommandChannel implements PlayerGroup {
             setReflection(null);
         }
 
-        if (_matchingRoom != null)
-            _matchingRoom.disband();
-        _commandChannelParties.clear();
-        _commandChannelLeader = null;
+        if (matchingRoom != null)
+            matchingRoom.disband();
+        commandChannelParties.clear();
+        commandChannelLeader = null;
     }
 
-    /**
-     * Broadcast packet to every channel member
-     *
-     * @param gsp
-     */
     @Override
     public void sendPacket(IStaticPacket... gsp) {
-        for (Party party : _commandChannelParties)
-            party.sendPacket(gsp);
+        commandChannelParties.forEach(party -> party.sendPacket(gsp));
     }
 
     @Override
     public void sendMessage(String message) {
-        for (Party party : _commandChannelParties)
-            party.sendMessage(message);
+        commandChannelParties.forEach(party -> party.sendMessage(message));
     }
 
     @Override
     public void sendChatMessage(int objectId, int messageType, String charName, String text) {
-        for (Party party : _commandChannelParties)
-            party.sendChatMessage(objectId, messageType, charName, text);
+        commandChannelParties.forEach(party -> party.sendChatMessage(objectId, messageType, charName, text));
     }
 
-    /**
-     * Broadcast packet to every party leader of command channel
-     */
     public void broadcastToChannelPartyLeaders(L2GameServerPacket gsp) {
-        for (Party party : _commandChannelParties) {
-            Player leader = party.getLeader();
-            if (leader != null)
-                leader.sendPacket(gsp);
-        }
+        commandChannelParties.forEach(party -> party.getLeader().sendPacket(gsp));
     }
 
-    /**
-     * @return list of Parties in Command Channel
-     */
+
     public List<Party> getParties() {
-        return _commandChannelParties;
+        return commandChannelParties;
     }
 
     @Override
     public Iterator<Player> iterator() {
-        List<Iterator<Player>> iterators = new ArrayList<>(_commandChannelParties.size());
-        for (Party p : getParties())
+        List<Iterator<Player>> iterators = new ArrayList<>(commandChannelParties.size());
+        for (Party p : commandChannelParties)
             iterators.add(p.getMembers().iterator());
         return new JoinedIterator<>(iterators);
     }
 
     @Override
     public int size() {
-        int size = 0;
-        for (Party party : _commandChannelParties)
-            size += party.size();
-
-        return size;
+        return commandChannelParties.stream()
+                .mapToInt(Party::size).sum();
     }
 
     @Override
     public Player getLeader() {
-        return _commandChannelLeader;
+        return commandChannelLeader;
     }
 
-    /**
-     * @return All party members of the command channel
-     */
     @Override
-    public List<Player> getMembers(Player... excluded) {
-        List<Player> members = new ArrayList<>(_commandChannelParties.size());
-        for (Party party : getParties())
-            members.addAll(party.getMembers(excluded));
-        return members;
+    public List<Player> getMembers() {
+        return commandChannelParties.stream()
+                .flatMap(party -> party.getMembers().stream())
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean containsMember(Player player) {
-        for (Party party : _commandChannelParties) {
-            if (party.containsMember(player))
-                return true;
-        }
-
-        return false;
+        return commandChannelParties.stream().anyMatch(party -> party.containsMember(player));
     }
 
-    /**
-     * @return Maximum level of all members in the command channel
-     */
     @Override
     public int getLevel() {
-        return _commandChannelLvl;
+        return commandChannelLvl;
     }
 
     /**
      * @param newLeader the leader of the Command Channel
      */
-    public void setChannelLeader(Player newLeader) {
-        _commandChannelLeader = newLeader;
+    void setChannelLeader(Player newLeader) {
+        commandChannelLeader = newLeader;
         sendPacket(new SystemMessage2(SystemMsg.COMMAND_CHANNEL_AUTHORITY_HAS_BEEN_TRANSFERRED_TO_C1).addString(newLeader.getName()));
     }
 
-    /**
-     * Queen Ant, Core, Orfen, Zaken: MemberCount > 36<br>
-     * Baium: MemberCount > 56<br>
-     * Antharas: MemberCount > 225<br>
-     * Valakas: MemberCount > 99<br>
-     * normal RaidBoss: MemberCount > 18
-     *
-     * @param npc
-     * @return true if proper condition for RaidWar
-     */
-    public boolean meetRaidWarCondition(NpcFriendInstance npc) {
-        if (!npc.isRaid())
-            return false;
-        int npcId = npc.getNpcId();
-        switch (npcId) {
-            case 29001: // Queen Ant
-            case 29006: // Core
-            case 29014: // Orfen
-            case 29022: // Zaken
-                return size() > 36;
-            case 29020: // Baium
-                return size() > 56;
-            case 29019: // Antharas
-                return size() > 225;
-            case 29028: // Valakas
-                return size() > 99;
-            default: // normal Raidboss
-                return size() > 18;
-        }
-    }
-
     private void refreshLevel() {
-        _commandChannelLvl = 0;
-        for (Party pty : _commandChannelParties)
-            if (pty.getLevel() > _commandChannelLvl)
-                _commandChannelLvl = pty.getLevel();
+        commandChannelLvl = commandChannelParties.stream()
+                .mapToInt(Party::getLevel)
+                .max().orElse(0);
+
     }
 
-    public boolean isInReflection() {
-        return _reflection != null;
+    boolean isInReflection() {
+        return reflection != null;
     }
 
     public Reflection getReflection() {
-        return _reflection;
+        return reflection;
     }
 
     @Override
-    public void setReflection(Reflection reflection) {
-        _reflection = reflection;
+    public CommandChannel setReflection(Reflection reflection) {
+        this.reflection = reflection;
+        return this;
     }
 
     public MatchingRoom getMatchingRoom() {
-        return _matchingRoom;
+        return matchingRoom;
     }
 
     public void setMatchingRoom(MatchingRoom matchingRoom) {
-        _matchingRoom = matchingRoom;
+        this.matchingRoom = matchingRoom;
     }
 }

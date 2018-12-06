@@ -34,10 +34,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public final class DoorInstance extends Creature implements GeoCollision {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     private final Lock _openLock = new ReentrantLock();
     private ScheduledFuture<?> _autoActionTask;
     private boolean _open = true;
@@ -305,7 +301,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
     protected void onSpawn() {
         super.onSpawn();
 
-        setCurrentHpMp(getMaxHp(), getMaxMp(), true);
+        setFullHpMp();
 
         closeMe(null, true);
     }

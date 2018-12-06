@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ReligiousAssociationLeader extends SiegeGuardFighter {
+public final class ReligiousAssociationLeader extends SiegeGuardFighter {
     private static final Map<Integer,NpcString[]> MESSAGES = new HashMap<>(9);
 
     static {
@@ -75,7 +75,7 @@ public class ReligiousAssociationLeader extends SiegeGuardFighter {
             actor.setParameter("dominion_first_attack", false);
             NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
             Quest q = QuestManager.getQuest(_732_ProtectTheReligiousAssociationLeader.class);
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+            for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
                     player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 
@@ -99,7 +99,7 @@ public class ReligiousAssociationLeader extends SiegeGuardFighter {
             return;
 
         NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
                 player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
 

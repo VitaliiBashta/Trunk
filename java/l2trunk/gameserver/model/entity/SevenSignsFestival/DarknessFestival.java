@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.SevenSignsFestival;
 
 import l2trunk.commons.threading.RunnableImpl;
-import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Party;
@@ -60,17 +59,12 @@ public final class DarknessFestival extends Reflection {
         }
 
         scheduleNext();
-        NpcTemplate witchTemplate = NpcHolder.getTemplate(_witchSpawn.npcId);
         // Spawn the festival witch for this arena
-        try {
-            SimpleSpawner npcSpawn = new SimpleSpawner(witchTemplate);
-            npcSpawn.setLoc(_witchSpawn.loc);
-            npcSpawn.setReflection(this);
-            addSpawn(npcSpawn);
-            npcSpawn.doSpawn(true);
-        } catch (RuntimeException e) {
-            _log.error("Error while initializing Darkness Festival", e);
-        }
+        SimpleSpawner npcSpawn = (SimpleSpawner) new SimpleSpawner(_witchSpawn.npcId)
+                .setLoc(_witchSpawn.loc)
+                .setReflection(this);
+        npcSpawn.doSpawn(true);
+        addSpawn(npcSpawn);
         sendMessageToParticipants("The festival will begin in 1 minute.");
     }
 
@@ -132,16 +126,13 @@ public final class DarknessFestival extends Reflection {
         if (spawns != null)
             for (int[] element : spawns) {
                 FestivalSpawn currSpawn = new FestivalSpawn(element);
-                NpcTemplate npcTemplate = NpcHolder.getTemplate(currSpawn.npcId);
 
-                SimpleSpawner npcSpawn;
-                npcSpawn = new SimpleSpawner(npcTemplate);
+                SimpleSpawner npcSpawn = new SimpleSpawner(currSpawn.npcId);
                 npcSpawn.setReflection(this);
-                npcSpawn.setLoc(currSpawn.loc);
-                npcSpawn.setHeading(Rnd.get(65536));
-                npcSpawn.setAmount(1);
-                npcSpawn.setRespawnDelay(respawnDelay);
-                npcSpawn.startRespawn();
+                npcSpawn.setLoc(currSpawn.loc)
+                        .setAmount(1)
+                        .setRespawnDelay(respawnDelay)
+                        .startRespawn();
                 FestivalMonsterInstance festivalMob = (FestivalMonsterInstance) npcSpawn.doSpawn(true);
                 // Set the offering bonus to 2x or 5x the amount per kill, if this spawn is part of an increased challenge or is a festival chest.
                 if (spawnType == 1)

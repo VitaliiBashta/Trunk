@@ -1,6 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.BalancerConfig;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -8,7 +7,10 @@ import l2trunk.gameserver.dao.OlympiadNobleDAO;
 import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.*;
-import l2trunk.gameserver.data.xml.parser.*;
+import l2trunk.gameserver.data.xml.parser.ClassesStatsBalancerParser;
+import l2trunk.gameserver.data.xml.parser.EventParser;
+import l2trunk.gameserver.data.xml.parser.FightClubMapParser;
+import l2trunk.gameserver.data.xml.parser.NpcParser;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.instancemanager.SpawnManager;
@@ -65,12 +67,13 @@ public class AdminReload implements IAdminCommandHandler {
             case admin_reload_gmaccess: {
                 try {
                     Config.loadGMAccess();
-                    for (Player player : GameObjectsStorage.getAllPlayersForIterate())
+                    GameObjectsStorage.getAllPlayers().forEach(player -> {
                         if (!Config.EVERYBODY_HAS_ADMIN_RIGHTS)
                             player.setPlayerAccess(Config.gmlist.get(player.getObjectId()));
                         else
                             player.setPlayerAccess(Config.gmlist.get(0));
-                } catch (Exception e) {
+                    });
+                } catch (RuntimeException e) {
                     return false;
                 }
                 activeChar.sendMessage("GMAccess reloaded!");
@@ -86,8 +89,7 @@ public class AdminReload implements IAdminCommandHandler {
             }
             case admin_reload_qs: {
                 if (fullString.endsWith("all"))
-                    for (Player p : GameObjectsStorage.getAllPlayersForIterate())
-                        reloadQuestStates(p);
+                    GameObjectsStorage.getAllPlayers().forEach(this::reloadQuestStates);
                 else {
                     GameObject t = activeChar.getTarget();
 
@@ -131,7 +133,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_shops: {
-                BuyListHolder.reload();
+                BuyListHolder.INSTANCE.reload();
                 break;
             }
             case admin_reload_static: {
@@ -147,7 +149,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_nobles: {
-                OlympiadNobleDAO.getInstance().select();
+                OlympiadNobleDAO.select();
                 OlympiadDatabase.loadNoblesRank();
                 break;
             }

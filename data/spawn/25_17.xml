@@ -2921,11 +2921,11 @@
 	</spawn>
 	<spawn count="1" respawn="60" respawn_random="0" period_of_day="none">
 		<point x="179560" y="-182956" z="-256" h="32404"/>
-		<npc id="32652"/><!--Teleport Crystal-->
+		<npc id="32652"/><!--teleport Crystal-->
 	</spawn>
 	<spawn count="1" respawn="60" respawn_random="0" period_of_day="none">
 		<point x="181941" y="-174614" z="-3568" h="0"/>
-		<npc id="32652"/><!--Teleport Crystal-->
+		<npc id="32652"/><!--teleport Crystal-->
 	</spawn>
 	<spawn count="1" respawn="60" respawn_random="0" period_of_day="none">
 		<point x="178884" y="-184227" z="-336" h="0"/>

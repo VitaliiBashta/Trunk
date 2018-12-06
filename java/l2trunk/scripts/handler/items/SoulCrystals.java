@@ -1,6 +1,5 @@
 package l2trunk.scripts.handler.items;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.data.xml.holder.SoulCrystalHolder;
@@ -24,6 +23,13 @@ import java.util.Set;
 public final class SoulCrystals extends ScriptItemHandler implements ScriptFile {
     private final Set<Integer> itemIds = new HashSet<>();
 
+    public SoulCrystals() {
+        for (SoulCrystal crystal : SoulCrystalHolder.getInstance().getCrystals()) {
+            itemIds.add(crystal.getItemId());
+            itemIds.add(crystal.getNextItemId());
+        }
+    }
+
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
         return true;
@@ -42,13 +48,6 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
     @Override
     public void onShutdown() {
 
-    }
-
-    public SoulCrystals() {
-        for (SoulCrystal crystal : SoulCrystalHolder.getInstance().getCrystals()) {
-            itemIds.add(crystal.getItemId());
-            itemIds.add(crystal.getNextItemId());
-        }
     }
 
     @Override
@@ -76,37 +75,25 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
         }
 
         // Soul Crystal Casting section
-        int skillHitTime = SkillTable.INSTANCE().getInfo(2096, 1).getHitTime();
+        int skillHitTime = SkillTable.INSTANCE.getInfo(2096, 1).getHitTime();
         player.broadcastPacket(new MagicSkillUse(player, 2096, 1, skillHitTime, 0));
         player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, skillHitTime));
         // End Soul Crystal Casting section
 
         // Continue execution later
-        player._skillTask = ThreadPoolManager.INSTANCE().schedule(new CrystalFinalizer(player, target), skillHitTime);
-        return true;
-    }
-
-    static class CrystalFinalizer extends RunnableImpl {
-        private final Player _activeChar;
-        private final MonsterInstance _target;
-
-        CrystalFinalizer(Player activeChar, MonsterInstance target) {
-            _activeChar = activeChar;
-            _target = target;
-        }
-
-        @Override
-        public void runImpl() {
-            _activeChar.sendActionFailed();
-            _activeChar.clearCastVars();
-            if (_activeChar.isDead() || _target.isDead())
+        player._skillTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            player.sendActionFailed();
+            player.clearCastVars();
+            if (player.isDead() || player.isDead())
                 return;
-            _target.addAbsorber(_activeChar);
-        }
+            target.addAbsorber(player);
+        }, skillHitTime);
+        return true;
     }
 
     @Override
     public final List<Integer> getItemIds() {
         return new ArrayList<>(itemIds);
     }
+
 }

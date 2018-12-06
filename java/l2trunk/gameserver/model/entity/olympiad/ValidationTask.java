@@ -7,19 +7,17 @@ import l2trunk.gameserver.model.entity.Hero;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ValidationTask extends RunnableImpl {
+public final class ValidationTask extends RunnableImpl {
     private static final Logger _log = LoggerFactory.getLogger(ValidationTask.class);
 
     @Override
     public void runImpl() {
-        OlympiadHistoryManager.getInstance().switchData();
+        OlympiadHistoryManager.INSTANCE.switchData();
 
         OlympiadDatabase.sortHerosToBe();
         OlympiadDatabase.saveNobleData();
         if (Hero.INSTANCE.computeNewHeroes(Olympiad._heroesToBe))
             _log.warn("Olympiad: Error while computing new heroes!");
-        //Announcements.INSTANCE().announceToAll("Olympiad Validation Period has ended");    //TODO [VISTALL] что за хренЬ?
-
         Olympiad._period = 0;
         Olympiad._currentCycle++;
 

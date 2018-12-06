@@ -1,173 +1,77 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.text.StrTable;
-import l2trunk.gameserver.Config;
-import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.model.instances.PetInstance;
-import l2trunk.gameserver.model.items.ItemInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-//TODO [G1ta0] submit the bredyatinu to hell
-public class GameObjectsStorage {
-    private static final Logger _log = LoggerFactory.getLogger(GameObjectsStorage.class);
+public final class GameObjectsStorage {
+    private static final Map<Integer, Creature> objects = new ConcurrentHashMap<>();
 
-    private static final int STORAGE_PLAYERS = 0x00;
-    private static final int STORAGE_SUMMONS = 0x01;
-    private static final int STORAGE_NPCS = 0x02;
-    /**
-     * .........................................
-     */
-    private static final int STORAGE_OTHER = 0x1E;
-    private static final int STORAGE_NONE = 0x1F;
+    private GameObjectsStorage() {}
 
-    @SuppressWarnings("rawtypes")
-    private static final GameObjectArray[] storages = new GameObjectArray[STORAGE_NONE];
-    private static long offline_refresh = 0;
-    private static int offline_count = 0;
-
-    static {
-        storages[STORAGE_PLAYERS] = new GameObjectArray<Player>("PLAYERS", Config.MAXIMUM_ONLINE_USERS, 1);
-        storages[STORAGE_SUMMONS] = new GameObjectArray<Playable>("SUMMONS", Config.MAXIMUM_ONLINE_USERS, 1);
-        storages[STORAGE_NPCS] = new GameObjectArray<NpcInstance>("NPCS", 60000 * Config.RATE_MOB_SPAWN, 5000);
-        storages[STORAGE_OTHER] = new GameObjectArray<>("OTHER", 2000, 1000);
+    private static List<NpcInstance> getStorageNpcs() {
+        return objects.values().stream()
+                .filter(o -> o instanceof NpcInstance)
+                .map(o -> (NpcInstance) o)
+                .collect(Collectors.toList());
     }
 
-    @SuppressWarnings("unchecked")
-    private static GameObjectArray<Player> getStoragePlayers() {
-        return storages[STORAGE_PLAYERS];
+    public static GameObject get(int storedId) {
+        return objects.get(storedId);
     }
 
-    @SuppressWarnings("unchecked")
-    private static GameObjectArray<NpcInstance> getStorageNpcs() {
-        return storages[STORAGE_NPCS];
+    public static NpcInstance getAsNpc(int storedId) {
+        GameObject obj = get(storedId);
+        if (obj instanceof NpcInstance) return (NpcInstance) obj;
+        throw new IllegalArgumentException("no npc with id:" + storedId);
     }
 
-    private static int selectStorageID(GameObject o) {
-        if (o.isNpc())
-            return STORAGE_NPCS;
-
-        if (o.isPlayable())
-            return o.isPlayer() ? STORAGE_PLAYERS : STORAGE_SUMMONS;
-
-        return STORAGE_OTHER;
-    }
-
-    private static GameObject get(long storedId) {
-        int STORAGE_ID;
-        if (storedId == 0 || (STORAGE_ID = getStorageID(storedId)) == STORAGE_NONE)
-            return null;
-        GameObject result = storages[STORAGE_ID].get(getStoredIndex(storedId));
-        return result != null && result.getObjectId() == getStoredObjectId(storedId) ? result : null;
-    }
-
-    public static GameObject get(Long storedId) {
-        int STORAGE_ID;
-        if (storedId == null || storedId == 0 || (STORAGE_ID = getStorageID(storedId)) == STORAGE_NONE)
-            return null;
-        GameObject result = storages[STORAGE_ID].get(getStoredIndex(storedId));
-        return result != null && result.getObjectId() == getStoredObjectId(storedId) ? result : null;
-    }
-
-
-    public static NpcInstance getAsNpc(long storedId) {
-        return (NpcInstance) get(storedId);
-    }
-
-    public static NpcInstance getAsNpc(Long storedId) {
-        return (NpcInstance) get(storedId);
-    }
-
-    public static Player getAsPlayer(long storedId) {
+    public static Player getAsPlayer(int storedId) {
         return (Player) get(storedId);
     }
 
-    public static Playable getAsPlayable(long storedId) {
-        return (Playable) get(storedId);
-    }
-
-    public static Creature getAsCharacter(long storedId) {
-        return (Creature) get(storedId);
-    }
-
-    public static MonsterInstance getAsMonster(long storedId) {
-        return (MonsterInstance) get(storedId);
-    }
-
-    public static PetInstance getAsPet(long storedId) {
-        return (PetInstance) get(storedId);
-    }
-
-    public static ItemInstance getAsItem(long storedId) {
-        return (ItemInstance) get(storedId);
-    }
-
-    public static boolean contains(long storedId) {
-        return get(storedId) != null;
-    }
-
     public static Player getPlayer(String name) {
-        return getStoragePlayers().findByName(name);
+        return getAllPlayers().stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
     public static Player getPlayer(int objId) {
-        return getStoragePlayers().findByObjectId(objId);
+        Creature o = objects.get(objId);
+        if (o instanceof Player) return (Player) o;
+        throw new IllegalArgumentException("no player with id:" + objId);
     }
 
-    /**
-     * A copy of the list of players from the store suitable for manipulation over her
-     * To iterate mostly better use getAllPlayersForIterate()
-     */
     public static List<Player> getAllPlayers() {
-        return getStoragePlayers().getAll();
+        return objects.values().stream()
+                .filter( o -> o instanceof Player)
+                .map( o -> (Player) o)
+                .collect(Collectors.toList());
     }
 
-    /**
-     * Only be used for enumeration types for(L2Player player : getAllPlayersForIterate()) ...
-     */
-    public static Iterable<Player> getAllPlayersForIterate() {
-        return getStoragePlayers();
-    }
-
-    /**
-     * Returns online from off traders
-     */
     public static int getAllPlayersCount() {
-        return getStoragePlayers().getRealSize() + Config.ONLINE_PLUS;
+        return getAllPlayers().size();
     }
 
-    private static int getAllObjectsCount() {
-        int result = 0;
-        for (GameObjectArray<?> storage : storages)
-            if (storage != null)
-                result += storage.getRealSize();
-        return result;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public static List<GameObject> getAllObjects() {
-        List<GameObject> result = new ArrayList<>(getAllObjectsCount());
-        for (GameObjectArray storage : storages)
-            if (storage != null)
-                storage.getAll(result);
-        return result;
+        return new ArrayList<>(objects.values());
     }
 
     public static GameObject findObject(int objId) {
-        GameObject result;
-        for (GameObjectArray<?> storage : storages)
-            if (storage != null)
-                if ((result = storage.findByObjectId(objId)) != null)
-                    return result;
-        return null;
+        return objects.get(objId);
     }
 
     public static List<NpcInstance> getAllNpcs() {
-        return getStorageNpcs().getAll();
+        return objects.values().stream()
+                .filter((v) -> v instanceof NpcInstance)
+                .map(v -> (NpcInstance) v)
+                .collect(Collectors.toList());
+//        return getStorageNpcs().getAll();
     }
 
     /**
@@ -179,6 +83,7 @@ public class GameObjectsStorage {
 
     public static NpcInstance getByNpcId(int npc_id) {
         NpcInstance result = null;
+
         for (NpcInstance temp : getStorageNpcs())
             if (npc_id == temp.getNpcId()) {
                 if (!temp.isDead())
@@ -211,7 +116,9 @@ public class GameObjectsStorage {
     }
 
     public static NpcInstance getNpc(String s) {
-        List<NpcInstance> npcs = getStorageNpcs().findAllByName(s);
+        List<NpcInstance> npcs = getStorageNpcs().stream()
+                .filter(npc -> npc.getName().equalsIgnoreCase(s))
+                .collect(Collectors.toList());
         if (npcs.size() == 0)
             return null;
         for (NpcInstance temp : npcs)
@@ -224,63 +131,22 @@ public class GameObjectsStorage {
     }
 
     public static NpcInstance getNpc(int objId) {
-        return getStorageNpcs().findByObjectId(objId);
+        return getStorageNpcs().get(objId);
     }
 
-    /**
-     * кладет объект в хранилище и возвращает уникальный индентификатор по которому его можно будет найти в хранилище
-     */
-    public static long put(GameObject o) {
-        int STORAGE_ID = selectStorageID(o);
-        return o.getObjectId() & 0xFFFFFFFFL | (STORAGE_ID & 0x1FL) << 32 | (storages[STORAGE_ID].add(o) & 0xFFFFFFFFL) << 37;
-    }
-
-    /**
-     * генерирует уникальный индентификатор по которому будет ясно что объект вне хранилища но можно будет получить objectId
-     */
-    public static long objIdNoStore(int objId) {
-        return objId & 0xFFFFFFFFL | (STORAGE_NONE & 0x1FL) << 32;
+    public static void put(Creature o) {
+        objects.put(o.getObjectId(), o);
     }
 
     /**
      * пересчитывает StoredId, необходимо при изменении ObjectId
      */
-    public static long refreshId(Creature o) {
-        return o.getObjectId() & 0xFFFFFFFFL | o.getStoredId() >> 32 << 32;
+    public static int refreshId(Creature o) {
+        return o.getObjectId();
     }
 
-    public static GameObject remove(long storedId) {
-        int STORAGE_ID = getStorageID(storedId);
-        return STORAGE_ID == STORAGE_NONE ? null : storages[STORAGE_ID].remove(getStoredIndex(storedId), getStoredObjectId(storedId));
+    public static GameObject remove(int storedId) {
+        return objects.remove(storedId);
     }
 
-    private static int getStorageID(long storedId) {
-        return (int) (storedId >> 32) & 0x1F;
-    }
-
-    private static int getStoredIndex(long storedId) {
-        return (int) (storedId >> 37);
-    }
-
-    public static int getStoredObjectId(long storedId) {
-        return (int) storedId;
-    }
-
-    public static StrTable getStats() {
-        StrTable table = new StrTable("L2 Objects Storage Stats");
-
-        GameObjectArray<?> storage;
-        for (int i = 0; i < storages.length; i++) {
-            if ((storage = storages[i]) == null)
-                continue;
-
-            synchronized (storage) {
-                table.set(i, "Name", storage.name);
-                table.set(i, "Size / Real", storage.size() + " / " + storage.getRealSize());
-                table.set(i, "Capacity / init", storage.capacity() + " / " + storage.initCapacity);
-            }
-        }
-
-        return table;
-    }
 }

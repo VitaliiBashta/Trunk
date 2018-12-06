@@ -2,11 +2,9 @@ package l2trunk.gameserver.scripts;
 
 import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.lang.reference.HardReferences;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.dao.CharacterDAO;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.*;
@@ -21,28 +19,18 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
 public class Functions {
-    private static final Logger _log = LoggerFactory.getLogger(Functions.class);
-
     public HardReference<Player> self = HardReferences.emptyRef();
     public HardReference<NpcInstance> npc = HardReferences.emptyRef();
 
     private static ScheduledFuture<?> executeTask(final Player caller, final String className, final String methodName, final Object[] args, final Map<String, Object> variables, long delay) {
-        return ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                callScripts(caller, className, methodName, args, variables);
-            }
-        }, delay);
+        return ThreadPoolManager.INSTANCE.schedule(() -> callScripts(caller, className, methodName, args, variables), delay);
     }
 
     protected static ScheduledFuture<?> executeTask(String className, String methodName, Object[] args, Map<String, Object> variables, long delay) {
@@ -66,7 +54,7 @@ public class Functions {
     }
 
     private static Object callScripts(Player player, String className, String methodName, Object[] args, Map<String, Object> variables) {
-        return Scripts.getInstance().callScripts(player, className, methodName, args, variables);
+        return Scripts.INSTANCE.callScripts(player, className, methodName, args, variables);
     }
 
     public static void show(String text, Player self, NpcInstance npc, Object... arg) {
@@ -159,7 +147,7 @@ public class Functions {
         int ry = MapUtils.regionY(npc);
         int offset = Config.SHOUT_OFFSET;
 
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getReflection() != npc.getReflection())
                 continue;
 
@@ -179,7 +167,7 @@ public class Functions {
         int ry = MapUtils.regionY(npc);
         int offset = Config.SHOUT_OFFSET;
 
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getReflection() != npc.getReflection())
                 continue;
 
@@ -200,47 +188,18 @@ public class Functions {
         }
     }
 
-    /**
-     * @param playable
-     * @param itemId
-     * @param count
-     * @param log
-     * @see ItemFunctions
-     */
     public static void addItem(Playable playable, int itemId, long count, String log) {
         ItemFunctions.addItem(playable, itemId, count, true, log);
     }
 
-    /**
-     * @param playable
-     * @param itemId
-     * @param count
-     * @param mess
-     * @param log
-     * @see ItemFunctions
-     */
     protected static void addItem(Playable playable, int itemId, long count, boolean mess, String log) {
         ItemFunctions.addItem(playable, itemId, count, mess, log);
     }
 
-    /**
-     * @param playable
-     * @param itemId
-     * @return
-     * @see ItemFunctions
-     */
     public static long getItemCount(Playable playable, int itemId) {
         return ItemFunctions.getItemCount(playable, itemId);
     }
 
-    /**
-     * @param playable
-     * @param itemId
-     * @param count
-     * @param log
-     * @return
-     * @see ItemFunctions
-     */
     public static long removeItem(Playable playable, int itemId, long count, String log) {
         return ItemFunctions.removeItem(playable, itemId, count, true, log);
     }
@@ -284,14 +243,8 @@ public class Functions {
     // @Deprecated
     // TODO [VISTALL] use NpcUtils
     protected static void SpawnNPCs(int npcId, int[][] locations, List<SimpleSpawner> list) {
-        NpcTemplate template = NpcHolder.getTemplate(npcId);
-        if (template == null) {
-            _log.warn("WARNING! Functions.SpawnNPCs template is null for npc: " + npcId);
-            Thread.dumpStack();
-            return;
-        }
         for (int[] location : locations) {
-            SimpleSpawner sp = new SimpleSpawner(template);
+            SimpleSpawner sp = new SimpleSpawner(npcId);
             sp.setLoc(new Location(location[0], location[1], location[2]));
             sp.setAmount(1);
             sp.setRespawnDelay(0);
@@ -302,14 +255,8 @@ public class Functions {
     }
 
     protected static void SpawnNPCs(int npcId, int[][] locations, List<SimpleSpawner> list, int respawn) {
-        NpcTemplate template = NpcHolder.getTemplate(npcId);
-        if (template == null) {
-            _log.warn("WARNING! Functions.SpawnNPCs template is null for npc: " + npcId);
-            Thread.dumpStack();
-            return;
-        }
         for (int[] location : locations) {
-            SimpleSpawner sp = new SimpleSpawner(template);
+            SimpleSpawner sp = new SimpleSpawner(npcId);
             sp.setLoc(new Location(location[0], location[1], location[2]));
             sp.setAmount(1);
             sp.setRespawnDelay(respawn);

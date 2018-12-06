@@ -126,7 +126,7 @@ public final class SignsPriestInstance extends NpcInstance {
                     cabal = SevenSigns.INSTANCE.getPriestCabal(getNpcId());
                     showChatWindow(player, val, SevenSigns.getCabalShortName(cabal), false);
                     break;
-                case 10: // Teleport Locations List
+                case 10: // teleport Locations List
                     cabal = SevenSigns.INSTANCE.getPriestCabal(getNpcId());
                     if (SevenSigns.INSTANCE.isSealValidationPeriod()) {
                         showChatWindow(player, val, "", false);
@@ -324,7 +324,7 @@ public final class SignsPriestInstance extends NpcInstance {
                         showChatWindow(player, 9, "a", false);
                     }
                     break;
-                case 11: // Teleport to Hunting Grounds - deprecated, instead use scripts_Util:QuestGatekeeper x y x 5575 price
+                case 11: // teleport to Hunting Grounds - deprecated, instead use scripts_Util:QuestGatekeeper x y x 5575 price
                     try {
                         String portInfo = command.substring(14).trim();
 

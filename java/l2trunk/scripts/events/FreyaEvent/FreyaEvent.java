@@ -137,7 +137,7 @@ public class FreyaEvent extends Functions implements ScriptFile, OnDeathListener
         if (SetActive(_name, true)) {
             spawnEventManagers();
             System.out.println("Event '" + _name + "' started.");
-            Announcements.INSTANCE.announceByCustomMessage(_msgStarted, null);
+            Announcements.INSTANCE.announceByCustomMessage(_msgStarted);
         } else
             player.sendMessage("Event '" + _name + "' already started.");
 
@@ -156,7 +156,7 @@ public class FreyaEvent extends Functions implements ScriptFile, OnDeathListener
         if (SetActive(_name, false)) {
             unSpawnEventManagers();
             System.out.println("Event '" + _name + "' stopped.");
-            Announcements.INSTANCE.announceByCustomMessage(_msgEnded, null);
+            Announcements.INSTANCE.announceByCustomMessage(_msgEnded);
         } else
             player.sendMessage("Event '" + _name + "' not started.");
 
@@ -168,7 +168,7 @@ public class FreyaEvent extends Functions implements ScriptFile, OnDeathListener
     @Override
     public void onPlayerEnter(Player player) {
         if (_active)
-            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, _msgStarted, null);
+            Announcements.INSTANCE.announceToPlayerByCustomMessage(player, _msgStarted);
     }
 
     public void receiveGift() {

@@ -70,9 +70,7 @@ public final class PavelRuins extends Fighter {
 
     private static void spawnNextMob(int npcId, Creature killer, Location loc) {
         SimpleSpawner sp = new SimpleSpawner(npcId);
-        sp.setLocx(loc.x);
-        sp.setLocy(loc.y);
-        sp.setLocz(loc.z);
+        sp.setLoc(loc);
         NpcInstance npc = sp.doSpawn(true);
         npc.setHeading(PositionUtils.calculateHeadingFrom(npc, killer));
         npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, 1000);

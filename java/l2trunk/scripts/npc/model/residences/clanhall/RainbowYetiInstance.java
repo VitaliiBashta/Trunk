@@ -21,12 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/**
- * @author VISTALL
- * @date 13:49/11.05.2011
- * 750
- */
-public class RainbowYetiInstance extends NpcInstance {
+public final class RainbowYetiInstance extends NpcInstance {
     private static final int ItemA = 8035;
     private static final int ItemB = 8036;
     private static final int ItemC = 8037;
@@ -47,38 +42,6 @@ public class RainbowYetiInstance extends NpcInstance {
     private static final int ItemU = 8053;
     private static final int ItemW = 8054;
     private static final int ItemY = 8055;
-
-    private static class Word {
-        private final String _name;
-        private final int[][] _items;
-
-        Word(String name, int[]... items) {
-            _name = name;
-            _items = items;
-        }
-
-        String getName() {
-            return _name;
-        }
-
-        int[][] getItems() {
-            return _items;
-        }
-    }
-
-    private class GenerateTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            _generated = Rnd.get(WORLD_LIST.length);
-            Word word = WORLD_LIST[_generated];
-
-            List<Player> around = World.getAroundPlayers(RainbowYetiInstance.this, 750, 100);
-            ExShowScreenMessage msg = new ExShowScreenMessage(NpcString.NONE, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, word.getName());
-            for (Player player : around)
-                player.sendPacket(msg);
-        }
-    }
-
     private static final Word[] WORLD_LIST = new Word[8];
 
     static {
@@ -95,7 +58,6 @@ public class RainbowYetiInstance extends NpcInstance {
     private final List<GameObject> _mobs = new ArrayList<>();
     private int _generated = -1;
     private Future<?> _task = null;
-
     public RainbowYetiInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         _hasRandomWalk = false;
@@ -116,7 +78,7 @@ public class RainbowYetiInstance extends NpcInstance {
                 player.teleToLocation(event.getResidence().getOtherRestartPoint());
         }
 
-        _task = ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new GenerateTask(), 10000L, 300000L);
+        _task = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GenerateTask(), 10000L, 300000L);
     }
 
     @Override
@@ -224,5 +186,34 @@ public class RainbowYetiInstance extends NpcInstance {
 
     public void addMob(GameObject object) {
         _mobs.add(object);
+    }
+
+    private static class Word {
+        private final String _name;
+        private final int[][] _items;
+
+        Word(String name, int[]... items) {
+            _name = name;
+            _items = items;
+        }
+
+        String getName() {
+            return _name;
+        }
+
+        int[][] getItems() {
+            return _items;
+        }
+    }
+
+    private class GenerateTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            _generated = Rnd.get(WORLD_LIST.length);
+            Word word = WORLD_LIST[_generated];
+
+            ExShowScreenMessage msg = new ExShowScreenMessage(NpcString.NONE, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, word.getName());
+            World.getAroundPlayers(RainbowYetiInstance.this, 750, 100).forEach(player -> player.sendPacket(msg));
+        }
     }
 }

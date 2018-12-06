@@ -9,13 +9,13 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.utils.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public abstract class MatchingRoom implements PlayerGroup {
     public static final int PARTY_MATCHING = 0;
@@ -31,7 +31,7 @@ public abstract class MatchingRoom implements PlayerGroup {
     final Player _leader;
     private final int _id;
     private final PartyListenerImpl _listener = new PartyListenerImpl();
-    private final List<Player> _members = new CopyOnWriteArrayList<>();
+    private final List<Player> members = new CopyOnWriteArrayList<>();
     private int _minLevel;
     private int _maxLevel;
     private int _maxMemberSize;
@@ -40,7 +40,7 @@ public abstract class MatchingRoom implements PlayerGroup {
 
     MatchingRoom(Player leader, int minLevel, int maxLevel, int maxMemberSize, int lootType, String topic) {
         _leader = leader;
-        _id = MatchingRoomManager.getInstance().addMatchingRoom(this);
+        _id = MatchingRoomManager.INSTANCE.addMatchingRoom(this);
         _minLevel = minLevel;
         _maxLevel = maxLevel;
         _maxMemberSize = maxMemberSize;
@@ -54,7 +54,7 @@ public abstract class MatchingRoom implements PlayerGroup {
     //                                                            Add/Remove Member
     //===============================================================================================================================================
     public boolean addMember(Player player) {
-        if (_members.contains(player))
+        if (members.contains(player))
             return true;
 
         if (player.getLevel() < getMinLevel() || player.getLevel() > getMaxLevel() || getPlayers().size() >= getMaxMembersSize()) {
@@ -66,10 +66,10 @@ public abstract class MatchingRoom implements PlayerGroup {
     }
 
     private boolean addMember0(Player player, L2GameServerPacket p) {
-        if (!_members.isEmpty())
+        if (!members.isEmpty())
             player.addListener(_listener);
 
-        _members.add(player);
+        members.add(player);
 
         player.setMatchingRoom(this);
 
@@ -77,19 +77,19 @@ public abstract class MatchingRoom implements PlayerGroup {
             if ($member != player)
                 $member.sendPacket(p, addMemberPacket($member, player));
 
-        MatchingRoomManager.getInstance().removeFromWaitingList(player);
+        MatchingRoomManager.INSTANCE.removeFromWaitingList(player);
         player.sendPacket(infoRoomPacket(), membersPacket(player));
         player.sendChanges();
         return true;
     }
 
     public void removeMember(Player member, boolean oust) {
-        if (!_members.remove(member))
+        if (!members.remove(member))
             return;
 
         member.removeListener(_listener);
         member.setMatchingRoom(null);
-        if (_members.isEmpty())
+        if (members.isEmpty())
             disband();
         else {
             L2GameServerPacket infoPacket = infoRoomPacket();
@@ -100,7 +100,7 @@ public abstract class MatchingRoom implements PlayerGroup {
         }
 
         member.sendPacket(closeRoomPacket(), exitMessage(false, oust));
-        MatchingRoomManager.getInstance().addToWaitingList(member);
+        MatchingRoomManager.INSTANCE.addToWaitingList(member);
         member.sendChanges();
     }
 
@@ -117,12 +117,12 @@ public abstract class MatchingRoom implements PlayerGroup {
             player.setMatchingRoom(null);
             player.sendChanges();
 
-            MatchingRoomManager.getInstance().addToWaitingList(player);
+            MatchingRoomManager.INSTANCE.addToWaitingList(player);
         }
 
-        _members.clear();
+        members.clear();
 
-        MatchingRoomManager.getInstance().removeMatchingRoom(this);
+        MatchingRoomManager.INSTANCE.removeMatchingRoom(this);
     }
 
     //===============================================================================================================================================
@@ -163,13 +163,13 @@ public abstract class MatchingRoom implements PlayerGroup {
 
     @Override
     public void sendMessage(String message) {
-        for (Player member : _members)
+        for (Player member : members)
             member.sendMessage(message);
     }
 
     @Override
     public void sendChatMessage(int objectId, int messageType, String charName, String text) {
-        for (Player member : _members)
+        for (Player member : members)
             member.sendChatMessage(objectId, messageType, charName, text);
     }
 
@@ -212,11 +212,11 @@ public abstract class MatchingRoom implements PlayerGroup {
     }
 
     public int getLocationId() {
-        return MatchingRoomManager.getInstance().getLocation(_leader);
+        return MatchingRoomManager.INSTANCE.getLocation(_leader);
     }
 
     public Collection<Player> getPlayers() {
-        return _members;
+        return members;
     }
 
     public int getLootType() {
@@ -229,12 +229,12 @@ public abstract class MatchingRoom implements PlayerGroup {
 
     @Override
     public Iterator<Player> iterator() {
-        return _members.iterator();
+        return members.iterator();
     }
 
     @Override
     public int size() {
-        return _members.size();
+        return members.size();
     }
 
     @Override
@@ -248,23 +248,13 @@ public abstract class MatchingRoom implements PlayerGroup {
     }
 
     @Override
-    public List<Player> getMembers(Player... excluded) {
-        if (excluded != null && excluded.length > 0) {
-            List<Player> members = new ArrayList<>();
-            for (Player member : _members) {
-                if (!Util.arrayContains(excluded, member))
-                    members.add(member);
-            }
-
-            return members;
-        }
-
-        return _members;
+    public List<Player> getMembers() {
+        return members;
     }
 
     @Override
     public boolean containsMember(Player player) {
-        return _members.contains(player);
+        return members.contains(player);
     }
 
     public void setMaxMemberSize(int maxMemberSize) {

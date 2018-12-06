@@ -77,7 +77,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
-
 public abstract class Creature extends GameObject {
     public static final double HEADINGS_IN_PI = 10430.3783;
     public static final int INTERACTION_DISTANCE = 200;
@@ -90,7 +89,7 @@ public abstract class Creature extends GameObject {
      */
     protected final Map<Integer, Skill> _skills = new ConcurrentSkipListMap<>();
     final Map<Integer, TimeStamp> _skillReuses = new HashMap<>();
-    final CharTemplate _baseTemplate;
+    final CharTemplate baseTemplate;
     private final Map<Integer, Long[]> receivedDebuffs;
     private final AtomicState _afraid = new AtomicState();
     private final AtomicState _muted = new AtomicState();
@@ -101,7 +100,7 @@ public abstract class Creature extends GameObject {
     private final AtomicState _sleeping = new AtomicState();
     private final AtomicState _stunned = new AtomicState();
     private final AtomicState _immobilized = new AtomicState();
-    private final AtomicState _confused = new AtomicState();
+    private final AtomicState confused = new AtomicState();
     private final AtomicState _frozen = new AtomicState();
     private final AtomicState _healBlocked = new AtomicState();
     private final AtomicState _damageBlocked = new AtomicState();
@@ -118,7 +117,7 @@ public abstract class Creature extends GameObject {
     private final List<List<Location>> _targetRecorder = new ArrayList<>();
     private final List<Calculator> _calculators;
     private final Lock regenLock = new ReentrantLock();
-    private final List<Zone> _zones = new ArrayList<>();
+    private final List<Zone> zones = new ArrayList<>();
     /**
      * Блокировка для чтения/записи объектов из региона
      */
@@ -136,12 +135,12 @@ public abstract class Creature extends GameObject {
     public boolean isMoving;
     public boolean isFollow;
     protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
-    protected boolean _isInvul;
+    protected boolean invul;
     protected CharTemplate template;
     protected volatile CharacterAI _ai;
-    protected String _name;
+    protected String name;
     protected volatile CharListenerList listeners;
-    protected Long storedId;
+    protected int storedId;
     double _currentMp = 1;
     String title;
     private int _scheduledCastCount;
@@ -182,7 +181,7 @@ public abstract class Creature extends GameObject {
     private boolean _isSalvation; // Восстанавливает все бафы после смерти и полностью CP, MP, HP
     private boolean _meditated;
     private boolean _lockedTarget;
-    private boolean _blocked;
+    private boolean blocked;
     private boolean _flying;
     private boolean _running;
     private Future<?> _moveTask;
@@ -197,7 +196,7 @@ public abstract class Creature extends GameObject {
     private volatile HardReference<? extends Creature> _aggressionTarget = HardReferences.emptyRef();
     private long _followTimestamp, _startMoveTime;
     private int _previousSpeed = 0;
-    private int _heading;
+    private int heading;
     private boolean _isRegenerating;
     private Future<?> _regenTask;
     private Runnable _regenTaskRunnable;
@@ -213,7 +212,7 @@ public abstract class Creature extends GameObject {
         receivedDebuffs = new HashMap<>();
 
         this.template = template;
-        _baseTemplate = template;
+        baseTemplate = template;
 
         _calculators = new ArrayList<>();
 
@@ -221,11 +220,13 @@ public abstract class Creature extends GameObject {
 
         reference = new L2Reference<>(this);
 
-        storedId = GameObjectsStorage.put(this);
+        storedId = getObjectId();
+                GameObjectsStorage.put(this);
     }
 
-    public final Long getStoredId() {
+    public final int getStoredId() {
         return storedId;
+//        return objectId;
     }
 
     @Override
@@ -745,7 +746,7 @@ public abstract class Creature extends GameObject {
     public final double calcStat(Stats stat, double init, Creature target, Skill skill) {
         int id = stat.ordinal();
 
-        Calculator c = new Calculator(stat,target);
+        Calculator c = new Calculator(stat, target);
         if (_calculators.contains(c))
             return init;
 //            c = _calculators.get(id);
@@ -1760,11 +1761,12 @@ public abstract class Creature extends GameObject {
 
     @Override
     public String getName() {
-        return StringUtils.defaultString(_name);
+        return StringUtils.defaultString(name);
     }
 
-    public final void setName(String name) {
-        _name = name;
+    public final Creature setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public int getPAtk(Creature target) {
@@ -1876,15 +1878,16 @@ public abstract class Creature extends GameObject {
     }
 
     public CharTemplate getBaseTemplate() {
-        return _baseTemplate;
+        return baseTemplate;
     }
 
     public String getTitle() {
         return StringUtils.defaultString(title);
     }
 
-    public void setTitle(String title) {
+    public Creature setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public final int getWalkSpeed() {
@@ -1952,7 +1955,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isInvul() {
-        return _isInvul;
+        return invul;
     }
 
     public boolean isMageClass() {
@@ -2393,7 +2396,7 @@ public abstract class Creature extends GameObject {
         zonesRead.lock();
         try {
             Zone zone;
-            for (Zone _zone : _zones) {
+            for (Zone _zone : zones) {
                 zone = _zone;
                 if (zone.getType() == ZoneType.water)
                     if (waterZ == Integer.MIN_VALUE || waterZ < zone.getTerritory().getZmax())
@@ -2427,9 +2430,9 @@ public abstract class Creature extends GameObject {
 
         zonesWrite.lock();
         try {
-            if (!_zones.isEmpty()) {
+            if (!this.zones.isEmpty()) {
                 leaving = new ArrayList<>();
-                for (Zone _zone : _zones) {
+                for (Zone _zone : this.zones) {
                     zone = _zone;
                     // зоны больше нет в регионе, либо вышли за территорию зоны
                     if (!zones.contains(zone) || !zone.checkIfInZone(getX(), getY(), getZ(), getReflection()))
@@ -2440,7 +2443,7 @@ public abstract class Creature extends GameObject {
                 if (!leaving.isEmpty()) {
                     for (Zone aLeaving : leaving) {
                         zone = aLeaving;
-                        _zones.remove(zone);
+                        this.zones.remove(zone);
                     }
                 }
             }
@@ -2450,7 +2453,7 @@ public abstract class Creature extends GameObject {
                 for (Zone zone2 : zones) {
                     zone = zone2;
                     // в зону еще не заходили и зашли на территорию зоны
-                    if (!_zones.contains(zone) && zone.checkIfInZone(getX(), getY(), getZ(), getReflection()))
+                    if (!this.zones.contains(zone) && zone.checkIfInZone(getX(), getY(), getZ(), getReflection()))
                         entering.add(zone);
                 }
 
@@ -2458,7 +2461,7 @@ public abstract class Creature extends GameObject {
                 if (!entering.isEmpty()) {
                     for (Zone anEntering : entering) {
                         zone = anEntering;
-                        _zones.add(zone);
+                        this.zones.add(zone);
                     }
                 }
             }
@@ -2501,7 +2504,7 @@ public abstract class Creature extends GameObject {
      * @return is Inside Valakas, Antharas or Baium zone
      */
     public boolean isInZonePvP() {
-        for (Zone zone : _zones)
+        for (Zone zone : zones)
             if (zone.getTemplate().isEpicPvP())
                 return true;
         return false;
@@ -2515,7 +2518,7 @@ public abstract class Creature extends GameObject {
         zonesRead.lock();
         try {
             Zone zone;
-            for (Zone _zone : _zones) {
+            for (Zone _zone : zones) {
                 zone = _zone;
                 if (zone.getType() == type)
                     return true;
@@ -2531,7 +2534,7 @@ public abstract class Creature extends GameObject {
         zonesRead.lock();
         try {
             Zone zone;
-            for (Zone _zone : _zones) {
+            for (Zone _zone : zones) {
                 zone = _zone;
                 if (zone.getName().equals(name))
                     return true;
@@ -2546,26 +2549,21 @@ public abstract class Creature extends GameObject {
     public boolean isInZone(Zone zone) {
         zonesRead.lock();
         try {
-            return _zones.contains(zone);
+            return zones.contains(zone);
         } finally {
             zonesRead.unlock();
         }
     }
 
-    public Zone getZone(ZoneType type) {
-        zonesRead.lock();
-        try {
-            return _zones.stream().filter(z -> z.getType() == type).findFirst().orElse(null);
-        } finally {
-            zonesRead.unlock();
-        }
+    public synchronized Zone getZone(ZoneType type) {
+        return zones.stream().filter(z -> z.getType() == type).findFirst().orElse(null);
     }
 
     public Location getRestartPoint() {
         zonesRead.lock();
         try {
             Zone zone;
-            for (Zone _zone : _zones) {
+            for (Zone _zone : zones) {
                 zone = _zone;
                 if (zone.getRestartPoints() != null) {
                     ZoneType type = zone.getType();
@@ -2584,7 +2582,7 @@ public abstract class Creature extends GameObject {
         zonesRead.lock();
         try {
             Zone zone;
-            for (Zone _zone : _zones) {
+            for (Zone _zone : zones) {
                 zone = _zone;
                 if (zone.getRestartPoints() != null) {
                     ZoneType type = zone.getType();
@@ -3156,7 +3154,12 @@ public abstract class Creature extends GameObject {
             startRegeneration();
     }
 
-    public void setCurrentHpMp(double newHp, double newMp, boolean canRessurect) {
+    public Creature setFullHpMp() {
+        setCurrentHpMp(getMaxHp(),getMaxMp(),true);
+        return this;
+    }
+
+    private void setCurrentHpMp(double newHp, double newMp, boolean canRessurect) {
         int maxHp = getMaxHp();
         int maxMp = getMaxMp();
 
@@ -3186,17 +3189,19 @@ public abstract class Creature extends GameObject {
             startRegeneration();
     }
 
-    public void setCurrentHpMp(double newHp, double newMp) {
+    public Creature setCurrentHpMp(double newHp, double newMp) {
         setCurrentHpMp(newHp, newMp, false);
+        return this;
     }
 
     @Override
     public final int getHeading() {
-        return _heading;
+        return heading;
     }
 
-    public void setHeading(int heading) {
-        _heading = heading;
+    public Creature setHeading(int heading) {
+        this.heading = heading;
+        return this;
     }
 
     public final void setIsTeleporting(boolean value) {
@@ -3360,28 +3365,28 @@ public abstract class Creature extends GameObject {
      * Блокируем персонажа
      */
     public void block() {
-        _blocked = true;
+        blocked = true;
     }
 
     /**
      * Разблокируем персонажа
      */
     public void unblock() {
-        _blocked = false;
+        blocked = false;
     }
 
     /**
      * @return предыдущее состояние
      */
     public boolean startConfused() {
-        return _confused.getAndSet(true);
+        return confused.getAndSet(true);
     }
 
     /**
      * @return текущее состояние
      */
     public boolean stopConfused() {
-        return _confused.setAndGet(false);
+        return confused.setAndGet(false);
     }
 
     /**
@@ -3614,12 +3619,12 @@ public abstract class Creature extends GameObject {
         _isSalvation = value;
     }
 
-    public void setIsInvul(boolean value) {
-        _isInvul = value;
+    public void setInvul(boolean invul) {
+        this.invul = invul;
     }
 
     public boolean isConfused() {
-        return _confused.get();
+        return confused.get();
     }
 
     public boolean isFakeDeath() {
@@ -3635,7 +3640,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isBlocked() {
-        return _blocked;
+        return blocked;
     }
 
     public boolean isMuted(Skill skill) {
@@ -3777,10 +3782,10 @@ public abstract class Creature extends GameObject {
             z = GeoEngine.getHeight(x, y, z, r.getGeoIndex());
 
         // TODO [G1ta0] убрать DimensionalRiftManager.teleToLocation
-        if (isPlayer() && DimensionalRiftManager.getInstance().checkIfInRiftZone(getLoc(), true)) {
+        if (isPlayer() && DimensionalRiftManager.INSTANCE.checkIfInRiftZone(getLoc(), true)) {
             Player player = (Player) this;
             if (player.isInParty() && player.getParty().isInDimensionalRift()) {
-                Location newCoords = DimensionalRiftManager.getInstance().getRoom(0, 0).getTeleportCoords();
+                Location newCoords = DimensionalRiftManager.INSTANCE.getRoom(0, 0).getTeleportCoords();
                 x = newCoords.x;
                 y = newCoords.y;
                 z = newCoords.z;
@@ -3873,10 +3878,8 @@ public abstract class Creature extends GameObject {
                 max_attacker_level = getLevel() + max_level_diff;
         }
 
-        if (attacker.getLevel() > max_attacker_level)
-            return true;
+        return attacker.getLevel() > max_attacker_level;
 
-        return false;
     }
 
     @Override
@@ -4124,6 +4127,7 @@ public abstract class Creature extends GameObject {
         updateStats();
         updateZones();
     }
+
 
     @Override
     public void spawnMe(Location loc) {

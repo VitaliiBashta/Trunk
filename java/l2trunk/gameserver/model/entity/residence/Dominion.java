@@ -5,7 +5,6 @@ import l2trunk.gameserver.dao.DominionDAO;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.events.EventType;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeRunnerEvent;
@@ -109,8 +108,7 @@ public final class Dominion extends Residence {
             newLordObjectId = clan.getLeaderId();
 
             SystemMessage2 message = new SystemMessage2(SystemMsg.CLAN_LORD_C2_WHO_LEADS_CLAN_S1_HAS_BEEN_DECLARED_THE_LORD_OF_THE_S3_TERRITORY).addName(clan.getLeader().getPlayer()).addString(clan.getName()).addResidenceName(getCastle());
-            for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-                player.sendPacket(message);
+            GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(message));
         }
 
         _lordObjectId = newLordObjectId;

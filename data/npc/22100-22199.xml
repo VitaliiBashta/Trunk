@@ -2643,7 +2643,7 @@
 			<skill id="4438" level="4" />	<!--Greater Resist Sleep-->
 			<skill id="4439" level="4" />	<!--Greater Resist Hold-->
 			<skill id="4614" level="1" />	<!--NPC Death Bomb-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 			<skill id="4789" level="9" />	<!--NPC High Level-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">
@@ -3092,7 +3092,7 @@
 			<skill id="4438" level="4" />	<!--Greater Resist Sleep-->
 			<skill id="4439" level="4" />	<!--Greater Resist Hold-->
 			<skill id="4614" level="10" />	<!--NPC Death Bomb-->
-			<skill id="4671" level="1" />	<!--AV - Teleport-->
+			<skill id="4671" level="1" />	<!--AV - teleport-->
 			<skill id="4789" level="10" />	<!--NPC High Level-->
 		</skills>
 		<rewardlist type="RATED_GROUPED">

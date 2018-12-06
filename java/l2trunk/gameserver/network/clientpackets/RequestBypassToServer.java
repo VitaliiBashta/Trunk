@@ -94,9 +94,9 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                 }
 
                 if (word.length == 1)
-                    Scripts.getInstance().callScripts(activeChar, path[0], path[1], variables);
+                    Scripts.INSTANCE.callScripts(activeChar, path[0], path[1], variables);
                 else
-                    Scripts.getInstance().callScripts(activeChar, path[0], path[1], new Object[]{args}, variables);
+                    Scripts.INSTANCE.callScripts(activeChar, path[0], path[1], new Object[]{args}, variables);
             } else if (bp.bypass.startsWith("user_")) {
                 String command = bp.bypass.substring(5).trim();
                 String word = command.split("\\s+")[0];
@@ -146,7 +146,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                 int heroclass = Integer.parseInt(st.nextToken().split("=")[1]);
                 int heropage = Integer.parseInt(st.nextToken().split("=")[1]);
 
-                OlympiadHistoryManager.getInstance().showHistory(activeChar, heroclass, heropage);
+                OlympiadHistoryManager.INSTANCE.showHistory(activeChar, heroclass, heropage);
             } else if (bp.bypass.startsWith("manor_menu_select?")) // Navigate throught Manor windows
             {
                 GameObject object = activeChar.getTarget();

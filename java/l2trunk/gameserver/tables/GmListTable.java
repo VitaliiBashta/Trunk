@@ -6,26 +6,23 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class GmListTable {
+public final class GmListTable {
+    private GmListTable() {
+    }
+
     public static List<Player> getAllGMs() {
-        List<Player> gmList = new ArrayList<>();
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            if (player.isGM())
-                gmList.add(player);
-
-        return gmList;
+        return GameObjectsStorage.getAllPlayers().stream()
+                .filter(Player::isGM).collect(Collectors.toList());
     }
 
     public static List<Player> getAllVisibleGMs() {
-        List<Player> gmList = new ArrayList<>();
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate())
-            if (player.isGM() && player.getVarInt("gmOnList", 1) == 1)
-                gmList.add(player);
-
-        return gmList;
+        return GameObjectsStorage.getAllPlayers().stream()
+                .filter(Player::isGM)
+                .filter(player -> player.getVarInt("gmOnList", 1) == 1)
+                .collect(Collectors.toList());
     }
 
     public static void sendListToPlayer(Player player) {
@@ -36,17 +33,14 @@ public class GmListTable {
         }
 
         player.sendPacket(SystemMsg._GM_LIST_);
-        for (Player gm : gmList)
-            player.sendPacket(new SystemMessage2(SystemMsg.GM_S1).addString(gm.getName()));
+        gmList.forEach(gm -> player.sendPacket(new SystemMessage2(SystemMsg.GM_S1).addString(gm.getName())));
     }
 
     public static void broadcastToGMs(L2GameServerPacket packet) {
-        for (Player gm : getAllGMs())
-            gm.sendPacket(packet);
+        getAllGMs().forEach(gm -> gm.sendPacket(packet));
     }
 
     public static void broadcastMessageToGMs(String message) {
-        for (Player gm : getAllGMs())
-            gm.sendMessage(message);
+        getAllGMs().forEach(gm -> gm.sendMessage(message));
     }
 }

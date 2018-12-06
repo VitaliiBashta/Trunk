@@ -128,7 +128,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
 
         int delay = 0;
         for (Skill skill : _skills) {
-            ThreadPoolManager.INSTANCE().schedule(new Buff(this, getPlayer(), skill), delay);
+            ThreadPoolManager.INSTANCE.schedule(new Buff(this, getPlayer(), skill), delay);
             delay = delay + skill.getHitTime() + 500;
         }
     }
@@ -171,12 +171,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     }
 
     public void despawnWithDelay(int delay) {
-        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                doDespawn();
-            }
-        }, delay);
+        ThreadPoolManager.INSTANCE.schedule(this::doDespawn, delay);
     }
 
     public void doDespawn() {
@@ -202,66 +197,66 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     }
 
     public static class Buff extends RunnableImpl {
-        private final NpcInstance _actor;
-        private final Player _owner;
-        private final Skill _skill;
+        private final NpcInstance actor;
+        private final Player owner;
+        private final Skill skill;
 
         Buff(NpcInstance actor, Player owner, Skill skill) {
-            _actor = actor;
-            _owner = owner;
-            _skill = skill;
+            this.actor = actor;
+            this.owner = owner;
+            this.skill = skill;
         }
 
         @Override
         public void runImpl() {
-            if (_actor != null)
-                _actor.doCast(_skill, _owner, true);
+            if (actor != null)
+                actor.doCast(skill, owner, true);
         }
     }
 
     private static class CheckDuration extends RunnableImpl {
-        private final TamedBeastInstance _tamedBeast;
+        private final TamedBeastInstance tamedBeast;
 
         CheckDuration(TamedBeastInstance tamedBeast) {
-            _tamedBeast = tamedBeast;
+            this.tamedBeast = tamedBeast;
         }
 
         @Override
         public void runImpl() {
-            Player owner = _tamedBeast.getPlayer();
+            Player owner = tamedBeast.getPlayer();
 
             if (owner == null || !owner.isOnline()) {
-                _tamedBeast.doDespawn();
+                tamedBeast.doDespawn();
                 return;
             }
 
-            if (_tamedBeast.getDistance(owner) > MAX_DISTANCE_FROM_OWNER) {
-                _tamedBeast.doDespawn();
+            if (tamedBeast.getDistance(owner) > MAX_DISTANCE_FROM_OWNER) {
+                tamedBeast.doDespawn();
                 return;
             }
 
-            int foodTypeSkillId = _tamedBeast.getFoodType();
-            _tamedBeast.setRemainingTime(_tamedBeast.getRemainingTime() - DURATION_CHECK_INTERVAL);
+            int foodTypeSkillId = tamedBeast.getFoodType();
+            tamedBeast.setRemainingTime(tamedBeast.getRemainingTime() - DURATION_CHECK_INTERVAL);
 
             // I tried to avoid this as much as possible...but it seems I can't avoid hardcoding
             // ids further, except by carrying an additional variable just for these two lines...
             // Find which food item needs to be consumed.
             ItemInstance item = null;
-            int foodItemId = _tamedBeast.getItemIdBySkillId(foodTypeSkillId);
+            int foodItemId = tamedBeast.getItemIdBySkillId(foodTypeSkillId);
             if (foodItemId > 0)
                 item = owner.getInventory().getItemByItemId(foodItemId);
 
             // if the owner has enough food, call the item handler (use the food and triffer all necessary actions)
             if (item != null && item.getCount() >= 1) {
-                _tamedBeast.onReceiveFood();
+                tamedBeast.onReceiveFood();
                 owner.getInventory().destroyItem(item, 1, "Tamed Beast");
             } else // if the owner has no food, the beast immediately despawns, except when it was only
                 // newly spawned. Newly spawned beasts can last up to 5 minutes
-                if (_tamedBeast.getRemainingTime() < MAX_DURATION - 300000)
-                    _tamedBeast.setRemainingTime(-1);
+                if (tamedBeast.getRemainingTime() < MAX_DURATION - 300000)
+                    tamedBeast.setRemainingTime(-1);
 
-            if (_tamedBeast.getRemainingTime() <= 0)
-                _tamedBeast.doDespawn();
+            if (tamedBeast.getRemainingTime() <= 0)
+                tamedBeast.doDespawn();
         }
     }
 }

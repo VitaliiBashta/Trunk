@@ -22,7 +22,7 @@ public class TaskEndHero extends Task {
     @Override
     public void onTimeElapsed(ExecutedTask task) {
         _log.info("Hero End Global Task: launched.");
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
+        for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getVarLong("HeroPeriod") <= System.currentTimeMillis()) {
                 player.setHero(false);
                 player.updatePledgeClass();

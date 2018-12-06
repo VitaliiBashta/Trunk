@@ -71,7 +71,7 @@
 		</item>
 				<item>
 			<ingredient id="13067" count="80000" /> <!--Fantasy Isle Coin-->
-			<production id="13016" count="1" /> <!--My Teleport Scroll -->
+			<production id="13016" count="1" /> <!--My teleport Scroll -->
 		</item>
 				<item>
 			<ingredient id="13067" count="100000" /> <!--Fantasy Isle Coin-->
@@ -79,7 +79,7 @@
 		</item>
 				<item>
 			<ingredient id="13067" count="100000" /> <!--Fantasy Isle Coin-->
-			<production id="20033" count="1" /> <!--My Teleport Flag-->
+			<production id="20033" count="1" /> <!--My teleport Flag-->
 		</item>
 				<item>
 			<ingredient id="13067" count="600000" /> <!--Fantasy Isle Coin-->
@@ -87,7 +87,7 @@
 		</item>
 				<item>
 			<ingredient id="13067" count="400000" /> <!--Fantasy Isle Coin-->
-			<production id="13015" count="1" /> <!--My Teleport Spellbook-->
+			<production id="13015" count="1" /> <!--My teleport Spellbook-->
 		</item>
 		<item>
 			<ingredient id="13067" count="10000000" /> <!--Fantasy Isle Coin-->

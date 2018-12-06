@@ -7,6 +7,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
@@ -30,7 +31,7 @@ public final class ArtefactAI extends CharacterAI {
         SiegeClanObject siegeClan = siegeEvent1.getSiegeClan(SiegeEvent.ATTACKERS, player.getClan());
 
         if (siegeEvent2 == null || siegeEvent1 == siegeEvent2 && siegeClan != null)
-            ThreadPoolManager.INSTANCE().schedule(new notifyGuard(player), 1000);
+            ThreadPoolManager.INSTANCE.schedule(new notifyGuard(player), 1000);
     }
 
     private class notifyGuard extends RunnableImpl {
@@ -47,12 +48,13 @@ public final class ArtefactAI extends CharacterAI {
             if (attacker == null || (actor = (NpcInstance) getActor()) == null)
                 return;
 
-            for (NpcInstance npc : actor.getAroundNpc(1500, 200))
-                if (npc.isSiegeGuard() && Rnd.chance(20))
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000);
+            actor.getAroundNpc(1500, 200).stream()
+                    .filter(GameObject::isSiegeGuard)
+                    .filter(npc -> Rnd.chance(20))
+                    .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000));
 
             if (attacker.getCastingSkill() != null && attacker.getCastingSkill().getTargetType() == Skill.SkillTargetType.TARGET_HOLY)
-                ThreadPoolManager.INSTANCE().schedule(this, 10000);
+                ThreadPoolManager.INSTANCE.schedule(this, 10000);
         }
     }
 }

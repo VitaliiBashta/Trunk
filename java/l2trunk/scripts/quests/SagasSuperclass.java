@@ -7,7 +7,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.CtrlIntention;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -15,7 +14,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
 import java.sql.Connection;
@@ -23,6 +21,108 @@ import java.sql.PreparedStatement;
 import java.util.*;
 
 public abstract class SagasSuperclass extends Quest {
+    private static final Map<Integer, Class<?>> Quests = new HashMap<>();
+    private static final int[][] QuestClass = new int[][]{
+            {0x7f},
+            {
+                    0x80,
+                    0x81
+            },
+            {0x82},
+            {0x05},
+            {0x14},
+            {0x15},
+            {0x02},
+            {0x03},
+            {0x2e},
+            {0x30},
+            {0x33},
+            {0x34},
+            {0x08},
+            {0x17},
+            {0x24},
+            {0x09},
+            {0x18},
+            {0x25},
+            {0x10},
+            {0x11},
+            {0x1e},
+            {0x0c},
+            {0x1b},
+            {0x28},
+            {0x0e},
+            {0x1c},
+            {0x29},
+            {0x0d},
+            {0x06},
+            {0x22},
+            {0x21},
+            {0x2b},
+            {0x37},
+            {0x39}
+    };
+
+    static {
+        Quests.put(67, _067_SagaOfTheDoombringer.class);
+        Quests.put(68, _068_SagaOfTheSoulHound.class);
+        Quests.put(69, _069_SagaOfTheTrickster.class);
+        Quests.put(70, _070_SagaOfThePhoenixKnight.class);
+        Quests.put(71, _071_SagaOfEvasTemplar.class);
+        Quests.put(72, _072_SagaOfTheSwordMuse.class);
+        Quests.put(73, _073_SagaOfTheDuelist.class);
+        Quests.put(74, _074_SagaOfTheDreadnoughts.class);
+        Quests.put(75, _075_SagaOfTheTitan.class);
+        Quests.put(76, _076_SagaOfTheGrandKhavatari.class);
+        Quests.put(77, _077_SagaOfTheDominator.class);
+        Quests.put(78, _078_SagaOfTheDoomcryer.class);
+        Quests.put(79, _079_SagaOfTheAdventurer.class);
+        Quests.put(80, _080_SagaOfTheWindRider.class);
+        Quests.put(81, _081_SagaOfTheGhostHunter.class);
+        Quests.put(82, _082_SagaOfTheSagittarius.class);
+        Quests.put(83, _083_SagaOfTheMoonlightSentinel.class);
+        Quests.put(84, _084_SagaOfTheGhostSentinel.class);
+        Quests.put(85, _085_SagaOfTheCardinal.class);
+        Quests.put(86, _086_SagaOfTheHierophant.class);
+        Quests.put(87, _087_SagaOfEvasSaint.class);
+        Quests.put(88, _088_SagaOfTheArchmage.class);
+        Quests.put(89, _089_SagaOfTheMysticMuse.class);
+        Quests.put(90, _090_SagaOfTheStormScreamer.class);
+        Quests.put(91, _091_SagaOfTheArcanaLord.class);
+        Quests.put(92, _092_SagaOfTheElementalMaster.class);
+        Quests.put(93, _093_SagaOfTheSpectralMaster.class);
+        Quests.put(94, _094_SagaOfTheSoultaker.class);
+        Quests.put(95, _095_SagaOfTheHellKnight.class);
+        Quests.put(96, _096_SagaOfTheSpectralDancer.class);
+        Quests.put(97, _097_SagaOfTheShillienTemplar.class);
+        Quests.put(98, _098_SagaOfTheShillienSaint.class);
+        Quests.put(99, _099_SagaOfTheFortuneSeeker.class);
+        Quests.put(100, _100_SagaOfTheMaestro.class);
+    }
+
+    private final List<Spawn> Spawn_List = new ArrayList<>();
+    private final int[] Archon_Minions = new int[]{
+            21646,
+            21647,
+            21648,
+            21649,
+            21650,
+            21651
+    };
+    private final int[] Guardian_Angels = new int[]{
+            27214,
+            27215,
+            27216
+    };
+    private final int[] Archon_Hellisha_Norm = new int[]{
+            18212,
+            18213,
+            18214,
+            18215,
+            18216,
+            18217,
+            18218,
+            18219
+    };
     protected int id = 0;
     int classid = 0;
     int prevclass = 0;
@@ -73,130 +173,39 @@ public abstract class SagasSuperclass extends Quest {
             2
     };
     String[] Text = new String[18];
-    private final List<Spawn> Spawn_List = new ArrayList<>();
 
-    private class Spawn {
-        final int npcId;
-        final int TimeToLive;
-        final long spawned_at;
-        final long charStoreId;
-        final long npcStoreId;
-
-        Spawn(NpcInstance npc, long charStoreId, int TimeToLive) {
-            npcId = npc.getNpcId();
-            npcStoreId = npc.getStoredId();
-            this.charStoreId = charStoreId;
-            this.TimeToLive = TimeToLive;
-            spawned_at = System.currentTimeMillis();
-        }
-
-        NpcInstance getNPC() {
-            return GameObjectsStorage.getAsNpc(npcStoreId);
-        }
+    SagasSuperclass(boolean party) {
+        super(party);
+        cleanTempVars();
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SpawnCleaner(), 60000, 10000);
     }
 
-    private final int[] Archon_Minions = new int[]{
-            21646,
-            21647,
-            21648,
-            21649,
-            21650,
-            21651
-    };
-    private final int[] Guardian_Angels = new int[]{
-            27214,
-            27215,
-            27216
-    };
-    private final int[] Archon_Hellisha_Norm = new int[]{
-            18212,
-            18213,
-            18214,
-            18215,
-            18216,
-            18217,
-            18218,
-            18219
-    };
-
-    private static final Map<Integer, Class<?>> Quests = new HashMap<>();
-
-    static {
-        Quests.put(67, _067_SagaOfTheDoombringer.class);
-        Quests.put(68, _068_SagaOfTheSoulHound.class);
-        Quests.put(69, _069_SagaOfTheTrickster.class);
-        Quests.put(70, _070_SagaOfThePhoenixKnight.class);
-        Quests.put(71, _071_SagaOfEvasTemplar.class);
-        Quests.put(72, _072_SagaOfTheSwordMuse.class);
-        Quests.put(73, _073_SagaOfTheDuelist.class);
-        Quests.put(74, _074_SagaOfTheDreadnoughts.class);
-        Quests.put(75, _075_SagaOfTheTitan.class);
-        Quests.put(76, _076_SagaOfTheGrandKhavatari.class);
-        Quests.put(77, _077_SagaOfTheDominator.class);
-        Quests.put(78, _078_SagaOfTheDoomcryer.class);
-        Quests.put(79, _079_SagaOfTheAdventurer.class);
-        Quests.put(80, _080_SagaOfTheWindRider.class);
-        Quests.put(81, _081_SagaOfTheGhostHunter.class);
-        Quests.put(82, _082_SagaOfTheSagittarius.class);
-        Quests.put(83, _083_SagaOfTheMoonlightSentinel.class);
-        Quests.put(84, _084_SagaOfTheGhostSentinel.class);
-        Quests.put(85, _085_SagaOfTheCardinal.class);
-        Quests.put(86, _086_SagaOfTheHierophant.class);
-        Quests.put(87, _087_SagaOfEvasSaint.class);
-        Quests.put(88, _088_SagaOfTheArchmage.class);
-        Quests.put(89, _089_SagaOfTheMysticMuse.class);
-        Quests.put(90, _090_SagaOfTheStormScreamer.class);
-        Quests.put(91, _091_SagaOfTheArcanaLord.class);
-        Quests.put(92, _092_SagaOfTheElementalMaster.class);
-        Quests.put(93, _093_SagaOfTheSpectralMaster.class);
-        Quests.put(94, _094_SagaOfTheSoultaker.class);
-        Quests.put(95, _095_SagaOfTheHellKnight.class);
-        Quests.put(96, _096_SagaOfTheSpectralDancer.class);
-        Quests.put(97, _097_SagaOfTheShillienTemplar.class);
-        Quests.put(98, _098_SagaOfTheShillienSaint.class);
-        Quests.put(99, _099_SagaOfTheFortuneSeeker.class);
-        Quests.put(100, _100_SagaOfTheMaestro.class);
+    private static QuestState findQuest(Player player) {
+        QuestState st = null;
+        for (Integer q : Quests.keySet()) {
+            st = player.getQuestState(Quests.get(q));
+            if (st != null) {
+                int[] qc = QuestClass[q - 67];
+                for (int c : qc)
+                    if (player.getClassId().getId() == c)
+                        return st;
+            }
+        }
+        return null;
     }
 
-    private static final int[][] QuestClass = new int[][]{
-            {0x7f},
-            {
-                    0x80,
-                    0x81
-            },
-            {0x82},
-            {0x05},
-            {0x14},
-            {0x15},
-            {0x02},
-            {0x03},
-            {0x2e},
-            {0x30},
-            {0x33},
-            {0x34},
-            {0x08},
-            {0x17},
-            {0x24},
-            {0x09},
-            {0x18},
-            {0x25},
-            {0x10},
-            {0x11},
-            {0x1e},
-            {0x0c},
-            {0x1b},
-            {0x28},
-            {0x0e},
-            {0x1c},
-            {0x29},
-            {0x0d},
-            {0x06},
-            {0x22},
-            {0x21},
-            {0x2b},
-            {0x37},
-            {0x39}
-    };
+    private static void process_step_15to16(QuestState st) {
+        if (st == null || st.getCond() != 15)
+            return;
+        int Halishas_Mark = ((SagasSuperclass) st.getQuest()).Items[3];
+        int Resonance_Amulet = ((SagasSuperclass) st.getQuest()).Items[8];
+
+        st.takeItems(Halishas_Mark, -1);
+        if (st.getQuestItemsCount(Resonance_Amulet) == 0)
+            st.giveItems(Resonance_Amulet, 1);
+        st.setCond(16);
+        st.playSound(SOUND_MIDDLE);
+    }
 
     private void cleanTempVars() {
         Connection con = null;
@@ -223,12 +232,6 @@ public abstract class SagasSuperclass extends Quest {
             player.setBaseClass(getClassId(player));
         player.broadcastCharInfo();
         Cast(st.findTemplate(NPC[0]), player, 4339, 1);
-    }
-
-    SagasSuperclass(boolean party) {
-        super(party);
-        cleanTempVars();
-        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new SpawnCleaner(), 60000, 10000);
     }
 
     void registerNPCs() {
@@ -267,25 +270,6 @@ public abstract class SagasSuperclass extends Quest {
     private void Cast(NpcInstance npc, Creature target, int skillId, int level) {
         target.broadcastPacket(new MagicSkillUse(target, target, skillId, level, 6000, 1));
         target.broadcastPacket(new MagicSkillUse(npc, npc, skillId, level, 6000, 1));
-    }
-
-    public class SpawnCleaner extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            synchronized (Spawn_List) {
-                long curr_time = System.currentTimeMillis();
-                Iterator<Spawn> itr = Spawn_List.iterator();
-                while (itr.hasNext()) {
-                    Spawn spawn = itr.next();
-                    NpcInstance npc = spawn.getNPC();
-                    if (curr_time - spawn.spawned_at > spawn.TimeToLive || npc == null) {
-                        if (npc != null)
-                            npc.deleteMe();
-                        itr.remove();
-                    }
-                }
-            }
-        }
     }
 
     private void AddSpawn(Player player, NpcInstance mob, int TimeToLive) {
@@ -329,18 +313,10 @@ public abstract class SagasSuperclass extends Quest {
     }
 
     private NpcInstance spawn(int id, Location loc) {
-        NpcTemplate template = NpcHolder.getTemplate(id);
-        SimpleSpawner spawn;
-        try {
-            spawn = new SimpleSpawner(template);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        spawn.setLoc(loc);
-        NpcInstance npc = spawn.doSpawn(true);
-        spawn.stopRespawn();
-        return npc;
+        return new SimpleSpawner(id)
+                .setLoc(loc)
+                .stopRespawn()
+                .doSpawn(true);
     }
 
     private void giveHallishaMark(QuestState st) {
@@ -385,33 +361,6 @@ public abstract class SagasSuperclass extends Quest {
         }
 
         return null;
-    }
-
-    private static QuestState findQuest(Player player) {
-        QuestState st = null;
-        for (Integer q : Quests.keySet()) {
-            st = player.getQuestState(Quests.get(q));
-            if (st != null) {
-                int[] qc = QuestClass[q - 67];
-                for (int c : qc)
-                    if (player.getClassId().getId() == c)
-                        return st;
-            }
-        }
-        return null;
-    }
-
-    private static void process_step_15to16(QuestState st) {
-        if (st == null || st.getCond() != 15)
-            return;
-        int Halishas_Mark = ((SagasSuperclass) st.getQuest()).Items[3];
-        int Resonance_Amulet = ((SagasSuperclass) st.getQuest()).Items[8];
-
-        st.takeItems(Halishas_Mark, -1);
-        if (st.getQuestItemsCount(Resonance_Amulet) == 0)
-            st.giveItems(Resonance_Amulet, 1);
-        st.setCond(16);
-        st.playSound(SOUND_MIDDLE);
     }
 
     private void AutoChat(NpcInstance npc, String text) {
@@ -921,5 +870,44 @@ public abstract class SagasSuperclass extends Quest {
             }
         }
         return null;
+    }
+
+    private class Spawn {
+        final int npcId;
+        final int TimeToLive;
+        final long spawned_at;
+        final int charStoreId;
+        final int npcStoreId;
+
+        Spawn(NpcInstance npc, int charStoreId, int TimeToLive) {
+            npcId = npc.getNpcId();
+            npcStoreId = npc.getStoredId();
+            this.charStoreId = charStoreId;
+            this.TimeToLive = TimeToLive;
+            spawned_at = System.currentTimeMillis();
+        }
+
+        NpcInstance getNPC() {
+            return GameObjectsStorage.getAsNpc(npcStoreId);
+        }
+    }
+
+    public class SpawnCleaner extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            synchronized (Spawn_List) {
+                long curr_time = System.currentTimeMillis();
+                Iterator<Spawn> itr = Spawn_List.iterator();
+                while (itr.hasNext()) {
+                    Spawn spawn = itr.next();
+                    NpcInstance npc = spawn.getNPC();
+                    if (curr_time - spawn.spawned_at > spawn.TimeToLive || npc == null) {
+                        if (npc != null)
+                            npc.deleteMe();
+                        itr.remove();
+                    }
+                }
+            }
+        }
     }
 }

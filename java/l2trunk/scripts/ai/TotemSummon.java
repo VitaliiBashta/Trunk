@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
@@ -28,14 +27,7 @@ public final class TotemSummon extends DefaultAI {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @SuppressWarnings("unused")
-            @Override
-            public void runImpl() {
-                if (getActor() != null)
-                    getActor().deleteMe();
-            }
-        }, 30 * 60 * 1000L);
+        ThreadPoolManager.INSTANCE.schedule(() -> getActor().deleteMe(), 30 * 60 * 1000L);
     }
 
     @Override
@@ -44,7 +36,7 @@ public final class TotemSummon extends DefaultAI {
             _timer = System.currentTimeMillis() + 15000L;
             for (Creature c : getActor().getAroundCharacters(450, 200))
                 if (c.isPlayable() && !c.isDead())
-                    c.altOnMagicUseTimer(c, SkillTable.INSTANCE().getInfo(getBuffId(getActor().getNpcId()), 1));
+                    c.altOnMagicUseTimer(c, SkillTable.INSTANCE.getInfo(getBuffId(getActor().getNpcId()), 1));
         }
 
         return true;

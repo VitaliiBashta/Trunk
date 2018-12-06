@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model;
 
-import l2trunk.scripts.bosses.FourSepulchersSpawn.GateKeeper;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -16,21 +15,16 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.scripts.bosses.FourSepulchersManager;
 import l2trunk.scripts.bosses.FourSepulchersSpawn;
+import l2trunk.scripts.bosses.FourSepulchersSpawn.GateKeeper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
-public class SepulcherNpcInstance extends NpcInstance {
-    protected static Map<Integer, Integer> _hallGateKeepers = new HashMap<>();
-
+public final class SepulcherNpcInstance extends NpcInstance {
+    private final static String HTML_FILE_PATH = "SepulcherNpc/";
+    private final static int HALLS_KEY = 7260;
     private Future<?> _closeTask = null;
     private Future<?> _spawnMonsterTask = null;
-
-    private final static String HTML_FILE_PATH = "SepulcherNpc/";
-
-    private final static int HALLS_KEY = 7260;
 
     public SepulcherNpcInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -80,7 +74,7 @@ public class SepulcherNpcInstance extends NpcInstance {
                 doDie(player);
                 if (_spawnMonsterTask != null)
                     _spawnMonsterTask.cancel(false);
-                _spawnMonsterTask = ThreadPoolManager.INSTANCE().schedule(new SpawnMonster(getNpcId()), 3500);
+                _spawnMonsterTask = ThreadPoolManager.INSTANCE.schedule(() -> FourSepulchersSpawn.spawnMonster(getNpcId()), 3500);
                 return;
 
             case 31455:
@@ -152,45 +146,7 @@ public class SepulcherNpcInstance extends NpcInstance {
 
         if (_closeTask != null)
             _closeTask.cancel(false);
-        _closeTask = ThreadPoolManager.INSTANCE().schedule(new CloseNextDoor(gk), 10000);
-    }
-
-    private class CloseNextDoor extends RunnableImpl {
-        private final GateKeeper _gk;
-        private int state = 0;
-
-        CloseNextDoor(GateKeeper gk) {
-            _gk = gk;
-        }
-
-        @Override
-        public void runImpl() {
-            if (state == 0) {
-                try {
-                    _gk.door.closeMe();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                state++;
-                _closeTask = ThreadPoolManager.INSTANCE.schedule(this, 10000);
-            } else if (state == 1) {
-                FourSepulchersSpawn.spawnMysteriousBox(_gk.template.npcId);
-                _closeTask = null;
-            }
-        }
-    }
-
-    private class SpawnMonster extends RunnableImpl {
-        private final int _NpcId;
-
-        SpawnMonster(int npcId) {
-            _NpcId = npcId;
-        }
-
-        @Override
-        public void runImpl() {
-            FourSepulchersSpawn.spawnMonster(_NpcId);
-        }
+        _closeTask = ThreadPoolManager.INSTANCE.schedule(new CloseNextDoor(gk), 10000);
     }
 
     public void sayInShout(String msg) {
@@ -222,4 +178,26 @@ public class SepulcherNpcInstance extends NpcInstance {
                 return true;
         return false;
     }
+
+    private class CloseNextDoor extends RunnableImpl {
+        private final GateKeeper _gk;
+        private int state = 0;
+
+        CloseNextDoor(GateKeeper gk) {
+            _gk = gk;
+        }
+
+        @Override
+        public void runImpl() {
+            if (state == 0) {
+                _gk.door.closeMe();
+                state++;
+                _closeTask = ThreadPoolManager.INSTANCE.schedule(this, 10000);
+            } else if (state == 1) {
+                FourSepulchersSpawn.spawnMysteriousBox(_gk.template.npcId);
+                _closeTask = null;
+            }
+        }
+    }
+
 }

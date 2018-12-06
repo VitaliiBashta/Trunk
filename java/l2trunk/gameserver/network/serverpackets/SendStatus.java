@@ -17,14 +17,10 @@ public final class SendStatus extends L2GameServerPacket {
         if (System.currentTimeMillis() - last_update < MIN_UPDATE_PERIOD)
             return;
         last_update = System.currentTimeMillis();
-        int i = 0;
-        int j = 0;
-        for (Player player : GameObjectsStorage.getAllPlayersForIterate()) {
-            i++;
-            if (player.isInStoreMode())
-                j++;
-        }
-        online_players = i;
+        int j = (int) GameObjectsStorage.getAllPlayers().stream()
+                .filter(Player::isInStoreMode)
+                .count();
+        online_players = GameObjectsStorage.getAllPlayers().size();
         online_priv_store = (int) Math.floor(j * Config.SENDSTATUS_TRADE_MOD);
         max_online_players = Math.max(max_online_players, online_players);
     }

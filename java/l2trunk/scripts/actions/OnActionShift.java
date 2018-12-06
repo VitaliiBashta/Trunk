@@ -13,8 +13,6 @@ import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
-import l2trunk.gameserver.model.quest.Quest;
-import l2trunk.gameserver.model.quest.QuestEventType;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.stats.Stats;
@@ -22,7 +20,10 @@ import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.gameserver.utils.Util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class OnActionShift extends Functions {
     public boolean OnActionShift_NpcInstance(Player player, GameObject object) {
@@ -189,11 +190,9 @@ public class OnActionShift extends Functions {
         StringBuilder dialog = new StringBuilder("<html><body><center><font color=\"LEVEL\">");
         dialog.append(nameNpc(npc)).append("<br></font></center><br>");
 
-        Map<QuestEventType, Quest[]> list = npc.getTemplate().getQuestEvents();
-        for (Map.Entry<QuestEventType, Quest[]> entry : list.entrySet()) {
-            for (Quest q : entry.getValue())
-                dialog.append(entry.getKey()).append(" ").append(q.getClass().getSimpleName()).append("<br1>");
-        }
+        npc.getTemplate().getQuestEvents().forEach((key, value) -> value.forEach(q ->
+                dialog.append(key).append(" ").append(q.getClass().getSimpleName()).append("<br1>")));
+
 
         dialog.append("</body></html>");
         show(dialog.toString(), player, npc);

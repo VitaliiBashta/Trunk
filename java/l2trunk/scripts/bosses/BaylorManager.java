@@ -160,7 +160,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
     private static void init() {
         _state = new EpicBossState(Baylor);
         zone = ReflectionUtils.getZone("[baylor_epic]");
-        zone.addListener(BaylorZoneListener.getInstance());
+        zone.addListener(new BaylorZoneListener());
 
         _isAlreadyEnteredOtherParty = false;
 
@@ -309,7 +309,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
                         _socialTask.cancel(false);
                         _socialTask = null;
                     }
-                    _socialTask = ThreadPoolManager.INSTANCE().schedule(new Social(_baylor, 1), 500);
+                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new Social(_baylor, 1), 500);
 
                     if (_endSceneTask != null) {
                         _endSceneTask.cancel(false);
@@ -358,20 +358,12 @@ public final class BaylorManager extends Functions implements ScriptFile {
                     player.broadcastPacket(new FlyToLocation(player, flyLoc, FlyType.THROW_HORIZONTAL));
                 }
             }
-            for (NpcInstance npc : _crystaline) {
-                if (npc != null)
-                    npc.reduceCurrentHp(npc.getMaxHp() + 1, npc, null, true, true, false, false, false, false, false);
-            }
+            _crystaline.forEach(npc ->
+                    npc.reduceCurrentHp(npc.getMaxHp() + 1, npc, null, true, true, false, false, false, false, false));
         }
     }
 
     private static class BaylorZoneListener implements OnZoneEnterLeaveListener {
-        private static final OnZoneEnterLeaveListener _instance = new BaylorZoneListener();
-
-        static OnZoneEnterLeaveListener getInstance() {
-            return _instance;
-        }
-
         @Override
         public void onZoneEnter(Zone zone, Creature actor) {
             if (actor.isPlayer())

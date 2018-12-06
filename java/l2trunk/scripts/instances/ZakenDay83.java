@@ -31,7 +31,7 @@ public class ZakenDay83 extends Reflection {
         addSpawnWithoutRespawn(Anchor, zakenTp[Rnd.get(zakenTp.length)], 0);
         NpcInstance zaken = addSpawnWithoutRespawn(UltraDayZaken, zakenSpawn, 0);
         zaken.addListener(_deathListener);
-        zaken.setIsInvul(true);
+        zaken.setInvul(true);
         _savedTime = System.currentTimeMillis();
     }
 

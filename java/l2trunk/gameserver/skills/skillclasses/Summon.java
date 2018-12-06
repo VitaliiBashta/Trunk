@@ -24,7 +24,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public class Summon extends Skill {
+public final class Summon extends Skill {
     private final SummonType _summonType;
 
     private final double _expPenalty;
@@ -139,7 +139,7 @@ public class Summon extends Skill {
                 if (activeChar.isInOlympiadMode())
                     summon.getEffectList().stopAllEffects();
 
-                summon.setCurrentHpMp(summon.getMaxHp(), summon.getMaxMp(), false);
+                summon.setFullHpMp();
 
                 if (_summonType == SummonType.SIEGE_SUMMON) {
                     SiegeEvent siegeEvent = activeChar.getEvent(SiegeEvent.class);
@@ -160,7 +160,7 @@ public class Summon extends Skill {
                 merchant.setReflection(activeChar.getReflection());
                 merchant.spawnMe(activeChar.getLoc());
 
-                ThreadPoolManager.INSTANCE().schedule(new GameObjectTasks.DeleteTask(merchant), _lifeTime);
+                ThreadPoolManager.INSTANCE.schedule(new GameObjectTasks.DeleteTask(merchant), _lifeTime);
                 break;
         }
 

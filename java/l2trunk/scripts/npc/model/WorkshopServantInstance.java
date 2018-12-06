@@ -111,7 +111,7 @@ public class WorkshopServantInstance extends NpcInstance {
                     player.sendMessage("In order to enter the Anomic Foundry your party should be carrying all 5 medals of Tully");
                     return;
                 }
-            party.Teleport(new Location(25512, 247240, -2656));
+            party.teleport(new Location(25512, 247240, -2656));
         } else
             super.onBypassFeedback(player, command);
     }

@@ -16,10 +16,12 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public class AdminEffects implements IAdminCommandHandler {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+
+public final class AdminEffects implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -52,22 +54,13 @@ public class AdminEffects implements IAdminCommandHandler {
                 }
                 break;
             case admin_gmspeed:
-                if (wordList.length < 2) {
-                    val = 0;
-                } else {
-                    try {
-                        val = Integer.parseInt(wordList[1]);
-                    } catch (Exception e) {
-                        activeChar.sendMessage("USAGE: //gmspeed value=[0..4]");
-                        return false;
-                    }
-                }
+                val = toInt(wordList[1], 0);
                 List<Effect> superhaste = activeChar.getEffectList().getEffectsBySkillId(7029);
                 int sh_level = superhaste == null ? 0 : superhaste.isEmpty() ? 0 : superhaste.get(0).getSkill().getLevel();
 
                 if (val == 0) {
                     if (sh_level != 0) {
-                        activeChar.doCast(SkillTable.INSTANCE().getInfo(7029, sh_level), activeChar, true); // снимаем еффект
+                        activeChar.doCast(SkillTable.INSTANCE.getInfo(7029, sh_level), activeChar, true); // снимаем еффект
                     }
                     activeChar.unsetVar("gm_gmspeed");
                 } else if ((val >= 1) && (val <= 4)) {
@@ -110,13 +103,16 @@ public class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_para_everybody:
             case admin_para:
-                Collection<Creature> targets = new ArrayList<>();
+                ArrayList<Creature> targets = new ArrayList<>();
                 int minutes = -1;
                 String reason = null;
                 if (command == Commands.admin_para_everybody) {
-                    for (Player playerToPara : GameObjectsStorage.getAllPlayersForIterate())
-                        if (playerToPara.isOnline() && playerToPara.getNetConnection() != null && !playerToPara.isGM())
-                            targets.add(playerToPara);
+                    GameObjectsStorage.getAllPlayers().stream()
+                            .filter(Player::isOnline)
+                            .filter(p -> p.getNetConnection() != null)
+                            .filter(p -> !p.isGM())
+                            .forEach(targets::add);
+
                 } else if (wordList.length == 2) {
                     int radius = Integer.parseInt(wordList[1]);
                     targets.addAll(World.getAroundPlayables(activeChar, radius, 500));
@@ -154,9 +150,11 @@ public class AdminEffects implements IAdminCommandHandler {
             case admin_unpara:
                 targets = new ArrayList<>();
                 if (command == Commands.admin_unpara_everybody) {
-                    for (Player playerToPara : GameObjectsStorage.getAllPlayersForIterate())
-                        if (playerToPara.isOnline() && playerToPara.getNetConnection() != null && !playerToPara.isGM())
-                            targets.add(playerToPara);
+                    GameObjectsStorage.getAllPlayers().stream()
+                            .filter(Player::isOnline)
+                            .filter(p -> p.getNetConnection() != null)
+                            .filter(p -> !p.isGM())
+                            .forEach(targets::add);
                 } else if (wordList.length > 1) {
                     int radius = Integer.parseInt(wordList[1]);
                     targets.addAll(World.getAroundPlayables(activeChar, radius, 500));
@@ -324,15 +322,15 @@ public class AdminEffects implements IAdminCommandHandler {
 
     private void handleInvul(Player activeChar, Player target) {
         if (target.isInvul()) {
-            target.setIsInvul(false);
+            target.setInvul(false);
             if (target.getPet() != null) {
-                target.getPet().setIsInvul(false);
+                target.getPet().setInvul(false);
             }
             activeChar.sendMessage(target.getName() + " is now mortal!");
         } else {
-            target.setIsInvul(true);
+            target.setInvul(true);
             if (target.getPet() != null) {
-                target.getPet().setIsInvul(true);
+                target.getPet().setInvul(true);
             }
             activeChar.sendMessage(target.getName() + " is now immortal!");
         }

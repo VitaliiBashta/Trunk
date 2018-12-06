@@ -68,7 +68,7 @@ public final class Darnel extends DefaultAI {
 
         if (rnd_per < 5) {
             actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5440, 1, 3000, 0));
-            ThreadPoolManager.INSTANCE().schedule(new TrapTask(), 3000);
+            ThreadPoolManager.INSTANCE.schedule(new TrapTask(), 3000);
             return true;
         }
 

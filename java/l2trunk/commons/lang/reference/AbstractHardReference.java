@@ -17,7 +17,6 @@ public class AbstractHardReference<T> implements HardReference<T> {
         reference = null;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object o) {
         if (o == this)

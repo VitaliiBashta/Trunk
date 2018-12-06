@@ -59,7 +59,7 @@ public class MerchantInstance extends NpcInstance {
         if (!player.getPlayerAccess().UseShop)
             return;
 
-        NpcTradeList list = BuyListHolder.getInstance().getBuyList(val);
+        NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(val);
 
         if (list != null) {
             ShopPreviewList bl = new ShopPreviewList(list, player);
@@ -82,7 +82,7 @@ public class MerchantInstance extends NpcInstance {
                 taxRate = castle.getTaxRate();
         }
 
-        NpcTradeList list = BuyListHolder.getInstance().getBuyList(listId);
+        NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(listId);
         if (list == null || list.getNpcId() == getNpcId())
             player.sendPacket(new ExBuySellList.BuyList(list, player, taxRate), new ExBuySellList.SellRefundList(player, false));
         else {

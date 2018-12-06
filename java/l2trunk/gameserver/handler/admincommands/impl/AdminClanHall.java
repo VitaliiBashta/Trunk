@@ -123,7 +123,7 @@ public class AdminClanHall implements IAdminCommandHandler {
         replyMSG.append("</table>");
         replyMSG.append("<br>");
         replyMSG.append("<table><tr>");
-        replyMSG.append("<td><button value=\"Teleport self\" action=\"bypass -h admin_clanhallteleportself " + clanhall.getId() + " \" width=80 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
+        replyMSG.append("<td><button value=\"teleport self\" action=\"bypass -h admin_clanhallteleportself " + clanhall.getId() + " \" width=80 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
         replyMSG.append("</table>");
         replyMSG.append("</center>");
         replyMSG.append("</body></html>");

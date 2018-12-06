@@ -6,8 +6,6 @@ import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.utils.TimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,17 +13,13 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class StatsLogger {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StatsLogger.class);
+public enum StatsLogger {
+    INSTANCE;
 
     private final Collection<SkillStat> statsToAdd = new CopyOnWriteArrayList<>();
 
-    private StatsLogger() {
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new LogStatThread(), TimeUtils.MINUTE_IN_MILLIS, TimeUtils.MINUTE_IN_MILLIS);
-    }
-
-    private static StatsLogger getInstance() {
-        return StatsLoggerHolder.instance;
+    StatsLogger() {
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new LogStatThread(), TimeUtils.MINUTE_IN_MILLIS, TimeUtils.MINUTE_IN_MILLIS);
     }
 
     public void addNewStat(Skill skill, Player attacker, Player defender, double base, double finalChance, double statMod, double mAtkMod, double deltaMod, double debuffMod, double resMod, double elementMod) {
@@ -77,7 +71,7 @@ public class StatsLogger {
     private static class LogStatThread implements Runnable {
         @Override
         public void run() {
-            Collection<SkillStat> stats = getInstance().getStatsToAdd();
+            Collection<SkillStat> stats = INSTANCE.getStatsToAdd();
             if (Config.ALLOW_SKILLS_STATS_LOGGER && stats.size() > 1) {
                 StringBuilder query = new StringBuilder();
                 query.append("INSERT INTO skill_chance_logger VALUES ");
@@ -106,12 +100,8 @@ public class StatsLogger {
                     //LOGGER.error("Error while logging Skill Chance Stats. Query: "+finalQuery+" Error: ", e);
                 }
 
-                getInstance().clearStats();
+                INSTANCE.clearStats();
             }
         }
-    }
-
-    private static class StatsLoggerHolder {
-        private static final StatsLogger instance = new StatsLogger();
     }
 }

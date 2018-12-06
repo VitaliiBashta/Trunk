@@ -4,15 +4,8 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * @author Mobius
- * @version $Revision: 1.0 $
- */
-public final class RunnableStatsManager {
-    /**
-     * Field _instance.
-     */
-    private static final RunnableStatsManager _instance = new RunnableStatsManager();
+public enum RunnableStatsManager {
+    INSTANCE;
     /**
      * Field classStats.
      */
@@ -22,21 +15,6 @@ public final class RunnableStatsManager {
      */
     private final Lock lock = new ReentrantLock();
 
-    /**
-     * Method INSTANCE.
-     *
-     * @return RunnableStatsManager
-     */
-    public static RunnableStatsManager getInstance() {
-        return _instance;
-    }
-
-    /**
-     * Method handleStats.
-     *
-     * @param cl      Class<?>
-     * @param runTime long
-     */
     public void handleStats(Class<?> cl, long runTime) {
         try {
             lock.lock();
@@ -57,16 +35,11 @@ public final class RunnableStatsManager {
         }
     }
 
-    /**
-     * Method getSortedClassStats.
-     *
-     * @return List<ClassStat>
-     */
     private List<ClassStat> getSortedClassStats() {
         List<ClassStat> result;
         try {
             lock.lock();
-            result = Arrays.asList(classStats.values().toArray(new ClassStat[classStats.size()]));
+            result = new ArrayList<>(classStats.values());
         } finally {
             lock.unlock();
         }
@@ -74,11 +47,6 @@ public final class RunnableStatsManager {
         return result;
     }
 
-    /**
-     * Method getStats.
-     *
-     * @return CharSequence
-     */
     public CharSequence getStats() {
         StringBuilder list = new StringBuilder();
         List<ClassStat> stats = getSortedClassStats();
@@ -93,36 +61,13 @@ public final class RunnableStatsManager {
         return list;
     }
 
-    /**
-     * @author Mobius
-     */
     private class ClassStat {
-        /**
-         * Field clazz.
-         */
         final Class<?> clazz;
-        /**
-         * Field runCount.
-         */
         long runCount = 0;
-        /**
-         * Field runTime.
-         */
         long runTime = 0;
-        /**
-         * Field minTime.
-         */
         long minTime = Long.MAX_VALUE;
-        /**
-         * Field maxTime.
-         */
         long maxTime = Long.MIN_VALUE;
 
-        /**
-         * Constructor for ClassStat.
-         *
-         * @param cl Class<?>
-         */
         ClassStat(Class<?> cl) {
             clazz = cl;
             classStats.put(cl, this);

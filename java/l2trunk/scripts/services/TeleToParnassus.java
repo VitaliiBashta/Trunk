@@ -25,6 +25,8 @@ public class TeleToParnassus extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(TeleToParnassus.class);
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
     private static final Zone _zone = ReflectionUtils.getZone("[parnassus_offshore]");
+    private static final String en = "<br>[scripts_services.TeleToParnassus:toParnassus @811;Parnassus|\"Move to Parnassus (offshore zone) - " + Config.SERVICES_PARNASSUS_PRICE + " Adena.\"]";
+    private static final String en2 = "<br>[scripts_services.ManaRegen:DoManaRegen|Full MP Regeneration. (1 MP for 5 Adena)]<br>[scripts_services.TeleToParnassus:fromParnassus @811;From Parnassus|\"Exit the Parnassus.\"]<br>";
     private static ZoneListener _zoneListener;
 
     @Override
@@ -36,74 +38,56 @@ public class TeleToParnassus extends Functions implements ScriptFile {
 
         // spawn wh keeper
         SimpleSpawner spawn = new SimpleSpawner(30086);
-        spawn.setLocx(149960);
-        spawn.setLocy(174136);
-        spawn.setLocz(-920);
-        spawn.setAmount(1);
-        spawn.setHeading(32768);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.PARNASSUS);
-        spawn.init();
+        spawn.setLoc(new Location(149960, 174136, -920, 32768))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.PARNASSUS)
+                .init();
         _spawns.add(spawn);
 
         // spawn grocery trader (Helvetia)
         spawn = new SimpleSpawner(30839);
-        spawn.setLocx(149368);
-        spawn.setLocy(174264);
-        spawn.setLocz(-896);
-        spawn.setAmount(1);
-        spawn.setHeading(49152);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.PARNASSUS);
-        spawn.init();
+        spawn.setLoc(new Location(149368, 174264, -896, 49152))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.PARNASSUS)
+                .init();
         _spawns.add(spawn);
 
         // spawn gk
         spawn = new SimpleSpawner(13129);
-        spawn.setLocx(149368);
-        spawn.setLocy(172568);
-        spawn.setLocz(-952);
-        spawn.setAmount(1);
-        spawn.setHeading(49152);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.PARNASSUS);
-        spawn.init();
+        spawn.setLoc(new Location(149368, 172568, -952, 49152))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.PARNASSUS)
+                .init();
         _spawns.add(spawn);
 
         // spawn Orion the Cat
         spawn = new SimpleSpawner(31860);
-        spawn.setLocx(148904);
-        spawn.setLocy(173656);
-        spawn.setLocz(-952);
-        spawn.setAmount(1);
-        spawn.setHeading(49152);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.PARNASSUS);
-        spawn.init();
+        spawn.setLoc(new Location(148904, 173656, -952, 49152))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.PARNASSUS)
+                .init();
         _spawns.add(spawn);
 
         // spawn blacksmith (Pushkin)
         spawn = new SimpleSpawner(30300);
-        spawn.setLocx(148760);
-        spawn.setLocy(174136);
-        spawn.setLocz(-920);
-        spawn.setAmount(1);
-        spawn.setHeading(0);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.PARNASSUS);
-        spawn.init();
+        spawn.setLoc(new Location(148760, 174136, -920, 0))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.PARNASSUS)
+                .init();
         _spawns.add(spawn);
 
         // spawn Item Broker
         spawn = new SimpleSpawner(32320);
-        spawn.setLocx(149368);
-        spawn.setLocy(173064);
-        spawn.setLocz(-952);
-        spawn.setAmount(1);
-        spawn.setHeading(16384);
-        spawn.setRespawnDelay(5);
-        spawn.setReflection(ReflectionManager.PARNASSUS);
-        spawn.init();
+        spawn.setLoc(new Location(149368, 173064, -952, 16384))
+                .setAmount(1)
+                .setRespawnDelay(5)
+                .setReflection(ReflectionManager.PARNASSUS)
+                .init();
         _spawns.add(spawn);
 
         _zoneListener = new ZoneListener();
@@ -117,7 +101,7 @@ public class TeleToParnassus extends Functions implements ScriptFile {
         zone.setReflection(ReflectionManager.PARNASSUS);
         zone.setActive(true);
 
-        _log.info("Loaded Service: Teleport to Parnassus");
+        _log.info("Loaded Service: teleport to Parnassus");
     }
 
     @Override
@@ -253,8 +237,6 @@ public class TeleToParnassus extends Functions implements ScriptFile {
         return getHtmlAppends(val);
     }
 
-    private static final String en = "<br>[scripts_services.TeleToParnassus:toParnassus @811;Parnassus|\"Move to Parnassus (offshore zone) - " + Config.SERVICES_PARNASSUS_PRICE + " Adena.\"]";
-
     private String getHtmlAppends(Integer val) {
         if (val != 0 || !Config.SERVICES_PARNASSUS_ENABLED)
             return "";
@@ -267,8 +249,6 @@ public class TeleToParnassus extends Functions implements ScriptFile {
     public String DialogAppend_13129(Integer val) {
         return getHtmlAppends2(val);
     }
-
-    private static final String en2 = "<br>[scripts_services.ManaRegen:DoManaRegen|Full MP Regeneration. (1 MP for 5 Adena)]<br>[scripts_services.TeleToParnassus:fromParnassus @811;From Parnassus|\"Exit the Parnassus.\"]<br>";
 
     private String getHtmlAppends2(Integer val) {
         if (val != 0 || !Config.SERVICES_PARNASSUS_ENABLED)

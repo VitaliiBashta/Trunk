@@ -10,7 +10,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Territory implements Shape, SpawnRange {
+public final class Territory implements Shape, SpawnRange {
     private final Point3D max = new Point3D();
     private final Point3D min = new Point3D();
 
