@@ -20,15 +20,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RecipeHolder {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class RecipeHolder {
     private static final Logger _log = LoggerFactory.getLogger(RecipeHolder.class);
     private static RecipeHolder _instance;
 
-    private final ConcurrentHashMap<Integer, Recipe> _listByRecipeId = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Recipe> listByRecipeId = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Recipe> _listByRecipeItem = new ConcurrentHashMap<>();
 
     private RecipeHolder() {
-        _listByRecipeId.clear();
+        listByRecipeId.clear();
         _listByRecipeItem.clear();
         try {
             loadFromXML();
@@ -43,7 +45,6 @@ public class RecipeHolder {
         return _instance;
     }
 
-    @SuppressWarnings("unused")
     private void loadFromXML() throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(false);
@@ -54,7 +55,6 @@ public class RecipeHolder {
             List<RecipeComponent> recipePartList = new ArrayList<>();
             for (Node n = doc.getFirstChild(); n != null; n = n.getNextSibling()) {
                 if ("list".equalsIgnoreCase(n.getNodeName())) {
-                    recipesFile:
                     for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling()) {
                         if ("recipes".equalsIgnoreCase(d.getNodeName())) {
                             recipePartList.clear();
@@ -69,7 +69,7 @@ public class RecipeHolder {
                                 _log.error("Missing id for recipe item, skipping");
                                 continue;
                             }
-                            id = Integer.parseInt(att.getNodeValue());
+                            id = toInt(att.getNodeValue());
                             set.set("id", id);
 
                             att = attrs.getNamedItem("level");
@@ -77,14 +77,14 @@ public class RecipeHolder {
                                 _log.error("Missing level for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("level", Integer.parseInt(att.getNodeValue()));
+                            set.set("level", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("recid");
                             if (att == null) {
                                 _log.error("Missing recid for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("recid", Integer.parseInt(att.getNodeValue()));
+                            set.set("recid", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("recipeName");
                             if (att == null) {
@@ -98,14 +98,14 @@ public class RecipeHolder {
                                 _log.error("Missing successRate for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("successRate", Integer.parseInt(att.getNodeValue()));
+                            set.set("successRate", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("mp");
                             if (att == null) {
                                 _log.error("Missing mp for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("mp", Integer.parseInt(att.getNodeValue()));
+                            set.set("mp", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("itemId");
                             if (att == null) {
@@ -140,7 +140,7 @@ public class RecipeHolder {
                                 _log.error("Missing sp for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("sp", Long.parseLong(att.getNodeValue()));
+                            set.set("sp", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("dwarven");
                             if (att == null) {
@@ -151,8 +151,8 @@ public class RecipeHolder {
 
                             for (Node c = d.getFirstChild(); c != null; c = c.getNextSibling()) {
                                 if ("recitem".equalsIgnoreCase(c.getNodeName())) {
-                                    int rpItemId = Integer.parseInt(c.getAttributes().getNamedItem("item").getNodeValue());
-                                    int quantity = Integer.parseInt(c.getAttributes().getNamedItem("icount").getNodeValue());
+                                    int rpItemId = toInt(c.getAttributes().getNamedItem("item").getNodeValue());
+                                    int quantity = toInt(c.getAttributes().getNamedItem("icount").getNodeValue());
                                     recipePartList.add(new RecipeComponent(rpItemId, quantity));
                                 }
                             }
@@ -173,24 +173,24 @@ public class RecipeHolder {
                             for (RecipeComponent recipePart : recipePartList) {
                                 recipeList.addRecipe(recipePart);
                             }
-                            _listByRecipeId.put(id, recipeList);
+                            listByRecipeId.put(id, recipeList);
                             _listByRecipeItem.put(recipeId, recipeList);
                         }
                     }
                 }
             }
-            _log.info("RecipeController: Loaded " + _listByRecipeId.size() + " Recipes.");
+            _log.info("RecipeController: Loaded " + listByRecipeId.size() + " Recipes.");
         } else {
             _log.error("Recipes file (" + file.getAbsolutePath() + ") doesnt exists.");
         }
     }
 
     public Collection<Recipe> getRecipes() {
-        return _listByRecipeId.values();
+        return listByRecipeId.values();
     }
 
     public Recipe getRecipeByRecipeId(int listId) {
-        return _listByRecipeId.get(listId);
+        return listByRecipeId.get(listId);
     }
 
     public Recipe getRecipeByRecipeItem(int itemId) {

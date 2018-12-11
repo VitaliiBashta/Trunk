@@ -24,7 +24,7 @@ public class CTBSiegeClanObject extends SiegeClanObject {
     }
 
     public void select(Residence r) {
-        _players.addAll(SiegePlayerDAO.getInstance().select(r, getObjectId()));
+        _players.addAll(SiegePlayerDAO.INSTANCE.select(r, getObjectId()));
     }
 
     public List<Integer> getPlayers() {
@@ -35,13 +35,11 @@ public class CTBSiegeClanObject extends SiegeClanObject {
     public void setEvent(boolean start, SiegeEvent event) {
         for (int i : getPlayers()) {
             Player player = GameObjectsStorage.getPlayer(i);
-            if (player != null) {
-                if (start)
-                    player.addEvent(event);
-                else
-                    player.removeEvent(event);
-                player.broadcastCharInfo();
-            }
+            if (start)
+                player.addEvent(event);
+            else
+                player.removeEvent(event);
+            player.broadcastCharInfo();
         }
     }
 

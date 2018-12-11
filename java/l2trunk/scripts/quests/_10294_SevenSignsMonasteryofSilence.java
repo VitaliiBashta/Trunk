@@ -33,16 +33,18 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest implements 
     // reading desks
     private static final List<Integer> ReadingDesk = ArrayUtils.createAscendingList(32821, 32836);
 
-    private static final int[] YellowRoomDesks = {ReadingDesk.get(0), ReadingDesk.get(1), ReadingDesk.get(2), ReadingDesk.get(3)};
-    private static final int YellowTrueReadingDesk = YellowRoomDesks[2];
+    private static final List<Integer> YellowRoomDesks = ReadingDesk.subList(0,4);
+    private static final int YellowTrueReadingDesk = YellowRoomDesks.get(2);
 
-    private static final int[] GreenRoomDesks = {ReadingDesk.get(4),
-            ReadingDesk.get(5), ReadingDesk.get(6), ReadingDesk.get(7)};
-    private static final int GreenTrueReadingDesk = GreenRoomDesks[3];
+    private static final List<Integer> GreenRoomDesks = Arrays.asList(
+            ReadingDesk.get(4), ReadingDesk.get(5),
+            ReadingDesk.get(6), ReadingDesk.get(7));
+    private static final int GreenTrueReadingDesk = GreenRoomDesks.get(3);
 
-    private static final int[] BlueRoomDesks = {ReadingDesk.get(8), ReadingDesk.get(9), ReadingDesk.get(10),
-            ReadingDesk.get(11)};
-    private static final int BlueTrueReadingDesk = BlueRoomDesks[1];
+    private static final List<Integer> BlueRoomDesks = Arrays.asList(
+            ReadingDesk.get(8), ReadingDesk.get(9),
+            ReadingDesk.get(10), ReadingDesk.get(11));
+    private static final int BlueTrueReadingDesk = BlueRoomDesks.get(1);
 
     private static final List<Integer> RedRoomDesks = Arrays.asList(ReadingDesk.get(12), ReadingDesk.get(13),
             ReadingDesk.get(14), ReadingDesk.get(15));
@@ -221,17 +223,17 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest implements 
                 htmltext = "relicwatcher_q10294_1.htm";
         } else if (ReadingDesk.contains(npcId)) {
             if (cond == 2) {
-                if (ArrayUtils.contains(YellowRoomDesks, npcId)) {
+                if (YellowRoomDesks.contains(npcId)) {
                     if (npcId == YellowTrueReadingDesk)
                         htmltext = "readingdesk_q10294_yellowtrue.htm";
                     else
                         htmltext = "readingdesk_q10294_false.htm";
-                } else if (ArrayUtils.contains(GreenRoomDesks, npcId)) {
+                } else if (GreenRoomDesks.contains(npcId)) {
                     if (npcId == GreenTrueReadingDesk)
                         htmltext = "readingdesk_q10294_greentrue.htm";
                     else
                         htmltext = "readingdesk_q10294_false.htm";
-                } else if (ArrayUtils.contains(BlueRoomDesks, npcId)) {
+                } else if (BlueRoomDesks.contains(npcId)) {
                     if (npcId == BlueTrueReadingDesk)
                         htmltext = "readingdesk_q10294_bluetrue.htm";
                     else
@@ -251,9 +253,9 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest implements 
     }
 
     private void teleportElcardia(Player player) {
-        for (NpcInstance n : player.getReflection().getNpcs())
-            if (n.getNpcId() == ElcardiaInzone1)
-                n.teleToLocation(Location.findPointToStay(player, 100));
+        player.getReflection().getNpcs().stream()
+                .filter(n -> n.getNpcId() == ElcardiaInzone1)
+                .forEach(n -> n.teleToLocation(Location.findPointToStay(player, 100)));
     }
 
     private boolean checkComplete(QuestState st) {

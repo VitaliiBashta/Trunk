@@ -1,44 +1,36 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 
 import java.util.*;
 
-public final class SpawnHolder extends AbstractHolder {
-    private static final SpawnHolder _instance = new SpawnHolder();
+public final class SpawnHolder {
+    private static final Map<String, List<SpawnTemplate>> SPAWNS = new HashMap<>();
 
-    private final Map<String, List<SpawnTemplate>> _spawns = new HashMap<>();
-
-    public static SpawnHolder getInstance() {
-        return _instance;
+    private SpawnHolder() {
     }
 
-    public void addSpawn(String group, SpawnTemplate spawn) {
-        List<SpawnTemplate> spawns = _spawns.computeIfAbsent(group, k -> new ArrayList<>());
+    public static void addSpawn(String group, SpawnTemplate spawn) {
+        List<SpawnTemplate> spawns = SPAWNS.computeIfAbsent(group, k -> new ArrayList<>());
         spawns.add(spawn);
     }
 
-    public List<SpawnTemplate> getSpawn(String name) {
-        List<SpawnTemplate> template = _spawns.get(name);
-        return template == null ? Collections.<SpawnTemplate>emptyList() : template;
+    public static List<SpawnTemplate> getSpawn(String name) {
+        List<SpawnTemplate> template = SPAWNS.get(name);
+        return template == null ? Collections.emptyList() : template;
     }
 
-    @Override
-    public int size() {
-        int i = 0;
-        for (List<?> l : _spawns.values())
-            i += l.size();
-
-        return i;
+    public static int size() {
+        return SPAWNS.values().stream()
+                .map(List::size)
+                .mapToInt(i -> i).sum();
     }
 
-    @Override
     public void clear() {
-        _spawns.clear();
+        SPAWNS.clear();
     }
 
-    public Map<String, List<SpawnTemplate>> getSpawns() {
-        return _spawns;
+    public static Map<String, List<SpawnTemplate>> getSpawns() {
+        return SPAWNS;
     }
 }

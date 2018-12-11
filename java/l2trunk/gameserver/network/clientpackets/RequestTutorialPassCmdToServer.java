@@ -4,14 +4,13 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.QuestManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.achievements.Achievements;
-import l2trunk.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.utils.AccountEmail;
 
 import java.util.Map;
 
-public class RequestTutorialPassCmdToServer extends L2GameClientPacket {
+public final class RequestTutorialPassCmdToServer extends L2GameClientPacket {
     // format: cS
 
     private String _bypass = null;
@@ -26,10 +25,6 @@ public class RequestTutorialPassCmdToServer extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-
-        if (player.isInFightClub()) {
-            FightClubEventManager.INSTANCE.requestEventPlayerMenuBypass(player, _bypass);
-        }
 
         // Alexander - Support for handling scripts events on tutorial windows
         else if (_bypass.startsWith("scripts_")) {

@@ -2,7 +2,7 @@ package l2trunk.commons.time.cron;
 
 import java.util.*;
 
-public class SchedulingPattern {
+public final class SchedulingPattern {
 
     private static final int MINUTE_MIN_VALUE = 0;
     private static final int MINUTE_MAX_VALUE = 59;

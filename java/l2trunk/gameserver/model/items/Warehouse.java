@@ -7,10 +7,10 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.ItemTemplate.ItemClass;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Warehouse extends ItemContainer {
     private static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
@@ -26,22 +26,10 @@ public abstract class Warehouse extends ItemContainer {
 
     protected abstract ItemLocation getItemLocation();
 
-    public ItemInstance[] getItems(ItemClass itemClass) {
-        List<ItemInstance> result = new ArrayList<>();
-
-        readLock();
-        try {
-            ItemInstance item;
-            for (ItemInstance _item : items) {
-                item = _item;
-                if ((itemClass == null || itemClass == ItemClass.ALL) || item.getItemClass() == itemClass)
-                    result.add(item);
-            }
-        } finally {
-            readUnlock();
-        }
-
-        return result.toArray(new ItemInstance[result.size()]);
+    public synchronized List<ItemInstance> getItems(ItemClass itemClass) {
+        return items.stream()
+                .filter(item -> (itemClass == null || itemClass == ItemClass.ALL) || item.getItemClass() == itemClass)
+                .collect(Collectors.toList());
     }
 
     public long getCountOfAdena() {
@@ -79,14 +67,11 @@ public abstract class Warehouse extends ItemContainer {
     }
 
     public void restore() {
-        final int ownerId = getOwnerId();
-
         writeLock();
         try {
-            Collection<ItemInstance> items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getItemLocation());
+            Collection<ItemInstance> items = _itemsDAO.getItemsByOwnerIdAndLoc(getOwnerId(), getItemLocation());
 
-            for (ItemInstance item : items)
-                this.items.add(item);
+            this.items.addAll(items);
         } finally {
             writeUnlock();
         }

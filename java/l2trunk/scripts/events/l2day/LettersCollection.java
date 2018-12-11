@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LettersCollection extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+public final class LettersCollection extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(LettersCollection.class);
     // Переменные, определять
     private static boolean _active;
@@ -56,7 +56,7 @@ public class LettersCollection extends Functions implements ScriptFile, OnDeathL
     // Контейнеры, не трогать
     static final Map<String, Integer[][]> _words = new HashMap<>();
     static final Map<String, RewardData[]> _rewards = new HashMap<>();
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
 
     @Override
     public void onLoad() {
@@ -82,14 +82,14 @@ public class LettersCollection extends Functions implements ScriptFile, OnDeathL
      * Спавнит эвент менеджеров
      */
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, SPAWNS);
     }
 
     /**
      * Удаляет спавн эвент менеджеров
      */
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
+        deSpawnNPCs(SPAWNS);
     }
 
     @Override

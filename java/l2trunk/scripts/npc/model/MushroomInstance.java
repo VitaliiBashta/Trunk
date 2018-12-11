@@ -85,7 +85,7 @@ public final class MushroomInstance extends MonsterInstance {
         TaskAfterDead(NpcInstance actor, Creature killer, int skillId) {
             _actor = actor;
             _killer = killer;
-            _skill = SkillTable.INSTANCE().getInfo(skillId, 1);
+            _skill = SkillTable.INSTANCE.getInfo(skillId);
         }
 
         @Override

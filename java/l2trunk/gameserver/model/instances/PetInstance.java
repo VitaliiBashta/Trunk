@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.instances;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
@@ -91,7 +90,7 @@ public class PetInstance extends Summon {
             _exp = getExpForNextLevel();
         }
 
-        _data = PetDataTable.getInstance().getInfo(template.npcId, level);
+        _data = PetDataTable.INSTANCE.getInfo(template.npcId, level);
         _inventory = new PetInventory(this);
     }
 
@@ -235,17 +234,12 @@ public class PetInstance extends Summon {
             return;
 
         // pet control item no longer exists, delete the pet from the database
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("DELETE FROM pets WHERE item_obj_id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("DELETE FROM pets WHERE item_obj_id=?")) {
             statement.setInt(1, getControlItemObjId());
             statement.execute();
         } catch (SQLException e) {
             _log.error("could not delete pet:", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -391,12 +385,12 @@ public class PetInstance extends Summon {
 
     @Override
     public long getExpForNextLevel() {
-        return PetDataTable.getInstance().getInfo(getNpcId(), level + 1).getExp();
+        return PetDataTable.INSTANCE.getInfo(getNpcId(), level + 1).getExp();
     }
 
     @Override
     public long getExpForThisLevel() {
-        return PetDataTable.getInstance().getInfo(getNpcId(), level).getExp();
+        return PetDataTable.INSTANCE.getInfo(getNpcId(), level).getExp();
     }
 
     private int getFoodId() {
@@ -436,7 +430,7 @@ public class PetInstance extends Summon {
     }
 
     private long getMaxExp() {
-        return PetDataTable.getInstance().getInfo(getNpcId(), Experience.getMaxLevel() + 1).getExp();
+        return PetDataTable.INSTANCE.getInfo(getNpcId(), Experience.getMaxLevel() + 1).getExp();
     }
 
     @Override
@@ -530,7 +524,7 @@ public class PetInstance extends Summon {
     }
 
     public int getSkillLevel(int skillId) {
-        if (_skills == null || _skills.get(skillId) == null)
+        if (skills == null || skills.get(skillId) == null)
             return -1;
         int lvl = getLevel();
         return lvl > 70 ? 7 + (lvl - 70) / 5 : lvl / 10;
@@ -595,10 +589,8 @@ public class PetInstance extends Summon {
         if (getControlItemObjId() == 0 || _exp == 0)
             return;
 
-        Connection con = null;
         PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             String req;
             if (!isRespawned())
                 req = "INSERT INTO pets (name,level,curHp,curMp,exp,sp,fed,objId,item_obj_id) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -620,10 +612,7 @@ public class PetInstance extends Summon {
             statement.executeUpdate();
         } catch (SQLException e) {
             _log.error("Could not store pet data!", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
-
         _respawned = true;
     }
 
@@ -657,7 +646,7 @@ public class PetInstance extends Summon {
     }
 
     private void updateData() {
-        _data = PetDataTable.getInstance().getInfo(getTemplate().npcId, level);
+        _data = PetDataTable.INSTANCE.getInfo(getTemplate().npcId, level);
     }
 
     @Override

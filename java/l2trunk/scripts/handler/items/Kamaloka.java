@@ -12,11 +12,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public final  class Kamaloka extends SimpleItemHandler implements ScriptFile {
-    private static final Integer[] ITEM_IDS = {13010, 13297, 20026, 13011, 13298, 20027, 13012, 13299, 20028};
+    private static final List<Integer> ITEM_IDS = Arrays.asList(
+            13010, 13297, 20026, 13011, 13298, 20027, 13012, 13299, 20028);
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(ITEM_IDS);
+        return ITEM_IDS;
     }
 
 
@@ -48,7 +49,7 @@ public final  class Kamaloka extends SimpleItemHandler implements ScriptFile {
             case 13010:
             case 13297:
             case 20026:
-                for (int i : InstantZoneHolder.getInstance().getSharedReuseInstanceIdsByGroup(1))
+                for (int i : InstantZoneHolder.getSharedReuseInstanceIdsByGroup(1))
                     if (player.getInstanceReuse(i) != null)
                         count++;
                 if (count == 0)
@@ -59,7 +60,7 @@ public final  class Kamaloka extends SimpleItemHandler implements ScriptFile {
             case 13011:
             case 13298:
             case 20027:
-                for (int i : InstantZoneHolder.getInstance().getSharedReuseInstanceIdsByGroup(2))
+                for (int i : InstantZoneHolder.getSharedReuseInstanceIdsByGroup(2))
                     if (player.getInstanceReuse(i) != null)
                         count++;
                 if (count == 0)
@@ -70,7 +71,7 @@ public final  class Kamaloka extends SimpleItemHandler implements ScriptFile {
             case 13012:
             case 13299:
             case 20028:
-                for (int i : InstantZoneHolder.getInstance().getSharedReuseInstanceIdsByGroup(3))
+                for (int i : InstantZoneHolder.getSharedReuseInstanceIdsByGroup(3))
                     if (player.getInstanceReuse(i) != null)
                         count++;
                 if (count == 0)

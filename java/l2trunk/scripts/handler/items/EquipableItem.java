@@ -14,12 +14,19 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EquipableItem extends ScriptItemHandler implements ScriptFile {
-    private final Set<Integer> _itemIds;
+    private final Set<Integer> itemIds;
+
+    public EquipableItem() {
+        itemIds = ItemHolder.getAllTemplates().stream()
+                .filter(ItemTemplate::isEquipable)
+                .map(ItemTemplate::getItemId)
+                .collect(Collectors.toSet());
+    }
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -39,17 +46,6 @@ public class EquipableItem extends ScriptItemHandler implements ScriptFile {
     @Override
     public void onShutdown() {
 
-    }
-
-    public EquipableItem() {
-        Set<Integer> set = new HashSet<>();
-        for (ItemTemplate template : ItemHolder.getInstance().getAllTemplates()) {
-            if (template == null)
-                continue;
-            if (template.isEquipable())
-                set.add(template.getItemId());
-        }
-        _itemIds = set;
     }
 
     @Override
@@ -135,6 +131,6 @@ public class EquipableItem extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return new ArrayList<>(_itemIds);
+        return new ArrayList<>(itemIds);
     }
 }

@@ -21,7 +21,7 @@ public final class ExShowSeedSetting extends L2GameServerPacket {
 
     public ExShowSeedSetting(int manorId) {
         _manorId = manorId;
-        Castle c = ResidenceHolder.getInstance().getResidence(Castle.class, _manorId);
+        Castle c = ResidenceHolder.getResidence(Castle.class, _manorId);
         List<Integer> seeds = Manor.INSTANCE.getSeedsForCastle(_manorId);
         _count = seeds.size();
         _seedData = new long[_count * 12];

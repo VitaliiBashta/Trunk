@@ -14,14 +14,13 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.StatsSet;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-//import org.napile.primitive.sets.IntSet;
-//import org.napile.primitive.sets.impl.TreeIntSet;
 
 public final class Dominion extends Residence {
-    private static final long serialVersionUID = 1L;
-    private final Set<Integer> _flags = new TreeSet<>();
+    private final Set<Integer> flags = new TreeSet<>();
     private Castle castle;
     private int _lordObjectId;
 
@@ -33,14 +32,14 @@ public final class Dominion extends Residence {
     public void init() {
         initEvent();
 
-        castle = ResidenceHolder.getInstance().getResidence(Castle.class, getId() - 80);
+        castle = ResidenceHolder.getResidence(Castle.class, getId() - 80);
         castle.setDominion(this);
 
         loadData();
 
         _siegeDate.setTimeInMillis(0);
         if (getOwner() != null) {
-            DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+            DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
             runnerEvent.registerDominion(this);
         }
     }
@@ -49,15 +48,15 @@ public final class Dominion extends Residence {
     public void rewardSkills() {
         Clan owner = getOwner();
         if (owner != null) {
-            if (!_flags.contains(getId()))
+            if (!flags.contains(getId()))
                 return;
 
-            for (int dominionId : _flags) {
-                Dominion dominion = ResidenceHolder.getInstance().getResidence(Dominion.class, dominionId);
-                for (Skill skill : dominion.getSkills()) {
+            for (int dominionId : flags) {
+                Dominion dominion = ResidenceHolder.getResidence(Dominion.class, dominionId);
+                dominion.getSkills().forEach(skill ->  {
                     owner.addSkill(skill, false);
                     owner.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED).addSkillName(skill));
-                }
+                });
             }
         }
     }
@@ -66,8 +65,8 @@ public final class Dominion extends Residence {
     public void removeSkills() {
         Clan owner = getOwner();
         if (owner != null) {
-            for (int dominionId : _flags) {
-                Dominion dominion = ResidenceHolder.getInstance().getResidence(Dominion.class, dominionId);
+            for (int dominionId : flags) {
+                Dominion dominion = ResidenceHolder.getResidence(Dominion.class, dominionId);
                 for (Skill skill : dominion.getSkills())
                     owner.removeSkill(skill.getId());
             }
@@ -75,15 +74,15 @@ public final class Dominion extends Residence {
     }
 
     public void addFlag(int dominionId) {
-        _flags.add(dominionId);
+        flags.add(dominionId);
     }
 
     public void removeFlag(int dominionId) {
-        _flags.remove(dominionId);
+        flags.remove(dominionId);
     }
 
-    public int[] getFlags() {
-        return _flags.stream().mapToInt(Number::intValue).toArray();
+    public List<Integer> getFlags() {
+        return new ArrayList<>(flags);
     }
 
     @Override

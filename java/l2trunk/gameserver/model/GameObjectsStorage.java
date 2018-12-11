@@ -44,7 +44,8 @@ public final class GameObjectsStorage {
     public static Player getPlayer(int objId) {
         Creature o = objects.get(objId);
         if (o instanceof Player) return (Player) o;
-        throw new IllegalArgumentException("no player with id:" + objId);
+        return null;
+//        throw new IllegalArgumentException("no player with id:" + objId);
     }
 
     public static List<Player> getAllPlayers() {
@@ -105,7 +106,7 @@ public final class GameObjectsStorage {
         return result;
     }
 
-    public static List<NpcInstance> getAllByNpcId(int[] npc_ids, boolean justAlive) {
+    public static List<NpcInstance> getAllByNpcId(List<Integer> npc_ids, boolean justAlive) {
         List<NpcInstance> result = new ArrayList<>();
         for (NpcInstance temp : getStorageNpcs())
             if (!justAlive || !temp.isDead())

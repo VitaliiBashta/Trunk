@@ -21,7 +21,9 @@ import l2trunk.gameserver.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-class Exchanger extends Functions {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class Exchanger extends Functions {
     public void change_page(String[] arg) {
         final Player player = getSelf();
         if (player == null)
@@ -37,14 +39,14 @@ class Exchanger extends Functions {
         removeVars(true);
         cleanAtt(-1);
         NpcHtmlMessage html = new NpcHtmlMessage(5).setFile("scripts/services/Exchanger/page.htm");
-        String template = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/template.htm", player);
+        String template = HtmCache.INSTANCE.getNotNull("scripts/services/Exchanger/template.htm", player);
         String block = "";
         String list = "";
         List<Change> _list = new ArrayList<>();
         //TODO it dosent change the armor throw ERROR Script class services not found!
         for (ItemInstance item : player.getInventory().getPaperdollItems()) {
             if (item != null) {
-                Change change = ExchangeItemHolder.getInstance().getChanges(item.getItemId(), isUpgrade);
+                Change change = ExchangeItemHolder.getChanges(item.getItemId(), isUpgrade);
                 if (change != null) {
                     _list.add(change);
                 }
@@ -60,7 +62,7 @@ class Exchanger extends Functions {
         }
 
         int perpage = 6;
-        int page = (arg.length > 1) && (Util.isNumber(arg[1])) ? Integer.parseInt(arg[1]) : 1;
+        int page = (arg.length > 1) && (Util.isNumber(arg[1])) ? toInt(arg[1]) : 1;
         int counter = 0;
         for (int i = (page - 1) * perpage; i < _list.size(); i++) {
             Change pack = _list.get(i);
@@ -114,15 +116,15 @@ class Exchanger extends Functions {
         if ((arg[0].isEmpty()) || (!Util.isNumber(arg[0]))) {
             return;
         }
-        int id = Integer.parseInt(arg[0]);
+        int id = toInt(arg[0]);
         boolean isUpgrade = arg[1].equalsIgnoreCase("1");
 
         NpcHtmlMessage html = new NpcHtmlMessage(5).setFile("scripts/services/Exchanger/list.htm");
-        String template = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/template.htm", player);
+        String template = HtmCache.INSTANCE.getNotNull("scripts/services/Exchanger/template.htm", player);
         String block = "";
         String list = "";
 
-        Change change = ExchangeItemHolder.getInstance().getChanges(id, isUpgrade);
+        Change change = ExchangeItemHolder.getChanges(id, isUpgrade);
         if (change == null) {
             return;
         }
@@ -131,7 +133,7 @@ class Exchanger extends Functions {
         List<Variant> _list = change.getList();
 
         int perpage = 6;
-        int page = (arg.length > 2) && (!arg[2].isEmpty()) && (Util.isNumber(arg[2])) ? Integer.parseInt(arg[2]) : 1;
+        int page = (arg.length > 2) && (!arg[2].isEmpty()) && (Util.isNumber(arg[2])) ? toInt(arg[2]) : 1;
         int counter = 0;
         for (int i = (page - 1) * perpage; i < _list.size(); i++) {
             Variant pack = _list.get(i);
@@ -180,7 +182,7 @@ class Exchanger extends Functions {
         if ((arg[0].isEmpty()) || (!Util.isNumber(arg[0]))) {
             return;
         }
-        int obj_my = player.getQuickVarI("exchange_obj", new int[]{-1});
+        int obj_my = player.getQuickVarI("exchange_obj", -1);
         if (obj_my == -1) {
             return;
         }
@@ -188,11 +190,11 @@ class Exchanger extends Functions {
         if (item == null) {
             return;
         }
-        int id_new = player.getQuickVarI("exchange_number", new int[]{-1});
+        int id_new = player.getQuickVarI("exchange_number", -1);
         if (id_new == -1) {
             return;
         }
-        int att_id = Integer.parseInt(arg[0]);
+        int att_id = toInt(arg[0]);
         boolean isUpgrade = arg[1].equalsIgnoreCase("1");
         Element att = Element.getElementById(att_id);
         if (att != Element.NONE) {
@@ -223,17 +225,17 @@ class Exchanger extends Functions {
         if (player == null)
             return;
 
-        int id = player.getQuickVarI("exchange", new int[]{-1});
+        int id = player.getQuickVarI("exchange", -1);
         if ((id == -1) || (arg[0].isEmpty()) || (!Util.isNumber(arg[0]))) {
             return;
         }
-        int new_id = Integer.parseInt(arg[0]);
+        int new_id = toInt(arg[0]);
         boolean isUpgrade = arg[1].equalsIgnoreCase("1");
         ItemInstance item = null;
         Change change = null;
         for (ItemInstance inv : player.getInventory().getPaperdollItems()) {
             if (inv != null) {
-                change = ExchangeItemHolder.getInstance().getChanges(inv.getItemId(), isUpgrade);
+                change = ExchangeItemHolder.getChanges(inv.getItemId(), isUpgrade);
                 if ((change != null) && (change.getId() == id)) {
                     item = inv;
                     break;
@@ -260,7 +262,7 @@ class Exchanger extends Functions {
         html.replace("%my_icon%", item.getTemplate().getIcon());
         ItemAttributes att = item.getAttributes();
         if ((!change.attChange()) || (item.getAttributeElementValue() == 0)) {
-            String att_info = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/att_info.htm", player);
+            String att_info = HtmCache.INSTANCE.getNotNull("scripts/services/Exchanger/att_info.htm", player);
             att_info = att_info.replace("%Earth%", String.valueOf(att.getEarth()));
             att_info = att_info.replace("%Fire%", String.valueOf(att.getFire()));
             att_info = att_info.replace("%Holy%", String.valueOf(att.getHoly()));
@@ -269,8 +271,8 @@ class Exchanger extends Functions {
             att_info = att_info.replace("%Wind%", String.valueOf(att.getWind()));
             html.replace("%att_info%", att_info);
         } else {
-            String att_info = HtmCache.INSTANCE().getNotNull("scripts/services/Exchanger/att_change.htm", player);
-            if (player.getQuickVarI("ex_att", new int[]{-1}) == -1) {
+            String att_info = HtmCache.INSTANCE.getNotNull("scripts/services/Exchanger/att_change.htm", player);
+            if (player.getQuickVarI("ex_att", -1) == -1) {
                 att_info = att_info.replace("%Earth%", String.valueOf(att.getEarth()));
                 att_info = att_info.replace("%Fire%", String.valueOf(att.getFire()));
                 att_info = att_info.replace("%Holy%", String.valueOf(att.getHoly()));
@@ -278,12 +280,12 @@ class Exchanger extends Functions {
                 att_info = att_info.replace("%Water%", String.valueOf(att.getWater()));
                 att_info = att_info.replace("%Wind%", String.valueOf(att.getWind()));
             } else {
-                att_info = att_info.replace("%Fire%", String.valueOf(player.getQuickVarI("ex_att_0", new int[]{0})));
-                att_info = att_info.replace("%Water%", String.valueOf(player.getQuickVarI("ex_att_1", new int[]{0})));
-                att_info = att_info.replace("%Wind%", String.valueOf(player.getQuickVarI("ex_att_2", new int[]{0})));
-                att_info = att_info.replace("%Earth%", String.valueOf(player.getQuickVarI("ex_att_3", new int[]{0})));
-                att_info = att_info.replace("%Holy%", String.valueOf(player.getQuickVarI("ex_att_4", new int[]{0})));
-                att_info = att_info.replace("%Unholy%", String.valueOf(player.getQuickVarI("ex_att_5", new int[]{0})));
+                att_info = att_info.replace("%Fire%", String.valueOf(player.getQuickVarI("ex_att_0", 0)));
+                att_info = att_info.replace("%Water%", String.valueOf(player.getQuickVarI("ex_att_1", 0)));
+                att_info = att_info.replace("%Wind%", String.valueOf(player.getQuickVarI("ex_att_2", 0)));
+                att_info = att_info.replace("%Earth%", String.valueOf(player.getQuickVarI("ex_att_3", 0)));
+                att_info = att_info.replace("%Holy%", String.valueOf(player.getQuickVarI("ex_att_4", 0)));
+                att_info = att_info.replace("%Unholy%", String.valueOf(player.getQuickVarI("ex_att_5", 0)));
             }
             html.replace("%att_info%", att_info);
         }
@@ -301,23 +303,23 @@ class Exchanger extends Functions {
         if (player == null)
             return;
 
-        int exchangeId = player.getQuickVarI("exchange", new int[]{-1});
+        int exchangeId = player.getQuickVarI("exchange", -1);
         if (exchangeId == -1) {
             return;
         }
-        int obj_my = player.getQuickVarI("exchange_obj", new int[]{-1});
+        int obj_my = player.getQuickVarI("exchange_obj", -1);
         if (obj_my == -1) {
             return;
         }
-        int id_new = player.getQuickVarI("exchange_new", new int[]{-1});
+        int id_new = player.getQuickVarI("exchange_new", -1);
         if (id_new == -1) {
             return;
         }
 
         boolean isUpgrade = arg[0].equalsIgnoreCase("1");
-        boolean att_change = player.getQuickVarB("exchange_attribute", new boolean[]{false});
+        boolean att_change = player.getQuickVarB("exchange_attribute", false);
 
-        Change change = ExchangeItemHolder.getInstance().getChanges(exchangeId, isUpgrade);
+        Change change = ExchangeItemHolder.getChanges(exchangeId, isUpgrade);
         if (change == null)
             return;
 
@@ -340,7 +342,7 @@ class Exchanger extends Functions {
         item.setEnchantLevel(item_my.getEnchantLevel());
         item.setAugmentation(item_my.getAugmentationMineralId(), item_my.getAugmentations());
 
-        int new_att = player.getQuickVarI("ex_att", new int[]{-1});
+        int new_att = player.getQuickVarI("ex_att", -1);
         if ((att_change) && (new_att != -1)) {
             Element element = Element.getElementById(new_att);
             int val = item_my.getAttributeElementValue();

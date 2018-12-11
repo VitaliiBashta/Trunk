@@ -16,28 +16,21 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.tables.SkillTable;
 
 public final class FreyaStandNormal extends Fighter {
-    private static final Skill Skill_EternalBlizzard = SkillTable.INSTANCE.getInfo(6274,1); // Мощнейшая атака ледяного урагана с силой 38к по площади в 3000 радиуса
+    private final Skill Skill_EternalBlizzard = SkillTable.INSTANCE.getInfo(6274, 1); // Мощнейшая атака ледяного урагана с силой 38к по площади в 3000 радиуса
+    private final Skill Skill_IceBall = SkillTable.INSTANCE.getInfo(6278); // Мощный клинок льда по Топ дамагеру
+    private final Skill Skill_SummonElemental = SkillTable.INSTANCE.getInfo(6277, 1); // Вселяет мощь льда в окружающих гвардов
+    private final Skill Skill_SelfNova = SkillTable.INSTANCE.getInfo(6279, 1); // Детонация льда, наносит АоЕ урон всем целям в радиусе 350
+    private final Skill Skill_DeathSentence = SkillTable.INSTANCE.getInfo(6280, 1); // Суровый вердикт Фреи, по истечении 10 секунд наносит мощный урон случайной цели
+    private final Skill Skill_ReflectMagic = SkillTable.INSTANCE.getInfo(6282, 1); // Щит, отражающий магию
+    private final Skill Skill_IceStorm = SkillTable.INSTANCE.getInfo(6283, 1); // Ледяной шторм по площади 1200 радиуса
+    private final Skill Skill_Anger = SkillTable.INSTANCE.getInfo(6285, 1); // Селф-бафф Фреи, призывает силы зимы
     private long _eternalblizzardReuseTimer = 0; // Таймер отката умения
-
-    private static final int Skill_IceBall = 6278; // Мощный клинок льда по Топ дамагеру
     private long _iceballReuseTimer = 0;
-
-    private static final Skill Skill_SummonElemental = SkillTable.INSTANCE.getInfo(6277, 1); // Вселяет мощь льда в окружающих гвардов
     private long _summonReuseTimer = 0;
-
-    private static final Skill Skill_SelfNova = SkillTable.INSTANCE.getInfo(6279, 1); // Детонация льда, наносит АоЕ урон всем целям в радиусе 350
     private long _selfnovaReuseTimer = 0;
-
-    private static final Skill Skill_DeathSentence = SkillTable.INSTANCE.getInfo(6280, 1); // Суровый вердикт Фреи, по истечении 10 секунд наносит мощный урон случайной цели
     private long _deathsentenceReuseTimer = 0;
-
-    private static final Skill Skill_ReflectMagic = SkillTable.INSTANCE.getInfo(6282,1); // Щит, отражающий магию
     private long _reflectReuseTimer = 0;
-
-    private static final Skill Skill_IceStorm = SkillTable.INSTANCE.getInfo(6283,1); // Ледяной шторм по площади 1200 радиуса
     private long _icestormReuseTimer = 0;
-
-    private static final Skill Skill_Anger = SkillTable.INSTANCE.getInfo(6285,1); // Селф-бафф Фреи, призывает силы зимы
     private long _angerReuseTimer = 0;
 
     private long _dispelTimer = 0;
@@ -77,7 +70,7 @@ public final class FreyaStandNormal extends Fighter {
         // Ice Ball Cast
         if (!actor.isCastingNow() && !actor.isMoving && _iceballReuseTimer < System.currentTimeMillis()) {
             if (topDamager != null && !topDamager.isDead() && topDamager.isInRangeZ(actor, 1000)) {
-                actor.doCast(SkillTable.INSTANCE().getInfo(Skill_IceBall, 1), topDamager, true);
+                actor.doCast(Skill_IceBall, topDamager, true);
                 int _iceballReuseDelay = 10;
                 _iceballReuseTimer = System.currentTimeMillis() + _iceballReuseDelay * 1000L;
             }
@@ -87,7 +80,7 @@ public final class FreyaStandNormal extends Fighter {
         if (!actor.isCastingNow() && _summonReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_SummonElemental, actor, true);
             getActor().getAroundNpc(800, 100).forEach(guard ->
-                guard.altOnMagicUseTimer(guard, Skill_SummonElemental));
+                    guard.altOnMagicUseTimer(guard, Skill_SummonElemental));
             int _summonReuseDelay = 50;
             _summonReuseTimer = System.currentTimeMillis() + _summonReuseDelay * 1000L;
         }

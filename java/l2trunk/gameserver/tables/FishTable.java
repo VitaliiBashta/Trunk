@@ -1,6 +1,5 @@
 package l2trunk.gameserver.tables;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.reward.RewardData;
 import l2trunk.gameserver.templates.FishTemplate;
@@ -59,8 +58,6 @@ public enum FishTable {
                 fishes.add(fish);
                 count++;
             }
-
-            DbUtils.close(statement, resultSet);
 
             LOG.info("FishTable: Loaded " + count + " fishes.");
 

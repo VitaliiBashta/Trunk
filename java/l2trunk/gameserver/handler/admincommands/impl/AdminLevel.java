@@ -84,7 +84,7 @@ public class AdminLevel implements IAdminCommandHandler {
             return;
         }
         if (target.isPet()) {
-            long exp_add = PetDataTable.getInstance().getInfo(((PetInstance) target).getNpcId(), level).getExp() - ((PetInstance) target).getExp();
+            long exp_add = PetDataTable.INSTANCE.getInfo(((PetInstance) target).getNpcId(), level).getExp() - ((PetInstance) target).getExp();
             ((PetInstance) target).addExpAndSp(exp_add, 0);
         }
     }

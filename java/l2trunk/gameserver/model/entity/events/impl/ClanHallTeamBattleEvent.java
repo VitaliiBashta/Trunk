@@ -48,8 +48,8 @@ public class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiegeClanOb
         if (_oldOwner != null)
             addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, _oldOwner, 0));
 
-        SiegeClanDAO.getInstance().delete(getResidence());
-        SiegePlayerDAO.getInstance().delete(getResidence());
+        SiegeClanDAO.INSTANCE.delete(getResidence());
+        SiegePlayerDAO.INSTANCE.delete(getResidence());
 
         List<CTBTeamObject> teams = getObjects(TRYOUT_PART);
         for (int i = 0; i < 5; i++) {
@@ -140,7 +140,7 @@ public class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiegeClanOb
 
     @Override
     public void loadSiegeClans() {
-        List<SiegeClanObject> siegeClanObjectList = SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS);
+        List<SiegeClanObject> siegeClanObjectList = SiegeClanDAO.INSTANCE.load(getResidence(), ATTACKERS);
         addObjects(ATTACKERS, siegeClanObjectList);
 
         List<CTBSiegeClanObject> objects = getObjects(ATTACKERS);

@@ -225,7 +225,6 @@ public final class AdminTeleport implements IAdminCommandHandler {
                             || plr.isInOlympiadMode()
                             || Olympiad.isRegistered(plr)
                             || plr.isJailed()
-                            || plr.isInFightClub()
                             || plr.isInZone(ZoneType.SIEGE)
                             || plr.getReflection() != ReflectionManager.DEFAULT
                             || plr.getPvpFlag() > 0

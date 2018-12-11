@@ -28,14 +28,14 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED/* && Config.BBS_PVP_CB_ENABLED*/) {
             _log.info("CommunityBoard: Manage Career service loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED/* && Config.BBS_PVP_CB_ENABLED*/)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -68,7 +68,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
             }
 
             final int price = Integer.parseInt(st.nextToken());
-            ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
+            ItemTemplate item = ItemHolder.getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
             ItemInstance pay = activeChar.getInventory().getItemByItemId(item.getItemId());
             if (pay != null && pay.getCount() >= price) {
                 activeChar.getInventory().destroyItem(pay, price, "Class Changer");
@@ -91,7 +91,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
                 jobLevel = 4;
 
             if ((level >= 20 && jobLevel == 1 || level >= 40 && jobLevel == 2 || level >= 76 && jobLevel == 3) && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevel)) {
-                ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
+                ItemTemplate item = ItemHolder.getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
                 html.append("You have to pay: <font color=\"LEVEL\">");
                 html.append(Util.formatAdena(Config.CLASS_MASTERS_PRICE_LIST[jobLevel])).append("</font> <font color=\"LEVEL\">").append(item.getName()).append("</font> to change profession<br>");
                 html.append("<center><table width=600><tr>");

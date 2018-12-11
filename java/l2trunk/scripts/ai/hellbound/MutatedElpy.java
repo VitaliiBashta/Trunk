@@ -14,7 +14,7 @@ public final class MutatedElpy extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        NaiaCoreManager.launchNaiaCore();
+        NaiaCoreManager.INSTANCE.launchNaiaCore();
         BelethManager.setElpyDead();
         super.onEvtDead(killer);
     }

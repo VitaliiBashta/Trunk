@@ -65,13 +65,13 @@ public final class UseItem extends L2GameClientPacket {
         }
 
 
-        if (ArrayUtils.contains(Config.ITEM_USE_LIST_ID, itemId) && !Config.ITEM_USE_IS_COMBAT_FLAG && (activeChar.getPvpFlag() != 0 || activeChar.isInDuel() || activeChar.isInCombat())) {
+        if (Config.ITEM_USE_LIST_ID.contains(itemId) && !Config.ITEM_USE_IS_COMBAT_FLAG && (activeChar.getPvpFlag() != 0 || activeChar.isInDuel() || activeChar.isInCombat())) {
             activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.network.l2.c2s.UseItem.NotUseIsFlag", activeChar));
             return;
         }
 
 
-        if (ArrayUtils.contains(Config.ITEM_USE_LIST_ID, itemId) && !Config.ITEM_USE_IS_ATTACK && activeChar.isAttackingNow()) {
+        if (Config.ITEM_USE_LIST_ID.contains(itemId) && !Config.ITEM_USE_IS_ATTACK && activeChar.isAttackingNow()) {
             activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.network.l2.c2s.UseItem.NotUseIsFlag", activeChar));
             return;
         }

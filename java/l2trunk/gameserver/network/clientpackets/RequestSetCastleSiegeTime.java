@@ -8,13 +8,13 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.CastleSiegeInfo;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestSetCastleSiegeTime extends L2GameClientPacket {
-    private int _id, _time;
+public final class RequestSetCastleSiegeTime extends L2GameClientPacket {
+    private int id, time;
 
     @Override
     protected void readImpl() {
-        _id = readD();
-        _time = readD();
+        id = readD();
+        time = readD();
     }
 
     @Override
@@ -23,7 +23,7 @@ public class RequestSetCastleSiegeTime extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, _id);
+        Castle castle = ResidenceHolder.getResidence(Castle.class, id);
         if (castle == null)
             return;
 
@@ -37,7 +37,7 @@ public class RequestSetCastleSiegeTime extends L2GameClientPacket {
 
         CastleSiegeEvent siegeEvent = castle.getSiegeEvent();
 
-        siegeEvent.setNextSiegeTime(_time);
+        siegeEvent.setNextSiegeTime(time);
 
         player.sendPacket(new CastleSiegeInfo(castle, player));
     }

@@ -11,7 +11,7 @@ public final class EffectStun extends Effect {
 
     @Override
     public boolean checkCondition() {
-        return Rnd.chance(_template.chance(80));
+        return Rnd.chance(template.chance(80));
     }
 
     @Override

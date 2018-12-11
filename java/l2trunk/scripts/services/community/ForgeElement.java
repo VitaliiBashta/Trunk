@@ -9,7 +9,7 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-class ForgeElement {
+public final class ForgeElement {
     static String[] generateAttribution(ItemInstance item, int slot, Player player, boolean hasBonus) {
         String[] data = new String[4];
 
@@ -24,7 +24,7 @@ class ForgeElement {
 
         if (item != null) {
             data[0] = item.getTemplate().getIcon();
-            data[1] = new StringBuilder().append(item.getName()).append(" ").append(item.getEnchantLevel() > 0 ? new StringBuilder().append("+").append(item.getEnchantLevel()).toString() : "").toString();
+            data[1] = item.getName() + " " + (item.getEnchantLevel() > 0 ? "+" + item.getEnchantLevel() : "");
             if ((item.getTemplate().isAttributable()) && (itemCheckGrade(hasBonus, item))) {
                 if (item.isHeroWeapon()) {
                     data[2] = heronot;
@@ -36,7 +36,7 @@ class ForgeElement {
                     data[2] = maxenchant;
                     data[3] = slotclose;
                 } else {
-                    data[2] = new StringBuilder().append("<button action=\"bypass _bbsforge:attribute:item:").append(slot).append("\" value=\"").append(new CustomMessage("common.enchant.attribute", player).toString()).append("\" width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">").toString();
+                    data[2] = "<button action=\"bypass _bbsforge:attribute:item:" + slot + "\" value=\"" + new CustomMessage("common.enchant.attribute", player).toString() + "\" width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
 					/*
 					if (item.getTemplate().isPvP())
 						data[3] = pvp;
@@ -50,7 +50,7 @@ class ForgeElement {
             }
         } else {
             data[0] = noicon;
-            data[1] = new CustomMessage(new StringBuilder().append("common.item.not.clothed.").append(slot).append("").toString(), player).toString();
+            data[1] = new CustomMessage("common.item.not.clothed." + slot + "", player).toString();
             data[2] = dot;
             data[3] = slotclose;
         }
@@ -70,13 +70,13 @@ class ForgeElement {
 
         if (item != null) {
             data[0] = item.getTemplate().getIcon();
-            data[1] = new StringBuilder().append(item.getName()).append(" ").append(item.getEnchantLevel() > 0 ? new StringBuilder().append("+").append(item.getEnchantLevel()).toString() : "").toString();
+            data[1] = item.getName() + " " + (item.getEnchantLevel() > 0 ? "+" + item.getEnchantLevel() : "");
             if (!item.getTemplate().isArrow()) {
                 if ((item.getEnchantLevel() >= max) || (!item.canBeEnchanted(true))) {
                     data[2] = maxenchant;
                     data[3] = slotclose;
                 } else {
-                    data[2] = new StringBuilder().append("<button action=\"bypass _bbsforge:enchant:item:").append(slot).append("\" value=\"").append(new CustomMessage("common.enchant", player).toString()).append("\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">").toString();
+                    data[2] = "<button action=\"bypass _bbsforge:enchant:item:" + slot + "\" value=\"" + new CustomMessage("common.enchant", player).toString() + "\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
 					/*
 					if (item.getTemplate().isPvP())
 						data[3] = pvp;
@@ -90,7 +90,7 @@ class ForgeElement {
             }
         } else {
             data[0] = noicon;
-            data[1] = new CustomMessage(new StringBuilder().append("common.item.not.clothed.").append(slot).append("").toString(), player).toString();
+            data[1] = new CustomMessage("common.item.not.clothed." + slot + "", player).toString();
             data[2] = dot;
             data[3] = slotclose;
         }
@@ -110,14 +110,14 @@ class ForgeElement {
 
         if (item != null) {
             data[0] = item.getTemplate().getIcon();
-            data[1] = new StringBuilder().append(item.getName()).append(" ").append(item.getEnchantLevel() > 0 ? new StringBuilder().append("+").append(item.getEnchantLevel()).toString() : "").toString();
+            data[1] = item.getName() + " " + (item.getEnchantLevel() > 0 ? new StringBuilder().append("+").append(item.getEnchantLevel()).toString() : "");
             if (!item.getTemplate().isArrow()) {
-                int found = FoundationHolder.getInstance().getFoundation(item.getItemId());
+                int found = FoundationHolder.getFoundation(item.getItemId());
                 if (found == -1) {
                     data[2] = no;
                     data[3] = slotclose;
                 } else {
-                    data[2] = new StringBuilder().append("<button action=\"bypass _bbsforge:foundation:item:").append(slot).append("\" value=\"").append(new CustomMessage("common.exchange", player).toString()).append("\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">").toString();
+                    data[2] = "<button action=\"bypass _bbsforge:foundation:item:" + slot + "\" value=\"" + new CustomMessage("common.exchange", player).toString() + "\"width=120 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">";
 					/*
 					if (item.getTemplate().isPvP())
 						data[3] = pvp;
@@ -131,7 +131,7 @@ class ForgeElement {
             }
         } else {
             data[0] = noicon;
-            data[1] = new CustomMessage(new StringBuilder().append("common.item.not.clothed.").append(slot).append("").toString(), player).toString();
+            data[1] = new CustomMessage("common.item.not.clothed." + slot + "", player).toString();
             data[2] = dot;
             data[3] = slotclose;
         }
@@ -140,7 +140,7 @@ class ForgeElement {
     }
 
     static String page(Player player) {
-        return HtmCache.INSTANCE().getNotNull(new StringBuilder().append(Config.BBS_HOME_DIR).append("forge/page_template.htm").toString(), player);
+        return HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "forge/page_template.htm", player);
     }
 
     static boolean itemCheckGrade(boolean hasBonus, ItemInstance item) {

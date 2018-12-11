@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager.itemauction;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
@@ -18,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class ItemAuction {
+public final class ItemAuction {
     private static final Logger _log = LoggerFactory.getLogger(ItemAuction.class);
 
     private static final long ENDING_TIME_EXTEND_5 = TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES);
@@ -69,7 +68,7 @@ public class ItemAuction {
         return true;
     }
 
-    public int getAuctionId() {
+    int getAuctionId() {
         return _auctionId;
     }
 
@@ -127,11 +126,8 @@ public class ItemAuction {
     }
 
     public void store() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("INSERT INTO item_auction (auctionId,instanceId,auctionItemId,startingTime,endingTime,auctionStateId) VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE auctionStateId=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("INSERT INTO item_auction (auctionId,instanceId,auctionItemId,startingTime,endingTime,auctionStateId) VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE auctionStateId=?")) {
             statement.setInt(1, _auctionId);
             statement.setInt(2, _instanceId);
             statement.setInt(3, _auctionItem.getAuctionItemId());
@@ -140,11 +136,8 @@ public class ItemAuction {
             statement.setInt(6, _auctionState.ordinal());
             statement.setInt(7, _auctionState.ordinal());
             statement.execute();
-            statement.close();
         } catch (SQLException e) {
             _log.warn("Error while Storing Item Auction! ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -155,11 +148,8 @@ public class ItemAuction {
     }
 
     private void updatePlayerBid(ItemAuctionBid bid, boolean delete) {
-        Connection con = null;
         PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             if (delete) {
                 statement = con.prepareStatement("DELETE FROM item_auction_bid WHERE auctionId=? AND playerObjId=?");
                 statement.setInt(1, _auctionId);
@@ -176,8 +166,6 @@ public class ItemAuction {
             statement.close();
         } catch (SQLException e) {
             _log.warn("Error while Updating Player Bid! ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

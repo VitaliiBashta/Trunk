@@ -78,8 +78,9 @@ public final class TvTArena1 extends Functions implements ScriptFile, OnDeathLis
         if (val == 0) {
             Player player = getSelf();
             if (player.isGM())
-                return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31390.htm", player) + HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31390-4.htm", player);
-            return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31390.htm", player);
+                return HtmCache.INSTANCE.getNotNull("scripts/events/TvTArena/31390.htm", player)
+                        + HtmCache.INSTANCE.getNotNull("scripts/events/TvTArena/31390-4.htm", player);
+            return HtmCache.INSTANCE.getNotNull("scripts/events/TvTArena/31390.htm", player);
         }
         return "";
     }

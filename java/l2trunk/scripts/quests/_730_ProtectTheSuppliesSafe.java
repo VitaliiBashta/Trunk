@@ -6,14 +6,10 @@ import l2trunk.gameserver.model.entity.events.impl.DominionSiegeRunnerEvent;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author VISTALL
- * @date 8:05/10.06.2011
- */
-public class _730_ProtectTheSuppliesSafe extends Quest implements ScriptFile {
+public final class _730_ProtectTheSuppliesSafe extends Quest implements ScriptFile {
     public _730_ProtectTheSuppliesSafe() {
         super(PARTY_NONE);
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.addBreakQuest(this);
     }
 

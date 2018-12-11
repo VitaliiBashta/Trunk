@@ -6,17 +6,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 
-/**
- * Сервис для гонок на Isle of Prayer, см. также ai.PrisonGuard
- *
- * @author SYS
- */
-class GrandIsleofPrayerRace extends Functions {
+public final class GrandIsleofPrayerRace extends Functions {
     private static final int RACE_STAMP = 10013;
     private static final int SECRET_KEY = 9694;
 
     public void startRace() {
-        Skill skill = SkillTable.INSTANCE().getInfo(Skill.SKILL_EVENT_TIMER, 1);
+        Skill skill = SkillTable.INSTANCE.getInfo(Skill.SKILL_EVENT_TIMER);
         Player player = getSelf();
         NpcInstance npc = getNpc();
         if (skill == null || player == null || npc == null)

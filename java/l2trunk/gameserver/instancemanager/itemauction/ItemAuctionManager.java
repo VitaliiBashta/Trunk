@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager.itemauction;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -43,19 +42,13 @@ public enum ItemAuctionManager {
     }
 
     private void load() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT auctionId FROM item_auction ORDER BY auctionId DESC LIMIT 0, 1");
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT auctionId FROM item_auction ORDER BY auctionId DESC LIMIT 0, 1");
+             ResultSet rset = statement.executeQuery()) {
             if (rset.next())
                 _nextId.set(rset.getInt(1));
         } catch (SQLException e) {
             LOG.error("ItemAuctionManager: Failed loading auctions.", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
 
         Path file = Config.DATAPACK_ROOT.resolve("data/item_auctions.xml");

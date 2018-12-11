@@ -2,7 +2,6 @@ package l2trunk.gameserver.model.entity.residence;
 
 import l2trunk.commons.dao.JdbcEntity;
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -36,11 +35,10 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Residence implements JdbcEntity {
     private static final long CYCLE_TIME = 60 * 60 * 1000L; // 1 час
-    private static final long serialVersionUID = 1L;
     private static final Logger _log = LoggerFactory.getLogger(Residence.class);
-    final int _id;
+    final int id;
     final Calendar _siegeDate = Calendar.getInstance();
-    private final String _name;
+    private final String name;
     private final List<ResidenceFunction> _functions = new ArrayList<>();
     private final List<Skill> skills = new ArrayList<>();
     private final Calendar lastSiegeDate = Calendar.getInstance();
@@ -61,8 +59,8 @@ public abstract class Residence implements JdbcEntity {
     private int _paidCycle;
 
     Residence(StatsSet set) {
-        _id = set.getInteger("id");
-        _name = set.getString("name");
+        id = set.getInteger("id");
+        name = set.getString("name");
     }
 
     public abstract ResidenceType getType();
@@ -78,25 +76,24 @@ public abstract class Residence implements JdbcEntity {
     }
 
     void initZone() {
-        _zone = ReflectionUtils.getZone("residence_" + _id);
+        _zone = ReflectionUtils.getZone("residence_" + id);
         _zone.setParam("residence", this);
     }
 
     void initEvent() {
-        _siegeEvent = EventHolder.getInstance().getEvent(EventType.SIEGE_EVENT, _id);
+        _siegeEvent = EventHolder.getEvent(EventType.SIEGE_EVENT, id);
     }
 
-    @SuppressWarnings("unchecked")
     public <E extends SiegeEvent> E getSiegeEvent() {
         return (E) _siegeEvent;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public int getOwnerId() {
@@ -196,9 +193,7 @@ public abstract class Residence implements JdbcEntity {
 
     public boolean isFunctionActive(int type) {
         ResidenceFunction function = getFunction(type);
-        if (function != null && function.isActive() && function.getLevel() > 0)
-            return true;
-        return false;
+        return function != null && function.isActive() && function.getLevel() > 0;
     }
 
     public ResidenceFunction getFunction(int type) {
@@ -225,7 +220,7 @@ public abstract class Residence implements JdbcEntity {
         int lease = level == 0 ? 0 : getFunction(type).getLease(level);
 
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            PreparedStatement statement = null;
+            PreparedStatement statement;
 
             if (!function.isActive()) {
                 if (count >= lease)
@@ -268,18 +263,13 @@ public abstract class Residence implements JdbcEntity {
     }
 
     private void removeFunction(int type) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("DELETE FROM residence_functions WHERE id=? AND type=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("DELETE FROM residence_functions WHERE id=? AND type=?")) {
             statement.setInt(1, getId());
             statement.setInt(2, type);
             statement.execute();
         } catch (SQLException e) {
             _log.warn("Exception: removeFunctions(int type): ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

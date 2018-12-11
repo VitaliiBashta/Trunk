@@ -47,7 +47,7 @@ public final class BossRandom extends Functions implements ScriptFile {
         public void run() {
 
             spawnBoss();
-            Location nearestTown = Location.findNearest(_boss, new Location[]{_boss.getLoc()});
+            Location nearestTown = Location.findNearest(_boss, _boss.getLoc());
             Announcements.INSTANCE.announceToAll(_boss.getName() + " appeared in " + String.valueOf(nearestTown) + "!");
             Announcements.INSTANCE.announceToAll("Part of the land on the island was peaceful.");
             _zone.setActive(false);

@@ -3,10 +3,12 @@ package l2trunk.scripts.ai.dragonvalley;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+
 public final class SandTracker extends Patrollers {
     public SandTracker(NpcInstance actor) {
         super(actor);
-        _points = new Location[]{new Location(122360, 114312, -3792),
+        points = Arrays.asList(new Location(122360, 114312, -3792),
                 new Location(125032, 114872, -3728),
                 new Location(127304, 114040, -3520),
                 new Location(128216, 113480, -3696),
@@ -41,6 +43,6 @@ public final class SandTracker extends Patrollers {
                 new Location(111352, 119256, -3056),
                 new Location(112328, 118264, -3072),
                 new Location(114008, 115784, -3280),
-                new Location(115768, 114440, -3104)};
+                new Location(115768, 114440, -3104));
     }
 }

@@ -98,7 +98,7 @@ public class TakeFlag extends Skill {
                 // спавним Варда, уже в новой територии
                 siegeEvent1.spawnAction("ward_" + wardDominionId, true);
 
-                DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+                DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.broadcastTo(new SystemMessage2(SystemMsg.CLAN_S1_HAS_SUCCEEDED_IN_CAPTURING_S2S_TERRITORY_WARD).addString(dominion.getOwner().getName()).addResidenceName(wardDominionId));
             }
     }

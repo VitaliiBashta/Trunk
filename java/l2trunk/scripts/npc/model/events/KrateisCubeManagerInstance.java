@@ -23,7 +23,7 @@ public final class KrateisCubeManagerInstance extends NpcInstance {
     @Override
     public void onBypassFeedback(Player player, String command) {
         if (command.startsWith("Kratei_UnRegister")) {
-            KrateisCubeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 2);
+            KrateisCubeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 2);
             for (KrateisCubeEvent cubeEvent : runnerEvent.getCubes()) {
                 List<KrateisCubePlayerObject> list = cubeEvent.getObjects(KrateisCubeEvent.REGISTERED_PLAYERS);
                 KrateisCubePlayerObject krateisCubePlayer = cubeEvent.getRegisteredPlayer(player);
@@ -34,7 +34,7 @@ public final class KrateisCubeManagerInstance extends NpcInstance {
 
             showChatWindow(player, 4);
         } else if (command.startsWith("Kratei_TryRegister")) {
-            KrateisCubeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 2);
+            KrateisCubeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 2);
             if (runnerEvent.isRegistrationOver()) {
                 if (runnerEvent.isInProgress())
                     showChatWindow(player, 3);
@@ -68,7 +68,7 @@ public final class KrateisCubeManagerInstance extends NpcInstance {
             if (t.countTokens() < 2)
                 return;
             t.nextToken();
-            KrateisCubeEvent cubeEvent = EventHolder.getInstance().getEvent(EventType.PVP_EVENT, Integer.parseInt(t.nextToken()));
+            KrateisCubeEvent cubeEvent = EventHolder.getEvent(EventType.PVP_EVENT, Integer.parseInt(t.nextToken()));
             if (cubeEvent == null)
                 return;
 

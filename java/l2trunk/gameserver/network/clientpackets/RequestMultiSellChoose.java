@@ -130,7 +130,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                 if (i.getItemId() <= 0) {
                     continue;
                 }
-                ItemTemplate item = ItemHolder.getInstance().getTemplate(i.getItemId());
+                ItemTemplate item = ItemHolder.getTemplate(i.getItemId());
 
                 weight = SafeMath.addAndCheck(weight, SafeMath.mulAndCheck(SafeMath.mulAndCheck(i.getItemCount(), _amount), item.getWeight()));
                 if (item.isStackable()) {
@@ -207,7 +207,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                         items.add(new ItemData(ingridientItemId, totalAmount, null));
                     }
                 } else {
-                    ItemTemplate template = ItemHolder.getInstance().getTemplate(ingridientItemId);
+                    ItemTemplate template = ItemHolder.getTemplate(ingridientItemId);
 
                     if (!template.isStackable()) {
                         for (int i = 0; i < (ingridientItemCount * _amount); i++) {
@@ -346,7 +346,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                     } else if (in.getItemId() == ItemTemplate.ITEM_ID_FAME) {
                         activeChar.setFame(activeChar.getFame() + (int) (in.getItemCount() * _amount), "MultiSell");
                     }
-                } else if (ItemHolder.getInstance().getTemplate(in.getItemId()).isStackable()) {
+                } else if (ItemHolder.getTemplate(in.getItemId()).isStackable()) {
                     long total = SafeMath.mulAndLimit(in.getItemCount(), _amount);
                     ItemFunctions.addItem(activeChar, in.getItemId(), total, true, "Multisell");
                 } else {
@@ -384,7 +384,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
         activeChar.sendChanges();
 
         if (!list1.isShowAll()) {
-            MultiSellHolder.getInstance().SeparateAndSend(list1, activeChar, castle == null ? 0 : castle.getTaxRate());
+            MultiSellHolder.INSTANCE.SeparateAndSend(list1, activeChar, castle == null ? 0 : castle.getTaxRate());
         }
     }
 

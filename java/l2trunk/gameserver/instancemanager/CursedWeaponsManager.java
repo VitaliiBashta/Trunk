@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -71,7 +70,7 @@ public enum CursedWeaponsManager {
             if (!Files.exists(file))
                 return;
 
-            Document doc = factory.newDocumentBuilder().parse(file.toFile());
+            Document doc = factory.newDocumentBuilder().parse(Files.newInputStream(file));
 
             for (Node n = doc.getFirstChild(); n != null; n = n.getNextSibling())
                 if ("list".equalsIgnoreCase(n.getNodeName()))
@@ -83,8 +82,8 @@ public enum CursedWeaponsManager {
                             String name = "Unknown cursed weapon";
                             if (attrs.getNamedItem("name") != null)
                                 name = attrs.getNamedItem("name").getNodeValue();
-                            else if (ItemHolder.getInstance().getTemplate(id) != null)
-                                name = ItemHolder.getInstance().getTemplate(id).getName();
+                            else if (ItemHolder.getTemplate(id) != null)
+                                name = ItemHolder.getTemplate(id).getName();
 
                             if (id == 0)
                                 continue;
@@ -251,7 +250,7 @@ public enum CursedWeaponsManager {
                 player.setCursedWeaponEquippedId(0);
                 player.setTransformation(0);
                 player.setTransformationName(null);
-                player.removeSkill(SkillTable.INSTANCE().getInfo(cw.getSkillId(), player.getSkillLevel(cw.getSkillId())), false);
+                player.removeSkill(SkillTable.INSTANCE.getInfo(cw.getSkillId(), player.getSkillLevel(cw.getSkillId())), false);
                 player.getInventory().destroyItemByItemId(cw.getItemId(), 1L, "CursedWeapon");
                 player.broadcastCharInfo();
             } else {
@@ -262,14 +261,12 @@ public enum CursedWeaponsManager {
                     statement.setInt(1, cw.getPlayerId());
                     statement.setInt(2, cw.getItemId());
                     statement.executeUpdate();
-                    DbUtils.close(statement);
 
                     // Delete the skill
                     statement = con.prepareStatement("DELETE FROM character_skills WHERE char_obj_id=? AND skill_id=?");
                     statement.setInt(1, cw.getPlayerId());
                     statement.setInt(2, cw.getSkillId());
                     statement.executeUpdate();
-                    DbUtils.close(statement);
 
                     // Restore the karma
                     statement = con.prepareStatement("UPDATE characters SET karma=?, pkkills=? WHERE obj_Id=?");
@@ -385,11 +382,12 @@ public enum CursedWeaponsManager {
     }
 
     public void doLogout(Player player) {
-        for (CursedWeapon cw : cursedWeaponsMap.values())
-            if (player.getInventory().getItemByItemId(cw.getItemId()) != null) {
-                cw.setPlayer(null);
-                cw.setItem(null);
-            }
+        cursedWeaponsMap.values().stream()
+                .filter(cw -> player.getInventory().getItemByItemId(cw.getItemId()) != null)
+                .forEach(cw -> {
+                    cw.setPlayer(null);
+                    cw.setItem(null);
+                });
     }
 
     /**

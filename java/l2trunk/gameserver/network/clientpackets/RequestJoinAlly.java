@@ -71,11 +71,6 @@ public class RequestJoinAlly extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInFightClub() && !activeChar.getFightClubEvent().canReceiveInvitations(activeChar, target)) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ON_ANOTHER_TASK).addString(target.getName()));
-            return;
-        }
-
         if (!target.getClan().canJoinAlly()) {
             SystemMessage2 sm = new SystemMessage2(SystemMsg.S1_CLAN_CANNOT_JOIN_THE_ALLIANCE_BECAUSE_ONE_DAY_HAS_NOT_YET_PASSED_SINCE_THEY_LEFT_ANOTHER_ALLIANCE);
             sm.addString(target.getClan().getName());

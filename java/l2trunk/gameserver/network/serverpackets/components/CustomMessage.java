@@ -79,7 +79,7 @@ public class CustomMessage {
     }
 
     public CustomMessage addItemName(int itemId) {
-        return addItemName(ItemHolder.getInstance().getTemplate(itemId));
+        return addItemName(ItemHolder.getTemplate(itemId));
     }
 
     private CustomMessage addItemName(ItemInstance item) {

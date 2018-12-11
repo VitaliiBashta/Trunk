@@ -15,7 +15,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardMystic;
 
 public final class GiselleVonHellmann extends SiegeGuardMystic {
-    private final Skill DAMAGE_SKILL = SkillTable.INSTANCE().getInfo(5003, 1);
+    private final Skill DAMAGE_SKILL = SkillTable.INSTANCE.getInfo(5003);
 
     private final Zone ZONE_1 = ReflectionUtils.getZone("lidia_zone1");
     private final Zone ZONE_2 = ReflectionUtils.getZone("lidia_zone2");
@@ -52,7 +52,7 @@ public final class GiselleVonHellmann extends SiegeGuardMystic {
         NpcInstance lidiaNpc = spawnExObject.getFirstSpawned();
 
         if (lidiaNpc.getCurrentHpRatio() == 1.)
-            lidiaNpc.setCurrentHp(lidiaNpc.getMaxHp() / 2, true);
+            lidiaNpc.setCurrentHp(lidiaNpc.getMaxHp() / 2., true);
     }
 
     @Override

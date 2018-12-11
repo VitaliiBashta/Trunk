@@ -17,10 +17,9 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AdminClientSupport implements IAdminCommandHandler {
-    private static final Logger _log = LoggerFactory.getLogger(AdminClientSupport.class);
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    @SuppressWarnings("rawtypes")
+public final class AdminClientSupport implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player player) {
         if (!player.getPlayerAccess().CanEditChar)
@@ -36,71 +35,60 @@ public class AdminClientSupport implements IAdminCommandHandler {
 
                 if (target == null || !target.isPlayer())
                     return false;
-                try {
-                    Skill skill = SkillTable.INSTANCE().getInfo(Integer.parseInt(wordList[1]), Integer.parseInt(wordList[2]));
-                    if (skill == null) {
-                        player.sendMessage("Too big level, max:" + SkillTable.INSTANCE().getMaxLevel(Integer.parseInt(wordList[1])));
-                        return false;
-                    }
-                    target.getPlayer().addSkill(skill, true);
-                    target.getPlayer().sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.getId(), skill.getLevel()));
-                } catch (NumberFormatException e) {
-                    _log.info("AdminClientSupport:useAdminCommand(Enum,String[],String,L2Player): " + e, e);
+                Skill skill = SkillTable.INSTANCE.getInfo(toInt(wordList[1]), toInt(wordList[2]));
+                if (skill == null) {
+                    player.sendMessage("Too big level, max:" + SkillTable.INSTANCE.getMaxLevel(toInt(wordList[1])));
                     return false;
                 }
+                target.getPlayer().addSkill(skill, true);
+                target.getPlayer().sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.getId(), skill.getLevel()));
                 break;
             case admin_summon:
                 if (wordList.length != 3)
                     return false;
 
-                try {
-                    int id = Integer.parseInt(wordList[1]);
-                    long count = Long.parseLong(wordList[2]);
+                int id = toInt(wordList[1]);
+                long count = Long.parseLong(wordList[2]);
 
-                    if (id >= 1000000) {
-                        if (target == null)
-                            target = player;
+                if (id >= 1000000) {
+                    if (target == null)
+                        target = player;
 
-                        NpcTemplate template = NpcHolder.getTemplate(id - 1000000);
+                    NpcTemplate template = NpcHolder.getTemplate(id - 1000000);
 
-                        for (int i = 0; i < count; i++) {
-                            NpcInstance npc = template.getNewInstance();
-                            npc.setSpawnedLoc(target.getLoc());
-                            npc.setFullHpMp();
+                    for (int i = 0; i < count; i++) {
+                        NpcInstance npc = template.getNewInstance();
+                        npc.setSpawnedLoc(target.getLoc());
+                        npc.setFullHpMp();
 
-                            npc.spawnMe(npc.getSpawnedLoc());
-                        }
+                        npc.spawnMe(npc.getSpawnedLoc());
+                    }
+                } else {
+                    if (target == null)
+                        target = player;
+
+                    if (!target.isPlayer())
+                        return false;
+
+                    ItemTemplate template = ItemHolder.getTemplate(id);
+                    if (template == null)
+                        return false;
+
+                    if (template.isStackable()) {
+                        ItemInstance item = ItemFunctions.createItem(id);
+                        item.setCount(count);
+
+                        target.getPlayer().getInventory().addItem(item, "admin_summon");
+                        target.getPlayer().sendPacket(SystemMessage2.obtainItems(item));
                     } else {
-                        if (target == null)
-                            target = player;
-
-                        if (!target.isPlayer())
-                            return false;
-
-                        ItemTemplate template = ItemHolder.getInstance().getTemplate(id);
-                        if (template == null)
-                            return false;
-
-                        if (template.isStackable()) {
+                        for (int i = 0; i < count; i++) {
                             ItemInstance item = ItemFunctions.createItem(id);
-                            item.setCount(count);
 
                             target.getPlayer().getInventory().addItem(item, "admin_summon");
                             target.getPlayer().sendPacket(SystemMessage2.obtainItems(item));
-                        } else {
-                            for (int i = 0; i < count; i++) {
-                                ItemInstance item = ItemFunctions.createItem(id);
-
-                                target.getPlayer().getInventory().addItem(item, "admin_summon");
-                                target.getPlayer().sendPacket(SystemMessage2.obtainItems(item));
-                            }
                         }
                     }
-                } catch (NumberFormatException e) {
-                    _log.info("AdminClientSupport:useAdminCommand(Enum,String[],String,L2Player): " + e, e);
-                    return false;
                 }
-
                 break;
         }
         return true;

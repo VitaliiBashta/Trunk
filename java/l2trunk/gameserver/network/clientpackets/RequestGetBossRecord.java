@@ -12,13 +12,11 @@ import java.util.Map;
 /**
  * Format: (ch) d
  */
-public class RequestGetBossRecord extends L2GameClientPacket {
-    @SuppressWarnings("unused")
-    private int _bossID;
+public final class RequestGetBossRecord extends L2GameClientPacket {
 
     @Override
     protected void readImpl() {
-        _bossID = readD(); // always 0?
+        readD();
     }
 
     @Override
@@ -31,7 +29,7 @@ public class RequestGetBossRecord extends L2GameClientPacket {
             return;
 
         List<BossRecordInfo> list = new ArrayList<>();
-        Map<Integer, Integer> points = RaidBossSpawnManager.getInstance().getPointsForOwnerId(activeChar.getObjectId());
+        Map<Integer, Integer> points = RaidBossSpawnManager.INSTANCE.getPointsForOwnerId(activeChar.getObjectId());
         if (points != null && !points.isEmpty())
             for (Map.Entry<Integer, Integer> e : points.entrySet())
                 switch (e.getKey()) {

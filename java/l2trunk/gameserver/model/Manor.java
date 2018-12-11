@@ -20,12 +20,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public enum Manor {
     INSTANCE;
     private final Logger _log = LoggerFactory.getLogger(Manor.class);
 
-    private  Map<Integer, SeedData> seeds = new ConcurrentHashMap<>();
+    private Map<Integer, SeedData> seeds = new ConcurrentHashMap<>();
 
     Manor() {
         parseData();
@@ -44,7 +47,7 @@ public enum Manor {
     }
 
     public int getSeedBasicPrice(int seedId) {
-        ItemTemplate seedItem = ItemHolder.getInstance().getTemplate(seedId);
+        ItemTemplate seedItem = ItemHolder.getTemplate(seedId);
         if (seedItem != null)
             return seedItem.getReferencePrice();
         return 0;
@@ -58,7 +61,7 @@ public enum Manor {
     }
 
     public int getCropBasicPrice(int cropId) {
-        ItemTemplate cropItem = ItemHolder.getInstance().getTemplate(cropId);
+        ItemTemplate cropItem = ItemHolder.getTemplate(cropId);
         if (cropItem != null)
             return cropItem.getReferencePrice();
         return 0;
@@ -132,11 +135,11 @@ public enum Manor {
     }
 
     public synchronized long getRewardAmountPerCrop(int castle, int cropId, int type) {
-        final CropProcure cs = ResidenceHolder.getInstance().getResidence(Castle.class, castle).getCropProcure(CastleManorManager.PERIOD_CURRENT).get(cropId);
-        for (SeedData seed : seeds.values())
-            if (seed.getCrop() == cropId)
-                return cs.getPrice() / getCropBasicPrice(seed.getReward(type));
-        return -1;
+        final CropProcure cs = ResidenceHolder.getResidence(Castle.class, castle).getCropProcure(CastleManorManager.PERIOD_CURRENT).get(cropId);
+        return seeds.values().stream()
+                .filter(seed -> seed.getCrop() == cropId)
+                .map(seed -> cs.getPrice() / getCropBasicPrice(seed.getReward(type)))
+                .findFirst().orElse(-1L);
     }
 
     public synchronized int getRewardItemBySeed(int seedId, int type) {
@@ -164,11 +167,10 @@ public enum Manor {
      * @return seedIds - list of seed ids
      */
     public List<Integer> getSeedsForCastle(int castleId) {
-        List<Integer> seedsID = new ArrayList<>();
-        for (SeedData seed : seeds.values())
-            if (seed.getManorId() == castleId && !seedsID.contains(seed.getId()))
-                seedsID.add(seed.getId());
-        return seedsID;
+        return seeds.values().stream()
+                .filter(seed -> seed.getManorId() == castleId)
+                .map(SeedData::getId)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -189,10 +191,9 @@ public enum Manor {
     }
 
     public long getCropPuchaseLimit(int cropId) {
-        for (SeedData seed : seeds.values())
-            if (seed.getCrop() == cropId)
-                return seed.getCropLimit();
-        return 0;
+        return seeds.values().stream()
+                .filter(seed -> seed.getCrop() == cropId)
+                .map(SeedData::getCropLimit).findFirst().orElse(0L);
     }
 
     private void parseData() {
@@ -217,16 +218,16 @@ public enum Manor {
     private SeedData parseList(String line) {
         StringTokenizer st = new StringTokenizer(line, ";");
 
-        int seedId = Integer.parseInt(st.nextToken()); // seed id
-        int level = Integer.parseInt(st.nextToken()); // seed level
-        int cropId = Integer.parseInt(st.nextToken()); // crop id
-        int matureId = Integer.parseInt(st.nextToken()); // mature crop id
-        int type1R = Integer.parseInt(st.nextToken()); // type I reward
-        int type2R = Integer.parseInt(st.nextToken()); // type II reward
-        int manorId = Integer.parseInt(st.nextToken()); // id of manor, where seed can be farmed
-        int isAlt = Integer.parseInt(st.nextToken()); // alternative seed
-        long limitSeeds = Math.round(Integer.parseInt(st.nextToken()) * Config.RATE_MANOR); // limit for seeds
-        long limitCrops = Math.round(Integer.parseInt(st.nextToken()) * Config.RATE_MANOR); // limit for crops
+        int seedId = toInt(st.nextToken()); // seed id
+        int level = toInt(st.nextToken()); // seed level
+        int cropId = toInt(st.nextToken()); // crop id
+        int matureId = toInt(st.nextToken()); // mature crop id
+        int type1R = toInt(st.nextToken()); // type I reward
+        int type2R = toInt(st.nextToken()); // type II reward
+        int manorId = toInt(st.nextToken()); // id of manor, where seed can be farmed
+        int isAlt = toInt(st.nextToken()); // alternative seed
+        long limitSeeds = Math.round(toInt(st.nextToken()) * Config.RATE_MANOR); // limit for seeds
+        long limitCrops = Math.round(toInt(st.nextToken()) * Config.RATE_MANOR); // limit for crops
 
         SeedData seed = new SeedData(level, cropId, matureId);
         seed.setData(seedId, type1R, type2R, manorId, isAlt, limitSeeds, limitCrops);

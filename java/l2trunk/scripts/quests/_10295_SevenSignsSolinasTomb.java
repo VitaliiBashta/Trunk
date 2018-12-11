@@ -1,6 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
+import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -12,13 +12,16 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author pchayka
  * <p/>
  * TODO: спавн минионов
  * TODO: включение и отключение свечения у Контроллеров Границ
  */
-public class _10295_SevenSignsSolinasTomb extends Quest implements ScriptFile {
+public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptFile {
     private static final int ErisEvilThoughts = 32792;
     private static final int ElcardiaInzone1 = 32787;
     private static final int TeleportControlDevice = 32820;
@@ -42,8 +45,8 @@ public class _10295_SevenSignsSolinasTomb extends Quest implements ScriptFile {
 
     private static final int Solina = 32793;
 
-    private static final int[] SolinaGuardians = {18952, 18953, 18954, 18955};
-    private static final int[] TombGuardians = {18956, 18957, 18958, 18959};
+    private static final List<Integer> SolinaGuardians = Arrays.asList(18952, 18953, 18954, 18955);
+    private static final List<Integer> TombGuardians = Arrays.asList(18956, 18957, 18958, 18959);
 
     static {
         Location[] minions1 = {new Location(55672, -252120, -6760), new Location(55752, -252120, -6760), new Location(55656, -252216, -6760), new Location(55736, -252216, -6760)};
@@ -231,12 +234,12 @@ public class _10295_SevenSignsSolinasTomb extends Quest implements ScriptFile {
     public String onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
         Player player = st.getPlayer();
-        if (ArrayUtils.contains(SolinaGuardians, npcId) && checkGuardians(player, SolinaGuardians)) {
+        if (SolinaGuardians.contains(npcId) && checkGuardians(player, SolinaGuardians)) {
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_SOLINA_TOMB_CLOSING);
             player.broadcastPacket(new EventTrigger(21100100, false));
             player.broadcastPacket(new EventTrigger(21100102, true));
         }
-        if (ArrayUtils.contains(TombGuardians, npcId)) {
+        if (TombGuardians.contains(npcId)) {
             if (checkGuardians(player, TombGuardians))
                 player.getReflection().openDoor(21100018);
             switch (npcId) {
@@ -271,11 +274,10 @@ public class _10295_SevenSignsSolinasTomb extends Quest implements ScriptFile {
                         e.exit();
     }
 
-    private boolean checkGuardians(Player player, int[] npcIds) {
-        for (NpcInstance n : player.getReflection().getNpcs())
-            if (ArrayUtils.contains(npcIds, n.getNpcId()) && !n.isDead())
-                return false;
-        return true;
+    private boolean checkGuardians(Player player, List<Integer> npcIds) {
+        return player.getReflection().getNpcs().stream()
+                .filter(n -> npcIds.contains(n.getNpcId()))
+                .allMatch(Creature::isDead);
     }
 
     private void activateTombGuards(Player player) {

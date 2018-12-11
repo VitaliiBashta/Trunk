@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.monas.FurnaceSpawnRoom;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
@@ -26,7 +25,7 @@ public final class FurnaceProtection extends DefaultAI {
             return;
 
         int event_id = actor.getAISpawnParam();
-        MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+        MonasteryFurnaceEvent furnace = EventHolder.getEvent(EventType.MAIN_EVENT, event_id);
 
         if (_firstTimeAttacked && !furnace.isInProgress()) {
             _firstTimeAttacked = false;
@@ -35,9 +34,9 @@ public final class FurnaceProtection extends DefaultAI {
             actor.setNpcState((byte) 1);
             Functions.npcShout(actor, NpcString.FURN1);
             furnace.registerActions();
-            ThreadPoolManager.INSTANCE.schedule(() -> EventHolder.getInstance()
-                    .getEvent(EventType.MAIN_EVENT, getActor().getAISpawnParam())
-                    .spawnAction(MonasteryFurnaceEvent.PROTECTOR_ROOM, true), 15000);
+            ThreadPoolManager.INSTANCE.schedule(() ->
+                    EventHolder.getEvent(EventType.MAIN_EVENT, getActor().getAISpawnParam())
+                            .spawnAction(MonasteryFurnaceEvent.PROTECTOR_ROOM, true), 15000);
         }
 
         super.onEvtAttacked(attacker, damage);

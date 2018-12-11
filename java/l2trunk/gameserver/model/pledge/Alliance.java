@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.pledge;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.cache.CrestCache;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
@@ -13,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -76,8 +77,8 @@ public class Alliance {
         removeMemberInDatabase(exMember);
     }
 
-    public Clan[] getMembers() {
-        return _members.values().toArray(new Clan[_members.size()]);
+    public List<Clan> getMembers() {
+        return new ArrayList<>(_members.values());
     }
 
     public int getMembersCount() {
@@ -142,19 +143,14 @@ public class Alliance {
             return;
         }
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE ally_data SET leader_id=?,expelled_member=? WHERE ally_id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE ally_data SET leader_id=?,expelled_member=? WHERE ally_id=?")) {
             statement.setInt(1, getLeaderId());
             statement.setLong(2, getExpelledMemberTime() / 1000);
             statement.setInt(3, getAllyId());
             statement.execute();
         } catch (SQLException e) {
             _log.warn("error while updating ally '" + _allyId + "' data in db: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

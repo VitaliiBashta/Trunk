@@ -5,18 +5,17 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.tables.ClanTable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
-public class ExShowCastleInfo extends L2GameServerPacket {
-    private List<CastleInfo> _infos = Collections.emptyList();
+public final class ExShowCastleInfo extends L2GameServerPacket {
+    private List<CastleInfo> _infos;
 
     public ExShowCastleInfo() {
         String ownerName;
         int id, tax, nextSiege;
 
-        List<Castle> castles = ResidenceHolder.getInstance().getResidenceList(Castle.class);
+        List<Castle> castles = ResidenceHolder.getResidenceList(Castle.class);
         _infos = new ArrayList<>(castles.size());
         for (Castle castle : castles) {
             ownerName = ClanTable.INSTANCE.getClanName(castle.getOwnerId());
@@ -32,25 +31,25 @@ public class ExShowCastleInfo extends L2GameServerPacket {
         writeEx(0x14);
         writeD(_infos.size());
         for (CastleInfo info : _infos) {
-            writeD(info._id);
-            writeS(info._ownerName);
-            writeD(info._tax);
-            writeD(info._nextSiege);
+            writeD(info.id);
+            writeS(info.ownerName);
+            writeD(info.tax);
+            writeD(info.nextSiege);
         }
         _infos.clear();
     }
 
     private static class CastleInfo {
-        final String _ownerName;
-        final int _id;
-        final int _tax;
-        final int _nextSiege;
+        final String ownerName;
+        final int id;
+        final int tax;
+        final int nextSiege;
 
         CastleInfo(String ownerName, int id, int tax, int nextSiege) {
-            _ownerName = ownerName;
-            _id = id;
-            _tax = tax;
-            _nextSiege = nextSiege;
+            this.ownerName = ownerName;
+            this.id = id;
+            this.tax = tax;
+            this.nextSiege = nextSiege;
         }
     }
 }

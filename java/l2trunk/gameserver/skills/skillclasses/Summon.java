@@ -130,12 +130,12 @@ public final class Summon extends Skill {
                 summon.setFollowMode(true);
 
                 if (summon.getSkillLevel(4140) > 0)
-                    summon.altUseSkill(SkillTable.INSTANCE().getInfo(4140, summon.getSkillLevel(4140)), activeChar);
+                    summon.altUseSkill(SkillTable.INSTANCE.getInfo(4140, summon.getSkillLevel(4140)), activeChar);
 
                 if (summon.getName().equalsIgnoreCase("Shadow"))//FIXME [G1ta0] идиотский хардкод
                     summon.addStatFunc(new FuncAdd(Stats.ABSORB_DAMAGE_PERCENT, 0x40, this, 15));
 
-                EffectsDAO.getInstance().restoreEffects(summon, true, summon.getMaxHp(), summon.getMaxCp(), summon.getMaxMp());
+                EffectsDAO.INSTANCE.restoreEffects(summon, true, summon.getMaxHp(), summon.getMaxCp(), summon.getMaxMp());
                 if (activeChar.isInOlympiadMode())
                     summon.getEffectList().stopAllEffects();
 

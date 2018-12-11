@@ -11,6 +11,8 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 /**
  * Admin comand handler for Manor System
  * This class handles following admin commands:
@@ -22,8 +24,7 @@ import java.util.StringTokenizer;
  * - manor_save = saves all manor data into database
  * - manor_disable = disables manor system
  */
-@SuppressWarnings("unused")
-public class AdminManor implements IAdminCommandHandler {
+public final class AdminManor implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -37,14 +38,10 @@ public class AdminManor implements IAdminCommandHandler {
         if (fullString.equals("admin_manor"))
             showMainPage(activeChar);
         else if (fullString.equals("admin_manor_reset")) {
-            int castleId = 0;
-            try {
-                castleId = Integer.parseInt(st.nextToken());
-            } catch (Exception e) {
-            }
+            int castleId = toInt(st.nextToken());
 
             if (castleId > 0) {
-                Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, castleId);
+                Castle castle = ResidenceHolder.getResidence(Castle.class, castleId);
                 castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                 castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                 castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
@@ -53,7 +50,7 @@ public class AdminManor implements IAdminCommandHandler {
                 castle.saveSeedData();
                 activeChar.sendMessage("Manor data for " + castle.getName() + " was nulled");
             } else {
-                for (Castle castle : ResidenceHolder.getInstance().getResidenceList(Castle.class)) {
+                for (Castle castle : ResidenceHolder.getResidenceList(Castle.class)) {
                     castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
                     castle.setCropProcure(new ArrayList<>(), CastleManorManager.PERIOD_NEXT);
                     castle.setSeedProduction(new ArrayList<>(), CastleManorManager.PERIOD_CURRENT);
@@ -107,12 +104,17 @@ public class AdminManor implements IAdminCommandHandler {
         replyMSG.append("<br><center>Castle Information:<table width=\"100%\">");
         replyMSG.append("<tr><td></td><td>Current Period</td><td>Next Period</td></tr>");
 
-        for (Castle c : ResidenceHolder.getInstance().getResidenceList(Castle.class)) {
-            replyMSG.append("<tr><td>" + c.getName() + "</td>" + "<td>" + c.getManorCost(CastleManorManager.PERIOD_CURRENT) + "a</td>" + "<td>" + c.getManorCost(CastleManorManager.PERIOD_NEXT) + "a</td>" + "</tr>");
-        }
-        replyMSG.append("</table><br>");
+        ResidenceHolder.getResidenceList(Castle.class).forEach( c->
+            replyMSG.append("<tr><td>")
+                    .append(c.getName())
+                    .append("</td>")
+                    .append("<td>")
+                    .append(c.getManorCost(CastleManorManager.PERIOD_CURRENT))
+                    .append("a</td><td>")
+                    .append(c.getManorCost(CastleManorManager.PERIOD_NEXT))
+                    .append("a</td></tr>"));
 
-        replyMSG.append("</body></html>");
+        replyMSG.append("</table><br></body></html>");
 
         adminReply.setHtml(replyMSG.toString());
         activeChar.sendPacket(adminReply);

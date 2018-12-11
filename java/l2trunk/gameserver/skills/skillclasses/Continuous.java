@@ -12,7 +12,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Continuous extends Skill {
+public final class Continuous extends Skill {
     private final int _lethal1;
     private final int _lethal2;
 
@@ -40,10 +40,6 @@ public class Continuous extends Skill {
                 return false;
             }
 
-            //Fight club
-            if (!target.equals(activeChar) && activeChar.isPlayable() && activeChar.getPlayer().isInFightClub())
-                if (!activeChar.getPlayer().getFightClubEvent().canUsePositiveMagic(activeChar, target))
-                    return false;
         }
 
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);

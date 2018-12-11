@@ -15,15 +15,12 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncMul;
-import l2trunk.gameserver.utils.GCSArray;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.bosses.BaylorManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private static final int INCSTANCED_ZONE_ID = 10;
@@ -80,7 +77,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private static final int OG3 = 32276;
     private static final int OG4 = 32277;
 
-    private static final int[] MOBLIST = new int[]{
+    private static final List<Integer> MOBLIST = Arrays.asList(
             KechisCaptain1,
             KechisCaptain2,
             KechisCaptain3,
@@ -93,7 +90,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
             ChromaticDetainee1,
             CrystallineUnicorn,
             EmeraldBoar,
-            PlazaHelm};
+            PlazaHelm);
 
     // Doors
     private static final int DOOR1 = 24220021;
@@ -145,7 +142,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
 
     public class Room {
         Map<NpcInstance, Boolean> npclist;
-        GCSArray<long[]> og;
+        List<long[]> og;
     }
 
     private static final Map<Integer,World> worlds = new HashMap<>();
@@ -231,8 +228,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private void despawnNpcF(World world) {
         for (long[] list : world.OracleTriggered.og) {
             NpcInstance npc = GameObjectsStorage.getAsNpc(OG1);
-            if (npc != null)
-                npc.decayMe();
+            npc.decayMe();
         }
     }
 
@@ -790,7 +786,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private void runSteamRoom1Oracle(World world) {
         world.OracleTriggeredRoom1 = false;
         world.OracleTriggered = new Room();
-        world.OracleTriggered.og = new GCSArray<>();
+        world.OracleTriggered.og = new ArrayList<>();
         NpcInstance NewNpc1;
         NpcInstance NewNpc2;
         NpcInstance NewNpc3;
@@ -841,7 +837,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private void runSteamRoom2Oracle(World world) {
         world.OracleTriggeredRoom2 = false;
         world.OracleTriggered = new Room();
-        world.OracleTriggered.og = new GCSArray<>();
+        world.OracleTriggered.og = new ArrayList<>();
         NpcInstance NewNpc1;
         NpcInstance NewNpc2;
         NpcInstance NewNpc3;
@@ -898,7 +894,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private void runSteamRoom3Oracle(World world) {
         world.OracleTriggeredRoom3 = false;
         world.OracleTriggered = new Room();
-        world.OracleTriggered.og = new GCSArray<>();
+        world.OracleTriggered.og = new ArrayList<>();
         NpcInstance NewNpc1;
         NpcInstance NewNpc2;
         NpcInstance NewNpc3;

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.actor.instances.player;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.actor.instances.player.Macro.L2MacroCmd;
@@ -15,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class MacroList {
+public final class MacroList {
     private static final Logger _log = LoggerFactory.getLogger(MacroList.class);
 
     private final Player player;
@@ -33,8 +32,8 @@ public class MacroList {
         return _revision;
     }
 
-    public Macro[] getAllMacroses() {
-        return _macroses.values().toArray(new Macro[_macroses.size()]);
+    public Collection<Macro> getAllMacroses() {
+        return _macroses.values();
     }
 
     public Macro getMacro(int id) {
@@ -72,20 +71,16 @@ public class MacroList {
 
     public void sendUpdate() {
         _revision++;
-        Macro[] all = getAllMacroses();
-        if (all.length == 0)
-            player.sendPacket(new SendMacroList(_revision, all.length, null));
+        Collection<Macro> all = getAllMacroses();
+        if (all.isEmpty())
+            player.sendPacket(new SendMacroList(_revision, 0, null));
         else
-            for (Macro m : all)
-                player.sendPacket(new SendMacroList(_revision, all.length, m));
+            all.forEach(m -> player.sendPacket(new SendMacroList(_revision, all.size(), m)));
     }
 
     private void registerMacroInDb(Macro macro) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("REPLACE INTO character_macroses (char_obj_id,id,icon,name,descr,acronym,commands) values(?,?,?,?,?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("REPLACE INTO character_macroses (char_obj_id,id,icon,name,descr,acronym,commands) values(?,?,?,?,?,?,?)")) {
             statement.setInt(1, player.getObjectId());
             statement.setInt(2, macro.id);
             statement.setInt(3, macro.icon);
@@ -105,27 +100,17 @@ public class MacroList {
             statement.execute();
         } catch (SQLException e) {
             _log.error("Could not store macro: " + macro.toString(), e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
-    /**
-     * @param shortcut
-     */
     private void deleteMacroFromDb(Macro macro) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("DELETE FROM character_macroses WHERE char_obj_id=? AND id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("DELETE FROM character_macroses WHERE char_obj_id=? AND id=?")) {
             statement.setInt(1, player.getObjectId());
             statement.setInt(2, macro.id);
             statement.execute();
         } catch (SQLException e) {
             _log.error("Could not delete macro:", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -159,7 +144,7 @@ public class MacroList {
                         commands.add(mcmd);
                     }
 
-                    Macro m = new Macro(id, icon, name, descr, acronym, commands.toArray(new L2MacroCmd[commands.size()]));
+                    Macro m = new Macro(id, icon, name, descr, acronym, commands);
                     _macroses.put(m.id, m);
                 }
             }

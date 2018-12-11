@@ -9,14 +9,14 @@ import l2trunk.gameserver.network.serverpackets.AskJoinPledge;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestJoinPledge extends L2GameClientPacket {
-    private int _objectId;
-    private int _pledgeType;
+public final class RequestJoinPledge extends L2GameClientPacket {
+    private int objectId;
+    private int pledgeType;
 
     @Override
     protected void readImpl() {
-        _objectId = readD();
-        _pledgeType = readD();
+        objectId = readD();
+        pledgeType = readD();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RequestJoinPledge extends L2GameClientPacket {
             return;
         }
 
-        if (_objectId == activeChar.getObjectId()) {
+        if (objectId == activeChar.getObjectId()) {
             activeChar.sendPacket(SystemMsg.YOU_CANNOT_ASK_YOURSELF_TO_APPLY_TO_A_CLAN);
             return;
         }
@@ -51,7 +51,7 @@ public class RequestJoinPledge extends L2GameClientPacket {
             return;
         }
 
-        GameObject object = activeChar.getVisibleObject(_objectId);
+        GameObject object = activeChar.getVisibleObject(objectId);
         if (object == null || !object.isPlayer()) {
             activeChar.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
             return;
@@ -78,18 +78,13 @@ public class RequestJoinPledge extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInFightClub() && !activeChar.getFightClubEvent().canReceiveInvitations(activeChar, member)) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ON_ANOTHER_TASK).addName(member));
-            return;
-        }
-
-        if (_pledgeType == Clan.SUBUNIT_ACADEMY && (member.getLevel() > 40 || member.getClassId().getLevel() > 2)) {
+        if (pledgeType == Clan.SUBUNIT_ACADEMY && (member.getLevel() > 40 || member.getClassId().getLevel() > 2)) {
             activeChar.sendPacket(SystemMsg.TO_JOIN_A_CLAN_ACADEMY_CHARACTERS_MUST_BE_LEVEL_40_OR_BELOW_NOT_BELONG_ANOTHER_CLAN_AND_NOT_YET_COMPLETED_THEIR_2ND_CLASS_TRANSFER);
             return;
         }
 
-        if (clan.getUnitMembersSize(_pledgeType) >= clan.getSubPledgeLimit(_pledgeType)) {
-            if (_pledgeType == 0)
+        if (clan.getUnitMembersSize(pledgeType) >= clan.getSubPledgeLimit(pledgeType)) {
+            if (pledgeType == 0)
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_IS_FULL_AND_CANNOT_ACCEPT_ADDITIONAL_CLAN_MEMBERS_AT_THIS_TIME).addString(clan.getName()));
             else
                 activeChar.sendPacket(SystemMsg.THE_ACADEMYROYAL_GUARDORDER_OF_KNIGHTS_IS_FULL_AND_CANNOT_ACCEPT_NEW_MEMBERS_AT_THIS_TIME);
@@ -97,7 +92,7 @@ public class RequestJoinPledge extends L2GameClientPacket {
         }
 
         Request request = new Request(L2RequestType.CLAN, activeChar, member).setTimeout(10000L);
-        request.set("pledgeType", _pledgeType);
+        request.set("pledgeType", pledgeType);
         member.sendPacket(new AskJoinPledge(activeChar.getObjectId(), activeChar.getClan().getName()));
     }
 }

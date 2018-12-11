@@ -4,7 +4,6 @@ import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.TeamType;
-import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public final class NpcInfoPoly extends L2GameServerPacket {
@@ -67,11 +66,6 @@ public final class NpcInfoPoly extends L2GameServerPacket {
         _abnormalEffect2 = cha.getAbnormalEffect2();
         _team = cha.getTeam();
 
-        if (cha.isInFightClub()) {
-            AbstractFightClub fightClubEvent = cha.getFightClubEvent();
-            _name = fightClubEvent.getVisibleName(cha, _name, false);
-            _title = fightClubEvent.getVisibleTitle(cha, _title, false);
-        }
     }
 
     @Override

@@ -76,7 +76,7 @@ public final class CommunityWarehouse implements ScriptFile, ICommunityBoardHand
 
     private void showMain(Player player) {
         if (player == null) return;
-        String htm = HtmCache.INSTANCE().getNotNull("scripts/services/community/pages/warehouse.htm", player);
+        String htm = HtmCache.INSTANCE.getNotNull("scripts/services/community/pages/warehouse.htm", player);
         htm = htm.replace("<?content?>", "");
         ShowBoard.separateAndSend(htm, player);
     }
@@ -89,13 +89,13 @@ public final class CommunityWarehouse implements ScriptFile, ICommunityBoardHand
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: Warehouse loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
-        if (Config.COMMUNITYBOARD_ENABLED) CommunityBoardManager.getInstance().removeHandler(this);
+        if (Config.COMMUNITYBOARD_ENABLED) CommunityBoardManager.removeHandler(this);
     }
 
     @Override

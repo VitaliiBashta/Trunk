@@ -168,9 +168,7 @@ public final class SumielInstance extends NpcInstance {
                     i_ai8 = Rnd.get(9) + 1;
                     i_ai9 = Rnd.get(9) + 1;
                     c_ai0 = player;
-                    if (i_quest9 == 1) {
-                    }
-                    TIMER_0 = ThreadPoolManager.INSTANCE().schedule(new TIMER_0(), 1 * 1000);
+                    TIMER_0 = ThreadPoolManager.INSTANCE.schedule(new TIMER_0(), 1 * 1000);
                 }
                 break;
             default:

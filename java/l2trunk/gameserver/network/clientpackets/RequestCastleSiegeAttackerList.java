@@ -5,12 +5,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.network.serverpackets.CastleSiegeAttackerList;
 
-public class RequestCastleSiegeAttackerList extends L2GameClientPacket {
-    private int _unitId;
+public final class RequestCastleSiegeAttackerList extends L2GameClientPacket {
+    private int unitId;
 
     @Override
     protected void readImpl() {
-        _unitId = readD();
+        unitId = readD();
     }
 
     @Override
@@ -19,7 +19,7 @@ public class RequestCastleSiegeAttackerList extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Residence residence = ResidenceHolder.getInstance().getResidence(_unitId);
+        Residence residence = ResidenceHolder.getResidence(unitId);
         if (residence != null)
             sendPacket(new CastleSiegeAttackerList(residence));
     }

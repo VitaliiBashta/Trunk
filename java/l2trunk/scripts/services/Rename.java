@@ -1,6 +1,5 @@
 package l2trunk.scripts.services;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.dao.CharacterDAO;
@@ -29,11 +28,12 @@ import l2trunk.gameserver.utils.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-class Rename extends Functions {
+public final class Rename extends Functions {
     public void rename_page() {
         Player player = getSelf();
         if (player == null)
@@ -385,20 +385,15 @@ class Rename extends Functions {
             return;
         }
 
-        Connection con = null;
-        PreparedStatement offline = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
             offline.setInt(1, player.getSex() == 1 ? 0 : 1);
             offline.setInt(2, player.getObjectId());
             offline.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             show(new CustomMessage("common.Error", player), player);
             return;
-        } finally {
-            DbUtils.closeQuietly(con, offline);
         }
 
         player.setHairColor(0);
@@ -419,7 +414,6 @@ class Rename extends Functions {
         }
         if (player.getClan() == null || !player.isClanLeader()) {
             player.sendPacket(new SystemMessage(SystemMessage.S1_IS_NOT_A_CLAN_LEADER).addName(player));
-            return;
         }
     }
 

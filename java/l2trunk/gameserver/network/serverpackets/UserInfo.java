@@ -10,7 +10,6 @@ import l2trunk.gameserver.model.base.Element;
 import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
-import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.matching.MatchingRoom;
 import l2trunk.gameserver.model.pledge.Alliance;
@@ -224,13 +223,6 @@ public class UserInfo extends L2GameServerPacket {
 
         can_writeImpl = true;
 
-        if (player.isInFightClub()) {
-            AbstractFightClub fightClubEvent = player.getFightClubEvent();
-            _name = fightClubEvent.getVisibleName(player, _name, true);
-            title = fightClubEvent.getVisibleTitle(player, title, true);
-            title_color = fightClubEvent.getVisibleTitleColor(player, title_color, true);
-            name_color = fightClubEvent.getVisibleNameColor(player, name_color, true);
-        }
     }
 
     @Override

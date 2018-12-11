@@ -15,7 +15,6 @@ public enum  ReflectionManager {
     public static final Reflection PARNASSUS = Reflection.createReflection(-1);
     public static final Reflection GIRAN_HARBOR = Reflection.createReflection(-2);
     public static final Reflection JAIL = Reflection.createReflection(-3);
-    public static final int FIGHT_CLUB_REFLECTION_ID = 400;
     private static final Reflection CTF_EVENT = Reflection.createReflection(-4);
     private static final Reflection TVT_EVENT = Reflection.createReflection(-5);
     private final Map<Integer, Reflection> reflections = new HashMap<>();
@@ -29,7 +28,7 @@ public enum  ReflectionManager {
         add(TVT_EVENT);
 
         // создаем в рефлекте все зоны, и все двери
-        DEFAULT.init(DoorHolder.getInstance().getDoors(), ZoneHolder.getInstance().getZones());
+        DEFAULT.init(DoorHolder.getDoors(), ZoneHolder.getZones());
 
         JAIL.setCoreLoc(new Location(-114648, -249384, -2984));
     }

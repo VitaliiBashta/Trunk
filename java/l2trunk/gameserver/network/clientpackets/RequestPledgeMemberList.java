@@ -3,7 +3,7 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.pledge.Clan;
 
-public class RequestPledgeMemberList extends L2GameClientPacket {
+public final class RequestPledgeMemberList extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }

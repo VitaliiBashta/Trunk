@@ -17,24 +17,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Valakas extends Fighter {
-    final Skill s_regen = getSkill(4691, 1);
+    final Skill s_regen = SkillTable.INSTANCE.getInfo(4691, 1);
     // Self skills
-    private final Skill s_lava_skin = getSkill(4680, 1);
-    private final Skill s_fear = getSkill(4689, 1);
-    private final Skill s_defence_down = getSkill(5864, 1);
-    private final Skill s_berserk = getSkill(5865, 1);
+    private final Skill s_lava_skin = SkillTable.INSTANCE.getInfo(4680, 1);
+    private final Skill s_fear = SkillTable.INSTANCE.getInfo(4689, 1);
+    private final Skill s_defence_down = SkillTable.INSTANCE.getInfo(5864, 1);
+    private final Skill s_berserk = SkillTable.INSTANCE.getInfo(5865, 1);
     // Offensive damage skills
-    private final Skill s_tremple_left = getSkill(4681, 1);
-    private final Skill s_tremple_right = getSkill(4682, 1);
-    private final Skill s_tail_stomp_a = getSkill(4685, 1);
-    private final Skill s_tail_lash = getSkill(4688, 1);
-    private final Skill s_meteor = getSkill(4690, 1);
-    private final Skill s_breath_low = getSkill(4683, 1);
-    private final Skill s_breath_high = getSkill(4684, 1);
+    private final Skill s_tremple_left = SkillTable.INSTANCE.getInfo(4681, 1);
+    private final Skill s_tremple_right = SkillTable.INSTANCE.getInfo(4682, 1);
+    private final Skill s_tail_stomp_a = SkillTable.INSTANCE.getInfo(4685, 1);
+    private final Skill s_tail_lash = SkillTable.INSTANCE.getInfo(4688, 1);
+    private final Skill s_meteor = SkillTable.INSTANCE.getInfo(4690, 1);
+    private final Skill s_breath_low = SkillTable.INSTANCE.getInfo(4683, 1);
+    private final Skill s_breath_high = SkillTable.INSTANCE.getInfo(4684, 1);
 
     // Offensive percentage skills
-    private final Skill s_destroy_body = getSkill(5860, 1);
-    private final Skill s_destroy_soul = getSkill(5861, 1); /* s_destroy_body2 = getSkill(5862, 1), s_destroy_soul2 = getSkill(5863, 1) */
+    private final Skill s_destroy_body = SkillTable.INSTANCE.getInfo(5860, 1);
+    private final Skill s_destroy_soul = SkillTable.INSTANCE.getInfo(5861, 1); /* s_destroy_body2 = getSkill(5862, 1), s_destroy_soul2 = getSkill(5863, 1) */
     // Timer reuses
     private final long defenceDownReuse = 120000L;
     // Timers
@@ -87,20 +87,20 @@ public final class Valakas extends Fighter {
         // Buffs and stats
         double chp = actor.getCurrentHpPercents();
         if (_hpStage == 0) {
-            actor.altOnMagicUseTimer(actor, getSkill(4691, 1));
+            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 1));
             _hpStage = 1;
         } else if (chp < 80 && _hpStage == 1) {
-            actor.altOnMagicUseTimer(actor, getSkill(4691, 2));
+            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 2));
             defenceDownTimer = System.currentTimeMillis();
             _hpStage = 2;
         } else if (chp < 50 && _hpStage == 2) {
-            actor.altOnMagicUseTimer(actor, getSkill(4691, 3));
+            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 3));
             _hpStage = 3;
         } else if (chp < 30 && _hpStage == 3) {
-            actor.altOnMagicUseTimer(actor, getSkill(4691, 4));
+            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 4));
             _hpStage = 4;
         } else if (chp < 10 && _hpStage == 4) {
-            actor.altOnMagicUseTimer(actor, getSkill(4691, 5));
+            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 5));
             _hpStage = 5;
         }
 
@@ -193,7 +193,4 @@ public final class Valakas extends Fighter {
         super.thinkAttack();
     }
 
-    private Skill getSkill(int id, int level) {
-        return SkillTable.INSTANCE().getInfo(id, level);
-    }
 }

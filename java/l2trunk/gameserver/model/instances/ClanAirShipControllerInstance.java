@@ -14,10 +14,10 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.AirshipDock;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class ClanAirShipControllerInstance extends AirShipControllerInstance {
+public final class ClanAirShipControllerInstance extends AirShipControllerInstance {
     private static final int ENERGY_STAR_STONE = 13277;
     private static final int AIRSHIP_SUMMON_LICENSE = 13559;
-    private final AirshipDock _dock;
+    private final AirshipDock airshipDock;
     private final AirshipDock.AirshipPlatform _platform;
     private HardReference<ClanAirShip> _dockedShipRef = HardReferences.emptyRef();
 
@@ -25,8 +25,8 @@ public class ClanAirShipControllerInstance extends AirShipControllerInstance {
         super(objectID, template);
         int dockId = template.getAIParams().getInteger("dockId", 0);
         int platformId = template.getAIParams().getInteger("platformId", 0);
-        _dock = AirshipDockHolder.getInstance().getDock(dockId);
-        _platform = _dock.getPlatform(platformId);
+        airshipDock = AirshipDockHolder.getDock(dockId);
+        _platform = airshipDock.getPlatform(platformId);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ClanAirShipControllerInstance extends AirShipControllerInstance {
             }
 
             ClanAirShip dockedShip = new ClanAirShip(player.getClan());
-            dockedShip.setDock(_dock);
+            dockedShip.setDock(airshipDock);
             dockedShip.setPlatform(_platform);
 
             dockedShip.setHeading(0);
@@ -114,7 +114,6 @@ public class ClanAirShipControllerInstance extends AirShipControllerInstance {
             return null;
     }
 
-    @SuppressWarnings("unchecked")
     public void setDockedShip(ClanAirShip dockedShip) {
         ClanAirShip old = _dockedShipRef.get();
         if (old != null) {
@@ -124,7 +123,7 @@ public class ClanAirShipControllerInstance extends AirShipControllerInstance {
 
         if (dockedShip != null) {
             boolean alreadyEnter = dockedShip.getDock() != null;
-            dockedShip.setDock(_dock);
+            dockedShip.setDock(airshipDock);
             dockedShip.setPlatform(_platform);
             if (!alreadyEnter)
                 dockedShip.startArrivalTask();

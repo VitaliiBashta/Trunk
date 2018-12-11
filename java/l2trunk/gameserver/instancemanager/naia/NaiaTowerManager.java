@@ -84,7 +84,7 @@ public final class NaiaTowerManager {
     }
 
     public static boolean isLegalGroup(Player player) {
-        if (_groupList == null || _groupList.isEmpty())
+        if (_groupList.isEmpty())
             return false;
 
         for (int i : _groupList.keySet())
@@ -112,16 +112,14 @@ public final class NaiaTowerManager {
     }
 
     public static boolean isRoomDone(int roomId, Player player) {
-        if (_roomsDone == null || _roomsDone.isEmpty())
+        if (_roomsDone.isEmpty())
             return false;
 
         if (_roomsDone.get(roomId) == null || _roomsDone.get(roomId).isEmpty())
             return false;
 
-        if (_roomsDone.get(roomId).contains(player))
-            return true;
+        return _roomsDone.get(roomId).contains(player);
 
-        return false;
     }
 
     public static void addMobsToRoom(int roomId, List<NpcInstance> mob) {
@@ -139,7 +137,7 @@ public final class NaiaTowerManager {
     private static class GroupTowerTimer extends RunnableImpl {
         @Override
         public void runImpl() {
-            ThreadPoolManager.INSTANCE().schedule(new GroupTowerTimer(), 30 * 1000L);
+            ThreadPoolManager.INSTANCE.schedule(new GroupTowerTimer(), 30 * 1000L);
             if (!_groupList.isEmpty() && !_groupTimer.isEmpty())
                 for (int i : _groupTimer.keySet())
                     if (_groupTimer.get(i) < System.currentTimeMillis()) {

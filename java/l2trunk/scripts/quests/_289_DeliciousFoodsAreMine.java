@@ -7,16 +7,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class _289_DeliciousFoodsAreMine extends Quest implements ScriptFile {
     private static final int GuardStan = 30200;
     private static final int FoulFruit = 15507;
     private static final int FullBarrelofSoup = 15712;
     private static final int EmptySoupBarrel = 15713;
-    private static final int[] SelMahums = {
-            22786,
-            22787,
-            22788
-    };
+    private static final List<Integer> SelMahums = Arrays.asList(22786, 22787, 22788);
     private static final int SelChef = 18908;
 
     public _289_DeliciousFoodsAreMine() {
@@ -166,7 +165,7 @@ public final class _289_DeliciousFoodsAreMine extends Quest implements ScriptFil
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            if (ArrayUtils.contains(SelMahums, npc.getNpcId()) || npc.getNpcId() == SelChef)
+            if (SelMahums.contains(npc.getNpcId()) || npc.getNpcId() == SelChef)
                 if (!st.rollAndGive(FullBarrelofSoup, 1, 15))
                     st.rollAndGive(EmptySoupBarrel, 1, 100);
         }

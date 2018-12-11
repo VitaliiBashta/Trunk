@@ -5,15 +5,15 @@ import l2trunk.gameserver.model.items.LockType;
 
 import java.util.List;
 
-public class ItemList extends L2GameServerPacket {
+public final class ItemList extends L2GameServerPacket {
     private final int _size;
     private final List<ItemInstance> _items;
     private final boolean _showWindow;
 
     private final LockType _lockType;
-    private final int[] _lockItems;
+    private final List<Integer> _lockItems;
 
-    public ItemList(int size, List<ItemInstance> items, boolean showWindow, LockType lockType, int[] lockItems) {
+    public ItemList(int size, List<ItemInstance> items, boolean showWindow, LockType lockType, List<Integer> lockItems) {
         _size = size;
         _items = items;
         _showWindow = showWindow;
@@ -34,11 +34,10 @@ public class ItemList extends L2GameServerPacket {
             writeItemInfo(temp);
         }
 
-        writeH(_lockItems.length);
-        if (_lockItems.length > 0) {
+        writeH(_lockItems.size());
+        if (_lockItems.size() > 0) {
             writeC(_lockType.ordinal());
-            for (int i : _lockItems)
-                writeD(i);
+            _lockItems.forEach(this::writeD);
         }
     }
 }

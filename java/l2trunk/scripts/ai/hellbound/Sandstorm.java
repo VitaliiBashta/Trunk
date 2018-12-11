@@ -12,8 +12,8 @@ import l2trunk.gameserver.utils.Location;
 
 public final class Sandstorm extends DefaultAI {
     private static final int AGGRO_RANGE = 200;
-    private  final Skill SKILL1 = SkillTable.INSTANCE().getInfo(5435, 1);
-    private  final Skill SKILL2 = SkillTable.INSTANCE().getInfo(5494, 1);
+    private  final Skill gust = SkillTable.INSTANCE.getInfo(5435, 1);
+    private  final Skill blow = SkillTable.INSTANCE.getInfo(5494, 1);
     private long lastThrow = 0;
 
     public Sandstorm(NpcInstance actor) {
@@ -26,8 +26,8 @@ public final class Sandstorm extends DefaultAI {
         if (lastThrow + 5000 < System.currentTimeMillis())
             for (Playable target : World.getAroundPlayables(actor, AGGRO_RANGE, AGGRO_RANGE))
                 if (target != null && !target.isAlikeDead() && !target.isInvul() && target.isVisible() && GeoEngine.canSeeTarget(actor, target, false)) {
-                    actor.doCast(SKILL1, target, true);
-                    actor.doCast(SKILL2, target, true);
+                    actor.doCast(gust, target, true);
+                    actor.doCast(blow, target, true);
                     lastThrow = System.currentTimeMillis();
                     break;
                 }

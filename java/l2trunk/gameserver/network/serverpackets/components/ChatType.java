@@ -1,9 +1,5 @@
 package l2trunk.gameserver.network.serverpackets.components;
 
-/**
- * @author VISTALL
- * @date 12:48/29.12.2010
- */
 public enum ChatType {
     ALL,  //0
     SHOUT, //1    !

@@ -43,7 +43,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
     }
 
     public Spellbooks() {
-        List<SkillLearn> l = SkillAcquireHolder.getInstance().getAllNormalSkillTreeWithForgottenScrolls();
+        List<SkillLearn> l = SkillAcquireHolder.getAllNormalSkillTreeWithForgottenScrolls();
         for (SkillLearn learn : l)
             _itemIds.add(learn.getItemId());
     }
@@ -60,7 +60,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
             return false;
         }
 
-        List<SkillLearn> list = SkillAcquireHolder.getInstance().getSkillLearnListByItemId(player, item.getItemId());
+        List<SkillLearn> list = SkillAcquireHolder.getSkillLearnListByItemId(player, item.getItemId());
         if (list.isEmpty()) {
             player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(item.getItemId()));
             return false;
@@ -106,7 +106,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
             return false;
 
         for (SkillLearn skillLearn : list) {
-            Skill skill = SkillTable.INSTANCE().getInfo(skillLearn.getId(), skillLearn.getLevel());
+            Skill skill = SkillTable.INSTANCE.getInfo(skillLearn.getId(), skillLearn.getLevel());
             if (skill == null)
                 continue;
             player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_EARNED_S1_SKILL).addSkillName(skill.getId(), skill.getLevel()));

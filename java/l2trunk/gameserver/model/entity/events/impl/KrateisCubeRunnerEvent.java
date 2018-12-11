@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class KrateisCubeRunnerEvent extends GlobalEvent {
+public final class KrateisCubeRunnerEvent extends GlobalEvent {
     private static final String MANAGER = "manager";
     private static final String REGISTRATION = "registration";
     private static final SchedulingPattern DATE_PATTERN = new SchedulingPattern("0,30 * * * *");
@@ -31,9 +31,9 @@ public class KrateisCubeRunnerEvent extends GlobalEvent {
     @Override
     public void initEvent() {
         super.initEvent();
-        _cubes.add(EventHolder.getInstance().<KrateisCubeEvent>getEvent(EventType.PVP_EVENT, 2));
-        _cubes.add(EventHolder.getInstance().<KrateisCubeEvent>getEvent(EventType.PVP_EVENT, 3));
-        _cubes.add(EventHolder.getInstance().<KrateisCubeEvent>getEvent(EventType.PVP_EVENT, 4));
+        _cubes.add(EventHolder.getEvent(EventType.PVP_EVENT, 2));
+        _cubes.add(EventHolder.getEvent(EventType.PVP_EVENT, 3));
+        _cubes.add(EventHolder.getEvent(EventType.PVP_EVENT, 4));
     }
 
     @Override

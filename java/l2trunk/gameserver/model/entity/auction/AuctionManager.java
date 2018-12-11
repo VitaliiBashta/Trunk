@@ -557,7 +557,7 @@ public final class AuctionManager {
 
         if (item.getItemType() == EtcItemType.POTION)
             return SuppliesItemType.Elixir;
-        if (HennaHolder.getInstance().isHenna(item.getItemId()))
+        if (HennaHolder.isHenna(item.getItemId()))
             return SuppliesItemType.Dye;
         if (item.getItemType() == EtcItemType.SCROLL)
             return SuppliesItemType.Scroll;

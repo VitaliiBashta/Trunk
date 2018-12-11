@@ -14,10 +14,12 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
+public final class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
     // NPC
     private static final int KETRAOSHAMAN = 32499;
     private static final int KOSUPPORTER = 32502;
@@ -33,9 +35,13 @@ public class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
     private static final int VSHGAPG1 = 18655;
     private static final int VSHGAPG2 = 18657;
 
-    private static final int[] Pailaka3rd = new int[]{18635, VSWARRIOR1, 18638, 18639, 18640, 18641, VSWARRIOR2, 18644, 18645, VSCOMMAO1, 18648, VSGMAG1, VSGMAG2, 18652, 18653, VSCOMMAO2, VSHGAPG1, 18656, VSHGAPG2, 18658, 18659};
+    private static final List<Integer> Pailaka3rd = Arrays.asList(
+            18635, VSWARRIOR1, 18638, 18639, 18640, 18641,
+            VSWARRIOR2, 18644, 18645, VSCOMMAO1, 18648,
+            VSGMAG1, VSGMAG2, 18652, 18653, VSCOMMAO2,
+            VSHGAPG1, 18656, VSHGAPG2, 18658, 18659);
 
-    private static final int[] Antelopes = new int[]{18637, 18643, 18647, 18651};
+    private static final List<Integer> Antelopes = Arrays.asList(18637, 18643, 18647, 18651);
 
     // BOSS
     private static final int LATANA = 18660;
@@ -48,7 +54,7 @@ public class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
     private static final int STAGE1 = 13056;
     private static final int STAGE2 = 13057;
 
-    private static final int[] PAILAKA3DROP = {8600, 8601, 8603, 8604};
+    private static final List<Integer> PAILAKA3DROP = Arrays.asList(8600, 8601, 8603, 8604);
     private static final int[] ANTELOPDROP = {13032, 13033};
 
     // REWARDS
@@ -86,7 +92,7 @@ public class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
         List<Creature> target = new ArrayList<>();
         target.add(player);
         npc.broadcastPacket(new MagicSkillUse(npc, player, skillId, level, 0, 0));
-        npc.callSkill(SkillTable.INSTANCE().getInfo(skillId, level), target, true);
+        npc.callSkill(SkillTable.INSTANCE.getInfo(skillId, level), target, true);
     }
 
     @Override
@@ -244,11 +250,11 @@ public class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
                 break;
         }
 
-        if (ArrayUtils.contains(Pailaka3rd, npcId))
+        if (Pailaka3rd.contains(npcId))
             if (Rnd.get(100) < 30)
-                st.dropItem(npc, PAILAKA3DROP[Rnd.get(PAILAKA3DROP.length)], 1);
+                st.dropItem(npc, Rnd.get(PAILAKA3DROP), 1);
 
-        if (ArrayUtils.contains(Antelopes, npcId))
+        if (Antelopes.contains(npcId))
             st.dropItem(npc, ANTELOPDROP[Rnd.get(ANTELOPDROP.length)], Rnd.get(1, 10));
 
         return null;

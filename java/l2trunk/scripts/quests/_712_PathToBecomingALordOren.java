@@ -11,7 +11,7 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _712_PathToBecomingALordOren extends Quest implements ScriptFile {
+public final class _712_PathToBecomingALordOren extends Quest implements ScriptFile {
     private static final int Brasseur = 35226;
     private static final int Croop = 30676;
     private static final int Marty = 30169;
@@ -33,35 +33,43 @@ public class _712_PathToBecomingALordOren extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(OrenCastle);
+        Castle castle = ResidenceHolder.getResidence(OrenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
-        if (event.equals("brasseur_q712_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("croop_q712_03.htm")) {
-            st.setCond(3);
-        } else if (event.equals("marty_q712_02.htm")) {
-            if (isLordAvailable(3, st)) {
-                castleOwner.getQuestState(getClass()).setCond(4);
+        switch (event) {
+            case "brasseur_q712_03.htm":
                 st.setState(STARTED);
-            }
-        } else if (event.equals("valleria_q712_02.htm")) {
-            if (isLordAvailable(4, st)) {
-                castleOwner.getQuestState(getClass()).setCond(5);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "croop_q712_03.htm":
+                st.setCond(3);
+                break;
+            case "marty_q712_02.htm":
+                if (isLordAvailable(3, st)) {
+                    castleOwner.getQuestState(getClass()).setCond(4);
+                    st.setState(STARTED);
+                }
+                break;
+            case "valleria_q712_02.htm":
+                if (isLordAvailable(4, st)) {
+                    castleOwner.getQuestState(getClass()).setCond(5);
+                    st.exitCurrentQuest(true);
+                }
+                break;
+            case "croop_q712_05.htm":
+                st.setCond(6);
+                break;
+            case "croop_q712_07.htm":
+                st.setCond(8);
+                break;
+            case "brasseur_q712_06.htm":
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_OREN, st.getPlayer().getName());
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
-            }
-        } else if (event.equals("croop_q712_05.htm")) {
-            st.setCond(6);
-        } else if (event.equals("croop_q712_07.htm")) {
-            st.setCond(8);
-        } else if (event.equals("brasseur_q712_06.htm")) {
-            Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_OREN, st.getPlayer().getName());
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+                break;
         }
         return event;
     }
@@ -72,7 +80,7 @@ public class _712_PathToBecomingALordOren extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int id = st.getState();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(OrenCastle);
+        Castle castle = ResidenceHolder.getResidence(OrenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -137,12 +145,11 @@ public class _712_PathToBecomingALordOren extends Quest implements ScriptFile {
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(OrenCastle);
+        Castle castle = ResidenceHolder.getResidence(OrenCastle);
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
-            if (castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond)
-                return true;
+            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
         return false;
     }
 

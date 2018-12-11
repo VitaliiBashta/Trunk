@@ -60,7 +60,7 @@ public final class BaiumGatekeeperInstance extends NpcInstance {
             }
             setBusy(true);
             Functions.npcSay(this, "You called my name! Now you gonna die!");
-            BaiumManager.spawnBaium(this, player);
+            BaiumManager.getInstance().spawnBaium(this, player);
         } else
             super.onBypassFeedback(player, command);
     }

@@ -20,7 +20,7 @@ import java.util.List;
 public class TeleToGH extends Functions implements ScriptFile {
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
 
-    private static final Zone _zone = ReflectionUtils.getZone("[giran_harbor_offshore]");
+    private final Zone _zone = ReflectionUtils.getZone("[giran_harbor_offshore]");
     private static final String en = "<br>[scripts_services.TeleToGH:toGH @811;Giran Harbor|\"I want free admission to Giran Harbor.\"]";
     private static final String en2 = "<br>[scripts_services.ManaRegen:DoManaRegen|Full MP Regeneration. (1 MP for 5 Adena)]<br>[scripts_services.TeleToGH:fromGH @811;From Giran Harbor|\"Exit the Giran Harbor.\"]<br>";
     private static ZoneListener _zoneListener;

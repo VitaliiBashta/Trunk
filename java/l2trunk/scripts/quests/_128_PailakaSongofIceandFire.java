@@ -12,6 +12,9 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class _128_PailakaSongofIceandFire extends Quest implements ScriptFile {
     // NPC
     private static final int ADLER = 32497;
@@ -55,7 +58,7 @@ public class _128_PailakaSongofIceandFire extends Quest implements ScriptFile {
     private static final int PailakaEarring = 13293;
     private static final int ScrollofEscape = 736;
 
-    private static final int[] MOBS = new int[]{18611, 18612, 18613, 18614, 18615};
+    private static final List<Integer> MOBS = Arrays.asList(18611, 18612, 18613, 18614, 18615);
     private static final int[] HPHERBS = new int[]{8600, 8601, 8602};
     private static final int[] MPHERBS = new int[]{8603, 8604, 8605};
 
@@ -188,7 +191,7 @@ public class _128_PailakaSongofIceandFire extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         int refId = player.getReflectionId();
-        if (ArrayUtils.contains(MOBS, npcId)) {
+        if (MOBS.contains(npcId)) {
             int herbRnd = Rnd.get(2);
             if (Rnd.get(100) < 50)
                 st.dropItem(npc, HPHERBS[herbRnd], 1);

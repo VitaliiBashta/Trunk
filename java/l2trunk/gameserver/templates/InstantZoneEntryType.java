@@ -171,7 +171,7 @@ public enum InstantZoneEntryType {
         if (player.isCursedWeaponEquipped() || player.isInFlyingTransform())
             return SystemMsg.YOU_CANNOT_ENTER_BECAUSE_YOU_DO_NOT_MEET_THE_REQUIREMENTS;
 
-        if (InstantZoneHolder.getInstance().getMinutesToNextEntrance(instancedZone.getId(), player) > 0)
+        if (InstantZoneHolder.getMinutesToNextEntrance(instancedZone.getId(), player) > 0)
             return SystemMsg.C1_MAY_NOT_REENTER_YET;
 
         if (instancedZone.getRemovedItemId() > 0 && instancedZone.getRemovedItemNecessity() && ItemFunctions.getItemCount(player, instancedZone.getRemovedItemId()) < 1)

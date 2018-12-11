@@ -1,18 +1,18 @@
 package l2trunk.gameserver.utils;
 
 public final class SqlBatch {
-    private final String _header;
-    private final String _tail;
-    private final StringBuilder _result;
-    private StringBuilder _sb;
+    private final String header;
+    private final String tail;
+    private final StringBuilder result;
+    private StringBuilder sb;
     private long limit = Long.MAX_VALUE;
     private boolean isEmpty = true;
 
     private SqlBatch(String header, String tail) {
-        _header = header + "\n";
-        _tail = tail != null && tail.length() > 0 ? " " + tail + ";\n" : ";\n";
-        _sb = new StringBuilder(_header);
-        _result = new StringBuilder();
+        this.header = header + "\n";
+        this.tail = tail != null && tail.length() > 0 ? " " + tail + ";\n" : ";\n";
+        sb = new StringBuilder(this.header);
+        result = new StringBuilder();
     }
 
     public SqlBatch(String header) {
@@ -20,31 +20,31 @@ public final class SqlBatch {
     }
 
     public void writeStructure(String str) {
-        _result.append(str);
+        result.append(str);
     }
 
     public void write(String str) {
         isEmpty = false;
-        if (_sb.length() + str.length() < limit - _tail.length())
-            _sb.append(str).append(",\n");
+        if (sb.length() + str.length() < limit - tail.length())
+            sb.append(str).append(",\n");
         else {
-            _sb.append(str).append(_tail);
-            _result.append(_sb.toString());
-            _sb = new StringBuilder(_header);
+            sb.append(str).append(tail);
+            result.append(sb.toString());
+            sb = new StringBuilder(header);
         }
     }
 
     private void writeBuffer() {
-        String last = _sb.toString();
+        String last = sb.toString();
         if (last.length() > 0)
-            _result.append(last, 0, last.length() - 2).append(_tail);
-        _sb = new StringBuilder(_header);
+            result.append(last, 0, last.length() - 2).append(tail);
+        sb = new StringBuilder(header);
     }
 
     public String close() {
-        if (_sb.length() > _header.length())
+        if (sb.length() > header.length())
             writeBuffer();
-        return _result.toString();
+        return result.toString();
     }
 
     public void setLimit(long l) {

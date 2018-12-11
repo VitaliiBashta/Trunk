@@ -5,6 +5,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,5 +52,5 @@ public interface IItemHandler {
 
     boolean pickupItem(Playable playable, ItemInstance item);
 
-    List<Integer> getItemIds();
+    Collection<Integer> getItemIds();
 }

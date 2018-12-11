@@ -34,7 +34,7 @@ public class RequestBBSwrite extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(_url);
+        ICommunityBoardHandler handler = CommunityBoardManager.getCommunityHandler(_url);
         if (handler != null) {
             if (!Config.COMMUNITYBOARD_ENABLED)
                 activeChar.sendPacket(new SystemMessage2(SystemMsg.THE_COMMUNITY_SERVER_IS_CURRENTLY_OFFLINE));

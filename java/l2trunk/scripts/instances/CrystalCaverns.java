@@ -139,8 +139,8 @@ public final class CrystalCaverns extends Reflection {
         if (timerActivated)
             return;
         timerActivated = true;
-        for (Player p : getPlayers())
-            p.altOnMagicUseTimer(p, SkillTable.INSTANCE().getInfo(5239, 1));
+        getPlayers().forEach(p ->
+                p.altOnMagicUseTimer(p, SkillTable.INSTANCE.getInfo(5239)));
         failureTimer = ThreadPoolManager.INSTANCE.schedule(new FailureTimer(), 5 * 60 * 1000L);
         spawnByGroup("cry_cav_steam_room_1");
         invokeDeathListener();

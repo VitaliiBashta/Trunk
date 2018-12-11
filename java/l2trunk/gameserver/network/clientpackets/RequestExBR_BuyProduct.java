@@ -63,7 +63,7 @@ public class RequestExBR_BuyProduct extends L2GameClientPacket {
         int totalCount = 0;
 
         for (ProductItemComponent com : product.getComponents()) {
-            ItemTemplate item = ItemHolder.getInstance().getTemplate(com.getItemId());
+            ItemTemplate item = ItemHolder.getTemplate(com.getItemId());
             if (item == null) {
                 activeChar.sendPacket(new ExBR_BuyProduct(ExBR_BuyProduct.RESULT_WRONG_PRODUCT));
                 return; //what

@@ -25,7 +25,7 @@ public final class ItemEnchantOptionsListener implements OnEquipListener {
 
         boolean needSendInfo = false;
         for (int i : item.getEnchantOptions()) {
-            OptionDataTemplate template = OptionDataHolder.getInstance().getTemplate(i);
+            OptionDataTemplate template = OptionDataHolder.getTemplate(i);
             if (template == null)
                 continue;
 
@@ -52,7 +52,7 @@ public final class ItemEnchantOptionsListener implements OnEquipListener {
 
         boolean needSendInfo = false;
         for (int i : item.getEnchantOptions()) {
-            OptionDataTemplate template = OptionDataHolder.getInstance().getTemplate(i);
+            OptionDataTemplate template = OptionDataHolder.getTemplate(i);
             if (template == null)
                 continue;
 

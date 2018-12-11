@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Creature;
@@ -16,12 +15,13 @@ import l2trunk.gameserver.tables.SkillTable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
+public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
     // Quest Npcs
     private static final int SIR_KRISTOF_RODEMAI = 30756;
     private static final int STATUE_OF_OFFERING = 30757;
@@ -40,13 +40,7 @@ public class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
     private static final int POTION_OF_RECOVERY = 3889;
 
     // Quest mobs, drop, rates and prices
-    private static final int[] CHESTS = {
-            27173,
-            27174,
-            27175,
-            27176,
-            27177
-    };
+    private static final List<Integer> CHESTS = Arrays.asList(27173, 27174, 27175, 27176, 27177);
     private static final int[][] MOBS = {
             {
                     20685,
@@ -66,18 +60,6 @@ public class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
     // stackable items paid to retry chest game: (default 10k adena)
     private static final int RETRY_PRICE = 10000;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _501_ProofOfClanAlliance() {
         super(PARTY_NONE);
 
@@ -95,8 +77,19 @@ public class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
             addQuestItem(i[1]);
         }
 
-        for (int i : CHESTS)
-            addKillId(i);
+        CHESTS.forEach(this::addKillId);
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 
     private QuestState getLeader(QuestState st) {
@@ -119,19 +112,13 @@ public class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
         }
 
         int clan = st.getPlayer().getClan().getClanId();
-
-        Connection con = null;
-        PreparedStatement offline = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            offline = con.prepareStatement("DELETE FROM character_quests WHERE name = ? AND char_id IN (SELECT obj_id FROM characters WHERE clanId = ? AND online = 0)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement offline = con.prepareStatement("DELETE FROM character_quests WHERE name = ? AND char_id IN (SELECT obj_id FROM characters WHERE clanId = ? AND online = 0)")) {
             offline.setString(1, getName());
             offline.setInt(2, clan);
             offline.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, offline);
         }
     }
 
@@ -196,7 +183,7 @@ public class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
                 st.set("chest_game", "0");
                 st.set("chest_try", "0");
                 st.startQuestTimer("poison_timer", 3600000);
-                st.getPlayer().altUseSkill(SkillTable.INSTANCE().getInfo(4082, 1), st.getPlayer());
+                st.getPlayer().altUseSkill(SkillTable.INSTANCE.getInfo(4082), st.getPlayer());
                 st.getPlayer().startImmobilized();
                 htmltext = "30759-07.htm";
             }

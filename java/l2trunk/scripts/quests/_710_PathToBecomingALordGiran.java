@@ -10,7 +10,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _710_PathToBecomingALordGiran extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _710_PathToBecomingALordGiran extends Quest implements ScriptFile {
     private static final int Saul = 35184;
     private static final int Gesto = 30511;
     private static final int Felton = 30879;
@@ -19,7 +22,8 @@ public class _710_PathToBecomingALordGiran extends Quest implements ScriptFile {
     private static final int FreightChest = 13014;
     private static final int GestoBox = 13013;
 
-    private static final int[] Mobs = {20832, 20833, 20835, 21602, 21603, 21604, 21605, 21606, 21607, 21608, 21609};
+    private static final List<Integer> Mobs = Arrays.asList(
+            20832, 20833, 20835, 21602, 21603, 21604, 21605, 21606, 21607, 21608, 21609);
 
     private static final int GiranCastle = 3;
 
@@ -33,23 +37,28 @@ public class _710_PathToBecomingALordGiran extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(GiranCastle);
+        Castle castle = ResidenceHolder.getResidence(GiranCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
-        if (event.equals("saul_q710_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("gesto_q710_03.htm")) {
-            st.setCond(3);
-        } else if (event.equals("felton_q710_02.htm")) {
-            st.setCond(4);
-        } else if (event.equals("saul_q710_07.htm")) {
-            Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_GIRAN, st.getPlayer().getName());
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+        switch (event) {
+            case "saul_q710_03.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "gesto_q710_03.htm":
+                st.setCond(3);
+                break;
+            case "felton_q710_02.htm":
+                st.setCond(4);
+                break;
+            case "saul_q710_07.htm":
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_GIRAN, st.getPlayer().getName());
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return event;
     }
@@ -60,7 +69,7 @@ public class _710_PathToBecomingALordGiran extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int id = st.getState();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(GiranCastle);
+        Castle castle = ResidenceHolder.getResidence(GiranCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();

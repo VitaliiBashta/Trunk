@@ -28,7 +28,7 @@ import l2trunk.gameserver.model.actor.instances.player.Macro;
  * <p>
  * format:		cdccdSSScc (ccdcS)
  */
-public class SendMacroList extends L2GameServerPacket {
+public final class SendMacroList extends L2GameServerPacket {
     private final int _rev;
     private final int _count;
     private final Macro _macro;
@@ -55,10 +55,10 @@ public class SendMacroList extends L2GameServerPacket {
             writeS(_macro.acronym); //acronym
             writeC(_macro.icon); //icon
 
-            writeC(_macro.commands.length); //count
+            writeC(_macro.commands.size()); //count
 
-            for (int i = 0; i < _macro.commands.length; i++) {
-                Macro.L2MacroCmd cmd = _macro.commands[i];
+            for (int i = 0; i < _macro.commands.size(); i++) {
+                Macro.L2MacroCmd cmd = _macro.commands.get(i);
                 writeC(i + 1); //i of count
                 writeC(cmd.type); //type  1 = skill, 3 = action, 4 = shortcut
                 writeD(cmd.d1); // skill id

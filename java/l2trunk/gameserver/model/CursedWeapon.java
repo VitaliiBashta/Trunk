@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CursedWeapon {
+public final class CursedWeapon {
     private final String _name;
     private final int _itemId, _skillMaxLevel;
     private final int _skillId;
@@ -35,7 +35,7 @@ public class CursedWeapon {
         _name = name;
         _itemId = itemId;
         _skillId = skillId;
-        _skillMaxLevel = SkillTable.INSTANCE().getMaxLevel(_skillId);
+        _skillMaxLevel = SkillTable.INSTANCE.getMaxLevel(_skillId);
     }
 
     public void initWeapon() {
@@ -95,12 +95,12 @@ public class CursedWeapon {
         player.setTransformationName(null);
         player.validateLocation(0);
 
-        Skill skill = SkillTable.INSTANCE().getInfo(_skillId, player.getSkillLevel(_skillId));
+        Skill skill = SkillTable.INSTANCE.getInfo(_skillId, player.getSkillLevel(_skillId));
         if (skill != null)
             for (AddedSkill s : skill.getAddedSkills())
-                player.removeSkillById(s.id);
+                player.removeSkill(s.id);
 
-        player.removeSkillById(_skillId);
+        player.removeSkill(_skillId);
 
         player.abortAttack(true, false);
 
@@ -133,11 +133,11 @@ public class CursedWeapon {
         if (level > _skillMaxLevel)
             level = _skillMaxLevel;
 
-        Skill skill = SkillTable.INSTANCE().getInfo(_skillId, level);
+        Skill skill = SkillTable.INSTANCE.getInfo(_skillId, level);
         List<Skill> ret = new ArrayList<>();
         ret.add(skill);
         for (AddedSkill s : skill.getAddedSkills())
-            ret.add(SkillTable.INSTANCE().getInfo(s.id, s.level));
+            ret.add(SkillTable.INSTANCE.getInfo(s.id, s.level));
         return ret;
     }
 
@@ -231,10 +231,6 @@ public class CursedWeapon {
 
     public void setDurationLost(int durationLost) {
         _durationLost = durationLost;
-    }
-
-    public int getTransformationId() {
-        return _transformationId;
     }
 
     public void setTransformationId(int transformationId) {

@@ -23,7 +23,7 @@ public class RequestHennaEquip extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Henna temp = HennaHolder.getInstance().getHenna(_symbolId);
+        Henna temp = HennaHolder.getHenna(_symbolId);
         if (temp == null || !temp.isForThisClass(player)) {
             player.sendPacket(SystemMsg.THE_SYMBOL_CANNOT_BE_DRAWN);
             return;

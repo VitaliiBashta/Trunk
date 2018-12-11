@@ -2136,7 +2136,7 @@ public enum SystemMsg implements IStaticPacket {
     PLEASE_ENTER_THE_CARD_NUMBER_FOR_NUMBER_S1(1237),
     // Message: Your temporary mailbox is full.  No more mail can be stored; you have reached the 10 message limit.
     YOUR_TEMPORARY_MAILBOX_IS_FULL(1238),
-    // Message: The keyboard security module has failed to load. Please exit the game and try again.
+    // Message: The keyboard security module has failed to loadFile. Please exit the game and try again.
     THE_KEYBOARD_SECURITY_MODULE_HAS_FAILED_TO_LOAD(1239),
     // Message: Seven Signs: The Revolutionaries of Dusk have won.
     SEVEN_SIGNS_THE_REVOLUTIONARIES_OF_DUSK_HAVE_WON(1240),

@@ -1,13 +1,11 @@
 package l2trunk.gameserver.data.xml.parser;
 
 import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.data.xml.holder.DoorHolder;
-import l2trunk.gameserver.data.xml.holder.InstantZoneHolder;
-import l2trunk.gameserver.data.xml.holder.SpawnHolder;
-import l2trunk.gameserver.data.xml.holder.ZoneHolder;
+import l2trunk.gameserver.data.xml.holder.*;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.templates.InstantZone;
@@ -17,33 +15,25 @@ import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
 
-public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder> {
-    private static final InstantZoneParser _instance = new InstantZoneParser();
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private InstantZoneParser() {
-        super(InstantZoneHolder.getInstance());
+public enum  InstantZoneParser {
+    INSTANCE;
+    private final Path xml = Config.DATAPACK_ROOT.resolve("data/instances/");
+    private Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + InstantZoneHolder.size() + " items");
     }
 
-    public static InstantZoneParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/instances/");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "instances.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
             int instanceId;
@@ -142,7 +132,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
 
                         boolean opened = e.attributeValue("opened") != null && Boolean.parseBoolean(e.attributeValue("opened"));
                         boolean invul = e.attributeValue("invul") == null || Boolean.parseBoolean(e.attributeValue("invul"));
-                        DoorTemplate template = DoorHolder.getInstance().getTemplate(Integer.parseInt(e.attributeValue("id")));
+                        DoorTemplate template = DoorHolder.getTemplate(toInt(e.attributeValue("id")));
                         doors.put(template.getNpcId(), new InstantZone.DoorInfo(template, opened, invul));
                     }
                 } else if ("zones".equalsIgnoreCase(subElement.getName())) {
@@ -151,9 +141,9 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
                             zones = new HashMap<>();
 
                         boolean active = e.attributeValue("active") != null && Boolean.parseBoolean(e.attributeValue("active"));
-                        ZoneTemplate template = ZoneHolder.getInstance().getTemplate(e.attributeValue("name"));
+                        ZoneTemplate template = ZoneHolder.getTemplate(e.attributeValue("name"));
                         if (template == null) {
-                            LOG.error("Zone: " + e.attributeValue("name") + " not found; file: " + getCurrentFileName());
+                            LOG.error("Zone: " + e.attributeValue("name") + " not found; file: " );
                             continue;
                         }
                         zones.put(template.getName(), new InstantZone.ZoneInfo(template, active));
@@ -167,9 +157,9 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
                         if ("group".equalsIgnoreCase(e.getName())) {
                             String group = e.attributeValue("name");
                             boolean spawned = e.attributeValue("spawned") != null && Boolean.parseBoolean(e.attributeValue("spawned"));
-                            List<SpawnTemplate> templates = SpawnHolder.getInstance().getSpawn(group);
+                            List<SpawnTemplate> templates = SpawnHolder.getSpawn(group);
                             if (templates == null)
-                                LOG.info("not find spawn group: " + group + " in file: " + getCurrentFileName());
+                                LOG.info("not find spawn group: " + group + " in file: " );
                             else {
                                 if (spawns2.isEmpty())
                                     spawns2 = new Hashtable<>();
@@ -227,7 +217,7 @@ public final class InstantZoneParser extends AbstractDirParser<InstantZoneHolder
             }
 
             InstantZone instancedZone = new InstantZone(instanceId, name, resetReuse, sharedReuseGroup, timelimit, dispelBuffs, minLevel, maxLevel, minParty, maxParty, timer, onPartyDismiss, teleportLocs, ret, mapx, mapy, doors, zones, spawns2, spawns, collapseIfEmpty, maxChannels, removedItemId, removedItemCount, removedItemNecessity, giveItemId, givedItemCount, requiredQuestId, setReuseUponEntry, params);
-            getHolder().addInstantZone(instancedZone);
+            InstantZoneHolder.addInstantZone(instancedZone);
         }
     }
 }

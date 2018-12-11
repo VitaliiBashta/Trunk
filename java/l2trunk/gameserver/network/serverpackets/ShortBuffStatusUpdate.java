@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Effect;
 
-public class ShortBuffStatusUpdate extends L2GameServerPacket {
+public final class ShortBuffStatusUpdate extends L2GameServerPacket {
     /**
      * This is client's row 2 buff packet.
      * <p>
@@ -24,30 +24,30 @@ public class ShortBuffStatusUpdate extends L2GameServerPacket {
      * to remove buff icon. Or it will be lasted forever.
      */
 
-    private final int _skillId;
-    private final int _skillLevel;
-    private final int _skillDuration;
+    private final int skillId;
+    private final int skillLevel;
+    private final int skillDuration;
 
     public ShortBuffStatusUpdate(Effect effect) {
-        _skillId = effect.getSkill().getDisplayId();
-        _skillLevel = effect.getSkill().getDisplayLevel();
-        _skillDuration = effect.getTimeLeft();
+        skillId = effect.getSkill().getDisplayId();
+        skillLevel = effect.getSkill().getDisplayLevel();
+        skillDuration = effect.getTimeLeft();
     }
 
     /**
      * Zero packet to delete skill icon.
      */
     public ShortBuffStatusUpdate() {
-        _skillId = 0;
-        _skillLevel = 0;
-        _skillDuration = 0;
+        skillId = 0;
+        skillLevel = 0;
+        skillDuration = 0;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0xfa); //Packet type
-        writeD(_skillId); // skill id??? CD 04 00 00 = skill 1229, hex 4CD
-        writeD(_skillLevel); //Skill Level??? 07 00 00 00 = casted by heal 7 lvl.
-        writeD(_skillDuration); //DURATION???? 0F 00 00 00 = 15 sec = overlord's heal
+        writeD(skillId); // skill id??? CD 04 00 00 = skill 1229, hex 4CD
+        writeD(skillLevel); //Skill Level??? 07 00 00 00 = casted by heal 7 lvl.
+        writeD(skillDuration); //DURATION???? 0F 00 00 00 = 15 sec = overlord's heal
     }
 }

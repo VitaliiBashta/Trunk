@@ -22,7 +22,7 @@ public final class EffectCubic extends Effect {
 
     public EffectCubic(Env env, EffectTemplate template) {
         super(env, template);
-        _template = CubicHolder.getInstance().getTemplate(getTemplate().getParam().getInteger("cubicId"), getTemplate().getParam().getInteger("cubicLevel"));
+        _template = CubicHolder.getTemplate(getTemplate().getParam().getInteger("cubicId"), getTemplate().getParam().getInteger("cubicLevel"));
     }
 
     private static boolean canBeAttacked(Player attacker, Creature target, CubicTemplate.SkillInfo info) {

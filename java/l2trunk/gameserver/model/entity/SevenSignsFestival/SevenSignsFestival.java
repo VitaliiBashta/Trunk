@@ -204,7 +204,7 @@ public enum SevenSignsFestival {
                 for (int i = 0; i < FESTIVAL_COUNT; i++)
                     _accumulatedBonuses[i] = rset.getInt("accumulated_bonus" + String.valueOf(i));
         } catch (SQLException e) {
-            _log.error("SevenSignsFestival: Failed to load configuration: ", e);
+            _log.error("SevenSignsFestival: Failed to loadFile configuration: ", e);
         }
     }
 

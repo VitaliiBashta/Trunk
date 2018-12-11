@@ -22,7 +22,7 @@ import l2trunk.scripts.quests._234_FatesWhisper;
 import l2trunk.scripts.quests._235_MimirsElixir;
 import l2trunk.scripts.quests._236_SeedsOfChaos;
 
-public class TerritoryManagerInstance extends NpcInstance {
+public final class TerritoryManagerInstance extends NpcInstance {
     public TerritoryManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -41,7 +41,7 @@ public class TerritoryManagerInstance extends NpcInstance {
             if (Functions.getItemCount(player, badgeId) < 1)
                 showChatWindow(player, 1);
             else
-                MultiSellHolder.getInstance().SeparateAndSend(npcId, player, 0);
+                MultiSellHolder.INSTANCE.SeparateAndSend(npcId, player, 0);
         } else if (command.equalsIgnoreCase("buyNobless")) {
             if (player.isNoble()) {
                 showChatWindow(player, 9);

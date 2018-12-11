@@ -40,7 +40,7 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
     private void loadMultiSell() {
         if (MultiSellLoaded)
             return;
-        MultiSellHolder.getInstance().parseFile(multiSellFile);
+        MultiSellHolder.INSTANCE.parseFile(multiSellFile);
         MultiSellLoaded = true;
     }
 
@@ -125,7 +125,7 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
     public void onReload() {
         unSpawnEventManagers();
         if (MultiSellLoaded) {
-            MultiSellHolder.getInstance().remove(multiSellFile);
+            MultiSellHolder.INSTANCE.remove(multiSellFile);
             MultiSellLoaded = false;
         }
     }

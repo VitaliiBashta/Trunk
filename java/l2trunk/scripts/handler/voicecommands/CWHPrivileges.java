@@ -15,6 +15,8 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Collections;
 import java.util.List;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
     private final String _commandList = "clan";
 
@@ -84,18 +86,19 @@ public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
                         sb = new StringBuilder("<html><body>Clan CP (.clan)<br><br><table>");
                         for (Object o_id : list)
                             for (UnitMember m : members)
-                                if (m.getObjectId() == Integer.parseInt(o_id.toString()))
+                                if (m.getObjectId() == toInt(o_id.toString()))
                                     sb.append("<tr><td width=10></td><td width=60>").append(m.getName()).append("</td><td width=20><button width=50 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\" action=\"bypass -h user_clan allowwh ").append(m.getName()).append("\" value=\"Remove\">").append("<br></td></tr>");
                         sb.append("<tr><td width=10></td><td width=20><button width=60 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\" action=\"bypass -h user_clan\" value=\"Back\"></td></tr></table></body></html>");
                         Functions.show(sb.toString(), activeChar, null);
                         return true;
                     }
             }
-            String dialog = HtmCache.INSTANCE().getNotNull("scripts/services/clan.htm", activeChar);
+            String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/clan.htm", activeChar);
             if (!Config.SERVICES_EXPAND_CWH_ENABLED)
                 dialog = dialog.replaceFirst("%whextprice%", "service disabled");
             else
-                dialog = dialog.replaceFirst("%whextprice%", Config.SERVICES_EXPAND_CWH_PRICE + " " + ItemHolder.getInstance().getTemplate(Config.SERVICES_EXPAND_CWH_ITEM).getName());
+                dialog = dialog.replaceFirst("%whextprice%", Config.SERVICES_EXPAND_CWH_PRICE + " "
+                        + ItemHolder.getTemplate(Config.SERVICES_EXPAND_CWH_ITEM).getName());
             Functions.show(dialog, activeChar, null);
             return true;
         }

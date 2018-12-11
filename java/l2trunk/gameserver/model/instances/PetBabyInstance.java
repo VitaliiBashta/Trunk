@@ -25,427 +25,426 @@ public final class PetBabyInstance extends PetInstance {
     private static final int GreaterHeal = 5195;
     private static final int BattleHeal = 5590;
     private static final int Recharge = 5200;
-    private static final int Pet_Haste = 5186; // 1-2
-    private static final int Pet_Vampiric_Rage = 5187; // 1-4
+    private static final Skill Pet_Haste = SkillTable.INSTANCE.getInfo(5186,2); 
+    private static final Skill Pet_Vampiric_Rage = SkillTable.INSTANCE.getInfo(5187,4); 
     private static final int Pet_Regeneration = 5188; // 1-3
-    private static final int Pet_Blessed_Body = 5189; // 1-6
-    private static final int Pet_Blessed_Soul = 5190; // 1-6
-    private static final int Pet_Guidance = 5191; // 1-3
-    private static final int Pet_Wind_Walk = 5192; // 1-2
-    private static final int Pet_Acumen = 5193; // 1-3
-    private static final int Pet_Empower = 5194; // 1-3
-    private static final int Pet_Concentration = 5201; // 1-3
-    private static final int Pet_Might = 5586; // 1-3
-    private static final int Pet_Shield = 5587; // 1-3
-    private static final int Pet_Focus = 5588; // 1-3
-    private static final int Pet_Death_Wisper = 5589; // 1-3
-    private static final int Pet_Armor_Maintenance = 5988; // 1
-    private static final int Pet_Weapon_Maintenance = 5987; // 1
-    private static final int Chant_of_Blood_Awakening = 1519;
-    private static final int Improved_Critical_Attack = 1502;
-    private static final int Improved_Combat = 1499;
-    private static final int Improved_Movement = 1504;
-    private static final int Improved_Condition = 1501;
-    private static final int Pet_Death_Whisper = 5589;
-    private static final int Improved_Magic = 1500;
-    private static final int Armor_Maintenance = 5988;
-    private static final int Weapon_Maintenance = 5987;
+    private static final Skill Pet_Blessed_Body = SkillTable.INSTANCE.getInfo(5189,6); 
+    private static final Skill Pet_Blessed_Soul = SkillTable.INSTANCE.getInfo(5190,6); 
+    private static final Skill Pet_Guidance = SkillTable.INSTANCE.getInfo(5191,3); 
+    private static final Skill Pet_Wind_Walk = SkillTable.INSTANCE.getInfo(5192,2); 
+    private static final Skill Pet_Acumen = SkillTable.INSTANCE.getInfo(5193,3); 
+    private static final Skill Pet_Empower = SkillTable.INSTANCE.getInfo(5194, 3); 
+    private static final Skill Pet_Concentration = SkillTable.INSTANCE.getInfo(5201, 6);
+    private static final Skill Pet_Might = SkillTable.INSTANCE.getInfo(5586, 3);
+    private static final Skill Pet_Shield = SkillTable.INSTANCE.getInfo(5587,3); 
+    private static final Skill Pet_Focus = SkillTable.INSTANCE.getInfo(5588,3);
+    private static final Skill Pet_Death_Whisper = SkillTable.INSTANCE.getInfo(5589,3);
+    private static final Skill Pet_Armor_Maintenance = SkillTable.INSTANCE.getInfo(5988);
+    private static final Skill Pet_Weapon_Maintenance = SkillTable.INSTANCE.getInfo(5987); // 1
+    private static final Skill Chant_of_Blood_Awakening = SkillTable.INSTANCE.getInfo(15191);
+    private static final Skill Improved_Critical_Attack = SkillTable.INSTANCE.getInfo(1502);
+    private static final Skill Improved_Combat = SkillTable.INSTANCE.getInfo(1499);
+    private static final Skill Improved_Movement = SkillTable.INSTANCE.getInfo(1504);
+    private static final Skill Improved_Condition = SkillTable.INSTANCE.getInfo(1501);
+    private static final Skill Improved_Magic = SkillTable.INSTANCE.getInfo(1500);
+    private static final Skill Armor_Maintenance = SkillTable.INSTANCE.getInfo(5988);
+    private static final Skill Weapon_Maintenance = SkillTable.INSTANCE.getInfo(5987);
     private static final int WindShackle = 5196, Hex = 5197, Slow = 5198, CurseGloom = 5199;
     private static final Skill[][] TOY_KNIGHT_BUFFS = {
-            {SkillTable.INSTANCE.getInfo(Pet_Focus, 3), SkillTable.INSTANCE.getInfo(Pet_Death_Wisper, 3)},
+            {Pet_Focus, Pet_Death_Whisper},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Death_Wisper, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2)},
+                    Pet_Focus,
+                    Pet_Death_Whisper,
+                    Pet_Shield,
+                    Pet_Wind_Walk},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Death_Wisper, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Vampiric_Rage, 4),
-                    SkillTable.INSTANCE.getInfo(Pet_Haste, 2)},
+                    Pet_Focus,
+                    Pet_Death_Whisper,
+                    Pet_Shield,
+                    Pet_Wind_Walk,
+                    Pet_Vampiric_Rage,
+                    Pet_Haste},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Death_Wisper, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Vampiric_Rage, 4),
-                    SkillTable.INSTANCE.getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6)}};
+                    Pet_Focus,
+                    Pet_Death_Whisper,
+                    Pet_Shield,
+                    Pet_Wind_Walk,
+                    Pet_Vampiric_Rage,
+                    Pet_Haste,
+                    Pet_Might,
+                    Pet_Blessed_Body}};
     private static final Skill[][] WHITE_WEASEL_BUFFS = {
-            {SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6), SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2)},
+            {Pet_Blessed_Body, Pet_Wind_Walk},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Death_Wisper, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3)},
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Death_Whisper,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Death_Wisper, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Vampiric_Rage, 4),
-                    SkillTable.INSTANCE.getInfo(Pet_Focus, 3)},
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Death_Whisper,
+                    Pet_Shield,
+                    Pet_Vampiric_Rage,
+                    Pet_Focus},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Death_Wisper, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Vampiric_Rage, 4),
-                    SkillTable.INSTANCE.getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Haste, 2)}};
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Death_Whisper,
+                    Pet_Shield,
+                    Pet_Vampiric_Rage,
+                    Pet_Focus,
+                    Pet_Haste}};
     //TODO: Array not offu. (Correct if there infa)
     private static final Skill[][] TURTLE_ASCETIC_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6), SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6)},
+            {Pet_Blessed_Body, Pet_Blessed_Soul},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2)},
+                    Pet_Blessed_Body,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Pet_Wind_Walk},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Armor_Maintenance, 1),
-                    SkillTable.INSTANCE.getInfo(Pet_Weapon_Maintenance, 1)},
+                    Pet_Blessed_Body,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Pet_Wind_Walk,
+                    Pet_Armor_Maintenance,
+                    Pet_Weapon_Maintenance},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Armor_Maintenance, 1),
-                    SkillTable.INSTANCE.getInfo(Pet_Weapon_Maintenance, 1)}};
+                    Pet_Blessed_Body,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Pet_Wind_Walk,
+                    Pet_Armor_Maintenance,
+                    Pet_Weapon_Maintenance}};
     private static final Skill[][] COUGAR_BUFFS = {
-            {SkillTable.INSTANCE.getInfo(Pet_Empower, 3), SkillTable.INSTANCE().getInfo(Pet_Might, 3)},
+            {Pet_Empower, Pet_Might},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6)},
+                    Pet_Empower,
+                    Pet_Might,
+                    Pet_Shield,
+                    Pet_Blessed_Body},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Haste, 2)},
+                    Pet_Empower,
+                    Pet_Might,
+                    Pet_Shield,
+                    Pet_Blessed_Body,
+                    Pet_Acumen,
+                    Pet_Haste},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE.getInfo(Pet_Vampiric_Rage, 4),
-                    SkillTable.INSTANCE.getInfo(Pet_Focus, 3)}};
+                    Pet_Empower,
+                    Pet_Might,
+                    Pet_Shield,
+                    Pet_Blessed_Body,
+                    Pet_Acumen,
+                    Pet_Haste,
+                    Pet_Vampiric_Rage,
+                    Pet_Focus}};
     private static final Skill[][] BUFFALO_BUFFS = {
-            {SkillTable.INSTANCE.getInfo(Pet_Might, 3), SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6)},
+            {Pet_Might, Pet_Blessed_Body},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Guidance, 3),},
+                    Pet_Might,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Guidance},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Guidance, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Vampiric_Rage, 4),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2)},
+                    Pet_Might,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Guidance,
+                    Pet_Vampiric_Rage,
+                    Pet_Haste},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Guidance, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Vampiric_Rage, 4),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Death_Wisper, 3)}};
+                    Pet_Might,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Guidance,
+                    Pet_Vampiric_Rage,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Death_Whisper}};
     private static final Skill[][] KOOKABURRA_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Empower, 3), SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6)},
+            {Pet_Empower, Pet_Blessed_Soul},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Concentration, 6)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Acumen,
+                    Pet_Concentration},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Concentration, 6)}};
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Acumen,
+                    Pet_Concentration}};
     private static final Skill[][] FAIRY_PRINCESS_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Empower, 3), SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6)},
+            {Pet_Empower, Pet_Blessed_Soul},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Concentration, 6)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Acumen,
+                    Pet_Concentration},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE.getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE.getInfo(Pet_Concentration, 6)}};
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Acumen,
+                    Pet_Concentration}};
     private static final Skill[][] ROSE_DESELOPH_BUFFS = {
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3)},
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3)},
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Body,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Death_Whisper, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Vampiric_Rage, 4)},
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Death_Whisper,
+                    Pet_Vampiric_Rage},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Death_Whisper, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Vampiric_Rage, 4)}};
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Death_Whisper,
+                    Pet_Vampiric_Rage}};
     private static final Skill[][] ROSE_HYUM_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Empower, 3), SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6)},
+            {Pet_Empower, Pet_Blessed_Soul},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield,
+                    Pet_Acumen},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3)}};
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield,
+                    Pet_Acumen}};
     private static final Skill[][] ROSE_REKANG_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6), SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2)},
+            {Pet_Blessed_Body, Pet_Wind_Walk},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3)},
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Armor_Maintenance, 1),
-                    SkillTable.INSTANCE().getInfo(Weapon_Maintenance, 1)},
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Armor_Maintenance,
+                    Weapon_Maintenance},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Armor_Maintenance, 1),
-                    SkillTable.INSTANCE().getInfo(Weapon_Maintenance, 1)}};
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Armor_Maintenance,
+                    Weapon_Maintenance}};
     private static final Skill[][] ROSE_LILIAS_BUFFS = {
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3)},
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3)},
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3)},
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Body,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Might, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Haste, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Focus, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Death_Whisper, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Vampiric_Rage, 4)}};
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Death_Whisper,
+                    Pet_Vampiric_Rage}};
     private static final Skill[][] ROSE_LAPHAM_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Empower, 3), SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6)},
+            {Pet_Empower, Pet_Blessed_Soul},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3)},
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield,
+                    Pet_Acumen},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Empower, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3)}};
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield,
+                    Pet_Acumen}};
     private static final Skill[][] ROSE_MAPHUM_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6), SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2)},
+            {Pet_Blessed_Body, Pet_Wind_Walk},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3)},
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Armor_Maintenance, 1),
-                    SkillTable.INSTANCE().getInfo(Weapon_Maintenance, 1)},
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Armor_Maintenance,
+                    Weapon_Maintenance},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Body, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Wind_Walk, 2),
-                    SkillTable.INSTANCE().getInfo(Pet_Blessed_Soul, 6),
-                    SkillTable.INSTANCE().getInfo(Pet_Shield, 3),
-                    SkillTable.INSTANCE().getInfo(Armor_Maintenance, 1),
-                    SkillTable.INSTANCE().getInfo(Weapon_Maintenance, 1)}};
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Armor_Maintenance,
+                    Weapon_Maintenance}};
     private static final Skill[][] IMPROVED_ROSE_DESELOPH_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Improved_Condition, 1), SkillTable.INSTANCE().getInfo(Improved_Movement, 1)},
+            {Improved_Condition, Improved_Movement},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Chant_of_Blood_Awakening, 1)},
+                    Improved_Condition,
+                    Improved_Movement,
+                    Improved_Combat,
+                    Chant_of_Blood_Awakening},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Chant_of_Blood_Awakening, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Critical_Attack, 1)},
+                    Improved_Condition,
+                    Improved_Movement,
+                    Improved_Combat,
+                    Chant_of_Blood_Awakening,
+                    Improved_Critical_Attack},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Chant_of_Blood_Awakening, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Critical_Attack, 1)}};
+                    Improved_Condition,
+                    Improved_Movement,
+                    Improved_Combat,
+                    Chant_of_Blood_Awakening,
+                    Improved_Critical_Attack}};
     private static final Skill[][] IMPROVED_ROSE_HYUM_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Acumen, 3), SkillTable.INSTANCE().getInfo(Improved_Condition, 1)},
+            {Pet_Acumen, Improved_Condition},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1)},
+                    Pet_Acumen,
+                    Improved_Condition,
+                    Improved_Combat},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),},
+                    Pet_Acumen,
+                    Improved_Condition,
+                    Improved_Combat,
+                    Improved_Movement,},
             {
-                    SkillTable.INSTANCE.getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE.getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Magic, 1),}};
+                    Pet_Acumen,
+                    Improved_Condition,
+                    Improved_Combat,
+                    Improved_Movement,
+                    Improved_Magic,}};
     private static final Skill[][] IMPROVED_ROSE_REKANG_BUFFS = {
-            {SkillTable.INSTANCE.getInfo(Improved_Combat, 1), SkillTable.INSTANCE.getInfo(Improved_Condition, 1)},
+            {Improved_Combat, Improved_Condition},
             {
-                    SkillTable.INSTANCE.getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Movement, 1)},
+                    Improved_Combat,
+                    Improved_Condition,
+                    Improved_Movement},
             {
-                    SkillTable.INSTANCE.getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE.getInfo(Armor_Maintenance, 1)},
+                    Improved_Combat,
+                    Improved_Condition,
+                    Improved_Movement,
+                    Armor_Maintenance},
             {
-                    SkillTable.INSTANCE.getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE.getInfo(Armor_Maintenance, 1),
-                    SkillTable.INSTANCE.getInfo(Weapon_Maintenance, 1)}};
+                    Improved_Combat,
+                    Improved_Condition,
+                    Improved_Movement,
+                    Armor_Maintenance,
+                    Weapon_Maintenance}};
     private static final Skill[][] IMPROVED_ROSE_LILIAS_BUFFS = {
-            {SkillTable.INSTANCE.getInfo(Improved_Combat, 1), SkillTable.INSTANCE().getInfo(Improved_Condition, 1)},
+            {Improved_Combat, Improved_Condition},
             {
-                    SkillTable.INSTANCE.getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE.getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Chant_of_Blood_Awakening, 1)},
+                    Improved_Combat,
+                    Improved_Condition,
+                    Chant_of_Blood_Awakening},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Chant_of_Blood_Awakening, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1)},
+                    Improved_Combat,
+                    Improved_Condition,
+                    Chant_of_Blood_Awakening,
+                    Improved_Movement},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Chant_of_Blood_Awakening, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Critical_Attack, 1)}};
+                    Improved_Combat,
+                    Improved_Condition,
+                    Chant_of_Blood_Awakening,
+                    Improved_Movement,
+                    Improved_Critical_Attack}};
     private static final Skill[][] IMPROVED_ROSE_LAPHAM_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Pet_Acumen, 3), SkillTable.INSTANCE().getInfo(Improved_Condition, 1)},
+            {Pet_Acumen, Improved_Condition},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1)},
+                    Pet_Acumen,
+                    Improved_Condition,
+                    Improved_Combat},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1)},
+                    Pet_Acumen,
+                    Improved_Condition,
+                    Improved_Combat,
+                    Improved_Movement},
             {
-                    SkillTable.INSTANCE().getInfo(Pet_Acumen, 3),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Magic, 1)}};
+                    Pet_Acumen,
+                    Improved_Condition,
+                    Improved_Combat,
+                    Improved_Movement,
+                    Improved_Magic}};
     private static final Skill[][] IMPROVED_ROSE_MAPHUM_BUFFS = {
-            {SkillTable.INSTANCE().getInfo(Improved_Combat, 1), SkillTable.INSTANCE().getInfo(Improved_Condition, 1)},
+            {Improved_Combat, Improved_Condition},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1)},
+                    Improved_Combat,
+                    Improved_Condition,
+                    Improved_Movement},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE().getInfo(Armor_Maintenance, 1),
-                    SkillTable.INSTANCE().getInfo(Weapon_Maintenance, 1)},
+                    Improved_Combat,
+                    Improved_Condition,
+                    Improved_Movement,
+                    Armor_Maintenance,
+                    Weapon_Maintenance},
             {
-                    SkillTable.INSTANCE().getInfo(Improved_Combat, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Condition, 1),
-                    SkillTable.INSTANCE().getInfo(Improved_Movement, 1),
-                    SkillTable.INSTANCE().getInfo(Armor_Maintenance, 1),
-                    SkillTable.INSTANCE().getInfo(Weapon_Maintenance, 1)}};
+                    Improved_Combat,
+                    Improved_Condition,
+                    Improved_Movement,
+                    Armor_Maintenance,
+                    Weapon_Maintenance}};
     private Future<?> _actionTask;
     private boolean _buffEnabled = true;
 
@@ -527,16 +526,16 @@ public final class PetBabyInstance extends PetInstance {
                     double curHp = owner.getCurrentHpPercents();
                     if (curHp < 90 && Rnd.chance((100 - curHp) / 3))
                         if (curHp < 33) // an emergency, a strong healing
-                            skill = SkillTable.INSTANCE().getInfo(improved ? BattleHeal : GreaterHealTrick, getHealLevel());
+                            skill = SkillTable.INSTANCE.getInfo(improved ? BattleHeal : GreaterHealTrick, getHealLevel());
                         else if (getNpcId() != PetDataTable.IMPROVED_BABY_KOOKABURRA_ID)
-                            skill = SkillTable.INSTANCE().getInfo(improved ? GreaterHeal : HealTrick, getHealLevel());
+                            skill = SkillTable.INSTANCE.getInfo(improved ? GreaterHeal : HealTrick, getHealLevel());
 
                     // check RECHARGER
                     if (skill == null && (getNpcId() == PetDataTable.IMPROVED_BABY_KOOKABURRA_ID || getNpcId() == PetDataTable.FAIRY_PRINCESS_ID)) // Речардж для Kookaburra и Принцесы Феи, но в комбат моде
                     {
                         double curMp = owner.getCurrentMpPercents();
                         if (curMp < 66 && Rnd.chance((100 - curMp) / 2))
-                            skill = SkillTable.INSTANCE().getInfo(Recharge, getRechargeLevel());
+                            skill = SkillTable.INSTANCE.getInfo(Recharge, getRechargeLevel());
                     }
 
                     if (skill != null && skill.checkCondition(PetBabyInstance.this, owner, false, !isFollowMode(), true)) {
@@ -566,7 +565,7 @@ public final class PetBabyInstance extends PetInstance {
                     return null;
                 }
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             _log.warn("Pet [#" + getNpcId() + "] a buff task error has occurred: " + e);
             _log.error("", e);
         }

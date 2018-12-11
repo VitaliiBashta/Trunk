@@ -176,7 +176,7 @@ public class UndergroundColiseumInstance extends NpcInstance {
         } else if (actualCommand.startsWith("Multisell") || actualCommand.startsWith("multisell")) {
             int listId = Integer.parseInt(command.substring(9).trim());
             Castle castle = getCastle(player);
-            MultiSellHolder.getInstance().SeparateAndSend(listId, player, castle != null ? castle.getTaxRate() : 0);
+            MultiSellHolder.INSTANCE.SeparateAndSend(listId, player, castle != null ? castle.getTaxRate() : 0);
         } else {
             super.onBypassFeedback(player, command);
         }

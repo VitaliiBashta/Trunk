@@ -1,16 +1,16 @@
 package l2trunk.loginserver;
 
+import l2trunk.loginserver.database.L2DatabaseFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import l2trunk.commons.dbutils.DbUtils;
-import l2trunk.loginserver.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.sql.SQLException;
 
 class GameServerRegister {
     private final static Logger _log = LoggerFactory.getLogger(GameServerRegister.class);
@@ -18,9 +18,8 @@ class GameServerRegister {
     public static void main(String[] paramArrayOfString) {
         Config.load();
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
+        PreparedStatement statement;
+        ResultSet rset;
 
         int i = 0;
         while (i == 0) {
@@ -30,10 +29,9 @@ class GameServerRegister {
             System.out.println("3. Del GameServer");
             System.out.println("4. Exit");
             System.out.print("Enter: ");
-            try {
+            try (Connection con = L2DatabaseFactory.getInstance().getConnection()) {
                 InputStreamReader localInputStreamReader1 = new InputStreamReader(System.in);
                 BufferedReader localBufferedReader1 = new BufferedReader(localInputStreamReader1);
-                con = L2DatabaseFactory.getInstance().getConnection();
                 int j = Integer.parseInt(localBufferedReader1.readLine());
                 switch (j) {
                     case 1:
@@ -79,10 +77,10 @@ class GameServerRegister {
                     case 4:
                         i = 1;
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 _log.error("", e);
-            } finally {
-                DbUtils.closeQuietly(con, statement, rset);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

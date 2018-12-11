@@ -11,10 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class _905_RefinedDragonBlood extends Quest implements ScriptFile {
+public final class _905_RefinedDragonBlood extends Quest implements ScriptFile {
     private static final List<Integer> SeparatedSoul = Arrays.asList(32864, 32865, 32866, 32867, 32868, 32869, 32870);
-    private static final int[] AntharasDragonsBlue = {22852, 22853, 22844, 22845};
-    private static final int[] AntharasDragonsRed = {22848, 22849, 22850, 22851};
+    private static final List<Integer> AntharasDragonsBlue = Arrays.asList(22852, 22853, 22844, 22845);
+    private static final List<Integer> AntharasDragonsRed = Arrays.asList(22848, 22849, 22850, 22851);
 
     private static final int UnrefinedRedDragonBlood = 21913;
     private static final int UnrefinedBlueDragonBlood = 21914;
@@ -92,10 +92,10 @@ public class _905_RefinedDragonBlood extends Quest implements ScriptFile {
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            if (ArrayUtils.contains(AntharasDragonsBlue, npc.getNpcId())) {
+            if (AntharasDragonsBlue.contains(npc.getNpcId())) {
                 if (st.getQuestItemsCount(UnrefinedBlueDragonBlood) < 10 && Rnd.chance(70))
                     st.giveItems(UnrefinedBlueDragonBlood, 1);
-            } else if (ArrayUtils.contains(AntharasDragonsRed, npc.getNpcId())) {
+            } else if (AntharasDragonsRed.contains(npc.getNpcId())) {
                 if (st.getQuestItemsCount(UnrefinedRedDragonBlood) < 10 && Rnd.chance(70))
                     st.giveItems(UnrefinedRedDragonBlood, 1);
             }

@@ -39,7 +39,7 @@ public class CharacterFriendDAO {
                 }
             }
         } catch (SQLException e) {
-            _log.error("CharacterFriendDAO.load(L2Player): " + e, e);
+            _log.error("CharacterFriendDAO.loadFile(L2Player): " + e, e);
         }
 
         return map;

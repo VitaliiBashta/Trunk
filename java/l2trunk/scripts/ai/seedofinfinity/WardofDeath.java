@@ -6,8 +6,11 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class WardofDeath extends DefaultAI {
-    private static final int[] mobs = {22516, 22520, 22522, 22524};
+    private static final List<Integer> mobs = Arrays.asList(22516, 22520, 22522, 22524);
 
     public WardofDeath(NpcInstance actor) {
         super(actor);
@@ -21,7 +24,7 @@ public final class WardofDeath extends DefaultAI {
             if (actor.getNpcId() == 18667) // trap skill
             {
                 if (!avoidAttack) {
-                    actor.doCast(SkillTable.INSTANCE().getInfo(Rnd.get(5423, 5424), 9), actor, false);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(Rnd.get(5423, 5424), 9), actor, false);
                     actor.doDie(null);
                 }
                 return true;
@@ -29,7 +32,7 @@ public final class WardofDeath extends DefaultAI {
             {
                 if (!avoidAttack) {
                     for (int i = 0; i < Rnd.get(1, 4); i++)
-                        actor.getReflection().addSpawnWithoutRespawn(mobs[Rnd.get(mobs.length)], actor.getLoc(), 100);
+                        actor.getReflection().addSpawnWithoutRespawn(Rnd.get(mobs), actor.getLoc(), 100);
                     actor.doDie(null);
                 }
                 return true;

@@ -9,7 +9,9 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
 import java.util.StringTokenizer;
 
-public class AdminGmEvent implements IAdminCommandHandler {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class AdminGmEvent implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         final StringTokenizer st = new StringTokenizer(fullString, " ");
@@ -23,7 +25,7 @@ public class AdminGmEvent implements IAdminCommandHandler {
         switch (st.nextToken()) {
             case "create":
                 try {
-                    if (GmEventManager.getInstance().getEventStatus() != StateEnum.INACTIVE) {
+                    if (GmEventManager.INSTANCE.getEventStatus() != StateEnum.INACTIVE) {
                         activeChar.sendMessage("There is already a created event");
                         showMainMenu(activeChar);
                         return true;
@@ -33,75 +35,47 @@ public class AdminGmEvent implements IAdminCommandHandler {
                     while (st.hasMoreTokens())
                         eventName += " " + st.nextToken();
 
-                    GmEventManager.getInstance().createEvent(activeChar, eventName);
+                    GmEventManager.INSTANCE.createEvent(activeChar, eventName);
                 } catch (Exception e) {
                     activeChar.sendMessage("Uso: //gmevent create [eventName]");
                 }
                 break;
             case "setminlvl":
-                try {
-                    final int minLvl = Integer.parseInt(st.nextToken());
-                    GmEventManager.getInstance().changeEventParameter(EventParameter.MIN_LVL, minLvl);
-                } catch (Exception e) {
-                    activeChar.sendMessage("Uso: //gmevent setminlvl [minLvl]");
-                }
+                    final int minLvl = toInt(st.nextToken());
+                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MIN_LVL, minLvl);
                 break;
             case "setmaxlvl":
-                try {
-                    final int maxLvl = Integer.parseInt(st.nextToken());
-                    GmEventManager.getInstance().changeEventParameter(EventParameter.MAX_LVL, maxLvl);
-                } catch (Exception e) {
-                    activeChar.sendMessage("Uso: //gmevent setmaxlvl [maxLvl]");
-                }
+                    final int maxLvl = toInt(st.nextToken());
+                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MAX_LVL, maxLvl);
                 break;
             case "setmintime":
-                try {
-                    final int minTime = Integer.parseInt(st.nextToken());
-                    GmEventManager.getInstance().changeEventParameter(EventParameter.MIN_TIME, minTime);
-                } catch (Exception e) {
-                    activeChar.sendMessage("Uso: //gmevent setmintime [minOnlineTime]");
-                }
+                    final int minTime = toInt(st.nextToken());
+                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MIN_TIME, minTime);
                 break;
             case "setmaxtime":
-                try {
-                    final int maxTime = Integer.parseInt(st.nextToken());
-                    GmEventManager.getInstance().changeEventParameter(EventParameter.MAX_TIME, maxTime);
-                } catch (Exception e) {
-                    activeChar.sendMessage("Uso: //gmevent setmaxtime [maxOnlineTime]");
-                }
+                    final int maxTime = toInt(st.nextToken());
+                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MAX_TIME, maxTime);
                 break;
             case "setpvpevent":
-                try {
-                    final int isPvp = Integer.parseInt(st.nextToken());
-                    GmEventManager.getInstance().changeEventParameter(EventParameter.IS_PVP_EVENT, isPvp);
-                } catch (Exception e) {
-                    activeChar.sendMessage("Uso: //gmevent setpvpevent 0|1");
-                }
+                    final int isPvp = toInt(st.nextToken());
+                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_PVP_EVENT, isPvp);
                 break;
             case "setpeaceevent":
-                try {
-                    final int isPeace = Integer.parseInt(st.nextToken());
-                    GmEventManager.getInstance().changeEventParameter(EventParameter.IS_PEACE_EVENT, isPeace);
-                } catch (Exception e) {
-                    activeChar.sendMessage("Uso: //gmevent setpeaceevent 0|1");
-                }
+                    final int isPeace = toInt(st.nextToken());
+                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_PEACE_EVENT, isPeace);
                 break;
             case "setautores":
-                try {
-                    final int autoRes = Integer.parseInt(st.nextToken());
-                    GmEventManager.getInstance().changeEventParameter(EventParameter.IS_AUTO_RES, autoRes);
-                } catch (Exception e) {
-                    activeChar.sendMessage("Uso: //gmevent setautores 0|1");
-                }
+                    final int autoRes = toInt(st.nextToken());
+                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_AUTO_RES, autoRes);
                 break;
             case "register":
-                GmEventManager.getInstance().startRegistration();
+                GmEventManager.INSTANCE.startRegistration();
                 break;
             case "start":
-                GmEventManager.getInstance().startEvent();
+                GmEventManager.INSTANCE.startEvent();
                 break;
             case "stop":
-                GmEventManager.getInstance().stopEvent();
+                GmEventManager.INSTANCE.stopEvent();
                 break;
             case "menu":
                 showMainMenu(activeChar);
@@ -116,7 +90,7 @@ public class AdminGmEvent implements IAdminCommandHandler {
 
     private void showMainMenu(Player activeChar) {
         // Si no hay ningun evento creado, mostramos la ventana de creacion
-        if (GmEventManager.getInstance().getEventStatus() == StateEnum.INACTIVE) {
+        if (GmEventManager.INSTANCE.getEventStatus() == StateEnum.INACTIVE) {
             final NpcHtmlMessage adminReply = new NpcHtmlMessage(0);
             adminReply.setFile("admin/events/gmevent_create.htm");
             activeChar.sendPacket(adminReply);
@@ -128,7 +102,7 @@ public class AdminGmEvent implements IAdminCommandHandler {
         adminReply.setFile("admin/events/gmevent_control.htm");
 
         // Segun que estado tenga el evento van a aparecer diferentes botones
-        switch (GmEventManager.getInstance().getEventStatus()) {
+        switch (GmEventManager.INSTANCE.getEventStatus()) {
             case STARTING:
                 adminReply.replace("%startEvent%", "<button value=\"Start Register\" action=\"bypass -h admin_gmevent register\" width=140 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df>");
                 break;
@@ -142,32 +116,32 @@ public class AdminGmEvent implements IAdminCommandHandler {
 
         // Botones para cambiar configs de evento
         final String pvpButton;
-        if (GmEventManager.getInstance().isPvPEvent())
+        if (GmEventManager.INSTANCE.isPvPEvent())
             pvpButton = "value=\"Disable\" action=\"bypass -h admin_gmevent setpvpevent 0\"";
         else
             pvpButton = "value=\"Enable\" action=\"bypass -h admin_gmevent setpvpevent 1\"";
 
         final String peaceButton;
-        if (GmEventManager.getInstance().isPeaceEvent())
+        if (GmEventManager.INSTANCE.isPeaceEvent())
             peaceButton = "value=\"Disable\" action=\"bypass -h admin_gmevent setpeaceevent 0\"";
         else
             peaceButton = "value=\"Enable\" action=\"bypass -h admin_gmevent setpeaceevent 1\"";
 
         final String resButton;
-        if (GmEventManager.getInstance().isAutoRes())
+        if (GmEventManager.INSTANCE.isAutoRes())
             resButton = "value=\"Disable\" action=\"bypass -h admin_gmevent setautores 0\"";
         else
             resButton = "value=\"Enable\" action=\"bypass -h admin_gmevent setautores 1\"";
 
         // Reemplazamos variables
-        adminReply.replace("%eventName%", GmEventManager.getInstance().getEventName());
-        adminReply.replace("%minLvl%", GmEventManager.getInstance().getMinLvl());
-        adminReply.replace("%maxLvl%", GmEventManager.getInstance().getMaxLvl());
-        adminReply.replace("%minTime%", GmEventManager.getInstance().getMinOnlineTime());
-        adminReply.replace("%maxTime%", GmEventManager.getInstance().getMaxOnlineTime());
-        adminReply.replace("%isPvPEvent%", GmEventManager.getInstance().isPvPEvent() ? "Enabled" : "Disabled");
-        adminReply.replace("%isPeaceEvent%", GmEventManager.getInstance().isPeaceEvent() ? "Enabled" : "Disabled");
-        adminReply.replace("%isAutoRes%", GmEventManager.getInstance().isAutoRes() ? "Enabled" : "Disabled");
+        adminReply.replace("%eventName%", GmEventManager.INSTANCE.getEventName());
+        adminReply.replace("%minLvl%", GmEventManager.INSTANCE.getMinLvl());
+        adminReply.replace("%maxLvl%", GmEventManager.INSTANCE.getMaxLvl());
+        adminReply.replace("%minTime%", GmEventManager.INSTANCE.getMinOnlineTime());
+        adminReply.replace("%maxTime%", GmEventManager.INSTANCE.getMaxOnlineTime());
+        adminReply.replace("%isPvPEvent%", GmEventManager.INSTANCE.isPvPEvent() ? "Enabled" : "Disabled");
+        adminReply.replace("%isPeaceEvent%", GmEventManager.INSTANCE.isPeaceEvent() ? "Enabled" : "Disabled");
+        adminReply.replace("%isAutoRes%", GmEventManager.INSTANCE.isAutoRes() ? "Enabled" : "Disabled");
         adminReply.replace("%pvpButton%", pvpButton);
         adminReply.replace("%peaceButton%", peaceButton);
         adminReply.replace("%resButton%", resButton);

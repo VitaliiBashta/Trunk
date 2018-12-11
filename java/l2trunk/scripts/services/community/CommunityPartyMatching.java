@@ -78,7 +78,7 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
     }
 
     private void showMainPage(Player player, int classesSortType, int sortType, int asc, int page, int charObjId) {
-        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_partymatching.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_partymatching.htm", player);
         html = html.replace("%characters%", getCharacters(player, sortType, asc, classesSortType, page, charObjId));
         html = html.replace("%visible%", player.isPartyMatchingVisible() ? "Hide from list" : "Show on list");
         html = replace(html, classesSortType, sortType, asc, page, charObjId);
@@ -332,12 +332,12 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
 
     @Override
     public void onLoad() {
-        CommunityBoardManager.getInstance().registerHandler(this);
+        CommunityBoardManager.registerHandler(this);
     }
 
     @Override
     public void onReload() {
-        CommunityBoardManager.getInstance().removeHandler(this);
+        CommunityBoardManager.removeHandler(this);
     }
 
     @Override

@@ -245,9 +245,9 @@ public final class BlockCheckerEngine {
 
         public StartEvent() {
             // Initialize all used skills
-            _freeze = SkillTable.INSTANCE().getInfo(6034, 1);
-            _transformationRed = SkillTable.INSTANCE().getInfo(6035, 1);
-            _transformationBlue = SkillTable.INSTANCE().getInfo(6036, 1);
+            _freeze = SkillTable.INSTANCE.getInfo(6034);
+            _transformationRed = SkillTable.INSTANCE.getInfo(6035);
+            _transformationBlue = SkillTable.INSTANCE.getInfo(6036);
         }
 
         /**

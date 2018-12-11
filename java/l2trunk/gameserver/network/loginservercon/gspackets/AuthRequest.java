@@ -1,11 +1,10 @@
 package l2trunk.gameserver.network.loginservercon.gspackets;
 
-import l2trunk.commons.net.AdvIP;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.GameServer;
 import l2trunk.gameserver.network.loginservercon.SendablePacket;
 
-public class AuthRequest extends SendablePacket {
+public final class AuthRequest extends SendablePacket {
     protected void writeImpl() {
         writeC(0x00);
         writeD(GameServer.AUTH_SERVER_PROTOCOL);
@@ -20,18 +19,17 @@ public class AuthRequest extends SendablePacket {
         writeS(Config.INTERNAL_HOSTNAME);
 
         //ports
-        writeH(Config.PORTS_GAME.length);
-        for (int PORT_GAME : Config.PORTS_GAME)
-            writeH(PORT_GAME);
+        writeH(Config.PORTS_GAME.size());
+        Config.PORTS_GAME.forEach(this::writeH);
 
         writeD(Config.MAXIMUM_ONLINE_USERS);
 
         // Sends channels info to login server.
         writeD(Config.GAMEIPS.size());
-        for (AdvIP ip : Config.GAMEIPS) {
+        Config.GAMEIPS.forEach(ip -> {
             writeD(ip.channelId);
             writeS(ip.channelAdress);
             writeD(ip.channelPort);
-        }
+        });
     }
 }

@@ -9,12 +9,12 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 /**
  * Format: (ch) S
  */
-public class RequestExMPCCAskJoin extends L2GameClientPacket {
-    private String _name;
+public final class RequestExMPCCAskJoin extends L2GameClientPacket {
+    private String name;
 
     @Override
     protected void readImpl() {
-        _name = readS(16);
+        name = readS(16);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class RequestExMPCCAskJoin extends L2GameClientPacket {
             return;
         }
 
-        Player target = World.getPlayer(_name);
+        Player target = World.getPlayer(name);
 
         // Чар с таким именем не найден в мире
         if (target == null) {
@@ -53,7 +53,7 @@ public class RequestExMPCCAskJoin extends L2GameClientPacket {
         }
 
         // Если приглашен в СС не лидер партии, то посылаем приглашение лидеру его партии
-        if (target.isInParty() && !target.getParty().isLeader(target))
+        if (!target.getParty().isLeader(target))
             target = target.getParty().getLeader();
 
         if (target == null) {
@@ -63,11 +63,6 @@ public class RequestExMPCCAskJoin extends L2GameClientPacket {
 
         if (target.getParty().isInCommandChannel()) {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.C1S_PARTY_IS_ALREADY_A_MEMBER_OF_THE_COMMAND_CHANNEL).addString(target.getName()));
-            return;
-        }
-
-        if (target.isInFightClub() && !target.getFightClubEvent().canReceiveInvitations(activeChar, target)) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ON_ANOTHER_TASK).addString(target.getName()));
             return;
         }
 

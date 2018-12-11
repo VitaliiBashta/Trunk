@@ -32,9 +32,9 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class TerritoryWardObject implements SpawnableObject, FlagItemAttachment {
     private static final long RETURN_FLAG_DELAY = 120000L;
-    private final Location _location;
-    private final int _itemId;
-    private final NpcTemplate _template;
+    private final Location location;
+    private final int itemId;
+    private final NpcTemplate template;
     private NpcInstance _wardNpcInstance;
     private ItemInstance _wardItemInstance;
     private boolean _isOutOfZone;
@@ -42,20 +42,20 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
     private ScheduledFuture<?> teleportBackTask;
 
     public TerritoryWardObject(int itemId, int npcId, Location location) {
-        _itemId = itemId;
-        _template = NpcHolder.getTemplate(npcId);
-        _location = location;
+        this.itemId = itemId;
+        template = NpcHolder.getTemplate(npcId);
+        this.location = location;
     }
 
     @Override
     public void spawnObject(GlobalEvent event) {
-        _wardItemInstance = ItemFunctions.createItem(_itemId);
+        _wardItemInstance = ItemFunctions.createItem(itemId);
         _wardItemInstance.setAttachment(this);
 
-        _wardNpcInstance = new TerritoryWardInstance(IdFactory.getInstance().getNextId(), _template, this);
+        _wardNpcInstance = new TerritoryWardInstance(IdFactory.getInstance().getNextId(), template, this);
         _wardNpcInstance.addEvent(event);
         _wardNpcInstance.setFullHpMp();
-        _wardNpcInstance.spawnMe(_location);
+        _wardNpcInstance.spawnMe(location);
         _startTimerTask = null;
         _isOutOfZone = false;
 
@@ -120,10 +120,10 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
         _wardItemInstance.update();
 
         _wardNpcInstance.setFullHpMp();
-        _wardNpcInstance.spawnMe(_location);
+        _wardNpcInstance.spawnMe(location);
 
 
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
 
         stopTerrFlagCountDown();
@@ -145,14 +145,14 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
         _wardItemInstance.setJdbcState(JdbcEntityState.UPDATED);
         _wardItemInstance.update();
 
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
 
         _wardNpcInstance.setFullHpMp();
         if (owner.isInZone(ZoneType.SIEGE)) {
             _wardNpcInstance.spawnMe(loc);
             teleportBackTask = ThreadPoolManager.INSTANCE.schedule(new ReturnFlagThread(), RETURN_FLAG_DELAY);
         } else {
-            _wardNpcInstance.spawnMe(_location);
+            _wardNpcInstance.spawnMe(location);
             runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
         }
 
@@ -163,9 +163,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
 
     @Override
     public boolean canPickUp(Player player) {
-        if (player.getActiveWeaponFlagAttachment() != null)
-            return false;
-        return true;
+        return player.getActiveWeaponFlagAttachment() == null;
     }
 
     @Override
@@ -175,7 +173,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
 
         player.sendPacket(SystemMsg.YOUVE_ACQUIRED_THE_WARD);
 
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.broadcastTo(new SystemMessage2(SystemMsg.THE_S1_WARD_HAS_BEEN_DESTROYED_C2_NOW_HAS_THE_TERRITORY_WARD).addResidenceName(getDominionId()).addName(player));
         checkZoneForTerr(player);
 
@@ -198,7 +196,10 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
             _startTimerTask.cancel(false);
             _startTimerTask = null;
         }
-        _startTimerTask = ThreadPoolManager.INSTANCE.schedule(new DropFlagInstance(player), Config.INTERVAL_FLAG_DROP * 1000);
+        _startTimerTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            if (!player.isInZone(ZoneType.SIEGE))
+                onLogout(player);
+        }, Config.INTERVAL_FLAG_DROP * 1000);
 
         player.sendMessage("You've leaved the battle zone! The flag will dissapear in " + Config.INTERVAL_FLAG_DROP + " seconds!");
 
@@ -265,7 +266,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
     }
 
     public int getDominionId() {
-        return _itemId - 13479;
+        return itemId - 13479;
     }
 
     public DominionSiegeEvent getEvent() {
@@ -285,26 +286,12 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
         }
     }
 
-    private class DropFlagInstance extends RunnableImpl {
-        private final Player _player;
-
-        DropFlagInstance(Player paramPlayer) {
-            _player = paramPlayer;
-        }
-
-        @Override
-        public void runImpl() {
-            if (!_player.isInZone(ZoneType.SIEGE))
-                onLogout(_player);
-        }
-    }
-
     private class ReturnFlagThread implements Runnable {
         @Override
         public void run() {
             if (_wardNpcInstance != null) {
-                _wardNpcInstance.teleToLocation(_location);
-                DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+                _wardNpcInstance.teleToLocation(location);
+                DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
                 runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
             }
         }

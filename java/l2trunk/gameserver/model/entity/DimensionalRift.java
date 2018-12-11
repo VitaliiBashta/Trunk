@@ -20,7 +20,7 @@ public class DimensionalRift extends Reflection {
     protected static final long seconds_5 = 5000L;
     private static final int MILLISECONDS_IN_MINUTE = 60000;
 
-    final int _roomType;
+    final int roomType;
     private List<Integer> _completedRooms = new ArrayList<>();
     private int jumps_current = 0;
     private int _choosenRoom = -1;
@@ -36,11 +36,11 @@ public class DimensionalRift extends Reflection {
         startCollapseTimer(7200000); // 120 минут таймер, для защиты от утечек памяти
         setName("DimensionalRift");
         if (this instanceof DelusionChamber) {
-            InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(type + 120); // Для равенства типа комнаты и ИД инстанса
+            InstantZone iz = InstantZoneHolder.getInstantZone(type + 120); // Для равенства типа комнаты и ИД инстанса
             setInstancedZone(iz);
             setName(iz.getName());
         }
-        _roomType = type;
+        roomType = type;
         setParty(party);
         if (!(this instanceof DelusionChamber))
             party.setDimensionalRift(this);
@@ -63,7 +63,7 @@ public class DimensionalRift extends Reflection {
     }
 
     public int getType() {
-        return _roomType;
+        return roomType;
     }
 
     public int getCurrentRoom() {
@@ -95,7 +95,7 @@ public class DimensionalRift extends Reflection {
             spawnTask = null;
         }
 
-        final DimensionalRiftRoom riftRoom = DimensionalRiftManager.INSTANCE.getRoom(_roomType, room);
+        final DimensionalRiftRoom riftRoom = DimensionalRiftManager.INSTANCE.getRoom(roomType, room);
 
         spawnTask = ThreadPoolManager.INSTANCE.schedule(() -> {
             for (SimpleSpawner s : riftRoom.getSpawns()) {
@@ -178,7 +178,7 @@ public class DimensionalRift extends Reflection {
         for (Spawner s : getSpawns())
             s.deleteAll();
 
-        int size = DimensionalRiftManager.INSTANCE.getRooms(_roomType).size();
+        int size = DimensionalRiftManager.INSTANCE.getRooms(roomType).size();
 		/*
 		if (jumps_current < getMaxJumps())
 			size--; // комната босса может быть только последней
@@ -253,11 +253,11 @@ public class DimensionalRift extends Reflection {
     }
 
     private void checkBossRoom(int room) {
-        isBossRoom = DimensionalRiftManager.INSTANCE.getRoom(_roomType, room).isBossRoom();
+        isBossRoom = DimensionalRiftManager.INSTANCE.getRoom(roomType, room).isBossRoom();
     }
 
     private Location getRoomCoord(int room) {
-        return DimensionalRiftManager.INSTANCE.getRoom(_roomType, room).getTeleportCoords();
+        return DimensionalRiftManager.INSTANCE.getRoom(roomType, room).getTeleportCoords();
     }
 
     /**

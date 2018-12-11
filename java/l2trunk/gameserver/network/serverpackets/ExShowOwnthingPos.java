@@ -8,19 +8,14 @@ import l2trunk.gameserver.utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author VISTALL
- */
-public class ExShowOwnthingPos extends L2GameServerPacket {
+public final class ExShowOwnthingPos extends L2GameServerPacket {
     private final List<WardInfo> _wardList = new ArrayList<>(9);
 
     public ExShowOwnthingPos() {
-        for (Dominion dominion : ResidenceHolder.getInstance().getResidenceList(Dominion.class)) {
+        for (Dominion dominion : ResidenceHolder.getResidenceList(Dominion.class)) {
             if (dominion.getSiegeDate().getTimeInMillis() == 0)
                 continue;
-
-            int[] flags = dominion.getFlags();
-            for (int dominionId : flags) {
+            for (int dominionId : dominion.getFlags()) {
                 TerritoryWardObject wardObject = dominion.getSiegeEvent().getFirstObject("ward_" + dominionId);
                 Location loc = wardObject.getWardLocation();
                 if (loc != null)

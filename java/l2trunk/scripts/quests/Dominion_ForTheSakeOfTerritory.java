@@ -26,11 +26,11 @@ public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
 
     Dominion_ForTheSakeOfTerritory() {
         super(PARTY_ALL);
-        DominionSiegeEvent siegeEvent = EventHolder.getInstance().getEvent(EventType.SIEGE_EVENT, getDominionId());
+        DominionSiegeEvent siegeEvent = EventHolder.getEvent(EventType.SIEGE_EVENT, getDominionId());
         siegeEvent.setForSakeQuest(this);
         siegeEvent.addListener(new OnStartStopListenerImpl());
 
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.addBreakQuest(this);
 
         addKillId(supplyBoxes);

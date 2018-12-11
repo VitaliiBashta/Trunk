@@ -1,13 +1,9 @@
 package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.entity.events.fightclubmanager.FightClubPlayer;
 import l2trunk.gameserver.model.entity.events.impl.KrateisCubeEvent;
 
-/**
- * @author VISTALL
- */
-public class RequestExStartShowCrataeCubeRank extends L2GameClientPacket {
+public final class RequestExStartShowCrataeCubeRank extends L2GameClientPacket {
     @Override
     protected void readImpl() {
         //
@@ -18,16 +14,11 @@ public class RequestExStartShowCrataeCubeRank extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
+        KrateisCubeEvent cubeEvent = player.getEvent(KrateisCubeEvent.class);
+        if (cubeEvent == null)
+            return;
 
-        if (player.isInFightClub()) {
-            FightClubPlayer fPlayer = player.getFightClubEvent().getFightClubPlayer(player);
-            fPlayer.setShowRank(true);
-        } else {
-            KrateisCubeEvent cubeEvent = player.getEvent(KrateisCubeEvent.class);
-            if (cubeEvent == null)
-                return;
+        cubeEvent.showRank(player);
 
-            cubeEvent.showRank(player);
-        }
     }
 }

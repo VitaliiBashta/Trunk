@@ -14,10 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.StringTokenizer;
 
-/**
- * Developer: L2Mythras
- * Date: 24.11.12 Time: 13:42
- */
 public class HitmanInstance extends NpcInstance {
     private static final long serialVersionUID = 1L;
 
@@ -137,7 +133,7 @@ public class HitmanInstance extends NpcInstance {
             sb.append("<table width=260 border=0 cellspacing=3 cellpadding=3>");
             sb.append("<tr><td align=center valign=top>");
 
-            for (int i = pageId * Config.PLAYERS_PER_PAGE - Config.PLAYERS_PER_PAGE; i < num; i++) {
+            for (int i = pageId * 10 - 10; i < num; i++) {
                 final Order order = Hitman.getOrderById(i);
                 sb.append("<table width=250 border=1 cellspacing=5 cellpadding=5>");
                 sb.append("<tr>");

@@ -4,6 +4,8 @@ package l2trunk.gameserver.model.entity.events.objects;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Element;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class BoatPoint extends Location {
     private final int _fuel;
     private int _speed1;
@@ -19,13 +21,13 @@ public final class BoatPoint extends Location {
     }
 
     public static BoatPoint parse(Element element) {
-        int speed1 = element.attributeValue("speed1") == null ? 0 : Integer.parseInt(element.attributeValue("speed1"));
-        int speed2 = element.attributeValue("speed2") == null ? 0 : Integer.parseInt(element.attributeValue("speed2"));
-        int x = Integer.parseInt(element.attributeValue("x"));
-        int y = Integer.parseInt(element.attributeValue("y"));
-        int z = Integer.parseInt(element.attributeValue("z"));
-        int h = element.attributeValue("h") == null ? 0 : Integer.parseInt(element.attributeValue("h"));
-        int fuel = element.attributeValue("fuel") == null ? 0 : Integer.parseInt(element.attributeValue("fuel"));
+        int speed1 = element.attributeValue("speed1") == null ? 0 : toInt(element.attributeValue("speed1"));
+        int speed2 = element.attributeValue("speed2") == null ? 0 : toInt(element.attributeValue("speed2"));
+        int x = toInt(element.attributeValue("x"));
+        int y = toInt(element.attributeValue("y"));
+        int z = toInt(element.attributeValue("z"));
+        int h = element.attributeValue("h") == null ? 0 : toInt(element.attributeValue("h"));
+        int fuel = element.attributeValue("fuel") == null ? 0 : toInt(element.attributeValue("fuel"));
         boolean teleport = Boolean.parseBoolean(element.attributeValue("teleport"));
         return new BoatPoint(x, y, z, h, speed1, speed2, fuel, teleport);
     }

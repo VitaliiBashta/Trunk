@@ -223,7 +223,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                     e.printStackTrace();
                 }
             } else if (bp.bypass.startsWith("multisell "))
-                MultiSellHolder.getInstance().SeparateAndSend(Integer.parseInt(bp.bypass.substring(10)), activeChar, 0);
+                MultiSellHolder.INSTANCE.SeparateAndSend(Integer.parseInt(bp.bypass.substring(10)), activeChar, 0);
             else if (bp.bypass.startsWith("Quest ")) {
                 String p = bp.bypass.substring(6).trim();
                 int idx = p.indexOf(' ');

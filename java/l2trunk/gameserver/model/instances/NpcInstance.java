@@ -185,7 +185,7 @@ public class NpcInstance extends Creature {
     }
 
     private static void showAcquireList(AcquireType t, Player player) {
-        final Collection<SkillLearn> skills = SkillAcquireHolder.getInstance().getAvailableSkills(player, t);
+        final Collection<SkillLearn> skills = SkillAcquireHolder.getAvailableSkills(player, t);
 
         final AcquireSkillList asl = new AcquireSkillList(t, skills.size());
 
@@ -216,7 +216,7 @@ public class NpcInstance extends Creature {
 
         Set<SkillLearn> learns = new TreeSet<>();
         for (SubUnit sub : player.getClan().getAllSubUnits()) {
-            learns.addAll(SkillAcquireHolder.getInstance().getAvailableSkills(player, AcquireType.SUB_UNIT, sub));
+            learns.addAll(SkillAcquireHolder.getAvailableSkills(player, AcquireType.SUB_UNIT, sub));
         }
 
         final AcquireSkillList asl = new AcquireSkillList(AcquireType.SUB_UNIT, learns.size());
@@ -253,15 +253,15 @@ public class NpcInstance extends Creature {
 
     @Override
     public CharacterAI getAI() {
-        if (_ai == null) {
+        if (ai == null) {
             synchronized (this) {
-                if (_ai == null) {
-                    _ai = getTemplate().getNewAI(this);
+                if (ai == null) {
+                    ai = getTemplate().getNewAI(this);
                 }
             }
         }
 
-        return _ai;
+        return ai;
     }
 
     /**
@@ -668,7 +668,7 @@ public class NpcInstance extends Creature {
         }
 
         // Get the weapon item equipped in the right hand of the L2NpcInstance
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(getTemplate().rhand);
+        ItemTemplate item = ItemHolder.getTemplate(getTemplate().rhand);
 
         if (!(item instanceof WeaponTemplate)) {
             return null;
@@ -693,7 +693,7 @@ public class NpcInstance extends Creature {
         }
 
         // Get the weapon item equipped in the right hand of the L2NpcInstance
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(getTemplate().lhand);
+        ItemTemplate item = ItemHolder.getTemplate(getTemplate().lhand);
 
         if (!(item instanceof WeaponTemplate)) {
             return null;
@@ -773,7 +773,7 @@ public class NpcInstance extends Creature {
             return null;
         }
         if (_nearestCastle == null) {
-            _nearestCastle = ResidenceHolder.getInstance().getResidence(getTemplate().getCastleId());
+            _nearestCastle = ResidenceHolder.getResidence(getTemplate().getCastleId());
         }
         return _nearestCastle;
     }
@@ -784,7 +784,7 @@ public class NpcInstance extends Creature {
 
     public Fortress getFortress() {
         if (_nearestFortress == null) {
-            _nearestFortress = ResidenceHolder.getInstance().findNearestResidence(Fortress.class, getX(), getY(), getZ(), getReflection(), 32768);
+            _nearestFortress = ResidenceHolder.findNearestResidence(Fortress.class, getX(), getY(), getZ(), getReflection(), 32768);
         }
 
         return _nearestFortress;
@@ -792,7 +792,7 @@ public class NpcInstance extends Creature {
 
     protected ClanHall getClanHall() {
         if (_nearestClanHall == null) {
-            _nearestClanHall = ResidenceHolder.getInstance().findNearestResidence(ClanHall.class, getX(), getY(), getZ(), getReflection(), 32768);
+            _nearestClanHall = ResidenceHolder.findNearestResidence(ClanHall.class, getX(), getY(), getZ(), getReflection(), 32768);
         }
 
         return _nearestClanHall;
@@ -808,7 +808,7 @@ public class NpcInstance extends Creature {
                 return null;
             }
 
-            Castle castle = ResidenceHolder.getInstance().getResidence(getTemplate().getCastleId());
+            Castle castle = ResidenceHolder.getResidence(getTemplate().getCastleId());
             _nearestDominion = castle.getDominion();
         }
 
@@ -1019,7 +1019,7 @@ public class NpcInstance extends Creature {
             } else if (command.startsWith("Multisell") || command.startsWith("multisell")) {
                 String listId = command.substring(9).trim();
                 Castle castle = getCastle(player);
-                MultiSellHolder.getInstance().SeparateAndSend(Integer.parseInt(listId), player, castle != null ? castle.getTaxRate() : 0);
+                MultiSellHolder.INSTANCE.SeparateAndSend(Integer.parseInt(listId), player, castle != null ? castle.getTaxRate() : 0);
             } else if (command.startsWith("EnterRift")) {
                 if (checkForDominionWard(player)) {
                     return;
@@ -1099,7 +1099,7 @@ public class NpcInstance extends Creature {
                     return;
                 }
 
-                Collection<SkillLearn> skills = SkillAcquireHolder.getInstance().getAvailableSkills(null, type);
+                Collection<SkillLearn> skills = SkillAcquireHolder.getAvailableSkills(null, type);
                 if (skills.isEmpty()) {
                     player.sendActionFailed();
                     return;
@@ -1267,7 +1267,7 @@ public class NpcInstance extends Creature {
         }
 
         if (!_showBoard.isEmpty()) {
-            ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(_showBoard);
+            ICommunityBoardHandler handler = CommunityBoardManager.getCommunityHandler(_showBoard);
             if (handler != null)
                 handler.onBypassCommand(player, _showBoard);
             return;
@@ -1421,7 +1421,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        final Collection<SkillLearn> skills = SkillAcquireHolder.getInstance().getAvailableSkills(player, AcquireType.NORMAL);
+        final Collection<SkillLearn> skills = SkillAcquireHolder.getAvailableSkills(player, AcquireType.NORMAL);
 
         final AcquireSkillList asl = new AcquireSkillList(AcquireType.NORMAL, skills.size());
         int counts = 0;
@@ -1442,7 +1442,7 @@ public class NpcInstance extends Creature {
         }
 
         if (counts == 0) {
-            int minlevel = SkillAcquireHolder.getInstance().getMinLevelForNewSkill(player, AcquireType.NORMAL);
+            int minlevel = SkillAcquireHolder.getMinLevelForNewSkill(player, AcquireType.NORMAL);
 
             if (minlevel > 0) {
                 SystemMessage2 sm = new SystemMessage2(SystemMsg.YOU_DO_NOT_HAVE_ANY_FURTHER_SKILLS_TO_LEARN__COME_BACK_WHEN_YOU_HAVE_REACHED_LEVEL_S1);
@@ -1492,7 +1492,7 @@ public class NpcInstance extends Creature {
         }
 
         Castle castle = getCastle(player);
-        MultiSellHolder.getInstance().SeparateAndSend(32323, player, castle != null ? castle.getTaxRate() : 0);
+        MultiSellHolder.INSTANCE.SeparateAndSend(32323, player, castle != null ? castle.getTaxRate() : 0);
         player.sendActionFailed();
     }
 

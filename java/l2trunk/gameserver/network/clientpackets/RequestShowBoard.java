@@ -7,9 +7,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestShowBoard extends L2GameClientPacket {
-    @SuppressWarnings("unused")
-    private int _unknown;
+public final class RequestShowBoard extends L2GameClientPacket {
 
     /**
      * packet type id 0x5E
@@ -23,7 +21,7 @@ public class RequestShowBoard extends L2GameClientPacket {
      */
     @Override
     public void readImpl() {
-        _unknown = readD();
+        int unknown = readD();
     }
 
     @Override
@@ -34,7 +32,7 @@ public class RequestShowBoard extends L2GameClientPacket {
         if (activeChar.isCursedWeaponEquipped())
             return;
         if (Config.COMMUNITYBOARD_ENABLED && !activeChar.isJailed()) {
-            ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(Config.BBS_DEFAULT);
+            ICommunityBoardHandler handler = CommunityBoardManager.getCommunityHandler(Config.BBS_DEFAULT);
             if (handler != null)
                 handler.onBypassCommand(activeChar, Config.BBS_DEFAULT);
         } else

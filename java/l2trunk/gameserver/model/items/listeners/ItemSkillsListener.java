@@ -40,7 +40,7 @@ public final class ItemSkillsListener implements OnEquipListener {
                     if (newlevel > 0)
                         player.addSkill(SkillTable.INSTANCE.getInfo(itemSkill.getId(), newlevel), false);
                     else
-                        player.removeSkillById(itemSkill.getId());
+                        player.removeSkill(itemSkill.getId());
                 } else {
                     player.removeSkill(itemSkill, false);
                 }
@@ -79,12 +79,12 @@ public final class ItemSkillsListener implements OnEquipListener {
                     int level = player.getSkillLevel(itemSkill.getId());
                     int newlevel = level;
                     if (level > 0) {
-                        if (SkillTable.INSTANCE().getInfo(itemSkill.getId(), level + 1) != null)
+                        if (SkillTable.INSTANCE.getInfo(itemSkill.getId(), level + 1) != null)
                             newlevel = level + 1;
                     } else
                         newlevel = 1;
                     if (newlevel != level) {
-                        player.addSkill(SkillTable.INSTANCE().getInfo(itemSkill.getId(), newlevel), false);
+                        player.addSkill(SkillTable.INSTANCE.getInfo(itemSkill.getId(), newlevel), false);
                     }
                 } else if (player.getSkillLevel(itemSkill.getId()) < itemSkill.getLevel()) {
                     player.addSkill(itemSkill, false);

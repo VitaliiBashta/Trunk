@@ -6,6 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author B0nux
  * http://l2wiki.info/Способ_сборки_Лавазавра
@@ -25,7 +28,7 @@ public class _901_HowLavasaurusesAreMade extends Quest implements ScriptFile {
     private static final int LAVASAURUS_BODY_FRAGMENT = 21911; // Lavasaurus Body Fragment
     private static final int LAVASAURUS_HORN_FRAGMENT = 21912; // Lavasaurus Horn Fragment
     // Monster's
-    private static final int[] KILLING_MONSTERS = new int[]{18799, 18800, 18801, 18802, 18803};
+    private static final List<Integer> KILLING_MONSTERS = Arrays.asList(18799, 18800, 18801, 18802, 18803);
     // Chance's
     private static final int DROP_CHANCE = 5;
 
@@ -102,7 +105,7 @@ public class _901_HowLavasaurusesAreMade extends Quest implements ScriptFile {
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
         if (st.getCond() == 1) {
-            if (!ArrayUtils.contains(KILLING_MONSTERS, npc.getNpcId()))
+            if (!KILLING_MONSTERS.contains(npc.getNpcId()))
                 return null;
 
             if (!st.haveQuestItem(LAVASAURUS_STONE_FRAGMENT, 10))

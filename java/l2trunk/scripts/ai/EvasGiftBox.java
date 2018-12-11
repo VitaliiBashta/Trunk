@@ -6,9 +6,11 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
+import java.util.Arrays;
+import java.util.List;
 
 public final class EvasGiftBox extends Fighter {
-    private static final int[] KISS_OF_EVA = new int[]{1073, 3141, 3252};
+    private static final List<Integer> KISS_OF_EVA = Arrays.asList(1073, 3141, 3252);
 
     private static final int Red_Coral = 9692;
     private static final int Crystal_Fragment = 9693;

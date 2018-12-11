@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.matching.MatchingRoom;
 import l2trunk.gameserver.templates.mapregion.RestartArea;
@@ -8,14 +7,15 @@ import l2trunk.gameserver.templates.mapregion.RestartPoint;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 
-public enum  MatchingRoomManager {
+public enum MatchingRoomManager {
     INSTANCE;
     private final RoomsHolder[] _holder = new RoomsHolder[2];
     private final Set<Player> players = new CopyOnWriteArraySet<>();
 
-    private MatchingRoomManager() {
+    MatchingRoomManager() {
         _holder[MatchingRoom.PARTY_MATCHING] = new RoomsHolder();
         _holder[MatchingRoom.CC_MATCHING] = new RoomsHolder();
     }
@@ -28,14 +28,12 @@ public enum  MatchingRoomManager {
         players.remove(player);
     }
 
-    public List<Player> getWaitingList(int minLevel, int maxLevel, int[] classes) {
-        List<Player> res = new ArrayList<>();
-        for (Player $member : players)
-            if ($member.getLevel() >= minLevel && $member.getLevel() <= maxLevel)
-                if (classes.length == 0 || ArrayUtils.contains(classes, $member.getClassId().getId()))
-                    res.add($member);
-
-        return res;
+    public List<Player> getWaitingList(int minLevel, int maxLevel, List<Integer> classes) {
+        return players.stream()
+                .filter(m -> m.getLevel() >= minLevel)
+                .filter(m -> m.getLevel() <= maxLevel)
+                .filter(m -> (classes.size() == 0 || classes.contains(m.getClassId().getId())))
+                .collect(Collectors.toList());
     }
 
     public List<MatchingRoom> getMatchingRooms(int type, int region, boolean allLevels, Player activeChar) {
@@ -68,7 +66,7 @@ public enum  MatchingRoomManager {
         if (player == null)
             return 0;
 
-        RestartArea ra = MapRegionManager.getInstance().getRegionData(RestartArea.class, player);
+        RestartArea ra = MapRegionHolder.getInstance().getRegionData(RestartArea.class, player);
         if (ra != null) {
             RestartPoint rp = ra.getRestartPoint().get(player.getRace());
             return rp.getBbs();

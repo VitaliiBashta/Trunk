@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Format: ch ddd [ddd]
  */
-public class ExGetBossRecord extends L2GameServerPacket {
+public final class ExGetBossRecord extends L2GameServerPacket {
     private final List<BossRecordInfo> _bossRecordInfo;
     private final int _ranking;
     private final int _totalPoints;

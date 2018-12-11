@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.geodata.GeoEngine;
@@ -15,7 +14,7 @@ import l2trunk.gameserver.utils.Location;
 
 public final class GuardofDawnStat extends DefaultAI {
     private static final int _aggrorange = 120;
-    private  final Skill _skill = SkillTable.INSTANCE().getInfo(5978, 1);
+    private final Skill skill = SkillTable.INSTANCE.getInfo(5978, 1);
     private Location _locTele = null;
     private boolean noCheckPlayers = false;
 
@@ -23,23 +22,6 @@ public final class GuardofDawnStat extends DefaultAI {
         super(actor);
         AI_TASK_ATTACK_DELAY = 200;
         setTelePoint(telePoint);
-    }
-
-    public class Teleportation extends RunnableImpl {
-
-        Location _telePoint = null;
-        Playable _target = null;
-
-        Teleportation(Location telePoint, Playable target) {
-            _telePoint = telePoint;
-            _target = target;
-        }
-
-        @Override
-        public void runImpl() {
-            _target.teleToLocation(_telePoint);
-            noCheckPlayers = false;
-        }
     }
 
     @Override
@@ -59,22 +41,25 @@ public final class GuardofDawnStat extends DefaultAI {
                 continue;
 
             if (target != null && target.isPlayer() && !target.isInvul() && GeoEngine.canSeeTarget(actor, target, false)) {
-                actor.doCast(_skill, target, true);
+                actor.doCast(skill, target, true);
                 Functions.npcSay(actor, "Intruder alert!! We have been infiltrated!");
                 noCheckPlayers = true;
-                ThreadPoolManager.INSTANCE().schedule(new Teleportation(getTelePoint(), target), 3000);
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    target.teleToLocation(getTelePoint());
+                    noCheckPlayers = false;
+                }, 3000);
                 return true;
             }
         }
         return false;
     }
 
-    private void setTelePoint(Location loc) {
-        _locTele = loc;
-    }
-
     private Location getTelePoint() {
         return _locTele;
+    }
+
+    private void setTelePoint(Location loc) {
+        _locTele = loc;
     }
 
     @Override

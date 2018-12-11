@@ -14,63 +14,62 @@ public final class Parsers {
     }
 
     public static void parseAll() {
-        HtmCache.INSTANCE().reload();
+        HtmCache.INSTANCE.reload();
         StringHolder.INSTANCE.load();
         //
-        SkillTable.INSTANCE().load(); // - SkillParser.INSTANCE();
-        OptionDataParser.getInstance().load();
-        ItemParser.getInstance().load();
+        SkillTable.INSTANCE.load(); // - SkillParser.INSTANCE();
+        OptionDataParser.INSTANCE.load();
+        ItemParser.INSTANCE.load();
         //
-        ZoneParser.getInstance().load();
-        DoorParser.getInstance().load(); //
-        NpcParser.getInstance().load();
+        ZoneParser.INSTANCE.load();
+        DoorParser.INSTANCE.load(); //
+        NpcParser.INSTANCE.load();
 
-        DomainParser.getInstance().load();
-        RestartPointParser.getInstance().load();
-        ExchangeItemParser.getInstance().load();
-        StaticObjectParser.getInstance().load();
+        DomainParser.INSTANCE.load();
+        RestartPointParser.INSTANCE.load();
+        ExchangeItemParser.INSTANCE.load();
+        StaticObjectParser.INSTANCE.load();
 
 
         SpawnTable.INSTANCE.init();
-        SpawnParser.getInstance().load();
-        InstantZoneParser.getInstance().load();
+        SpawnParser.INSTANCE.load();
+        InstantZoneParser.INSTANCE.load();
 
         ReflectionManager.INSTANCE.init();
 
         //
-        AirshipDockParser.getInstance().load();
-        SkillAcquireParser.getInstance().load();
+        AirshipDockParser.INSTANCE.load();
+        SkillAcquireParser.INSTANCE.load();
         //
-        CharTemplateParser.getInstance().load();
+        CharTemplateParser.INSTANCE.load();
         //
-        ResidenceParser.getInstance().load();
+        ResidenceParser.INSTANCE.load();
 
-        EventParser.getInstance().load();
-        FightClubMapParser.getInstance().load();
+        EventParser.INSTANCE.load();
         // support(cubic & agathion)
-        CubicParser.getInstance().load();
+        CubicParser.INSTANCE.load();
         //
         BuyListHolder.INSTANCE.init();
         RecipeHolder.getInstance();
-        MultiSellHolder.getInstance();
+        MultiSellHolder.INSTANCE.toString();
         ProductHolder.getInstance();
         // AgathionParser.INSTANCE();
         // item support
-        HennaParser.getInstance().load();
-        EnchantItemParser.getInstance().load();
-//        SoulCrystalParser.INSTANCE().load();
+        HennaParser.INSTANCE.load();
+        EnchantItemParser.INSTANCE.load();
+//        SoulCrystalParser.INSTANCE().loadFile();
         SoulCrystalHolder.getInstance();
-        ArmorSetsParser.getInstance().load();
+        ArmorSetsParser.INSTANCE.load();
 
         // etc
-        PetitionGroupParser.getInstance().load();
-        DressArmorParser.getInstance().load();
-        DressCloakParser.getInstance().load();
-        DressShieldParser.getInstance().load();
-        DressWeaponParser.getInstance().load();
-        AugmentationDataParser.getInstance().load();
+        PetitionGroupParser.INSTANCE.load();
+        DressArmorParser.INSTANCE.load();
+        DressCloakParser.INSTANCE.load();
+        DressShieldParser.INSTANCE.load();
+        DressWeaponParser.INSTANCE.load();
+        AugmentationDataParser.INSTANCE.load();
 
         // Community Board Adds
-        FoundationParser.getInstance().load();
+        FoundationParser.INSTANCE.load();
     }
 }

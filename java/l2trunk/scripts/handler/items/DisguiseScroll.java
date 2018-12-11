@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
-    private final Integer[] ITEM_IDS =
-            {
+    private final List<Integer> ITEM_IDS = Arrays.asList(
                     13677, // Gludio Disguise Scroll
                     13678, // Dion Disguise Scroll
                     13679, // Giran Disguise Scroll
@@ -27,8 +26,7 @@ public class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
                     13682, // Innadril Disguise Scroll
                     13683, // Goddard Disguise Scroll
                     13684, // Rune Disguise Scroll
-                    13685  // Schuttgart Disguise Scroll
-            };
+                    13685);  // Schuttgart Disguise Scroll
     private final int[] DOMINION_IDS = {81, 82, 83, 84, 85, 86, 87, 88, 89};
 
 
@@ -59,12 +57,12 @@ public class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
 
         Player player = (Player) playable;
 
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         if (!runnerEvent.isBattlefieldChatActive()) {
             player.sendPacket(SystemMsg.THE_TERRITORY_WAR_EXCLUSIVE_DISGUISE_AND_TRANSFORMATION_CAN_BE_USED_20_MINUTES_BEFORE_THE_START_OF_THE_TERRITORY_WAR_TO_10_MINUTES_AFTER_ITS_END);
             return false;
         }
-        int index = ArrayUtils.indexOf(ITEM_IDS, item.getItemId());
+        int index = ITEM_IDS.indexOf(item.getItemId());
         DominionSiegeEvent siegeEvent = player.getEvent(DominionSiegeEvent.class);
         if (siegeEvent == null) {
             player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addName(item));
@@ -95,6 +93,6 @@ public class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(ITEM_IDS);
+        return ITEM_IDS;
     }
 }

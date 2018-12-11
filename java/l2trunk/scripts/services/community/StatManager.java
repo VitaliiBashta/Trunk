@@ -1,6 +1,5 @@
 package l2trunk.scripts.services.community;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -15,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,14 +30,14 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: Statistic service loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -58,7 +58,6 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
 
     /**
      * Обработчик команд класса
-     *
      */
     @Override
     public void onBypassCommand(Player player, String command) {
@@ -84,13 +83,9 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
      * @param player
      */
     private void showPvp(Player player) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT * FROM characters WHERE accesslevel = '0' ORDER BY pvpkills DESC LIMIT 20;");
-            rs = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT * FROM characters WHERE accesslevel = '0' ORDER BY pvpkills DESC LIMIT 20;");
+             ResultSet rs = statement.executeQuery()) {
 
             StringBuilder html = new StringBuilder();
             html.append("<table width=440>");
@@ -115,7 +110,7 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
                     color = "D70000";
                 }
                 html.append("<tr>");
-                html.append("<td width=150 align=\"center\">" + tp.ChName + "</td>");
+                html.append("<td width=150 align=\"center\">").append(tp.ChName).append("</td>");
                 html.append("<td width=50 align=\"center\">" + sex + "</td>");
                 html.append("<td width=80 align=\"center\">" + OnlineTime(tp.ChGameTime) + "</td>");
                 html.append("<td width=50 align=\"center\">" + tp.ChPk + "</td>");
@@ -129,21 +124,15 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
 
             content = content.replace("%stats_top_pvp%", html.toString());
             ShowBoard.separateAndSend(content, player);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
         }
     }
 
     private void showPK(Player player) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT * FROM characters WHERE accesslevel = '0' ORDER BY pkkills DESC LIMIT 20;");
-            rs = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT * FROM characters WHERE accesslevel = '0' ORDER BY pkkills DESC LIMIT 20;");
+             ResultSet rs = statement.executeQuery()) {
 
             StringBuilder html = new StringBuilder();
             html.append("<table width=440>");
@@ -168,7 +157,7 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
                     color = "D70000";
                 }
                 html.append("<tr>");
-                html.append("<td width=150 align=\"center\">" + tp.ChName + "</td>");
+                html.append("<td width=150 align=\"center\">").append(tp.ChName).append("</td>");
                 html.append("<td width=50 align=\"center\">" + sex + "</td>");
                 html.append("<td width=80 align=\"center\">" + OnlineTime(tp.ChGameTime) + "</td>");
                 html.append("<td width=50 align=\"center\"><font color=00CC00>" + tp.ChPk + "</font></td>");
@@ -180,21 +169,15 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
             String content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_top_pk.htm", player);
             content = content.replace("%stats_top_pk%", html.toString());
             ShowBoard.separateAndSend(content, player);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
         }
     }
 
     private void showOnline(Player player) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT * FROM characters WHERE accesslevel = '0' ORDER BY onlinetime DESC LIMIT 20;");
-            rs = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT * FROM characters WHERE accesslevel = '0' ORDER BY onlinetime DESC LIMIT 20;");
+             ResultSet rs = statement.executeQuery()) {
 
             StringBuilder html = new StringBuilder();
             html.append("<table width=440>");
@@ -229,31 +212,25 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
             }
             html.append("</table>");
 
-            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_online.htm", player);
+            String content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_online.htm", player);
             content = content.replace("%stats_online%", html.toString());
             ShowBoard.separateAndSend(content, player);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
         }
     }
 
     private void showCastle(Player player) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT castle.name, castle.id, castle.tax_percent, castle.siege_date as siegeDate, clan_subpledges.name as clan_name, clan_data.clan_id " +
-                    "FROM castle " +
-                    "LEFT JOIN clan_data ON clan_data.hasCastle=castle.id " +
-                    "LEFT JOIN clan_subpledges ON clan_subpledges.clan_id=clan_data.clan_id AND clan_subpledges.type='0';");
-            rs = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT castle.name, castle.id, castle.tax_percent, castle.siege_date as siegeDate, clan_subpledges.name as clan_name, clan_data.clan_id " +
+                     "FROM castle " +
+                     "LEFT JOIN clan_data ON clan_data.hasCastle=castle.id " +
+                     "LEFT JOIN clan_subpledges ON clan_subpledges.clan_id=clan_data.clan_id AND clan_subpledges.type='0';");
+             ResultSet rs = statement.executeQuery()) {
             StringBuilder html = new StringBuilder();
             html.append("<table width=460>");
-            String color = "FFFFFF";
+            String color;
 
             while (rs.next()) {
                 CBStatMan tp = new CBStatMan();
@@ -276,24 +253,18 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
                 html.append("</tr>");
             }
             html.append("</table>");
-            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_castle.htm", player);
+            String content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_castle.htm", player);
             content = content.replace("%stats_castle%", html.toString());
             ShowBoard.separateAndSend(content, player);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
         }
     }
 
     private void showClan(Player player) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT clan_subpledges.name,clan_data.clan_level,clan_data.reputation_score,clan_data.hasCastle,ally_data.ally_name FROM clan_data LEFT JOIN ally_data ON clan_data.ally_id = ally_data.ally_id, clan_subpledges WHERE clan_data.clan_level>0 AND clan_subpledges.clan_id=clan_data.clan_id AND clan_subpledges.type='0' order by clan_data.clan_level desc limit 20;");
-            rs = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT clan_subpledges.name,clan_data.clan_level,clan_data.reputation_score,clan_data.hasCastle,ally_data.ally_name FROM clan_data LEFT JOIN ally_data ON clan_data.ally_id = ally_data.ally_id, clan_subpledges WHERE clan_data.clan_level>0 AND clan_subpledges.clan_id=clan_data.clan_id AND clan_subpledges.type='0' order by clan_data.clan_level desc limit 20;");
+             ResultSet rs = statement.executeQuery()) {
 
             StringBuilder html = new StringBuilder();
             html.append("<table width=440>");
@@ -304,8 +275,8 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
                 tp.ReputationClan = rs.getInt("reputation_score");
                 tp.ClanLevel = rs.getInt("clan_level");
                 tp.hasCastle = rs.getInt("hasCastle");
-                String hasCastle = "";
-                String castleColor = "D70000";
+                String hasCastle;
+                String castleColor;
 
                 switch (tp.hasCastle) {
                     case 1:
@@ -355,36 +326,32 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
                     html.append("<td width=140>" + tp.AllyName + "</td>");
                 else
                     html.append("<td width=140>No alliance</td>");
-                html.append("<td width=100 align=\"center\">" + tp.ReputationClan + "</td>");
-                html.append("<td width=80 align=\"center\">" + tp.ClanLevel + "</td>");
+                html.append("<td width=100 align=\"center\">").append(tp.ReputationClan).append("</td>");
+                html.append("<td width=80 align=\"center\">").append(tp.ClanLevel).append("</td>");
                 html.append("<td width=100 align=\"center\"><font color=" + castleColor + ">" + hasCastle + "</font></td>");
                 html.append("</tr>");
             }
             html.append("</table>");
-            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_clan.htm", player);
+            String content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/stats/stats_clan.htm", player);
             content = content.replace("%stats_clan%", html.toString());
             ShowBoard.separateAndSend(content, player);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
         }
     }
 
     /**
      * Вызываем показ текущего списка лучших 20 плееров по PK показателю
      * Осуществляем внутри-классовый конект и чекинг таблицы (по приведённым параметрам)
-     *
-     * @param player
      */
     private String OnlineTime(int time) {
         long onlinetimeH;
-        int onlinetimeM;
+        long onlinetimeM;
         if (time / 60 / 60 - 0.5 <= 0)
             onlinetimeH = 0;
         else
-            onlinetimeH = Math.round(time / 60 / 60 - 0.5);
-        onlinetimeM = Math.round((time / 60 / 60 - onlinetimeH) * 60);
+            onlinetimeH = Math.round(time / 60. / 60 - 0.5);
+        onlinetimeM = Math.round((time / 60. / 60 - onlinetimeH) * 60);
         return "" + onlinetimeH + " h. " + onlinetimeM + " m.";
     }
 

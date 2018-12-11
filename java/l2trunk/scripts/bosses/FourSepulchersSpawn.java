@@ -1,6 +1,5 @@
 package l2trunk.scripts.bosses;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -28,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FourSepulchersSpawn extends Functions implements ScriptFile {
+public final class FourSepulchersSpawn extends Functions implements ScriptFile {
     public static final Map<Integer, Location> _startHallSpawns = new HashMap<>();
     public static final Map<Integer, Boolean> _hallInUse = new HashMap<>();
     public static final List<GateKeeper> _GateKeepers = new ArrayList<>();
@@ -212,36 +211,26 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
 
     private static int loadSpawn(Map<Integer, List<NpcLocation>> table, int type) {
         int count = 0;
-        Connection con = null;
-        PreparedStatement statement1 = null;
-        ResultSet rset1 = null;
-        PreparedStatement statement2 = null;
-        ResultSet rset2 = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement1 = con.prepareStatement("SELECT DISTINCT key_npc_id FROM four_sepulchers_spawnlist WHERE spawntype = ? ORDER BY key_npc_id");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement1 = con.prepareStatement("SELECT DISTINCT key_npc_id FROM four_sepulchers_spawnlist WHERE spawntype = ? ORDER BY key_npc_id");
+             PreparedStatement statement2 = con.prepareStatement("SELECT id, count, npc_templateid, locx, locy, locz, heading, respawn_delay, key_npc_id FROM four_sepulchers_spawnlist WHERE key_npc_id = ? AND spawntype = ? ORDER BY id")) {
             statement1.setInt(1, type);
-            rset1 = statement1.executeQuery();
-            statement2 = con.prepareStatement("SELECT id, count, npc_templateid, locx, locy, locz, heading, respawn_delay, key_npc_id FROM four_sepulchers_spawnlist WHERE key_npc_id = ? AND spawntype = ? ORDER BY id");
+            ResultSet rset1 = statement1.executeQuery();
             while (rset1.next()) {
                 int keyNpcId = rset1.getInt("key_npc_id");
                 statement2.setInt(1, keyNpcId);
                 statement2.setInt(2, type);
-                rset2 = statement2.executeQuery();
+                ResultSet rset2 = statement2.executeQuery();
 
                 List<NpcLocation> locations = new ArrayList<>();
                 while (rset2.next()) {
                     locations.add(new NpcLocation(rset2.getInt("locx"), rset2.getInt("locy"), rset2.getInt("locz"), rset2.getInt("heading"), rset2.getInt("npc_templateid")));
                     count++;
                 }
-
-                DbUtils.close(rset2);
                 table.put(keyNpcId, locations);
             }
         } catch (SQLException e) {
             LOG.error("Error while Loading Four Sepulchers Spawns", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement1, rset1);
         }
 
         return count;
@@ -249,14 +238,9 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
 
     private static void loadMysteriousBox() {
         _mysteriousBoxSpawns.clear();
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT id, count, npc_templateid, locx, locy, locz, heading, respawn_delay, key_npc_id FROM four_sepulchers_spawnlist WHERE spawntype = 0 ORDER BY id");
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT id, count, npc_templateid, locx, locy, locz, heading, respawn_delay, key_npc_id FROM four_sepulchers_spawnlist WHERE spawntype = 0 ORDER BY id");
+             ResultSet rset = statement.executeQuery()) {
 
             while (rset.next())
                 _mysteriousBoxSpawns.put(rset.getInt("key_npc_id"), new NpcLocation(rset.getInt("locx"), rset.getInt("locy"), rset.getInt("locz"), rset.getInt("heading"), rset.getInt("npc_templateid")));
@@ -264,8 +248,6 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
             LOG.info("FourSepulchersManager: Loaded " + _mysteriousBoxSpawns.size() + " Mysterious-Box spawns.");
         } catch (SQLException e) {
             LOG.error("Error while loading Mystierios Box from Four Sepulchers Spawns", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
@@ -300,12 +282,7 @@ public class FourSepulchersSpawn extends Functions implements ScriptFile {
     }
 
     static void closeAllDoors() {
-        for (GateKeeper gk : _GateKeepers)
-            try {
-                gk.door.closeMe();
-            } catch (RuntimeException e) {
-                LOG.error("Error while closing Four Sepulchers Spawn", e);
-            }
+        _GateKeepers.forEach(gk -> gk.door.closeMe());
     }
 
     static void deleteAllMobs() {

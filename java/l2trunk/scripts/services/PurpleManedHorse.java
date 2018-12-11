@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.base.MultiSellEntry;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class PurpleManedHorse extends Functions implements ScriptFile {
+public final class PurpleManedHorse extends Functions implements ScriptFile {
     private static boolean Enabled = false;
     private static final int MultiSellID = -1001;
     private static final PrintfFormat dlg = new PrintfFormat("<br>[npc_%%objectId%%_Multisell %d|%s]");
@@ -51,7 +51,7 @@ public class PurpleManedHorse extends Functions implements ScriptFile {
     }
 
     private static void loadMultiSell() {
-        MultiSellHolder.getInstance().addMultiSellListContainer(MultiSellID, list);
+        MultiSellHolder.INSTANCE.addMultiSellListContainer(MultiSellID, list);
     }
 
     private String PetManagersDialogAppend(Integer val) {

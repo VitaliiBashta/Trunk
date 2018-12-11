@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,12 +38,17 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private static final Map<Integer, SimpleSpawner> _monsterSpawn = new ConcurrentHashMap<>();
     private static final List<NpcInstance> _angels = new ArrayList<>();
     private static final List<SimpleSpawner> _angelSpawns = new ArrayList<>();
+    private static BaiumManager instance;
+    public static BaiumManager getInstance() {
+        if (instance == null)
+            instance = new BaiumManager();
+        return instance;
+    }
     private final static int ARCHANGEL = 29021;
     private final static int BAIUM = 29020;
     private final static int BAIUM_NPC = 29025;
     // location of arcangels.
-    private final static Location[] ANGEL_LOCATION = new Location[]
-            {
+    private final  List<Location> ANGEL_LOCATION = Arrays.asList(
                     new Location(113004, 16209, 10076, 60242),
                     new Location(114053, 16642, 10076, 4411),
                     new Location(114563, 17184, 10076, 49241),
@@ -52,8 +58,8 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
                     new Location(114680, 15407, 10051, 32485),
                     new Location(114886, 14437, 10076, 16868),
                     new Location(115391, 17593, 10076, 55346),
-                    new Location(115245, 17558, 10076, 35536)
-            };
+                    new Location(115245, 17558, 10076, 35536));
+
     // location of teleport cube.
     private final static Location CUBE_LOCATION = new Location(115203, 16620, 10078, 0);
     private final static Location STATUE_LOCATION = new Location(115996, 17417, 10106, 41740);
@@ -61,7 +67,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private final static int FWB_LIMITUNTILSLEEP = 30 * 60000;
     private final static int FWB_FIXINTERVALOFBAIUM = Config.BAIUM_DEFAULT_SPAWN_HOURS * 60 * 60000;
     private final static int FWB_RANDOMINTERVALOFBAIUM = Config.BAIUM_RANDOM_SPAWN_HOURS * 60 * 60000;
-    public static SimpleSpawner _statueSpawn = null;
+    public SimpleSpawner _statueSpawn = null;
     // tasks.
     private static ScheduledFuture<?> _callAngelTask = null;
     private static ScheduledFuture<?> _cubeSpawnTask = null;
@@ -86,9 +92,9 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
             player.teleToClosestTown();
     }
 
-    private synchronized static void checkAnnihilated() {
+    private synchronized void checkAnnihilated() {
         if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(BaiumManager::sleepBaium, 5000);
+            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(this::sleepBaium, 5000);
     }
 
     // Archangel ascension.
@@ -136,7 +142,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     }
 
     // start interval.
-    private static void setIntervalEndTask() {
+    private void setIntervalEndTask() {
         setUnspawn();
 
         //init state of Baium's lair.
@@ -223,7 +229,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     }
 
     // Baium sleeps if not attacked for 30 minutes.
-    private static void sleepBaium() {
+    private void sleepBaium() {
         setUnspawn();
         Log.add("Baium going to sleep, spawning statue", "bosses");
         state.setState(State.NOTSPAWN);
@@ -234,7 +240,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     }
 
     // do spawn Baium.
-    public static void spawnBaium(NpcInstance npcBaium, Player awakeBy) {
+    public void spawnBaium(NpcInstance npcBaium, Player awakeBy) {
         Dying = false;
         _npcBaium = npcBaium;
 
@@ -324,7 +330,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
         random.forEach(i -> {
             SimpleSpawner spawnDat = (SimpleSpawner) new SimpleSpawner(ARCHANGEL)
-                    .setLoc(ANGEL_LOCATION[i])
+                    .setLoc(ANGEL_LOCATION.get(i))
                     .setAmount(1)
                     .setRespawnDelay(300000);
             _angelSpawns.add(spawnDat);
@@ -374,7 +380,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         }
     }
 
-    public static class CheckLastAttack extends RunnableImpl {
+    public class CheckLastAttack extends RunnableImpl {
         @Override
         public void runImpl() {
             if (state.getState().equals(State.ALIVE))
@@ -453,7 +459,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         }
     }
 
-    public static class onAnnihilated extends RunnableImpl {
+    public class onAnnihilated extends RunnableImpl {
         @Override
         public void runImpl() {
             sleepBaium();

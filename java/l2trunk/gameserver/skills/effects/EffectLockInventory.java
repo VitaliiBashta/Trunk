@@ -5,14 +5,16 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.LockType;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectLockInventory extends Effect {
-    private final LockType _lockType;
-    private final int[] _lockItems;
+import java.util.List;
+
+public final class EffectLockInventory extends Effect {
+    private final LockType lockType;
+    private final List<Integer> lockItems;
 
     public EffectLockInventory(Env env, EffectTemplate template) {
         super(env, template);
-        _lockType = template.getParam().getEnum("lockType", LockType.class);
-        _lockItems = template.getParam().getIntegerArray("lockItems");
+        lockType = template.getParam().getEnum("lockType", LockType.class);
+        lockItems =template.getParam().getIntegerList("lockItems");
     }
 
     @Override
@@ -21,7 +23,7 @@ public class EffectLockInventory extends Effect {
 
         Player player = _effector.getPlayer();
 
-        player.getInventory().lockItems(_lockType, _lockItems);
+        player.getInventory().lockItems(lockType, lockItems);
     }
 
     @Override

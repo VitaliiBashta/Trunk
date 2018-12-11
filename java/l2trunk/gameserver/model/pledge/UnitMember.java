@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.pledge;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.NickNameChanged;
@@ -146,18 +145,13 @@ public final class UnitMember {
     }
 
     private void updatePledgeType() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE characters SET pledge_type=? WHERE obj_Id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE characters SET pledge_type=? WHERE obj_Id=?")) {
             statement.setInt(1, _pledgeType);
             statement.setInt(2, getObjectId());
             statement.execute();
         } catch (SQLException e) {
             _log.error("Error while updating Unit Member Pledge Type", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

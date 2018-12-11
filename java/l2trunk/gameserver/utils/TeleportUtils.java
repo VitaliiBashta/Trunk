@@ -2,7 +2,7 @@ package l2trunk.gameserver.utils;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
-import l2trunk.gameserver.instancemanager.MapRegionManager;
+import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.RestartType;
@@ -13,7 +13,7 @@ import l2trunk.gameserver.templates.mapregion.RestartPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TeleportUtils {
+public final class TeleportUtils {
     private final static Location DEFAULT_RESTART = new Location(17817, 170079, -3530);
     private static final Logger _log = LoggerFactory.getLogger(TeleportUtils.class);
 
@@ -37,15 +37,15 @@ public class TeleportUtils {
         if (clan != null) {
             // If teleport to clan hall
             if (restartType == RestartType.TO_CLANHALL && clan.getHasHideout() != 0)
-                return ResidenceHolder.getInstance().getResidence(clan.getHasHideout()).getOwnerRestartPoint();
+                return ResidenceHolder.getResidence(clan.getHasHideout()).getOwnerRestartPoint();
 
             // If teleport to castle
             if (restartType == RestartType.TO_CASTLE && clan.getCastle() != 0)
-                return ResidenceHolder.getInstance().getResidence(clan.getCastle()).getOwnerRestartPoint();
+                return ResidenceHolder.getResidence(clan.getCastle()).getOwnerRestartPoint();
 
             // If teleport to fortress
             if (restartType == RestartType.TO_FORTRESS && clan.getHasFortress() != 0)
-                return ResidenceHolder.getInstance().getResidence(clan.getHasFortress()).getOwnerRestartPoint();
+                return ResidenceHolder.getResidence(clan.getHasFortress()).getOwnerRestartPoint();
         }
 
         if (player.getKarma() > 1) {
@@ -56,7 +56,7 @@ public class TeleportUtils {
                 return player.getRestartPoint();
         }
 
-        RestartArea ra = MapRegionManager.getInstance().getRegionData(RestartArea.class, from);
+        RestartArea ra = MapRegionHolder.getInstance().getRegionData(RestartArea.class, from);
         if (ra != null) {
             RestartPoint rp = ra.getRestartPoint().get(player.getRace());
 

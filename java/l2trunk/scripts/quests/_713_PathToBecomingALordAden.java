@@ -30,22 +30,26 @@ public class _713_PathToBecomingALordAden extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(AdenCastle);
+        Castle castle = ResidenceHolder.getResidence(AdenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
-        if (event.equals("logan_q713_02.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("orven_q713_03.htm")) {
-            st.setCond(2);
-        } else if (event.equals("logan_q713_05.htm")) {
-            Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_ADEN, st.getPlayer().getName());
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+        switch (event) {
+            case "logan_q713_02.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "orven_q713_03.htm":
+                st.setCond(2);
+                break;
+            case "logan_q713_05.htm":
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_ADEN, st.getPlayer().getName());
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return event;
     }
@@ -56,7 +60,7 @@ public class _713_PathToBecomingALordAden extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int id = st.getState();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(AdenCastle);
+        Castle castle = ResidenceHolder.getResidence(AdenCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();

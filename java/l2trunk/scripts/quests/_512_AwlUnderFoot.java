@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class _512_AwlUnderFoot extends Quest implements ScriptFile {
+public final class _512_AwlUnderFoot extends Quest implements ScriptFile {
     private final static int INSTANCE_ZONE_ID = 13; // Castles Dungeon
 
     private final static int FragmentOfTheDungeonLeaderMark = 9798;
@@ -136,19 +136,17 @@ public class _512_AwlUnderFoot extends Quest implements ScriptFile {
     }
 
     private boolean check(Player player) {
-        Castle castle = ResidenceHolder.getInstance().getResidenceByObject(Castle.class, player);
+        Castle castle = ResidenceHolder.getResidenceByObject(Castle.class, player);
         if (castle == null)
             return false;
         Clan clan = player.getClan();
         if (clan == null)
             return false;
-        if (clan.getClanId() != castle.getOwnerId())
-            return false;
-        return true;
+        return clan.getClanId() == castle.getOwnerId();
     }
 
     private String enterPrison(Player player) {
-        Castle castle = ResidenceHolder.getInstance().getResidenceByObject(Castle.class, player);
+        Castle castle = ResidenceHolder.getResidenceByObject(Castle.class, player);
         if (castle == null || castle.getOwner() != player.getClan())
             return "gludio_prison_keeper_q0512_01a.htm";
 
@@ -156,8 +154,8 @@ public class _512_AwlUnderFoot extends Quest implements ScriptFile {
             return "gludio_prison_keeper_q0512_01a.htm";
 
         if (player.canEnterInstance(INSTANCE_ZONE_ID)) {
-            InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(INSTANCE_ZONE_ID);
-            Prison prison = null;
+            InstantZone iz = InstantZoneHolder.getInstantZone(INSTANCE_ZONE_ID);
+            Prison prison;
             if (!_prisons.isEmpty()) {
                 prison = _prisons.get(castle.getId());
                 if (prison != null && prison.isLocked()) {

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.dao;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.entity.residence.ClanHall;
@@ -16,18 +15,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ClanDataDAO {
+public enum ClanDataDAO {
+    INSTANCE;
     private static final String SELECT_CASTLE_OWNER = "SELECT clan_id FROM clan_data WHERE hasCastle = ? LIMIT 1";
     private static final String SELECT_FORTRESS_OWNER = "SELECT clan_id FROM clan_data WHERE hasFortress = ? LIMIT 1";
     private static final String SELECT_CLANHALL_OWNER = "SELECT clan_id FROM clan_data WHERE hasHideout = ? LIMIT 1";
     private static final String UPDATE_CLAN_DESCRIPTION = "UPDATE clan_description SET description=? WHERE clan_id=?";
     private static final String INSERT_CLAN_DESCRIPTION = "INSERT INTO clan_description (clan_id, description) VALUES (?, ?)";
     private static final Logger _log = LoggerFactory.getLogger(ClanDataDAO.class);
-    private static final ClanDataDAO _instance = new ClanDataDAO();
-
-    public static ClanDataDAO getInstance() {
-        return _instance;
-    }
 
     public Clan getOwner(Castle c) {
         return getOwner(c, SELECT_CASTLE_OWNER);
@@ -56,35 +51,24 @@ public class ClanDataDAO {
     }
 
     public void updateDescription(int id, String description) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(UPDATE_CLAN_DESCRIPTION);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(UPDATE_CLAN_DESCRIPTION)) {
             statement.setString(1, description);
             statement.setInt(2, id);
             statement.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("ClanDataDAO.updateDescription(int, String)", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     public void insertDescription(int id, String description) {
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(INSERT_CLAN_DESCRIPTION);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(INSERT_CLAN_DESCRIPTION)) {
             statement.setInt(1, id);
             statement.setString(2, description);
             statement.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("ClanDataDAO.updateDescription(int, String)", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 }

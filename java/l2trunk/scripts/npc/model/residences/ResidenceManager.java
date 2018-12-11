@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model.residences;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.residence.Residence;
@@ -17,6 +16,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.gameserver.utils.TimeUtils;
 import l2trunk.gameserver.utils.WarehouseFunctions;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -24,19 +24,17 @@ public abstract class ResidenceManager extends MerchantInstance {
     protected static final int COND_FAIL = 0;
     protected static final int COND_SIEGE = 1;
     protected static final int COND_OWNER = 2;
-
+    private final List<Integer> doors;
     protected String _siegeDialog;
     protected String _mainDialog;
     protected String _failDialog;
-
-    private final int[] _doors;
 
     protected ResidenceManager(int objectId, NpcTemplate template) {
         super(objectId, template);
 
         setDialogs();
 
-        _doors = template.getAIParams().getIntegerArray("doors", ArrayUtils.EMPTY_INT_ARRAY);
+        doors = template.getAIParams().getIntegerList("doors", Collections.emptyList());
     }
 
     protected void setDialogs() {
@@ -158,7 +156,7 @@ public abstract class ResidenceManager extends MerchantInstance {
             showChatWindow(player, "residence/door.htm");
         } else if (actualCommand.equalsIgnoreCase("openDoors")) {
             if (isHaveRigths(player, getPrivDoors())) {
-                for (int i : _doors)
+                for (int i : doors)
                     ReflectionUtils.getDoor(i).openMe();
 
                 showChatWindow(player, "residence/door.htm");
@@ -166,7 +164,7 @@ public abstract class ResidenceManager extends MerchantInstance {
                 player.sendPacket(SystemMsg.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
         } else if (actualCommand.equalsIgnoreCase("closeDoors")) {
             if (isHaveRigths(player, getPrivDoors())) {
-                for (int i : _doors)
+                for (int i : doors)
                     ReflectionUtils.getDoor(i).closeMe();
 
                 showChatWindow(player, "residence/door.htm");
@@ -370,7 +368,7 @@ public abstract class ResidenceManager extends MerchantInstance {
     }
 
     private boolean useSkill(int id, int level, Player player) {
-        Skill skill = SkillTable.INSTANCE().getInfo(id, level);
+        Skill skill = SkillTable.INSTANCE.getInfo(id, level);
         if (skill == null) {
             player.sendMessage("Invalid skill " + id);
             return true;
@@ -403,10 +401,10 @@ public abstract class ResidenceManager extends MerchantInstance {
             html.replace("%" + replace1 + "Date%", "0");
         }
         if (getResidence().getFunction(type) != null && getResidence().getFunction(type).getLevels().size() > 0) {
-            String out = "[<a action=\"bypass -h npc_%objectId%_manage " + replace2 + " " + replace1 + " 0\">Stop</a>]";
+            StringBuilder out = new StringBuilder("[<a action=\"bypass -h npc_%objectId%_manage " + replace2 + " " + replace1 + " 0\">Stop</a>]");
             for (int level : getResidence().getFunction(type).getLevels())
-                out += "[<a action=\"bypass -h npc_%objectId%_manage " + replace2 + " " + replace1 + " " + level + "\">" + level + (proc ? "%" : "") + "</a>]";
-            html.replace("%" + replace1 + "Manage%", out);
+                out.append("[<a action=\"bypass -h npc_%objectId%_manage ").append(replace2).append(" ").append(replace1).append(" ").append(level).append("\">").append(level).append(proc ? "%" : "").append("</a>]");
+            html.replace("%" + replace1 + "Manage%", out.toString());
         } else
             html.replace("%" + replace1 + "Manage%", "Not Available");
     }

@@ -21,6 +21,8 @@ import l2trunk.gameserver.utils.PositionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 
 public abstract class TvTTemplate extends Functions {
     private static final int ITEM_ID = 4357;
@@ -121,19 +123,15 @@ public abstract class TvTTemplate extends Functions {
             return;
         }
         _manager = manager;
-        try {
-            _price = Integer.valueOf(var[0]);
-            _team1count = Integer.valueOf(var[1]);
-            _team2count = Integer.valueOf(var[2]);
-            _team1min = Integer.valueOf(var[3]);
-            _team1max = Integer.valueOf(var[4]);
-            _team2min = Integer.valueOf(var[5]);
-            _team2max = Integer.valueOf(var[6]);
-            _timeToStart = Integer.valueOf(var[7]);
-        } catch (Exception e) {
-            show("Incorrect data", player);
-            return;
-        }
+        _price = toInt(var[0]);
+        _team1count = toInt(var[1]);
+        _team2count = toInt(var[2]);
+        _team1min = toInt(var[3]);
+        _team1max = toInt(var[4]);
+        _team2min = toInt(var[5]);
+        _team2max = toInt(var[6]);
+        _timeToStart = toInt(var[7]);
+
         if (_price < 1 || _price > 500) {
             show("Incorrect rate", player);
             return;
@@ -512,7 +510,7 @@ public abstract class TvTTemplate extends Functions {
     }
 
     private void paralyzeTeams() {
-        Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
+        Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID);
         for (Player player : getPlayers(_team1list)) {
             player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
             revengeSkill.getEffects(player, player, false, false);
@@ -529,16 +527,16 @@ public abstract class TvTTemplate extends Functions {
 
     private void unParalyzeTeams() {
         for (Player player : getPlayers(_team1list)) {
-            player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+            player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
             if (player.getPet() != null)
-                player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+                player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 
             player.leaveParty();
         }
         for (Player player : getPlayers(_team2list)) {
-            player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+            player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
             if (player.getPet() != null)
-                player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+                player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 
             player.leaveParty();
         }
@@ -566,7 +564,7 @@ public abstract class TvTTemplate extends Functions {
             _team1live.remove(player.getStoredId());
         else
             _team2live.remove(player.getStoredId());
-        Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
+        Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID);
         revengeSkill.getEffects(player, player, false, false);
         return !checkTeams();
     }

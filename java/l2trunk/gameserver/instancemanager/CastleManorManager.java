@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -48,18 +47,14 @@ public enum CastleManorManager {
     private boolean disabled;
 
     CastleManorManager() {
-        load(); // load data from database
-
+        load(); // loadFile data from database
     }
 
     private void load() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            // Get Connection
-            con = DatabaseFactory.getInstance().getConnection();
-            List<Castle> castleList = ResidenceHolder.getInstance().getResidenceList(Castle.class);
+        PreparedStatement statement;
+        ResultSet rs;
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
             for (Castle castle : castleList) {
                 List<SeedProduction> production = new ArrayList<>();
                 List<SeedProduction> productionNext = new ArrayList<>();
@@ -81,8 +76,6 @@ public enum CastleManorManager {
                     else
                         productionNext.add(new SeedProduction(seedId, canProduce, price, startProduce));
                 }
-
-                DbUtils.close(statement, rs);
 
                 castle.setSeedProduction(production, PERIOD_CURRENT);
                 castle.setSeedProduction(productionNext, PERIOD_NEXT);
@@ -109,13 +102,9 @@ public enum CastleManorManager {
 
                 if (!procure.isEmpty() || !procureNext.isEmpty() || !production.isEmpty() || !productionNext.isEmpty())
                     LOG.info("Manor System: Loaded data for " + castle.getName() + " castle");
-
-                DbUtils.close(statement, rs);
             }
         } catch (SQLException e) {
             LOG.error("Manor System: Error restoring manor data!", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
         }
     }
 
@@ -140,18 +129,17 @@ public enum CastleManorManager {
         FirstDelay.set(Calendar.SECOND, 0);
         FirstDelay.set(Calendar.MILLISECOND, 0);
         FirstDelay.add(Calendar.MINUTE, 1);
-        ThreadPoolManager.INSTANCE().scheduleAtFixedRate(new ManorTask(), FirstDelay.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), 60000);
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ManorTask(), FirstDelay.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), 60000);
 
 
         underMaintenance = false;
         disabled = !Config.ALLOW_MANOR;
-        List<Castle> castleList = ResidenceHolder.getInstance().getResidenceList(Castle.class);
-        for (Castle c : castleList)
-            c.setNextPeriodApproved(ServerVariables.getBool(var_name));
+        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
+        castleList.forEach(c -> c.setNextPeriodApproved(ServerVariables.getBool(var_name)));
     }
 
     private void setNextPeriod() {
-        List<Castle> castleList = ResidenceHolder.getInstance().getResidenceList(Castle.class);
+        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
         for (Castle c : castleList) {
             if (c.getOwnerId() <= 0)
                 continue;
@@ -227,7 +215,7 @@ public enum CastleManorManager {
     }
 
     private void approveNextPeriod() {
-        List<Castle> castleList = ResidenceHolder.getInstance().getResidenceList(Castle.class);
+        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
         for (Castle c : castleList) {
             // Castle has no owner
             if (c.getOwnerId() <= 0)
@@ -291,31 +279,25 @@ public enum CastleManorManager {
     }
 
     public void save() {
-        List<Castle> castleList = ResidenceHolder.getInstance().getResidenceList(Castle.class);
-        for (Castle c : castleList) {
+        List<Castle> castleList = ResidenceHolder.getResidenceList(Castle.class);
+        castleList.forEach(c -> {
             c.saveSeedData();
             c.saveCropData();
-        }
+        });
     }
 
-    public String getOwner(int castleId) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT clan_id FROM clan_data WHERE hasCastle = ? LIMIT 1");
-            statement.setInt(1, castleId);
-            rs = statement.executeQuery();
-            if (rs.next())
-                return ClanTable.INSTANCE.getClan(rs.getInt("clan_id")).toString();
-        } catch (SQLException e) {
-            LOG.error("Error while selecting Manor Owners", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
-        }
-        return null;
-    }
+//    public String getOwner(int castleId) {
+//        try (Connection con = DatabaseFactory.INSTANCE().getConnection();
+//             PreparedStatement statement = con.prepareStatement("SELECT clan_id FROM clan_data WHERE hasCastle = ? LIMIT 1")) {
+//            statement.setInt(1, castleId);
+//            ResultSet rs = statement.executeQuery();
+//            if (rs.next())
+//                return ClanTable.INSTANCE.getClan(rs.getInt("clan_id")).toString();
+//        } catch (SQLException e) {
+//            LOG.error("Error while selecting Manor Owners", e);
+//        }
+//        return null;
+//    }
 
     private class ManorTask extends RunnableImpl {
         @Override

@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SummerMeleons extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+public final class SummerMeleons extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(SummerMeleons.class);
     private static final int EVENT_MANAGER_ID = 32636;
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
@@ -110,9 +110,6 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
         SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
     private void unSpawnEventManagers() {
         deSpawnNPCs(_spawns);
     }
@@ -120,7 +117,7 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
     private void loadMultiSell() {
         if (MultiSellLoaded)
             return;
-        MultiSellHolder.getInstance().parseFile(multiSellFile);
+        MultiSellHolder.INSTANCE.parseFile(multiSellFile);
         MultiSellLoaded = true;
     }
 
@@ -128,7 +125,7 @@ public class SummerMeleons extends Functions implements ScriptFile, OnDeathListe
     public void onReload() {
         unSpawnEventManagers();
         if (MultiSellLoaded) {
-            MultiSellHolder.getInstance().remove(multiSellFile);
+            MultiSellHolder.INSTANCE.remove(multiSellFile);
             MultiSellLoaded = false;
         }
     }

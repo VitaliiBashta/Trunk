@@ -75,6 +75,7 @@ public  final class Rnd {
         return list[get(list.length)];
     }
 
+
     public static <E> E get(List<E> list) {
         if (list.size() == 0)
             return null;

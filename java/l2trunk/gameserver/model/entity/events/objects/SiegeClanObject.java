@@ -95,7 +95,6 @@ public class SiegeClanObject implements Serializable {
 
     public static class SiegeClanComparatorImpl implements Comparator<SiegeClanObject>, Serializable {
         private static final SiegeClanComparatorImpl _instance = new SiegeClanComparatorImpl();
-        private static final long serialVersionUID = -1970716766952161021L;
 
         public static SiegeClanComparatorImpl getInstance() {
             return _instance;

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.entity.events.impl.DominionSiegeRunnerEvent;
 import l2trunk.gameserver.network.serverpackets.ExReplyDominionInfo;
 import l2trunk.gameserver.network.serverpackets.ExShowOwnthingPos;
 
-public class RequestExDominionInfo extends L2GameClientPacket {
+public final class RequestExDominionInfo extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }
@@ -20,7 +20,7 @@ public class RequestExDominionInfo extends L2GameClientPacket {
 
         activeChar.sendPacket(new ExReplyDominionInfo());
 
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         if (runnerEvent.isInProgress())
             activeChar.sendPacket(new ExShowOwnthingPos());
     }

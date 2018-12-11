@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener {
+public final class TvTArena2 extends Functions implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener {
     private static final Logger _log = LoggerFactory.getLogger(TvTArena2.class);
     private static TvTTemplate _instance;
     private final List<NpcInstance> _spawns = new ArrayList<>();
@@ -76,8 +76,8 @@ public class TvTArena2 extends Functions implements ScriptFile, OnDeathListener,
         if (val == 0) {
             Player player = getSelf();
             if (player.isGM())
-                return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31391.htm", player) + HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31391-4.htm", player);
-            return HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31391.htm", player);
+                return HtmCache.INSTANCE.getNotNull("scripts/events/TvTArena/31391.htm", player) + HtmCache.INSTANCE().getNotNull("scripts/events/TvTArena/31391-4.htm", player);
+            return HtmCache.INSTANCE.getNotNull("scripts/events/TvTArena/31391.htm", player);
         }
         return "";
     }

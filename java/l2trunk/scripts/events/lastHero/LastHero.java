@@ -13,7 +13,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class LastHero extends Functions implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener {
+public final class LastHero extends Functions implements ScriptFile, OnDeathListener, OnTeleportListener, OnPlayerExitListener {
 	/*private static final Logger _log = LoggerFactory.getLogger(LastHero.class);
 
 	private static List<Long> players_list = new CopyOnWriteArrayList<Long>();
@@ -380,7 +380,7 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
     }
 
     public static void paralyzePlayers() {
-		/*Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
+		/*Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE_ID, 1);
 		for (Player player : getPlayers(players_list)){
 			if (EventsConfig.getBoolean("LastHero_DisableEffect"))
 				player.getEffectList().stopAllEffects();
@@ -394,9 +394,9 @@ public class LastHero extends Functions implements ScriptFile, OnDeathListener, 
 
     public static void upParalyzePlayers() {
 		/*for(Player player : getPlayers(players_list)){
-			player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+			player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 			if (player.getPet() != null)
-				player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+				player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 
 			player.leaveParty();}*/
     }

@@ -82,7 +82,7 @@ public class SetPrivateStoreBuyList extends L2GameClientPacket {
                 long count = _itemQ[i];
                 long price = _itemP[i];
 
-                ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId);
+                ItemTemplate item = ItemHolder.getTemplate(itemId);
 
                 if (item == null || itemId == ItemTemplate.ITEM_ID_ADENA)
                     continue;

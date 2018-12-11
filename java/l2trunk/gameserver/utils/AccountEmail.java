@@ -1,6 +1,5 @@
 package l2trunk.gameserver.utils;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
@@ -12,8 +11,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class AccountEmail {
+public final class AccountEmail {
     private static final Logger _log = LoggerFactory.getLogger(AccountEmail.class.getName());
 
 
@@ -40,14 +40,14 @@ public class AccountEmail {
     public static void checkEmail(Player player) {
         if (getEmail(player) == null) // Player has no e-mail set.
         {
-            String html = HtmCache.INSTANCE().getNotNull("custom/AccountEmail.htm", player);
+            String html = HtmCache.INSTANCE.getNotNull("custom/AccountEmail.htm", player);
             player.sendPacket(new TutorialShowHtml(html));
         }
     }
 
     public static void verifyEmail(Player player, String email) {
         if (email == null) {
-            String html = HtmCache.INSTANCE().getNotNull("custom/VerifyEmail.htm", player);
+            String html = HtmCache.INSTANCE.getNotNull("custom/VerifyEmail.htm", player);
             player.sendPacket(new TutorialShowHtml(html));
             if (!player.isBlocked())
                 player.block();
@@ -94,8 +94,7 @@ public class AccountEmail {
             return false;
 
         if (email.contains("@") && email.contains(".") && email.length() <= 50 && email.length() >= 5) {
-            if (email.equalsIgnoreCase(email2))
-                return true;
+            return email.equalsIgnoreCase(email2);
         }
 
         return false;
@@ -115,40 +114,29 @@ public class AccountEmail {
     }
 
     private static void insertAccountData(String accountName, String var, String value) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("REPLACE INTO account_variables VALUES (?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("REPLACE INTO account_variables VALUES (?,?,?)")) {
             statement.setString(1, accountName);
             statement.setString(2, var);
             statement.setString(3, value);
             statement.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.warn("Cannot insert account variable.", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     private static String getAccountValue(String accountName, String var) {
         String data = null;
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT value FROM account_variables WHERE account_name=? AND var=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT value FROM account_variables WHERE account_name=? AND var=?")) {
             statement.setString(1, accountName);
             statement.setString(2, var);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
             while (rset.next()) {
                 data = rset.getString(1);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.warn("Cannot get account variable value.", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
 
         return data;
@@ -156,22 +144,15 @@ public class AccountEmail {
 
     public static String getAccountVar(String accountName) {
         String data = "";
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT var FROM account_variables WHERE account_name=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT var FROM account_variables WHERE account_name=?")) {
             statement.setString(1, accountName);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
             while (rset.next()) {
                 data = rset.getString(1);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.warn("Cannot get account variable.", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
 
         return data;

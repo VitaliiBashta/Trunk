@@ -1,27 +1,18 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
+import java.util.Arrays;
+import java.util.List;
 
-public class _287_FiguringItOut extends Quest implements ScriptFile {
+public final class _287_FiguringItOut extends Quest implements ScriptFile {
     private static final int Laki = 32742;
-    private static final int[] TantaClan = {
-            22768,
-            22769,
-            22770,
-            22771,
-            22772,
-            22773,
-            22774
-    };
+    private static final List<Integer> TantaClan = Arrays.asList(
+            22768, 22769, 22770, 22771, 22772, 22773, 22774);
     private static final int VialofTantaBlood = 15499;
 
     public _287_FiguringItOut() {
@@ -153,7 +144,7 @@ public class _287_FiguringItOut extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1) {
-            if (ArrayUtils.contains(TantaClan, npcId) && Rnd.chance(60))
+            if (TantaClan.contains(npcId) && Rnd.chance(60))
                 st.giveItems(VialofTantaBlood, 1, true);
         }
         return null;

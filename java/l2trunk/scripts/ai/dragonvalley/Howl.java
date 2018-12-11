@@ -3,10 +3,12 @@ package l2trunk.scripts.ai.dragonvalley;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+
 public final class Howl extends Patrollers {
     public Howl(NpcInstance actor) {
         super(actor);
-        _points = new Location[]{new Location(94664, 117368, -3056),
+        points = Arrays.asList(new Location(94664, 117368, -3056),
                 new Location(93400, 118600, -2992),
                 new Location(91256, 118536, -3056),
                 new Location(90376, 119640, -3056),
@@ -20,6 +22,6 @@ public final class Howl extends Patrollers {
                 new Location(89160, 114984, -3056),
                 new Location(90056, 115976, -3056),
                 new Location(91000, 117832, -3088),
-                new Location(93224, 118360, -3024)};
+                new Location(93224, 118360, -3024));
     }
 }

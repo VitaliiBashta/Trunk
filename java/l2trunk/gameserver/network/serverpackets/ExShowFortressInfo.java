@@ -9,27 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ExShowFortressInfo extends L2GameServerPacket {
-    private final List<FortressInfo> _infos;
+    private final List<FortressInfo> infos;
 
     public ExShowFortressInfo() {
-        List<Fortress> forts = ResidenceHolder.getInstance().getResidenceList(Fortress.class);
-        _infos = new ArrayList<>(forts.size());
+        List<Fortress> forts = ResidenceHolder.getResidenceList(Fortress.class);
+        infos = new ArrayList<>(forts.size());
         for (Fortress fortress : forts) {
             Clan owner = fortress.getOwner();
-            _infos.add(new FortressInfo(owner == null ? StringUtils.EMPTY : owner.getName(), fortress.getId(), fortress.getSiegeEvent().isInProgress(), owner == null ? 0 : (int) ((System.currentTimeMillis() - fortress.getOwnDate().getTimeInMillis()) / 1000L)));
+            infos.add(new FortressInfo(owner == null ? StringUtils.EMPTY : owner.getName(), fortress.getId(), fortress.getSiegeEvent().isInProgress(), owner == null ? 0 : (int) ((System.currentTimeMillis() - fortress.getOwnDate().getTimeInMillis()) / 1000L)));
         }
     }
 
     @Override
     protected final void writeImpl() {
         writeEx(0x15);
-        writeD(_infos.size());
-        for (FortressInfo _info : _infos) {
+        writeD(infos.size());
+        infos.forEach(_info -> {
             writeD(_info._id);
             writeS(_info._owner);
             writeD(_info._status);
             writeD(_info._siege);
-        }
+        });
     }
 
     static class FortressInfo {

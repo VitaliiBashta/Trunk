@@ -86,12 +86,7 @@ public class SoDManager {
         SpawnManager.INSTANCE.spawn(SPAWN_GROUP);
         handleDoors(true);
 
-        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                closeSeed();
-            }
-        }, timelimit);
+        ThreadPoolManager.INSTANCE.schedule(SoDManager::closeSeed, timelimit);
     }
 
     public static void closeSeed() {

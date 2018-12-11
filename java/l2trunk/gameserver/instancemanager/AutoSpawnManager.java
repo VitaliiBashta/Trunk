@@ -323,7 +323,7 @@ public class AutoSpawnManager {
                     spawnInst.addAttackable(npcInst);
                 }
 
-                RestartArea ra = MapRegionManager.getInstance().getRegionData(RestartArea.class, npcInst.getLoc());
+                RestartArea ra = MapRegionHolder.getInstance().getRegionData(RestartArea.class, npcInst.getLoc());
                 String nearestTown = "";
                 if (ra != null) {
                     RestartPoint rp = ra.getRestartPoint().get(Race.human);

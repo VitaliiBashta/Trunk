@@ -1,11 +1,10 @@
 package l2trunk.loginserver.gameservercon.gspackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.loginserver.accounts.SessionManager;
 import l2trunk.loginserver.gameservercon.GameServer;
 import l2trunk.loginserver.gameservercon.ReceivablePacket;
 
-public class SetAccountInfo extends ReceivablePacket {
+public final class SetAccountInfo extends ReceivablePacket {
     private String _account;
     private int _size;
     private int[] _deleteChars;
@@ -16,7 +15,7 @@ public class SetAccountInfo extends ReceivablePacket {
         _size = readC();
         int size = readD();
         if (size > 7 || size <= 0)
-            _deleteChars = ArrayUtils.EMPTY_INT_ARRAY;
+            _deleteChars = new int[0];
         else {
             _deleteChars = new int[size];
             for (int i = 0; i < _deleteChars.length; i++)

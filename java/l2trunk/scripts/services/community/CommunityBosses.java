@@ -52,14 +52,14 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: Bosses loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
      * @param search word in Name of the boss
      */
     private static void sendBossListPage(Player player, SortType sort, int page, String search) {
-        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_boss_list.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_boss_list.htm", player);
 
         Map<Integer, StatsSet> allBosses = getSearchedBosses(sort, search);
         Map<Integer, StatsSet> bossesToShow = getBossesToShow(allBosses, page);
@@ -200,8 +200,8 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
      * @param bossId Id of the boss to show
      */
     private static void sendBossDetails(Player player, SortType sort, int page, CharSequence search, int bossId) {
-        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_boss_details.htm", player);
-        StatsSet bossSet = RaidBossSpawnManager.getInstance().getAllBosses().get(bossId);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_boss_details.htm", player);
+        StatsSet bossSet = RaidBossSpawnManager.INSTANCE.getAllBosses().get(bossId);
 
         if (bossSet == null) {
             ShowBoard.separateAndSend(html, player);
@@ -379,9 +379,9 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     private static Map<Integer, StatsSet> getBossesMapBySearch(String search) {
         Map<Integer, StatsSet> finalResult = new HashMap<>();
         if (search.isEmpty()) {
-            finalResult = RaidBossSpawnManager.getInstance().getAllBosses();
+            finalResult = RaidBossSpawnManager.INSTANCE.getAllBosses();
         } else {
-            for (Entry<Integer, StatsSet> entry : RaidBossSpawnManager.getInstance().getAllBosses().entrySet()) {
+            for (Entry<Integer, StatsSet> entry : RaidBossSpawnManager.INSTANCE.getAllBosses().entrySet()) {
                 NpcTemplate temp = NpcHolder.getTemplate(entry.getKey());
                 if (StringUtils.containsIgnoreCase(temp.getName(), search))
                     finalResult.put(entry.getKey(), entry.getValue());

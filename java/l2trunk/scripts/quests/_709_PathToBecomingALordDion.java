@@ -40,7 +40,7 @@ public final class _709_PathToBecomingALordDion extends Quest implements ScriptF
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        Castle castle = ResidenceHolder.getInstance().getResidence(DionCastle);
+        Castle castle = ResidenceHolder.getResidence(DionCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -91,7 +91,7 @@ public final class _709_PathToBecomingALordDion extends Quest implements ScriptF
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(DionCastle);
+        Castle castle = ResidenceHolder.getResidence(DionCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -171,7 +171,7 @@ public final class _709_PathToBecomingALordDion extends Quest implements ScriptF
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(DionCastle);
+        Castle castle = ResidenceHolder.getResidence(DionCastle);
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)

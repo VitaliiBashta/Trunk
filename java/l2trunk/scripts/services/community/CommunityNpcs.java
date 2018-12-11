@@ -367,14 +367,14 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: Npcs loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -524,8 +524,8 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
             html = html.replace("%respawnValakas%", convertRespawnDate(ValakasManager.getState().getRespawnDate()));
             html = html.replace("%respawnBaium%", convertRespawnDate(BaiumManager.getState().getRespawnDate()));
             html = html.replace("%respawnBeleth%", convertRespawnDate(ServerVariables.getLong("BelethKillTime", 0L)));
-            html = html.replace("%respawnQueenAnt%", convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29001) * 1000L));
-            html = html.replace("%respawnOrfen%", convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29014) * 1000L));
+            html = html.replace("%respawnQueenAnt%", convertRespawnDate(RaidBossSpawnManager.INSTANCE.getRespawntime(29001) * 1000L));
+            html = html.replace("%respawnOrfen%", convertRespawnDate(RaidBossSpawnManager.INSTANCE.getRespawntime(29014) * 1000L));
 
             ShowBoard.separateAndSend(html, player);
 

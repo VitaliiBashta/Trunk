@@ -18,7 +18,7 @@ public class OlympiadEndTask extends RunnableImpl {
     public void runImpl() {
         if (Olympiad._inCompPeriod) // Если бои еще не закончились, откладываем окончание олимпиады на минуту
         {
-            ThreadPoolManager.INSTANCE().schedule(new OlympiadEndTask(), 60000);
+            ThreadPoolManager.INSTANCE.schedule(new OlympiadEndTask(), 60000);
             return;
         }
 

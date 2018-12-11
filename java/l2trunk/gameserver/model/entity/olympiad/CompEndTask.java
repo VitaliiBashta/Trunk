@@ -9,7 +9,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class CompEndTask extends RunnableImpl {
+public class CompEndTask extends RunnableImpl {
     private static final Logger _log = LoggerFactory.getLogger(CompEndTask.class);
 
     @Override
@@ -18,22 +18,17 @@ class CompEndTask extends RunnableImpl {
             return;
 
         Olympiad._inCompPeriod = false;
+        OlympiadManager manager = Olympiad._manager;
 
-        try {
-            OlympiadManager manager = Olympiad._manager;
-
-            // Если остались игры, ждем их завершения еще одну минуту
-            if (manager != null && !manager.getOlympiadGames().isEmpty()) {
-                ThreadPoolManager.INSTANCE().schedule(new CompEndTask(), 60000);
-                return;
-            }
-
-            Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
-            _log.info("Olympiad System: Olympiad Game Ended");
-            OlympiadDatabase.save();
-        } catch (Exception e) {
-            _log.warn("Olympiad System: Failed to save Olympiad configuration", e);
+        // Если остались игры, ждем их завершения еще одну минуту
+        if (manager != null && !manager.getOlympiadGames().isEmpty()) {
+            ThreadPoolManager.INSTANCE.schedule(new CompEndTask(), 60000);
+            return;
         }
+
+        Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
+        _log.info("Olympiad System: Olympiad Game Ended");
+        OlympiadDatabase.save();
         Olympiad.init();
     }
 }

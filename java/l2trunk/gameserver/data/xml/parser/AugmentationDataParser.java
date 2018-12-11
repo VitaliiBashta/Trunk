@@ -1,6 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.math.random.RndSelector;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.AugmentationDataHolder;
@@ -9,38 +9,25 @@ import l2trunk.gameserver.templates.augmentation.AugmentationInfo;
 import l2trunk.gameserver.templates.augmentation.OptionGroup;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
 
-//import org.napile.primitive.lists.IntList;
-//import org.napile.primitive.lists.impl.ArrayIntList;
-//import org.napile.primitive.maps.IntObjectMap;
-//import org.napile.primitive.maps.impl.HashIntObjectMap;
+import static l2trunk.commons.lang.NumberUtils.toDouble;
 
-public final class AugmentationDataParser extends AbstractFileParser<AugmentationDataHolder> {
-    private static final AugmentationDataParser _instance = new AugmentationDataParser();
+public enum AugmentationDataParser {
+    INSTANCE;
+    private Path xml = Config.DATAPACK_ROOT.resolve("data/augmentation_data.xml");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
-    private AugmentationDataParser() {
-        super(AugmentationDataHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("loaded " + AugmentationDataHolder.size() + " doors ");
     }
 
-    public static AugmentationDataParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/augmentation_data.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "augmentation_data.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         Map<String, int[]> items = new HashMap<>();
         Map<Integer, RndSelector<OptionGroup>[][]> variants = new HashMap<>();
         for (Iterator<Element> iterator = rootElement.elementIterator("item_group"); iterator.hasNext(); ) {
@@ -53,7 +40,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
             for (Element itemElement : itemElements) {
                 int itemId = Integer.parseInt(itemElement.attributeValue("id"));
 
-                ItemTemplate itemTemplate = ItemHolder.getInstance().getTemplate(itemId);
+                ItemTemplate itemTemplate = ItemHolder.getTemplate(itemId);
                 if (itemTemplate == null) {
                     LOG.warn("Not found item: " + itemId + "; item group: " + name);
                 } else {
@@ -86,14 +73,14 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
             if (rndSelectors == null) {
                 LOG.warn("Not find variants for mineral: " + mineralId);
             } else {
-                getHolder().addStone(mineralId);
+                AugmentationDataHolder.addStone(mineralId);
 
                 AugmentationInfo augmentationInfo = new AugmentationInfo(mineralId, feeItemId, feeItemCount, cancelFee, rndSelectors);
-                getHolder().addAugmentationInfo(augmentationInfo);
+                AugmentationDataHolder.addAugmentationInfo(augmentationInfo);
 
                 int[] array = items.get(itemGroup);
                 for (int i : array) {
-                    ItemHolder.getInstance().getTemplate(i).addAugmentationInfo(augmentationInfo);
+                    ItemHolder.getTemplate(i).addAugmentationInfo(augmentationInfo);
                 }
             }
         }
@@ -112,7 +99,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
             int allGroupChance = 0;
             for (Element groupElement : variantElement.elements()) {
                 OptionGroup optionGroup = new OptionGroup();
-                int chance = (int) (Double.parseDouble(groupElement.attributeValue("chance")) * 10000.0D * Config.AUGMENTATION_CHANCE_MOD[0]);
+                int chance = (int) (toDouble(groupElement.attributeValue("chance")) * 10000.0D );
                 allGroupChance += chance;
 
                 rnd.add(optionGroup, chance);
@@ -120,7 +107,7 @@ public final class AugmentationDataParser extends AbstractFileParser<Augmentatio
                 int allSubGroupChance = 0;
                 for (Element optionElement : groupElement.elements()) {
                     int optionId = Integer.parseInt(optionElement.attributeValue("id"));
-                    int optionChance = (int) (Double.parseDouble(optionElement.attributeValue("chance")) * 10000.0D * Config.AUGMENTATION_CHANCE_MOD[1]);
+                    int optionChance = (int) (toDouble(optionElement.attributeValue("chance")) * 10000.0D);
                     allSubGroupChance += optionChance;
 
                     optionGroup.addOptionWithChance(optionId, optionChance);

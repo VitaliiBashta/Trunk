@@ -1,21 +1,18 @@
 package l2trunk.scripts.npc.model;
 
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.templates.npc.MinionData;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * У монстров в Seed of Annihilation список минионов может быть разный.
- *
- * @author Bonux
- **/
-public class SeedOfAnnihilationInstance extends MonsterInstance {
-    private static final int[] BISTAKON_MOBS = new int[]{22750, 22751, 22752, 22753};
-    private static final int[] COKRAKON_MOBS = new int[]{22763, 22764, 22765};
+import java.util.Arrays;
+import java.util.List;
+
+public final class SeedOfAnnihilationInstance extends MonsterInstance {
+    private static final List<Integer> BISTAKON_MOBS = Arrays.asList(22750, 22751, 22752, 22753);
+    private static final List<Integer> COKRAKON_MOBS = Arrays.asList(22763, 22764, 22765);
     private static final int[][] BISTAKON_MINIONS = new int[][]{
             {22746, 22746, 22746},
             {22747, 22747, 22747},
@@ -31,10 +28,10 @@ public class SeedOfAnnihilationInstance extends MonsterInstance {
 
     public SeedOfAnnihilationInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-        if (ArrayUtils.contains(BISTAKON_MOBS, template.getNpcId()))
-            addMinions(BISTAKON_MINIONS[Rnd.get(BISTAKON_MINIONS.length)], template);
-        else if (ArrayUtils.contains(COKRAKON_MOBS, template.getNpcId()))
-            addMinions(COKRAKON_MINIONS[Rnd.get(COKRAKON_MINIONS.length)], template);
+        if (BISTAKON_MOBS.contains(template.getNpcId()))
+            addMinions(Rnd.get(BISTAKON_MINIONS), template);
+        else if (COKRAKON_MOBS.contains(template.getNpcId()))
+            addMinions(Rnd.get(COKRAKON_MINIONS), template);
     }
 
     private static void addMinions(int[] minions, NpcTemplate template) {
@@ -45,7 +42,6 @@ public class SeedOfAnnihilationInstance extends MonsterInstance {
 
     @Override
     protected void onDeath(Creature killer) {
-        //TODO: Проверить на оффе, при убийстве главного миньёны анспавнятся или нет.
         getMinionList().unspawnMinions();
         super.onDeath(killer);
     }

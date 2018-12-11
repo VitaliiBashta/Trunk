@@ -62,7 +62,7 @@ public class ManagerInstance extends ResidenceManager {
 
     @Override
     protected int getCond(Player player) {
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
 
         Residence residence = getResidence();
         Clan residenceOwner = residence.getOwner();

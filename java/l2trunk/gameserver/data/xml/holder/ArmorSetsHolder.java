@@ -1,38 +1,32 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.model.ArmorSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public final class ArmorSetsHolder extends AbstractHolder {
-    private static final ArmorSetsHolder _instance = new ArmorSetsHolder();
-    private final List<ArmorSet> _armorSets = new ArrayList<>();
+public final class ArmorSetsHolder {
+    private static final List<ArmorSet> ARMOR_SETS = new ArrayList<>();
 
-    public static ArmorSetsHolder getInstance() {
-        return _instance;
+    private ArmorSetsHolder() {
     }
 
-    public void addArmorSet(ArmorSet armorset) {
-        _armorSets.add(armorset);
+    public static int size() {
+        return ARMOR_SETS.size();
     }
 
-    public ArmorSet getArmorSet(int chestItemId) {
-        for (ArmorSet as : _armorSets)
-            if (as.getChestItemIds().contains(chestItemId))
-                return as;
-        return null;
+    public static void clear() {
+        ARMOR_SETS.clear();
     }
 
-    @Override
-    public int size() {
-        return _armorSets.size();
+    public static void addArmorSet(ArmorSet armorset) {
+        ARMOR_SETS.add(armorset);
     }
 
-    @Override
-    public void clear() {
-        _armorSets.clear();
+    public static ArmorSet getArmorSet(int chestItemId) {
+        return ARMOR_SETS.stream()
+                .filter(as -> as.getChestItemIds().contains(chestItemId))
+                .findFirst().orElse(null);
     }
 }

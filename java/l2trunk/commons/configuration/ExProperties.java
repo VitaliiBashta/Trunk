@@ -1,5 +1,7 @@
 package l2trunk.commons.configuration;
 
+import l2trunk.commons.lang.NumberUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -7,6 +9,9 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toDouble;
 
 public class ExProperties extends Properties {
     public static final String defaultDelimiter = "[\\s,;]+";
@@ -84,75 +89,30 @@ public class ExProperties extends Properties {
         return val;
     }
 
-    public boolean[] getProperty(String name, boolean[] defaultValue) {
-        return getProperty(name, defaultValue, defaultDelimiter);
-    }
-
-    private boolean[] getProperty(String name, boolean[] defaultValue, String delimiter) {
-        boolean[] val = defaultValue;
+    public List<Integer> getProperty(String name, List<Integer> defaultValue) {
         String value;
 
         if ((value = super.getProperty(name, null)) != null) {
-            String[] values = value.split(delimiter);
-            val = new boolean[values.length];
-            for (int i = 0; i < val.length; i++)
-                val[i] = parseBoolean(values[i]);
+            List<String> values = Arrays.asList(value.split(defaultDelimiter));
+            return values.stream()
+                    .map(NumberUtils::toInt)
+                    .collect(Collectors.toList());
         }
-
-        return val;
+        return defaultValue;
     }
 
-    public int[] getProperty(String name, int[] defaultValue) {
-        return getProperty(name, defaultValue, defaultDelimiter);
-    }
+//    public List<Long> getProperty(String name, List<Long> defaultValue) {
+//        return getProperty(name, defaultValue, defaultDelimiter);
+//    }
 
-    private int[] getProperty(String name, int[] defaultValue, String delimiter) {
-        int[] val = defaultValue;
-        String value;
-
-        if ((value = super.getProperty(name, null)) != null) {
-            String[] values = value.split(delimiter);
-            val = new int[values.length];
-            for (int i = 0; i < val.length; i++)
-                val[i] = Integer.parseInt(values[i]);
-        }
-
-        return val;
-    }
-
-    public long[] getProperty(String name, long[] defaultValue) {
-        return getProperty(name, defaultValue, defaultDelimiter);
-    }
-
-    private long[] getProperty(String name, long[] defaultValue, String delimiter) {
-        long[] val = defaultValue;
-        String value;
-
-        if ((value = super.getProperty(name, null)) != null) {
-            String[] values = value.split(delimiter);
-            val = new long[values.length];
-            for (int i = 0; i < val.length; i++)
-                val[i] = Long.parseLong(values[i]);
-        }
-
-        return val;
-    }
-
-    public double[] getProperty(String name, double[] defaultValue) {
-        return getProperty(name, defaultValue, defaultDelimiter);
-    }
-
-    private double[] getProperty(String name, double[] defaultValue, String delimiter) {
-        double[] val = defaultValue;
-        String value;
-
-        if ((value = super.getProperty(name, null)) != null) {
-            String[] values = value.split(delimiter);
-            val = new double[values.length];
-            for (int i = 0; i < val.length; i++)
-                val[i] = Double.parseDouble(values[i]);
-        }
-
-        return val;
-    }
+//    public List<Double> getProperty(String name, List<Double> defaultValue) {
+//        String value;
+//        if ((value = super.getProperty(name, null)) != null) {
+//            return  Arrays.stream(value.split(defaultDelimiter))
+//            .map(NumberUtils::toDouble)
+//            .collect(Collectors.toList());
+//        }
+//
+//        return defaultValue;
+//    }
 }

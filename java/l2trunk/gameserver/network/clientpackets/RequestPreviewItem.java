@@ -16,37 +16,36 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.item.ArmorTemplate.ArmorType;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class RequestPreviewItem extends L2GameClientPacket {
     // format: cdddb
 
-    private int _listId;
-    private int _count;
-    private int[] _items;
+    private int listId;
+    private int count;
+    private List<Integer> items = new ArrayList<>();
 
     @Override
     protected void readImpl() {
         int _unknow = readD();
-        _listId = readD();
-        _count = readD();
-        if (_count * 4 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
-            _count = 0;
+        listId = readD();
+        count = readD();
+        if (count * 4 > _buf.remaining() || count > Short.MAX_VALUE || count < 1) {
+            count = 0;
             return;
         }
-        _items = new int[_count];
-        for (int i = 0; i < _count; i++)
-            _items[i] = readD();
+        for (int i = 0; i < count; i++)
+            items.add(readD());
     }
 
     @Override
     protected void runImpl() {
         Player activeChar = getClient().getActiveChar();
-        if (activeChar == null || _count == 0)
+        if (activeChar == null || count == 0)
             return;
 
         if (activeChar.isActionsDisabled()) {
@@ -76,7 +75,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
             return;
         }
 
-        NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(_listId);
+        NpcTradeList list = BuyListHolder.INSTANCE.getBuyList(listId);
         if (list == null) {
             //TODO audit
             activeChar.sendActionFailed();
@@ -87,16 +86,13 @@ public final class RequestPreviewItem extends L2GameClientPacket {
 
         Map<Integer, Integer> itemList = new HashMap<>();
         try {
-            for (int i = 0; i < _count; i++) {
-                int itemId = _items[i];
-                if (list.getItemByItemId(itemId) == null) {
+            for (Integer item : items) {
+                if (list.getItemByItemId(item) == null) {
                     activeChar.sendActionFailed();
                     return;
                 }
 
-                ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
-                if (template == null)
-                    continue;
+                ItemTemplate template = ItemHolder.getTemplate(item);
 
                 if (!template.isEquipable())
                     continue;
@@ -117,7 +113,7 @@ public final class RequestPreviewItem extends L2GameClientPacket {
                     activeChar.sendPacket(SystemMsg.YOU_CAN_NOT_TRY_THOSE_ITEMS_ON_AT_THE_SAME_TIME);
                     return;
                 } else
-                    itemList.put(paperdoll, itemId);
+                    itemList.put(paperdoll, item);
 
                 totalPrice += ShopPreviewList.getWearPrice(template);
             }

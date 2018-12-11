@@ -232,7 +232,7 @@ public final class NpcFriendInstance extends MerchantInstance {
             }
 
             if (skill != 0 && player.getInventory().destroyItemByItemId(item, count, "NpcFriend Buff"))
-                player.doCast(SkillTable.INSTANCE().getInfo(skill, level), player, true);
+                player.doCast(SkillTable.INSTANCE.getInfo(skill, level), player, true);
             else
                 showChatWindow(player, "npc_friend/" + getNpcId() + "-havenotitems.htm");
         } else if (command.startsWith("Chat")) {

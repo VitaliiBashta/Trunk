@@ -535,7 +535,7 @@ public final class Party implements PlayerGroup {
             return;
 
         // bonus for the party
-        double bonus = Config.ALT_PARTY_BONUS[mtr.size() - 1];
+        double bonus = Config.ALT_PARTY_BONUS.get(mtr.size() - 1);
 
         // of exp and sp for distribution to all
         double XP = xpReward * bonus;

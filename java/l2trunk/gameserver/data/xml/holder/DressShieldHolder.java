@@ -1,29 +1,27 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.model.DressShieldData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DressShieldHolder extends AbstractHolder {
-    private static final DressShieldHolder _instance = new DressShieldHolder();
-    private final List<DressShieldData> _shield = new ArrayList<>();
-
-    public static DressShieldHolder getInstance() {
-        return _instance;
+public final class DressShieldHolder  {
+    private DressShieldHolder() {
     }
 
-    public void addShield(DressShieldData shield) {
-        _shield.add(shield);
+    private static final List<DressShieldData> shields = new ArrayList<>();
+
+
+    public static void addShield(DressShieldData shield) {
+        shields.add(shield);
     }
 
     public List<DressShieldData> getAllShields() {
-        return _shield;
+        return shields;
     }
 
     public DressShieldData getShield(int id) {
-        for (DressShieldData shield : _shield) {
+        for (DressShieldData shield : shields) {
             if (shield.getId() == id)
                 return shield;
         }
@@ -31,13 +29,11 @@ public final class DressShieldHolder extends AbstractHolder {
         return null;
     }
 
-    @Override
-    public int size() {
-        return _shield.size();
+    public static int size() {
+        return shields.size();
     }
 
-    @Override
     public void clear() {
-        _shield.clear();
+        shields.clear();
     }
 }

@@ -12,19 +12,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiegePlayerDAO {
+public enum SiegePlayerDAO {
+    INSTANCE;
     private static final String INSERT_SQL_QUERY = "INSERT INTO siege_players(residence_id, object_id, clan_id) VALUES (?,?,?)";
     private static final String DELETE_SQL_QUERY = "DELETE FROM siege_players WHERE residence_id=? AND object_id=? AND clan_id=?";
     private static final String DELETE_SQL_QUERY2 = "DELETE FROM siege_players WHERE residence_id=?";
     private static final String SELECT_SQL_QUERY = "SELECT object_id FROM siege_players WHERE residence_id=? AND clan_id=?";
     private static final Logger _log = LoggerFactory.getLogger(SiegePlayerDAO.class);
-    private static final SiegePlayerDAO _instance = new SiegePlayerDAO();
 
-    public static SiegePlayerDAO getInstance() {
-        return _instance;
-    }
-
-    public static List<Integer> select(Residence residence, int clanId) {
+    public List<Integer> select(Residence residence, int clanId) {
         List<Integer> set = new ArrayList<>();
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -41,7 +37,7 @@ public class SiegePlayerDAO {
         return set;
     }
 
-    public static void insert(Residence residence, int clanId, int playerId) {
+    public  void insert(Residence residence, int clanId, int playerId) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(INSERT_SQL_QUERY)) {
             statement.setInt(1, residence.getId());
@@ -53,7 +49,7 @@ public class SiegePlayerDAO {
         }
     }
 
-    public static void delete(Residence residence, int clanId, int playerId) {
+    public void delete(Residence residence, int clanId, int playerId) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(DELETE_SQL_QUERY)) {
             statement.setInt(1, residence.getId());
@@ -65,7 +61,7 @@ public class SiegePlayerDAO {
         }
     }
 
-    public static void delete(Residence residence) {
+    public void delete(Residence residence) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(DELETE_SQL_QUERY2);) {
             statement.setInt(1, residence.getId());

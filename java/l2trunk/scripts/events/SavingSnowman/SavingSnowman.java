@@ -38,7 +38,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
     private static final int INITIAL_SAVE_DELAY = 10 * 60 * 1000; // 10 мин
     private static final int SAVE_INTERVAL = 60 * 60 * 1000; // 60 мин
-    private static final int SNOWMAN_SHOUT_INTERVAL = 1 * 60 * 1000; // 1 мин
+    private static final int SNOWMAN_SHOUT_INTERVAL = 60 * 1000; // 1 мин
     private static final int THOMAS_EAT_DELAY = 10 * 60 * 1000; // 10 мин
     private static final int SATNA_SAY_INTERVAL = 5 * 60 * 1000; // 5 мин
     private static final int EVENT_MANAGER_ID = 13184;
@@ -359,13 +359,13 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         }
 
         player.broadcastPacket(new MagicSkillUse(player, player, 23017, 1, 0, 0));
-        player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(23017, 1));
+        player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(23017));
         player.setVar("santaEventTime", String.valueOf(System.currentTimeMillis() + SANTA_BUFF_REUSE), -1);
 
         Summon pet = player.getPet();
         if (pet != null) {
             pet.broadcastPacket(new MagicSkillUse(pet, pet, 23017, 1, 0, 0));
-            pet.altOnMagicUseTimer(pet, SkillTable.INSTANCE().getInfo(23017, 1));
+            pet.altOnMagicUseTimer(pet, SkillTable.INSTANCE.getInfo(23017));
         }
     }
 

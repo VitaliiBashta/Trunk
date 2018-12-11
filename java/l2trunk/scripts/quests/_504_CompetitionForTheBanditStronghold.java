@@ -11,10 +11,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.TimeUtils;
 
-/**
- * @author VISTALL
- */
-public class _504_CompetitionForTheBanditStronghold extends Quest implements ScriptFile {
+public final class _504_CompetitionForTheBanditStronghold extends Quest implements ScriptFile {
     // NPC
     private static final int MESSENGER = 35437;
     // MOBS
@@ -59,7 +56,7 @@ public class _504_CompetitionForTheBanditStronghold extends Quest implements Scr
         int cond = st.getCond();
         Player player = st.getPlayer();
         Clan clan = player.getClan();
-        ClanHall clanhall = ResidenceHolder.getInstance().getResidence(35);
+        ClanHall clanhall = ResidenceHolder.getResidence(35);
 
         if (clanhall.getSiegeEvent().isRegistrationOver()) {
             htmltext = null;

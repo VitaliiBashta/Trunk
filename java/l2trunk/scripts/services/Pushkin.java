@@ -14,7 +14,7 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-class Pushkin extends Functions {
+public final class Pushkin extends Functions {
     private String DialogAppend_30300(Integer val) {
         if (val != 0 || !Config.ALT_SIMPLE_SIGNS && !Config.ALT_BS_CRYSTALLIZE)
             return "";
@@ -69,13 +69,13 @@ class Pushkin extends Functions {
         final Inventory inv = player.getInventory();
         for (final ItemInstance itm : inv.getItems())
             if (itm.canBeCrystallized(player)) {
-                final ItemTemplate crystal = ItemHolder.getInstance().getTemplate(itm.getTemplate().getCrystalType().cry);
+                final ItemTemplate crystal = ItemHolder.getTemplate(itm.getTemplate().getCrystalType().cry);
                 MultiSellEntry possibleEntry = new MultiSellEntry(++entry, crystal.getItemId(), itm.getTemplate().getCrystalCount(), 0);
                 possibleEntry.addIngredient(new MultiSellIngredient(itm.getItemId(), 1, itm.getEnchantLevel()));
                 possibleEntry.addIngredient(new MultiSellIngredient(ItemTemplate.ITEM_ID_ADENA, Math.round(itm.getTemplate().getCrystalCount() * crystal.getReferencePrice() * 0.05), 0));
                 list.addEntry(possibleEntry);
             }
 
-        MultiSellHolder.getInstance().SeparateAndSend(list, player, castle == null ? 0. : castle.getTaxRate());
+        MultiSellHolder.INSTANCE.SeparateAndSend(list, player, castle == null ? 0. : castle.getTaxRate());
     }
 }

@@ -12,16 +12,24 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: pchayka
- * @date: 26.09.2010
- */
-public class _726_LightwithintheDarkness extends Quest implements ScriptFile {
+public final class _726_LightwithintheDarkness extends Quest implements ScriptFile {
     // ITEMS
     private static final int KnightsEpaulette = 9912;
 
     // MOB's
     private static final int KanadisGuide3 = 25661;
+
+    public _726_LightwithintheDarkness() {
+        super(true);
+
+        addStartNpc(35666, 35698, 35735, 35767, 35804, 35835, 35867, 35904, 35936, 35974, 36011, 36043, 36081, 36118, 36149, 36181, 36219, 36257, 36294, 36326, 36364);
+        addKillId(KanadisGuide3);
+    }
+
+    private static boolean checkAllDestroyed(int mobId, int refId) {
+        return GameObjectsStorage.getAllByNpcId(mobId, true).stream()
+                .noneMatch(npc -> npc.getReflectionId() == refId);
+    }
 
     @Override
     public void onLoad() {
@@ -35,13 +43,6 @@ public class _726_LightwithintheDarkness extends Quest implements ScriptFile {
     public void onShutdown() {
     }
 
-    public _726_LightwithintheDarkness() {
-        super(true);
-
-        addStartNpc(35666, 35698, 35735, 35767, 35804, 35835, 35867, 35904, 35936, 35974, 36011, 36043, 36081, 36118, 36149, 36181, 36219, 36257, 36294, 36326, 36364);
-        addKillId(KanadisGuide3);
-    }
-
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int cond = st.getCond();
@@ -51,7 +52,7 @@ public class _726_LightwithintheDarkness extends Quest implements ScriptFile {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("reward") && cond == 1 && player.getVar("q726").equalsIgnoreCase("done")) {
+        } else if (event.equals("reward") && cond == 1 && "done".equalsIgnoreCase(player.getVar("q726"))) {
             player.unsetVar("q726");
             player.unsetVar("q726done");
             st.giveItems(KnightsEpaulette, 152);
@@ -107,20 +108,13 @@ public class _726_LightwithintheDarkness extends Quest implements ScriptFile {
                         member.setVar("q726done", "done", -1);
                         st.playSound(SOUND_ITEMGET);
                     }
-            player.getReflection().startCollapseTimer(1 * 60 * 1000L);
+            player.getReflection().startCollapseTimer( 60 * 1000L);
         }
         return null;
     }
 
-    private static boolean checkAllDestroyed(int mobId, int refId) {
-        for (NpcInstance npc : GameObjectsStorage.getAllByNpcId(mobId, true))
-            if (npc.getReflectionId() == refId)
-                return false;
-        return true;
-    }
-
     private boolean check(Player player) {
-        Fortress fort = ResidenceHolder.getInstance().getResidenceByObject(Fortress.class, player);
+        Fortress fort = ResidenceHolder.getResidenceByObject(Fortress.class, player);
         if (fort == null)
             return false;
         Clan clan = player.getClan();
@@ -128,8 +122,6 @@ public class _726_LightwithintheDarkness extends Quest implements ScriptFile {
             return false;
         if (clan.getClanId() != fort.getOwnerId())
             return false;
-        if (fort.getContractState() != 1)
-            return false;
-        return true;
+        return fort.getContractState() == 1;
     }
 }

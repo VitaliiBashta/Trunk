@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile {
+public final class _194_SevenSignsMammonsContract extends Quest implements ScriptFile {
     // NPCs
     private static final int Colin = 32571;
     private static final int SirGustavAthebaldt = 30760;
@@ -57,7 +57,7 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6201, 1).getEffects(npc, player, false, false);
+            SkillTable.INSTANCE.getInfo(6201).getEffects(npc, player, false, false);
         } else if (event.equalsIgnoreCase("frog_q194_2.htm")) {
             st.setCond(5);
             st.playSound(SOUND_MIDDLE);
@@ -74,7 +74,7 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
             st.setCond(7);
             st.playSound(SOUND_MIDDLE);
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6202, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6202).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("tess_q194_2.htm")) {
             st.setCond(8);
             st.giveItems(GrandmaTessCandyPouch, 1);
@@ -91,7 +91,7 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
             st.setCond(10);
             st.playSound(SOUND_MIDDLE);
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6203, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6203).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("kuta_q194_2.htm")) {
             st.setCond(11);
             st.giveItems(NativesGlove, 1);
@@ -114,21 +114,21 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6201, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6201).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("colin_q194_12a.htm")) {
             if (player.getTransformation() != 0 || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6202, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6202).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("colin_q194_13a.htm")) {
             if (player.getTransformation() != 0 || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6203, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6203).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("colin_q194_0c.htm"))
             negateTransformations(player);
         return event;
@@ -184,7 +184,7 @@ public class _194_SevenSignsMammonsContract extends Quest implements ScriptFile 
                 htmltext = "colin_q194_12.htm";
             else if (cond == 10 && player.getTransformation() == 0)
                 htmltext = "colin_q194_13.htm";
-            else if ((cond == 4 || cond == 7 || cond == 10) && player.getTransformation() != 0)
+            else if (cond == 4 || cond == 7 || cond == 10)
                 htmltext = "colin_q194_0a.htm";
         } else if (npcId == Frog) {
             if (cond == 4 && player.getTransformation() == 111)

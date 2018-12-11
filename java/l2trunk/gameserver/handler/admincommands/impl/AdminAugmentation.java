@@ -164,7 +164,7 @@ public class AdminAugmentation implements IAdminCommandHandler {
             return;
         }
 
-        final Collection<OptionDataTemplate> augmentations = OptionDataHolder.getInstance().getUniqueOptions(_filter);
+        final Collection<OptionDataTemplate> augmentations = OptionDataHolder.getUniqueOptions(_filter);
         if (augmentations.isEmpty()) {
             _page = 0;
             showMainMenu(player);

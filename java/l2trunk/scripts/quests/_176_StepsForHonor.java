@@ -10,10 +10,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-public class _176_StepsForHonor extends Quest implements ScriptFile {
+public final class _176_StepsForHonor extends Quest implements ScriptFile {
     private static final int RAPIDUS = 36479;
 
     public _176_StepsForHonor() {
@@ -61,9 +58,9 @@ public class _176_StepsForHonor extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         if (runnerEvent.isInProgress())
             htmltext = "rapidus_q176_05.htm";
         else {
@@ -122,9 +119,7 @@ public class _176_StepsForHonor extends Quest implements ScriptFile {
             return false;
         if (killedSiegeEvent == killerSiegeEvent)
             return false;
-        if (killed.getLevel() < 61)
-            return false;
-        return true;
+        return killed.getLevel() >= 61;
     }
 
     @Override

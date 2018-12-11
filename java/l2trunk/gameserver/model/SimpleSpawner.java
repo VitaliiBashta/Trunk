@@ -17,11 +17,12 @@ public final class SimpleSpawner extends Spawner {
     private Territory territory;
 
     private SimpleSpawner(NpcTemplate mobTemplate) {
-        if (mobTemplate == null)
-            throw new NullPointerException();
+        if (mobTemplate != null) {
+//            throw new NullPointerException();
 
-        npcTemplate = mobTemplate;
-        spawned = new ArrayList<>(1);
+            npcTemplate = mobTemplate;
+            spawned = new ArrayList<>(1);
+        }
     }
 
     public SimpleSpawner(int npcId) {

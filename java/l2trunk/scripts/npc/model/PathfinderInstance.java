@@ -1,7 +1,7 @@
 package l2trunk.scripts.npc.model;
 
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.instancemanager.MapRegionManager;
+import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -55,7 +55,7 @@ public class PathfinderInstance extends NpcInstance {
                 return;
             }
 
-            DomainArea domain = MapRegionManager.getInstance().getRegionData(DomainArea.class, this);
+            DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, this);
             String htmlpath = "instance/soloKamaloka/" + getNpcId();
             if (domain != null)
                 switch (domain.getId()) {

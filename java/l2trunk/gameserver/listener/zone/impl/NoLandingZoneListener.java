@@ -9,7 +9,7 @@ import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.PetDataTable;
 
-public class NoLandingZoneListener implements OnZoneEnterLeaveListener {
+public final class NoLandingZoneListener implements OnZoneEnterLeaveListener {
     public static final OnZoneEnterLeaveListener STATIC = new NoLandingZoneListener();
 
     @Override
@@ -17,7 +17,7 @@ public class NoLandingZoneListener implements OnZoneEnterLeaveListener {
         Player player = actor.getPlayer();
         if (player != null)
             if (player.isFlying() && player.getMountNpcId() == PetDataTable.WYVERN_ID) {
-                Residence residence = ResidenceHolder.getInstance().getResidence(zone.getParams().getInteger("residence", 0));
+                Residence residence = ResidenceHolder.getResidence(zone.getParams().getInteger("residence", 0));
                 if (residence != null && player.getClan() != null && residence.getOwner() == player.getClan()) {
                     //
                 } else {

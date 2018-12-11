@@ -81,7 +81,7 @@ public class FarmMessengerInstance extends NpcInstance {
                 }
 
                 siegeClan.getPlayers().add(player.getObjectId());
-                SiegePlayerDAO.getInstance().insert(clanHall, clan.getClanId(), player.getObjectId());
+                SiegePlayerDAO.INSTANCE.insert(clanHall, clan.getClanId(), player.getObjectId());
                 showChatWindow(player, "residence2/clanhall/farm_kel_mahum_messenger_9.htm");
             }
         } else if (command.startsWith("formAlliance")) {
@@ -102,7 +102,7 @@ public class FarmMessengerInstance extends NpcInstance {
             int npcId = Integer.parseInt(t.nextToken());
             siegeClan.setParam(npcId);
 
-            SiegeClanDAO.getInstance().update(clanHall, siegeClan);
+            SiegeClanDAO.INSTANCE.update(clanHall, siegeClan);
             showChatWindow(player, "residence2/clanhall/agit_oel_mahum_messeger_9.htm");
         } else if (command.equalsIgnoreCase("setNpc")) {
             CTBSiegeClanObject siegeClan = siegeEvent.getSiegeClan(ClanHallTeamBattleEvent.ATTACKERS, player.getClan());
@@ -158,8 +158,8 @@ public class FarmMessengerInstance extends NpcInstance {
 
         siegeEvent.addObject(ClanHallTeamBattleEvent.ATTACKERS, siegeClan);
 
-        SiegeClanDAO.getInstance().insert(clanHall, siegeClan);
-        SiegePlayerDAO.getInstance().insert(clanHall, clan.getClanId(), player.getObjectId());
+        SiegeClanDAO.INSTANCE.insert(clanHall, siegeClan);
+        SiegePlayerDAO.INSTANCE.insert(clanHall, clan.getClanId(), player.getObjectId());
 
         List<CTBSiegeClanObject> siegeClans = siegeEvent.getObjects(ClanHallTeamBattleEvent.ATTACKERS);
 

@@ -2,11 +2,10 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Summon;
 import l2trunk.gameserver.model.base.TeamType;
-import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.utils.Location;
 
-public class PetInfo extends L2GameServerPacket {
+public final class PetInfo extends L2GameServerPacket {
     private final int _runSpd;
     private final int _walkSpd;
     private final int MAtkSpd;
@@ -103,11 +102,6 @@ public class PetInfo extends L2GameServerPacket {
         _showSpawnAnimation = summon.getSpawnAnimation();
         type = summon.getFormId();
 
-        if (summon.getPlayer().isInFightClub()) {
-            AbstractFightClub fightClubEvent = summon.getPlayer().getFightClubEvent();
-            _name = fightClubEvent.getVisibleName(summon.getPlayer(), _name, false);
-            title = fightClubEvent.getVisibleTitle(summon.getPlayer(), title, false);
-        }
     }
 
     public PetInfo update(Integer _showSpawnAnimation) {

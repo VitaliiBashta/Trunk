@@ -24,12 +24,8 @@ public class Call extends Skill {
         _party = set.getBool("party", false);
     }
 
-    /**
-     * @param activeChar
-     * @return Can a summons at the moment to use the call
-     */
     public static SystemMessage canSummonHere(Player activeChar) {
-        if (activeChar.isAlikeDead() || activeChar.isInOlympiadMode() || activeChar.isInObserverMode() || activeChar.isFlying() || activeChar.isFestivalParticipant() || activeChar.isInFightClub())
+        if (activeChar.isAlikeDead() || activeChar.isInOlympiadMode() || activeChar.isInObserverMode() || activeChar.isFlying() || activeChar.isFestivalParticipant() )
             return Msg.NOTHING_HAPPENED;
 
         if (activeChar.getPlayer().isJailed()) {
@@ -72,9 +68,6 @@ public class Call extends Skill {
         if ((target.getPvpFlag() != 0) || (target.isInCombat())) {
             return new SystemMessage(SystemMessage.S1_IS_ENGAGED_IN_COMBAT_AND_CANNOT_BE_SUMMONED).addString(target.getName());
         }
-
-        if (target.getPlayer().isInFightClub())
-            return Msg.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING;
 
         if (target.getPlayer().isJailed()) {
             target.getPlayer().sendMessage("You cannot escape from Jail!");

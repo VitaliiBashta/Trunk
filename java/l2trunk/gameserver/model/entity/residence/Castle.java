@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.residence;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.math.SafeMath;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.CastleDAO;
@@ -67,7 +66,7 @@ public final class Castle extends Residence {
 
     public Castle(StatsSet set) {
         super(set);
-        npcStringName = NpcString.valueOf(1001000 + _id);
+        npcStringName = NpcString.valueOf(1001000 + id);
     }
 
     @Override
@@ -80,11 +79,11 @@ public final class Castle extends Residence {
             List<Integer> list = entry.getValue();
             List<Integer> list2 = new ArrayList<>(list.size());
             for (Integer i : list) {
-                Fortress fortress = ResidenceHolder.getInstance().getResidence(i);
+                Fortress fortress = ResidenceHolder.getResidence(i);
                 if (fortress == null)
                     continue;
 
-                list2.add(fortress._id);
+                list2.add(fortress.id);
 
                 fortress.addRelatedCastle(this);
             }
@@ -103,12 +102,12 @@ public final class Castle extends Residence {
         // Если клан уже владел каким-либо замком/крепостью, отбираем его.
         if (newOwner != null) {
             if (newOwner.getHasFortress() != 0) {
-                Fortress oldFortress = ResidenceHolder.getInstance().getResidence(Fortress.class, newOwner.getHasFortress());
+                Fortress oldFortress = ResidenceHolder.getResidence(Fortress.class, newOwner.getHasFortress());
                 if (oldFortress != null)
                     oldFortress.changeOwner(null);
             }
             if (newOwner.getCastle() != 0) {
-                Castle oldCastle = ResidenceHolder.getInstance().getResidence(Castle.class, newOwner.getCastle());
+                Castle oldCastle = ResidenceHolder.getResidence(Castle.class, newOwner.getCastle());
                 if (oldCastle != null)
                     oldCastle.changeOwner(null);
             }
@@ -164,7 +163,7 @@ public final class Castle extends Residence {
     // This method loads castle
     @Override
     protected void loadData() {
-        CastleEntity castleEntity = HibernateUtil.getSession().get(CastleEntity.class, _id);
+        CastleEntity castleEntity = HibernateUtil.getSession().get(CastleEntity.class, id);
         _TaxPercent = castleEntity.getTaxPercent();
         setTaxPercent(_TaxPercent);
         treasury = castleEntity.getTreasury();
@@ -179,10 +178,8 @@ public final class Castle extends Residence {
         _productionNext = new ArrayList<>();
         _isNextPeriodApproved = false;
 
-        _owner = ClanDataDAO.getInstance().getOwner(this);
-//        CastleDAO.INSTANCE().select(this);
-
-        CastleHiredGuardDAO.getInstance().load(this);
+        _owner = ClanDataDAO.INSTANCE.getOwner(this);
+        CastleHiredGuardDAO.INSTANCE.load(this);
     }
 
     private void updateOwnerInDB(Clan clan) {
@@ -248,9 +245,9 @@ public final class Castle extends Residence {
         if (amount == 0)
             return;
 
-        if (amount > 1 && _id != 5 && _id != 8) // If current castle instance is not Aden or Rune
+        if (amount > 1 && id != 5 && id != 8) // If current castle instance is not Aden or Rune
         {
-            Castle royal = ResidenceHolder.getInstance().getResidence(Castle.class, _id >= 7 ? 8 : 5);
+            Castle royal = ResidenceHolder.getResidence(Castle.class, id >= 7 ? 8 : 5);
             if (royal != null) {
                 long royalTax = (long) (amount * royal.getTaxRate()); // Find out what royal castle gets from the current castle instance's income
                 if (royal.getOwnerId() > 0) {
@@ -386,11 +383,8 @@ public final class Castle extends Residence {
 
     // Save manor production data
     public void saveSeedData() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(CASTLE_MANOR_DELETE_PRODUCTION);
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement(CASTLE_MANOR_DELETE_PRODUCTION);
             statement.setInt(1, getId());
             statement.execute();
 
@@ -429,8 +423,6 @@ public final class Castle extends Residence {
             }
         } catch (SQLException e) {
             _log.error("Error adding seed production data for castle " + getName() + '!', e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -510,18 +502,13 @@ public final class Castle extends Residence {
 
     // Save crop procure data for specified period
     public void saveCropData(int period) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(CASTLE_MANOR_DELETE_PROCURE_PERIOD);
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement(CASTLE_MANOR_DELETE_PROCURE_PERIOD);
             statement.setInt(1, getId());
             statement.setInt(2, period);
             statement.execute();
-            DbUtils.close(statement);
 
-            List<CropProcure> proc = null;
-            proc = getCropProcure(period);
+            List<CropProcure> proc = getCropProcure(period);
 
             if (proc != null) {
                 int count = 0;
@@ -538,22 +525,16 @@ public final class Castle extends Residence {
                         query += "," + values[i];
                     statement = con.prepareStatement(query);
                     statement.execute();
-                    DbUtils.close(statement);
                 }
             }
         } catch (SQLException e) {
             _log.error("Error adding crop data for castle " + getName() + '!', e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     public void updateCrop(int cropId, long amount, int period) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(CASTLE_UPDATE_CROP);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(CASTLE_UPDATE_CROP)) {
             statement.setLong(1, amount);
             statement.setInt(2, cropId);
             statement.setInt(3, getId());
@@ -561,17 +542,12 @@ public final class Castle extends Residence {
             statement.execute();
         } catch (SQLException e) {
             _log.error("Error adding crop data for castle " + getName() + '!', e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     public void updateSeed(int seedId, long amount, int period) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(CASTLE_UPDATE_SEED);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(CASTLE_UPDATE_SEED)) {
             statement.setLong(1, amount);
             statement.setInt(2, seedId);
             statement.setInt(3, getId());
@@ -579,8 +555,6 @@ public final class Castle extends Residence {
             statement.execute();
         } catch (SQLException e) {
             _log.error("Error adding seed production data for castle " + getName() + '!', e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -615,7 +589,7 @@ public final class Castle extends Residence {
 
     @Override
     public void update() {
-        CastleDAO.getInstance().update(this);
+        CastleDAO.INSTANCE.update(this);
     }
 
     public NpcString getNpcStringName() {

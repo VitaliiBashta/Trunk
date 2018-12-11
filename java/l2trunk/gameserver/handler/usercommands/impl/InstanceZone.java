@@ -27,7 +27,7 @@ public final class InstanceZone implements IUserCommandHandler {
         boolean noLimit = true;
         boolean showMsg = false;
         for (int i : activeChar.getInstanceReuses().keySet()) {
-            limit = InstantZoneHolder.getInstance().getMinutesToNextEntrance(i, activeChar);
+            limit = InstantZoneHolder.getMinutesToNextEntrance(i, activeChar);
             if (limit > 0) {
                 noLimit = false;
                 if (!showMsg) {

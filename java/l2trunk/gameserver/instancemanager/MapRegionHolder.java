@@ -1,37 +1,31 @@
 package l2trunk.gameserver.instancemanager;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.templates.mapregion.RegionData;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Менеджер специальных зон регионов.
- *
- * @author G1ta0
- */
-public final class MapRegionManager extends AbstractHolder {
-    private static final MapRegionManager _instance = new MapRegionManager();
-    private final RegionData[][][] map = new RegionData[World.WORLD_SIZE_X][World.WORLD_SIZE_Y][0];
+public final class MapRegionHolder /*extends AbstractHolder*/ {
+    private static final MapRegionHolder _instance = new MapRegionHolder();
+    private static final RegionData[][][] map = new RegionData[World.WORLD_SIZE_X][World.WORLD_SIZE_Y][0];
 
-    private MapRegionManager() {
+    private MapRegionHolder() {
     }
 
-    public static MapRegionManager getInstance() {
+    public static MapRegionHolder getInstance() {
         return _instance;
     }
 
-    private int regionX(int x) {
+    private static int regionX(int x) {
         return (x - World.MAP_MIN_X >> 15);
     }
 
-    private int regionY(int y) {
+    private static int regionY(int y) {
         return (y - World.MAP_MIN_Y >> 15);
     }
 
-    public void addRegionData(RegionData rd) {
+    public static void addRegionData(RegionData rd) {
         for (int x = regionX(rd.getTerritory().getXmin()); x <= regionX(rd.getTerritory().getXmax()); x++)
             for (int y = regionY(rd.getTerritory().getYmin()); y <= regionY(rd.getTerritory().getYmax()); y++) {
                 map[x][y] = ArrayUtils.add(map[x][y], rd);
@@ -57,12 +51,10 @@ public final class MapRegionManager extends AbstractHolder {
         return null;
     }
 
-    @Override
-    public int size() {
+    public static int size() {
         return World.WORLD_SIZE_X * World.WORLD_SIZE_Y;
     }
 
-    @Override
     public void clear() {
 
     }

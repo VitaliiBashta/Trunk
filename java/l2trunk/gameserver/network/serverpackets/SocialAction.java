@@ -22,18 +22,18 @@ public final class SocialAction extends L2GameServerPacket {
     public static final int GIVE_HERO = 20016;
     public static final int CURSED_WEAPON_LEVEL_UP = 20017;
     public static final int LEVEL_UP = 2122;
-    private final int _playerId;
-    private final int _actionId;
+    private final int playerId;
+    private final int actionId;
 
     public SocialAction(int playerId, int actionId) {
-        _playerId = playerId;
-        _actionId = actionId;
+        this.playerId = playerId;
+        this.actionId = actionId;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x27);
-        writeD(_playerId);
-        writeD(_actionId);
+        writeD(playerId);
+        writeD(actionId);
     }
 }

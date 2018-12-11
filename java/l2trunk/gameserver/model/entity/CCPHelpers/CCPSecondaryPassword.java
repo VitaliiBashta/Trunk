@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
-public class CCPSecondaryPassword {
+public final class CCPSecondaryPassword {
     private static final Logger _log = LoggerFactory.getLogger(CCPSecondaryPassword.class);
 
     public static void startSecondaryPasswordSetup(Player player, String text) {
@@ -27,9 +27,9 @@ public class CCPSecondaryPassword {
 
         if (pageIndex.equals("F")) {
             if (hasPassword(player))
-                sendHtml(player, HtmCache.INSTANCE().getNotNull("command/cfgSPSecondaryChange.htm", player));
+                sendHtml(player, HtmCache.INSTANCE.getNotNull("command/cfgSPSecondaryChange.htm", player));
             else
-                sendHtml(player, HtmCache.INSTANCE().getNotNull("command/cfgSPSecondarySet.htm", player));
+                sendHtml(player, HtmCache.INSTANCE.getNotNull("command/cfgSPSecondarySet.htm", player));
             return;
         }
         if (args.length < 2) {

@@ -16,7 +16,7 @@ public class EffectRandomHate extends Effect {
 
     @Override
     public boolean checkCondition() {
-        return getEffected().isMonster() && Rnd.chance(_template.chance(100));
+        return getEffected().isMonster() && Rnd.chance(template.chance(100));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
@@ -13,7 +12,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.List;
 
-public class RequestPetUseItem extends L2GameClientPacket {
+public final class RequestPetUseItem extends L2GameClientPacket {
     private int _objectId;
 
     @Override
@@ -57,13 +56,13 @@ public class RequestPetUseItem extends L2GameClientPacket {
         if (pet.tryFeedItem(item))
             return;
 
-        if (ArrayUtils.contains(Config.ALT_ALLOWED_PET_POTIONS, item.getItemId())) {
+        if (Config.ALT_ALLOWED_PET_POTIONS.contains(item.getItemId())) {
             List<Skill> skills = item.getTemplate().getAttachedSkills();
-                for (Skill skill : skills) {
-                    Creature aimingTarget = skill.getAimingTarget(pet, pet.getTarget());
-                    if (skill.checkCondition(pet, aimingTarget, false, false, true))
-                        pet.getAI().Cast(skill, aimingTarget, false, false);
-                }
+            for (Skill skill : skills) {
+                Creature aimingTarget = skill.getAimingTarget(pet, pet.getTarget());
+                if (skill.checkCondition(pet, aimingTarget, false, false, true))
+                    pet.getAI().Cast(skill, aimingTarget, false, false);
+            }
             return;
         }
 

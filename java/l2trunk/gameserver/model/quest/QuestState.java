@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class QuestState {
     public static final String VAR_COND = "cond";
-    public final static QuestState[] EMPTY_ARRAY = new QuestState[0];
     private static final int RESTART_HOUR = 6;
     private static final int RESTART_MINUTES = 30;
     private static final Logger _log = LoggerFactory.getLogger(QuestState.class);
@@ -347,7 +346,7 @@ public final class QuestState {
             count = 1;
 
         // Get template of item
-        ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate template = ItemHolder.getTemplate(itemId);
         if (template == null)
             return;
 
@@ -414,7 +413,7 @@ public final class QuestState {
         if (getQuest().getParty() > Quest.PARTY_NONE) {
             Player player = getPlayer();
             if (player.getParty() != null)
-                calcChance *= Config.ALT_PARTY_BONUS[player.getParty().getMemberCountInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) - 1];
+                calcChance *= Config.ALT_PARTY_BONUS.get(player.getParty().getMemberCountInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) - 1)/100.;
         }
         if (calcChance > 100) {
             if ((int) Math.ceil(calcChance / 100) <= calcChance / 100)

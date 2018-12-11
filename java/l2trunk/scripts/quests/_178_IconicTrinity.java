@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _178_IconicTrinity extends Quest implements ScriptFile {
+public final class _178_IconicTrinity extends Quest implements ScriptFile {
     //NPC
     private static final int Kekropus = 32138;
     private static final int IconOfThePast = 32255;
@@ -64,9 +64,9 @@ public class _178_IconicTrinity extends Quest implements ScriptFile {
             if (!event.equals("0")) {
                 if (st.get("id") == null)
                     st.set("id", "");
-                String id = st.get("id").toString();
+                String id = st.get("id");
                 st.set("id", id + event);
-                len = st.get("id").toString().length();
+                len = st.get("id").length();
             }
             if (!event.equals("0") && len == 4 && (cond == 1 || cond == 2) || len == 5 && cond == 3) {
                 if (cond == 1 && st.get("id") != null && st.get("id").toString().equalsIgnoreCase("CRTR"))
@@ -81,11 +81,11 @@ public class _178_IconicTrinity extends Quest implements ScriptFile {
                 }
             } else {
                 if (cond == 1)
-                    htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/32255-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32255-03.htm", st.getPlayer());
                 else if (cond == 2)
-                    htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/32256-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32256-03.htm", st.getPlayer());
                 else
-                    htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/32257-03.htm", st.getPlayer());
+                    htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/32257-03.htm", st.getPlayer());
 
                 if (len == 0)
                     htmltext = htmltext.replace("Password :  ", "").replace("#N", "first");

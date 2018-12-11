@@ -10,6 +10,7 @@ import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.PlayerClass;
 import l2trunk.gameserver.model.base.Race;
+import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExPCCafePointInfo;
@@ -30,7 +31,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class AdminEditChar implements IAdminCommandHandler {
+public final class AdminEditChar implements IAdminCommandHandler {
     public static void showCharacterList(Player activeChar, Player player) {
         if (player == null) {
             GameObject target = activeChar.getTarget();
@@ -273,19 +274,11 @@ public class AdminEditChar implements IAdminCommandHandler {
             if (player.isHero() || player.isFakeHero()) {
                 player.setHero(false);
                 player.updatePledgeClass();
-                player.removeSkill(SkillTable.INSTANCE().getInfo(395, 1));
-                player.removeSkill(SkillTable.INSTANCE().getInfo(396, 1));
-                player.removeSkill(SkillTable.INSTANCE().getInfo(1374, 1));
-                player.removeSkill(SkillTable.INSTANCE().getInfo(1375, 1));
-                player.removeSkill(SkillTable.INSTANCE().getInfo(1376, 1));
+                Hero.removeSkills(player);
             } else {
                 player.setHero(true);
                 player.updatePledgeClass();
-                player.addSkill(SkillTable.INSTANCE().getInfo(395, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(396, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(1374, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(1375, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(1376, 1));
+                Hero.addSkills(player);
             }
 
             player.sendPacket(new SkillList(player));
@@ -325,7 +318,7 @@ public class AdminEditChar implements IAdminCommandHandler {
             player.broadcastUserInfo(true);
         } else if (fullString.startsWith("admin_setsex")) {
             GameObject target = activeChar.getTarget();
-            Player player = null;
+            Player player;
             if (target != null && target.isPlayer())
                 player = (Player) target;
             else
@@ -337,7 +330,7 @@ public class AdminEditChar implements IAdminCommandHandler {
             try {
                 String val = fullString.substring(15);
                 GameObject target = activeChar.getTarget();
-                Player player = null;
+                Player player;
                 if (target != null && target.isPlayer())
                     player = (Player) target;
                 else

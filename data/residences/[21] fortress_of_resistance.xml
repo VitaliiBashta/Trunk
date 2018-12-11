@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE residence SYSTEM "residence.dtd">
+<!DOCTYPE residence SYSTEM "residences.dtd">
 <residence id="21" name="Fortress of Resistance" impl="ClanHall">
 	<support level="3" lease="7000"/>
 	<support level="13" lease="70000"/>

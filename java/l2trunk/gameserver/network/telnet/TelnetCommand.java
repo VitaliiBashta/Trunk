@@ -1,14 +1,12 @@
 package l2trunk.gameserver.network.telnet;
 
 
-import l2trunk.commons.lang.ArrayUtils;
-
 public abstract class TelnetCommand implements Comparable<TelnetCommand> {
     private final String command;
     private final String[] acronyms;
 
     public TelnetCommand(String command) {
-        this(command, ArrayUtils.EMPTY_STRING_ARRAY);
+        this(command, new String[0]);
     }
 
     public TelnetCommand(String command, String... acronyms) {

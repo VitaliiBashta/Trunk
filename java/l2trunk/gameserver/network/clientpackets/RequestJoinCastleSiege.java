@@ -39,7 +39,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
 
         if (join) {
             Residence registeredCastle = null;
-            for (Residence residence : ResidenceHolder.getInstance().getResidenceList(Castle.class)) {
+            for (Residence residence : ResidenceHolder.getResidenceList(Castle.class)) {
                 SiegeClanObject tempCastle = residence.getSiegeEvent().getSiegeClan(CastleSiegeEvent.ATTACKERS, playerClan);
 
                 if (tempCastle == null)
@@ -112,7 +112,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
                 siegeClan = new SiegeClanObject(CastleSiegeEvent.ATTACKERS, playerClan, 0);
                 siegeEvent.addObject(CastleSiegeEvent.ATTACKERS, siegeClan);
 
-                SiegeClanDAO.getInstance().insert(castle, siegeClan);
+                SiegeClanDAO.INSTANCE.insert(castle, siegeClan);
 
                 player.sendPacket(new CastleSiegeAttackerList(castle));
             } else {
@@ -157,7 +157,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
                 siegeClan = new SiegeClanObject(CastleSiegeEvent.DEFENDERS_WAITING, playerClan, 0);
                 siegeEvent.addObject(CastleSiegeEvent.DEFENDERS_WAITING, siegeClan);
 
-                SiegeClanDAO.getInstance().insert(castle, siegeClan);
+                SiegeClanDAO.INSTANCE.insert(castle, siegeClan);
 
                 player.sendPacket(new CastleSiegeDefenderList(castle));
             }
@@ -177,8 +177,8 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
 
             siegeEvent.removeObject(siegeClan.getType(), siegeClan);
 
-            SiegeClanDAO.getInstance().delete(castle, siegeClan);
-            if (siegeClan.getType() == SiegeEvent.ATTACKERS)
+            SiegeClanDAO.INSTANCE.delete(castle, siegeClan);
+            if (siegeClan.getType().equals(SiegeEvent.ATTACKERS))
                 player.sendPacket(new CastleSiegeAttackerList(castle));
             else
                 player.sendPacket(new CastleSiegeDefenderList(castle));
@@ -222,7 +222,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
             siegeClan = new SiegeClanObject(ClanHallSiegeEvent.ATTACKERS, playerClan, 0);
             siegeEvent.addObject(ClanHallSiegeEvent.ATTACKERS, siegeClan);
 
-            SiegeClanDAO.getInstance().insert(clanHall, siegeClan);
+            SiegeClanDAO.INSTANCE.insert(clanHall, siegeClan);
         } else {
             if (siegeClan == null) {
                 player.sendPacket(SystemMsg.YOU_ARE_NOT_YET_REGISTERED_FOR_THE_CASTLE_SIEGE);
@@ -236,7 +236,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
 
             siegeEvent.removeObject(siegeClan.getType(), siegeClan);
 
-            SiegeClanDAO.getInstance().delete(clanHall, siegeClan);
+            SiegeClanDAO.INSTANCE.delete(clanHall, siegeClan);
         }
 
         player.sendPacket(new CastleSiegeAttackerList(clanHall));
@@ -260,7 +260,7 @@ public class RequestJoinCastleSiege extends L2GameClientPacket {
             return;
         }
 
-        Residence residence = ResidenceHolder.getInstance().getResidence(_id);
+        Residence residence = ResidenceHolder.getResidence(_id);
 
         if (residence.getType() == ResidenceType.Castle)
             registerAtCastle(player, (Castle) residence, _isAttacker, _isJoining);

@@ -13,7 +13,7 @@ public final class SubClass {
     private int classId = 0;
     private long _exp = Experience.LEVEL[Config.ALT_GAME_START_LEVEL_TO_SUBCLASS], minExp = Experience.LEVEL[Config.ALT_GAME_START_LEVEL_TO_SUBCLASS], maxExp = Experience.LEVEL[Experience.LEVEL.length - 1];
     private int _sp = 0;
-    private int _level = Config.ALT_GAME_START_LEVEL_TO_SUBCLASS, certification;
+    private int level = Config.ALT_GAME_START_LEVEL_TO_SUBCLASS, certification;
     private double _Hp = 1, _Mp = 1, _Cp = 1;
     private boolean _active = false, base = false;
     private DeathPenalty deathPenalty;
@@ -38,7 +38,7 @@ public final class SubClass {
         val = Math.min(val, maxExp);
 
         _exp = val;
-        _level = Experience.getLevel(_exp);
+        level = Experience.getLevel(_exp);
     }
 
     public long getMaxExp() {
@@ -65,7 +65,7 @@ public final class SubClass {
     }
 
     public int getLevel() {
-        return _level;
+        return level;
     }
 
     public double getHp() {
@@ -138,7 +138,7 @@ public final class SubClass {
 
     @Override
     public String toString() {
-        return ClassId.VALUES[classId].toString() + " " + _level;
+        return ClassId.VALUES[classId].toString() + " " + level;
     }
 
     public String toStringCB() {

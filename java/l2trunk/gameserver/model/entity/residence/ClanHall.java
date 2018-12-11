@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.residence;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.dao.ClanDataDAO;
 import l2trunk.gameserver.dao.ClanHallDAO;
 import l2trunk.gameserver.data.xml.holder.DoorHolder;
@@ -22,10 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public final class ClanHall extends Residence {
-    private static final long serialVersionUID = 1L;
-
     private static final Logger _log = LoggerFactory.getLogger(ClanHall.class);
 
     private static final int REWARD_CYCLE = 168; // 1 week - 7 days - 168 hours
@@ -91,43 +89,35 @@ public final class ClanHall extends Residence {
 
     @Override
     protected void loadData() {
-        _owner = ClanDataDAO.getInstance().getOwner(this);
+        _owner = ClanDataDAO.INSTANCE.getOwner(this);
 
-        ClanHallDAO.getInstance().select(this);
+        ClanHallDAO.INSTANCE.select(this);
     }
 
     private void updateOwnerInDB(Clan clan) {
         _owner = clan;
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE clan_data SET hasHideout=0 WHERE hasHideout=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement("UPDATE clan_data SET hasHideout=0 WHERE hasHideout=?");
             statement.setInt(1, getId());
             statement.execute();
-            DbUtils.close(statement);
 
             statement = con.prepareStatement("UPDATE clan_data SET hasHideout=? WHERE clan_id=?");
             statement.setInt(1, getId());
             statement.setInt(2, getOwnerId());
             statement.execute();
-            DbUtils.close(statement);
 
             statement = con.prepareStatement("DELETE FROM residence_functions WHERE id=?");
             statement.setInt(1, getId());
             statement.execute();
-            DbUtils.close(statement);
 
             // Announce to clan memebers
             if (clan != null) {
                 clan.setHasHideout(getId()); // Set has hideout flag for new owner
                 clan.broadcastClanStatus(false, true, false);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.warn("Exception: updateOwnerInDB(L2Clan clan): " + e, e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -137,7 +127,7 @@ public final class ClanHall extends Residence {
 
     @Override
     public void update() {
-        ClanHallDAO.getInstance().update(this);
+        ClanHallDAO.INSTANCE.update(this);
     }
 
     public int getAuctionLength() {
@@ -205,12 +195,9 @@ public final class ClanHall extends Residence {
      * @return Returns true if all clan hall doors are closed
      */
     private boolean isDoorsClosed() {
-        for (DoorTemplate door : DoorHolder.getInstance().getDoors().values()) {
-            if (door != null && door.getAIParams().getInteger("residence_id", 0) == getId() && door.isOpened())
-                return false;
-        }
-
-        return true;
+        return DoorHolder.getDoors().values().stream()
+                .filter(door -> door.getAIParams().getInteger("residence_id", 0) == getId())
+                .noneMatch(DoorTemplate::isOpened);
     }
 
     // Alexander - Listener to control players that enter the clan hall, when doors are closed

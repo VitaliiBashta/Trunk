@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class _10275_ContainingTheAttributePower extends Quest implements ScriptFile {
+public final class _10275_ContainingTheAttributePower extends Quest implements ScriptFile {
     private final static int Holly = 30839;
     private final static int Weber = 31307;
     private final static int Yin = 32325;
@@ -88,12 +88,12 @@ public class _10275_ContainingTheAttributePower extends Quest implements ScriptF
             st.giveItems(YangSword, 1, Element.EARTH, 10);
         } else if (event.equalsIgnoreCase("32325-09.htm")) {
             st.setCond(5);
-            SkillTable.INSTANCE().getInfo(2635, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(2635).getEffects(player, player, false, false);
             st.giveItems(YinSword, 1, Element.FIRE, 10);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("32326-09.htm")) {
             st.setCond(10);
-            SkillTable.INSTANCE().getInfo(2636, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(2636).getEffects(player, player, false, false);
             st.giveItems(YangSword, 1, Element.EARTH, 10);
             st.playSound(SOUND_MIDDLE);
         } else {

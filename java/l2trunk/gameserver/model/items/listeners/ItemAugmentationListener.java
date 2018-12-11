@@ -32,7 +32,7 @@ public final class ItemAugmentationListener implements OnEquipListener {
 
         boolean sendList = false;
         for (int i : stats) {
-            OptionDataTemplate template = OptionDataHolder.getInstance().getTemplate(i);
+            OptionDataTemplate template = OptionDataHolder.getTemplate(i);
             if (template == null)
                 continue;
 
@@ -72,7 +72,7 @@ public final class ItemAugmentationListener implements OnEquipListener {
         boolean sendList = false;
         boolean sendReuseList = false;
         for (int i : stats) {
-            OptionDataTemplate template = OptionDataHolder.getInstance().getTemplate(i);
+            OptionDataTemplate template = OptionDataHolder.getTemplate(i);
             if (template == null)
                 continue;
 

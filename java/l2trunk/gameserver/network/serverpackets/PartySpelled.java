@@ -1,11 +1,10 @@
 package l2trunk.gameserver.network.serverpackets;
 
+import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.utils.EffectsComparator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 public class PartySpelled extends L2GameServerPacket {
@@ -19,8 +18,8 @@ public class PartySpelled extends L2GameServerPacket {
         // 0 - L2Player // 1 - петы // 2 - саммоны
         _effects = new ArrayList<>();
         if (full) {
-            l2trunk.gameserver.model.Effect[] effects = activeChar.getEffectList().getAllFirstEffects();
-            Arrays.sort(effects, EffectsComparator.getInstance());
+            List<l2trunk.gameserver.model.Effect> effects = activeChar.getEffectList().getAllFirstEffects();
+            effects.sort(EffectsComparator.getInstance());
             for (l2trunk.gameserver.model.Effect effect : effects)
                 if (effect != null && effect.isInUse())
                     effect.addPartySpelledIcon(this);

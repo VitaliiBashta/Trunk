@@ -13,37 +13,31 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author pchayka
- * <p>
- * TODO: удалять квест у доверенного лица
- */
-
-public class _716_PathToBecomingALordRune extends Quest implements ScriptFile {
+public final class _716_PathToBecomingALordRune extends Quest implements ScriptFile {
     private static final int Frederick = 35509;
     private static final int Agripel = 31348;
     private static final int Innocentin = 31328;
 
     private static final int RuneCastle = 8;
-    private static final List<Integer> Pagans = new ArrayList<>();
+    private static final List<Integer> PAGANS = new ArrayList<>();
 
     static {
         for (int i = 22138; i <= 22176; i++)
-            Pagans.add(i);
+            PAGANS.add(i);
         for (int i = 22188; i <= 22195; i++)
-            Pagans.add(i);
+            PAGANS.add(i);
     }
 
     public _716_PathToBecomingALordRune() {
         super(false);
         addStartNpc(Frederick);
         addTalkId(Agripel, Innocentin);
-        addKillId(Pagans);
+        addKillId(PAGANS);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(RuneCastle);
+        Castle castle = ResidenceHolder.getResidence(RuneCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -70,7 +64,7 @@ public class _716_PathToBecomingALordRune extends Quest implements ScriptFile {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(RuneCastle);
+        Castle castle = ResidenceHolder.getResidence(RuneCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -152,7 +146,7 @@ public class _716_PathToBecomingALordRune extends Quest implements ScriptFile {
 
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(RuneCastle);
+        Castle castle = ResidenceHolder.getResidence(RuneCastle);
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (st.getState() == STARTED && st.getCond() == 0) {
             if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this.getClass()) != null && castleOwner.getQuestState(this.getClass()).getCond() == 7) {

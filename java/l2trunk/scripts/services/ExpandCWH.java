@@ -50,7 +50,7 @@ class ExpandCWH extends Functions {
             return;
         }
 
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.SERVICES_EXPAND_CWH_ITEM);
+        ItemTemplate item = ItemHolder.getTemplate(Config.SERVICES_EXPAND_CWH_ITEM);
 
         String out = "";
 

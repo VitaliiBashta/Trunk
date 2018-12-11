@@ -20,6 +20,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public final class PcInventory extends Inventory {
     private static final int[][] arrows = {
@@ -47,7 +48,7 @@ public final class PcInventory extends Inventory {
     public boolean isRefresh = false;
     // locks
     private LockType _lockType = LockType.NONE;
-    private int[] _lockItems = ArrayUtils.EMPTY_INT_ARRAY;
+    private List<Integer> _lockItems = Collections.emptyList();
     // Alexander - Vars to check when visual ids for items of dressme must be used. Only when the set is complete
     private boolean _mustShowDressMe = false;
 
@@ -262,7 +263,7 @@ public final class PcInventory extends Inventory {
 
     public ItemInstance findArrowForBow(ItemTemplate bow) {
         int[] arrowsId = arrows[bow.getCrystalType().externalOrdinal];
-        ItemInstance ret = null;
+        ItemInstance ret;
         for (int id : arrowsId) {
             if ((ret = getItemByItemId(id)) != null) {
                 return ret;
@@ -273,7 +274,7 @@ public final class PcInventory extends Inventory {
 
     public ItemInstance findArrowForCrossbow(ItemTemplate xbow) {
         int[] boltsId = bolts[xbow.getCrystalType().externalOrdinal];
-        ItemInstance ret = null;
+        ItemInstance ret;
         for (int id : boltsId) {
             if ((ret = getItemByItemId(id)) != null) {
                 return ret;
@@ -302,7 +303,7 @@ public final class PcInventory extends Inventory {
         return res;
     }
 
-    public void lockItems(LockType lock, int[] items) {
+    public void lockItems(LockType lock, List<Integer> items) {
         if (_lockType != LockType.NONE) {
             return;
         }
@@ -319,7 +320,7 @@ public final class PcInventory extends Inventory {
         }
 
         _lockType = LockType.NONE;
-        _lockItems = ArrayUtils.EMPTY_INT_ARRAY;
+        _lockItems = Collections.emptyList();
 
         getActor().sendItemList(false);
     }
@@ -327,9 +328,9 @@ public final class PcInventory extends Inventory {
     public boolean isLockedItem(ItemInstance item) {
         switch (_lockType) {
             case INCLUDE:
-                return ArrayUtils.contains(_lockItems, item.getItemId());
+                return _lockItems.contains(item.getItemId());
             case EXCLUDE:
-                return !ArrayUtils.contains(_lockItems, item.getItemId());
+                return !_lockItems.contains(item.getItemId());
             default:
                 return false;
         }
@@ -339,7 +340,7 @@ public final class PcInventory extends Inventory {
         return _lockType;
     }
 
-    public int[] getLockItems() {
+    public List<Integer> getLockItems() {
         return _lockItems;
     }
 
@@ -536,7 +537,7 @@ public final class PcInventory extends Inventory {
     protected void onDestroyItem(ItemInstance item) {
         // Alexander - If one item of the set for the dress me system is destroyed, then we have to disolve the complete set to avoid problems
         if (item.getVisualItemId() > 0) {
-            DressArmorData dress = DressArmorHolder.getInstance().getArmorByPartId(item.getVisualItemId());
+            DressArmorData dress = DressArmorHolder.getArmorByPartId(item.getVisualItemId());
             if (dress != null) {
                 for (ItemInstance invItem : getItems()) {
                     if (invItem.getObjectId() == item.getObjectId())

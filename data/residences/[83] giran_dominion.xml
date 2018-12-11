@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE residence SYSTEM "residence.dtd">
+<!DOCTYPE residence SYSTEM "residences.dtd">
 <residence id="83" name="Giran" impl="Dominion">
 	<skills>
 		<skill id="850" level="1" /> <!--Giran Territory Benefaction-->

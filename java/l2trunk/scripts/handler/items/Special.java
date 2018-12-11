@@ -323,10 +323,10 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     //Dewdrop of Destruction
     private boolean use8556(Player player, boolean ctrl) {
-        int[] npcs = {29048, 29049};
+        List<Integer> npcs = Arrays.asList(29048, 29049);
 
         GameObject t = player.getTarget();
-        if (t == null || !t.isNpc() || !ArrayUtils.contains(npcs, ((NpcInstance) t).getNpcId())) {
+        if (t == null || !t.isNpc() || !npcs.contains(((NpcInstance) t).getNpcId())) {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(8556));
             return false;
         }
@@ -353,14 +353,14 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     //Holy Water for SSQ 2nd quest
     private boolean use13808(Player player, boolean ctrl) {
-        int[] allowedDoors = {17240101, 17240105, 17240109};
+        List<Integer> allowedDoors = Arrays.asList(17240101, 17240105, 17240109);
 
         GameObject target = player.getTarget();
         if (player.getDistance(target) > 150)
             return false;
         if (target != null && target.isDoor()) {
             int _door = ((DoorInstance) target).getDoorId();
-            if (ArrayUtils.contains(allowedDoors, _door))
+            if (allowedDoors.contains(_door))
                 player.getReflection().openDoor(_door);
             else {
                 player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
@@ -375,10 +375,6 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     // My teleport SpellBook (Capacity added + 3)
     private boolean use13015(Player player, boolean ctrl) {
-        if (player == null || !(player instanceof Player)) {
-            player.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
-            return false;
-        }
         if (player.bookmarks.getCapacity() >= 30) {
             player.sendPacket(new SystemMessage(SystemMessage.YOUR_NUMBER_OF_MY_TELEPORTS_SLOTS_HAS_REACHED_ITS_MAXIMUM_LIMIT));
             return false;
@@ -391,12 +387,12 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     //Court Mag Staff for SSQ 2nd quest
     private boolean use13809(Player player, boolean ctrl) {
-        int[] allowedDoors = {17240103, 17240107};
+        List<Integer> allowedDoors = Arrays.asList(17240103, 17240107);
 
         GameObject target = player.getTarget();
         if (target != null && target.isDoor()) {
             int _door = ((DoorInstance) target).getDoorId();
-            if (ArrayUtils.contains(allowedDoors, _door)) {
+            if (allowedDoors.contains(_door)) {
                 useItem(player, 13809, 1);
                 player.getReflection().openDoor(_door);
                 return false;
@@ -522,7 +518,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21903));
             return false;
         }
-        player.doCast(SkillTable.INSTANCE().getInfo(22298, 1), player, false);
+        player.doCast(SkillTable.INSTANCE.getInfo(22298), player, false);
         Functions.removeItem(player, 21903, 1, "use21903");
         return true;
     }
@@ -533,7 +529,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21904));
             return false;
         }
-        player.doCast(SkillTable.INSTANCE().getInfo(22299, 1), player, false);
+        player.doCast(SkillTable.INSTANCE.getInfo(22299), player, false);
         Functions.removeItem(player, 21904, 1, "use21904");
         return true;
     }
@@ -544,7 +540,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(17268));
             return false;
         }
-        player.doCast(SkillTable.INSTANCE().getInfo(9179, 1), player, false);
+        player.doCast(SkillTable.INSTANCE.getInfo(9179), player, false);
         Functions.removeItem(player, 17268, 1, "use17268");
         return true;
     }

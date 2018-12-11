@@ -8,11 +8,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _715_PathToBecomingALordGoddard extends Quest implements ScriptFile {
+public final class _715_PathToBecomingALordGoddard extends Quest implements ScriptFile {
     private static final int Alfred = 35363;
 
     private static final int WaterSpiritAshutar = 25316;
@@ -28,23 +24,28 @@ public class _715_PathToBecomingALordGoddard extends Quest implements ScriptFile
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(GoddardCastle);
+        Castle castle = ResidenceHolder.getResidence(GoddardCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
-        if (event.equals("alfred_q715_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("alfred_q715_04a.htm")) {
-            st.setCond(3);
-        } else if (event.equals("alfred_q715_04b.htm")) {
-            st.setCond(2);
-        } else if (event.equals("alfred_q715_08.htm")) {
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+        switch (event) {
+            case "alfred_q715_03.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "alfred_q715_04a.htm":
+                st.setCond(3);
+                break;
+            case "alfred_q715_04b.htm":
+                st.setCond(2);
+                break;
+            case "alfred_q715_08.htm":
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return event;
     }
@@ -54,7 +55,7 @@ public class _715_PathToBecomingALordGoddard extends Quest implements ScriptFile
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(GoddardCastle);
+        Castle castle = ResidenceHolder.getResidence(GoddardCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();

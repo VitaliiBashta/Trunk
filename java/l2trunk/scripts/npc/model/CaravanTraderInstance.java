@@ -220,7 +220,7 @@ public final class CaravanTraderInstance extends NpcInstance {
             }
         } else if (command.startsWith("secret_med")) // Hude
         {
-            MultiSellHolder.getInstance().SeparateAndSend(250980014, player, 0);
+            MultiSellHolder.INSTANCE.SeparateAndSend(250980014, player, 0);
         } else if (command.startsWith("get_third")) // Hude
         {
             if (player.getInventory().getCountOf(SecondMark) >= 1 && player.getInventory().getCountOf(LifeForce) >= 56 && player.getInventory().getCountOf(ContainedLifeForce) >= 14) {
@@ -235,7 +235,7 @@ public final class CaravanTraderInstance extends NpcInstance {
             }
         } else if (command.startsWith("s80_trade")) // Hude
         {
-            MultiSellHolder.getInstance().SeparateAndSend(250980013, player, 0);
+            MultiSellHolder.INSTANCE.SeparateAndSend(250980013, player, 0);
         } else if (command.startsWith("try_open_door")) // Traitor
         {
             if (player.getInventory().getCountOf(MarkOfBetrayal) >= 10) {
@@ -275,7 +275,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                     showDialog(player, getHtmlPath(getNpcId(), 2, player));
                     return;
                 }
-                members.forEach(m ->m.teleToLocation(new Location(-22204, 277056, -15045)));
+            members.forEach(m -> m.teleToLocation(new Location(-22204, 277056, -15045)));
         } else if (command.startsWith("tully_dorian_entrance")) // Dorian
         {
             if (player.getParty() == null || !player.getParty().isLeader(player)) {
@@ -290,8 +290,7 @@ public final class CaravanTraderInstance extends NpcInstance {
                     return;
                 }
 
-            for (Player member : members)
-                member.teleToLocation(new Location(-13400, 272827, -15304));
+            members.forEach(member -> member.teleToLocation(new Location(-13400, 272827, -15304)));
         } else if (command.startsWith("enter_urban")) // Kanaf - urban area instance
         {
             Reflection r = player.getActiveReflection();

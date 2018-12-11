@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class AdminPoll implements IAdminCommandHandler {
+public final class AdminPoll implements IAdminCommandHandler {
     private static final String MAIN_FOLDER = "admin/poll/";
 
     /**
      * Use file name like: admin_new_poll.htm
      */
     private static String getPageHtml(String fileName, Player activeChar) {
-        return HtmCache.INSTANCE().getNotNull(MAIN_FOLDER + fileName, activeChar);
+        return HtmCache.INSTANCE.getNotNull(MAIN_FOLDER + fileName, activeChar);
     }
 
     private static String getButton(String buttonText, String bypass) {
@@ -47,7 +47,7 @@ public class AdminPoll implements IAdminCommandHandler {
                     return useAdminCommand(Commands.admin_poll_set_question, wordList, fullString, activeChar);
                 }
 
-                html = HtmCache.INSTANCE().getNotNull(MAIN_FOLDER + "admin_current_poll.htm", activeChar);
+                html = HtmCache.INSTANCE.getNotNull(MAIN_FOLDER + "admin_current_poll.htm", activeChar);
 
                 html = html.replace("%question%", currentPoll.getQuestion());
                 html = html.replace("%endDate%", currentPoll.getPollEndDate());

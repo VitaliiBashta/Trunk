@@ -1,18 +1,16 @@
 package l2trunk.gameserver.network.serverpackets;
 
 import Elemental.managers.GmEventManager;
-import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.RestartType;
-import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Die extends L2GameServerPacket {
+public final class Die extends L2GameServerPacket {
     private final int _objectId;
     private final boolean _fake;
     private final Map<RestartType, Boolean> _types = new HashMap<>(RestartType.VALUES.length);
@@ -25,7 +23,7 @@ public class Die extends L2GameServerPacket {
 
         if (cha.isMonster())
             _sweepable = ((MonsterInstance) cha).isSweepActive();
-        else if (cha.isPlayer() && !cha.getPlayer().isInPvPEvent() && GmEventManager.getInstance().canResurrect(cha.getPlayer())) {
+        else if (cha.isPlayer() && GmEventManager.INSTANCE.canResurrect(cha.getPlayer())) {
             Player player = (Player) cha;
             put(RestartType.FIXED, player.getPlayerAccess().ResurectFixed || ((player.getInventory().getCountOf(10649) > 0 || player.getInventory().getCountOf(13300) > 0) && !player.isOnSiegeField()));
             put(RestartType.AGATHION, player.isAgathionResAvailable());
@@ -38,11 +36,7 @@ public class Die extends L2GameServerPacket {
                 put(RestartType.TO_FORTRESS, clan.getHasFortress() > 0);
             }
 
-            for (GlobalEvent e : cha.getEvents())
-                e.checkRestartLocs(player, _types);
-            //If player is just leaving Fight club. to Giran timer is taking care of him
-            if (!player.isInFightClub() && player.getReflection().getId() == ReflectionManager.FIGHT_CLUB_REFLECTION_ID)
-                _types.clear();
+            cha.getEvents().forEach(e -> e.checkRestartLocs(player, _types));
 
             if (player.getVar("isPvPevents") != null)
                 isPvPevents = true;

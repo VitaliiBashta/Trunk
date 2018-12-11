@@ -3,12 +3,13 @@ package l2trunk.scripts.ai.dragonvalley;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
 
 public final class DustTracker extends Patrollers {
 
     public DustTracker(NpcInstance actor) {
         super(actor);
-        _points = new Location[]{new Location(125176, 111896, -3168),
+        points = Arrays.asList(new Location(125176, 111896, -3168),
                 new Location(124872, 109736, -3104),
                 new Location(123608, 108712, -3024),
                 new Location(122632, 108008, -2992),
@@ -19,6 +20,6 @@ public final class DustTracker extends Patrollers {
                 new Location(110264, 111320, -3152),
                 new Location(109512, 113432, -3088),
                 new Location(109272, 116104, -3104),
-                new Location(108008, 117912, -3056)};
+                new Location(108008, 117912, -3056));
     }
 }

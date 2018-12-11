@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class BeastShot extends ScriptItemHandler implements ScriptFile {
-    private final static Integer[] _itemIds = {6645, 6646, 6647, 20332, 20333, 20334};
+    private final static List<Integer> ITEM_IDS = Arrays.asList(6645, 6646, 6647, 20332, 20333, 20334);
 
 
     @Override
@@ -107,6 +107,6 @@ public final class BeastShot extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public final List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

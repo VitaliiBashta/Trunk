@@ -3,7 +3,6 @@ package l2trunk.gameserver.dao;
 import l2trunk.commons.dao.JdbcDAO;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.dao.JdbcEntityStats;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.mail.Mail;
@@ -20,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class MailDAO implements JdbcDAO<Integer, Mail> {
+public final class MailDAO implements JdbcDAO<Integer, Mail> {
     private static final Logger _log = LoggerFactory.getLogger(MailDAO.class);
 
     private final static String RESTORE_MAIL = "SELECT sender_id, sender_name, receiver_id, receiver_name, expire_time, topic, body, price, type, unread FROM mail WHERE message_id = ?";
@@ -84,12 +83,8 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
     }
 
     private void save0(Mail mail) throws SQLException {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(STORE_MAIL, Statement.RETURN_GENERATED_KEYS);
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement(STORE_MAIL, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, mail.getSenderId());
             statement.setString(2, mail.getSenderName());
             statement.setInt(3, mail.getReceiverId());
@@ -102,14 +97,12 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
             statement.setBoolean(10, mail.isUnread());
             statement.execute();
 
-            rset = statement.getGeneratedKeys();
+            ResultSet rset = statement.getGeneratedKeys();
             rset.next();
 
             mail.setMessageId(rset.getInt(1));
 
             if (!mail.getAttachments().isEmpty()) {
-                DbUtils.close(statement);
-
                 statement = con.prepareStatement(STORE_MAIL_ATTACHMENT);
 
                 for (ItemInstance item : mail.getAttachments()) {
@@ -121,8 +114,6 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
                 statement.executeBatch();
             }
 
-            DbUtils.close(statement);
-
             if (mail.getType() == Mail.SenderType.NORMAL) {
                 statement = con.prepareStatement(STORE_OWN_MAIL);
                 statement.setInt(1, mail.getSenderId());
@@ -131,27 +122,20 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
                 statement.execute();
             }
 
-            DbUtils.close(statement);
-
             statement = con.prepareStatement(STORE_OWN_MAIL);
             statement.setInt(1, mail.getReceiverId());
             statement.setInt(2, mail.getMessageId());
             statement.setBoolean(3, false);
             statement.execute();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
-
         insert.incrementAndGet();
     }
 
     private Mail load0(int messageId) throws SQLException {
         Mail mail = null;
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        PreparedStatement statement;
+        ResultSet rset;
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             statement = con.prepareStatement(RESTORE_MAIL);
             statement.setInt(1, messageId);
             rset = statement.executeQuery();
@@ -169,7 +153,6 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
                 mail.setType(Mail.SenderType.VALUES[rset.getInt(9)]);
                 mail.setUnread(rset.getBoolean(10));
 
-                DbUtils.close(statement, rset);
 
                 statement = con.prepareStatement(RESTORE_MAIL_ATTACHMENTS);
                 statement.setInt(1, messageId);
@@ -184,8 +167,6 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
                         mail.addAttachment(item);
                 }
             }
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
 
         load.incrementAndGet();
@@ -194,10 +175,8 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
     }
 
     private void update0(Mail mail) throws SQLException {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        PreparedStatement statement;
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             statement = con.prepareStatement(UPDATE_MAIL);
             statement.setInt(1, mail.getSenderId());
             statement.setString(2, mail.getSenderName());
@@ -213,74 +192,49 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
             statement.execute();
 
             if (mail.getAttachments().isEmpty()) {
-                DbUtils.close(statement);
-
                 statement = con.prepareStatement(REMOVE_MAIL_ATTACHMENTS);
                 statement.setInt(1, mail.getMessageId());
                 statement.execute();
             }
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
 
         update.incrementAndGet();
     }
 
     private void delete0(Mail mail) throws SQLException {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(REMOVE_MAIL);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(REMOVE_MAIL)) {
             statement.setInt(1, mail.getMessageId());
             statement.execute();
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
-
         delete.incrementAndGet();
     }
 
     private List<Mail> getMailByOwnerId(int ownerId, boolean sent) {
-        List<Integer> messageIds = Collections.emptyList();
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(RESTORE_OWN_MAIL);
+        List<Integer> messageIds = new ArrayList<>();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(RESTORE_OWN_MAIL)) {
             statement.setInt(1, ownerId);
             statement.setBoolean(2, sent);
-            rset = statement.executeQuery();
-            messageIds = new ArrayList<>();
+            ResultSet rset = statement.executeQuery();
             while (rset.next())
                 messageIds.add(rset.getInt(1));
         } catch (SQLException e) {
             _log.error("Error while restore mail of owner : " + ownerId, e);
             messageIds.clear();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
-
         return load(messageIds);
     }
 
-    private boolean deleteMailByOwnerIdAndMailId(int ownerId, int messageId, boolean sent) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(REMOVE_OWN_MAIL);
+    private void deleteMailByOwnerIdAndMailId(int ownerId, int messageId, boolean sent) {
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(REMOVE_OWN_MAIL)) {
             statement.setInt(1, ownerId);
             statement.setInt(2, messageId);
             statement.setBoolean(3, sent);
-            return statement.execute();
+            statement.execute();
         } catch (SQLException e) {
             _log.error("Error while deleting mail of owner : " + ownerId, e);
-            return false;
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -312,35 +266,27 @@ public class MailDAO implements JdbcDAO<Integer, Mail> {
         return null;
     }
 
-    public boolean deleteReceivedMailByMailId(int receiverId, int messageId) {
-        return deleteMailByOwnerIdAndMailId(receiverId, messageId, false);
+    public void deleteReceivedMailByMailId(int receiverId, int messageId) {
+        deleteMailByOwnerIdAndMailId(receiverId, messageId, false);
     }
 
-    public boolean deleteSentMailByMailId(int senderId, int messageId) {
-        return deleteMailByOwnerIdAndMailId(senderId, messageId, true);
+    public void deleteSentMailByMailId(int senderId, int messageId) {
+        deleteMailByOwnerIdAndMailId(senderId, messageId, true);
     }
 
     public List<Mail> getExpiredMail(int expireTime) {
-        List<Integer> messageIds = Collections.emptyList();
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(RESTORE_EXPIRED_MAIL);
+        List<Integer> messageIds = new ArrayList<>();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(RESTORE_EXPIRED_MAIL)) {
             statement.setInt(1, expireTime);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
             messageIds = new ArrayList<>();
             while (rset.next())
                 messageIds.add(rset.getInt(1));
         } catch (SQLException e) {
             _log.error("Error while restore expired mail!", e);
             messageIds.clear();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
-
         return load(messageIds);
     }
 

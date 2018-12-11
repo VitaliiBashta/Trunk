@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class RndSelector<E> {
+public final class RndSelector<E> {
     private final List<RndNode<E>> nodes;
     private int totalWeight = 0;
 

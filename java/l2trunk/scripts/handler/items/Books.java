@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Books extends SimpleItemHandler implements ScriptFile {
-    private static final Integer[] ITEM_IDS = {5555, 5707};
+    private static final List<Integer> ITEM_IDS = Arrays.asList(5555, 5707);
 
 
     @Override
@@ -37,7 +37,7 @@ public final class Books extends SimpleItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(ITEM_IDS);
+        return ITEM_IDS;
     }
 
     @Override

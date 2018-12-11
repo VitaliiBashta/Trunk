@@ -216,6 +216,7 @@ public final class DocumentSkill extends DocumentBase {
                         parseTrigger(n, current);
                 }
             }
+
             currentSkill.skills.addAll(currentSkill.currentSkills);
         } catch (RuntimeException e) {
             _log.error("Error loading skill " + skillId, e);

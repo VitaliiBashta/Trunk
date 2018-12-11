@@ -17,6 +17,7 @@ import l2trunk.gameserver.tables.ClanTable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObject> {
@@ -38,11 +39,11 @@ public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObje
             if (siegeClan != null) {
                 CMGSiegeClanObject oldSiegeClan = getSiegeClan(REFUND, siegeClan.getObjectId());
                 if (oldSiegeClan != null) {
-                    SiegeClanDAO.getInstance().delete(getResidence(), siegeClan); // удаляем с базы старое
+                    SiegeClanDAO.INSTANCE.delete(getResidence(), siegeClan); // удаляем с базы старое
 
                     oldSiegeClan.setParam(oldSiegeClan.getParam() + siegeClan.getParam());
 
-                    SiegeClanDAO.getInstance().update(getResidence(), oldSiegeClan);
+                    SiegeClanDAO.INSTANCE.update(getResidence(), oldSiegeClan);
                 } else {
                     siegeClan.setType(REFUND);
                     // удаляем с аттакеров
@@ -50,7 +51,7 @@ public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObje
                     // добавляем к рефунд
                     addObject(REFUND, siegeClan);
 
-                    SiegeClanDAO.getInstance().update(getResidence(), siegeClan);
+                    SiegeClanDAO.INSTANCE.update(getResidence(), siegeClan);
                 }
             }
             siegeClans.clear();
@@ -61,13 +62,13 @@ public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObje
             return;
         }
 
-        CMGSiegeClanObject[] clans = siegeClans.toArray(new CMGSiegeClanObject[siegeClans.size()]);
-        Arrays.sort(clans, SiegeClanObject.SiegeClanComparatorImpl.getInstance());
+        List<CMGSiegeClanObject> clans = new ArrayList<>(siegeClans);
+        clans.sort(SiegeClanObject.SiegeClanComparatorImpl.getInstance());
 
         List<CMGSiegeClanObject> temp = new ArrayList<>(4);
 
-        for (CMGSiegeClanObject siegeClan : clans) {
-            SiegeClanDAO.getInstance().delete(getResidence(), siegeClan);
+        clans.forEach(siegeClan ->{
+            SiegeClanDAO.INSTANCE.delete(getResidence(), siegeClan);
 
             if (temp.size() == 4) {
                 siegeClans.remove(siegeClan);
@@ -78,7 +79,7 @@ public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObje
 
                 siegeClan.broadcast(SystemMsg.YOU_HAVE_BEEN_REGISTERED_FOR_A_CLAN_HALL_WAR);
             }
-        }
+        });
 
         _arenaClosed = false;
 
@@ -159,8 +160,8 @@ public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObje
 
     @Override
     public void loadSiegeClans() {
-        addObjects(ATTACKERS, SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS));
-        addObjects(REFUND, SiegeClanDAO.getInstance().load(getResidence(), REFUND));
+        addObjects(ATTACKERS, SiegeClanDAO.INSTANCE.load(getResidence(), ATTACKERS));
+        addObjects(REFUND, SiegeClanDAO.INSTANCE.load(getResidence(), REFUND));
     }
 
     @Override

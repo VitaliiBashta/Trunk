@@ -249,8 +249,8 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     // Siege Clans
     // ========================================================================================================================================================================
     void loadSiegeClans() {
-        addObjects(ATTACKERS, SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS));
-        addObjects(DEFENDERS, SiegeClanDAO.getInstance().load(getResidence(), DEFENDERS));
+        addObjects(ATTACKERS, SiegeClanDAO.INSTANCE.load(getResidence(), ATTACKERS));
+        addObjects(DEFENDERS, SiegeClanDAO.INSTANCE.load(getResidence(), DEFENDERS));
     }
 
     @SuppressWarnings("unchecked")
@@ -262,8 +262,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     void updateParticles(boolean start, String... arg) {
         for (String a : arg) {
             List<SiegeClanObject> siegeClans = getObjects(a);
-            for (SiegeClanObject s : siegeClans)
-                s.setEvent(start, this);
+            siegeClans.forEach(s -> s.setEvent(start, this));
         }
     }
 
@@ -306,9 +305,8 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     // ========================================================================================================================================================================
 
     @Override
-    @SuppressWarnings("unchecked")
     public void initEvent() {
-        residence = (R) ResidenceHolder.getInstance().getResidence(getId());
+        residence = (R) ResidenceHolder.getResidence(getId());
 
         loadSiegeClans();
 

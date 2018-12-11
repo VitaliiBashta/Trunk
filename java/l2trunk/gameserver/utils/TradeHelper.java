@@ -55,9 +55,6 @@ public final class TradeHelper {
             return false;
         }
 
-        if (player.isInFightClub() && !player.getFightClubEvent().canOpenStore(player))
-            return false;
-
         if (player.isActionsDisabled() || player.isMounted() || player.isInOlympiadMode() || player.isInDuel() || player.isProcessingRequest())
             return false;
 
@@ -137,7 +134,7 @@ public final class TradeHelper {
                 long count = _itemQ[i];
                 long price = _itemP[i];
 
-                TradeItem bi = null;
+                TradeItem bi;
                 for (TradeItem si : sellList) {
                     if (si.getObjectId() == objectId) {
                         if (si.getOwnersPrice() == price) {

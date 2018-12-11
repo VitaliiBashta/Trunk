@@ -10,20 +10,23 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class GroupAI extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(GroupAI.class);
 
-    private static final int[] RANDOM_SPAWN_MOBS = {
-            18799, 18800, 18801, 18802, 18803};
+    private static final List<Integer> RANDOM_SPAWN_MOBS = Arrays.asList(
+            18799, 18800, 18801, 18802, 18803);
 
-    private static final int[] FOG_MOBS = {
+    private static final List<Integer> FOG_MOBS = Arrays.asList(
             22634, 22635, 22636, 22637, 22638, 22639, 22640, 22641,
-            22642, 22643, 22644, 22645, 22646, 22647, 22648, 22649};
+            22642, 22643, 22644, 22645, 22646, 22647, 22648, 22649);
 
     private GroupAI(NpcInstance actor) {
         super(actor);
 
-        if (ArrayUtils.contains(RANDOM_SPAWN_MOBS, actor.getNpcId()))
+        if (RANDOM_SPAWN_MOBS.contains(actor.getNpcId()))
             actor.startImmobilized();
     }
 
@@ -32,9 +35,9 @@ public final class GroupAI extends Fighter {
         NpcInstance npc;
         NpcInstance actor = getActor();
 
-        if (ArrayUtils.contains(FOG_MOBS, actor.getNpcId())) {
+        if (FOG_MOBS.contains(actor.getNpcId())) {
             try {
-                npc = NpcHolder.getTemplate(RANDOM_SPAWN_MOBS[Rnd.get(RANDOM_SPAWN_MOBS.length)]).getNewInstance();
+                npc = NpcHolder.getTemplate(Rnd.get(RANDOM_SPAWN_MOBS)).getNewInstance();
                 npc.setSpawnedLoc(actor.getLoc());
                 npc.setReflection(actor.getReflection());
                 npc.setFullHpMp();

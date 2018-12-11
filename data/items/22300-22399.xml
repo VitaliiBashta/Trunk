@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE list SYSTEM "item.dtd">
+<!DOCTYPE list SYSTEM "items.dtd">
 <list>
   <armor id="22302" name="Antharas's Earring" add_name="3 day limited period">
     <set name="crystal_type" value="S"/>

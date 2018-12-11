@@ -4,8 +4,7 @@ import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.stats.Env;
 
-/*    */
-public class EffectDummy extends Effect {
+public final class EffectDummy extends Effect {
     public EffectDummy(Env env, EffectTemplate template) {
         super(env, template);
     }

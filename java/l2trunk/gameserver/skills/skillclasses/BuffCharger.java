@@ -8,7 +8,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class BuffCharger extends Skill {
+public final class BuffCharger extends Skill {
     private final int _target;
 
     public BuffCharger(StatsSet set) {
@@ -24,7 +24,7 @@ public class BuffCharger extends Skill {
             if (el != null)
                 level = el.get(0).getSkill().getLevel();
 
-            Skill next = SkillTable.INSTANCE().getInfo(_target, level + 1);
+            Skill next = SkillTable.INSTANCE.getInfo(_target, level + 1);
             if (next != null)
                 next.getEffects(activeChar, target, false, false);
         }

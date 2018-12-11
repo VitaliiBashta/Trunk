@@ -11,6 +11,8 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public class AdminClanHall implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
@@ -21,7 +23,7 @@ public class AdminClanHall implements IAdminCommandHandler {
 
         ClanHall clanhall = null;
         if (wordList.length > 1)
-            clanhall = ResidenceHolder.getInstance().getResidence(ClanHall.class, Integer.parseInt(wordList[1]));
+            clanhall = ResidenceHolder.getResidence(ClanHall.class, toInt(wordList[1]));
 
         if (clanhall == null) {
             showClanHallSelectPage(activeChar);

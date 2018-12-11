@@ -46,7 +46,7 @@ class ExpandInventory extends Functions {
             return;
         }
 
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.SERVICES_EXPAND_INVENTORY_ITEM);
+        ItemTemplate item = ItemHolder.getTemplate(Config.SERVICES_EXPAND_INVENTORY_ITEM);
 
         String out = "";
 

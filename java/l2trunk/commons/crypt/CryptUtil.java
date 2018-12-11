@@ -86,7 +86,6 @@ public class CryptUtil {
         return new ByteArrayInputStream(output.toByteArray());
     }
 
-    @SuppressWarnings("resource")
     public static InputStream decryptOnDemand(Path file) throws IOException {
         InputStream output;
         InputStream input = Files.newInputStream(file);

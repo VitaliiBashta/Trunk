@@ -1,34 +1,29 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.templates.AirshipDock;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class AirshipDockHolder extends AbstractHolder {
-    private static final AirshipDockHolder INSTANCE = new AirshipDockHolder();
-    private final Map<Integer, AirshipDock> docks = new HashMap<>(4);
+public final class AirshipDockHolder {
+    private final static Map<Integer, AirshipDock> docks = new HashMap<>(4);
 
-    public static AirshipDockHolder getInstance() {
-        return INSTANCE;
+    private AirshipDockHolder() {
     }
 
-    public void addDock(AirshipDock dock) {
+    public static void addDock(AirshipDock dock) {
         docks.put(dock.getId(), dock);
     }
 
-    public AirshipDock getDock(int dock) {
-        return docks.get(dock);
+    public static AirshipDock getDock(int dockId) {
+        return docks.get(dockId);
     }
 
-    @Override
-    public int size() {
+    public static int size() {
         return docks.size();
     }
 
-    @Override
-    public void clear() {
+    public static void clear() {
         docks.clear();
     }
 }

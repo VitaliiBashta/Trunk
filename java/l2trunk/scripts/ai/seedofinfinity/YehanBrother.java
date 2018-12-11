@@ -43,7 +43,7 @@ public final class YehanBrother extends Fighter {
         NpcInstance actor = getActor();
         NpcInstance brother = getBrother();
         if (!brother.isDead() && !actor.isInRange(brother, 300))
-            actor.altOnMagicUseTimer(getActor(), SkillTable.INSTANCE().getInfo(6371, 1));
+            actor.altOnMagicUseTimer(getActor(), SkillTable.INSTANCE.getInfo(6371));
         else
             removeInvul(actor);
         if (_spawnTimer + 40000 < System.currentTimeMillis()) {
@@ -55,8 +55,8 @@ public final class YehanBrother extends Fighter {
     }
 
     private void removeInvul(NpcInstance npc) {
-        for (Effect e : npc.getEffectList().getAllEffects())
-            if (e.getSkill().getId() == 6371)
-                e.exit();
+        npc.getEffectList().getAllEffects().stream()
+                .filter(e -> e.getSkill().getId() == 6371)
+                .forEach(Effect::exit);
     }
 }

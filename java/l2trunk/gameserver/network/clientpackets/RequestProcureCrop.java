@@ -80,13 +80,13 @@ public class RequestProcureCrop extends L2GameClientPacket {
 
         GameObject target = activeChar.getTarget();
 
-        ManorManagerInstance manor = target != null && target instanceof ManorManagerInstance ? (ManorManagerInstance) target : null;
-        if (!activeChar.isGM() && (manor == null || !activeChar.isInRange(manor, Creature.INTERACTION_DISTANCE))) {
+        ManorManagerInstance manor = target instanceof ManorManagerInstance ? (ManorManagerInstance) target : null;
+        if (!activeChar.isGM() && (!activeChar.isInRange(manor, Creature.INTERACTION_DISTANCE))) {
             activeChar.sendActionFailed();
             return;
         }
 
-        Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, _manorId);
+        Castle castle = ResidenceHolder.getResidence(Castle.class, _manorId);
         if (castle == null)
             return;
 
@@ -107,7 +107,7 @@ public class RequestProcureCrop extends L2GameClientPacket {
 
                 rewradItemCount = SafeMath.mulAndCheck(count, rewradItemCount);
 
-                ItemTemplate template = ItemHolder.getInstance().getTemplate(rewradItemId);
+                ItemTemplate template = ItemHolder.getTemplate(rewradItemId);
                 if (template == null)
                     return;
 

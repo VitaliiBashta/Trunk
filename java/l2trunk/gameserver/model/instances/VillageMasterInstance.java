@@ -674,7 +674,7 @@ public final class VillageMasterInstance extends NpcInstance {
             return;
         }
 
-        for (Residence r : ResidenceHolder.getInstance().getResidences()) {
+        for (Residence r : ResidenceHolder.getResidences()) {
             if (r.getSiegeEvent().getSiegeClan(SiegeEvent.ATTACKERS, clan) != null || r.getSiegeEvent().getSiegeClan(SiegeEvent.DEFENDERS, clan) != null || r.getSiegeEvent().getSiegeClan(CastleSiegeEvent.DEFENDERS_WAITING, clan) != null) {
                 player.sendPacket(SystemMsg.UNABLE_TO_DISSOLVE_YOUR_CLAN_HAS_REQUESTED_TO_PARTICIPATE_IN_A_CASTLE_SIEGE);
                 return;
@@ -784,7 +784,7 @@ public final class VillageMasterInstance extends NpcInstance {
             case 10:
                 // Upgrade to 11
                 if (clan.getReputationScore() >= Config.CLAN_LEVEL_11_COST && clan.getAllSize() >= Config.CLAN_LEVEL_11_REQUIREMEN) {
-                    Castle castle = ResidenceHolder.getInstance().getResidence(clan.getCastle());
+                    Castle castle = ResidenceHolder.getResidence(clan.getCastle());
                     if (castle == null) {
                         player.sendMessage("Your clan has no 1st of the castle!");
                         increaseClanLevel = false;
@@ -805,7 +805,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
             player.broadcastCharInfo();
 
-            doCast(SkillTable.INSTANCE().getInfo(5103, 1), player, true);
+            doCast(SkillTable.INSTANCE.getInfo(5103), player, true);
 
             if (clan.getLevel() >= 4)
                 SiegeUtils.addSiegeSkills(player);
@@ -833,7 +833,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
         player.broadcastCharInfo();
 
-        doCast(SkillTable.INSTANCE().getInfo(5103, 1), player, true);
+        doCast(SkillTable.INSTANCE.getInfo(5103), player, true);
 
         if (clan.getLevel() >= 4)
             SiegeUtils.addSiegeSkills(player);

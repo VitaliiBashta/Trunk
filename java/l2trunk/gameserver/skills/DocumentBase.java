@@ -35,7 +35,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 abstract class DocumentBase {
-    private static final Logger _log = LoggerFactory.getLogger(DocumentBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DocumentBase.class);
 
     private final Path file;
     Map<String, Object[]> tables;
@@ -61,17 +61,17 @@ abstract class DocumentBase {
                 output = Files.newInputStream(file);
             doc = factory.newDocumentBuilder().parse(output);
         } catch (FileNotFoundException e) {
-            _log.error("Didn't find " + file, e);
+            LOG.error("Didn't find " + file, e);
             return null;
         } catch (IOException | ParserConfigurationException | SAXException e) {
-            _log.error("Error loading file " + file, e);
+            LOG.error("Error loading file " + file, e);
             return null;
         }
 
         try {
             parseDocument(doc);
         } catch (RuntimeException e) {
-            _log.error("Error in file " + file, e);
+            LOG.error("Error in file " + file, e);
             return null;
         }
         return doc;
@@ -254,7 +254,7 @@ abstract class DocumentBase {
             if (n.getNodeType() == Node.ELEMENT_NODE)
                 cond.add(parseCondition(n));
         if (cond._conditions == null || cond._conditions.size() == 0)
-            _log.error("Empty <and> condition in " + file);
+            LOG.error("Empty <and> condition in " + file);
         return cond;
     }
 
@@ -264,7 +264,7 @@ abstract class DocumentBase {
             if (n.getNodeType() == Node.ELEMENT_NODE)
                 cond.add(parseCondition(n));
         if (cond._conditions == null || cond._conditions.size() == 0)
-            _log.error("Empty <or> condition in " + file);
+            LOG.error("Empty <or> condition in " + file);
         return cond;
     }
 
@@ -272,7 +272,7 @@ abstract class DocumentBase {
         for (n = n.getFirstChild(); n != null; n = n.getNextSibling())
             if (n.getNodeType() == Node.ELEMENT_NODE)
                 return new ConditionLogicNot(parseCondition(n));
-        _log.error("Empty <not> condition in " + file);
+        LOG.error("Empty <not> condition in " + file);
         return null;
     }
 
@@ -368,7 +368,7 @@ abstract class DocumentBase {
         }
 
         if (cond == null)
-            _log.error("Unrecognized <player> condition in " + file);
+            LOG.error("Unrecognized <player> condition in " + file);
         return cond;
     }
 
@@ -429,7 +429,7 @@ abstract class DocumentBase {
                 cond = joinAnd(cond, new ConditionTargetHasForbiddenSkill(parseNumber(a.getNodeValue()).intValue()));
         }
         if (cond == null)
-            _log.error("Unrecognized <target> condition in " + file);
+            LOG.error("Unrecognized <target> condition in " + file);
         return cond;
     }
 
@@ -456,7 +456,7 @@ abstract class DocumentBase {
                             mask |= at.mask();
                             continue tokens;
                         }
-                    _log.error("Invalid item kind: \"" + item + "\" in " + file);
+                    LOG.error("Invalid item kind: \"" + item + "\" in " + file);
                 }
                 if (mask != 0)
                     cond = joinAnd(cond, new ConditionUsingItemType(mask));
@@ -476,7 +476,7 @@ abstract class DocumentBase {
             }
         }
         if (cond == null)
-            _log.error("Unrecognized <using> condition in " + file);
+            LOG.error("Unrecognized <using> condition in " + file);
         return cond;
     }
 
@@ -496,7 +496,7 @@ abstract class DocumentBase {
                 cond = joinAnd(cond, new ConditionFirstEffectSuccess(Boolean.valueOf(nodeValue)));
         }
         if (cond == null)
-            _log.error("Unrecognized <has> condition in " + file);
+            LOG.error("Unrecognized <has> condition in " + file);
         return cond;
     }
 
@@ -511,7 +511,7 @@ abstract class DocumentBase {
             }
         }
         if (cond == null)
-            _log.error("Unrecognized <game> condition in " + file);
+            LOG.error("Unrecognized <game> condition in " + file);
         return cond;
     }
 
@@ -524,7 +524,7 @@ abstract class DocumentBase {
                 cond = joinAnd(cond, new ConditionZoneType(a.getNodeValue()));
         }
         if (cond == null)
-            _log.error("Unrecognized <zone> condition in " + file);
+            LOG.error("Unrecognized <zone> condition in " + file);
         return cond;
     }
 
@@ -560,19 +560,19 @@ abstract class DocumentBase {
             else
                 set.set(name, value);
         } catch (DOMException e) {
-            _log.warn(n.getAttributes().getNamedItem("name") + " " + set.get("skill_id"), e);
+            LOG.warn(n.getAttributes().getNamedItem("name") + " " + set.get("skill_id"), e);
         }
     }
 
     Number parseNumber(String value) {
+        if ("none".equalsIgnoreCase(value)) return null;
         if (value.charAt(0) == '#')
             value = getTableValue(value).toString();
+        if (value.equalsIgnoreCase("max"))
+            return Double.POSITIVE_INFINITY;
+        if (value.equalsIgnoreCase("min"))
+            return Double.NEGATIVE_INFINITY;
         try {
-            if (value.equalsIgnoreCase("max"))
-                return Double.POSITIVE_INFINITY;
-            if (value.equalsIgnoreCase("min"))
-                return Double.NEGATIVE_INFINITY;
-
             if (value.indexOf('.') == -1) {
                 int radix = 10;
                 if (value.length() > 2 && value.substring(0, 2).equalsIgnoreCase("0x")) {
@@ -583,8 +583,10 @@ abstract class DocumentBase {
             }
             return Double.valueOf(value);
         } catch (NumberFormatException e) {
+//            LOG.warn("parse excetion with value :" + value);
             return null;
         }
+
     }
 
     private Condition joinAnd(Condition cond, Condition c) {

@@ -53,7 +53,7 @@ public class OlympiadGame {
         _type = type;
         _id = id;
         _reflection = new Reflection();
-        InstantZone instantZone = InstantZoneHolder.getInstance().getInstantZone(Rnd.get(STADIUMS_INSTANCE_ID));
+        InstantZone instantZone = InstantZoneHolder.getInstantZone(Rnd.get(STADIUMS_INSTANCE_ID));
         _reflection.init(instantZone);
 
         _team1 = new OlympiadTeam(this, 1);

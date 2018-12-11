@@ -15,7 +15,7 @@ import l2trunk.gameserver.utils.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SendWareHouseWithDrawList extends L2GameClientPacket {
+public final class SendWareHouseWithDrawList extends L2GameClientPacket {
     private static final Logger _log = LoggerFactory.getLogger(SendWareHouseWithDrawList.class);
 
     private int _count;

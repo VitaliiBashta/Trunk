@@ -78,7 +78,7 @@ public final class EnterWorld extends L2GameClientPacket {
         if (!activeChar.isClanLeader())
             return;
 
-        ClanHall clanHall = clan.getHasHideout() > 0 ? ResidenceHolder.getInstance().getResidence(ClanHall.class, clan.getHasHideout()) : null;
+        ClanHall clanHall = clan.getHasHideout() > 0 ? ResidenceHolder.getResidence(ClanHall.class, clan.getHasHideout()) : null;
         if (clanHall == null || clanHall.getAuctionLength() != 0)
             return;
 

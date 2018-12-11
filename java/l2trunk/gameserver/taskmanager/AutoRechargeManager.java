@@ -11,7 +11,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public class AutoRechargeManager extends SteppingRunnableQueueManager {
+public final class AutoRechargeManager extends SteppingRunnableQueueManager {
     private static final AutoRechargeManager _instance = new AutoRechargeManager();
     private static final int TYPE_CP = 0x01;
     private static final int TYPE_HP = 0x02;
@@ -89,7 +89,7 @@ public class AutoRechargeManager extends SteppingRunnableQueueManager {
             public void runImpl() {
                 long current = System.currentTimeMillis();
 
-                if (player.isAfraid() || player.isAlikeDead() || player.isInOlympiadMode() || player.isDead() || player.isInFightClub() || player.isInTvT())
+                if (player.isAfraid() || player.isAlikeDead() || player.isInOlympiadMode() || player.isDead())
                     return;
 
                 if (player._autoCp && (current >= (msCpLastCheck + CP_CHECK_TIME))) {

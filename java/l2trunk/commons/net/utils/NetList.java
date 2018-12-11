@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public final class NetList extends ArrayList<Net> {
-    private static final long serialVersionUID = 4266033257195615387L;
-
     public boolean isInRange(String address) {
         for (Net net : this)
             if (net.isInRange(address))

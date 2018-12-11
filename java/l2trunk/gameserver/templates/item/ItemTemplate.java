@@ -34,8 +34,7 @@ public abstract class ItemTemplate extends StatTemplate {
     /**
      * Item ID для замковых корон
      */
-    public static final int[] ITEM_ID_CASTLE_CIRCLET =
-            {
+    public static final List<Integer> ITEM_ID_CASTLE_CIRCLET =Arrays.asList(
                     0, // no castle - no circlet.. :)
                     6838, // Circlet of Gludio
                     6835, // Circlet of Dion
@@ -45,10 +44,9 @@ public abstract class ItemTemplate extends StatTemplate {
                     6834, // Circlet of Innadril
                     6836, // Circlet of Goddard
                     8182, // Circlet of Rune
-                    8183, // Circlet of Schuttgart
-            };
-    public static final int[] ITEM_ID_CASTLE_CLOAK =
-            {
+                    8183); // Circlet of Schuttgart
+
+    public static final List<Integer> ITEM_ID_CASTLE_CLOAK = Arrays.asList(
                     0, // no castle - no cloak..
                     37018, // Cloak of Gludio
                     37016, // Cloak of Dion
@@ -58,8 +56,7 @@ public abstract class ItemTemplate extends StatTemplate {
                     37020, // Cloak of Innadril
                     37019, // Cloak of Goddard
                     37022, // Cloak of Rune
-                    37023, // Cloak of Schuttgart
-            };
+                    37023); // Cloak of Schuttgart
     public static final int ITEM_ID_FORMAL_WEAR = 6408;
     // Uniforms
     public static final int ITEM_ID_SCHOOL_UNIFORM_A = 57000;

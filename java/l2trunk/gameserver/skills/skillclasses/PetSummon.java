@@ -58,20 +58,11 @@ public class PetSummon extends Skill {
             return false;
         }
 
-        if (player.isInFightClub()) {
-            player.sendMessage("You cannot use that item in Fight Club!");
-            return false;
-        }
-
         if (activeChar.getPlayer().isJailed()) {
             player.sendMessage("You cannot use that item in Jail!");
             return false;
         }
 
-        if (target.isPlayable() && target.getPlayer().isInFightClub()) {
-            player.sendMessage("You cannot use that item while target is on Fight Club!");
-            return false;
-        }
 
         for (GameObject o : World.getAroundObjects(player, 120, 200))
             if (o.isDoor()) {

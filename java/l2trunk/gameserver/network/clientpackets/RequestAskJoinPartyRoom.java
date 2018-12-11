@@ -12,12 +12,12 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 /**
  * format: (ch)S
  */
-public class RequestAskJoinPartyRoom extends L2GameClientPacket {
-    private String _name; // not tested, just guessed
+public final class RequestAskJoinPartyRoom extends L2GameClientPacket {
+    private String name; // not tested, just guessed
 
     @Override
     protected void readImpl() {
-        _name = readS(16);
+        name = readS(16);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class RequestAskJoinPartyRoom extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-        Player targetPlayer = World.getPlayer(_name);
+        Player targetPlayer = World.getPlayer(name);
 
         if (targetPlayer == null || targetPlayer == player) {
             player.sendActionFailed();
@@ -39,11 +39,6 @@ public class RequestAskJoinPartyRoom extends L2GameClientPacket {
 
         if (targetPlayer.isProcessingRequest()) {
             player.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ON_ANOTHER_TASK).addName(targetPlayer));
-            return;
-        }
-
-        if (player.isInFightClub() && !player.getFightClubEvent().canJoinParty(player, targetPlayer)) {
-            player.sendMessage("You cannot do that on Fight Club!");
             return;
         }
 

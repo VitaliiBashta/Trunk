@@ -13,20 +13,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 10:23/17.03.2011
- */
-public class CastleDamageZoneDAO {
+public enum  CastleDamageZoneDAO {
+    INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT zone FROM castle_damage_zones WHERE residence_id=?";
     private static final String INSERT_SQL_QUERY = "INSERT INTO castle_damage_zones (residence_id, zone) VALUES (?,?)";
     private static final String DELETE_SQL_QUERY = "DELETE FROM castle_damage_zones WHERE residence_id=?";
-    private static final CastleDamageZoneDAO _instance = new CastleDamageZoneDAO();
     private static final Logger _log = LoggerFactory.getLogger(CastleDoorUpgradeDAO.class);
-
-    public static CastleDamageZoneDAO getInstance() {
-        return _instance;
-    }
 
     public List<String> load(Residence r) {
         List<String> set = Collections.emptyList();
@@ -41,7 +33,7 @@ public class CastleDamageZoneDAO {
                     set.add(rset.getString("zone"));
             }
         } catch (SQLException e) {
-            _log.error("CastleDamageZoneDAO:load(Residence): ", e);
+            _log.error("CastleDamageZoneDAO:loadFile(Residence): ", e);
         }
 
         return set;

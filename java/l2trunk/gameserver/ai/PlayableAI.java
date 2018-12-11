@@ -438,7 +438,7 @@ public class PlayableAI extends CharacterAI {
                 return;
             }
 
-            clientStopMoving(false);
+            clientStopMoving();
             actor.doAttack(attack_target);
         } else if (!_dontMove) {
             ThreadPoolManager.INSTANCE.execute(new ExecuteFollow(attack_target, range - 20));
@@ -524,7 +524,7 @@ public class PlayableAI extends CharacterAI {
             }
 
             if (_skill.checkCondition(actor, target, _forceUse, _dontMove, true)) {
-                clientStopMoving(false);
+                clientStopMoving();
                 actor.doCast(_skill, target, _forceUse);
             } else {
                 setNextIntention();

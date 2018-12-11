@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
@@ -13,10 +12,11 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public final class SeducedInvestigator extends Fighter {
-    private final int[] _allowedTargets = {25659, 25660, 25661, 25662, 25663, 25664};
+    private final List<Integer> _allowedTargets = Arrays.asList(25659, 25660, 25661, 25662, 25663, 25664);
     private long _reuse = 0;
 
     public SeducedInvestigator(NpcInstance actor) {
@@ -32,11 +32,9 @@ public final class SeducedInvestigator extends Fighter {
         if (actor.isDead())
             return false;
 
-        List<NpcInstance> around = actor.getAroundNpc(1000, 300);
-        if (around != null && !around.isEmpty())
-            for (NpcInstance npc : around)
-                if (ArrayUtils.contains(_allowedTargets, npc.getNpcId()))
-                    actor.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, npc, 300);
+        actor.getAroundNpc(1000, 300).stream()
+                .filter(npc -> _allowedTargets.contains(npc.getNpcId()))
+                .forEach(npc -> actor.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, npc, 300));
 
         if (Rnd.chance(0.1) && _reuse + 30000 < System.currentTimeMillis()) {
             List<Player> players = World.getAroundPlayers(actor, 500, 200);
@@ -47,13 +45,13 @@ public final class SeducedInvestigator extends Fighter {
                 _reuse = System.currentTimeMillis();
                 int[] buffs = {5970, 5971, 5972, 5973};
                 if (actor.getNpcId() == 36562)
-                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[0], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[0]), player, true);
                 else if (actor.getNpcId() == 36563)
-                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[1], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[1]), player, true);
                 else if (actor.getNpcId() == 36564)
-                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[2], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[2]), player, true);
                 else
-                    actor.doCast(SkillTable.INSTANCE().getInfo(buffs[3], 1), player, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[3]), player, true);
             }
         }
 

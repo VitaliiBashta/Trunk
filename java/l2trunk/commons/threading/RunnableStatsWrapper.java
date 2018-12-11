@@ -3,12 +3,12 @@ package l2trunk.commons.threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RunnableStatsWrapper implements Runnable {
-    private static final Logger _log = LoggerFactory.getLogger(RunnableStatsWrapper.class);
-    private final Runnable _runnable;
+public final class RunnableStatsWrapper implements Runnable {
+    private static final Logger LOG = LoggerFactory.getLogger(RunnableStatsWrapper.class);
+    private final Runnable runnable;
 
     private RunnableStatsWrapper(Runnable runnable) {
-        _runnable = runnable;
+        this.runnable = runnable;
     }
 
     public static Runnable wrap(Runnable runnable) {
@@ -22,12 +22,12 @@ public class RunnableStatsWrapper implements Runnable {
 
             RunnableStatsManager.INSTANCE.handleStats(runnable.getClass(), System.nanoTime() - begin);
         } catch (RuntimeException e) {
-            _log.error("Exception in a Runnable execution:", e);
+            LOG.error("Exception in a Runnable execution:", e);
         }
     }
 
     @Override
     public void run() {
-        execute(_runnable);
+        execute(runnable);
     }
 }

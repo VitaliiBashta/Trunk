@@ -1,47 +1,39 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.CharTemplateHolder;
 import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.CreateItem;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class CharTemplateParser extends AbstractFileParser<CharTemplateHolder> {
-    private static final CharTemplateParser _instance = new CharTemplateParser();
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private CharTemplateParser() {
-        super(CharTemplateHolder.getInstance());
+public enum CharTemplateParser {
+    INSTANCE;
+    private static Path xml = Config.DATAPACK_ROOT.resolve("data/char_templates.xml");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("loaded " + CharTemplateHolder.size() + " doors ");
     }
 
-    public static CharTemplateParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/char_templates.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "char_templates.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator interator = rootElement.elementIterator(); interator.hasNext(); ) {
             List<CreateItem> items = new ArrayList<>();
 
             Element element = (org.dom4j.Element) interator.next();
             StatsSet set = new StatsSet();
 
-            int classId = Integer.parseInt(element.attributeValue("id"));
+            int classId = toInt(element.attributeValue("id"));
             String name = element.attributeValue("name");
             set.set("name", name);
 
@@ -49,23 +41,19 @@ public final class CharTemplateParser extends AbstractFileParser<CharTemplateHol
                 Element templat = (org.dom4j.Element) template.next();
                 if (templat.getName().equalsIgnoreCase("set"))
                     set.set(templat.attributeValue("name"), templat.attributeValue("value"));
-                else if (templat.getName().equalsIgnoreCase("item"))
-                    try {
-                        int itemId = Integer.parseInt(templat.attributeValue("id"));
-                        int count = Integer.parseInt(templat.attributeValue("count"));
-                        boolean equipable = false;
-                        int shortcat = -1;
-                        if (templat.attributeValue("equipable") != null)
-                            equipable = Boolean.parseBoolean(templat.attributeValue("equipable"));
-                        if (templat.attributeValue("shortcut") != null)
-                            shortcat = Integer.parseInt(templat.attributeValue("shortcut"));
-                        items.add(new CreateItem(itemId, count, equipable, shortcat));
-                    } catch (NumberFormatException e) {
-                        LOG.error("Error parsing char_template, add item for classId " + set.get("classId") + ": ", e);
-                    }
+                else if (templat.getName().equalsIgnoreCase("item")) {
+                    int itemId = toInt(templat.attributeValue("id"));
+                    int count = toInt(templat.attributeValue("count"));
+                    boolean equipable = false;
+                    int shortcat = -1;
+                    if (templat.attributeValue("equipable") != null)
+                        equipable = Boolean.parseBoolean(templat.attributeValue("equipable"));
+                    if (templat.attributeValue("shortcut") != null)
+                        shortcat = toInt(templat.attributeValue("shortcut"));
+                    items.add(new CreateItem(itemId, count, equipable, shortcat));
+                }
             }
-
-            getHolder().addTemplate(classId, set, items);
+            CharTemplateHolder.addTemplate(classId, set, items);
         }
     }
 }

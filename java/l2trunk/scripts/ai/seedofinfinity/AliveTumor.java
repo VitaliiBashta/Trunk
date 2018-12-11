@@ -1,15 +1,17 @@
 package l2trunk.scripts.ai.seedofinfinity;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class AliveTumor extends DefaultAI {
+    private static final List<Integer> regenCoffins = Arrays.asList(18706, 18709, 18710);
     private long checkTimer = 0;
     private int coffinsCount = 0;
-    private static final int[] regenCoffins = {18706, 18709, 18710};
 
     public AliveTumor(NpcInstance actor) {
         super(actor);
@@ -24,13 +26,13 @@ public final class AliveTumor extends DefaultAI {
             checkTimer = System.currentTimeMillis();
             int i = 0;
             for (NpcInstance n : actor.getAroundNpc(400, 300))
-                if (ArrayUtils.contains(regenCoffins, n.getNpcId()) && !n.isDead())
+                if (regenCoffins.contains(n.getNpcId()) && !n.isDead())
                     i++;
             if (coffinsCount != i) {
                 coffinsCount = i;
                 coffinsCount = Math.min(coffinsCount, 12);
                 if (coffinsCount > 0)
-                    actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE().getInfo(5940, coffinsCount));
+                    actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(5940, coffinsCount));
             }
         }
         return super.thinkActive();

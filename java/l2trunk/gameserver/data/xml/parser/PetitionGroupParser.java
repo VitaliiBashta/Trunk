@@ -1,43 +1,34 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.PetitionGroupHolder;
 import l2trunk.gameserver.model.petition.PetitionMainGroup;
 import l2trunk.gameserver.model.petition.PetitionSubGroup;
 import l2trunk.gameserver.utils.Language;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.List;
 
-public class PetitionGroupParser extends AbstractFileParser<PetitionGroupHolder> {
-    private static final PetitionGroupParser _instance = new PetitionGroupParser();
+public enum PetitionGroupParser {
+    INSTANCE;
+    private static Path xml = Config.DATAPACK_ROOT.resolve("data/petition_group.xml");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
-    private PetitionGroupParser() {
-        super(PetitionGroupHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + PetitionGroupHolder.size() + " items");
     }
 
-    public static PetitionGroupParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/petition_group.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "petition_group.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element groupElement = iterator.next();
             PetitionMainGroup group = new PetitionMainGroup(Integer.parseInt(groupElement.attributeValue("id")));
-            getHolder().addPetitionGroup(group);
+            PetitionGroupHolder.addPetitionGroup(group);
 
             for (Iterator<Element> subIterator = groupElement.elementIterator(); subIterator.hasNext(); ) {
                 Element subElement = subIterator.next();

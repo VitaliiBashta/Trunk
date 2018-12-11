@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.olympiad;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.OlympiadNobleDAO;
@@ -28,21 +27,15 @@ public final class OlympiadDatabase {
         Olympiad._noblesRank = new ConcurrentHashMap<>();
         Map<Integer, Integer> tmpPlace = new HashMap<>();
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(OlympiadNobleDAO.GET_ALL_CLASSIFIED_NOBLESS);
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(OlympiadNobleDAO.GET_ALL_CLASSIFIED_NOBLESS);
+             ResultSet rset = statement.executeQuery()) {
             int place = 1;
             while (rset.next())
                 tmpPlace.put(rset.getInt(Olympiad.CHAR_ID), place++);
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("Olympiad System: Error!", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
 
         int rank1 = (int) Math.round(tmpPlace.size() * 0.01);
@@ -75,22 +68,16 @@ public final class OlympiadDatabase {
      */
     public static synchronized void cleanupNobles() {
         _log.info("Olympiad: Calculating last period...");
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(OlympiadNobleDAO.OLYMPIAD_CALCULATE_LAST_PERIOD);
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement(OlympiadNobleDAO.OLYMPIAD_CALCULATE_LAST_PERIOD);
             statement.setInt(1, Config.OLYMPIAD_BATTLES_FOR_REWARD);
             statement.execute();
-            DbUtils.close(statement);
 
             statement = con.prepareStatement(OlympiadNobleDAO.OLYMPIAD_CLEANUP_NOBLES);
             statement.setInt(1, Config.OLYMPIAD_POINTS_DEFAULT);
             statement.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("Olympiad System: Couldn't calculate last period!", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
 
         for (Integer nobleId : Olympiad._nobles.keySet()) {
@@ -165,11 +152,9 @@ public final class OlympiadDatabase {
 
         Olympiad._heroesToBe = new ArrayList<>();
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        PreparedStatement statement;
+        ResultSet rset;
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             StatsSet hero;
 
             for (ClassId id : ClassId.VALUES) {
@@ -189,13 +174,10 @@ public final class OlympiadDatabase {
 
                         Olympiad._heroesToBe.add(hero);
                     }
-                    DbUtils.close(statement, rset);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("Olympiad System: Couldnt heros from db!", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 

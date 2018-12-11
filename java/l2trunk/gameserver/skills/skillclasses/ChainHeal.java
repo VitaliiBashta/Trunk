@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.lang.NumberUtils;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.residences.SiegeFlagInstance;
@@ -11,21 +12,21 @@ import l2trunk.gameserver.templates.StatsSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ChainHeal extends Skill {
-    private final int[] _healPercents;
+public final class ChainHeal extends Skill {
+    private final List<Integer> _healPercents;
     private final int _healRadius;
     private final int _maxTargets;
 
     public ChainHeal(StatsSet set) {
         super(set);
         _healRadius = set.getInteger("healRadius", 350);
-        String[] params = set.getString("healPercents", "").split(";");
-        _maxTargets = params.length;
-        _healPercents = new int[params.length];
-        for (int i = 0; i < params.length; i++) {
-            _healPercents[i] = Integer.parseInt(params[i]);
-        }
+        List<String> params = Arrays.asList(set.getString("healPercents", "").split(";"));
+        _maxTargets = params.size();
+        _healPercents = params.stream()
+                .map(NumberUtils::toInt)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -41,13 +42,7 @@ public class ChainHeal extends Skill {
             }
 
             if (target.isPlayer()) {
-                // for fightclub event restriction to not heal opponent
-                if (activeChar.getPlayer().isInFightClub() && target.getPlayer().isInFightClub()
-                        && activeChar.getPlayer().getFightClubEvent().getFightClubPlayer(activeChar).getTeam() != target.getPlayer().getFightClubEvent().getFightClubPlayer(target).getTeam()) {
-                    continue;
-                }
-
-                // if it is in duel	
+                // if it is in duel
                 if (activeChar.getPlayer().isInDuel() && target.getPlayer().isInDuel()) {
                     continue;
                 }
@@ -55,7 +50,7 @@ public class ChainHeal extends Skill {
 
             getEffects(activeChar, target, getActivateRate() > 0, false);
 
-            double hp = (_healPercents[curTarget] * target.getMaxHp()) / 100.;
+            double hp = (_healPercents.get(curTarget) * target.getMaxHp()) / 100.;
             double addToHp = Math.max(0, Math.min(hp, ((target.calcStat(Stats.HP_LIMIT, null, null) * target.getMaxHp()) / 100.) - target.getCurrentHp()));
 
             if (addToHp > 0) {
@@ -100,23 +95,16 @@ public class ChainHeal extends Skill {
             healTargets.add(new HealTarget(hpPercent, target));
         }
 
-        HealTarget[] healTargetsArr = new HealTarget[healTargets.size()];
-        healTargets.toArray(healTargetsArr);
-        Arrays.sort(healTargetsArr, (o1, o2) -> {
+        List<HealTarget> sortedTargets = new ArrayList<>(healTargets);
+        sortedTargets.sort( (o1, o2) -> {
             if ((o1 == null) || (o2 == null)) {
                 return 0;
             }
-            if (o1.getHpPercent() < o2.getHpPercent()) {
-                return -1;
-            }
-            if (o1.getHpPercent() > o2.getHpPercent()) {
-                return 1;
-            }
-            return 0;
+            return Double.compare(o1.getHpPercent(), o2.getHpPercent());
         });
 
         int targetsCount = 0;
-        for (HealTarget ht : healTargetsArr) {
+        for (HealTarget ht : sortedTargets) {
             result.add(ht.getTarget());
             targetsCount++;
             if (targetsCount >= _maxTargets) {
@@ -134,12 +122,6 @@ public class ChainHeal extends Skill {
         if (activeChar.isPlayable() && target.isMonster()) {
             return false;
         }
-
-        if (activeChar.isPlayable() && activeChar.getPlayer().isInFightClub()) {
-            if (!activeChar.getPlayer().getFightClubEvent().canUsePositiveMagic(activeChar, target))
-                return false;
-        }
-
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
     }
 

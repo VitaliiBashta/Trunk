@@ -191,7 +191,7 @@ public final class EnchantSkillLearn {
      * @return Returns the spCost.
      */
     public int[] getCost() {
-        return SkillTable.INSTANCE().getInfo(id, 1).isOffensive() ? _priceCombat[_level % 100] : _priceBuff[_level % 100];
+        return SkillTable.INSTANCE.getInfo(id, 1).isOffensive() ? _priceCombat[_level % 100] : _priceBuff[_level % 100];
     }
 
     /**

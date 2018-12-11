@@ -29,20 +29,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class MultiSellHolder {
-    private static final Logger _log = LoggerFactory.getLogger(MultiSellHolder.class);
+public enum  MultiSellHolder {
+    INSTANCE;
+    private static final Logger LOG = LoggerFactory.getLogger(MultiSellHolder.class);
     private static final String NODE_PRODUCTION = "production";
     private static final String NODE_INGRIDIENT = "ingredient";
-    private static final MultiSellHolder _instance = new MultiSellHolder();
     private final Map<Integer, MultiSellListContainer> entries = new HashMap<>();
 
-    private MultiSellHolder() {
+    MultiSellHolder() {
         parseData();
     }
 
-    public static MultiSellHolder getInstance() {
-        return _instance;
-    }
 
     private static long[] parseItemIdAndCount(String s) {
         if (s == null || s.isEmpty())
@@ -53,7 +50,7 @@ public final class MultiSellHolder {
             long count = a.length > 1 ? Long.parseLong(a[1]) : 1;
             return new long[]{id, count};
         } catch (NumberFormatException e) {
-            _log.error("Error while parsing ItemId and Count in Multisell! ", e);
+            LOG.error("Error while parsing ItemId and Count in Multisell! ", e);
             return null;
         }
     }
@@ -92,7 +89,7 @@ public final class MultiSellHolder {
     private void hashFiles(List<Path> hash) {
         Path dir = Config.DATAPACK_ROOT.resolve("data/multisell");
         if (!Files.exists(dir)) {
-            _log.info("Dir " + dir.toAbsolutePath() + " not exists");
+            LOG.info("Dir " + dir.toAbsolutePath() + " not exists");
             return;
         }
         hash.addAll(FileUtils.getAllFiles(dir, true, ".xml"));
@@ -101,7 +98,7 @@ public final class MultiSellHolder {
 
     public void addMultiSellListContainer(int id, MultiSellListContainer list) {
         if (entries.containsKey(id))
-            _log.warn("MultiSell redefined: " + id);
+            LOG.warn("MultiSell redefined: " + id);
 
         list.setListId(id);
         entries.put(id, list);
@@ -124,7 +121,7 @@ public final class MultiSellHolder {
         try {
             id = Integer.parseInt(f.getFileName().toString().replaceAll(".xml", ""));
         } catch (NumberFormatException e) {
-            _log.error("Error loading file " + f, e);
+            LOG.error("Error loading file " + f, e);
             return;
         }
         Document doc;
@@ -134,13 +131,13 @@ public final class MultiSellHolder {
             factory.setIgnoringComments(true);
             doc = factory.newDocumentBuilder().parse(CryptUtil.decryptOnDemand(f));
         } catch (IOException | ParserConfigurationException | SAXException e) {
-            _log.error("Error loading file " + f, e);
+            LOG.error("Error loading file " + f, e);
             return;
         }
         try {
             addMultiSellListContainer(id, parseDocument(doc, id));
         } catch (RuntimeException e) {
-            _log.error("Error in file " + f, e);
+            LOG.error("Error in file " + f, e);
         }
     }
 
@@ -222,7 +219,7 @@ public final class MultiSellHolder {
                     mi.getItemAttributes().setUnholy(Integer.parseInt(d.getAttributes().getNamedItem("unholyAttr").getNodeValue()));
 
                 if (!Config.ALT_ALLOW_SHADOW_WEAPONS && id > 0) {
-                    ItemTemplate item = ItemHolder.getInstance().getTemplate(id);
+                    ItemTemplate item = ItemHolder.getTemplate(id);
                     if (item != null && item.isShadowItem() && item.isWeapon() && !Config.ALT_ALLOW_SHADOW_WEAPONS)
                         return null;
                 }
@@ -231,19 +228,19 @@ public final class MultiSellHolder {
             }
 
         if (entry.getIngredients().isEmpty() || entry.getProduction().isEmpty()) {
-            _log.warn("MultiSell [" + multiSellId + "] is empty!");
+            LOG.warn("MultiSell [" + multiSellId + "] is empty!");
             return null;
         }
 
         if (entry.getIngredients().size() == 1 && entry.getProduction().size() == 1 && entry.getIngredients().get(0).getItemId() == 57) {
-            ItemTemplate item = ItemHolder.getInstance().getTemplate(entry.getProduction().get(0).getItemId());
+            ItemTemplate item = ItemHolder.getTemplate(entry.getProduction().get(0).getItemId());
             if (item == null) {
-                _log.warn("MultiSell [" + multiSellId + "] Production [" + entry.getProduction().get(0).getItemId() + "] not found!");
+                LOG.warn("MultiSell [" + multiSellId + "] Production [" + entry.getProduction().get(0).getItemId() + "] not found!");
                 return null;
             }
             if (multiSellId < 70000 || multiSellId > 70010) //FIXME hardcode. Все кроме GM Shop
                 if (item.getReferencePrice() > entry.getIngredients().get(0).getItemCount())
-                    _log.warn("MultiSell [" + multiSellId + "] Production '" + item.getName() + "' [" + entry.getProduction().get(0).getItemId() + "] price is lower than referenced | " + item.getReferencePrice() + " > " + entry.getIngredients().get(0).getItemCount());
+                    LOG.warn("MultiSell [" + multiSellId + "] Production '" + item.getName() + "' [" + entry.getProduction().get(0).getItemId() + "] price is lower than referenced | " + item.getReferencePrice() + " > " + entry.getIngredients().get(0).getItemCount());
         }
 
         return entry;
@@ -334,7 +331,7 @@ public final class MultiSellHolder {
                     if (i.getItemId() < 1)
                         continue;
 
-                    ItemTemplate item = ItemHolder.getInstance().getTemplate(i.getItemId());
+                    ItemTemplate item = ItemHolder.getTemplate(i.getItemId());
                     if (item.isStackable())
                         tax += item.getReferencePrice() * i.getItemCount() * taxRate;
                 }
@@ -361,7 +358,7 @@ public final class MultiSellHolder {
                         containsMammonVarnishEnhancer = true;
                 // Проверка наличия у игрока ингридиентов
                 for (MultiSellIngredient ingredient : ingridients) {
-                    ItemTemplate template = ingredient.getItemId() <= 0 ? null : ItemHolder.getInstance().getTemplate(ingredient.getItemId());
+                    ItemTemplate template = ingredient.getItemId() <= 0 ? null : ItemHolder.getTemplate(ingredient.getItemId());
                     if (ingredient.getItemId() <= 0 || nokey || template.isEquipment() || containsMammonVarnishEnhancer) {
                         if (ingredient.getItemId() == 12374) // Mammon's Varnish Enhancer
                             continue;
@@ -397,7 +394,7 @@ public final class MultiSellHolder {
                                 MultiSellEntry possibleEntry = new MultiSellEntry(enchant ? ent.getEntryId() + item.getEnchantLevel() * 100000 : ent.getEntryId());
 
                                 for (MultiSellIngredient p : ent.getProduction()) {
-                                    if (enchant && template.canBeEnchanted(true) && ItemHolder.getInstance().getTemplate(p.getItemId()).getCrystalType().equals(item.getCrystalType())) {
+                                    if (enchant && template.canBeEnchanted(true) && ItemHolder.getTemplate(p.getItemId()).getCrystalType().equals(item.getCrystalType())) {
                                         p.setItemEnchant(item.getEnchantLevel());
                                         p.setItemAttributes(item.getAttributes().clone());
                                     }
@@ -405,7 +402,7 @@ public final class MultiSellHolder {
                                 }
 
                                 for (MultiSellIngredient ig : ingridients) {
-                                    if (enchant && ig.getItemId() > 0 && ItemHolder.getInstance().getTemplate(ig.getItemId()).canBeEnchanted(true)) {
+                                    if (enchant && ig.getItemId() > 0 && ItemHolder.getTemplate(ig.getItemId()).canBeEnchanted(true)) {
                                         ig.setItemEnchant(item.getEnchantLevel());
                                         ig.setItemAttributes(item.getAttributes().clone());
                                     }

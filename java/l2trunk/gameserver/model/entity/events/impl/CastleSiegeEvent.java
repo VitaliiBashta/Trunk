@@ -32,7 +32,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.*;
 import java.util.concurrent.Future;
 
-public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
+public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
     public static final int MAX_SIEGE_CLANS = 20;
     public static final String DEFENDERS_WAITING = "defenders_waiting";
     public static final String DEFENDERS_REFUSED = "defenders_refused";
@@ -59,10 +59,10 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
 
         List<DoorObject> doorObjects = getObjects(DOORS);
 
-        addObjects(BOUGHT_ZONES, CastleDamageZoneDAO.getInstance().load(getResidence()));
+        addObjects(BOUGHT_ZONES, CastleDamageZoneDAO.INSTANCE.load(getResidence()));
 
         for (DoorObject doorObject : doorObjects) {
-            doorObject.setUpgradeValue(this, CastleDoorUpgradeDAO.getInstance().load(doorObject.getUId()));
+            doorObject.setUpgradeValue(this, CastleDoorUpgradeDAO.INSTANCE.load(doorObject.getUId()));
             doorObject.getDoor().addListener(_doorDeathListener);
         }
     }
@@ -140,7 +140,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
                 removeObjects(HIRED_GUARDS);
                 removeObjects(BOUGHT_ZONES);
 
-                CastleDamageZoneDAO.getInstance().delete(getResidence());
+                CastleDamageZoneDAO.INSTANCE.delete(getResidence());
             } else {
                 spawnAction(GUARDS, false);
             }
@@ -150,7 +150,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
                 doorObject.setWeak(true);
                 doorObject.setUpgradeValue(this, 0);
 
-                CastleDoorUpgradeDAO.getInstance().delete(doorObject.getUId());
+                CastleDoorUpgradeDAO.INSTANCE.delete(doorObject.getUId());
             }
         }
 
@@ -173,7 +173,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
                     item.deleteMe();
                 }
 
-                CastleHiredGuardDAO.getInstance().delete(getResidence());
+                CastleHiredGuardDAO.INSTANCE.delete(getResidence());
 
                 spawnAction(HIRED_GUARDS, true);
             }
@@ -191,7 +191,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
             return;
         }
 
-        SiegeClanDAO.getInstance().delete(getResidence());
+        SiegeClanDAO.INSTANCE.delete(getResidence());
 
         updateParticles(true, ATTACKERS, DEFENDERS);
 
@@ -266,7 +266,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
             getResidence().getOwnDate().setTimeInMillis(System.currentTimeMillis());
             getResidence().getLastSiegeDate().setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis());
 
-            DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+            DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
             runnerEvent.registerDominion(getResidence().getDominion());
             int id = getResidence().getId();
             if (id == 3 || id == 5 || id == 8) {
@@ -290,7 +290,7 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
             getResidence().getOwnDate().setTimeInMillis(0);
             getResidence().getLastSiegeDate().setTimeInMillis(0);
 
-            DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+            DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
             runnerEvent.unRegisterDominion(getResidence().getDominion());
         }
 
@@ -344,8 +344,8 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> {
     public void loadSiegeClans() {
         super.loadSiegeClans();
 
-        addObjects(DEFENDERS_WAITING, SiegeClanDAO.getInstance().load(getResidence(), DEFENDERS_WAITING));
-        addObjects(DEFENDERS_REFUSED, SiegeClanDAO.getInstance().load(getResidence(), DEFENDERS_REFUSED));
+        addObjects(DEFENDERS_WAITING, SiegeClanDAO.INSTANCE.load(getResidence(), DEFENDERS_WAITING));
+        addObjects(DEFENDERS_REFUSED, SiegeClanDAO.INSTANCE.load(getResidence(), DEFENDERS_REFUSED));
     }
 
     @Override

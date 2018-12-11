@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 public final class Keys extends ScriptItemHandler implements ScriptFile {
-    private final Set<Integer> _itemIds;
+    private final Set<Integer> itemIds;
 
 
     @Override
@@ -45,10 +45,10 @@ public final class Keys extends ScriptItemHandler implements ScriptFile {
 
     public Keys() {
         Set<Integer> keys = new HashSet<>();
-        for (DoorTemplate door : DoorHolder.getInstance().getDoors().values())
+        for (DoorTemplate door : DoorHolder.getDoors().values())
             if (door != null && door.getKey() > 0)
                 keys.add(door.getKey());
-        _itemIds = keys;
+        itemIds = keys;
     }
 
     @Override
@@ -87,6 +87,6 @@ public final class Keys extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return new ArrayList<>(_itemIds);
+        return new ArrayList<>(itemIds);
     }
 }

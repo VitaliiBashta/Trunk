@@ -6,10 +6,10 @@ import l2trunk.gameserver.model.entity.events.impl.DominionSiegeRunnerEvent;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _733_ProtectTheEconomicAssociationLeader extends Quest implements ScriptFile {
+public final class _733_ProtectTheEconomicAssociationLeader extends Quest implements ScriptFile {
     public _733_ProtectTheEconomicAssociationLeader() {
         super(PARTY_NONE);
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         runnerEvent.addBreakQuest(this);
     }
 

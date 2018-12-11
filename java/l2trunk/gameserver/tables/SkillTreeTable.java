@@ -36,7 +36,7 @@ public class SkillTreeTable {
     }
 
     public static void checkSkill(Player player, Skill skill) {
-        SkillLearn learn = SkillAcquireHolder.getInstance().getSkillLearn(player, skill.getId(), levelWithoutEnchant(skill), AcquireType.NORMAL);
+        SkillLearn learn = SkillAcquireHolder.getSkillLearn(player, skill.getId(), levelWithoutEnchant(skill), AcquireType.NORMAL);
         if (learn == null)
             return;
 
@@ -47,13 +47,13 @@ public class SkillTreeTable {
             // если у нас низкий лвл для скила, то заточка обнуляется 100%
             // и ищем от большего к меньшему подходящий лвл для скила
             for (int i = skill.getBaseLevel(); i != 0; i--) {
-                SkillLearn learn2 = SkillAcquireHolder.getInstance().getSkillLearn(player, skill.getId(), i, AcquireType.NORMAL);
+                SkillLearn learn2 = SkillAcquireHolder.getSkillLearn(player, skill.getId(), i, AcquireType.NORMAL);
                 if (learn2 == null)
                     continue;
                 if (learn2.getMinLevel() > player.getLevel() + 6) // Official +10 (Alexander)
                     continue;
 
-                Skill newSkill = SkillTable.INSTANCE().getInfo(skill.getId(), i);
+                Skill newSkill = SkillTable.INSTANCE.getInfo(skill.getId(), i);
                 if (newSkill != null) {
                     player.addSkill(newSkill, true);
                     break;

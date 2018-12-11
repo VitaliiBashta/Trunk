@@ -33,9 +33,6 @@ import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public abstract class Playable extends Creature {
 
@@ -113,30 +110,19 @@ public abstract class Playable extends Creature {
         if (isInZonePvP() && target.isInZonePvP()) {
             return false;
         }
-        if (getPlayer().isInFightClub()) {
-            return false;
-        }
         if (isInZone(ZoneType.SIEGE) && target.isInZone(ZoneType.SIEGE)) {
             return false;
         }
         if ((skill == null) || skill.isOffensive()) {
             if (target.getKarma() > 0) {
                 return false;
-            } else if (target.isPlayable()) {
-                return true;
-            }
-        } else if ((target.getPvpFlag() > 0) || (target.getKarma() > 0) || target.isMonster()) {
-            return true;
-        }
+            } else return target.isPlayable();
+        } else return (target.getPvpFlag() > 0) || (target.getKarma() > 0) || target.isMonster();
 
-        return false;
     }
 
     /**
      * Checks whether you can attack the target (for physical attacks)
-     *
-     * @param target
-     * @return
      */
     private boolean checkTarget(Creature target) {
         Player player = getPlayer();
@@ -195,9 +181,7 @@ public abstract class Playable extends Creature {
                 player.sendPacket(Msg.YOU_MAY_NOT_ATTACK_THIS_TARGET_IN_A_PEACEFUL_ZONE);
                 return false;
             }
-            if (player.isInOlympiadMode() && !player.isOlympiadCompStarted()) {
-                return false;
-            }
+            return !player.isInOlympiadMode() || player.isOlympiadCompStarted();
         }
 
         return true;
@@ -403,7 +387,7 @@ public abstract class Playable extends Creature {
         if ((attacker == null) || (player == null) || attacker.equals(this))
             return false;
 
-        if (attacker.equals(this) || attacker.equals(player) && !force)
+        if (attacker.equals(player) && !force)
             return false;
 
         if (isAlikeDead() || attacker.isAlikeDead())
@@ -431,9 +415,6 @@ public abstract class Playable extends Creature {
         Player pcAttacker = attacker.getPlayer();
         if ((pcAttacker != null) && !pcAttacker.equals(player)) {
             if (pcAttacker.isInBoat())
-                return false;
-
-            if (pcAttacker.isInTvT() && pcAttacker.getTeam() == player.getTeam())
                 return false;
 
             if ((pcAttacker.getBlockCheckerArena() > -1) || (player.getBlockCheckerArena() > -1))
@@ -603,7 +584,7 @@ public abstract class Playable extends Creature {
     }
 
     public void paralizeMe(Creature effector) {
-        Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE, 1);
+        Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID);
         revengeSkill.getEffects(effector, this, false, false);
     }
 
@@ -624,7 +605,7 @@ public abstract class Playable extends Creature {
         } else {
             isPendingRevive = false;
 
-            if (isSalvation() || isPlayer() && getPlayer().isInFightClub()) {
+            if (isSalvation() || isPlayer()) {
                 for (Effect e : getEffectList().getAllEffects()) {
                     if (e.getEffectType() == EffectType.Salvation) {
                         e.exit();

@@ -6,15 +6,14 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _461_RumbleInTheBase extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _461_RumbleInTheBase extends Quest implements ScriptFile {
     private static final int Stan = 30200;
     private static final int ShoesStringofSelMahum = 16382;
     private static final int ShinySalmon = 15503;
-    private static final int[] SelMahums = {
-            22786,
-            22787,
-            22788
-    };
+    private static final List<Integer> SelMahums = Arrays.asList(22786, 22787, 22788);
     private static final int SelChef = 18908;
 
     public _461_RumbleInTheBase() {
@@ -75,7 +74,7 @@ public class _461_RumbleInTheBase extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         if (cond == 1) {
             if (st.getQuestItemsCount(ShoesStringofSelMahum) < 10 && st.getQuestItemsCount(ShinySalmon) < 5) {
-                if (st.getQuestItemsCount(ShoesStringofSelMahum) < 10 && ArrayUtils.contains(SelMahums, npcId))
+                if (st.getQuestItemsCount(ShoesStringofSelMahum) < 10 && SelMahums.contains(npcId))
                     st.rollAndGive(ShoesStringofSelMahum, 1, 20);
                 if (st.getQuestItemsCount(ShinySalmon) < 5 && npcId == SelChef)
                     st.rollAndGive(ShinySalmon, 1, 10);

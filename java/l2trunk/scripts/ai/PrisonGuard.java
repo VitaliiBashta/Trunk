@@ -16,11 +16,10 @@ import l2trunk.gameserver.tables.SkillTable;
  * - Не проявляют агресии к чарам без эффекта Event Timer<br>
  * ID: 18367, 18368
  *
- * @author SYS
  */
 public final class PrisonGuard extends Fighter {
     private static final int RACE_STAMP = 10013;
-
+    private Skill petrification = SkillTable.INSTANCE.getInfo(4578, 1); // Petrification
     public PrisonGuard(NpcInstance actor) {
         super(actor);
     }
@@ -51,7 +50,7 @@ public final class PrisonGuard extends Fighter {
             else if (actor.getNpcId() == 18368)
                 Functions.npcSay(actor, "You're out of mind comming here...");
 
-            Skill petrification = SkillTable.INSTANCE().getInfo(4578, 1); // Petrification
+
             actor.doCast(petrification, attacker, true);
             if (attacker.getPet() != null)
                 actor.doCast(petrification, attacker.getPet(), true);

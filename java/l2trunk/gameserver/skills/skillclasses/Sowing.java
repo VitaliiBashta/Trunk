@@ -27,7 +27,7 @@ public class Sowing extends Skill {
 
         Player player = (Player) activeChar;
         int seedId = player.getUseSeed();
-        boolean altSeed = ItemHolder.getInstance().getTemplate(seedId).isAltSeed();
+        boolean altSeed = ItemHolder.getTemplate(seedId).isAltSeed();
 
         // remove seed from inventory
         if (!player.getInventory().destroyItemByItemId(seedId, 1L, "Sowing")) {

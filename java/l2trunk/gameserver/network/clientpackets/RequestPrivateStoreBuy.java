@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.TradeHelper;
 
-public class RequestPrivateStoreBuy extends L2GameClientPacket {
+public final class RequestPrivateStoreBuy extends L2GameClientPacket {
     private int _sellerId;
     private int _count;
     private int[] _items; // object id

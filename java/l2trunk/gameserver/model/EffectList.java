@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.skills.EffectType;
 import l2trunk.gameserver.skills.effects.EffectTemplate;
@@ -24,7 +23,7 @@ public class EffectList {
     private static final int DEBUFF_SLOT_TYPE = 3;
     private final Creature _actor;
     private final Lock lock = new ReentrantLock();
-    private List<Effect> _effects;
+    private List<Effect> effects;
 
     EffectList(Creature owner) {
         _actor = owner;
@@ -70,7 +69,7 @@ public class EffectList {
 
         int count = 0;
 
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.getSkill().getId() == skill_id) {
                 count++;
             }
@@ -84,7 +83,7 @@ public class EffectList {
             return null;
         }
 
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.getEffectType() == et) {
                 return e;
             }
@@ -100,13 +99,13 @@ public class EffectList {
         return getEffectsBySkillId(skill.getId());
     }
 
-    public List<Effect> getEffectsBySkillId(int skillId) {
+    public List<Effect> getEffectsBySkillId(Integer skillId) {
         if (isEmpty()) {
             return null;
         }
 
         List<Effect> list = new ArrayList<>(2);
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.getSkill().getId() == skillId) {
                 list.add(e);
             }
@@ -119,7 +118,7 @@ public class EffectList {
         if (isEmpty()) {
             return null;
         }
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if ((e.getSkill().getId() == skillId) && (e.getEffectType() == type)) {
                 return e;
             }
@@ -132,7 +131,7 @@ public class EffectList {
         if (isEmpty()) {
             return null;
         }
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.getStackType().equals(type)) {
                 return e;
             }
@@ -141,49 +140,42 @@ public class EffectList {
         return null;
     }
 
-    public boolean containEffectFromSkills(int[] skillIds) {
+    public boolean containEffectFromSkills(List<Integer> skillIds) {
         if (isEmpty()) {
             return false;
         }
-
-        int skillId;
-        for (Effect e : _effects) {
-            skillId = e.getSkill().getId();
-            if (ArrayUtils.contains(skillIds, skillId)) {
-                return true;
-            }
-        }
-
-        return false;
+        return effects.stream()
+                .map(e -> e.getSkill().getId())
+                .anyMatch(skillIds::contains);
     }
 
     public List<Effect> getAllEffects() {
         if (isEmpty()) {
             return Collections.emptyList();
         }
-        return new ArrayList<>(_effects);
+        return new ArrayList<>(effects);
     }
 
     private boolean isEmpty() {
-        return (_effects == null) || _effects.isEmpty();
+        return (effects == null) || effects.isEmpty();
     }
 
     /**
      * Возвращает первые эффекты для всех скиллов. Нужно для отображения не более чем 1 иконки для каждого скилла.
      */
-    public Effect[] getAllFirstEffects() {
+    public List<Effect> getAllFirstEffects() {
         if (isEmpty())
-            return Effect.EMPTY_L2EFFECT_ARRAY;
+            return Collections.emptyList();
 
         Map<Integer, Effect> map = new LinkedHashMap<>();
-        for (Effect e : _effects)
-            map.put(e.getSkill().getId(), e); // putIfAbsent
 
-        return map.values().toArray(new Effect[map.size()]);
+        effects.forEach(e -> map.put(e.getSkill().getId(), e)); // putIfAbsent
+
+        return new ArrayList<>(map.values());
     }
 
     private void checkSlotLimit(Effect newEffect) {
-        if (_effects == null) {
+        if (effects == null) {
             return;
         }
 
@@ -194,7 +186,7 @@ public class EffectList {
 
         int size = 0;
         List<Integer> skillIds = new ArrayList<>();
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.isInUse()) {
                 if (e.getSkill().equals(newEffect.getSkill())) {
                     return;
@@ -231,7 +223,7 @@ public class EffectList {
         }
 
         int skillId = 0;
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.isInUse()) {
                 if (getSlotType(e) == slotType) {
                     skillId = e.getSkill().getId();
@@ -256,13 +248,13 @@ public class EffectList {
 
         lock.lock();
         try {
-            if (_effects == null) {
-                _effects = new CopyOnWriteArrayList<>();
+            if (effects == null) {
+                effects = new CopyOnWriteArrayList<>();
             }
 
             if (stackType.equals(EffectTemplate.NO_STACK)) {
                 // Delete the same effects
-                for (Effect e : _effects) {
+                for (Effect e : effects) {
                     if (!e.isInUse()) {
                         continue;
                     }
@@ -280,7 +272,7 @@ public class EffectList {
                 // Проверяем, нужно ли накладывать эффект, при совпадении StackType.
                 // Новый эффект накладывается только в том случае, если у него больше StackOrder и больше длительность.
                 // Если условия подходят - удаляем старый.
-                for (Effect e : _effects) {
+                for (Effect e : effects) {
                     if (!e.isInUse()) {
                         continue;
                     }
@@ -308,7 +300,7 @@ public class EffectList {
             checkSlotLimit(effect);
 
             // Добавляем новый эффект
-            if (add = _effects.add(effect)) {
+            if (add = effects.add(effect)) {
                 effect.setInUse(true);
             }
         } finally {
@@ -346,15 +338,13 @@ public class EffectList {
             return;
         }
 
-        boolean remove;
-
         lock.lock();
         try {
-            if (_effects == null) {
+            if (effects == null) {
                 return;
             }
 
-            if (!_effects.remove(effect)) {
+            if (!effects.remove(effect)) {
                 return;
             }
         } finally {
@@ -372,7 +362,7 @@ public class EffectList {
 
         lock.lock();
         try {
-            for (Effect e : _effects) {
+            for (Effect e : effects) {
                 e.exit();
             }
         } finally {
@@ -388,7 +378,7 @@ public class EffectList {
             return;
         }
 
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.getSkill().getId() == skillId) {
                 e.exit();
             }
@@ -401,24 +391,12 @@ public class EffectList {
         }
     }
 
-    public void stopEffectByDisplayId(int skillId) {
-        if (isEmpty()) {
-            return;
-        }
-
-        for (Effect e : _effects) {
-            if (e.getSkill().getDisplayId() == skillId) {
-                e.exit();
-            }
-        }
-    }
-
     public void stopEffects(EffectType type) {
         if (isEmpty()) {
             return;
         }
 
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.getEffectType() == type) {
                 e.exit();
             }
@@ -435,14 +413,13 @@ public class EffectList {
 
         Set<Integer> skillIds = new HashSet<>();
 
-        for (Effect e : _effects) {
+        for (Effect e : effects) {
             if (e.getEffectType() == type) {
                 skillIds.add(e.getSkill().getId());
             }
         }
 
-        for (int skillId : skillIds) {
-            stopEffect(skillId);
-        }
+        skillIds.forEach(this::stopEffect);
+
     }
 }

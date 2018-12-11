@@ -1,17 +1,13 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 import static l2trunk.scripts.ai.ZakenDaytime.scheduleTeleport;
-import static l2trunk.scripts.ai.ZakenDaytime83.zakenTele;
 
 public final class ZakenNightly extends Fighter {
     private static final int doll_blader_b = 29023;

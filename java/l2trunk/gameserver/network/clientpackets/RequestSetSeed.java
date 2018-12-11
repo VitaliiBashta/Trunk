@@ -21,7 +21,7 @@ import java.util.List;
  * d - price
  * ]
  */
-public class RequestSetSeed extends L2GameClientPacket {
+public final class RequestSetSeed extends L2GameClientPacket {
     private int _count, _manorId;
 
     private long[] _items; // _size*3
@@ -57,7 +57,7 @@ public class RequestSetSeed extends L2GameClientPacket {
             return;
         }
 
-        Castle caslte = ResidenceHolder.getInstance().getResidence(Castle.class, _manorId);
+        Castle caslte = ResidenceHolder.getResidence(Castle.class, _manorId);
         if (caslte.getOwnerId() != activeChar.getClanId() // clan owns castle
                 || (activeChar.getClanPrivileges() & Clan.CP_CS_MANOR_ADMIN) != Clan.CP_CS_MANOR_ADMIN) // has manor rights
         {
@@ -67,7 +67,7 @@ public class RequestSetSeed extends L2GameClientPacket {
 
         List<SeedProduction> seeds = new ArrayList<>(_count);
         for (int i = 0; i < _count; i++) {
-            int id = (int) _items[i * 3 + 0];
+            int id = (int) _items[i * 3 ];
             long sales = _items[i * 3 + 1];
             long price = _items[i * 3 + 2];
             if (id > 0) {

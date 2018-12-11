@@ -20,12 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum  BuyListHolder {
+public enum BuyListHolder {
     INSTANCE;
-    private final Logger _log = LoggerFactory.getLogger(BuyListHolder.class);
     private static BuyListHolder _instance;
-
-    private final Map<Integer, NpcTradeList> _lists = new HashMap<>();
+    private final Logger _log = LoggerFactory.getLogger(BuyListHolder.class);
+    private final Map<Integer, NpcTradeList> lists = new HashMap<>();
 
     public void init() {
         try {
@@ -84,7 +83,7 @@ public enum  BuyListHolder {
                                                 for (Node i = d2.getFirstChild(); i != null; i = i.getNextSibling())
                                                     if ("item".equalsIgnoreCase(i.getNodeName())) {
                                                         final int itemId = Integer.parseInt(i.getAttributes().getNamedItem("id").getNodeValue());
-                                                        final ItemTemplate template = ItemHolder.getInstance().getTemplate(itemId);
+                                                        final ItemTemplate template = ItemHolder.getTemplate(itemId);
                                                         if (template == null) {
                                                             _log.warn("Template not found for itemId: " + itemId + " for shop " + shop_id);
                                                             continue;
@@ -106,46 +105,45 @@ public enum  BuyListHolder {
                                                         item.setRechargeTime(itemRechargeTime);
                                                         tl.addItem(item);
                                                     }
-                                                _lists.put(shop_id, tl);
+                                                lists.put(shop_id, tl);
                                             }
                                         }
                         }
 
             _log.info("TradeController: Loaded " + counterFiles + " file(s).");
             _log.info("TradeController: Loaded " + counterItems + " Items.");
-            _log.info("TradeController: Loaded " + _lists.size() + " Buylists.");
+            _log.info("TradeController: Loaded " + lists.size() + " Buylists.");
         } catch (DOMException | IOException | NumberFormatException | ParserConfigurationException | SAXException e) {
             _log.warn("TradeController: Buy lists could not be initialized.", e);
         }
     }
 
-    public  void reload() {
+    public void reload() {
         init();
     }
 
     private boolean checkItem(ItemTemplate template) {
         if (template.isCommonItem() && !Config.ALT_ALLOW_SELL_COMMON)
             return false;
-        if (template.isEquipment() && !template.isForPet() && Config.ALT_SHOP_PRICE_LIMITS.length > 0)
-            for (int i = 0; i < Config.ALT_SHOP_PRICE_LIMITS.length; i += 2)
-                if (template.getBodyPart() == Config.ALT_SHOP_PRICE_LIMITS[i]) {
-                    if (template.getReferencePrice() > Config.ALT_SHOP_PRICE_LIMITS[i + 1])
+        if (template.isEquipment() && !template.isForPet() && Config.ALT_SHOP_PRICE_LIMITS.size() > 0)
+            for (int i = 0; i < Config.ALT_SHOP_PRICE_LIMITS.size(); i += 2)
+                if (template.getBodyPart() == Config.ALT_SHOP_PRICE_LIMITS.get(i)) {
+                    if (template.getReferencePrice() > Config.ALT_SHOP_PRICE_LIMITS.get(i + 1))
                         return false;
                     break;
                 }
-        if (Config.ALT_SHOP_UNALLOWED_ITEMS.length > 0)
-            for (int i : Config.ALT_SHOP_UNALLOWED_ITEMS)
-                if (template.getItemId() == i)
-                    return false;
+        if (Config.ALT_SHOP_UNALLOWED_ITEMS.size() > 0)
+            return Config.ALT_SHOP_UNALLOWED_ITEMS.stream()
+                    .noneMatch(i -> template.getItemId() == i);
         return true;
     }
 
     public NpcTradeList getBuyList(int listId) {
-        return _lists.get(listId);
+        return lists.get(listId);
     }
 
     public void addToBuyList(int listId, NpcTradeList list) {
-        _lists.put(listId, list);
+        lists.put(listId, list);
     }
 
     public static class NpcTradeList {
@@ -195,19 +193,17 @@ public enum  BuyListHolder {
         }
 
         public TradeItem getItemByItemId(int itemId) {
-            for (TradeItem ti : tradeList)
-                if (ti.getItemId() == itemId)
-                    return ti;
-            return null;
+            return tradeList.stream()
+                    .filter(ti -> ti.getItemId() == itemId)
+                    .findFirst().orElse(null);
         }
 
         public synchronized void updateItems(List<TradeItem> buyList) {
-            for (TradeItem ti : buyList) {
+            buyList.forEach(ti -> {
                 TradeItem ic = getItemByItemId(ti.getItemId());
-
                 if (ic.isCountLimited())
                     ic.setCurrentValue(Math.max(ic.getCurrentValue() - ti.getCount(), 0));
-            }
+            });
         }
     }
 }

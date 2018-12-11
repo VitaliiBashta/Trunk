@@ -43,7 +43,7 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
     public ItemSkills() {
         Set<Integer> set = new HashSet<>();
-        for (ItemTemplate template : ItemHolder.getInstance().getAllTemplates()) {
+        for (ItemTemplate template : ItemHolder.getAllTemplates()) {
             if (template == null)
                 continue;
 

@@ -8,7 +8,6 @@ import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
@@ -22,6 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class SchemeBufferInstance extends NpcInstance {
 
@@ -68,62 +69,17 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static final String SET_ALL = "All";
     private static final String SET_NONE = "None";
 
-    private static final String[] SCHEME_ICONS = new String[]
-            {
-                    "Icon.skill1331",
-                    "Icon.skill1332",
-                    "Icon.skill1316",
-                    "Icon.skill1264",
-                    "Icon.skill1254",
-                    "Icon.skill1178",
-                    "Icon.skill1085",
-                    "Icon.skill957",
-                    "Icon.skill0928",
-                    "Icon.skill0793",
-                    "Icon.skill0787",
-                    "Icon.skill0490",
-                    "Icon.skill0487",
-                    "Icon.skill0452",
-                    "Icon.skill0453",
-                    "Icon.skill0440",
-                    "Icon.skill0409",
-                    "Icon.skill0405",
-                    "Icon.skill0061",
-                    "Icon.skill0072",
-                    "Icon.skill0219",
-                    "Icon.skill0208",
-                    "Icon.skill0210",
-                    "Icon.skill0254",
-                    "Icon.skill0228",
-                    "Icon.skill0222",
-                    "Icon.skill0181",
-                    "Icon.skill0078",
-                    "Icon.skill0091",
-                    "Icon.skill0076",
-                    "Icon.skill0025",
-                    "Icon.skill0018",
-                    "Icon.skill0019",
-                    "Icon.skill0007",
-                    "Icon.skill1391",
-                    "Icon.skill1373",
-                    "Icon.skill1388",
-                    "Icon.skill1409",
-                    "Icon.skill1457",
-                    "Icon.skill1501",
-                    "Icon.skill1520",
-                    "Icon.skill1506",
-                    "Icon.skill1527",
-                    "Icon.skill5016",
-                    "Icon.skill5860",
-                    "Icon.skill5661",
-                    "Icon.skill6302",
-                    "Icon.skill6171",
-                    "Icon.skill6286",
-                    "Icon.skill4106",
-                    "Icon.skill4270_3"
-            };
-    private static final char[] FINE_CHARS = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
-            'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' '};
+    private static final List<String> SCHEME_ICONS = Arrays.asList(
+            "Icon.skill1331", "Icon.skill1332", "Icon.skill1316", "Icon.skill1264", "Icon.skill1254",
+            "Icon.skill1178", "Icon.skill1085", "Icon.skill957", "Icon.skill0928", "Icon.skill0793",
+            "Icon.skill0787", "Icon.skill0490", "Icon.skill0487", "Icon.skill0452", "Icon.skill0453",
+            "Icon.skill0440", "Icon.skill0409", "Icon.skill0405", "Icon.skill0061", "Icon.skill0072",
+            "Icon.skill0219", "Icon.skill0208", "Icon.skill0210", "Icon.skill0254", "Icon.skill0228",
+            "Icon.skill0222", "Icon.skill0181", "Icon.skill0078", "Icon.skill0091", "Icon.skill0076",
+            "Icon.skill0025", "Icon.skill0018", "Icon.skill0019", "Icon.skill0007", "Icon.skill1391",
+            "Icon.skill1373", "Icon.skill1388", "Icon.skill1409", "Icon.skill1457", "Icon.skill1501",
+            "Icon.skill1520", "Icon.skill1506", "Icon.skill1527", "Icon.skill5016", "Icon.skill5860",
+            "Icon.skill5661", "Icon.skill6302", "Icon.skill6171", "Icon.skill6286", "Icon.skill4106", "Icon.skill4270_3");
     private static boolean singleBuffsLoaded = false;
     private static List<SingleBuff> allSingleBuffs = null;
 
@@ -213,7 +169,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static boolean checkConditions(Player player) {
         String msg = null;
         int playerReflectionId = player.getReflection().getInstancedZoneId();
-        if (playerReflectionId != ReflectionManager.DEFAULT.getId() && playerReflectionId != ReflectionManager.FIGHT_CLUB_REFLECTION_ID) {
+        if (playerReflectionId != ReflectionManager.DEFAULT.getId()) {
             msg = "You cannot receive buffs outside the default instance.";
         } else if (player.isInOlympiadMode() || Olympiad.isRegistered(player)) {
             msg = "You cannot receive buffs while registered in the Grand Olympiad.";
@@ -292,9 +248,9 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static String viewAllSchemeBuffs(Player player, String scheme, String page) {
-        int pageN = Integer.parseInt(page);
-        int schemeId = Integer.parseInt(scheme);
-        String dialog = HtmCache.INSTANCE().getNotNull("scripts/services/communityPVP/buffer_scheme_buffs.htm", player);
+        int pageN = toInt(page);
+        int schemeId = toInt(scheme);
+        String dialog = HtmCache.INSTANCE.getNotNull("scripts/services/communityPVP/buffer_scheme_buffs.htm", player);
 
         int[] buffCount = getBuffCount(player, schemeId);
         int TOTAL_BUFF = buffCount[0];
@@ -494,9 +450,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static boolean canHeal(Player player) {
-        if (player.isInFightClub() && player.getFightClubEvent().getState() != AbstractFightClub.EVENT_STATE.PREPARATION)
-            return false;
-        return player.isInFightClub() || (checkConditions(player) && (player.isInPeaceZone() || player.isInZone(ZoneType.RESIDENCE)));
+        return (checkConditions(player) && (player.isInPeaceZone() || player.isInZone(ZoneType.RESIDENCE)));
     }
 
     private static void heal(Player player, boolean isPet) {
@@ -582,7 +536,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 continue;
 
             if (buff._buffType.equals(buffType)) {
-                String bName = SkillTable.INSTANCE().getInfo(buff._buffId, buff._buffLevel).getName();
+                String bName = SkillTable.INSTANCE.getInfo(buff._buffId, buff._buffLevel).getName();
                 bName = bName.replace(" ", "+");
                 availableBuffs.add(bName + "_" + buff._buffId + "_" + buff._buffLevel);
             }
@@ -603,8 +557,8 @@ public final class SchemeBufferInstance extends NpcInstance {
                 buff = buff.replace("_", " ");
                 String[] buffSplit = buff.split(" ");
                 String name = buffSplit[0];
-                int id = Integer.parseInt(buffSplit[1]);
-                int level = Integer.parseInt(buffSplit[2]);
+                int id = toInt(buffSplit[1]);
+                int level = toInt(buffSplit[2]);
                 name = name.replace("+", " ");
                 builder.append("<td align=center><table cellspacing=0 cellpadding=0><tr><td align=right>").append(getSkillIconHtml(id, level)).append("</td><td><button value=\"").append(name).append("\" action=\"bypass _bbsbufferbypass_giveBuffs ").append(id).append(" ").append(level).append(" ").append(buffType).append("\" width=190 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td><td align=left>").append(getSkillIconHtml(id, level)).append("</td></tr></table></td>");
                 index++;
@@ -721,14 +675,14 @@ public final class SchemeBufferInstance extends NpcInstance {
         final StringBuilder icons = new StringBuilder();
         final int MAX_ICONS_PER_ROW = 17;
 
-        for (int i = 0; i < SCHEME_ICONS.length; i++) {
+        for (int i = 0; i < SCHEME_ICONS.size(); i++) {
             // Open the new row
             if (i == 0 || (i + 1) % MAX_ICONS_PER_ROW == 1)
                 icons.append("<tr>");
 
             // Draw the icon
             icons.append("<td width=60 align=center valign=top>");
-            icons.append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=" + SCHEME_ICONS[i] + ">");
+            icons.append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=" + SCHEME_ICONS.get(i) + ">");
             icons.append("<tr>");
             icons.append("<td width=32 height=32 align=center valign=top>");
             if (iconId == i) {
@@ -745,7 +699,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             icons.append("</td>");
 
             // Close the row
-            if ((i + 1) == SCHEME_ICONS.length || (i + 1) % MAX_ICONS_PER_ROW == 0)
+            if ((i + 1) == SCHEME_ICONS.size() || (i + 1) % MAX_ICONS_PER_ROW == 0)
                 icons.append("</tr>");
         }
 
@@ -768,14 +722,14 @@ public final class SchemeBufferInstance extends NpcInstance {
         final StringBuilder icons = new StringBuilder();
         final int MAX_ICONS_PER_ROW = 17;
 
-        for (int i = 0; i < SCHEME_ICONS.length; i++) {
+        for (int i = 0; i < SCHEME_ICONS.size(); i++) {
             // Open the new row
             if (i == 0 || (i + 1) % MAX_ICONS_PER_ROW == 1)
                 icons.append("<tr>");
 
             // Draw the icon
             icons.append("<td width=60 align=center valign=top>");
-            icons.append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=" + SCHEME_ICONS[i] + ">");
+            icons.append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=" + SCHEME_ICONS.get(i) + ">");
             icons.append("<tr>");
             icons.append("<td width=32 height=32 align=center valign=top>");
             icons.append("<button action=\"bypass _bbsbufferbypass_changeIcon " + schemeId + " " + i + " x x\" width=34 height=34 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />");
@@ -785,7 +739,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             icons.append("</td>");
 
             // Close the row
-            if ((i + 1) == SCHEME_ICONS.length || (i + 1) % MAX_ICONS_PER_ROW == 0)
+            if ((i + 1) == SCHEME_ICONS.size() || (i + 1) % MAX_ICONS_PER_ROW == 0)
                 icons.append("</tr>");
         }
 
@@ -871,7 +825,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 mainBuilder.append("<table border=0 width=240 height=40 cellspacing=4 cellpadding=3 bgcolor=10100E>");
                 mainBuilder.append("<tr>");
                 mainBuilder.append("<td align=right valign=top>");
-                mainBuilder.append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=" + SCHEME_ICONS[scheme.iconId] + ">");
+                mainBuilder.append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=" + SCHEME_ICONS.get(scheme.iconId) + ">");
                 mainBuilder.append("<tr>");
                 mainBuilder.append("<td width=32 height=32 align=center valign=top>");
                 mainBuilder.append("<button action=\"bypass _bbsbufferbypass_cast " + scheme.schemeId + " x x\" width=34 height=34 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />");
@@ -978,7 +932,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         }
         typeName = typeName.replace(" ", "_");
         for (int ii = 1; ii <= pc; ++ii) {
-            if (ii == Integer.parseInt(page)) {
+            if (ii == toInt(page)) {
                 builder.append("<td width=").append(width).append(" align=center><font color=LEVEL>").append(pageName).append(ii).append("</font></td>");
             } else {
                 builder.append("<td width=").append(width).append("><button value=\"").append(pageName).append(ii).append("\" action=\"bypass _bbsbufferbypass_edit_buff_list ").append(type).append(" ").append(typeName).append(" ").append(ii).append("\" width=").append(width).append(" height=20 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>");
@@ -986,7 +940,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         }
         builder.append("</tr></table><br>");
 
-        int limit = buffsPerPage * Integer.parseInt(page);
+        int limit = buffsPerPage * toInt(page);
         int start = limit - buffsPerPage;
         int end = Math.min(limit, buffList.size());
         for (int i = start; i < end; ++i) {
@@ -1050,7 +1004,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         if (eventSplit.length < 4)
             return;
 
-        // If buffs were not loaded, load them now
+        // If buffs were not loaded, loadFile them now
         if (!singleBuffsLoaded) {
             singleBuffsLoaded = true;
             loadSingleBuffs();
@@ -1108,8 +1062,8 @@ public final class SchemeBufferInstance extends NpcInstance {
         } else if (eventParam0.equalsIgnoreCase("edit_buff_list")) {
             msg = viewAllBuffs(eventParam1, eventParam2, eventParam3);
         } else if (eventParam0.equalsIgnoreCase("changeBuffSet")) {
-            final int skillId = Integer.parseInt(eventParam1);
-            final int skillLevel = Integer.parseInt(eventParam2);
+            final int skillId = toInt(eventParam1);
+            final int skillLevel = toInt(eventParam2);
             final String page = eventSplit[4];
             final String type = eventSplit[5];
             int forClass = 0;
@@ -1150,9 +1104,9 @@ public final class SchemeBufferInstance extends NpcInstance {
 
             msg = viewAllBuffs("set", "Buff_Sets", page);
         } else if (eventParam0.equalsIgnoreCase("editSelectedBuff")) {
-            final int skillId = Integer.parseInt(eventParam1);
-            final int skillLevel = Integer.parseInt(eventParam2);
-            final int mustEnable = Integer.parseInt(eventParam3);
+            final int skillId = toInt(eventParam1);
+            final int skillLevel = toInt(eventParam2);
+            final int mustEnable = toInt(eventParam3);
             final String page = eventSplit[4];
             String typeName = eventSplit[5];
 
@@ -1231,7 +1185,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                     return;
                 }
             }
-            if (!isEnabled(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)) || player.isBlocked())
+            if (!isEnabled(toInt(eventParam1), toInt(eventParam2)) || player.isBlocked())
                 return;
 
             final boolean getpetbuff = isPetBuff(player);
@@ -1243,10 +1197,10 @@ public final class SchemeBufferInstance extends NpcInstance {
                             player.getCubic(cubic.getId()).exit();
                         }
                     }
-                    player.onMagicUseTimer(player, SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)), false);
+                    player.onMagicUseTimer(player, SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)), false);
                 } else {
-                    SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)).getEffects(player, player, false, false);
-                    player.broadcastPacket(new MagicSkillUse(player, player, Integer.parseInt(eventParam1), Integer.parseInt(eventParam2), 2, 0));
+                    SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)).getEffects(player, player, false, false);
+                    player.broadcastPacket(new MagicSkillUse(player, player, toInt(eventParam1), toInt(eventParam2), 2, 0));
                 }
             } else {
                 if (eventParam3.equals("cubic")) {
@@ -1256,11 +1210,11 @@ public final class SchemeBufferInstance extends NpcInstance {
                             player.getCubic(cubic.getId()).exit();
                         }
                     }
-                    player.onMagicUseTimer(player, SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)), false);
+                    player.onMagicUseTimer(player, SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)), false);
                 } else {
                     if (player.getPet() != null) {
-                        SkillTable.INSTANCE().getInfo(Integer.parseInt(eventParam1), Integer.parseInt(eventParam2)).getEffects(player.getPet(), player.getPet(), false, false);
-                        player.broadcastPacket(new MagicSkillUse(player, player.getPet(), Integer.parseInt(eventParam1), Integer.parseInt(eventParam2), 0, 0));
+                        SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)).getEffects(player.getPet(), player.getPet(), false, false);
+                        player.broadcastPacket(new MagicSkillUse(player, player.getPet(), toInt(eventParam1), toInt(eventParam2), 0, 0));
                     } else {
                         sendErrorMessageToPlayer(player, "You do not have a servitor. Summon your pet first!");
                         showCommunity(player, main(player));
@@ -1300,7 +1254,7 @@ public final class SchemeBufferInstance extends NpcInstance {
 
                 ThreadPoolManager.INSTANCE.execute(() -> {
                     for (int[] i : buff_sets) {
-                        SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
+                        SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
                         npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                     }
                 });
@@ -1317,7 +1271,7 @@ public final class SchemeBufferInstance extends NpcInstance {
 
                     ThreadPoolManager.INSTANCE.execute(() -> {
                         for (int[] i : buff_sets) {
-                            SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
+                            SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
                             npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                         }
                     });
@@ -1391,7 +1345,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 }
             }
 
-            final int schemeId = Integer.parseInt(eventParam1);
+            final int schemeId = toInt(eventParam1);
             if (player.getBuffSchemeById(schemeId) == null || player.getBuffSchemeById(schemeId).schemeBuffs == null) {
                 player.sendMessage("First you have to Create scheme.");
                 return;
@@ -1515,10 +1469,10 @@ public final class SchemeBufferInstance extends NpcInstance {
             } catch (SQLException e) {
                 _log.error("Error while deleting Scheme Content", e);
             }
-            int skillId = Integer.parseInt(skill);
-            for (SchemeBuff buff : player.getBuffSchemeById(Integer.parseInt(scheme)).schemeBuffs)
+            int skillId = toInt(skill);
+            for (SchemeBuff buff : player.getBuffSchemeById(toInt(scheme)).schemeBuffs)
                 if (buff.skillId == skillId) {
-                    player.getBuffSchemeById(Integer.parseInt(scheme)).schemeBuffs.remove(buff);
+                    player.getBuffSchemeById(toInt(scheme)).schemeBuffs.remove(buff);
                     break;
                 }
 
@@ -1528,9 +1482,9 @@ public final class SchemeBufferInstance extends NpcInstance {
             String scheme = split[0];
             String skill = split[1];
             String level = split[2];
-            if (!isEnabled(Integer.parseInt(skill), Integer.parseInt(level)))
+            if (!isEnabled(toInt(skill), toInt(level)))
                 return;
-            int idbuffclass = getClassBuff(Integer.parseInt(skill));
+            int idbuffclass = getClassBuff(toInt(skill));
 
             try (Connection con = DatabaseFactory.getInstance().getConnection();
                  PreparedStatement statement = con.prepareStatement("INSERT INTO npcbuffer_scheme_contents (scheme_id,skill_id,skill_level,buff_class) VALUES (?,?,?,?)")) {
@@ -1543,14 +1497,14 @@ public final class SchemeBufferInstance extends NpcInstance {
                 _log.error("Error while deleting Scheme Content", e);
             }
 
-            player.getBuffSchemeById(Integer.parseInt(scheme)).schemeBuffs.add(new SchemeBuff(Integer.parseInt(skill), Integer.parseInt(level), idbuffclass));
+            player.getBuffSchemeById(toInt(scheme)).schemeBuffs.add(new SchemeBuff(toInt(skill), toInt(level), idbuffclass));
 
 			/*
-			int temp = Integer.parseInt(eventParam3) + 1;
+			int temp = toInt(eventParam3) + 1;
 			final String HTML;
 			if (temp >= (MAX_SCHEME_BUFFS + MAX_SCHEME_DANCES))
 			{
-				HTML = getOptionList(player, Integer.parseInt(scheme));
+				HTML = getOptionList(player, toInt(scheme));
 			}
 			else
 			{
@@ -1569,8 +1523,8 @@ public final class SchemeBufferInstance extends NpcInstance {
 
             int iconId = 0;
             try {
-                iconId = Integer.parseInt(eventParam1);
-                if (iconId < 0 || iconId > SCHEME_ICONS.length - 1)
+                iconId = toInt(eventParam1);
+                if (iconId < 0 || iconId > SCHEME_ICONS.size() - 1)
                     throw new Exception();
             } catch (Exception e) {
                 sendErrorMessageToPlayer(player, "Wrong icon selected!");
@@ -1599,7 +1553,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 msg = main(player);
             }
         } else if (eventParam0.equalsIgnoreCase("delete")) {
-            final int schemeId = Integer.parseInt(eventParam1);
+            final int schemeId = toInt(eventParam1);
             final PlayerScheme scheme = player.getBuffSchemeById(schemeId);
             if (scheme == null) {
                 sendErrorMessageToPlayer(player, "Invalid scheme selected.");
@@ -1620,13 +1574,13 @@ public final class SchemeBufferInstance extends NpcInstance {
                 return;
             }
 
-            msg = createScheme(player, Integer.parseInt(eventParam1));
+            msg = createScheme(player, toInt(eventParam1));
         } else if (eventParam0.equalsIgnoreCase("edit_1")) {
             msg = getEditSchemePage(player);
         } else if (eventParam0.equalsIgnoreCase("delete_1")) {
             msg = getDeleteSchemePage(player);
         } else if (eventParam0.equalsIgnoreCase("manage_scheme_select")) {
-            msg = getOptionList(player, Integer.parseInt(eventParam1));
+            msg = getOptionList(player, toInt(eventParam1));
         }
         // Alexander - Function to cast a certain custom buff set
         else if (eventParam0.equalsIgnoreCase("giveBuffSet")) {
@@ -1666,7 +1620,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             if (!getpetbuff) {
                 ThreadPoolManager.INSTANCE.execute(() -> {
                     for (int[] i : buff_sets) {
-                        SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
+                        SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
                         npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                     }
                 });
@@ -1674,7 +1628,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 if (player.getPet() != null) {
                     ThreadPoolManager.INSTANCE.execute(() -> {
                         for (int[] i : buff_sets) {
-                            SkillTable.INSTANCE().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
+                            SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
                             npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
                         }
                     });
@@ -1704,7 +1658,7 @@ public final class SchemeBufferInstance extends NpcInstance {
         }
         // Alexander - Change the scheme's name
         else if (eventParam0.equalsIgnoreCase("changeName")) {
-            final int schemeId = Integer.parseInt(eventParam1);
+            final int schemeId = toInt(eventParam1);
             final PlayerScheme scheme = player.getBuffSchemeById(schemeId);
             if (scheme == null) {
                 sendErrorMessageToPlayer(player, "Invalid scheme selected.");
@@ -1737,11 +1691,11 @@ public final class SchemeBufferInstance extends NpcInstance {
         }
         // Alexander - Main page for changing scheme icon
         else if (eventParam0.equalsIgnoreCase("changeIcon_1")) {
-            msg = changeSchemeIcon(player, Integer.parseInt(eventParam1));
+            msg = changeSchemeIcon(player, toInt(eventParam1));
         }
         // Alexander - Change the scheme's icon
         else if (eventParam0.equalsIgnoreCase("changeIcon")) {
-            final int schemeId = Integer.parseInt(eventParam1);
+            final int schemeId = toInt(eventParam1);
             final PlayerScheme scheme = player.getBuffSchemeById(schemeId);
             if (scheme == null) {
                 sendErrorMessageToPlayer(player, "Invalid scheme selected!");
@@ -1751,8 +1705,8 @@ public final class SchemeBufferInstance extends NpcInstance {
 
             int iconId = 0;
             try {
-                iconId = Integer.parseInt(eventParam2);
-                if (iconId < 0 || iconId > SCHEME_ICONS.length - 1)
+                iconId = toInt(eventParam2);
+                if (iconId < 0 || iconId > SCHEME_ICONS.size() - 1)
                     throw new Exception();
             } catch (Exception e) {
                 sendErrorMessageToPlayer(player, "Wrong icon selected!");
@@ -1821,16 +1775,9 @@ public final class SchemeBufferInstance extends NpcInstance {
         StringBuilder newNameBuilder = new StringBuilder();
         char[] chars = currentName.toCharArray();
         for (char c : chars)
-            if (isCharFine(c))
+            if (Character.isDigit(c) || Character.isLetter(c))
                 newNameBuilder.append(c);
         return newNameBuilder.toString();
-    }
-
-    private static boolean isCharFine(char c) {
-        for (char fineChar : FINE_CHARS)
-            if (fineChar == c)
-                return true;
-        return false;
     }
 
     private static class SingleBuff {
@@ -1849,7 +1796,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             _buffLevel = buffLevel;
             _forClass = forClass;
             _canUse = canUse;
-            _buffName = SkillTable.INSTANCE().getInfo(buffId, buffLevel).getName();
+            _buffName = SkillTable.INSTANCE.getInfo(buffId, buffLevel).getName();
         }
     }
 

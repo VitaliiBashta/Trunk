@@ -12,11 +12,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: pchayka
- * @date: 26.09.2010
- */
-public class _727_HopewithintheDarkness extends Quest implements ScriptFile {
+public final class _727_HopewithintheDarkness extends Quest implements ScriptFile {
     // ITEMS
     private static final int KnightsEpaulette = 9912;
 
@@ -120,14 +116,12 @@ public class _727_HopewithintheDarkness extends Quest implements ScriptFile {
     }
 
     private boolean check(Player player) {
-        Castle castle = ResidenceHolder.getInstance().getResidenceByObject(Castle.class, player);
+        Castle castle = ResidenceHolder.getResidenceByObject(Castle.class, player);
         if (castle == null)
             return false;
         Clan clan = player.getClan();
         if (clan == null)
             return false;
-        if (clan.getClanId() != castle.getOwnerId())
-            return false;
-        return true;
+        return clan.getClanId() == castle.getOwnerId();
     }
 }

@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public enum  DominionDAO {
+public enum DominionDAO {
     INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT lord_object_id, wards FROM dominion WHERE id=?";
     private static final String UPDATE_SQL_QUERY = "UPDATE dominion SET lord_object_id=?, wards=? WHERE id=?";
@@ -47,10 +47,7 @@ public enum  DominionDAO {
 
     private void update0(Dominion dominion) {
         StringBuilder builder = new StringBuilder();
-        int[] flags = dominion.getFlags();
-        if (flags.length > 0)
-            for (int flag : flags)
-                builder.append(flag).append(';');
+        dominion.getFlags().forEach(flag -> builder.append(flag).append(';'));
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(UPDATE_SQL_QUERY)) {

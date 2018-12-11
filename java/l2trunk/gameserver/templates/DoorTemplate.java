@@ -24,7 +24,7 @@ public class DoorTemplate extends CharTemplate {
     private final boolean _targetable;
     private final Polygon _polygon;
     private final Location _loc;
-    private final int _key;
+    private final int key;
     private final int _openTime;
     private final int _rndTime;
     private final int _closeTime;
@@ -44,7 +44,7 @@ public class DoorTemplate extends CharTemplate {
         _targetable = set.getBool("targetable", true);
         _loc = (Location) set.get("pos");
         _polygon = (Polygon) set.get("shape");
-        _key = set.getInteger("key", 0);
+        key = set.getInteger("key", 0);
         _openTime = set.getInteger("open_time", 0);
         _rndTime = set.getInteger("random_time", 0);
         _closeTime = set.getInteger("close_time", 0);
@@ -114,7 +114,7 @@ public class DoorTemplate extends CharTemplate {
     }
 
     public int getKey() {
-        return _key;
+        return key;
     }
 
     public boolean isOpened() {

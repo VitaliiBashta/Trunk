@@ -9,20 +9,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author VISTALL
- * @date 15:39/10.03.2011
- */
-public class CastleDoorUpgradeDAO {
+public enum CastleDoorUpgradeDAO {
+    INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT hp FROM castle_door_upgrade WHERE door_id=?";
     private static final String REPLACE_SQL_QUERY = "REPLACE INTO castle_door_upgrade (door_id, hp) VALUES (?,?)";
     private static final String DELETE_SQL_QUERY = "DELETE FROM castle_door_upgrade WHERE door_id=?";
-    private static final CastleDoorUpgradeDAO _instance = new CastleDoorUpgradeDAO();
     private static final Logger _log = LoggerFactory.getLogger(CastleDoorUpgradeDAO.class);
-
-    public static CastleDoorUpgradeDAO getInstance() {
-        return _instance;
-    }
 
     public int load(int doorId) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -34,7 +26,7 @@ public class CastleDoorUpgradeDAO {
                     return rset.getInt("hp");
             }
         } catch (SQLException e) {
-            _log.error("CastleDoorUpgradeDAO:load(int): ", e);
+            _log.error("CastleDoorUpgradeDAO:loadFile(int): ", e);
         }
 
         return 0;

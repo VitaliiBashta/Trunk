@@ -15,24 +15,26 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public class Recall extends Skill {
-    private final int _townId;
-    private final boolean _clanhall;
-    private final boolean _castle;
-    private final boolean _fortress;
-    private final Location _loc;
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class Recall extends Skill {
+    private final int townId;
+    private final boolean clanhall;
+    private final boolean castle;
+    private final boolean fortress;
+    private final Location loc;
 
     public Recall(StatsSet set) {
         super(set);
-        _townId = set.getInteger("townId", 0);
-        _clanhall = set.getBool("clanhall", false);
-        _castle = set.getBool("castle", false);
-        _fortress = set.getBool("fortress", false);
+        townId = set.getInteger("townId", 0);
+        clanhall = set.getBool("clanhall", false);
+        castle = set.getBool("castle", false);
+        fortress = set.getBool("fortress", false);
         String[] cords = set.getString("loc", "").split(";");
         if (cords.length == 3)
-            _loc = new Location(Integer.parseInt(cords[0]), Integer.parseInt(cords[1]), Integer.parseInt(cords[2]));
+            loc = new Location(toInt(cords[0]), toInt(cords[1]), toInt(cords[2]));
         else
-            _loc = null;
+            loc = null;
     }
 
     @Override
@@ -40,17 +42,17 @@ public class Recall extends Skill {
         // BSOE the clan hall / lock only works if you have one
         if (getHitTime() == 200) {
             Player player = activeChar.getPlayer();
-            if (_clanhall) {
+            if (clanhall) {
                 if (player.getClan() == null || player.getClan().getHasHideout() == 0) {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(_itemConsumeId[0]));
                     return false;
                 }
-            } else if (_castle) {
+            } else if (castle) {
                 if (player.getClan() == null || player.getClan().getCastle() == 0) {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(_itemConsumeId[0]));
                     return false;
                 }
-            } else if (_fortress)
+            } else if (fortress)
                 if (player.getClan() == null || player.getClan().getHasFortress() == 0) {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(_itemConsumeId[0]));
                     return false;
@@ -71,14 +73,6 @@ public class Recall extends Skill {
                 activeChar.sendPacket(SystemMsg.YOU_CANNOT_USE_THAT_SKILL_IN_A_GRAND_OLYMPIAD_MATCH);
                 return false;
             }
-            if (p.isInTvT()) {
-                activeChar.sendMessage("Cannot use that skill on TvT!");
-                return false;
-            }
-            if (p.isInFightClub()) {
-                activeChar.sendPacket(SystemMsg.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING);
-                return false;
-            }
 
             if (getTargetType() == SkillTargetType.TARGET_PARTY && activeChar.getReflection() != ReflectionManager.DEFAULT) {
                 activeChar.sendMessage("This skill cannot be used inside instanced zones!");
@@ -91,7 +85,7 @@ public class Recall extends Skill {
             }
         }
 
-        if (activeChar.isInZone(ZoneType.no_escape) || _townId > 0 && activeChar.getReflection() != null && activeChar.getReflection().getCoreLoc() != null) {
+        if (activeChar.isInZone(ZoneType.no_escape) || townId > 0 && activeChar.getReflection() != null && activeChar.getReflection().getCoreLoc() != null) {
             if (activeChar.isPlayer())
                 activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.skills.skillclasses.Recall.Here", (Player) activeChar));
             return false;
@@ -125,10 +119,7 @@ public class Recall extends Skill {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(getId(), getLevel()));
                     return;
                 }
-                if (pcTarget.isInFightClub()) {
-                    activeChar.sendMessage("Cannot do that while target is in Fight Club!");
-                    return;
-                }
+
                 if (pcTarget.isJailed()) {
                     pcTarget.sendMessage("You cannot escape from Jail!");
                     return;
@@ -171,20 +162,20 @@ public class Recall extends Skill {
                         return;
                     }
                 }
-                if (_loc != null) {
+                if (loc != null) {
                     if (Config.ALT_TELEPORTS_ONLY_FOR_GIRAN) {
                         pcTarget.teleToLocation(82272, 147801, -3350, 0);
                         return;
                     }
-                    pcTarget.teleToLocation(_loc);
+                    pcTarget.teleToLocation(loc);
                     return;
                 }
-                if (_townId > 0 && Config.ALT_TELEPORTS_ONLY_FOR_GIRAN) {
+                if (townId > 0 && Config.ALT_TELEPORTS_ONLY_FOR_GIRAN) {
                     pcTarget.teleToLocation(82272, 147801, -3350, 0);
                     return;
                 }
 
-                switch (_townId) // To town by Id
+                switch (townId) // To town by Id
                 {
                     case 1: // Talking Island
                         pcTarget.teleToLocation(-83990, 243336, -3700, 0);
@@ -253,17 +244,17 @@ public class Recall extends Skill {
                         pcTarget.teleToLocation(8976, 252416, -1928, 0);
                         return;
                 }
-                if (_castle) // To castle
+                if (castle) // To castle
                 {
                     pcTarget.teleToCastle();
                     return;
                 }
-                if (_clanhall) // to clanhall
+                if (clanhall) // to clanhall
                 {
                     pcTarget.teleToClanhall();
                     return;
                 }
-                if (_fortress) // To fortress
+                if (fortress) // To fortress
                 {
                     pcTarget.teleToFortress();
                     return;

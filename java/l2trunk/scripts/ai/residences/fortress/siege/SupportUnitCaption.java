@@ -12,11 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.scripts.ai.residences.SiegeGuardMystic;
 import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
-/**
- * @author VISTALL
- * @date 16:41/17.04.2011
- */
-public class SupportUnitCaption extends SiegeGuardMystic {
+public final class SupportUnitCaption extends SiegeGuardMystic {
     public SupportUnitCaption(NpcInstance actor) {
         super(actor);
     }
@@ -40,7 +36,7 @@ public class SupportUnitCaption extends SiegeGuardMystic {
             return;
 
         if (siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF) > 0)
-            actor.doCast(SkillTable.INSTANCE().getInfo(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF)), actor, false);
+            actor.doCast(SkillTable.INSTANCE.getInfo(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF)), actor, false);
 
         siegeEvent.barrackAction(2, false);
     }

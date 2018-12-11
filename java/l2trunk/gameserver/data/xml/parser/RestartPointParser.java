@@ -2,10 +2,12 @@ package l2trunk.gameserver.data.xml.parser;
 
 import javafx.util.Pair;
 import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.geometry.Rectangle;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.instancemanager.MapRegionManager;
+import l2trunk.gameserver.data.xml.holder.OptionDataHolder;
+import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.base.Race;
@@ -14,33 +16,25 @@ import l2trunk.gameserver.templates.mapregion.RestartPoint;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
 
-public class RestartPointParser extends AbstractFileParser<MapRegionManager> {
-    private static final RestartPointParser _instance = new RestartPointParser();
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private RestartPointParser() {
-        super(MapRegionManager.getInstance());
+public enum  RestartPointParser /*extends AbstractFileParser<MapRegionHolder>*/ {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    Path xml = Config.DATAPACK_ROOT.resolve("data/mapregion/restart_points.xml");
+
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + MapRegionHolder.size() + " items ");
     }
 
-    public static RestartPointParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/mapregion/restart_points.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "restart_points.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         List<Pair<Territory, Map<Race, String>>> restartArea = new ArrayList<>();
         Map<String, RestartPoint> restartPoint = new HashMap<>();
 
@@ -60,8 +54,8 @@ public class RestartPointParser extends AbstractFileParser<MapRegionManager> {
                         Attribute map = n.attribute("map");
                         String s = map.getValue();
                         String val[] = s.split("_");
-                        int rx = Integer.parseInt(val[0]);
-                        int ry = Integer.parseInt(val[1]);
+                        int rx = toInt(val[0]);
+                        int ry = toInt(val[1]);
 
                         int x1 = World.MAP_MIN_X + (rx - Config.GEO_X_FIRST << 15);
                         int y1 = World.MAP_MIN_Y + (ry - Config.GEO_Y_FIRST << 15);
@@ -102,8 +96,8 @@ public class RestartPointParser extends AbstractFileParser<MapRegionManager> {
                 restartArea.add(new Pair<>(territory, restarts));
             } else if ("restart_loc".equals(listElement.getName())) {
                 String name = listElement.attributeValue("name");
-                int bbs = Integer.parseInt(listElement.attributeValue("bbs", "0"));
-                int msgId = Integer.parseInt(listElement.attributeValue("msg_id", "0"));
+                int bbs = toInt(listElement.attributeValue("bbs", "0"));
+                int msgId = toInt(listElement.attributeValue("msg_id", "0"));
                 List<Location> restartPoints = new ArrayList<>();
                 List<Location> PKrestartPoints = new ArrayList<>();
 
@@ -149,7 +143,7 @@ public class RestartPointParser extends AbstractFileParser<MapRegionManager> {
 
                 restarts.put(e.getKey(), rp);
 
-                getHolder().addRegionData(new RestartArea(ra.getKey(), restarts));
+                MapRegionHolder.addRegionData(new RestartArea(ra.getKey(), restarts));
             }
         }
     }

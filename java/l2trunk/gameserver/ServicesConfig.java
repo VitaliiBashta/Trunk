@@ -33,25 +33,16 @@ public final class ServicesConfig {
         load();
     }
 
-    private static void loadFile(List<Path> _content) {
-        for (Path _file : _content) {
-            try {
-                if (Files.isHidden(_file)) {
-                    continue;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if ((_file.toString().endsWith(".ini")) || (_file.toString().endsWith(".properties"))) {
-                loadProperties(_file);
-            }
-        }
+    private static void loadFile(List<Path> content) {
+        content.stream()
+                .filter(file -> (file.toString().endsWith(".ini")) || file.toString().endsWith(".properties"))
+                .forEach(ServicesConfig::loadProperties);
     }
 
-    private static void loadProperties(Path _file) {
+    private static void loadProperties(Path file) {
         ExProperties p = new ExProperties();
         try {
-            p.load(_file);
+            p.load(file);
             for (String name : p.stringPropertyNames()) {
                 if (properties.get(name) != null) {
                     properties.replace(name, p.getProperty(name).trim());
@@ -63,19 +54,19 @@ public final class ServicesConfig {
             }
             p.clear();
         } catch (IOException e) {
-            _log.error("Error loading config : " + _file.toString() + '!', e);
+            _log.error("Error loading config : " + file.toString() + '!', e);
         }
     }
 
-    public static String get(String name, String defaultValue) {
-        String val;
-        try {
-            val = properties.get(name);
-        } catch (Exception e) {
-            val = defaultValue;
-        }
-        return val;
-    }
+//    public static String get(String name, String defaultValue) {
+//        String val;
+//        try {
+//            val = properties.get(name);
+//        } catch (Exception e) {
+//            val = defaultValue;
+//        }
+//        return val;
+//    }
 
     public static boolean get(String name, boolean defaultValue) {
         boolean val;

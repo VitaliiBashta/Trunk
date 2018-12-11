@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
@@ -13,6 +12,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public final class DonateNPCInstance extends NpcInstance {
 
@@ -76,7 +76,7 @@ public final class DonateNPCInstance extends NpcInstance {
             if (player.getClan() != null) {
                 if (player.getInventory().destroyItemByItemId(Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_REP, command, "Destroyed")) {
                     player.getClan().incReputation(Config.DONATOR_NPC_COUNT_REP, false, "DonateNPC");
-                    player.getClan().broadcastToOnlineMembers(new L2GameServerPacket[]{new PledgeShowInfoUpdate(player.getClan())});
+                    player.getClan().broadcastToOnlineMembers(new PledgeShowInfoUpdate(player.getClan()));
                     player.sendMessage(Config.DONATOR_NPC_REP + " " + Config.DONATOR_NPC_ITEM_NAME + " have disappeared!");
                     player.sendMessage("Your clan received " + Config.DONATOR_NPC_COUNT_REP + " clan reputation!");
                     System.out.println("Character " + player + "  received clan reputation points via donation");
@@ -123,19 +123,14 @@ public final class DonateNPCInstance extends NpcInstance {
                 return;
             }
 
-            Connection con = null;
-            PreparedStatement offline = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?");
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
                 offline.setInt(1, player.getSex() == 1 ? 0 : 1);
                 offline.setInt(2, player.getObjectId());
                 offline.executeUpdate();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 return;
-            } finally {
-                DbUtils.closeQuietly(con, offline);
             }
 
             Functions.removeItem(player, Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_COUNT_SEX, "Removed");

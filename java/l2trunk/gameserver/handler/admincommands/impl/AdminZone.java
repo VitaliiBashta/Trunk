@@ -2,7 +2,7 @@ package l2trunk.gameserver.handler.admincommands.impl;
 
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
-import l2trunk.gameserver.instancemanager.MapRegionManager;
+import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
@@ -52,8 +52,8 @@ public class AdminZone implements IAdminCommandHandler {
                 break;
             }
             case admin_domain: {
-                DomainArea domain = MapRegionManager.getInstance().getRegionData(DomainArea.class, activeChar);
-                Castle castle = domain != null ? ResidenceHolder.getInstance().getResidence(Castle.class, domain.getId()) : null;
+                DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, activeChar);
+                Castle castle = domain != null ? ResidenceHolder.getResidence(Castle.class, domain.getId()) : null;
                 if (castle != null)
                     activeChar.sendMessage("Domain: " + castle.getName());
                 else

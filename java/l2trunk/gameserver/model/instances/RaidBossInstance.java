@@ -176,25 +176,25 @@ public class RaidBossInstance extends MonsterInstance {
                 if (playerReward == 0)
                     continue;
                 player.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_EARNED_S1_RAID_POINTS).addNumber(playerReward));
-                RaidBossSpawnManager.getInstance().addPoints(player.getObjectId(), getNpcId(), playerReward);
+                RaidBossSpawnManager.INSTANCE.addPoints(player.getObjectId(), getNpcId(), playerReward);
             }
         }
 
-        RaidBossSpawnManager.getInstance().updatePointsDb();
-        RaidBossSpawnManager.getInstance().calculateRanking();
+        RaidBossSpawnManager.INSTANCE.updatePointsDb();
+        RaidBossSpawnManager.INSTANCE.calculateRanking();
     }
 
     @Override
     protected void onDecay() {
         super.onDecay();
-        RaidBossSpawnManager.getInstance().setRaidBossDied(getNpcId(), _killer);
+        RaidBossSpawnManager.INSTANCE.setRaidBossDied(getNpcId(), _killer);
     }
 
     @Override
     protected void onSpawn() {
         super.onSpawn();
-        addSkill(SkillTable.INSTANCE().getInfo(4045, 1)); // Resist Full Magic Attack
-        RaidBossSpawnManager.getInstance().onBossSpawned(this);
+        addSkill(SkillTable.INSTANCE.getInfo(4045, 1)); // Resist Full Magic Attack
+        RaidBossSpawnManager.INSTANCE.onBossSpawned(this);
     }
 
     @Override

@@ -120,7 +120,7 @@ public enum HandysBlockCheckerManager {
                 return false;
             }
 
-            KrateisCubeRunnerEvent krateis = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 2);
+            KrateisCubeRunnerEvent krateis = EventHolder.getEvent(EventType.MAIN_EVENT, 2);
             if (krateis.isRegistered(player)) {
                 player.sendPacket(new SystemMessage2(SystemMsg.APPLICANTS_FOR_THE_OLYMPIAD_UNDERGROUND_COLISEUM_OR_KRATEIS_CUBE_MATCHES_CANNOT_REGISTER));
                 return false;

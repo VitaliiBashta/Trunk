@@ -1,6 +1,5 @@
 package l2trunk.scripts.bosses;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ public final class EpicBossState {
         return respawnDate;
     }
 
-    public void setRespawnDate(long interval) {
+    void setRespawnDate(long interval) {
         respawnDate = interval + System.currentTimeMillis();
     }
 
@@ -62,16 +61,11 @@ public final class EpicBossState {
     }
 
     private void load() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
 
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-
-            statement = con.prepareStatement("SELECT * FROM epic_boss_spawn WHERE bossId = ? LIMIT 1");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT * FROM epic_boss_spawn WHERE bossId = ? LIMIT 1")) {
             statement.setInt(1, bossId);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             if (rset.next()) {
                 respawnDate = rset.getLong("respawnDate") * 1000L;
@@ -94,42 +88,29 @@ public final class EpicBossState {
             }
         } catch (SQLException e) {
             LOG.error("Error while loading Epic Boss States", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
     public void save() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("REPLACE INTO epic_boss_spawn (bossId,respawnDate,state) VALUES(?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("REPLACE INTO epic_boss_spawn (bossId,respawnDate,state) VALUES(?,?,?)")) {
             statement.setInt(1, bossId);
             statement.setInt(2, (int) (respawnDate / 1000));
             statement.setInt(3, state.ordinal());
             statement.execute();
         } catch (SQLException e) {
             LOG.error("Error while saving Epic Boss States", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     public void update() {
-        Connection con = null;
-        Statement statement = null;
-
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.createStatement();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             Statement statement = con.createStatement()) {
             statement.executeUpdate("UPDATE epic_boss_spawn SET respawnDate=" + respawnDate / 1000 + ", state=" + state.ordinal() + " WHERE bossId=" + bossId);
             final Date dt = new Date(respawnDate);
             LOG.info("update EpicBossState: ID:" + bossId + ", RespawnDate:" + dt + ", State:" + state.toString());
         } catch (SQLException e) {
             LOG.error("Exception on update EpicBossState: ID " + bossId + ", RespawnDate:" + respawnDate / 1000 + ", State:" + state.toString(), e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

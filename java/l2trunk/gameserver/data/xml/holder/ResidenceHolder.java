@@ -1,57 +1,52 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.residence.Residence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public final class ResidenceHolder extends AbstractHolder {
-    private static final ResidenceHolder _instance = new ResidenceHolder();
-
-    private final Map<Integer, Residence> _residences = new TreeMap<>();
-
-    private final Map<Class, List<Residence>> _fastResidencesByType = new HashMap<>(4);
-
+public final class ResidenceHolder {
     private ResidenceHolder() {
-        //
     }
 
-    public static ResidenceHolder getInstance() {
-        return _instance;
+    private final static Map<Integer, Residence> RESIDENCES = new TreeMap<>();
+
+    private static final Map<Class, List<Residence>> _fastResidencesByType = new HashMap<>(4);
+
+    public static void addResidence(Residence r) {
+        RESIDENCES.put(r.getId(), r);
     }
 
-    public void addResidence(Residence r) {
-        _residences.put(r.getId(), r);
+    public static <R extends Residence> R getResidence(int id) {
+        Residence residence = RESIDENCES.get(id);
+        return (R) residence;
     }
 
-    public <R extends Residence> R getResidence(int id) {
-        return (R) _residences.get(id);
-    }
-
-    public <R extends Residence> R getResidence(Class<R> type, int id) {
+    public static <R extends Residence> R getResidence(Class<R> type, int id) {
         Residence r = getResidence(id);
         if (r == null || r.getClass() != type)
-            return null;
+            throw new IllegalArgumentException("Can't find residence with id " + id);
 
         return (R) r;
     }
 
-    public <R extends Residence> List<R> getResidenceList(Class<R> t) {
+    public static <R extends Residence> List<R> getResidenceList(Class<R> t) {
         return (List<R>) _fastResidencesByType.get(t);
     }
 
-    public Collection<Residence> getResidences() {
-        return _residences.values();
+    public static Collection<Residence> getResidences() {
+        return RESIDENCES.values();
     }
 
-    public <R extends Residence> R getResidenceByObject(Class<? extends Residence> type, GameObject object) {
+    public static <R extends Residence> R getResidenceByObject(Class<? extends Residence> type, GameObject object) {
         return (R) getResidenceByCoord(type, object.getX(), object.getY(), object.getZ(), object.getReflection());
     }
 
-    private <R extends Residence> R getResidenceByCoord(Class<R> type, int x, int y, int z, Reflection ref) {
-        Collection<Residence> residences = type == null ? getResidences() : (Collection<Residence>) getResidenceList(type);
+    private static <R extends Residence> R getResidenceByCoord(Class<R> type, int x, int y, int z, Reflection ref) {
+        Collection<Residence> residences = type == null ? RESIDENCES.values() : (Collection<Residence>) getResidenceList(type);
         for (Residence residence : residences) {
             if (residence.checkIfInZone(x, y, z, ref))
                 return (R) residence;
@@ -59,7 +54,7 @@ public final class ResidenceHolder extends AbstractHolder {
         return null;
     }
 
-    public <R extends Residence> R findNearestResidence(Class<R> clazz, int x, int y, int z, Reflection ref, int offset) {
+    public static <R extends Residence> R findNearestResidence(Class<R> clazz, int x, int y, int z, Reflection ref, int offset) {
         Residence residence = getResidenceByCoord(clazz, x, y, z, ref);
         if (residence == null) {
             double closestDistance = offset;
@@ -75,30 +70,23 @@ public final class ResidenceHolder extends AbstractHolder {
         return (R) residence;
     }
 
-    public void callInit() {
-        for (Residence r : getResidences())
-            r.init();
+    public static void callInit() {
+        RESIDENCES.values().forEach(Residence::init);
     }
 
-    public void buildFastLook() {
-        for (Residence residence : _residences.values()) {
+    public static void buildFastLook() {
+        for (Residence residence : RESIDENCES.values()) {
             List<Residence> list = _fastResidencesByType.computeIfAbsent(residence.getClass(), k -> new ArrayList<>());
             list.add(residence);
         }
-        LOG.info("total size: " + _residences.size());
-        for (Map.Entry<Class, List<Residence>> entry : _fastResidencesByType.entrySet())
-            LOG.info(" - load " + entry.getValue().size() + " " + entry.getKey().getSimpleName().toLowerCase() + "(s).");
-
     }
 
-    @Override
-    public int size() {
-        return _residences.size();
+    public static int size() {
+        return RESIDENCES.size();
     }
 
-    @Override
     public void clear() {
-        _residences.clear();
+        RESIDENCES.clear();
         _fastResidencesByType.clear();
     }
 }

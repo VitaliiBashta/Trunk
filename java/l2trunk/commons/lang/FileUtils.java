@@ -57,7 +57,7 @@ public class FileUtils {
             result.append(readFileToString(curFile));
         }
 
-        Path outputFile = path.resolve("allDors.xml");
+        Path outputFile = path.resolve("allDoors.xml");
         try {
             Files.write(outputFile, result.toString().getBytes());
         } catch (IOException e) {

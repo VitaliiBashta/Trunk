@@ -35,27 +35,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class RaidBossSpawnManager {
+public enum RaidBossSpawnManager {
+    INSTANCE;
     private static final Integer KEY_RANK = -1;
     private static final Integer KEY_TOTAL_POINTS = 0;
     private final static Map<Integer, Integer> _respawns = new HashMap<>();
     private static final Logger _log = LoggerFactory.getLogger(RaidBossSpawnManager.class);
     private static final Map<Integer, Spawner> _spawntable = new ConcurrentHashMap<>();
-    private static Map<Integer, StatsSet> _storedInfo;
+    private final static Map<Integer, StatsSet> _storedInfo = new ConcurrentHashMap<>();
     private static Map<Integer, Map<Integer, Integer>> _points;
-    private static RaidBossSpawnManager _instance;
     private final Lock pointsLock = new ReentrantLock();
 
-    private RaidBossSpawnManager() {
-        _instance = this;
+    public void init() {
         if (!Config.DONTLOADSPAWN)
             reloadBosses();
-    }
-
-    public static RaidBossSpawnManager getInstance() {
-        if (_instance == null)
-            new RaidBossSpawnManager();
-        return _instance;
     }
 
     /**
@@ -66,10 +59,10 @@ public class RaidBossSpawnManager {
      * @param bossId Id of the target
      */
     public static void showBossLocation(Player player, int bossId) {
-        switch (getInstance().getRaidBossStatusId(bossId)) {
+        switch (INSTANCE.getRaidBossStatusId(bossId)) {
             case ALIVE:
             case DEAD:
-                Spawner spawn = getInstance().getSpawnTable().get(bossId);
+                Spawner spawn = INSTANCE.getSpawnTable().get(bossId);
 
                 Location loc = spawn.getCurrentSpawnRange().getRandomLoc(spawn.getReflection().getGeoIndex());
 
@@ -109,8 +102,6 @@ public class RaidBossSpawnManager {
     }
 
     private void loadStatus() {
-        _storedInfo = new ConcurrentHashMap<>();
-
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              ResultSet rset = con.createStatement().executeQuery("SELECT * FROM `raidboss_status`")) {
             while (rset.next()) {
@@ -125,7 +116,7 @@ public class RaidBossSpawnManager {
                 _respawns.put(id, rset.getInt("respawn_delay"));
             }
         } catch (SQLException e) {
-            _log.warn("RaidBossSpawnManager: Couldnt load raidboss statuses", e);
+            _log.warn("RaidBossSpawnManager: Couldnt loadFile raidboss statuses", e);
         }
         _log.info("RaidBossSpawnManager: Loaded " + _storedInfo.size() + " Statuses");
     }
@@ -285,7 +276,7 @@ public class RaidBossSpawnManager {
                     score.put(bossId, rset.getInt("points"));
             }
         } catch (SQLException e) {
-            _log.warn("RaidBossSpawnManager: Couldnt load raidboss points", e);
+            _log.warn("RaidBossSpawnManager: Couldnt loadFile raidboss points", e);
         }
         pointsLock.unlock();
     }

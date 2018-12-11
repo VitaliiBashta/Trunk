@@ -41,7 +41,7 @@ class ExpandWarehouse extends Functions {
             return;
         }
 
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.SERVICES_EXPAND_WAREHOUSE_ITEM);
+        ItemTemplate item = ItemHolder.getTemplate(Config.SERVICES_EXPAND_WAREHOUSE_ITEM);
 
         String out = "";
 

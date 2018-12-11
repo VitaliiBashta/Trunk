@@ -50,9 +50,9 @@ public final class Escape implements IUserCommandHandler {
 
         Skill skill;
         if (activeChar.getPlayerAccess().FastUnstuck)
-            skill = SkillTable.INSTANCE().getInfo(1050, 2);
+            skill = SkillTable.INSTANCE.getInfo(1050, 2);
         else
-            skill = SkillTable.INSTANCE().getInfo(2099, 1);
+            skill = SkillTable.INSTANCE.getInfo(2099);
 
         if (skill != null && skill.checkCondition(activeChar, activeChar, false, false, true))
             activeChar.getAI().Cast(skill, activeChar, false, true);

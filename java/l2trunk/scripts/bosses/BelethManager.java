@@ -29,8 +29,8 @@ import java.util.concurrent.ScheduledFuture;
 
 public class BelethManager extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(BelethManager.class);
-    private static final Zone _zone = ReflectionUtils.getZone("[Beleth_room]");
-    private static final ZoneListener _zoneListener = new ZoneListener();
+    private final Zone _zone = ReflectionUtils.getZone("[Beleth_room]");
+    private final ZoneListener _zoneListener = new ZoneListener();
     private static final List<Player> _indexedPlayers = new ArrayList<>();
     private static final List<NpcInstance> _npcList = new ArrayList<>();
     private static final int _doorWaitTimeDuration = 60000; // 1min
@@ -43,7 +43,13 @@ public class BelethManager extends Functions implements ScriptFile {
     private static final long _entityInactivityTime = 2 * 60 * 60 * 1000; // 2 hours
     private static final int _ringSpawnTime = 300000; // 5min
     private static final int _lastSpawnTime = 600000; // 10min
+    private static BelethManager instance;
 
+    public static BelethManager getInstance() {
+        if (instance == null)
+            instance = new BelethManager();
+        return instance;
+    }
     private static final int DOOR = 20240001; // Throne door
     private static final int CORRDOOR = 20240002; // Corridor door
     private static final int COFFDOOR = 20240003; // Tomb door
@@ -100,7 +106,7 @@ public class BelethManager extends Functions implements ScriptFile {
         return npc;
     }
 
-    private static Zone getZone() {
+    private Zone getZone() {
         return _zone;
     }
 
@@ -115,7 +121,7 @@ public class BelethManager extends Functions implements ScriptFile {
         return ServerVariables.getLong("BelethKillTime", 0) <= System.currentTimeMillis();
     }
 
-    public static class ZoneListener implements OnZoneEnterLeaveListener {
+    public class ZoneListener implements OnZoneEnterLeaveListener {
 
         @Override
         public void onZoneEnter(Zone zone, Creature actor) {
@@ -161,7 +167,7 @@ public class BelethManager extends Functions implements ScriptFile {
         }
     }
 
-    private static class BelethSpawnTask extends RunnableImpl {
+    private class BelethSpawnTask extends RunnableImpl {
         @Override
         public void runImpl() {
             _indexedPlayers.clear();
@@ -188,7 +194,7 @@ public class BelethManager extends Functions implements ScriptFile {
         spawn_extras
     }
 
-    public static class eventExecutor extends RunnableImpl {
+    public class eventExecutor extends RunnableImpl {
         final Event _event;
 
         eventExecutor(Event event) {
@@ -309,7 +315,7 @@ public class BelethManager extends Functions implements ScriptFile {
         _ringAvailable = value;
     }
 
-    public static void setBelethDead() {
+    public void setBelethDead() {
         if (_entryLocked && _belethAlive) {
             ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.beleth_dead), 10);
             checkElpySpawn();

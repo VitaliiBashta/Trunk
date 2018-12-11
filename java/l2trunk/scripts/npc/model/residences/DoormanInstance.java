@@ -8,10 +8,8 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author VISTALL
- * @date 13:00/31.03.2011
- */
+import java.util.List;
+
 public abstract class DoormanInstance extends NpcInstance {
     protected static final int COND_OWNER = 0;
     protected static final int COND_SIEGE = 1;
@@ -21,14 +19,14 @@ public abstract class DoormanInstance extends NpcInstance {
     protected String _mainDialog;
     protected String _failDialog;
 
-    protected final int[] _doors;
+    protected final List<Integer> _doors;
 
     protected DoormanInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
         setDialogs();
 
-        _doors = template.getAIParams().getIntegerArray("doors");
+        _doors = template.getAIParams().getIntegerList("doors");
     }
 
     protected void setDialogs() {

@@ -29,8 +29,8 @@ public final class FantasyIslePaddies extends CharacterAI {
         public void onNight() {
             NpcInstance actor = (NpcInstance) getActor();
             if (actor != null) {
-                FantasiIsleParadEvent n_event = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 10031);
-                FantasiIsleParadEvent d_event = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 10032);
+                FantasiIsleParadEvent n_event = EventHolder.getEvent(EventType.MAIN_EVENT, 10031);
+                FantasiIsleParadEvent d_event = EventHolder.getEvent(EventType.MAIN_EVENT, 10032);
                 n_event.registerActions();
                 d_event.stopEvent();
             }
@@ -43,8 +43,8 @@ public final class FantasyIslePaddies extends CharacterAI {
         public void onDay() {
             NpcInstance actor = (NpcInstance) getActor();
             if (actor != null) {
-                FantasiIsleParadEvent n_event = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 10031);
-                FantasiIsleParadEvent d_event = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 10032);
+                FantasiIsleParadEvent n_event = EventHolder.getEvent(EventType.MAIN_EVENT, 10031);
+                FantasiIsleParadEvent d_event = EventHolder.getEvent(EventType.MAIN_EVENT, 10032);
                 n_event.stopEvent();
                 d_event.registerActions();
             }

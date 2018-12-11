@@ -8,7 +8,6 @@ import java.util.Map;
 
 public enum SkillTable {
     INSTANCE;
-    public static SkillTable INSTANCE() {return INSTANCE;}
     private Map<Integer, Skill> skills;
     private Map<Integer, Integer> maxLevelsTable;
     private Map<Integer, Integer> baseLevelsTable;
@@ -30,6 +29,9 @@ public enum SkillTable {
         skills = SkillsEngine.INSTANCE.loadAllSkills();
     }
 
+    public Skill getInfo(int skillId) {
+        return getInfo(skillId, 1);
+    }
     public Skill getInfo(int skillId, int level) {
         return skills.get(getSkillHashCode(skillId, level));
     }
@@ -45,7 +47,7 @@ public enum SkillTable {
     private void makeLevelsTable() {
         maxLevelsTable = new HashMap<>();
         baseLevelsTable = new HashMap<>();
-        for (Skill s : skills.values()) {
+        skills.values().forEach(s -> {
             int skillId = s.getId();
             int level = s.getLevel();
             int maxLevel = 0;
@@ -55,6 +57,6 @@ public enum SkillTable {
                 maxLevelsTable.put(skillId, level);
             if (baseLevelsTable.get(skillId) != null)
                 baseLevelsTable.put(skillId, s.getBaseLevel());
-        }
+        });
     }
 }

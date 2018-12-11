@@ -141,7 +141,7 @@ public class World {
      */
     private static WorldRegion getRegion(int x, int y, int z) {
         WorldRegion[][][] regions = getRegions();
-        WorldRegion region = null;
+        WorldRegion region;
         region = regions[x][y][z];
         if (region == null)
             synchronized (regions) {

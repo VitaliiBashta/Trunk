@@ -1,7 +1,6 @@
 package l2trunk.gameserver;
 
 import Elemental.datatables.OfflineBuffersTable;
-import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.commons.net.AdvIP;
 import l2trunk.commons.net.nio.impl.SelectorThread;
@@ -43,7 +42,6 @@ import l2trunk.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2trunk.gameserver.model.entity.achievements.AchievementNotification;
 import l2trunk.gameserver.model.entity.achievements.Achievements;
 import l2trunk.gameserver.model.entity.auction.AuctionManager;
-import l2trunk.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.network.GameClient;
 import l2trunk.gameserver.network.GamePacketHandler;
@@ -154,13 +152,13 @@ public class GameServer {
         SpawnManager.INSTANCE.spawnAll();
         printSection("Boats");
         BoatHolder.getInstance().spawnAll();
-        StaticObjectHolder.getInstance().spawnAll();
+        StaticObjectHolder.spawnAll();
         _log.info("===============[Spawn Manager]==================");
-        RaidBossSpawnManager.getInstance();
+        RaidBossSpawnManager.INSTANCE.init();
         printSection("Dimensional Rift");
         DimensionalRiftManager.INSTANCE.init();
         Announcements.INSTANCE.loadAnnouncements();
-        LotteryManager.getInstance();
+        LotteryManager.INSTANCE.init();
         PlayerMessageStack.getInstance();
         if (Config.AUTODESTROY_ITEM_AFTER > 0) {
             ItemsAutoDestroy.INSTANCE.init();
@@ -191,8 +189,8 @@ public class GameServer {
         VoicedCommandHandler.INSTANCE.log();
         TaskManager.INSTANCE.init();
         _log.info("======================[Loading Castels & Clan Halls]==========================");
-        ResidenceHolder.getInstance().callInit();
-        EventHolder.getInstance().callInit();
+        ResidenceHolder.callInit();
+        EventHolder.callInit();
         CastleManorManager.INSTANCE.init(); // schedule all manor related events
         printSection("");
         Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
@@ -209,12 +207,12 @@ public class GameServer {
         NaiaCoreManager.INSTANCE.init();
         printSection("");
         SoDManager.getInstance();
-        SoIManager.getInstance();
+        SoIManager.init();
         BloodAltarManager.INSTANCE.init();
         AuctionManager.getInstance();
         if (Config.ALLOW_DROP_CALCULATOR) {
             _log.info("Preparing Drop Calculator");
-            ItemHolder.getInstance().getDroppableTemplates();
+            ItemHolder.getDroppableTemplates();
         }
         MiniGameScoreManager.INSTANCE.init();
 
@@ -229,23 +227,22 @@ public class GameServer {
         _log.info("===============[Protection Database]==================");
         CharacterDAO.checkCharactersToDelete();
         printSection("");
-        FightClubEventManager.INSTANCE.init();
         GamePacketHandler gph = new GamePacketHandler();
         InetAddress serverAddr = Config.GAMESERVER_HOSTNAME.equalsIgnoreCase("*") ? null : InetAddress.getByName(Config.GAMESERVER_HOSTNAME);
-        int arrayLen = Config.GAMEIPS.isEmpty() ? Config.PORTS_GAME.length : Config.PORTS_GAME.length + Config.GAMEIPS.size();
+        int arrayLen = Config.GAMEIPS.isEmpty() ? Config.PORTS_GAME.size() : Config.PORTS_GAME.size() + Config.GAMEIPS.size();
         _selectorThreads = new SelectorThread[arrayLen];
-        for (int i = 0; i < Config.PORTS_GAME.length; i++) {
+        for (int i = 0; i < Config.PORTS_GAME.size(); i++) {
             try {
                 _selectorThreads[i] = new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null);
-                _selectorThreads[i].openServerSocket(serverAddr, Config.PORTS_GAME[i]);
+                _selectorThreads[i].openServerSocket(serverAddr, Config.PORTS_GAME.get(i));
                 _selectorThreads[i].start();
             } catch (IOException ioe) {
-                _log.error("Cannot bind address: " + serverAddr + ":" + Config.PORTS_GAME[i], ioe);
+                _log.error("Cannot bind address: " + serverAddr + ":" + Config.PORTS_GAME.get(i), ioe);
             }
         }
         if (!Config.GAMEIPS.isEmpty()) // AdvIP support. server.ini ports are ignored and accepted only IPs and ports from advipsystem.ini
         {
-            int i = Config.PORTS_GAME.length; // Start from the last spot.
+            int i = Config.PORTS_GAME.size(); // Start from the last spot.
             for (AdvIP advip : Config.GAMEIPS) {
                 try {
                     _selectorThreads[i] = new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null);
@@ -354,19 +351,18 @@ public class GameServer {
 
     public class GameServerListenerList extends ListenerList<GameServer> {
         void onStart() {
-            for (Listener<GameServer> listener : getListeners()) {
-                if (OnStartListener.class.isInstance(listener)) {
-                    ((OnStartListener) listener).onStart();
-                }
-            }
+            getListeners().stream()
+                    .filter(listener -> listener instanceof OnStartListener)
+                    .map(listener -> (OnStartListener) listener)
+                    .forEach(OnStartListener::onStart);
         }
 
         public void onShutdown() {
-            for (Listener<GameServer> listener : getListeners()) {
-                if (OnShutdownListener.class.isInstance(listener)) {
-                    ((OnShutdownListener) listener).onShutdown();
-                }
-            }
+            getListeners().stream()
+                    .filter(listener -> listener instanceof OnShutdownListener)
+                    .map(listener -> (OnShutdownListener) listener)
+                    .forEach(OnShutdownListener::onShutdown);
         }
+
     }
 }

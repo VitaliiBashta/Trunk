@@ -7,16 +7,16 @@ import l2trunk.gameserver.model.items.attachment.FlagItemAttachment;
 import l2trunk.gameserver.network.serverpackets.ActionFail;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class RequestMagicSkillUse extends L2GameClientPacket {
-    private Integer _magicId;
-    private boolean _ctrlPressed;
-    private boolean _shiftPressed;
+public final class RequestMagicSkillUse extends L2GameClientPacket {
+    private Integer magicId;
+    private boolean ctrlPressed;
+    private boolean shiftPressed;
 
     @Override
     protected void readImpl() {
-        _magicId = readD();
-        _ctrlPressed = readD() != 0;
-        _shiftPressed = readC() != 0;
+        magicId = readD();
+        ctrlPressed = readD() != 0;
+        shiftPressed = readC() != 0;
     }
 
     @Override
@@ -37,9 +37,9 @@ public class RequestMagicSkillUse extends L2GameClientPacket {
         }
 
         if (activeChar.getMacroSkill() != null) {
-            this._magicId = activeChar.getMacroSkill().getId();
+            this.magicId = activeChar.getMacroSkill().getId();
         }
-        Skill skill = SkillTable.INSTANCE().getInfo(this._magicId, activeChar.getSkillLevel(this._magicId));
+        Skill skill = SkillTable.INSTANCE.getInfo(this.magicId, activeChar.getSkillLevel(this.magicId));
 
         if (activeChar.isPendingOlyEnd()) {
             if ((skill != null) && (skill.isOffensive())) {
@@ -93,7 +93,7 @@ public class RequestMagicSkillUse extends L2GameClientPacket {
 //			{
 //				activeChar.broadcastPacket(new MoveToPawn(activeChar, target, (int) activeChar.getDistance(target)));
 //			}
-            activeChar.getAI().Cast(skill, target, _ctrlPressed, _shiftPressed);
+            activeChar.getAI().Cast(skill, target, ctrlPressed, shiftPressed);
         } else {
             activeChar.setMacroSkill(null);
             activeChar.sendActionFailed();

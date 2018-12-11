@@ -39,8 +39,8 @@ public final class RequestExSendPost extends L2GameClientPacket {
     private int _messageType;
     private String _recieverName, _topic, _body;
     private int _count;
-    private int[] _items;
-    private long[] _itemQ;
+    private List<Integer> _items;
+    private List<Long> _itemQ;
     private long _price;
 
     /**
@@ -60,13 +60,15 @@ public final class RequestExSendPost extends L2GameClientPacket {
             return;
         }
 
-        _items = new int[_count];
-        _itemQ = new long[_count];
+        _items = new ArrayList<>();
+        _itemQ = new ArrayList<>();
 
         for (int i = 0; i < _count; i++) {
-            _items[i] = readD(); // objectId
-            _itemQ[i] = readQ(); // the amount
-            if (_itemQ[i] < 1 || ArrayUtils.indexOf(_items, _items[i]) < i) {
+            int tempS=  readD(); // objectId
+            long tempQ = readQ(); // the amount
+            _items.add(tempS);
+            _itemQ.add(tempQ); // the amount
+            if (tempQ < 1 || _items.indexOf(tempS) < i) {
                 _count = 0;
                 return;
             }
@@ -94,10 +96,10 @@ public final class RequestExSendPost extends L2GameClientPacket {
         // Custom
         if (activeChar.isGM() && _recieverName.equalsIgnoreCase(AdminMail.MAIL_ALL_TEXT)) {
             Map<Integer, Long> map = new HashMap<>();
-            if (_items != null && _items.length > 0)
-                for (int i = 0; i < _items.length; i++) {
-                    ItemInstance item = activeChar.getInventory().getItemByObjectId(_items[i]);
-                    map.put(item.getItemId(), _itemQ[i]);
+            if (_items != null && _items.size() > 0)
+                for (int i = 0; i < _items.size(); i++) {
+                    ItemInstance item = activeChar.getInventory().getItemByObjectId(_items.get(i));
+                    map.put(item.getItemId(), _itemQ.get(i));
                 }
 
             GameObjectsStorage.getAllPlayers().stream()
@@ -109,10 +111,10 @@ public final class RequestExSendPost extends L2GameClientPacket {
             return;
         } else if (activeChar.isGM() && _recieverName.equalsIgnoreCase(AdminMail.MAIL_LIST)) {
             Map<Integer, Long> map = new HashMap<>();
-            if (_items != null && _items.length > 0)
-                for (int i = 0; i < _items.length; i++) {
-                    ItemInstance item = activeChar.getInventory().getItemByObjectId(_items[i]);
-                    map.put(item.getItemId(), _itemQ[i]);
+            if (_items != null && _items.size() > 0)
+                for (int i = 0; i < _items.size(); i++) {
+                    ItemInstance item = activeChar.getInventory().getItemByObjectId(_items.get(i));
+                    map.put(item.getItemId(), _itemQ.get(i));
                 }
 
             int count = 0;
@@ -246,9 +248,9 @@ public final class RequestExSendPost extends L2GameClientPacket {
             // prepare attachement
             if (_count > 0)
                 for (int i = 0; i < _count; i++) {
-                    ItemInstance item = activeChar.getInventory().getItemByObjectId(_items[i]);
+                    ItemInstance item = activeChar.getInventory().getItemByObjectId(_items.get(i));
 
-                    if (item == null || item.getCount() < _itemQ[i] || (item.getItemId() == ItemTemplate.ITEM_ID_ADENA && item.getCount() < _itemQ[i] + serviceCost) || !item.canBeTraded(activeChar)) {
+                    if (item == null || item.getCount() < _itemQ.get(i) || (item.getItemId() == ItemTemplate.ITEM_ID_ADENA && item.getCount() < _itemQ.get(i) + serviceCost) || !item.canBeTraded(activeChar)) {
                         activeChar.sendPacket(SystemMsg.THE_ITEM_THAT_YOURE_TRYING_TO_SEND_CANNOT_BE_FORWARDED_BECAUSE_IT_ISNT_PROPER);
                         return;
                     }
@@ -261,7 +263,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
 
             if (_count > 0) {
                 for (int i = 0; i < _count; i++) {
-                    ItemInstance item = activeChar.getInventory().removeItemByObjectId(_items[i], _itemQ[i], "SendPost");
+                    ItemInstance item = activeChar.getInventory().removeItemByObjectId(_items.get(i), _itemQ.get(i), "SendPost");
 
                     item.setOwnerId(activeChar.getObjectId());
                     item.setLocation(ItemLocation.MAIL);

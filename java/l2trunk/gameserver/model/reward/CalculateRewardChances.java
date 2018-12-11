@@ -90,9 +90,6 @@ public class CalculateRewardChances {
 
     /**
      * Key: 0 - Drop, 1 - Spoil
-     *
-     * @param itemId
-     * @return
      */
     public static List<NpcTemplateDrops> getNpcsByDropOrSpoil(int itemId) {
         List<NpcTemplateDrops> templates = new ArrayList<>();

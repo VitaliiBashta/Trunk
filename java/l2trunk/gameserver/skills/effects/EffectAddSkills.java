@@ -1,7 +1,6 @@
 package l2trunk.gameserver.skills.effects;
 
 import l2trunk.gameserver.model.Effect;
-import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.stats.Env;
 
 public class EffectAddSkills extends Effect {
@@ -12,15 +11,15 @@ public class EffectAddSkills extends Effect {
     @Override
     public void onStart() {
         super.onStart();
-        for (AddedSkill as : getSkill().getAddedSkills())
-            getEffected().addSkill(as.getSkill());
+        getSkill().getAddedSkills().forEach(as ->
+                getEffected().addSkill(as.getSkill()));
     }
 
     @Override
     public void onExit() {
         super.onExit();
-        for (AddedSkill as : getSkill().getAddedSkills())
-            getEffected().removeSkill(as.getSkill());
+        getSkill().getAddedSkills().forEach(as ->
+                getEffected().removeSkill(as.getSkill()));
     }
 
     @Override

@@ -185,13 +185,13 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
     @Override
     public DoorAI getAI() {
-        if (_ai == null)
+        if (ai == null)
             synchronized (this) {
-                if (_ai == null)
-                    _ai = getTemplate().getNewAI(this);
+                if (ai == null)
+                    ai = getTemplate().getNewAI(this);
             }
 
-        return (DoorAI) _ai;
+        return (DoorAI) ai;
     }
 
     @Override

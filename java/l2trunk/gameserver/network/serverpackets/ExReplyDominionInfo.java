@@ -4,48 +4,46 @@ import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.entity.residence.Dominion;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
-public class ExReplyDominionInfo extends L2GameServerPacket {
-    private List<TerritoryInfo> _dominionList = Collections.emptyList();
+public final class ExReplyDominionInfo extends L2GameServerPacket {
+    private List<TerritoryInfo> dominionList;
 
     public ExReplyDominionInfo() {
-        List<Dominion> dominions = ResidenceHolder.getInstance().getResidenceList(Dominion.class);
-        _dominionList = new ArrayList<>(dominions.size());
+        List<Dominion> dominions = ResidenceHolder.getResidenceList(Dominion.class);
+        dominionList = new ArrayList<>(dominions.size());
 
         for (Dominion dominion : dominions) {
             if (dominion.getSiegeDate().getTimeInMillis() == 0)
                 continue;
 
-            _dominionList.add(new TerritoryInfo(dominion.getId(), dominion.getName(), dominion.getOwner().getName(), dominion.getFlags(), (int) (dominion.getSiegeDate().getTimeInMillis() / 1000L)));
+            dominionList.add(new TerritoryInfo(dominion.getId(), dominion.getName(), dominion.getOwner().getName(), dominion.getFlags(), (int) (dominion.getSiegeDate().getTimeInMillis() / 1000L)));
         }
     }
 
     @Override
     protected void writeImpl() {
         writeEx(0x92);
-        writeD(_dominionList.size());
-        for (TerritoryInfo cf : _dominionList) {
+        writeD(dominionList.size());
+        dominionList.forEach( cf-> {
             writeD(cf.id);
             writeS(cf.terr);
             writeS(cf.clan);
-            writeD(cf.flags.length);
-            for (int f : cf.flags)
-                writeD(f);
+            writeD(cf.flags.size());
+            cf.flags.forEach(this::writeD);
             writeD(cf.startTime);
-        }
+        });
     }
 
     private class TerritoryInfo {
         final int id;
         final String terr;
         final String clan;
-        final int[] flags;
+        final List<Integer> flags;
         final int startTime;
 
-        TerritoryInfo(int id, String terr, String clan, int[] flags, int startTime) {
+        TerritoryInfo(int id, String terr, String clan, List<Integer> flags, int startTime) {
             this.id = id;
             this.terr = terr;
             this.clan = clan;

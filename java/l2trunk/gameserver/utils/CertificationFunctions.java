@@ -140,7 +140,7 @@ public class CertificationFunctions {
             player.getInventory().destroyItemByItemId(classType2.getTransformationId(), player.getInventory().getCountOf(classType2.getTransformationId()), "cancelCertification");
         }
 
-        Collection<SkillLearn> skillLearnList = SkillAcquireHolder.getInstance().getAvailableSkills(null, AcquireType.CERTIFICATION);
+        Collection<SkillLearn> skillLearnList = SkillAcquireHolder.getAvailableSkills(null, AcquireType.CERTIFICATION);
         for (SkillLearn learn : skillLearnList) {
             Skill skill = player.getKnownSkill(learn.getId());
             if (skill != null)

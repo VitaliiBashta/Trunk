@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.Arrays;
 import java.util.List;
 
-public class Teleport implements IVoicedCommandHandler {
+public final class Teleport implements IVoicedCommandHandler {
     private static final List<String> _commandList = Arrays.asList("pvp", "farm", "farm_hard", "farm_low");
 
     @Override
@@ -31,7 +31,7 @@ public class Teleport implements IVoicedCommandHandler {
         if (Config.COMMAND_PVP) {
             final int CoinCountPvP = Config.PRICE_PVP;
             if (command.equalsIgnoreCase("pvp")) {
-                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic) || activeChar.isInTvT()) {
+                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic)) {
                     activeChar.sendMessage("Teleportation is not possible");
                     return false;
                 }
@@ -52,7 +52,7 @@ public class Teleport implements IVoicedCommandHandler {
         if (Config.COMMAND_FARM) {
             final int CoinCountFarm = Config.PRICE_FARM;
             if (command.equalsIgnoreCase("farm")) {
-                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic) || activeChar.isInTvT()) {
+                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic)) {
                     activeChar.sendMessage("Teleportation is not possible");
                     return false;
                 }
@@ -74,7 +74,7 @@ public class Teleport implements IVoicedCommandHandler {
         if (Config.COMMAND_FARM_HARD) {
             final int CoinCountFarmH = Config.PRICE_FARM_HARD;
             if (command.equalsIgnoreCase("farm_hard")) {
-                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic) || activeChar.isInTvT()) {
+                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic)) {
                     activeChar.sendMessage("Teleportation is not possible");
                     return false;
                 }
@@ -97,7 +97,7 @@ public class Teleport implements IVoicedCommandHandler {
         if (Config.COMMAND_FARM_LOW) {
             final int CoinCount = Config.PRICE_FARM_LOW;
             if (command.equalsIgnoreCase("farm_low")) {
-                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic) || activeChar.isInTvT()) {
+                if (activeChar.isCursedWeaponEquipped() || activeChar.getReflectionId() != 0 || activeChar.isDead() || activeChar.isAlikeDead() || activeChar.isCastingNow() || activeChar.isInCombat() || activeChar.isAttackingNow() || activeChar.isInOlympiadMode() || activeChar.isFlying() || activeChar.isTerritoryFlagEquipped() || activeChar.isInZone(ZoneType.no_escape) || activeChar.isInZone(ZoneType.SIEGE) || activeChar.isInZone(ZoneType.epic)) {
                     activeChar.sendMessage("Teleportation is not possible");
                     return false;
                 }

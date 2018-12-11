@@ -1892,7 +1892,7 @@
 		<set name="target" val="TARGET_AREA" />
 		<set name="skillRadius" val="200" />
 		<set name="castRange" val="900" />
-		<set name="element" val="1" />
+		<set name="element" val="fire" />
 		<set name="minimumChance" val="80" />
 		<set name="overHit" val="true" />
 		<set name="criticalRate" val="15" />

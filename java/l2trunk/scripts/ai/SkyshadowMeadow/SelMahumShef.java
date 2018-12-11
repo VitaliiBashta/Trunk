@@ -29,7 +29,7 @@ public final class SelMahumShef extends Fighter {
             if (_wait_timeout < System.currentTimeMillis()) {
                 List<Player> players = World.getAroundPlayers(actor, 100, 100);
                 for (Player p : players)
-                    actor.doCast(SkillTable.INSTANCE().getInfo(6330, 1), p, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(6330), p, true);
                 _wait_timeout = (System.currentTimeMillis() + 30000);
             }
 

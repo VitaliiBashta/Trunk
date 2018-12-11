@@ -55,8 +55,8 @@ public final class NaiaSpore extends Fighter {
                 break;
         }
 
-        if (isBossSpawnCondMet() != 0 && !NaiaCoreManager.isBossSpawned())
-            NaiaCoreManager.spawnEpidos(isBossSpawnCondMet());
+        if (isBossSpawnCondMet() != 0 && !NaiaCoreManager.INSTANCE.isBossSpawned())
+            NaiaCoreManager.INSTANCE.spawnEpidos(isBossSpawnCondMet());
 
         super.onEvtDead(killer);
     }

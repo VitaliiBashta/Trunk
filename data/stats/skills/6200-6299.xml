@@ -52,11 +52,6 @@
 		</for>
 	</skill>
 	<skill id="6203" levels="1" name="Transformed Condition - Native" >
-		<!--
-		Done by:	pchayka
-		Last modify:	09.06.2010  
-		Description: Transformed into a Native.
-		-->
 		<set name="magicType" val="SPECIAL" />
 		<set name="icon" val="icon.skilltransform3" />
 		<set name="castRange" val="900" />

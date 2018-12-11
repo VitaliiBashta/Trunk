@@ -4,8 +4,8 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class MatchTrief extends MatchFighter {
-    private final Skill HOLD = SkillTable.INSTANCE().getInfo(4047, 6);
+public final class MatchTrief extends MatchFighter {
+    private final Skill HOLD = SkillTable.INSTANCE.getInfo(4047, 6);
 
     public MatchTrief(NpcInstance actor) {
         super(actor);

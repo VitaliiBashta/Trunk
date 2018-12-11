@@ -69,9 +69,9 @@ public final class AdminEffects implements IAdminCommandHandler {
                     }
                     if (val != sh_level) {
                         if (sh_level != 0) {
-                            activeChar.doCast(SkillTable.INSTANCE().getInfo(7029, sh_level), activeChar, true); // снимаем еффект
+                            activeChar.doCast(SkillTable.INSTANCE.getInfo(7029, sh_level), activeChar, true); // снимаем еффект
                         }
-                        activeChar.doCast(SkillTable.INSTANCE().getInfo(7029, val), activeChar, true);
+                        activeChar.doCast(SkillTable.INSTANCE.getInfo(7029, val), activeChar, true);
                     }
                 } else {
                     activeChar.sendMessage("USAGE: //gmspeed value=[0 1 2 3 4]");
@@ -293,26 +293,21 @@ public final class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_callskill:
                 try {
-                    id = Integer.parseInt(wordList[1]);
-                    lvl = Integer.parseInt(wordList[2]);
+                    id = toInt(wordList[1]);
+                    lvl = toInt(wordList[2]);
                     List<Effect> trasform = activeChar.getEffectList().getEffectsBySkillId(id);
                 } catch (Exception e) {
                     activeChar.sendMessage("USAGE: //transform transform_id");
                     return false;
                 }
-                activeChar.doCast(SkillTable.INSTANCE().getInfo(id, lvl), activeChar, true);
+                activeChar.doCast(SkillTable.INSTANCE.getInfo(id, lvl), activeChar, true);
                 break;
             case admin_showmovie:
                 if (wordList.length < 2) {
                     activeChar.sendMessage("USAGE: //showmovie id");
                     return false;
                 }
-                try {
-                    id = Integer.parseInt(wordList[1]);
-                } catch (NumberFormatException e) {
-                    activeChar.sendMessage("You must specify id");
-                    return false;
-                }
+                id = toInt(wordList[1]);
                 activeChar.showQuestMovie(id);
                 break;
         }

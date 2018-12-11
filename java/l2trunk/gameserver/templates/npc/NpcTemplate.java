@@ -110,8 +110,8 @@ public final class NpcTemplate extends CharTemplate {
         return _constructorType;
     }
 
-    public boolean isInstanceOf(Class<?> _class) {
-        return _class.isAssignableFrom(_classType);
+    public boolean isInstanceOf(Class<?> clazz) {
+        return clazz.isAssignableFrom(_classType);
     }
 
     /**

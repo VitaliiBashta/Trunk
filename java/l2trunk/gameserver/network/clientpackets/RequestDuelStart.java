@@ -10,14 +10,14 @@ import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class RequestDuelStart extends L2GameClientPacket {
-    private String _name;
-    private int _duelType;
+public final class RequestDuelStart extends L2GameClientPacket {
+    private String name;
+    private int duelType;
 
     @Override
     protected void readImpl() {
-        _name = readS(Config.CNAME_MAXLEN);
-        _duelType = readD();
+        name = readS(Config.CNAME_MAXLEN);
+        duelType = readD();
     }
 
     @Override
@@ -36,21 +36,19 @@ public class RequestDuelStart extends L2GameClientPacket {
             return;
         }
 
-        Player target = World.getPlayer(_name);
+        Player target = World.getPlayer(name);
         if (target == null || target == player) {
             player.sendPacket(SystemMsg.THERE_IS_NO_OPPONENT_TO_RECEIVE_YOUR_CHALLENGE_FOR_A_DUEL);
             return;
         }
 
-        DuelEvent duelEvent = EventHolder.getInstance().getEvent(EventType.PVP_EVENT, _duelType);
+        DuelEvent duelEvent = EventHolder.getEvent(EventType.PVP_EVENT, duelType);
         if (duelEvent == null)
             return;
 
         if (!duelEvent.canDuel(player, target, true))
             return;
 
-        if (target.isInFightClub())
-            return;
 
         if (target.isBusy()) {
             player.sendPacket(new SystemMessage2(SystemMsg.C1_IS_ON_ANOTHER_TASK).addName(target));

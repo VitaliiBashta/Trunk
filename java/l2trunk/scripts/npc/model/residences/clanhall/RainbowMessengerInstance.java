@@ -65,7 +65,7 @@ public class RainbowMessengerInstance extends NpcInstance {
 
                 CMGSiegeClanObject siegeClanObject = new CMGSiegeClanObject(ClanHallMiniGameEvent.ATTACKERS, clan, count);
                 miniGameEvent.addObject(ClanHallMiniGameEvent.ATTACKERS, siegeClanObject);
-                SiegeClanDAO.getInstance().insert(clanHall, siegeClanObject);
+                SiegeClanDAO.INSTANCE.insert(clanHall, siegeClanObject);
 
                 showChatWindow(player, "residence2/clanhall/messenger_yetti009.htm");
             }
@@ -90,7 +90,7 @@ public class RainbowMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti016.htm");
             else {
                 miniGameEvent.removeObject(ClanHallMiniGameEvent.ATTACKERS, siegeClanObject);
-                SiegeClanDAO.getInstance().delete(clanHall, siegeClanObject);
+                SiegeClanDAO.INSTANCE.delete(clanHall, siegeClanObject);
 
                 ItemFunctions.addItem(player, ITEM_ID, siegeClanObject.getParam() / 2L, true, "RainbowMessenger");
 
@@ -117,7 +117,7 @@ public class RainbowMessengerInstance extends NpcInstance {
                 showChatWindow(player, "residence2/clanhall/messenger_yetti020.htm");
             else {
                 miniGameEvent.removeObject(ClanHallMiniGameEvent.REFUND, siegeClanObject);
-                SiegeClanDAO.getInstance().delete(clanHall, siegeClanObject);
+                SiegeClanDAO.INSTANCE.delete(clanHall, siegeClanObject);
 
                 ItemFunctions.addItem(player, ITEM_ID, siegeClanObject.getParam(), true, "RainbowMessenger");
 

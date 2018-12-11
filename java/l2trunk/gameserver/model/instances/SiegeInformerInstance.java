@@ -6,7 +6,9 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.network.serverpackets.CastleSiegeInfo;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class SiegeInformerInstance extends NpcInstance {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class SiegeInformerInstance extends NpcInstance {
     public SiegeInformerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -17,7 +19,7 @@ public class SiegeInformerInstance extends NpcInstance {
             return;
 
         if (command.startsWith("siege_")) {
-            Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, Integer.parseInt(command.substring(6)));
+            Castle castle = ResidenceHolder.getResidence(Castle.class, toInt(command.substring(6)));
             if (castle != null)
                 player.sendPacket(new CastleSiegeInfo(castle, player));
         } else

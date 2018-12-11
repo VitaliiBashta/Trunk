@@ -11,7 +11,6 @@ import l2trunk.gameserver.model.actor.instances.player.ShortCut;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.PcInventory;
 import l2trunk.gameserver.network.serverpackets.*;
-import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.AugmentationData;
@@ -20,7 +19,7 @@ import l2trunk.gameserver.utils.Util;
 
 import java.util.Collection;
 
-class Augmentation extends Functions {
+public final class Augmentation extends Functions {
     private static final int MAX_AUGMENTATIONS_PER_PAGE = 7;
     private static final int MAX_PAGES_PER_PAGE = 6;
 
@@ -163,12 +162,7 @@ class Augmentation extends Functions {
 
         SystemMessage2 sm = new SystemMessage2(SystemMsg.AUGMENTATION_HAS_BEEN_SUCCESSFULLY_REMOVED_FROM_YOUR_S1);
         sm.addItemName(item.getItemId());
-        player.sendPacket(new IStaticPacket[]
-                {
-                        new ExVariationCancelResult(1),
-                        iu,
-                        sm
-                });
+        player.sendPacket(new ExVariationCancelResult(1), iu, sm);
         for (ShortCut sc : player.getAllShortCuts())
             if ((sc.getId() == item.getObjectId()) && (sc.getType() == 1))
                 player.sendPacket(new ShortCutRegister(player, sc));
@@ -205,7 +199,7 @@ class Augmentation extends Functions {
             player.sendPacket(adminReply);
             return;
         }
-        Collection<OptionDataTemplate> augmentations = OptionDataHolder.getInstance().getUniqueOptions(_filter);
+        Collection<OptionDataTemplate> augmentations = OptionDataHolder.getUniqueOptions(_filter);
         if (augmentations.isEmpty()) {
             showMainMenu(player, 0, Options.AugmentationFilter.NONE);
             player.sendMessage("Augmentation list is empty. Try with another filter");
@@ -246,7 +240,7 @@ class Augmentation extends Functions {
                 break;
             if (page != _page)
                 continue;
-            Skill skill = !augm.getSkills().isEmpty() ? (Skill) augm.getSkills().get(0) : !augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).getSkill() : null;
+            Skill skill = !augm.getSkills().isEmpty() ? augm.getSkills().get(0) : !augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).getSkill() : null;
             block = template;
             block = block.replace("{bypass}", new StringBuilder().append("bypass -h scripts_services.Augmentation:run put ").append(augm.getId()).append(" ").append(_filter.ordinal() + 1).toString());
             String name = "";

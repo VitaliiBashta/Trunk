@@ -81,7 +81,7 @@ public final class AdminSkill implements IAdminCommandHandler {
                 break;
             case admin_buff:
                 for (int i = 7041; i <= 7064; i++)
-                    activeChar.addSkill(SkillTable.INSTANCE().getInfo(i, 1));
+                    activeChar.addSkill(SkillTable.INSTANCE.getInfo(i));
                 activeChar.sendPacket(new SkillList(activeChar));
                 break;
             case admin_people_having_effect:
@@ -119,9 +119,9 @@ public final class AdminSkill implements IAdminCommandHandler {
         Skill skill;
         for (int i = 0; i < 10; i++) // Lazy hack to give clan skills at max level for the specific clan level.
         {
-            Collection<SkillLearn> clanSkills = SkillAcquireHolder.getInstance().getAvailableSkills(target, AcquireType.CLAN);
+            Collection<SkillLearn> clanSkills = SkillAcquireHolder.getAvailableSkills(target, AcquireType.CLAN);
             for (SkillLearn sl : clanSkills) {
-                skill = SkillTable.INSTANCE().getInfo(sl.getId(), sl.getLevel());
+                skill = SkillTable.INSTANCE.getInfo(sl.getId(), sl.getLevel());
                 clan.addSkill(skill, true);
             }
         }
@@ -180,11 +180,11 @@ public final class AdminSkill implements IAdminCommandHandler {
         }
         int unLearnable = 0;
         int skillCounter = 0;
-        Collection<SkillLearn> skills = SkillAcquireHolder.getInstance().getAvailableSkills(player, AcquireType.NORMAL);
+        Collection<SkillLearn> skills = SkillAcquireHolder.getAvailableSkills(player, AcquireType.NORMAL);
         while (skills.size() > unLearnable) {
             unLearnable = 0;
             for (SkillLearn s : skills) {
-                Skill sk = SkillTable.INSTANCE().getInfo(s.getId(), s.getLevel());
+                Skill sk = SkillTable.INSTANCE.getInfo(s.getId(), s.getLevel());
                 if (sk == null || !sk.getCanLearn(player.getClassId())) {
                     unLearnable++;
                     continue;
@@ -193,7 +193,7 @@ public final class AdminSkill implements IAdminCommandHandler {
                     skillCounter++;
                 player.addSkill(sk, true);
             }
-            skills = SkillAcquireHolder.getInstance().getAvailableSkills(player, AcquireType.NORMAL);
+            skills = SkillAcquireHolder.getAvailableSkills(player, AcquireType.NORMAL);
         }
 
         player.sendMessage("Admin gave you " + skillCounter + " skills.");
@@ -369,7 +369,7 @@ public final class AdminSkill implements IAdminCommandHandler {
 
         int counter = 0;
         for (Skill element : player.getAllSkills())
-            if ((!element.isCommon()) && (!SkillAcquireHolder.getInstance().isSkillPossible(player, element, AcquireType.NORMAL))) {
+            if ((!element.isCommon()) && (!SkillAcquireHolder.isSkillPossible(player, element, AcquireType.NORMAL))) {
                 player.removeSkill(element, true);
                 counter++;
             }
@@ -392,9 +392,9 @@ public final class AdminSkill implements IAdminCommandHandler {
         }
 
         if (wordList.length == 3) {
-            int id = Integer.parseInt(wordList[1]);
-            int level = Integer.parseInt(wordList[2]);
-            Skill skill = SkillTable.INSTANCE().getInfo(id, level);
+            int id = toInt(wordList[1]);
+            int level = toInt(wordList[2]);
+            Skill skill = SkillTable.INSTANCE.getInfo(id, level);
             if (skill != null) {
                 player.sendMessage("Admin gave you the skill " + skill.getName() + ".");
                 player.addSkill(skill, true);
@@ -418,9 +418,9 @@ public final class AdminSkill implements IAdminCommandHandler {
         }
 
         if (wordList.length == 2) {
-            int id = Integer.parseInt(wordList[1]);
+            int id = toInt(wordList[1]);
             int level = player.getSkillLevel(id);
-            Skill skill = SkillTable.INSTANCE().getInfo(id, level);
+            Skill skill = SkillTable.INSTANCE.getInfo(id, level);
             if (skill != null) {
                 player.sendMessage("Admin removed the skill " + skill.getName() + ".");
                 player.removeSkill(skill, true);

@@ -9,7 +9,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class BleedingFlyMinion extends Fighter {
 
-    private final Skill self_destruction = SkillTable.INSTANCE().getInfo(6872, 1);
+    private final Skill self_destruction = SkillTable.INSTANCE.getInfo(6872);
 
     private long last_cast_sd = 0;
 

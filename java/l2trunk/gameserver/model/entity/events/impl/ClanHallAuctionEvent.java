@@ -115,7 +115,7 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
                 oldOwner.getWarehouse().addItem(ItemTemplate.ITEM_ID_ADENA, givedBid, "Clan Hall Auction Old Owner Bid");
             }
 
-            SiegeClanDAO.getInstance().delete(getResidence());
+            SiegeClanDAO.INSTANCE.delete(getResidence());
 
 
             getResidence().setAuctionLength(0);

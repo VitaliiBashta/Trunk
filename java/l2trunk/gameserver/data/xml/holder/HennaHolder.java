@@ -1,6 +1,5 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.templates.Henna;
 
@@ -8,45 +7,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public final class HennaHolder extends AbstractHolder {
-    private static final HennaHolder INSTANCE = new HennaHolder();
+public final class HennaHolder {
+    private static final Map<Integer, Henna> hennas = new HashMap<>();
 
-    private final Map<Integer, Henna> hennas = new HashMap<>();
 
-    public static HennaHolder getInstance() {
-        return INSTANCE;
+    private HennaHolder() {
     }
 
-    public void addHenna(Henna h) {
+    public static void addHenna(Henna h) {
         hennas.put(h.getSymbolId(), h);
     }
 
-    public Henna getHenna(int symbolId) {
+    public static Henna getHenna(int symbolId) {
         return hennas.get(symbolId);
     }
 
-    public List<Henna> generateList(Player player) {
-        List<Henna> list = new ArrayList<>();
-        for (Henna henna : hennas.values()) {
-            if (henna.isForThisClass(player))
-                list.add(henna);
-        }
-
-        return list;
+    public static List<Henna> generateList(Player player) {
+        return hennas.values().stream()
+                .filter(henna -> henna.isForThisClass(player))
+                .collect(Collectors.toList());
     }
 
-    public boolean isHenna(int itemId) {
+    public static boolean isHenna(int itemId) {
         return hennas.entrySet().stream().anyMatch(h -> h.getValue().getDyeId() == itemId);
     }
 
-    @Override
-    public int size() {
+    public static int size() {
         return hennas.size();
     }
 
-    @Override
-    public void clear() {
-        hennas.clear();
-    }
 }

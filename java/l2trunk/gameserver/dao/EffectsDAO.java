@@ -19,25 +19,17 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class EffectsDAO {
+public enum EffectsDAO {
+    INSTANCE;
     private static final int SUMMON_SKILL_OFFSET = 100000;
-    private static final Logger _log = LoggerFactory.getLogger(EffectsDAO.class);
-    private static final EffectsDAO _instance = new EffectsDAO();
-
-    private EffectsDAO() {
-        //
-    }
-
-    public static EffectsDAO getInstance() {
-        return _instance;
-    }
+    private final Logger _log = LoggerFactory.getLogger(EffectsDAO.class);
 
     public void restoreEffects(final Playable playable, final boolean heal, final double healToHp, final double healToCp, final double healToMp) {
         int id = getId(playable);
         if (id == 0) return;
         int objectId = playable.isPlayer() ? playable.getObjectId() : playable.getPlayer().getObjectId();
 
-        if (playable.getPlayer().isInOlympiadMode() || playable.getPlayer().isInFightClub()) {
+        if (playable.getPlayer().isInOlympiadMode()) {
             if (heal) {
                 heal(playable, healToHp, healToCp, healToMp);
             }
@@ -60,7 +52,7 @@ public class EffectsDAO {
                 long effectCurTime = rset.getLong("effect_cur_time");
                 long duration = rset.getLong("duration");
 
-                Skill skill = SkillTable.INSTANCE().getInfo(skillId, skillLvl);
+                Skill skill = SkillTable.INSTANCE.getInfo(skillId, skillLvl);
                 if (skill == null)
                     continue;
 

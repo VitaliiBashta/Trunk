@@ -24,8 +24,8 @@ import l2trunk.gameserver.utils.PositionUtils;
  */
 public final class GuardofDawnFemale extends DefaultAI {
     private static final int _aggrorange = 300;
-    private final Skill _skill = SkillTable.INSTANCE().getInfo(5978, 1);
-    private Location _locTele = null;
+    private final Skill deathStrike = SkillTable.INSTANCE.getInfo(5978);
+    private Location locTele = null;
     private boolean noCheckPlayers = false;
 
     public GuardofDawnFemale(NpcInstance actor, Location telePoint) {
@@ -36,8 +36,8 @@ public final class GuardofDawnFemale extends DefaultAI {
 
     public class Teleportation extends RunnableImpl {
 
-        Location _telePoint = null;
-        Playable _target = null;
+        final Location _telePoint;
+        final Playable _target;
 
         Teleportation(Location telePoint, Playable target) {
             _telePoint = telePoint;
@@ -68,7 +68,7 @@ public final class GuardofDawnFemale extends DefaultAI {
                 continue;
 
             if (target != null && target.isPlayer() && !target.isSilentMoving() && !target.isInvul() && GeoEngine.canSeeTarget(actor, target, false) && PositionUtils.isFacing(actor, target, 150)) {
-                actor.doCast(_skill, target, true);
+                actor.doCast(deathStrike, target, true);
                 Functions.npcSay(actor, "Who are you?! A new face like you can't approach this place!");
                 noCheckPlayers = true;
                 ThreadPoolManager.INSTANCE.schedule(new Teleportation(getTelePoint(), target), 3000);
@@ -79,11 +79,11 @@ public final class GuardofDawnFemale extends DefaultAI {
     }
 
     private void setTelePoint(Location loc) {
-        _locTele = loc;
+        locTele = loc;
     }
 
     private Location getTelePoint() {
-        return _locTele;
+        return locTele;
     }
 
     @Override

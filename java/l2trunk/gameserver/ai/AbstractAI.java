@@ -165,16 +165,6 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     /**
-     * Останавливает движение
-     *
-     * @param validate - рассылать ли ValidateLocation
-     */
-    void clientStopMoving(boolean validate) {
-        Creature actor = getActor();
-        actor.stopMove(validate);
-    }
-
-    /**
      * Останавливает движение и рассылает ValidateLocation
      */
     protected void clientStopMoving() {

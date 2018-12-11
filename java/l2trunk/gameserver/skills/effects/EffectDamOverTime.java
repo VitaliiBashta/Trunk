@@ -24,7 +24,7 @@ public class EffectDamOverTime extends Effect {
 
         double damage = calc();
         if (_percent)
-            damage = effected.getMaxHp() * _template._value * 0.01;
+            damage = effected.getMaxHp() * template._value * 0.01;
         if (damage < 2 && getStackOrder() != -1)
             switch (getEffectType()) {
                 case Poison:

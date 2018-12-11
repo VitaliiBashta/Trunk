@@ -29,10 +29,13 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.TradeHelper;
 import l2trunk.gameserver.utils.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 /**
  * Manager para manejar todas las funciones del offline buffer
@@ -40,8 +43,8 @@ import java.util.logging.Logger;
  *
  * @author GipsyGrierosu Andrei
  */
-public class OfflineBufferManager {
-    protected static final Logger _log = Logger.getLogger(OfflineBufferManager.class.getName());
+public final class OfflineBufferManager {
+    protected static final Logger _log = LoggerFactory.getLogger(OfflineBufferManager.class);
 
     private static final int MAX_INTERACT_DISTANCE = 100;
 
@@ -75,7 +78,7 @@ public class OfflineBufferManager {
             // Sets a new buff store
             case "setstore": {
                 try {
-                    final int price = Integer.parseInt(st.nextToken());
+                    final int price = toInt(st.nextToken());
                     String title = st.nextToken();
                     while (st.hasMoreTokens()) {
                         title += " " + st.nextToken();
@@ -118,7 +121,7 @@ public class OfflineBufferManager {
                     }
 
                     // Buff Stores can only be put inside areas designated to it and in clan halls
-                    final ClanHall ch = ResidenceHolder.getInstance().getResidenceByObject(ClanHall.class, player);
+                    final ClanHall ch = ResidenceHolder.getResidenceByObject(ClanHall.class, player);
                     if (!player.isGM() && !player.isInZone(ZoneType.buff_store_only) && !player.isInZone(ZoneType.RESIDENCE) && ch == null) {
                         player.sendMessage("You can't put a buff store here. Look for special designated zones or clan halls.");
                         break;
@@ -230,9 +233,9 @@ public class OfflineBufferManager {
             // Shows the buff list of the selected buffer
             case "bufflist": {
                 try {
-                    final int playerId = Integer.parseInt(st.nextToken());
-                    final boolean isPlayer = (st.hasMoreTokens() ? st.nextToken().equalsIgnoreCase("player") : true);
-                    final int page = (st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 0);
+                    final int playerId = toInt(st.nextToken());
+                    final boolean isPlayer = (!st.hasMoreTokens() || st.nextToken().equalsIgnoreCase("player"));
+                    final int page = (st.hasMoreTokens() ? toInt(st.nextToken()) : 0);
 
                     // Check if the buffer exists
                     final BufferData buffer = _buffStores.get(playerId);
@@ -265,10 +268,10 @@ public class OfflineBufferManager {
             // Purchases a particular buff of the store
             case "purchasebuff": {
                 try {
-                    final int playerId = Integer.parseInt(st.nextToken());
-                    final boolean isPlayer = (st.hasMoreTokens() ? st.nextToken().equalsIgnoreCase("player") : true);
-                    final int buffId = Integer.parseInt(st.nextToken());
-                    final int page = (st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 0);
+                    final int playerId = toInt(st.nextToken());
+                    final boolean isPlayer = (!st.hasMoreTokens() || st.nextToken().equalsIgnoreCase("player"));
+                    final int buffId = toInt(st.nextToken());
+                    final int page = (st.hasMoreTokens() ? toInt(st.nextToken()) : 0);
 
                     // Check if the buffer exists
                     final BufferData buffer = _buffStores.get(playerId);
@@ -450,7 +453,7 @@ public class OfflineBufferManager {
             nextPageButton = "<button value=\"\" width=15 height=15 action=\"\" back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame>";
 
         html.replace("%bufferId%", buffer.getOwner().getObjectId());
-        html.replace("%bufferClass%", Util.toProperCaseAll(CharTemplateHolder.getInstance().getTemplate(buffer.getOwner().getClassId(), false).className));
+        html.replace("%bufferClass%", Util.toProperCaseAll(CharTemplateHolder.getTemplate(buffer.getOwner().getClassId(), false).className));
         html.replace("%bufferLvl%", (buffer.getOwner().getLevel() >= 76 && buffer.getOwner().getLevel() < 80 ? 76 : (buffer.getOwner().getLevel() >= 84 ? 84 : Math.round(buffer.getOwner().getLevel() / 10) * 10)));
         html.replace("%bufferName%", buffer.getOwner().getName());
         html.replace("%bufferMp%", (int) buffer.getOwner().getCurrentMp());

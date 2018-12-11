@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Playable;
@@ -11,10 +10,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-/**
- * @author pchayka
- */
 
 public class SoIManager {
     private static final Logger _log = LoggerFactory.getLogger(SoIManager.class);
@@ -37,10 +32,9 @@ public class SoIManager {
             new Location(-180921, 216789, -9536),
             new Location(-177264, 217760, -9536),
             new Location(-173727, 218169, -9536)};
-    private static SoIManager _instance = null;
     private static Zone _zone = null;
 
-    private SoIManager() {
+    public static void init() {
         _log.info("Seed of Infinity Manager: Loaded. Current stage is: " + getCurrentStage());
         _zone = ReflectionUtils.getZone("[inner_undying01]");
         checkStageAndSpawn();
@@ -48,13 +42,7 @@ public class SoIManager {
             openSeed(getOpenedTime());
     }
 
-    public static SoIManager getInstance() {
-        if (_instance == null)
-            _instance = new SoIManager();
-        return _instance;
-    }
-
-    public static int getCurrentStage() {
+       public static int getCurrentStage() {
         return ServerVariables.getInt("SoI_stage", 1);
     }
 
@@ -91,12 +79,9 @@ public class SoIManager {
         spawnOpenedSeed();
         ReflectionUtils.getDoor(14240102).openMe();
 
-        ThreadPoolManager.INSTANCE().schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                closeSeed();
-                setCurrentStage(4);
-            }
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            closeSeed();
+            setCurrentStage(4);
         }, time);
     }
 

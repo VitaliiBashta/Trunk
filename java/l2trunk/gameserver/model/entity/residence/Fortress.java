@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.residence;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.dao.ClanDataDAO;
 import l2trunk.gameserver.dao.FortressDAO;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
@@ -36,10 +35,6 @@ public final class Fortress extends Residence {
     public static final int DWARVENS = 3;
     public static final int SCOUT = 4;
     public static final int FACILITY_MAX = 5;
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     private static final Logger _log = LoggerFactory.getLogger(Fortress.class);
     private static final long REMOVE_CYCLE = 7 * 24; // 7 Fort days may belong owneru
     private static final long REWARD_CYCLE = 6; // every 6 hours
@@ -65,12 +60,12 @@ public final class Fortress extends Residence {
         // If a clan is owned by a castle / fortress, we getBonuses it.
         if (clan != null) {
             if (clan.getHasFortress() != 0) {
-                Fortress oldFortress = ResidenceHolder.getInstance().getResidence(Fortress.class, clan.getHasFortress());
+                Fortress oldFortress = ResidenceHolder.getResidence(Fortress.class, clan.getHasFortress());
                 if (oldFortress != null)
                     oldFortress.changeOwner(null);
             }
             if (clan.getCastle() != 0) {
-                Castle oldCastle = ResidenceHolder.getInstance().getResidence(Castle.class, clan.getCastle());
+                Castle oldCastle = ResidenceHolder.getResidence(Castle.class, clan.getCastle());
                 if (oldCastle != null)
                     oldCastle.changeOwner(null);
             }
@@ -109,21 +104,18 @@ public final class Fortress extends Residence {
 
     @Override
     protected void loadData() {
-        _owner = ClanDataDAO.getInstance().getOwner(this);
-        FortressDAO.getInstance().select(this);
+        _owner = ClanDataDAO.INSTANCE.getOwner(this);
+        FortressDAO.INSTANCE.select(this);
     }
 
     private void updateOwnerInDB(Clan clan) {
         _owner = clan;
 
-        Connection con = null;
         PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             statement = con.prepareStatement("UPDATE clan_data SET hasFortress=0 WHERE hasFortress=? LIMIT 1");
             statement.setInt(1, getId());
             statement.execute();
-            DbUtils.close(statement);
 
             if (clan != null) {
                 statement = con.prepareStatement("UPDATE clan_data SET hasFortress=? WHERE clan_id=? LIMIT 1");
@@ -135,8 +127,6 @@ public final class Fortress extends Residence {
             }
         } catch (SQLException e) {
             _log.error("Error while updating Fortress Owner in Database", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -169,7 +159,7 @@ public final class Fortress extends Residence {
             setRewardCount(getRewardCount() + 1);
 
             if (getContractState() == CONTRACT_WITH_CASTLE) {
-                Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, _castleId);
+                Castle castle = ResidenceHolder.getResidence(Castle.class, _castleId);
                 if (castle.getOwner() == null || castle.getOwner().getReputationScore() < 2 || _owner.getWarehouse().getCountOf(ItemTemplate.ITEM_ID_ADENA) > CASTLE_FEE) {
                     setSupplyCount(0);
                     setFortState(INDEPENDENT, 0);
@@ -187,7 +177,7 @@ public final class Fortress extends Residence {
 
     @Override
     public void update() {
-        FortressDAO.getInstance().update(this);
+        FortressDAO.INSTANCE.update(this);
     }
 
     public int getSupplyCount() {

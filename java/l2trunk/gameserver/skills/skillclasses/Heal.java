@@ -12,7 +12,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Heal extends Skill {
+public final class Heal extends Skill {
     private final boolean _ignoreHpEff;
     private final boolean _staticPower;
 
@@ -27,12 +27,6 @@ public class Heal extends Skill {
         if ((target == null) || target.isDoor() || target.isRaid() || target.isBoss() || (target instanceof SiegeFlagInstance)) {
             return false;
         }
-
-        //Fight club
-        if (activeChar.isPlayable() && activeChar.getPlayer().isInFightClub())
-            if (!activeChar.getPlayer().getFightClubEvent().canUsePositiveMagic(activeChar, target))
-                return false;
-
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
     }
 
@@ -41,7 +35,7 @@ public class Heal extends Skill {
         // Надо уточнить формулу.
         double hp = power;
         if (!_staticPower) {
-            hp += 0.1 * power * Math.sqrt(activeChar.getMAtk(null, this) / 333);
+            hp += 0.1 * power * Math.sqrt(activeChar.getMAtk(null, this) / 333.);
         }
 
         int sps = isSSPossible() && (getHpConsume() == 0) ? activeChar.getChargedSpiritShot() : 0;
@@ -70,10 +64,6 @@ public class Heal extends Skill {
                     } else if (activeChar.isPlayer() && activeChar.isCursedWeaponEquipped()) {
                         continue;
                     }
-                    //Fight club check
-                    else if (activeChar.isPlayable() && activeChar.getPlayer().isInFightClub())
-                        if (!activeChar.getPlayer().getFightClubEvent().canUsePositiveMagic(activeChar, target))
-                            continue;
                 }
 
                 double addToHp = 0;

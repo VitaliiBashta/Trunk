@@ -8,7 +8,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 public final class DemonPrince extends Fighter {
-    private final Skill ULTIMATE_DEFENSE_SKILL = SkillTable.INSTANCE().getInfo(5044, 3);
+    private final Skill ULTIMATE_DEFENSE_SKILL = SkillTable.INSTANCE.getInfo(5044, 3);
     private static final int TELEPORTATION_CUBIC_ID = 32375;
     private static final Location CUBIC_POSITION = new Location(-22144, 278744, -8239, 0);
     private boolean _notUsedUltimateDefense = true;

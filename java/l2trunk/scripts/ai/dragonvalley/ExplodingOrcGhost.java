@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.dragonvalley;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Skill;
@@ -9,7 +8,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class ExplodingOrcGhost extends Fighter {
 
-    private final Skill SELF_DESTRUCTION = SkillTable.INSTANCE().getInfo(6850, 1);
+    private final Skill SELF_DESTRUCTION = SkillTable.INSTANCE.getInfo(6850, 1);
 
     public ExplodingOrcGhost(NpcInstance actor) {
         super(actor);
@@ -17,24 +16,13 @@ public final class ExplodingOrcGhost extends Fighter {
 
     @Override
     public void onEvtSpawn() {
-        ThreadPoolManager.INSTANCE().schedule(new StartSelfDestructionTimer(getActor()), 3000L);
+        ThreadPoolManager.INSTANCE.schedule(() -> {
+            NpcInstance npc = getActor();
+            npc.abortAttack(true, false);
+            npc.abortCast(true, false);
+            npc.doCast(SELF_DESTRUCTION, actor, true);
+        }, 3000L);
         super.onEvtSpawn();
-    }
-
-    private class StartSelfDestructionTimer extends RunnableImpl {
-
-        private final NpcInstance _npc;
-
-        StartSelfDestructionTimer(NpcInstance npc) {
-            _npc = npc;
-        }
-
-        @Override
-        public void runImpl() {
-            _npc.abortAttack(true, false);
-            _npc.abortCast(true, false);
-            _npc.doCast(SELF_DESTRUCTION, actor, true);
-        }
     }
 
 }

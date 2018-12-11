@@ -41,11 +41,11 @@ public final class MercenaryCaptain extends DefaultAI {
             return true;
 
         NpcString shout;
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         if (runnerEvent.isInProgress())
             shout = NpcString.CHARGE_CHARGE_CHARGE;
         else
-            shout = MESSAGES[Rnd.get(MESSAGES.length)];
+            shout = Rnd.get(MESSAGES);
 
         Functions.npcShout(actor, shout);
 

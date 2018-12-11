@@ -51,7 +51,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static String replaceItemsByNamePage(String html, String itemName, int page) {
         String newHtml = html;
 
-        List<ItemTemplate> itemsByName = ItemHolder.getInstance().getItemsByNameContainingString(itemName, true);
+        List<ItemTemplate> itemsByName = ItemHolder.getItemsByNameContainingString(itemName, true);
         itemsByName.sort(new ItemComparator(itemName));
 
         int itemIndex = 0;
@@ -172,7 +172,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static void showDropMonstersByName(Player player, String monsterName, int page) {
         player.addQuickVar("DCMonsterName", monsterName);
         player.addQuickVar("DCMonstersPage", page);
-        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonstersByName.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonstersByName.htm", player);
         html = replaceMonstersByName(html, monsterName, page);
         ShowBoard.separateAndSend(html, player);
     }
@@ -205,7 +205,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     }
 
     private static void showDropMonsterDetailsByName(Player player, int monsterId) {
-        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByName.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByName.htm", player);
         html = replaceMonsterDetails(player, html, monsterId);
 //		if (!canTeleToMonster(player, monsterId, false))
 //			html = html.replace("%goToNpc%", "<br>");
@@ -232,7 +232,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
                 RewardListInfo.showInfo(player, NpcHolder.getTemplate(monsterId), false, false, 1.0);
                 break;
             case 3:// teleport To Monster
-                if (!canTeleToMonster(player, monsterId, true)) {
+                if (!canTeleToMonster(player, monsterId)) {
                     return;
                 }
                 List<NpcInstance> aliveInstance = GameObjectsStorage.getAllByNpcId(monsterId, true);
@@ -246,16 +246,14 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         }
     }
 
-    private static boolean canTeleToMonster(Player player, int monsterId, boolean sendMessage) {
+    private static boolean canTeleToMonster(Player player, int monsterId) {
         if (!player.isInZonePeace()) {
-            if (sendMessage)
-                player.sendMessage("You can do it only in safe zone!");
+            player.sendMessage("You can do it only in safe zone!");
             return false;
         }
 
         if (Olympiad.isRegistered(player) || player.isInOlympiadMode()) {
-            if (sendMessage)
-                player.sendMessage("You cannot do it while being registered in Olympiad Battle!");
+            player.sendMessage("You cannot do it while being registered in Olympiad Battle!");
             return false;
         }
 
@@ -291,13 +289,6 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         return formatDropChance(chance);
     }
 
-//if (!player.reduceAdena(1000000, true, "TeleportToMonster"))	
-    //      {
-    //        if(sendMessage)	
-    //          player.sendMessage("You do not have enough adena!");
-    //    return false;
-    // }
-
     public static String formatDropChance(String chance) {
         String realChance = chance;
         if (realChance.length() - realChance.indexOf('.') > 6)
@@ -318,14 +309,14 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: Drop Calculator service loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -344,7 +335,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         player.setSessionVar("add_fav", null);
 
         if (!Config.ALLOW_DROP_CALCULATOR) {
-            String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcOff.htm", player);
+            String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropCalcOff.htm", player);
             ShowBoard.separateAndSend(html, player);
             return;
         }

@@ -8,18 +8,17 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommunityBoardManager {
-    private static final Logger _log = LoggerFactory.getLogger(CommunityBoardManager.class);
-    private static final CommunityBoardManager _instance = new CommunityBoardManager();
-
-    private final Map<String, ICommunityBoardHandler> _handlers = new HashMap<>();
-    private final StatsSet _properties = new StatsSet();
-
-    public static CommunityBoardManager getInstance() {
-        return _instance;
+public final class CommunityBoardManager {
+    private CommunityBoardManager() {
     }
 
-    public void registerHandler(ICommunityBoardHandler commHandler) {
+    private static final Logger _log = LoggerFactory.getLogger(CommunityBoardManager.class);
+
+    private static final Map<String, ICommunityBoardHandler> _handlers = new HashMap<>();
+    private static final StatsSet properties = new StatsSet();
+
+
+    public static void registerHandler(ICommunityBoardHandler commHandler) {
         for (String bypass : commHandler.getBypassCommands()) {
             if (_handlers.containsKey(bypass))
                 _log.warn("CommunityBoard: dublicate bypass registered! First handler: " + _handlers.get(bypass).getClass().getSimpleName() + " second: " + commHandler.getClass().getSimpleName());
@@ -28,13 +27,13 @@ public class CommunityBoardManager {
         }
     }
 
-    public void removeHandler(ICommunityBoardHandler handler) {
+    public static void removeHandler(ICommunityBoardHandler handler) {
         for (String bypass : handler.getBypassCommands())
             _handlers.remove(bypass);
         _log.info("CommunityBoard: " + handler.getClass().getSimpleName() + " unloaded.");
     }
 
-    public ICommunityBoardHandler getCommunityHandler(String bypass) {
+    public static ICommunityBoardHandler getCommunityHandler(String bypass) {
         if (!Config.COMMUNITYBOARD_ENABLED || _handlers.isEmpty())
             return null;
 
@@ -46,14 +45,14 @@ public class CommunityBoardManager {
     }
 
     public void setProperty(String name, String val) {
-        _properties.set(name, val);
+        properties.set(name, val);
     }
 
     public void setProperty(String name, int val) {
-        _properties.set(name, val);
+        properties.set(name, val);
     }
 
-    public int getIntProperty(String name) {
-        return _properties.getInteger(name, 0);
+    public static int getIntProperty(String name) {
+        return properties.getInteger(name, 0);
     }
 }

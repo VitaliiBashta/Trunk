@@ -1,38 +1,31 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.lang.NumberUtils;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.StatsSet;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class LearnSkill extends Skill {
-    private final int[] _learnSkillId;
-    private final int[] _learnSkillLvl;
+public final class LearnSkill extends Skill {
+    private final List<Integer> _learnSkillId;
+    private final List<Integer> _learnSkillLvl;
 
     public LearnSkill(StatsSet set) {
         super(set);
 
-        String[] ar = set.getString("learnSkillId", "0").split(",");
-        int[] ar2 = new int[ar.length];
+        _learnSkillId = Arrays.stream(set.getString("learnSkillId", "0").split(","))
+                .map(NumberUtils::toInt)
+                .collect(Collectors.toList());
 
-        for (int i = 0; i < ar.length; i++)
-            ar2[i] = Integer.parseInt(ar[i]);
 
-        _learnSkillId = ar2;
-
-        ar = set.getString("learnSkillLvl", "1").split(",");
-        ar2 = new int[_learnSkillId.length];
-
-        for (int i = 0; i < _learnSkillId.length; i++)
-            ar2[i] = 1;
-
-        for (int i = 0; i < ar.length; i++)
-            ar2[i] = Integer.parseInt(ar[i]);
-
-        _learnSkillLvl = ar2;
+        _learnSkillLvl = Arrays.stream(set.getString("learnSkillLvl", "1").split(","))
+                .map(NumberUtils::toInt)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -43,9 +36,9 @@ public class LearnSkill extends Skill {
         final Player player = ((Player) activeChar);
         Skill newSkill;
 
-        for (int i = 0; i < _learnSkillId.length; i++) {
-            if (player.getSkillLevel(_learnSkillId[i]) < _learnSkillLvl[i] && _learnSkillId[i] != 0) {
-                newSkill = SkillTable.INSTANCE().getInfo(_learnSkillId[i], _learnSkillLvl[i]);
+        for (int i = 0; i < _learnSkillId.size(); i++) {
+            if (player.getSkillLevel(_learnSkillId.get(i)) < _learnSkillLvl.get(i) && _learnSkillId.get(i) != 0) {
+                newSkill = SkillTable.INSTANCE.getInfo(_learnSkillId.get(i), _learnSkillLvl.get(i));
                 if (newSkill != null)
                     player.addSkill(newSkill, true);
             }

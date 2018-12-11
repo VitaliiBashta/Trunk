@@ -22,7 +22,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.List;
 
-public class SuspiciousMerchantInstance extends NpcInstance {
+public final class SuspiciousMerchantInstance extends NpcInstance {
     public SuspiciousMerchantInstance(int objectID, NpcTemplate template) {
         super(objectID, template);
     }
@@ -90,8 +90,8 @@ public class SuspiciousMerchantInstance extends NpcInstance {
             }
 
             // 1 рега возможна всего
-            for (Fortress $ : ResidenceHolder.getInstance().getResidenceList(Fortress.class))
-                if ($.getSiegeEvent().getSiegeClan(FortressSiegeEvent.ATTACKERS, clan) != null) {
+            for (Fortress fort : ResidenceHolder.getResidenceList(Fortress.class))
+                if (fort.getSiegeEvent().getSiegeClan(FortressSiegeEvent.ATTACKERS, clan) != null) {
                     showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");
                     return;
                 }
@@ -103,14 +103,14 @@ public class SuspiciousMerchantInstance extends NpcInstance {
 
             // если у нас есть форт, запрещаем регатся на форт, если на носу осада своего форта(во избежания абуза, участия в 2 осадах)
             if (clan.getHasFortress() > 0) {
-                Fortress clanFortress = ResidenceHolder.getInstance().getResidence(clan.getHasFortress());
+                Fortress clanFortress = ResidenceHolder.getResidence(clan.getHasFortress());
                 if (clanFortress.getSiegeDate().getTimeInMillis() > 0) {
                     showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");
                     return;
                 }
             }
 
-            DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+            DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
             if (runnerEvent.isRegistrationOver() || siegeEvent.isRegistrationOver()) {
                 showChatWindow(player, "residence2/fortress/fortress_ordery006.htm");
                 return;
@@ -126,7 +126,7 @@ public class SuspiciousMerchantInstance extends NpcInstance {
 
             siegeClan = new SiegeClanObject(FortressSiegeEvent.ATTACKERS, clan, 0);
             siegeEvent.addObject(FortressSiegeEvent.ATTACKERS, siegeClan);
-            SiegeClanDAO.getInstance().insert(fortress, siegeClan);
+            SiegeClanDAO.INSTANCE.insert(fortress, siegeClan);
 
             siegeEvent.reCalcNextTime(false);
 
@@ -142,7 +142,7 @@ public class SuspiciousMerchantInstance extends NpcInstance {
             SiegeClanObject siegeClan = siegeEvent.getSiegeClan(FortressSiegeEvent.ATTACKERS, clan);
             if (siegeClan != null) {
                 siegeEvent.removeObject(FortressSiegeEvent.ATTACKERS, siegeClan);
-                SiegeClanDAO.getInstance().delete(fortress, siegeClan);
+                SiegeClanDAO.INSTANCE.delete(fortress, siegeClan);
 
                 siegeEvent.reCalcNextTime(false);
 

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.residence;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.TeleportLocation;
 import l2trunk.gameserver.tables.SkillTable;
@@ -15,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class ResidenceFunction {
+public final class ResidenceFunction {
     // residence functions
     public static final int TELEPORT = 1;
     public static final int ITEM_CREATE = 2;
@@ -274,11 +273,8 @@ public class ResidenceFunction {
     public void updateRentTime(boolean inDebt) {
         setEndTimeInMillis(System.currentTimeMillis() + 86400000);
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE residence_functions SET endTime=?, inDebt=? WHERE type=? AND id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE residence_functions SET endTime=?, inDebt=? WHERE type=? AND id=?")) {
             statement.setInt(1, (int) (getEndTimeInMillis() / 1000));
             statement.setInt(2, inDebt ? 1 : 0);
             statement.setInt(3, getType());
@@ -286,8 +282,6 @@ public class ResidenceFunction {
             statement.executeUpdate();
         } catch (SQLException e) {
             _log.error("Error while updating Residence Function Rent Time", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

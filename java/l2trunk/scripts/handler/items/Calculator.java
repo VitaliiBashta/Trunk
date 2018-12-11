@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Collections;
 import java.util.List;
 
-public class Calculator extends ScriptItemHandler implements ScriptFile {
+public final class Calculator extends ScriptItemHandler implements ScriptFile {
     private static final int CALCULATOR = 4393;
 
 

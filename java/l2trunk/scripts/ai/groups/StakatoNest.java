@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.groups;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -19,10 +18,13 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class StakatoNest extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(StakatoNest.class);
 
-    private static final int[] BIZARRE_COCOON = {18793, 18794, 18795, 18796, 18797, 18798};
+    private static final List<Integer> BIZARRE_COCOON = Arrays.asList(18793, 18794, 18795, 18796, 18797, 18798);
     private static final int CANNIBALISTIC_STAKATO_LEADER = 22625;
     private static final int SPIKE_STAKATO_NURSE = 22630;
     private static final int SPIKE_STAKATO_NURSE_CHANGED = 22631;
@@ -46,7 +48,7 @@ public final class StakatoNest extends Fighter {
 
     private StakatoNest(NpcInstance actor) {
         super(actor);
-        if (ArrayUtils.contains(BIZARRE_COCOON, actor.getNpcId())) {
+        if (BIZARRE_COCOON.contains(actor.getNpcId())) {
             actor.setInvul(true);
             actor.startImmobilized();
         }
@@ -83,7 +85,7 @@ public final class StakatoNest extends Fighter {
                 _mob.abortAttack(true, false);
                 _mob.abortCast(true, false);
                 _mob.setHeading(PositionUtils.getHeadingTo(_mob, _follower));
-                _mob.doCast(SkillTable.INSTANCE().getInfo(4485, 1), _follower, false);
+                _mob.doCast(SkillTable.INSTANCE.getInfo(4485), _follower, false);
                 _mob.setCurrentHp(_mob.getCurrentHp() + _follower.getCurrentHp(), false);
                 _follower.doDie(_follower);
                 _follower.deleteMe();
@@ -97,7 +99,7 @@ public final class StakatoNest extends Fighter {
         NpcInstance actor = getActor();
 
         MinionInstance _minion = getAliveMinion(actor);
-        MonsterInstance _leader = null;
+        MonsterInstance _leader;
 
         switch (actor.getNpcId()) {
             case SPIKE_STAKATO_NURSE:
@@ -105,7 +107,7 @@ public final class StakatoNest extends Fighter {
                     break;
                 actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000, 0));
                 for (int i = 0; i < 3; i++)
-                    spawnMonster(_minion, killer, SPIKED_STAKATO_CAPTAIN);
+                    spawnMonster(SPIKED_STAKATO_CAPTAIN,_minion, killer);
                 break;
             case SPIKED_STAKATO_BABY:
                 _leader = ((MinionInstance) actor).getLeader();
@@ -117,7 +119,7 @@ public final class StakatoNest extends Fighter {
                     break;
                 actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000, 0));
                 for (int i = 0; i < 3; i++)
-                    spawnMonster(_minion, killer, SPIKED_STAKATO_GUARD);
+                    spawnMonster(SPIKED_STAKATO_GUARD,_minion, killer );
                 break;
             case FEMALE_SPIKED_STAKATO:
                 _leader = ((MinionInstance) actor).getLeader();
@@ -154,7 +156,7 @@ public final class StakatoNest extends Fighter {
     @Override
     public void onEvtSeeSpell(Skill skill, Creature caster) {
         NpcInstance actor = getActor();
-        if (actor == null || !ArrayUtils.contains(BIZARRE_COCOON, actor.getNpcId()) || caster == null || skill.getId() != SKILL_GROWTH_ACCELERATOR) {
+        if (actor == null || !BIZARRE_COCOON.contains(actor.getNpcId()) || caster == null || skill.getId() != SKILL_GROWTH_ACCELERATOR) {
             super.onEvtSeeSpell(skill, caster);
             return;
         }
@@ -181,7 +183,7 @@ public final class StakatoNest extends Fighter {
         return null;
     }
 
-    private void spawnMonster(NpcInstance actor, Creature killer, int mobId) {
+    private void spawnMonster( int mobId, NpcInstance actor, Creature killer) {
         NpcInstance npc = (NpcInstance) NpcHolder.getTemplate(mobId).getNewInstance()
                 .setSpawnedLoc(actor.getSpawnedLoc())
                 .setFullHpMp()
@@ -203,12 +205,12 @@ public final class StakatoNest extends Fighter {
 
     @Override
     public boolean randomWalk() {
-        return !(ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId()) || getActor().getNpcId() == QUEEN_SHYEED);
+        return !(BIZARRE_COCOON.contains(getActor().getNpcId()) || getActor().getNpcId() == QUEEN_SHYEED);
     }
 
     @Override
     public boolean randomAnimation() {
-        return !ArrayUtils.contains(BIZARRE_COCOON, getActor().getNpcId());
+        return !(BIZARRE_COCOON.contains(getActor().getNpcId()));
     }
 
     private class ChangeMonster extends RunnableImpl {
@@ -224,7 +226,7 @@ public final class StakatoNest extends Fighter {
 
         @Override
         public void runImpl() {
-            spawnMonster(_npc, _killer, _monsterId);
+            spawnMonster(_monsterId,_npc, _killer);
         }
     }
 }

@@ -240,17 +240,13 @@ public class Functions {
         return NpcUtils.spawnSingle(npcId, loc, reflection, 0);
     }
 
-    // @Deprecated
+     @Deprecated
     // TODO [VISTALL] use NpcUtils
     protected static void SpawnNPCs(int npcId, int[][] locations, List<SimpleSpawner> list) {
         for (int[] location : locations) {
-            SimpleSpawner sp = new SimpleSpawner(npcId);
-            sp.setLoc(new Location(location[0], location[1], location[2]));
-            sp.setAmount(1);
-            sp.setRespawnDelay(0);
-            sp.init();
+            NpcUtils.spawnSingle(npcId,location[0], location[1], location[2]);
             if (list != null)
-                list.add(sp);
+                list.add(new SimpleSpawner(npcId));
         }
     }
 
@@ -268,9 +264,7 @@ public class Functions {
     }
 
     public static void deSpawnNPCs(List<SimpleSpawner> list) {
-        for (SimpleSpawner sp : list)
-            sp.deleteAll();
-
+        list.forEach(Spawner::deleteAll);
         list.clear();
     }
 

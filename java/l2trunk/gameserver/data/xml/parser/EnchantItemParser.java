@@ -1,38 +1,28 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.EnchantItemHolder;
 import l2trunk.gameserver.templates.item.support.EnchantScroll;
 import l2trunk.gameserver.templates.item.support.FailResultType;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
 
-public final class EnchantItemParser extends AbstractFileParser<EnchantItemHolder> {
-    private static final EnchantItemParser _instance = new EnchantItemParser();
+public enum EnchantItemParser {
+    INSTANCE;
+    private static Path xml = Config.DATAPACK_ROOT.resolve("data/enchant_items.xml");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
-    private EnchantItemParser() {
-        super(EnchantItemHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + EnchantItemHolder.size() + " items");
     }
 
-    public static EnchantItemParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/enchant_items.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "enchant_items.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         int defaultMaxEnchant = 0;
         int defaultChance = 0;
         int defaultMagicChance = 0;
@@ -51,15 +41,13 @@ public final class EnchantItemParser extends AbstractFileParser<EnchantItemHolde
             int itemId = Integer.parseInt(enchantItemElement.attributeValue("id"));
             int chance = enchantItemElement.attributeValue("chance") == null ? defaultChance : Integer.parseInt(enchantItemElement.attributeValue("chance"));
 
-            //TODO [VISTALL]
-            @SuppressWarnings("unused")
             int magicChance = enchantItemElement.attributeValue("magic_chance") == null ? defaultMagicChance : Integer.parseInt(enchantItemElement.attributeValue("magic_chance"));
             int maxEnchant = enchantItemElement.attributeValue("max_enchant") == null ? defaultMaxEnchant : Integer.parseInt(enchantItemElement.attributeValue("max_enchant"));
             FailResultType resultType = FailResultType.valueOf(enchantItemElement.attributeValue("on_fail"));
             boolean visualEffect = enchantItemElement.attributeValue("visual_effect") == null ? defaultVisualEffect : Boolean.parseBoolean(enchantItemElement.attributeValue("visual_effect"));
 
             EnchantScroll item = new EnchantScroll(itemId, chance, maxEnchant, resultType, visualEffect);
-            getHolder().addEnchantScroll(item);
+            EnchantItemHolder.addEnchantScroll(item);
 
             for (Iterator<Element> iterator2 = enchantItemElement.elementIterator(); iterator2.hasNext(); ) {
                 Element element2 = iterator2.next();

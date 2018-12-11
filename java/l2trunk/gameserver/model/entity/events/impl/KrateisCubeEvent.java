@@ -30,7 +30,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.*;
 
-public class KrateisCubeEvent extends GlobalEvent {
+public final class KrateisCubeEvent extends GlobalEvent {
     public static final String REGISTERED_PLAYERS = "registered_players";
     public static final String WAIT_LOCS = "wait_locs";
     public static final String TELEPORT_LOCS = "teleport_locs";
@@ -38,8 +38,8 @@ public class KrateisCubeEvent extends GlobalEvent {
     private static final String PREPARE = "prepare";
     private static final SchedulingPattern DATE_PATTERN = new SchedulingPattern("0,30 * * * *");
     private static final Location RETURN_LOC = new Location(-70381, -70937, -1428);
-    private static final int[] SKILL_IDS = {1086, 1204, 1059, 1085, 1078, 1068, 1240, 1077, 1242, 1062, 5739};
-    private static final int[] SKILL_LEVEL = {2, 2, 3, 3, 6, 3, 3, 3, 3, 2, 1};
+    private static final List<Integer> SKILL_IDS = Arrays.asList(1086, 1204, 1059, 1085, 1078, 1068, 1240, 1077, 1242, 1062, 5739);
+    private static final List<Integer> SKILL_LEVEL = Arrays.asList(2, 2, 3, 3, 6, 3, 3, 3, 3, 2, 1);
     private final int _minLevel;
     private final int _maxLevel;
     private final Calendar _calendar = Calendar.getInstance();
@@ -54,7 +54,7 @@ public class KrateisCubeEvent extends GlobalEvent {
 
     @Override
     public void initEvent() {
-        _runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 2);
+        _runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 2);
 
         super.initEvent();
     }
@@ -132,10 +132,9 @@ public class KrateisCubeEvent extends GlobalEvent {
         player.setFullHpMp();
         player.setCurrentCp(player.getMaxCp());
 
-        for (int j = 0; j < SKILL_IDS.length; j++) {
-            Skill skill = SkillTable.INSTANCE().getInfo(SKILL_IDS[j], SKILL_LEVEL[j]);
-            if (skill != null)
-                skill.getEffects(player, player, false, false);
+        for (int j = 0; j < SKILL_IDS.size(); j++) {
+            Skill skill = SkillTable.INSTANCE.getInfo(SKILL_IDS.get(j), SKILL_LEVEL.get(j));
+            skill.getEffects(player, player, false, false);
         }
     }
 
@@ -169,10 +168,9 @@ public class KrateisCubeEvent extends GlobalEvent {
 
     public KrateisCubePlayerObject getParticlePlayer(Player player) {
         List<KrateisCubePlayerObject> registeredPlayers = getObjects(PARTICLE_PLAYERS);
-        for (KrateisCubePlayerObject p : registeredPlayers)
-            if (p.getPlayer() == player)
-                return p;
-        return null;
+        return registeredPlayers.stream()
+                .filter(p -> p.getPlayer() == player)
+                .findFirst().orElse(null);
     }
 
     public void showRank(Player player) {
@@ -207,10 +205,9 @@ public class KrateisCubeEvent extends GlobalEvent {
         final ExPVPMatchCCRecord p = new ExPVPMatchCCRecord(scores);
 
         List<KrateisCubePlayerObject> players = getObjects(PARTICLE_PLAYERS);
-        for (KrateisCubePlayerObject $player : players) {
-            if ($player.isShowRank())
-                $player.getPlayer().sendPacket(p);
-        }
+        players.stream()
+                .filter(KrateisCubePlayerObject::isShowRank)
+                .forEach(pl -> pl.getPlayer().sendPacket(p));
     }
 
     private List<KrateisCubePlayerObject> getSortedPlayers() {
@@ -234,7 +231,7 @@ public class KrateisCubeEvent extends GlobalEvent {
 
     @Override
     public void announce(int a) {
-        IStaticPacket p = null;
+        IStaticPacket p;
         if (a > 0)
             p = new SystemMessage2(SystemMsg.S1_SECONDS_TO_GAME_END).addInteger(a);
         else

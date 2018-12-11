@@ -11,15 +11,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ClanHallDAO {
+public enum  ClanHallDAO {
+    INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT siege_date, own_date, last_siege_date, auction_desc, auction_length, auction_min_bid, cycle, paid_cycle FROM clanhall WHERE id = ?";
     private static final String UPDATE_SQL_QUERY = "UPDATE clanhall SET siege_date=?, last_siege_date=?, own_date=?, auction_desc=?, auction_length=?, auction_min_bid=?, cycle=?, paid_cycle=? WHERE id=?";
     private static final Logger _log = LoggerFactory.getLogger(ClanHallDAO.class);
-    private static final ClanHallDAO _instance = new ClanHallDAO();
-
-    public static ClanHallDAO getInstance() {
-        return _instance;
-    }
 
     public void select(ClanHall clanHall) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();

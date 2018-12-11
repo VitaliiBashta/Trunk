@@ -36,7 +36,7 @@ public class CharacterPostFriendDAO {
                 }
             }
         } catch (SQLException e) {
-            _log.error("CharacterPostFriendDAO.load(Player): " + e, e);
+            _log.error("CharacterPostFriendDAO.loadFile(Player): " + e, e);
         }
         return set;
     }

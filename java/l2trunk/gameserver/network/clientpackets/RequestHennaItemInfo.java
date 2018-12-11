@@ -20,8 +20,7 @@ public class RequestHennaItemInfo extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Henna henna = HennaHolder.getInstance().getHenna(_symbolId);
-        if (henna != null)
-            player.sendPacket(new HennaItemInfo(henna, player));
+        Henna henna = HennaHolder.getHenna(_symbolId);
+        player.sendPacket(new HennaItemInfo(henna, player));
     }
 }

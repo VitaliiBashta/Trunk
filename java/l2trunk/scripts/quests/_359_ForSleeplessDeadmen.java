@@ -71,7 +71,7 @@ public class _359_ForSleeplessDeadmen extends Quest implements ScriptFile {
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30857-07.htm")) {
             // 713 quest hook
-            Castle castle = ResidenceHolder.getInstance().getResidence(5);
+            Castle castle = ResidenceHolder.getResidence(5);
             if (castle.getOwner() != null) {
                 Player castleOwner = castle.getOwner().getLeader().getPlayer();
                 if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getClan() == st.getPlayer().getClan() && castleOwner.getQuestState(_713_PathToBecomingALordAden.class) != null && castleOwner.getQuestState(_713_PathToBecomingALordAden.class).getCond() == 2) {

@@ -8,7 +8,7 @@ import l2trunk.gameserver.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public abstract class ItemContainer {
     static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
 
-    final List<ItemInstance> items = new ArrayList<>();
+    final List<ItemInstance> items = new CopyOnWriteArrayList<>();
     /**
      * Блокировка для чтения/записи вещей из списка и внешних операций
      */
@@ -57,26 +57,10 @@ public abstract class ItemContainer {
         readLock.unlock();
     }
 
-    /**
-     * Найти вещь по objectId
-     *
-     * @param objectId
-     * @return вещь, если найдена, либо null если не найдена
-     */
-    public ItemInstance getItemByObjectId(int objectId) {
-        readLock();
-        try {
-            ItemInstance item;
-            for (ItemInstance _item : items) {
-                item = _item;
-                if (item.getObjectId() == objectId)
-                    return item;
-            }
-        } finally {
-            readUnlock();
-        }
-
-        return null;
+    public synchronized ItemInstance getItemByObjectId(int objectId) {
+        return items.stream()
+                .filter(i -> i.getObjectId() == objectId)
+                .findFirst().orElse(null);
     }
 
     /**
@@ -97,20 +81,10 @@ public abstract class ItemContainer {
                 .collect(Collectors.toList());
     }
 
-    public long getCountOf(int itemId) {
-        long count = 0L;
-        readLock();
-        try {
-            ItemInstance item;
-            for (ItemInstance _item : items) {
-                item = _item;
-                if (item.getItemId() == itemId)
-                    count = SafeMath.addAndLimit(count, item.getCount());
-            }
-        } finally {
-            readUnlock();
-        }
-        return count;
+    public synchronized long getCountOf(int itemId) {
+        return items.stream()
+                .filter(i -> i.getItemId() == itemId)
+                .count();
     }
 
     /**
@@ -129,7 +103,7 @@ public abstract class ItemContainer {
         try {
             item = getItemByItemId(itemId);
 
-            if (item !=null && item.isStackable()) {
+            if (item != null && item.isStackable()) {
                 item.setCount(SafeMath.addAndLimit(item.getCount(), count));
                 onModifyItem(item);
                 if (owner != null)

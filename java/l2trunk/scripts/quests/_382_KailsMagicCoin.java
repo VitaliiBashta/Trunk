@@ -65,7 +65,7 @@ public class _382_KailsMagicCoin extends Quest implements ScriptFile {
                 st.exitCurrentQuest(true);
             }
         else if (event.equalsIgnoreCase("list")) {
-            MultiSellHolder.getInstance().SeparateAndSend(382, st.getPlayer(), 0);
+            MultiSellHolder.INSTANCE.SeparateAndSend(382, st.getPlayer(), 0);
             htmltext = null;
         }
         return htmltext;

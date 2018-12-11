@@ -45,7 +45,7 @@ public class _655_AGrandPlanForTamingWildBeasts extends Quest implements ScriptF
         int cond = st.getCond();
         Player player = st.getPlayer();
         Clan clan = player.getClan();
-        ClanHall clanhall = ResidenceHolder.getInstance().getResidence(63);
+        ClanHall clanhall = ResidenceHolder.getResidence(63);
 
         if (clanhall.getSiegeEvent().isRegistrationOver()) {
             htmlText = null;

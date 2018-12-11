@@ -35,7 +35,7 @@ public final class KrateisCubeWatcherRed extends DefaultAI {
         for (Creature cha : around)
             if (cha.isPlayer() && !cha.isDead() && Rnd.chance(SKILL_CHANCE)) {
                 int rnd = Rnd.get(SKILLS.length);
-                Skill skill = SkillTable.INSTANCE().getInfo(SKILLS[rnd][0], SKILLS[rnd][1]);
+                Skill skill = SkillTable.INSTANCE.getInfo(SKILLS[rnd][0], SKILLS[rnd][1]);
                 if (skill != null)
                     skill.getEffects(cha, cha, false, false);
             }

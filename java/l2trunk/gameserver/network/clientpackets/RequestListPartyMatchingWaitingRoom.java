@@ -3,11 +3,12 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExListPartyMatchingWaitingRoom;
 
-/**
- * @author VISTALL
- */
-public class RequestListPartyMatchingWaitingRoom extends L2GameClientPacket {
-    private int _minLevel, _maxLevel, _page, _classes[];
+import java.util.ArrayList;
+import java.util.List;
+
+public final class RequestListPartyMatchingWaitingRoom extends L2GameClientPacket {
+    private int _minLevel, _maxLevel, _page;
+    private List<Integer> _classes = new ArrayList<>();
 
     @Override
     protected void readImpl() {
@@ -17,9 +18,8 @@ public class RequestListPartyMatchingWaitingRoom extends L2GameClientPacket {
         int size = readD();
         if (size > Byte.MAX_VALUE || size < 0)
             size = 0;
-        _classes = new int[size];
         for (int i = 0; i < size; i++)
-            _classes[i] = readD();
+            _classes.add(readD());
     }
 
     @Override

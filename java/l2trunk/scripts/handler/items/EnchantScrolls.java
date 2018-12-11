@@ -72,7 +72,7 @@ public final class EnchantScrolls extends ScriptItemHandler implements ScriptFil
 
     @Override
     public final List<Integer> getItemIds() {
-        Set<Integer> enchantScrolls = new HashSet<>(EnchantItemHolder.getInstance().getEnchantScrolls());
+        Set<Integer> enchantScrolls = new HashSet<>(EnchantItemHolder.getEnchantScrolls());
         enchantScrolls.addAll(Arrays.asList(_itemIds));
         return new ArrayList<>(enchantScrolls);
     }

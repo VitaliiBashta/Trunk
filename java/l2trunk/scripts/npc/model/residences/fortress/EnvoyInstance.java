@@ -22,7 +22,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
  * 004 - success contract
  * 005 - fail contract
  */
-public class EnvoyInstance extends NpcInstance {
+public final class EnvoyInstance extends NpcInstance {
     private static final int COND_LEADER = 0;
     private static final int COND_FAIL = 1;
 
@@ -53,7 +53,7 @@ public class EnvoyInstance extends NpcInstance {
                 final int castleId, state;
                 final String fileName;
                 if (command.equalsIgnoreCase("yes")) {
-                    Residence castle = ResidenceHolder.getInstance().getResidence(Castle.class, _castleId);
+                    Residence castle = ResidenceHolder.getResidence(Castle.class, _castleId);
                     if (castle.getOwnerId() == 0) {
                         castleId = -1;
                         state = Fortress.NOT_DECIDED;

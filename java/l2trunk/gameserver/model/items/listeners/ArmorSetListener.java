@@ -35,7 +35,7 @@ public final class ArmorSetListener implements OnEquipListener {
             return;
 
         // checks if there is armorSet for chest item that player wears
-        ArmorSet armorSet = ArmorSetsHolder.getInstance().getArmorSet(chestItem.getItemId());
+        ArmorSet armorSet = ArmorSetsHolder.getArmorSet(chestItem.getItemId());
         if (armorSet == null)
             return;
 
@@ -45,7 +45,7 @@ public final class ArmorSetListener implements OnEquipListener {
             if (armorSet.containAll(player)) {
                 Map<Integer, Integer> skills = armorSet.getSkills();
                 for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                    player.addSkill(SkillTable.INSTANCE().getInfo(skill.getKey(), skill.getValue()), false);
+                    player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
                     update = true;
                 }
 
@@ -53,7 +53,7 @@ public final class ArmorSetListener implements OnEquipListener {
                 {
                     skills = armorSet.getShieldSkills();
                     for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                        player.addSkill(SkillTable.INSTANCE().getInfo(skill.getKey(), skill.getValue()), false);
+                        player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
                         update = true;
                     }
                 }
@@ -61,7 +61,7 @@ public final class ArmorSetListener implements OnEquipListener {
                 {
                     skills = armorSet.getEnchant6skills();
                     for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                        player.addSkill(SkillTable.INSTANCE().getInfo(skill.getKey(), skill.getValue()), false);
+                        player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
                         update = true;
                     }
                 }
@@ -70,7 +70,7 @@ public final class ArmorSetListener implements OnEquipListener {
             if (armorSet.containAll(player)) {
                 Map<Integer, Integer> skills = armorSet.getShieldSkills();
                 for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                    player.addSkill(SkillTable.INSTANCE().getInfo(skill.getKey(), skill.getValue()), false);
+                    player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
                     update = true;
                 }
             }
@@ -101,7 +101,7 @@ public final class ArmorSetListener implements OnEquipListener {
         Set<Integer> removeSkillId3 = null; // enchant +6 skill
 
         if (slot == Inventory.PAPERDOLL_CHEST) {
-            ArmorSet armorSet = ArmorSetsHolder.getInstance().getArmorSet(item.getItemId());
+            ArmorSet armorSet = ArmorSetsHolder.getArmorSet(item.getItemId());
             if (armorSet == null)
                 return;
 
@@ -115,7 +115,7 @@ public final class ArmorSetListener implements OnEquipListener {
             if (chestItem == null)
                 return;
 
-            ArmorSet armorSet = ArmorSetsHolder.getInstance().getArmorSet(chestItem.getItemId());
+            ArmorSet armorSet = ArmorSetsHolder.getArmorSet(chestItem.getItemId());
             if (armorSet == null)
                 return;
 

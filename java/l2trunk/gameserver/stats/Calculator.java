@@ -24,8 +24,8 @@ public final class Calculator {
     public final Stats _stat;
     private final Creature _character;
     private List<Func> _functions;
-    private double _base;
-    private double _last;
+    private double base;
+    private double last;
 
     public Calculator(Stats stat, Creature character) {
         _stat = stat;
@@ -59,20 +59,15 @@ public final class Calculator {
      * Remove each Func with the specified owner of the Calculator.<BR><BR>
      */
     public void removeOwner(Object owner) {
-        List<Func> tmp = _functions;
         _functions.removeIf(a->a.owner == owner);
-//        for (Func element : tmp)
-//            if (element.owner == owner)
-//                removeFunc(element);
     }
 
     /**
      * Run each Func of the Calculator.<BR><BR>
      */
-    @SuppressWarnings("unused")
     public void calc(Env env) {
         List<Func> funcs = _functions;
-        _base = env.value;
+        base = env.value;
 
         boolean overrideLimits = false;
         for (Func func : funcs) {
@@ -92,9 +87,9 @@ public final class Calculator {
         if (!overrideLimits)
             env.value = _stat.validate(env.value);
 
-        if (env.value != _last) {
-            double last = _last; //TODO [G1ta0] найти приминение в StatsChangeRecorder
-            _last = env.value;
+        if (env.value != last) {
+            double last = this.last; //TODO [G1ta0] найти приминение в StatsChangeRecorder
+            this.last = env.value;
         }
     }
 
@@ -106,10 +101,10 @@ public final class Calculator {
     }
 
     public double getBase() {
-        return _base;
+        return base;
     }
 
     public double getLast() {
-        return _last;
+        return last;
     }
 }

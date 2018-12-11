@@ -36,7 +36,7 @@ public final class ItemAuctionBrokerInstance extends NpcInstance {
 
         switch (params[0]) {
             case "auctionItemsSale":
-                CommunityBoardManager.getInstance().getCommunityHandler("_maillist").onBypassCommand(player, "_maillist");
+                CommunityBoardManager.getCommunityHandler("_maillist").onBypassCommand(player, "_maillist");
                 break;
             case "auction":
                 if (_instance == null) {

@@ -35,7 +35,7 @@ public final class MuscleBomber extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        getActor().altOnMagicUseTimer(getActor(), SkillTable.INSTANCE().getInfo(6842, 1));
+        getActor().altOnMagicUseTimer(getActor(), SkillTable.INSTANCE.getInfo(6842));
         last_attack_time = System.currentTimeMillis();
     }
 

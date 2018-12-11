@@ -10,19 +10,16 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.CastleSiegeDefenderList;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-/**
- * @reworked VISTALL
- */
-public class RequestConfirmCastleSiegeWaitingList extends L2GameClientPacket {
-    private boolean _approved;
-    private int _unitId;
-    private int _clanId;
+public final class RequestConfirmCastleSiegeWaitingList extends L2GameClientPacket {
+    private boolean approved;
+    private int unitId;
+    private int clanId;
 
     @Override
     protected void readImpl() {
-        _unitId = readD();
-        _clanId = readD();
-        _approved = readD() == 1;
+        unitId = readD();
+        clanId = readD();
+        approved = readD() == 1;
     }
 
     @Override
@@ -34,7 +31,7 @@ public class RequestConfirmCastleSiegeWaitingList extends L2GameClientPacket {
         if (player.getClan() == null)
             return;
 
-        Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, _unitId);
+        Castle castle = ResidenceHolder.getResidence(Castle.class, unitId);
 
         if (castle == null || player.getClan().getCastle() != castle.getId()) {
             player.sendActionFailed();
@@ -43,9 +40,9 @@ public class RequestConfirmCastleSiegeWaitingList extends L2GameClientPacket {
 
         CastleSiegeEvent siegeEvent = castle.getSiegeEvent();
 
-        SiegeClanObject siegeClan = siegeEvent.getSiegeClan(CastleSiegeEvent.DEFENDERS_WAITING, _clanId);
+        SiegeClanObject siegeClan = siegeEvent.getSiegeClan(CastleSiegeEvent.DEFENDERS_WAITING, clanId);
         if (siegeClan == null)
-            siegeClan = siegeEvent.getSiegeClan(CastleSiegeEvent.DEFENDERS, _clanId);
+            siegeClan = siegeEvent.getSiegeClan(CastleSiegeEvent.DEFENDERS, clanId);
 
         if (siegeClan == null)
             return;
@@ -68,14 +65,14 @@ public class RequestConfirmCastleSiegeWaitingList extends L2GameClientPacket {
 
         siegeEvent.removeObject(siegeClan.getType(), siegeClan);
 
-        if (_approved)
+        if (approved)
             siegeClan.setType(CastleSiegeEvent.DEFENDERS);
         else
             siegeClan.setType(CastleSiegeEvent.DEFENDERS_REFUSED);
 
         siegeEvent.addObject(siegeClan.getType(), siegeClan);
 
-        SiegeClanDAO.getInstance().update(castle, siegeClan);
+        SiegeClanDAO.INSTANCE.update(castle, siegeClan);
 
         player.sendPacket(new CastleSiegeDefenderList(castle));
     }

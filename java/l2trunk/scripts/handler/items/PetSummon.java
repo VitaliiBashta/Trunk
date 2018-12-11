@@ -3,6 +3,7 @@ package l2trunk.scripts.handler.items;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.PetDataTable;
@@ -11,9 +12,9 @@ import l2trunk.gameserver.tables.SkillTable;
 import java.util.List;
 
 public final class PetSummon extends ScriptItemHandler implements ScriptFile {
+    private final Skill wolvesNecklace = SkillTable.INSTANCE.getInfo(2046);
     // all the items ids that this handler knowns
     private final List<Integer> _itemIds = PetDataTable.getPetControlItems();
-    private static final int _skillId = 2046;
 
     @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
@@ -22,7 +23,7 @@ public final class PetSummon extends ScriptItemHandler implements ScriptFile {
         Player player = (Player) playable;
 
         player.setPetControlItem(item);
-        player.getAI().Cast(SkillTable.INSTANCE().getInfo(_skillId, 1), player, false, true);
+        player.getAI().Cast(wolvesNecklace, player, false, true);
         return true;
     }
 

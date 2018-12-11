@@ -93,7 +93,7 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
         item.setJdbcState(JdbcEntityState.STORED);
 
         castle.getSpawnMerchantTickets().add(item);
-        CastleHiredGuardDAO.getInstance().insert(castle, item.getItemId(), item.getLoc());
+        CastleHiredGuardDAO.INSTANCE.insert(castle, item.getItemId(), item.getLoc());
     }
 
     @Override
@@ -118,15 +118,14 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
             return false;
         }
         castle.getSpawnMerchantTickets().remove(item);
-        CastleHiredGuardDAO.getInstance().delete(castle, item);
+        CastleHiredGuardDAO.INSTANCE.delete(castle, item);
         return true;
     }
 
     @Override
     public final List<Integer> getItemIds() {
         Set<Integer> set = new HashSet<>(100);
-        ResidenceHolder residenceList = ResidenceHolder.getInstance();
-        List<Castle> castles = residenceList.getResidenceList(Castle.class);
+        List<Castle> castles = ResidenceHolder.getResidenceList(Castle.class);
         castles.forEach(c -> set.addAll(c.getMerchantGuards().keySet()));
         return new ArrayList<>(set);
     }

@@ -6,15 +6,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.petition.PetitionMainGroup;
 import l2trunk.gameserver.network.serverpackets.ExResponseShowStepTwo;
 
-/**
- * @author VISTALL
- */
-public class RequestExShowStepTwo extends L2GameClientPacket {
-    private int _petitionGroupId;
+public final class RequestExShowStepTwo extends L2GameClientPacket {
+    private int petitionGroupId;
 
     @Override
     protected void readImpl() {
-        _petitionGroupId = readC();
+        petitionGroupId = readC();
     }
 
     @Override
@@ -23,7 +20,7 @@ public class RequestExShowStepTwo extends L2GameClientPacket {
         if (player == null || !Config.EX_NEW_PETITION_SYSTEM)
             return;
 
-        PetitionMainGroup group = PetitionGroupHolder.getInstance().getPetitionGroup(_petitionGroupId);
+        PetitionMainGroup group = PetitionGroupHolder.getPetitionGroup(petitionGroupId);
         if (group == null)
             return;
 

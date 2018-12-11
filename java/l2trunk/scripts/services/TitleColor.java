@@ -9,26 +9,18 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
 
-/**
- * @author kick
- */
-class TitleColor extends Functions {
+public final class TitleColor extends Functions {
     public void list(String[] param) {
         Player player = getSelf();
         if (player == null)
             return;
 
-        if (!Config.SERVICES_CHANGE_Title_COLOR_ENABLED) {
-            player.sendMessage(new CustomMessage("scripts.services.off", player));
-            return;
-        }
-
         final int page = param[0].length() > 0 ? Integer.parseInt(param[0]) : 1;
         final int perpage = 6;
         int counter = 0;
 
-        String html = HtmCache.INSTANCE().getNotNull("scripts/services/TitleColor/index.htm", player);
-        String template = HtmCache.INSTANCE().getNotNull("scripts/services/TitleColor/template.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull("scripts/services/TitleColor/index.htm", player);
+        String template = HtmCache.INSTANCE.getNotNull("scripts/services/TitleColor/template.htm", player);
         String block = "";
         String list = "";
 
@@ -38,7 +30,7 @@ class TitleColor extends Functions {
             block = block.replace("{bypass}", "bypass -h scripts_services.TitleColor:change " + color);
             block = block.replace("{color}", (color.substring(4, 6) + color.substring(2, 4) + color.substring(0, 2)));
             block = block.replace("{count}", Util.formatAdena(Config.SERVICES_CHANGE_Title_COLOR_PRICE));
-            block = block.replace("{item}", ItemHolder.getInstance().getTemplate(Config.SERVICES_CHANGE_Title_COLOR_ITEM).getName());
+            block = block.replace("{item}", ItemHolder.getTemplate(Config.SERVICES_CHANGE_Title_COLOR_ITEM).getName());
             list += block;
 
             counter++;

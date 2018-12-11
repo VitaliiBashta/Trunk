@@ -16,13 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author n0nam3, pchayka
- * @date 12/10/2010 20:06
- * <p>
- * http://www.lineage2.com/archive/2010/06/gift_of_vitalit.html
- */
-public class GiftOfVitality extends Functions implements ScriptFile {
+public final class GiftOfVitality extends Functions implements ScriptFile {
     private static final String EVENT_NAME = "GiftOfVitality";
     private static final int REUSE_HOURS = 6; // reuse
     private static final int EVENT_MANAGER_ID = 109; // npc id
@@ -180,7 +174,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
 //					htmltext = "jack-onSub.htm";
                 else {
                     npc.broadcastPacket(new MagicSkillUse(npc, player, 23179, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(23179, 1));
+                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(23179, 1));
                     player.setVar("govEventTime", String.valueOf(System.currentTimeMillis() + REUSE_HOURS * 60 * 60 * 1000L), -1);
                     player.setVitality(Config.VITALITY_LEVELS[4]);
                     htmltext = "jack-okvitality.htm";
@@ -194,7 +188,7 @@ public class GiftOfVitality extends Functions implements ScriptFile {
                 else {
                     for (int[] buff : _summonBuff) {
                         npc.broadcastPacket(new MagicSkillUse(npc, player.getPet(), buff[0], buff[1], 0, 0));
-                        player.altOnMagicUseTimer(player.getPet(), SkillTable.INSTANCE().getInfo(buff[0], buff[1]));
+                        player.altOnMagicUseTimer(player.getPet(), SkillTable.INSTANCE.getInfo(buff[0], buff[1]));
                     }
                     htmltext = "jack-okbuff.htm";
                 }
@@ -206,12 +200,12 @@ public class GiftOfVitality extends Functions implements ScriptFile {
                     if (!player.isMageClass() || player.getTemplate().race == Race.orc)
                         for (int[] buff : _warrBuff) {
                             npc.broadcastPacket(new MagicSkillUse(npc, player, buff[0], buff[1], 0, 0));
-                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(buff[0], buff[1]));
+                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(buff[0], buff[1]));
                         }
                     else
                         for (int[] buff : _mageBuff) {
                             npc.broadcastPacket(new MagicSkillUse(npc, player, buff[0], buff[1], 0, 0));
-                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(buff[0], buff[1]));
+                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(buff[0], buff[1]));
                         }
                     htmltext = "jack-okbuff.htm";
                 }

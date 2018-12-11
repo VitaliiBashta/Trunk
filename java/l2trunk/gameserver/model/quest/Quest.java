@@ -34,6 +34,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public class Quest {
     public static final String SOUND_ITEMGET = "ItemSound.quest_itemget";
     public static final String SOUND_MIDDLE = "ItemSound.quest_middle";
@@ -62,9 +64,9 @@ public class Quest {
     protected static final int ADENA_ID = 57;
     protected static final int PARTY_ONE = 1;
     private static final Logger _log = LoggerFactory.getLogger(Quest.class);
-    private final String _name;
-    private final int _party;
-    private final int _questId;
+    private final String name;
+    private final int party;
+    private final int questId;
     //карта с приостановленными квестовыми таймерами для каждого игрока
     private final Map<Integer, Map<String, QuestTimer>> _pausedQuestTimers = new ConcurrentHashMap<>();
     private final Set<Integer> _questItems = new HashSet<>();
@@ -78,9 +80,9 @@ public class Quest {
      * 0 - по ластхиту, 1 - случайно по пати, 2 - всей пати.
      */
     public Quest(int party) {
-        _name = getClass().getSimpleName();
-        _questId = Integer.parseInt(_name.split("_")[1]);
-        _party = party;
+        name = getClass().getSimpleName();
+        questId = toInt(name.split("_")[1]);
+        this.party = party;
         QuestManager.addQuest(this);
     }
 
@@ -271,7 +273,7 @@ public class Quest {
         for (int id : ids)
             if (id != 0) {
                 ItemTemplate i;
-                i = ItemHolder.getInstance().getTemplate(id);
+                i = ItemHolder.getTemplate(id);
 
                 if (_questItems.contains(id))
                     _log.warn("Item " + i + " multiple times in quest drop in " + getName());
@@ -466,7 +468,7 @@ public class Quest {
      * @return String
      */
     public String getName() {
-        return _name;
+        return name;
     }
 
     /**
@@ -475,7 +477,7 @@ public class Quest {
      * @return int
      */
     public int getQuestIntId() {
-        return _questId;
+        return questId;
     }
 
     /**
@@ -484,7 +486,7 @@ public class Quest {
      * @return String
      */
     public int getParty() {
-        return _party;
+        return party;
     }
 
     /**
@@ -664,7 +666,7 @@ public class Quest {
     }
 
     private void showHtmlFile(Player player, String fileName, boolean showQuestInfo) {
-        showHtmlFile(player, fileName, showQuestInfo, ArrayUtils.EMPTY_OBJECT_ARRAY);
+        showHtmlFile(player, fileName, showQuestInfo, new Object[]{});
     }
 
     protected void showHtmlFile(Player player, String fileName, boolean showQuestInfo, Object... arg) {

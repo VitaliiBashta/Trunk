@@ -7,7 +7,7 @@ import l2trunk.gameserver.data.xml.holder.BuyListHolder;
 import l2trunk.gameserver.data.xml.holder.BuyListHolder.NpcTradeList;
 import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
-import l2trunk.gameserver.instancemanager.MapRegionManager;
+import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Castle;
@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.StringTokenizer;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class MerchantInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(MerchantInstance.class);
@@ -106,19 +108,19 @@ public class MerchantInstance extends NpcInstance {
         if (actualCommand.equalsIgnoreCase("Buy") || actualCommand.equalsIgnoreCase("Sell")) {
             int val = 0;
             if (st.countTokens() > 0)
-                val = Integer.parseInt(st.nextToken());
+                val = toInt(st.nextToken());
             showShopWindow(player, val, true);
         } else if (actualCommand.equalsIgnoreCase("Wear")) {
             if (st.countTokens() < 1)
                 return;
-            int val = Integer.parseInt(st.nextToken());
+            int val = toInt(st.nextToken());
             showWearWindow(player, val);
         } else if (actualCommand.equalsIgnoreCase("Multisell")) {
             if (st.countTokens() < 1)
                 return;
-            int val = Integer.parseInt(st.nextToken());
+            int val = toInt(st.nextToken());
             Castle castle = getCastle(player);
-            MultiSellHolder.getInstance().SeparateAndSend(val, player, castle != null ? castle.getTaxRate() : 0);
+            MultiSellHolder.INSTANCE.SeparateAndSend(val, player, castle != null ? castle.getTaxRate() : 0);
         } else if (actualCommand.equalsIgnoreCase("ReceivePremium")) {
             if (player.getPremiumItemList().isEmpty()) {
                 player.sendPacket(Msg.THERE_ARE_NO_MORE_VITAMIN_ITEMS_TO_BE_FOUND);
@@ -139,9 +141,9 @@ public class MerchantInstance extends NpcInstance {
             if (var != null && !var.isEmpty()) {
                 Location loc = Location.parseLoc(var);
 
-                DomainArea domain = MapRegionManager.getInstance().getRegionData(DomainArea.class, loc);
+                DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, loc);
                 if (domain != null)
-                    return ResidenceHolder.getInstance().getResidence(Castle.class, domain.getId());
+                    return ResidenceHolder.getResidence(Castle.class, domain.getId());
             }
 
             return super.getCastle();

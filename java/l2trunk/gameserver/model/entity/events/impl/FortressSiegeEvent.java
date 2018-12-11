@@ -56,7 +56,6 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
     private static final String MERCHANT = "merchant";
     private static final long SIEGE_WAIT_PERIOD = 4 * 60 * 60 * 1000L;
     private static final long COMMANDER_RESPAWN = 10 * 60 * 1000L;
-    private final SpawnCommanderTask _commanderSpawnRunnable = new SpawnCommanderTask();
     private Future<?> _envoyTask;
     private Future<?> _merchantSpawnTask;
     private Future<?> _commanderSpawnTask;
@@ -113,7 +112,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
         if (_oldOwner != null)
             addObject(DEFENDERS, new SiegeClanObject(DEFENDERS, _oldOwner, 0));
 
-        SiegeClanDAO.getInstance().delete(getResidence());
+        SiegeClanDAO.INSTANCE.delete(getResidence());
 
         flagPoleUpdate(true);
         updateParticles(true, ATTACKERS, DEFENDERS);
@@ -386,7 +385,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
     }
 
     private void startCommanderSpawnTask() {
-        _commanderSpawnTask = ThreadPoolManager.INSTANCE().schedule(_commanderSpawnRunnable, COMMANDER_RESPAWN);
+        _commanderSpawnTask = ThreadPoolManager.INSTANCE.schedule(new SpawnCommanderTask(), COMMANDER_RESPAWN);
     }
 
     private void stopCommanderSpawnTask() {

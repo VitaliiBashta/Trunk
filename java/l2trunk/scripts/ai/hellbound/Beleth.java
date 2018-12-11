@@ -19,7 +19,7 @@ public final class Beleth extends Mystic {
 
     @Override
     public void onEvtDead(Creature killer) {
-        BelethManager.setBelethDead();
+        BelethManager.getInstance().setBelethDead();
         super.onEvtDead(killer);
     }
 

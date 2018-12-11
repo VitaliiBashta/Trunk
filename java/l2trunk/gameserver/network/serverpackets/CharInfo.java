@@ -6,7 +6,6 @@ import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.TeamType;
-import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.model.instances.DecoyInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.PcInventory;
@@ -18,7 +17,9 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CharInfo extends L2GameServerPacket {
+import java.util.List;
+
+public final class CharInfo extends L2GameServerPacket {
     private static final int[] PAPERDOLL_ORDER =
             {
                     Inventory.PAPERDOLL_UNDER,
@@ -57,7 +58,7 @@ public class CharInfo extends L2GameServerPacket {
     private int _noble, _hero, _fishing, mount_type;
     private int plg_class, pledge_type, clan_rep_score, cw_level, mount_id;
     private int _nameColor, _title_color, _transform, _agathion, _clanBoatObjectId;
-    private EffectCubic[] cubics;
+    private List<EffectCubic> cubics;
     private boolean _invis, _isPartyRoomLeader, _isFlying;
     private TeamType _team;
 
@@ -191,7 +192,7 @@ public class CharInfo extends L2GameServerPacket {
         _combat = player.isInCombat() ? 1 : 0;
         _dead = player.isAlikeDead() ? 1 : 0;
         private_store = player.isInObserverMode() ? Player.STORE_OBSERVING_GAMES : (player.isInBuffStore() ? 0 : player.getPrivateStoreType());
-        cubics = player.getCubics().toArray(new EffectCubic[player.getCubics().size()]);
+        cubics = player.getCubics();
         _abnormalEffect = player.getAbnormalEffect();
         _abnormalEffect2 = player.getAbnormalEffect2();
         rec_have = player.isGM() ? 0 : player.getRecomHave();
@@ -232,15 +233,7 @@ public class CharInfo extends L2GameServerPacket {
             _inv[Inventory.PAPERDOLL_DHAIR][1] = 0;
 
         }
-
-        if (player.isInFightClub()) {
-            AbstractFightClub fightClubEvent = player.getFightClubEvent();
-            _name = fightClubEvent.getVisibleName(player, _name, false);
-            _title = fightClubEvent.getVisibleTitle(player, _title, false);
-            _title_color = fightClubEvent.getVisibleTitleColor(player, _title_color, false);
-            _nameColor = fightClubEvent.getVisibleNameColor(player, _nameColor, false);
-        }
-    }
+            }
 
     @Override
     protected final void writeImpl() {
@@ -317,9 +310,9 @@ public class CharInfo extends L2GameServerPacket {
         writeC(0x00); // is invisible
         writeC(mount_type); // 1-on Strider, 2-on Wyvern, 3-on Great Wolf, 0-no mount
         writeC(private_store);
-        writeH(cubics.length);
-        for (EffectCubic cubic : cubics)
-            writeH(cubic == null ? 0 : cubic.getId());
+        writeH(cubics.size());
+        cubics.forEach(cubic ->
+            writeH(cubic == null ? 0 : cubic.getId()));
         writeC(_isPartyRoomLeader ? 0x01 : 0x00); // find party members
         writeD(_abnormalEffect);
         writeC(_isFlying ? 0x02 : 0x00);

@@ -18,12 +18,8 @@ import l2trunk.gameserver.utils.TeleportUtils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * A simple engine to facilitate the task of the GameMasters when doing a manual event
- *
- * @author Gipsy_Ady
- */
-public class GmEventManager {
+public enum GmEventManager {
+    INSTANCE;
     private static final int INSTANCE_ID = 909;
 
     private static final int RESURRECTION_DELAY = 10000;
@@ -40,19 +36,12 @@ public class GmEventManager {
     private boolean _isPeaceEvent = false;
     private boolean _isAutoRes = false;
 
-    public static GmEventManager getInstance() {
-        return SingletonHolder._instance;
-    }
-
     /**
      * Create a new event with particular name at position pj
-     *
-     * @param gameMaster
-     * @param eventName
      */
     public void createEvent(Player gameMaster, String eventName) {
         // Creamos la instancia y metemos al pj en la misma
-        final InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(INSTANCE_ID);
+        final InstantZone iz = InstantZoneHolder.getInstantZone(INSTANCE_ID);
         Reflection r = new Reflection();
         r.init(iz);
 
@@ -112,20 +101,14 @@ public class GmEventManager {
         _state = StateEnum.REGISTERING;
     }
 
-    /**
-     * Comienza el evento
-     */
     public void startEvent() {
         if (_state != StateEnum.REGISTERING)
             return;
 
-        // Avisamos que el evento comenzo
         Announcements.INSTANCE.announceToAll("The event " + _eventName + " has started");
 
-        // Ponemos el evento en activo
         _state = StateEnum.ACTIVE;
 
-        // Si es un evento PvP le cancelamos todos los buffs a los pjs al comenzar
         if (isPvPEvent()) {
             for (GmEventParticipant participant : _participants.values()) {
                 if (participant == null)
@@ -137,17 +120,12 @@ public class GmEventManager {
         }
     }
 
-    /**
-     * Detiene el evento, devuelve todos los pjs a su posicion original y resetea variables
-     */
     public void stopEvent() {
         if (_state == StateEnum.INACTIVE)
             return;
 
-        // Avisamos que el evento fue detenido
         Announcements.INSTANCE.announceToAll("The event " + _eventName + " has finished");
 
-        // Enviamos a todos los pjs de nuevo a la ubicacion de donde se anotaron
         for (GmEventParticipant participant : _participants.values()) {
             if (participant == null || participant.getPlayer() == null)
                 continue;
@@ -158,7 +136,6 @@ public class GmEventManager {
             participant.getPlayer().teleToLocation(participant.getInitialLoc(), 0);
         }
 
-        // Reseteamos todas las variables
         _participants.clear();
         _eventName = "";
         _state = StateEnum.INACTIVE;
@@ -170,17 +147,12 @@ public class GmEventManager {
         _isPeaceEvent = false;
         _isAutoRes = false;
 
-        // Destruimos la instancia
+
         Reflection r = ReflectionManager.INSTANCE.get(_instanceId);
         if (r != null)
             r.startCollapseTimer(5);
     }
 
-    /**
-     * Registra un pj al evento. Realiza todos los chequeos de si puede ingresar o no
-     *
-     * @param player
-     */
     public void registerToEvent(Player player) {
         // Si no es momento de registro, no hacemos nada
         if (_state != StateEnum.REGISTERING)
@@ -273,11 +245,6 @@ public class GmEventManager {
         player.sendMessage("You have succesfully registered to the event");
     }
 
-    /**
-     * Remueve al pj del evento si se habia registrado antes
-     *
-     * @param player
-     */
     public void unregisterOfEvent(Player player) {
         // Si el pj apreta desregistrarse, pero no esta anotado aunque esta en la zona del evento, lo enviamos a la ciudad. Esto puede pasar si se desloguea y cuando vuelve ya termino
         if (!_participants.containsKey(player.getObjectId()) && player.getReflectionId() == _instanceId) {
@@ -303,12 +270,6 @@ public class GmEventManager {
         player.sendMessage("You have succesfully unregistered from the event");
     }
 
-    /**
-     * Invocado cuando un pj muere
-     *
-     * @param killed
-     * @param killer
-     */
     public void onPlayerKill(Player killed, Creature killer) {
         if (killed == null || killer == null)
             return;
@@ -322,22 +283,11 @@ public class GmEventManager {
             ThreadPoolManager.INSTANCE.schedule(new ResurrectionTask(killed), RESURRECTION_DELAY);
     }
 
-    /**
-     * @param player
-     * @return Devuelve true si el pj puede resucitar
-     */
     public boolean canResurrect(Player player) {
         // No puede revivir si esta participando del evento
-        if (!isParticipating(player))
-            return true;
-
-        return false;
+        return !isParticipating(player);
     }
 
-    /**
-     * @param player
-     * @return Devuelve true si el pj esta participando en el evento
-     */
     public boolean isParticipating(Player player) {
         if (getEventStatus() != StateEnum.ACTIVE || player == null)
             return false;
@@ -355,74 +305,40 @@ public class GmEventManager {
         return false;
     }
 
-    /**
-     * @return Devuelve el nombre del evento
-     */
     public String getEventName() {
         return _eventName;
     }
 
-    /**
-     * @return Devuelve el lvl minimo de los pjs para registrarse
-     */
-    public int getMinLvl() {
+     public int getMinLvl() {
         return _minLvl;
     }
 
-    /**
-     * @return Devuelve el lvl maximo de los pjs para registrarse
-     */
     public int getMaxLvl() {
         return _maxLvl;
     }
 
-    /**
-     * @return Devuelve el tiempo minimo online de los pjs para registrarse
-     */
     public int getMinOnlineTime() {
         return _minOnlineTime;
     }
 
-    /**
-     * @return Devuelve el tiempo maximo online de los pjs para registrarse
-     */
     public int getMaxOnlineTime() {
         return _maxOnlineTime;
     }
 
-    /**
-     * @return Devuelve si este es un evento pvp
-     */
     public boolean isPvPEvent() {
         return _isPvPEvent;
     }
 
-    /**
-     * @return Devuelve si este es un evento pasivo, los pjs no se pueden pegar
-     */
     public boolean isPeaceEvent() {
         return _isPeaceEvent;
     }
 
-    /**
-     * @return Devuelve true si los pjs que mueren son revividos automaticamente
-     */
     public boolean isAutoRes() {
         return _isAutoRes;
     }
 
-    /**
-     * @return Devuelve el estado actual del evento, o sea en que etapa se encuentra
-     */
     public StateEnum getEventStatus() {
         return _state;
-    }
-
-    /**
-     * @return Devuelve el id de la instancia que se esta usando para el evento
-     */
-    public int getEventInstanceId() {
-        return _instanceId;
     }
 
     public enum EventParameter {
@@ -458,9 +374,6 @@ public class GmEventManager {
         }
     }
 
-    private static class SingletonHolder {
-        static final GmEventManager _instance = new GmEventManager();
-    }
 
     // Un thread que maneja los res de los pjs cuando mueren
     private class ResurrectionTask implements Runnable {
@@ -475,11 +388,8 @@ public class GmEventManager {
             if (_player == null || !_player.isDead() || !isParticipating(_player))
                 return;
 
-            // Revivimos al pj
             _player.doRevive(100);
-
-            // Le damos celestial shield asi esta invulnerable al principio
-            SkillTable.INSTANCE().getInfo(5576, 1).getEffects(_player, _player, false, true);
+            SkillTable.INSTANCE.getInfo(5576).getEffects(_player, _player, false, true);
         }
     }
 }

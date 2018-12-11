@@ -9,15 +9,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 public final class TarBeetle extends DefaultAI {
-    private static final Logger _log = LoggerFactory.getLogger(TarBeetle.class);
-
-    private static final Location[] POSITIONS = {
+    private static final List<Location> POSITIONS = Arrays.asList(
             new Location(179256, -117160, -3608),
             new Location(179752, -115000, -3608),
             new Location(177944, -119528, -4112),
@@ -54,12 +52,10 @@ public final class TarBeetle extends DefaultAI {
             new Location(181336, -110536, -5832),
             new Location(182088, -106664, -6000),
             new Location(178808, -107736, -5832),
-            new Location(178776, -110120, -5824),
-    };
-
-    private boolean CAN_DEBUF = false;
+            new Location(178776, -110120, -5824));
     private static final long TAR_BEETLE = 18804;
     private static final long TELEPORT_PERIOD = 3 * 60 * 1000;
+    private boolean CAN_DEBUF = false;
     private long LAST_TELEPORT = System.currentTimeMillis();
 
 
@@ -108,7 +104,7 @@ public final class TarBeetle extends DefaultAI {
             return false;
 
         for (Location POSITION : POSITIONS) {
-            Location loc = POSITIONS[Rnd.get(POSITIONS.length)];
+            Location loc = Rnd.get(POSITIONS);
             if (actor.getLoc().equals(loc))
                 continue;
 
@@ -130,17 +126,14 @@ public final class TarBeetle extends DefaultAI {
             int level = effect.get(0).getSkill().getLevel();
             if (level < 3) {
                 effect.get(0).exit();
-                Skill skill = SkillTable.INSTANCE().getInfo(6142, level + 1);
+                Skill skill = SkillTable.INSTANCE.getInfo(6142, level + 1);
                 skill.getEffects(actor, player, false, false);
                 actor.broadcastPacket(new MagicSkillUse(actor, player, skill.getId(), level, skill.getHitTime(), 0));
             }
         } else {
-            Skill skill = SkillTable.INSTANCE().getInfo(6142, 1);
-            if (skill != null) {
-                skill.getEffects(actor, player, false, false);
-                actor.broadcastPacket(new MagicSkillUse(actor, player, skill.getId(), 1, skill.getHitTime(), 0));
-            } else
-                _log.warn("Skill " + skill.getId() + " is null, fix it.");
+            Skill skill = SkillTable.INSTANCE.getInfo(6142);
+            skill.getEffects(actor, player, false, false);
+            actor.broadcastPacket(new MagicSkillUse(actor, player, skill.getId(), 1, skill.getHitTime(), 0));
         }
     }
 }

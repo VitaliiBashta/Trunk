@@ -23,7 +23,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         super(holder);
     }
 
-    Condition parseFirstCond(Element sub) {
+    static Condition parseFirstCond(Element sub) {
         List<Element> e = sub.elements();
         if (e.isEmpty())
             return null;
@@ -32,7 +32,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return parseCond(element);
     }
 
-    private Condition parseCond(Element element) {
+    private static Condition parseCond(Element element) {
         String name = element.getName();
         if (name.equalsIgnoreCase("and"))
             return parseLogicAnd(element);
@@ -52,7 +52,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return null;
     }
 
-    private Condition parseLogicAnd(Element n) {
+    private static Condition parseLogicAnd(Element n) {
         ConditionLogicAnd cond = new ConditionLogicAnd();
         for (Iterator<Element> iterator = n.elementIterator(); iterator.hasNext(); ) {
             Element condElement = iterator.next();
@@ -60,11 +60,11 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         }
 
         if (cond._conditions == null || cond._conditions.size() == 0)
-            LOG.error("Empty <and> condition in " + getCurrentFileName());
+            LOG.error("Empty <and> condition in " + n);
         return cond;
     }
 
-    private Condition parseLogicOr(Element n) {
+    private static Condition parseLogicOr(Element n) {
         ConditionLogicOr cond = new ConditionLogicOr();
         for (Iterator<Element> iterator = n.elementIterator(); iterator.hasNext(); ) {
             Element condElement = iterator.next();
@@ -72,18 +72,18 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         }
 
         if (cond._conditions == null || cond._conditions.size() == 0)
-            LOG.error("Empty <or> condition in " + getCurrentFileName());
+            LOG.error("Empty <or> condition in " + n);
         return cond;
     }
 
-    private Condition parseLogicNot(Element n) {
+    private static Condition parseLogicNot(Element n) {
         if (!n.elements().isEmpty())
             return new ConditionLogicNot(parseCond(n.elements().get(0)));
-        LOG.error("Empty <not> condition in " + getCurrentFileName());
+        LOG.error("Empty <not> condition in " + n);
         return null;
     }
 
-    private Condition parseTargetCondition(Element element) {
+    private static Condition parseTargetCondition(Element element) {
         Condition cond = null;
         for (Iterator<Attribute> iterator = element.attributeIterator(); iterator.hasNext(); ) {
             Attribute attribute = iterator.next();
@@ -96,7 +96,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return cond;
     }
 
-    private Condition parseZoneCondition(Element element) {
+    private static Condition parseZoneCondition(Element element) {
         Condition cond = null;
         for (Iterator<Attribute> iterator = element.attributeIterator(); iterator.hasNext(); ) {
             Attribute attribute = iterator.next();
@@ -109,7 +109,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return cond;
     }
 
-    private Condition parsePlayerCondition(Element element) {
+    private static Condition parsePlayerCondition(Element element) {
         Condition cond = null;
         for (Iterator<Attribute> iterator = element.attributeIterator(); iterator.hasNext(); ) {
             Attribute attribute = iterator.next();
@@ -135,7 +135,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return cond;
     }
 
-    private Condition parseUsingCondition(Element element) {
+    private static Condition parseUsingCondition(Element element) {
         Condition cond = null;
         for (Iterator<Attribute> iterator = element.attributeIterator(); iterator.hasNext(); ) {
             Attribute attribute = iterator.next();
@@ -166,7 +166,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
                             continue tokens;
                         }
 
-                    LOG.error("Invalid item kind: \"" + item + "\" in " + getCurrentFileName());
+                    LOG.error("Invalid item kind: \"" + item + "\" in " + element);
                 }
                 if (mask != 0)
                     cond = joinAnd(cond, new ConditionUsingItemType(mask));
@@ -176,7 +176,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return cond;
     }
 
-    private Condition joinAnd(Condition cond, Condition c) {
+    private static Condition joinAnd(Condition cond, Condition c) {
         if (cond == null)
             return c;
         if (cond instanceof ConditionLogicAnd) {
@@ -189,7 +189,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return and;
     }
 
-    void parseFor(Element forElement, StatTemplate template) {
+    public static void parseFor(Element forElement, StatTemplate template) {
         for (Iterator<Element> iterator = forElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
             final String elementName = element.getName();
@@ -208,7 +208,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         }
     }
 
-    void parseTriggers(Element f, StatTemplate triggerable) {
+    static void parseTriggers(Element f, StatTemplate triggerable) {
         for (Iterator<Element> iterator = f.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
             int id = parseNumber(element.attributeValue("id")).intValue();
@@ -229,7 +229,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         }
     }
 
-    private void attachFunc(Element n, StatTemplate template, String name) {
+    private static void attachFunc(Element n, StatTemplate template, String name) {
         Stats stat = Stats.valueOfXml(n.attributeValue("stat"));
         String order = n.attributeValue("order");
         int ord = parseNumber(order).intValue();
@@ -241,22 +241,18 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         template.attachFunc(new FuncTemplate(applyCond, name, stat, ord, val));
     }
 
-    Number parseNumber(String value) {
-        if (value.charAt(0) == '#')
-            value = getTableValue(value).toString();
-        try {
-            if (value.indexOf('.') == -1) {
-                int radix = 10;
-                if (value.length() > 2 && value.substring(0, 2).equalsIgnoreCase("0x")) {
-                    value = value.substring(2);
-                    radix = 16;
-                }
-                return Integer.valueOf(value, radix);
+    static Number parseNumber(String value) {
+//        if (value.charAt(0) == '#')
+//            value = getTableValue(value).toString();
+        if (value.indexOf('.') == -1) {
+            int radix = 10;
+            if (value.length() > 2 && value.substring(0, 2).equalsIgnoreCase("0x")) {
+                value = value.substring(2);
+                radix = 16;
             }
-            return Double.valueOf(value);
-        } catch (NumberFormatException e) {
-            return null;
+            return Integer.valueOf(value, radix);
         }
+        return Double.valueOf(value);
     }
 
     protected abstract Object getTableValue(String name);

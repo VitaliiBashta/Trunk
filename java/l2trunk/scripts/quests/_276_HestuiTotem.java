@@ -68,7 +68,7 @@ public class _276_HestuiTotem extends Quest implements ScriptFile {
                 st.giveItems(Leather_Pants, 1);
                 st.giveItems(Totem_of_Hestui, 1);
                 if (st.getRateQuestsReward() > 1)
-                    st.giveItems(57, Math.round(ItemHolder.getInstance().getTemplate(Totem_of_Hestui).getReferencePrice() * (st.getRateQuestsReward() - 1) / 2), false);
+                    st.giveItems(57, Math.round(ItemHolder.getTemplate(Totem_of_Hestui).getReferencePrice() * (st.getRateQuestsReward() - 1) / 2), false);
 
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
                     st.getPlayer().setVar("p1q4", "1", -1);

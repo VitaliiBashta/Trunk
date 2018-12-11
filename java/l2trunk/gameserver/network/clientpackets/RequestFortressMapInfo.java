@@ -5,12 +5,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Fortress;
 import l2trunk.gameserver.network.serverpackets.ExShowFortressMapInfo;
 
-public class RequestFortressMapInfo extends L2GameClientPacket {
-    private int _fortressId;
+public final class RequestFortressMapInfo extends L2GameClientPacket {
+    private int fortressId;
 
     @Override
     protected void readImpl() {
-        _fortressId = readD();
+        fortressId = readD();
     }
 
     @Override
@@ -18,8 +18,7 @@ public class RequestFortressMapInfo extends L2GameClientPacket {
         Player player = getClient().getActiveChar();
         if (player == null)
             return;
-        Fortress fortress = ResidenceHolder.getInstance().getResidence(Fortress.class, _fortressId);
-        if (fortress != null)
-            sendPacket(new ExShowFortressMapInfo(fortress));
+        Fortress fortress = ResidenceHolder.getResidence(Fortress.class, fortressId);
+        sendPacket(new ExShowFortressMapInfo(fortress));
     }
 }

@@ -1,38 +1,29 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.OptionDataHolder;
+import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.OptionDataTemplate;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
 
-public final class OptionDataParser extends StatParser<OptionDataHolder> {
-    private static final OptionDataParser _instance = new OptionDataParser();
+public enum  OptionDataParser /*extends StatParser<OptionDataHolder>*/ {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    Path xml = Config.DATAPACK_ROOT.resolve("data/option_data");
 
-    private OptionDataParser() {
-        super(OptionDataHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + OptionDataHolder.size() + " items ");
     }
 
-    public static OptionDataParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/option_data");
-    }
-
-
-    @Override
-    public String getDTDFileName() {
-        return "option_data.dtd";
-    }
-
-    @Override
     protected void readData(Element rootElement) {
         for (Iterator<Element> itemIterator = rootElement.elementIterator(); itemIterator.hasNext(); ) {
             Element optionDataElement = itemIterator.next();
@@ -41,29 +32,28 @@ public final class OptionDataParser extends StatParser<OptionDataHolder> {
                 Element subElement = subIterator.next();
                 String subName = subElement.getName();
                 if (subName.equalsIgnoreCase("for"))
-                    parseFor(subElement, template);
+                    StatParser.parseFor(subElement, template);
                 else if (subName.equalsIgnoreCase("triggers"))
-                    parseTriggers(subElement, template);
+                    StatParser.parseTriggers(subElement, template);
                 else if (subName.equalsIgnoreCase("skills")) {
                     for (Iterator<Element> nextIterator = subElement.elementIterator(); nextIterator.hasNext(); ) {
                         Element nextElement = nextIterator.next();
                         int id = Integer.parseInt(nextElement.attributeValue("id"));
                         int level = Integer.parseInt(nextElement.attributeValue("level"));
 
-                        Skill skill = SkillTable.INSTANCE().getInfo(id, level);
+                        Skill skill = SkillTable.INSTANCE.getInfo(id, level);
 
                         if (skill != null)
                             template.addSkill(skill);
                         else
-                            LOG.info("Skill not found(" + id + "," + level + ") for option data:" + template.getId() + "; file:" + getCurrentFileName());
+                            LOG.info("Skill not found(" + id + "," + level + ") for option data:" + template.getId() + "; element:" + optionDataElement);
                     }
                 }
             }
-            getHolder().addTemplate(template);
+            OptionDataHolder.addTemplate(template);
         }
     }
 
-    @Override
     protected Object getTableValue(String name) {
         return null;
     }

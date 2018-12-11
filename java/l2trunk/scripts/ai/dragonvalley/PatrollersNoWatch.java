@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.dragonvalley;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
@@ -10,10 +9,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-public class PatrollersNoWatch extends Fighter {
-    Location[] _points;
-    private final int[] _teleporters = {22857, 22833, 22834};
+import java.util.Arrays;
+import java.util.List;
 
+public class PatrollersNoWatch extends Fighter {
+    private final List<Integer> _teleporters = Arrays.asList(22857, 22833, 22834);
+    List<Location> _points;
     private int _lastPoint = 0;
     private boolean _firstThought = true;
 
@@ -61,26 +62,21 @@ public class PatrollersNoWatch extends Fighter {
             _firstThought = false;
         } else
             _lastPoint++;
-        if (_lastPoint >= _points.length) {
+        if (_lastPoint >= _points.size()) {
             _lastPoint = 0;
-            if (ArrayUtils.contains(_teleporters, npc.getNpcId()))
-                npc.teleToLocation(_points[_lastPoint]);
+            if (_teleporters.contains(npc.getNpcId()))
+                npc.teleToLocation(_points.get(_lastPoint));
         }
         npc.setRunning();
-        try {
-            if (Rnd.chance(30))
-                npc.altOnMagicUseTimer(npc, SkillTable.INSTANCE().getInfo(6757, 1));
-            addTaskMove(Location.findPointToStay(_points[_lastPoint], 250, npc.getGeoIndex()), true);
-        } catch (Exception e) {
-        }
+        if (Rnd.chance(30))
+            npc.altOnMagicUseTimer(npc, SkillTable.INSTANCE.getInfo(6757));
+        addTaskMove(Location.findPointToStay(_points.get(_lastPoint), 250, npc.getGeoIndex()), true);
         doTask();
     }
 
     private int getIndex(Location loc) {
-        for (int i = 0; i < _points.length; i++)
-            if (_points[i] == loc)
-                return i;
-        return 0;
+        int index = _points.indexOf(loc);
+        return index == -1 ? 0 : index;
     }
 
     @Override

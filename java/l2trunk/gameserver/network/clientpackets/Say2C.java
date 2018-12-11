@@ -174,7 +174,7 @@ public final class Say2C extends L2GameClientPacket {
             return;
         }
 
-        if (Config.CHATFILTER_MIN_LEVEL > 0 && ArrayUtils.contains(Config.CHATFILTER_CHANNELS, _type.ordinal()) && activeChar.getLevel() < Config.CHATFILTER_MIN_LEVEL) {
+        if (Config.CHATFILTER_MIN_LEVEL > 0 && activeChar.getLevel() < Config.CHATFILTER_MIN_LEVEL) {
             if (Config.CHATFILTER_WORK_TYPE == 1)
                 _type = ChatType.ALL;
             else if (Config.CHATFILTER_WORK_TYPE == 2) {
@@ -311,8 +311,6 @@ public final class Say2C extends L2GameClientPacket {
                         OlympiadGame game = activeChar.getOlympiadGame();
                         if (game != null)
                             list = game.getAllPlayers();
-                    } else if (activeChar.isInFightClub()) {
-                        list = activeChar.getFightClubEvent().getAllFightingPlayers();
                     } else
                         list = World.getAroundPlayers(activeChar);
 
@@ -399,10 +397,6 @@ public final class Say2C extends L2GameClientPacket {
                 PetitionManager.getInstance().sendActivePetitionMessage(activeChar, _text);
                 break;
             case BATTLEFIELD:
-                if (activeChar.isInFightClub()) {
-                    activeChar.getFightClubEvent().getMyTeamFightingPlayers(activeChar).forEach(player -> player.sendPacket(cs));
-                    return;
-                }
                 if (activeChar.getBattlefieldChatId() == 0)
                     return;
 

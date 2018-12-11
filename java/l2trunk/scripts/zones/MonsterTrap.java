@@ -13,7 +13,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class MonsterTrap implements ScriptFile {
+public final class MonsterTrap implements ScriptFile {
     private static ZoneListener _zoneListener;
     private static final String[] zones = {
             "[hellbound_trap1]",
@@ -91,30 +91,17 @@ public class MonsterTrap implements ScriptFile {
                     spawn.stopRespawn();
                     NpcInstance mob = spawn.doSpawn(true);
                     if (mob != null) {
-                        ThreadPoolManager.INSTANCE().schedule(new UnSpawnTask(spawn), despawn * 1000L);
+                        ThreadPoolManager.INSTANCE.schedule(spawn::deleteAll, despawn * 1000L);
                         if (mob.isAggressive() && attackOnSpawn)
                             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 100);
                     }
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     e.printStackTrace();
                 }
         }
 
         @Override
         public void onZoneLeave(Zone zone, Creature cha) {
-        }
-    }
-
-    public class UnSpawnTask extends RunnableImpl {
-        private final SimpleSpawner spawn;
-
-        UnSpawnTask(SimpleSpawner spawn) {
-            this.spawn = spawn;
-        }
-
-        @Override
-        public void runImpl() {
-            spawn.deleteAll();
         }
     }
 }

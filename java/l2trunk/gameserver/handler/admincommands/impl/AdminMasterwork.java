@@ -9,11 +9,11 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-public class AdminMasterwork implements IAdminCommandHandler {
+public final class AdminMasterwork implements IAdminCommandHandler {
     private static final int[] SLOTS_TO_MASTERWORK = {Inventory.PAPERDOLL_RHAND, Inventory.PAPERDOLL_LHAND, Inventory.PAPERDOLL_HEAD, Inventory.PAPERDOLL_LEGS, Inventory.PAPERDOLL_GLOVES, Inventory.PAPERDOLL_FEET};
 
     private static void showMainMasterwork(Player activeChar, Player target) {
-        String html = HtmCache.INSTANCE().getNullable("admin/masterwork.htm", activeChar);
+        String html = HtmCache.INSTANCE.getNullable("admin/masterwork.htm", activeChar);
 
         StringBuilder main = new StringBuilder("<table width=250>");
 

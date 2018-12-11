@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class SpecialTree extends DefaultAI {
+public final class SpecialTree extends DefaultAI {
     private static final RndSelector<Integer> SOUNDS;
 
     static {
@@ -37,7 +37,7 @@ public class SpecialTree extends DefaultAI {
                 if (actor == null)
                     return false;
 
-                addTaskBuff(actor, SkillTable.INSTANCE().getInfo(2139, 1));
+                addTaskBuff(actor, SkillTable.INSTANCE.getInfo(2139));
 
                 if (Rnd.chance(33))
                     actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, SOUNDS.select(), 1, 500, 0));

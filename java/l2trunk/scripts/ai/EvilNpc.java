@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class EvilNpc extends DefaultAI {
+public final class EvilNpc extends DefaultAI {
     private long _lastAction;
     private static final String[] _txt = {
             "Leave me alone!",
@@ -32,11 +32,11 @@ public class EvilNpc extends DefaultAI {
             if (chance < 2)
                 attacker.getPlayer().setKarma(attacker.getPlayer().getKarma() + 5);
             else if (chance < 4)
-                actor.doCast(SkillTable.INSTANCE().getInfo(4578, 1), attacker, true); // Petrification
+                actor.doCast(SkillTable.INSTANCE.getInfo(4578), attacker, true); // Petrification
             else
-                actor.doCast(SkillTable.INSTANCE().getInfo(4185, 7), attacker, true); // Sleep
+                actor.doCast(SkillTable.INSTANCE.getInfo(4185, 7), attacker, true); // Sleep
 
-            Functions.npcSay(actor, attacker.getName() + ", " + _txt[Rnd.get(_txt.length)]);
+            Functions.npcSay(actor, attacker.getName() + ", " + Rnd.get(_txt));
             _lastAction = System.currentTimeMillis();
         }
     }

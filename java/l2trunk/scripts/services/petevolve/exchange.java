@@ -76,7 +76,7 @@ class exchange extends Functions {
             show("Service is disabled.", player);
             return;
         }
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.SERVICES_EXCHANGE_BABY_PET_ITEM);
+        ItemTemplate item = ItemHolder.getTemplate(Config.SERVICES_EXCHANGE_BABY_PET_ITEM);
         String out = "";
         out += "<html><body>You can at any time to exchange your Improved Baby pet to a different type without losing experience. Pet should be summoned.";
         out += "<br>Cost: " + Util.formatAdena(Config.SERVICES_EXCHANGE_BABY_PET_PRICE) + " " + item.getName();
@@ -95,7 +95,7 @@ class exchange extends Functions {
             show("Service is disabled.", player);
             return;
         }
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.SERVICES_CHANGE_PET_NAME_ITEM);
+        ItemTemplate item = ItemHolder.getTemplate(Config.SERVICES_CHANGE_PET_NAME_ITEM);
         String out = "";
         out += "<html><body>You can clear the name of a pet, in order to appoint a new one. Peter thus should be called.";
         out += "<br>Zero cost: " + Util.formatAdena(Config.SERVICES_CHANGE_PET_NAME_PRICE) + " " + item.getName();

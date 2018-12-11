@@ -14,21 +14,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author VISTALL
- * @date 11:45/08.03.2011
- */
-public class CastleHiredGuardDAO {
+public enum CastleHiredGuardDAO {
+    INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT * FROM castle_hired_guards WHERE residence_id=?";
     private static final String INSERT_SQL_QUERY = "INSERT INTO castle_hired_guards(residence_id, item_id, x, y, z) VALUES (?, ?, ?, ?, ?)";
     private static final String DELETE_SQL_QUERY = "DELETE FROM castle_hired_guards WHERE residence_id=?";
     private static final String DELETE_SQL_QUERY2 = "DELETE FROM castle_hired_guards WHERE residence_id=? AND item_id=? AND x=? AND y=? AND z=?";
     private static final Logger _log = LoggerFactory.getLogger(CastleHiredGuardDAO.class);
-    private static final CastleHiredGuardDAO _instance = new CastleHiredGuardDAO();
-
-    public static CastleHiredGuardDAO getInstance() {
-        return _instance;
-    }
 
     public void load(Castle r) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -47,7 +39,7 @@ public class CastleHiredGuardDAO {
                 }
             }
         } catch (SQLException e) {
-            _log.error("CastleHiredGuardDAO:load(Castle): ", e);
+            _log.error("CastleHiredGuardDAO:loadFile(Castle): ", e);
         }
     }
 

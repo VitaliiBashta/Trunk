@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _714_PathToBecomingALordSchuttgart extends Quest implements ScriptFile {
+public final class _714_PathToBecomingALordSchuttgart extends Quest implements ScriptFile {
     private static final int August = 35555;
     private static final int Newyear = 31961;
     private static final int Yasheni = 31958;
@@ -29,26 +29,32 @@ public class _714_PathToBecomingALordSchuttgart extends Quest implements ScriptF
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(ShuttgartCastle);
+        Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
 
-        if (event.equals("august_q714_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("august_q714_05.htm")) {
-            st.setCond(2);
-        } else if (event.equals("newyear_q714_03.htm")) {
-            st.setCond(3);
-        } else if (event.equals("yasheni_q714_02.htm")) {
-            st.setCond(5);
-        } else if (event.equals("august_q714_08.htm")) {
-            Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_SCHUTTGART, st.getPlayer().getName());
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+        switch (event) {
+            case "august_q714_03.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "august_q714_05.htm":
+                st.setCond(2);
+                break;
+            case "newyear_q714_03.htm":
+                st.setCond(3);
+                break;
+            case "yasheni_q714_02.htm":
+                st.setCond(5);
+                break;
+            case "august_q714_08.htm":
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_SCHUTTGART, st.getPlayer().getName());
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return event;
     }
@@ -59,7 +65,7 @@ public class _714_PathToBecomingALordSchuttgart extends Quest implements ScriptF
         int npcId = npc.getNpcId();
         int id = st.getState();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(ShuttgartCastle);
+        Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();

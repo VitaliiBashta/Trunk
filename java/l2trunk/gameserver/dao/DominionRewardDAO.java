@@ -1,6 +1,5 @@
 package l2trunk.gameserver.dao;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeEvent;
 import l2trunk.gameserver.model.entity.residence.Dominion;
@@ -53,11 +52,8 @@ public class DominionRewardDAO {
     }
 
     public void insert(Dominion d) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(DELETE_SQL_QUERY2);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(DELETE_SQL_QUERY2)) {
             statement.setInt(1, d.getId());
             statement.execute();
 
@@ -78,8 +74,6 @@ public class DominionRewardDAO {
                 statement.executeUpdate(b.close());
         } catch (SQLException e) {
             _log.error("DominionRewardDAO.insert(Dominion):", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

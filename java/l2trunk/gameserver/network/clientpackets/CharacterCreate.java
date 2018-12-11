@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class CharacterCreate extends L2GameClientPacket {
+public final class CharacterCreate extends L2GameClientPacket {
     private static final Logger LOG = LoggerFactory.getLogger(CharacterCreate.class);
     private static final String[] ALLOWED_LETTERS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"};
     // cSdddddddddddd
@@ -153,17 +153,17 @@ public class CharacterCreate extends L2GameClientPacket {
         ClassId nclassId = ClassId.VALUES[_classId];
         if (Config.ALLOW_START_ITEMS) {
             if (nclassId.isMage()) {
-                for (int i = 0; i < Config.START_ITEMS_MAGE.length; i++) {
-                    ItemInstance item = ItemFunctions.createItem(Config.START_ITEMS_MAGE[i]);
-                    item.setCount(Config.START_ITEMS_MAGE_COUNT[i]);
+                for (int i = 0; i < Config.START_ITEMS_MAGE.size(); i++) {
+                    ItemInstance item = ItemFunctions.createItem(Config.START_ITEMS_MAGE.get(i));
+                    item.setCount(Config.START_ITEMS_MAGE_COUNT.get(i));
                     newChar.getInventory().addItem(item, "New Char Item");
                     if (item.isEquipable())
                         newChar.getInventory().equipItem(item);
                 }
             } else {
-                for (int i = 0; i < Config.START_ITEMS_FITHER.length; i++) {
-                    ItemInstance item = ItemFunctions.createItem(Config.START_ITEMS_FITHER[i]);
-                    item.setCount(Config.START_ITEMS_FITHER_COUNT[i]);
+                for (int i = 0; i < Config.START_ITEMS_FITHER.size(); i++) {
+                    ItemInstance item = ItemFunctions.createItem(Config.START_ITEMS_FITHER.get(i));
+                    item.setCount(Config.START_ITEMS_FITHER_COUNT.get(i));
                     newChar.getInventory().addItem(item, "New Char Item");
                     if (item.isEquipable())
                         newChar.getInventory().equipItem(item);
@@ -180,8 +180,8 @@ public class CharacterCreate extends L2GameClientPacket {
         item.setCount(10);
         newChar.getInventory().addItem(item, "New Char Item");
 
-        for (SkillLearn skill : SkillAcquireHolder.getInstance().getAvailableSkills(newChar, AcquireType.NORMAL))
-            newChar.addSkill(SkillTable.INSTANCE().getInfo(skill.getId(), skill.getLevel()), true);
+        for (SkillLearn skill : SkillAcquireHolder.getAvailableSkills(newChar, AcquireType.NORMAL))
+            newChar.addSkill(SkillTable.INSTANCE.getInfo(skill.getId(), skill.getLevel()), true);
 
         if (newChar.getSkillLevel(1001) > 0) // Soul Cry
             newChar.registerShortCut(new ShortCut(1, 0, ShortCut.TYPE_SKILL, 1001, 1, 1));

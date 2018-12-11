@@ -288,7 +288,7 @@ public class RequestEnchantItem extends L2GameClientPacket {
                 return;
             }
 
-            EnchantScroll enchantScroll = EnchantItemHolder.getInstance().getEnchantScroll(scroll.getItemId());
+            EnchantScroll enchantScroll = EnchantItemHolder.getEnchantScroll(scroll.getItemId());
             if (enchantScroll == null) {
                 doEnchantOld(player, item, scroll, catalyst);
                 return;

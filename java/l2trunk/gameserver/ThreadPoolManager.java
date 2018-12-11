@@ -10,11 +10,12 @@ public enum ThreadPoolManager {
     INSTANCE;
 
     private static final long MAX_DELAY = (long) 1000 * 60 * 60 * 24 * 365;
-    private  ScheduledThreadPoolExecutor _scheduledExecutor;
+    private final ScheduledThreadPoolExecutor _scheduledExecutor =
+            new ScheduledThreadPoolExecutor(Config.SCHEDULED_THREAD_POOL_SIZE, new PriorityThreadFactory("ScheduledThreadPool", Thread.NORM_PRIORITY), new LoggingRejectedExecutionHandler());
     private  ThreadPoolExecutor _executor;
     private boolean _shutdown;
     public void init() {
-        _scheduledExecutor = new ScheduledThreadPoolExecutor(Config.SCHEDULED_THREAD_POOL_SIZE, new PriorityThreadFactory("ScheduledThreadPool", Thread.NORM_PRIORITY), new LoggingRejectedExecutionHandler());
+//        _scheduledExecutor =
         _executor = new ThreadPoolExecutor(Config.EXECUTOR_THREAD_POOL_SIZE, Integer.MAX_VALUE, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new PriorityThreadFactory("ThreadPoolExecutor", Thread.NORM_PRIORITY), new LoggingRejectedExecutionHandler());
 
         //Очистка каждые 5 минут
@@ -22,10 +23,6 @@ public enum ThreadPoolManager {
             _scheduledExecutor.purge();
             _executor.purge();
         }, 300000L, 300000L);
-    }
-
-    public static ThreadPoolManager INSTANCE() {
-        return INSTANCE;
     }
 
     private long validate(long delay) {

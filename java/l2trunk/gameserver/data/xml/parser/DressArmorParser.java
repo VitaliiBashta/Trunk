@@ -1,54 +1,46 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.DressArmorHolder;
 import l2trunk.gameserver.model.DressArmorData;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
 
-public final class DressArmorParser extends AbstractFileParser<DressArmorHolder> {
-    private static final DressArmorParser _instance = new DressArmorParser();
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private DressArmorParser() {
-        super(DressArmorHolder.getInstance());
+public enum DressArmorParser {
+    INSTANCE;
+    private final Path xml = Config.DATAPACK_ROOT.resolve("data/dress/armor.xml");
+    private Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + DressArmorHolder.size() + " items");
     }
 
-    public static DressArmorParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/dress/armor.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "armor.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator("dress"); iterator.hasNext(); ) {
             Element dress = iterator.next();
-            int id = Integer.parseInt(dress.attributeValue("id"));
+            int id = toInt(dress.attributeValue("id"));
             String name = dress.attributeValue("name");
 
             Element set = dress.element("set");
 
-            int chest = Integer.parseInt(set.attributeValue("chest"));
-            int legs = Integer.parseInt(set.attributeValue("legs"));
-            int gloves = Integer.parseInt(set.attributeValue("gloves"));
-            int feet = Integer.parseInt(set.attributeValue("feet"));
+            int chest = toInt(set.attributeValue("chest"));
+            int legs = toInt(set.attributeValue("legs"));
+            int gloves = toInt(set.attributeValue("gloves"));
+            int feet = toInt(set.attributeValue("feet"));
 
             Element price = dress.element("price");
-            int itemId = Integer.parseInt(price.attributeValue("id"));
+            int itemId = toInt(price.attributeValue("id"));
             long itemCount = Long.parseLong(price.attributeValue("count"));
 
-            getHolder().addDress(new DressArmorData(id, name, chest, legs, gloves, feet, itemId, itemCount));
+            DressArmorHolder.addDress(new DressArmorData(id, name, chest, legs, gloves, feet, itemId, itemCount));
         }
     }
 }

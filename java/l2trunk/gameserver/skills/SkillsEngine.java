@@ -16,10 +16,6 @@ public enum SkillsEngine {
     private static final Logger LOG = LoggerFactory.getLogger(SkillsEngine.class);
 
     private List<Skill> loadSkills(Path file) {
-        if (file == null) {
-            LOG.warn("SkillsEngine: File not found!");
-            return null;
-        }
         DocumentSkill doc = new DocumentSkill(file);
         doc.parse();
         return doc.getSkills();

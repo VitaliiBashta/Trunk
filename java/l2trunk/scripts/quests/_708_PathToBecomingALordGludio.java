@@ -12,14 +12,17 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _708_PathToBecomingALordGludio extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _708_PathToBecomingALordGludio extends Quest implements ScriptFile {
     private static final int Sayres = 35100;
     private static final int Pinter = 30298;
     private static final int Bathis = 30332;
 
     private static final int HeadlessKnightsArmor = 13848;
 
-    private static final int[] Mobs = {20045, 20051, 20099};
+    private static final List<Integer> MOBS = Arrays.asList(20045, 20051, 20099);
 
     private static final int GludioCastle = 1;
 
@@ -28,53 +31,62 @@ public class _708_PathToBecomingALordGludio extends Quest implements ScriptFile 
         addStartNpc(Sayres);
         addTalkId(Pinter, Bathis);
         addQuestItem(HeadlessKnightsArmor);
-        addKillId(Mobs);
+        addKillId(MOBS);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        Castle castle = ResidenceHolder.getInstance().getResidence(GludioCastle);
+        Castle castle = ResidenceHolder.getResidence(GludioCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
-        if (event.equals("sayres_q708_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("sayres_q708_05.htm")) {
-            st.setCond(2);
-        } else if (event.equals("sayres_q708_08.htm")) {
-            if (isLordAvailable(2, st)) {
-                castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                castleOwner.getQuestState(getClass()).setCond(3);
+        switch (event) {
+            case "sayres_q708_03.htm":
                 st.setState(STARTED);
-            } else
-                htmltext = "sayres_q708_05a.htm";
-        } else if (event.equals("pinter_q708_03.htm")) {
-            if (isLordAvailable(3, st)) {
-                castleOwner.getQuestState(getClass()).setCond(4);
-            } else
-                htmltext = "pinter_q708_03a.htm";
-        } else if (event.equals("bathis_q708_02.htm")) {
-            st.setCond(6);
-        } else if (event.equals("bathis_q708_05.htm")) {
-            st.setCond(8);
-            Functions.npcSay(npc, NpcString.LISTEN_YOU_VILLAGERS_OUR_LIEGE_WHO_WILL_SOON_BECAME_A_LORD_HAS_DEFEATED_THE_HEADLESS_KNIGHT);
-        } else if (event.equals("pinter_q708_05.htm")) {
-            if (isLordAvailable(8, st)) {
-                st.takeItems(1867, 100);
-                st.takeItems(1865, 100);
-                st.takeItems(1869, 100);
-                st.takeItems(1879, 50);
-                castleOwner.getQuestState(getClass()).setCond(9);
-            } else
-                htmltext = "pinter_q708_03a.htm";
-        } else if (event.equals("sayres_q708_12.htm")) {
-            Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_GLUDIO, st.getPlayer().getName());
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "sayres_q708_05.htm":
+                st.setCond(2);
+                break;
+            case "sayres_q708_08.htm":
+                if (isLordAvailable(2, st)) {
+                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                    castleOwner.getQuestState(getClass()).setCond(3);
+                    st.setState(STARTED);
+                } else
+                    htmltext = "sayres_q708_05a.htm";
+                break;
+            case "pinter_q708_03.htm":
+                if (isLordAvailable(3, st)) {
+                    castleOwner.getQuestState(getClass()).setCond(4);
+                } else
+                    htmltext = "pinter_q708_03a.htm";
+                break;
+            case "bathis_q708_02.htm":
+                st.setCond(6);
+                break;
+            case "bathis_q708_05.htm":
+                st.setCond(8);
+                Functions.npcSay(npc, NpcString.LISTEN_YOU_VILLAGERS_OUR_LIEGE_WHO_WILL_SOON_BECAME_A_LORD_HAS_DEFEATED_THE_HEADLESS_KNIGHT);
+                break;
+            case "pinter_q708_05.htm":
+                if (isLordAvailable(8, st)) {
+                    st.takeItems(1867, 100);
+                    st.takeItems(1865, 100);
+                    st.takeItems(1869, 100);
+                    st.takeItems(1879, 50);
+                    castleOwner.getQuestState(getClass()).setCond(9);
+                } else
+                    htmltext = "pinter_q708_03a.htm";
+                break;
+            case "sayres_q708_12.htm":
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_GLUDIO, st.getPlayer().getName());
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return htmltext;
     }
@@ -85,7 +97,7 @@ public class _708_PathToBecomingALordGludio extends Quest implements ScriptFile 
         int npcId = npc.getNpcId();
         int id = st.getState();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(GludioCastle);
+        Castle castle = ResidenceHolder.getResidence(GludioCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -162,12 +174,11 @@ public class _708_PathToBecomingALordGludio extends Quest implements ScriptFile 
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(GludioCastle);
+        Castle castle = ResidenceHolder.getResidence(GludioCastle);
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
-            if (castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond)
-                return true;
+            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
         return false;
     }
 

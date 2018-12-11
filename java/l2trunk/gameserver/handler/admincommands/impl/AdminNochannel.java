@@ -46,7 +46,7 @@ public class AdminNochannel implements IAdminCommandHandler {
                     if (activeChar.getPlayerAccess().BanChatBonusId > 0 && activeChar.getPlayerAccess().BanChatBonusCount > 0) {
                         int add_count = activeChar.getPlayerAccess().BanChatBonusCount * bonus_mod;
 
-                        ItemTemplate item = ItemHolder.getInstance().getTemplate(activeChar.getPlayerAccess().BanChatBonusId);
+                        ItemTemplate item = ItemHolder.getTemplate(activeChar.getPlayerAccess().BanChatBonusId);
                         activeChar.sendMessage("Bonus for moderation: " + add_count + " " + item.getName());
 
                         if (penaltyCount > 0) // У модератора был штраф за нарушения

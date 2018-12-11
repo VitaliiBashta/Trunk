@@ -27,14 +27,14 @@ public final class ServicesCommunity extends Functions implements ScriptFile, IC
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("ServicesCommunity: Services Community service loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED) {
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
         }
     }
 
@@ -60,7 +60,7 @@ public final class ServicesCommunity extends Functions implements ScriptFile, IC
 
 
         if (bypass.startsWith("_bbsservices:level")) {
-            String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/pages/content.htm", player);
+            String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/pages/content.htm", player);
 
             StringBuilder _content = new StringBuilder();
             _content.append("<table width=400><tr><td align=center> Improve Services. </td></tr></table>");

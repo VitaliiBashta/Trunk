@@ -14,23 +14,27 @@ import l2trunk.gameserver.templates.StatsSet;
 import java.util.ArrayList;
 import java.util.List;
 
-class BuyHero extends Functions {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class BuyHero extends Functions {
     public void list() {
         Player player = getSelf();
         if (!Config.SERVICES_HERO_SELL_ENABLED) {
-            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE.getNotNull("npcdefault.htm", player), player);
             return;
         }
-        String html = null;
-
-        html = HtmCache.INSTANCE().getNotNull("scripts/services/BuyHero.htm", player);
-        String add = "";
-        for (int i = 0; i < Config.SERVICES_HERO_SELL_DAY.length; i++)
-            add += "<a action=\"bypass -h scripts_services.BuyHero:get " + i + "\">"
-                    + "for " + Config.SERVICES_HERO_SELL_DAY[i] +
-                    " days - " + Config.SERVICES_HERO_SELL_PRICE[i] +
-                    " " + ItemHolder.getInstance().getTemplate(Config.SERVICES_HERO_SELL_ITEM[i]).getName() + "</a><br>";
-        html = html.replaceFirst("%toreplace%", add);
+        String html = HtmCache.INSTANCE.getNotNull("scripts/services/BuyHero.htm", player);
+        StringBuilder add = new StringBuilder();
+        for (int i = 0; i < Config.SERVICES_HERO_SELL_DAY.size(); i++)
+            add.append("<a action=\"bypass -h scripts_services.BuyHero:get ")
+                    .append(i)
+                    .append("\">")
+                    .append("for ")
+                    .append(Config.SERVICES_HERO_SELL_DAY.get(i))
+                    .append(" days - ")
+                    .append(Config.SERVICES_HERO_SELL_PRICE.get(i)).append(" ")
+                    .append(ItemHolder.getTemplate(Config.SERVICES_HERO_SELL_ITEM.get(i)).getName()).append("</a><br>");
+        html = html.replaceFirst("%toreplace%", add.toString());
 
 
         show(html, player);
@@ -39,14 +43,14 @@ class BuyHero extends Functions {
     public void get(String[] param) {
         Player player = getSelf();
         if (!Config.SERVICES_HERO_SELL_ENABLED) {
-            show(HtmCache.INSTANCE().getNotNull("npcdefault.htm", player), player);
+            show(HtmCache.INSTANCE.getNotNull("npcdefault.htm", player), player);
             return;
         }
-        int i = Integer.parseInt(param[0]);
-        if ((Functions.getItemCount(player, Config.SERVICES_HERO_SELL_ITEM[i]) >= Config.SERVICES_HERO_SELL_PRICE[i])) {
+        int i = toInt(param[0]);
+        if ((Functions.getItemCount(player, Config.SERVICES_HERO_SELL_ITEM.get(i)) >= Config.SERVICES_HERO_SELL_PRICE.get(i))) {
             if (!player.isHero()) {
-                player.setVar("HeroPeriod", (System.currentTimeMillis() + 60 * 1000 * 60 * 24 * Config.SERVICES_HERO_SELL_DAY[i]), -1);
-                Functions.removeItem(player, Config.SERVICES_HERO_SELL_ITEM[i], Config.SERVICES_HERO_SELL_PRICE[i], "BuyHero$get");
+                player.setVar("HeroPeriod", (System.currentTimeMillis() + 60 * 1000 * 60 * 24 * Config.SERVICES_HERO_SELL_DAY.get(i)), -1);
+                Functions.removeItem(player, Config.SERVICES_HERO_SELL_ITEM.get(i), Config.SERVICES_HERO_SELL_PRICE.get(i), "BuyHero$get");
 
                 StatsSet hero = new StatsSet();
                 hero.set(Olympiad.CLASS_ID, player.getBaseClassId());

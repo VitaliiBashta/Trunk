@@ -103,7 +103,7 @@ public class ItemInfo {
     public void setItemId(int itemId) {
         this.itemId = itemId;
         if (itemId > 0)
-            item = ItemHolder.getInstance().getTemplate(getItemId());
+            item = ItemHolder.getTemplate(getItemId());
         else
             item = null;
         if (item != null) {

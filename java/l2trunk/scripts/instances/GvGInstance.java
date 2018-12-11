@@ -307,7 +307,7 @@ public final class GvGInstance extends Reflection {
             //player.setCurrentMp(player.getMaxMp());
             player.broadcastPacket(new Revive(player));
         }
-        player.altOnMagicUseTimer(player, SkillTable.INSTANCE().getInfo(5660, 2)); // Battlefield Death Syndrome
+        player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(5660, 2)); // Battlefield Death Syndrome
 
     }
 
@@ -400,22 +400,6 @@ public final class GvGInstance extends Reflection {
         @Override
         public void runImpl() {
             broadCastPacketToBothTeams(new ExShowScreenMessage("Until the end of the battle remained 1 minute", 4000, ScreenMessageAlign.MIDDLE_CENTER, true));
-        }
-    }
-
-    public class BattleEnd extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            broadCastPacketToBothTeams(new ExShowScreenMessage("The battle has expired. Teleportation 1 minute.", 4000, ScreenMessageAlign.BOTTOM_RIGHT, true));
-            end();
-        }
-    }
-
-    public class Finish extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            unParalyzePlayers();
-            cleanUp();
         }
     }
 

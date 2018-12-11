@@ -36,7 +36,7 @@ public final class FurnaceBalance extends DefaultAI {
             return;
 
         int event_id = actor.getAISpawnParam();
-        MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+        MonasteryFurnaceEvent furnace = EventHolder.getEvent(EventType.MAIN_EVENT, event_id);
 
         if (_firstTimeAttacked && !furnace.isInProgress()) {
             _firstTimeAttacked = false;
@@ -55,7 +55,7 @@ public final class FurnaceBalance extends DefaultAI {
         @Override
         public void runImpl() {
             int event_id = getActor().getAISpawnParam();
-            MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+            MonasteryFurnaceEvent furnace = EventHolder.getEvent(EventType.MAIN_EVENT, event_id);
             furnace.spawnAction(MonasteryFurnaceEvent.STANDART_ROOM, true);
         }
     }

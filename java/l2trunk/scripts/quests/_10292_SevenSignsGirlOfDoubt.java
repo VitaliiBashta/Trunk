@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -10,11 +9,10 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author Bonux
- * @date 02/06/2011
- */
-public class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptFile {
     // NPC
     private static final int WOOD = 32593;
     private static final int FRANZ = 32597;
@@ -22,7 +20,7 @@ public class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptFile {
     private static final int HARDIN = 30832;
 
     // MOBD
-    private static final int[] MOBS_1 = {22801, 22802, 22803, 22804, 22805, 22806};
+    private static final List<Integer> MOBS_1 = Arrays.asList(22801, 22802, 22803, 22804, 22805, 22806);
     private static final int CREATURE_OF_THE_DUSK_1 = 27422;
     private static final int CREATURE_OF_THE_DUSK_2 = 27424;
 
@@ -47,7 +45,7 @@ public class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptFile {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("priest_wood_q10292_4.htm"))
-            enterInstance(player, 145);
+            enterInstance(player);
         else if (event.equalsIgnoreCase("witness_of_dawn_q10292_2.htm")) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
@@ -142,7 +140,7 @@ public class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
-        if (cond == 3 && ArrayUtils.contains(MOBS_1, npcId) && Rnd.chance(70)) {
+        if (cond == 3 && MOBS_1.contains(npcId) && Rnd.chance(70)) {
             st.giveItems(ELCARDIAS_MARK, 1);
             if (st.getQuestItemsCount(ELCARDIAS_MARK) < 10)
                 st.playSound(SOUND_ITEMGET);
@@ -166,13 +164,13 @@ public class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptFile {
         return null;
     }
 
-    private void enterInstance(Player player, int instancedZoneId) {
+    private void enterInstance(Player player) {
         Reflection r = player.getActiveReflection();
         if (r != null) {
-            if (player.canReenterInstance(instancedZoneId))
+            if (player.canReenterInstance(145))
                 player.teleToLocation(r.getTeleportLoc(), r);
-        } else if (player.canEnterInstance(instancedZoneId)) {
-            ReflectionUtils.enterReflection(player, instancedZoneId);
+        } else if (player.canEnterInstance(145)) {
+            ReflectionUtils.enterReflection(player, 145);
         }
     }
 

@@ -17,7 +17,7 @@ public class HennaEquipList extends L2GameServerPacket {
         _adena = player.getAdena();
         _emptySlots = player.getHennaEmptySlots();
 
-        List<Henna> list = HennaHolder.getInstance().generateList(player);
+        List<Henna> list = HennaHolder.generateList(player);
         for (Henna element : list)
             if (player.getInventory().getItemByItemId(element.getDyeId()) != null)
                 _hennas.add(element);

@@ -12,7 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
 public final class ZakenDaytime83 extends Fighter {
     private long _teleportSelfTimer = 0L;
     private final long _teleportSelfReuse = 120000L; // 120 secs
-    static Skill zakenTele = SkillTable.INSTANCE.getInfo(4222, 1);
+    private Skill zakenTele = SkillTable.INSTANCE.getInfo(4222);
     private final NpcInstance actor = getActor();
 
     public ZakenDaytime83(NpcInstance actor) {

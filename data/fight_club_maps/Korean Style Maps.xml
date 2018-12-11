@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE list SYSTEM "maps.dtd">
+<!DOCTYPE list SYSTEM "fight_club_maps.dtd">
 <list>
 	<map name="[Tully_Last_Floor]">
 		<parameter name="events" value="KoreanStyle"/>

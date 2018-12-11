@@ -9,11 +9,11 @@ class ItemActionLog {
     private SingleItemLog[] itemsLost;
     private SingleItemLog[] itemsReceived;
 
-    public ItemActionLog(int actionId, int playerObjectId, ItemActionType actionType, long time, SingleItemLog[] itemsLost, SingleItemLog[] itemsReceived) {
+    ItemActionLog(int actionId, int playerObjectId, ItemActionType actionType, long time, SingleItemLog[] itemsLost, SingleItemLog[] itemsReceived) {
         this(actionId, playerObjectId, actionType, time, itemsLost, itemsReceived, false);
     }
 
-    public ItemActionLog(int actionId, int playerObjectId, ItemActionType actionType, long time, SingleItemLog[] itemsLost, SingleItemLog[] itemsReceived, boolean isSavedInDatabase) {
+    ItemActionLog(int actionId, int playerObjectId, ItemActionType actionType, long time, SingleItemLog[] itemsLost, SingleItemLog[] itemsReceived, boolean isSavedInDatabase) {
         this.actionId = actionId;
         this.playerObjectId = playerObjectId;
         this.actionType = actionType;

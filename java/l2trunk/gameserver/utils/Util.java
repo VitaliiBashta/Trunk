@@ -9,7 +9,6 @@ import l2trunk.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.ClassId;
-import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.model.reward.RewardList;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.templates.item.ItemTemplate;
@@ -28,7 +27,6 @@ import java.util.regex.PatternSyntaxException;
 public class Util {
     private static final String PATTERN = "0.0000000000E00";
     private static final DecimalFormat df;
-    private static final char[] ALLOWED_CHARS = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     private static final NumberFormat adenaFormatter;
     private static final Pattern _pattern = Pattern.compile("<!--TEMPLET(\\d+)(.*?)TEMPLET-->", Pattern.DOTALL);
@@ -441,22 +439,8 @@ public class Util {
         return b ? "True" : "False";
     }
 
-    /**
-     * @param event
-     * @return
-     * @From FFADeathMatchEvent @Making FFADeathMatch
-     */
-    public static String getChangedEventName(AbstractFightClub event) {
-        String eventName = event.getClass().getSimpleName();//For example FFADeathMatchEvent
-        eventName = eventName.substring(0, eventName.length() - 5);//Making it FFADeathMatch
-        return eventName;
-    }
-
     public static boolean isInteger(char c) {
-        for (char possibility : ALLOWED_CHARS)
-            if (possibility == c)
-                return true;
-        return false;
+        return Character.isDigit(c);
     }
 
     public static boolean arrayContains(@Nullable Object[] array, @Nullable Object objectToLookFor) {
@@ -468,10 +452,6 @@ public class Util {
         return false;
     }
 
-    /**
-     * @param name
-     * @return Funcion que convierte el string en proper case, de cada palabra del string, la primera se hace mayuscula, y las demas todas minisculas
-     */
     public static String toProperCaseAll(String name) {
         StringTokenizer st = new StringTokenizer(name);
         String newString = "";
@@ -894,27 +874,27 @@ public class Util {
         return name;
     }
 
-    public static String ArrayToString(String[] array, int start) {
-        String text = "";
-
-        if (array.length > 1) {
-            int count = 1;
-            for (int i = start; i < array.length; i++) {
-                text += (count > 1 ? " " : "") + array[i];
-                count++;
-            }
-        } else
-            text = array[start];
-
-        return text;
-    }
+//    public static String ArrayToString(String[] array, int start) {
+//        String text = "";
+//
+//        if (array.length > 1) {
+//            int count = 1;
+//            for (int i = start; i < array.length; i++) {
+//                text += (count > 1 ? " " : "") + array[i];
+//                count++;
+//            }
+//        } else
+//            text = array[start];
+//
+//        return text;
+//    }
 
     public static String time(long time) {
         return TIME_FORMAT.format(new Date(time));
     }
 
     public static void communityNextPage(Player player, String link) {
-        ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(link);
+        ICommunityBoardHandler handler = CommunityBoardManager.getCommunityHandler(link);
         if (handler != null)
             handler.onBypassCommand(player, link);
     }
@@ -927,11 +907,11 @@ public class Util {
         else if (itemId == ItemTemplate.ITEM_ID_CLAN_REPUTATION_SCORE)
             return "Clan reputation";
         else
-            return ItemHolder.getInstance().getTemplate(itemId).getName();
+            return ItemHolder.getTemplate(itemId).getName();
     }
 
     public static String getItemIcon(int itemId) {
-        return ItemHolder.getInstance().getTemplate(itemId).getIcon();
+        return ItemHolder.getTemplate(itemId).getIcon();
     }
 
     public static String formatPay(Player player, long count, int item) {
@@ -947,14 +927,14 @@ public class Util {
         String five = "";
         switch (word) {
             case DAYS:
-                one = new String("Day");
-                two = new String("Days");
-                five = new String("Days");
+                one = "Day";
+                two = "Days";
+                five = "Days";
                 break;
             case HOUR:
-                one = new String("Hour");
-                two = new String("Hours");
-                five = new String("Hours");
+                one = "Hour";
+                two = "Hours";
+                five = "Hours";
                 break;
             case MINUTES:
                 one = new String("Minute");

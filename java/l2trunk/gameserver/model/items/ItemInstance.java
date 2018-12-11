@@ -46,7 +46,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
     //public static final int FLAG_ALWAYS_DROP_ON_DIE = 1 << 7;
     public static final int FLAG_EQUIP_ON_PICKUP = 1 << 7;
     private static final int[] EMPTY_AUGMENTATIONS = new int[2];
-    private static final int FLAG_NO_DROP = 1 << 0;
+    private static final int FLAG_NO_DROP = 1;
     private static final int FLAG_NO_TRADE = 1 << 1;
     private static final int FLAG_NO_TRANSFER = 1 << 2;
     private static final int FLAG_NO_CRYSTALLIZE = 1 << 3;
@@ -58,8 +58,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * ID of the owner
      */
     private int ownerId;
-    //public static final int FLAG_NO_RIDER_PICKUP = 1 << 9;
-    //public static final int FLAG_PET_EQUIPPED = 1 << 10;
     /**
      * ID of the item
      */
@@ -159,7 +157,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     public void setItemId(int id) {
         itemId = id;
-        template = ItemHolder.getInstance().getTemplate(id);
+        template = ItemHolder.getTemplate(id);
         setCustomFlags(getCustomFlags());
     }
 

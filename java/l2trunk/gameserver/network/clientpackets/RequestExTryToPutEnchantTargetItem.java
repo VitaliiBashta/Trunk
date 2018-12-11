@@ -12,7 +12,7 @@ import l2trunk.gameserver.templates.item.support.EnchantScroll;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Log;
 
-public class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket {
+public final class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket {
     private int _objectId;
 
     //@Deprecated
@@ -126,7 +126,7 @@ public class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket {
         int scrollId = scroll.getItemId();
         int itemId = itemToEnchant.getItemId();
 
-        EnchantScroll enchantScroll = EnchantItemHolder.getInstance().getEnchantScroll(scrollId);
+        EnchantScroll enchantScroll = EnchantItemHolder.getEnchantScroll(scrollId);
 
         if (!itemToEnchant.canBeEnchanted(enchantScroll == null) || itemToEnchant.isStackable()) {
             player.sendPacket(ExPutEnchantTargetItemResult.FAIL);

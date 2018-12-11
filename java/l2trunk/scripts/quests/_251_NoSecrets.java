@@ -6,25 +6,21 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _251_NoSecrets extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _251_NoSecrets extends Quest implements ScriptFile {
     private static final int GuardPinaps = 30201;
-    private static final int[] SelMahumTrainers = {
-            22775,
-            22777,
-            22778
-    };
-    private static final int[] SelMahumRecruits = {
-            22780,
-            22782,
-            22784
-    };
+    private static final List<Integer> SelMahumTrainers = Arrays.asList(22775, 22777, 22778);
+    private static final List<Integer> SelMahumRecruits = Arrays.asList(22780, 22782, 22784);
     private static final int SelMahumTrainingDiary = 15508;
     private static final int SelMahumTrainingTimetable = 15509;
 
     public _251_NoSecrets() {
         super(false);
         addStartNpc(GuardPinaps);
-        addKillId(SelMahumTrainers[0], SelMahumTrainers[1], SelMahumTrainers[2], SelMahumRecruits[0], SelMahumRecruits[1], SelMahumRecruits[2]);
+        addKillId(SelMahumTrainers);
+        addKillId(SelMahumRecruits);
         addQuestItem(SelMahumTrainingDiary, SelMahumTrainingTimetable);
     }
 
@@ -68,9 +64,9 @@ public class _251_NoSecrets extends Quest implements ScriptFile {
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            if (st.getQuestItemsCount(SelMahumTrainingDiary) < 10 && ArrayUtils.contains(SelMahumRecruits, npc.getNpcId()))
+            if (st.getQuestItemsCount(SelMahumTrainingDiary) < 10 && SelMahumRecruits.contains(npc.getNpcId()))
                 st.rollAndGive(SelMahumTrainingDiary, 3, 40);
-            else if (st.getQuestItemsCount(SelMahumTrainingTimetable) < 5 && ArrayUtils.contains(SelMahumTrainers, npc.getNpcId()))
+            else if (st.getQuestItemsCount(SelMahumTrainingTimetable) < 5 && SelMahumTrainers.contains(npc.getNpcId()))
                 st.rollAndGive(SelMahumTrainingTimetable, 3, 25);
 
             if (st.getQuestItemsCount(SelMahumTrainingDiary) >= 10 && st.getQuestItemsCount(SelMahumTrainingTimetable) >= 5)

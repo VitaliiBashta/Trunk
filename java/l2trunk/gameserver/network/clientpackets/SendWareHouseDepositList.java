@@ -169,6 +169,6 @@ public class SendWareHouseDepositList extends L2GameClientPacket {
             return;
         }
 
-        CommunityBoardManager.getInstance().getCommunityHandler("_sendTimePrice_").onBypassCommand(activeChar, "_sendTimePrice_" + _items[0]);
+        CommunityBoardManager.getCommunityHandler("_sendTimePrice_").onBypassCommand(activeChar, "_sendTimePrice_" + _items[0]);
     }
 }

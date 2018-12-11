@@ -87,13 +87,13 @@ public class RequestBuySeed extends L2GameClientPacket {
 
         GameObject target = activeChar.getTarget();
 
-        ManorManagerInstance manor = target != null && target instanceof ManorManagerInstance ? (ManorManagerInstance) target : null;
-        if (!activeChar.isGM() && (manor == null || !activeChar.isInRange(manor, Creature.INTERACTION_DISTANCE))) {
+        ManorManagerInstance manor = target instanceof ManorManagerInstance ? (ManorManagerInstance) target : null;
+        if (!activeChar.isGM() && (!activeChar.isInRange(manor, Creature.INTERACTION_DISTANCE))) {
             activeChar.sendActionFailed();
             return;
         }
 
-        Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, _manorId);
+        Castle castle = ResidenceHolder.getResidence(Castle.class, _manorId);
         if (castle == null)
             return;
 
@@ -105,8 +105,8 @@ public class RequestBuySeed extends L2GameClientPacket {
             for (int i = 0; i < _count; i++) {
                 int seedId = _items[i];
                 long count = _itemQ[i];
-                long price = 0;
-                long residual = 0;
+                long price;
+                long residual;
 
                 SeedProduction seed = castle.getSeed(seedId, CastleManorManager.PERIOD_CURRENT);
                 price = seed.getPrice();
@@ -120,7 +120,7 @@ public class RequestBuySeed extends L2GameClientPacket {
 
                 totalPrice = SafeMath.addAndCheck(totalPrice, SafeMath.mulAndCheck(count, price));
 
-                ItemTemplate item = ItemHolder.getInstance().getTemplate(seedId);
+                ItemTemplate item = ItemHolder.getTemplate(seedId);
                 if (item == null)
                     return;
 

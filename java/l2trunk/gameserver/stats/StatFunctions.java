@@ -978,7 +978,7 @@ public class StatFunctions {
 
         @Override
         public void calc(Env env) {
-            env.value += env.character.getTemplate().baseAttributeAttack[element.getId()];
+            env.value += env.character.getTemplate().baseAttributeAttack.get(element.getId());
         }
     }
 
@@ -1003,7 +1003,7 @@ public class StatFunctions {
 
         @Override
         public void calc(Env env) {
-            env.value += env.character.getTemplate().baseAttributeDefence[element.getId()];
+            env.value += env.character.getTemplate().baseAttributeDefence.get(element.getId());
         }
     }
 

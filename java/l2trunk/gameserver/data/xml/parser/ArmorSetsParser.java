@@ -1,36 +1,27 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ArmorSetsHolder;
 import l2trunk.gameserver.model.ArmorSet;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.List;
 
-public final class ArmorSetsParser extends AbstractFileParser<ArmorSetsHolder> {
-    private static final ArmorSetsParser _instance = new ArmorSetsParser();
+public enum  ArmorSetsParser {
+    INSTANCE;
+    private static Path xmlFile = Config.DATAPACK_ROOT.resolve("data/armor_sets.xml");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
-    private ArmorSetsParser() {
-        super(ArmorSetsHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xmlFile).forEach(this::readData);
+        LOG.info("Loaded " + ArmorSetsHolder.size() + " item(s) ");
     }
 
-    public static ArmorSetsParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/armor_sets.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "armor_sets.dtd";
-    }
-
-    @Override
     protected void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator("set"); iterator.hasNext(); ) {
             String[] chest = null, legs = null, head = null, gloves = null, feet = null, skills = null, shield = null, shield_skills = null, enchant6skills = null;
@@ -55,7 +46,7 @@ public final class ArmorSetsParser extends AbstractFileParser<ArmorSetsHolder> {
             if (element.attributeValue("enchant6skills") != null)
                 enchant6skills = element.attributeValue("enchant6skills").split(";");
 
-            getHolder().addArmorSet(new ArmorSet(id, chest, legs, head, gloves, feet, skills, shield, shield_skills, enchant6skills));
+            ArmorSetsHolder.addArmorSet(new ArmorSet(id, chest, legs, head, gloves, feet, skills, shield, shield_skills, enchant6skills));
         }
     }
 }

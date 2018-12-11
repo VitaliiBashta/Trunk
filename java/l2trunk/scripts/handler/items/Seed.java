@@ -2,7 +2,7 @@ package l2trunk.scripts.handler.items;
 
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.handler.items.ItemHandler;
-import l2trunk.gameserver.instancemanager.MapRegionManager;
+import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.model.Manor;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
@@ -91,7 +91,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
             return false;
         }
 
-        DomainArea domain = MapRegionManager.getInstance().getRegionData(DomainArea.class, player);
+        DomainArea domain = MapRegionHolder.getInstance().getRegionData(DomainArea.class, player);
         int castleId = domain == null ? 0 : domain.getId();
         // Несовпадение зоны
         if (Manor.INSTANCE.getCastleIdForSeed(seedId) != castleId) {
@@ -100,7 +100,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         }
 
         // use Sowing skill, id 2097
-        Skill skill = SkillTable.INSTANCE().getInfo(2097, 1);
+        Skill skill = SkillTable.INSTANCE.getInfo(2097);
         if (skill == null) {
             player.sendActionFailed();
             return false;

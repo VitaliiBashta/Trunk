@@ -1292,8 +1292,7 @@
 		<set name="operateType" val="OP_ACTIVE" />
 	</skill>
 	<skill id="5494" levels="1" name="Gust">
-		<!--
-		-->
+
 		<set name="icon" val="icon.skill0000" />
 		<set name="magicLevel" val="86" />
 		<set name="target" val="TARGET_ONE" />

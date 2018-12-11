@@ -35,7 +35,7 @@ public final class FurnaceWill extends DefaultAI {
             return;
 
         int event_id = actor.getAISpawnParam();
-        MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+        MonasteryFurnaceEvent furnace = EventHolder.getEvent(EventType.MAIN_EVENT, event_id);
 
         if (_firstTimeAttacked && !furnace.isInProgress()) {
             _firstTimeAttacked = false;
@@ -44,7 +44,7 @@ public final class FurnaceWill extends DefaultAI {
             actor.setNpcState((byte) 1);
             Functions.npcShout(actor, NpcString.FURN1);
             furnace.registerActions();
-            ThreadPoolManager.INSTANCE.schedule(() -> EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, getActor().getAISpawnParam())
+            ThreadPoolManager.INSTANCE.schedule(() -> EventHolder.getEvent(EventType.MAIN_EVENT, getActor().getAISpawnParam())
                     .spawnAction(MonasteryFurnaceEvent.FIGHTER_ROOM, true), 15000);
         }
 

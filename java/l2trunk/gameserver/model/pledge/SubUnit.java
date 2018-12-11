@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.pledge;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
@@ -158,19 +157,14 @@ public final class SubUnit {
         }
 
         if (updateDB) {
-            Connection con = null;
-            PreparedStatement statement = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                statement = con.prepareStatement("UPDATE clan_subpledges SET leader_id=? WHERE clan_id=? and type=?");
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement("UPDATE clan_subpledges SET leader_id=? WHERE clan_id=? and type=?")) {
                 statement.setInt(1, getLeaderObjectId());
                 statement.setInt(2, _clan.getClanId());
                 statement.setInt(3, type);
                 statement.execute();
             } catch (SQLException e) {
                 LOG.error("Exception while setting Sub Unit Leader", e);
-            } finally {
-                DbUtils.closeQuietly(con, statement);
             }
         }
     }
@@ -178,19 +172,14 @@ public final class SubUnit {
     public void setName(String name, boolean updateDB) {
         _name = name;
         if (updateDB) {
-            Connection con = null;
-            PreparedStatement statement = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                statement = con.prepareStatement("UPDATE clan_subpledges SET name=? WHERE clan_id=? and type=?");
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement("UPDATE clan_subpledges SET name=? WHERE clan_id=? and type=?")) {
                 statement.setString(1, _name);
                 statement.setInt(2, _clan.getClanId());
                 statement.setInt(3, type);
                 statement.execute();
             } catch (SQLException e) {
                 LOG.error("Exception while setting Sub Unit Name", e);
-            } finally {
-                DbUtils.closeQuietly(con, statement);
             }
         }
     }
@@ -206,12 +195,8 @@ public final class SubUnit {
             oldSkill = _skills.put(newSkill.getId(), newSkill);
 
             if (store) {
-                Connection con = null;
-                PreparedStatement statement = null;
-
-                try {
-                    con = DatabaseFactory.getInstance().getConnection();
-
+                try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+                    PreparedStatement statement;
                     if (oldSkill != null) {
                         statement = con.prepareStatement("UPDATE clan_subpledges_skills SET skill_level=? WHERE skill_id=? AND clan_id=? AND type=?");
                         statement.setInt(1, newSkill.getLevel());
@@ -229,8 +214,6 @@ public final class SubUnit {
                     }
                 } catch (SQLException e) {
                     LOG.warn("Exception while adding Skill to SubUnit", e);
-                } finally {
-                    DbUtils.closeQuietly(con, statement);
                 }
             }
 
@@ -249,14 +232,8 @@ public final class SubUnit {
         return oldSkill;
     }
 
-    /**
-     * Функция вызывается из клановской addSkillsQuietly(), отдельно вызывать не нужно
-     *
-     * @param player
-     */
-    public void addSkillsQuietly(Player player) {
-        for (Skill skill : _skills.values())
-            addSkill(player, skill);
+    void addSkillsQuietly(Player player) {
+        _skills.values().forEach(skill -> addSkill(player, skill));
     }
 
     public void enableSkills(Player player) {
@@ -283,27 +260,23 @@ public final class SubUnit {
     }
 
     public void restore() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(//
-                    "SELECT `c`.`char_name` AS `char_name`," + //
-                            "`s`.`level` AS `level`," + //
-                            "`s`.`class_id` AS `classid`," + //
-                            "`c`.`obj_Id` AS `obj_id`," + //
-                            "`c`.`title` AS `title`," + //
-                            "`c`.`pledge_rank` AS `pledge_rank`," + //
-                            "`c`.`apprentice` AS `apprentice`, " + //
-                            "`c`.`sex` AS `sex` " + //
-                            "FROM `characters` `c` " + //
-                            "LEFT JOIN `character_subclasses` `s` ON (`s`.`char_obj_id` = `c`.`obj_Id` AND `s`.`isBase` = '1') " + //
-                            "WHERE `c`.`clanid`=? AND `c`.`pledge_type`=? ORDER BY `c`.`lastaccess` DESC");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(//
+                     "SELECT `c`.`char_name` AS `char_name`," + //
+                             "`s`.`level` AS `level`," + //
+                             "`s`.`class_id` AS `classid`," + //
+                             "`c`.`obj_Id` AS `obj_id`," + //
+                             "`c`.`title` AS `title`," + //
+                             "`c`.`pledge_rank` AS `pledge_rank`," + //
+                             "`c`.`apprentice` AS `apprentice`, " + //
+                             "`c`.`sex` AS `sex` " + //
+                             "FROM `characters` `c` " + //
+                             "LEFT JOIN `character_subclasses` `s` ON (`s`.`char_obj_id` = `c`.`obj_Id` AND `s`.`isBase` = '1') " + //
+                             "WHERE `c`.`clanid`=? AND `c`.`pledge_type`=? ORDER BY `c`.`lastaccess` DESC")) {
 
             statement.setInt(1, _clan.getClanId());
             statement.setInt(2, type);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             while (rset.next()) {
                 UnitMember member = new UnitMember(_clan, rset.getString("char_name"), rset.getString("title"), rset.getInt("level"), rset.getInt("classid"), rset.getInt("obj_Id"), type, rset.getInt("pledge_rank"), rset.getInt("apprentice"), rset.getInt("sex"), Clan.SUBUNIT_NONE);
@@ -321,8 +294,6 @@ public final class SubUnit {
             }
         } catch (SQLException e) {
             LOG.warn("Error while restoring clan members for clan: " + _clan.getClanId(), e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
@@ -332,15 +303,11 @@ public final class SubUnit {
     }
 
     void restoreSkills() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT skill_id,skill_level FROM clan_subpledges_skills WHERE clan_id=? AND type=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT skill_id,skill_level FROM clan_subpledges_skills WHERE clan_id=? AND type=?")) {
             statement.setInt(1, _clan.getClanId());
             statement.setInt(2, type);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             while (rset.next()) {
                 int id = rset.getInt("skill_id");
@@ -352,8 +319,6 @@ public final class SubUnit {
             }
         } catch (SQLException e) {
             LOG.error("Exception while restoring Sub Unit Skills", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 

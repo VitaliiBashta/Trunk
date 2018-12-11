@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.seedofdestruction;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -18,19 +17,23 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class Tiat extends Fighter {
-    private static final int TIAT_TRANSFORMATION_SKILL_ID = 5974;
-    private static final int TRAPS_COUNT = 4;
-    private static final Location[] TRAP_LOCS = {
+    private static final List<Location> TRAP_LOCS = Arrays.asList(
             new Location(-252022, 210130, -11995, 16384),
             new Location(-248782, 210130, -11995, 16384),
             new Location(-248782, 206875, -11995, 16384),
-            new Location(-252022, 206875, -11995, 16384)};
+            new Location(-252022, 206875, -11995, 16384));
     private static final long COLLAPSE_BY_INACTIVITY_INTERVAL = 10 * 60 * 1000; // 10 мин
     private static final int TRAP_NPC_ID = 18696;
-    private static final int[] TIAT_MINION_IDS = {29162, 22538, 22540, 22547, 22542, 22548};
-    private static final String[] TIAT_TEXT = {"You'll regret challenging me!", "You shall die in pain!", "I will wipe out your entire kind!"};
-    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.INSTANCE().getInfo(TIAT_TRANSFORMATION_SKILL_ID, 1);
+    private static final List<Integer> TIAT_MINION_IDS = Arrays.asList(29162, 22538, 22540, 22547, 22542, 22548);
+    private static final List<String> TIAT_TEXT = Arrays.asList(
+            "You'll regret challenging me!",
+            "You shall die in pain!",
+            "I will wipe out your entire kind!");
+    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.INSTANCE.getInfo(5974);
     private boolean _notUsedTransform = true;
     private long _lastAttackTime = 0;
     private long _lastFactionNotifyTime = 0;
@@ -71,11 +74,11 @@ public final class Tiat extends Fighter {
         }
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
-            for (NpcInstance npc : World.getAroundNpc(actor))
-                if (ArrayUtils.contains(TIAT_MINION_IDS, npc.getNpcId()))
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 30000);
+            World.getAroundNpc(actor).stream()
+                    .filter(npc -> (TIAT_MINION_IDS.contains(npc.getNpcId())))
+                    .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 30000));
             if (Rnd.chance(15) && !_notUsedTransform)
-                actor.broadcastPacket(new ExShowScreenMessage(TIAT_TEXT[Rnd.get(TIAT_TEXT.length)], 4000, ScreenMessageAlign.MIDDLE_CENTER, false));
+                actor.broadcastPacket(new ExShowScreenMessage(Rnd.get(TIAT_TEXT), 4000, ScreenMessageAlign.MIDDLE_CENTER, false));
         }
         super.onEvtAttacked(attacker, damage);
     }
@@ -120,7 +123,6 @@ public final class Tiat extends Fighter {
     private void spawnTraps() {
         NpcInstance actor = getActor();
         actor.broadcastPacket(new ExShowScreenMessage("Come out, warriors. Protect Seed of Destruction.", 5000, ScreenMessageAlign.MIDDLE_CENTER, false));
-        for (int i = 0; i < TRAPS_COUNT; i++)
-            actor.getReflection().addSpawnWithRespawn(TRAP_NPC_ID, TRAP_LOCS[i], 0, 180);
+        TRAP_LOCS.forEach(trap -> actor.getReflection().addSpawnWithRespawn(TRAP_NPC_ID, trap, 0, 180));
     }
 }

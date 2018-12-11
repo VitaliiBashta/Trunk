@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model.residences.fortress.siege;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Spawner;
@@ -12,13 +11,11 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
-/**
- * @author VISTALL
- * @date 19:35/19.04.2011
- */
-public class PowerControlUnitInstance extends NpcInstance {
+public final class PowerControlUnitInstance extends NpcInstance {
     private static final int LIMIT = 3;
 
     private static final int COND_NO_ENTERED = 0;
@@ -27,7 +24,7 @@ public class PowerControlUnitInstance extends NpcInstance {
     private static final int COND_FAIL = 3;
     private static final int COND_TIMEOUT = 4;
 
-    private final int[] _generated = new int[LIMIT];
+    private final List<Integer> _generated = new ArrayList<>();
     private int _index;
     private int _tryCount;
     private long _invalidatePeriod;
@@ -51,7 +48,7 @@ public class PowerControlUnitInstance extends NpcInstance {
             else
                 _index++;
         } else {
-            if (_generated[_index] == val)
+            if (_generated.get(_index) == val)
                 _index++;
             else
                 _tryCount++;
@@ -115,15 +112,15 @@ public class PowerControlUnitInstance extends NpcInstance {
         _tryCount = 0;
         _index = 0;
 
-        for (int i = 0; i < _generated.length; i++)
-            _generated[i] = -1;
+        for (int i = 0; i < _generated.size(); i++)
+            _generated.set(i, -1);
 
         int j = 0;
         while (j != LIMIT) {
             int val = Rnd.get(0, 9);
-            if (ArrayUtils.contains(_generated, val))
+            if (_generated.contains(val))
                 continue;
-            _generated[j++] = val;
+            _generated.set(j++, val);
         }
     }
 
@@ -140,7 +137,7 @@ public class PowerControlUnitInstance extends NpcInstance {
             return COND_ENTERED;
     }
 
-    public int[] getGenerated() {
+    public List<Integer> getGenerated() {
         return _generated;
     }
 }

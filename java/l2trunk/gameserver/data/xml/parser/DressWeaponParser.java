@@ -1,48 +1,40 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.DressWeaponHolder;
 import l2trunk.gameserver.model.DressWeaponData;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
 
-public final class DressWeaponParser extends AbstractFileParser<DressWeaponHolder> {
-    private static final DressWeaponParser _instance = new DressWeaponParser();
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private DressWeaponParser() {
-        super(DressWeaponHolder.getInstance());
+public enum DressWeaponParser {
+    INSTANCE;
+    private static Path xml = Config.DATAPACK_ROOT.resolve("data/dress/weapon.xml");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + DressWeaponHolder.size() + " items");
     }
 
-    public static DressWeaponParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/dress/weapon.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "weapon.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator("weapon"); iterator.hasNext(); ) {
             Element dress = iterator.next();
-            int id = Integer.parseInt(dress.attributeValue("id"));
+            int id = toInt(dress.attributeValue("id"));
             String name = dress.attributeValue("name");
             String type = dress.attributeValue("type");
 
             Element price = dress.element("price");
-            int itemId = Integer.parseInt(price.attributeValue("id"));
-            long itemCount = Long.parseLong(price.attributeValue("count"));
+            int itemId = toInt(price.attributeValue("id"));
+            long itemCount = toInt(price.attributeValue("count"));
 
-            getHolder().addWeapon(new DressWeaponData(id, name, type, itemId, itemCount));
+            DressWeaponHolder.addWeapon(new DressWeaponData(id, name, type, itemId, itemCount));
         }
     }
 }

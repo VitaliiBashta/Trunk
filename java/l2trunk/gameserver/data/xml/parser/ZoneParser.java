@@ -1,6 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Circle;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.geometry.Rectangle;
@@ -13,22 +13,18 @@ import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ZoneParser extends AbstractDirParser<ZoneHolder> {
-    private static final ZoneParser _instance = new ZoneParser();
-
-    private ZoneParser() {
-        super(ZoneHolder.getInstance());
-    }
-
-    public static ZoneParser getInstance() {
-        return _instance;
-    }
+public enum ZoneParser {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    Path xml = Config.DATAPACK_ROOT.resolve("data/zone/");
 
     private static Rectangle parseRectangle(Element n) {
         int x1, y1, x2, y2, zmin = World.MAP_MIN_Z, zmax = World.MAP_MAX_Z;
@@ -77,7 +73,7 @@ public class ZoneParser extends AbstractDirParser<ZoneHolder> {
         return poly;
     }
 
-    private static Circle parseCircle(Element shape) {
+    private Circle parseCircle(Element shape) {
         Circle circle;
 
         String[] coord = shape.attribute("loc").getValue().split("[\\s,;]+");
@@ -89,19 +85,12 @@ public class ZoneParser extends AbstractDirParser<ZoneHolder> {
         return circle;
     }
 
-    @Override
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/zone/");
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + ZoneHolder.size() + " items ");
     }
 
-
-    @Override
-    public String getDTDFileName() {
-        return "zone.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             StatsSet zoneDat = new StatsSet();
             Element zoneElement = iterator.next();
@@ -182,7 +171,7 @@ public class ZoneParser extends AbstractDirParser<ZoneHolder> {
                 if (territory == null || territory.getTerritories().isEmpty())
                     LOG.error("Empty territory for zone: " + zoneDat.get("name"));
                 ZoneTemplate template = new ZoneTemplate(zoneDat);
-                getHolder().addTemplate(template);
+                ZoneHolder.addTemplate(template);
             }
         }
     }

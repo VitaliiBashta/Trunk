@@ -5,15 +5,15 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.HennaUnequipInfo;
 import l2trunk.gameserver.templates.Henna;
 
-public class RequestHennaUnequipInfo extends L2GameClientPacket {
-    private int _symbolId;
+public final class RequestHennaUnequipInfo extends L2GameClientPacket {
+    private int symbolId;
 
     /**
      * format: d
      */
     @Override
     protected void readImpl() {
-        _symbolId = readD();
+        symbolId = readD();
     }
 
     @Override
@@ -22,8 +22,7 @@ public class RequestHennaUnequipInfo extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Henna henna = HennaHolder.getInstance().getHenna(_symbolId);
-        if (henna != null)
-            player.sendPacket(new HennaUnequipInfo(henna, player));
+        Henna henna = HennaHolder.getHenna(symbolId);
+        player.sendPacket(new HennaUnequipInfo(henna, player));
     }
 }

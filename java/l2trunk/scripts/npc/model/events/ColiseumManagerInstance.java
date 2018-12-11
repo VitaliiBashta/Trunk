@@ -33,37 +33,42 @@ public final class ColiseumManagerInstance extends ColiseumHelperInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        UndergroundColiseumEvent coliseumEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, _coliseumId);
+        UndergroundColiseumEvent coliseumEvent = EventHolder.getEvent(EventType.MAIN_EVENT, _coliseumId);
 
-        if (command.equals("register")) {
-            Party party = player.getParty();
-            if (party == null)
-                showChatWindow(player, "events/kerthang_manager008.htm");
-            else if (party.getLeader() != player)
-                showChatWindow(player, "events/kerthang_manager004.htm");
-            else {
-                for (Player $player : party) {
-                    if ($player.getLevel() < coliseumEvent.getMinLevel() || $player.getLevel() > coliseumEvent.getMaxLevel()) {
-                        showChatWindow(player, "events/kerthang_manager011.htm", "%name%", $player.getName());
-                        return;
+        switch (command) {
+            case "register":
+                Party party = player.getParty();
+                if (party == null)
+                    showChatWindow(player, "events/kerthang_manager008.htm");
+                else if (party.getLeader() != player)
+                    showChatWindow(player, "events/kerthang_manager004.htm");
+                else {
+                    for (Player $player : party) {
+                        if ($player.getLevel() < coliseumEvent.getMinLevel() || $player.getLevel() > coliseumEvent.getMaxLevel()) {
+                            showChatWindow(player, "events/kerthang_manager011.htm", "%name%", $player.getName());
+                            return;
+                        }
                     }
                 }
-            }
-        } else if (command.equals("viewTeams")) {
+                break;
+            case "viewTeams":
 
-            List<Player> reg = coliseumEvent.getRegisteredPlayers();
+                List<Player> reg = coliseumEvent.getRegisteredPlayers();
 
-            NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
-            msg.setFile("events/kerthang_manager003.htm");
-            for (int i = 0; i < 5; i++) {
-                Player $player = CollectionUtils.safeGet(reg, i);
+                NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
+                msg.setFile("events/kerthang_manager003.htm");
+                for (int i = 0; i < 5; i++) {
+                    Player $player = CollectionUtils.safeGet(reg, i);
 
-                msg.replace("%team" + i + "%", $player == null ? StringUtils.EMPTY : $player.getName());
-            }
+                    msg.replace("%team" + i + "%", $player == null ? StringUtils.EMPTY : $player.getName());
+                }
 
-            player.sendPacket(msg);
-        } else
-            super.onBypassFeedback(player, command);
+                player.sendPacket(msg);
+                break;
+            default:
+                super.onBypassFeedback(player, command);
+                break;
+        }
     }
 
     @Override

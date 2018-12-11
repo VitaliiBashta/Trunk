@@ -24,7 +24,7 @@ import java.util.List;
 public class TeleToParnassus extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(TeleToParnassus.class);
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
-    private static final Zone _zone = ReflectionUtils.getZone("[parnassus_offshore]");
+    private final Zone _zone = ReflectionUtils.getZone("[parnassus_offshore]");
     private static final String en = "<br>[scripts_services.TeleToParnassus:toParnassus @811;Parnassus|\"Move to Parnassus (offshore zone) - " + Config.SERVICES_PARNASSUS_PRICE + " Adena.\"]";
     private static final String en2 = "<br>[scripts_services.ManaRegen:DoManaRegen|Full MP Regeneration. (1 MP for 5 Adena)]<br>[scripts_services.TeleToParnassus:fromParnassus @811;From Parnassus|\"Exit the Parnassus.\"]<br>";
     private static ZoneListener _zoneListener;

@@ -8,12 +8,6 @@ import l2trunk.gameserver.templates.manor.CropProcure;
 
 import java.util.List;
 
-
-/**
- * format
- * dd[ddc[d]c[d]ddddddcddc]
- * dd[ddc[d]c[d]ddddQQcQQc] - Gracia Final
- */
 public final class ExShowCropSetting extends L2GameServerPacket {
     private final int _manorId;
     private final int _count;
@@ -21,13 +15,13 @@ public final class ExShowCropSetting extends L2GameServerPacket {
 
     public ExShowCropSetting(int manorId) {
         _manorId = manorId;
-        Castle c = ResidenceHolder.getInstance().getResidence(Castle.class, _manorId);
+        Castle c = ResidenceHolder.getResidence(Castle.class, _manorId);
         List<Integer> crops = Manor.INSTANCE.getCropsForCastle(_manorId);
         _count = crops.size();
         _cropData = new long[_count * 14];
         int i = 0;
         for (int cr : crops) {
-            _cropData[i * 14 + 0] = cr;
+            _cropData[i * 14 ] = cr;
             _cropData[i * 14 + 1] = Manor.INSTANCE.getSeedLevelByCrop(cr);
             _cropData[i * 14 + 2] = Manor.INSTANCE.getRewardItem(cr, 1);
             _cropData[i * 14 + 3] = Manor.INSTANCE.getRewardItem(cr, 2);

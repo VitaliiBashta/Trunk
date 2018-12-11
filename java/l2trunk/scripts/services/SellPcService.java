@@ -10,14 +10,10 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-/**
- * @author Buemo
- * @editor RuleZzz
- * @update Buemo
- * @date 30.12.11
- */
-public class SellPcService extends Functions implements ScriptFile {
+
+public final class SellPcService extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
 
@@ -35,11 +31,11 @@ public class SellPcService extends Functions implements ScriptFile {
         if (player == null)
             return;
 
-        int points = Integer.parseInt(param[0]);    //поинты (очки)
-        int itemId = Integer.parseInt(param[1]);    //ид предмета, который взымается
-        int itemCount = Integer.parseInt(param[2]); //количество предмета, который взымается
+        int points = toInt(param[0]);    //поинты (очки)
+        int itemId = toInt(param[1]);    //ид предмета, который взымается
+        int itemCount = toInt(param[2]); //количество предмета, который взымается
 
-        ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId); //id итема
+        ItemTemplate item = ItemHolder.getTemplate(itemId); //id итема
 
         if (item == null)
             return;

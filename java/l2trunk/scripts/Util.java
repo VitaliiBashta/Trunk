@@ -3,7 +3,6 @@ package l2trunk.scripts;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.data.xml.holder.BuyListHolder;
-import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.handler.bbs.CommunityBoardManager;
@@ -12,22 +11,20 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.entity.SevenSigns;
-import l2trunk.gameserver.model.entity.events.EventType;
-import l2trunk.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
-import l2trunk.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
-import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.WarehouseFunctions;
 
-public class Util extends Functions {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class Util extends Functions {
     public void Gatekeeper(String[] param) {
         if (param.length < 4)
             throw new IllegalArgumentException();
@@ -95,13 +92,13 @@ public class Util extends Functions {
             return;
         }
 
-        int x = Integer.parseInt(param[0]);
-        int y = Integer.parseInt(param[1]);
-        int z = Integer.parseInt(param[2]);
-        int castleId = param.length > 4 ? Integer.parseInt(param[3]) : 0;
+        int x = toInt(param[0]);
+        int y = toInt(param[1]);
+        int z = toInt(param[2]);
+        int castleId = param.length > 4 ? toInt(param[3]) : 0;
 
         if (player.getReflection().isDefault()) {
-            Castle castle = castleId > 0 ? ResidenceHolder.getInstance().getResidence(Castle.class, castleId) : null;
+            Castle castle = castleId > 0 ? ResidenceHolder.getResidence(Castle.class, castleId) : null;
             if (castle != null && castle.getSiegeEvent().isInProgress()) {
                 player.sendPacket(Msg.YOU_CANNOT_TELEPORT_TO_A_VILLAGE_THAT_IS_IN_A_SIEGE);
                 return;
@@ -155,9 +152,9 @@ public class Util extends Functions {
             return;
         }
 
-        int x = Integer.parseInt(param[0]);
-        int y = Integer.parseInt(param[1]);
-        int z = Integer.parseInt(param[2]);
+        int x = toInt(param[0]);
+        int y = toInt(param[1]);
+        int z = toInt(param[2]);
 
         Location pos = Location.findPointToStay(x, y, z, 50, 100, player.getGeoIndex());
 
@@ -203,14 +200,14 @@ public class Util extends Functions {
             return;
         }
 
-        int x = Integer.parseInt(param[0]);
-        int y = Integer.parseInt(param[1]);
-        int z = Integer.parseInt(param[2]);
-        int castleId = param.length > 4 ? Integer.parseInt(param[3]) : 0;
+        int x = toInt(param[0]);
+        int y = toInt(param[1]);
+        int z = toInt(param[2]);
+        int castleId = param.length > 4 ? toInt(param[3]) : 0;
         final boolean closeTutorial = param.length > 5;
 
         if (player.getReflection().isDefault()) {
-            Castle castle = castleId > 0 ? ResidenceHolder.getInstance().getResidence(Castle.class, castleId) : null;
+            Castle castle = castleId > 0 ? ResidenceHolder.getResidence(Castle.class, castleId) : null;
             if (castle != null && castle.getSiegeEvent().isInProgress()) {
                 player.sendPacket(Msg.YOU_CANNOT_TELEPORT_TO_A_VILLAGE_THAT_IS_IN_A_SIEGE);
                 return;
@@ -240,7 +237,7 @@ public class Util extends Functions {
         if (player == null)
             return;
 
-        int type = Integer.parseInt(param[3]);
+        int type = toInt(param[3]);
 
         if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
             return;
@@ -269,7 +266,7 @@ public class Util extends Functions {
             }
         }
 
-        player.teleToLocation(Integer.parseInt(param[0]), Integer.parseInt(param[1]), Integer.parseInt(param[2]));
+        player.teleToLocation(toInt(param[0]), toInt(param[1]), toInt(param[2]));
     }
 
     private void QuestGatekeeper(String[] param) {
@@ -281,7 +278,7 @@ public class Util extends Functions {
             return;
 
         long count = Long.parseLong(param[3]);
-        int item = Integer.parseInt(param[4]);
+        int item = toInt(param[4]);
 
         if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
             return;
@@ -299,9 +296,9 @@ public class Util extends Functions {
             player.sendPacket(SystemMessage2.removeItems(item, count));
         }
 
-        int x = Integer.parseInt(param[0]);
-        int y = Integer.parseInt(param[1]);
-        int z = Integer.parseInt(param[2]);
+        int x = toInt(param[0]);
+        int y = toInt(param[1]);
+        int z = toInt(param[2]);
 
         Location pos = Location.findPointToStay(x, y, z, 20, 70, player.getGeoIndex());
 
@@ -321,7 +318,7 @@ public class Util extends Functions {
             return;
         }
 
-        player.setReflection(Integer.parseInt(param[4]));
+        player.setReflection(toInt(param[4]));
 
         Gatekeeper(param);
     }
@@ -338,7 +335,7 @@ public class Util extends Functions {
         }
 
         String listId = param[0];
-        MultiSellHolder.getInstance().SeparateAndSend(Integer.parseInt(listId), getSelf(), 0);
+        MultiSellHolder.INSTANCE.SeparateAndSend(toInt(listId), getSelf(), 0);
     }
 
     public void CommunitySell() {
@@ -448,7 +445,7 @@ public class Util extends Functions {
         Functions.addItem(getSelf(), 10280, 1, "CommunityCert65");
         clzz.addCertification(SubClass.CERTIFICATION_65);
         getSelf().store(true);
-        CommunityBoardManager.getInstance().getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
     }
 
     public void CommunityCert70() {
@@ -459,7 +456,7 @@ public class Util extends Functions {
         Functions.addItem(getSelf(), 10280, 1, "CommunityCert70");
         clzz.addCertification(SubClass.CERTIFICATION_70);
         getSelf().store(true);
-        CommunityBoardManager.getInstance().getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
     }
 
     public void CommunityCert75Class() {
@@ -474,7 +471,7 @@ public class Util extends Functions {
         Functions.addItem(getSelf(), cl.getType2().getCertificateId(), 1, "CommunityCert75Class");
         clzz.addCertification(SubClass.CERTIFICATION_75);
         getSelf().store(true);
-        CommunityBoardManager.getInstance().getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
     }
 
     public void CommunityCert75Master() {
@@ -485,7 +482,7 @@ public class Util extends Functions {
         Functions.addItem(getSelf(), 10612, 1, "CommunityCert75Master"); // master ability
         clzz.addCertification(SubClass.CERTIFICATION_75);
         getSelf().store(true);
-        CommunityBoardManager.getInstance().getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
     }
 
     public void CommunityCert80() {
@@ -500,7 +497,7 @@ public class Util extends Functions {
         Functions.addItem(getSelf(), cl.getType2().getTransformationId(), 1, "CommunityCert80");
         clzz.addCertification(SubClass.CERTIFICATION_80);
         getSelf().store(true);
-        CommunityBoardManager.getInstance().getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
+        CommunityBoardManager.getCommunityHandler("_bbsChooseCertificate").onBypassCommand(getSelf(), "_bbsChooseCertificate");
     }
 
     private boolean checkCertificationCondition(int requiredLevel, int certificationIndex) {
@@ -516,7 +513,7 @@ public class Util extends Functions {
         }
 
         if (failed) {
-            CommunityBoardManager.getInstance().getCommunityHandler("_bbsfile").onBypassCommand(getSelf(), "_bbsfile:smallNpcs/subclassChanger");
+            CommunityBoardManager.getCommunityHandler("_bbsfile").onBypassCommand(getSelf(), "_bbsfile:smallNpcs/subclassChanger");
             return false;
         }
         return true;
@@ -551,7 +548,7 @@ public class Util extends Functions {
             return;
 
         String page = param[0];
-        int item = Integer.parseInt(param[1]);
+        int item = toInt(param[1]);
         long price = Long.parseLong(param[2]);
 
         if (getItemCount(player, item) < price) {
@@ -574,8 +571,8 @@ public class Util extends Functions {
 //        if (!NpcInstance.canBypassCheck(player, player.getLastNpc()))
 //            return;
 //
-//        int crystal = Integer.parseInt(param[0]);
-//        int score = Integer.parseInt(param[1]);
+//        int crystal = toInt(param[0]);
+//        int score = toInt(param[1]);
 //
 //        if (crystal < 4411 || crystal > 4417)
 //            return;

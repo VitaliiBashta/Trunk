@@ -9,6 +9,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -29,13 +30,13 @@ public final class RequestAllyInfo extends L2GameClientPacket {
 
         int clancount;
         Clan leaderclan = player.getAlliance().getLeader();
-        clancount = ClanTable.INSTANCE.getAlliance(leaderclan.getAllyId()).getMembers().length;
+        clancount = ClanTable.INSTANCE.getAlliance(leaderclan.getAllyId()).getMembers().size();
         int[] online = new int[clancount + 1];
         int[] count = new int[clancount + 1];
-        Clan[] clans = player.getAlliance().getMembers();
+        List<Clan> clans = player.getAlliance().getMembers();
         for (int i = 0; i < clancount; i++) {
-            online[i + 1] = clans[i].getOnlineMembers(0).size();
-            count[i + 1] = clans[i].getAllSize();
+            online[i + 1] = clans.get(i).getOnlineMembers(0).size();
+            count[i + 1] = clans.get(i).getAllSize();
             online[0] += online[i + 1];
             count[0] += count[i + 1];
         }
@@ -48,9 +49,9 @@ public final class RequestAllyInfo extends L2GameClientPacket {
         packets.add(new SystemMessage2(SystemMsg.AFFILIATED_CLANS_TOTAL_S1_CLANS).addInteger(clancount)); //clan count
         packets.add(new SystemMessage2(SystemMsg.CLAN_INFORMATION));
         for (int i = 0; i < clancount; i++) {
-            packets.add(new SystemMessage2(SystemMsg.CLAN_NAME_S1).addString(clans[i].getName()));
-            packets.add(new SystemMessage2(SystemMsg.CLAN_LEADER__S1).addString(clans[i].getLeaderName()));
-            packets.add(new SystemMessage2(SystemMsg.CLAN_LEVEL_S1).addInteger(clans[i].getLevel()));
+            packets.add(new SystemMessage2(SystemMsg.CLAN_NAME_S1).addString(clans.get(i).getName()));
+            packets.add(new SystemMessage2(SystemMsg.CLAN_LEADER__S1).addString(clans.get(i).getLeaderName()));
+            packets.add(new SystemMessage2(SystemMsg.CLAN_LEVEL_S1).addInteger(clans.get(i).getLevel()));
             packets.add(new SystemMessage2(SystemMsg.CONNECTION_S1__TOTAL_S2).addInteger(online[i + 1]).addInteger(count[i + 1]));
             packets.add(new SystemMessage2(SystemMsg.__DASHES__));
         }

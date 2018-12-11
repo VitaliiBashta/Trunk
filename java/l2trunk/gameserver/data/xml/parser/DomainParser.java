@@ -1,39 +1,29 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.instancemanager.MapRegionManager;
+import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.templates.mapregion.DomainArea;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
 
-public final class DomainParser extends AbstractFileParser<MapRegionManager> {
-    private static final DomainParser _instance = new DomainParser();
+public enum DomainParser /*extends AbstractFileParser<MapRegionHolder>*/ {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    Path xml = Config.DATAPACK_ROOT.resolve("data/mapregion/domains.xml");
 
-    private DomainParser() {
-        super(MapRegionManager.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + MapRegionHolder.size() + " items ");
     }
 
-    public static DomainParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/mapregion/domains.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "domains.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element listElement = iterator.next();
 
@@ -60,7 +50,7 @@ public final class DomainParser extends AbstractFileParser<MapRegionManager> {
                 if (territory == null)
                     throw new RuntimeException("DomainParser: empty territory!");
 
-                getHolder().addRegionData(new DomainArea(id, territory));
+                MapRegionHolder.addRegionData(new DomainArea(id, territory));
             }
         }
     }

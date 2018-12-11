@@ -1,48 +1,39 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.SkillAcquireHolder;
 import l2trunk.gameserver.model.SkillLearn;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
 
-public final class SkillAcquireParser extends AbstractDirParser<SkillAcquireHolder> {
-    private static final SkillAcquireParser _instance = new SkillAcquireParser();
+public enum SkillAcquireParser {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    private final Path xmlFile = Config.DATAPACK_ROOT.resolve("data/skill_tree/");
 
-    private SkillAcquireParser() {
-        super(SkillAcquireHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xmlFile).forEach(this::readData);
+        LOG.info("loaded " + SkillAcquireHolder.size() + " items");
     }
 
-    public static SkillAcquireParser getInstance() {
-        return _instance;
-    }
 
-    @Override
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/skill_tree/");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "tree.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator("certification_skill_tree"); iterator.hasNext(); )
-            getHolder().addAllCertificationLearns(parseSkillLearn(iterator.next()));
+            SkillAcquireHolder.addAllCertificationLearns(parseSkillLearn(iterator.next()));
 
         for (Iterator<Element> iterator = rootElement.elementIterator("sub_unit_skill_tree"); iterator.hasNext(); )
-            getHolder().addAllSubUnitLearns(parseSkillLearn(iterator.next()));
+            SkillAcquireHolder.addAllSubUnitLearns(parseSkillLearn(iterator.next()));
 
         for (Iterator<Element> iterator = rootElement.elementIterator("pledge_skill_tree"); iterator.hasNext(); )
-            getHolder().addAllPledgeLearns(parseSkillLearn(iterator.next()));
+            SkillAcquireHolder.addAllPledgeLearns(parseSkillLearn(iterator.next()));
 
         for (Iterator<Element> iterator = rootElement.elementIterator("collection_skill_tree"); iterator.hasNext(); )
-            getHolder().addAllCollectionLearns(parseSkillLearn(iterator.next()));
+            SkillAcquireHolder.addAllCollectionLearns(parseSkillLearn(iterator.next()));
 
         for (Iterator<Element> iterator = rootElement.elementIterator("fishing_skill_tree"); iterator.hasNext(); ) {
             Element nxt = iterator.next();
@@ -50,7 +41,7 @@ public final class SkillAcquireParser extends AbstractDirParser<SkillAcquireHold
                 Element classElement = classIterator.next();
                 int race = Integer.parseInt(classElement.attributeValue("id"));
                 List<SkillLearn> learns = parseSkillLearn(classElement);
-                getHolder().addAllFishingLearns(race, learns);
+                SkillAcquireHolder.addAllFishingLearns(race, learns);
             }
         }
 
@@ -60,7 +51,7 @@ public final class SkillAcquireParser extends AbstractDirParser<SkillAcquireHold
                 Element classElement = classIterator.next();
                 int classId = Integer.parseInt(classElement.attributeValue("id"));
                 List<SkillLearn> learns = parseSkillLearn(classElement);
-                getHolder().addAllTransferLearns(classId, learns);
+                SkillAcquireHolder.addAllTransferLearns(classId, learns);
             }
         }
 
@@ -75,7 +66,7 @@ public final class SkillAcquireParser extends AbstractDirParser<SkillAcquireHold
                 map.put(classId, learns);
             }
 
-            getHolder().addAllNormalSkillLearns(map);
+            SkillAcquireHolder.addAllNormalSkillLearns(map);
         }
 
         for (Iterator<Element> iterator = rootElement.elementIterator("transformation_skill_tree"); iterator.hasNext(); ) {
@@ -84,7 +75,7 @@ public final class SkillAcquireParser extends AbstractDirParser<SkillAcquireHold
                 Element classElement = classIterator.next();
                 int race = Integer.parseInt(classElement.attributeValue("id"));
                 List<SkillLearn> learns = parseSkillLearn(classElement);
-                getHolder().addAllTransformationLearns(race, learns);
+                SkillAcquireHolder.addAllTransformationLearns(race, learns);
             }
         }
     }

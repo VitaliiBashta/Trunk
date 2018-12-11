@@ -1,12 +1,10 @@
 package l2trunk.gameserver.model.entity;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.database.mysql;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -88,19 +86,19 @@ public enum Hero {
     }
 
     public static void addSkills(Player player) {
-        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_MIRACLE, 1));
-        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_BERSERKER, 1));
-        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_VALOR, 1));
-        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_GRANDEUR, 1));
-        player.addSkill(SkillTable.INSTANCE.getInfo(Skill.SKILL_HEROIC_DREAD, 1));
+        player.addSkill(SkillTable.INSTANCE.getInfo(395));
+        player.addSkill(SkillTable.INSTANCE.getInfo(396));
+        player.addSkill(SkillTable.INSTANCE.getInfo(1374));
+        player.addSkill(SkillTable.INSTANCE.getInfo(1375));
+        player.addSkill(SkillTable.INSTANCE.getInfo(1376));
     }
 
     public static void removeSkills(Player player) {
-        player.removeSkillById(Skill.SKILL_HEROIC_MIRACLE);
-        player.removeSkillById(Skill.SKILL_HEROIC_BERSERKER);
-        player.removeSkillById(Skill.SKILL_HEROIC_VALOR);
-        player.removeSkillById(Skill.SKILL_HEROIC_GRANDEUR);
-        player.removeSkillById(Skill.SKILL_HEROIC_DREAD);
+        player.removeSkill(395);
+        player.removeSkill(396);
+        player.removeSkill(1374);
+        player.removeSkill(1375);
+        player.removeSkill(1376);
     }
 
     private void init() {
@@ -109,11 +107,9 @@ public enum Hero {
         _herodiary = new ConcurrentHashMap<>();
         _heroMessage = new ConcurrentHashMap<>();
 
-        Connection con = null;
         PreparedStatement statement = null;
         ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             statement = con.prepareStatement(GET_HEROES);
             rset = statement.executeQuery();
             while (rset.next()) {
@@ -129,8 +125,6 @@ public enum Hero {
                 loadMessage(charId);
                 heroes.put(charId, hero);
             }
-            DbUtils.close(statement, rset);
-
             statement = con.prepareStatement(GET_ALL_HEROES);
             rset = statement.executeQuery();
             while (rset.next()) {
@@ -145,9 +139,7 @@ public enum Hero {
                 _completeHeroes.put(charId, hero);
             }
         } catch (SQLException e) {
-            LOG.warn("Hero System: Couldnt load Heroes", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
+            LOG.warn("Hero System: Couldnt loadFile Heroes", e);
         }
 
     }
@@ -234,11 +226,8 @@ public enum Hero {
     }
 
     private void updateHeroes(int id) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("REPLACE INTO heroes (char_id, count, played, active) VALUES (?,?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("REPLACE INTO heroes (char_id, count, played, active) VALUES (?,?,?,?)")) {
 
             for (Integer heroId : heroes.keySet()) {
                 if (id > 0 && heroId != id)  //if (id > 0 && heroId != id) //Here maybe not normal with intValue
@@ -256,25 +245,19 @@ public enum Hero {
             }
         } catch (SQLException e) {
             LOG.error("Hero System: Couldnt update Heroes", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     public boolean isHero(int id) {
         if (heroes == null || heroes.isEmpty())
             return false;
-        if (heroes.containsKey(id) && heroes.get(id).getInteger(ACTIVE) == 1)
-            return true;
-        return false;
+        return heroes.containsKey(id) && heroes.get(id).getInteger(ACTIVE) == 1;
     }
 
     public boolean isInactiveHero(int id) {
         if (heroes == null || heroes.isEmpty())
             return false;
-        if (heroes.containsKey(id) && heroes.get(id).getInteger(ACTIVE) == 0)
-            return true;
-        return false;
+        return heroes.containsKey(id) && heroes.get(id).getInteger(ACTIVE) == 0;
     }
 
     public void activateHero(Player player) {
@@ -301,15 +284,10 @@ public enum Hero {
 
     private void loadDiary(int charId) {
         List<HeroDiary> diary = new ArrayList<>();
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT * FROM  heroes_diary WHERE charId=? ORDER BY time ASC");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT * FROM  heroes_diary WHERE charId=? ORDER BY time ASC")) {
             statement.setInt(1, charId);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             while (rset.next()) {
                 long time = rset.getLong("time");
@@ -325,9 +303,7 @@ public enum Hero {
             if (Config.DEBUG)
                 LOG.info("Hero System: Loaded " + diary.size() + " diary entries for Hero(object id: #" + charId + ")");
         } catch (SQLException e) {
-            LOG.warn("Hero System: Couldnt load Hero Diary for CharId: " + charId, e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
+            LOG.warn("Hero System: Couldnt loadFile Hero Diary for CharId: " + charId, e);
         }
     }
 
@@ -361,7 +337,7 @@ public enum Hero {
                     fList.append("<table width=270 bgcolor=\"131210\">");
                 else
                     fList.append("<table width=270>");
-                fList.append("<tr><td width=270><font color=\"LEVEL\">" + entry.getKey() + "</font></td></tr>");
+                fList.append("<tr><td width=270><font color=\"LEVEL\">").append(entry.getKey()).append("</font></td></tr>");
                 fList.append("<tr><td width=270>" + entry.getValue() + "</td></tr>");
                 fList.append("<tr><td>&nbsp;</td></tr></table>");
                 fList.append("</td></tr>");
@@ -398,42 +374,27 @@ public enum Hero {
     }
 
     private void insertHeroDiary(int charId, int action, int param) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("INSERT INTO heroes_diary (charId, time, action, param) values(?,?,?,?)");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("INSERT INTO heroes_diary (charId, time, action, param) values(?,?,?,?)")) {
             statement.setInt(1, charId);
             statement.setLong(2, System.currentTimeMillis());
             statement.setInt(3, action);
             statement.setInt(4, param);
             statement.execute();
-            statement.close();
         } catch (SQLException e) {
             LOG.error("SQL exception while saving DiaryData.", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     private void loadMessage(int charId) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-
-        try {
-            String message = null;
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT message FROM heroes WHERE char_id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT message FROM heroes WHERE char_id=?")) {
             statement.setInt(1, charId);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
             rset.next();
-            message = rset.getString("message");
-            _heroMessage.put(charId, message);
+            _heroMessage.put(charId, rset.getString("message"));
         } catch (SQLException e) {
-            LOG.error("Hero System: Couldnt load Hero Message for CharId: " + charId, e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
+            LOG.error("Hero System: Couldnt loadFile Hero Message for CharId: " + charId, e);
         }
     }
 
@@ -445,20 +406,13 @@ public enum Hero {
         if (_heroMessage.get(charId) == null)
             return;
 
-        Connection con = null;
-        PreparedStatement statement = null;
-
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE heroes SET message=? WHERE char_id=?;");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE heroes SET message=? WHERE char_id=?;")) {
             statement.setString(1, _heroMessage.get(charId));
             statement.setInt(2, charId);
             statement.execute();
-            statement.close();
         } catch (SQLException e) {
             LOG.error("SQL exception while saving HeroMessage.", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.commons.threading.RunnableImpl;
@@ -554,8 +553,8 @@ public enum SevenSigns {
      * Restores all Seven Signs data and settings, usually called at server startup.
      */
     private void restoreSevenSignsData() {
-        PreparedStatement statement = null;
-        ResultSet rset = null;
+        PreparedStatement statement;
+        ResultSet rset;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             statement = con.prepareStatement("SELECT char_obj_id, cabal, seal, dawn_red_stones, dawn_green_stones, dawn_blue_stones, dawn_ancient_adena_amount, dawn_contribution_score, dusk_red_stones, dusk_green_stones, dusk_blue_stones, dusk_ancient_adena_amount, dusk_contribution_score FROM seven_signs");
             rset = statement.executeQuery();
@@ -579,7 +578,6 @@ public enum SevenSigns {
 
                 _signsPlayerData.put(charObjId, sevenDat);
             }
-            DbUtils.close(statement, rset);
 
             statement = con.prepareStatement("SELECT * FROM seven_signs_status");
             rset = statement.executeQuery();
@@ -605,13 +603,12 @@ public enum SevenSigns {
                 _signsDuskSealTotals.put(SEAL_GNOSIS, rset.getInt("gnosis_dusk_score"));
                 _signsDuskSealTotals.put(SEAL_STRIFE, rset.getInt("strife_dusk_score"));
             }
-            DbUtils.close(statement, rset);
 
             statement = con.prepareStatement("UPDATE seven_signs_status SET date=?");
             statement.setInt(1, Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
             statement.execute();
         } catch (SQLException e) {
-            _log.error("Unable to load Seven Signs Data: ", e);
+            _log.error("Unable to loadFile Seven Signs Data: ", e);
         }
         // Festival data is loaded now after the Seven Signs engine data.
     }
@@ -623,19 +620,14 @@ public enum SevenSigns {
      * @param updateSettings — если true сохраняет глобальные параметры, иначе только личные
      */
     public synchronized void saveSevenSignsData(int playerId, boolean updateSettings) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE seven_signs SET cabal=?, seal=?, dawn_red_stones=?, dawn_green_stones=?, dawn_blue_stones=?, dawn_ancient_adena_amount=?, dawn_contribution_score=?, dusk_red_stones=?, dusk_green_stones=?, dusk_blue_stones=?, dusk_ancient_adena_amount=?, dusk_contribution_score=? WHERE char_obj_id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement("UPDATE seven_signs SET cabal=?, seal=?, dawn_red_stones=?, dawn_green_stones=?, dawn_blue_stones=?, dawn_ancient_adena_amount=?, dawn_contribution_score=?, dusk_red_stones=?, dusk_green_stones=?, dusk_blue_stones=?, dusk_ancient_adena_amount=?, dusk_contribution_score=? WHERE char_obj_id=?");
 
             if (playerId > 0)
                 processStatement(statement, _signsPlayerData.get(playerId));
             else
                 for (StatsSet sevenDat : _signsPlayerData.values())
                     processStatement(statement, sevenDat);
-
-            DbUtils.close(statement);
 
             if (updateSettings) {
                 StringBuilder buf = new StringBuilder();
@@ -674,8 +666,6 @@ public enum SevenSigns {
             }
         } catch (SQLException e) {
             _log.error("Unable to save Seven Signs data", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -739,7 +729,7 @@ public enum SevenSigns {
      * Returns the cabal ID the player has joined.
      */
     public int setPlayerInfo(int charObjId, int chosenCabal, int chosenSeal) {
-        StatsSet currPlayer = null;
+        StatsSet currPlayer;
         if (hasRegisteredBefore(charObjId)) {
             // If the seal validation period has passed,
             // cabal information was removed and so "re-register" player
@@ -766,23 +756,18 @@ public enum SevenSigns {
 
             _signsPlayerData.put(charObjId, currPlayer);
 
-            Connection con = null;
-            PreparedStatement statement = null;
             // Update data in database, as we have a new player signing up.
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                statement = con.prepareStatement("INSERT INTO seven_signs (char_obj_id, cabal, seal) VALUES (?,?,?)");
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement("INSERT INTO seven_signs (char_obj_id, cabal, seal) VALUES (?,?,?)")) {
                 statement.setInt(1, charObjId);
                 statement.setString(2, getCabalShortName(chosenCabal));
                 statement.setInt(3, chosenSeal);
                 statement.execute();
             } catch (SQLException e) {
                 _log.error("SevenSigns: Failed to save data: ", e);
-            } finally {
-                DbUtils.closeQuietly(con, statement);
             }
         }
-        long contribScore = 0;
+        long contribScore;
 
         switch (chosenCabal) {
             case CABAL_DAWN:
@@ -1210,7 +1195,7 @@ public enum SevenSigns {
                 case PERIOD_COMP_RECRUITING: // Initialization
                     sendMessageToAll(SystemMessage.SEVEN_SIGNS_THE_QUEST_EVENT_PERIOD_HAS_BEGUN_VISIT_A_PRIEST_OF_DAWN_OR_DUSK_TO_PARTICIPATE_IN_THE_EVENT);
                     // раздаем награды за рейдов, к печатям не относится но чтобы не заводить еще один таймер...
-                    RaidBossSpawnManager.getInstance().distributeRewards();
+                    RaidBossSpawnManager.INSTANCE.distributeRewards();
                     break;
                 case PERIOD_COMPETITION: // Results Calculation
                     sendMessageToAll(SystemMessage.SEVEN_SIGNS_THE_QUEST_EVENT_PERIOD_HAS_ENDED_THE_NEXT_QUEST_EVENT_WILL_START_IN_ONE_WEEK);
@@ -1229,7 +1214,7 @@ public enum SevenSigns {
                     // Perform initial Seal Validation set up.
                     initializeSeals();
                     // раздаем награды за рейдов, к печатям не относится но чтобы не заводить еще один таймер...
-                    RaidBossSpawnManager.getInstance().distributeRewards();
+                    RaidBossSpawnManager.INSTANCE.distributeRewards();
                     // Send message that Seal Validation has begun.
                     sendMessageToAll(SystemMessage.SEVEN_SIGNS_THE_SEAL_VALIDATION_PERIOD_HAS_BEGUN);
                     _log.info("SevenSigns: The " + getCabalName(_previousWinner) + " have won the competition with " + getCurrentScore(_previousWinner) + " points!");

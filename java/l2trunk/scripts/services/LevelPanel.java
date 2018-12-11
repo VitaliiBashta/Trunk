@@ -27,20 +27,20 @@ public final class LevelPanel extends Functions {
         String up = "";
         String lower = "";
         if (!Config.SERVICES_LEVEL_UP_ENABLE) {
-            up = HtmCache.INSTANCE().getNotNull("scripts/services/LevelPanel/up_off.htm", player);
+            up = HtmCache.INSTANCE.getNotNull("scripts/services/LevelPanel/up_off.htm", player);
             up = up.replace("{cost}", "<font color=\"CC3333\">" + new CustomMessage("Service is turned off.").toString() + "</font>");
             html.replace("%up%", up);
         } else {
-            up = HtmCache.INSTANCE().getNotNull("scripts/services/LevelPanel/up.htm", player);
+            up = HtmCache.INSTANCE.getNotNull("scripts/services/LevelPanel/up.htm", player);
             up = up.replace("{cost}", Util.formatPay(player, Config.SERVICES_LEVEL_UP[1], Config.SERVICES_LEVEL_UP[0]));
             html.replace("%up%", up);
         }
         if (!Config.SERVICES_DELEVEL_ENABLE) {
-            lower = HtmCache.INSTANCE().getNotNull("scripts/services/LevelPanel/lower_off.htm", player);
+            lower = HtmCache.INSTANCE.getNotNull("scripts/services/LevelPanel/lower_off.htm", player);
             lower = lower.replace("{cost}", "<font color=\"CC3333\">" + "Service is not allowed.".toString() + "</font>");
             html.replace("%lower%", lower);
         } else {
-            lower = HtmCache.INSTANCE().getNotNull("scripts/services/LevelPanel/lower.htm", player);
+            lower = HtmCache.INSTANCE.getNotNull("scripts/services/LevelPanel/lower.htm", player);
             lower = lower.replace("{cost}", Util.formatPay(player, Config.SERVICES_DELEVEL[1], Config.SERVICES_DELEVEL[0]));
             html.replace("%lower%", lower);
         }

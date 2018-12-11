@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.math.SafeMath;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Player;
@@ -11,23 +10,23 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestExRefundItem extends L2GameClientPacket {
-    private int _listId;
+public final class RequestExRefundItem extends L2GameClientPacket {
     private int _count;
-    private int[] _items;
+    private List<Integer> _items;
 
     @Override
     protected void readImpl() {
-        _listId = readD();
+        int listId = readD();
         _count = readD();
         if (_count * 4 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;
             return;
         }
-        _items = new int[_count];
+        _items = new ArrayList<>();
         for (int i = 0; i < _count; i++) {
-            _items[i] = readD();
-            if (ArrayUtils.indexOf(_items, _items[i]) < i) {
+            int tempS = readD();
+            _items.add(tempS);
+            if (_items.indexOf(tempS) < i) {
                 _count = 0;
                 break;
             }

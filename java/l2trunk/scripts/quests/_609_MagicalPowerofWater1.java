@@ -6,7 +6,10 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class _609_MagicalPowerofWater1 extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _609_MagicalPowerofWater1 extends Quest implements ScriptFile {
     // NPC
     private static final int WAHKAN = 31371;
     private static final int ASEFA = 31372;
@@ -25,7 +28,15 @@ public class _609_MagicalPowerofWater1 extends Quest implements ScriptFile {
     private static final int MARK_OF_KETRA_ALLIANCE5 = 7215;
     private static final int THIEF_KEY = 1661;
 
-    private final int[] VARKA_NPC_LIST = new int[20];
+    private static final List<Integer> VARKA_NPC_LIST = Arrays.asList(21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362, 21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
+
+    public _609_MagicalPowerofWater1() {
+        super(false);
+        addStartNpc(WAHKAN);
+        addTalkId(ASEFA);
+        addTalkId(UDANS_MARDUI_BOX);
+        VARKA_NPC_LIST.forEach(this::addAttackId);
+    }
 
     @Override
     public void onLoad() {
@@ -37,39 +48,6 @@ public class _609_MagicalPowerofWater1 extends Quest implements ScriptFile {
 
     @Override
     public void onShutdown() {
-    }
-
-    public _609_MagicalPowerofWater1() {
-        super(false);
-
-        addStartNpc(WAHKAN);
-
-        addTalkId(ASEFA);
-        addTalkId(UDANS_MARDUI_BOX);
-
-        VARKA_NPC_LIST[0] = 21350;
-        VARKA_NPC_LIST[1] = 21351;
-        VARKA_NPC_LIST[2] = 21353;
-        VARKA_NPC_LIST[3] = 21354;
-        VARKA_NPC_LIST[4] = 21355;
-        VARKA_NPC_LIST[5] = 21357;
-        VARKA_NPC_LIST[6] = 21358;
-        VARKA_NPC_LIST[7] = 21360;
-        VARKA_NPC_LIST[8] = 21361;
-        VARKA_NPC_LIST[9] = 21362;
-        VARKA_NPC_LIST[10] = 21364;
-        VARKA_NPC_LIST[11] = 21365;
-        VARKA_NPC_LIST[12] = 21366;
-        VARKA_NPC_LIST[13] = 21368;
-        VARKA_NPC_LIST[14] = 21369;
-        VARKA_NPC_LIST[15] = 21370;
-        VARKA_NPC_LIST[16] = 21371;
-        VARKA_NPC_LIST[17] = 21372;
-        VARKA_NPC_LIST[18] = 21373;
-        VARKA_NPC_LIST[19] = 21374;
-
-        for (int npcId : VARKA_NPC_LIST)
-            addAttackId(npcId);
     }
 
     @Override
@@ -128,7 +106,7 @@ public class _609_MagicalPowerofWater1 extends Quest implements ScriptFile {
                 st.setCond(2);
             } else if (cond == 2 && proval == 1) {
                 htmltext = "shaman_asefa_q0609_03.htm";
-                npc.doCast(SkillTable.INSTANCE().getInfo(4548, 1), st.getPlayer(), true);
+                npc.doCast(SkillTable.INSTANCE.getInfo(4548), st.getPlayer(), true);
                 st.set("proval", "0");
             } else if (cond == 3 && st.getQuestItemsCount(STOLEN_GREEN_TOTEM) >= 1) {
                 htmltext = "shaman_asefa_q0609_04.htm";
@@ -146,7 +124,7 @@ public class _609_MagicalPowerofWater1 extends Quest implements ScriptFile {
     @Override
     public String onAttack(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && st.getInt("proval") == 0) {
-            npc.doCast(SkillTable.INSTANCE.getInfo(4547, 1), st.getPlayer(), true);
+            npc.doCast(SkillTable.INSTANCE.getInfo(4547), st.getPlayer(), true);
             st.set("proval", "1");
         }
         return null;

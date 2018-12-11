@@ -342,7 +342,7 @@ public final class ItemAuctionInstance {
                         case 1: {
                             if (auction.getScheduledAuctionEndingExtendState() == 0) {
                                 auction.setScheduledAuctionEndingExtendState(1);
-                                setStateTask(ThreadPoolManager.INSTANCE().schedule(this, Math.max(auction.getEndingTime() - System.currentTimeMillis(), 0L)));
+                                setStateTask(ThreadPoolManager.INSTANCE.schedule(this, Math.max(auction.getEndingTime() - System.currentTimeMillis(), 0L)));
                                 return;
                             }
                             break;

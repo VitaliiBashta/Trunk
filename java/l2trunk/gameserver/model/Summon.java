@@ -75,15 +75,15 @@ public abstract class Summon extends Playable {
 
     @Override
     public SummonAI getAI() {
-        if (_ai == null) {
+        if (ai == null) {
             synchronized (this) {
-                if (_ai == null) {
-                    _ai = new SummonAI(this);
+                if (ai == null) {
+                    ai = new SummonAI(this);
                 }
             }
         }
 
-        return (SummonAI) _ai;
+        return (SummonAI) ai;
     }
 
     @Override
@@ -220,9 +220,6 @@ public abstract class Summon extends Playable {
             return;
         }
 
-        if (owner.isInFightClub() || killer.isPlayable() && killer.getPlayer().isInFightClub()) {
-            return;
-        }
 
         if (owner.isInZonePvP()) {
             return;
@@ -320,7 +317,7 @@ public abstract class Summon extends Playable {
             getEffectList().stopAllEffects();
         }
 
-        EffectsDAO.getInstance().insert(this);
+        EffectsDAO.INSTANCE.insert(this);
     }
 
     public boolean isFollowMode() {

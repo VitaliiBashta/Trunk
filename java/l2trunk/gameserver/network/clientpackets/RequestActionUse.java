@@ -501,7 +501,7 @@ public final class RequestActionUse extends L2GameClientPacket {
             return;
         }
 
-        Skill skill = SkillTable.INSTANCE().getInfo(skillId, skillLevel);
+        Skill skill = SkillTable.INSTANCE.getInfo(skillId, skillLevel);
         if (skill == null) {
             activeChar.sendActionFailed();
             return;

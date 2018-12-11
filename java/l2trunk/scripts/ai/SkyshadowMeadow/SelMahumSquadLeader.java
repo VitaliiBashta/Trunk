@@ -49,12 +49,12 @@ public final class SelMahumSquadLeader extends Fighter {
         if (!statsIsChanged) {
             switch (actor.getNpcState()) {
                 case 1: {
-                    actor.doCast(SkillTable.INSTANCE().getInfo(6332, 1), actor, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(6332), actor, true);
                     statsIsChanged = true;
                     break;
                 }
                 case 2: {
-                    actor.doCast(SkillTable.INSTANCE().getInfo(6331, 1), actor, true);
+                    actor.doCast(SkillTable.INSTANCE.getInfo(6331), actor, true);
                     statsIsChanged = true;
                     break;
                 }
@@ -109,7 +109,7 @@ public final class SelMahumSquadLeader extends Fighter {
                     }
                 } else if (Rnd.chance(20)) {
                     actor.setNpcState((byte) 2);
-                    ThreadPoolManager.INSTANCE.schedule(new Stop(), Rnd.get(20, 30) * 1000);
+                    ThreadPoolManager.INSTANCE.schedule(() -> getActor().setNpcState((byte) 3), Rnd.get(20, 30) * 1000);
                 }
             }
         }
@@ -128,14 +128,6 @@ public final class SelMahumSquadLeader extends Fighter {
             addTaskMove(loc, true);
             _firstTime1 = true;
             _firstTime3 = true;
-        }
-    }
-
-    private class Stop extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            actor.setNpcState((byte) 3);
         }
     }
 

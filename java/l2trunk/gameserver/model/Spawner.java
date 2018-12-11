@@ -170,8 +170,6 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         }
 
         NpcInstance tmp = template.getNewInstance();
-        if (tmp == null)
-            return null;
 
         if (!spawn)
             spawn = _respawnTime <= System.currentTimeMillis() / 1000 + MIN_RESPAWN_DELAY;

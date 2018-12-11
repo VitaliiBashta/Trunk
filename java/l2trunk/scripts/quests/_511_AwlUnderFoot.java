@@ -135,7 +135,7 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
     }
 
     private boolean check(Player player) {
-        Fortress fort = ResidenceHolder.getInstance().getResidenceByObject(Fortress.class, player);
+        Fortress fort = ResidenceHolder.getResidenceByObject(Fortress.class, player);
         if (fort == null)
             return false;
         Clan clan = player.getClan();
@@ -145,7 +145,7 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
     }
 
     private String enterPrison(Player player) {
-        Fortress fort = ResidenceHolder.getInstance().getResidenceByObject(Fortress.class, player);
+        Fortress fort = ResidenceHolder.getResidenceByObject(Fortress.class, player);
         if (fort == null || fort.getOwner() != player.getClan())
             return "gludio_fort_a_campkeeper_q0511_01a.htm";
 
@@ -155,8 +155,8 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
         if (!areMembersSameClan(player))
             return "gludio_fort_a_campkeeper_q0511_01a.htm";
         if (player.canEnterInstance(INSTANCE_ZONE_ID)) {
-            InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(INSTANCE_ZONE_ID);
-            Prison prison = null;
+            InstantZone iz = InstantZoneHolder.getInstantZone(INSTANCE_ZONE_ID);
+            Prison prison;
             if (!_prisons.isEmpty()) {
                 prison = _prisons.get(fort.getId());
                 if (prison != null && prison.isLocked()) {

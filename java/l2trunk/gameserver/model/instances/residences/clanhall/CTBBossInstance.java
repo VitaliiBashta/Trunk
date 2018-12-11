@@ -12,7 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public abstract class CTBBossInstance extends MonsterInstance {
-    private final Skill SKILL = SkillTable.INSTANCE().getInfo(5456, 1);
+    private final Skill SKILL = SkillTable.INSTANCE.getInfo(5456, 1);
     private CTBTeamObject _matchTeamObject;
 
     protected CTBBossInstance(int objectId, NpcTemplate template) {
@@ -35,8 +35,7 @@ public abstract class CTBBossInstance extends MonsterInstance {
         CTBSiegeClanObject clan = _matchTeamObject.getSiegeClan();
         if (clan != null && attacker.isPlayable()) {
             Player player = attacker.getPlayer();
-            if (player.getClan() == clan.getClan())
-                return false;
+            return player.getClan() != clan.getClan();
         }
         return true;
     }

@@ -1,46 +1,40 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.model.Options.AugmentationFilter;
 import l2trunk.gameserver.templates.OptionDataTemplate;
 
 import java.util.*;
 
-public final class OptionDataHolder extends AbstractHolder {
-    private static final OptionDataHolder _instance = new OptionDataHolder();
-
-    private final Map<Integer, OptionDataTemplate> _templates = new HashMap<>();
-
-    public static OptionDataHolder getInstance() {
-        return _instance;
+public final class OptionDataHolder  {
+    private OptionDataHolder() {
     }
 
-    public void addTemplate(OptionDataTemplate template) {
-        _templates.put(template.getId(), template);
+    private static final Map<Integer, OptionDataTemplate> templates = new HashMap<>();
+
+    public static void addTemplate(OptionDataTemplate template) {
+        templates.put(template.getId(), template);
     }
 
-    public OptionDataTemplate getTemplate(int id) {
-        return _templates.get(id);
+    public static OptionDataTemplate getTemplate(int id) {
+        return templates.get(id);
     }
 
-    @Override
-    public int size() {
-        return _templates.size();
+    public static int size() {
+        return templates.size();
     }
 
-    @Override
     public void clear() {
-        _templates.clear();
+        templates.clear();
     }
 
-    public Collection<OptionDataTemplate> getUniqueOptions(AugmentationFilter filter) {
+    public static Collection<OptionDataTemplate> getUniqueOptions(AugmentationFilter filter) {
         if (filter == AugmentationFilter.NONE)
-            return _templates.values();
+            return templates.values();
 
         final Map<Integer, OptionDataTemplate> options = new HashMap<>();
         switch (filter) {
             case ACTIVE_SKILL: {
-                for (OptionDataTemplate option : _templates.values()) {
+                for (OptionDataTemplate option : templates.values()) {
                     // Solo activas
                     if (!option.getTriggerList().isEmpty())
                         continue;
@@ -55,7 +49,7 @@ public final class OptionDataHolder extends AbstractHolder {
                 break;
             }
             case PASSIVE_SKILL: {
-                for (OptionDataTemplate option : _templates.values()) {
+                for (OptionDataTemplate option : templates.values()) {
                     // Solo pasivas
                     if (!option.getTriggerList().isEmpty())
                         continue;
@@ -70,7 +64,7 @@ public final class OptionDataHolder extends AbstractHolder {
                 break;
             }
             case CHANCE_SKILL: {
-                for (OptionDataTemplate option : _templates.values()) {
+                for (OptionDataTemplate option : templates.values()) {
                     // Solo de chance
                     if (option.getTriggerList().isEmpty())
                         continue;
@@ -81,7 +75,7 @@ public final class OptionDataHolder extends AbstractHolder {
                 break;
             }
             case STATS: {
-                for (OptionDataTemplate option : _templates.values()) {
+                for (OptionDataTemplate option : templates.values()) {
                     switch (option.getId()) {
                         case 16341: // +1 STR
                         case 16342: // +1 CON
@@ -96,12 +90,12 @@ public final class OptionDataHolder extends AbstractHolder {
         }
 
         final List<OptionDataTemplate> augs = new ArrayList<>(options.values());
-        Collections.sort(augs, new AugmentationComparator());
+        augs.sort(new AugmentationComparator());
 
         return augs;
     }
 
-    static class AugmentationComparator implements Comparator<OptionDataTemplate> {
+    private static class AugmentationComparator implements Comparator<OptionDataTemplate> {
         @Override
         public int compare(final OptionDataTemplate left, final OptionDataTemplate right) {
             if (left.getSkills().isEmpty() || right.getSkills().isEmpty())

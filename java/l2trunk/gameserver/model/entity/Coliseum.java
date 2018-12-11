@@ -155,7 +155,7 @@ public final class Coliseum {
     }
 
     private void StopBattle(Party party, Party party2, TeamType winner, long period) {
-        ThreadPoolManager.INSTANCE().schedule(new StopBattle(party, party2, winner), period);
+        ThreadPoolManager.INSTANCE.schedule(new StopBattle(party, party2, winner), period);
     }
 
     private void teleportPlayers(Party party, Party party2) {
@@ -275,7 +275,7 @@ public final class Coliseum {
     class StopBattle implements Runnable {
         final Party _party1;
         final Party _party2;
-        TeamType _winner = TeamType.NONE;
+        TeamType _winner;
 
         StopBattle(Party party, Party party2, TeamType winner) {
             _party1 = party;

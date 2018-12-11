@@ -26,7 +26,7 @@ public final class CCPPoll {
             fileName = "pollVote.htm";
         }
 
-        String html = HtmCache.INSTANCE().getNotNull("command/" + fileName, activeChar);
+        String html = HtmCache.INSTANCE.getNotNull("command/" + fileName, activeChar);
 
         if (html.contains("%question%"))
             html = html.replace("%question%", activePoll.getQuestion());

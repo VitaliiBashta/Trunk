@@ -6,7 +6,7 @@ import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class CPDam extends Skill {
+public final class CPDam extends Skill {
     public CPDam(StatsSet set) {
         super(set);
     }

@@ -1,10 +1,16 @@
 package l2trunk.commons.collections;
 
+import l2trunk.commons.lang.NumberUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class MultiValueSet<T> extends HashMap<T, Object> {
-    private static final long serialVersionUID = 8071544899414292397L;
-
     public MultiValueSet() {
         super();
     }
@@ -114,31 +120,26 @@ public class MultiValueSet<T> extends HashMap<T, Object> {
         return defaultValue;
     }
 
-    public int[] getIntegerArray(T key) {
+    public List<Integer> getIntegerList(T key) {
         Object val = get(key);
 
-        if (val instanceof int[])
-            return (int[]) val;
+        if (val instanceof List<?>)
+            return (List<Integer>) val;
         if (val instanceof Number)
-            return new int[]{((Number) val).intValue()};
+            return Collections.singletonList((Integer)val);
         if (val instanceof String) {
-            String[] vals = ((String) val).split(";");
+            List<String> vals = Arrays.asList(((String) val).split(";"));
+                return vals.stream()
+                        .map(NumberUtils::toInt)
+                        .collect(Collectors.toList());
 
-            int[] result = new int[vals.length];
-
-            int i = 0;
-            for (String v : vals)
-                result[i++] = Integer.parseInt(v);
-
-            return result;
         }
-
-        throw new IllegalArgumentException("Integer array required, but found: " + val + "!");
+        throw new IllegalArgumentException("Integer list required, but found: " + val + "!");
     }
 
-    public int[] getIntegerArray(T key, int[] defaultArray) {
+    public List<Integer> getIntegerList(T key, List<Integer> defaultArray) {
         try {
-            return getIntegerArray(key);
+            return getIntegerList(key);
         } catch (IllegalArgumentException e) {
             return defaultArray;
         }
@@ -282,11 +283,10 @@ public class MultiValueSet<T> extends HashMap<T, Object> {
         throw new IllegalArgumentException("Enum value of type " + enumClass.getName() + "required, but found: " + val + "!");
     }
 
-    @SuppressWarnings("unchecked")
     public <E extends Enum<E>> E getEnum(T name, Class<E> enumClass, E defaultValue) {
         Object val = get(name);
 
-        if (val != null && enumClass.isInstance(val))
+        if (enumClass.isInstance(val))
             return (E) val;
         if (val instanceof String)
             return Enum.valueOf(enumClass, (String) val);

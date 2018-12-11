@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -8,7 +7,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+
+public final class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFile {
     private static final int Chairen = 32655;
 
     private static final int SoulCoreContainingEvilSpirit = 14881;
@@ -19,19 +24,8 @@ public class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFile {
     private static final int DROP_CHANCE1 = 1;
     private static final int DROP_CHANCE2 = 40;
 
-    private static final int[] MOBS = {
-            22691,
-            22692,
-            22693,
-            22694,
-            22695,
-            22696,
-            22697,
-            22698,
-            22699,
-            22701,
-            22702
-    };
+    private static final List<Integer> MOBS = Arrays.asList(
+            22691, 22692, 22693, 22694, 22695, 22696, 22697, 22698, 22699, 22701, 22702);
 
     public _311_ExpulsionOfEvilSpirits() {
         super(false);
@@ -60,11 +54,8 @@ public class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFile {
             } else
                 htmltext = "chairen_q311_06b.htm";
         } else {
-            int id = 0;
-            try {
-                id = Integer.parseInt(event);
-            } catch (Exception e) {
-            }
+            int id = toInt(event, 0);
+
 
             if (id > 0) {
                 int count = 0;
@@ -118,7 +109,6 @@ public class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFile {
                         count = 1000;
                         break;
                     default:
-                        count = 0;
                         break;
                 }
                 if (count > 0) {
@@ -164,13 +154,13 @@ public class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
 
-        if (cond == 1 && ArrayUtils.contains(MOBS, npcId)) {
+        if (cond == 1 && MOBS.contains(npcId)) {
             if (Rnd.chance(DROP_CHANCE1) && st.getQuestItemsCount(SoulCoreContainingEvilSpirit) < 10) {
                 st.giveItems(SoulCoreContainingEvilSpirit, 1);
                 st.playSound(SOUND_FANFARE2);
             }
             if (Rnd.chance(DROP_CHANCE2)) {
-                st.giveItems(RagnaOrcAmulet, (int) Config.RATE_QUESTS_REWARD * 1);
+                st.giveItems(RagnaOrcAmulet, (int) Config.RATE_QUESTS_REWARD);
                 st.playSound(SOUND_ITEMGET);
             }
         }

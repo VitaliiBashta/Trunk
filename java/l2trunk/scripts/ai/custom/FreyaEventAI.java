@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.custom;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
@@ -11,8 +10,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class FreyaEventAI extends DefaultAI {
-    private static final int[] GIFT_SKILLS = {9150, 9151, 9152, 9153, 9154, 9155, 9156};
+    private static final List<Integer> GIFT_SKILLS = Arrays.asList(9150, 9151, 9152, 9153, 9154, 9155, 9156);
     private static final int GIFT_CHANCE = 5;
     private static final int FREYA_GIFT = 17138;
     private static final NpcString[] SAY_TEXT = new NpcString[]{
@@ -50,7 +52,7 @@ public final class FreyaEventAI extends DefaultAI {
 
         Player player = caster.getPlayer();
 
-        if (ArrayUtils.contains(GIFT_SKILLS, skill.getId())) {
+        if (GIFT_SKILLS.contains(skill.getId())) {
             if (Rnd.chance(GIFT_CHANCE)) {
                 Functions.npcSay(actor, SAY_TEXT[0], player.getName());
                 Functions.addItem(player, FREYA_GIFT, 1, "FreyaEventAI");

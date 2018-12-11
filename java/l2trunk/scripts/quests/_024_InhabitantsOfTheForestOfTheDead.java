@@ -1,11 +1,13 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class _024_InhabitantsOfTheForestOfTheDead extends Quest implements ScriptFile {
     // Список NPC
@@ -25,18 +27,8 @@ public class _024_InhabitantsOfTheForestOfTheDead extends Quest implements Scrip
 
     // Список мобов
     // Bone Snatchers, Bone Shapers, Bone Collectors, Bone Animators, Bone Slayers, Skull Collectors, Skull Animators
-    private final int[] MOBS = new int[]{
-            21557,
-            21558,
-            21560,
-            21561,
-            21562,
-            21563,
-            21564,
-            21565,
-            21566,
-            21567
-    };
+    private final List<Integer> MOBS = Arrays.asList(
+            21557, 21558, 21560, 21561, 21562, 21563, 21564, 21565, 21566, 21567);
 
     public _024_InhabitantsOfTheForestOfTheDead() {
         super(PARTY_NONE);
@@ -171,7 +163,7 @@ public class _024_InhabitantsOfTheForestOfTheDead extends Quest implements Scrip
         int npcId = npc.getNpcId();
         int cond = qs.getCond();
 
-        if (ArrayUtils.contains(MOBS, npcId))
+        if (MOBS.contains(npcId))
             if (cond == 9 && Rnd.chance(70)) {
                 qs.giveItems(SUSPICIOUS_TOTEM_DOLL, 1);
                 qs.playSound(SOUND_MIDDLE);

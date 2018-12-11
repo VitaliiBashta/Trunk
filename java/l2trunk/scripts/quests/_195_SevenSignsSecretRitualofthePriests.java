@@ -17,7 +17,7 @@ import l2trunk.scripts.ai.GuardofDawn;
 import l2trunk.scripts.ai.GuardofDawnFemale;
 import l2trunk.scripts.ai.GuardofDawnStat;
 
-public class _195_SevenSignsSecretRitualofthePriests extends Quest implements ScriptFile {
+public final class _195_SevenSignsSecretRitualofthePriests extends Quest implements ScriptFile {
     // NPCs
     private static final int ClaudiaAthebaldt = 31001;
     private static final int John = 32576;
@@ -157,7 +157,7 @@ public class _195_SevenSignsSecretRitualofthePriests extends Quest implements Sc
             }
             st.playSound(SOUND_MIDDLE);
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6204, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6204).getEffects(player, player, false, false);
             st.setCond(3);
         } else if (event.equalsIgnoreCase("transformagain")) {
             if (player.getTransformation() != 0 || player.isMounted()) {
@@ -165,7 +165,7 @@ public class _195_SevenSignsSecretRitualofthePriests extends Quest implements Sc
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE().getInfo(6204, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6204).getEffects(player, player, false, false);
             htmltext = "raymond_q195_4c.htm";
         } else if (event.equalsIgnoreCase("dispel")) {
             if (player.getTransformation() == 113) {

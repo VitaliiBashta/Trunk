@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Summon;
 
-public class ExPartyPetWindowAdd extends L2GameServerPacket {
+public final class ExPartyPetWindowAdd extends L2GameServerPacket {
     private final int ownerId, npcId, type, curHp, maxHp, curMp, maxMp, level;
     private final int summonId;
     private final String name;

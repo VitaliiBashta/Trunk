@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
@@ -25,27 +24,19 @@ public final class ServerVariables {
     }
 
     private static void LoadFromDB() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT * FROM server_variables");
-            rs = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT * FROM server_variables");
+             ResultSet rs = statement.executeQuery()) {
             while (rs.next())
                 server_vars.set(rs.getString("name"), rs.getString("value"));
         } catch (SQLException e) {
             _log.error("Error while Loading Server Variables ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rs);
         }
     }
 
     private static void SaveToDB(String name) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement;
             String value = getVars().getString(name, "");
             if (value.isEmpty()) {
                 statement = con.prepareStatement("DELETE FROM server_variables WHERE name = ?");
@@ -59,8 +50,6 @@ public final class ServerVariables {
             }
         } catch (SQLException e) {
             _log.error("Error while Saving Server Variables! ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -100,8 +89,8 @@ public final class ServerVariables {
         return getVars().getString(name);
     }
 
-    public static String getString(String name, String defult) {
-        return getVars().getString(name, defult);
+    public static String getString(String name, String _default) {
+        return getVars().getString(name, _default);
     }
 
     public static void set(String name, boolean value) {

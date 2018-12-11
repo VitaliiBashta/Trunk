@@ -25,6 +25,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Log;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     public static final int CP_CL_INVITE_CLAN = 2; // Join clan
@@ -345,9 +347,9 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             _warehouse.writeUnlock();
         }
         if (_hasCastle != 0)
-            ResidenceHolder.getInstance().getResidence(Castle.class, _hasCastle).changeOwner(null);
+            ResidenceHolder.getResidence(Castle.class, _hasCastle).changeOwner(null);
         if (_hasFortress != 0)
-            ResidenceHolder.getInstance().getResidence(Fortress.class, _hasFortress).changeOwner(null);
+            ResidenceHolder.getResidence(Fortress.class, _hasFortress).changeOwner(null);
     }
 
     public void removeClanMember(int id) {
@@ -797,7 +799,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
                 int id = rset.getInt("skill_id");
                 int level = rset.getInt("skill_level");
                 // Create a L2Skill object for each record
-                Skill skill = SkillTable.INSTANCE().getInfo(id, level);
+                Skill skill = SkillTable.INSTANCE.getInfo(id, level);
                 // Add the L2Skill object to the L2Clan skills
                 _skills.put(skill.getId(), skill);
             }
@@ -916,7 +918,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         for (UnitMember temp : this) {
             Player player = temp.getPlayer();
             if (player != null && player.isOnline()) {
-                player.removeSkillById(skill);
+                player.removeSkill(skill);
                 player.sendPacket(p, new SkillList(player));
             }
         }
@@ -1131,7 +1133,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         player.sendPacket(new PledgeSkillList(this));
         player.sendPacket(new SkillList(player));
 
-        EventHolder.getInstance().findEvent(player);
+        EventHolder.findEvent(player);
         if (getWarDominion() > 0) {
             DominionSiegeEvent siegeEvent = player.getEvent(DominionSiegeEvent.class);
 
@@ -1413,11 +1415,9 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public List<L2GameServerPacket> listAll() {
-        List<L2GameServerPacket> p = new ArrayList<>(_subUnits.size());
-        for (SubUnit unit : getAllSubUnits())
-            p.add(new PledgeShowMemberListAll(this, unit));
-
-        return p;
+        return getAllSubUnits().stream()
+                .map(unit -> new PledgeShowMemberListAll(this, unit))
+                .collect(Collectors.toList());
     }
 
     public String getNotice() {
@@ -1473,9 +1473,6 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         return true;
     }
 
-    /**
-     * @return
-     */
     public int getAverageLevel() {
         int size = 0;
         int level = 0;
@@ -1491,7 +1488,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     @Override
-    public int compareTo(Clan o) {
+    public int compareTo(@NotNull Clan o) {
         if (o == null) return 1;
         return this.getReputationScore() - o.getReputationScore();
     }
@@ -1520,48 +1517,5 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             return _comment;
         }
     }
-    // /**
-    // * @param obj
-    // * @return
-    // */
-    // public boolean checkInviteList(int obj)
-    //{
-    // for (ClanRequest request : ClanRequest.getInviteList(getClanId()))
-    // {
-    // Player invited = request.getPlayer();
 
-    // if (invited.getObjectId() == obj)
-    // return true;
-    // }
-
-    // return false;
-    // }
-
-    // public List<ClanRequest> getInviteList()
-    // {
-    // return ClanRequest.getInviteList(getClanId());
-    // }
-
-
-    //
-    // /**
-    // * @return
-    // */
-    // public String getDescription()
-    // {
-    // return _description;
-    // }
-    //
-    // public void setDescription(String description)
-    // {
-    // _description = description;
-    // }
-    // Synerge - Clan Stats support for Server Ranking
-    // private final ClanStats _stats;
-
-    // public final ClanStats getStats()
-    // {
-    // return _stats;
-    // }
-    //}
 }

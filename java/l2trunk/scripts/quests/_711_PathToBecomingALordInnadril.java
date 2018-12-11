@@ -11,17 +11,16 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * @author pchayka
- */
-
-public class _711_PathToBecomingALordInnadril extends Quest implements ScriptFile {
+public final class _711_PathToBecomingALordInnadril extends Quest implements ScriptFile {
     private static final int Neurath = 35316;
     private static final int IasonHeine = 30969;
 
     private static final int InnadrilCastle = 6;
-    private static final int[] mobs = {20789, 20790, 20791, 20792, 20793, 20804, 20805, 20806, 20807, 20808};
+    private static final List<Integer> mobs = Arrays.asList(
+            20789, 20790, 20791, 20792, 20793, 20804, 20805, 20806, 20807, 20808);
 
     public _711_PathToBecomingALordInnadril() {
         super(false);
@@ -32,33 +31,39 @@ public class _711_PathToBecomingALordInnadril extends Quest implements ScriptFil
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(InnadrilCastle);
+        Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         String htmltext = event;
-        if (event.equals("neurath_q711_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("neurath_q711_05.htm")) {
-            st.setCond(2);
-        } else if (event.equals("neurath_q711_08.htm")) {
-            if (isLordAvailable(2, st)) {
-                castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-                castleOwner.getQuestState(getClass()).setCond(3);
+        switch (event) {
+            case "neurath_q711_03.htm":
                 st.setState(STARTED);
-            } else
-                htmltext = "neurath_q711_07a.htm";
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "neurath_q711_05.htm":
+                st.setCond(2);
+                break;
+            case "neurath_q711_08.htm":
+                if (isLordAvailable(2, st)) {
+                    castleOwner.getQuestState(getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                    castleOwner.getQuestState(getClass()).setCond(3);
+                    st.setState(STARTED);
+                } else
+                    htmltext = "neurath_q711_07a.htm";
 
-        } else if (event.equals("heine_q711_03.htm")) {
-            if (isLordAvailable(3, st))
-                castleOwner.getQuestState(getClass()).setCond(4);
-            else
-                htmltext = "heine_q711_00a.htm";
-        } else if (event.equals("neurath_q711_12.htm")) {
-            Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_INNADRIL, st.getPlayer().getName());
-            castle.getDominion().changeOwner(castleOwner.getClan());
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+                break;
+            case "heine_q711_03.htm":
+                if (isLordAvailable(3, st))
+                    castleOwner.getQuestState(getClass()).setCond(4);
+                else
+                    htmltext = "heine_q711_00a.htm";
+                break;
+            case "neurath_q711_12.htm":
+                Functions.npcSay(npc, NpcString.S1_HAS_BECOME_THE_LORD_OF_THE_TOWN_OF_INNADRIL, st.getPlayer().getName());
+                castle.getDominion().changeOwner(castleOwner.getClan());
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return htmltext;
     }
@@ -68,7 +73,7 @@ public class _711_PathToBecomingALordInnadril extends Quest implements ScriptFil
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
         int cond = st.getCond();
-        Castle castle = ResidenceHolder.getInstance().getResidence(InnadrilCastle);
+        Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
@@ -138,12 +143,11 @@ public class _711_PathToBecomingALordInnadril extends Quest implements ScriptFil
     }
 
     private boolean isLordAvailable(int cond, QuestState st) {
-        Castle castle = ResidenceHolder.getInstance().getResidence(InnadrilCastle);
+        Castle castle = ResidenceHolder.getResidence(InnadrilCastle);
         Clan owner = castle.getOwner();
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
         if (owner != null)
-            if (castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond)
-                return true;
+            return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
         return false;
     }
 

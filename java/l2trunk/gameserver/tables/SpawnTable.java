@@ -44,7 +44,7 @@ public enum SpawnTable {
                 SpawnTemplate template = new SpawnTemplate(PeriodOfDay.NONE, count, delay, delay_rnd);
                 template.addNpc(new SpawnNpcInfo(npcId, 1, StatsSet.EMPTY));
                 template.addSpawnRange(new Location(x, y, z, h));
-                SpawnHolder.getInstance().addSpawn(PeriodOfDay.NONE.name(), template);
+                SpawnHolder.addSpawn(PeriodOfDay.NONE.name(), template);
             }
         } catch (SQLException e1) {
             _log.warn("custom_spawnlist couldnt be initialized:" + e1);

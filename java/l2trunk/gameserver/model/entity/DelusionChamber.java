@@ -62,7 +62,7 @@ public final class DelusionChamber extends DimensionalRift {
 
     @Override
     public String getName() {
-        InstantZone iz = InstantZoneHolder.getInstance().getInstantZone(_roomType + 120);
+        InstantZone iz = InstantZoneHolder.getInstantZone(roomType + 120);
         return iz.getName();
     }
 

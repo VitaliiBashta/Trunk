@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @reworked VISTALL
  */
-public class CastleSiegeAttackerList extends L2GameServerPacket {
+public final class CastleSiegeAttackerList extends L2GameServerPacket {
     private final int _id;
     private final int _registrationValid;
     private final List<SiegeClanObject> _clans;

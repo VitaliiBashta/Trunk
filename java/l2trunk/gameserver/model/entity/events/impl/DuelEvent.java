@@ -14,6 +14,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,12 +63,11 @@ public abstract class DuelEvent extends GlobalEvent implements Iterable<DuelSnap
     }
 
     public void sendPacket(IStaticPacket packet, String... ar) {
-        for (String a : ar) {
+        Arrays.stream(ar).forEach(a -> {
             List<DuelSnapshotObject> objs = getObjects(a);
-
-            for (DuelSnapshotObject obj : objs)
-                obj.getPlayer().sendPacket(packet);
-        }
+            objs.forEach(obj ->
+                    obj.getPlayer().sendPacket(packet));
+        });
     }
 
     void sendPacket(IStaticPacket packet) {
@@ -112,10 +112,6 @@ public abstract class DuelEvent extends GlobalEvent implements Iterable<DuelSnap
             packet = new SystemMessage2(SystemMsg.C1_CANNOT_MAKE_A_CHALLENGE_TO_A_DUEL_BECAUSE_C1_IS_CURRENTLY_IN_A_DUELPROHIBITED_AREA_PEACEFUL_ZONE__SEVEN_SIGNS_ZONE__NEAR_WATER__RESTART_PROHIBITED_AREA).addName(target);
         else if (!requestor.isInRangeZ(target, 1200))
             packet = new SystemMessage2(SystemMsg.C1_CANNOT_RECEIVE_A_DUEL_CHALLENGE_BECAUSE_C1_IS_TOO_FAR_AWAY).addName(target);
-        else if (target.isInTvT())
-            requestor.sendMessage("Target cannot participate in duel cause is already in TvT Event");
-        else if (target.isInLastHero())
-            requestor.sendMessage("Target cannot participate in duel cause is already in LastHero Event");
         else if (target.getTransformation() != 0)
             packet = new SystemMessage2(SystemMsg.C1_CANNOT_DUEL_BECAUSE_C1_IS_CURRENTLY_POLYMORPHED).addName(target);
         return packet;
@@ -156,10 +152,7 @@ public abstract class DuelEvent extends GlobalEvent implements Iterable<DuelSnap
             return false;
 
         DuelEvent duelEvent = target.getEvent(DuelEvent.class);
-        if (duelEvent == null || duelEvent != this)
-            return false;
-
-        return true;
+        return duelEvent != null && duelEvent == this;
     }
 
     @Override

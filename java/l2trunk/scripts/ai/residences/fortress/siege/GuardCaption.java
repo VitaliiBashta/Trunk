@@ -11,11 +11,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 
-/**
- * @author VISTALL
- * @date 16:43/17.04.2011
- */
-public class GuardCaption extends SiegeGuardFighter {
+public final class GuardCaption extends SiegeGuardFighter {
     public GuardCaption(NpcInstance actor) {
         super(actor);
     }
@@ -30,7 +26,7 @@ public class GuardCaption extends SiegeGuardFighter {
             return;
 
         if (siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF) > 0)
-            actor.doCast(SkillTable.INSTANCE().getInfo(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF)), actor, false);
+            actor.doCast(SkillTable.INSTANCE.getInfo(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF)), actor, false);
 
         siegeEvent.barrackAction(1, false);
     }

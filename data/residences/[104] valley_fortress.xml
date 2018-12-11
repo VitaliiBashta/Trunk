@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE residence SYSTEM "residence.dtd">
+<!DOCTYPE residence SYSTEM "residences.dtd">
 <residence id="104" name="Valley Fortress" impl="Fortress">
 	<support level="7" lease="49000"/>
 	<support level="17" lease="490000"/>

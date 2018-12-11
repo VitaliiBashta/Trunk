@@ -18,7 +18,7 @@ public final class DivinityMonster extends DefaultAI {
         NpcInstance actor = getActor();
 
         int event_id = actor.getAISpawnParam();
-        MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+        MonasteryFurnaceEvent furnace = EventHolder.getEvent(EventType.MAIN_EVENT, event_id);
 
         if (Rnd.chance(5) && !furnace.isInProgress())
             furnace.spawnAction(MonasteryFurnaceEvent.FURNACE_ROOM, true);

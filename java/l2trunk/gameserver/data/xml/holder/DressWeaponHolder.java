@@ -1,43 +1,35 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.model.DressWeaponData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DressWeaponHolder extends AbstractHolder {
-    private static final DressWeaponHolder _instance = new DressWeaponHolder();
-    private final List<DressWeaponData> _weapons = new ArrayList<>();
+public final class DressWeaponHolder {
+    private static final List<DressWeaponData> WEAPONS = new ArrayList<>();
 
-    public static DressWeaponHolder getInstance() {
-        return _instance;
+    private DressWeaponHolder() {
     }
 
-    public void addWeapon(DressWeaponData weapon) {
-        _weapons.add(weapon);
+    public static void addWeapon(DressWeaponData weapon) {
+        WEAPONS.add(weapon);
+    }
+
+    public static int size() {
+        return WEAPONS.size();
     }
 
     public List<DressWeaponData> getAllWeapons() {
-        return _weapons;
+        return WEAPONS;
     }
 
     public DressWeaponData getWeapon(int id) {
-        for (DressWeaponData weapon : _weapons) {
-            if (weapon.getId() == id)
-                return weapon;
-        }
-
-        return null;
+        return WEAPONS.stream()
+                .filter(weapon -> weapon.getId() == id)
+                .findFirst().orElse(null);
     }
 
-    @Override
-    public int size() {
-        return _weapons.size();
-    }
-
-    @Override
     public void clear() {
-        _weapons.clear();
+        WEAPONS.clear();
     }
 }

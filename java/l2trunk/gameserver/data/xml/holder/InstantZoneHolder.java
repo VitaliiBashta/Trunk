@@ -1,6 +1,5 @@
 package l2trunk.gameserver.data.xml.holder;
 
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.templates.InstantZone;
@@ -8,28 +7,26 @@ import l2trunk.gameserver.templates.InstantZone;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class InstantZoneHolder extends AbstractHolder {
-    private static final InstantZoneHolder _instance = new InstantZoneHolder();
-    private final Map<Integer, InstantZone> _zones = new HashMap<>();
-
-    public static InstantZoneHolder getInstance() {
-        return _instance;
+public final class InstantZoneHolder  {
+    private InstantZoneHolder() {
     }
 
-    public void addInstantZone(InstantZone zone) {
-        _zones.put(zone.getId(), zone);
+    private static final Map<Integer, InstantZone> ZONES = new HashMap<>();
+
+    public static void addInstantZone(InstantZone zone) {
+        ZONES.put(zone.getId(), zone);
     }
 
-    public InstantZone getInstantZone(int id) {
-        return _zones.get(id);
+    public static InstantZone getInstantZone(int id) {
+        return ZONES.get(id);
     }
 
-    private SchedulingPattern getResetReuseById(int id) {
+    private static SchedulingPattern getResetReuseById(int id) {
         InstantZone zone = getInstantZone(id);
         return zone == null ? null : zone.getResetReuse();
     }
 
-    public int getMinutesToNextEntrance(int id, Player player) {
+    public static int getMinutesToNextEntrance(int id, Player player) {
         SchedulingPattern resetReuse = getResetReuseById(id);
         if (resetReuse == null)
             return 0;
@@ -52,8 +49,8 @@ public final class InstantZoneHolder extends AbstractHolder {
     }
 
 
-    private List<Integer> getSharedReuseInstanceIds(int id) {
-        return _zones.values().stream()
+    private static List<Integer> getSharedReuseInstanceIds(int id) {
+        return ZONES.values().stream()
                 .filter(iz -> iz.getSharedReuseGroup() > 0)
                 .filter(iz -> getInstantZone(id).getSharedReuseGroup() > 0)
                 .filter(iz -> iz.getSharedReuseGroup() == getInstantZone(id).getSharedReuseGroup())
@@ -62,23 +59,18 @@ public final class InstantZoneHolder extends AbstractHolder {
 
     }
 
-    public List<Integer> getSharedReuseInstanceIdsByGroup(int groupId) {
+    public static List<Integer> getSharedReuseInstanceIdsByGroup(int groupId) {
         if (groupId < 1)
-            return null;
+            return Collections.emptyList();
         List<Integer> sharedInstanceIds = new ArrayList<>();
-        for (InstantZone iz : _zones.values())
+        for (InstantZone iz : ZONES.values())
             if (iz.getSharedReuseGroup() > 0 && iz.getSharedReuseGroup() == groupId)
                 sharedInstanceIds.add(iz.getId());
         return sharedInstanceIds;
     }
 
-    @Override
-    public int size() {
-        return _zones.size();
+    public static int size() {
+        return ZONES.size();
     }
 
-    @Override
-    public void clear() {
-        _zones.clear();
-    }
 }

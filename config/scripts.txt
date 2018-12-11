@@ -181,7 +181,6 @@ ai.isle_of_prayer.IsleOfPrayerFighter
 ai.isle_of_prayer.IsleOfPrayerMystic
 ai.isle_of_prayer.Kechi
 ai.isle_of_prayer.Shade
-ai.isle_of_prayer.Tears
 ai.isle_of_prayer.WaterDragonDetractor
 ai.Jaradine
 ai.Kama56Boss
@@ -385,7 +384,6 @@ events.Christmas.NewYearTimer
 events.Christmas.Seed
 events.CofferofShadows.Coffer
 events.CofferofShadows.CofferofShadows
-events.CtF.CtF
 events.CustomDropItems.CustomDropItems
 events.EventsConfig
 events.FightClub.FightClubArena

@@ -58,12 +58,6 @@ public class RequestRestart extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInFightClub()) {
-            activeChar.sendMessage("You need to leave Fight Club first!");
-            activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);
-            return;
-        }
-
         if (activeChar.isInStoreMode() && !activeChar.isInZone(Zone.ZoneType.offshore)) {
             activeChar.sendMessage(new CustomMessage("trade.OfflineNoTradeZoneOnlyOffshore", activeChar));
             activeChar.sendPacket(RestartResponse.FAIL, ActionFail.STATIC);

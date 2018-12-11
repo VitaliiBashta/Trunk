@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.dragonvalley;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
@@ -11,9 +10,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Patrollers extends Fighter {
-    Location[] _points;
-    private final int[] _teleporters = {22857, 22833, 22834, 22835};
+    List<Location> points;
+    private final List<Integer> _teleporters = Arrays.asList(22857, 22833, 22834, 22835);
 
     private int _lastPoint = 0;
     private boolean _firstThought = true;
@@ -69,37 +71,34 @@ public class Patrollers extends Fighter {
 
         NpcInstance npc = getActor();
         if (_firstThought) {
-            _lastPoint = getIndex(Location.findNearest(npc, _points));
+            _lastPoint = getIndex(Location.findNearest(npc, points));
             _firstThought = false;
         } else
             _lastPoint++;
 
-        if (_lastPoint >= _points.length) {
+        if (_lastPoint >= points.size()) {
             _lastPoint = 0;
-            if (ArrayUtils.contains(_teleporters, npc.getNpcId()))
-                npc.teleToLocation(_points[_lastPoint]);
+            if (_teleporters.contains(npc.getNpcId()))
+                npc.teleToLocation(points.get(_lastPoint));
         }
 
         npc.setRunning();
         if (Rnd.chance(30))
-            npc.altOnMagicUseTimer(npc, SkillTable.INSTANCE().getInfo(6757, 1));
-        addTaskMove(Location.findPointToStay(_points[_lastPoint], 250, npc.getGeoIndex()), true);
+            npc.altOnMagicUseTimer(npc, SkillTable.INSTANCE.getInfo(6757));
+        addTaskMove(Location.findPointToStay(points.get(_lastPoint), 250, npc.getGeoIndex()), true);
         if (npc instanceof MonsterInstance) {
             MonsterInstance _monster = (MonsterInstance) npc;
             if (_monster.getMinionList() != null && _monster.getMinionList().hasMinions())
                 for (NpcInstance _npc : _monster.getMinionList().getAliveMinions()) {
                     _npc.setRunning();
-                    ((Fighter) _npc.getAI()).addTaskMove(Location.findPointToStay(_points[_lastPoint], 250, _npc.getGeoIndex()), true);
+                    ((Fighter) _npc.getAI()).addTaskMove(Location.findPointToStay(points.get(_lastPoint), 250, _npc.getGeoIndex()), true);
                 }
         }
         doTask();
     }
 
     private int getIndex(Location loc) {
-        for (int i = 0; i < _points.length; i++)
-            if (_points[i] == loc)
-                return i;
-        return 0;
+        return points.indexOf(loc) == -1 ? 0 : points.indexOf(loc);
     }
 
     @Override

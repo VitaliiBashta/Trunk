@@ -61,8 +61,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
     private static boolean _entryLocked = false;
 
     private static void banishForeigners() {
-        for (Player player : getPlayersInside())
-            player.teleToClosestTown();
+        getPlayersInside().forEach(Player::teleToClosestTown);
     }
 
     private synchronized static void checkAnnihilated() {
@@ -364,7 +363,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                 case 9:
                     for (Player pc : _players) {
                         pc.leaveMovieMode();
-                        pc.altOnMagicUseTimer(pc, SkillTable.INSTANCE.getInfo(23312, 1));
+                        pc.altOnMagicUseTimer(pc, SkillTable.INSTANCE.getInfo(23312));
                     }
                     broadcastScreenMessage(NpcString.ANTHARAS_THE_EVIL_LAND_DRAGON_ANTHARAS_DEFEATED);
                     onAntharasDie();

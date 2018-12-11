@@ -839,11 +839,11 @@ public enum NpcString {
     PEUNGLUI_MUGLANEP(1800857),
     WHERE_DID_HE_GO(1010207);
 
-    private final int _id;
+    private final int id;
     private final int _size;
 
     NpcString(int id) {
-        _id = id;
+        this.id = id;
 
         if (name().contains("S4"))
             _size = 4;
@@ -866,7 +866,7 @@ public enum NpcString {
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public int getSize() {

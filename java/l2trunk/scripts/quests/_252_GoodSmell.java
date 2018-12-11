@@ -1,16 +1,16 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class _252_GoodSmell extends Quest implements ScriptFile {
     private static final int GuardStan = 30200;
-    private static final int[] SelMahums = {
-            22786, 22787, 22788
-    };
+    private static final List<Integer> SelMahums = Arrays.asList(22786, 22787, 22788);
     private static final int SelChef = 18908;
     private static final int SelMahumDiary = 15500;
     private static final int SelMahumCookbookPage = 15501;
@@ -18,7 +18,8 @@ public final class _252_GoodSmell extends Quest implements ScriptFile {
     public _252_GoodSmell() {
         super(false);
         addStartNpc(GuardStan);
-        addKillId(SelMahums[0], SelMahums[1], SelMahums[2], SelChef);
+        addKillId(SelMahums);
+        addKillId(SelChef);
         addQuestItem(SelMahumDiary, SelMahumCookbookPage);
     }
 
@@ -62,7 +63,7 @@ public final class _252_GoodSmell extends Quest implements ScriptFile {
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1) {
-            if (st.getQuestItemsCount(SelMahumDiary) < 10 && ArrayUtils.contains(SelMahums, npc.getNpcId()))
+            if (st.getQuestItemsCount(SelMahumDiary) < 10 && SelMahums.contains(npc.getNpcId()))
                 st.rollAndGive(SelMahumDiary, 1, 15);
             if (st.getQuestItemsCount(SelMahumCookbookPage) < 5 && npc.getNpcId() == SelChef)
                 st.rollAndGive(SelMahumCookbookPage, 1, 10);

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.CharTemplateHolder;
 import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
@@ -20,8 +19,11 @@ import l2trunk.loginserver.database.L2DatabaseFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class OlympiadManagerInstance extends NpcInstance {
     public OlympiadManagerInstance(int objectId, NpcTemplate template) {
@@ -33,22 +35,18 @@ public class OlympiadManagerInstance extends NpcInstance {
     private static void CheckRank(Player player, int classId) {
         final int comp_matches_to_show = Config.OLYMPIAD_BATTLES_FOR_REWARD;
         int points, comp_done, pos = 0;
-        String char_name = "";
-        String Class = CharTemplateHolder.getInstance().getTemplate(classId, false).className;
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
+        String char_name;
+        String Class = CharTemplateHolder.getTemplate(classId, false).className;
 
         NpcHtmlMessage nhm = new NpcHtmlMessage(5);
         StringBuilder html = new StringBuilder();
         html.append("<html><head><title>Grand Olympiad Ranking</title></head><body><center><font color=66cc00>Olympiad Ranking Online System</font></center><br><center>" + Class + "</center><br1><center><img src=\"L2UI.SquareWhite\" width=300 height=1><img src=\"L2UI.SquareBlank\" width=1 height=3></center><table width=300 border=0 bgcolor=\"000000\"><tr><td>Position</td><center><td>|</td></center><td><center>Name</center></td><center><td>|</td></center><td><center>Points</center></td><center><td>|</td></center><td><center>Fights</center></td></tr>");
 
-        try {
-            con = L2DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT characters.char_name,  olympiad_nobles.competitions_done, olympiad_nobles.olympiad_points  FROM olympiad_nobles, characters WHERE characters.obj_Id = olympiad_nobles.char_id AND olympiad_nobles.class_id AND class_id=? AND olympiad_nobles.competitions_done >= ? order by olympiad_points desc, competitions_done desc");
+        try (Connection con = L2DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT characters.char_name,  olympiad_nobles.competitions_done, olympiad_nobles.olympiad_points  FROM olympiad_nobles, characters WHERE characters.obj_Id = olympiad_nobles.char_id AND olympiad_nobles.class_id AND class_id=? AND olympiad_nobles.competitions_done >= ? order by olympiad_points desc, competitions_done desc")) {
             statement.setInt(1, classId);
             statement.setInt(2, comp_matches_to_show);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
             while (rset.next()) {
                 char_name = rset.getString("char_name");
                 points = rset.getInt("olympiad_points");
@@ -59,10 +57,8 @@ public class OlympiadManagerInstance extends NpcInstance {
             html.append("</table></body></html>");
             nhm.setHtml(html.toString());
             player.sendPacket(nhm);
-        } catch (Exception e) {
-            //_log.warn("Olympiad System: Couldnt get ranks from db!", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -78,10 +74,8 @@ public class OlympiadManagerInstance extends NpcInstance {
             return;
 
         if (command.startsWith("OlympiadNoble")) {
-            if (!Config.ENABLE_OLYMPIAD)
-                return;
 
-            int val = Integer.parseInt(command.substring(14));
+            int val = toInt(command.substring(14));
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
 
             switch (val) {
@@ -115,10 +109,10 @@ public class OlympiadManagerInstance extends NpcInstance {
                         player.sendPacket(html.setFile(Olympiad.OLYMPIAD_HTML_PATH + "manager_nopoints.htm"));
                     break;
                 case 7:
-                    MultiSellHolder.getInstance().SeparateAndSend(102, player, 0);
+                    MultiSellHolder.INSTANCE.SeparateAndSend(102, player, 0);
                     break;
                 case 9:
-                    MultiSellHolder.getInstance().SeparateAndSend(103, player, 0);
+                    MultiSellHolder.INSTANCE.SeparateAndSend(103, player, 0);
                     break;
                 case 10:
                     Olympiad.registerNoble(player, CompType.TEAM);
@@ -130,9 +124,7 @@ public class OlympiadManagerInstance extends NpcInstance {
                     break;
             }
         } else if (command.startsWith("Olympiad")) {
-            if (!Config.ENABLE_OLYMPIAD)
-                return;
-            int val = Integer.parseInt(command.substring(9, 10));
+            int val = toInt(command.substring(9, 10));
 
             NpcHtmlMessage reply = new NpcHtmlMessage(player, this);
 
@@ -146,7 +138,7 @@ public class OlympiadManagerInstance extends NpcInstance {
                     break;
                 case 2:
                     // for example >> Olympiad 1_88
-                    int classId = Integer.parseInt(command.substring(11));
+                    int classId = toInt(command.substring(11));
                     if (classId >= 88) {
                         reply.setFile(Olympiad.OLYMPIAD_HTML_PATH + "manager_ranking.htm");
 
@@ -172,7 +164,7 @@ public class OlympiadManagerInstance extends NpcInstance {
                 case 3:
                     if (!Config.ENABLE_OLYMPIAD_SPECTATING)
                         break;
-                    Olympiad.addSpectator(Integer.parseInt(command.substring(11)), player);
+                    Olympiad.addSpectator(toInt(command.substring(11)), player);
                     break;
                 case 4:
                     player.sendPacket(new ExHeroList());
@@ -187,7 +179,7 @@ public class OlympiadManagerInstance extends NpcInstance {
                     break;
                 case 6://Getting Best players by current olympiad scores
                     // for example >> Olympiad 6_88
-                    classId = Integer.parseInt(command.substring(11));
+                    classId = toInt(command.substring(11));
                     if (classId >= 88) {
                         reply.setFile(Olympiad.OLYMPIAD_HTML_PATH + "manager_ranking.htm");
 
@@ -232,7 +224,7 @@ public class OlympiadManagerInstance extends NpcInstance {
             html.replace("%name%", player.getName());
             player.sendPacket(html);
         } else if (actualCommand.equalsIgnoreCase("rank")) {
-            int val = Integer.parseInt(st.nextToken());
+            int val = toInt(st.nextToken());
             CheckRank(player, val);
         } else if (actualCommand.equalsIgnoreCase("back")) {
             NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());

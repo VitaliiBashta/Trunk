@@ -90,8 +90,6 @@ public class Spoil extends Skill {
     }
 
     private boolean isSpoilUse(Creature target) {
-        if (getLevel() == 1 && target.getLevel() > 22 && getId() == 254)
-            return false;
-        return true;
+        return getLevel() != 1 || target.getLevel() <= 22 || getId() != 254;
     }
 }

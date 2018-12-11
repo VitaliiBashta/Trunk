@@ -9,7 +9,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 
-public class TreasureChestInstance extends ChestInstance {
+public final class TreasureChestInstance extends ChestInstance {
     private static final int TREASURE_BOMB_ID = 4143;
 
     public TreasureChestInstance(int objectId, NpcTemplate template) {
@@ -47,7 +47,7 @@ public class TreasureChestInstance extends ChestInstance {
     }
 
     private void fakeOpen(Creature opener) {
-        Skill bomb = SkillTable.INSTANCE().getInfo(TREASURE_BOMB_ID, getBombLvl());
+        Skill bomb = SkillTable.INSTANCE.getInfo(TREASURE_BOMB_ID, getBombLvl());
         if (bomb != null)
             doCast(bomb, opener, false);
         onDecay();
@@ -79,9 +79,7 @@ public class TreasureChestInstance extends ChestInstance {
 
     private boolean isCommonTreasureChest() {
         int npcId = getNpcId();
-        if (npcId >= 18265 && npcId <= 18286)
-            return true;
-        return false;
+        return npcId >= 18265 && npcId <= 18286;
     }
 
 

@@ -72,42 +72,42 @@ public final class SupportPower extends ScriptItemHandler implements ScriptFile 
 
         switch (classId) {
             case 97://Cardinal
-                player.addSkill(SkillTable.INSTANCE().getInfo(24001, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24001, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;
             case 98://Hierophant
-                player.addSkill(SkillTable.INSTANCE().getInfo(24002, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24002, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;
             case 100://SwordMuse
-                player.addSkill(SkillTable.INSTANCE().getInfo(24003, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24003, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;
             case 105://EvaSaint
-                player.addSkill(SkillTable.INSTANCE().getInfo(24004, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24004, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;
             case 107://SpectralDancer
-                player.addSkill(SkillTable.INSTANCE().getInfo(24005, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24005, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;
             case 112://ShillienSaint
-                player.addSkill(SkillTable.INSTANCE().getInfo(24006, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24006, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;
             case 115://Dominator
-                player.addSkill(SkillTable.INSTANCE().getInfo(24007, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24007, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;
             case 116://Doomcryer
-                player.addSkill(SkillTable.INSTANCE().getInfo(24008, 1), false);
+                player.addSkill(SkillTable.INSTANCE.getInfo(24008, 1), false);
                 player.updateStats();
                 player.sendPacket(new SkillList(player));
                 break;

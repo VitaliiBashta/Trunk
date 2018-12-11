@@ -54,7 +54,7 @@ public final class ItemFunctions {
 
         Player player = playable.getPlayer();
 
-        ItemTemplate t = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate t = ItemHolder.getTemplate(itemId);
         if (t.isStackable())
             player.getInventory().addItem(itemId, count, log);
         else
@@ -79,7 +79,7 @@ public final class ItemFunctions {
 
         Player player = playable.getPlayer();
 
-        ItemTemplate t = ItemHolder.getInstance().getTemplate(itemId);
+        ItemTemplate t = ItemHolder.getTemplate(itemId);
         if (t.isStackable()) {
             if (player.getInventory().destroyItemByItemId(itemId, count, log))
                 removed = count;
@@ -138,11 +138,11 @@ public final class ItemFunctions {
         if (item.getItemType() == WeaponType.DUALDAGGER && player.getSkillLevel(923) < 1)
             return new SystemMessage2(SystemMsg.YOU_DO_NOT_MEET_THE_REQUIRED_CONDITION_TO_EQUIP_THAT_ITEM);
 
-        if (ArrayUtils.contains(ItemTemplate.ITEM_ID_CASTLE_CIRCLET, itemId) && (clan == null || itemId != ItemTemplate.ITEM_ID_CASTLE_CIRCLET[clan.getCastle()]))
+        if (ItemTemplate.ITEM_ID_CASTLE_CIRCLET.contains(itemId) && (clan == null || itemId != ItemTemplate.ITEM_ID_CASTLE_CIRCLET.get(clan.getCastle())))
             return new SystemMessage2(SystemMsg.YOU_DO_NOT_MEET_THE_REQUIRED_CONDITION_TO_EQUIP_THAT_ITEM);
 
         // Custom Cloaks of Aden / Dion / Giran / Gludio / Goddard / Innadril / Oren / Rune / Schuttgart
-        if (ArrayUtils.contains(ItemTemplate.ITEM_ID_CASTLE_CLOAK, itemId) && (clan == null || itemId != ItemTemplate.ITEM_ID_CASTLE_CLOAK[clan.getCastle()]))
+        if (ItemTemplate.ITEM_ID_CASTLE_CLOAK.contains(itemId) && (clan == null || itemId != ItemTemplate.ITEM_ID_CASTLE_CLOAK.get(clan.getCastle())))
             return new SystemMessage2(SystemMsg.YOU_DO_NOT_MEET_THE_REQUIRED_CONDITION_TO_EQUIP_THAT_ITEM);
 
         if (itemId == 6841 && (clan == null || !player.isClanLeader() || clan.getCastle() == 0))

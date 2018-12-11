@@ -26,7 +26,7 @@ public final class FurnaceMagic extends DefaultAI {
             return;
 
         int event_id = actor.getAISpawnParam();
-        MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+        MonasteryFurnaceEvent furnace = EventHolder.getEvent(EventType.MAIN_EVENT, event_id);
 
         if (_firstTimeAttacked && !furnace.isInProgress()) {
             _firstTimeAttacked = false;
@@ -46,7 +46,7 @@ public final class FurnaceMagic extends DefaultAI {
         public void runImpl() {
             NpcInstance actor = getActor();
             int event_id = actor.getAISpawnParam();
-            MonasteryFurnaceEvent furnace = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, event_id);
+            MonasteryFurnaceEvent furnace = EventHolder.getEvent(EventType.MAIN_EVENT, event_id);
             furnace.spawnAction(MonasteryFurnaceEvent.MYSTIC_ROOM, true);
         }
     }

@@ -1,6 +1,5 @@
 package l2trunk.loginserver;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.loginserver.database.L2DatabaseFactory;
 import l2trunk.loginserver.gameservercon.GameServer;
 import org.slf4j.Logger;
@@ -9,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
@@ -16,7 +16,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class GameServerManager {
-//    private static final GameServerManager _instance = new GameServerManager();
+    //    private static final GameServerManager _instance = new GameServerManager();
     private static final Logger _log = LoggerFactory.getLogger(GameServerManager.class);
     private final Map<Integer, GameServer> _gameServers = new TreeMap<>();
     private final Map<Integer, GameServer> _channels = new TreeMap<>();
@@ -34,28 +34,18 @@ public class GameServerManager {
     }
 
     private void load() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-
-        try {
-            con = L2DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT server_id FROM gameservers");
-            rset = statement.executeQuery();
+        try (Connection con = L2DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT server_id FROM gameservers");
+             ResultSet rset = statement.executeQuery()) {
 
             int id;
-
             while (rset.next()) {
                 id = rset.getInt("server_id");
-
                 GameServer gs = new GameServer(id);
-
                 _gameServers.put(id, gs);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
@@ -172,6 +162,7 @@ public class GameServerManager {
         }
         return false;
     }
+
     private static class SingletonHolder {
         static final GameServerManager _instance = new GameServerManager();
     }

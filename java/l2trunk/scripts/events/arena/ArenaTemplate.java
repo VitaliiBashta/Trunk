@@ -420,7 +420,7 @@ public abstract class ArenaTemplate extends Functions {
     }
 
     public void paralyzeTeams() {
-		/*Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
+		/*Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE_ID, 1);
 		for (Player player : getPlayers(_team1live))
 		{
 			player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
@@ -440,15 +440,15 @@ public abstract class ArenaTemplate extends Functions {
     public void unParalyzeTeams() {
 		/*for(Player player : getPlayers(_team1list))
 		{
-			player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+			player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 			if (player.getPet() != null)
-				player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+				player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 		}
 		for (Player player : getPlayers(_team2list))
 		{
-			player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+			player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 			if (player.getPet() != null)
-				player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE);
+				player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 		}*/
     }
 
@@ -476,7 +476,7 @@ public abstract class ArenaTemplate extends Functions {
     public boolean playerHasLost(Player player) {
 		/*_team1live.remove(player.getStoredId());
 		_team2live.remove(player.getStoredId());
-		Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE, 1);
+		Skill revengeSkill = SkillTable.INSTANCE().getInfo(Skill.SKILL_RAID_CURSE_ID, 1);
 		player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
 		revengeSkill.getEffects(player, player, false, false);
 		return !checkTeams();*/

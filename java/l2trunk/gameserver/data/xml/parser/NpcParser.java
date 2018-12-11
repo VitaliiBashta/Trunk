@@ -1,6 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Skill;
@@ -26,31 +26,29 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class NpcParser extends AbstractDirParser<NpcHolder> {
-    private static final NpcParser _instance = new NpcParser();
-    private final static Logger LOG = LoggerFactory.getLogger(NpcParser.class);
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private NpcParser() {
-        super(NpcHolder.getInstance());
+public enum NpcParser {
+    INSTANCE;
+    private static Path xmldir = Config.DATAPACK_ROOT.resolve("data/npc/");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+
+    public void load() {
+        ParserUtil.INSTANCE.load(xmldir).forEach(this::readData);
+        LOG.info("Loaded  " + NpcHolder.size() + " item(s)");
     }
 
-    public static NpcParser getInstance() {
-        return _instance;
+    public void reload() {
+        LOG.info("reload start...");
+        NpcHolder.clear();
+        load();
     }
 
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/npc/");
-    }
-
-    public String getDTDFileName() {
-        return "npc.dtd";
-    }
-
-    protected void readData(org.dom4j.Element rootElement) {
+    private void readData(org.dom4j.Element rootElement) {
         for (Iterator<org.dom4j.Element> npcIterator = rootElement.elementIterator(); npcIterator.hasNext(); ) {
             org.dom4j.Element npcElement = npcIterator.next();
-            int npcId = Integer.parseInt(npcElement.attributeValue("id"));
-            int templateId = npcElement.attributeValue("template_id") == null ? 0 : Integer.parseInt(npcElement.attributeValue("template_id"));
+            int npcId = toInt(npcElement.attributeValue("id"));
+            int templateId = npcElement.attributeValue("template_id") == null ? 0 : toInt(npcElement.attributeValue("template_id"));
             String name = npcElement.attributeValue("name");
             String title = npcElement.attributeValue("title");
 
@@ -85,11 +83,11 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                         org.dom4j.Element eElement = eIterator.next();
                         Element element;
                         if (eElement.getName().equalsIgnoreCase("defence")) {
-                            element = Element.getElementByName(eElement.attributeValue("attribute"));
-                            attributeDefence[element.getId()] = Integer.parseInt(eElement.attributeValue("value"));
+                            element = Element.getElement(eElement.attributeValue("attribute"));
+                            attributeDefence[element.getId()] = toInt(eElement.attributeValue("value"));
                         } else if (eElement.getName().equalsIgnoreCase("attack")) {
-                            element = Element.getElementByName(eElement.attributeValue("attribute"));
-                            attributeAttack[element.getId()] = Integer.parseInt(eElement.attributeValue("value"));
+                            element = Element.getElement(eElement.attributeValue("attribute"));
+                            attributeAttack[element.getId()] = toInt(eElement.attributeValue("value"));
                         }
                     }
 
@@ -106,11 +104,11 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                 if (nodeName.equalsIgnoreCase("faction")) {
                     String factionId = secondElement.attributeValue("name");
                     Faction faction = new Faction(factionId);
-                    int factionRange = Integer.parseInt(secondElement.attributeValue("range"));
+                    int factionRange = toInt(secondElement.attributeValue("range"));
                     faction.setRange(factionRange);
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         final org.dom4j.Element nextElement = nextIterator.next();
-                        int ignoreId = Integer.parseInt(nextElement.attributeValue("npc_id"));
+                        int ignoreId = toInt(nextElement.attributeValue("npc_id"));
                         faction.addIgnoreNpcId(ignoreId);
                     }
                     template.setFaction(faction);
@@ -130,7 +128,7 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                                 org.dom4j.Element rewardElement = rewardIterator.next();
                                 RewardData data = parseReward(rewardElement, 1);
                                 if (type == RewardType.SWEEP || type == RewardType.NOT_RATED_NOT_GROUPED)
-                                    LOG.warn("Can't load rewardlist from group: " + npcId + "; type: " + type);
+                                    LOG.warn("Can't loadFile rewardlist from group: " + npcId + "; type: " + type);
                                 else
                                     group.addData(data);
                             }
@@ -160,10 +158,10 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                 } else if (nodeName.equalsIgnoreCase("skills")) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
-                        int id = Integer.parseInt(nextElement.attributeValue("id"));
-                        int level = Integer.parseInt(nextElement.attributeValue("level"));
+                        int id = toInt(nextElement.attributeValue("id"));
+                        int level = toInt(nextElement.attributeValue("level"));
 
-                        Skill skill = SkillTable.INSTANCE().getInfo(id, level);
+                        Skill skill = SkillTable.INSTANCE.getInfo(id, level);
                         // Для определения расы используется скилл 4416
                         if (id == 4416) {
                             template.setRace(level);
@@ -178,8 +176,8 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                 } else if (nodeName.equalsIgnoreCase("minions")) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
-                        int id = Integer.parseInt(nextElement.attributeValue("npc_id"));
-                        int count = Integer.parseInt(nextElement.attributeValue("count"));
+                        int id = toInt(nextElement.attributeValue("npc_id"));
+                        int count = toInt(nextElement.attributeValue("count"));
 
                         template.addMinion(new MinionData(id, count));
                     }
@@ -187,7 +185,7 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
 
-                        int id = Integer.parseInt(nextElement.attributeValue("id"));
+                        int id = toInt(nextElement.attributeValue("id"));
 
                         template.addTeachInfo(ClassId.VALUES[id]);
                     }
@@ -195,10 +193,10 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
                         org.dom4j.Element nextElement = nextIterator.next();
 
-                        int chance = Integer.parseInt(nextElement.attributeValue("chance"));
-                        int cursedChance = nextElement.attributeValue("cursed_chance") == null ? 0 : Integer.parseInt(nextElement.attributeValue("cursed_chance"));
-                        int minLevel = Integer.parseInt(nextElement.attributeValue("min_level"));
-                        int maxLevel = Integer.parseInt(nextElement.attributeValue("max_level"));
+                        int chance = toInt(nextElement.attributeValue("chance"));
+                        int cursedChance = nextElement.attributeValue("cursed_chance") == null ? 0 : toInt(nextElement.attributeValue("cursed_chance"));
+                        int minLevel = toInt(nextElement.attributeValue("min_level"));
+                        int maxLevel = toInt(nextElement.attributeValue("max_level"));
                         boolean skill = nextElement.attributeValue("skill") != null && Boolean.parseBoolean(nextElement.attributeValue("skill"));
                         AbsorbInfo.AbsorbType absorbType = AbsorbInfo.AbsorbType.valueOf(nextElement.attributeValue("type"));
 
@@ -207,16 +205,16 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
                 } else if (nodeName.equalsIgnoreCase("teleportlist")) {
                     for (Iterator<org.dom4j.Element> sublistIterator = secondElement.elementIterator(); sublistIterator.hasNext(); ) {
                         org.dom4j.Element subListElement = sublistIterator.next();
-                        int id = Integer.parseInt(subListElement.attributeValue("id"));
+                        int id = toInt(subListElement.attributeValue("id"));
                         List<TeleportLocation> list = new ArrayList<>();
                         for (Iterator<org.dom4j.Element> targetIterator = subListElement.elementIterator(); targetIterator.hasNext(); ) {
                             org.dom4j.Element targetElement = targetIterator.next();
-                            int itemId = Integer.parseInt(targetElement.attributeValue("item_id", "57"));
-                            long price = Integer.parseInt(targetElement.attributeValue("price"));
-                            int npcStringId = Integer.parseInt(targetElement.attributeValue("name"));
+                            int itemId = toInt(targetElement.attributeValue("item_id", "57"));
+                            long price = toInt(targetElement.attributeValue("price"));
+                            int npcStringId = toInt(targetElement.attributeValue("name"));
                             String nameString = targetElement.attributeValue("StringName");
                             String nameStringLang = targetElement.attributeValue("StringNameLang");
-                            int castleId = Integer.parseInt(targetElement.attributeValue("castle_id", "0"));
+                            int castleId = toInt(targetElement.attributeValue("castle_id", "0"));
                             TeleportLocation loc = new TeleportLocation(itemId, price, npcStringId, nameString, nameStringLang, castleId);
                             loc.set(Location.parseLoc(targetElement.attributeValue("loc")));
                             list.add(loc);
@@ -231,9 +229,9 @@ public final class NpcParser extends AbstractDirParser<NpcHolder> {
     }
 
     private RewardData parseReward(org.dom4j.Element rewardElement, int id) {
-        int itemId = Integer.parseInt(rewardElement.attributeValue("item_id"));
-        int min = Integer.parseInt(rewardElement.attributeValue("min"));
-        int max = Integer.parseInt(rewardElement.attributeValue("max"));
+        int itemId = toInt(rewardElement.attributeValue("item_id"));
+        int min = toInt(rewardElement.attributeValue("min"));
+        int max = toInt(rewardElement.attributeValue("max"));
         // переводим в системный вид
         double chance = Double.parseDouble(rewardElement.attributeValue("chance")) * 10000;
         double chance_dop = chance * Config.RATE_CHANCE_DROP_ITEMS;

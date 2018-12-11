@@ -5,8 +5,7 @@ public enum EventType {
     SIEGE_EVENT,// Siege of Castle, Fortress, Clan Hall, Dominion
     PVP_EVENT, // Kratei Cube, Cleft, Underground Coliseum
     BOAT_EVENT, //
-    FUN_EVENT, //
-    FIGHT_CLUB_EVENT; //
+    FUN_EVENT; //
 
     private final int _step;
 

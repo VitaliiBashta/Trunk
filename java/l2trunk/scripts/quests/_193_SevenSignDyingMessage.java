@@ -13,7 +13,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _193_SevenSignDyingMessage extends Quest implements ScriptFile {
+public final class _193_SevenSignDyingMessage extends Quest implements ScriptFile {
     // NPCs
     private static final int Hollint = 30191;
     private static final int Cain = 32569;

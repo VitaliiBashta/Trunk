@@ -1,10 +1,8 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
-import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import l2trunk.gameserver.network.serverpackets.SkillList;
 import l2trunk.gameserver.network.serverpackets.UserInfo;
@@ -14,12 +12,9 @@ import l2trunk.gameserver.utils.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public final class BetaNPCInstance extends NpcInstance {
-    /**
-     * Author Ady
-     */
-    private static final long serialVersionUID = 5938813598479742068L;
 
     public BetaNPCInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -31,43 +26,28 @@ public final class BetaNPCInstance extends NpcInstance {
             return;
         }
         if (command.equalsIgnoreCase("change_sex")) {
-            Connection con = null;
-            PreparedStatement offline = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?");
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement offline = con.prepareStatement("UPDATE characters SET sex = ? WHERE obj_Id = ?")) {
                 offline.setInt(1, player.getSex() == 1 ? 0 : 1);
                 offline.setInt(2, player.getObjectId());
                 offline.executeUpdate();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 return;
-            } finally {
-                DbUtils.closeQuietly(con, offline);
             }
 
             player.changeSex();
             player.sendMessage("Your gender has been changed !!");
-            Log.add(new StringBuilder().append("Character ").append(player).append("  changed sex to ").append(player.getSex() == 1 ? "male" : "female").toString(), "renames");
+            Log.add("Character " + player + "  changed sex to " + (player.getSex() == 1 ? "male" : "female"), "renames");
         } else if (command.equalsIgnoreCase("add_clan_reputation")) {
             if (player.getClan() != null) {
                 player.getClan().incReputation(10000, false, "BetaNpc");
-                player.getClan().broadcastToOnlineMembers(new L2GameServerPacket[]
-                        {
-                                new PledgeShowInfoUpdate(player.getClan())
-                        });
+                player.getClan().broadcastToOnlineMembers(new PledgeShowInfoUpdate(player.getClan()));
                 player.sendMessage("Your clan received 10 000 clan reputation!");
             } else {
                 player.sendMessage("You don't have clan to use this feature!");
             }
         } else if (command.equalsIgnoreCase("add_exp_sp")) {
-            player.addExpAndSp(999999999L, 999999999L);
-            player.addExpAndSp(999999999L, 999999999L);
-            player.addExpAndSp(999999999L, 999999999L);
-            player.addExpAndSp(999999999L, 999999999L);
-            player.addExpAndSp(999999999L, 999999999L);
-            player.addExpAndSp(999999999L, 999999999L);
-            player.addExpAndSp(999999999L, 999999999L);
             player.addExpAndSp(999999999L, 999999999L);
         } else if (command.equalsIgnoreCase("add_fame")) {
             player.setFame(player.getFame() + 10000, "BetaNpc");
@@ -84,18 +64,18 @@ public final class BetaNPCInstance extends NpcInstance {
                 player.getInventory().addItem(7694, 1L, "nobleTiara");
                 player.sendMessage("Congratulations! You gained noblesse rank.");
                 player.broadcastUserInfo(true);
-            } else if (player.isNoble()) {
+            } else {
                 player.sendMessage("You already have noblesse rank !");
             }
         } else if (command.equalsIgnoreCase("give_hero")) {
             if (!player.isHero()) {
                 player.setHero(true);
                 player.updatePledgeClass();
-                player.addSkill(SkillTable.INSTANCE().getInfo(395, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(396, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(1374, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(1375, 1));
-                player.addSkill(SkillTable.INSTANCE().getInfo(1376, 1));
+                player.addSkill(SkillTable.INSTANCE.getInfo(395, 1));
+                player.addSkill(SkillTable.INSTANCE.getInfo(396, 1));
+                player.addSkill(SkillTable.INSTANCE.getInfo(1374, 1));
+                player.addSkill(SkillTable.INSTANCE.getInfo(1375, 1));
+                player.addSkill(SkillTable.INSTANCE.getInfo(1376, 1));
                 player.sendPacket(new SkillList(player));
                 player.getPlayer().broadcastUserInfo(true);
                 player.sendMessage("Congratulations! You gained hero rank.");

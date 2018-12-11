@@ -9,14 +9,13 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.tables.ClanTable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class ExShowAgitInfo extends L2GameServerPacket {
     private List<AgitInfo> _clanHalls;
 
     public ExShowAgitInfo() {
-        List<ClanHall> chs = ResidenceHolder.getInstance().getResidenceList(ClanHall.class);
+        List<ClanHall> chs = ResidenceHolder.getResidenceList(ClanHall.class);
         _clanHalls = new ArrayList<>(chs.size());
 
         for (ClanHall clanHall : chs) {

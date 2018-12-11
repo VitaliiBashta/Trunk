@@ -45,13 +45,13 @@ public class Reflection {
     private final Set<Integer> _visitors = new HashSet<>();
     int _playerCount;
     // vars
-    private Map<Integer, DoorInstance> _doors = new HashMap<>();
+    private Map<Integer, DoorInstance> doors = new HashMap<>();
     private Map<String, Zone> _zones = Collections.emptyMap();
     private Map<String, List<Spawner>> _spawners = Collections.emptyMap();
     private Party party;
     private CommandChannel _commandChannel;
     private String name = "";
-    private InstantZone _instance;
+    private InstantZone instance;
     private int geoIndex;
     private Location _resetLoc; // место, к которому кидает при использовании SoE/unstuck, иначе выбрасывает в основной мир
     private Location _returnLoc; // если не прописано reset, но прописан return, то телепортит туда, одновременно перемещая в основной мир
@@ -90,7 +90,7 @@ public class Reflection {
     }
 
     public int getInstancedZoneId() {
-        return _instance == null ? 0 : _instance.getId();
+        return instance == null ? 0 : instance.getId();
     }
 
     protected Party getParty() {
@@ -118,11 +118,11 @@ public class Reflection {
     }
 
     public InstantZone getInstancedZone() {
-        return _instance;
+        return instance;
     }
 
     void setInstancedZone(InstantZone iz) {
-        _instance = iz;
+        instance = iz;
     }
 
     public int getGeoIndex() {
@@ -162,17 +162,17 @@ public class Reflection {
     }
 
     public Collection<DoorInstance> getDoors() {
-        return _doors.values();
+        return doors.values();
     }
 
     public DoorInstance getDoor(int id) {
-        return _doors.get(id);
+        return doors.get(id);
     }
 
     public Zone getZone(String name) {
         if (!_zones.containsKey(name)) {
             _log.warn("not found zone for name1: " + name);
-            System.exit(1);
+//            System.exit(1);
         }
         return _zones.get(name);
     }
@@ -286,10 +286,10 @@ public class Reflection {
                 despawnByGroup(group);
             }
 
-            for (DoorInstance d : _doors.values()) {
+            for (DoorInstance d : doors.values()) {
                 d.deleteMe();
             }
-            _doors.clear();
+            doors.clear();
 
             for (Zone zone : _zones.values()) {
                 zone.setActive(false);
@@ -347,7 +347,7 @@ public class Reflection {
             _spawns.clear();
             _objects.clear();
             _visitors.clear();
-            _doors.clear();
+            doors.clear();
 
             _playerCount = 0;
 
@@ -534,7 +534,7 @@ public class Reflection {
     // FIXME [VISTALL] сдвинуть в один?
     public void init(Map<Integer, DoorTemplate> doors, Map<String, ZoneTemplate> zones) {
         if (!doors.isEmpty()) {
-            _doors = new HashMap<>(doors.size());
+            this.doors = new HashMap<>(doors.size());
         }
 
         for (DoorTemplate template : doors.values()) {
@@ -546,7 +546,7 @@ public class Reflection {
                 door.openMe();
             }
 
-            _doors.put(template.getNpcId(), door);
+            this.doors.put(template.getNpcId(), door);
         }
 
         initDoors();
@@ -582,7 +582,7 @@ public class Reflection {
     // FIXME [VISTALL] сдвинуть в один?
     private void init0(Map<Integer, InstantZone.DoorInfo> doors, Map<String, InstantZone.ZoneInfo> zones) {
         if (!doors.isEmpty()) {
-            _doors = new HashMap<>(doors.size());
+            this.doors = new HashMap<>(doors.size());
         }
 
         for (InstantZone.DoorInfo info : doors.values()) {
@@ -594,7 +594,7 @@ public class Reflection {
                 door.openMe();
             }
 
-            _doors.put(info.getTemplate().getNpcId(), door);
+            this.doors.put(info.getTemplate().getNpcId(), door);
         }
 
         initDoors();
@@ -628,7 +628,7 @@ public class Reflection {
     }
 
     private void initDoors() {
-        for (DoorInstance door : _doors.values()) {
+        for (DoorInstance door : doors.values()) {
             if (door.getTemplate().getMasterDoor() > 0) {
                 DoorInstance masterDoor = getDoor(door.getTemplate().getMasterDoor());
 
@@ -641,7 +641,7 @@ public class Reflection {
      * Открывает дверь в отражении
      */
     public void openDoor(int doorId) {
-        DoorInstance door = _doors.get(doorId);
+        DoorInstance door = doors.get(doorId);
         if (door != null) {
             door.openMe();
         }
@@ -651,7 +651,7 @@ public class Reflection {
      * Закрывает дверь в отражении
      */
     public void closeDoor(int doorId) {
-        DoorInstance door = _doors.get(doorId);
+        DoorInstance door = doors.get(doorId);
         if (door != null) {
             door.closeMe();
         }
@@ -747,7 +747,7 @@ public class Reflection {
 
     public void init(InstantZone instantZone) {
         setName(instantZone.getName());
-        _instance = instantZone;
+        instance = instantZone;
 
         if (instantZone.getMapX() >= 0) {
             int geoIndex = GeoEngine.NextGeoIndex(instantZone.getMapX(), instantZone.getMapY(), getId());

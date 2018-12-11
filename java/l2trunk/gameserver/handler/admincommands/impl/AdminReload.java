@@ -9,7 +9,6 @@ import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.*;
 import l2trunk.gameserver.data.xml.parser.ClassesStatsBalancerParser;
 import l2trunk.gameserver.data.xml.parser.EventParser;
-import l2trunk.gameserver.data.xml.parser.FightClubMapParser;
 import l2trunk.gameserver.data.xml.parser.NpcParser;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
@@ -57,7 +56,7 @@ public class AdminReload implements IAdminCommandHandler {
             }
             case admin_reload_multisell: {
                 try {
-                    MultiSellHolder.getInstance().reload();
+                    MultiSellHolder.INSTANCE.reload();
                 } catch (Exception e) {
                     return false;
                 }
@@ -112,12 +111,12 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_skills: {
-                ThreadPoolManager.INSTANCE.execute(() -> SkillTable.INSTANCE().reload());
+                ThreadPoolManager.INSTANCE.execute(SkillTable.INSTANCE::reload);
                 activeChar.sendMessage("Skills Reloaded!");
                 break;
             }
             case admin_reload_npc: {
-                NpcParser.getInstance().reload();
+                NpcParser.INSTANCE.reload();
                 break;
             }
             case admin_reload_spawn: {
@@ -141,7 +140,7 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_pets: {
-                PetDataTable.getInstance().reload();
+                PetDataTable.INSTANCE.reload();
                 break;
             }
             case admin_reload_locale: {
@@ -158,15 +157,9 @@ public class AdminReload implements IAdminCommandHandler {
                 break;
             }
             case admin_reload_events: {
-                EventHolder.getInstance().clear();
-                EventParser.getInstance().load();
+                EventHolder.clear();
+                EventParser.INSTANCE.load();
                 activeChar.sendMessage("Events Reloaded!");
-                break;
-            }
-            case admin_reload_fc_maps: {
-                FightClubMapHolder.getInstance().clear();
-                FightClubMapParser.getInstance().load();
-                activeChar.sendMessage("Maps Reloaded!");
                 break;
             }
             case admin_reload_changelog: {
@@ -224,7 +217,6 @@ public class AdminReload implements IAdminCommandHandler {
         admin_reload_nobles,
         admin_reload_im,
         admin_reload_events,
-        admin_reload_fc_maps,
         admin_reload_changelog,
         admin_reload_balanceclasses,
         admin_reload_damageclasses

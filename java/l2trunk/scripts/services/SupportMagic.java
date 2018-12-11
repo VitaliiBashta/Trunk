@@ -11,7 +11,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import java.util.ArrayList;
 import java.util.List;
 
-class SupportMagic extends Functions {
+public final class SupportMagic extends Functions {
     private final static int[][] _mageBuff = new int[][]{
             // minlevel maxlevel skill skilllevel
             {6, 75, 4322, 1}, // windwalk
@@ -79,12 +79,12 @@ class SupportMagic extends Functions {
             show("default/newbie_blessing_no.htm", player, npc);
             return;
         }
-        npc.doCast(SkillTable.INSTANCE().getInfo(5182, 1), player, true);
+        npc.doCast(SkillTable.INSTANCE.getInfo(5182), player, true);
     }
 
     private static void doSupportMagic(NpcInstance npc, Player player, boolean servitor) {
         // Prevent a cursed weapon weilder of being buffed
-        if (player == null || npc == null || !npc.isInRange(player, 1000L) || player.isCursedWeaponEquipped())
+        if (npc == null || !npc.isInRange(player, 1000L) || player.isCursedWeaponEquipped())
             return;
         int lvl = player.getLevel();
 
@@ -110,7 +110,7 @@ class SupportMagic extends Functions {
             for (int[] buff : _summonBuff)
                 if (lvl >= buff[0] && lvl <= buff[1]) {
                     npc.broadcastPacket(new MagicSkillUse(npc, player.getPet(), buff[2], buff[3], 0, 0));
-                    npc.callSkill(SkillTable.INSTANCE().getInfo(buff[2], buff[3]), target, true);
+                    npc.callSkill(SkillTable.INSTANCE.getInfo(buff[2], buff[3]), target, true);
                 }
         } else {
             target.add(player);
@@ -119,13 +119,13 @@ class SupportMagic extends Functions {
                 for (int[] buff : _warrBuff)
                     if (lvl >= buff[0] && lvl <= buff[1]) {
                         npc.broadcastPacket(new MagicSkillUse(npc, player, buff[2], buff[3], 0, 0));
-                        npc.callSkill(SkillTable.INSTANCE().getInfo(buff[2], buff[3]), target, true);
+                        npc.callSkill(SkillTable.INSTANCE.getInfo(buff[2], buff[3]), target, true);
                     }
             } else
                 for (int[] buff : _mageBuff)
                     if (lvl >= buff[0] && lvl <= buff[1]) {
                         npc.broadcastPacket(new MagicSkillUse(npc, player, buff[2], buff[3], 0, 0));
-                        npc.callSkill(SkillTable.INSTANCE().getInfo(buff[2], buff[3]), target, true);
+                        npc.callSkill(SkillTable.INSTANCE.getInfo(buff[2], buff[3]), target, true);
                     }
         }
     }

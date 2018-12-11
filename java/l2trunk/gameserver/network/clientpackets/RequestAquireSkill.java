@@ -17,7 +17,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class RequestAquireSkill extends L2GameClientPacket {
+public final class RequestAquireSkill extends L2GameClientPacket {
     private AcquireType _type;
     private int _id, _level, _subUnit;
 
@@ -157,14 +157,14 @@ public class RequestAquireSkill extends L2GameClientPacket {
         if ((trainer == null || player.getDistance(trainer.getX(), trainer.getY()) > Creature.INTERACTION_DISTANCE) && !player.isGM())
             return;
 
-        Skill skill = SkillTable.INSTANCE().getInfo(_id, _level);
+        Skill skill = SkillTable.INSTANCE.getInfo(_id, _level);
         if (skill == null)
             return;
 
-        if (!SkillAcquireHolder.getInstance().isSkillPossible(player, skill, _type))
+        if (!SkillAcquireHolder.isSkillPossible(player, skill, _type))
             return;
 
-        SkillLearn skillLearn = SkillAcquireHolder.getInstance().getSkillLearn(player, _id, _level, _type);
+        SkillLearn skillLearn = SkillAcquireHolder.getSkillLearn(player, _id, _level, _type);
 
         if (skillLearn == null)
             return;

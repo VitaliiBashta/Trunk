@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.CCPHelpers;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.dao.ItemsDAO;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
@@ -49,34 +48,28 @@ public class CCPRepair {
                 return false;
             }
 
-            Connection con = null;
-            PreparedStatement statement = null;
-            ResultSet rs = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
+            PreparedStatement statement;
+            ResultSet rs;
+            try (Connection con = DatabaseFactory.getInstance().getConnection()) {
                 statement = con.prepareStatement("SELECT karma FROM characters WHERE obj_Id=?");
                 statement.setInt(1, objId);
                 statement.execute();
                 rs = statement.getResultSet();
 
-                int karma = 0;
-
+                int karma;
                 rs.next();
 
                 karma = rs.getInt("karma");
 
-                DbUtils.close(statement, rs);
 
                 if (karma > 0) {
                     statement = con.prepareStatement("UPDATE characters SET x=17144, y=170156, z=-3502 WHERE obj_Id=?");
                     statement.setInt(1, objId);
                     statement.execute();
-                    DbUtils.close(statement);
                 } else {
                     statement = con.prepareStatement("UPDATE characters SET x=0, y=0, z=0 WHERE obj_Id=?");
                     statement.setInt(1, objId);
                     statement.execute();
-                    DbUtils.close(statement);
 
                     Collection<ItemInstance> items = ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objId, ItemLocation.PAPERDOLL);
                     for (ItemInstance item : items) {
@@ -91,15 +84,12 @@ public class CCPRepair {
                 statement = con.prepareStatement("DELETE FROM character_variables WHERE obj_id=? AND type='user-var' AND name='reflection'");
                 statement.setInt(1, objId);
                 statement.execute();
-                DbUtils.close(statement);
 
                 Functions.sendMessage(new CustomMessage("voicedcommandhandlers.Repair.RepairDone", activeChar), activeChar);
                 return true;
             } catch (SQLException e) {
                 _log.error("Error while repairing Char", e);
                 return false;
-            } finally {
-                DbUtils.closeQuietly(con, statement, rs);
             }
         } else {
             activeChar.sendMessage(".repair <name>");

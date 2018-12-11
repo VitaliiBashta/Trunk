@@ -1,7 +1,6 @@
 package l2trunk.gameserver.dao;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.entity.residence.Fortress;
 import org.slf4j.Logger;
@@ -12,29 +11,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author VISTALL
- * @date 18:10/15.04.2011
- */
-public class FortressDAO {
+public enum  FortressDAO {
+    INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT * FROM fortress WHERE id = ?";
     private static final String UPDATE_SQL_QUERY = "UPDATE fortress SET castle_id=?, state=?, cycle=?, reward_count=?, paid_cycle=?, supply_count=?, siege_date=?, last_siege_date=?, own_date=?, facility_0=?, facility_1=?, facility_2=?, facility_3=?, facility_4=? WHERE id=?";
     private static final Logger _log = LoggerFactory.getLogger(FortressDAO.class);
-    private static final FortressDAO _instance = new FortressDAO();
-
-    public static FortressDAO getInstance() {
-        return _instance;
-    }
 
     public void select(Fortress fortress) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(SELECT_SQL_QUERY);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY)) {
             statement.setInt(1, fortress.getId());
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
             if (rset.next()) {
                 fortress.setFortState(rset.getInt("state"), rset.getInt("castle_id"));
                 fortress.setCycle(rset.getInt("cycle"));
@@ -49,8 +36,6 @@ public class FortressDAO {
             }
         } catch (SQLException e) {
             _log.error("FortressDAO.getBonuses(Fortress):" + e, e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 

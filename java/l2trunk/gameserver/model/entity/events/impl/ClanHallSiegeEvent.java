@@ -34,7 +34,7 @@ public class ClanHallSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
             return;
         }
 
-        SiegeClanDAO.getInstance().delete(getResidence());
+        SiegeClanDAO.INSTANCE.delete(getResidence());
 
         updateParticles(true, ATTACKERS);
 
@@ -86,7 +86,7 @@ public class ClanHallSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
 
     @Override
     public void loadSiegeClans() {
-        addObjects(ATTACKERS, SiegeClanDAO.getInstance().load(getResidence(), ATTACKERS));
+        addObjects(ATTACKERS, SiegeClanDAO.INSTANCE.load(getResidence(), ATTACKERS));
     }
 
     @Override

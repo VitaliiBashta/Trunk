@@ -30,8 +30,8 @@ public final class NaiaCube extends DefaultAI {
         @Override
         public void runImpl() {
             _npc.deleteMe();
-            NaiaCoreManager.setZoneActive(false);
-            NaiaCoreManager.setBossSpawned(false);
+            NaiaCoreManager.INSTANCE.setZoneActive(false);
+            NaiaCoreManager.INSTANCE.setBossSpawned(false);
             ReflectionUtils.getDoor(20240001).openMe(); // Beleth Door
             ReflectionUtils.getDoor(18250025).openMe(); // Epidos Door
         }

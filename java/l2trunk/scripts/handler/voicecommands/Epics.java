@@ -17,7 +17,7 @@ import l2trunk.scripts.services.community.CommunityNpcs;
 import java.util.Arrays;
 import java.util.List;
 
-public class Epics implements IVoicedCommandHandler, ScriptFile {
+public final class Epics implements IVoicedCommandHandler, ScriptFile {
     private final List<String> _commandList = Arrays.asList(
             "epicAntharas",
             "epicValakas",
@@ -45,7 +45,7 @@ public class Epics implements IVoicedCommandHandler, ScriptFile {
         if (activeChar == null)
             return false;
 
-        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "epicsRespawn/template.htm", activeChar);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "epicsRespawn/template.htm", activeChar);
 
         if (command.equals("epicAntharas")) {
             html = html.replace("%img%", "Btns.epic_29068");
@@ -101,7 +101,7 @@ public class Epics implements IVoicedCommandHandler, ScriptFile {
         }
         if (command.equals("epicQueenAnt")) {
             html = html.replace("%img%", "Btns.epic_29001");
-            html = html.replace("%respawn%", CommunityNpcs.convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29001) * 1000L));
+            html = html.replace("%respawn%", CommunityNpcs.convertRespawnDate(RaidBossSpawnManager.INSTANCE.getRespawntime(29001) * 1000L));
             html = html.replace("%loc1%", "-21880 184488 -5720 1000000");
             html = html.replace("%loc2%", "-22392 183000 -5720 1000000");
             html = html.replace("%loc3%", "-21096 183208 -5720 1000000");
@@ -114,7 +114,7 @@ public class Epics implements IVoicedCommandHandler, ScriptFile {
         }
         if (command.equals("epicOrfen")) {
             html = html.replace("%img%", "Btns.epic_29014");
-            html = html.replace("%respawn%", CommunityNpcs.convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29014) * 1000L));
+            html = html.replace("%respawn%", CommunityNpcs.convertRespawnDate(RaidBossSpawnManager.INSTANCE.getRespawntime(29014) * 1000L));
             html = html.replace("%loc1%", "54152 18024 -5456 1000000");
             html = html.replace("%loc2%", "56344 18312 -5464 1000000");
             html = html.replace("%loc3%", "56488 17016 -5440 1000000");

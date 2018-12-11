@@ -7,12 +7,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _278_HomeSecurity extends Quest implements ScriptFile {
+import java.util.Arrays;
+import java.util.List;
+
+public final class _278_HomeSecurity extends Quest implements ScriptFile {
     private static final int Tunatun = 31537;
-    private static final int[] FarmMonsters = {
-            18905,
-            18906
-    };
+    private static final List<Integer> FarmMonsters = Arrays.asList(18905, 18906);
     private static final int SelMahumMane = 15531;
 
     public _278_HomeSecurity() {
@@ -106,7 +106,7 @@ public class _278_HomeSecurity extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1)
-            if (ArrayUtils.contains(FarmMonsters, npcId) && st.getQuestItemsCount(SelMahumMane) < 300) {
+            if (FarmMonsters.contains(npcId) && st.getQuestItemsCount(SelMahumMane) < 300) {
                 st.giveItems(SelMahumMane, 1, true);
                 if (st.getQuestItemsCount(SelMahumMane) >= 300)
                     st.setCond(2);

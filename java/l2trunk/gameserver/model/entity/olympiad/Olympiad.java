@@ -109,7 +109,7 @@ public final class Olympiad {
                 break;
             case 1:
                 _isOlympiadEnd = true;
-                _scheduledValdationTask = ThreadPoolManager.INSTANCE().schedule(new ValidationTask(), getMillisToValidationEnd());
+                _scheduledValdationTask = ThreadPoolManager.INSTANCE.schedule(new ValidationTask(), getMillisToValidationEnd());
                 break;
             default:
                 _log.warn("Olympiad System: Omg something went wrong in loading!! Period = " + _period);

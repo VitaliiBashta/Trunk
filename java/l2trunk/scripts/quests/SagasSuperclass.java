@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -18,6 +17,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 public abstract class SagasSuperclass extends Quest {
@@ -208,17 +208,12 @@ public abstract class SagasSuperclass extends Quest {
     }
 
     private void cleanTempVars() {
-        Connection con = null;
-        PreparedStatement st = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            st = con.prepareStatement("DELETE FROM character_quests WHERE name=? AND (var='spawned' OR var='kills' OR var='Archon' OR var LIKE 'Mob_%')");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement("DELETE FROM character_quests WHERE name=? AND (var='spawned' OR var='kills' OR var='Archon' OR var LIKE 'Mob_%')")) {
             st.setString(1, getName());
             st.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, st);
         }
     }
 

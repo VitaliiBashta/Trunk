@@ -5,6 +5,9 @@ import l2trunk.gameserver.model.actor.instances.player.Macro;
 import l2trunk.gameserver.model.actor.instances.player.Macro.L2MacroCmd;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * packet type id 0xcd
  * <p>
@@ -26,7 +29,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
  * <p>
  * format:		cdSSScc (ccdcS)
  */
-public class RequestMakeMacro extends L2GameClientPacket {
+public final class RequestMakeMacro extends L2GameClientPacket {
     private Macro _macro;
 
     @Override
@@ -39,14 +42,14 @@ public class RequestMakeMacro extends L2GameClientPacket {
         int _count = readC();
         if (_count > 12)
             _count = 12;
-        L2MacroCmd[] commands = new L2MacroCmd[_count];
+        List<L2MacroCmd> commands = new ArrayList<>();
         for (int i = 0; i < _count; i++) {
             int entry = readC();
             int type = readC(); // 1 = skill, 3 = action, 4 = shortcut
             int d1 = readD(); // skill or page number for shortcuts
             int d2 = readC();
             String command = readS().replace(";", "").replace(",", "");
-            commands[i] = new L2MacroCmd(entry, type, d1, d2, command);
+            commands.add( new L2MacroCmd(entry, type, d1, d2, command));
         }
         _macro = new Macro(_id, _icon, _name, _desc, _acronym, commands);
     }
@@ -57,7 +60,7 @@ public class RequestMakeMacro extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        if (activeChar.getMacroses().getAllMacroses().length > 48) {
+        if (activeChar.getMacroses().getAllMacroses().size() > 48) {
             activeChar.sendPacket(SystemMsg.YOU_MAY_CREATE_UP_TO_48_MACROS);
             return;
         }

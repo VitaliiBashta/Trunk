@@ -22,7 +22,7 @@ import java.util.List;
  * c - reward type
  * ]
  */
-public class RequestSetCrop extends L2GameClientPacket {
+public final class RequestSetCrop extends L2GameClientPacket {
     private int _count, _manorId;
 
     private long[] _items; // _size*4
@@ -59,7 +59,7 @@ public class RequestSetCrop extends L2GameClientPacket {
             return;
         }
 
-        Castle caslte = ResidenceHolder.getInstance().getResidence(Castle.class, _manorId);
+        Castle caslte = ResidenceHolder.getResidence(Castle.class, _manorId);
         if (caslte.getOwnerId() != activeChar.getClanId() // clan owns castle
                 || (activeChar.getClanPrivileges() & Clan.CP_CS_MANOR_ADMIN) != Clan.CP_CS_MANOR_ADMIN) // has manor rights
         {
@@ -69,7 +69,7 @@ public class RequestSetCrop extends L2GameClientPacket {
 
         List<CropProcure> crops = new ArrayList<>(_count);
         for (int i = 0; i < _count; i++) {
-            int id = (int) _items[i * 4 + 0];
+            int id = (int) _items[i * 4 ];
             long sales = _items[i * 4 + 1];
             long price = _items[i * 4 + 2];
             int type = (int) _items[i * 4 + 3];

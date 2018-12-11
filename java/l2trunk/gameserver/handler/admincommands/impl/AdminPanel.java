@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class AdminPanel implements IAdminCommandHandler {
+public final class AdminPanel implements IAdminCommandHandler {
     private static void CppanelMainPage(Player activeChar) {
         int count = ServerVariables.getInt("fake_players");
 
@@ -262,9 +262,9 @@ public class AdminPanel implements IAdminCommandHandler {
 
                 target = activeChar.getTarget().getPlayer();
 
-                int skillId = Integer.parseInt(st.nextToken());
-                int skillLevel = Integer.parseInt(st.nextToken());
-                Skill skill = SkillTable.INSTANCE().getInfo(skillId, skillLevel);
+                int skillId = toInt(st.nextToken());
+                int skillLevel = toInt(st.nextToken());
+                Skill skill = SkillTable.INSTANCE.getInfo(skillId, skillLevel);
                 if (skill != null && target.getPlayer().getClan() != null) {
                     Clan clan = target.getPlayer().getClan();
                     clan.addSkill(skill, true);

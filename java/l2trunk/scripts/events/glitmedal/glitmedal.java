@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class glitmedal extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
@@ -27,29 +28,31 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     private static final int EVENT_MANAGER_ID2 = 31229; // Winnie
 
     private static final Logger _log = LoggerFactory.getLogger(glitmedal.class);
-
-    // Для временного статуса который выдается в игре рандомно либо 0 либо 1
-    private int isTalker;
-
     // Медали
     private static final int EVENT_MEDAL = 6392;
     private static final int EVENT_GLITTMEDAL = 6393;
-
     private static final int Badge_of_Rabbit = 6399;
     private static final int Badge_of_Hyena = 6400;
     private static final int Badge_of_Fox = 6401;
     private static final int Badge_of_Wolf = 6402;
-
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
     private static boolean _active = false;
     private static boolean MultiSellLoaded = false;
-
-    private final Path[] multiSellFiles = {
+    private final List<Path> multiSellFiles = Arrays.asList(
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/502.xml"),
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/503.xml"),
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/504.xml"),
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/505.xml"),
-            Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/506.xml"),};
+            Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/506.xml"));
+    // Для временного статуса который выдается в игре рандомно либо 0 либо 1
+    private int isTalker;
+
+    /**
+     * Читает статус эвента из базы.
+     */
+    private static boolean isActive() {
+        return isActive("glitter");
+    }
 
     @Override
     public void onLoad() {
@@ -61,13 +64,6 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
             _log.info("Loaded Event: L2 Medal Collection Event [state: activated]");
         } else
             _log.info("Loaded Event: L2 Medal Collection Event [state: deactivated]");
-    }
-
-    /**
-     * Читает статус эвента из базы.
-     */
-    private static boolean isActive() {
-        return isActive("glitter");
     }
 
     /**
@@ -170,8 +166,7 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     private void loadMultiSell() {
         if (MultiSellLoaded)
             return;
-        for (Path f : multiSellFiles)
-            MultiSellHolder.getInstance().parseFile(f);
+        multiSellFiles.forEach(MultiSellHolder.INSTANCE::parseFile);
         MultiSellLoaded = true;
     }
 
@@ -179,8 +174,7 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     public void onReload() {
         unSpawnEventManagers();
         if (MultiSellLoaded) {
-            for (Path f : multiSellFiles)
-                MultiSellHolder.getInstance().remove(f);
+            multiSellFiles.forEach(MultiSellHolder.INSTANCE::remove);
             MultiSellLoaded = false;
         }
     }
@@ -256,7 +250,6 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
         }
 
         show("scripts/events/glitmedal/event_col_agent2_q0996_01.htm", player);
-        return;
     }
 
     public void game() {
@@ -426,6 +419,5 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
                 return;
             }
         show("scripts/events/glitmedal/event_col_agent2_q0996_26.htm", player);
-        return;
     }
 }

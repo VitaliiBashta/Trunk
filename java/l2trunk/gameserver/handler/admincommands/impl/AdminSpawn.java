@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class AdminSpawn implements IAdminCommandHandler {
+public final class AdminSpawn implements IAdminCommandHandler {
     private static final Logger _log = LoggerFactory.getLogger(AdminSpawn.class);
 
     @Override
@@ -282,7 +282,7 @@ public class AdminSpawn implements IAdminCommandHandler {
                 .setRespawnDelay(respawnTime)
                 .setReflection(activeChar.getReflection());
 
-        if (RaidBossSpawnManager.getInstance().isDefined(templateId))
+        if (RaidBossSpawnManager.INSTANCE.isDefined(templateId))
             activeChar.sendMessage("Raid Boss " + templateId + " already spawned.");
         else {
             if (Config.SAVE_GM_SPAWN)

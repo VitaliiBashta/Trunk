@@ -53,7 +53,7 @@ public final class ServerList extends L2LoginServerPacket {
         Pair<Integer, int[]> entry = account.getAccountInfo(gs.getId());
 
         try {
-            _servers.put(server_id, new ServerData(ip, port, gs.isPvp(), gs.isShowingBrackets(), gs.getServerType(), gs.getOnline(), gs.getMaxPlayers(), gs.isOnline(), entry == null ? 0 : entry.getKey(), gs.getAgeLimit(), entry == null ? ArrayUtils.EMPTY_INT_ARRAY : entry.getValue(), server_id));
+            _servers.put(server_id, new ServerData(ip, port, gs.isPvp(), gs.isShowingBrackets(), gs.getServerType(), gs.getOnline(), gs.getMaxPlayers(), gs.isOnline(), entry == null ? 0 : entry.getKey(), gs.getAgeLimit(), entry == null ? new int[0] : entry.getValue(), server_id));
         } catch (Exception e) {
             e.printStackTrace();
         }

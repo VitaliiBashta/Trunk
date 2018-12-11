@@ -1,6 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.Skill;
@@ -17,35 +17,27 @@ import l2trunk.gameserver.templates.item.support.MerchantGuard;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.*;
 
-public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
-    private static final ResidenceParser _instance = new ResidenceParser();
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private ResidenceParser() {
-        super(ResidenceHolder.getInstance());
+public enum ResidenceParser {
+    INSTANCE;
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    Path xml = Config.DATAPACK_ROOT.resolve("data/residences/");
+
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + ResidenceHolder.size() + " items ");
     }
 
-    public static ResidenceParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/residences/");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "residence.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         String impl = rootElement.attributeValue("impl");
         Class<?> clazz;
 
@@ -60,19 +52,19 @@ public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
             clazz = Class.forName("l2trunk.gameserver.model.entity.residence." + impl);
             Constructor<?> constructor = clazz.getConstructor(StatsSet.class);
             residence = (Residence) constructor.newInstance(set);
-            getHolder().addResidence(residence);
+            ResidenceHolder.addResidence(residence);
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            LOG.error("fail to init: " + getCurrentFileName(), e);
+            LOG.error("fail to init: " + impl, e);
             return;
         }
 
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
             String nodeName = element.getName();
-            int level = element.attributeValue("level") == null ? 0 : Integer.valueOf(element.attributeValue("level"));
-            int lease = (int) ((element.attributeValue("lease") == null ? 0 : Integer.valueOf(element.attributeValue("lease"))) * Config.RESIDENCE_LEASE_FUNC_MULTIPLIER);
-            int npcId = element.attributeValue("npcId") == null ? 0 : Integer.valueOf(element.attributeValue("npcId"));
-            int listId = element.attributeValue("listId") == null ? 0 : Integer.valueOf(element.attributeValue("listId"));
+            int level = element.attributeValue("level") == null ? 0 : toInt(element.attributeValue("level"));
+            int lease = (int) ((element.attributeValue("lease") == null ? 0 : toInt(element.attributeValue("lease"))) * Config.RESIDENCE_LEASE_FUNC_MULTIPLIER);
+            int npcId = element.attributeValue("npcId") == null ? 0 : toInt(element.attributeValue("npcId"));
+            int listId = element.attributeValue("listId") == null ? 0 : toInt(element.attributeValue("listId"));
 
             ResidenceFunction function = null;
             if (nodeName.equalsIgnoreCase("teleport")) {
@@ -169,7 +161,7 @@ public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
                         else if (q.equalsIgnoreCase("cabal_dawn"))
                             intSet.add(SevenSigns.CABAL_DAWN);
                         else
-                            LOG.error("Unknown ssq type: " + q + "; file: " + getCurrentFileName());
+                            LOG.error("Unknown ssq type: " + q);
                     }
 
                     ((Castle) residence).addMerchantGuard(new MerchantGuard(itemId, npcId2, maxGuard, intSet));
@@ -179,7 +171,7 @@ public final class ResidenceParser extends AbstractDirParser<ResidenceHolder> {
             if (function != null)
                 function.addLease(level, lease);
         }
-        getHolder().buildFastLook();
+        ResidenceHolder.buildFastLook();
     }
 
     private ResidenceFunction checkAndGetFunction(Residence residence, int type) {

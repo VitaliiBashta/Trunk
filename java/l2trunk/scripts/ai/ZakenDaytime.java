@@ -9,12 +9,14 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExSendUIEvent;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
+import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-import static l2trunk.scripts.ai.ZakenDaytime83.zakenTele;
+import java.util.Arrays;
+import java.util.List;
 
 public final class ZakenDaytime extends Fighter {
-    private static final Location[] _locations = new Location[]{
+    private static final List<Location> _locations = Arrays.asList(
             new Location(55272, 219112, -3496),
             new Location(56296, 218072, -3496),
             new Location(54232, 218072, -3496),
@@ -29,11 +31,8 @@ public final class ZakenDaytime extends Fighter {
             new Location(56296, 218072, -2952),
             new Location(54232, 218072, -2952),
             new Location(54248, 220136, -2952),
-            new Location(56296, 220136, -2952)
-    };
-    private final long _teleportSelfReuse = 120000L;          // 120 secs
+            new Location(56296, 220136, -2952));
     private final NpcInstance actor = getActor();
-    private long _teleportSelfTimer = 0L;
 
     public ZakenDaytime(NpcInstance actor) {
         super(actor);
@@ -43,7 +42,7 @@ public final class ZakenDaytime extends Fighter {
     static void scheduleTeleport(long _teleportSelfTimer, long _teleportSelfReuse, NpcInstance actor) {
         if (_teleportSelfTimer + _teleportSelfReuse < System.currentTimeMillis()) {
             if (Rnd.chance(20)) {
-                actor.doCast(zakenTele, actor, false);
+                actor.doCast(SkillTable.INSTANCE.getInfo(4222), actor, false);
                 ThreadPoolManager.INSTANCE.schedule(() -> {
                     actor.teleToLocation(Rnd.get(_locations));
                     actor.getAggroList().clear(true);
@@ -54,6 +53,9 @@ public final class ZakenDaytime extends Fighter {
 
     @Override
     public void thinkAttack() {
+        // 120 secs
+        long _teleportSelfReuse = 120000L;
+        long _teleportSelfTimer = 0L;
         scheduleTeleport(_teleportSelfTimer, _teleportSelfReuse, actor);
         super.thinkAttack();
     }

@@ -1,6 +1,5 @@
 package l2trunk.scripts.services.community;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -49,14 +48,14 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
             selectRankingCIP();
             selectRankingAdena();
             _log.info("Ranking in the commynity board has been updated.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -66,7 +65,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
 
     @Override
     public void onBypassCommand(Player player, String bypass) {
-        String html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "off.htm", player);
+        String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "off.htm", player);
         ShowBoard.separateAndSend(html, player);
 
         //Checking if all required images were sent to the player, if not - not allowing to pass
@@ -125,7 +124,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 number++;
             }
         } else if (page == 2) {
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "ranking/pvp.htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "ranking/pvp.htm", player);
             while (number < 10) {
                 if (RankingManagerStats.RankingPvPName[number] != null) {
                     html = html.replace("<?name_" + number + "?>", RankingManagerStats.RankingPvPName[number]);
@@ -143,7 +142,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 number++;
             }
         } else if (page == 3) {
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "ranking/rk.htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "ranking/rk.htm", player);
             while (number < 10) {
                 if (RankingManagerStats.RankingRaidName[number] != null) {
                     html = html.replace("<?name_" + number + "?>", RankingManagerStats.RankingRaidName[number]);
@@ -161,7 +160,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 number++;
             }
         } else if (page == 4) {
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "ranking/cis.htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "ranking/cis.htm", player);
             while (number < 10) {
                 if (RankingManagerStats.RankingInstanceSoloName[number] != null) {
                     html = html.replace("<?name_" + number + "?>", RankingManagerStats.RankingInstanceSoloName[number]);
@@ -179,7 +178,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 number++;
             }
         } else if (page == 5) {
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "ranking/cip.htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "ranking/cip.htm", player);
             while (number < 10) {
                 if (RankingManagerStats.RankingInstancePartyName[number] != null) {
                     html = html.replace("<?name_" + number + "?>", RankingManagerStats.RankingInstancePartyName[number]);
@@ -197,7 +196,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 number++;
             }
         } else if (page == 6) {
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "ranking/adena.htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "ranking/adena.htm", player);
             while (number < 10) {
                 if (RankingManagerStats.RankingAdenaName[number] != null) {
                     html = html.replace("<?name_" + number + "?>", RankingManagerStats.RankingAdenaName[number]);
@@ -226,15 +225,11 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
     }
 
     private void selectRankingPVP() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
         int number = 0;
 
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, pvpkills FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0 ORDER BY pvpkills DESC LIMIT " + 10);
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, pvpkills FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0 ORDER BY pvpkills DESC LIMIT " + 10);
+             ResultSet rset = statement.executeQuery()) {
 
             while (rset.next()) {
                 if (!rset.getString("char_name").isEmpty()) {
@@ -254,10 +249,8 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 }
                 number++;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
@@ -320,15 +313,11 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
     }
 
     private void selectRankingCIS() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
         int number = 0;
 
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, soloinstance FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0  ORDER BY soloinstance DESC LIMIT " + 10);
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, soloinstance FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0  ORDER BY soloinstance DESC LIMIT " + 10);
+             ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
                 if (!rset.getString("char_name").isEmpty()) {
                     RankingManagerStats.RankingInstanceSoloName[number] = rset.getString("char_name");
@@ -347,23 +336,16 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 }
                 number++;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
     private void selectRankingCIP() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
         int number = 0;
-
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, partyinstance FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0  ORDER BY partyinstance DESC LIMIT " + 10);
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, partyinstance FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) WHERE cs.isBase=1 AND accesslevel = 0  ORDER BY partyinstance DESC LIMIT " + 10);
+             ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
                 if (!rset.getString("char_name").isEmpty()) {
                     RankingManagerStats.RankingInstancePartyName[number] = rset.getString("char_name");
@@ -382,23 +364,17 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 }
                 number++;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
     private void selectRankingAdena() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
         int number = 0;
 
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, it.count FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) JOIN items AS it ON (c.obj_Id=it.owner_id) WHERE cs.isBase=1 AND it.item_id=57 AND accesslevel = 0 ORDER BY it.count DESC LIMIT " + 10);
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT char_name, class_id, clanid, online, it.count FROM characters AS c LEFT JOIN character_subclasses AS cs ON (c.obj_Id=cs.char_obj_id) JOIN items AS it ON (c.obj_Id=it.owner_id) WHERE cs.isBase=1 AND it.item_id=57 AND accesslevel = 0 ORDER BY it.count DESC LIMIT " + 10);
+             ResultSet rset = statement.executeQuery()) {
 
             while (rset.next()) {
                 if (!rset.getString("char_name").isEmpty()) {
@@ -418,10 +394,8 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
                 }
                 number++;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 

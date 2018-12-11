@@ -28,7 +28,7 @@ public interface IXmlReader {
     PathMatcher XML_FILTER = new XMLFilter();
 
     /**
-     * This method can be used to load/reload the data.<br>
+     * This method can be used to loadFile/reload the data.<br>
      * It's highly recommended to clear the data storage, either the list or map.
      */
     void load();

@@ -44,7 +44,7 @@ public class PlayerMessageStack {
     }
 
     public void CheckMessages(Player cha) {
-        List<L2GameServerPacket> messages = null;
+        List<L2GameServerPacket> messages;
         synchronized (_stack) {
             if (!_stack.containsKey(cha.getObjectId()))
                 return;

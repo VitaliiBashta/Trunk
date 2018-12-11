@@ -7,7 +7,7 @@ import l2trunk.gameserver.network.serverpackets.ExShowFortressSiegeInfo;
 
 import java.util.List;
 
-public class RequestFortressSiegeInfo extends L2GameClientPacket {
+public final class RequestFortressSiegeInfo extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }
@@ -17,9 +17,8 @@ public class RequestFortressSiegeInfo extends L2GameClientPacket {
         Player activeChar = getClient().getActiveChar();
         if (activeChar == null)
             return;
-        List<Fortress> fortressList = ResidenceHolder.getInstance().getResidenceList(Fortress.class);
-        for (Fortress fort : fortressList)
-            if (fort != null && fort.getSiegeEvent().isInProgress())
-                activeChar.sendPacket(new ExShowFortressSiegeInfo(fort));
+        ResidenceHolder.getResidenceList(Fortress.class).stream()
+                .filter(fort -> fort.getSiegeEvent().isInProgress())
+                .forEach(fort -> activeChar.sendPacket(new ExShowFortressSiegeInfo(fort)));
     }
 }

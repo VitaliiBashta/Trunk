@@ -1,6 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.DoorHolder;
@@ -8,29 +8,23 @@ import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.List;
 
-public final class DoorParser extends AbstractDirParser<DoorHolder> {
-    private static final DoorParser _instance = new DoorParser();
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-    private DoorParser() {
-        super(DoorHolder.getInstance());
-    }
+public enum DoorParser {
+    INSTANCE;
+    private Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    private final Path xml = Config.DATAPACK_ROOT.resolve("data/doors/allDoors.xml");
 
-    public static DoorParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/doors/");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "doors.dtd";
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + DoorHolder.size() +" items");
     }
 
     private StatsSet initBaseStats() {
@@ -63,8 +57,7 @@ public final class DoorParser extends AbstractDirParser<DoorHolder> {
         return baseDat;
     }
 
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element doorElement = iterator.next();
 
@@ -76,21 +69,21 @@ public final class DoorParser extends AbstractDirParser<DoorHolder> {
 
                 Element posElement = doorElement.element("pos");
                 Location doorPos;
-                int x = Integer.parseInt(posElement.attributeValue("x"));
-                int y = Integer.parseInt(posElement.attributeValue("y"));
-                int z = Integer.parseInt(posElement.attributeValue("z"));
+                int x = toInt(posElement.attributeValue("x"));
+                int y = toInt(posElement.attributeValue("y"));
+                int z = toInt(posElement.attributeValue("z"));
                 doorSet.set("pos", doorPos = new Location(x, y, z));
 
                 Polygon shape = new Polygon();
                 int minz, maxz;
 
                 Element shapeElement = doorElement.element("shape");
-                minz = Integer.parseInt(shapeElement.attributeValue("minz"));
-                maxz = Integer.parseInt(shapeElement.attributeValue("maxz"));
-                shape.add(Integer.parseInt(shapeElement.attributeValue("ax")), Integer.parseInt(shapeElement.attributeValue("ay")));
-                shape.add(Integer.parseInt(shapeElement.attributeValue("bx")), Integer.parseInt(shapeElement.attributeValue("by")));
-                shape.add(Integer.parseInt(shapeElement.attributeValue("cx")), Integer.parseInt(shapeElement.attributeValue("cy")));
-                shape.add(Integer.parseInt(shapeElement.attributeValue("dx")), Integer.parseInt(shapeElement.attributeValue("dy")));
+                minz = toInt(shapeElement.attributeValue("minz"));
+                maxz = toInt(shapeElement.attributeValue("maxz"));
+                shape.add(toInt(shapeElement.attributeValue("ax")), toInt(shapeElement.attributeValue("ay")));
+                shape.add(toInt(shapeElement.attributeValue("bx")), toInt(shapeElement.attributeValue("by")));
+                shape.add(toInt(shapeElement.attributeValue("cx")), toInt(shapeElement.attributeValue("cy")));
+                shape.add(toInt(shapeElement.attributeValue("dx")), toInt(shapeElement.attributeValue("dy")));
                 shape.setZmin(minz);
                 shape.setZmax(maxz);
                 doorSet.set("shape", shape);
@@ -125,7 +118,7 @@ public final class DoorParser extends AbstractDirParser<DoorHolder> {
                 doorSet.set("collision_radius", Math.max(50, Math.min(doorPos.x - shape.getXmin(), doorPos.y - shape.getYmin())));
 
                 DoorTemplate template = new DoorTemplate(doorSet);
-                getHolder().addTemplate(template);
+                DoorHolder.addTemplate(template);
             }
         }
     }

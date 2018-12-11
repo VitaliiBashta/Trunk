@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class ManorManagerInstance extends MerchantInstance {
+public final class ManorManagerInstance extends MerchantInstance {
     public ManorManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -105,16 +105,16 @@ public class ManorManagerInstance extends MerchantInstance {
                     player.sendPacket(new ExShowSellCropList(player, castleId, castle.getCropProcure(CastleManorManager.PERIOD_CURRENT)));
                     break;
                 case 3: // Current seeds (Manor info)
-                    if (time == 1 && !ResidenceHolder.getInstance().getResidence(Castle.class, castleId).isNextPeriodApproved())
-                        player.sendPacket(new ExShowSeedInfo(castleId, Collections.<SeedProduction>emptyList()));
+                    if (time == 1 && !ResidenceHolder.getResidence(Castle.class, castleId).isNextPeriodApproved())
+                        player.sendPacket(new ExShowSeedInfo(castleId, Collections.emptyList()));
                     else
-                        player.sendPacket(new ExShowSeedInfo(castleId, ResidenceHolder.getInstance().getResidence(Castle.class, castleId).getSeedProduction(time)));
+                        player.sendPacket(new ExShowSeedInfo(castleId, ResidenceHolder.getResidence(Castle.class, castleId).getSeedProduction(time)));
                     break;
                 case 4: // Current crops (Manor info)
-                    if (time == 1 && !ResidenceHolder.getInstance().getResidence(Castle.class, castleId).isNextPeriodApproved())
-                        player.sendPacket(new ExShowCropInfo(castleId, Collections.<CropProcure>emptyList()));
+                    if (time == 1 && !ResidenceHolder.getResidence(Castle.class, castleId).isNextPeriodApproved())
+                        player.sendPacket(new ExShowCropInfo(castleId, Collections.emptyList()));
                     else
-                        player.sendPacket(new ExShowCropInfo(castleId, ResidenceHolder.getInstance().getResidence(Castle.class, castleId).getCropProcure(time)));
+                        player.sendPacket(new ExShowCropInfo(castleId, ResidenceHolder.getResidence(Castle.class, castleId).getCropProcure(time)));
                     break;
                 case 5: // Basic info (Manor info)
                     player.sendPacket(new ExShowManorDefaultInfo());

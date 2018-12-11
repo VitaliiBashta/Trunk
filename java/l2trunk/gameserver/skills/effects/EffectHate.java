@@ -14,7 +14,7 @@ public class EffectHate extends Effect {
     public void onStart() {
         super.onStart();
         if (effected.isMonster()) {
-            effected.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _effector, _template._value);
+            effected.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _effector, template._value);
         }
         // On players it makes attack the caster
         else if (effected.isPlayable() && effected.isMonster()) {

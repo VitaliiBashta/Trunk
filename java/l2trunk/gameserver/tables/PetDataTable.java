@@ -1,6 +1,5 @@
 package l2trunk.gameserver.tables;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Creature;
@@ -14,12 +13,15 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class PetDataTable {
+public enum PetDataTable {
+    INSTANCE;
     public final static int ROSE_DESELOPH_ID = 1562;
     public final static int ROSE_HYUM_ID = 1563;
     public final static int ROSE_REKANG_ID = 1564;
@@ -75,16 +77,7 @@ public class PetDataTable {
     private final static int MAGUEN_ID = 16071;
     private final static int ELITE_MAGUEN_ID = 16072;
     private static final Logger _log = LoggerFactory.getLogger(PetDataTable.class);
-    private static final PetDataTable _instance = new PetDataTable();
-    private final Map<Integer, PetData> _pets = new HashMap<>();
-
-    private PetDataTable() {
-        load();
-    }
-
-    public static PetDataTable getInstance() {
-        return _instance;
-    }
+    private final Map<Integer, PetData> pets = new HashMap<>();
 
     public static void deletePet(ItemInstance item, Creature owner) {
         int petObjectId = 0;
@@ -115,15 +108,10 @@ public class PetDataTable {
 
     public static void unSummonPet(ItemInstance oldItem, Creature owner) {
         int petObjectId = 0;
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT objId FROM pets WHERE item_obj_id=?");
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT objId FROM pets WHERE item_obj_id=?")) {
             statement.setInt(1, oldItem.getObjectId());
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             while (rset.next())
                 petObjectId = rset.getInt("objId");
@@ -138,18 +126,16 @@ public class PetDataTable {
             Player player = owner.getPlayer();
             if (player != null && player.isMounted() && player.getMountObjId() == petObjectId)
                 player.setMount(0, 0, 0);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("could not restore pet objectid:", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
     public static int getControlItemId(int npcId) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getNpcId() == npcId)
-                return pet.getControlItemId();
-        return 1;
+        return Arrays.stream(L2Pet.values())
+                .filter(pet -> (pet.getNpcId() == npcId))
+                .map(L2Pet::getControlItemId)
+                .findFirst().orElse(1);
     }
 
     private static int getFoodId(int npcId) {
@@ -202,24 +188,21 @@ public class PetDataTable {
     }
 
     public static int getSummonId(ItemInstance item) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getControlItemId() == item.getItemId())
-                return pet.getNpcId();
-        return 0;
+        return Arrays.stream(L2Pet.values())
+                .filter(pet -> pet.getControlItemId() == item.getItemId())
+                .map(L2Pet::getNpcId)
+                .findFirst().orElse(0);
     }
 
     public static List<Integer> getPetControlItems() {
-        List<Integer> items = new ArrayList<>(L2Pet.values().length);
-        for (L2Pet pet : L2Pet.values())
-            items.add(pet.getControlItemId());
-        return items;
+        return Arrays.stream(L2Pet.values())
+                .map(L2Pet::getControlItemId)
+                .collect(Collectors.toList());
     }
 
     public static boolean isPetControlItem(ItemInstance item) {
-        for (L2Pet pet : L2Pet.values())
-            if (pet.getControlItemId() == item.getItemId())
-                return true;
-        return false;
+        return Arrays.stream(L2Pet.values())
+                .anyMatch(pet -> pet.getControlItemId() == item.getItemId());
     }
 
     public static boolean isBabyPet(int id) {
@@ -349,6 +332,10 @@ public class PetDataTable {
         }
     }
 
+    public void init() {
+        load();
+    }
+
     public void reload() {
         load();
     }
@@ -356,7 +343,7 @@ public class PetDataTable {
     public PetData getInfo(int petNpcId, int level) {
         PetData result = null;
         while (result == null && level < 100) {
-            result = _pets.get(petNpcId * 100 + level);
+            result = pets.get(petNpcId * 100 + level);
             level++;
         }
 
@@ -366,13 +353,9 @@ public class PetDataTable {
     private void load() {
         PetData petData;
 
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT id, level, exp, hp, mp, patk, pdef, matk, mdef, acc, evasion, crit, speed, atk_speed, cast_speed, max_meal, battle_meal, normal_meal, loadMax, hpregen, mpregen FROM pet_data");
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT id, level, exp, hp, mp, patk, pdef, matk, mdef, acc, evasion, crit, speed, atk_speed, cast_speed, max_meal, battle_meal, normal_meal, loadMax, hpregen, mpregen FROM pet_data");
+             ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
                 petData = new PetData();
                 petData.setID(rset.getInt("id"));
@@ -403,15 +386,12 @@ public class PetDataTable {
                 petData.setMinLevel(getMinLevel(petData.getID()));
                 petData.setAddFed(getAddFed(petData.getID()));
 
-                _pets.put(petData.getID() * 100 + petData.getLevel(), petData);
+                pets.put(petData.getID() * 100 + petData.getLevel(), petData);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
-
-        _log.info("PetDataTable: Loaded " + _pets.size() + " pets.");
+        _log.info("PetDataTable: Loaded " + pets.size() + " pets.");
     }
 
     public enum L2Pet {

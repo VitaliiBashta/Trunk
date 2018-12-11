@@ -12,7 +12,7 @@ import java.util.Map;
 public final class InstantZone {
     private final int _id;
     private final String _name;
-    private final SchedulingPattern _resetReuse;
+    private final SchedulingPattern resetReuse;
     private final int _sharedReuseGroup;
     private final int _timelimit;
     private final int _minLevel;
@@ -45,7 +45,7 @@ public final class InstantZone {
     public InstantZone(int id, String name, SchedulingPattern resetReuse, int sharedReuseGroup, int timelimit, boolean dispelBuffs, int minLevel, int maxLevel, int minParty, int maxParty, int timer, boolean onPartyDismiss, List<Location> tele, Location ret, int mapx, int mapy, Map<Integer, DoorInfo> doors, Map<String, ZoneInfo> zones, Map<String, SpawnInfo2> spawns, List<SpawnInfo> spawnsInfo, int collapseIfEmpty, int maxChannels, int removedItemId, int removedItemCount, boolean removedItemNecessity, int giveItemId, int givedItemCount, int requiredQuestId, boolean setReuseUponEntry, StatsSet params) {
         _id = id;
         _name = name;
-        _resetReuse = resetReuse;
+        this.resetReuse = resetReuse;
         _sharedReuseGroup = sharedReuseGroup;
         _timelimit = timelimit;
         this.dispelBuffs = dispelBuffs;
@@ -93,7 +93,7 @@ public final class InstantZone {
     }
 
     public SchedulingPattern getResetReuse() {
-        return _resetReuse;
+        return resetReuse;
     }
 
     public boolean isDispelBuffs() {

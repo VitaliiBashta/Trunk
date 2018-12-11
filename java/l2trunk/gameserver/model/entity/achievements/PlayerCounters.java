@@ -186,7 +186,7 @@ public class PlayerCounters {
 //		}
 //	}
 //    
-//	public void load()
+//	public void loadFile()
 //	{
 //		if (activeChar == null)
 //			return;

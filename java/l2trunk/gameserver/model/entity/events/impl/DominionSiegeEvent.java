@@ -38,7 +38,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
-    private static final Logger LOG = LoggerFactory.getLogger(DominionSiegeEvent.class);
     public static final int KILL_REWARD = 0;
     public static final int ONLINE_REWARD = 1;
     public static final int STATIC_BADGES = 2;
@@ -49,6 +48,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     public static final String TERRITORY_NPC = "territory_npc";
     public static final String CATAPULT = "catapult";
     public static final String CATAPULT_DOORS = "catapult_doors";
+    private static final Logger LOG = LoggerFactory.getLogger(DominionSiegeEvent.class);
     //
     private static final int REWARD_MAX = 3;
     private final Map<Integer, int[]> _playersRewards = new ConcurrentHashMap<>();
@@ -63,7 +63,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
 
     @Override
     public void initEvent() {
-        _runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        _runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
 
         super.initEvent();
 
@@ -109,18 +109,16 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
                     addObject(ATTACKERS, siegeClan);
         }
 
-        int[] flags = getResidence().getFlags();
-        if (flags.length > 0) {
+        List<Integer> flags = getResidence().getFlags();
+        if (flags.size() > 0) {
             getResidence().removeSkills();
             getResidence().getOwner().broadcastToOnlineMembers(SystemMsg.THE_EFFECT_OF_TERRITORY_WARD_IS_DISAPPEARING);
         }
 
-        SiegeClanDAO.getInstance().delete(getResidence());
-        SiegePlayerDAO.getInstance();
-        SiegePlayerDAO.delete(getResidence());
+        SiegeClanDAO.INSTANCE.delete(getResidence());
+        SiegePlayerDAO.INSTANCE.delete(getResidence());
 
-        for (int i : flags)
-            spawnAction("ward_" + i, true);
+        flags.forEach(f -> spawnAction("ward_" + f, true));
 
         updateParticles(true);
 
@@ -131,9 +129,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     public void stopEvent(boolean t) {
         getObjects(DISGUISE_PLAYERS).clear();
 
-        int[] flags = getResidence().getFlags();
-        for (int i : flags)
-            spawnAction("ward_" + i, false);
+        getResidence().getFlags().forEach(f -> spawnAction("ward_" + f, false));
 
         getResidence().rewardSkills();
         getResidence().setJdbcState(JdbcEntityState.UPDATED);
@@ -155,8 +151,8 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
 
     @Override
     public void loadSiegeClans() {
-        addObjects(DEFENDERS, SiegeClanDAO.getInstance().load(getResidence(), DEFENDERS));
-        addObjects(DEFENDER_PLAYERS, SiegePlayerDAO.getInstance().select(getResidence(), 0));
+        addObjects(DEFENDERS, SiegeClanDAO.INSTANCE.load(getResidence(), DEFENDERS));
+        addObjects(DEFENDER_PLAYERS, SiegePlayerDAO.INSTANCE.select(getResidence(), 0));
 
         DominionRewardDAO.getInstance().select(getResidence());
     }
@@ -184,8 +180,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
         List<Integer> players = getObjects(DEFENDER_PLAYERS);
         for (int i : players) {
             Player player = GameObjectsStorage.getPlayer(i);
-            if (player != null)
-                updatePlayer(player, start);
+            updatePlayer(player, start);
         }
     }
 
@@ -380,7 +375,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
                 return Location.findAroundPosition(siegeClan.getFlag(), 50, 75);
         }
 
-        Residence r = ResidenceHolder.getInstance().getResidence(zone.getParams().getInteger("residence"));
+        Residence r = ResidenceHolder.getResidence(zone.getParams().getInteger("residence"));
         if (r == null) {
             LOG.error(toString(), new Exception("Not find residence: " + zone.getParams().getInteger("residence")));
             return player.getLoc();
@@ -391,11 +386,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     @Override
     public void teleportPlayers(String t) {
         List<ZoneObject> zones = getObjects(SIEGE_ZONES);
-        for (ZoneObject zone : zones) {
-            Residence r = ResidenceHolder.getInstance().getResidence(zone.getZone().getParams().getInteger("residence"));
-
-            r.banishForeigner();
-        }
+        zones.forEach(zone -> ResidenceHolder.getResidence(zone.getZone().getParams().getInteger("residence")).banishForeigner());
     }
 
     @Override

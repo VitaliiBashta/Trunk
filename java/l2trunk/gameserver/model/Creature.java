@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.lang.reference.HardReferences;
@@ -74,6 +73,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
@@ -87,7 +87,7 @@ public abstract class Creature extends GameObject {
     /**
      * HashMap(Integer, L2Skill) containing all skills of the L2Character
      */
-    protected final Map<Integer, Skill> _skills = new ConcurrentSkipListMap<>();
+    protected final Map<Integer, Skill> skills = new ConcurrentSkipListMap<>();
     final Map<Integer, TimeStamp> _skillReuses = new HashMap<>();
     final CharTemplate baseTemplate;
     private final Map<Integer, Long[]> receivedDebuffs;
@@ -96,7 +96,7 @@ public abstract class Creature extends GameObject {
     private final AtomicState _pmuted = new AtomicState();
     private final AtomicState _amuted = new AtomicState();
     private final AtomicState _paralyzed = new AtomicState();
-    private final AtomicState _rooted = new AtomicState();
+    private final AtomicState rooted = new AtomicState();
     private final AtomicState _sleeping = new AtomicState();
     private final AtomicState _stunned = new AtomicState();
     private final AtomicState _immobilized = new AtomicState();
@@ -104,7 +104,7 @@ public abstract class Creature extends GameObject {
     private final AtomicState _frozen = new AtomicState();
     private final AtomicState _healBlocked = new AtomicState();
     private final AtomicState _damageBlocked = new AtomicState();
-    private final AtomicState _buffImmunity = new AtomicState(); // Иммунитет к бафам
+    private final AtomicState buffImmunity = new AtomicState(); // Иммунитет к бафам
     private final AtomicState _debuffImmunity = new AtomicState(); // Иммунитет к дебафам
     private final AtomicState _effectImmunity = new AtomicState(); // Иммунитет ко всем эффектам
     private final AtomicState _weaponEquipBlocked = new AtomicState();
@@ -137,7 +137,7 @@ public abstract class Creature extends GameObject {
     protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
     protected boolean invul;
     protected CharTemplate template;
-    protected volatile CharacterAI _ai;
+    protected volatile CharacterAI ai;
     protected String name;
     protected volatile CharListenerList listeners;
     protected int storedId;
@@ -146,11 +146,9 @@ public abstract class Creature extends GameObject {
     private int _scheduledCastCount;
     private int _scheduledCastInterval;
     private Future<?> _skillLaunchedTask;
-    /**
-     *
-     */
+
     private long _reuseDelay = 0L;
-    private double _currentCp = 0;
+    private double currentCp = 0;
     private double _currentHp = 1;
     private boolean _isAttackAborted;
     private long _attackEndTime;
@@ -221,7 +219,7 @@ public abstract class Creature extends GameObject {
         reference = new L2Reference<>(this);
 
         storedId = getObjectId();
-                GameObjectsStorage.put(this);
+        GameObjectsStorage.put(this);
     }
 
     public final int getStoredId() {
@@ -393,7 +391,7 @@ public abstract class Creature extends GameObject {
         return damage;
     }
 
-    private double absorbToMp(Creature attacker, double damage) {
+    private double absorbToMp(double damage) {
         double transferToMpDamPercent = calcStat(Stats.TRANSFER_TO_MP_DAMAGE_PERCENT, 0.);
         if (transferToMpDamPercent > 0) {
             double transferDamage = (damage * transferToMpDamPercent) * .01;
@@ -416,7 +414,7 @@ public abstract class Creature extends GameObject {
         return damage;
     }
 
-    private double absorbToSummon(Creature attacker, double damage) {
+    private double absorbToSummon(double damage) {
         double transferToSummonDam = calcStat(Stats.TRANSFER_TO_SUMMON_DAMAGE_PERCENT, 0.);
         if (transferToSummonDam > 0) {
             Summon summon = getPet();
@@ -442,13 +440,13 @@ public abstract class Creature extends GameObject {
         if (newSkill == null)
             return null;
 
-        Skill oldSkill = _skills.get(newSkill.getId());
+        Skill oldSkill = skills.get(newSkill.getId());
 
         if (oldSkill != null && oldSkill.getLevel() == newSkill.getLevel())
             return newSkill;
 
         // Replace oldSkill by newSkill or Add the newSkill
-        _skills.put(newSkill.getId(), newSkill);
+        skills.put(newSkill.getId(), newSkill);
 
         // FIX for /useskill re-use exploit
         if (oldSkill != null) {
@@ -478,7 +476,6 @@ public abstract class Creature extends GameObject {
     public final void addStatFunc(Func f) {
         if (f == null)
             return;
-        int stat = f.stat.ordinal();
         synchronized (_calculators) {
             Calculator calculator = new Calculator(f.stat, this);
             calculator.addFunc(f);
@@ -488,8 +485,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final void addStatFuncs(List<Func> funcs) {
-        for (Func f : funcs)
-            addStatFunc(f);
+        funcs.forEach(this::addStatFunc);
     }
 
     private void removeStatFunc(Func f) {
@@ -744,14 +740,10 @@ public abstract class Creature extends GameObject {
     }
 
     public final double calcStat(Stats stat, double init, Creature target, Skill skill) {
-        int id = stat.ordinal();
 
         Calculator c = new Calculator(stat, target);
         if (_calculators.contains(c))
             return init;
-//            c = _calculators.get(id);
-//        if (c == null)
-//            return init;
         Env env = new Env();
         env.character = this;
 
@@ -824,7 +816,7 @@ public abstract class Creature extends GameObject {
                 // Рассчитываем игрорируемые скилы из спец.эффекта
                 Effect ie = target.getEffectList().getEffectByType(EffectType.IgnoreSkill);
                 if (ie != null)
-                    if (ArrayUtils.contains(ie.getTemplate().getParam().getIntegerArray("skillId"), skill.getId())) {
+                    if (Arrays.asList(ie.getTemplate().getParam().getIntegerList("skillId")).contains(skill.getId())) {
                         itr.remove();
                         continue;
                     }
@@ -832,7 +824,7 @@ public abstract class Creature extends GameObject {
                 target.getListeners().onMagicHit(skill, this);
 
                 if (pl != null)
-                    if (target != null && target.isNpc()) {
+                    if (target.isNpc()) {
                         NpcInstance npc = (NpcInstance) target;
                         List<QuestState> ql = pl.getQuestsForEvent(npc, QuestEventType.MOB_TARGETED_BY_SKILL);
                         if (ql != null)
@@ -1202,26 +1194,6 @@ public abstract class Creature extends GameObject {
         if (skill == null)
             return;
 
-        boolean disallowSkill = false;
-        if (getPlayer() != null && getPlayer().isInTvT()) {
-            for (String skillId : Config.EVENT_TvT_DISALLOWED_SKILLS) {
-                if (skill.getId() == Integer.parseInt(skillId))
-                    disallowSkill = true;
-            }
-        }
-
-        if (getPlayer() != null && getPlayer().isInCtF()) {
-            for (String skillId : Config.EVENT_CtF_DISALLOWED_SKILLS) {
-                if (skill.getId() == Integer.parseInt(skillId))
-                    disallowSkill = true;
-            }
-        }
-
-        if (disallowSkill) {
-            getPlayer().sendMessage("Action is not allowed");
-            return;
-        }
-
         for (GlobalEvent e : getEvents()) {
             if (!e.canUseSkill(this, target, skill)) {
                 sendMessage("The skill you are trying to cast is not allowed in your current state");
@@ -1365,7 +1337,7 @@ public abstract class Creature extends GameObject {
             return 1.0;
 
         long dateOfDebuffEnd = receivedDebuffs.get(skillId)[0];
-        double lastDebuffPeriod = receivedDebuffs.get(skillId)[1] / 1000L;
+        double lastDebuffPeriod = receivedDebuffs.get(skillId)[1] / 1000.;
 
         if (dateOfDebuffEnd == 0L)
             return 1.0;
@@ -1419,11 +1391,6 @@ public abstract class Creature extends GameObject {
         // killing is only possible one time
         if (!isDead.compareAndSet(false, true))
             return;
-        // for (Player player : World.getAroundPlayers(this))
-        // {
-        // if (player.getTarget() == this && player.isCastingNow())
-        // player.abortCast(true, false);
-        // }
         onDeath(killer);
     }
 
@@ -1442,7 +1409,7 @@ public abstract class Creature extends GameObject {
             killer.getListeners().onKill(this);
 
             if (isPlayer() && killer.isPlayable())
-                _currentCp = 0;
+                currentCp = 0;
         }
 
         setTarget(null);
@@ -1458,7 +1425,7 @@ public abstract class Creature extends GameObject {
         //   getPlayer().getPet().unSummon();
         // }
 
-        boolean fightClubKeepBuffs = isPlayable() && getPlayer().isInFightClub() && !getPlayer().getFightClubEvent().loseBuffsOnDeath(getPlayer());
+        boolean fightClubKeepBuffs = isPlayable() ;
         // Stop all active skills effects in progress on the L2Character
         if (isBlessedByNoblesse() || isSalvation() || fightClubKeepBuffs) {
             if (isSalvation() && isPlayer() && !getPlayer().isInOlympiadMode()) {
@@ -1467,9 +1434,9 @@ public abstract class Creature extends GameObject {
             for (Effect e : getEffectList().getAllEffects()) {
                 // Noblesse Blessing Buff/debuff effects are retained after
                 // death. However, Noblesse Blessing and Lucky Charm are lost as normal.
-                if (e.getEffectType() == EffectType.BlessNoblesse || e.getSkill().getId() == Skill.SKILL_FORTUNE_OF_NOBLESSE || e.getSkill().getId() == Skill.SKILL_RAID_BLESSING)
+                if (e.getEffectType() == EffectType.BlessNoblesse || e.getSkill().getId() ==1325 || e.getSkill().getId() == Skill.SKILL_RAID_BLESSING)
                     e.exit();
-                else if (e.getEffectType() == EffectType.AgathionResurrect && !(isPlayable() && getPlayer().isInFightClub())) {
+                else if (e.getEffectType() == EffectType.AgathionResurrect && !isPlayable()) {
                     if (isPlayer())
                         getPlayer().setAgathionRes(true);
                     e.exit();
@@ -1484,14 +1451,6 @@ public abstract class Creature extends GameObject {
                     e.exit();
             }
         }
-
-        // Fight Club
-        // Killer is in Fight Club
-        if (killer != null && killer.isPlayable() && killer.getPlayer().isInFightClub())
-            killer.getPlayer().getFightClubEvent().onKilled(killer, this);
-            // Dead guy killed by monster in fight club
-        else if (isPlayable() && getPlayer().isInFightClub())
-            getPlayer().getFightClubEvent().onKilled(killer, this);
 
         ThreadPoolManager.INSTANCE.execute(new NotifyAITask(this, CtrlEvent.EVT_DEAD, killer, null));
 
@@ -1541,19 +1500,9 @@ public abstract class Creature extends GameObject {
         return (int) calcStat(Stats.ACCURACY_COMBAT, 0, null, null);
     }
 
-    /**
-     * Возвращает коллекцию скиллов для быстрого перебора
-     *
-     * @return
-     */
     public Collection<Skill> getAllSkills() {
-        return _skills.values();
+        return skills.values();
     }
-
-//    public final Skill[] getAllSkillsArray() {
-//        Collection<Skill> vals = _skills.values();
-//        return vals.toArray(Skill.EMPTY_ARRAY);
-//    }
 
     public final double getAttackSpeedMultiplier() {
         return 1.1 * getPAtkSpd() / getTemplate().basePAtkSpd;
@@ -1573,10 +1522,6 @@ public abstract class Creature extends GameObject {
 
     /**
      * Возвращает шанс физического крита (1000 == 100%)
-     *
-     * @param target
-     * @param skill
-     * @return
      */
     public int getCriticalHit(Creature target, Skill skill) {
         return (int) calcStat(Stats.CRITICAL_BASE, template.baseCritRate, target, skill);
@@ -1585,21 +1530,13 @@ public abstract class Creature extends GameObject {
     /**
      * Возвращает шанс магического крита в процентах
      *
-     * @param target
-     * @param skill
-     * @return
      */
     public double getMagicCriticalRate(Creature target, Skill skill) {
         return calcStat(Stats.MCRITICAL_RATE, target, skill);
     }
 
-    /**
-     * Return the current CP of the L2Character.
-     *
-     * @return
-     */
     public final double getCurrentCp() {
-        return _currentCp;
+        return currentCp;
     }
 
     public final void setCurrentCp(double newCp) {
@@ -1612,10 +1549,6 @@ public abstract class Creature extends GameObject {
 
     public final double getCurrentCpPercents() {
         return getCurrentCpRatio() * 100.;
-    }
-
-    public final boolean isCurrentCpFull() {
-        return getCurrentCp() >= getMaxCp();
     }
 
     public final boolean isCurrentCpZero() {
@@ -1699,7 +1632,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final Skill getKnownSkill(int skillId) {
-        return _skills.get(skillId);
+        return skills.get(skillId);
     }
 
     public final int getMagicalAttackRange(Skill skill) {
@@ -1807,7 +1740,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final int getSkillDisplayLevel(Integer skillId) {
-        Skill skill = _skills.get(skillId);
+        Skill skill = skills.get(skillId);
         if (skill == null)
             return -1;
         return skill.getDisplayLevel();
@@ -1818,7 +1751,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final int getSkillLevel(Integer skillId, int def) {
-        Skill skill = _skills.get(skillId);
+        Skill skill = skills.get(skillId);
         if (skill == null)
             return def;
         return skill.getLevel();
@@ -1857,10 +1790,6 @@ public abstract class Creature extends GameObject {
     public void setTarget(GameObject object) {
         if (object != null && !object.isVisible())
             object = null;
-
-        /*
-         * DS: на оффе сброс текущей цели не отменяет атаку или каст. if (object == null) { if (isAttackingNow() && getAI().getAttackTarget() == getTarget()) abortAttack(false, true); if (isCastingNow() && getAI().getAttackTarget() == getTarget()) abortCast(false, true); }
-         */
 
         if (object == null)
             target = HardReferences.emptyRef();
@@ -1925,7 +1854,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isBuffImmune() {
-        return _buffImmunity.get();
+        return buffImmunity.get();
     }
 
     public boolean isDebuffImmune() {
@@ -1956,6 +1885,10 @@ public abstract class Creature extends GameObject {
 
     public boolean isInvul() {
         return invul;
+    }
+
+    public void setInvul(boolean invul) {
+        this.invul = invul;
     }
 
     public boolean isMageClass() {
@@ -2423,8 +2356,8 @@ public abstract class Creature extends GameObject {
 
         List<Zone> zones = isVisible() ? getCurrentRegion().getZones() : new ArrayList<>();
 
-        ArrayList<Zone> entering = null;
-        ArrayList<Zone> leaving = null;
+        List<Zone> entering = null;
+        List<Zone> leaving = null;
 
         Zone zone;
 
@@ -2449,13 +2382,11 @@ public abstract class Creature extends GameObject {
             }
 
             if (zones.size() > 0) {
-                entering = new ArrayList<>();
-                for (Zone zone2 : zones) {
-                    zone = zone2;
-                    // в зону еще не заходили и зашли на территорию зоны
-                    if (!this.zones.contains(zone) && zone.checkIfInZone(getX(), getY(), getZ(), getReflection()))
-                        entering.add(zone);
-                }
+                entering = zones.stream()
+                        // в зону еще не заходили и зашли на территорию зоны
+                        .filter(z -> !this.zones.contains(z))
+                        .filter(z -> z.checkIfInZone(getX(), getY(), getZ(), getReflection()))
+                        .collect(Collectors.toList());
 
                 // Вошли в зоны, добавим в список зон персонажа
                 if (!entering.isEmpty()) {
@@ -2856,8 +2787,8 @@ public abstract class Creature extends GameObject {
                 return;
 
             damage = absorbToEffector(attacker, damage);
-            damage = absorbToMp(attacker, damage);
-            damage = absorbToSummon(attacker, damage);
+            damage = absorbToMp(damage);
+            damage = absorbToSummon(damage);
         }
 
         getListeners().onCurrentHpDamage(damage, attacker, skill);
@@ -2874,9 +2805,7 @@ public abstract class Creature extends GameObject {
     }
 
     protected void onReduceCurrentHp(final double damage, Creature attacker, Skill skill, boolean awake, boolean standUp, boolean directHp) {
-        // Alexander - Player is in Fight Club, then set damage done
-        if (attacker != null && attacker.isPlayable() && attacker.getPlayer().isInFightClub())
-            attacker.getPlayer().getFightClubEvent().onDamage(attacker, this, damage);
+
 
         if (awake && isSleeping())
             getEffectList().stopEffects(EffectType.Sleep);
@@ -2945,13 +2874,8 @@ public abstract class Creature extends GameObject {
             startAttackStanceTask();
     }
 
-    public double relativeSpeed(GameObject target) {
-        return getMoveSpeed() - target.getMoveSpeed() * Math.cos(headingToRadians(getHeading()) - headingToRadians(target.getHeading()));
-    }
-
     void removeAllSkills() {
-        for (Skill s : getAllSkills())
-            removeSkill(s);
+        getAllSkills().forEach(this::removeSkill);
     }
 
     public void removeBlockStats(List<Stats> stats) {
@@ -2965,12 +2889,12 @@ public abstract class Creature extends GameObject {
     public Skill removeSkill(Skill skill) {
         if (skill == null)
             return null;
-        return removeSkillById(skill.getId());
+        return removeSkill(skill.getId());
     }
 
-    public Skill removeSkillById(Integer id) {
+    public Skill removeSkill(int id) {
         // Remove the skill from the L2Character skills
-        Skill oldSkill = _skills.remove(id);
+        Skill oldSkill = skills.remove(id);
 
         // Remove all its Func objects from the L2Character calculator set
         if (oldSkill != null) {
@@ -3043,27 +2967,27 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean hasAI() {
-        return _ai != null;
+        return ai != null;
     }
 
     public CharacterAI getAI() {
-        if (_ai == null)
+        if (ai == null)
             synchronized (this) {
-                if (_ai == null)
-                    _ai = new CharacterAI(this);
+                if (ai == null)
+                    ai = new CharacterAI(this);
             }
 
-        return _ai;
+        return ai;
     }
 
     public void setAI(CharacterAI newAI) {
         if (newAI == null)
             return;
 
-        CharacterAI oldAI = _ai;
+        CharacterAI oldAI = ai;
 
         synchronized (this) {
-            _ai = newAI;
+            ai = newAI;
         }
 
         if (oldAI != null) {
@@ -3137,25 +3061,25 @@ public abstract class Creature extends GameObject {
         int maxCp = getMaxCp();
         newCp = Math.min(maxCp, Math.max(0, newCp));
 
-        if (_currentCp == newCp)
+        if (currentCp == newCp)
             return;
 
         if (newCp >= 0.5 && isDead())
             return;
 
-        _currentCp = newCp;
+        currentCp = newCp;
 
         if (sendInfo) {
             broadcastStatusUpdate();
             sendChanges();
         }
 
-        if (_currentCp < maxCp)
+        if (currentCp < maxCp)
             startRegeneration();
     }
 
     public Creature setFullHpMp() {
-        setCurrentHpMp(getMaxHp(),getMaxMp(),true);
+        setCurrentHpMp(getMaxHp(), getMaxMp(), true);
         return this;
     }
 
@@ -3449,14 +3373,14 @@ public abstract class Creature extends GameObject {
      * @return предыдущее состояние
      */
     public boolean startRooted() {
-        return _rooted.getAndSet(true);
+        return rooted.getAndSet(true);
     }
 
     /**
      * @return текущее состояние
      */
     public boolean stopRooted() {
-        return _rooted.setAndGet(false);
+        return rooted.setAndGet(false);
     }
 
     /**
@@ -3547,14 +3471,14 @@ public abstract class Creature extends GameObject {
      * @return предыдущее состояние
      */
     public boolean startBuffImmunity() {
-        return _buffImmunity.getAndSet(true);
+        return buffImmunity.getAndSet(true);
     }
 
     /**
      * @return текущее состояние
      */
     public boolean stopBuffImmunity() {
-        return _buffImmunity.setAndGet(false);
+        return buffImmunity.setAndGet(false);
     }
 
     /**
@@ -3569,20 +3493,6 @@ public abstract class Creature extends GameObject {
      */
     public boolean stopDebuffImmunity() {
         return _debuffImmunity.setAndGet(false);
-    }
-
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startEffectImmunity() {
-        return _effectImmunity.getAndSet(true);
-    }
-
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopEffectImmunity() {
-        return _effectImmunity.setAndGet(false);
     }
 
     /**
@@ -3617,10 +3527,6 @@ public abstract class Creature extends GameObject {
 
     public final void setIsSalvation(boolean value) {
         _isSalvation = value;
-    }
-
-    public void setInvul(boolean invul) {
-        this.invul = invul;
     }
 
     public boolean isConfused() {
@@ -3662,7 +3568,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isRooted() {
-        return _rooted.get();
+        return rooted.get();
     }
 
     public boolean isSleeping() {
@@ -4030,10 +3936,10 @@ public abstract class Creature extends GameObject {
             setCurrentHp(maxHp, false);
         if (_currentMp > maxMp)
             setCurrentMp(maxMp, false);
-        if (_currentCp > maxCp)
+        if (currentCp > maxCp)
             setCurrentCp(maxCp, false);
 
-        if (_currentHp < maxHp || _currentMp < maxMp || _currentCp < maxCp)
+        if (_currentHp < maxHp || _currentMp < maxMp || currentCp < maxCp)
             startRegeneration();
     }
 
@@ -4444,12 +4350,12 @@ public abstract class Creature extends GameObject {
                 _currentMp = Math.min(maxMp, _currentMp);
 
                 if (isPlayer()) {
-                    _currentCp += Math.max(0, Math.min(Formulas.calcCpRegen(Creature.this), calcStat(Stats.CP_LIMIT, null, null) * maxCp / 100. - _currentCp));
-                    _currentCp = Math.min(maxCp, _currentCp);
+                    currentCp += Math.max(0, Math.min(Formulas.calcCpRegen(Creature.this), calcStat(Stats.CP_LIMIT, null, null) * maxCp / 100. - currentCp));
+                    currentCp = Math.min(maxCp, currentCp);
                 }
 
                 // отрегенились, останавливаем задачу
-                if (_currentHp == maxHp && _currentMp == maxMp && _currentCp == maxCp)
+                if (_currentHp == maxHp && _currentMp == maxMp && currentCp == maxCp)
                     stopRegeneration();
             } finally {
                 regenLock.unlock();

@@ -28,22 +28,21 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.*;
 
-public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler {
+public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityAuctionHouse.class);
-
 
     @Override
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: Auction System Service loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
 
         if ("maillist".equals(cmd)) {
 
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
 
             html = fillAuctionListPage(player, html, 1, new int[]{-1, -1}, "All", null, 1, 0, 0, 0);
 
@@ -126,12 +125,12 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
                         }
                     }
                     //sending buy_item html
-                    html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_buy_item.htm", player);
+                    html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_mail_buy_item.htm", player);
                     html = fillPurchasePage(player, html, page, itemTypes, grade, search, itemSort, gradeSort, quantitySort, priceSort, auctionId);
 
                 } else {
                     //sending auction list html
-                    html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
+                    html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_mail_list.htm", player);
                     html = fillAuctionListPage(player, html, page, itemTypes, grade, search, itemSort, gradeSort, quantitySort, priceSort);
                 }
             } catch (NumberFormatException e) {
@@ -195,7 +194,7 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
             }
 
             //sending my auction page
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "bbs_mail_new_auction.htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_mail_new_auction.htm", player);
             html = fillNewAuctionPage(player, html, currentItem.equals("n"), currentObjectId, line);
         }
 
@@ -203,21 +202,6 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
         ShowBoard.separateAndSend(html, player);
     }
 
-    /**
-     * Auction List page
-     *
-     * @param player
-     * @param html
-     * @param page
-     * @param itemTypes
-     * @param itemGrade
-     * @param search
-     * @param itemSort
-     * @param gradeSort
-     * @param quantitySort
-     * @param priceSort
-     * @return
-     */
     private String fillAuctionListPage(Player player, String html, int page, int[] itemTypes,
                                        String itemGrade, String search, int itemSort, int gradeSort, int quantitySort, int priceSort) {
         int heightToBeUsed = 220;
@@ -303,20 +287,6 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
         return html;
     }
 
-    /**
-     * @param player
-     * @param html
-     * @param page
-     * @param itemTypes
-     * @param itemGrade
-     * @param search
-     * @param itemSort
-     * @param gradeSort
-     * @param quantitySort
-     * @param priceSort
-     * @param auctionId
-     * @return Purchase Page
-     */
     private String fillPurchasePage(Player player, String html, int page, int[] itemTypes,
                                     String itemGrade, String search, int itemSort, int gradeSort, int quantitySort, int priceSort, int auctionId) {
 
@@ -398,16 +368,6 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
         return html;
     }
 
-    /**
-     * My Auctions page
-     *
-     * @param player
-     * @param html
-     * @param newItem
-     * @param currentItem
-     * @param line
-     * @return
-     */
     private String fillNewAuctionPage(Player player, String html, boolean newItem, int currentItem, int line) {
         //getting items from inventory, that can be auctioned
         List<ItemInstance> itemsToAuction = getItemsToAuction(player);
@@ -631,14 +591,6 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
         return 0;
     }
 
-    /**
-     * @param item
-     * @param windowWidth   - 1=Auction List Item 2. Current Auction item 3. Items to be auctioned
-     * @param windowHeight
-     * @param isPrivStore
-     * @param addToItemName
-     * @return
-     */
     private String getItemName(ItemInstance item, int windowWidth, int windowHeight, boolean isPrivStore, String... addToItemName) {
         StringBuilder builder = new StringBuilder();
 
@@ -676,12 +628,6 @@ public class CommunityAuctionHouse implements ScriptFile, ICommunityBoardHandler
         return "<td align=left width=228 height=25>" + builder.toString() + (addToItemName.length > 0 ? addToItemName[0] : "") + "</td>";
     }
 
-    /**
-     * returning font color for each element
-     *
-     * @param element
-     * @return
-     */
     private String getElementColor(Element element) {
         switch (element) {
             case EARTH:

@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 
 public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CommunityBoard.class);
@@ -63,14 +65,14 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: service loaded.");
-            CommunityBoardManager.getInstance().registerHandler(this);
+            CommunityBoardManager.registerHandler(this);
         }
     }
 
     @Override
     public void onReload() {
         if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.getInstance().removeHandler(this);
+            CommunityBoardManager.removeHandler(this);
     }
 
     @Override
@@ -97,11 +99,11 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
             StringTokenizer p = new StringTokenizer(Config.BBS_DEFAULT, "_");
             String dafault = p.nextToken();
             if (dafault.equals(cmd)) {
-                html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/index.htm", player);
-                html = html.replaceFirst("%nick%", String.valueOf(player.getName()));
-                html = html.replace("<?fav_count?>", String.valueOf(0));
+                html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/index.htm", player);
+                html = html.replaceFirst("%nick%", player.getName());
+                html = html.replace("<?fav_count?>", "0");
                 html = html.replace("<?clan_count?>", String.valueOf(ClanTable.INSTANCE.getClans().size()));
-                html = html.replace("<?market_count?>", String.valueOf(CommunityBoardManager.getInstance().getIntProperty("col_count")));
+                html = html.replace("<?market_count?>", String.valueOf(CommunityBoardManager.getIntProperty("col_count")));
                 html = html.replace("<?player_name?>", String.valueOf(player.getName()));
                 html = html.replace("<?player_class?>", String.valueOf(Util.getFullClassName(player.getClassId().getId())));
                 html = html.replace("<?player_level?>", String.valueOf(player.getLevel()));
@@ -121,11 +123,11 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
         } else if (bypass.startsWith("_bbspage")) {
             String[] b = bypass.split(":");
             String page = b[1];
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/" + page + ".htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/" + page + ".htm", player);
             ImagesCache.sendUsedImages(html, player);
 
             if (bypass.equals("_bbspage:information")) {
-                html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/information.htm", player);
+                html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/information.htm", player);
                 html = html.replaceFirst("%nick%", String.valueOf(player.getName()));
                 html = html.replaceFirst("%prof%", String.valueOf(player.getActiveClass().toStringCB()));
                 html = html.replaceFirst("%lvl%", String.valueOf(player.getLevel()));
@@ -138,7 +140,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
                 html = html.replaceFirst("%mytime%", getTimeInServer(player));
                 html = html.replaceFirst("%online%", String.valueOf(GameObjectsStorage.getAllPlayersCount()));
             } else if (bypass.equals("_bbspage:HowToDonate")) {
-                html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/HowToDonate.htm", player);
+                html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/HowToDonate.htm", player);
                 html = html.replaceFirst("%nick%", String.valueOf(player.getName()));
 
             }
@@ -150,27 +152,27 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
         } else if (bypass.startsWith("_bbsfile")) {
             String[] b = bypass.split(":");
             String page = b[1];
-            html = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + page + ".htm", player);
+            html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + page + ".htm", player);
             ImagesCache.sendUsedImages(html, player);
         } else if (Config.BBS_PVP_ALLOW_BUY && bypass.startsWith("_bbsmultisell")) {
             StringTokenizer st2 = new StringTokenizer(bypass, ";");
             String[] mBypass = st2.nextToken().split(":");
             String pBypass = st2.hasMoreTokens() ? st2.nextToken() : null;
             if (pBypass != null) {
-                ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(pBypass);
+                ICommunityBoardHandler handler = CommunityBoardManager.getCommunityHandler(pBypass);
                 if (handler != null)
                     handler.onBypassCommand(player, pBypass);
             }
 
-            int listId = Integer.parseInt(mBypass[1]);
-            MultiSellHolder.getInstance().SeparateAndSend(listId, player, 0);
+            int listId = toInt(mBypass[1]);
+            MultiSellHolder.INSTANCE.SeparateAndSend(listId, player, 0);
             return;
         } else if (Config.BBS_PVP_ALLOW_SELL && bypass.startsWith("_bbssell")) {
             StringTokenizer st2 = new StringTokenizer(bypass, ";");
             st2.nextToken();
             String pBypass = st2.hasMoreTokens() ? st2.nextToken() : null;
             if (pBypass != null) {
-                ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(pBypass);
+                ICommunityBoardHandler handler = CommunityBoardManager.getCommunityHandler(pBypass);
                 if (handler != null)
                     handler.onBypassCommand(player, pBypass);
             }
@@ -199,7 +201,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
             String sBypass = st2.nextToken().substring(12);
             String pBypass = st2.hasMoreTokens() ? st2.nextToken() : null;
             if (pBypass != null) {
-                ICommunityBoardHandler handler = CommunityBoardManager.getInstance().getCommunityHandler(pBypass);
+                ICommunityBoardHandler handler = CommunityBoardManager.getCommunityHandler(pBypass);
                 if (handler != null)
                     handler.onBypassCommand(player, pBypass);
             }

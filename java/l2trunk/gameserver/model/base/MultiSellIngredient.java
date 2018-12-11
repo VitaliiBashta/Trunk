@@ -58,25 +58,14 @@ public final class MultiSellIngredient implements Cloneable {
         _itemCount = itemCount;
     }
 
-    /**
-     * Returns if item is stackable
-     *
-     * @return boolean
-     */
     public boolean isStackable() {
-        return itemId <= 0 || ItemHolder.getInstance().getTemplate(itemId).isStackable();
+        return itemId <= 0 || ItemHolder.getTemplate(itemId).isStackable();
     }
 
-    /**
-     * @return Returns the itemEnchant.
-     */
     public int getItemEnchant() {
         return itemEnchant;
     }
 
-    /**
-     * @param itemEnchant The itemEnchant to set.
-     */
     public void setItemEnchant(int itemEnchant) {
         this.itemEnchant = itemEnchant;
     }

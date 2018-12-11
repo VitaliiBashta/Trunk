@@ -100,7 +100,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
 
         zeroGuesses(player);
         if (haveAllHearts(player))
-            show(link(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_01.htm", player), isRus(player)), player);
+            show(link(HtmCache.INSTANCE.getNotNull("scripts/events/Heart/hearts_01.htm", player), isRus(player)), player);
         else
             show("scripts/events/Heart/hearts_00.htm", player);
     }
@@ -138,7 +138,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         }
 
         if (var_player == var_cat) {
-            show(fillvars(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_same.htm", player), var_player, var_cat, player), player);
+            show(fillvars(HtmCache.INSTANCE.getNotNull("scripts/events/Heart/hearts_same.htm", player), var_player, var_cat, player), player);
             return;
         }
 
@@ -150,7 +150,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
                 reward(player, curr_guesses);
                 zeroGuesses(player);
             }
-            show(fillvars(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_level_" + curr_guesses + ".htm", player), var_player, var_cat, player), player);
+            show(fillvars(HtmCache.INSTANCE.getNotNull("scripts/events/Heart/hearts_level_" + curr_guesses + ".htm", player), var_player, var_cat, player), player);
             return;
         }
 
@@ -164,10 +164,10 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         switch (guesses) {
             case -1:
             case 0:
-                addItem(player, scrolls[Rnd.get(scrolls.length)], 1, "heardReward");
+                addItem(player, Rnd.get(scrolls), 1, "heardReward");
                 break;
             case 1:
-                addItem(player, potions[Rnd.get(potions.length)], 10, "heardReward");
+                addItem(player, Rnd.get(potions), 10, "heardReward");
                 break;
             case 2:
                 addItem(player, 1538, 1, "heardReward"); // 1  Blessed Scroll of Escape
@@ -223,7 +223,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     private int getGuesses(Player player) {
-        return Guesses.containsKey(player.getObjectId()) ? Guesses.get(player.getObjectId()) : 0;
+        return Guesses.getOrDefault(player.getObjectId(), 0);
     }
 
     private void incGuesses(Player player) {
@@ -234,8 +234,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     private void zeroGuesses(Player player) {
-        if (Guesses.containsKey(player.getObjectId()))
-            Guesses.remove(player.getObjectId());
+        Guesses.remove(player.getObjectId());
     }
 
     private void takeHeartsSet(Player player) {

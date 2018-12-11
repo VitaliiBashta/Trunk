@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager.games;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Announcements;
@@ -19,7 +18,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-public class LotteryManager {
+public enum LotteryManager {
+    INSTANCE;
     public static final long SECOND = 1000;
     private static final long MINUTE = 60000;
     private static final Logger _log = LoggerFactory.getLogger(LotteryManager.class);
@@ -29,14 +29,13 @@ public class LotteryManager {
     private static final String SELECT_LAST_LOTTERY = "SELECT idnr, prize, newprize, enddate, finished FROM games WHERE id = 1 ORDER BY idnr DESC LIMIT 1";
     private static final String SELECT_LOTTERY_ITEM = "SELECT enchant_level, custom_type2 FROM items WHERE item_id = 4442 AND custom_type1 = ?";
     private static final String SELECT_LOTTERY_TICKET = "SELECT number1, number2, prize1, prize2, prize3 FROM games WHERE id = 1 AND idnr = ?";
-    private static LotteryManager _instance;
     private int _number;
     private int _prize;
     private boolean _isSellingTickets;
     private boolean _isStarted;
     private long _enddate;
 
-    private LotteryManager() {
+    public void init() {
         _number = 1;
         _prize = Config.SERVICES_LOTTERY_PRIZE;
         _isSellingTickets = false;
@@ -47,39 +46,24 @@ public class LotteryManager {
             new startLottery().run();
     }
 
-    public static LotteryManager getInstance() {
-        if (_instance == null)
-            _instance = new LotteryManager();
-
-        return _instance;
-    }
 
     public void increasePrize(int count) {
         _prize += count;
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(UPDATE_PRICE);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(UPDATE_PRICE)) {
             statement.setInt(1, getPrize());
             statement.setInt(2, getPrize());
             statement.setInt(3, getId());
             statement.execute();
         } catch (SQLException e) {
             _log.warn("Lottery: Could not increase current lottery prize: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     private boolean restoreLotteryData() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(SELECT_LAST_LOTTERY);
-            rset = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_LAST_LOTTERY);
+             ResultSet rset = statement.executeQuery()) {
 
             if (rset.next()) {
                 _number = rset.getInt("idnr");
@@ -112,10 +96,7 @@ public class LotteryManager {
             }
         } catch (SQLException e) {
             _log.warn("Lottery: Could not restore lottery data: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
-
         return true;
     }
 
@@ -159,16 +140,13 @@ public class LotteryManager {
             _enddate = finishtime.getTimeInMillis();
         }
 
-        ThreadPoolManager.INSTANCE().schedule(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
-        ThreadPoolManager.INSTANCE().schedule(new finishLottery(), _enddate - System.currentTimeMillis());
+        ThreadPoolManager.INSTANCE.schedule(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
+        ThreadPoolManager.INSTANCE.schedule(new finishLottery(), _enddate - System.currentTimeMillis());
     }
 
     private void createNewLottery() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(INSERT_LOTTERY);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(INSERT_LOTTERY)) {
             statement.setInt(1, 1);
             statement.setInt(2, getId());
             statement.setLong(3, getEndDate());
@@ -177,8 +155,6 @@ public class LotteryManager {
             statement.execute();
         } catch (SQLException e) {
             _log.warn("Lottery: Could not store new lottery data: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -210,15 +186,10 @@ public class LotteryManager {
 
     private int[] checkTicket(int id, int enchant, int type2) {
         int res[] = {0, 0};
-
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(SELECT_LOTTERY_TICKET);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SELECT_LOTTERY_TICKET)) {
             statement.setInt(1, id);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             if (rset.next()) {
                 int curenchant = rset.getInt("number1") & enchant;
@@ -262,8 +233,6 @@ public class LotteryManager {
             }
         } catch (SQLException e) {
             _log.warn("Lottery: Could not check lottery ticket #" + id + ": ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
 
         return res;
@@ -371,14 +340,10 @@ public class LotteryManager {
             int count3 = 0;
             int count4 = 0;
 
-            Connection con = null;
-            PreparedStatement statement = null;
-            ResultSet rset = null;
-            try {
-                con = DatabaseFactory.getInstance().getConnection();
-                statement = con.prepareStatement(SELECT_LOTTERY_ITEM);
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement(SELECT_LOTTERY_ITEM)) {
                 statement.setInt(1, getId());
-                rset = statement.executeQuery();
+                ResultSet rset = statement.executeQuery();
 
                 while (rset.next()) {
                     int curenchant = rset.getInt("enchant_level") & enchant;
@@ -415,8 +380,6 @@ public class LotteryManager {
                 }
             } catch (SQLException e) {
                 _log.warn("Lottery: Could restore lottery data: ", e);
-            } finally {
-                DbUtils.closeQuietly(con, statement, rset);
             }
 
             int prize4 = count4 * Config.SERVICES_LOTTERY_2_AND_1_NUMBER_PRIZE;
@@ -459,10 +422,8 @@ public class LotteryManager {
                 Announcements.INSTANCE.announceToAll(sm);
             }
 
-            try {
-
-                con = DatabaseFactory.getInstance().getConnection();
-                statement = con.prepareStatement(UPDATE_LOTTERY);
+            try (Connection con = DatabaseFactory.getInstance().getConnection();
+                 PreparedStatement statement = con.prepareStatement(UPDATE_LOTTERY)) {
                 statement.setInt(1, getPrize());
                 statement.setInt(2, newprize);
                 statement.setInt(3, enchant);
@@ -474,11 +435,9 @@ public class LotteryManager {
                 statement.execute();
             } catch (SQLException e) {
                 _log.warn("Lottery: Could not store finished lottery data: ", e);
-            } finally {
-                DbUtils.closeQuietly(con, statement);
             }
 
-            ThreadPoolManager.INSTANCE().schedule(new startLottery(), 1 * MINUTE);
+            ThreadPoolManager.INSTANCE.schedule(new startLottery(), MINUTE);
             _number++;
 
             _isStarted = false;

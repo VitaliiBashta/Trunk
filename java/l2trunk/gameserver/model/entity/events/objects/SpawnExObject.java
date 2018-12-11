@@ -72,7 +72,7 @@ public final class SpawnExObject implements SpawnableObject {
         List<NpcInstance> npcs = new ArrayList<>();
         for (Spawner spawn : _spawns)
             npcs.addAll(spawn.getAllSpawned());
-        return npcs.isEmpty() ? Collections.<NpcInstance>emptyList() : npcs;
+        return npcs.isEmpty() ? Collections.emptyList() : npcs;
     }
 
     public NpcInstance getFirstSpawned() {

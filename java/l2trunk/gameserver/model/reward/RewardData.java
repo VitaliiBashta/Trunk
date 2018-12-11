@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.reward;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.math.SafeMath;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -11,38 +10,38 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RewardData implements Cloneable {
+public final class RewardData implements Cloneable {
     private final ItemTemplate _item;
-    private boolean _notRate = false; // Рейты к вещи не применяются
+    private boolean notRate = false; // Рейты к вещи не применяются
 
-    private long _mindrop;
-    private long _maxdrop;
-    private double _chance;
+    private long mindrop;
+    private long maxdrop;
+    private double chance;
     private double _chanceInGroup;
 
     public RewardData(int itemId) {
-        _item = ItemHolder.getInstance().getTemplate(itemId);
+        _item = ItemHolder.getTemplate(itemId);
         if (_item.isArrow() // стрелы не рейтуются
                 || (Config.NO_RATE_EQUIPMENT && _item.isEquipment()) // отключаемая рейтовка эквипа
                 || (Config.NO_RATE_KEY_MATERIAL && _item.isKeyMatherial()) // отключаемая рейтовка ключевых материалов
                 || (Config.NO_RATE_RECIPES && _item.isRecipe()) // отключаемая рейтовка рецептов
-                || ArrayUtils.contains(Config.NO_RATE_ITEMS, itemId)) // индивидаульная отключаемая рейтовка для списка предметов
-            _notRate = true;
+                || (Config.NO_RATE_ITEMS.contains(itemId))) // индивидаульная отключаемая рейтовка для списка предметов
+            notRate = true;
     }
 
     public RewardData(int itemId, long min, long max, double chance) {
         this(itemId);
-        _mindrop = min;
-        _maxdrop = max;
-        _chance = chance;
+        mindrop = min;
+        maxdrop = max;
+        this.chance = chance;
     }
 
     public boolean notRate() {
-        return _notRate;
+        return notRate;
     }
 
     public void setNotRate(boolean notRate) {
-        _notRate = notRate;
+        this.notRate = notRate;
     }
 
     public int getItemId() {
@@ -54,27 +53,27 @@ public class RewardData implements Cloneable {
     }
 
     public long getMinDrop() {
-        return _mindrop;
+        return mindrop;
     }
 
     public void setMinDrop(long mindrop) {
-        _mindrop = mindrop;
+        this.mindrop = mindrop;
     }
 
     public long getMaxDrop() {
-        return _maxdrop;
+        return maxdrop;
     }
 
     public void setMaxDrop(long maxdrop) {
-        _maxdrop = maxdrop;
+        this.maxdrop = maxdrop;
     }
 
     public double getChance() {
-        return _chance;
+        return chance;
     }
 
     public void setChance(double chance) {
-        _chance = chance;
+        this.chance = chance;
     }
 
     public double getChanceInGroup() {
@@ -136,7 +135,7 @@ public class RewardData implements Cloneable {
         RewardItem t = null;
         long count;
         for (int n = 0; n < mult; n++) {
-            if (Rnd.get(RewardList.MAX_CHANCE) <= _chance * Math.min(rate - n, 1.0)) {
+            if (Rnd.get(RewardList.MAX_CHANCE) <= chance * Math.min(rate - n, 1.0)) {
                 if (getMinDrop() >= getMaxDrop())
                     count = getMinDrop();
                 else

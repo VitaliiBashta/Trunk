@@ -8,18 +8,14 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.TimeUtils;
 
-/**
- * @author VISTALL
- * @date 18:16/04.03.2011
- */
-public class BrakelInstance extends NpcInstance {
+public final class BrakelInstance extends NpcInstance {
     public BrakelInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
     @Override
     public void showChatWindow(Player player, int val, Object... arg) {
-        ClanHall clanhall = ResidenceHolder.getInstance().getResidence(ClanHall.class, 21);
+        ClanHall clanhall = ResidenceHolder.getResidence(ClanHall.class, 21);
         if (clanhall == null)
             return;
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);

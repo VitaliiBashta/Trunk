@@ -19,17 +19,13 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import java.util.*;
 import java.util.concurrent.Future;
 
-/**
- * @author VISTALL
- * @date 15:24/14.02.2011
- */
-public class DominionSiegeRunnerEvent extends GlobalEvent {
+public final class DominionSiegeRunnerEvent extends GlobalEvent {
     private static final String REGISTRATION = "registration";
     private static final String BATTLEFIELD = "battlefield";
     private final BattlefieldChatTask _battlefieldChatTask = new BattlefieldChatTask();
     private final Map<ClassId, Quest> _classQuests = new HashMap<>();
     private final List<Quest> _breakQuests = new ArrayList<>();
-    private final List<Dominion> _registeredDominions = new ArrayList<>(9);
+    private final List<Dominion> registeredDominions = new ArrayList<>(9);
     private boolean _battlefieldChatActive;
     private Future<?> _battlefieldChatFuture;
     private Calendar _startTime = Calendar.getInstance();
@@ -56,11 +52,11 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
             _battlefieldChatFuture = null;
         }
 
-        for (Dominion d : _registeredDominions) {
+        for (Dominion d : registeredDominions) {
             List<SiegeClanObject> defenders = d.getSiegeEvent().getObjects(DominionSiegeEvent.DEFENDERS);
             for (SiegeClanObject siegeClan : defenders) {
                 for (UnitMember member : siegeClan.getClan()) {
-                    for (Dominion d2 : _registeredDominions) {
+                    for (Dominion d2 : registeredDominions) {
                         DominionSiegeEvent siegeEvent2 = d2.getSiegeEvent();
                         List<Integer> defenderPlayers2 = siegeEvent2.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS);
 
@@ -74,7 +70,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
 
             List<Integer> defenderPlayers = d.getSiegeEvent().getObjects(DominionSiegeEvent.DEFENDER_PLAYERS);
             for (int i : defenderPlayers) {
-                for (Dominion d2 : _registeredDominions) {
+                for (Dominion d2 : registeredDominions) {
                     DominionSiegeEvent siegeEvent2 = d2.getSiegeEvent();
 
                     if (d != d2)
@@ -83,7 +79,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
             }
         }
 
-        for (Dominion d : _registeredDominions) {
+        for (Dominion d : registeredDominions) {
             d.getSiegeEvent().clearActions();
             d.getSiegeEvent().registerActions();
         }
@@ -97,12 +93,12 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
 
         reCalcNextTime(false);
 
-        for (Dominion d : _registeredDominions)
+        for (Dominion d : registeredDominions)
             d.getSiegeDate().setTimeInMillis(_startTime.getTimeInMillis());
 
         broadcastToWorld(SystemMsg.TERRITORY_WAR_HAS_ENDED);
 
-        _battlefieldChatFuture = ThreadPoolManager.INSTANCE().schedule(_battlefieldChatTask, 600000L);
+        _battlefieldChatFuture = ThreadPoolManager.INSTANCE.schedule(_battlefieldChatTask, 600000L);
 
         SiegeEvent.showResults();
 
@@ -175,7 +171,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
     }
 
     public void broadcastTo(IStaticPacket packet) {
-        for (Dominion dominion : _registeredDominions)
+        for (Dominion dominion : registeredDominions)
             dominion.getSiegeEvent().broadcastTo(packet);
     }
     //========================================================================================================================================================================
@@ -183,7 +179,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
     //========================================================================================================================================================================
 
     public void broadcastTo(L2GameServerPacket packet) {
-        for (Dominion dominion : _registeredDominions)
+        for (Dominion dominion : registeredDominions)
             dominion.getSiegeEvent().broadcastTo(packet);
     }
 
@@ -213,7 +209,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
 
     private void setRegistrationOver(boolean registrationOver) {
         _isRegistrationOver = registrationOver;
-        for (Dominion d : _registeredDominions)
+        for (Dominion d : registeredDominions)
             d.getSiegeEvent().setRegistrationOver(registrationOver);
 
         if (registrationOver)
@@ -250,10 +246,10 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
     }
 
     public synchronized void registerDominion(Dominion d) {
-        if (_registeredDominions.contains(d))
+        if (registeredDominions.contains(d))
             return;
 
-        if (_registeredDominions.isEmpty()) {
+        if (registeredDominions.isEmpty()) {
             Castle castle = d.getCastle();
             if (castle.getOwnDate().getTimeInMillis() == 0)
                 return;
@@ -278,19 +274,19 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
         d.getSiegeEvent().spawnAction(DominionSiegeEvent.TERRITORY_NPC, true);
         d.rewardSkills();
 
-        _registeredDominions.add(d);
+        registeredDominions.add(d);
     }
 
     public synchronized void unRegisterDominion(Dominion d) {
-        if (!_registeredDominions.contains(d))
+        if (!registeredDominions.contains(d))
             return;
 
-        _registeredDominions.remove(d);
+        registeredDominions.remove(d);
 
         d.getSiegeEvent().spawnAction(DominionSiegeEvent.TERRITORY_NPC, false);
         d.getSiegeDate().setTimeInMillis(0);
 
-        if (_registeredDominions.isEmpty()) {
+        if (registeredDominions.isEmpty()) {
             clearActions();
 
             _startTime.setTimeInMillis(0);
@@ -300,7 +296,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
     }
 
     public List<Dominion> getRegisteredDominions() {
-        return _registeredDominions;
+        return registeredDominions;
     }
 
     private class BattlefieldChatTask extends RunnableImpl {
@@ -309,7 +305,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
             setBattlefieldChatActive(false);
             setRegistrationOver(false);
 
-            for (Dominion d : _registeredDominions) {
+            registeredDominions.forEach(d -> {
                 DominionSiegeEvent siegeEvent = d.getSiegeEvent();
 
                 siegeEvent.updateParticles(false);
@@ -320,7 +316,7 @@ public class DominionSiegeRunnerEvent extends GlobalEvent {
                 siegeEvent.removeObjects(DominionSiegeEvent.DEFENDERS);
                 siegeEvent.removeObjects(DominionSiegeEvent.ATTACKER_PLAYERS);
                 siegeEvent.removeObjects(DominionSiegeEvent.DEFENDER_PLAYERS);
-            }
+            });
 
             _battlefieldChatFuture = null;
         }

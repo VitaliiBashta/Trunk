@@ -21,31 +21,29 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum  SpawnManager {
+public enum SpawnManager {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(SpawnManager.class);
     private static final String DAWN_GROUP = "dawn_spawn";
     private static final String DUSK_GROUP = "dusk_spawn";
     private static final String DAWN_GROUP2 = "dawn_spawn2";
     private static final String DUSK_GROUP2 = "dusk_spawn2";
-//    private static final SpawnManager _instance = new SpawnManager();
+    //    private static final SpawnManager _instance = new SpawnManager();
     private final Map<String, List<Spawner>> _spawns = new ConcurrentHashMap<>();
-    private final Listeners _listeners = new Listeners();
+    private final Listeners listeners = new Listeners();
     private final Map<Integer, Integer> spawnCountByNpcId = new HashMap<>();
     private final Map<Integer, List<Location>> spawnLocationsByNpcId = new HashMap<>();
 
     SpawnManager() {
-        for (Map.Entry<String, List<SpawnTemplate>> entry : SpawnHolder.getInstance().getSpawns().entrySet()) {
-            fillSpawn(entry.getKey(), entry.getValue());
-        }
-
-        GameTimeController.INSTANCE.addListener(_listeners);
-        SevenSigns.INSTANCE.addListener(_listeners);
+//        for (Map.Entry<String, List<SpawnTemplate>> entry :
+        SpawnHolder.getSpawns().forEach(this::fillSpawn);
+        GameTimeController.INSTANCE.addListener(listeners);
+        SevenSigns.INSTANCE.addListener(listeners);
     }
 
-    private List<Spawner> fillSpawn(String group, List<SpawnTemplate> templateList) {
+    private void fillSpawn(String group, List<SpawnTemplate> templateList) {
         if (Config.DONTLOADSPAWN) {
-            return Collections.emptyList();
+            return;
         }
 
         List<Spawner> spawnerList = _spawns.get(group);
@@ -69,7 +67,7 @@ public enum  SpawnManager {
             }
 
             if (Config.ALLOW_DROP_CALCULATOR) {
-                int currentCount = spawnCountByNpcId.containsKey(npcTemplate.getNpcId()) ? spawnCountByNpcId.get(npcTemplate.getNpcId()) : 0;
+                int currentCount = spawnCountByNpcId.getOrDefault(npcTemplate.getNpcId(), 0);
                 spawnCountByNpcId.put(npcTemplate.getNpcId(), currentCount + toAdd);
             }
 
@@ -86,11 +84,10 @@ public enum  SpawnManager {
 
 
             if (npcTemplate.isRaid && group.equals(PeriodOfDay.NONE.name())) {
-                RaidBossSpawnManager.getInstance().addNewSpawn(npcTemplate.getNpcId(), spawner);
+                RaidBossSpawnManager.INSTANCE.addNewSpawn(npcTemplate.getNpcId(), spawner);
             }
         }
 
-        return spawnerList;
     }
 
     public void spawnAll() {
@@ -167,7 +164,7 @@ public enum  SpawnManager {
             }
         }
 
-        RaidBossSpawnManager.getInstance().reloadBosses();
+        RaidBossSpawnManager.INSTANCE.reloadBosses();
 
         spawnAll();
 
@@ -177,12 +174,12 @@ public enum  SpawnManager {
             mode = SevenSigns.INSTANCE.getCabalHighestScore();
         }
 
-        _listeners.onPeriodChange(mode);
+        listeners.onPeriodChange(mode);
 
         if (GameTimeController.INSTANCE.isNowNight()) {
-            _listeners.onNight();
+            listeners.onNight();
         } else {
-            _listeners.onDay();
+            listeners.onDay();
         }
     }
 

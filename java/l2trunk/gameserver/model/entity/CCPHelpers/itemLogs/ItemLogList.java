@@ -25,21 +25,14 @@ public class ItemLogList {
     }
 
     private static int getSmallestLogId(Set<Integer> set) {
-        int smallest = Integer.MAX_VALUE;
-        for (int i : set) {
-            if (i < smallest) {
-                smallest = i;
-            }
-        }
-
-        return smallest;
+        return set.stream().mapToInt(i -> i).min().orElse(Integer.MAX_VALUE);
     }
 
     public static ItemLogList getInstance() {
         return ItemLogListHolder.instance;
     }
 
-    public List<ItemActionLog> getLogs(Player player) {
+    List<ItemActionLog> getLogs(Player player) {
         if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
             return new ArrayList<>();
         }
@@ -49,7 +42,7 @@ public class ItemLogList {
         return list;
     }
 
-    public void addLogs(ItemActionLog logs) {
+    void addLogs(ItemActionLog logs) {
         if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
             return;
         }
@@ -65,22 +58,21 @@ public class ItemLogList {
         list.add(logs);
     }
 
-    public void fillReceiver(int itemObjectId, String playerName) {
+    void fillReceiver(int itemObjectId, String playerName) {
         if (!Config.ENABLE_PLAYER_ITEM_LOGS) {
             return;
         }
-        for (List<ItemActionLog> logList : this._logLists.values()) {
-            for (ItemActionLog log : logList) {
-                if (!log.getActionType().isReceiverKnown()) {
-                    for (SingleItemLog item : log.getItemsLost()) {
-                        if ((item.getItemObjectId() != itemObjectId) || ((item.getReceiverName() != null) && (!item.getReceiverName().isEmpty())))
-                            continue;
-                        item.setReceiverName(playerName);
-                        return;
+        _logLists.values().forEach(logList ->
+                logList.forEach(log -> {
+                    if (!log.getActionType().isReceiverKnown()) {
+                        for (SingleItemLog item : log.getItemsLost()) {
+                            if ((item.getItemObjectId() != itemObjectId) || ((item.getReceiverName() != null) && (!item.getReceiverName().isEmpty())))
+                                continue;
+                            item.setReceiverName(playerName);
+                            return;
+                        }
                     }
-                }
-            }
-        }
+                }));
     }
 
     public void loadAllLogs() {

@@ -8,11 +8,11 @@ import l2trunk.gameserver.model.entity.residence.Dominion;
 import l2trunk.gameserver.model.pledge.Alliance;
 import l2trunk.gameserver.model.pledge.Clan;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ExShowDominionRegistry extends L2GameServerPacket {
+public final class ExShowDominionRegistry extends L2GameServerPacket {
     private final int _dominionId;
     private final String _ownerClanName;
     private final String _ownerLeaderName;
@@ -23,7 +23,7 @@ public class ExShowDominionRegistry extends L2GameServerPacket {
     private final int _currentTime;
     private final boolean _registeredAsPlayer;
     private final boolean _registeredAsClan;
-    private List<TerritoryFlagsInfo> _flags = Collections.emptyList();
+    private final List<TerritoryFlagsInfo> flags;
 
     public ExShowDominionRegistry(Player activeChar, Dominion dominion) {
         _dominionId = dominion.getId();
@@ -42,10 +42,10 @@ public class ExShowDominionRegistry extends L2GameServerPacket {
         _registeredAsPlayer = siegeEvent.getObjects(DominionSiegeEvent.DEFENDER_PLAYERS).contains(activeChar.getObjectId());
         _registeredAsClan = siegeEvent.getSiegeClan(DominionSiegeEvent.DEFENDERS, activeChar.getClan()) != null;
 
-        List<Dominion> dominions = ResidenceHolder.getInstance().getResidenceList(Dominion.class);
-        _flags = new ArrayList<>(dominions.size());
-        for (Dominion d : dominions)
-            _flags.add(new TerritoryFlagsInfo(d.getId(), d.getFlags()));
+        List<Dominion> dominions = ResidenceHolder.getResidenceList(Dominion.class);
+        flags = dominions.stream()
+                .map(d -> new TerritoryFlagsInfo(d.getId(), d.getFlags()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -63,22 +63,21 @@ public class ExShowDominionRegistry extends L2GameServerPacket {
         writeD(_registeredAsClan); // Состояние клановой кнопки: 0 - не подписал, 1 - подписан на эту территорию
         writeD(_registeredAsPlayer); // Состояние персональной кнопки: 0 - не подписал, 1 - подписан на эту территорию
         writeD(0x01);
-        writeD(_flags.size()); // Territory Count
-        for (TerritoryFlagsInfo cf : _flags) {
+        writeD(flags.size()); // Territory Count
+        flags.forEach(cf -> {
             writeD(cf.id); // Territory Id
-            writeD(cf.flags.length); // Emblem Count
-            for (int flag : cf.flags)
-                writeD(flag); // Emblem ID - should be in for loop for emblem count
-        }
+            writeD(cf.flags.size()); // Emblem Count
+            cf.flags.forEach(this::writeD); // Emblem ID - should be in for loop for emblem count
+        });
     }
 
     private class TerritoryFlagsInfo {
         final int id;
-        final int[] flags;
+        final List<Integer> flags;
 
-        TerritoryFlagsInfo(int id_, int[] flags_) {
-            id = id_;
-            flags = flags_;
+        TerritoryFlagsInfo(int id, List<Integer> flags) {
+            this.id = id;
+            this.flags = flags;
         }
     }
 }

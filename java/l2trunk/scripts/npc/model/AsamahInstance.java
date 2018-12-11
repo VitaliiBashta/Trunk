@@ -7,11 +7,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.quests._111_ElrokianHuntersProof;
 
-/**
- * @author VISTALL
- * @date 10:35/24.06.2011
- */
-public class AsamahInstance extends NpcInstance {
+public final class AsamahInstance extends NpcInstance {
     private static final int ElrokianTrap = 8763;
     private static final int TrapStone = 8764;
 

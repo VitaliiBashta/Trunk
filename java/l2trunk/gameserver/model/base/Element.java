@@ -29,19 +29,8 @@ public enum Element {
         this.defence = defence;
     }
 
-    public static Element getElementById(int id) {
-        for (Element e : VALUES)
-            if (e.getId() == id)
-                return e;
-        return NONE;
-    }
 
-    /**
-     * Возвращает противоположный тип элемента
-     *
-     * @param element
-     * @return значение элемента
-     */
+
     public static Element getReverseElement(Element element) {
         switch (element) {
             case WATER:
@@ -61,11 +50,26 @@ public enum Element {
         return NONE;
     }
 
+    public static Element getElement(String name) {
+        try {
+            int id = Integer.parseInt(name);
+            return getElementById(id);
+        } catch (NumberFormatException e) {
+            return getElementByName(name);
+        }
+
+    }
+
+    public static Element getElementById(int id) {
+        return Arrays.stream(VALUES)
+                .filter(e -> e.getId() == id)
+                .findFirst().orElse(NONE);
+    }
+
     public static Element getElementByName(String name) {
-        for (Element e : VALUES)
-            if (e.name().equalsIgnoreCase(name))
-                return e;
-        return NONE;
+        return Arrays.stream(VALUES)
+                .filter(e -> (e.name().equalsIgnoreCase(name)))
+                .findFirst().orElse(NONE);
     }
 
     public int getId() {

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class _367_ElectrifyingRecharge extends Quest implements ScriptFile {
+public final class _367_ElectrifyingRecharge extends Quest implements ScriptFile {
     //NPCs
     private static final int LORAIN = 30673;
     //Mobs
@@ -111,7 +111,7 @@ public class _367_ElectrifyingRecharge extends Quest implements ScriptFile {
                         qs.playSound(SOUND_MIDDLE);
                     } else
                         qs.playSound(SOUND_ITEMGET);
-                    npc.doCast(SkillTable.INSTANCE().getInfo(4072, 4), qs.getPlayer(), true);
+                    npc.doCast(SkillTable.INSTANCE.getInfo(4072, 4), qs.getPlayer(), true);
                     return null;
                 } else if (Rnd.chance(broke_chance))
                     if (takeAllLamps(qs))

@@ -53,7 +53,7 @@ public final class ClassMasterInstance extends MerchantInstance {
             jobLevel = 4;
 
         if ((level >= 20 && jobLevel == 1 || level >= 40 && jobLevel == 2 || level >= 76 && jobLevel == 3) && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevelTemp)) {
-            ItemTemplate item = ItemHolder.getInstance().getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
+            ItemTemplate item = ItemHolder.getTemplate(Config.CLASS_MASTERS_PRICE_ITEM);
             if (Config.CLASS_MASTERS_PRICE_LIST[jobLevel] > 0)
                 html.append("Price: ").append(Util.formatAdena(Config.CLASS_MASTERS_PRICE_LIST[jobLevel])).append(" ").append(item.getName()).append("<br1>");
             for (ClassId cid : ClassId.VALUES) {

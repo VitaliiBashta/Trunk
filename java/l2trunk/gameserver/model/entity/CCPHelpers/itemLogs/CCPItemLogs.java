@@ -132,7 +132,7 @@ public final class CCPItemLogs {
                         return table.replace("%items%", itemsBuilder.toString());
                     }
 
-                    ItemTemplate template = ItemHolder.getInstance().getTemplate(item.getItemTemplateId());
+                    ItemTemplate template = ItemHolder.getTemplate(item.getItemTemplateId());
                     String itemText = props.getText("item");
                     itemText = itemText.replace("%itemTableColor%", itemIndex % 2 == 0 ? props.getText("item_table_color_0") : props.getText("item_table_color_1"));
                     itemText = itemText.replace("%icon%", template.getIcon());

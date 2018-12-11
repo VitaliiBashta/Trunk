@@ -3,7 +3,7 @@ package l2trunk.gameserver.ai;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.entity.boat.Boat;
 
-public class BoatAI extends CharacterAI {
+public final class BoatAI extends CharacterAI {
     public BoatAI(Creature actor) {
         super(actor);
     }

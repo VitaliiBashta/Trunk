@@ -5,12 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 
-/**
- * AI Gargos<br>
- * Юзает огненый скил, пишет в чат фразу "Вперед!"<br>
- *
- * @author n0nam3
- */
 public final class Gargos extends Fighter {
     private long _lastFire;
 
@@ -27,7 +21,7 @@ public final class Gargos extends Fighter {
         if (System.currentTimeMillis() - _lastFire > 60000L) {
             NpcInstance actor = getActor();
             Functions.npcSayCustomMessage(actor, "scripts.ai.Gargos.fire");
-            actor.doCast(SkillTable.INSTANCE().getInfo(5705, 1), actor, false);
+            actor.doCast(SkillTable.INSTANCE.getInfo(5705), actor, false);
             _lastFire = System.currentTimeMillis();
             return true;
         }

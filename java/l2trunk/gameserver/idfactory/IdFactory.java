@@ -1,14 +1,10 @@
 package l2trunk.gameserver.idfactory;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,28 +35,21 @@ public abstract class IdFactory {
     }
 
     private void resetOnlineStatus() {
-        Connection con = null;
-        Statement st = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            st = con.createStatement();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement("UPDATE characters SET online = 0")) {
             st.executeUpdate("UPDATE characters SET online = 0");
             _log.info("IdFactory: Clear characters online status.");
         } catch (SQLException e) {
             _log.error("Error while reseting Online Status! ", e);
-        } finally {
-            DbUtils.closeQuietly(con, st);
         }
     }
 
     private void cleanUpDB() {
-        Connection con = null;
-        Statement st = null;
-        try {
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             Statement st = con.createStatement()) {
             long cleanupStart = System.currentTimeMillis();
             int cleanCount = 0;
-            con = DatabaseFactory.getInstance().getConnection();
-            st = con.createStatement();
+
 
             cleanCount += st.executeUpdate("DELETE FROM account_bonus WHERE account_bonus.account NOT IN (SELECT account_name FROM characters);");
             cleanCount += st.executeUpdate("DELETE FROM account_variables WHERE account_variables.account_name NOT IN (SELECT account_name FROM characters);");
@@ -139,34 +128,25 @@ public abstract class IdFactory {
             _log.info("IdFactory: Cleaned " + cleanCount + " elements from database in " + (System.currentTimeMillis() - cleanupStart) / 1000 + "sec.");
         } catch (SQLException e) {
             _log.error("", e);
-        } finally {
-            DbUtils.closeQuietly(con, st);
         }
     }
 
     List<Integer> extractUsedObjectIDTable() throws SQLException {
         List<Integer> objectIds = new ArrayList<>();
 
-        Connection con = null;
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            st = con.createStatement();
+        ResultSet rs;
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             Statement st = con.createStatement()) {
             for (String[] table : EXTRACT_OBJ_ID_TABLES) {
                 rs = st.executeQuery("SELECT " + table[1] + " FROM " + table[0]);
                 int size = objectIds.size();
                 while (rs.next())
                     objectIds.add(rs.getInt(1));
 
-                DbUtils.close(rs);
-
                 size = objectIds.size() - size;
                 if (size > 0)
                     _log.info("IdFactory: Extracted " + size + " used id's from " + table[0]);
             }
-        } finally {
-            DbUtils.closeQuietly(con, st, rs);
         }
 
         Collections.sort(objectIds);

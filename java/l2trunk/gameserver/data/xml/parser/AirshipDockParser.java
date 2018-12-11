@@ -1,12 +1,14 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractFileParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.AirshipDockHolder;
 import l2trunk.gameserver.model.entity.events.objects.BoatPoint;
 import l2trunk.gameserver.network.serverpackets.components.SceneMovie;
 import l2trunk.gameserver.templates.AirshipDock;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -14,29 +16,17 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public final class AirshipDockParser extends AbstractFileParser<AirshipDockHolder> {
-    private static final AirshipDockParser _instance = new AirshipDockParser();
+public enum AirshipDockParser {
+    INSTANCE;
+    private static Path xml = Config.DATAPACK_ROOT.resolve("data/airship_docks.xml");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
-    private AirshipDockParser() {
-        super(AirshipDockHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + AirshipDockHolder.size() + " items");
     }
 
-    public static AirshipDockParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLFile() {
-        return Config.DATAPACK_ROOT.resolve("data/airship_docks.xml");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "airship_docks.dtd";
-    }
-
-    @Override
-    protected void readData(Element rootElement) {
+    private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element dockElement = iterator.next();
             int id = Integer.parseInt(dockElement.attributeValue("id"));
@@ -62,7 +52,7 @@ public final class AirshipDockParser extends AbstractFileParser<AirshipDockHolde
                 platformList.add(platform);
             }
 
-            getHolder().addDock(new AirshipDock(id, teleportList, platformList));
+            AirshipDockHolder.addDock(new AirshipDock(id, teleportList, platformList));
         }
     }
 
@@ -73,6 +63,6 @@ public final class AirshipDockParser extends AbstractFileParser<AirshipDockHolde
         for (Iterator<Element> iterator = listElement.elementIterator(); iterator.hasNext(); )
             list.add(BoatPoint.parse(iterator.next()));
 
-        return list.isEmpty() ? Collections.<BoatPoint>emptyList() : list;
+        return list.isEmpty() ? Collections.emptyList() : list;
     }
 }

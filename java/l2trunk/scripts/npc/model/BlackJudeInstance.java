@@ -16,35 +16,40 @@ public final class BlackJudeInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equals("tryRemovePenalty")) {
-            if (player.getDeathPenalty().getLevel() > 0)
-                showChatWindow(player, 2, "%price%", getPrice(player));
-            else
-                showChatWindow(player, 1);
-        } else if (command.equals("removePenalty")) {
-            if (player.getDeathPenalty().getLevel() > 0)
-                if (player.getAdena() >= getPrice(player)) {
-                    player.reduceAdena(getPrice(player), true, "BlackJudeInstance");
-                    doCast(SkillTable.INSTANCE().getInfo(5077, 1), player, false);
-                } else
-                    player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
-            else
-                showChatWindow(player, 1);
-        } else
-            super.onBypassFeedback(player, command);
+        switch (command) {
+            case "tryRemovePenalty":
+                if (player.getDeathPenalty().getLevel() > 0)
+                    showChatWindow(player, 2, "%price%", getPrice(player));
+                else
+                    showChatWindow(player, 1);
+                break;
+            case "removePenalty":
+                if (player.getDeathPenalty().getLevel() > 0)
+                    if (player.getAdena() >= getPrice(player)) {
+                        player.reduceAdena(getPrice(player), true, "BlackJudeInstance");
+                        doCast(SkillTable.INSTANCE.getInfo(5077), player, false);
+                    } else
+                        player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
+                else
+                    showChatWindow(player, 1);
+                break;
+            default:
+                super.onBypassFeedback(player, command);
+                break;
+        }
     }
 
     private int getPrice(Player player) {
         int playerLvl = player.getLevel();
         if (playerLvl <= 19)
             return 3600; // Non-grade (confirmed)
-        else if (playerLvl >= 20 && playerLvl <= 39)
+        else if (playerLvl <= 39)
             return 16400; // D-grade
-        else if (playerLvl >= 40 && playerLvl <= 51)
+        else if (playerLvl <= 51)
             return 36200; // C-grade
-        else if (playerLvl >= 52 && playerLvl <= 60)
+        else if (playerLvl <= 60)
             return 50400; // B-grade (confirmed)
-        else if (playerLvl >= 61 && playerLvl <= 75)
+        else if (playerLvl <= 75)
             return 78200; // A-grade
         else
             return 102800; // S-grade

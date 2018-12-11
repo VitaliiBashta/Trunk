@@ -22,7 +22,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.TeleportUtils;
 
-public class RequestRestartPoint extends L2GameClientPacket {
+public final class RequestRestartPoint extends L2GameClientPacket {
     private RestartType _restartType;
 
     //FIXME [VISTALL] вынести куда то?
@@ -87,7 +87,7 @@ public class RequestRestartPoint extends L2GameClientPacket {
         }
 
         // Ady - If the player is in a Gm Event check if it can resurrect
-        if (!GmEventManager.getInstance().canResurrect(activeChar)) {
+        if (!GmEventManager.INSTANCE.canResurrect(activeChar)) {
             return;
         }
 
@@ -125,11 +125,6 @@ public class RequestRestartPoint extends L2GameClientPacket {
 
                 if (loc == null)
                     loc = defaultLoc(_restartType, activeChar);
-
-                if (activeChar.isInFightClub()) {
-                    activeChar.getFightClubEvent().requestRespawn(activeChar, _restartType);
-                    return;
-                }
 
                 if (loc != null) {
                     Pair<Integer, OnAnswerListener> ask = activeChar.getAskListener(false);

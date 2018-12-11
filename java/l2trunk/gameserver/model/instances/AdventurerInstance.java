@@ -26,10 +26,10 @@ public class AdventurerInstance extends NpcInstance {
         if (command.startsWith("npcfind_byid"))
             try {
                 int bossId = Integer.parseInt(command.substring(12).trim());
-                switch (RaidBossSpawnManager.getInstance().getRaidBossStatusId(bossId)) {
+                switch (RaidBossSpawnManager.INSTANCE.getRaidBossStatusId(bossId)) {
                     case ALIVE:
                     case DEAD:
-                        Spawner spawn = RaidBossSpawnManager.getInstance().getSpawnTable().get(bossId);
+                        Spawner spawn = RaidBossSpawnManager.INSTANCE.getSpawnTable().get(bossId);
 
                         Location loc = spawn.getCurrentSpawnRange().getRandomLoc(spawn.getReflection().getGeoIndex());
 

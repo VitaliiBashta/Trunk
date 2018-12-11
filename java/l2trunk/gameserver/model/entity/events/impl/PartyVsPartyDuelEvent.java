@@ -72,7 +72,7 @@ public class PartyVsPartyDuelEvent extends DuelEvent {
 
     @Override
     public void teleportPlayers(String name) {
-        InstantZone instantZone = InstantZoneHolder.getInstance().getInstantZone(1);
+        InstantZone instantZone = InstantZoneHolder.getInstantZone(1);
 
         Reflection reflection = new Reflection();
         reflection.init(instantZone);

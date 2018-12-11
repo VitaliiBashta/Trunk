@@ -2,7 +2,9 @@ package l2trunk.gameserver.data.xml.parser;
 
 import l2trunk.commons.collections.MultiValueSet;
 import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
+import l2trunk.gameserver.data.xml.holder.AirshipDockHolder;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.model.entity.events.EventAction;
 import l2trunk.gameserver.model.entity.events.EventType;
@@ -16,36 +18,26 @@ import l2trunk.gameserver.network.serverpackets.components.SysString;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.*;
 
-public final class EventParser extends AbstractDirParser<EventHolder> {
-    private static final EventParser _instance = new EventParser();
+public enum  EventParser  {
+    INSTANCE;
+    private static Path xml = Config.DATAPACK_ROOT.resolve("data/events/");
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
-    private EventParser() {
-        super(EventHolder.getInstance());
+    public void load() {
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
+        LOG.info("Loaded " + EventHolder.size() + " items");
     }
 
-    public static EventParser getInstance() {
-        return _instance;
-    }
-
-    @Override
-    public Path getXMLDir() {
-        return Config.DATAPACK_ROOT.resolve("data/events/");
-    }
-
-    @Override
-    public String getDTDFileName() {
-        return "events.dtd";
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void readData(Element rootElement) throws Exception {
+    protected void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator("event"); iterator.hasNext(); ) {
             Element eventElement = iterator.next();
             int id = Integer.parseInt(eventElement.attributeValue("id"));
@@ -56,49 +48,61 @@ public final class EventParser extends AbstractDirParser<EventHolder> {
             try {
                 eventClass = (Class<GlobalEvent>) Class.forName("l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
             } catch (ClassNotFoundException e) {
-                LOG.error("Not found impl class: " + impl + "; File: " + getCurrentFileName(), e);
+                LOG.error("Not found impl class: " + impl, e);
                 continue;
             }
 
-            Constructor<GlobalEvent> constructor = eventClass.getConstructor(MultiValueSet.class);
+            try {
+                Constructor<GlobalEvent> constructor = eventClass.getConstructor(MultiValueSet.class);
 
-            MultiValueSet<String> set = new MultiValueSet<>();
-            set.set("id", id);
-            set.set("name", name);
-            set.set("eventClass", "l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
+                MultiValueSet<String> set = new MultiValueSet<>();
+                set.set("id", id);
+                set.set("name", name);
+                set.set("eventClass", "l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
 
-            for (Iterator<Element> parameterIterator = eventElement.elementIterator("parameter"); parameterIterator.hasNext(); ) {
-                Element parameterElement = parameterIterator.next();
-                set.set(parameterElement.attributeValue("name"), parameterElement.attributeValue("value"));
-            }
-
-            GlobalEvent event = constructor.newInstance(set);
-
-            event.addOnStartActions(parseActions(eventElement.element("on_start"), Integer.MAX_VALUE));
-            event.addOnStopActions(parseActions(eventElement.element("on_stop"), Integer.MAX_VALUE));
-            event.addOnInitActions(parseActions(eventElement.element("on_init"), Integer.MAX_VALUE));
-
-            Element onTime = eventElement.element("on_time");
-            if (onTime != null)
-                for (Iterator<Element> onTimeIterator = onTime.elementIterator("on"); onTimeIterator.hasNext(); ) {
-                    Element on = onTimeIterator.next();
-                    int time = Integer.parseInt(on.attributeValue("time"));
-
-                    List<EventAction> actions = parseActions(on, time);
-
-                    event.addOnTimeActions(time, actions);
+                for (Iterator<Element> parameterIterator = eventElement.elementIterator("parameter"); parameterIterator.hasNext(); ) {
+                    Element parameterElement = parameterIterator.next();
+                    set.set(parameterElement.attributeValue("name"), parameterElement.attributeValue("value"));
                 }
 
-            for (Iterator<Element> objectIterator = eventElement.elementIterator("objects"); objectIterator.hasNext(); ) {
-                Element objectElement = objectIterator.next();
-                String objectsName = objectElement.attributeValue("name");
-                List<Object> objects = parseObjects(objectElement);
+                GlobalEvent event = constructor.newInstance(set);
 
-                event.addObjects(objectsName, objects);
+                event.addOnStartActions(parseActions(eventElement.element("on_start"), Integer.MAX_VALUE));
+                event.addOnStopActions(parseActions(eventElement.element("on_stop"), Integer.MAX_VALUE));
+                event.addOnInitActions(parseActions(eventElement.element("on_init"), Integer.MAX_VALUE));
+
+                Element onTime = eventElement.element("on_time");
+                if (onTime != null)
+                    for (Iterator<Element> onTimeIterator = onTime.elementIterator("on"); onTimeIterator.hasNext(); ) {
+                        Element on = onTimeIterator.next();
+                        int time = Integer.parseInt(on.attributeValue("time"));
+
+                        List<EventAction> actions = parseActions(on, time);
+
+                        event.addOnTimeActions(time, actions);
+                    }
+
+                for (Iterator<Element> objectIterator = eventElement.elementIterator("objects"); objectIterator.hasNext(); ) {
+                    Element objectElement = objectIterator.next();
+                    String objectsName = objectElement.attributeValue("name");
+                    List<Object> objects = parseObjects(objectElement);
+
+                    event.addObjects(objectsName, objects);
+                }
+                EventHolder.addEvent(type, event);
+            } catch (IndexOutOfBoundsException e ) {
+
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             }
 
 
-            getHolder().addEvent(type, event);
         }
     }
 
@@ -235,7 +239,7 @@ public final class EventParser extends AbstractDirParser<EventHolder> {
             } else if (actionElement.getName().equalsIgnoreCase("announce")) {
                 String val = actionElement.attributeValue("val");
                 if (val == null && time == Integer.MAX_VALUE) {
-                    LOG.info("Can't get announce time." + getCurrentFileName());
+                    LOG.info("Can't get announce time." + element);
                     continue;
                 }
 

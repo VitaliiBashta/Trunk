@@ -31,7 +31,7 @@ public class MercenaryCaptainInstance extends NpcInstance {
             int multisell = Integer.parseInt(tokenizer.nextToken());
 
             if (player.getInventory().getCountOf(certification) > 0)
-                MultiSellHolder.getInstance().SeparateAndSend(multisell, player, getCastle().getTaxRate());
+                MultiSellHolder.INSTANCE.SeparateAndSend(multisell, player, getCastle().getTaxRate());
             else
                 showChatWindow(player, 25);
         } else

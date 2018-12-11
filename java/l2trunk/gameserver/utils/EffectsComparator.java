@@ -5,9 +5,8 @@ import l2trunk.gameserver.model.Effect;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class EffectsComparator implements Comparator<Effect>, Serializable {
+public final class EffectsComparator implements Comparator<Effect>, Serializable {
     private static final EffectsComparator instance = new EffectsComparator();
-    private static final long serialVersionUID = -901791557314516714L;
 
     public static EffectsComparator getInstance() {
         return instance;
@@ -15,7 +14,6 @@ public class EffectsComparator implements Comparator<Effect>, Serializable {
 
     private static int compareStartTime(Effect o1, Effect o2) {
         return Long.compare(o1.getStartTime(), o2.getStartTime());
-
     }
 
     @Override

@@ -14,19 +14,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class SiegeClanDAO {
+public enum  SiegeClanDAO {
+    INSTANCE;
     private static final String SELECT_SQL_QUERY = "SELECT clan_id, param, date FROM siege_clans WHERE residence_id=? AND type=? ORDER BY date";
     private static final String INSERT_SQL_QUERY = "INSERT INTO siege_clans(residence_id, clan_id, param, type, date) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE_SQL_QUERY = "UPDATE siege_clans SET type=?, param=? WHERE residence_id=? AND clan_id=?";
     private static final String DELETE_SQL_QUERY = "DELETE FROM siege_clans WHERE residence_id=? AND clan_id=? AND type=?";
     private static final String DELETE_SQL_QUERY2 = "DELETE FROM siege_clans WHERE residence_id=?";
 
-    private static final Logger _log = LoggerFactory.getLogger(SiegeClanDAO.class);
-    private static final SiegeClanDAO _instance = new SiegeClanDAO();
-
-    public static SiegeClanDAO getInstance() {
-        return _instance;
-    }
+    private final Logger LOG = LoggerFactory.getLogger(SiegeClanDAO.class);
 
     public List<SiegeClanObject> load(Residence residence, String name) {
         List<SiegeClanObject> siegeClans = Collections.emptyList();
@@ -45,11 +41,11 @@ public final class SiegeClanDAO {
                     if (object != null)
                         siegeClans.add(object);
                     else
-                        _log.info("SiegeClanDAO#load(Residence, String): null clan: " + clanId + "; residence: " + residence.getId());
+                        LOG.info("SiegeClanDAO#loadFile(Residence, String): null clan: " + clanId + "; residence: " + residence.getId());
                 }
             }
         } catch (SQLException e) {
-            _log.warn("SiegeClanDAO#load(Residence, String): " + e, e);
+            LOG.warn("SiegeClanDAO#loadFile(Residence, String): " + e, e);
         }
         return siegeClans;
     }
@@ -64,7 +60,7 @@ public final class SiegeClanDAO {
             statement.setLong(5, siegeClan.getDate());
             statement.execute();
         } catch (SQLException e) {
-            _log.warn("SiegeClanDAO#insert(Residence, SiegeClan): " + e, e);
+            LOG.warn("SiegeClanDAO#insert(Residence, SiegeClan): " + e, e);
         }
     }
 
@@ -76,7 +72,7 @@ public final class SiegeClanDAO {
             statement.setString(3, siegeClan.getType());
             statement.execute();
         } catch (SQLException e) {
-            _log.warn("SiegeClanDAO#delete(Residence, SiegeClan): " + e, e);
+            LOG.warn("SiegeClanDAO#delete(Residence, SiegeClan): " + e, e);
         }
     }
 
@@ -86,7 +82,7 @@ public final class SiegeClanDAO {
             statement.setInt(1, residence.getId());
             statement.execute();
         } catch (SQLException e) {
-            _log.warn("SiegeClanDAO#delete(Residence): " + e, e);
+            LOG.warn("SiegeClanDAO#delete(Residence): " + e, e);
         }
     }
 
@@ -99,7 +95,7 @@ public final class SiegeClanDAO {
             statement.setInt(4, siegeClan.getObjectId());
             statement.execute();
         } catch (SQLException e) {
-            _log.warn("SiegeClanDAO#update(Residence, SiegeClan): ", e);
+            LOG.warn("SiegeClanDAO#update(Residence, SiegeClan): ", e);
         }
     }
 }

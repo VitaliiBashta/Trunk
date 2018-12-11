@@ -1,11 +1,7 @@
 package l2trunk.gameserver.network.loginservercon.lspackets;
 
-import javafx.util.Pair;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.Msg;
-import l2trunk.gameserver.dao.AccountBonusDAO;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.actor.instances.player.Bonus;
 import l2trunk.gameserver.network.GameClient;
 import l2trunk.gameserver.network.loginservercon.AuthServerCommunication;
 import l2trunk.gameserver.network.loginservercon.ReceivablePacket;

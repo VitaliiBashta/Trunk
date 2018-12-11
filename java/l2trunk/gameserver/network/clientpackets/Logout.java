@@ -47,12 +47,6 @@ public class Logout extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInFightClub()) {
-            activeChar.sendMessage("Leave Fight Club first!");
-            activeChar.sendActionFailed();
-            return;
-        }
-
         if (activeChar.getVar("isPvPevents") != null) {
             activeChar.sendMessage("You can follow any responses did not leave while participating in the event!");
             activeChar.sendActionFailed();

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.instancemanager.games;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -28,7 +27,7 @@ public enum FishingChampionShipManager {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(FishingChampionShipManager.class);
 
-//    private static final FishingChampionShipManager _instance = new FishingChampionShipManager();
+    //    private static final FishingChampionShipManager _instance = new FishingChampionShipManager();
     private final List<String> _playersName = new ArrayList<>();
     private final List<String> _fishLength = new ArrayList<>();
     private final List<String> _winPlayersName = new ArrayList<>();
@@ -67,12 +66,9 @@ public enum FishingChampionShipManager {
 
     private void restoreData() {
         _enddate = ServerVariables.getLong("fishChampionshipEnd", 0);
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT `PlayerName`, `fishLength`, `rewarded` FROM fishing_championship");
-            ResultSet rs = statement.executeQuery();
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT `PlayerName`, `fishLength`, `rewarded` FROM fishing_championship");
+             ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 int rewarded = rs.getInt("rewarded");
                 if (rewarded == 0) // Текущий участник
@@ -80,11 +76,8 @@ public enum FishingChampionShipManager {
                 if (rewarded > 0) // Победитель прошлой недели
                     _winPlayers.add(new Fisher(rs.getString("PlayerName"), rs.getDouble("fishLength"), rewarded));
             }
-            rs.close();
         } catch (SQLException e) {
             _log.warn("Exception: can't get fishing championship info: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
@@ -223,7 +216,7 @@ public enum FishingChampionShipManager {
             strBuilder.append("<td width=80 align=center>").append(getCurrentFishLength(x)).append("</td></tr>");
         }
         html.replace("%TABLE%", strBuilder.toString());
-        html.replace("%prizeItem%", ItemHolder.getInstance().getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
+        html.replace("%prizeItem%", ItemHolder.getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
         html.replace("%prizeFirst%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_1));
         html.replace("%prizeTwo%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_2));
         html.replace("%prizeThree%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_3));
@@ -243,7 +236,7 @@ public enum FishingChampionShipManager {
             strBuilder.append("<td width=80 align=center>").append(getFishLength(x)).append("</td></tr>");
         }
         html.replace("%TABLE%", strBuilder.toString());
-        html.replace("%prizeItem%", ItemHolder.getInstance().getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
+        html.replace("%prizeItem%", ItemHolder.getTemplate(Config.ALT_FISH_CHAMPIONSHIP_REWARD_ITEM).getName());
         html.replace("%prizeFirst%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_1));
         html.replace("%prizeTwo%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_2));
         html.replace("%prizeThree%", String.valueOf(Config.ALT_FISH_CHAMPIONSHIP_REWARD_3));
@@ -256,11 +249,8 @@ public enum FishingChampionShipManager {
 
     public void shutdown() {
         ServerVariables.set("fishChampionshipEnd", _enddate);
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("DELETE FROM fishing_championship");
+        try (Connection con = DatabaseFactory.getInstance().getConnection()) {
+            PreparedStatement statement = con.prepareStatement("DELETE FROM fishing_championship");
             statement.execute();
             statement.close();
 
@@ -282,8 +272,6 @@ public enum FishingChampionShipManager {
             }
         } catch (SQLException e) {
             _log.warn("Exception: can't update player vitality: ", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 

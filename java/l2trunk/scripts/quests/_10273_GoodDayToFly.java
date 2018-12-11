@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public class _10273_GoodDayToFly extends Quest implements ScriptFile {
+public final class _10273_GoodDayToFly extends Quest implements ScriptFile {
     private final static int Lekon = 32557;
     private final static int VultureRider1 = 22614;
     private final static int VultureRider2 = 22615;
@@ -51,29 +51,29 @@ public class _10273_GoodDayToFly extends Quest implements ScriptFile {
                 return null;
             }
             st.set("transform", "1");
-            SkillTable.INSTANCE().getInfo(5982, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(5982).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("32557-10.htm")) {
             if (player.getTransformation() != 0) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
-            SkillTable.INSTANCE().getInfo(5983, 1).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(5983).getEffects(player, player, false, false);
         } else if (event.equalsIgnoreCase("32557-13.htm")) {
             if (player.getTransformation() != 0) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
             }
             if (st.getInt("transform") == 1)
-                SkillTable.INSTANCE().getInfo(5982, 1).getEffects(player, player, false, false);
+                SkillTable.INSTANCE.getInfo(5982).getEffects(player, player, false, false);
             else if (st.getInt("transform") == 2)
-                SkillTable.INSTANCE().getInfo(5983, 1).getEffects(player, player, false, false);
+                SkillTable.INSTANCE.getInfo(5983).getEffects(player, player, false, false);
         }
         return event;
     }
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int id = st.getState();
         int transform = st.getInt("transform");
 

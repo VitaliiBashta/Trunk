@@ -53,11 +53,6 @@ public final class Potions extends SimpleItemHandler implements ScriptFile {
             return false;
         }
 
-        if (player.isInFightClub()) {
-            player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemId));
-            return false;
-        }
-
         if (!useItem(player, item, 1))
             return false;
 

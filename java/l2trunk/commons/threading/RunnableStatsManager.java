@@ -6,13 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public enum RunnableStatsManager {
     INSTANCE;
-    /**
-     * Field classStats.
-     */
     private final Map<Class<?>, ClassStat> classStats = new HashMap<>();
-    /**
-     * Field lock.
-     */
     private final Lock lock = new ReentrantLock();
 
     public void handleStats(Class<?> cl, long runTime) {
@@ -35,31 +29,6 @@ public enum RunnableStatsManager {
         }
     }
 
-    private List<ClassStat> getSortedClassStats() {
-        List<ClassStat> result;
-        try {
-            lock.lock();
-            result = new ArrayList<>(classStats.values());
-        } finally {
-            lock.unlock();
-        }
-        result.sort((c1, c2) -> Long.compare(c2.maxTime, c1.maxTime));
-        return result;
-    }
-
-    public CharSequence getStats() {
-        StringBuilder list = new StringBuilder();
-        List<ClassStat> stats = getSortedClassStats();
-        for (ClassStat stat : stats) {
-            list.append(stat.clazz.getName()).append(":\n");
-            list.append("\tRun: ............ ").append(stat.runCount).append('\n');
-            list.append("\tTime: ........... ").append(stat.runTime).append('\n');
-            list.append("\tMin: ............ ").append(stat.minTime).append('\n');
-            list.append("\tMax: ............ ").append(stat.maxTime).append('\n');
-            list.append("\tAverage: ........ ").append(stat.runTime / stat.runCount).append('\n');
-        }
-        return list;
-    }
 
     private class ClassStat {
         final Class<?> clazz;

@@ -1,6 +1,8 @@
 package l2trunk.gameserver.model.actor.instances.player;
 
-public class Macro {
+import java.util.List;
+
+public final class Macro {
     public final static int CMD_TYPE_SKILL = 1;
     public final static int CMD_TYPE_ACTION = 3;
     public final static int CMD_TYPE_SHORTCUT = 4;
@@ -8,13 +10,10 @@ public class Macro {
     public final String name;
     public final String descr;
     public final String acronym;
-    public final L2MacroCmd[] commands;
+    public final List<L2MacroCmd> commands;
     public int id;
 
-    /**
-     *
-     */
-    public Macro(int id, int icon, String name, String descr, String acronym, L2MacroCmd[] commands) {
+    public Macro(int id, int icon, String name, String descr, String acronym, List<L2MacroCmd> commands) {
         this.id = id;
         this.icon = icon;
         this.name = name;

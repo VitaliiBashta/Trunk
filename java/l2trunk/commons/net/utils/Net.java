@@ -1,13 +1,6 @@
 package l2trunk.commons.net.utils;
 
-/**
- * Presentation of the IPv4 network mask
- * <p>
- * Supports both CIDR notation, and Apache-like.
- *
- * @author L2Mythras
- */
-public class Net {
+public final class Net {
     private final int address;
     private final int netmask;
 

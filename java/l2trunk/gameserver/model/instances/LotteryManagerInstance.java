@@ -16,7 +16,7 @@ import l2trunk.gameserver.utils.Log;
 
 import java.text.DateFormat;
 
-public class LotteryManagerInstance extends NpcInstance {
+public final class LotteryManagerInstance extends NpcInstance {
     public LotteryManagerInstance(int objectID, NpcTemplate template) {
         super(objectID, template);
     }
@@ -59,12 +59,12 @@ public class LotteryManagerInstance extends NpcInstance {
             filename = getHtmlPath(npcId, 1, player);
             html.setFile(filename);
         } else if (val >= 1 && val <= 21) {
-            if (!LotteryManager.getInstance().isStarted()) {
+            if (!LotteryManager.INSTANCE.isStarted()) {
                 /** LOTTERY_TICKETS_ARE_NOT_CURRENTLY_BEING_SOLD **/
                 player.sendPacket(Msg.LOTTERY_TICKETS_ARE_NOT_CURRENTLY_BEING_SOLD);
                 return;
             }
-            if (!LotteryManager.getInstance().isSellableTickets()) {
+            if (!LotteryManager.INSTANCE.isSellableTickets()) {
                 /** TICKETS_FOR_THE_CURRENT_LOTTERY_ARE_NO_LONGER_AVAILABLE **/
                 player.sendPacket(Msg.TICKETS_FOR_THE_CURRENT_LOTTERY_ARE_NO_LONGER_AVAILABLE);
                 return;
@@ -114,19 +114,19 @@ public class LotteryManagerInstance extends NpcInstance {
         }
 
         if (val == 22) {
-            if (!LotteryManager.getInstance().isStarted()) {
+            if (!LotteryManager.INSTANCE.isStarted()) {
                 /** LOTTERY_TICKETS_ARE_NOT_CURRENTLY_BEING_SOLD **/
                 player.sendPacket(Msg.LOTTERY_TICKETS_ARE_NOT_CURRENTLY_BEING_SOLD);
                 return;
             }
-            if (!LotteryManager.getInstance().isSellableTickets()) {
+            if (!LotteryManager.INSTANCE.isSellableTickets()) {
                 /** TICKETS_FOR_THE_CURRENT_LOTTERY_ARE_NO_LONGER_AVAILABLE **/
                 player.sendPacket(Msg.TICKETS_FOR_THE_CURRENT_LOTTERY_ARE_NO_LONGER_AVAILABLE);
                 return;
             }
 
             int price = Config.SERVICES_ALT_LOTTERY_PRICE;
-            int lotonumber = LotteryManager.getInstance().getId();
+            int lotonumber = LotteryManager.INSTANCE.getId();
             int enchant = 0;
             int type2 = 0;
             for (int i = 0; i < 5; i++) {
@@ -162,7 +162,7 @@ public class LotteryManagerInstance extends NpcInstance {
             filename = getHtmlPath(npcId, 4, player);
             html.setFile(filename);
 
-            int lotonumber = LotteryManager.getInstance().getId();
+            int lotonumber = LotteryManager.INSTANCE.getId();
             String message = "";
 
             for (ItemInstance item : player.getInventory().getItems()) {
@@ -171,10 +171,10 @@ public class LotteryManagerInstance extends NpcInstance {
                 if (item.getItemId() == 4442 && item.getCustomType1() < lotonumber) {
                     message += "<a action=\"bypass -h npc_%objectId%_Loto " + item.getObjectId() + "\">" + item.getCustomType1();
                     message += " " + HtmlUtils.htmlNpcString(NpcString.EVENT_NUMBER) + " ";
-                    int[] numbers = LotteryManager.getInstance().decodeNumbers(item.getEnchantLevel(), item.getCustomType2());
+                    int[] numbers = LotteryManager.INSTANCE.decodeNumbers(item.getEnchantLevel(), item.getCustomType2());
                     for (int i = 0; i < 5; i++)
                         message += numbers[i] + " ";
-                    int[] check = LotteryManager.getInstance().checkTicket(item);
+                    int[] check = LotteryManager.INSTANCE.checkTicket(item);
                     if (check[0] > 0) {
                         message += "- ";
                         switch (check[0]) {
@@ -204,11 +204,11 @@ public class LotteryManagerInstance extends NpcInstance {
             filename = getHtmlPath(npcId, 2, player);
             html.setFile(filename);
         } else if (val > 25) {
-            int lotonumber = LotteryManager.getInstance().getId();
+            int lotonumber = LotteryManager.INSTANCE.getId();
             ItemInstance item = player.getInventory().getItemByObjectId(val);
             if (item == null || item.getItemId() != 4442 || item.getCustomType1() >= lotonumber)
                 return;
-            int[] check = LotteryManager.getInstance().checkTicket(item);
+            int[] check = LotteryManager.INSTANCE.checkTicket(item);
 
             if (player.getInventory().destroyItem(item, 1L, "LotteryManager")) {
                 player.sendPacket(SystemMessage2.removeItems(4442, 1));
@@ -222,14 +222,14 @@ public class LotteryManagerInstance extends NpcInstance {
         }
 
         html.replace("%objectId%", String.valueOf(getObjectId()));
-        html.replace("%race%", "" + LotteryManager.getInstance().getId());
-        html.replace("%adena%", "" + LotteryManager.getInstance().getPrize());
+        html.replace("%race%", "" + LotteryManager.INSTANCE.getId());
+        html.replace("%adena%", "" + LotteryManager.INSTANCE.getPrize());
         html.replace("%ticket_price%", "" + Config.SERVICES_LOTTERY_TICKET_PRICE);
         html.replace("%prize5%", "" + Config.SERVICES_LOTTERY_5_NUMBER_RATE * 100);
         html.replace("%prize4%", "" + Config.SERVICES_LOTTERY_4_NUMBER_RATE * 100);
         html.replace("%prize3%", "" + Config.SERVICES_LOTTERY_3_NUMBER_RATE * 100);
         html.replace("%prize2%", "" + Config.SERVICES_LOTTERY_2_AND_1_NUMBER_PRIZE);
-        html.replace("%enddate%", "" + DateFormat.getDateInstance().format(LotteryManager.getInstance().getEndDate()));
+        html.replace("%enddate%", "" + DateFormat.getDateInstance().format(LotteryManager.INSTANCE.getEndDate()));
 
         player.sendPacket(html);
         player.sendActionFailed();

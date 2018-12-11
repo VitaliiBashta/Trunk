@@ -66,7 +66,6 @@ public class MethodInvoker {
      * @param parameters    Parameters that method is accepting.
      * @return Return value of the Method
      */
-    @SuppressWarnings("OverloadedVarargsMethod")
     private static Object invokeMethod(Class<?> classToInvoke, String methodName, @Nullable Object classObject, Object... parameters) {
         Class<?>[] parameterClasses = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++)

@@ -4,17 +4,17 @@ import l2trunk.gameserver.data.xml.holder.StaticObjectHolder;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.instances.StaticObjectInstance;
 
-public class StaticObjectObject implements SpawnableObject {
-    private final int _uid;
-    private StaticObjectInstance _instance;
+public final class StaticObjectObject implements SpawnableObject {
+    private final int uid;
+    private StaticObjectInstance instance;
 
     public StaticObjectObject(int id) {
-        _uid = id;
+        uid = id;
     }
 
     @Override
     public void spawnObject(GlobalEvent event) {
-        _instance = StaticObjectHolder.getInstance().getObject(_uid);
+        instance = StaticObjectHolder.getObject(uid);
     }
 
     @Override
@@ -25,17 +25,17 @@ public class StaticObjectObject implements SpawnableObject {
     @Override
     public void refreshObject(GlobalEvent event) {
         if (!event.isInProgress())
-            _instance.removeEvent(event);
+            instance.removeEvent(event);
         else
-            _instance.addEvent(event);
+            instance.addEvent(event);
     }
 
     public void setMeshIndex(int id) {
-        _instance.setMeshIndex(id);
-        _instance.broadcastInfo(false);
+        instance.setMeshIndex(id);
+        instance.broadcastInfo(false);
     }
 
     public int getUId() {
-        return _uid;
+        return uid;
     }
 }

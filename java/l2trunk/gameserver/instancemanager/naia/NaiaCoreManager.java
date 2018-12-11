@@ -12,9 +12,19 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum NaiaCoreManager {
     INSTANCE;
-    private static final Territory _coreTerritory = new Territory().add(new Polygon().add(-44789, 246305).add(-44130, 247452).add(-46092, 248606).add(-46790, 247414).add(-46139, 246304).setZmin(-14220).setZmax(-13800));
+    private static final Territory _coreTerritory = new Territory()
+            .add(new Polygon().add(-44789, 246305)
+                    .add(-44130, 247452)
+                    .add(-46092, 248606)
+                    .add(-46790, 247414)
+                    .add(-46139, 246304)
+                    .setZmin(-14220)
+                    .setZmax(-13800));
     //Spores
     private static final int fireSpore = 25605;
     private static final int waterSpore = 25606;
@@ -27,40 +37,36 @@ public enum NaiaCoreManager {
     private static final int earthEpidos = 25612;
     private static final int teleCube = 32376;
     private static final int respawnDelay = 120; // 2min
-    private static final long coreClearTime = 1 * 60 * 60 * 1000L; // 1hour
+    private static final long coreClearTime = 60 * 60 * 1000L; // 1hour
     private static final Location spawnLoc = new Location(-45496, 246744, -14209);
     private static Zone _zone;
     private static boolean _active = false;
     private static boolean _bossSpawned = false;
     private final Logger _log = LoggerFactory.getLogger(NaiaTowerManager.class);
+    List<Integer> spores = Arrays.asList(fireSpore, waterSpore, windSpore, earthSpore);
+    List<Integer> epidoses = Arrays.asList(fireEpidos, waterEpidos, windEpidos, earthEpidos);
 
-    public static void launchNaiaCore() {
-        if (isActive())
-            return;
-
-        _active = true;
-        ReflectionUtils.getDoor(18250025).closeMe();
-        _zone.setActive(true);
-        spawnSpores();
-        ThreadPoolManager.INSTANCE.schedule(new ClearCore(), coreClearTime);
+    private static void spawnToRoom(List<Integer> mobIds) {
+        for (int mobId : mobIds)
+            for (int i = 0; i < 10; i++) {
+                SimpleSpawner sp = new SimpleSpawner(mobId);
+                sp.setLoc(Territory.getRandomLoc(NaiaCoreManager._coreTerritory).setH(Rnd.get(65535)));
+                sp.setRespawnDelay(respawnDelay, 30);
+                sp.setAmount(1);
+                sp.doSpawn(true);
+                sp.startRespawn();
+            }
     }
 
-    private static boolean isActive() {
+    private boolean isActive() {
         return _active;
     }
 
-    public static void setZoneActive(boolean value) {
+    public void setZoneActive(boolean value) {
         _zone.setActive(value);
     }
 
-    private static void spawnSpores() {
-        spawnToRoom(fireSpore);
-        spawnToRoom(waterSpore);
-        spawnToRoom(windSpore);
-        spawnToRoom(earthSpore);
-    }
-
-    public static void spawnEpidos(int index) {
+    public void spawnEpidos(int index) {
         if (!isActive())
             return;
         int epidostospawn = 0;
@@ -91,21 +97,16 @@ public enum NaiaCoreManager {
         _bossSpawned = true;
     }
 
-    public static boolean isBossSpawned() {
+    public boolean isBossSpawned() {
         return _bossSpawned;
     }
 
-    public static void setBossSpawned(boolean value) {
+    public void setBossSpawned(boolean value) {
         _bossSpawned = value;
     }
 
-    public static void removeSporesAndSpawnCube() {
-        int[] spores = {
-                fireSpore,
-                waterSpore,
-                windSpore,
-                earthSpore
-        };
+    public void removeSporesAndSpawnCube() {
+
         GameObjectsStorage.getAllByNpcId(spores, false).forEach(GameObject::deleteMe);
         Spawner sp = new SimpleSpawner(teleCube)
                 .setLoc(spawnLoc)
@@ -114,15 +115,19 @@ public enum NaiaCoreManager {
         Functions.npcShout(sp.getLastSpawn(), "Teleportation to Beleth Throne Room is available for 5 minutes");
     }
 
-    private static void spawnToRoom(int mobId) {
-        for (int i = 0; i < 10; i++) {
-            SimpleSpawner sp = new SimpleSpawner(mobId);
-            sp.setLoc(Territory.getRandomLoc(NaiaCoreManager._coreTerritory).setH(Rnd.get(65535)));
-            sp.setRespawnDelay(respawnDelay, 30);
-            sp.setAmount(1);
-            sp.doSpawn(true);
-            sp.startRespawn();
-        }
+    public void launchNaiaCore() {
+        if (isActive())
+            return;
+
+        _active = true;
+        ReflectionUtils.getDoor(18250025).closeMe();
+        _zone.setActive(true);
+        spawnSpores();
+        ThreadPoolManager.INSTANCE.schedule(new ClearCore(), coreClearTime);
+    }
+
+    private void spawnSpores() {
+        spawnToRoom(spores);
     }
 
     public void init() {
@@ -130,21 +135,11 @@ public enum NaiaCoreManager {
         _log.info("Naia Core Manager: Loaded");
     }
 
-    private static class ClearCore extends RunnableImpl {
+    private class ClearCore extends RunnableImpl {
         @Override
         public void runImpl() {
-            int[] spores = {
-                    fireSpore,
-                    waterSpore,
-                    windSpore,
-                    earthSpore
-            };
-            int[] epidoses = {
-                    fireEpidos,
-                    waterEpidos,
-                    windEpidos,
-                    earthEpidos
-            };
+
+
             GameObjectsStorage.getAllByNpcId(spores, false).forEach(GameObject::deleteMe);
             GameObjectsStorage.getAllByNpcId(epidoses, false).forEach(GameObject::deleteMe);
 

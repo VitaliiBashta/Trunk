@@ -110,7 +110,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
                 if (item == null || item.getCount() < count || item.getItemId() != cropId)
                     return;
 
-                Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, manorId);
+                Castle castle = ResidenceHolder.getResidence(Castle.class, manorId);
                 if (castle == null)
                     return;
 
@@ -130,7 +130,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
 
                 int rewardItemId = Manor.INSTANCE.getRewardItem(cropId, crop.getReward());
 
-                ItemTemplate template = ItemHolder.getInstance().getTemplate(rewardItemId);
+                ItemTemplate template = ItemHolder.getTemplate(rewardItemId);
                 if (template == null)
                     return;
 
@@ -172,7 +172,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
                 if (item == null || item.getCount() < count || item.getItemId() != cropId)
                     continue;
 
-                Castle castle = ResidenceHolder.getInstance().getResidence(Castle.class, manorId);
+                Castle castle = ResidenceHolder.getResidence(Castle.class, manorId);
                 if (castle == null)
                     continue;
 
@@ -185,7 +185,7 @@ public class RequestProcureCropList extends L2GameClientPacket {
 
                 int rewardItemId = Manor.INSTANCE.getRewardItem(cropId, crop.getReward());
                 long sellPrice = count * crop.getPrice();
-                long rewardPrice = ItemHolder.getInstance().getTemplate(rewardItemId).getReferencePrice();
+                long rewardPrice = ItemHolder.getTemplate(rewardItemId).getReferencePrice();
 
                 if (rewardPrice == 0)
                     continue;

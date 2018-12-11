@@ -79,7 +79,7 @@ public final class RequestExEnchantSkillRouteChange extends L2GameClientPacket {
         if (_skillLvl % 100 == 0)
             _skillLvl = sl.getBaseLevel();
 
-        Skill skill = SkillTable.INSTANCE().getInfo(_skillId, SkillTreeTable.convertEnchantLevel(sl.getBaseLevel(), _skillLvl, sl.getMaxLevel()));
+        Skill skill = SkillTable.INSTANCE.getInfo(_skillId, SkillTreeTable.convertEnchantLevel(sl.getBaseLevel(), _skillLvl, sl.getMaxLevel()));
 
         if (skill != null)
             activeChar.addSkill(skill, true);

@@ -1118,7 +1118,7 @@
 		<set name="hitCancelTime" val="500" />
 		<set name="mpConsume2" val="121" />
 		<set name="baseCritRate" val="15" />
-		<set name="element" val="3" />
+		<set name="element" val="EARTH" />
 		<set name="elementPower" val="200" />
 		<set name="magicLvl" val="85" />
 		<set name="operateType" val="OP_ACTIVE" />

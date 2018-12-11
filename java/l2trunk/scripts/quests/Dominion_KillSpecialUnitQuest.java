@@ -22,7 +22,7 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
         super(PARTY_ALL);
 
         _classIds = getTargetClassIds();
-        DominionSiegeRunnerEvent runnerEvent = EventHolder.getInstance().getEvent(EventType.MAIN_EVENT, 1);
+        DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
         for (ClassId c : _classIds)
             runnerEvent.addClassQuest(c, this);
     }

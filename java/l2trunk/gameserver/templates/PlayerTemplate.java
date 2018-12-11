@@ -30,7 +30,7 @@ public class PlayerTemplate extends CharTemplate {
     public final double lvlMpAdd;
     public final double lvlMpMod;
 
-    private final List<CreateItem> _items;
+    private final List<CreateItem> items;
 
     public PlayerTemplate(int id, StatsSet set, boolean isMale, List<CreateItem> items) {
         super(set);
@@ -50,14 +50,11 @@ public class PlayerTemplate extends CharTemplate {
         lvlMpAdd = set.getDouble("lvlMpAdd");
         lvlMpMod = set.getDouble("lvlMpMod");
 
-        _items = new ArrayList<>();
-        _items.addAll(items);
+        this.items = new ArrayList<>();
+        this.items.addAll(items);
     }
 
-    /**
-     * @return itemIds of all the starter equipment
-     */
     public List<CreateItem> getItems() {
-        return _items;
+        return items;
     }
 }

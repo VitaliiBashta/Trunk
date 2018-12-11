@@ -1,7 +1,6 @@
 package l2trunk.loginserver.accounts;
 
 import javafx.util.Pair;
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.commons.net.utils.Net;
 import l2trunk.commons.net.utils.NetList;
 import l2trunk.loginserver.database.L2DatabaseFactory;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,23 +18,18 @@ public final class Account {
     private final static Logger _log = LoggerFactory.getLogger(Account.class);
 
     private final String login;
-
+    private final NetList allowedIpList = new NetList();
+    private final Map<Integer, Pair<Integer, int[]>> _serversInfo = new HashMap<>(2);
     private String passwordHash;
     private String allowedIP;
     private String allowedHwid;
-    private final NetList allowedIpList = new NetList();
     private int accessLevel;
-
     private int banExpire;
-
     private double bonus;
     private int bonusExpire;
-
     private String lastIP;
     private int lastAccess;
     private int lastServer;
-
-    private final Map<Integer,Pair<Integer, int[]>> _serversInfo = new HashMap<>(2);
 
     public Account(String login) {
         this.login = login;
@@ -59,7 +54,7 @@ public final class Account {
     public void setAllowedIP(String allowedIP) {
         if (allowedIP == null)
             return;
-        this.allowedIpList.clear();
+        allowedIpList.clear();
         this.allowedIP = allowedIP;
 
         if (this.allowedIP.isEmpty())
@@ -152,14 +147,10 @@ public final class Account {
     }
 
     public void restore() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-        try {
-            con = L2DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("SELECT password, access_level, ban_expire, allow_ip, allow_hwid, bonus, bonus_expire, last_server, last_ip, last_access FROM accounts WHERE login = ?");
+        try (Connection con = L2DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("SELECT password, access_level, ban_expire, allow_ip, allow_hwid, bonus, bonus_expire, last_server, last_ip, last_access FROM accounts WHERE login = ?")) {
             statement.setString(1, login);
-            rset = statement.executeQuery();
+            ResultSet rset = statement.executeQuery();
 
             if (rset.next()) {
                 setPasswordHash(rset.getString("password"));
@@ -173,35 +164,25 @@ public final class Account {
                 setLastIP(rset.getString("last_ip"));
                 setLastAccess(rset.getInt("last_access"));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement, rset);
         }
     }
 
     public void save() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = L2DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("INSERT INTO accounts (login, password) VALUES(?,?)");
+        try (Connection con = L2DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("INSERT INTO accounts (login, password) VALUES(?,?)")) {
             statement.setString(1, getLogin());
             statement.setString(2, getPasswordHash());
             statement.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 
     public void update() {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = L2DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement("UPDATE accounts SET password = ?, access_level = ?, ban_expire = ?, allow_ip = ?, allow_hwid=?, bonus = ?, bonus_expire = ?, last_server = ?, last_ip = ?, last_access = ? WHERE login = ?");
+        try (Connection con = L2DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement("UPDATE accounts SET password = ?, access_level = ?, ban_expire = ?, allow_ip = ?, allow_hwid=?, bonus = ?, bonus_expire = ?, last_server = ?, last_ip = ?, last_access = ? WHERE login = ?")) {
             statement.setString(1, getPasswordHash());
             statement.setInt(2, getAccessLevel());
             statement.setInt(3, getBanExpire());
@@ -214,10 +195,8 @@ public final class Account {
             statement.setInt(10, getLastAccess());
             statement.setString(11, getLogin());
             statement.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.error("", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 }

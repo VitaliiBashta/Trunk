@@ -2,10 +2,8 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.entity.residence.Castle;
-import l2trunk.gameserver.model.entity.residence.Residence;
 
 import java.util.Collection;
-
 
 /**
  * Format : (h) d [dS]
@@ -30,15 +28,15 @@ import java.util.Collection;
  * 0090: 00 68 00 75 00 74 00 74 00 67 00 61 00 72 00 74    .h.u.t.t.g.a.r.t
  * 00a0: 00 00 00                                           ...
  */
-public class ExSendManorList extends L2GameServerPacket {
+public final class ExSendManorList extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0x22);
-        Collection<Castle> residences = ResidenceHolder.getInstance().getResidenceList(Castle.class);
-        writeD(residences.size());
-        for (Residence castle : residences) {
+        Collection<Castle> casltes = ResidenceHolder.getResidenceList(Castle.class);
+        writeD(casltes.size());
+        casltes.forEach(castle -> {
             writeD(castle.getId());
             writeS(castle.getName().toLowerCase());
-        }
+        });
     }
 }

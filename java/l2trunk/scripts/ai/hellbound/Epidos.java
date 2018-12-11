@@ -13,7 +13,7 @@ public final class Epidos extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        NaiaCoreManager.removeSporesAndSpawnCube();
+        NaiaCoreManager.INSTANCE.removeSporesAndSpawnCube();
         NaiaSpore.resetEpidosStats();
         super.onEvtDead(killer);
     }

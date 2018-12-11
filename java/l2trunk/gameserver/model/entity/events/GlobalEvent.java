@@ -175,10 +175,9 @@ public abstract class GlobalEvent {
         return objects == null ? Collections.emptyList() : (List<O>) objects;
     }
 
-    @SuppressWarnings("unchecked")
     public <O extends Serializable> O getFirstObject(String name) {
         List<O> objects = getObjects(name);
-        return objects.size() > 0 ? (O) objects.get(0) : null;
+        return objects.size() > 0 ? objects.get(0) : null;
     }
 
     public void addObject(String name, Object object) {
@@ -488,13 +487,13 @@ public abstract class GlobalEvent {
     private class ListenerListImpl extends ListenerList<GlobalEvent> {
         void onStart() {
             for (Listener<GlobalEvent> listener : getListeners())
-                if (OnStartStopListener.class.isInstance(listener))
+                if (listener instanceof OnStartStopListener)
                     ((OnStartStopListener) listener).onStart(GlobalEvent.this);
         }
 
         void onStop() {
             for (Listener<GlobalEvent> listener : getListeners())
-                if (OnStartStopListener.class.isInstance(listener))
+                if (listener instanceof OnStartStopListener)
                     ((OnStartStopListener) listener).onStop(GlobalEvent.this);
         }
     }

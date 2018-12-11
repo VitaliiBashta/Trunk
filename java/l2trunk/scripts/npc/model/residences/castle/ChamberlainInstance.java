@@ -22,7 +22,6 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.manor.CropProcure;
-import l2trunk.gameserver.templates.manor.SeedProduction;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.ItemFunctions;
@@ -34,9 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class ChamberlainInstance extends ResidenceManager {
-    private static final long serialVersionUID = 963855670350235846L;
+public final class ChamberlainInstance extends ResidenceManager {
 
     public ChamberlainInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -141,7 +140,7 @@ public class ChamberlainInstance extends ResidenceManager {
             if (CastleManorManager.INSTANCE.isDisabled())
                 filename = "npcdefault.htm";
             else {
-                int cmd = Integer.parseInt(val);
+                int cmd = toInt(val);
                 switch (cmd) {
                     case 0:
                         filename = "castle/chamberlain/manor/manor.htm";
@@ -176,9 +175,9 @@ public class ChamberlainInstance extends ResidenceManager {
 
             String params = actualCommand.substring(actualCommand.indexOf("?") + 1);
             StringTokenizer str = new StringTokenizer(params, "&");
-            int ask = Integer.parseInt(str.nextToken().split("=")[1]);
-            int state = Integer.parseInt(str.nextToken().split("=")[1]);
-            int time = Integer.parseInt(str.nextToken().split("=")[1]);
+            int ask = toInt(str.nextToken().split("=")[1]);
+            int state = toInt(str.nextToken().split("=")[1]);
+            int time = toInt(str.nextToken().split("=")[1]);
 
             int castleId;
             if (state == -1) // info for current manor
@@ -189,16 +188,16 @@ public class ChamberlainInstance extends ResidenceManager {
 
             switch (ask) { // Main action
                 case 3: // Current seeds (Manor info)
-                    if (time == 1 && !ResidenceHolder.getInstance().getResidence(Castle.class, castleId).isNextPeriodApproved())
+                    if (time == 1 && !ResidenceHolder.getResidence(Castle.class, castleId).isNextPeriodApproved())
                         player.sendPacket(new ExShowSeedInfo(castleId, Collections.emptyList()));
                     else
-                        player.sendPacket(new ExShowSeedInfo(castleId, ResidenceHolder.getInstance().getResidence(Castle.class, castleId).getSeedProduction(time)));
+                        player.sendPacket(new ExShowSeedInfo(castleId, ResidenceHolder.getResidence(Castle.class, castleId).getSeedProduction(time)));
                     break;
                 case 4: // Current crops (Manor info)
-                    if (time == 1 && !ResidenceHolder.getInstance().getResidence(Castle.class, castleId).isNextPeriodApproved())
-                        player.sendPacket(new ExShowCropInfo(castleId, Collections.<CropProcure>emptyList()));
+                    if (time == 1 && !ResidenceHolder.getResidence(Castle.class, castleId).isNextPeriodApproved())
+                        player.sendPacket(new ExShowCropInfo(castleId, Collections.emptyList()));
                     else
-                        player.sendPacket(new ExShowCropInfo(castleId, ResidenceHolder.getInstance().getResidence(Castle.class, castleId).getCropProcure(time)));
+                        player.sendPacket(new ExShowCropInfo(castleId, ResidenceHolder.getResidence(Castle.class, castleId).getCropProcure(time)));
                     break;
                 case 5: // Basic info (Manor info)
                     player.sendPacket(new ExShowManorDefaultInfo());
@@ -227,9 +226,9 @@ public class ChamberlainInstance extends ResidenceManager {
                 return;
             }
             if (!val.equals("")) {
-                boolean open = Integer.parseInt(val) == 1;
+                boolean open = toInt(val) == 1;
                 while (st.hasMoreTokens()) {
-                    DoorInstance door = ReflectionUtils.getDoor(Integer.parseInt(st.nextToken()));
+                    DoorInstance door = ReflectionUtils.getDoor(toInt(st.nextToken()));
                     if (open)
                         door.openMe(player, true);
                     else
@@ -256,7 +255,7 @@ public class ChamberlainInstance extends ResidenceManager {
                 else if (SevenSigns.INSTANCE.getSealOwner(SevenSigns.SEAL_STRIFE) == SevenSigns.CABAL_DAWN)
                     maxTax = 25;
 
-                int tax = Integer.parseInt(val);
+                int tax = toInt(val);
                 if (tax < 0 || tax > maxTax) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("castle/chamberlain/chamberlain-hightax.htm");
@@ -315,7 +314,7 @@ public class ChamberlainInstance extends ResidenceManager {
 
             player.getClan().getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, price, "ChamberlainBuyTrap");
             castle.getSiegeEvent().addObject(CastleSiegeEvent.BOUGHT_ZONES, val);
-            CastleDamageZoneDAO.getInstance().insert(castle, val);
+            CastleDamageZoneDAO.INSTANCE.insert(castle, val);
 
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile("castle/chamberlain/trapSuccess.htm");
@@ -340,9 +339,9 @@ public class ChamberlainInstance extends ResidenceManager {
                 player.sendPacket(SystemMsg.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
                 return;
             }
-            int id = Integer.parseInt(val);
-            int type = Integer.parseInt(st.nextToken());
-            int level = Integer.parseInt(st.nextToken());
+            int id = toInt(val);
+            int type = toInt(st.nextToken());
+            int level = toInt(st.nextToken());
             long price = getDoorCost(type, level);
 
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
@@ -356,9 +355,9 @@ public class ChamberlainInstance extends ResidenceManager {
             if (checkSiegeFunctions(player))
                 return;
 
-            int id = Integer.parseInt(val);
-            int type = Integer.parseInt(st.nextToken());
-            int level = Integer.parseInt(st.nextToken());
+            int id = toInt(val);
+            int type = toInt(st.nextToken());
+            int level = toInt(st.nextToken());
             long price = getDoorCost(type, level);
 
             List<DoorObject> doorObjects = castle.getSiegeEvent().getObjects(SiegeEvent.DOORS);
@@ -394,7 +393,7 @@ public class ChamberlainInstance extends ResidenceManager {
             player.getClan().getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, price, "UpgradeDoor");
 
             targetDoorObject.setUpgradeValue(castle.getSiegeEvent(), upgradeHp);
-            CastleDoorUpgradeDAO.getInstance().insert(door.getDoorId(), upgradeHp);
+            CastleDoorUpgradeDAO.INSTANCE.insert(door.getDoorId(), upgradeHp);
         } else if (actualCommand.equalsIgnoreCase("report")) // Report page
         {
             if (!isHaveRigths(player, Clan.CP_CS_USE_FUNCTIONS)) {

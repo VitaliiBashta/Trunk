@@ -93,7 +93,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
             int objectId = charData.getInt("obj_Id");
             StatsSet subclassesSet = restoreClasses(objectId, con);
             boolean female = charData.getInt("sex") == 1;
-            PlayerTemplate template = CharTemplateHolder.getInstance().getTemplate(subclassesSet.getInteger("baseClassId"), female);
+            PlayerTemplate template = CharTemplateHolder.getTemplate(subclassesSet.getInteger("baseClassId"), female);
             if (template == null) {
                 _log.error("restoreChar fail | template == null | objectId: " + objectId + " | classId: " + subclassesSet.getInteger("baseClassId") + " | female: " + female);
                 return null;

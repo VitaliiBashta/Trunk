@@ -1,6 +1,5 @@
 package l2trunk.gameserver.dao;
 
-import l2trunk.commons.dbutils.DbUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.skills.TimeStamp;
@@ -15,11 +14,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 11:41/28.03.2011
- */
-public class CharacterGroupReuseDAO {
+public final class CharacterGroupReuseDAO {
     private static final String DELETE_SQL_QUERY = "DELETE FROM character_group_reuse WHERE object_id=?";
     private static final String SELECT_SQL_QUERY = "SELECT * FROM character_group_reuse WHERE object_id=?";
     private static final String INSERT_SQL_QUERY = "REPLACE INTO `character_group_reuse` (`object_id`,`reuse_group`,`item_id`,`end_time`,`reuse`) VALUES";
@@ -62,11 +57,8 @@ public class CharacterGroupReuseDAO {
     }
 
     public void insert(Player player) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(DELETE_SQL_QUERY);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(DELETE_SQL_QUERY)) {
             statement.setInt(1, player.getObjectId());
             statement.execute();
 
@@ -80,13 +72,12 @@ public class CharacterGroupReuseDAO {
                     int group = entry.getKey();
                     TimeStamp timeStamp = entry.getValue();
                     if (timeStamp.hasNotPassed()) {
-                        StringBuilder sb = new StringBuilder("(");
-                        sb.append(player.getObjectId()).append(",");
-                        sb.append(group).append(",");
-                        sb.append(timeStamp.getId()).append(",");
-                        sb.append(timeStamp.getEndTime()).append(",");
-                        sb.append(timeStamp.getReuseBasic()).append(")");
-                        b.write(sb.toString());
+                        String sb = "(" + player.getObjectId() + "," +
+                                group + "," +
+                                timeStamp.getId() + "," +
+                                timeStamp.getEndTime() + "," +
+                                timeStamp.getReuseBasic() + ")";
+                        b.write(sb);
                     }
                 }
             }
@@ -94,8 +85,6 @@ public class CharacterGroupReuseDAO {
                 statement.executeUpdate(b.close());
         } catch (SQLException e) {
             _log.error("CharacterGroupReuseDAO.insert(L2Player):", e);
-        } finally {
-            DbUtils.closeQuietly(con, statement);
         }
     }
 }

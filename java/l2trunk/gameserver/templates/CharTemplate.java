@@ -1,9 +1,10 @@
 package l2trunk.gameserver.templates;
 
 
-public class CharTemplate {
-    private final static int[] EMPTY_ATTRIBUTES = new int[6];
+import java.util.ArrayList;
+import java.util.List;
 
+public class CharTemplate {
     public final int baseSTR;
     public final int baseCON;
     public final int baseDEX;
@@ -13,12 +14,10 @@ public class CharTemplate {
     public final double baseHpMax;
     public final double baseCpMax;
     public final double baseMpMax;
-
     /**
      * HP Regen base
      */
     public final double baseHpReg;
-
     /**
      * MP Regen base
      */
@@ -35,16 +34,20 @@ public class CharTemplate {
     public final int baseCritRate;
     public final int baseRunSpd;
     public final int baseWalkSpd;
-    public final int[] baseAttributeAttack;
-    public final int[] baseAttributeDefence;
+    public final List<Integer> baseAttributeAttack;
+    public final List<Integer> baseAttributeDefence;
     public final double collisionRadius;
     public final double collisionHeight;
+    private final List<Integer> EMPTY_ATTRIBUTES = new ArrayList<>(6);
     /**
      * CP Regen base
      */
     private final double baseCpReg;
 
     public CharTemplate(StatsSet set) {
+        for (int i = 0; i < 6; i++) {
+            EMPTY_ATTRIBUTES.add(0);
+        }
         baseSTR = set.getInteger("baseSTR");
         baseCON = set.getInteger("baseCON");
         baseDEX = set.getInteger("baseDEX");
@@ -69,8 +72,8 @@ public class CharTemplate {
         baseCritRate = set.getInteger("baseCritRate");
         baseRunSpd = set.getInteger("baseRunSpd");
         baseWalkSpd = set.getInteger("baseWalkSpd");
-        baseAttributeAttack = set.getIntegerArray("baseAttributeAttack", EMPTY_ATTRIBUTES);
-        baseAttributeDefence = set.getIntegerArray("baseAttributeDefence", EMPTY_ATTRIBUTES);
+        baseAttributeAttack = set.getIntegerList("baseAttributeAttack", EMPTY_ATTRIBUTES);
+        baseAttributeDefence = set.getIntegerList("baseAttributeDefence", EMPTY_ATTRIBUTES);
         // Geometry
         collisionRadius = set.getDouble("collision_radius", 5);
         collisionHeight = set.getDouble("collision_height", 5);

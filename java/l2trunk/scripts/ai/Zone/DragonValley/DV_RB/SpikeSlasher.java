@@ -15,12 +15,12 @@ public final class SpikeSlasher extends Fighter {
     private boolean spawn_33 = true;
     private boolean spawn_5 = true;
 
-    private final int gem_dragon = 25733;
+    private static final int gem_dragon = 25733;
 
     private long last_attack_time = 0;
     private long last_cast_anchor = 0;
 
-    private final Skill paralysis = SkillTable.INSTANCE().getInfo(6878, 1);
+    private final Skill paralysis = SkillTable.INSTANCE.getInfo(6878);
 
     public SpikeSlasher(NpcInstance actor) {
         super(actor);
