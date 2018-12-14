@@ -1,17 +1,15 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.Zone;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Transformation extends Skill {
     public final boolean isDisguise;
@@ -102,9 +100,10 @@ public class Transformation extends Skill {
         if (isSummonerTransformation() && activeChar.getPet() != null && activeChar.getPet().isSummon())
             activeChar.getPet().unSummon();
 
-        for (Creature target : targets)
-            if (target != null && target.isPlayer())
-                getEffects(activeChar, target, false, false);
+        targets.stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isPlayer)
+                .forEach(target -> getEffects(activeChar, target));
 
         if (isSSPossible())
             if (!(Config.SAVING_SPS && _skillType == SkillType.BUFF))

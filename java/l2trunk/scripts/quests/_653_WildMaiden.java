@@ -70,7 +70,7 @@ public class _653_WildMaiden extends Quest implements ScriptFile {
                 st.takeItems(SOE, 1);
                 htmltext = "spring_girl_sooki_q0653_04a.htm";
                 NpcInstance n = findNpc(player);
-                n.broadcastPacket(new MagicSkillUse(n, n, 2013, 1, 20000, 0));
+                n.broadcastPacket(new MagicSkillUse(n,  2013,  20000));
                 st.startQuestTimer("suki_timer", 20000);
             }
         } else if (event.equalsIgnoreCase("spring_girl_sooki_q0653_03.htm")) {

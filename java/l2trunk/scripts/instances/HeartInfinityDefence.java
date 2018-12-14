@@ -17,10 +17,7 @@ import l2trunk.scripts.quests._698_BlocktheLordsEscape;
 
 import java.util.concurrent.ScheduledFuture;
 
-/**
- * @author pchayka
- */
-public class HeartInfinityDefence extends Reflection {
+public final class HeartInfinityDefence extends Reflection {
     private static final int DeadTumor = 32535;
     private static final int AliveTumor = 18708;
     private static final int RegenerationCoffin = 18709;
@@ -42,17 +39,12 @@ public class HeartInfinityDefence extends Reflection {
         tumorRespawnTime = 3 * 60 * 1000L;
         wagonRespawnTime = 60 * 1000L;
         coffinsCreated = 0;
-        ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                conquestBegins();
-            }
-        }, 20000L);
+        ThreadPoolManager.INSTANCE.schedule(this::conquestBegins, 20000L);
     }
 
     private void conquestBegins() {
-        for (Player p : getPlayers())
-            p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_HEAR_THE_UNDEAD_OF_EKIMUS_RUSHING_TOWARD_YOU, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.DEFEND.getId()));
+        getPlayers().forEach(p ->
+            p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_HEAR_THE_UNDEAD_OF_EKIMUS_RUSHING_TOWARD_YOU, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.DEFEND.getId())));
         spawnByGroup("soi_hoi_defence_mob_1");
         spawnByGroup("soi_hoi_defence_mob_2");
         spawnByGroup("soi_hoi_defence_mob_3");

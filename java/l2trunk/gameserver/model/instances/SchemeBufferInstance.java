@@ -83,7 +83,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static boolean singleBuffsLoaded = false;
     private static List<SingleBuff> allSingleBuffs = null;
 
-    private SchemeBufferInstance(int objectId, NpcTemplate template) {
+    public SchemeBufferInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
         if (!singleBuffsLoaded) {
@@ -466,7 +466,7 @@ public final class SchemeBufferInstance extends NpcInstance {
             pet.setCurrentHp(pet.getMaxHp(), false);
             pet.setCurrentMp(pet.getMaxMp());
             pet.setCurrentCp(pet.getMaxCp());
-            pet.broadcastPacket(new MagicSkillUse(pet, 22217, 1, 0, 0));
+            pet.broadcastPacket(new MagicSkillUse(pet, 22217));
         }
     }
 
@@ -820,36 +820,43 @@ public final class SchemeBufferInstance extends NpcInstance {
         for (int i = 0; i < SCHEMES_PER_PLAYER; i++) {
             if (it.hasNext()) {
                 final PlayerScheme scheme = it.next();
-                mainBuilder.append("<tr>");
-                mainBuilder.append("<td width=240 height=30 valign=top align=center>");
-                mainBuilder.append("<table border=0 width=240 height=40 cellspacing=4 cellpadding=3 bgcolor=10100E>");
-                mainBuilder.append("<tr>");
-                mainBuilder.append("<td align=right valign=top>");
-                mainBuilder.append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=" + SCHEME_ICONS.get(scheme.iconId) + ">");
-                mainBuilder.append("<tr>");
-                mainBuilder.append("<td width=32 height=32 align=center valign=top>");
-                mainBuilder.append("<button action=\"bypass _bbsbufferbypass_cast " + scheme.schemeId + " x x\" width=34 height=34 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />");
-                mainBuilder.append("</td>");
-                mainBuilder.append("</tr>");
-                mainBuilder.append("</table>");
-                mainBuilder.append("</td>");
-                mainBuilder.append("<td width=120 valign=top>");
-                mainBuilder.append("<font name=hs12 color=ADA71B>" + scheme.schemeName + "</font><br1>");
-                mainBuilder.append("<font color=FFFFFF name=__SYSTEMWORLDFONT>Price: 60,000 Adena</font>");
-                mainBuilder.append("</td>");
-                mainBuilder.append("<td width=30 align=center>");
-                mainBuilder.append("<br>");
-                mainBuilder.append("<button action=\"bypass _bbsbufferbypass_manage_scheme_select " + scheme.schemeId + " x x\" width=32 height=32 back=L2UI_CT1.RadarMap_DF_OptionBtn_Down fore=L2UI_CT1.RadarMap_DF_OptionBtn />");
-                mainBuilder.append("</td>");
-                mainBuilder.append("</tr>");
-                mainBuilder.append("</table>");
-                mainBuilder.append("<br>");
-                mainBuilder.append("</td>");
-                mainBuilder.append("</tr>");
+                mainBuilder.append("<tr>")
+                        .append("<td width=240 height=30 valign=top align=center>")
+                        .append("<table border=0 width=240 height=40 cellspacing=4 cellpadding=3 bgcolor=10100E>")
+                        .append("<tr>")
+                        .append("<td align=right valign=top>")
+                        .append("<table border=0 cellspacing=0 cellpadding=0 width=32 height=32 background=")
+                        .append(SCHEME_ICONS.get(scheme.iconId)).append(">")
+                        .append("<tr>")
+                        .append("<td width=32 height=32 align=center valign=top>")
+                        .append("<button action=\"bypass _bbsbufferbypass_cast ")
+                        .append(scheme.schemeId)
+                        .append(" x x\" width=34 height=34 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />")
+                        .append("</td>")
+                        .append("</tr>")
+                        .append("</table>")
+                        .append("</td>")
+                        .append("<td width=120 valign=top>")
+                        .append("<font name=hs12 color=ADA71B>")
+                        .append(scheme.schemeName)
+                        .append("</font><br1>")
+                        .append("<font color=FFFFFF name=__SYSTEMWORLDFONT>Price: 60,000 Adena</font>")
+                        .append("</td>")
+                        .append("<td width=30 align=center>")
+                        .append("<br>")
+                        .append("<button action=\"bypass _bbsbufferbypass_manage_scheme_select ")
+                        .append(scheme.schemeId)
+                        .append(" x x\" width=32 height=32 back=L2UI_CT1.RadarMap_DF_OptionBtn_Down fore=L2UI_CT1.RadarMap_DF_OptionBtn />")
+                        .append("</td>")
+                        .append("</tr>")
+                        .append("</table>")
+                        .append("<br>")
+                        .append("</td>")
+                        .append("</tr>");
             } else {
-                mainBuilder.append("<tr>");
-                mainBuilder.append("<td width=240 height=50 valign=top align=center></td>");
-                mainBuilder.append("</tr>");
+                mainBuilder.append("<tr>")
+                        .append("<td width=240 height=50 valign=top align=center></td>")
+                        .append("</tr>");
             }
         }
 
@@ -857,15 +864,11 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static String getBuffType(int id) {
-        for (SingleBuff singleBuff : allSingleBuffs) {
-            if (!singleBuff._canUse)
-                continue;
-
-            if (singleBuff._buffId == id) {
-                return singleBuff._buffType;
-            }
-        }
-        return "none";
+        return allSingleBuffs.stream()
+                .filter(buff -> buff._canUse)
+                .filter(buff -> buff._buffId == id)
+                .map(buff -> buff._buffType)
+                .findFirst().orElse("none");
     }
 
     private static boolean isEnabled(int id, int level) {
@@ -880,15 +883,11 @@ public final class SchemeBufferInstance extends NpcInstance {
     }
 
     private static int getClassBuff(int id) {
-        for (SingleBuff singleBuff : allSingleBuffs) {
-            if (!singleBuff._canUse)
-                continue;
-
-            if (singleBuff._buffId == id)
-                return singleBuff._buffClass;
-        }
-
-        return 0;
+        return allSingleBuffs.stream()
+                .filter(buff -> buff._canUse)
+                .filter(buff -> buff._buffId == id)
+                .map(buff -> buff._buffClass)
+                .findFirst().orElse(0);
     }
 
     private static String viewAllBuffs(String type, String typeName, String page) {
@@ -1199,22 +1198,20 @@ public final class SchemeBufferInstance extends NpcInstance {
                     }
                     player.onMagicUseTimer(player, SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)), false);
                 } else {
-                    SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)).getEffects(player, player, false, false);
-                    player.broadcastPacket(new MagicSkillUse(player, player, toInt(eventParam1), toInt(eventParam2), 2, 0));
+                    SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)).getEffects(player);
+                    player.broadcastPacket(new MagicSkillUse(player, toInt(eventParam1), toInt(eventParam2), 2));
                 }
             } else {
                 if (eventParam3.equals("cubic")) {
-                    if (player.getCubics() != null) {
-                        for (EffectCubic cubic : player.getCubics()) {
-                            cubic.exit();
-                            player.getCubic(cubic.getId()).exit();
-                        }
-                    }
+                    player.getCubics().forEach(cubic -> {
+                        cubic.exit();
+                        player.getCubic(cubic.getId()).exit();
+                    });
                     player.onMagicUseTimer(player, SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)), false);
                 } else {
                     if (player.getPet() != null) {
-                        SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)).getEffects(player.getPet(), player.getPet(), false, false);
-                        player.broadcastPacket(new MagicSkillUse(player, player.getPet(), toInt(eventParam1), toInt(eventParam2), 0, 0));
+                        SkillTable.INSTANCE.getInfo(toInt(eventParam1), toInt(eventParam2)).getEffects(player.getPet());
+                        player.broadcastPacket(new MagicSkillUse(player, player.getPet(), toInt(eventParam1), toInt(eventParam2)));
                     } else {
                         sendErrorMessageToPlayer(player, "You do not have a servitor. Summon your pet first!");
                         showCommunity(player, main(player));
@@ -1254,8 +1251,8 @@ public final class SchemeBufferInstance extends NpcInstance {
 
                 ThreadPoolManager.INSTANCE.execute(() -> {
                     for (int[] i : buff_sets) {
-                        SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
-                        npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+                        SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player);
+                        npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1]));
                     }
                 });
             } else {
@@ -1271,8 +1268,8 @@ public final class SchemeBufferInstance extends NpcInstance {
 
                     ThreadPoolManager.INSTANCE.execute(() -> {
                         for (int[] i : buff_sets) {
-                            SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
-                            npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+                            SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player.getPet());
+                            npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1]));
                         }
                     });
                 } else {
@@ -1433,10 +1430,10 @@ public final class SchemeBufferInstance extends NpcInstance {
                 ThreadPoolManager.INSTANCE.execute(() -> {
                     for (int i = 0; i < buffs.size(); ++i) {
                         if (!getpetbuff) {
-                            SkillTable.INSTANCE.getInfo(buffs.get(i), levels.get(i)).getEffects(player, player, false, false);
-                            npc2.broadcastPacket(new MagicSkillUse(npc2, player, buffs.get(i), levels.get(i), 0, 0));
+                            SkillTable.INSTANCE.getInfo(buffs.get(i), levels.get(i)).getEffects(player);
+                            npc2.broadcastPacket(new MagicSkillUse(npc2, player, buffs.get(i), levels.get(i)));
                         } else {
-                            SkillTable.INSTANCE.getInfo(buffs.get(i), levels.get(i)).getEffects(player.getPet(), player.getPet(), false, false);
+                            SkillTable.INSTANCE.getInfo(buffs.get(i), levels.get(i)).getEffects(player.getPet());
                             // npc2.getPet().broadcastPacket(new MagicSkillUse(npc2, player.getPet(), buffs.get(i), levels.get(i), 0, 0));
                         }
                         try {
@@ -1593,7 +1590,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                     return;
                 }
             }
-            final List<int[]> buff_sets;
+            final Map<Integer, Integer> buff_sets;
             switch (eventParam1) {
                 case "mage":
                     buff_sets = Config.NpcBuffer_BuffSetMage;
@@ -1618,20 +1615,16 @@ public final class SchemeBufferInstance extends NpcInstance {
 
             final boolean getpetbuff = isPetBuff(player);
             if (!getpetbuff) {
-                ThreadPoolManager.INSTANCE.execute(() -> {
-                    for (int[] i : buff_sets) {
-                        SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
-                        npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
-                    }
-                });
+                ThreadPoolManager.INSTANCE.execute(() -> buff_sets.forEach((k, v) -> {
+                    SkillTable.INSTANCE.getInfo(k, v).getEffects(player);
+                    npc2.broadcastPacket(new MagicSkillUse(npc2, player, k, v));
+                }));
             } else {
                 if (player.getPet() != null) {
-                    ThreadPoolManager.INSTANCE.execute(() -> {
-                        for (int[] i : buff_sets) {
-                            SkillTable.INSTANCE.getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
-                            npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
-                        }
-                    });
+                    ThreadPoolManager.INSTANCE.execute(() -> buff_sets.forEach((k, v) -> {
+                        SkillTable.INSTANCE.getInfo(k, v).getEffects(player.getPet());
+                        npc2.broadcastPacket(new MagicSkillUse(npc2, player, k, v));
+                    }));
                 } else {
                     sendErrorMessageToPlayer(player, "You do not have a servitor summoned. Please summon your servitor and try again.");
                     showCommunity(player, main(player));

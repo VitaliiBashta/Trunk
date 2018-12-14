@@ -4,31 +4,23 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.quest.QuestState;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/**
- * @author Drin
- * награды полностью отпарсены с C4PTS
- */
-
-public class OpenSealedBox {
-    private final QuestState st;
-    private String result = "";
-    private int takecount = 0;
-    private final Map<Integer, Long> rewards = new HashMap<>();
-    private static final RewardGroup[] rewardgroups = {
+public final class OpenSealedBox {
+    public static final List<Integer> counts = Arrays.asList(1, 5, 10);
+    private static final List<RewardGroup> rewardgroups = Arrays.asList(
             new RewardAdena(),
             new RewardRes1(),
             new RewardRes2(),
             new RewardEnchants(),
-            new RewardParts()
-    };
-    public static final int[] counts = {
-            1,
-            5,
-            10
-    };
+            new RewardParts());
+    private final QuestState st;
+    private final Map<Integer, Long> rewards = new HashMap<>();
+    private String result = "";
+    private int takecount = 0;
 
     public OpenSealedBox(QuestState st, int count) {
         this.st = st;
@@ -52,7 +44,7 @@ public class OpenSealedBox {
         }
 
         for (int i = 0; i < not_disintegrated; i++)
-            rewardgroups[Rnd.get(rewardgroups.length)].apply(rewards);
+            Rnd.get(rewardgroups).apply(rewards);
 
         if (rewards.size() == 0) {
             result = count == 1 ? "Hmm. The box is empty." : "Hmm. All boxes is empty.";
@@ -67,8 +59,8 @@ public class OpenSealedBox {
             if (rewards.size() > 0 && !canGiveReward())
                 return "You haven't enougth free slots in your inventory.";
             st.takeItems(_620_FourGoblets.Sealed_Box, takecount);
-            for (Integer itemId : rewards.keySet())
-                st.giveItems(itemId, rewards.get(itemId), false); //не применять рейты тут
+            rewards.keySet().forEach( itemId ->
+                st.giveItems(itemId, rewards.get(itemId), false)); //не применять рейты тут
         }
 
         rewards.clear();
@@ -87,17 +79,17 @@ public class OpenSealedBox {
         return FreeInvSlots > 0;
     }
 
-    abstract static class RewardGroup {
-        protected abstract void apply(Map<Integer, Long> rewards);
-
+    private abstract static class RewardGroup {
         static void putReward(Map<Integer, Long> rewards, int item_id, long count) {
             if (rewards.containsKey(item_id))
                 count += rewards.remove(item_id);
             rewards.put(item_id, count);
         }
+
+        protected abstract void apply(Map<Integer, Long> rewards);
     }
 
-    public static class RewardAdena extends RewardGroup {
+    private static class RewardAdena extends RewardGroup {
         @Override
         public void apply(Map<Integer, Long> rewards) {
             putReward(rewards, 57, 10000);
@@ -196,7 +188,7 @@ public class OpenSealedBox {
         }
     }
 
-    public static class RewardEnchants extends RewardGroup {
+    private static class RewardEnchants extends RewardGroup {
         @Override
         public void apply(Map<Integer, Long> rewards) {
             if (Rnd.chance(3.1)) {
@@ -220,7 +212,7 @@ public class OpenSealedBox {
         }
     }
 
-    public static class RewardParts extends RewardGroup {
+    private static class RewardParts extends RewardGroup {
         @Override
         public void apply(Map<Integer, Long> rewards) {
             if (Rnd.chance(32.9)) {

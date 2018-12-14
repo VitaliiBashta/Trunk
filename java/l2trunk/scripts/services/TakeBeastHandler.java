@@ -4,14 +4,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-class TakeBeastHandler extends Functions {
+public final class TakeBeastHandler extends Functions {
     private final int BEAST_WHIP = 15473;
 
     public void show() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
 
-        if (player == null || npc == null || !npc.isInRange(player, 1000L))
+        if (npc == null || !npc.isInRange(player, 1000L))
             return;
 
         String htmltext;

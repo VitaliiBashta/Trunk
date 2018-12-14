@@ -1,74 +1,27 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _067_SagaOfTheDoombringer extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.Arrays;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _067_SagaOfTheDoombringer extends SagasSuperclass implements ScriptFile {
     public _067_SagaOfTheDoombringer() {
         super(false);
 
-        NPC = new int[]{
-                32138,
-                31627,
-                32223,
-                32227,
-                32254,
-                31646,
-                31647,
-                31650,
-                31654,
-                31655,
-                31656,
-                32227
-        };
-        Items = new int[]{
-                7080,
-                9721,
-                7081,
-                9740,
-                9722,
-                9725,
-                9728,
-                9731,
-                9734,
-                9737,
-                9717,
-                0
-        };
-        Mob = new int[]{
-                27324,
-                27325,
-                27326
-        };
+        NPC = Arrays.asList(
+                32138, 31627, 32223, 32227, 32254, 31646, 31647, 31650, 31654, 31655, 31656, 32227);
+        Items = Arrays.asList(
+                7080, 9721, 7081, 9740, 9722, 9725, 9728, 9731, 9734, 9737, 9717, 0);
+        Mob = Arrays.asList(27324, 27325, 27326);
         classid = 131;
         prevclass = 0x7F;
-        X = new int[]{
-                191046,
-                47429,
-                47391
-        };
-        Y = new int[]{
-                -40640,
-                -56923,
-                -56929
-        };
-        Z = new int[]{
-                -3042,
-                -2383,
-                -2370
-        };
-        Text = new String[]{
+        locs = Arrays.asList(
+                new Location(191046, -40640, -3042),
+                new Location(47429, -56923, -2383),
+                new Location(47391, -56929, -2370)
+        );
+        Text = Arrays.asList(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +39,20 @@ public class _067_SagaOfTheDoombringer extends SagasSuperclass implements Script
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

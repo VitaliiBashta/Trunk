@@ -1,7 +1,7 @@
 package l2trunk.gameserver.instancemanager;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.database.DatabaseFactory;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

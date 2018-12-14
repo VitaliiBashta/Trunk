@@ -518,7 +518,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21903));
             return false;
         }
-        player.doCast(SkillTable.INSTANCE.getInfo(22298), player, false);
+        player.doCast(22298, player, false);
         Functions.removeItem(player, 21903, 1, "use21903");
         return true;
     }
@@ -529,7 +529,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(21904));
             return false;
         }
-        player.doCast(SkillTable.INSTANCE.getInfo(22299), player, false);
+        player.doCast(22299, player, false);
         Functions.removeItem(player, 21904, 1, "use21904");
         return true;
     }
@@ -540,7 +540,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(17268));
             return false;
         }
-        player.doCast(SkillTable.INSTANCE.getInfo(9179), player, false);
+        player.doCast(9179, player, false);
         Functions.removeItem(player, 17268, 1, "use17268");
         return true;
     }

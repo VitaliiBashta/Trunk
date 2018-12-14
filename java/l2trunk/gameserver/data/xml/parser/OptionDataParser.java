@@ -3,7 +3,6 @@ package l2trunk.gameserver.data.xml.parser;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.OptionDataHolder;
-import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.OptionDataTemplate;
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.Iterator;
 
-public enum  OptionDataParser /*extends StatParser<OptionDataHolder>*/ {
+public enum OptionDataParser /*extends StatParser<OptionDataHolder>*/ {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
     Path xml = Config.DATAPACK_ROOT.resolve("data/option_data");

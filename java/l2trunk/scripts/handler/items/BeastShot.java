@@ -101,7 +101,7 @@ public final class BeastShot extends ScriptItemHandler implements ScriptFile {
                 break;
         }
 
-        pet.broadcastPacket(new MagicSkillUse(pet, pet, skillid, 1, 0, 0));
+        pet.broadcastPacket(new MagicSkillUse(pet, skillid));
         return true;
     }
 

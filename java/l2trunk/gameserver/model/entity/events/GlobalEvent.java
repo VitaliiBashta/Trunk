@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.gameserver.Config;
@@ -48,7 +48,7 @@ public abstract class GlobalEvent {
     private final ListenerListImpl _listenerList = new ListenerListImpl();
     private Map<Integer, ItemInstance> _banishedItems = new HashMap<>();//Containers.emptyIntObjectMap();
 
-    protected GlobalEvent(MultiValueSet<String> set) {
+    protected GlobalEvent(StatsSet set) {
         this(set.getInteger("id"), set.getString("name"));
     }
 

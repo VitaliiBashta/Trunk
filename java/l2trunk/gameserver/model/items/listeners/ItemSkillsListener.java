@@ -38,15 +38,15 @@ public final class ItemSkillsListener implements OnEquipListener {
                     int level = player.getSkillLevel(itemSkill.getId());
                     int newlevel = level - 1;
                     if (newlevel > 0)
-                        player.addSkill(SkillTable.INSTANCE.getInfo(itemSkill.getId(), newlevel), false);
+                        player.addSkill(itemSkill.getId(), newlevel, false);
                     else
                         player.removeSkill(itemSkill.getId());
                 } else {
-                    player.removeSkill(itemSkill, false);
+                    player.removeSkill(itemSkill.getId(), false);
                 }
 
         if (enchant4Skill != null)
-            player.removeSkill(enchant4Skill, false);
+            player.removeSkill(enchant4Skill.getId(), false);
 
         if (itemSkills.size() > 0 || enchant4Skill != null) {
             player.sendPacket(new SkillList(player));
@@ -59,7 +59,7 @@ public final class ItemSkillsListener implements OnEquipListener {
         Player player = (Player) actor;
 
         ItemTemplate it = item.getTemplate();
-        List<Skill> itemSkills = it.getAttachedSkills();;
+        List<Skill> itemSkills = it.getAttachedSkills();
         Skill enchant4Skill = null;
 
 
@@ -84,7 +84,7 @@ public final class ItemSkillsListener implements OnEquipListener {
                     } else
                         newlevel = 1;
                     if (newlevel != level) {
-                        player.addSkill(SkillTable.INSTANCE.getInfo(itemSkill.getId(), newlevel), false);
+                        player.addSkill(itemSkill.getId(), newlevel, false);
                     }
                 } else if (player.getSkillLevel(itemSkill.getId()) < itemSkill.getLevel()) {
                     player.addSkill(itemSkill, false);

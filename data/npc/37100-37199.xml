@@ -360,7 +360,7 @@
 		<set name="rewardSp" value="0"/>
 		<set name="shots" value="NONE"/>
 		<set name="texture" value=""/>
-		<set name="type" value="fightClub.FlagToCapture"/>
+		<set name="type" value="Npc"/>
 	</npc>
 	<npc id="53004" name="Red Flag" title="">
 		<set name="displayId" value="35062" />
@@ -397,7 +397,7 @@
 		<set name="rewardSp" value="0"/>
 		<set name="shots" value="NONE"/>
 		<set name="texture" value=""/>
-		<set name="type" value="fightClub.FlagToCapture"/>
+		<set name="type" value="Npc"/>
 	</npc>
 	<npc id="53005" name="Flag Holder" title="">
 		<set name="displayId" value="32027" />
@@ -434,6 +434,6 @@
 		<set name="rewardSp" value="0"/>
 		<set name="shots" value="NONE"/>
 		<set name="texture" value=""/>
-		<set name="type" value="fightClub.FlagHolder"/>
+		<set name="type" value="Npc"/>
 	</npc>
 </list>

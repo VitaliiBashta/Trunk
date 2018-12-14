@@ -1,6 +1,7 @@
 package l2trunk.gameserver.skills.skillclasses;
 
-import javafx.util.Pair;
+import l2trunk.commons.collections.StatsSet;
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;
@@ -16,7 +17,6 @@ import l2trunk.gameserver.model.instances.PetInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
@@ -28,7 +28,6 @@ public final class Resurrect extends Skill {
         _canPet = set.getBool("canPet", false);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean checkCondition(Creature activeChar, Creature target, boolean forceUse, boolean dontMove, boolean first) {
         if (!activeChar.isPlayer()) {
@@ -75,18 +74,10 @@ public final class Resurrect extends Skill {
                 player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
                 return false;
             }
-            if (targetClan) {
-                SiegeEvent event = target.getEvent(SiegeEvent.class);
-                if (event == null) {
-                    target.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
-                    return false;
-                }
-            } else if (playerClan) {
-                SiegeEvent event = player.getEvent(SiegeEvent.class);
-                if (event == null) {
-                    player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
-                    return false;
-                }
+            SiegeEvent event = target.getEvent(SiegeEvent.class);
+            if (event == null) {
+                target.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(this));
+                return false;
             }
         }
 

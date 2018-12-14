@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.instances.residences.dominion;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.geometry.Circle;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
@@ -12,16 +13,11 @@ import l2trunk.gameserver.model.entity.events.impl.DominionSiegeEvent;
 import l2trunk.gameserver.model.instances.residences.SiegeFlagInstance;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncMul;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public class OutpostInstance extends SiegeFlagInstance {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    private Zone _zone = null;
+    private Zone zone;
 
     public OutpostInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -40,18 +36,18 @@ public class OutpostInstance extends SiegeFlagInstance {
         set.set("type", Zone.ZoneType.dummy);
         set.set("territory", new Territory().add(c));
 
-        _zone = new Zone(new ZoneTemplate(set));
-        _zone.setReflection(ReflectionManager.DEFAULT);
-        _zone.addListener(new OnZoneEnterLeaveListenerImpl());
-        _zone.setActive(true);
+        zone = new Zone(new ZoneTemplate(set));
+        zone.setReflection(ReflectionManager.DEFAULT);
+        zone.addListener(new OnZoneEnterLeaveListenerImpl());
+        zone.setActive(true);
     }
 
     @Override
     public void onDelete() {
         super.onDelete();
 
-        _zone.setActive(false);
-        _zone = null;
+        zone.setActive(false);
+        zone = null;
     }
 
     @Override

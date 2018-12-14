@@ -1,74 +1,25 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _070_SagaOfThePhoenixKnight extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _070_SagaOfThePhoenixKnight extends SagasSuperclass implements ScriptFile {
     public _070_SagaOfThePhoenixKnight() {
         super(false);
 
-        NPC = new int[]{
-                30849,
-                31624,
-                31277,
-                30849,
-                31631,
-                31646,
-                31647,
-                31650,
-                31654,
-                31655,
-                31657,
-                31277
-        };
-        Items = new int[]{
-                7080,
-                7534,
-                7081,
-                7485,
-                7268,
-                7299,
-                7330,
-                7361,
-                7392,
-                7423,
-                7093,
-                6482
-        };
-        Mob = new int[]{
-                27286,
-                27219,
-                27278
-        };
+        NPC = List.of(
+                30849, 31624, 31277, 30849, 31631, 31646, 31647, 31650, 31654, 31655, 31657, 31277);
+        Items = List.of(7080, 7534, 7081, 7485, 7268, 7299, 7330, 7361, 7392, 7423, 7093, 6482);
+        Mob = List.of(27286, 27219, 27278);
         classid = 90;
         prevclass = 0x05;
-        X = new int[]{
-                191046,
-                46087,
-                46066
-        };
-        Y = new int[]{
-                -40640,
-                -36372,
-                -36396
-        };
-        Z = new int[]{
-                -3042,
-                -1685,
-                -1685
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(191046, -40640, -3042),
+                new Location(46087, -36372, -1685),
+                new Location(46066, -36396, -1685));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +37,20 @@ public class _070_SagaOfThePhoenixKnight extends SagasSuperclass implements Scri
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

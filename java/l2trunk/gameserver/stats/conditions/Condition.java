@@ -4,14 +4,14 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 
 public abstract class Condition {
-    private SystemMsg _message;
+    private SystemMsg message;
 
     public final SystemMsg getSystemMsg() {
-        return _message;
+        return message;
     }
 
     public final void setSystemMsg(int msgId) {
-        _message = SystemMsg.valueOf(msgId);
+        message = SystemMsg.valueOf(msgId);
     }
 
     public final boolean test(Env env) {

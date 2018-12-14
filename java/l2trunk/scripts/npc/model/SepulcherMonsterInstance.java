@@ -15,14 +15,13 @@ import l2trunk.scripts.bosses.FourSepulchersSpawn;
 
 import java.util.concurrent.Future;
 
-public class SepulcherMonsterInstance extends MonsterInstance {
+public final class SepulcherMonsterInstance extends MonsterInstance {
+    private final static int HALLS_KEY = 7260;
     public int mysteriousBoxId = 0;
-
-    private Future<?> _victimShout = null;
+    private Future<?> victimShout = null;
     private Future<?> _victimSpawnKeyBoxTask = null;
     private Future<?> _changeImmortalTask = null;
     private Future<?> _onDeadEventTask = null;
-    private final static int HALLS_KEY = 7260;
 
     public SepulcherMonsterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -42,9 +41,9 @@ public class SepulcherMonsterInstance extends MonsterInstance {
                 if (_victimSpawnKeyBoxTask != null)
                     _victimSpawnKeyBoxTask.cancel(false);
                 _victimSpawnKeyBoxTask = ThreadPoolManager.INSTANCE.schedule(new VictimSpawnKeyBox(this), 300000);
-                if (_victimShout != null)
-                    _victimShout.cancel(false);
-                _victimShout = ThreadPoolManager.INSTANCE.schedule(new VictimShout(this), 5000);
+                if (victimShout != null)
+                    victimShout.cancel(false);
+                victimShout = ThreadPoolManager.INSTANCE.schedule(new VictimShout(this), 5000);
                 break;
             case 18196:
             case 18197:
@@ -139,9 +138,9 @@ public class SepulcherMonsterInstance extends MonsterInstance {
                     _victimSpawnKeyBoxTask.cancel(false);
                     _victimSpawnKeyBoxTask = null;
                 }
-                if (_victimShout != null) {
-                    _victimShout.cancel(false);
-                    _victimShout = null;
+                if (victimShout != null) {
+                    victimShout.cancel(false);
+                    victimShout = null;
                 }
                 if (_onDeadEventTask != null)
                     _onDeadEventTask.cancel(false);
@@ -207,6 +206,16 @@ public class SepulcherMonsterInstance extends MonsterInstance {
         super.onDelete();
     }
 
+    private boolean hasPartyAKey(Player player) {
+        return player.getParty().getMembers().stream()
+                .anyMatch(m -> ItemFunctions.getItemCount(m, HALLS_KEY) > 0);
+    }
+
+    @Override
+    public boolean canChampion() {
+        return false;
+    }
+
     private class VictimShout extends RunnableImpl {
         private final SepulcherMonsterInstance _activeChar;
 
@@ -227,25 +236,22 @@ public class SepulcherMonsterInstance extends MonsterInstance {
     }
 
     private class VictimSpawnKeyBox extends RunnableImpl {
-        private final SepulcherMonsterInstance _activeChar;
+        private final SepulcherMonsterInstance activeChar;
 
         VictimSpawnKeyBox(SepulcherMonsterInstance activeChar) {
-            _activeChar = activeChar;
+            this.activeChar = activeChar;
         }
 
         @Override
         public void runImpl() {
-            if (_activeChar.isDead())
+            if (activeChar.isDead() || !activeChar.isVisible())
                 return;
 
-            if (!_activeChar.isVisible())
-                return;
-
-            FourSepulchersSpawn.spawnKeyBox(_activeChar);
+            FourSepulchersSpawn.spawnKeyBox(activeChar);
             broadcastPacket(new NpcSay(SepulcherMonsterInstance.this, ChatType.ALL, "Many thanks for rescue me."));
-            if (_victimShout != null) {
-                _victimShout.cancel(false);
-                _victimShout = null;
+            if (victimShout != null) {
+                victimShout.cancel(false);
+                victimShout = null;
             }
         }
     }
@@ -352,20 +358,8 @@ public class SepulcherMonsterInstance extends MonsterInstance {
 
         @Override
         public void runImpl() {
-            Skill fp = SkillTable.INSTANCE.getInfo(4616, 1); // Invulnerable by petrification
-            fp.getEffects(activeChar, activeChar, false, false);
+            Skill fp = SkillTable.INSTANCE.getInfo(4616); // Invulnerable by petrification
+            fp.getEffects(activeChar);
         }
-    }
-
-    private boolean hasPartyAKey(Player player) {
-        for (Player m : player.getParty().getMembers())
-            if (ItemFunctions.getItemCount(m, HALLS_KEY) > 0)
-                return true;
-        return false;
-    }
-
-    @Override
-    public boolean canChampion() {
-        return false;
     }
 }

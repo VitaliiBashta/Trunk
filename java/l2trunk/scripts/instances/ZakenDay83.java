@@ -11,34 +11,37 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Класс контролирует высшего дневного Закена
- *
- * @author Grivesky
- */
+import java.util.Arrays;
+import java.util.List;
 
-public class ZakenDay83 extends Reflection {
+public final class ZakenDay83 extends Reflection {
     private static final int Anchor = 32468;
     private static final int UltraDayZaken = 29181;
-    private static final Location[] zakenTp = {new Location(55272, 219080, -2952), new Location(55272, 219080, -3224), new Location(55272, 219080, -3496),};
+    private static final int sealedVorpalRing = 15763;
+    private static final int sealedVorpalEarring = 15764;
+    private static final int sealedVorpalNeckace = 15765;
+    private static final List<Location> zakenTp = Arrays.asList(
+            new Location(55272, 219080, -2952),
+            new Location(55272, 219080, -3224),
+            new Location(55272, 219080, -3496));
     private static final Location zakenSpawn = new Location(55048, 216808, -3772);
     private final DeathListener _deathListener = new DeathListener();
-    private long _savedTime;
+    private long startedTime;
 
     @Override
     protected void onCreate() {
         super.onCreate();
-        addSpawnWithoutRespawn(Anchor, zakenTp[Rnd.get(zakenTp.length)], 0);
+        addSpawnWithoutRespawn(Anchor, Rnd.get(zakenTp), 0);
         NpcInstance zaken = addSpawnWithoutRespawn(UltraDayZaken, zakenSpawn, 0);
         zaken.addListener(_deathListener);
         zaken.setInvul(true);
-        _savedTime = System.currentTimeMillis();
+        startedTime = System.currentTimeMillis();
     }
 
     @Override
     public void onPlayerEnter(Player player) {
         super.onPlayerEnter(player);
-        player.sendPacket(new ExSendUIEvent(player, false, true, (int) (System.currentTimeMillis() - _savedTime) / 1000, 0, NpcString.ELAPSED_TIME));
+        player.sendPacket(new ExSendUIEvent(player, false, true, (int) (System.currentTimeMillis() - startedTime) / 1000, 0, NpcString.ELAPSED_TIME));
     }
 
     @Override
@@ -51,21 +54,19 @@ public class ZakenDay83 extends Reflection {
         @Override
         public void onDeath(Creature self, Creature killer) {
             if (self.isNpc() && self.getNpcId() == UltraDayZaken) {
-                long _timePassed = System.currentTimeMillis() - _savedTime;
-                for (Player p : getPlayers()) {
-                    if (_timePassed < 5 * 60 * 1000) {
+                long timePassed = (System.currentTimeMillis() - startedTime) / 60 / 1000;
+
+                final int reward = timePassed < 5 ? sealedVorpalNeckace :
+                        timePassed < 10 ? sealedVorpalEarring :
+                                timePassed < 15 ? sealedVorpalRing : 0;
+                if (reward != 0)
+                    getPlayers().forEach(p -> {
                         if (Rnd.chance(10))
-                            ItemFunctions.addItem(p, 15763, 1, true, "ZakenDay83");
-                    } else if (_timePassed < 10 * 60 * 1000) {
-                        if (Rnd.chance(8))
-                            ItemFunctions.addItem(p, 15764, 1, true, "ZakenDay83");
-                    } else if (_timePassed < 15 * 60 * 1000) {
-                        if (Rnd.chance(5))
-                            ItemFunctions.addItem(p, 15763, 1, true, "ZakenDay83");
-                    }
-                }
-                for (Player p : getPlayers())
-                    p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0));
+                            ItemFunctions.addItem(p, reward, 1, true, "ZakenDay83");
+
+                    });
+                getPlayers().forEach(p ->
+                        p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0)));
             }
         }
     }

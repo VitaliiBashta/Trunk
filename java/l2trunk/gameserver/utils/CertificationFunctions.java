@@ -3,7 +3,6 @@ package l2trunk.gameserver.utils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.SkillAcquireHolder;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.SkillLearn;
 import l2trunk.gameserver.model.SubClass;
 import l2trunk.gameserver.model.base.AcquireType;
@@ -17,7 +16,7 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.Collection;
 
-public class CertificationFunctions {
+public final class CertificationFunctions {
     private static final String PATH = "villagemaster/certification/";
 
     public static void showCertificationList(NpcInstance npc, Player player) {
@@ -142,15 +141,12 @@ public class CertificationFunctions {
 
         Collection<SkillLearn> skillLearnList = SkillAcquireHolder.getAvailableSkills(null, AcquireType.CERTIFICATION);
         for (SkillLearn learn : skillLearnList) {
-            Skill skill = player.getKnownSkill(learn.getId());
-            if (skill != null)
-                player.removeSkill(skill, true);
+            player.removeSkill(learn.getId(), true);
         }
 
-        for (SubClass subClass : player.getSubClasses().values()) {
-            if (!subClass.isBase())
-                subClass.setCertification(0);
-        }
+        player.getSubClasses().values().stream()
+                .filter(subClass -> !subClass.isBase())
+                .forEach(subClass -> subClass.setCertification(0));
 
         player.sendPacket(new SkillList(player));
         Functions.show(new CustomMessage("scripts.services.SubclassSkills.SkillsDeleted", player), player);

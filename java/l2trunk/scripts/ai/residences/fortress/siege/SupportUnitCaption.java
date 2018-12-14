@@ -36,7 +36,7 @@ public final class SupportUnitCaption extends SiegeGuardMystic {
             return;
 
         if (siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF) > 0)
-            actor.doCast(SkillTable.INSTANCE.getInfo(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF)), actor, false);
+            actor.doCast(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF), actor, false);
 
         siegeEvent.barrackAction(2, false);
     }

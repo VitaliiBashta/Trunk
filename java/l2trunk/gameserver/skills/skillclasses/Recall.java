@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Creature;
@@ -10,7 +11,6 @@ import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;

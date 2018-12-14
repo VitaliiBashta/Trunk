@@ -20,6 +20,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.StatusUpdate;
 import l2trunk.gameserver.stats.Stats;
+import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.taskmanager.AiTaskManager;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
@@ -61,7 +62,7 @@ public class DefaultAI extends CharacterAI {
     protected long _globalAggro;
     protected int _pathfindFails;
     protected long _checkAggroTimestamp = 0;
-    protected long _minFactionNotifyInterval = 10000;
+    protected long _minFactionNotifyInterval;
     private long AI_TASK_DELAY_CURRENT = AI_TASK_ACTIVE_DELAY;
     private ScheduledFuture<?> runningTask;
     private long _randomAnimationEnd;
@@ -196,6 +197,10 @@ public class DefaultAI extends CharacterAI {
         task.skill = skill;
         _tasks.add(task);
         _def_think = true;
+    }
+
+    protected void addTaskBuff(Creature target, int skillid) {
+        addTaskBuff(target, SkillTable.INSTANCE.getInfo(skillid));
     }
 
     protected void addTaskBuff(Creature target, Skill skill) {
@@ -1060,7 +1065,7 @@ public class DefaultAI extends CharacterAI {
         changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
 
         if (teleport) {
-            actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 2036, 1, 500, 0));
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor, 2036, 500));
             actor.teleToLocation(sloc.x, sloc.y, GeoEngine.getHeight(sloc, actor.getGeoIndex()));
         } else {
             if (!clearAggro) {
@@ -1158,7 +1163,7 @@ public class DefaultAI extends CharacterAI {
         if ((skills == null) || (skills.size() == 0) || (target == null)) {
             return null;
         }
-        return skills.stream().filter( a-> canUseSkill(a, target, distance)).collect(Collectors.toList());
+        return skills.stream().filter(a -> canUseSkill(a, target, distance)).collect(Collectors.toList());
     }
 
     protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill[] skills) {
@@ -1168,6 +1173,10 @@ public class DefaultAI extends CharacterAI {
         for (Skill sk : skills) {
             addDesiredSkill(skillMap, target, distance, sk);
         }
+    }
+
+    protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, int skillId) {
+        addDesiredSkill(skillMap, target, distance, SkillTable.INSTANCE.getInfo(skillId));
     }
 
     protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill skill) {
@@ -1205,17 +1214,17 @@ public class DefaultAI extends CharacterAI {
         }
     }
 
-    protected void addDesiredBuff(Map<Skill, Integer> skillMap, Skill[] skills) {
-        if ((skills == null) || (skills.length == 0)) {
-            return;
-        }
-        NpcInstance actor = getActor();
-        for (Skill sk : skills) {
-            if (canUseSkill(sk, actor)) {
-                skillMap.put(sk, 1000000);
-            }
-        }
-    }
+//    protected void addDesiredBuff(Map<Skill, Integer> skillMap, Skill[] skills) {
+//        if ((skills == null) || (skills.length == 0)) {
+//            return;
+//        }
+//        NpcInstance actor = getActor();
+//        for (Skill sk : skills) {
+//            if (canUseSkill(sk, actor)) {
+//                skillMap.put(sk, 1000000);
+//            }
+//        }
+//    }
 
     protected Skill selectTopSkill(Map<Skill, Integer> skillMap) {
         if ((skillMap == null) || skillMap.isEmpty()) {
@@ -1240,6 +1249,10 @@ public class DefaultAI extends CharacterAI {
             skills[nWeight++] = e.getKey();
         }
         return skills[Rnd.get(nWeight)];
+    }
+
+    protected boolean chooseTaskAndTargets(int skillId, Creature target, double distance) {
+        return chooseTaskAndTargets(SkillTable.INSTANCE.getInfo(skillId), target, distance);
     }
 
     protected boolean chooseTaskAndTargets(Skill skill, Creature target, double distance) {
@@ -1569,7 +1582,7 @@ public class DefaultAI extends CharacterAI {
         BUFF
     }
 
-    static class Task implements Comparable<Task> {
+    private static class Task implements Comparable<Task> {
         TaskType type;
         Skill skill;
         HardReference<? extends Creature> target;

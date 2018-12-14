@@ -8,7 +8,6 @@ import l2trunk.gameserver.instancemanager.SoIManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -75,8 +74,7 @@ public final class HeartInfinityAttack extends Reflection {
         spawnByGroup("soi_hoi_attack_mob_5");
         spawnByGroup("soi_hoi_attack_mob_6");
         spawnByGroup("soi_hoi_attack_tumors");
-        for (NpcInstance n : getAllByNpcId(AliveTumor, true))
-            n.setCurrentHp(n.getMaxHp() * .5, false);
+        getAllByNpcId(AliveTumor, true).forEach(n -> n.setCurrentHp(n.getMaxHp() * .5, false));
         spawnByGroup("soi_hoi_attack_wards");
         //spawnByGroup("soi_hoi_attack_echmus");
         ekimus = addSpawnWithoutRespawn(Ekimus, new Location(-179537, 208854, -15504, 16384), 0);
@@ -96,7 +94,7 @@ public final class HeartInfinityAttack extends Reflection {
         getZone("[soi_hoi_attack_defenceup_5]").setActive(true);
         getZone("[soi_hoi_attack_defenceup_6]").setActive(true);
         getDoor(14240102).openMe();
-        getPlayers().forEach(p -> p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_HEAR_THE_UNDEAD_OF_EKIMUS_RUSHING_TOWARD_YOU, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.ATTACK.getId())));
+        showScreenMessage(NpcString.YOU_CAN_HEAR_THE_UNDEAD_OF_EKIMUS_RUSHING_TOWARD_YOU, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.ATTACK.getId());
         if (invoker != null) {
             ekimus.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, invoker, 50000);
             Functions.npcShout(ekimus, NpcString.I_SHALL_ACCEPT_YOUR_CHALLENGE_S1_COME_AND_DIE_IN_THE_ARMS_OF_IMMORTALITY, invoker.getName());
@@ -113,25 +111,27 @@ public final class HeartInfinityAttack extends Reflection {
     private void notifyTumorDeath() {
         if (getAliveTumorCount() < 1) {
             houndBlocked = true;
-            hounds.forEach(Creature::block);
-            getPlayers().forEach(p ->
-                    p.sendPacket(new ExShowScreenMessage(NpcString.WITH_ALL_CONNECTIONS_TO_THE_TUMOR_SEVERED_EKIMUS_HAS_LOST_ITS_POWER_TO_CONTROL_THE_FERAL_HOUND, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false)));
+            hounds.forEach(h -> h.setBlock(true));
+            showScreenMessage(NpcString.WITH_ALL_CONNECTIONS_TO_THE_TUMOR_SEVERED_EKIMUS_HAS_LOST_ITS_POWER_TO_CONTROL_THE_FERAL_HOUND);
         } else {
-            getPlayers().forEach(p ->
-                    p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_THAT_HAS_PROVIDED_ENERGY_N_TO_EKIMUS_IS_DESTROYED, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId())));
+            showScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_THAT_HAS_PROVIDED_ENERGY_N_TO_EKIMUS_IS_DESTROYED, "#" + NpcString.HEART_OF_IMMORTALITY.getId());
         }
         handleEkimusStats();
+    }
+
+    private void showScreenMessage(NpcString str, String... params) {
+        getPlayers().forEach(p ->
+                p.sendPacket(new ExShowScreenMessage(str, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, params)));
+
     }
 
     private void notifyTumorRevival() {
         if (getAliveTumorCount() == 1 && houndBlocked) {
             houndBlocked = false;
-            hounds.forEach(Creature::unblock);
-            getPlayers().forEach(p ->
-                    p.sendPacket(new ExShowScreenMessage(NpcString.WITH_THE_CONNECTION_TO_THE_TUMOR_RESTORED_EKIMUS_HAS_REGAINED_CONTROL_OVER_THE_FERAL_HOUND, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false)));
+            hounds.forEach(h -> h.setBlock(false));
+            showScreenMessage(NpcString.WITH_THE_CONNECTION_TO_THE_TUMOR_RESTORED_EKIMUS_HAS_REGAINED_CONTROL_OVER_THE_FERAL_HOUND);
         } else
-            getPlayers().forEach(p ->
-                    p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_COMPLETELY_RESURRECTED_N_AND_STARTED_TO_ENERGIZE_EKIMUS_AGAIN, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId())));
+            showScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_COMPLETELY_RESURRECTED_N_AND_STARTED_TO_ENERGIZE_EKIMUS_AGAIN, "#" + NpcString.HEART_OF_IMMORTALITY.getId());
         handleEkimusStats();
     }
 
@@ -214,14 +214,14 @@ public final class HeartInfinityAttack extends Reflection {
         startCollapseTimer(15 * 60 * 1000L);
         if (win)
             setReenterTime(System.currentTimeMillis());
-        for (Player p : getPlayers()) {
+        getPlayers().forEach(p -> {
             p.sendPacket(new SystemMessage2(SystemMsg.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addInteger(15));
-            p.sendPacket(new ExShowScreenMessage(win ? NpcString.CONGRATULATIONS_YOU_HAVE_SUCCEEDED_AT_S1_S2_THE_INSTANCE_WILL_SHORTLY_EXPIRE : NpcString.YOU_HAVE_FAILED_AT_S1_S2, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.ATTACK.getId()));
             p.showQuestMovie(win ? ExStartScenePlayer.SCENE_ECHMUS_SUCCESS : ExStartScenePlayer.SCENE_ECHMUS_FAIL);
-        }
-        for (NpcInstance npc : getNpcs())
-            if (npc.getNpcId() == AliveTumor || npc.getNpcId() == DeadTumor || npc.getNpcId() == RegenerationCoffin)
-                npc.deleteMe();
+        });
+        showScreenMessage(win ? NpcString.CONGRATULATIONS_YOU_HAVE_SUCCEEDED_AT_S1_S2_THE_INSTANCE_WILL_SHORTLY_EXPIRE : NpcString.YOU_HAVE_FAILED_AT_S1_S2, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.ATTACK.getId());
+        getNpcs().stream()
+                .filter(npc -> List.of(AliveTumor, DeadTumor, RegenerationCoffin).contains(npc.getNpcId()))
+                .forEach(GameObject::deleteMe);
     }
 
     public void notifyEkimusAttack() {
@@ -236,17 +236,15 @@ public final class HeartInfinityAttack extends Reflection {
         if (notifiedEkimusIdle)
             return;
         notifiedEkimusIdle = true;
-        for (Player p : getPlayers())
-            p.sendPacket(new ExShowScreenMessage(NpcString.THERE_IS_NO_PARTY_CURRENTLY_CHALLENGING_EKIMUS, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "180"));
+        getPlayers().forEach(p ->
+                p.sendPacket(new ExShowScreenMessage(NpcString.THERE_IS_NO_PARTY_CURRENTLY_CHALLENGING_EKIMUS, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "180")));
         ekimusIdleTask = ThreadPoolManager.INSTANCE.schedule(() -> conquestConclusion(false), 180000L);
     }
 
     public void notifyEkimusRoomEntrance() {
-        for (Playable playable : getZone("[soi_hoi_attack_echmusroom]").getInsidePlayables())
-            playable.teleToLocation(new Location(-179537, 211233, -15472));
-        ThreadPoolManager.INSTANCE.schedule(() -> {
-            getPlayers().forEach(p -> p.sendPacket(new ExShowScreenMessage(NpcString.EKIMUS_HAS_SENSED_ABNORMAL_ACTIVITY, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false)));
-        }, 10000L);
+        getZone("[soi_hoi_attack_echmusroom]").getInsidePlayables().forEach(p ->
+                p.teleToLocation(new Location(-179537, 211233, -15472)));
+        ThreadPoolManager.INSTANCE.schedule(() -> showScreenMessage(NpcString.EKIMUS_HAS_SENSED_ABNORMAL_ACTIVITY), 10000L);
     }
 
     @Override

@@ -69,7 +69,7 @@ public final class RequestSetCrop extends L2GameClientPacket {
 
         List<CropProcure> crops = new ArrayList<>(_count);
         for (int i = 0; i < _count; i++) {
-            int id = (int) _items[i * 4 ];
+            int id = (int) _items[i * 4];
             long sales = _items[i * 4 + 1];
             long price = _items[i * 4 + 2];
             int type = (int) _items[i * 4 + 3];

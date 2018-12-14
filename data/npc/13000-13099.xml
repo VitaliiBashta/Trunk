@@ -123,7 +123,7 @@
 		<set name="rewardSp" value="10" />
 		<set name="shots" value="NONE" />
 		<set name="texture" value="" />
-		<set name="type" value="Npc" />
+		<set name="type" value="residences.castle.CastleControlTower"/>
 		<attributes>
 			<defence attribute="fire" value="20" />
 			<defence attribute="water" value="20" />

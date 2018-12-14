@@ -81,7 +81,7 @@ public final class AdminSkill implements IAdminCommandHandler {
                 break;
             case admin_buff:
                 for (int i = 7041; i <= 7064; i++)
-                    activeChar.addSkill(SkillTable.INSTANCE.getInfo(i));
+                    activeChar.addSkill(i);
                 activeChar.sendPacket(new SkillList(activeChar));
                 break;
             case admin_people_having_effect:
@@ -348,7 +348,7 @@ public final class AdminSkill implements IAdminCommandHandler {
         else {
             Collection<Skill> skills = player.getAllSkills();
             for (Skill element : activeChar.getAllSkills())
-                activeChar.removeSkill(element, true);
+                activeChar.removeSkill(element.getId(), true);
             for (Skill element : skills)
                 activeChar.addSkill(element, true);
             activeChar.sendMessage("You now have all the skills of  " + player.getName() + ".");
@@ -370,7 +370,7 @@ public final class AdminSkill implements IAdminCommandHandler {
         int counter = 0;
         for (Skill element : player.getAllSkills())
             if ((!element.isCommon()) && (!SkillAcquireHolder.isSkillPossible(player, element, AcquireType.NORMAL))) {
-                player.removeSkill(element, true);
+                player.removeSkill(element.getId(), true);
                 counter++;
             }
         player.checkSkills();
@@ -423,7 +423,7 @@ public final class AdminSkill implements IAdminCommandHandler {
             Skill skill = SkillTable.INSTANCE.getInfo(id, level);
             if (skill != null) {
                 player.sendMessage("Admin removed the skill " + skill.getName() + ".");
-                player.removeSkill(skill, true);
+                player.removeSkill(id, true);
                 player.sendPacket(new SkillList(player));
                 activeChar.sendMessage("You removed the skill " + skill.getName() + " from " + player.getName() + ".");
             } else

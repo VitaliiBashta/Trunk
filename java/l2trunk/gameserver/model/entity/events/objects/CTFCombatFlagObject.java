@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.events.objects;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;

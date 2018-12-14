@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
@@ -8,13 +9,12 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.EffectType;
 import l2trunk.gameserver.stats.Formulas;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NegateEffects extends Skill {
+public final class NegateEffects extends Skill {
     private final boolean _onlyPhysical;
     private final boolean _negateDebuffs;
     private final Map<EffectType, Integer> _negateEffects = new HashMap<>();

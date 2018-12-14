@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -147,16 +146,17 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest implements Scri
             if (n.getNpcId() == ElcardiaInzone1) {
                 n.teleToLocation(Location.findPointToStay(player, 60));
                 if (n.isBlocked())
-                    n.unblock();
+                    n.setBlock();
             }
     }
 
     private void teleportElcardia(Player player, Location loc) {
-        for (NpcInstance n : player.getReflection().getNpcs())
-            if (n.getNpcId() == ElcardiaInzone1) {
-                n.teleToLocation(loc);
-                n.block();
-            }
+        player.getReflection().getNpcs().stream()
+                .filter(n -> n.getNpcId() == ElcardiaInzone1)
+                .forEach(n -> {
+                    n.teleToLocation(loc);
+                    n.setBlock(true);
+                });
     }
 
     private void enterInstance(Player player) {

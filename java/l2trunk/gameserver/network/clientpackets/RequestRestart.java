@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.PartyMatchingBBSManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
@@ -43,7 +42,7 @@ public class RequestRestart extends L2GameClientPacket {
 
         if (activeChar.isInJail()) {
             activeChar.standUp();
-            activeChar.unblock();
+            activeChar.setBlock(false);
         }
 
         if (activeChar.getVar("isPvPevents") != null) {

@@ -1,5 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
@@ -12,7 +13,6 @@ import l2trunk.gameserver.model.reward.RewardGroup;
 import l2trunk.gameserver.model.reward.RewardList;
 import l2trunk.gameserver.model.reward.RewardType;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.npc.AbsorbInfo;
 import l2trunk.gameserver.templates.npc.Faction;
 import l2trunk.gameserver.templates.npc.MinionData;

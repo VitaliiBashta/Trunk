@@ -21,7 +21,6 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.item.ItemTemplate;
-import l2trunk.gameserver.templates.manor.CropProcure;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.ItemFunctions;
@@ -423,7 +422,7 @@ public final class ChamberlainInstance extends ResidenceManager {
             html.setFile("castle/chamberlain/chamberlain-fortress-status.htm");
             StringBuilder b = new StringBuilder(100);
 
-            for (Map.Entry<Integer,List<Integer>> entry : castle.getRelatedFortresses().entrySet()) {
+            for (Map.Entry<Integer, List<Integer>> entry : castle.getRelatedFortresses().entrySet()) {
                 NpcString type;
                 switch (entry.getKey()) {
                     case Fortress.DOMAIN:

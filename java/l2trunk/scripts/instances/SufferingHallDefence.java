@@ -55,11 +55,11 @@ public final class SufferingHallDefence extends Reflection {
             return;
         tumorIndex -= 5;
         if (tumorIndex == 100)
-            for (Player p : getPlayers())
-                p.sendPacket(new ExShowScreenMessage(NpcString.THE_AREA_NEAR_THE_TUMOR_IS_FULL_OF_OMINOUS_ENERGY, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
+            getPlayers().forEach(p ->
+                    p.sendPacket(new ExShowScreenMessage(NpcString.THE_AREA_NEAR_THE_TUMOR_IS_FULL_OF_OMINOUS_ENERGY, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false)));
         else if (tumorIndex == 30)
-            for (Player p : getPlayers())
-                p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_FEEL_THE_SURGING_ENERGY_OF_DEATH_FROM_THE_TUMOR, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
+            getPlayers().forEach(p ->
+                p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_FEEL_THE_SURGING_ENERGY_OF_DEATH_FROM_THE_TUMOR, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false)));
         if (tumorIndex <= 0) {
             if (getTumor() != null)
                 getTumor().deleteMe();
@@ -187,8 +187,8 @@ public final class SufferingHallDefence extends Reflection {
                     spawnByGroup("soi_hos_defence_tepios");
 
                     setReenterTime(System.currentTimeMillis());
-                    for (Player p : getPlayers())
-                        p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0));
+                    getPlayers().forEach( p->
+                        p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0)));
 
                     timeSpent = (int) (System.currentTimeMillis() - _savedTime) / 1000;
                 }, 10000L);

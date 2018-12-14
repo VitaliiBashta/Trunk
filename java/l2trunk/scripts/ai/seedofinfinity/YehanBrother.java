@@ -43,7 +43,7 @@ public final class YehanBrother extends Fighter {
         NpcInstance actor = getActor();
         NpcInstance brother = getBrother();
         if (!brother.isDead() && !actor.isInRange(brother, 300))
-            actor.altOnMagicUseTimer(getActor(), SkillTable.INSTANCE.getInfo(6371));
+            actor.altOnMagicUseTimer(getActor(), 6371);
         else
             removeInvul(actor);
         if (_spawnTimer + 40000 < System.currentTimeMillis()) {

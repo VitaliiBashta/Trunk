@@ -7,21 +7,21 @@ import l2trunk.gameserver.network.serverpackets.ExSendUIEvent;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Класс контролирует дневного Закена
- *
- * @author pchayka
- */
+import java.util.Arrays;
+import java.util.List;
 
-public class ZakenDay extends Reflection {
+public final class ZakenDay extends Reflection {
     private static final int Anchor = 32468;
-    private static final Location[] zakenTp = {new Location(55272, 219080, -2952), new Location(55272, 219080, -3224), new Location(55272, 219080, -3496),};
+    private static final List<Location> zakenTp = Arrays.asList(
+            new Location(55272, 219080, -2952),
+            new Location(55272, 219080, -3224),
+            new Location(55272, 219080, -3496));
     private long _savedTime;
 
     @Override
     protected void onCreate() {
         super.onCreate();
-        addSpawnWithoutRespawn(Anchor, zakenTp[Rnd.get(zakenTp.length)], 0);
+        addSpawnWithoutRespawn(Anchor, Rnd.get(zakenTp), 0);
         _savedTime = System.currentTimeMillis();
     }
 

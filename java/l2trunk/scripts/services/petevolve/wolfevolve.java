@@ -9,13 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 
-/**
- * User: darkevil
- * Date: 16.05.2008
- * Time: 12:19:36
- */
-class wolfevolve extends Functions {
-    private static final int WOLF = PetDataTable.PET_WOLF_ID; //Чтоб было =), проверка на Wolf
+public final class wolfevolve extends Functions {
     private static final int WOLF_COLLAR = L2Pet.WOLF.getControlItemId(); // Ошейник Wolf
     private static final int GREAT_WOLF_NECKLACE = L2Pet.GREAT_WOLF.getControlItemId(); // Ожерелье Great Wolf
 
@@ -33,7 +27,7 @@ class wolfevolve extends Functions {
             show("scripts/services/petevolve/evolve_no.htm", player, npc);
             return;
         }
-        if (pl_pet.getNpcId() != WOLF) {
+        if (pl_pet.getNpcId() != PetDataTable.PET_WOLF_ID) {
             show("scripts/services/petevolve/no_wolf.htm", player, npc);
             return;
         }

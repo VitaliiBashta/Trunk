@@ -1,5 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
@@ -8,7 +9,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.stats.conditions.Condition;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.OptionDataTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.*;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public enum  ItemParser /*extends StatParser<ItemHolder>*/ {
+public enum ItemParser /*extends StatParser<ItemHolder>*/ {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
     Path xml = Config.DATAPACK_ROOT.resolve("data/items/");
@@ -61,7 +61,7 @@ public enum  ItemParser /*extends StatParser<ItemHolder>*/ {
             ItemTemplate template;
             try {
                 if (itemElement.getName().equalsIgnoreCase("weapon")) {
-                    if (!set.containsKey("class")) {
+                    if (!set.isSet("class")) {
                         if ((slot & ItemTemplate.SLOT_L_HAND) > 0) {
                             set.set("class", ItemTemplate.ItemClass.ARMOR);
                         } else {
@@ -70,7 +70,7 @@ public enum  ItemParser /*extends StatParser<ItemHolder>*/ {
                     }
                     template = new WeaponTemplate(set);
                 } else if (itemElement.getName().equalsIgnoreCase("armor")) {
-                    if (!set.containsKey("class")) {
+                    if (!set.isSet("class")) {
                         if ((slot & ItemTemplate.SLOTS_ARMOR) > 0) {
                             set.set("class", ItemTemplate.ItemClass.ARMOR);
                         } else if ((slot & ItemTemplate.SLOTS_JEWELRY) > 0) {

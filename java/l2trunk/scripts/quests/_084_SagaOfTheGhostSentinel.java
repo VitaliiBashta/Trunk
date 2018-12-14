@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _084_SagaOfTheGhostSentinel extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _084_SagaOfTheGhostSentinel extends SagasSuperclass implements ScriptFile {
     public _084_SagaOfTheGhostSentinel() {
         super(false);
 
-        NPC = new int[]{
-                30702,
-                31587,
-                31604,
-                31640,
-                31635,
-                31646,
-                31649,
-                31652,
-                31654,
-                31655,
-                31659,
-                31641
-        };
-        Items = new int[]{
-                7080,
-                7521,
-                7081,
-                7499,
-                7282,
-                7313,
-                7344,
-                7375,
-                7406,
-                7437,
-                7107,
-                0
-        };
-        Mob = new int[]{
-                27298,
-                27233,
-                27307
-        };
+        NPC = List.of(30702, 31587, 31604, 31640, 31635, 31646, 31649, 31652, 31654, 31655, 31659, 31641);
+        Items = List.of(7080, 7521, 7081, 7499, 7282, 7313, 7344, 7375, 7406, 7437, 7107, 0);
+        Mob = List.of(27298, 27233, 27307);
         classid = 109;
         prevclass = 0x25;
-        X = new int[]{
-                161719,
-                124376,
-                124376
-        };
-        Y = new int[]{
-                -92823,
-                82127,
-                82127
-        };
-        Z = new int[]{
-                -1893,
-                -2796,
-                -2796
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(161719, -92823, -1893),
+                new Location(124376, 82127, -2796),
+                new Location(124376, 82127, -2796));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _084_SagaOfTheGhostSentinel extends SagasSuperclass implements Scri
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

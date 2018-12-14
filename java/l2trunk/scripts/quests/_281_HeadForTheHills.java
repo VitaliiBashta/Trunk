@@ -107,7 +107,7 @@ public class _281_HeadForTheHills extends Quest implements ScriptFile {
     private void tryGiveOneTimeRevard(QuestState st) {
         if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q2")) {
             st.getPlayer().setVar("p1q2", "1", -1);
-            st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+            st.getPlayer().sendPacket(new ExShowScreenMessage("Acquisition of Soulshot for beginners complete.\n                  Go find the Newbie Guide."));
             QuestState qs = st.getPlayer().getQuestState(_255_Tutorial.class);
             if (qs != null && qs.getInt("Ex") != 10) {
                 st.showQuestionMark(26);

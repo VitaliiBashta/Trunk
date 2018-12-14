@@ -26,7 +26,7 @@ public final class IceKnightNormal extends Fighter {
         NpcInstance actor = getActor();
         iced = true;
         actor.setNpcState(1);
-        actor.block();
+        actor.setBlock(true);
         aggroPlayers();
 
         task = ThreadPoolManager.INSTANCE.schedule(new ReleaseFromIce(), 6000L);
@@ -49,7 +49,7 @@ public final class IceKnightNormal extends Fighter {
             iced = false;
             if (task != null)
                 task.cancel(false);
-            actor.unblock();
+            actor.setBlock();
             actor.setNpcState(2);
         }
         super.onEvtAttacked(attacker, damage);
@@ -61,7 +61,7 @@ public final class IceKnightNormal extends Fighter {
             if (iced) {
                 iced = false;
                 getActor().setNpcState(2);
-                getActor().unblock();
+                getActor().setBlock();
                 aggroPlayers(); // Additional aggro
             }
         }

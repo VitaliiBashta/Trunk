@@ -1,7 +1,6 @@
 package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.gameserver.cache.CrestCache;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.PledgeCrest;
 
 public final class RequestPledgeCrest extends L2GameClientPacket {

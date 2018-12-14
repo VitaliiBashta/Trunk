@@ -1,16 +1,16 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.AggroList.AggroInfo;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class ShiftAggression extends Skill {
+public final class ShiftAggression extends Skill {
     public ShiftAggression(StatsSet set) {
         super(set);
     }

@@ -11,10 +11,6 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.concurrent.ScheduledFuture;
 
-/**
- * Класс контролирует Rim Pailaka - Rune
- */
-
 public final class RimPailaka extends Reflection {
     private static final int SeducedKnight = 36562;
     private static final int SeducedRanger = 36563;
@@ -54,7 +50,14 @@ public final class RimPailaka extends Reflection {
         ThreadPoolManager.INSTANCE.schedule(() -> getPlayers().forEach(player ->
                 player.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(10))), (getInstancedZone().getTimelimit() - 10) * 60 * 1000L);
         initTask = ThreadPoolManager.INSTANCE.schedule(new InvestigatorsSpawn(), initdelay);
-        firstwaveTask = ThreadPoolManager.INSTANCE.schedule(new FirstWave(), firstwavedelay);
+        firstwaveTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            sendWave(MSG1, KanadisGuide1, KanadisFollower1);
+            secondWaveTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+                sendWave(MSG2, KanadisGuide2, KanadisFollower2);
+                thirdWaveTask = ThreadPoolManager.INSTANCE.schedule(
+                        () -> sendWave(MSG3, KanadisGuide3, KanadisFollower3), thirdwavedelay);
+            }, secondwavedelay);
+        }, firstwavedelay);
     }
 
     @Override
@@ -88,40 +91,4 @@ public final class RimPailaka extends Reflection {
         }
     }
 
-    public class FirstWave extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            sendWave(MSG1, KanadisGuide1, KanadisFollower1);
-            secondWaveTask = ThreadPoolManager.INSTANCE.schedule(new SecondWave(), secondwavedelay);
-        }
-    }
-
-    public class SecondWave extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            sendWave(MSG2, KanadisGuide2, KanadisFollower2);
-            thirdWaveTask = ThreadPoolManager.INSTANCE.schedule(new ThirdWave(), thirdwavedelay);
-        }
-    }
-
-    public class ThirdWave extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            sendWave(MSG3, KanadisGuide3, KanadisFollower3);
-        }
-    }
-
-    public class CollapseTimer extends RunnableImpl {
-        private int _minutes;
-
-        CollapseTimer(int minutes) {
-            _minutes = minutes;
-        }
-
-        @Override
-        public void runImpl() {
-            getPlayers().forEach(player ->
-                    player.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(_minutes)));
-        }
-    }
 }

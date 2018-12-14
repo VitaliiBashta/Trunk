@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.DeclensionKey;
 import l2trunk.gameserver.utils.Util;
 
-class ClearPK extends Functions {
+public final class ClearPK extends Functions {
     public void clear() {
         final Player player = getSelf();
         if (player == null)
@@ -36,7 +36,7 @@ class ClearPK extends Functions {
             } else {
                 player.setPkKills(0);
             }
-            player.sendPacket(new ExShowScreenMessage(msg.toString(), 3000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true));
+            player.sendPacket(new ExShowScreenMessage(msg.toString()));
             player.sendMessage(msg);
             player.sendChanges();
         }

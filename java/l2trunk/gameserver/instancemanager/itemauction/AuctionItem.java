@@ -1,19 +1,18 @@
 package l2trunk.gameserver.instancemanager.itemauction;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.items.ItemInfo;
 import l2trunk.gameserver.model.items.ItemInstance;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-/**
- * @author n0nam3
- */
 public final class AuctionItem extends ItemInfo {
     private final int _auctionItemId;
     private final int _auctionLength;
     private final long _auctionInitBid;
 
-    public AuctionItem(final int auctionItemId, final int auctionLength, final long auctionInitBid, final int itemId, final long itemCount, boolean altByItem, final StatsSet itemExtra) {
+    public AuctionItem(final int auctionItemId, final int auctionLength, final long auctionInitBid,
+                       final int itemId, final long itemCount, boolean altByItem,
+                       final StatsSet itemExtra) {
         _auctionItemId = auctionItemId;
         _auctionLength = auctionLength;
         _auctionInitBid = auctionInitBid;

@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.exchange.Change;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ExchangeItemHolder  {
+public final class ExchangeItemHolder {
     private ExchangeItemHolder() {
     }
 

@@ -1,46 +1,46 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 
-public class MonasteryFurnaceEvent extends GlobalEvent {
+public final class MonasteryFurnaceEvent extends GlobalEvent {
     public static final String FURNACE_ROOM = "furnace_room";
     public static final String PROTECTOR_ROOM = "Protector_Room";
     public static final String FIGHTER_ROOM = "Fighter_Room";
     public static final String MYSTIC_ROOM = "Mystic_Room";
     public static final String STANDART_ROOM = "Standart_Monster";
-    private long _startTime;
-    private boolean _progress;
+    private long startTime;
+    private boolean progress;
 
-    public MonasteryFurnaceEvent(MultiValueSet<String> set) {
+    public MonasteryFurnaceEvent(StatsSet set) {
         super(set);
     }
 
     @Override
     public void startEvent() {
-        _progress = true;
+        progress = true;
         super.startEvent();
     }
 
     @Override
     public void stopEvent() {
-        _progress = false;
+        progress = false;
         super.stopEvent();
     }
 
     @Override
     public boolean isInProgress() {
-        return _progress;
+        return progress;
     }
 
     @Override
     public void reCalcNextTime(boolean onStart) {
-        _startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         registerActions();
     }
 
     @Override
     protected long startTimeMillis() {
-        return _startTime;
+        return startTime;
     }
 }

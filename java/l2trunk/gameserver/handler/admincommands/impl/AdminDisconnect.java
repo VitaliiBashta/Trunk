@@ -9,11 +9,6 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-enum Commands {
-    admin_disconnect,
-    admin_kick,
-    admin_kick_count
-}
 
 public final class AdminDisconnect implements IAdminCommandHandler {
     @Override
@@ -71,5 +66,11 @@ public final class AdminDisconnect implements IAdminCommandHandler {
     @Override
     public Enum[] getAdminCommandEnum() {
         return Commands.values();
+    }
+
+    private enum Commands {
+        admin_disconnect,
+        admin_kick,
+        admin_kick_count
     }
 }

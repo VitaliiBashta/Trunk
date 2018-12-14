@@ -13,7 +13,10 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.templates.CubicTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 public final class EffectCubic extends Effect {
@@ -66,7 +69,7 @@ public final class EffectCubic extends Effect {
             return;
 
         final Creature aimTarget = target;
-        player.broadcastPacket(new MagicSkillUse(player, aimTarget, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
+        player.broadcastPacket(new MagicSkillUse(player, aimTarget, skill.getId()));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = new ArrayList<>(1);
@@ -159,7 +162,7 @@ public final class EffectCubic extends Effect {
         if (!hasDebuff)
             return;
 
-        player.broadcastPacket(new MagicSkillUse(player, player, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime(), 0));
+        player.broadcastPacket(new MagicSkillUse(player,  skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime()));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = Collections.singletonList(player);

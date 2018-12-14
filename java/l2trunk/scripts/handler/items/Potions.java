@@ -3,21 +3,41 @@ package l2trunk.scripts.handler.items;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class Potions extends SimpleItemHandler implements ScriptFile {
-    private static final Integer[] ITEM_IDS = {7906, 7907, 7908, 7909, 7910, 7911, 9997, 9998, 9999, 10000, 10001, 10002, 13750, 14612};
+    private static final Map<Integer, Integer> ITEM_SKILL = new HashMap<>();
+
+
+    static {
+        ITEM_SKILL.put(7906, 2248);    //Blessing of Fire
+        ITEM_SKILL.put(7907, 2249);    //Blessing of Water
+        ITEM_SKILL.put(7908, 2250);    //Blessing of Wind
+        ITEM_SKILL.put(7909, 2251);    //Blessing of Earth
+        ITEM_SKILL.put(7910, 2252);    //Blessing of Darkness
+        ITEM_SKILL.put(7911, 2253);    //Blessing of Sanctity
+        ITEM_SKILL.put(9997, 2235);    //Fire Resist Potion
+        ITEM_SKILL.put(9998, 2336);    //Water Resist Potion
+        ITEM_SKILL.put(9999, 2338);    //Earth Resist Potion
+        ITEM_SKILL.put(10000, 2337);   //Wind Resist Potion
+        ITEM_SKILL.put(10001, 2340);   //Darkness Resist Potion
+        ITEM_SKILL.put(10002, 2339);   //Holy Resist Potion
+        ITEM_SKILL.put(14612, 23017);  // Christmas Red Sock
+    }
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(ITEM_IDS);
+        return new ArrayList<>(ITEM_SKILL.keySet());
     }
 
     @Override
@@ -55,82 +75,11 @@ public final class Potions extends SimpleItemHandler implements ScriptFile {
 
         if (!useItem(player, item, 1))
             return false;
-
-        switch (itemId) {
-            //Blessing of Fire
-            case 7906:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2248, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2248, 1));
-                break;
-            //Blessing of Water
-            case 7907:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2249, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2249, 1));
-                break;
-            //Blessing of Wind
-            case 7908:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2250, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2250, 1));
-                break;
-            //Blessing of Earth
-            case 7909:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2251, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2251, 1));
-                break;
-            //Blessing of Darkness
-            case 7910:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2252, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2252, 1));
-                break;
-            //Blessing of Sanctity
-            case 7911:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2253, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2253, 1));
-                break;
-            //Fire Resist Potion
-            case 9997:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2335, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2335, 1));
-                break;
-            //Water Resist Potion
-            case 9998:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2336, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2336, 1));
-                break;
-            //Earth Resist Potion
-            case 9999:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2338, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2338, 1));
-                break;
-            //Wind Resist Potion
-            case 10000:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2337, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2337, 1));
-                break;
-            //Darkness Resist Potion
-            case 10001:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2340, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2340, 1));
-                break;
-            //Holy Resist Potion
-            case 10002:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2339, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2339, 1));
-                break;
-            //Warrior's Temporary Healing Potion
-            case 13750:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2592, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2592, 1));
-                break;
-            // Christmas Red Sock
-            case 14612:
-                player.broadcastPacket(new MagicSkillUse(player, player, 23017, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(23017, 1));
-                break;
-            default:
-                return false;
-        }
-
+        Integer skillId = ITEM_SKILL.get(itemId);
+        if (skillId == null)
+            return false;
+        player.broadcastPacket(new MagicSkillUse(player, skillId));
+        player.altOnMagicUseTimer(player, skillId);
         return true;
     }
 }

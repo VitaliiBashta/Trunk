@@ -1,29 +1,29 @@
 package l2trunk.gameserver.templates.spawn;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class SpawnNpcInfo {
-    private final NpcTemplate _template;
-    private final int _max;
-    private final MultiValueSet<String> _parameters;
+public final class SpawnNpcInfo {
+    private final NpcTemplate template;
+    private final int max;
+    private final StatsSet parameters;
 
-    public SpawnNpcInfo(int npcId, int max, MultiValueSet<String> set) {
-        _template = NpcHolder.getTemplate(npcId);
-        _max = max;
-        _parameters = set;
+    public SpawnNpcInfo(int npcId, int max, StatsSet set) {
+        template = NpcHolder.getTemplate(npcId);
+        this.max = max;
+        parameters = set;
     }
 
     public NpcTemplate getTemplate() {
-        return _template;
+        return template;
     }
 
     public int getMax() {
-        return _max;
+        return max;
     }
 
-    public MultiValueSet<String> getParameters() {
-        return _parameters;
+    public StatsSet getParameters() {
+        return parameters;
     }
 }

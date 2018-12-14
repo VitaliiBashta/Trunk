@@ -55,7 +55,7 @@ public final class AuctioneerInstance extends NpcInstance {
                     "\t\t<td width=70>%date%</td>\n" +
                     "\t</tr>";
 
-    private AuctioneerInstance(int objectId, NpcTemplate template) {
+    public AuctioneerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

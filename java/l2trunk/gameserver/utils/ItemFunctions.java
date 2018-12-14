@@ -1,6 +1,5 @@
 package l2trunk.gameserver.utils;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;

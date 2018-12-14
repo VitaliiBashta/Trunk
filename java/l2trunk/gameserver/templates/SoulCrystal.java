@@ -13,7 +13,7 @@ public class SoulCrystal {
     private int level;
     @XmlAttribute(name = "next_item_id")
     private int nextItemId;
-    @XmlAttribute(name= "cursed_next_item_id")
+    @XmlAttribute(name = "cursed_next_item_id")
     private int cursedNextItemId;
 
     public SoulCrystal() {

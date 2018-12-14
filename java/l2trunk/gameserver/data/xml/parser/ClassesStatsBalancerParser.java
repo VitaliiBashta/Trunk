@@ -1,12 +1,12 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.data.xml.holder.ClassesStatsBalancerHolder;
 import l2trunk.gameserver.data.xml.newreader.IXmlReader;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.UserInfo;
 import l2trunk.gameserver.stats.Stats;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

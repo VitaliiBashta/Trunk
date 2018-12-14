@@ -1,12 +1,12 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class TeleportNpc extends Skill {
+public final class TeleportNpc extends Skill {
     public TeleportNpc(StatsSet set) {
         super(set);
     }
@@ -24,14 +24,14 @@ public class TeleportNpc extends Skill {
                 int z = activeChar.getZ();
                 int h = activeChar.getHeading();
                 int range = (int) (activeChar.getColRadius() + target.getColRadius());
-                int hyp = (int) Math.sqrt(range * range / 2);
+                int hyp = (int) Math.sqrt(range * range / 2.);
                 if (h < 16384) {
                     x += hyp;
                     y += hyp;
                 } else if (h > 16384 && h <= 32768) {
                     x -= hyp;
                     y += hyp;
-                } else if (h < 32768 && h <= 49152) {
+                } else if (h < 32768) {
                     x -= hyp;
                     y -= hyp;
                 } else if (h > 49152) {

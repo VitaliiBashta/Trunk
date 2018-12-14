@@ -95,7 +95,7 @@ public final class Archangel extends Fighter {
 
         changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
 
-        actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 2036, 1, 500, 0));
+        actor.broadcastPacketToOthers(new MagicSkillUse(actor,  2036,  500));
         actor.teleToLocation(sloc.x, sloc.y, GeoEngine.getHeight(sloc, actor.getGeoIndex()));
     }
 }

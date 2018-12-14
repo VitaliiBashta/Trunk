@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.math.SafeMath;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
@@ -12,13 +11,16 @@ import l2trunk.gameserver.model.items.PcInventory;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-public class RequestPackageSend extends L2GameClientPacket {
-    private static final long _FREIGHT_FEE = 1000; // TODO [VISTALL] hardcode price
+import java.util.ArrayList;
+import java.util.List;
+
+public final class RequestPackageSend extends L2GameClientPacket {
+    private static final long _FREIGHT_FEE = 1000;
 
     private int _objectId;
     private int _count;
-    private int[] _items;
-    private long[] _itemQ;
+    private List<Integer> _items = new ArrayList<>();
+    private List<Long> _itemQ = new ArrayList<>();
 
     @Override
     protected void readImpl() {
@@ -29,13 +31,12 @@ public class RequestPackageSend extends L2GameClientPacket {
             return;
         }
 
-        _items = new int[_count];
-        _itemQ = new long[_count];
-
         for (int i = 0; i < _count; i++) {
-            _items[i] = readD();
-            _itemQ[i] = readQ();
-            if ((_itemQ[i] < 1) || (ArrayUtils.indexOf(_items, _items[i]) < i)) {
+            int id = readD();
+            long q = readQ();
+            _items.add(id);
+            _itemQ.add(q);
+            if ((q < 1) || (_items.indexOf(id) < i)) {
                 _count = 0;
                 return;
             }
@@ -71,7 +72,7 @@ public class RequestPackageSend extends L2GameClientPacket {
 
         // To detect the npc and distance
         NpcInstance whkeeper = player.getLastNpc();
-        if ((whkeeper == null) || !player.isInRangeZ(whkeeper, Creature.INTERACTION_DISTANCE)) {
+        if (!player.isInRangeZ(whkeeper, Creature.INTERACTION_DISTANCE)) {
             return;
         }
 
@@ -86,7 +87,7 @@ public class RequestPackageSend extends L2GameClientPacket {
         inventory.writeLock();
         freight.writeLock();
         try {
-            int slotsleft = 0;
+            int slotsleft;
             long adenaDeposit = 0;
 
             slotsleft = Config.FREIGHT_SLOTS - freight.getSize();
@@ -95,10 +96,10 @@ public class RequestPackageSend extends L2GameClientPacket {
 
             // Create a new list of items passed on the basis of the data
             for (int i = 0; i < _count; i++) {
-                ItemInstance item = inventory.getItemByObjectId(_items[i]);
-                if ((item == null) || (item.getCount() < _itemQ[i]) || !item.getTemplate().isFreightable()) {
-                    _items[i] = 0; // Null, a thing not to be transferred
-                    _itemQ[i] = 0L;
+                ItemInstance item = inventory.getItemByObjectId(_items.get(i));
+                if ((item == null) || (item.getCount() < _itemQ.get(i)) || !item.getTemplate().isFreightable()) {
+                    _items.set(i, 0); // Null, a thing not to be transferred
+                    _itemQ.set(i, 0L);
                     continue;
                 }
 
@@ -106,15 +107,15 @@ public class RequestPackageSend extends L2GameClientPacket {
                 {
                     if (slotsleft <= 0) // если слоты кончились нестекуемые вещи и отсутствующие стекуемые пропускаем
                     {
-                        _items[i] = 0; // Обнуляем, вещь не будет передана
-                        _itemQ[i] = 0L;
+                        _items.set(i, 0); // Обнуляем, вещь не будет передана
+                        _itemQ.set(i, 0L);
                         continue;
                     }
                     slotsleft--; // если слот есть то его уже нет
                 }
 
                 if (item.getItemId() == ItemTemplate.ITEM_ID_ADENA) {
-                    adenaDeposit = _itemQ[i];
+                    adenaDeposit = _itemQ.get(i);
                 }
 
                 items++;
@@ -144,10 +145,10 @@ public class RequestPackageSend extends L2GameClientPacket {
             }
 
             for (int i = 0; i < _count; i++) {
-                if (_items[i] == 0) {
+                if (_items.get(i) == 0) {
                     continue;
                 }
-                ItemInstance item = inventory.removeItemByObjectId(_items[i], _itemQ[i], "Freight");
+                ItemInstance item = inventory.removeItemByObjectId(_items.get(i), _itemQ.get(i), "Freight");
                 freight.addItem(item, "Freight " + player.toString(), "Freight");
             }
         } catch (ArithmeticException ae) {

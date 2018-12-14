@@ -374,8 +374,6 @@ public enum GmEventManager {
         }
     }
 
-
-    // Un thread que maneja los res de los pjs cuando mueren
     private class ResurrectionTask implements Runnable {
         private final Player _player;
 
@@ -389,7 +387,7 @@ public enum GmEventManager {
                 return;
 
             _player.doRevive(100);
-            SkillTable.INSTANCE.getInfo(5576).getEffects(_player, _player, false, true);
+            SkillTable.INSTANCE.getInfo(5576).getEffects(_player, false, true);
         }
     }
 }

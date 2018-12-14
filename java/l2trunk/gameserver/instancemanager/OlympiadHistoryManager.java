@@ -1,5 +1,6 @@
 package l2trunk.gameserver.instancemanager;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.dao.OlympiadHistoryDAO;
 import l2trunk.gameserver.data.StringHolder;
@@ -7,7 +8,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.olympiad.OlympiadHistory;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.HtmlUtils;
 
 import java.util.Collections;
@@ -22,7 +22,7 @@ public enum OlympiadHistoryManager {
     private final Map<Integer, List<OlympiadHistory>> _historyNew = new HashMap<>();
     private final Map<Integer, List<OlympiadHistory>> _historyOld = new HashMap<>();
 
-    public void  init() {
+    public void init() {
         Map<Boolean, List<OlympiadHistory>> historyList = OlympiadHistoryDAO.getInstance().select();
         for (Map.Entry<Boolean, List<OlympiadHistory>> entry : historyList.entrySet())
             for (OlympiadHistory history : entry.getValue())
@@ -51,8 +51,8 @@ public enum OlympiadHistoryManager {
     private void addHistory(boolean old, OlympiadHistory history) {
         Map<Integer, List<OlympiadHistory>> map = old ? _historyOld : _historyNew;
 
-        addHistory0(map, history.getObjectId1(), history);
-        addHistory0(map, history.getObjectId2(), history);
+        addHistory0(map, history.objectId1, history);
+        addHistory0(map, history.objectId2, history);
     }
 
     private void addHistory0(Map<Integer, List<OlympiadHistory>> map, int objectId, OlympiadHistory history) {
@@ -82,11 +82,11 @@ public enum OlympiadHistoryManager {
         int allStatLoss = 0;
         int allStatTie = 0;
         for (OlympiadHistory h : historyList) {
-            if (h.getGameStatus() == 0)
+            if (h.gameStatus == 0)
                 allStatTie++;
             else {
-                int team = entry.getKey() == h.getObjectId1() ? 1 : 2;
-                if (h.getGameStatus() == team)
+                int team = entry.getKey() == h.objectId1 ? 1 : 2;
+                if (h.gameStatus == team)
                     allStatWinner++;
                 else
                     allStatLoss++;
@@ -107,11 +107,11 @@ public enum OlympiadHistoryManager {
 
         for (int i = 0; i < historyList.size(); i++) {
             OlympiadHistory history = historyList.get(i);
-            if (history.getGameStatus() == 0)
+            if (history.gameStatus == 0)
                 currentTie++;
             else {
-                int team = entry.getKey() == history.getObjectId1() ? 1 : 2;
-                if (history.getGameStatus() == team)
+                int team = entry.getKey() == history.objectId1 ? 1 : 2;
+                if (history.gameStatus == team)
                     currentWinner++;
                 else
                     currentLoss++;

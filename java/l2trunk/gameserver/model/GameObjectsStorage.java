@@ -3,7 +3,6 @@ package l2trunk.gameserver.model;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,7 +11,8 @@ import java.util.stream.Collectors;
 public final class GameObjectsStorage {
     private static final Map<Integer, Creature> objects = new ConcurrentHashMap<>();
 
-    private GameObjectsStorage() {}
+    private GameObjectsStorage() {
+    }
 
     private static List<NpcInstance> getStorageNpcs() {
         return objects.values().stream()
@@ -50,8 +50,8 @@ public final class GameObjectsStorage {
 
     public static List<Player> getAllPlayers() {
         return objects.values().stream()
-                .filter( o -> o instanceof Player)
-                .map( o -> (Player) o)
+                .filter(o -> o instanceof Player)
+                .map(o -> (Player) o)
                 .collect(Collectors.toList());
     }
 

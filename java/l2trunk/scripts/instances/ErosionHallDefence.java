@@ -24,11 +24,7 @@ import l2trunk.scripts.quests._697_DefendtheHallofErosion;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-/**
- * @author pchayka
- */
-
-public class ErosionHallDefence extends Reflection {
+public final class ErosionHallDefence extends Reflection {
     private static final int AliveTumor = 18708;
     private static final int DeadTumor = 32535;
     private static final int UnstableSeed = 32541;

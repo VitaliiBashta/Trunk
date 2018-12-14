@@ -6,18 +6,15 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * Используется для телепорта на Fantasy Isle и обратно.
- *
- * @Author: SYS
- * @Date: 01/07/2008
- */
-public class TeleToFantasyIsle extends Functions {
-    public static final Location[] POINTS = {
+import java.util.Arrays;
+import java.util.List;
+
+public final class TeleToFantasyIsle extends Functions {
+    public static final List<Location> POINTS = Arrays.asList(
             new Location(-60695, -56896, -2032),
             new Location(-59716, -55920, -2032),
             new Location(-58752, -56896, -2032),
-            new Location(-59716, -57864, -2032)};
+            new Location(-59716, -57864, -2032));
 
     public void toFantasyIsle() {
         Player player = getSelf();
@@ -26,7 +23,7 @@ public class TeleToFantasyIsle extends Functions {
             return;
 
         player.setVar("backCoords", player.getLoc().toXYZString(), -1);
-        player.teleToLocation(POINTS[Rnd.get(POINTS.length)]);
+        player.teleToLocation(Rnd.get(POINTS));
     }
 
     public void fromFantasyIsle() {
@@ -49,7 +46,7 @@ public class TeleToFantasyIsle extends Functions {
     private void teleOut() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
-        if (player == null || npc == null || !npc.isInRange(player, 1000L))
+        if (npc == null || !npc.isInRange(player, 1000L))
             return;
 
         player.teleToLocation(-44316, -113136, -80); //Orc Village

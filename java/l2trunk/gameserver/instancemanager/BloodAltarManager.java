@@ -6,7 +6,7 @@ import l2trunk.gameserver.ThreadPoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public enum  BloodAltarManager {
+public enum BloodAltarManager {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(BloodAltarManager.class);
     private static final long delay = 30 * 60 * 1000L;
@@ -45,6 +45,7 @@ public enum  BloodAltarManager {
             }
         }, delay, delay);
     }
+
     private static void manageNpcs(boolean spawnAlive) {
         if (spawnAlive) {
             SpawnManager.INSTANCE.despawn("bloodaltar_dead_npc");

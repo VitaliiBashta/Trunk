@@ -85,7 +85,6 @@ public final class BlockCheckerEngine {
     /**
      * Updates the player holder before the event starts
      * to synchronize all info
-     *
      */
     public void updatePlayersOnStart(ArenaParticipantsHolder holder) {
         this.holder = holder;
@@ -131,7 +130,7 @@ public final class BlockCheckerEngine {
     }
 
     public synchronized int getBluePoints() {
-            return _bluePoints;
+        return _bluePoints;
     }
 
     /**
@@ -301,12 +300,12 @@ public final class BlockCheckerEngine {
 
                 // Give the player start up effects
                 // Freeze
-                _freeze.getEffects(player, player, false, false);
+                _freeze.getEffects(player);
                 // Tranformation
                 if (holder.getPlayerTeam(player) == 0)
-                    _transformationRed.getEffects(player, player, false, false);
+                    _transformationRed.getEffects(player);
                 else
-                    _transformationBlue.getEffects(player, player, false, false);
+                    _transformationBlue.getEffects(player);
                 // Set the current player arena
                 player.setBlockCheckerArena((byte) _arena);
                 // Send needed packets
@@ -371,8 +370,8 @@ public final class BlockCheckerEngine {
                     _task = ThreadPoolManager.INSTANCE.schedule(new CountDown(), 175000);
                     break;
             }
-            // random % 2, if == 0 will spawn a red block
-            // if != 0, will spawn a blue block
+            // random % 2, if == 0 will spawn a red setBlock
+            // if != 0, will spawn a blue setBlock
             byte random = 2;
             // common template
             // Spawn blocks
@@ -391,7 +390,7 @@ public final class BlockCheckerEngine {
                 random++;
             }
 
-            // Spawn the block carrying girl
+            // Spawn the setBlock carrying girl
             if (_round == 1 || _round == 2) {
                 final SimpleSpawner girlSpawn = new SimpleSpawner(18676);
                 girlSpawn.setLoc(new Location(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400),

@@ -5,12 +5,8 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.residences.clanhall.CTBBossInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 19:37/22.04.2011
- */
 public class MatchBerserkerInstance extends CTBBossInstance {
-    MatchBerserkerInstance(int objectId, NpcTemplate template) {
+    public MatchBerserkerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

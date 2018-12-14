@@ -89,7 +89,7 @@ public final class Tears extends DefaultAI {
         }
 
         if (rnd_per < 5 && spawnTask == null && despawnTask == null) {
-            actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 5441, 1, 3000, 0));
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor,  5441,  3000));
             spawnTask = ThreadPoolManager.INSTANCE.schedule(this::spawnMobs, 3000);
             return true;
         }

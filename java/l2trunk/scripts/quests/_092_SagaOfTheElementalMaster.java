@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _092_SagaOfTheElementalMaster extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _092_SagaOfTheElementalMaster extends SagasSuperclass implements ScriptFile {
     public _092_SagaOfTheElementalMaster() {
         super(false);
 
-        NPC = new int[]{
-                30174,
-                31281,
-                31614,
-                31614,
-                31629,
-                31646,
-                31648,
-                31652,
-                31654,
-                31655,
-                31659,
-                31614
-        };
-        Items = new int[]{
-                7080,
-                7605,
-                7081,
-                7507,
-                7290,
-                7321,
-                7352,
-                7383,
-                7414,
-                7445,
-                7111,
-                0
-        };
-        Mob = new int[]{
-                27314,
-                27241,
-                27311
-        };
+        NPC = List.of(30174, 31281, 31614, 31614, 31629, 31646, 31648, 31652, 31654, 31655, 31659, 31614);
+        Items = List.of(7080, 7605, 7081, 7507, 7290, 7321, 7352, 7383, 7414, 7445, 7111, 0);
+        Mob = List.of(27314, 27241, 27311);
         classid = 104;
         prevclass = 0x1C;
-        X = new int[]{
-                161719,
-                124376,
-                124355
-        };
-        Y = new int[]{
-                -92823,
-                82127,
-                82155
-        };
-        Z = new int[]{
-                -1893,
-                -2796,
-                -2803
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(161719, -92823, -1893),
+                new Location(124376, 82127, -2796),
+                new Location(124355, 82155, -2803));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _092_SagaOfTheElementalMaster extends SagasSuperclass implements Sc
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

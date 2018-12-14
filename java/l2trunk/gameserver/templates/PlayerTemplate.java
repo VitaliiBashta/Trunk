@@ -1,5 +1,6 @@
 package l2trunk.gameserver.templates;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.templates.item.CreateItem;

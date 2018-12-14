@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.instances;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
@@ -10,7 +11,6 @@ import l2trunk.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.Calendar;

@@ -9,7 +9,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 public class BossInstance extends RaidBossInstance {
     private boolean teleportedToNest;
 
-    protected BossInstance(int objectId, NpcTemplate template) {
+    public BossInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

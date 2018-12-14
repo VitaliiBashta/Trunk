@@ -30,7 +30,7 @@ public final class Toma extends DefaultAI {
         if (_thisActor.getLoc().equals(loc))
             return false;
 
-        _thisActor.broadcastPacketToOthers(new MagicSkillUse(_thisActor, _thisActor, 4671, 1, 1000, 0));
+        _thisActor.broadcastPacketToOthers(new MagicSkillUse(_thisActor,  4671,  1000));
         ThreadPoolManager.INSTANCE.schedule(new Teleport(loc), 1000);
         _lastTeleport = System.currentTimeMillis();
 

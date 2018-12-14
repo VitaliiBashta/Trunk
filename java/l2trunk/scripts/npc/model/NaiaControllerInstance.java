@@ -9,10 +9,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.ai.hellbound.NaiaLock;
 
-/**
- * @author pchayka
- */
-public class NaiaControllerInstance extends NpcInstance {
+public final class NaiaControllerInstance extends NpcInstance {
     public NaiaControllerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -45,16 +42,9 @@ public class NaiaControllerInstance extends NpcInstance {
                 }
                 NaiaTowerManager.startNaiaTower(player);
 
-                broadcastPacket(new MagicSkillUse(this, this, 5527, 1, 0, 0));
+                broadcastPacket(new MagicSkillUse(this,  5527));
                 doDie(null);
             }
-			/*
-			else
-			{
-				broadcastPacket(new MagicSkillUse(this, this, 5527, 1, 0, 0));
-				doDie(null);
-			}
-			*/
         } else
             super.onBypassFeedback(player, command);
     }

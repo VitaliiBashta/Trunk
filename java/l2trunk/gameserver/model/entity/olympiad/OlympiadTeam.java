@@ -1,12 +1,12 @@
 package l2trunk.gameserver.model.entity.olympiad;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Party;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExOlympiadUserInfo;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.Collection;

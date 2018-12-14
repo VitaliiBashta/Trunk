@@ -48,7 +48,7 @@ public final class EffectDummy2 extends Effect {
         }
         super.onStart();
 
-        if (!this.effected.startFear()) {
+        if (this.effected.startFear()) {
             this.effected.abortAttack(true, true);
             this.effected.abortCast(true, true);
             this.effected.stopMove();

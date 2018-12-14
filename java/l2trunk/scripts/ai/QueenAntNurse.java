@@ -75,7 +75,7 @@ public final class QueenAntNurse extends Priest {
             return;
         clientStopMoving();
         _pathfindFails = 0;
-        actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 2036, 1, 500, 600000));
+        actor.broadcastPacketToOthers(new MagicSkillUse(actor,  2036,  500, 600000));
         ThreadPoolManager.INSTANCE.schedule(new Teleport(loc), 500);
     }
 

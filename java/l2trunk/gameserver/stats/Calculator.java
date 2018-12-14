@@ -59,7 +59,7 @@ public final class Calculator {
      * Remove each Func with the specified owner of the Calculator.<BR><BR>
      */
     public void removeOwner(Object owner) {
-        _functions.removeIf(a->a.owner == owner);
+        _functions.removeIf(a -> a.owner == owner);
     }
 
     /**

@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.model.Creature;
@@ -7,11 +8,10 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class DeleteHate extends Skill {
+public final class DeleteHate extends Skill {
     public DeleteHate(StatsSet set) {
         super(set);
     }
@@ -38,7 +38,7 @@ public class DeleteHate extends Skill {
                     npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
                 }
 
-                getEffects(activeChar, target, false, false);
+                getEffects(activeChar, target );
             }
     }
 }

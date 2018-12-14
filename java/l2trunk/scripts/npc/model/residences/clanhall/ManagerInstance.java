@@ -9,7 +9,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.npc.model.residences.ResidenceManager;
 
 public class ManagerInstance extends ResidenceManager {
-    ManagerInstance(int objectId, NpcTemplate template) {
+    public ManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

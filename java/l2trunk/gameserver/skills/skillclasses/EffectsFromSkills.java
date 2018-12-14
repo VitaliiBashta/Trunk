@@ -1,21 +1,22 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
+import java.util.Objects;
 
-public class EffectsFromSkills extends Skill {
+public final class EffectsFromSkills extends Skill {
     public EffectsFromSkills(StatsSet set) {
         super(set);
     }
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets)
-            if (target != null)
-                for (AddedSkill as : getAddedSkills())
-                    as.getSkill().getEffects(activeChar, target, false, false);
+        targets.stream()
+                .filter(Objects::nonNull)
+                .forEach(target -> getAddedSkills().forEach(as ->
+                        as.getSkill().getEffects(activeChar, target)));
     }
 }

@@ -146,21 +146,17 @@ public enum ClanTable {
             LOG.warn("Error while restoring allies!!! ", e);
         }
 
-        for (int allyId : allyIds) {
+        allyIds.forEach(allyId -> {
             Alliance ally = new Alliance(allyId);
-
             if (ally.getMembersCount() <= 0) {
                 LOG.warn("membersCount = 0 for allyId: " + allyId);
-                continue;
             }
-
             if (ally.getLeader() == null) {
                 LOG.warn("Not found leader for allyId: " + allyId);
-                continue;
             }
 
             alliances.put(ally.getAllyId(), ally);
-        }
+        });
     }
 
     public Clan getClanByName(String clanName) {
@@ -177,13 +173,9 @@ public enum ClanTable {
         if (!Util.isMatchingRegexp(allyName, Config.ALLY_NAME_TEMPLATE)) {
             return null;
         }
-
-        for (Alliance ally : alliances.values()) {
-            if (ally.getAllyName().equalsIgnoreCase(allyName))
-                return ally;
-        }
-
-        return null;
+        return alliances.values().stream()
+                .filter(ally -> ally.getAllyName().equalsIgnoreCase(allyName))
+                .findFirst().orElse(null);
     }
 
     public Clan createClan(Player player, String clanName) {
@@ -195,7 +187,7 @@ public enum ClanTable {
 
             SubUnit unit = new SubUnit(clan, Clan.SUBUNIT_MAIN_CLAN, leader, clanName);
             unit.addUnitMember(leader);
-            clan.addSubUnit(unit, false);   //Ä�ËťÄ�Âµ Ä�ËťĹ�ďż˝Ä�Â¶Ä�ËťÄ�Äľ Ĺ�ďż˝Ä�ÄľÄ�Ë›Ä�Â°Ĺ�â€šĹ�Ĺš Ä�Ë› Ä�Â±Ä�Â°Ä�Â·Ĺ�ďż˝. Ä�ĹĽÄ�Â¸Ĺ�â€¦Ä�Â°Ä�ÂµĹ�â€šĹ�ďż˝Ĺ�Ĺą Ä�ËťÄ�Â¸Ä�Â¶Ä�Âµ
+            clan.addSubUnit(unit, false);
 
             clan.store();
 
@@ -216,12 +208,12 @@ public enum ClanTable {
     public void dissolveClan(Player player) {
         Clan clan = player.getClan();
         SiegeUtils.removeSiegeSkills(player);
-        for (Player clanMember : clan.getOnlineMembers(0)) {
+        clan.getOnlineMembers(0).forEach(clanMember -> {
             clanMember.setClan(null);
             clanMember.setTitle(null);
             clanMember.sendPacket(PledgeShowMemberListDeleteAll.STATIC, SystemMsg.YOU_HAVE_RECENTLY_BEEN_DISMISSED_FROM_A_CLAN);
             clanMember.broadcastCharInfo();
-        }
+        });
         clan.flush();
         deleteClanFromDb(clan.getClanId());
         clans.remove(clan.getClanId());

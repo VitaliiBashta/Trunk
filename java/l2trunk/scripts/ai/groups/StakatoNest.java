@@ -85,7 +85,7 @@ public final class StakatoNest extends Fighter {
                 _mob.abortAttack(true, false);
                 _mob.abortCast(true, false);
                 _mob.setHeading(PositionUtils.getHeadingTo(_mob, _follower));
-                _mob.doCast(SkillTable.INSTANCE.getInfo(4485), _follower, false);
+                _mob.doCast(4485, _follower, false);
                 _mob.setCurrentHp(_mob.getCurrentHp() + _follower.getCurrentHp(), false);
                 _follower.doDie(_follower);
                 _follower.deleteMe();
@@ -105,7 +105,7 @@ public final class StakatoNest extends Fighter {
             case SPIKE_STAKATO_NURSE:
                 if (_minion == null)
                     break;
-                actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000, 0));
+                actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000 ));
                 for (int i = 0; i < 3; i++)
                     spawnMonster(SPIKED_STAKATO_CAPTAIN,_minion, killer);
                 break;
@@ -117,7 +117,7 @@ public final class StakatoNest extends Fighter {
             case MALE_SPIKED_STAKATO:
                 if (_minion == null)
                     break;
-                actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000, 0));
+                actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000));
                 for (int i = 0; i < 3; i++)
                     spawnMonster(SPIKED_STAKATO_GUARD,_minion, killer );
                 break;

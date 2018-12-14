@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.entity.events.impl.CastleSiegeEvent;
 import l2trunk.gameserver.model.entity.events.impl.FortressSiegeEvent;
@@ -9,11 +10,10 @@ import l2trunk.gameserver.model.instances.StaticObjectInstance;
 import l2trunk.gameserver.model.items.attachment.ItemAttachment;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class TakeFortress extends Skill {
+public final class TakeFortress extends Skill {
     public TakeFortress(StatsSet set) {
         super(set);
     }

@@ -51,7 +51,7 @@ public final class ForgeoftheGods extends Fighter {
         List<Player> players = World.getAroundPlayers(actor, TAR_BEETLE_SEARCH_RADIUS, 200);
         if (players == null || players.size() < 1)
             return false;
-        actor.doCast(SkillTable.INSTANCE.getInfo(6142, Rnd.get(1, 3)), players.get(Rnd.get(players.size())), false);
+        actor.doCast(6142, Rnd.get(1, 3), players.get(Rnd.get(players.size())), false);
         return true;
     }
 

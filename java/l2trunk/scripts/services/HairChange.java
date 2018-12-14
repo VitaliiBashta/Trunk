@@ -11,9 +11,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
 
-public class HairChange extends Functions {
+public final class HairChange extends Functions {
     private static final int[] Male = {1, 1, 1, 1, 1, 0, 0};
-    private static final int[] Female = {1, 1, 1, 1, 1, 1, 1};
 
     private void show() {
         final Player player = getSelf();
@@ -30,7 +29,7 @@ public class HairChange extends Functions {
         for (int i = 0; i < 7; i++) {
             String button = "<button action=\"bypass -h scripts_services.HairChange:ask " + i + "\" width=34 height=34 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"/>";
             String prohibited = "<img src=\"L2UI_CT1.ItemWindow_DF_SlotBox_Disable\" width=\"32\" height=\"32\">";
-            boolean result = (player.getHairStyle() != i) && (player.getSex() == 0 ? Male[i] != 0 : Female[i] != 0);
+            boolean result = player.getHairStyle() != i && (player.getSex() != 0 || Male[i] != 0);
 
             html.replace("%hair_" + (i + 1) + "%", result ? button : prohibited);
             html.replace("%color_" + (i + 1) + "%", result ? "99CC00" : "CC3333");
@@ -56,7 +55,7 @@ public class HairChange extends Functions {
     }
 
     private static boolean isCorrect(int id) {
-        return (id >= 0) || (id <= 6);
+        return true;
     }
 
     private static String HairTypeName(int id) {
@@ -83,7 +82,7 @@ public class HairChange extends Functions {
         if (Util.getPay(player, Config.SERVICES_HAIR_CHANGE_ITEM_ID, Config.SERVICES_HAIR_CHANGE_COUNT, true)) {
             player.setHairStyle(id);
             player.sendMessage("Hairstyle successfully changed.");
-            player.broadcastPacket(new MagicSkillUse(player, player, 6696, 1, 1000, 0L));
+            player.broadcastPacket(new MagicSkillUse(player,  6696));
             player.broadcastCharInfo();
         }
     }

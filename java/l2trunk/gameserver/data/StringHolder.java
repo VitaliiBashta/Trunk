@@ -79,7 +79,7 @@ public enum StringHolder {
                 LOG.error("Exception in StringHolder", e);
             }
         }
-        strings.forEach((key, value) -> LOG.info("loaded " + value.size()+" for " + key.getShortName() + " language"));
+        strings.forEach((key, value) -> LOG.info("loaded " + value.size() + " for " + key.getShortName() + " language"));
     }
 
     public void reload() {

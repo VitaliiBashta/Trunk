@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _071_SagaOfEvasTemplar extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _071_SagaOfEvasTemplar extends SagasSuperclass implements ScriptFile {
     public _071_SagaOfEvasTemplar() {
         super(false);
 
-        NPC = new int[]{
-                30852,
-                31624,
-                31278,
-                30852,
-                31638,
-                31646,
-                31648,
-                31651,
-                31654,
-                31655,
-                31658,
-                31281
-        };
-        Items = new int[]{
-                7080,
-                7535,
-                7081,
-                7486,
-                7269,
-                7300,
-                7331,
-                7362,
-                7393,
-                7424,
-                7094,
-                6482
-        };
-        Mob = new int[]{
-                27287,
-                27220,
-                27279
-        };
+        NPC = List.of(30852, 31624, 31278, 30852, 31638, 31646, 31648, 31651, 31654, 31655, 31658, 31281);
+        Items = List.of(7080, 7535, 7081, 7486, 7269, 7300, 7331, 7362, 7393, 7424, 7094, 6482);
+        Mob = List.of(27287, 27220, 27279);
         classid = 99;
         prevclass = 0x14;
-        X = new int[]{
-                119518,
-                181215,
-                181227
-        };
-        Y = new int[]{
-                -28658,
-                36676,
-                36703
-        };
-        Z = new int[]{
-                -3811,
-                -4812,
-                -4816
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(119518, -28658, -3811),
+                new Location(181215, 36676, -4812),
+                new Location(181227, 36703, -4816));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _071_SagaOfEvasTemplar extends SagasSuperclass implements ScriptFil
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

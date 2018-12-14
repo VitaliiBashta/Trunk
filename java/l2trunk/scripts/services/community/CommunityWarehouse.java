@@ -48,27 +48,27 @@ public final class CommunityWarehouse implements ScriptFile, ICommunityBoardHand
 
     private int getVal(String name) {
         name = name.trim();
-        if ( name.equalsIgnoreCase("weapon") || name.equalsIgnoreCase("1"))
+        if (name.equalsIgnoreCase("weapon") || name.equalsIgnoreCase("1"))
             return 1;
-        else if ( name.equalsIgnoreCase("armor") || name.equalsIgnoreCase("2"))
+        else if (name.equalsIgnoreCase("armor") || name.equalsIgnoreCase("2"))
             return 2;
-        else if ( name.equalsIgnoreCase("jewelry") || name.equalsIgnoreCase("3"))
+        else if (name.equalsIgnoreCase("jewelry") || name.equalsIgnoreCase("3"))
             return 3;
-        else if ( name.equalsIgnoreCase("ornamentation") || name.equalsIgnoreCase("4"))
+        else if (name.equalsIgnoreCase("ornamentation") || name.equalsIgnoreCase("4"))
             return 4;
-        else if ( name.equalsIgnoreCase("supplies") || name.equalsIgnoreCase("5"))
+        else if (name.equalsIgnoreCase("supplies") || name.equalsIgnoreCase("5"))
             return 5;
-        else if ( name.equalsIgnoreCase("materials") || name.equalsIgnoreCase("6"))
+        else if (name.equalsIgnoreCase("materials") || name.equalsIgnoreCase("6"))
             return 6;
-        else if ( name.equalsIgnoreCase("key materials") || name.equalsIgnoreCase("7"))
+        else if (name.equalsIgnoreCase("key materials") || name.equalsIgnoreCase("7"))
             return 7;
-        else if ( name.equalsIgnoreCase("recipes") || name.equalsIgnoreCase("8"))
+        else if (name.equalsIgnoreCase("recipes") || name.equalsIgnoreCase("8"))
             return 8;
-        else if ( name.equalsIgnoreCase("books") || name.equalsIgnoreCase("9"))
+        else if (name.equalsIgnoreCase("books") || name.equalsIgnoreCase("9"))
             return 9;
-        else if ( name.equalsIgnoreCase("Miscellaneous") || name.equalsIgnoreCase("10"))
+        else if (name.equalsIgnoreCase("Miscellaneous") || name.equalsIgnoreCase("10"))
             return 10;
-        else if ( name.equalsIgnoreCase("Other") || name.equalsIgnoreCase("11"))
+        else if (name.equalsIgnoreCase("Other") || name.equalsIgnoreCase("11"))
             return 11;
 
         return 0;

@@ -9,29 +9,18 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * @author VISTALL
- */
-public class LogisticsOfficerInstance extends FacilityManagerInstance {
-    private static final Logger LOG = LoggerFactory.getLogger(LogisticsOfficerInstance.class);
-    private static final long serialVersionUID = 1L;
+import java.util.Arrays;
+import java.util.List;
 
-    private static final int[] SUPPLY_NPC = new int[]
-            {
-                    35665,
-                    35697,
-                    35734,
-                    35766,
-                    35803,
-                    35834
-            };
+
+public final class LogisticsOfficerInstance extends FacilityManagerInstance {
+    private static final List<Integer> SUPPLY_NPC = Arrays.asList(
+            35665, 35697, 35734, 35766, 35803, 35834);
 
     private static final int ITEM_ID = 9910; // Blood Oath
 
-    private LogisticsOfficerInstance(int objectId, NpcTemplate template) {
+    public LogisticsOfficerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
@@ -68,7 +57,7 @@ public class LogisticsOfficerInstance extends FacilityManagerInstance {
             if (fortress.getSupplyCount() > 0) {
                 filename = "residence2/fortress/fortress_supply_officer016.htm";
 
-                NpcInstance npc = NpcHolder.getTemplate(SUPPLY_NPC[fortress.getSupplyCount() - 1]).getNewInstance();
+                NpcInstance npc = NpcHolder.getTemplate(SUPPLY_NPC.get(fortress.getSupplyCount() - 1)).getNewInstance();
                 npc.setFullHpMp();
                 npc.spawnMe(new Location(getX() - 23, getY() + 41, getZ()));
 

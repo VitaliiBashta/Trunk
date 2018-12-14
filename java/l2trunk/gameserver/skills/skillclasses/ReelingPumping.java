@@ -1,16 +1,16 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Fishing;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 
 import java.util.List;
 
-public class ReelingPumping extends Skill {
+public final class ReelingPumping extends Skill {
 
     public ReelingPumping(StatsSet set) {
         super(set);

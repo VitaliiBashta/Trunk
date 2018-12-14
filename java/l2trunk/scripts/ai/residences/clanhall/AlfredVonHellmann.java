@@ -15,8 +15,8 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 
 public final class AlfredVonHellmann extends SiegeGuardFighter {
-    private  final Skill DAMAGE_SKILL = SkillTable.INSTANCE.getInfo(5000, 1);
-    private  final Skill DRAIN_SKILL = SkillTable.INSTANCE.getInfo(5001, 1);
+    private  final Skill DAMAGE_SKILL = SkillTable.INSTANCE.getInfo(5000);
+    private  final Skill DRAIN_SKILL = SkillTable.INSTANCE.getInfo(5001);
 
     private  final Zone ZONE_3 = ReflectionUtils.getZone("lidia_zone3");
 

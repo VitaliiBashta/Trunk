@@ -2,10 +2,7 @@ package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-public class _722_ForTheSakeOfTheTerritoryInnadril extends Dominion_ForTheSakeOfTerritory implements ScriptFile {
+public final class _722_ForTheSakeOfTheTerritoryInnadril extends Dominion_ForTheSakeOfTerritory implements ScriptFile {
     public _722_ForTheSakeOfTheTerritoryInnadril() {
         super();
     }

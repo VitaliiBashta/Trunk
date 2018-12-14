@@ -10,13 +10,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 
-/**
- * User: darkevil
- * Date: 07.06.2008
- * Time: 0:37:55
- */
-class ibkookaburra extends Functions {
-    private static final int BABY_KOOKABURRA = PetDataTable.BABY_KOOKABURRA_ID;
+public final class ibkookaburra extends Functions {
     private static final int BABY_KOOKABURRA_OCARINA = L2Pet.BABY_KOOKABURRA.getControlItemId();
     private static final int IN_KOOKABURRA_OCARINA = L2Pet.IMPROVED_BABY_KOOKABURRA.getControlItemId();
 
@@ -33,7 +27,7 @@ class ibkookaburra extends Functions {
             show("scripts/services/petevolve/evolve_no.htm", player, npc);
             return;
         }
-        if (pet.getNpcId() != BABY_KOOKABURRA) {
+        if (pet.getNpcId() != PetDataTable.BABY_KOOKABURRA_ID) {
             show("scripts/services/petevolve/no_pet.htm", player, npc);
             return;
         }

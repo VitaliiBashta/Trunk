@@ -1,6 +1,6 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
@@ -9,8 +9,8 @@ import l2trunk.gameserver.instancemanager.RaidBossSpawnManager;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
+import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.tables.SpawnTable;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,22 +92,18 @@ public final class AdminSpawn implements IAdminCommandHandler {
                 String aiName = st.nextToken();
                 target = (NpcInstance) activeChar.getTarget();
 
-                Constructor<?> aiConstructor = null;
-                try {
-                    if (!aiName.equalsIgnoreCase("npc"))
-                        aiConstructor = Class.forName("l2trunk.gameserver.ai." + aiName).getConstructors()[0];
-                } catch (Exception e) {
+                Constructor<? extends CharacterAI> aiConstructor = null;
+                if (!aiName.equalsIgnoreCase("npc")) {
                     try {
-                        aiConstructor = Class.forName("l2trunk.scripts.ai." + aiName).getConstructors()[0];
-                    } catch (Exception e1) {
-                        activeChar.sendMessage("This type AI not found.");
-                        return false;
+                        aiConstructor = Scripts.INSTANCE.getAI("l2trunk.gameserver.ai." + aiName).getConstructor(Creature.class);
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
                     }
                 }
 
                 if (aiConstructor != null) {
                     try {
-                        target.setAI((CharacterAI) aiConstructor.newInstance(new Object[]{target}));
+                        target.setAI(aiConstructor.newInstance(target));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -148,7 +144,7 @@ public final class AdminSpawn implements IAdminCommandHandler {
                     return false;
                 }
                 target = (NpcInstance) activeChar.getTarget();
-                MultiValueSet<String> set = target.getParameters();
+                StatsSet set = target.getParameters();
                 if (!set.isEmpty())
                     _log.info("Dump of Parameters:\r\n" + set.toString());
                 else

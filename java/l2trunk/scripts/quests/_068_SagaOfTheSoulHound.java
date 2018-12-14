@@ -2,74 +2,24 @@ package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _068_SagaOfTheSoulHound extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _068_SagaOfTheSoulHound extends SagasSuperclass implements ScriptFile {
     public _068_SagaOfTheSoulHound() {
         super(false);
 
-        NPC = new int[]{
-                32138,
-                31272,
-                31269,
-                31317,
-                32235,
-                31646,
-                31648,
-                31652,
-                31654,
-                31655,
-                31657,
-                32241
-        };
-        Items = new int[]{
-                7080,
-                9802,
-                7081,
-                9741,
-                9723,
-                9726,
-                9729,
-                9732,
-                9735,
-                9738,
-                9719,
-                0
-        };
-        Mob = new int[]{
-                27327,
-                27329,
-                27328
-        };
+        NPC = List.of(32138, 31272, 31269, 31317, 32235, 31646, 31648, 31652, 31654, 31655, 31657, 32241);
+        Items = List.of(7080, 9802, 7081, 9741, 9723, 9726, 9729, 9732, 9735, 9738, 9719, 0);
+        Mob = List.of(27327, 27329, 27328);
         classid = 132; // see getClassId
         prevclass = 128; // see getPrevClass
-        X = new int[]{
-                161719,
-                46087,
-                46066
-        };
-        Y = new int[]{
-                -92823,
-                -36372,
-                -36396
-        };
-        Z = new int[]{
-                -1893,
-                -1685,
-                -1685
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(161719, -92823, -1893),
+                new Location(46087, -36372, -1685),
+                new Location(46066, -36396, -1685));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -87,10 +37,20 @@ public class _068_SagaOfTheSoulHound extends SagasSuperclass implements ScriptFi
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
-
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 
     @Override

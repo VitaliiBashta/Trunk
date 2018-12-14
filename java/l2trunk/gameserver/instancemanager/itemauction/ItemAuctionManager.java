@@ -1,9 +1,9 @@
 package l2trunk.gameserver.instancemanager.itemauction;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;

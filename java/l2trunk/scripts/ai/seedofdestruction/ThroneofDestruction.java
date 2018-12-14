@@ -17,7 +17,7 @@ public final class ThroneofDestruction extends DefaultAI {
 
     public ThroneofDestruction(NpcInstance actor) {
         super(actor);
-        actor.block();
+        actor.setBlock(true);
         actor.startDamageBlocked();
     }
 
@@ -25,14 +25,14 @@ public final class ThroneofDestruction extends DefaultAI {
     public void onEvtDead(Creature killer) {
         NpcInstance actor = getActor();
         Reflection ref = actor.getReflection();
-        if (checkAllDestroyed(actor.getNpcId())) {
+        if (checkAllDestroyed()) {
             ref.openDoor(DOOR);
             ref.addSpawnWithoutRespawn(TIAT_NPC_ID, TIAT_LOC, 0);
         }
         super.onEvtDead(killer);
     }
 
-    private boolean checkAllDestroyed(int mobId) {
+    private boolean checkAllDestroyed() {
         return getActor().getReflection().getNpcs().stream()
                 .filter(npc -> checkNpcs.contains(npc.getNpcId()))
                 .allMatch(Creature::isDead);

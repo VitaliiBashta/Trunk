@@ -58,11 +58,10 @@ public final class OlympiadBufferInstance extends NpcInstance {
             st.nextToken();
             int id = Integer.parseInt(st.nextToken());
             int lvl = Integer.parseInt(st.nextToken());
-            Skill skill = SkillTable.INSTANCE.getInfo(id, lvl);
             List<Creature> target = new ArrayList<>();
             target.add(player);
-            broadcastPacket(new MagicSkillUse(this, player, id, lvl, 0, 0));
-            callSkill(skill, target, true);
+            broadcastPacket(new MagicSkillUse(this, player, id, lvl));
+            callSkill(id,lvl, target, true);
             buffs.add(id);
             if (buffs.size() > 4)
                 showChatWindow(player, 1);

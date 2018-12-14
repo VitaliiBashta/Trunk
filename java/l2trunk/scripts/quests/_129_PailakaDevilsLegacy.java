@@ -10,7 +10,8 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.List;
 
 public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
     // NPC
@@ -19,13 +20,8 @@ public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
     private static final int DADVENTURER = 32508;
     private static final int DADVENTURER2 = 32511;
     private static final int CHEST = 32495;
-    private static final int[] Pailaka2nd = new int[]{
-            18623,
-            18624,
-            18625,
-            18626,
-            18627
-    };
+    private static final List<Integer> Pailaka2nd = List.of(
+            18623, 18624, 18625, 18626, 18627);
 
     // BOSS
     private static final int KAMS = 18629;
@@ -146,7 +142,7 @@ public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
             if (cond == 4) {
                 if (player.getPet() != null)
                     htmltext = "32511-03.htm";
-                else if (player.getPet() == null) {
+                else {
                     st.giveItems(ScrollOfEscape, 1);
                     st.giveItems(PBRACELET, 1);
                     st.addExpAndSp(10810000, 950000);
@@ -176,7 +172,7 @@ public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
             st.setCond(4);
             st.playSound(SOUND_MIDDLE);
             addSpawnToInstance(DADVENTURER2, new Location(84990, -208376, -3342, 55000), 0, refId);
-        } else if (ArrayUtils.contains(Pailaka2nd, npcId)) {
+        } else if (Pailaka2nd.contains(npcId)) {
             if (Rnd.get(100) < 80)
                 st.dropItem(npc, HERBS[Rnd.get(HERBS.length)], Rnd.get(1, 2));
         } else if (npcId == CHEST)

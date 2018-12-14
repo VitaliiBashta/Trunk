@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _099_SagaOfTheFortuneSeeker extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _099_SagaOfTheFortuneSeeker extends SagasSuperclass implements ScriptFile {
     public _099_SagaOfTheFortuneSeeker() {
         super(false);
 
-        NPC = new int[]{
-                31594,
-                31623,
-                31600,
-                31600,
-                31601,
-                31646,
-                31649,
-                31650,
-                31654,
-                31655,
-                31657,
-                31600
-        };
-        Items = new int[]{
-                7080,
-                7608,
-                7081,
-                7514,
-                7297,
-                7328,
-                7359,
-                7390,
-                7421,
-                7452,
-                7109,
-                0
-        };
-        Mob = new int[]{
-                27259,
-                27248,
-                27309
-        };
+        NPC = List.of(31594, 31623, 31600, 31600, 31601, 31646, 31649, 31650, 31654, 31655, 31657, 31600);
+        Items = List.of(7080, 7608, 7081, 7514, 7297, 7328, 7359, 7390, 7421, 7452, 7109, 0);
+        Mob = List.of(27259, 27248, 27309);
         classid = 117;
         prevclass = 0x37;
-        X = new int[]{
-                191046,
-                46066,
-                46087
-        };
-        Y = new int[]{
-                -40640,
-                -36396,
-                -36372
-        };
-        Z = new int[]{
-                -3042,
-                -1685,
-                -1685
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(191046, -40640, -3042),
+                new Location(46066, -36396, -1685),
+                new Location(46087, -36372, -1685));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _099_SagaOfTheFortuneSeeker extends SagasSuperclass implements Scri
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

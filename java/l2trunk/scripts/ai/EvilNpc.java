@@ -32,9 +32,9 @@ public final class EvilNpc extends DefaultAI {
             if (chance < 2)
                 attacker.getPlayer().setKarma(attacker.getPlayer().getKarma() + 5);
             else if (chance < 4)
-                actor.doCast(SkillTable.INSTANCE.getInfo(4578), attacker, true); // Petrification
+                actor.doCast(4578, attacker, true); // Petrification
             else
-                actor.doCast(SkillTable.INSTANCE.getInfo(4185, 7), attacker, true); // Sleep
+                actor.doCast(4185, 7, attacker, true); // Sleep
 
             Functions.npcSay(actor, attacker.getName() + ", " + Rnd.get(_txt));
             _lastAction = System.currentTimeMillis();

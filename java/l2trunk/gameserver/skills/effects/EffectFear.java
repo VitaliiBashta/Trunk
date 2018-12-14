@@ -46,7 +46,7 @@ public final class EffectFear extends Effect {
     public void onStart() {
         super.onStart();
 
-        if (!effected.startFear()) {
+        if (effected.startFear()) {
             effected.abortAttack(true, true);
             effected.abortCast(true, true);
             effected.stopMove();

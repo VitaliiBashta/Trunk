@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _097_SagaOfTheShillienTemplar extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _097_SagaOfTheShillienTemplar extends SagasSuperclass implements ScriptFile {
     public _097_SagaOfTheShillienTemplar() {
         super(false);
 
-        NPC = new int[]{
-                31580,
-                31623,
-                31285,
-                31285,
-                31610,
-                31646,
-                31648,
-                31652,
-                31654,
-                31655,
-                31659,
-                31285
-        };
-        Items = new int[]{
-                7080,
-                7526,
-                7081,
-                7512,
-                7295,
-                7326,
-                7357,
-                7388,
-                7419,
-                7450,
-                7091,
-                0
-        };
-        Mob = new int[]{
-                27271,
-                27246,
-                27273
-        };
+        NPC = List.of(31580, 31623, 31285, 31285, 31610, 31646, 31648, 31652, 31654, 31655, 31659, 31285);
+        Items = List.of(7080, 7526, 7081, 7512, 7295, 7326, 7357, 7388, 7419, 7450, 7091, 0);
+        Mob = List.of(27271, 27246, 27273);
         classid = 106;
         prevclass = 0x21;
-        X = new int[]{
-                161719,
-                124355,
-                124376
-        };
-        Y = new int[]{
-                -92823,
-                82155,
-                82127
-        };
-        Z = new int[]{
-                -1893,
-                -2803,
-                -2796
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(161719, -92823, -1893),
+                new Location(124355, 82155, -2803),
+                new Location(124376, 82127, -2796));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _097_SagaOfTheShillienTemplar extends SagasSuperclass implements Sc
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

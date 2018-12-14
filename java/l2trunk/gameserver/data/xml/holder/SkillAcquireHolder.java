@@ -14,9 +14,6 @@ import java.util.*;
 
 
 public final class SkillAcquireHolder /*extends AbstractHolder*/ {
-    private SkillAcquireHolder() {
-    }
-
     private static final Logger LOG = LoggerFactory.getLogger(SkillAcquireHolder.class);
     // классовые зависимости
     private static final Map<Integer, List<SkillLearn>> NORMAL_SKILL_TREE = new HashMap<>();
@@ -29,6 +26,9 @@ public final class SkillAcquireHolder /*extends AbstractHolder*/ {
     private static final List<SkillLearn> COLLECTION_SKILL_TREE = new ArrayList<>();
     private static final List<SkillLearn> PLEDGE_SKILL_TREE = new ArrayList<>();
     private static final List<SkillLearn> SUB_UNIT_SKILL_TREE = new ArrayList<>();
+
+    private SkillAcquireHolder() {
+    }
 
     public static int getMinLevelForNewSkill(Player player, AcquireType type) {
         List<SkillLearn> skills;
@@ -133,75 +133,6 @@ public final class SkillAcquireHolder /*extends AbstractHolder*/ {
                     return skills;
                 else
                     return getAvaliableList(skills, player.getAllSkills(), player.getLevel());
-            default:
-                return Collections.emptyList();
-        }
-    }
-
-    public Collection<SkillLearn> getAvailableSkills(Player player, AcquireType type, SubUnit subUnit, int level) {
-        Collection<SkillLearn> skills;
-        switch (type) {
-            case NORMAL:
-                skills = NORMAL_SKILL_TREE.get(player.getActiveClassId());
-                if (skills == null) {
-                    LOG.info("skill tree for class " + player.getActiveClassId() + " is not defined !");
-                    return Collections.emptyList();
-                }
-                return getAvaliableList(skills, player.getAllSkills(), level);
-            case COLLECTION:
-                skills = COLLECTION_SKILL_TREE;
-                return getAvaliableList(skills, player.getAllSkills(), level);
-            case TRANSFORMATION:
-                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace().ordinal());
-                if (skills == null) {
-                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
-                    return Collections.emptyList();
-                }
-                return getAvaliableList(skills, player.getAllSkills(), level);
-            case TRANSFER_EVA_SAINTS:
-            case TRANSFER_SHILLIEN_SAINTS:
-            case TRANSFER_CARDINAL:
-                skills = TRANSFER_SKILL_TREE.get(type.transferClassId());
-                if (skills == null) {
-                    LOG.info("skill tree for class " + type.transferClassId() + " is not defined !");
-                    return Collections.emptyList();
-                }
-                if (player == null)
-                    return skills;
-                else {
-                    Map<Integer, SkillLearn> skillLearnMap = new TreeMap<>();
-                    for (SkillLearn temp : skills)
-                        if (temp.getMinLevel() <= player.getLevel()) {
-                            int knownLevel = player.getSkillLevel(temp.getId());
-                            if (knownLevel == -1)
-                                skillLearnMap.put(temp.getId(), temp);
-                        }
-
-                    return skillLearnMap.values();
-                }
-            case FISHING:
-                skills = FISHING_SKILL_TREE.get(player.getRace().ordinal());
-                if (skills == null) {
-                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
-                    return Collections.emptyList();
-                }
-                return getAvaliableList(skills, player.getAllSkills(), level);
-            case CLAN:
-                skills = PLEDGE_SKILL_TREE;
-                Collection<Skill> skls = player.getClan().getSkills(); //TODO [VISTALL] придумать другой способ
-
-                return getAvaliableList(skills, skls, level);
-            case SUB_UNIT:
-                skills = SUB_UNIT_SKILL_TREE;
-                Collection<Skill> st = subUnit.getSkills(); //TODO [VISTALL] придумать другой способ
-
-                return getAvaliableList(skills, st, level);
-            case CERTIFICATION:
-                skills = CERTIFICATION_SKILL_TREE;
-                if (player == null)
-                    return skills;
-                else
-                    return getAvaliableList(skills, player.getAllSkills(), level);
             default:
                 return Collections.emptyList();
         }
@@ -319,18 +250,14 @@ public final class SkillAcquireHolder /*extends AbstractHolder*/ {
     }
 
     private static boolean isSkillPossible(Collection<SkillLearn> skills, Skill skill) {
-        for (SkillLearn learn : skills)
-            if (learn.getId() == skill.getId() && learn.getLevel() <= skill.getLevel())
-                return true;
-        return false;
+        return skills.stream()
+                .filter(learn -> learn.getId() == skill.getId())
+                .anyMatch(learn -> learn.getLevel() <= skill.getLevel());
     }
 
     public static boolean isSkillPossible(Player player, Skill skill) {
-        for (AcquireType aq : AcquireType.VALUES)
-            if (isSkillPossible(player, skill, aq))
-                return true;
-
-        return false;
+        return Arrays.stream(AcquireType.VALUES)
+                .anyMatch(aq -> isSkillPossible(player, skill, aq));
     }
 
     public static List<SkillLearn> getSkillLearnListByItemId(Player player, int itemId) {
@@ -423,6 +350,84 @@ public final class SkillAcquireHolder /*extends AbstractHolder*/ {
         PLEDGE_SKILL_TREE.addAll(s);
     }
 
+    public static int size() {
+        return NORMAL_SKILL_TREE.size() +
+                FISHING_SKILL_TREE.size() +
+                TRANSFER_SKILL_TREE.size() +
+                CERTIFICATION_SKILL_TREE.size() +
+                COLLECTION_SKILL_TREE.size() +
+                PLEDGE_SKILL_TREE.size() +
+                SUB_UNIT_SKILL_TREE.size();
+    }
+
+    public Collection<SkillLearn> getAvailableSkills(Player player, AcquireType type, SubUnit subUnit, int level) {
+        Collection<SkillLearn> skills;
+        switch (type) {
+            case NORMAL:
+                skills = NORMAL_SKILL_TREE.get(player.getActiveClassId());
+                if (skills == null) {
+                    LOG.info("skill tree for class " + player.getActiveClassId() + " is not defined !");
+                    return Collections.emptyList();
+                }
+                return getAvaliableList(skills, player.getAllSkills(), level);
+            case COLLECTION:
+                skills = COLLECTION_SKILL_TREE;
+                return getAvaliableList(skills, player.getAllSkills(), level);
+            case TRANSFORMATION:
+                skills = TRANSFORMATION_SKILL_TREE.get(player.getRace().ordinal());
+                if (skills == null) {
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    return Collections.emptyList();
+                }
+                return getAvaliableList(skills, player.getAllSkills(), level);
+            case TRANSFER_EVA_SAINTS:
+            case TRANSFER_SHILLIEN_SAINTS:
+            case TRANSFER_CARDINAL:
+                skills = TRANSFER_SKILL_TREE.get(type.transferClassId());
+                if (skills == null) {
+                    LOG.info("skill tree for class " + type.transferClassId() + " is not defined !");
+                    return Collections.emptyList();
+                }
+                if (player == null)
+                    return skills;
+                else {
+                    Map<Integer, SkillLearn> skillLearnMap = new TreeMap<>();
+                    for (SkillLearn temp : skills)
+                        if (temp.getMinLevel() <= player.getLevel()) {
+                            int knownLevel = player.getSkillLevel(temp.getId());
+                            if (knownLevel == -1)
+                                skillLearnMap.put(temp.getId(), temp);
+                        }
+
+                    return skillLearnMap.values();
+                }
+            case FISHING:
+                skills = FISHING_SKILL_TREE.get(player.getRace().ordinal());
+                if (skills == null) {
+                    LOG.info("skill tree for race " + player.getRace().ordinal() + " is not defined !");
+                    return Collections.emptyList();
+                }
+                return getAvaliableList(skills, player.getAllSkills(), level);
+            case CLAN:
+                skills = PLEDGE_SKILL_TREE;
+                Collection<Skill> skls = player.getClan().getSkills(); //TODO [VISTALL] придумать другой способ
+
+                return getAvaliableList(skills, skls, level);
+            case SUB_UNIT:
+                skills = SUB_UNIT_SKILL_TREE;
+                Collection<Skill> st = subUnit.getSkills(); //TODO [VISTALL] придумать другой способ
+
+                return getAvaliableList(skills, st, level);
+            case CERTIFICATION:
+                skills = CERTIFICATION_SKILL_TREE;
+                if (player == null)
+                    return skills;
+                else
+                    return getAvaliableList(skills, player.getAllSkills(), level);
+            default:
+                return Collections.emptyList();
+        }
+    }
 
     public void log() {
         LOG.info("loadFile " + NORMAL_SKILL_TREE.size() + " normal learns for " + NORMAL_SKILL_TREE.size() + " classes.");
@@ -435,7 +440,6 @@ public final class SkillAcquireHolder /*extends AbstractHolder*/ {
         LOG.info("loadFile " + SUB_UNIT_SKILL_TREE.size() + " sub unit learns.");
     }
 
-
     public void clear() {
         NORMAL_SKILL_TREE.clear();
         FISHING_SKILL_TREE.clear();
@@ -444,15 +448,5 @@ public final class SkillAcquireHolder /*extends AbstractHolder*/ {
         COLLECTION_SKILL_TREE.clear();
         PLEDGE_SKILL_TREE.clear();
         SUB_UNIT_SKILL_TREE.clear();
-    }
-
-    public static int size() {
-        return NORMAL_SKILL_TREE.size() +
-                FISHING_SKILL_TREE.size() +
-                TRANSFER_SKILL_TREE.size() +
-                CERTIFICATION_SKILL_TREE.size() +
-                COLLECTION_SKILL_TREE.size() +
-                PLEDGE_SKILL_TREE.size() +
-                SUB_UNIT_SKILL_TREE.size();
     }
 }

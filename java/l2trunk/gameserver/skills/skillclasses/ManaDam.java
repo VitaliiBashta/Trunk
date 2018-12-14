@@ -1,15 +1,15 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.Stats;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class ManaDam extends Skill {
+public final class ManaDam extends Skill {
     public ManaDam(StatsSet set) {
         super(set);
     }
@@ -37,7 +37,7 @@ public class ManaDam extends Skill {
                 if (mDef < 1.)
                     mDef = 1.;
 
-                double damage = Math.sqrt(mAtk) * getPower() * (target.getMaxMp() / 97) / mDef;
+                double damage = Math.sqrt(mAtk) * getPower() * (target.getMaxMp() / 97.) / mDef;
 
                 boolean crit = Formulas.calcMCrit(activeChar.getMagicCriticalRate(target, this));
                 if (crit) {

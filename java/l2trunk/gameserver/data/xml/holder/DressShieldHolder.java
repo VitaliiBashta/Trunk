@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.DressShieldData;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DressShieldHolder  {
+public final class DressShieldHolder {
     private DressShieldHolder() {
     }
 

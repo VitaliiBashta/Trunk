@@ -65,8 +65,8 @@ public class _061_LawEnforcement extends Quest implements ScriptFile {
             st.giveItems(ADENA_ID, 26000);
             st.getPlayer().setClassId(ClassId.judicator.ordinal(), false, true);
             st.getPlayer().broadcastCharInfo();
-            st.getPlayer().broadcastPacket(new MagicSkillUse(st.getPlayer(), 4339, 1, 6000, 1));
-            st.getPlayer().broadcastPacket(new MagicSkillUse(npc, 4339, 1, 6000, 1));
+            st.getPlayer().broadcastPacket(new MagicSkillUse(st.getPlayer(), 4339, 1, 6000));
+            st.getPlayer().broadcastPacket(new MagicSkillUse(npc, 4339, 1, 6000));
             st.exitCurrentQuest(true);
         }
         return htmltext;

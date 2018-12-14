@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SiegeGuardInstance extends NpcInstance {
-    protected SiegeGuardInstance(int objectId, NpcTemplate template) {
+    public SiegeGuardInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         setHasChatWindow(false);
     }

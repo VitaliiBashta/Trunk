@@ -9,13 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 
-/**
- * User: darkevil
- * Date: 07.06.2008
- * Time: 16:28:42
- */
-class ibcougar extends Functions {
-    private static final int BABY_COUGAR = PetDataTable.BABY_COUGAR_ID;
+public final class ibcougar extends Functions {
     private static final int BABY_COUGAR_CHIME = L2Pet.BABY_COUGAR.getControlItemId();
     private static final int IN_COUGAR_CHIME = L2Pet.IMPROVED_BABY_COUGAR.getControlItemId();
 
@@ -33,7 +27,7 @@ class ibcougar extends Functions {
             show("scripts/services/petevolve/evolve_no.htm", player, npc);
             return;
         }
-        if (pl_pet.getNpcId() != BABY_COUGAR) {
+        if (pl_pet.getNpcId() != PetDataTable.BABY_COUGAR_ID) {
             show("scripts/services/petevolve/no_pet.htm", player, npc);
             return;
         }

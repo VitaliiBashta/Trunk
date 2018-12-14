@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.crypt.CryptUtil;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.skills.effects.EffectTemplate;
@@ -12,7 +13,6 @@ import l2trunk.gameserver.stats.conditions.ConditionPlayerState.CheckPlayerState
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
 import l2trunk.gameserver.stats.triggers.TriggerInfo;
 import l2trunk.gameserver.stats.triggers.TriggerType;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.ArmorTemplate.ArmorType;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2trunk.gameserver.utils.PositionUtils;
@@ -38,7 +38,7 @@ abstract class DocumentBase {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentBase.class);
 
     private final Path file;
-    Map<String, Object[]> tables;
+    Map<String, List<String>> tables;
 
     DocumentBase(Path file) {
         this.file = file;
@@ -79,7 +79,7 @@ abstract class DocumentBase {
 
     protected abstract void parseDocument(Document doc);
 
-    protected abstract Object getTableValue(String name);
+    protected abstract String getTableValue(String name);
 
     protected abstract Object getTableValue(String name, int idx);
 
@@ -87,7 +87,7 @@ abstract class DocumentBase {
         tables = new HashMap<>();
     }
 
-    private void setTable(String name, Object[] table) {
+    private void setTable(String name, List<String> table) {
         tables.put(name, table);
     }
 
@@ -538,7 +538,7 @@ abstract class DocumentBase {
         while (data.hasMoreTokens())
             array.add(data.nextToken());
         Object[] res = array.toArray(new Object[array.size()]);
-        setTable(name, res);
+        setTable(name, array);
         return res;
     }
 
@@ -567,7 +567,7 @@ abstract class DocumentBase {
     Number parseNumber(String value) {
         if ("none".equalsIgnoreCase(value)) return null;
         if (value.charAt(0) == '#')
-            value = getTableValue(value).toString();
+            value = getTableValue(value);
         if (value.equalsIgnoreCase("max"))
             return Double.POSITIVE_INFINITY;
         if (value.equalsIgnoreCase("min"))

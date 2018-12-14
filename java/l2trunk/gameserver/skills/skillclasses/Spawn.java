@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
@@ -8,7 +9,6 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

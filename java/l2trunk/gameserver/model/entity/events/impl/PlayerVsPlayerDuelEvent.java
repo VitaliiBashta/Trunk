@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.model.GameObject;
@@ -14,8 +14,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.util.List;
 
-public class PlayerVsPlayerDuelEvent extends DuelEvent {
-    public PlayerVsPlayerDuelEvent(MultiValueSet<String> set) {
+public final class PlayerVsPlayerDuelEvent extends DuelEvent {
+    public PlayerVsPlayerDuelEvent(StatsSet set) {
         super(set);
     }
 

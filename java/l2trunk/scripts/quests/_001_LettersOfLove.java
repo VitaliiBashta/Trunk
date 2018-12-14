@@ -85,7 +85,7 @@ public class _001_LettersOfLove extends Quest implements ScriptFile {
                     st.takeItems(BAULS_POTION, -1);
                     st.giveItems(NECKLACE, 1, false);
                     if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                        st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                        st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                     st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 1200 + 2466 * Config.RATE_QUESTS_REWARD), false); // T2
                     st.getPlayer().addExpAndSp(5672, 446);
                     st.playSound(SOUND_FINISH);

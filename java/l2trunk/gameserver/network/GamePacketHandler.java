@@ -514,7 +514,7 @@ public final class GamePacketHandler implements IPacketHandler<GameClient>, ICli
                             msg = new RequestTutorialClientEvent();
                             break;
                         case 0x89:
-                            msg = new RequestPetition();
+//                            msg = new RequestPetition();
                             break;
                         case 0x8a:
                             msg = new RequestPetitionCancel();
@@ -1090,13 +1090,13 @@ public final class GamePacketHandler implements IPacketHandler<GameClient>, ICli
                                     msg = new RequestExCancelSentPost();
                                     break;
                                 case 0x70:
-                                    msg = new RequestExShowNewUserPetition();
+//                                    msg = new RequestExShowNewUserPetition();
                                     break;
                                 case 0x71:
-                                    msg = new RequestExShowStepTwo();
+//                                    msg = new RequestExShowStepTwo();
                                     break;
                                 case 0x72:
-                                    msg = new RequestExShowStepThree();
+//                                    msg = new RequestExShowStepThree();
                                     break;
                                 case 0x73:
                                     //msg = new ExRaidReserveResult();

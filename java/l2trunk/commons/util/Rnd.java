@@ -78,7 +78,7 @@ public  final class Rnd {
 
     public static <E> E get(List<E> list) {
         if (list.size() == 0)
-            return null;
+            throw new IllegalArgumentException("can't get random from emprty list: " );
 
         return list.get(get(list.size()));
     }

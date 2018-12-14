@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MultiValueIntegerMap {
+public final class MultiValueIntegerMap {
     private final Map<Integer, List<Integer>> map;
 
     public MultiValueIntegerMap() {
@@ -18,13 +18,6 @@ public class MultiValueIntegerMap {
 
     public Collection<List<Integer>> values() {
         return map.values();
-    }
-
-    public List<Integer> allValues() {
-        List<Integer> result = new ArrayList<>();
-        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet())
-            result.addAll(entry.getValue());
-        return result;
     }
 
     public Set<Entry<Integer, List<Integer>>> entrySet() {

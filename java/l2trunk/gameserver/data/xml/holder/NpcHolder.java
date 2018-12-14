@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public final class NpcHolder {
     private static final Logger LOG = LoggerFactory.getLogger(NpcHolder.class);
     private static final Map<Integer, NpcTemplate> npcs = new HashMap<>(20000);
+
     private NpcHolder() {
     }
 

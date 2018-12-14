@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Creature;
@@ -16,11 +17,10 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncMul;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class SummonSiegeFlag extends Skill {
+public final class SummonSiegeFlag extends Skill {
     private final FlagType _flagType;
     private final double _advancedMult;
 

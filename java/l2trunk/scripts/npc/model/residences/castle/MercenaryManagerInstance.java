@@ -7,7 +7,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
  * @author VISTALL
  * @date 17:35/13.07.2011
  */
-class MercenaryManagerInstance extends MerchantInstance {
+public class MercenaryManagerInstance extends MerchantInstance {
     public MercenaryManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

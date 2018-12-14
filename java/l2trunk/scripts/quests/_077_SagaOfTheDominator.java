@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _077_SagaOfTheDominator extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _077_SagaOfTheDominator extends SagasSuperclass implements ScriptFile {
     public _077_SagaOfTheDominator() {
         super(false);
 
-        NPC = new int[]{
-                31336,
-                31624,
-                31371,
-                31290,
-                31636,
-                31646,
-                31648,
-                31653,
-                31654,
-                31655,
-                31656,
-                31290
-        };
-        Items = new int[]{
-                7080,
-                7539,
-                7081,
-                7492,
-                7275,
-                7306,
-                7337,
-                7368,
-                7399,
-                7430,
-                7100,
-                0
-        };
-        Mob = new int[]{
-                27294,
-                27226,
-                27262
-        };
+        NPC = List.of(31336, 31624, 31371, 31290, 31636, 31646, 31648, 31653, 31654, 31655, 31656, 31290);
+        Items = List.of(7080, 7539, 7081, 7492, 7275, 7306, 7337, 7368, 7399, 7430, 7100, 0);
+        Mob = List.of(27294, 27226, 27262);
         classid = 115;
         prevclass = 0x33;
-        X = new int[]{
-                164650,
-                47429,
-                47391
-        };
-        Y = new int[]{
-                -74121,
-                -56923,
-                -56929
-        };
-        Z = new int[]{
-                -2871,
-                -2383,
-                -2370
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(164650, -74121, -2871),
+                new Location(47429, -56923, -2383),
+                new Location(47391, -56929, -2370));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _077_SagaOfTheDominator extends SagasSuperclass implements ScriptFi
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

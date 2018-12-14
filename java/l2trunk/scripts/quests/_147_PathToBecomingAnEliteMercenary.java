@@ -86,7 +86,7 @@ public class _147_PathToBecomingAnEliteMercenary extends Quest implements Script
                     else if (st.getCond() == 3)
                         st.setCond(4);
                     st.unset("enemies");
-                    st.getPlayer().sendPacket(new ExShowScreenMessage(NpcString.YOU_WEAKENED_THE_ENEMYS_ATTACK, 4000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true));
+                    st.getPlayer().sendPacket(new ExShowScreenMessage(NpcString.YOU_WEAKENED_THE_ENEMYS_ATTACK, 4000));
                 }
             }
         }

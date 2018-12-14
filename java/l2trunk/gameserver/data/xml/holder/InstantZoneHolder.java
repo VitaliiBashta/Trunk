@@ -7,7 +7,7 @@ import l2trunk.gameserver.templates.InstantZone;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class InstantZoneHolder  {
+public final class InstantZoneHolder {
     private InstantZoneHolder() {
     }
 

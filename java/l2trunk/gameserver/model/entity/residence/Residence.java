@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.residence;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntity;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.threading.RunnableImpl;
@@ -16,7 +17,6 @@ import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;

@@ -1,10 +1,8 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.collections.MultiValueSet;
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.data.xml.holder.AirshipDockHolder;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.model.entity.events.EventAction;
 import l2trunk.gameserver.model.entity.events.EventType;
@@ -21,13 +19,14 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.*;
 
-public enum  EventParser  {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public enum EventParser {
     INSTANCE;
     private static Path xml = Config.DATAPACK_ROOT.resolve("data/events/");
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
@@ -40,7 +39,7 @@ public enum  EventParser  {
     protected void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator("event"); iterator.hasNext(); ) {
             Element eventElement = iterator.next();
-            int id = Integer.parseInt(eventElement.attributeValue("id"));
+            int id = toInt(eventElement.attributeValue("id"));
             String name = eventElement.attributeValue("name");
             String impl = eventElement.attributeValue("impl");
             EventType type = EventType.valueOf(eventElement.attributeValue("type"));
@@ -53,12 +52,12 @@ public enum  EventParser  {
             }
 
             try {
-                Constructor<GlobalEvent> constructor = eventClass.getConstructor(MultiValueSet.class);
+                Constructor<GlobalEvent> constructor = eventClass.getConstructor(StatsSet.class);
 
-                MultiValueSet<String> set = new MultiValueSet<>();
-                set.set("id", id);
-                set.set("name", name);
-                set.set("eventClass", "l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
+                StatsSet set = new StatsSet()
+                        .set("id", id)
+                        .set("name", name)
+                        .set("eventClass", "l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
 
                 for (Iterator<Element> parameterIterator = eventElement.elementIterator("parameter"); parameterIterator.hasNext(); ) {
                     Element parameterElement = parameterIterator.next();
@@ -75,7 +74,7 @@ public enum  EventParser  {
                 if (onTime != null)
                     for (Iterator<Element> onTimeIterator = onTime.elementIterator("on"); onTimeIterator.hasNext(); ) {
                         Element on = onTimeIterator.next();
-                        int time = Integer.parseInt(on.attributeValue("time"));
+                        int time = toInt(on.attributeValue("time"));
 
                         List<EventAction> actions = parseActions(on, time);
 
@@ -90,7 +89,7 @@ public enum  EventParser  {
                     event.addObjects(objectsName, objects);
                 }
                 EventHolder.addEvent(type, event);
-            } catch (IndexOutOfBoundsException e ) {
+            } catch (IndexOutOfBoundsException e) {
 
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
@@ -121,28 +120,28 @@ public enum  EventParser  {
             else if (nodeName.equalsIgnoreCase("spawn_ex"))
                 objects.add(new SpawnExObject(objectsElement.attributeValue("name")));
             else if (nodeName.equalsIgnoreCase("door"))
-                objects.add(new DoorObject(Integer.parseInt(objectsElement.attributeValue("id"))));
+                objects.add(new DoorObject(toInt(objectsElement.attributeValue("id"))));
             else if (nodeName.equalsIgnoreCase("static_object"))
-                objects.add(new StaticObjectObject(Integer.parseInt(objectsElement.attributeValue("id"))));
+                objects.add(new StaticObjectObject(toInt(objectsElement.attributeValue("id"))));
             else if (nodeName.equalsIgnoreCase("combat_flag")) {
-                int x = Integer.parseInt(objectsElement.attributeValue("x"));
-                int y = Integer.parseInt(objectsElement.attributeValue("y"));
-                int z = Integer.parseInt(objectsElement.attributeValue("z"));
+                int x = toInt(objectsElement.attributeValue("x"));
+                int y = toInt(objectsElement.attributeValue("y"));
+                int z = toInt(objectsElement.attributeValue("z"));
                 objects.add(new FortressCombatFlagObject(new Location(x, y, z)));
             } else if (nodeName.equalsIgnoreCase("territory_ward")) {
-                int x = Integer.parseInt(objectsElement.attributeValue("x"));
-                int y = Integer.parseInt(objectsElement.attributeValue("y"));
-                int z = Integer.parseInt(objectsElement.attributeValue("z"));
-                int itemId = Integer.parseInt(objectsElement.attributeValue("item_id"));
-                int npcId = Integer.parseInt(objectsElement.attributeValue("npc_id"));
+                int x = toInt(objectsElement.attributeValue("x"));
+                int y = toInt(objectsElement.attributeValue("y"));
+                int z = toInt(objectsElement.attributeValue("z"));
+                int itemId = toInt(objectsElement.attributeValue("item_id"));
+                int npcId = toInt(objectsElement.attributeValue("npc_id"));
                 objects.add(new TerritoryWardObject(itemId, npcId, new Location(x, y, z)));
             } else if (nodeName.equalsIgnoreCase("siege_toggle_npc")) {
-                int id = Integer.parseInt(objectsElement.attributeValue("id"));
-                int fakeId = Integer.parseInt(objectsElement.attributeValue("fake_id"));
-                int x = Integer.parseInt(objectsElement.attributeValue("x"));
-                int y = Integer.parseInt(objectsElement.attributeValue("y"));
-                int z = Integer.parseInt(objectsElement.attributeValue("z"));
-                int hp = Integer.parseInt(objectsElement.attributeValue("hp"));
+                int id = toInt(objectsElement.attributeValue("id"));
+                int fakeId = toInt(objectsElement.attributeValue("fake_id"));
+                int x = toInt(objectsElement.attributeValue("x"));
+                int y = toInt(objectsElement.attributeValue("y"));
+                int z = toInt(objectsElement.attributeValue("z"));
+                int hp = toInt(objectsElement.attributeValue("hp"));
                 Set<String> set = Collections.emptySet();
                 for (Iterator<Element> oIterator = objectsElement.elementIterator(); oIterator.hasNext(); ) {
                     Element sub = oIterator.next();
@@ -157,8 +156,8 @@ public enum  EventParser  {
             } else if (nodeName.equalsIgnoreCase("zone")) {
                 objects.add(new ZoneObject(objectsElement.attributeValue("name")));
             } else if (nodeName.equalsIgnoreCase("ctb_team")) {
-                int mobId = Integer.parseInt(objectsElement.attributeValue("mob_id"));
-                int flagId = Integer.parseInt(objectsElement.attributeValue("id"));
+                int mobId = toInt(objectsElement.attributeValue("mob_id"));
+                int flagId = toInt(objectsElement.attributeValue("id"));
                 Location loc = Location.parse(objectsElement);
 
                 objects.add(new CTBTeamObject(mobId, flagId, loc));
@@ -217,22 +216,22 @@ public enum  EventParser  {
                 InitAction a = new InitAction(name);
                 actions.add(a);
             } else if (actionElement.getName().equalsIgnoreCase("npc_say")) {
-                int npc = Integer.parseInt(actionElement.attributeValue("npc"));
+                int npc = toInt(actionElement.attributeValue("npc"));
                 ChatType chat = ChatType.valueOf(actionElement.attributeValue("chat"));
-                int range = Integer.parseInt(actionElement.attributeValue("range"));
+                int range = toInt(actionElement.attributeValue("range"));
                 NpcString string = NpcString.valueOf(actionElement.attributeValue("text"));
                 NpcSayAction action = new NpcSayAction(npc, range, chat, string);
                 actions.add(action);
             } else if (actionElement.getName().equalsIgnoreCase("play_sound")) {
-                int range = Integer.parseInt(actionElement.attributeValue("range"));
+                int range = toInt(actionElement.attributeValue("range"));
                 String sound = actionElement.attributeValue("sound");
                 PlaySound.Type type = PlaySound.Type.valueOf(actionElement.attributeValue("type"));
 
                 PlaySoundAction action = new PlaySoundAction(range, sound, type);
                 actions.add(action);
             } else if (actionElement.getName().equalsIgnoreCase("give_item")) {
-                int itemId = Integer.parseInt(actionElement.attributeValue("id"));
-                long count = Integer.parseInt(actionElement.attributeValue("count"));
+                int itemId = toInt(actionElement.attributeValue("id"));
+                long count = toInt(actionElement.attributeValue("count"));
 
                 GiveItemAction action = new GiveItemAction(itemId, count);
                 actions.add(action);
@@ -243,7 +242,7 @@ public enum  EventParser  {
                     continue;
                 }
 
-                int val2 = val == null ? time : Integer.parseInt(val);
+                int val2 = val == null ? time : toInt(val);
                 EventAction action = new AnnounceAction(val2);
                 actions.add(action);
             } else if (actionElement.getName().equalsIgnoreCase("if")) {
@@ -269,7 +268,7 @@ public enum  EventParser  {
                     lastIf.setElseList(parseActions(actionElement, time));
             } else if (actionElement.getName().equalsIgnoreCase("say")) {
                 ChatType chat = ChatType.valueOf(actionElement.attributeValue("chat"));
-                int range = Integer.parseInt(actionElement.attributeValue("range"));
+                int range = toInt(actionElement.attributeValue("range"));
 
                 String how = actionElement.attributeValue("how");
                 String text = actionElement.attributeValue("text");

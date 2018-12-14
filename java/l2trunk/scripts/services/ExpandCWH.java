@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-class ExpandCWH extends Functions {
+public class ExpandCWH extends Functions {
     public void get() {
         Player player = getSelf();
         if (player == null)

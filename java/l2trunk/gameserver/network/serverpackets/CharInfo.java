@@ -233,7 +233,7 @@ public final class CharInfo extends L2GameServerPacket {
             _inv[Inventory.PAPERDOLL_DHAIR][1] = 0;
 
         }
-            }
+    }
 
     @Override
     protected final void writeImpl() {
@@ -312,7 +312,7 @@ public final class CharInfo extends L2GameServerPacket {
         writeC(private_store);
         writeH(cubics.size());
         cubics.forEach(cubic ->
-            writeH(cubic == null ? 0 : cubic.getId()));
+                writeH(cubic == null ? 0 : cubic.getId()));
         writeC(_isPartyRoomLeader ? 0x01 : 0x00); // find party members
         writeD(_abnormalEffect);
         writeC(_isFlying ? 0x02 : 0x00);

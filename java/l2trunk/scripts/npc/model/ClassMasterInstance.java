@@ -122,7 +122,7 @@ public final class ClassMasterInstance extends MerchantInstance {
 
         player.setClassId(val, false, false);
         player.broadcastPacket(new SocialAction(player.getObjectId(), SocialAction.VICTORY));
-        final MagicSkillUse msu = new MagicSkillUse(player, player, 2527, 1, 0, 500);
+        final MagicSkillUse msu = new MagicSkillUse(player,  2527,  0, 500);
         player.broadcastPacket(msu);
         player.broadcastCharInfo();
     }

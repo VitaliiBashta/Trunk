@@ -17,8 +17,8 @@ import java.util.List;
 
 public final class FishShots extends ScriptItemHandler implements ScriptFile {
     // All the item IDs that this handler knows.
-    private static final Integer[] _itemIds = {6535, 6536, 6537, 6538, 6539, 6540};
-    private static final Integer[] _skillIds = {2181, 2182, 2183, 2184, 2185, 2186};
+    private static final List<Integer> _itemIds = List.of(6535, 6536, 6537, 6538, 6539, 6540);
+    private static final List<Integer> _skillIds = List.of(2181, 2182, 2183, 2184, 2185, 2186);
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -86,13 +86,13 @@ public final class FishShots extends ScriptItemHandler implements ScriptFile {
         if (player.getInventory().destroyItem(item, 1L, "FishShots")) {
             weaponInst.setChargedFishshot(true);
             player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, player, _skillIds[grade], 1, 0, 0));
+            player.broadcastPacket(new MagicSkillUse(player, _skillIds.get(grade)));
         }
         return true;
     }
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return _itemIds;
     }
 }

@@ -1,8 +1,8 @@
 package l2trunk.gameserver.templates.item;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 
 public final class WeaponTemplate extends ItemTemplate {
     private final int _soulShotCount;

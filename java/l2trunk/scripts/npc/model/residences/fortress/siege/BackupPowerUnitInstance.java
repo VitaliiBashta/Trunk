@@ -102,14 +102,14 @@ public final class BackupPowerUnitInstance extends NpcInstance {
         _index = 0;
 
         for (int i = 0; i < LIMIT; i++)
-            _generated.set(i,  -1);
+            _generated.set(i, -1);
 
         int j = 0;
         while (j != LIMIT) {
             int val = Rnd.get(0, LIMIT);
             if (_generated.contains(val))
                 continue;
-            _generated.set(j++,val);
+            _generated.set(j++, val);
         }
     }
 

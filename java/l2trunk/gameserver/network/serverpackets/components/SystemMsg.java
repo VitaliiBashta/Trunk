@@ -1298,7 +1298,7 @@ public enum SystemMsg implements IStaticPacket {
     GM_S1(704),
     // Message: You cannot exclude yourself.
     YOU_CANNOT_EXCLUDE_YOURSELF(705),
-    // Message: You can only enter up to 128 names in your block list.
+    // Message: You can only enter up to 128 names in your setBlock list.
     YOU_CAN_ONLY_ENTER_UP_TO_128_NAMES_IN_YOUR_BLOCK_LIST(706),
     // Message: You cannot teleport to a village that is in a siege.
     YOU_CANNOT_TELEPORT_TO_A_VILLAGE_THAT_IS_IN_A_SIEGE(707),
@@ -1494,7 +1494,7 @@ public enum SystemMsg implements IStaticPacket {
     MONSTER_RACE_S1_IS_FINISHED(825),
     // Message: First prize goes to the player in lane $s1. Second prize goes to the player in lane $s2.
     FIRST_PRIZE_GOES_TO_THE_PLAYER_IN_LANE_S1(826),
-    // Message: You may not impose a block on a GM.
+    // Message: You may not impose a setBlock on a GM.
     YOU_MAY_NOT_IMPOSE_A_BLOCK_ON_A_GM(827),
     // Message: Are you sure you wish to delete the $s1 macro?
     ARE_YOU_SURE_YOU_WISH_TO_DELETE_THE_S1_MACRO(828),
@@ -2268,7 +2268,7 @@ public enum SystemMsg implements IStaticPacket {
     THE_CONTACT_WILL_BE_DELETED_AND_BLOCKED_FROM_YOUR_CONTACT_LIST(1316),
     // Message: Would you like to delete this contact?
     WOULD_YOU_LIKE_TO_DELETE_THIS_CONTACT(1317),
-    // Message: Please getBonuses the contact you want to block or unblock.
+    // Message: Please getBonuses the contact you want to setBlock or setBlock.
     PLEASE_SELECT_THE_CONTACT_YOU_WANT_TO_BLOCK_OR_UNBLOCK(1318),
     // Message: Please getBonuses the name of the contact you wish to change to another group.
     PLEASE_SELECT_THE_NAME_OF_THE_CONTACT_YOU_WISH_TO_CHANGE_TO_ANOTHER_GROUP(1319),
@@ -2338,7 +2338,7 @@ public enum SystemMsg implements IStaticPacket {
     YOU_HAVE_BEEN_ADDED_TO_S1_S2S_CONTACT_LIST(1352),
     // Message: You can set the option to show your status as always being off-line to all of your contacts.
     YOU_CAN_SET_THE_OPTION_TO_SHOW_YOUR_STATUS_AS_ALWAYS_BEING_OFFLINE_TO_ALL_OF_YOUR_CONTACTS(1353),
-    // Message: You are not allowed to chat with a contact while a chatting block is imposed.
+    // Message: You are not allowed to chat with a contact while a chatting setBlock is imposed.
     YOU_ARE_NOT_ALLOWED_TO_CHAT_WITH_A_CONTACT_WHILE_A_CHATTING_BLOCK_IS_IMPOSED(1354),
     // Message: That contact is currently blocked from chatting.
     THAT_CONTACT_IS_CURRENTLY_BLOCKED_FROM_CHATTING(1355),

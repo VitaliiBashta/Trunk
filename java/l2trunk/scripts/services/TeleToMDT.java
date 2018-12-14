@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-class TeleToMDT extends Functions {
+public final class TeleToMDT extends Functions {
     public void toMDT() {
         Player player = getSelf();
         NpcInstance npc = getNpc();

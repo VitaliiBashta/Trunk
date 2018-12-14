@@ -402,8 +402,10 @@ public abstract class TvTTemplate extends Functions {
 
                     if (!ALLOW_CLAN_SKILL)
                         if (player.getClan() != null)
-                            for (Skill skill : player.getClan().getAllSkills())
-                                player.removeSkill(skill, false);
+                            player.getClan().getAllSkills().stream()
+                                    .mapToInt(Skill::getId)
+                                    .forEach(skill ->
+                                            player.removeSkill(skill, false));
 
                     if (!ALLOW_HERO_SKILL)
                         if (player.isHero())
@@ -436,8 +438,9 @@ public abstract class TvTTemplate extends Functions {
 
                     if (!ALLOW_CLAN_SKILL)
                         if (player.getClan() != null)
-                            for (Skill skill : player.getClan().getAllSkills())
-                                player.removeSkill(skill, false);
+                            player.getClan().getAllSkills().stream()
+                                    .mapToInt(Skill::getId)
+                                    .forEach(skill -> player.removeSkill(skill, false));
 
                     if (!ALLOW_HERO_SKILL)
                         if (player.isHero())
@@ -511,28 +514,28 @@ public abstract class TvTTemplate extends Functions {
 
     private void paralyzeTeams() {
         Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID);
-        for (Player player : getPlayers(_team1list)) {
+        getPlayers(_team1list).forEach(player ->  {
             player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
-            revengeSkill.getEffects(player, player, false, false);
+            revengeSkill.getEffects(player);
             if (player.getPet() != null)
-                revengeSkill.getEffects(player, player.getPet(), false, false);
-        }
-        for (Player player : getPlayers(_team2list)) {
+                revengeSkill.getEffects(player, player.getPet());
+        });
+        getPlayers(_team2list).forEach(player ->  {
             player.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
-            revengeSkill.getEffects(player, player, false, false);
+            revengeSkill.getEffects(player);
             if (player.getPet() != null)
-                revengeSkill.getEffects(player, player.getPet(), false, false);
-        }
+                revengeSkill.getEffects(player, player.getPet());
+        });
     }
 
     private void unParalyzeTeams() {
-        for (Player player : getPlayers(_team1list)) {
+        getPlayers(_team1list).forEach(player ->  {
             player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
             if (player.getPet() != null)
                 player.getPet().getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
 
             player.leaveParty();
-        }
+        });
         for (Player player : getPlayers(_team2list)) {
             player.getEffectList().stopEffect(Skill.SKILL_RAID_CURSE_ID);
             if (player.getPet() != null)
@@ -565,7 +568,7 @@ public abstract class TvTTemplate extends Functions {
         else
             _team2live.remove(player.getStoredId());
         Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID);
-        revengeSkill.getEffects(player, player, false, false);
+        revengeSkill.getEffects(player   );
         return !checkTeams();
     }
 
@@ -718,7 +721,7 @@ public abstract class TvTTemplate extends Functions {
             Player player = cha.getPlayer();
             if (_status >= 2 && player != null && !(_team1list.contains(player.getStoredId()) || _team2list.contains(player.getStoredId())))
                 ThreadPoolManager.INSTANCE.schedule(() -> {
-                    cha.unblock();
+                    cha.setBlock();
                     cha.teleToLocation(_zone.getSpawn());
                 }, 3000);
         }
@@ -733,7 +736,7 @@ public abstract class TvTTemplate extends Functions {
                 int y = (int) (cha.getY() - 50 * Math.cos(radian));
                 int z = cha.getZ();
                 ThreadPoolManager.INSTANCE.schedule(() -> {
-                    cha.unblock();
+                    cha.setBlock();
                     cha.teleToLocation(new Location(x, y, z));
                 }, 3000);
             }

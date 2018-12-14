@@ -27,7 +27,7 @@ public final class BlackJudeInstance extends NpcInstance {
                 if (player.getDeathPenalty().getLevel() > 0)
                     if (player.getAdena() >= getPrice(player)) {
                         player.reduceAdena(getPrice(player), true, "BlackJudeInstance");
-                        doCast(SkillTable.INSTANCE.getInfo(5077), player, false);
+                        doCast(5077, player, false);
                     } else
                         player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
                 else

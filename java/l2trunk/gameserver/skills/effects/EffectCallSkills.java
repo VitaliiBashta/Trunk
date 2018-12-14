@@ -23,8 +23,8 @@ public final class EffectCallSkills extends Effect {
         for (int i = 0; i < skillIds.size(); i++) {
             Skill skill = SkillTable.INSTANCE.getInfo(skillIds.get(i), skillLevels.get(i));
             for (Creature cha : skill.getTargets(getEffector(), getEffected(), false))
-                getEffector().broadcastPacket(new MagicSkillUse(getEffector(), cha, skillIds.get(i), skillLevels.get(i), 0, 0));
-            getEffector().callSkill(skill, skill.getTargets(getEffector(), getEffected(), false), false);
+                getEffector().broadcastPacket(new MagicSkillUse(getEffector(), cha, skillIds.get(i), skillLevels.get(i)));
+            getEffector().callSkill(skillIds.get(i),skillLevels.get(i), skill.getTargets(getEffector(), getEffected(), false), false);
         }
     }
 

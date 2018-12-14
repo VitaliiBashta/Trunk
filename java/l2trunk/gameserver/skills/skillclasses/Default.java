@@ -1,16 +1,16 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class Default extends Skill {
+public final class Default extends Skill {
     private static final Logger _log = LoggerFactory.getLogger(Default.class);
 
     public Default(StatsSet set) {

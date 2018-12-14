@@ -60,7 +60,7 @@ public final class SSQAnakim extends Mystic {
         }
         if (_lastSkillTime < System.currentTimeMillis()) {
             if (getLilith() != null)
-                getActor().broadcastPacket(new MagicSkillUse(getActor(), getLilith(), 6191, 1, 5000, 10));
+                getActor().broadcastPacket(new MagicSkillUse(getActor(), getLilith(), 6191,  1,5000, 10));
             _lastSkillTime = System.currentTimeMillis() + 6500;
         }
         return true;

@@ -48,7 +48,6 @@ public enum AdminCommandHandler {
         registerAdminCommandHandler(new AdminMammon());
         registerAdminCommandHandler(new AdminManor());
         registerAdminCommandHandler(new AdminMenu());
-        registerAdminCommandHandler(new AdminMonsterRace());
         registerAdminCommandHandler(new AdminPanel());
         registerAdminCommandHandler(new AdminNochannel());
         registerAdminCommandHandler(new AdminOlympiad());

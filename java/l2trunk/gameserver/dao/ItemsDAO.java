@@ -32,7 +32,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     private final static String UPDATE_ITEM = "UPDATE items SET owner_id = ?, item_id = ?, count = ?, enchant_level = ?, loc = ?, loc_data = ?, custom_type1 = ?, custom_type2 = ?, life_time = ?, custom_flags = ?, augmentation_id = ?, attribute_fire = ?, attribute_water = ?, attribute_wind = ?, attribute_earth = ?, attribute_holy = ?, attribute_unholy = ?, agathion_energy=?, visual_item_id=? WHERE object_id = ?";
     private final static String REMOVE_ITEM = "DELETE FROM items WHERE object_id = ?";
 
-//    private final static ItemsDAO instance = new ItemsDAO();
+    //    private final static ItemsDAO instance = new ItemsDAO();
     private Cache cache;
     private final AtomicLong load = new AtomicLong();
     private final AtomicLong insert = new AtomicLong();

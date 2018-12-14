@@ -96,7 +96,7 @@ public class _005_MinersFavor extends Quest implements ScriptFile {
                 st.giveItems(NECKLACE, 1, false);
                 st.getPlayer().addExpAndSp(5672, 446);
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.giveItems(ADENA_ID, 2466);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);

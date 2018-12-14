@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 public class AtomicState {
     private static final AtomicIntegerFieldUpdater<AtomicState> stateUpdater = AtomicIntegerFieldUpdater.newUpdater(AtomicState.class, "value");
 
-    private volatile int value;
+    private volatile int value= 0;
 
     private AtomicState(boolean initialValue) {
         value = initialValue ? 1 : 0;

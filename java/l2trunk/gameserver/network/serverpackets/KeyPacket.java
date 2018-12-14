@@ -1,33 +1,24 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class KeyPacket extends L2GameServerPacket {
-    //private final int[] _signatures;
-    private final byte[] _key;
+public final class KeyPacket extends L2GameServerPacket {
+    private final byte[] key;
 
     public KeyPacket(byte key[]) {
-        _key = key;
-        //_signatures = ClickersSignatureDao.INSTANCE().getSignatures();
+        this.key = key;
     }
 
     @Override
     public void writeImpl() {
         writeC(0x2E);
-        if (_key == null || _key.length == 0) {
+        if (key == null || key.length == 0) {
             writeC(0x00);
             return;
         }
         writeC(0x01);
-        writeB(_key);
+        writeB(key);
         writeD(0x01);
         writeD(0x00);
         writeC(0x00);
         writeD(0x00); // Seed (obfuscation key)
-
-        //writeD(_signatures.length);
-
-        //for(int sig : _signatures)
-        //{
-        //	writeD(sig);
-        //}
     }
 }

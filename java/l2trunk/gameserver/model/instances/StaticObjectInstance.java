@@ -15,7 +15,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.Collections;
 import java.util.List;
 
-public class StaticObjectInstance extends GameObject {
+public final class StaticObjectInstance extends GameObject {
     private final HardReference<StaticObjectInstance> reference;
     private final StaticObjectTemplate _template;
     private int _meshIndex;

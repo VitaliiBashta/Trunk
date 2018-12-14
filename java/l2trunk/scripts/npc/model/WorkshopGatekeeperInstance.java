@@ -17,7 +17,6 @@ import java.util.Set;
 
 /**
  * Открывает двери 5го этажа Tully Workshop
- *
  */
 public final class WorkshopGatekeeperInstance extends NpcInstance {
     private static final Map<Integer, Set<Integer>> doors = new HashMap<>();

@@ -12,7 +12,7 @@ public final class CubicHolder {
     private static final Map<Integer, CubicTemplate> cubics = new HashMap<>(10);
 
     public static void addCubicTemplate(CubicTemplate template) {
-        cubics.put(template.getId()* 10000 + template.getLevel(), template);
+        cubics.put(template.getId() * 10000 + template.getLevel(), template);
     }
 
     public static CubicTemplate getTemplate(int id, int level) {

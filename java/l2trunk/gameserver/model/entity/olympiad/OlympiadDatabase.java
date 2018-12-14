@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.olympiad;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.OlympiadNobleDAO;
@@ -9,7 +10,6 @@ import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

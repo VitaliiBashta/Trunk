@@ -1,16 +1,16 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 
 import java.util.Calendar;
 
-public class March8Event extends GlobalEvent {
+public final class March8Event extends GlobalEvent {
     private static final long LENGTH = 7 * 24 * 60 * 60 * 1000L;
     private final Calendar _calendar = Calendar.getInstance();
 
-    public March8Event(MultiValueSet<String> set) {
+    public March8Event(StatsSet set) {
         super(set);
     }
 

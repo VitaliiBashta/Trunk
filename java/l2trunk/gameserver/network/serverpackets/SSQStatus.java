@@ -1,9 +1,9 @@
 package l2trunk.gameserver.network.serverpackets;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.SevenSigns;
 import l2trunk.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
-import l2trunk.gameserver.templates.StatsSet;
 
 /**
  * Seven Signs Record Update

@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.NumberUtils;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
@@ -7,7 +8,6 @@ import l2trunk.gameserver.model.instances.residences.SiegeFlagInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.conditions.ConditionTargetRelation;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,7 +96,7 @@ public final class ChainHeal extends Skill {
         }
 
         List<HealTarget> sortedTargets = new ArrayList<>(healTargets);
-        sortedTargets.sort( (o1, o2) -> {
+        sortedTargets.sort((o1, o2) -> {
             if ((o1 == null) || (o2 == null)) {
                 return 0;
             }

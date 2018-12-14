@@ -62,7 +62,7 @@ public class _101_SwordOfSolidarity extends Quest implements ScriptFile {
 
             if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
                 st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 st.giveItems(1060, 100); // healing potion
                 for (int item = 4412; item <= 4417; item++)
                     st.giveItems(item, 10); // echo cry

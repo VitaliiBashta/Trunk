@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
@@ -11,11 +12,10 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Sowing extends Skill {
+public final class Sowing extends Skill {
     public Sowing(StatsSet set) {
         super(set);
     }

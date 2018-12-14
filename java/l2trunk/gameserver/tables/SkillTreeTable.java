@@ -42,7 +42,7 @@ public class SkillTreeTable {
 
         if (learn.getMinLevel() > player.getLevel() + 5) // Official +9 (Alexander)
         {
-            player.removeSkill(skill, true);
+            player.removeSkill(skill.getId(), true);
 
             // если у нас низкий лвл для скила, то заточка обнуляется 100%
             // и ищем от большего к меньшему подходящий лвл для скила

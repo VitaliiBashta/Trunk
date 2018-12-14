@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.geodata.GeoEngine;
@@ -105,7 +105,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
 
     public abstract void respawnNpc(NpcInstance oldNpc);
 
-    protected abstract NpcInstance initNpc(NpcInstance mob, boolean spawn, MultiValueSet<String> set);
+    abstract NpcInstance initNpc(NpcInstance mob, boolean spawn, StatsSet set);
 
     public abstract int getCurrentNpcId();
 
@@ -163,7 +163,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------
-    NpcInstance doSpawn0(NpcTemplate template, boolean spawn, MultiValueSet<String> set) {
+    NpcInstance doSpawn0(NpcTemplate template, boolean spawn, StatsSet set) {
         if (template.isInstanceOf(PetInstance.class) || template.isInstanceOf(MinionInstance.class)) {
             _currentCount++;
             return null;
@@ -177,7 +177,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         return initNpc(tmp, spawn, set);
     }
 
-    NpcInstance initNpc0(NpcInstance mob, Location newLoc, boolean spawn, MultiValueSet<String> set) {
+    NpcInstance initNpc0(NpcInstance mob, Location newLoc, boolean spawn, StatsSet set) {
         mob.setParameters(set);
 
         // Set the HP and MP of the L2NpcInstance to the max

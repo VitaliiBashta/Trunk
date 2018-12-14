@@ -1,7 +1,7 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
 import l2trunk.commons.collections.CollectionUtils;
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.dao.SiegeClanDAO;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
@@ -16,16 +16,14 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObject> {
+public final class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObject> {
     public static final String REFUND = "refund";
     private static final String NEXT_STEP = "next_step";
     private boolean _arenaClosed = true;
 
-    public ClanHallMiniGameEvent(MultiValueSet<String> set) {
+    public ClanHallMiniGameEvent(StatsSet set) {
         super(set);
     }
 
@@ -67,7 +65,7 @@ public class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeClanObje
 
         List<CMGSiegeClanObject> temp = new ArrayList<>(4);
 
-        clans.forEach(siegeClan ->{
+        clans.forEach(siegeClan -> {
             SiegeClanDAO.INSTANCE.delete(getResidence(), siegeClan);
 
             if (temp.size() == 4) {

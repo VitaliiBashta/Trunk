@@ -42,7 +42,7 @@ public final class GeoEngine {
     /**
      * Dany array contains all the geodata server. <BR>
      * First 2 [] [] (byte [*] [*] [] []) are x and y region. <BR>
-     * Third [] (byte [] [] [*] []) is a block of geodata. <BR>
+     * Third [] (byte [] [] [*] []) is a setBlock of geodata. <BR>
      * The fourth [] (byte [] [] [] [*]) is a container for all the units in the
      * region. <BR>
      */
@@ -163,7 +163,7 @@ public final class GeoEngine {
     }
 
     /**
-     * @return True if NSWE dont block given direction
+     * @return True if NSWE dont setBlock given direction
      */
     private static boolean checkNSWE(byte NSWE, int x, int y, int tx, int ty) {
         if (NSWE == NSWE_ALL)
@@ -744,7 +744,7 @@ public final class GeoEngine {
     }
 
     /**
-     * @return returns the height of the next block, or if the move can not be
+     * @return returns the height of the next setBlock, or if the move can not be
      * Integer.MIN_VALUE
      */
     private static int NcanMoveNext(int x, int y, int z, short[] layers, int next_x, int next_y, short[] next_layers, short[] temp_layers, boolean withCollision, int geoIndex) {
@@ -863,7 +863,7 @@ public final class GeoEngine {
 
         int cellX, cellY;
         int index = 0;
-        // Read current block type: 0 - flat, 1 - complex, 2 - multilevel
+        // Read current setBlock type: 0 - flat, 1 - complex, 2 - multilevel
         byte type = block[index];
         index++;
 
@@ -903,7 +903,7 @@ public final class GeoEngine {
                 }
                 return;
             default:
-                _log.error("GeoEngine: Unknown block type");
+                _log.error("GeoEngine: Unknown setBlock type");
         }
     }
 
@@ -924,7 +924,7 @@ public final class GeoEngine {
 
         int cellX, cellY, index = 0;
 
-        // Read current block type: 0 - flat, 1 - complex, 2 - multilevel
+        // Read current setBlock type: 0 - flat, 1 - complex, 2 - multilevel
         byte type = block[index];
         index++;
 
@@ -989,7 +989,7 @@ public final class GeoEngine {
         int cellX, cellY;
         int index = 0;
 
-        // Read current block type: 0 - flat, 1 - complex, 2 - multilevel
+        // Read current setBlock type: 0 - flat, 1 - complex, 2 - multilevel
         byte type = block[index];
         index++;
 
@@ -1048,7 +1048,7 @@ public final class GeoEngine {
 
                 return NSWE_ALL;
             default:
-                _log.error("GeoEngine: Unknown block type.");
+                _log.error("GeoEngine: Unknown setBlock type.");
                 return NSWE_ALL;
         }
     }
@@ -1065,7 +1065,7 @@ public final class GeoEngine {
         int cellX, cellY, index = 0;
         short height, NSWE = NSWE_ALL;
 
-        // Read current block type: 0 - flat, 1 - complex, 2 - multilevel
+        // Read current setBlock type: 0 - flat, 1 - complex, 2 - multilevel
         byte type = block[index];
         index++;
 
@@ -1137,7 +1137,7 @@ public final class GeoEngine {
                 result[1] = NSWE;
                 return;
             default:
-                _log.error("GeoEngine: Unknown block type.");
+                _log.error("GeoEngine: Unknown setBlock type.");
                 result[0] = z;
                 result[1] = NSWE_ALL;
         }
@@ -1164,11 +1164,11 @@ public final class GeoEngine {
     }
 
     /**
-     * Creates a block index geodata given the coordinates of the block.
+     * Creates a setBlock index geodata given the coordinates of the setBlock.
      *
-     * @param blockX to block geoX
-     * @param blockY to block по geoY
-     * @return block index
+     * @param blockX to setBlock geoX
+     * @param blockY to setBlock по geoY
+     * @return setBlock index
      */
     private static int getBlockIndex(int blockX, int blockY) {
         return (blockX << 8) + blockY;
@@ -1184,7 +1184,7 @@ public final class GeoEngine {
      * It is the actual unit for the current geo-coordinates. <BR>
      * Is the workpiece to return otdelnіh units with doors @ Param geoX
      * geographic coordinates @ Param geoY geographic coordinates @ Return the
-     * current block geodata, or null if there is no geodata.
+     * current setBlock geodata, or null if there is no geodata.
      */
     private static byte[] getGeoBlockFromGeoCoords(int geoX, int geoY, int geoIndex) {
         if (!Config.ALLOW_GEODATA)
@@ -1222,7 +1222,7 @@ public final class GeoEngine {
         }
         if (b == null) {
             System.out.println("DEBUG: " + regIndex + " - " + a);
-            _log.warn("Warning null block detected [test]");
+            _log.warn("Warning null setBlock detected [test]");
             return null;
         }
         return region[regIndex][getBlockIndex(blockX, blockY)];
@@ -1395,7 +1395,7 @@ public final class GeoEngine {
             // геодаты
         }
 
-        // Indexing geo files, so we will know where each block starts
+        // Indexing geo files, so we will know where each setBlock starts
         for (block = 0; block < BLOCKS_IN_MAP; block++) {
             byte type = geo.get(index);
             index++;
@@ -1404,7 +1404,7 @@ public final class GeoEngine {
             switch (type) {
                 case BLOCKTYPE_FLAT:
 
-                    // Create a block of geodata
+                    // Create a setBlock of geodata
                     geoBlock = new byte[2 + 1];
 
                     // Read the required data from geodata
@@ -1415,13 +1415,13 @@ public final class GeoEngine {
                     // Increment the index
                     index += 2;
 
-                    // Adding block geodata
+                    // Adding setBlock geodata
                     blocks[block] = geoBlock;
                     break;
 
                 case BLOCKTYPE_COMPLEX:
 
-                    // Create a block of geodata
+                    // Create a setBlock of geodata
                     geoBlock = new byte[128 + 1];
 
                     // Read the data with geodata
@@ -1433,7 +1433,7 @@ public final class GeoEngine {
                     // Increment the index
                     index += 128;
 
-                    // Adding block geodata
+                    // Adding setBlock geodata
                     blocks[block] = geoBlock;
                     break;
 
@@ -1441,7 +1441,7 @@ public final class GeoEngine {
                     // Original Index
                     orgIndex = index;
 
-                    // We consider the length of the block geodata
+                    // We consider the length of the setBlock geodata
                     for (int b = 0; b < 64; b++) {
                         byte layers = geo.get(index);
                         MAX_LAYERS = Math.max(MAX_LAYERS, layers);
@@ -1462,7 +1462,7 @@ public final class GeoEngine {
                     geo.position(orgIndex);
                     geo.get(geoBlock, 1, diff);
 
-                    // Adding block geodata
+                    // Adding setBlock geodata
                     blocks[block] = geoBlock;
                     break;
                 default:
@@ -1483,7 +1483,7 @@ public final class GeoEngine {
         synchronized (geodata) {
             byte[][][] region = geodata[ix][iy];
 
-            // We are looking for a free block
+            // We are looking for a free setBlock
             for (int i = 0; i < region.length; i++) {
                 if (region[i] == null) {
                     regIndex = i;
@@ -1491,7 +1491,7 @@ public final class GeoEngine {
                 }
             }
 
-            // Free block is not present, create a new
+            // Free setBlock is not present, create a new
             if (regIndex == -1) {
                 byte[][][] resizedRegion = new byte[(regIndex = region.length) + 1][][];
                 for (int i = 0; i < region.length; i++)
@@ -1530,7 +1530,7 @@ public final class GeoEngine {
     /**
      * Converts FLAT blocks COMPLEX <br>
      *
-     * @ Param ix region x @ Param iy y region @ Param blockIndex block index in
+     * @ Param ix region x @ Param iy y region @ Param blockIndex setBlock index in
      * the region
      */
 
@@ -1541,10 +1541,10 @@ public final class GeoEngine {
      * if (region == null) { Log.add("door at null region? [" + ix + "][" + iy +
      * "]", "doors"); return; }
      *
-     * byte[] block = region[blockIndex][0]; byte blockType = block[0];
+     * byte[] setBlock = region[blockIndex][0]; byte blockType = setBlock[0];
      *
      * switch (blockType) { case BLOCKTYPE_FLAT: short height =
-     * makeShort(block[2], block[1]); height &= 0x0fff0; height <<= 1; height |=
+     * makeShort(setBlock[2], setBlock[1]); height &= 0x0fff0; height <<= 1; height |=
      * NORTH; height |= SOUTH; height |= WEST; height |= EAST; byte[] newblock =
      * new byte[129]; newblock[0] = BLOCKTYPE_COMPLEX; for (int i = 1; i < 129;
      * i += 2) { newblock[i + 1] = (byte) (height >> 8); newblock[i] = (byte)
@@ -1745,7 +1745,7 @@ public final class GeoEngine {
                 int geoX = minX + gX;
                 int geoY = minY + gY;
 
-                // Trying to copy a block of geodata, if already exists, it is
+                // Trying to copy a setBlock of geodata, if already exists, it is
                 // not copied
                 // TODO: if (first_time)
                 // copyBlock(ix, iy, blockIndex);

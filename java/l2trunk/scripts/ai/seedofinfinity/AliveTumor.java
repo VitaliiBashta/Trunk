@@ -32,7 +32,7 @@ public final class AliveTumor extends DefaultAI {
                 coffinsCount = i;
                 coffinsCount = Math.min(coffinsCount, 12);
                 if (coffinsCount > 0)
-                    actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(5940, coffinsCount));
+                    actor.altOnMagicUseTimer(actor, 5940, coffinsCount);
             }
         }
         return super.thinkActive();

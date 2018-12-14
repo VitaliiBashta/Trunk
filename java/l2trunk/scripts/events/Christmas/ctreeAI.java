@@ -1,21 +1,18 @@
 package l2trunk.scripts.events.Christmas;
 
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.skills.SkillsEngine;
 import l2trunk.gameserver.skills.effects.EffectTemplate;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
+import l2trunk.gameserver.tables.SkillTable;
 
-import java.nio.file.Path;
+import java.util.Objects;
 
 public final class ctreeAI extends DefaultAI {
-    private  final Path ORIGINAL_EFFECT_FILE = Config.DATAPACK_ROOT.resolve("data/stats/skills/2100-2199.xml");
     private static final int ORIGINAL_EFFECT_ID = 2139;
     private static final int RANGE = 200;
     private final Skill treeEffect;
@@ -25,7 +22,15 @@ public final class ctreeAI extends DefaultAI {
         treeEffect = getRandomTreeEffect();
     }
 
-    private  Skill getRandomTreeEffect() {
+    private static void changeSkillEffect(Stats stat, double mult) {
+        FuncTemplate func = new FuncTemplate(null, "Mul", stat, 0x30, mult);
+        for (EffectTemplate template : SkillTable.INSTANCE.getInfo(ctreeAI.ORIGINAL_EFFECT_ID).getEffectTemplates()) {
+            template.clearAttachedFuncs();
+            template.attachFunc(func);
+        }
+    }
+
+    private Skill getRandomTreeEffect() {
         int random = Rnd.get(7);
         switch (random) {
             case 0:
@@ -47,18 +52,10 @@ public final class ctreeAI extends DefaultAI {
         }
     }
 
-    private  Skill createRandomSkillEffect(Stats stat, double mult) {
-        Skill copiedSkill = SkillsEngine.INSTANCE.loadSkill(ORIGINAL_EFFECT_ID, ORIGINAL_EFFECT_FILE);
-        changeSkillEffect(copiedSkill, stat, mult);
+    private Skill createRandomSkillEffect(Stats stat, double mult) {
+        Skill copiedSkill = SkillTable.INSTANCE.getInfo(ORIGINAL_EFFECT_ID);
+        changeSkillEffect(stat, mult);
         return copiedSkill;
-    }
-
-    private static void changeSkillEffect(Skill skill, Stats stat, double mult) {
-        FuncTemplate func = new FuncTemplate(null, "Mul", stat, 0x30, mult);
-        for (EffectTemplate template : skill.getEffectTemplates()) {
-            template.clearAttachedFuncs();
-            template.attachFunc(func);
-        }
     }
 
     @Override
@@ -66,11 +63,10 @@ public final class ctreeAI extends DefaultAI {
         NpcInstance actor = getActor();
         if (actor == null)
             return true;
-
-        for (Player player : World.getAroundPlayers(actor, RANGE, RANGE))
-            if (player != null && player.getEffectList().getEffectsBySkillId(ORIGINAL_EFFECT_ID) == null) {
-                actor.doCast(treeEffect, player, true);
-            }
+        World.getAroundPlayers(actor, RANGE, RANGE).stream()
+                .filter(Objects::nonNull)
+                .filter(player -> player.getEffectList().getEffectsBySkillId(ORIGINAL_EFFECT_ID) == null)
+                .forEach(player -> actor.doCast(treeEffect, player, true));
         return false;
     }
 

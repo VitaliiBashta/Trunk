@@ -1,9 +1,9 @@
 package l2trunk.gameserver.dao;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.stream.Stream;
 
 public final class OlympiadNobleDAO {
 
@@ -35,13 +36,12 @@ public final class OlympiadNobleDAO {
              PreparedStatement statement = con.prepareStatement(SELECT_SQL_QUERY);
              ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
-                int classId = rset.getInt(Olympiad.CLASS_ID);
-                if (classId < 88) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
-                    for (ClassId id : ClassId.VALUES)
-                        if (id.level() == 3 && id.getParent(0).getId() == classId) {
-                            classId = id.getId();
-                            break;
-                        }
+                int tempId = rset.getInt(Olympiad.CLASS_ID);
+//                if (tempId < 88) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
+                int classId = Stream.of(ClassId.VALUES)
+                        .filter(id -> id.level() == 3)
+                        .filter(id -> id.getParent(0).getId() == tempId)
+                        .mapToInt(ClassId::getId).findFirst().orElse(tempId);
 
                 StatsSet statDat = new StatsSet();
                 int charId = rset.getInt(Olympiad.CHAR_ID);

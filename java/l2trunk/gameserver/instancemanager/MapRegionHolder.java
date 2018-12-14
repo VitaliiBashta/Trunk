@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.templates.mapregion.RegionData;
 import l2trunk.gameserver.utils.Location;
 
-public final class MapRegionHolder /*extends AbstractHolder*/ {
+public final class MapRegionHolder  {
     private static final MapRegionHolder _instance = new MapRegionHolder();
     private static final RegionData[][][] map = new RegionData[World.WORLD_SIZE_X][World.WORLD_SIZE_Y][0];
 

@@ -10,14 +10,15 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.npc.model.OrfenInstance;
 
+import java.util.Arrays;
 import java.util.List;
 
 public final class Orfen extends Fighter {
-    private static final PrintfFormat[] MsgOnRecall = {
+    private static final List<PrintfFormat> MsgOnRecall = Arrays.asList(
             new PrintfFormat("%s. Stop kidding yourself about your own powerlessness!"),
             new PrintfFormat("%s. I'll make you feel what true fear is!"),
             new PrintfFormat("You're really stupid to have challenged me. %s! Get ready!"),
-            new PrintfFormat("%s. Do you think that's going to work?!")};
+            new PrintfFormat("%s. Do you think that's going to work?!"));
 
     private final List<Skill> _paralyze;
 
@@ -56,7 +57,7 @@ public final class Orfen extends Fighter {
 
         // if(attacker.isMuted() &&)
         if (distance > 300 && distance < 1000 && _damSkills.size() > 0 && Rnd.chance(10)) {
-            Functions.npcSay(actor, MsgOnRecall[Rnd.get(MsgOnRecall.length - 1)].sprintf(attacker.getName()));
+            Functions.npcSay(actor, Rnd.get(MsgOnRecall).sprintf(attacker.getName()));
             teleToLocation(attacker, Location.findFrontPosition(actor, attacker, 0, 50));
             Skill r_skill = _damSkills.get(Rnd.get(_damSkills.size()));
             if (canUseSkill(r_skill, attacker, -1))
@@ -77,9 +78,9 @@ public final class Orfen extends Fighter {
 
         double distance = actor.getDistance(caster);
         if (_damSkills.size() > 0 && skill.getEffectPoint() > 0 && distance < 1000 && Rnd.chance(20)) {
-            Functions.npcSay(actor, MsgOnRecall[Rnd.get(MsgOnRecall.length)].sprintf(caster.getName()));
+            Functions.npcSay(actor, Rnd.get(MsgOnRecall).sprintf(caster.getName()));
             teleToLocation(caster, Location.findFrontPosition(actor, caster, 0, 50));
-            Skill r_skill = _damSkills.get(Rnd.get(_damSkills.size()));
+            Skill r_skill = Rnd.get(_damSkills);
             if (canUseSkill(r_skill, caster, -1))
                 addTaskAttack(caster, r_skill, 1000000);
         }
@@ -87,7 +88,8 @@ public final class Orfen extends Fighter {
 
     @Override
     public OrfenInstance getActor() {
-        return (OrfenInstance) super.getActor();
+        NpcInstance actor = super.getActor();
+        return (OrfenInstance) actor;
     }
 
     private void teleToLocation(Creature attacker, Location loc) {

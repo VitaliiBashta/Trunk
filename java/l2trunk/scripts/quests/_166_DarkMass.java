@@ -76,7 +76,7 @@ public class _166_DarkMass extends Quest implements ScriptFile {
                 st.giveItems(ADENA_ID, 2966);
                 st.getPlayer().addExpAndSp(5672, 446);
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
             }

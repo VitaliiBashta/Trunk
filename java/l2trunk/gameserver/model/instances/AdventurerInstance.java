@@ -11,10 +11,10 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AdventurerInstance extends NpcInstance {
+public final class AdventurerInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(AdventurerInstance.class);
 
-    private AdventurerInstance(int objectId, NpcTemplate template) {
+    public AdventurerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
-public class NewbieGuideInstance extends NpcInstance {
+public final class NewbieGuideInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(NewbieGuideInstance.class);
     private static final List<?> mainHelpers = Arrays.asList(30598, 30599, 30600, 30601, 30602, 32135);
 
-    private NewbieGuideInstance(int objectId, NpcTemplate template) {
+    public NewbieGuideInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

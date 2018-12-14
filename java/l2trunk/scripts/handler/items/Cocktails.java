@@ -86,28 +86,28 @@ public final class Cocktails extends SimpleItemHandler implements ScriptFile {
             case 10178:
             case 15356:
             case 20393:
-                for (int skill : sweet_list) {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
-                }
+                sweet_list.forEach(skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                    player.altOnMagicUseTimer(player, skill);
+                });
                 break;
             // Fresh Fruit Cocktail
             case 10179:
             case 15357:
             case 20394:
                 for (int skill : fresh_list) {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill, 1));
+                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                    player.altOnMagicUseTimer(player, skill);
                 }
                 break;
             //Event - Fresh Milk
             case 14739:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2873, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2891, 6));
-                for (int skill : milk_list) {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
-                }
+                player.broadcastPacket(new MagicSkillUse(player, 2873));
+                player.altOnMagicUseTimer(player, 2891, 6);
+                milk_list.forEach( skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                    player.altOnMagicUseTimer(player, skill);
+                });
             default:
                 return false;
         }

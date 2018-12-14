@@ -11,13 +11,12 @@ public final class GrandIsleofPrayerRace extends Functions {
     private static final int SECRET_KEY = 9694;
 
     public void startRace() {
-        Skill skill = SkillTable.INSTANCE.getInfo(Skill.SKILL_EVENT_TIMER);
         Player player = getSelf();
         NpcInstance npc = getNpc();
-        if (skill == null || player == null || npc == null)
+        if ( player == null || npc == null)
             return;
 
-        getNpc().altUseSkill(skill, player);
+        getNpc().altUseSkill(Skill.SKILL_EVENT_TIMER, player);
         removeItem(player, RACE_STAMP, getItemCount(player, RACE_STAMP), "GrandIsleofPrayerRace$startRace");
         show("default/32349-2.htm", player, npc);
     }

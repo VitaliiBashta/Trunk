@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
@@ -29,8 +30,8 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
     private static final Logger _log = LoggerFactory.getLogger(GameClient.class);
     public static boolean SESSION_OK = MMOClient.SESSION_OK;
     private static byte[] _keyClientEn = new byte[8];
-    private final List<Integer> _charSlotMapping = new ArrayList<>();
     private final GameCrypt _crypt;
+    private List<Integer> _charSlotMapping = new ArrayList<>();
     private GameClientState _state;
     private SecondaryPasswordAuth _secondaryAuth;
     private String _fileId = "";
@@ -229,13 +230,10 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> {
         _sessionKey = sessionKey;
     }
 
-    public void setCharSelection(CharSelectInfoPackage[] chars) {
-        _charSlotMapping.clear();
-
-        for (CharSelectInfoPackage element : chars) {
-            int objectId = element.getObjectId();
-            _charSlotMapping.add(objectId);
-        }
+    public void setCharSelection(List<CharSelectInfoPackage> chars) {
+        _charSlotMapping = chars.stream()
+                .map(CharSelectInfoPackage::getObjectId)
+                .collect(Collectors.toList());
     }
 
     public int getRevision() {

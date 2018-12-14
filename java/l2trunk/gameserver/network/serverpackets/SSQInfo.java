@@ -20,7 +20,6 @@ import l2trunk.gameserver.model.entity.SevenSigns;
  * Возможно и другие вариации, эффект не совсем понятен.
  * 1 0
  * 0 1
- *
  */
 public final class SSQInfo extends L2GameServerPacket {
     private int _state = 0;

@@ -40,7 +40,7 @@ public class _283_TheFewTheProudTheBrave extends Quest implements ScriptFile {
 
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
                     st.getPlayer().setVar("p1q4", "1", -1);
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
                 }
 
                 st.playSound(SOUND_MIDDLE);

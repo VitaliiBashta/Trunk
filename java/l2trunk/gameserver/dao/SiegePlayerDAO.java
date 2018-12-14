@@ -37,7 +37,7 @@ public enum SiegePlayerDAO {
         return set;
     }
 
-    public  void insert(Residence residence, int clanId, int playerId) {
+    public void insert(Residence residence, int clanId, int playerId) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(INSERT_SQL_QUERY)) {
             statement.setInt(1, residence.getId());

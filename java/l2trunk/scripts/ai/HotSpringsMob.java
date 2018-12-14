@@ -4,13 +4,11 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.Mystic;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,15 +39,10 @@ public final class HotSpringsMob extends Mystic {
                 int level = effect.get(0).getSkill().getLevel();
                 if (level < 10) {
                     effect.get(0).exit();
-                    Skill skill = SkillTable.INSTANCE.getInfo(DeBuff, level + 1);
-                    skill.getEffects(actor, attacker, false, false);
+                    SkillTable.INSTANCE.getInfo(DeBuff, level + 1).getEffects(actor, attacker);
                 }
             } else {
-                Skill skill = SkillTable.INSTANCE.getInfo(DeBuff);
-                if (skill != null)
-                    skill.getEffects(actor, attacker, false, false);
-                else
-                    _log.warn("Skill " + DeBuff + " is null, fix it.");
+                SkillTable.INSTANCE.getInfo(DeBuff).getEffects(actor, attacker);
             }
         }
         super.onEvtAttacked(attacker, damage);

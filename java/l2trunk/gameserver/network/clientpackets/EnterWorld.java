@@ -1,7 +1,7 @@
 package l2trunk.gameserver.network.clientpackets;
 
 import Elemental.datatables.OfflineBuffersTable;
-import javafx.util.Pair;
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.MailDAO;
@@ -35,7 +35,6 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.AbnormalEffect;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.*;
 import org.slf4j.Logger;
@@ -278,7 +277,7 @@ public final class EnterWorld extends L2GameClientPacket {
 
             if (activeChar.getVar("Para") != null) {
                 if (!activeChar.isBlocked())
-                    activeChar.block();
+                    activeChar.setBlock(true);
                 activeChar.startAbnormalEffect(AbnormalEffect.HOLD_1);
                 activeChar.abortAttack(true, false);
                 activeChar.abortCast(true, false);
@@ -348,8 +347,7 @@ public final class EnterWorld extends L2GameClientPacket {
             try {
                 int var_gmspeed = Integer.parseInt(activeChar.getVar("gm_gmspeed"));
                 if (var_gmspeed >= 1 && var_gmspeed <= 4) {
-                    Skill skill = SkillTable.INSTANCE.getInfo(7029, var_gmspeed);
-                    activeChar.doCast(skill, activeChar, true);
+                    activeChar.doCast(7029, var_gmspeed, activeChar, true);
                 }
             } catch (NumberFormatException e) {
                 //LOG.error("Error while loading gmSpeed var ", e);

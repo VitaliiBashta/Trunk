@@ -104,15 +104,15 @@ public final class AdminManor implements IAdminCommandHandler {
         replyMSG.append("<br><center>Castle Information:<table width=\"100%\">");
         replyMSG.append("<tr><td></td><td>Current Period</td><td>Next Period</td></tr>");
 
-        ResidenceHolder.getResidenceList(Castle.class).forEach( c->
-            replyMSG.append("<tr><td>")
-                    .append(c.getName())
-                    .append("</td>")
-                    .append("<td>")
-                    .append(c.getManorCost(CastleManorManager.PERIOD_CURRENT))
-                    .append("a</td><td>")
-                    .append(c.getManorCost(CastleManorManager.PERIOD_NEXT))
-                    .append("a</td></tr>"));
+        ResidenceHolder.getResidenceList(Castle.class).forEach(c ->
+                replyMSG.append("<tr><td>")
+                        .append(c.getName())
+                        .append("</td>")
+                        .append("<td>")
+                        .append(c.getManorCost(CastleManorManager.PERIOD_CURRENT))
+                        .append("a</td><td>")
+                        .append(c.getManorCost(CastleManorManager.PERIOD_NEXT))
+                        .append("a</td></tr>"));
 
         replyMSG.append("</table><br></body></html>");
 

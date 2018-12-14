@@ -5,7 +5,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.EnchantItemHolder;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.actor.instances.player.Bonus;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.WarehouseInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -28,7 +27,7 @@ public class RequestEnchantItem extends L2GameClientPacket {
     private static void showEnchantAnimation(Player player, int enchantLevel) {
         enchantLevel = Math.min(enchantLevel, 20);
         final int skillId = 23096 + enchantLevel;
-        final MagicSkillUse msu = new MagicSkillUse(player, player, skillId, 1, 1, 1);
+        final MagicSkillUse msu = new MagicSkillUse(player,  skillId);
         player.broadcastPacket(msu);
     }
 
@@ -130,7 +129,7 @@ public class RequestEnchantItem extends L2GameClientPacket {
 
         int safeEnchantLevel = item.getTemplate().getBodyPart() == ItemTemplate.SLOT_FULL_ARMOR ? Config.SAFE_ENCHANT_FULL_BODY : Config.SAFE_ENCHANT_COMMON;
 
-        double chance=100;
+        double chance = 100;
 
         if (ItemFunctions.isDivineEnchantScroll(scrollId)) // Item Mall divine
             chance = 100;

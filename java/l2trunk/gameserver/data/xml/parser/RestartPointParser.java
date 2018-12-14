@@ -1,12 +1,10 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import javafx.util.Pair;
-import l2trunk.commons.data.xml.AbstractFileParser;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.geometry.Rectangle;
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.data.xml.holder.OptionDataHolder;
 import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.model.World;
@@ -24,7 +22,7 @@ import java.util.*;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public enum  RestartPointParser /*extends AbstractFileParser<MapRegionHolder>*/ {
+public enum RestartPointParser /*extends AbstractFileParser<MapRegionHolder>*/ {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
     Path xml = Config.DATAPACK_ROOT.resolve("data/mapregion/restart_points.xml");

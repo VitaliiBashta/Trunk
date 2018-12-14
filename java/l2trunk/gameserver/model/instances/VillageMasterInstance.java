@@ -36,7 +36,7 @@ import java.util.*;
 public final class VillageMasterInstance extends NpcInstance {
     private static final Logger LOG = LoggerFactory.getLogger(VillageMasterInstance.class);
 
-    private VillageMasterInstance(int objectId, NpcTemplate template) {
+    public VillageMasterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
@@ -805,7 +805,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
             player.broadcastCharInfo();
 
-            doCast(SkillTable.INSTANCE.getInfo(5103), player, true);
+            doCast(5103, player, true);
 
             if (clan.getLevel() >= 4)
                 SiegeUtils.addSiegeSkills(player);
@@ -833,7 +833,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
         player.broadcastCharInfo();
 
-        doCast(SkillTable.INSTANCE.getInfo(5103), player, true);
+        doCast(5103, player, true);
 
         if (clan.getLevel() >= 4)
             SiegeUtils.addSiegeSkills(player);

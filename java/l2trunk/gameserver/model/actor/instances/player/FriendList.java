@@ -12,16 +12,16 @@ import java.sql.Connection;
 import java.util.Collections;
 import java.util.Map;
 
-public class FriendList {
+public final class FriendList {
     private final Player _owner;
-    private Map<Integer, Friend> _friendList = Collections.emptyMap();
+    private Map<Integer, Friend> friendList = Collections.emptyMap();
 
     public FriendList(Player owner) {
         _owner = owner;
     }
 
     public void restore(Connection con) {
-        _friendList = CharacterFriendDAO.select(_owner, con);
+        friendList = CharacterFriendDAO.select(_owner, con);
     }
 
     public void removeFriend(String name) {
@@ -40,7 +40,7 @@ public class FriendList {
     }
 
     public void notifyFriends(boolean login) {
-        for (Friend friend : _friendList.values()) {
+        for (Friend friend : friendList.values()) {
             Player friendPlayer = GameObjectsStorage.getPlayer(friend.getObjectId());
             if (friendPlayer != null) {
                 Friend thisFriend = friendPlayer.getFriendList().getList().get(_owner.getObjectId());
@@ -60,7 +60,7 @@ public class FriendList {
     }
 
     public void addFriend(Player friendPlayer) {
-        _friendList.put(friendPlayer.getObjectId(), new Friend(friendPlayer));
+        friendList.put(friendPlayer.getObjectId(), new Friend(friendPlayer));
 
         CharacterFriendDAO.getInstance().insert(_owner, friendPlayer);
     }
@@ -70,7 +70,7 @@ public class FriendList {
             return 0;
 
         Integer objectId = 0;
-        for (Map.Entry<Integer, Friend> entry : _friendList.entrySet()) {
+        for (Map.Entry<Integer, Friend> entry : friendList.entrySet()) {
             if (name.equalsIgnoreCase(entry.getValue().getName())) {
                 objectId = entry.getKey();
                 break;
@@ -78,7 +78,7 @@ public class FriendList {
         }
 
         if (objectId > 0) {
-            _friendList.remove(objectId);
+            friendList.remove(objectId);
             CharacterFriendDAO.getInstance().delete(_owner, objectId);
             return objectId;
         }
@@ -86,7 +86,7 @@ public class FriendList {
     }
 
     public Map<Integer, Friend> getList() {
-        return _friendList;
+        return friendList;
     }
 
     @Override

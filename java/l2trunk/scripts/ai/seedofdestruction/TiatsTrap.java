@@ -27,16 +27,18 @@ public final class TiatsTrap extends DefaultAI {
     public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (!actor.getAroundCharacters(200, 150).isEmpty()) {
-            Skill skill;
+            int skillId;
+            int skillLvl = 9;
             if (holdTraps.contains(actor.getNpcId()))
-                skill = SkillTable.INSTANCE.getInfo(4186, 9);
+                skillId = 4186;
             else if (damageTraps.contains(actor.getNpcId()))
-                skill = SkillTable.INSTANCE.getInfo(5311, 9);
-            else if (stunTraps.contains(actor.getNpcId()))
-                skill = SkillTable.INSTANCE.getInfo(4072, 10);
-            else
+                skillId = 5311;
+            else if (stunTraps.contains(actor.getNpcId())) {
+                skillId = 4072;
+                skillLvl= 10;
+            }else
                 return false;
-            actor.doCast(skill, actor, true);
+            actor.doCast(skillId,skillLvl, actor, true);
             ThreadPoolManager.INSTANCE.schedule(() -> getActor().doDie(null), 5000);
             return true;
         }

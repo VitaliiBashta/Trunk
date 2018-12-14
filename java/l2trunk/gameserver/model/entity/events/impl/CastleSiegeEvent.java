@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -46,7 +46,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
     private Future<?> _nextSiegeDateSetTask = null;
     private boolean _firstStep = false;
 
-    public CastleSiegeEvent(MultiValueSet<String> set) {
+    public CastleSiegeEvent(StatsSet set) {
         super(set);
     }
 
@@ -281,7 +281,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
                 L2GameServerPacket packet = new Say2(0, ChatType.CRITICAL_ANNOUNCE, getResidence().getName() + " Castle", msg);
                 GameObjectsStorage.getAllPlayers().forEach(player -> {
                     player.sendPacket(packet);
-                    player.sendPacket(new ExShowScreenMessage(msg, 3000, ScreenMessageAlign.TOP_CENTER, false));
+                    player.sendPacket(new ExShowScreenMessage(msg, 3000, false));
                 });
             }
         } else {

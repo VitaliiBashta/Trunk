@@ -30,6 +30,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
     private static final int ANNIHILATION_FURNACE = 18928;
     private static final int[][] ZONE_BUFFS_LIST = {{1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 2, 1}, {3, 1, 2}};
     private static final Map<String, Location> _teleportZones = new HashMap<>();
+    private static ZoneListener _zoneListener;
 
     static {
         _teleportZones.put("[14_23_telzone_to_cocracon]", new Location(-213175, 182648, -10992)); // In Kokracon location teleport zone.
@@ -38,33 +39,16 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
         _teleportZones.put("[14_23_telzone_from_raptilicon]", new Location(-179275, 186802, -10720)); // Out Reptilikon location teleport zone.
     }
 
-    private static ZoneListener _zoneListener;
-
     // 0: Bistakon, 1: Reptilikon, 2: Cokrakon
     private final SeedRegion[] _regionsData = new SeedRegion[3];
     private Long _seedsNextStatusChange;
 
-    private class SeedRegion {
-        final String[] buff_zone_pc;
-        final String[] buff_zone_npc;
-        final int[][] af_spawns;
-        final NpcInstance[] af_npcs = new NpcInstance[2];
-        int activeBuff = 0;
-
-        SeedRegion(String[] bz_pc, String[] bz_npc, int[][] as) {
-            buff_zone_pc = bz_pc;
-            buff_zone_npc = bz_npc;
-            af_spawns = as;
-        }
-    }
-
     private void loadSeedRegionData() {
         _zoneListener = new ZoneListener();
-        if (_teleportZones != null && !_teleportZones.isEmpty())
-            for (String s : _teleportZones.keySet()) {
-                Zone zone = ReflectionUtils.getZone(s);
-                zone.addListener(_zoneListener);
-            }
+        for (String s : _teleportZones.keySet()) {
+            Zone zone = ReflectionUtils.getZone(s);
+            zone.addListener(_zoneListener);
+        }
 
         _regionsData[0] = new SeedRegion(new String[]{"[14_23_beastacon_for_melee_for_pc]", "[14_23_beastacon_for_archer_for_pc]", "[14_23_beastacon_for_mage_for_pc]"}, new String[]{"[14_23_beastacon_for_melee]", "[14_23_beastacon_for_archer]", "[14_23_beastacon_for_mage]"}, new int[][]{
                 {-180450, 185507, -10574, 11632},
@@ -132,6 +116,48 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
         ThreadPoolManager.INSTANCE.schedule(new ChangeSeedsStatus(), _seedsNextStatusChange - System.currentTimeMillis());
     }
 
+    private void chanceZoneActive(String zoneName, boolean val) {
+        Zone zone = ReflectionUtils.getZone(zoneName);
+        zone.setActive(val);
+    }
+
+    public void transform() {
+        Player player = getSelf();
+        NpcInstance npc = getNpc();
+        if (player == null || npc == null)
+            return;
+
+        if (!NpcInstance.canBypassCheck(player, npc))
+            return;
+
+        if (player.getTransformation() != 0 || player.isMounted()) {
+            player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
+            return;
+        }
+        if (player.getEffectList().getEffectsBySkillId(6408) != null) {
+            show("default/32739-2.htm", player);
+        } else {
+            npc.setTarget(player);
+            SkillTable.INSTANCE.getInfo(6408).getEffects(player);
+            SkillTable.INSTANCE.getInfo(6649).getEffects(player);
+            show("default/32739-1.htm", player);
+        }
+    }
+
+    private class SeedRegion {
+        final String[] buff_zone_pc;
+        final String[] buff_zone_npc;
+        final int[][] af_spawns;
+        final NpcInstance[] af_npcs = new NpcInstance[2];
+        int activeBuff = 0;
+
+        SeedRegion(String[] bz_pc, String[] bz_npc, int[][] as) {
+            buff_zone_pc = bz_pc;
+            buff_zone_npc = bz_npc;
+            af_spawns = as;
+        }
+    }
+
     private class ChangeSeedsStatus extends RunnableImpl {
         public void runImpl() {
             int buffsNow = Rnd.get(ZONE_BUFFS_LIST.length);
@@ -152,11 +178,6 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
             }
             ThreadPoolManager.INSTANCE.schedule(new ChangeSeedsStatus(), _seedsNextStatusChange - System.currentTimeMillis());
         }
-    }
-
-    private void chanceZoneActive(String zoneName, boolean val) {
-        Zone zone = ReflectionUtils.getZone(zoneName);
-        zone.setActive(val);
     }
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
@@ -180,29 +201,6 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
 
         @Override
         public void onZoneLeave(Zone zone, Creature cha) {
-        }
-    }
-
-    public void transform() {
-        Player player = getSelf();
-        NpcInstance npc = getNpc();
-        if (player == null || npc == null)
-            return;
-
-        if (!NpcInstance.canBypassCheck(player, npc))
-            return;
-
-        if (player.getTransformation() != 0 || player.isMounted()) {
-            player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
-            return;
-        }
-        if (player.getEffectList().getEffectsBySkillId(6408) != null) {
-            show("default/32739-2.htm", player);
-        } else {
-            npc.setTarget(player);
-            SkillTable.INSTANCE.getInfo(6408).getEffects(player, player, false, false);
-            SkillTable.INSTANCE.getInfo(6649).getEffects(player, player, false, false);
-            show("default/32739-1.htm", player);
         }
     }
 }

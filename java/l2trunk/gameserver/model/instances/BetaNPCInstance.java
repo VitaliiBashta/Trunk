@@ -71,11 +71,11 @@ public final class BetaNPCInstance extends NpcInstance {
             if (!player.isHero()) {
                 player.setHero(true);
                 player.updatePledgeClass();
-                player.addSkill(SkillTable.INSTANCE.getInfo(395, 1));
-                player.addSkill(SkillTable.INSTANCE.getInfo(396, 1));
-                player.addSkill(SkillTable.INSTANCE.getInfo(1374, 1));
-                player.addSkill(SkillTable.INSTANCE.getInfo(1375, 1));
-                player.addSkill(SkillTable.INSTANCE.getInfo(1376, 1));
+                player.addSkill(395);
+                player.addSkill(396);
+                player.addSkill(1374);
+                player.addSkill(1375);
+                player.addSkill(1376);
                 player.sendPacket(new SkillList(player));
                 player.getPlayer().broadcastUserInfo(true);
                 player.sendMessage("Congratulations! You gained hero rank.");

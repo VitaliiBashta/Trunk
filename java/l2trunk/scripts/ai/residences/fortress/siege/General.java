@@ -36,7 +36,7 @@ public final class General extends SiegeGuardFighter {
             return;
 
         if (siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF) > 0)
-            actor.doCast(SkillTable.INSTANCE.getInfo(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF)), actor, false);
+            actor.doCast(5432, siegeEvent.getResidence().getFacilityLevel(Fortress.GUARD_BUFF), actor, false);
 
         siegeEvent.barrackAction(4, false);
     }

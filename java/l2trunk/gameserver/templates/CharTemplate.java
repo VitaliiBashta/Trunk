@@ -1,7 +1,10 @@
 package l2trunk.gameserver.templates;
 
 
+import l2trunk.commons.collections.StatsSet;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CharTemplate {
@@ -38,16 +41,13 @@ public class CharTemplate {
     public final List<Integer> baseAttributeDefence;
     public final double collisionRadius;
     public final double collisionHeight;
-    private final List<Integer> EMPTY_ATTRIBUTES = new ArrayList<>(6);
+    private final List<Integer> EMPTY_ATTRIBUTES = Collections.nCopies(6,0);
     /**
      * CP Regen base
      */
     private final double baseCpReg;
 
     public CharTemplate(StatsSet set) {
-        for (int i = 0; i < 6; i++) {
-            EMPTY_ATTRIBUTES.add(0);
-        }
         baseSTR = set.getInteger("baseSTR");
         baseCON = set.getInteger("baseCON");
         baseDEX = set.getInteger("baseDEX");

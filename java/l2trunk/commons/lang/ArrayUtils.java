@@ -1,7 +1,12 @@
 package l2trunk.commons.lang;
 
+import l2trunk.gameserver.templates.mapregion.RegionData;
+
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public final class ArrayUtils {
     /**
@@ -40,23 +45,21 @@ public final class ArrayUtils {
      *
      * @return new array with element
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> T[] add(T[] array, T element) {
-        Class type = array != null ? array.getClass().getComponentType() : element != null ? element.getClass() : Object.class;
-        T[] newArray = (T[]) copyArrayGrow(array, type);
+    public static  RegionData[] add(RegionData[] array, RegionData element) {
+        Class type = array != null ? array.getClass().getComponentType() :  element.getClass();
+        RegionData[] newArray = copyArrayGrow(array, type);
         newArray[newArray.length - 1] = element;
         return newArray;
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> T[] copyArrayGrow(T[] array, Class<? extends T> type) {
+    private static RegionData[] copyArrayGrow(RegionData[] array, Class<? extends RegionData> type) {
         if (array != null) {
             int arrayLength = Array.getLength(array);
-            T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
+            RegionData[] newArray = (RegionData[]) Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
             System.arraycopy(array, 0, newArray, 0, arrayLength);
             return newArray;
         }
-        return (T[]) Array.newInstance(type, 1);
+        return (RegionData[]) Array.newInstance(type, 1);
     }
 
     public static int indexOf(int[] array, int value) {
@@ -68,10 +71,12 @@ public final class ArrayUtils {
     }
 
     public static List<Integer> createAscendingList(int min, int max) {
-        List<Integer> list = new ArrayList<>(max - min + 1);
-        int j = min;
-        while (j <= max)
-            list.add(j++);
-        return list;
+//        List<Integer> list = new ArrayList<>(max - min + 1);
+        return IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
+//        Stream.iterate(min, i -> i+1)
+//        int j = min;
+//        while (j <= max)
+//            list.add(j++);
+//        return list;
     }
 }

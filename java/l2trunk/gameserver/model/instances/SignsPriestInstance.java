@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 public final class SignsPriestInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(SignsPriestInstance.class);
 
-    private SignsPriestInstance(int objectId, NpcTemplate template) {
+    public SignsPriestInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

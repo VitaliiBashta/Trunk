@@ -50,11 +50,11 @@ public final class AccountEmail {
             String html = HtmCache.INSTANCE.getNotNull("custom/VerifyEmail.htm", player);
             player.sendPacket(new TutorialShowHtml(html));
             if (!player.isBlocked())
-                player.block();
+                player.setBlock(true);
         } else {
             if (email.equalsIgnoreCase(getEmail(player))) {
                 if (player.isBlocked())
-                    player.unblock();
+                    player.setBlock();
                 player.sendMessage("You have confirmed to be the owner of this account. You are free to go.");
                 player.setVar("LastIP", player.getIP()); // Taken from EnterWorld and commented it there.
                 player.sendPacket(TutorialCloseHtml.STATIC); // Close the tutorial window since you have confirmed to be the owner.

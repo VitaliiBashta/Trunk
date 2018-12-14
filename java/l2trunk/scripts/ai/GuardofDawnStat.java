@@ -3,63 +3,52 @@ package l2trunk.scripts.ai;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.geodata.GeoEngine;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
-import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Objects;
+
 public final class GuardofDawnStat extends DefaultAI {
-    private static final int _aggrorange = 120;
-    private final Skill skill = SkillTable.INSTANCE.getInfo(5978, 1);
-    private Location _locTele = null;
+    private static final int AGGRORANGE = 120;
+    private final int skill = 5978;
+    private final Location loc;
     private boolean noCheckPlayers = false;
 
-    public GuardofDawnStat(NpcInstance actor, Location telePoint) {
+    public GuardofDawnStat(NpcInstance actor, Location loc) {
         super(actor);
         AI_TASK_ATTACK_DELAY = 200;
-        setTelePoint(telePoint);
+        this.loc = loc;
     }
 
     @Override
     public boolean thinkActive() {
-        NpcInstance actor = getActor();
-
         // проверяем игроков вокруг
         if (!noCheckPlayers)
-            checkAroundPlayers(actor);
-
+            checkAroundPlayers(getActor());
         return true;
     }
 
     private boolean checkAroundPlayers(NpcInstance actor) {
-        for (Playable target : World.getAroundPlayables(actor, _aggrorange, _aggrorange)) {
-            if (!canSeeInSilentMove(target) || !canSeeInHide(target))
-                continue;
-
-            if (target != null && target.isPlayer() && !target.isInvul() && GeoEngine.canSeeTarget(actor, target, false)) {
-                actor.doCast(skill, target, true);
-                Functions.npcSay(actor, "Intruder alert!! We have been infiltrated!");
-                noCheckPlayers = true;
-                ThreadPoolManager.INSTANCE.schedule(() -> {
-                    target.teleToLocation(getTelePoint());
-                    noCheckPlayers = false;
-                }, 3000);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Location getTelePoint() {
-        return _locTele;
-    }
-
-    private void setTelePoint(Location loc) {
-        _locTele = loc;
+        return World.getAroundPlayables(actor, AGGRORANGE, AGGRORANGE).stream()
+                .filter(Objects::nonNull)
+                .filter(this::canSeeInSilentMove)
+                .filter(this::canSeeInHide)
+                .filter(GameObject::isPlayer)
+                .filter(Playable::isSilentMoving)
+                .filter(target -> !target.isInvul())
+                .filter(target -> GeoEngine.canSeeTarget(actor, target, false))
+                .peek(target -> {
+                    actor.doCast(skill, target, true);
+                    Functions.npcSay(actor, "Intruder alert!! We have been infiltrated!");
+                    noCheckPlayers = true;
+                    ThreadPoolManager.INSTANCE.schedule(() -> {
+                        target.teleToLocation(loc);
+                        noCheckPlayers = false;
+                    }, 3000);
+                }).findFirst().isPresent();
     }
 
     @Override

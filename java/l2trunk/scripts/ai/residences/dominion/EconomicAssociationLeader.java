@@ -76,7 +76,7 @@ public final class EconomicAssociationLeader extends SiegeGuardFighter {
             Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
             for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                    player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+                    player.sendPacket(new ExShowScreenMessage(msg));
 
                     QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
                     questState.setCond(1, false);
@@ -100,7 +100,7 @@ public final class EconomicAssociationLeader extends SiegeGuardFighter {
         NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
         for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+                player.sendPacket(new ExShowScreenMessage(msg));
 
                 QuestState questState = player.getQuestState(_733_ProtectTheEconomicAssociationLeader.class);
                 if (questState != null)

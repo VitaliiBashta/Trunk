@@ -1,14 +1,11 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.collections.MultiValueSet;
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.data.xml.holder.SpawnHolder;
 import l2trunk.gameserver.model.Territory;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import l2trunk.gameserver.templates.spawn.SpawnNpcInfo;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
@@ -24,7 +21,7 @@ import java.util.Map;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public enum  SpawnParser {
+public enum SpawnParser {
     INSTANCE;
     private static Path xml = Config.DATAPACK_ROOT.resolve("data/spawn/");
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
@@ -33,7 +30,7 @@ public enum  SpawnParser {
         ParserUtil.INSTANCE.load(xml).forEach(this::readData);
         LOG.info("Loaded " + SpawnHolder.size() + " items");
     }
-    
+
     private void readData(Element rootElement) {
         Map<String, Territory> territories = new HashMap<>();
         for (Iterator<Element> spawnIterator = rootElement.elementIterator(); spawnIterator.hasNext(); ) {
@@ -78,11 +75,8 @@ public enum  SpawnParser {
                     } else if (subElement.getName().equalsIgnoreCase("npc")) {
                         int npcId = toInt(subElement.attributeValue("id"));
                         int max = subElement.attributeValue("max") == null ? 0 : toInt(subElement.attributeValue("max"));
-                        MultiValueSet<String> parameters = StatsSet.EMPTY;
+                        StatsSet parameters = new StatsSet();
                         for (Element e : subElement.elements()) {
-                            if (parameters.isEmpty())
-                                parameters = new MultiValueSet<>();
-
                             parameters.set(e.attributeValue("name"), e.attributeValue("value"));
                         }
                         template.addNpc(new SpawnNpcInfo(npcId, max, parameters));

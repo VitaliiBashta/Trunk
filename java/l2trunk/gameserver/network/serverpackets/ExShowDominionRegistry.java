@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.entity.residence.Dominion;
 import l2trunk.gameserver.model.pledge.Alliance;
 import l2trunk.gameserver.model.pledge.Clan;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

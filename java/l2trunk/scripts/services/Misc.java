@@ -8,7 +8,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 /**
  * @author pchayka
  */
-class Misc extends Functions {
+public final class Misc extends Functions {
     public void assembleAntharasCrystal() {
 
 

@@ -4,15 +4,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * Author: Bonux
- **/
-class TeleToGracia extends Functions {
+public final class TeleToGracia extends Functions {
     public void tele() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
 
-        if (player != null && npc != null && npc.isInRange(player, 1000L))
+        if (npc != null && npc.isInRange(player, 1000L))
             if (player.getLevel() < 75)
                 show("teleporter/" + npc.getNpcId() + "-4.htm", player);
             else if (player.getAdena() >= 150000) {

@@ -1,10 +1,11 @@
 package l2trunk.gameserver.templates;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.instances.StaticObjectInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class StaticObjectTemplate {
+public final class StaticObjectTemplate {
     private final int _uid;
     private final int _type; // 0 - signs, 1 - throne, 2 - starter town map, 3 - airship control key
     private final String _filePath;

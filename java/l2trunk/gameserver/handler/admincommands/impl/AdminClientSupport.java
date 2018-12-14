@@ -14,8 +14,6 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 

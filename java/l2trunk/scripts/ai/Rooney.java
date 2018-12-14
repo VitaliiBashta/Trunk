@@ -38,7 +38,7 @@ public final class Rooney extends DefaultAI {
             if (actor.getLoc().equals(loc))
                 continue;
 
-            actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 4671, 1, 1000, 0));
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor,  4671,  1000));
             ThreadPoolManager.INSTANCE.schedule(new Teleport(loc), 1000);
             _lastTeleport = System.currentTimeMillis();
             break;

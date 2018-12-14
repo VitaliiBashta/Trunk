@@ -62,7 +62,6 @@ public final class Parsers {
         ArmorSetsParser.INSTANCE.load();
 
         // etc
-        PetitionGroupParser.INSTANCE.load();
         DressArmorParser.INSTANCE.load();
         DressCloakParser.INSTANCE.load();
         DressShieldParser.INSTANCE.load();

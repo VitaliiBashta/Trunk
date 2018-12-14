@@ -10,26 +10,16 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public enum SkillsEngine {
     INSTANCE;
-    private static final Logger LOG = LoggerFactory.getLogger(SkillsEngine.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private List<Skill> loadSkills(Path file) {
         DocumentSkill doc = new DocumentSkill(file);
         doc.parse();
         return doc.getSkills();
-    }
-
-    public Skill loadSkill(int skillId, Path file) {
-        DocumentSkill doc = new DocumentSkill(file, skillId);
-        doc.parse();
-        List<Skill> parsedSkills = doc.getSkills();
-
-        if (parsedSkills.isEmpty())
-            return null;
-        else
-            return parsedSkills.get(0);
     }
 
     public Map<Integer, Skill> loadAllSkills() {
@@ -41,23 +31,9 @@ public enum SkillsEngine {
 
         Collection<Path> files = FileUtils.getAllFiles(dir, true, ".xml");
         Map<Integer, Skill> result = new HashMap<>();
-        int maxId = 0;
-        int maxLvl = 0;
-
-        for (Path file : files) {
-            List<Skill> s = loadSkills(file);
-            if (s != null) {
-                for (Skill skill : s) {
-                    result.put(SkillTable.getSkillHashCode(skill), skill);
-                    if (skill.getId() > maxId)
-                        maxId = skill.getId();
-                    if (skill.getLevel() > maxLvl)
-                        maxLvl = skill.getLevel();
-                }
-            }
-        }
-
-        LOG.info("SkillsEngine: Loaded " + result.size() + " skill templates from XML files. Max id: " + maxId + ", max level: " + maxLvl);
+        files.forEach(file ->
+                result.putAll(loadSkills(file).stream()
+                        .collect(Collectors.toMap(SkillTable::getSkillHashCode, s -> s))));
         return result;
     }
 }

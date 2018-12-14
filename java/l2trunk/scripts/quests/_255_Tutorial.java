@@ -389,11 +389,6 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
         }
     }
 
-    /**
-     * If {@link #canChangeClass(Player, int) canChangeClass}, showing Tutorial Page with next Classes that player can advance to
-     *
-     * @param st
-     */
     private static void checkClassMaster(QuestState st) {
         Player player = st.getPlayer();
 
@@ -503,7 +498,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
         if (event.equals("CheckPass")) {
             String text = HtmCache.INSTANCE.getNotNull("enterworldSecondary.htm", player);
             st.showTutorialHTML(text);
-            player.block();
+            player.setBlock(true);
             //player.startAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
 
             return null;
@@ -530,10 +525,10 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                 if (player.isBlocked()) {
                     //player.stopAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
                     player.broadcastPacket(new SocialAction(player.getObjectId(), SocialAction.VICTORY));
-                    final MagicSkillUse msu = new MagicSkillUse(player, player, 23312, 1, 0, 500);
+                    final MagicSkillUse msu = new MagicSkillUse(player,  23312,  0, 500);
                     player.broadcastPacket(msu);
                     player.broadcastCharInfo();
-                    player.unblock();
+                    player.setBlock();
                 }
 
                 player.setInvul(false);
@@ -546,7 +541,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                     }
                     if (player.getNetConnection() != null ) {
                         String msg = "You don't have Premium Account, you can buy it from Community Board.";
-                        player.sendPacket(new ExShowScreenMessage(msg, 10000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
+                        player.sendPacket(new ExShowScreenMessage(msg, 10000));
                         player.sendMessage(msg);
                     }
                 }
@@ -619,7 +614,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
 
                 player.setClassId(newClassId, false, false);
 
-                final MagicSkillUse msu = new MagicSkillUse(player, player, 5103, 1, 1, 1);
+                final MagicSkillUse msu = new MagicSkillUse(player,  5103);
                 player.broadcastPacket(msu);
                 player.broadcastUserInfo(true);
                 st.closeTutorial();

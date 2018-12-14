@@ -20,7 +20,7 @@ public final class SpikeSlasher extends Fighter {
     private long last_attack_time = 0;
     private long last_cast_anchor = 0;
 
-    private final Skill paralysis = SkillTable.INSTANCE.getInfo(6878);
+    private static final int paralysis = 6878;
 
     public SpikeSlasher(NpcInstance actor) {
         super(actor);

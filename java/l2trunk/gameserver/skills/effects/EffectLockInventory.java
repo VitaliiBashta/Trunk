@@ -14,7 +14,7 @@ public final class EffectLockInventory extends Effect {
     public EffectLockInventory(Env env, EffectTemplate template) {
         super(env, template);
         lockType = template.getParam().getEnum("lockType", LockType.class);
-        lockItems =template.getParam().getIntegerList("lockItems");
+        lockItems = template.getParam().getIntegerList("lockItems");
     }
 
     @Override

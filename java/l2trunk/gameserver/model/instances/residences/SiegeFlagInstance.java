@@ -11,14 +11,10 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public class SiegeFlagInstance extends NpcInstance {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     private SiegeClanObject _owner;
     private long _lastAnnouncedAttackedTime = 0;
 
-    protected SiegeFlagInstance(int objectId, NpcTemplate template) {
+    public SiegeFlagInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         setHasChatWindow(false);
     }

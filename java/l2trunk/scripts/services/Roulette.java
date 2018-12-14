@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.GameStats;
 import l2trunk.gameserver.utils.Util;
 
-public class Roulette extends Functions {
+public final class Roulette extends Functions {
     private static final String R = "red";
     private static final String B = "black";
     private static final String fst = "first";
@@ -126,7 +126,7 @@ public class Roulette extends Functions {
             return;
         }
 
-        String[] roll = Numbers[Rnd.get(Numbers.length)];
+        String[] roll = Rnd.get(Numbers);
         int result = check(betID, roll, type);
 
         String ret = HtmCache.INSTANCE().getNotNull("scripts/services/rouletteresult.htm", player);
@@ -159,11 +159,6 @@ public class Roulette extends Functions {
 
     /**
      * Возвращает множитель ставки или 0 при проигрыше
-     *
-     * @param betID
-     * @param roll
-     * @param type
-     * @return
      */
     private static int check(String betID, String[] roll, GameType type) {
         switch (type) {

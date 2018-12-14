@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.ChestInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 
@@ -47,9 +46,7 @@ public final class TreasureChestInstance extends ChestInstance {
     }
 
     private void fakeOpen(Creature opener) {
-        Skill bomb = SkillTable.INSTANCE.getInfo(TREASURE_BOMB_ID, getBombLvl());
-        if (bomb != null)
-            doCast(bomb, opener, false);
+        doCast(TREASURE_BOMB_ID, getBombLvl(), opener, false);
         onDecay();
     }
 

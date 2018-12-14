@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.items.TradeItem;
 import l2trunk.gameserver.network.serverpackets.*;
-import l2trunk.gameserver.templates.manor.CropProcure;
 import l2trunk.gameserver.templates.manor.SeedProduction;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 

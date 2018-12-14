@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.residence;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.gameserver.dao.DominionDAO;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
@@ -12,7 +13,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public final class Dominion extends Residence {
 
             for (int dominionId : flags) {
                 Dominion dominion = ResidenceHolder.getResidence(Dominion.class, dominionId);
-                dominion.getSkills().forEach(skill ->  {
+                dominion.getSkills().forEach(skill -> {
                     owner.addSkill(skill, false);
                     owner.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED).addSkillName(skill));
                 });

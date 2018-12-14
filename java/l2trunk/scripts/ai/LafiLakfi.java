@@ -16,8 +16,8 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class LafiLakfi extends DefaultAI {
     private static final int MAX_RADIUS = 500;
-    private  final Skill s_display_bug_of_fortune1 = SkillTable.INSTANCE.getInfo(6045, 1);
-    private  final Skill s_display_jackpot_firework = SkillTable.INSTANCE.getInfo(5778, 1);
+    private  final static int s_display_bug_of_fortune1 = 6045;
+    private  final static int s_display_jackpot_firework = 5778;
 
     private long _nextEat;
     private int i_ai2, actor_lvl, prev_st;
@@ -158,7 +158,7 @@ public final class LafiLakfi extends DefaultAI {
                 Functions.npcSayInRange(actor, 600, NpcString.I_HAVENT_EATEN_ANYTHING_IM_SO_WEAK);
                 return;
             } else
-                actor.broadcastPacket(new MagicSkillUse(actor, s_display_jackpot_firework.getId(), 1, s_display_jackpot_firework.getHitTime(), 0));
+                actor.broadcastPacket(new MagicSkillUse(actor, s_display_jackpot_firework));
 
             int _chance = getChance(i_ai2);
 

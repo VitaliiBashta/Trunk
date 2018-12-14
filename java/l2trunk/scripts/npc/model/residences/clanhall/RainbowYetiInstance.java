@@ -58,6 +58,7 @@ public final class RainbowYetiInstance extends NpcInstance {
     private final List<GameObject> _mobs = new ArrayList<>();
     private int _generated = -1;
     private Future<?> _task = null;
+
     public RainbowYetiInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         _hasRandomWalk = false;
@@ -212,7 +213,7 @@ public final class RainbowYetiInstance extends NpcInstance {
             _generated = Rnd.get(WORLD_LIST.length);
             Word word = WORLD_LIST[_generated];
 
-            ExShowScreenMessage msg = new ExShowScreenMessage(NpcString.NONE, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, word.getName());
+            ExShowScreenMessage msg = new ExShowScreenMessage(NpcString.NONE,  word.getName());
             World.getAroundPlayers(RainbowYetiInstance.this, 750, 100).forEach(player -> player.sendPacket(msg));
         }
     }

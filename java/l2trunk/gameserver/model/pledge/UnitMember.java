@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public final class UnitMember {
     private static final Logger _log = LoggerFactory.getLogger(UnitMember.class);
     private final int _objectId;
-    private Player _player;
+    private Player player;
     private Clan _clan;
     private String _name;
     private String _title;
@@ -47,11 +47,11 @@ public final class UnitMember {
 
     public UnitMember(Player player) {
         _objectId = player.getObjectId();
-        _player = player;
+        this.player = player;
     }
 
     public void setPlayerInstance(Player player, boolean exit) {
-        _player = exit ? null : player;
+        this.player = exit ? null : player;
         if (player == null)
             return;
 
@@ -67,11 +67,11 @@ public final class UnitMember {
     }
 
     public Player getPlayer() {
-        return _player;
+        return player;
     }
 
     public boolean isOnline() {
-        return _player != null;
+        return player != null;
     }
 
     public Clan getClan() {

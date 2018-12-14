@@ -1,5 +1,6 @@
 package l2trunk.gameserver.instancemanager;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -16,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.ShowMiniMap;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.tables.GmListTable;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;

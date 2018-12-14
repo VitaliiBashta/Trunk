@@ -132,7 +132,7 @@ public final class Taurin extends DefaultAI {
                         wait = true;
                         return true;
                     case 33:
-                        actor.broadcastPacket(new MagicSkillUse(actor, actor, 2025, 1, 500, 0));
+                        actor.broadcastPacket(new MagicSkillUse(actor,  2025,  500));
                         wait_timeout = System.currentTimeMillis() + 1000;
                         wait = true;
                         return true;

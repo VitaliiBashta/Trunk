@@ -1,5 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
@@ -11,7 +12,6 @@ import l2trunk.gameserver.model.entity.residence.Fortress;
 import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.model.entity.residence.ResidenceFunction;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.support.MerchantGuard;
 import l2trunk.gameserver.utils.Location;

@@ -8,7 +8,6 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class SprigantPoison extends Fighter {
 
-    private final Skill SKILL = SkillTable.INSTANCE.getInfo(5086);
     private long _waitTime;
 
     private static final int TICK_IN_MILISECONDS = 15000;
@@ -21,7 +20,7 @@ public final class SprigantPoison extends Fighter {
     public boolean thinkActive() {
         NpcInstance actor = getActor();
         if (System.currentTimeMillis() > _waitTime) {
-            actor.doCast(SKILL, actor, false);
+            actor.doCast(5086, actor, false);
             _waitTime = System.currentTimeMillis() + TICK_IN_MILISECONDS;
         }
         actor.broadcastPacket(new SocialAction(actor.getObjectId(), 1));

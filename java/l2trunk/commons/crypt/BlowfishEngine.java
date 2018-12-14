@@ -139,7 +139,7 @@ class BlowfishEngine {
             // get the 32 bits of the key, in 4 * 8 bit chunks
             int data = 0x0000000;
             for (int j = 0; j < 4; j++) {
-                // create a 32 bit block
+                // create a 32 bit setBlock
                 data = (data << 8) | (key[keyIndex++] & 0xff);
                 // wrap when we get to the end of the key
                 if (keyIndex >= keyLength) {

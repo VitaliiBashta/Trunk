@@ -1,15 +1,15 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.boat.ClanAirShip;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Refill extends Skill {
+public final class Refill extends Skill {
     public Refill(StatsSet set) {
         super(set);
     }

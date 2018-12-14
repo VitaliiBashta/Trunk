@@ -1,10 +1,9 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.templates.spawn.SpawnRange;
 import l2trunk.gameserver.utils.Location;
@@ -87,7 +86,7 @@ public final class SimpleSpawner extends Spawner {
     }
 
     @Override
-    protected NpcInstance initNpc(NpcInstance mob, boolean spawn, MultiValueSet<String> set) {
+    protected NpcInstance initNpc(NpcInstance mob, boolean spawn, StatsSet set) {
         Location newLoc;
 
         if (territory != null) {
@@ -110,7 +109,7 @@ public final class SimpleSpawner extends Spawner {
 
     public SimpleSpawner newInstance() {
         return (SimpleSpawner) new SimpleSpawner(npcTemplate)
-        .setTerritory(territory)
+                .setTerritory(territory)
                 .setLoc(loc)
                 .setAmount(maximumCount)
                 .setRespawnDelay(respawnDelay, _respawnDelayRandom);

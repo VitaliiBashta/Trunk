@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public final class Knoriks extends Patrollers {
     private static final int KNORIKS_ACTIVATE_SKILL_CHANGE = 5;        // chance for activate skill
-    private final Skill KNORIKS_SKILL_DBUFF = SkillTable.INSTANCE.getInfo(6744);    // dbuff id (Dark Storm)
+    private static final int KNORIKS_SKILL_DBUFF = 6744;    // dbuff id (Dark Storm)
     private static int SEARCH_RADIUS = 600;        // search around players
 
     public Knoriks(NpcInstance actor) {

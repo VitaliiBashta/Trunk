@@ -5,7 +5,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.tables.SkillTable;
 
 public class DeathPenalty {
     private static final int _skillId = 5076;
@@ -80,13 +79,13 @@ public class DeathPenalty {
     public void restore(Player player) {
         Skill remove = player.getKnownSkill(_skillId);
         if (remove != null)
-            player.removeSkill(remove, true);
+            player.removeSkill(remove.getId(), true);
 
         if (!Config.ALLOW_DEATH_PENALTY_C5)
             return;
 
         if (getLevel() > 0) {
-            player.addSkill(SkillTable.INSTANCE.getInfo(_skillId, getLevel()), false);
+            player.addSkill(_skillId, getLevel(), false);
             player.sendPacket(new SystemMessage2(SystemMsg.THE_LEVEL_S1_DEATH_PENALTY_WILL_BE_ASSESSED).addInteger(getLevel()));
         }
         player.sendEtcStatusUpdate();
@@ -101,12 +100,12 @@ public class DeathPenalty {
         if (getLevel() != 0) {
             Skill remove = player.getKnownSkill(_skillId);
             if (remove != null)
-                player.removeSkill(remove, true);
+                player.removeSkill(remove.getId(), true);
         }
 
         _level++;
 
-        player.addSkill(SkillTable.INSTANCE.getInfo(_skillId, getLevel()), false);
+        player.addSkill(_skillId, getLevel(), false);
         player.sendPacket(new SystemMessage2(SystemMsg.THE_LEVEL_S1_DEATH_PENALTY_WILL_BE_ASSESSED).addInteger(getLevel()));
         player.sendEtcStatusUpdate();
         player.updateStats();
@@ -117,14 +116,12 @@ public class DeathPenalty {
         if (player == null || getLevel() <= 0)
             return;
 
-        Skill remove = player.getKnownSkill(_skillId);
-        if (remove != null)
-            player.removeSkill(remove, true);
+        player.removeSkill(_skillId, true);
 
         _level--;
 
         if (getLevel() > 0) {
-            player.addSkill(SkillTable.INSTANCE.getInfo(_skillId, getLevel()), false);
+            player.addSkill(_skillId, getLevel(), false);
             player.sendPacket(new SystemMessage2(SystemMsg.THE_LEVEL_S1_DEATH_PENALTY_WILL_BE_ASSESSED).addInteger(getLevel()));
         } else
             player.sendPacket(SystemMsg.THE_DEATH_PENALTY_HAS_BEEN_LIFTED);

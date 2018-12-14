@@ -106,7 +106,7 @@ public final class _609_MagicalPowerofWater1 extends Quest implements ScriptFile
                 st.setCond(2);
             } else if (cond == 2 && proval == 1) {
                 htmltext = "shaman_asefa_q0609_03.htm";
-                npc.doCast(SkillTable.INSTANCE.getInfo(4548), st.getPlayer(), true);
+                npc.doCast(4548, st.getPlayer(), true);
                 st.set("proval", "0");
             } else if (cond == 3 && st.getQuestItemsCount(STOLEN_GREEN_TOTEM) >= 1) {
                 htmltext = "shaman_asefa_q0609_04.htm";
@@ -124,7 +124,7 @@ public final class _609_MagicalPowerofWater1 extends Quest implements ScriptFile
     @Override
     public String onAttack(NpcInstance npc, QuestState st) {
         if (st.getCond() == 2 && st.getInt("proval") == 0) {
-            npc.doCast(SkillTable.INSTANCE.getInfo(4547), st.getPlayer(), true);
+            npc.doCast(4547, st.getPlayer(), true);
             st.set("proval", "1");
         }
         return null;

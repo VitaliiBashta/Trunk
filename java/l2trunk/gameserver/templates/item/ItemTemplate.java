@@ -1,6 +1,6 @@
 package l2trunk.gameserver.templates.item;
 
-import l2trunk.commons.lang.ArrayUtils;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.handler.items.IItemHandler;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
@@ -13,8 +13,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.StatTemplate;
 import l2trunk.gameserver.stats.conditions.Condition;
-import l2trunk.gameserver.stats.funcs.FuncTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.augmentation.AugmentationInfo;
 import l2trunk.gameserver.templates.item.EtcItemTemplate.EtcItemType;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
@@ -34,29 +32,29 @@ public abstract class ItemTemplate extends StatTemplate {
     /**
      * Item ID для замковых корон
      */
-    public static final List<Integer> ITEM_ID_CASTLE_CIRCLET =Arrays.asList(
-                    0, // no castle - no circlet.. :)
-                    6838, // Circlet of Gludio
-                    6835, // Circlet of Dion
-                    6839, // Circlet of Giran
-                    6837, // Circlet of Oren
-                    6840, // Circlet of Aden
-                    6834, // Circlet of Innadril
-                    6836, // Circlet of Goddard
-                    8182, // Circlet of Rune
-                    8183); // Circlet of Schuttgart
+    public static final List<Integer> ITEM_ID_CASTLE_CIRCLET = Arrays.asList(
+            0, // no castle - no circlet.. :)
+            6838, // Circlet of Gludio
+            6835, // Circlet of Dion
+            6839, // Circlet of Giran
+            6837, // Circlet of Oren
+            6840, // Circlet of Aden
+            6834, // Circlet of Innadril
+            6836, // Circlet of Goddard
+            8182, // Circlet of Rune
+            8183); // Circlet of Schuttgart
 
     public static final List<Integer> ITEM_ID_CASTLE_CLOAK = Arrays.asList(
-                    0, // no castle - no cloak..
-                    37018, // Cloak of Gludio
-                    37016, // Cloak of Dion
-                    37017, // Cloak of Giran
-                    37021, // Cloak of Oren
-                    37015, // Cloak of Aden
-                    37020, // Cloak of Innadril
-                    37019, // Cloak of Goddard
-                    37022, // Cloak of Rune
-                    37023); // Cloak of Schuttgart
+            0, // no castle - no cloak..
+            37018, // Cloak of Gludio
+            37016, // Cloak of Dion
+            37017, // Cloak of Giran
+            37021, // Cloak of Oren
+            37015, // Cloak of Aden
+            37020, // Cloak of Innadril
+            37019, // Cloak of Goddard
+            37022, // Cloak of Rune
+            37023); // Cloak of Schuttgart
     public static final int ITEM_ID_FORMAL_WEAR = 6408;
     // Uniforms
     public static final int ITEM_ID_SCHOOL_UNIFORM_A = 57000;
@@ -665,7 +663,7 @@ public abstract class ItemTemplate extends StatTemplate {
      * @param gradeCheck
      * @return
      */
-    public boolean canBeEnchanted(@Deprecated boolean gradeCheck) {
+    public boolean canBeEnchanted(boolean gradeCheck) {
         if (gradeCheck && (getCrystalType() == Grade.NONE)) {
             return false;
         }

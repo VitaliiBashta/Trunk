@@ -58,7 +58,7 @@ public final class ItemEnchantOptionsListener implements OnEquipListener {
 
             player.removeStatsOwner(template);
             for (Skill skill : template.getSkills()) {
-                player.removeSkill(skill, false);
+                player.removeSkill(skill.getId(), false);
                 needSendInfo = true;
             }
             for (TriggerInfo triggerInfo : template.getTriggerList())

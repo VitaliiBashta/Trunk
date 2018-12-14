@@ -1,6 +1,6 @@
 package l2trunk.gameserver.templates;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.configuration.ExProperties;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Territory;
@@ -11,6 +11,8 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class ZoneTemplate {
     private final String _name;
@@ -79,7 +81,7 @@ public class ZoneTemplate {
     private final int _index;
     private final int _taxById;
 
-    private final StatsSet _params;
+    private final StatsSet params;
 
     private final boolean _isEpicPvP;
 
@@ -100,7 +102,7 @@ public class ZoneTemplate {
         Skill skill = null;
         if (s != null) {
             String[] sk = s.split("[\\s,;]+");
-            skill = SkillTable.INSTANCE.getInfo(Integer.parseInt(sk[0]), Integer.parseInt(sk[1]));
+            skill = SkillTable.INSTANCE.getInfo(toInt(sk[0]), toInt(sk[1]));
         }
         _skill = skill;
         _skillProb = set.getInteger("skill_prob", 100);
@@ -137,7 +139,7 @@ public class ZoneTemplate {
         _index = set.getInteger("index", 0);
         _taxById = set.getInteger("taxById", 0);
 
-        _params = set;
+        params = set;
     }
 
     public boolean isEnabled() {
@@ -276,7 +278,7 @@ public class ZoneTemplate {
         return _isEpicPvP;
     }
 
-    public MultiValueSet<String> getParams() {
-        return _params.clone();
+    public StatsSet getParams() {
+        return params;
     }
 }

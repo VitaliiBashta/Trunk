@@ -41,7 +41,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         TAMED_DATA[5] = new AbstractMap.SimpleImmutableEntry<>(NpcString.SWIFT_S1, new int[]{6434, 6667});
     }
 
-    private final List<Skill> _skills = new ArrayList<>();
+    private final List<Integer> _skills = new ArrayList<>();
     private HardReference<Player> _playerRef = HardReferences.emptyRef();
     private int _foodSkillId, _remainingTime = MAX_DURATION;
     private Future<?> _durationCheckTask = null;
@@ -99,8 +99,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         setName("#" + getNameNpcStringByNpcId().getId());
 
         for (int skillId : type.getValue()) {
-            Skill sk = SkillTable.INSTANCE.getInfo(skillId, 1);
-            if (sk != null)
+            int sk = skillId;
                 _skills.add(sk);
         }
     }
@@ -127,9 +126,9 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
         }
 
         int delay = 0;
-        for (Skill skill : _skills) {
+        for (Integer skill : _skills) {
             ThreadPoolManager.INSTANCE.schedule(new Buff(this, getPlayer(), skill), delay);
-            delay = delay + skill.getHitTime() + 500;
+            delay = delay + SkillTable.INSTANCE.getInfo(skill).getHitTime() + 500;
         }
     }
 
@@ -199,18 +198,18 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     public static class Buff extends RunnableImpl {
         private final NpcInstance actor;
         private final Player owner;
-        private final Skill skill;
+        private final int skillId;
 
-        Buff(NpcInstance actor, Player owner, Skill skill) {
+        Buff(NpcInstance actor, Player owner, int skillId) {
             this.actor = actor;
             this.owner = owner;
-            this.skill = skill;
+            this.skillId = skillId;
         }
 
         @Override
         public void runImpl() {
             if (actor != null)
-                actor.doCast(skill, owner, true);
+                actor.doCast(skillId, owner, true);
         }
     }
 

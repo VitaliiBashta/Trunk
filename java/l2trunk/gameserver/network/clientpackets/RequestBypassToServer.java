@@ -235,7 +235,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
             // Ady - Bypass for Buff Store
             else if (bp.bypass.startsWith("BuffStore")) {
                 try {
-                    OfflineBufferManager.getInstance().processBypass(activeChar, bp.bypass);
+                    OfflineBufferManager.INSTANCE.processBypass(activeChar, bp.bypass);
                 } catch (Exception ex) {
                 }
             } else if (bp.handler != null) {

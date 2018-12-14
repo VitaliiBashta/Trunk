@@ -1,13 +1,13 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.PetDataTable;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class PetSummon extends Skill {
+public final class PetSummon extends Skill {
     public PetSummon(StatsSet set) {
         super(set);
     }

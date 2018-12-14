@@ -93,7 +93,7 @@ public class _174_SupplyCheck extends Quest implements ScriptFile {
                 st.giveItems(ADENA_ID, 2466, true);
                 st.getPlayer().addExpAndSp(5672, 446);
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.exitCurrentQuest(false);
                 htmltext = "zerstorer_morsell_q0174_12.htm";
             }

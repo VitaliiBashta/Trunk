@@ -12,8 +12,8 @@ import l2trunk.gameserver.utils.Location;
 
 public final class Sandstorm extends DefaultAI {
     private static final int AGGRO_RANGE = 200;
-    private  final Skill gust = SkillTable.INSTANCE.getInfo(5435, 1);
-    private  final Skill blow = SkillTable.INSTANCE.getInfo(5494, 1);
+    private static final int gust = 5435;
+    private static final int blow = 5494;
     private long lastThrow = 0;
 
     public Sandstorm(NpcInstance actor) {

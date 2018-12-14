@@ -1,18 +1,14 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.stats.Formulas;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-/**
- * @author byldas
- */
-
-public class CurseDivinity extends Skill {
+public final class CurseDivinity extends Skill {
     public CurseDivinity(StatsSet set) {
         super(set);
         power = set.getInteger("power", 1);

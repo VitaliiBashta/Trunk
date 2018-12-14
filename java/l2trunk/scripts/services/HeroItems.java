@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import static l2trunk.gameserver.model.entity.olympiad.Olympiad.OLYMPIAD_HTML_PATH;
 
-class HeroItems extends Functions {
+public final class HeroItems extends Functions {
     private static final Logger _log = LoggerFactory.getLogger(HeroItems.class);
     private static final String[][] HERO_ITEMS = {
             {

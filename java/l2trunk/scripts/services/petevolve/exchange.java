@@ -16,7 +16,7 @@ import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.Util;
 
-class exchange extends Functions {
+public final class exchange extends Functions {
     /**
      * Билеты для обмена
      **/

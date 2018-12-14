@@ -9,13 +9,16 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class OrfenInstance extends BossInstance {
     private static final Location nest = new Location(43728, 17220, -4342);
 
-    private static final Location[] locs = new Location[]{
+    private static final List<Location> locs = Arrays.asList(
             new Location(55024, 17368, -5412),
             new Location(53504, 21248, -5496),
-            new Location(53248, 24576, -5272)};
+            new Location(53248, 24576, -5272));
 
     public OrfenInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -24,7 +27,7 @@ public class OrfenInstance extends BossInstance {
     @Override
     public void setTeleported(boolean flag) {
         super.setTeleported(flag);
-        Location loc = flag ? nest : locs[Rnd.get(locs.length)];
+        Location loc = flag ? nest : Rnd.get(locs);
         setSpawnedLoc(loc);
         getAggroList().clear(true);
         getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);

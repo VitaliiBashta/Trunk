@@ -50,6 +50,11 @@ public class PetInstance extends Summon {
     /**
      * Create a new pet
      */
+    //Fixme нет такого конструктора
+    public PetInstance(int objectId, NpcTemplate template) {
+        this(objectId, template, null, null);
+    }
+
     public PetInstance(int objectId, NpcTemplate template, Player owner, ItemInstance control) {
         this(objectId, template, owner, control, 0, 0);
     }
@@ -280,10 +285,10 @@ public class PetInstance extends Summon {
                 return;
 
             if (item.isHerb()) {
-                List<Skill> skills = item.getTemplate().getAttachedSkills();
-                if (skills.size() > 0)
-                    for (Skill skill : skills)
-                        altUseSkill(skill, this);
+                item.getTemplate().getAttachedSkills().stream()
+                    .mapToInt(Skill::getId)
+                    .forEach(skill ->
+                        altUseSkill(skill, this));
                 item.deleteMe();
                 return;
             }

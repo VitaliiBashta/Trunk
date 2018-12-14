@@ -212,7 +212,7 @@
 	</skill>
 	<skill id="4821" levels="1" name="Raid Boss - Level 43">
 		<!--
-			Description: The latest version of Mechanical Golem that the Black Anvil Guild is desperately looking for. It recklessly ran because of a defective component that an artisan installed during the production by mistake. It partially destroyed the workshop, crushed many Dwarven Artisans who were trying to block it from running, and escaped the town. It is still wandering about in the woods without any destination, and attacking tourists passing by.
+			Description: The latest version of Mechanical Golem that the Black Anvil Guild is desperately looking for. It recklessly ran because of a defective component that an artisan installed during the production by mistake. It partially destroyed the workshop, crushed many Dwarven Artisans who were trying to setBlock it from running, and escaped the town. It is still wandering about in the woods without any destination, and attacking tourists passing by.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />
@@ -252,7 +252,7 @@
 	</skill>
 	<skill id="4825" levels="1" name="Raid Boss - Level 35">
 		<!--
-			Description: Summoner Sejarr's Servitor dispatched from the Ivory Tower to block Devil Beleth. Sejarr cast the powerful dark magic to seal Beleth, but died of Beleth's reflective reaction. However, Phantom who was the only one that did not disappear among Sejarr's Servitors left. It was polluted by the dark magic of Beleth and the Ivory Tower, and reconciled with the Wasteland. Although he thinks his owner's death was unjust, he shows strong hostility towards other mystics.
+			Description: Summoner Sejarr's Servitor dispatched from the Ivory Tower to setBlock Devil Beleth. Sejarr cast the powerful dark magic to seal Beleth, but died of Beleth's reflective reaction. However, Phantom who was the only one that did not disappear among Sejarr's Servitors left. It was polluted by the dark magic of Beleth and the Ivory Tower, and reconciled with the Wasteland. Although he thinks his owner's death was unjust, he shows strong hostility towards other mystics.
 		-->
 		<set name="icon" val="icon.skillraid" />
 		<set name="magicLevel" val="1" />

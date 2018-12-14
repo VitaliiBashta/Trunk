@@ -17,8 +17,8 @@ import java.util.List;
 
 public final class SpiritShot extends ScriptItemHandler implements ScriptFile {
     // all the items ids that this handler knowns
-    private static final Integer[] _itemIds = {5790, 2509, 2510, 2511, 2512, 2513, 2514, 22077, 22078, 22079, 22080, 22081};
-    private static final Integer[] _skillIds = {2061, 2155, 2156, 2157, 2158, 2159};
+    private static final List<Integer> ITEM_IDS = List.of(5790, 2509, 2510, 2511, 2512, 2513, 2514, 22077, 22078, 22079, 22080, 22081);
+    private static final List<Integer> SKILL_IDS = List.of(2061, 2155, 2156, 2157, 2158, 2159);
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -107,12 +107,12 @@ public final class SpiritShot extends ScriptItemHandler implements ScriptFile {
         if (Config.ALLOW_SOUL_SPIRIT_SHOT_INFINITELY) {
             weaponInst.setChargedSpiritshot(ItemInstance.CHARGED_SPIRITSHOT);
             player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, player, _skillIds[grade], 1, 0, 0));
+            player.broadcastPacket(new MagicSkillUse(player, SKILL_IDS.get(grade)));
         } else {
             if (player.getInventory().destroyItem(item, soulSpiritConsumption, null)) {
                 weaponInst.setChargedSpiritshot(ItemInstance.CHARGED_SPIRITSHOT);
                 player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-                player.broadcastPacket(new MagicSkillUse(player, player, _skillIds[grade], 1, 0, 0));
+                player.broadcastPacket(new MagicSkillUse(player, SKILL_IDS.get(grade)));
             }
         }
         return true;
@@ -120,6 +120,6 @@ public final class SpiritShot extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public final List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

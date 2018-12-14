@@ -1,5 +1,6 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -10,7 +11,6 @@ import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.model.entity.olympiad.*;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.List;

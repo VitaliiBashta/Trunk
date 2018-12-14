@@ -17,7 +17,7 @@ public final class PowderKeg extends DefaultAI {
             return;
 
         actor.setTarget(actor);
-        actor.doCast(SkillTable.INSTANCE.getInfo(5714, 1), attacker, true);
+        actor.doCast(5714, attacker, true);
         actor.doDie(null);
         super.onEvtAttacked(attacker, damage);
     }

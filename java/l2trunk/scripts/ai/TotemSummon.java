@@ -2,20 +2,19 @@ package l2trunk.scripts.ai;
 
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
-public final class TotemSummon extends DefaultAI {
-    private static final int TotemofBody = 143;
-    private static final int TotemofSpirit = 144;
-    private static final int TotemofBravery = 145;
-    private static final int TotemofFortitude = 146;
+import java.util.Map;
 
-    private static final int TotemofBodyBuff = 23308;
-    private static final int TotemofSpiritBuff = 23309;
-    private static final int TotemofBraveryBuff = 23310;
-    private static final int TotemofFortitudeBuff = 23311;
+public final class TotemSummon extends DefaultAI {
+    private static final Map<Integer, Integer> npcBuffs = Map.of(
+            143, 23308,
+            144, 23309,
+            145, 23310,
+            146, 23311);
     private long _timer = 0;
 
     public TotemSummon(NpcInstance actor) {
@@ -34,32 +33,16 @@ public final class TotemSummon extends DefaultAI {
     public boolean thinkActive() {
         if (_timer < System.currentTimeMillis()) {
             _timer = System.currentTimeMillis() + 15000L;
-            for (Creature c : getActor().getAroundCharacters(450, 200))
-                if (c.isPlayable() && !c.isDead())
-                    c.altOnMagicUseTimer(c, SkillTable.INSTANCE.getInfo(getBuffId(getActor().getNpcId()), 1));
+            getActor().getAroundCharacters(450, 200).stream()
+                    .filter(GameObject::isPlayable)
+                    .filter(c -> !c.isDead())
+                    .forEach(c -> c.altOnMagicUseTimer(c, getBuffId(getActor().getNpcId())));
         }
 
         return true;
     }
 
     private int getBuffId(int npcId) {
-        int buffId = 0;
-        switch (npcId) {
-            case TotemofBody:
-                buffId = TotemofBodyBuff;
-                break;
-            case TotemofSpirit:
-                buffId = TotemofSpiritBuff;
-                break;
-            case TotemofBravery:
-                buffId = TotemofBraveryBuff;
-                break;
-            case TotemofFortitude:
-                buffId = TotemofFortitudeBuff;
-                break;
-            default:
-                break;
-        }
-        return buffId;
+        return npcBuffs.get(npcId) != null ? npcBuffs.get(npcId) : 0;
     }
 }

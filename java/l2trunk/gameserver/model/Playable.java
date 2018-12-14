@@ -584,8 +584,7 @@ public abstract class Playable extends Creature {
     }
 
     public void paralizeMe(Creature effector) {
-        Skill revengeSkill = SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID);
-        revengeSkill.getEffects(effector, this, false, false);
+        SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID).getEffects(effector, this );
     }
 
     boolean isPendingRevive() {
@@ -656,11 +655,8 @@ public abstract class Playable extends Creature {
         return isSilentMoving.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopSilentMoving() {
-        return isSilentMoving.setAndGet(false);
+    public void stopSilentMoving() {
+        isSilentMoving.setAndGet(false);
     }
 
     /**

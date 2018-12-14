@@ -1,6 +1,6 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import javafx.util.Pair;
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.model.Player;
 

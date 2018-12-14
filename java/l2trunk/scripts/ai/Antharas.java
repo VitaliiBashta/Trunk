@@ -26,21 +26,21 @@ public final class Antharas extends DefaultAI {
     private static final int DESPAWN_TIME = 180 * 60 * 1000; // 3 часа = 180 минут
     private static long _minionsSpawnDelay = 0;
     // debuffs
-    private final Skill s_fear = getSkill(4108);
-    private final Skill s_fear2 = getSkill(5092);
-    private final Skill s_curse = getSkill(4109);
-    private final Skill s_paralyze = getSkill(4111);
+    private final int s_fear = 4108;
+    private final int s_fear2 = 5092;
+    private final int s_curse = 4109;
+    private final int s_paralyze = 4111;
     // damage skills
-    private final Skill s_shock = getSkill(4106);
-    private final Skill s_shock2 = getSkill(4107);
-    private final Skill s_antharas_ordinary_attack = getSkill(4112);
-    private final Skill s_antharas_ordinary_attack2 = getSkill(4113);
-    private final Skill s_meteor = getSkill(5093);
-    private final Skill s_breath = getSkill(4110);
+    private final int s_shock = 4106;
+    private final int s_shock2 = 4107;
+    private final int s_antharas_ordinary_attack = 4112;
+    private final int s_antharas_ordinary_attack2 = 4113;
+    private final int s_meteor = 5093;
+    private final int s_breath = 4110;
     // regen skills
-    private final Skill s_regen1 = getSkill(4239);
-    private final Skill s_regen2 = getSkill(4240);
-    private final Skill s_regen3 = getSkill(4241);
+    private final int s_regen1 = 4239;
+    private final int s_regen2 = 4240;
+    private final int s_regen3 = 4241;
     private final List<NpcInstance> minions = new ArrayList<>();
     // Vars
     private int _hpStage = 0;
@@ -166,9 +166,9 @@ public final class Antharas extends DefaultAI {
                 .count();
     }
 
-    private Skill getSkill(int id) {
-        return SkillTable.INSTANCE.getInfo(id, 1);
-    }
+//    private Skill int id) {
+//        return SkillTable.INSTANCE.getInfo(id);
+//    }
 
     @Override
     public void onEvtDead(Creature killer) {

@@ -48,7 +48,9 @@ public final class AutoRechargeManager extends SteppingRunnableQueueManager {
             boolean consumeItem(int itemId) {
                 if (ItemFunctions.getItemCount(player, itemId) > 0) {
                     List<Skill> itemSkills = player.getInventory().getItemByItemId(itemId).getTemplate().getAttachedSkills();
-                    itemSkills.forEach(s -> player.altUseSkill(s, player));
+                    itemSkills.stream()
+                            .mapToInt(Skill::getId)
+                            .forEach(s -> player.altUseSkill(s, player));
                 } else
                     return false;
 

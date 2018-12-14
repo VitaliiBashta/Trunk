@@ -12,6 +12,7 @@ public final class ItemHolder {
     private static final Map<Integer, ItemTemplate> items = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(ItemHolder.class);
     private static List<ItemTemplate> droppableTemplates;
+
     private ItemHolder() {
     }
 
@@ -41,7 +42,7 @@ public final class ItemHolder {
         return items.values();
     }
 
-    public static  List<ItemTemplate> getItemsByNameContainingString(String name, boolean onlyDroppable) {
+    public static List<ItemTemplate> getItemsByNameContainingString(String name, boolean onlyDroppable) {
         Collection<ItemTemplate> toChooseFrom = onlyDroppable ? getDroppableTemplates() : items.values();
         List<ItemTemplate> templates = new ArrayList<>();
         for (ItemTemplate template : toChooseFrom)

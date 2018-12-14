@@ -1,9 +1,9 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.CharTemplateHolder;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.CreateItem;
 import org.dom4j.Element;
 import org.slf4j.Logger;

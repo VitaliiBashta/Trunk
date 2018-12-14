@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.ItemInfoCache;
 import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;

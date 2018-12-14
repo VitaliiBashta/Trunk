@@ -60,16 +60,16 @@ public class OlympiadHistoryDAO {
     public void insert(OlympiadHistory history) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(INSERT_SQL_QUERY)) {
-            statement.setInt(1, history.getObjectId1());
-            statement.setInt(2, history.getObjectId2());
-            statement.setInt(3, history.getClassId1());
-            statement.setInt(4, history.getClassId2());
-            statement.setString(5, history.getName1());
-            statement.setString(6, history.getName2());
-            statement.setLong(7, history.getGameStartTime());
-            statement.setInt(8, history.getGameTime());
-            statement.setInt(9, history.getGameStatus());
-            statement.setInt(10, history.getGameType());
+            statement.setInt(1, history.objectId1);
+            statement.setInt(2, history.objectId2);
+            statement.setInt(3, history.classId1);
+            statement.setInt(4, history.classId2);
+            statement.setString(5, history.name1);
+            statement.setString(6, history.name2);
+            statement.setLong(7, history.gameStartTime);
+            statement.setInt(8, history.gameTime);
+            statement.setInt(9, history.gameStatus);
+            statement.setInt(10, history.gameType);
             statement.setInt(11, 0);
             statement.execute();
         } catch (SQLException e) {

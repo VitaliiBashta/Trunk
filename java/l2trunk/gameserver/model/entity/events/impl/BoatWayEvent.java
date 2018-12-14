@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.BoatHolder;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -32,7 +32,7 @@ public final class BoatWayEvent extends GlobalEvent {
         _returnLoc = null;
     }
 
-    public BoatWayEvent(MultiValueSet<String> set) {
+    public BoatWayEvent(StatsSet set) {
         super(set);
         _ticketId = set.getInteger("ticketId", 0);
         _returnLoc = Location.parseLoc(set.getString("return_point"));

@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.model.Player;
@@ -24,7 +24,7 @@ public final class KrateisCubeRunnerEvent extends GlobalEvent {
     private boolean _isInProgress;
     private boolean _isRegistrationOver;
 
-    public KrateisCubeRunnerEvent(MultiValueSet<String> set) {
+    public KrateisCubeRunnerEvent(StatsSet set) {
         super(set);
     }
 

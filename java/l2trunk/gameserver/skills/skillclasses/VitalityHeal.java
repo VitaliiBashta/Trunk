@@ -1,14 +1,13 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class VitalityHeal extends Skill {
+public final class VitalityHeal extends Skill {
     public VitalityHeal(StatsSet set) {
         super(set);
     }
@@ -20,9 +19,7 @@ public class VitalityHeal extends Skill {
 
         for (Creature target : targets) {
             if (target.isPlayer()) {
-                Player player = target.getPlayer();
-                double points = fullPoints / 100 * percent;
-                player.addVitality(points);
+                target.getPlayer().addVitality(fullPoints / 100. * percent);
             }
             getEffects(activeChar, target, getActivateRate() > 0, false);
         }

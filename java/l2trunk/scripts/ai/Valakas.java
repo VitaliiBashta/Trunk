@@ -17,24 +17,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Valakas extends Fighter {
-    final Skill s_regen = SkillTable.INSTANCE.getInfo(4691, 1);
+    final int s_regen = 4691;
     // Self skills
-    private final Skill s_lava_skin = SkillTable.INSTANCE.getInfo(4680, 1);
-    private final Skill s_fear = SkillTable.INSTANCE.getInfo(4689, 1);
-    private final Skill s_defence_down = SkillTable.INSTANCE.getInfo(5864, 1);
-    private final Skill s_berserk = SkillTable.INSTANCE.getInfo(5865, 1);
+    private static final int s_lava_skin = 4680;
+    private static final int s_fear = 4689;
+    private static final int s_defence_down = 5864;
+    private static final int s_berserk = 5865;
     // Offensive damage skills
-    private final Skill s_tremple_left = SkillTable.INSTANCE.getInfo(4681, 1);
-    private final Skill s_tremple_right = SkillTable.INSTANCE.getInfo(4682, 1);
-    private final Skill s_tail_stomp_a = SkillTable.INSTANCE.getInfo(4685, 1);
-    private final Skill s_tail_lash = SkillTable.INSTANCE.getInfo(4688, 1);
-    private final Skill s_meteor = SkillTable.INSTANCE.getInfo(4690, 1);
-    private final Skill s_breath_low = SkillTable.INSTANCE.getInfo(4683, 1);
-    private final Skill s_breath_high = SkillTable.INSTANCE.getInfo(4684, 1);
+    private static final int s_tremple_left = 4681;
+    private static final int s_tremple_right = 4682;
+    private static final int s_tail_stomp_a = 4685;
+    private static final int s_tail_lash = 4688;
+    private static final int s_meteor = 4690;
+    private static final int s_breath_low = 4683;
+    private static final int s_breath_high = 4684;
 
     // Offensive percentage skills
-    private final Skill s_destroy_body = SkillTable.INSTANCE.getInfo(5860, 1);
-    private final Skill s_destroy_soul = SkillTable.INSTANCE.getInfo(5861, 1); /* s_destroy_body2 = getSkill(5862, 1), s_destroy_soul2 = getSkill(5863, 1) */
+    private static final int s_destroy_body = 5860;
+    private static final int s_destroy_soul = 5861;
+    private static final int s_destroy_body2 = 5862;
+    private static final int s_destroy_soul2 = 5863 ;
     // Timer reuses
     private final long defenceDownReuse = 120000L;
     // Timers
@@ -87,20 +89,20 @@ public final class Valakas extends Fighter {
         // Buffs and stats
         double chp = actor.getCurrentHpPercents();
         if (_hpStage == 0) {
-            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 1));
+            actor.altOnMagicUseTimer(actor, 4691);
             _hpStage = 1;
         } else if (chp < 80 && _hpStage == 1) {
-            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 2));
+            actor.altOnMagicUseTimer(actor, 4691, 2);
             defenceDownTimer = System.currentTimeMillis();
             _hpStage = 2;
         } else if (chp < 50 && _hpStage == 2) {
-            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 3));
+            actor.altOnMagicUseTimer(actor, 4691, 3);
             _hpStage = 3;
         } else if (chp < 30 && _hpStage == 3) {
-            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 4));
+            actor.altOnMagicUseTimer(actor, 4691, 4);
             _hpStage = 4;
         } else if (chp < 10 && _hpStage == 4) {
-            actor.altOnMagicUseTimer(actor, SkillTable.INSTANCE.getInfo(4691, 5));
+            actor.altOnMagicUseTimer(actor, 4691, 5);
             _hpStage = 5;
         }
 
@@ -172,7 +174,7 @@ public final class Valakas extends Fighter {
                 addDesiredSkill(d_skill, target, distance, s_destroy_soul);
                 addDesiredSkill(d_skill, target, distance, s_meteor);
                 addDesiredSkill(d_skill, target, distance, s_fear);
-                // addDesiredSkill(d_skill, target, distance, Rnd.chance(60) ? s_destroy_soul2 : s_destroy_body);
+                 addDesiredSkill(d_skill, target, distance, Rnd.chance(60) ? s_destroy_soul2 : s_destroy_body);
                 break;
         }
 
@@ -188,7 +190,7 @@ public final class Valakas extends Fighter {
         NpcInstance actor = getActor();
         // Lava buff
         if (actor.isInZone(Zone.ZoneType.poison))
-            if (actor.getEffectList() != null && actor.getEffectList().getEffectsBySkill(s_lava_skin) == null)
+            if (actor.getEffectList() != null && actor.getEffectList().getEffectsBySkillId(s_lava_skin) == null)
                 actor.altOnMagicUseTimer(actor, s_lava_skin);
         super.thinkAttack();
     }

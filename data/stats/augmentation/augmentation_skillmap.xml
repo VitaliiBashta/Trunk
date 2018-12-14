@@ -830,7 +830,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="14715"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="14715"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="1" />
 		<type val="red" />
@@ -855,7 +855,7 @@
 		<skillLevel val="1" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="14720"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="14720"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="1" />
 		<type val="red" />
@@ -1806,7 +1806,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="14893"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="14893"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="2" />
 		<type val="red" />
@@ -1831,7 +1831,7 @@
 		<skillLevel val="2" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="14898"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="14898"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="2" />
 		<type val="red" />
@@ -2782,7 +2782,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15071"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="15071"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="3" />
 		<type val="red" />
@@ -2807,7 +2807,7 @@
 		<skillLevel val="3" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15076"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="15076"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="3" />
 		<type val="red" />
@@ -3758,7 +3758,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15249"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="15249"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="4" />
 		<type val="red" />
@@ -3783,7 +3783,7 @@
 		<skillLevel val="4" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15254"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="15254"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="4" />
 		<type val="red" />
@@ -4734,7 +4734,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15427"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="15427"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="5" />
 		<type val="red" />
@@ -4759,7 +4759,7 @@
 		<skillLevel val="5" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15432"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="15432"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="5" />
 		<type val="red" />
@@ -5708,7 +5708,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15605"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="15605"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="6" />
 		<type val="red" />
@@ -5733,7 +5733,7 @@
 		<skillLevel val="6" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15610"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="15610"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="6" />
 		<type val="red" />
@@ -6684,7 +6684,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15783"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="15783"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="7" />
 		<type val="red" />
@@ -6709,7 +6709,7 @@
 		<skillLevel val="7" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15788"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="15788"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="7" />
 		<type val="red" />
@@ -7660,7 +7660,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15961"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="15961"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="8" />
 		<type val="red" />
@@ -7685,7 +7685,7 @@
 		<skillLevel val="8" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="15966"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="15966"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="8" />
 		<type val="red" />
@@ -8636,7 +8636,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="16139"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="16139"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="9" />
 		<type val="red" />
@@ -8661,7 +8661,7 @@
 		<skillLevel val="9" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="16144"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="16144"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="9" />
 		<type val="red" />
@@ -9610,7 +9610,7 @@
 		<trigger_chance val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="16317"> <!-- Chance: Has a chance to block the use of all physical and magical skills by a target that damages you. -->
+	<augmentation id="16317"> <!-- Chance: Has a chance to setBlock the use of all physical and magical skills by a target that damages you. -->
 		<skillId val="3237" /> <!-- Item Skill: Doom: Chance: Momentarily blocks all of the target's physical and magic skills when you are under attack. -->
 		<skillLevel val="10" />
 		<type val="red" />
@@ -9635,7 +9635,7 @@
 		<skillLevel val="10" />
 		<type val="red" />
 	</augmentation>
-	<augmentation id="16322"> <!-- Chance: Has a chance to block the use of all magic skills by a target that damages you. -->
+	<augmentation id="16322"> <!-- Chance: Has a chance to setBlock the use of all magic skills by a target that damages you. -->
 		<skillId val="3236" /> <!-- Item Skill: Silence: Chance: Momentarily blocks the target's magic skills when you are under attack. -->
 		<skillLevel val="10" />
 		<type val="red" />

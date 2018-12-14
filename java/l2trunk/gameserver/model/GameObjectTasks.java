@@ -190,7 +190,7 @@ public final class GameObjectTasks {
 
             if (player.isBlocked()) // prevent locks
             {
-                player.unblock();
+                player.setBlock();
             }
             player.standUp();
         }
@@ -269,13 +269,13 @@ public final class GameObjectTasks {
      * AltMagicUseTask
      */
     public static class AltMagicUseTask extends RunnableImpl {
-        final Skill _skill;
+        final int skillId;
         private final HardReference<? extends Creature> _charRef, _targetRef;
 
-        public AltMagicUseTask(Creature character, Creature target, Skill skill) {
+        public AltMagicUseTask(Creature character, Creature target, int skillId) {
             _charRef = character.getRef();
             _targetRef = target.getRef();
-            _skill = skill;
+            this.skillId = skillId;
         }
 
         @Override
@@ -283,7 +283,7 @@ public final class GameObjectTasks {
             Creature cha, target;
             if ((cha = _charRef.get()) == null || (target = _targetRef.get()) == null)
                 return;
-            cha.altOnMagicUseTimer(target, _skill);
+            cha.altOnMagicUseTimer(target, skillId);
         }
     }
 

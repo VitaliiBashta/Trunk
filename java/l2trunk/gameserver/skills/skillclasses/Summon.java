@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.dao.EffectsDAO;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
@@ -18,7 +19,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncAdd;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
@@ -130,7 +130,7 @@ public final class Summon extends Skill {
                 summon.setFollowMode(true);
 
                 if (summon.getSkillLevel(4140) > 0)
-                    summon.altUseSkill(SkillTable.INSTANCE.getInfo(4140, summon.getSkillLevel(4140)), activeChar);
+                    summon.altUseSkill(4140, summon.getSkillLevel(4140), activeChar);
 
                 if (summon.getName().equalsIgnoreCase("Shadow"))//FIXME [G1ta0] идиотский хардкод
                     summon.addStatFunc(new FuncAdd(Stats.ABSORB_DAMAGE_PERCENT, 0x40, this, 15));

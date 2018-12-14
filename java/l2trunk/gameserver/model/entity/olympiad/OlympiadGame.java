@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.olympiad;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -21,12 +22,12 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.InstantZone;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
@@ -270,41 +271,34 @@ public class OlympiadGame {
     }
 
     private void tie() {
-        TeamMember[] teamMembers1 = _team1.getMembers().toArray(new TeamMember[_team1.getMembers().size()]);
-        TeamMember[] teamMembers2 = _team2.getMembers().toArray(new TeamMember[_team2.getMembers().size()]);
+        Collection<TeamMember> teamMembers1 = _team1.getMembers();
+        Collection<TeamMember> teamMembers2 = _team2.getMembers();
 
         ExReceiveOlympiad.MatchResult packet = new ExReceiveOlympiad.MatchResult(true, "");
-        for (int i = 0; i < teamMembers1.length; i++) {
-            try {
-                TeamMember member1 = ArrayUtils.valid(teamMembers1, i);
-                TeamMember member2 = ArrayUtils.valid(teamMembers2, i);
+        for (TeamMember member1 : teamMembers1) {
+            if (member1 != null) {
+                member1.incGameCount();
+                StatsSet stat1 = member1.getStat();
+                packet.addPlayer(TeamType.BLUE, member1, -2);
+                stat1.set(Olympiad.POINTS, stat1.getInteger(Olympiad.POINTS) - 2);
+            }
+        }
+        for (TeamMember member2 : teamMembers2) {
+            if (member2 != null) {
+                member2.incGameCount();
+                StatsSet stat2 = member2.getStat();
+                packet.addPlayer(TeamType.RED, member2, -2);
 
-                if (member1 != null) {
-                    member1.incGameCount();
-                    StatsSet stat1 = member1.getStat();
-                    packet.addPlayer(TeamType.BLUE, member1, -2);
-
-                    stat1.set(Olympiad.POINTS, stat1.getInteger(Olympiad.POINTS) - 2);
-                }
-
-                if (member2 != null) {
-                    member2.incGameCount();
-                    StatsSet stat2 = member2.getStat();
-                    packet.addPlayer(TeamType.RED, member2, -2);
-
-                    stat2.set(Olympiad.POINTS, stat2.getInteger(Olympiad.POINTS) - 2);
-                }
-            } catch (Exception e) {
-                _log.error("OlympiadGame.tie(): " + e, e);
+                stat2.set(Olympiad.POINTS, stat2.getInteger(Olympiad.POINTS) - 2);
             }
         }
 
         if (_type != CompType.TEAM) {
-            TeamMember member1 = ArrayUtils.valid(teamMembers1, 0);
-            TeamMember member2 = ArrayUtils.valid(teamMembers2, 0);
+            TeamMember member1 = teamMembers1.stream().findFirst().orElse(null);
+            TeamMember member2 = teamMembers2.stream().findFirst().orElse(null);
             if (member1 != null && member2 != null) {
                 int diff = (int) ((System.currentTimeMillis() - _startTime) / 1000L);
-                OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member1.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, 0, _type.ordinal());
+                OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member2.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, 0, _type.ordinal());
 
                 OlympiadHistoryManager.INSTANCE.saveHistory(h);
             }

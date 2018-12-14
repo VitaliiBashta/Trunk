@@ -12,7 +12,7 @@ import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-class clanhall extends Functions {
+public final class clanhall extends Functions {
     // -- Pet ID --
     private static final int GREAT_WOLF = PetDataTable.GREAT_WOLF_ID;
     private static final int WHITE_WOLF = PetDataTable.WGREAT_WOLF_ID;

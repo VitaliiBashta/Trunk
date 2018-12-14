@@ -1,22 +1,23 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class ExtractStone extends Skill {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class ExtractStone extends Skill {
     private final static int ExtractScrollSkill = 2630;
     private final static int ExtractedCoarseRedStarStone = 13858;
     private final static int ExtractedCoarseBlueStarStone = 13859;
@@ -52,13 +53,13 @@ public class ExtractStone extends Skill {
     private final static int SeedDarkness = 18683;
     private final static int SeedDivinity = 18682;
 
-    private final List<Integer> _npcIds = new ArrayList<>();
+    private final List<Integer> npcIds = new ArrayList<>();
 
     public ExtractStone(StatsSet set) {
         super(set);
         StringTokenizer st = new StringTokenizer(set.getString("npcIds", ""), ";");
         while (st.hasMoreTokens())
-            _npcIds.add(Integer.valueOf(st.nextToken()));
+            npcIds.add(toInt(st.nextToken()));
     }
 
     @Override
@@ -68,7 +69,7 @@ public class ExtractStone extends Skill {
             return false;
         }
 
-        if (!_npcIds.isEmpty() && !_npcIds.contains(target.getNpcId())) {
+        if (!npcIds.isEmpty() && !npcIds.contains(target.getNpcId())) {
             activeChar.sendPacket(SystemMsg.INVALID_TARGET);
             return false;
         }
@@ -76,11 +77,6 @@ public class ExtractStone extends Skill {
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
     }
 
-    /**
-     * Возвращает ID предмета получаемого из npcId.
-     *
-     * @return
-     */
     private int getItemId(int npcId) {
         switch (npcId) {
             case RedStarStone1:
@@ -126,12 +122,12 @@ public class ExtractStone extends Skill {
 
         for (Creature target : targets)
             if (target != null && getItemId(target.getNpcId()) != 0) {
-                double rate = Config.RATE_QUESTS_DROP ;
+                double rate = Config.RATE_QUESTS_DROP;
                 long count = id == ExtractScrollSkill ? 1 : Math.min(10, Rnd.get((int) (getLevel() * rate + 1)));
                 int itemId = getItemId(target.getNpcId());
 
                 if (count > 0) {
-                    ItemInstance createdItem = player.getInventory().addItem(itemId, count, "ExtractStone");
+                    player.getInventory().addItem(itemId, count, "ExtractStone");
                     player.sendPacket(new PlaySound(Quest.SOUND_ITEMGET));
                     player.sendPacket(SystemMessage2.obtainItems(itemId, count, 0));
                     player.sendChanges();

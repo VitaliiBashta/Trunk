@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.SevenSignsFestival;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -12,7 +13,6 @@ import l2trunk.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.ClanTable;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

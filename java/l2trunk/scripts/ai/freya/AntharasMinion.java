@@ -17,13 +17,13 @@ public final class AntharasMinion extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        for (Player p : AntharasManager.getZone().getInsidePlayers())
-            notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 5000);
+        AntharasManager.getZone().getInsidePlayers().forEach(p ->
+            notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 5000));
     }
 
     @Override
     public void onEvtDead(Creature killer) {
-        getActor().doCast(SkillTable.INSTANCE.getInfo(5097, 1), getActor(), true);
+        getActor().doCast(5097, getActor(), true);
         super.onEvtDead(killer);
     }
 }

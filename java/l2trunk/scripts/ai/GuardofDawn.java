@@ -20,7 +20,7 @@ import l2trunk.gameserver.utils.Location;
  */
 public final class GuardofDawn extends DefaultAI {
     private static final int _aggrorange = 150;
-    private final Skill _skill = SkillTable.INSTANCE.getInfo(5978, 1);
+    private static final int _skill = 5978;
     private Location _locStart = null;
     private Location _locEnd = null;
     private Location _locTele = null;

@@ -225,7 +225,7 @@ public class _114_ResurrectionOfAnOldManager extends Quest implements ScriptFile
             st.takeItems(DETECTOR, 1);
             st.giveItems(DETECTOR2, 1);
             st.setCond(18);
-            player.sendPacket(new ExShowScreenMessage(NpcString.THE_RADIO_SIGNAL_DETECTOR_IS_RESPONDING_A_SUSPICIOUS_PILE_OF_STONES_CATCHES_YOUR_EYE, 4500, ScreenMessageAlign.TOP_CENTER));
+            player.sendPacket(new ExShowScreenMessage(NpcString.THE_RADIO_SIGNAL_DETECTOR_IS_RESPONDING_A_SUSPICIOUS_PILE_OF_STONES_CATCHES_YOUR_EYE));
         }
         return "";
     }

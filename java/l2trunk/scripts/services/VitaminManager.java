@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-class VitaminManager extends Functions {
+public final class VitaminManager extends Functions {
     private static final int PetCoupon = 13273;
     private static final int SpecialPetCoupon = 14065;
 

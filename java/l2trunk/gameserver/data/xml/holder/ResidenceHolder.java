@@ -3,8 +3,6 @@ package l2trunk.gameserver.data.xml.holder;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.residence.Residence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 

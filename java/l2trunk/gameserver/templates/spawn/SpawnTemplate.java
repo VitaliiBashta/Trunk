@@ -3,13 +3,13 @@ package l2trunk.gameserver.templates.spawn;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpawnTemplate {
+public final class SpawnTemplate {
     private final PeriodOfDay _periodOfDay;
     private final int _count;
     private final int _respawn;
     private final int _respawnRandom;
 
-    private final List<SpawnNpcInfo> _npcList = new ArrayList<>(1);
+    private final List<SpawnNpcInfo> npcList = new ArrayList<>(1);
     private final List<SpawnRange> _spawnRangeList = new ArrayList<>(1);
 
     public SpawnTemplate(PeriodOfDay periodOfDay, int count, int respawn, int respawnRandom) {
@@ -30,16 +30,16 @@ public class SpawnTemplate {
 
     //----------------------------------------------------------------------------------------------------------
     public void addNpc(SpawnNpcInfo info) {
-        _npcList.add(info);
+        npcList.add(info);
     }
 
     public SpawnNpcInfo getNpcId(int index) {
-        return _npcList.get(index);
+        return npcList.get(index);
     }
     //----------------------------------------------------------------------------------------------------------
 
     public int getNpcSize() {
-        return _npcList.size();
+        return npcList.size();
     }
 
     public int getSpawnRangeSize() {

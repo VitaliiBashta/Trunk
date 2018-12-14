@@ -6,15 +6,11 @@ import l2trunk.gameserver.model.entity.residence.Residence;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.StringTokenizer;
 
 public final class WyvernManagerInstance extends NpcInstance {
-    private static final Logger _log = LoggerFactory.getLogger(WyvernManagerInstance.class);
-
-    private WyvernManagerInstance(int objectId, NpcTemplate template) {
+    public WyvernManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

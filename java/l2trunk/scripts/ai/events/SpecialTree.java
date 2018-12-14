@@ -37,10 +37,10 @@ public final class SpecialTree extends DefaultAI {
                 if (actor == null)
                     return false;
 
-                addTaskBuff(actor, SkillTable.INSTANCE.getInfo(2139));
+                addTaskBuff(actor, 2139);
 
                 if (Rnd.chance(33))
-                    actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, SOUNDS.select(), 1, 500, 0));
+                    actor.broadcastPacketToOthers(new MagicSkillUse(actor,  SOUNDS.select(),  500));
             }
         }
 

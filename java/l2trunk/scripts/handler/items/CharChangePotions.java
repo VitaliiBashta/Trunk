@@ -108,7 +108,7 @@ public final class CharChangePotions extends ScriptItemHandler implements Script
                 break;
         }
 
-        player.broadcastPacket(new MagicSkillUse(player, player, 2003, 1, 1, 0));
+        player.broadcastPacket(new MagicSkillUse(player,  2003));
         if (face != player.getFace() || hairColor != player.getHairColor() || hairStyle != player.getHairStyle())
             player.broadcastUserInfo(true);
         return true;

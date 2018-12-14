@@ -10,13 +10,15 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessag
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Obelisk extends DefaultAI {
-    private static final int[] MOBS = {22541, 22544, 22543};
+    private static final List<Integer> MOBS = List.of(22541, 22544, 22543);
     private boolean _firstTimeAttacked = true;
 
     public Obelisk(NpcInstance actor) {
         super(actor);
-        actor.block();
+        actor.setBlock(true);
     }
 
     @Override
@@ -37,11 +39,11 @@ public final class Obelisk extends DefaultAI {
         if (_firstTimeAttacked) {
             _firstTimeAttacked = false;
             for (int i = 0; i < 8; i++)
-                for (int mobId : MOBS) {
+                MOBS.forEach(mobId -> {
                     NpcInstance npc = actor.getReflection().addSpawnWithoutRespawn(mobId, Location.findPointToStay(actor, 400, 1000), 0);
                     Creature randomHated = actor.getAggroList().getRandomHated();
                     npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, randomHated != null ? randomHated : attacker, Rnd.get(1, 100));
-                }
+                });
         }
         super.onEvtAttacked(attacker, damage);
     }

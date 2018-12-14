@@ -20,7 +20,7 @@ import java.util.List;
 public enum ChangeLogManager {
     INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(ChangeLogManager.class);
-    private final List<Change> changeList =new LinkedList<>();
+    private final List<Change> changeList = new LinkedList<>();
 
     ChangeLogManager() {
         loadChangeLog();

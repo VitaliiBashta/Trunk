@@ -1,5 +1,6 @@
 package l2trunk.gameserver.templates;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.ai.DoorAI;
@@ -11,8 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class DoorTemplate extends CharTemplate {
-    @SuppressWarnings("unchecked")
+public final class DoorTemplate extends CharTemplate {
     private static final Constructor<DoorAI> DEFAULT_AI_CONSTRUCTOR = (Constructor<DoorAI>) CharacterAI.class.getConstructors()[0];
     private static final Logger LOG = LoggerFactory.getLogger(DoorTemplate.class);
     private final int _id;
@@ -28,7 +28,7 @@ public class DoorTemplate extends CharTemplate {
     private final int _openTime;
     private final int _rndTime;
     private final int _closeTime;
-    private final int _masterDoor;
+    private final int masterDoor;
     private final StatsSet _aiParams;
     private Class<DoorAI> _classAI = DoorAI.class;
     private Constructor<DoorAI> _constructorAI = DEFAULT_AI_CONSTRUCTOR;
@@ -48,7 +48,7 @@ public class DoorTemplate extends CharTemplate {
         _openTime = set.getInteger("open_time", 0);
         _rndTime = set.getInteger("random_time", 0);
         _closeTime = set.getInteger("close_time", 0);
-        _masterDoor = set.getInteger("master_door", 0);
+        masterDoor = set.getInteger("master_door", 0);
         _aiParams = (StatsSet) set.getObject("ai_params", StatsSet.EMPTY);
 
         setAI(set.getString("ai", "DoorAI"));
@@ -142,7 +142,7 @@ public class DoorTemplate extends CharTemplate {
     }
 
     public int getMasterDoor() {
-        return _masterDoor;
+        return masterDoor;
     }
 
     public StatsSet getAIParams() {

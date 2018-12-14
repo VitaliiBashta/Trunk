@@ -3,17 +3,15 @@ package l2trunk.scripts.ai;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
-import l2trunk.gameserver.tables.SkillTable;
 
 public final class ZakenDaytime83 extends Fighter {
-    private long _teleportSelfTimer = 0L;
+    private final static int zakenTele = 4222;
     private final long _teleportSelfReuse = 120000L; // 120 secs
-    private Skill zakenTele = SkillTable.INSTANCE.getInfo(4222);
     private final NpcInstance actor = getActor();
+    private long _teleportSelfTimer = 0L;
 
     public ZakenDaytime83(NpcInstance actor) {
         super(actor);

@@ -74,8 +74,7 @@ public enum CancelTaskManager {
                 task._cancelled.sendMessage("Cancelled buffs returned!");
             }
 
-            for (DispelClass task : toRemove)
-                _taskTimes.remove(task);
+            toRemove.forEach(_taskTimes::remove);
         }
     }
 }

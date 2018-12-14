@@ -12,7 +12,6 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.AbnormalEffect;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Util;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public final class AdminEffects implements IAdminCommandHandler {
 
                 if (val == 0) {
                     if (sh_level != 0) {
-                        activeChar.doCast(SkillTable.INSTANCE.getInfo(7029, sh_level), activeChar, true); // снимаем еффект
+                        activeChar.doCast(7029, sh_level, activeChar, true); // снимаем еффект
                     }
                     activeChar.unsetVar("gm_gmspeed");
                 } else if ((val >= 1) && (val <= 4)) {
@@ -69,9 +68,9 @@ public final class AdminEffects implements IAdminCommandHandler {
                     }
                     if (val != sh_level) {
                         if (sh_level != 0) {
-                            activeChar.doCast(SkillTable.INSTANCE.getInfo(7029, sh_level), activeChar, true); // снимаем еффект
+                            activeChar.doCast(7029, sh_level, activeChar, true); // снимаем еффект
                         }
-                        activeChar.doCast(SkillTable.INSTANCE.getInfo(7029, val), activeChar, true);
+                        activeChar.doCast(7029, val, activeChar, true);
                     }
                 } else {
                     activeChar.sendMessage("USAGE: //gmspeed value=[0 1 2 3 4]");
@@ -137,7 +136,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                     c.startAbnormalEffect(AbnormalEffect.HOLD_1);
                     c.abortAttack(true, false);
                     c.abortCast(true, false);
-                    c.block();
+                    c.setBlock(true);
 
                     if (minutes > 0 && c.isPlayable()) {
                         c.getPlayer().setVar("Para", reason, System.currentTimeMillis() + minutes * 60000L);
@@ -167,7 +166,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 for (Creature c : targets) {
                     if (!c.isBlocked())
                         continue;
-                    c.unblock();
+                    c.setBlock();
                     c.stopAbnormalEffect(AbnormalEffect.HOLD_1);
                     if (c.isPlayable())
                         c.getPlayer().unsetVar("Para");
@@ -300,7 +299,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                     activeChar.sendMessage("USAGE: //transform transform_id");
                     return false;
                 }
-                activeChar.doCast(SkillTable.INSTANCE.getInfo(id, lvl), activeChar, true);
+                activeChar.doCast(id, lvl, activeChar, true);
                 break;
             case admin_showmovie:
                 if (wordList.length < 2) {

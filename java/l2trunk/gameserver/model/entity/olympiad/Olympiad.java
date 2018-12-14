@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.olympiad;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.configuration.ExProperties;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -15,7 +16,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.MultiValueIntegerMap;
 import l2trunk.gameserver.utils.TimeUtils;
@@ -340,7 +340,7 @@ public final class Olympiad {
 
     public static synchronized void logoutPlayer(Player player) {
         _classBasedRegisters.removeValue(player.getObjectId());
-        _nonClassBasedRegisters.remove(new Integer(player.getObjectId()));
+        _nonClassBasedRegisters.remove(player.getObjectId());
         _teamBasedRegisters.removeValue(player.getObjectId());
 
         OlympiadGame game = player.getOlympiadGame();
@@ -386,7 +386,7 @@ public final class Olympiad {
             }
         }
         _classBasedRegisters.removeValue(noble.getObjectId());
-        _nonClassBasedRegisters.remove(new Integer(noble.getObjectId()));
+        _nonClassBasedRegisters.remove(noble.getObjectId());
         _teamBasedRegisters.removeValue(noble.getObjectId());
 
         noble.sendPacket(SystemMsg.YOU_HAVE_BEEN_REMOVED_FROM_THE_GRAND_OLYMPIAD_WAITING_LIST);
@@ -396,8 +396,8 @@ public final class Olympiad {
 
     private static synchronized void updateCompStatus() {
         long milliToStart = getMillisToCompBegin();
-        double numSecs = milliToStart / 1000 % 60;
-        double countDown = (milliToStart / 1000 - numSecs) / 60;
+        double numSecs = milliToStart / 1000. % 60;
+        double countDown = (milliToStart / 1000. - numSecs) / 60;
         int numMins = (int) Math.floor(countDown % 60);
         countDown = (countDown - numMins) / 60;
         int numHours = (int) Math.floor(countDown % 24);
@@ -586,9 +586,7 @@ public final class Olympiad {
             return true;
         if (_nonClassBasedRegisters.contains(noble.getObjectId()))
             return true;
-        if (_teamBasedRegisters.containsValue(noble.getObjectId()))
-            return true;
-        return false;
+        return _teamBasedRegisters.containsValue(noble.getObjectId());
     }
 
     public static synchronized boolean isRegisteredInComp(Player player) {

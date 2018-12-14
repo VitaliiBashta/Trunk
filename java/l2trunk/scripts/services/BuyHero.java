@@ -1,5 +1,6 @@
 package l2trunk.scripts.services;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
@@ -9,7 +10,6 @@ import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.List;

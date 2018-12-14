@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.commons.threading.RunnableImpl;
@@ -19,7 +20,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2trunk.gameserver.network.serverpackets.SSQInfo;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +85,6 @@ public enum SevenSigns {
     private static final int CREST_OF_DAWN_ID = 31170;
     private static final int CREST_OF_DUSK_ID = 31171;
     private static final Logger _log = LoggerFactory.getLogger(SevenSigns.class);
-    private static SevenSigns _instance;
     private final Calendar _calendar = Calendar.getInstance();
     private final Map<Integer, StatsSet> _signsPlayerData = new ConcurrentHashMap<>();
     private final Map<Integer, Integer> _signsSealOwners = new ConcurrentHashMap<>();
@@ -895,8 +894,6 @@ public enum SevenSigns {
 
     /**
      * Send info on the current Seven Signs period to the specified player.
-     *
-     * @param player
      */
     public void sendCurrentPeriodMsg(Player player) {
         switch (_activePeriod) {

@@ -380,7 +380,7 @@ public abstract class ResidenceManager extends MerchantInstance {
             sendHtmlMessage(player, html);
             return false;
         }
-        altUseSkill(skill, player);
+        altUseSkill(id,level, player);
         return true;
     }
 

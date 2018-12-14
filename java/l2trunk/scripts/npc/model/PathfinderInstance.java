@@ -1,5 +1,6 @@
 package l2trunk.scripts.npc.model;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.MapRegionHolder;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
@@ -8,11 +9,12 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.InstantZone;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.mapregion.DomainArea;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.instances.KamalokaNightmare;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class PathfinderInstance extends NpcInstance {
     //Instance's ID
@@ -128,7 +130,7 @@ public class PathfinderInstance extends NpcInstance {
             showChatWindow(player, 1);
         } else if (command.startsWith("Chat"))
             try {
-                int val = Integer.parseInt(command.substring(5));
+                int val = toInt(command.substring(5));
                 showChatWindow(player, val);
             } catch (NumberFormatException nfe) {
                 String filename = command.substring(5).trim();
@@ -138,7 +140,7 @@ public class PathfinderInstance extends NpcInstance {
                     showChatWindow(player, filename);
             }
         else if (command.startsWith("solo_kamaloka")) {
-            int val = Integer.parseInt(command.substring(14));
+            int val = toInt(command.substring(14));
             Reflection r = player.getActiveReflection();
             if (r != null) {
                 if (player.canReenterInstance(val))
@@ -184,8 +186,8 @@ public class PathfinderInstance extends NpcInstance {
                 continue;
 
             int[] item = new int[2];
-            item[0] = Integer.parseInt(item_s[0]);
-            item[1] = Integer.parseInt(item_s[1]);
+            item[0] = toInt(item_s[0]);
+            item[1] = toInt(item_s[1]);
             result[i] = item;
         }
         return result;

@@ -9,10 +9,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
 
-/**
- * @author L2Mythras
- */
-class NickColor extends Functions {
+public final class NickColor extends Functions {
     public void list(String[] param) {
         Player player = getSelf();
         if (player == null)

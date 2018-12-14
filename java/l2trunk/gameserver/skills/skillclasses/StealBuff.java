@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Creature;
@@ -12,7 +13,6 @@ import l2trunk.gameserver.skills.EffectType;
 import l2trunk.gameserver.skills.effects.EffectDispelEffects;
 import l2trunk.gameserver.skills.effects.EffectTemplate;
 import l2trunk.gameserver.stats.Env;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.ArrayList;
 import java.util.Collections;

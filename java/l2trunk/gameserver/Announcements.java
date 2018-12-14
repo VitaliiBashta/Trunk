@@ -126,7 +126,7 @@ public enum Announcements {
     /**
      * Отправляет анонсом CustomMessage, приминимо к примеру в шатдауне.
      *
-     * @param address      адрес в {@link l2trunk.gameserver.network.serverpackets.components.CustomMessage}
+     * @param address адрес в {@link l2trunk.gameserver.network.serverpackets.components.CustomMessage}
      */
     public void announceByCustomMessage(String address) {
         GameObjectsStorage.getAllPlayers().forEach(player ->
@@ -140,7 +140,7 @@ public enum Announcements {
 
     public void announceToPlayerByCustomMessage(Player player, String address) {
         CustomMessage cm = new CustomMessage(address, player);
-                player.sendPacket(new Say2(0, ChatType.ANNOUNCEMENT, "", cm.toString()));
+        player.sendPacket(new Say2(0, ChatType.ANNOUNCEMENT, "", cm.toString()));
     }
 
     public void announceToPlayerByCustomMessage(Player player, String address, String[] replacements, ChatType type) {

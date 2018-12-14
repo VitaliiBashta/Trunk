@@ -62,7 +62,7 @@ public final class PlayerVar {
                 case "Para":
                     if (!var.owner.isBlocked())
                         return;
-                    var.owner.unblock();
+                    var.owner.setBlock(false);
                     var.owner.stopAbnormalEffect(AbnormalEffect.HOLD_1);
                     if (var.owner.isPlayable())
                         var.owner.getPlayer().unsetVar("Para");

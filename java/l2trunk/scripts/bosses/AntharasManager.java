@@ -17,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -181,8 +180,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
     }
 
     private static void broadcastScreenMessage(NpcString npcs) {
-        for (Player p : getPlayersInside())
-            p.sendPacket(new ExShowScreenMessage(npcs, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false));
+        getPlayersInside().forEach(p -> p.sendPacket(new ExShowScreenMessage(npcs)));
     }
 
     public static void addSpawnedMinion(NpcInstance npc) {
@@ -361,10 +359,10 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(9), 13000);
                     break;
                 case 9:
-                    for (Player pc : _players) {
+                    _players.forEach(pc -> {
                         pc.leaveMovieMode();
-                        pc.altOnMagicUseTimer(pc, SkillTable.INSTANCE.getInfo(23312));
-                    }
+                        pc.altOnMagicUseTimer(pc, 23312);
+                    });
                     broadcastScreenMessage(NpcString.ANTHARAS_THE_EVIL_LAND_DRAGON_ANTHARAS_DEFEATED);
                     onAntharasDie();
                     break;

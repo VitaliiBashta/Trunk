@@ -12,7 +12,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 public abstract class CTBBossInstance extends MonsterInstance {
-    private final Skill SKILL = SkillTable.INSTANCE.getInfo(5456, 1);
+    private static final int SKILL = 5456;
     private CTBTeamObject _matchTeamObject;
 
     protected CTBBossInstance(int objectId, NpcTemplate template) {
@@ -22,7 +22,7 @@ public abstract class CTBBossInstance extends MonsterInstance {
 
     @Override
     public void reduceCurrentHp(double damage, Creature attacker, Skill skill, boolean awake, boolean standUp, boolean directHp, boolean canReflect, boolean transferDamage, boolean isDot, boolean sendMessage) {
-        if (attacker.getLevel() > (getLevel() + 8) && attacker.getEffectList().getEffectsCountForSkill(SKILL.getId()) == 0) {
+        if (attacker.getLevel() > (getLevel() + 8) && attacker.getEffectList().getEffectsCountForSkill(SKILL) == 0) {
             doCast(SKILL, attacker, false);
             return;
         }

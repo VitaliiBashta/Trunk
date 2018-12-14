@@ -1,89 +1,56 @@
 package l2trunk.scripts.ai;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.geodata.GeoEngine;
-import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
-import l2trunk.gameserver.model.Skill;
-import l2trunk.gameserver.model.World;
+import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 
-/**
- * AI NPC для SSQ Dungeon
- * - Если находят чара в радиусе 300, то кричат в чат и отправляют на точку старта
- * - Не видят, кто находится в хайде
- * - Никогда и никого не атакуют
- *
- * @author pchayka, n0nam3
- */
+import java.util.Objects;
+
 public final class GuardofDawnFemale extends DefaultAI {
-    private static final int _aggrorange = 300;
-    private final Skill deathStrike = SkillTable.INSTANCE.getInfo(5978);
-    private Location locTele = null;
+    private static final int AGGRORANGE = 300;
+    private static final int deathStrike = 5978;
+    private final Location location;
     private boolean noCheckPlayers = false;
 
     public GuardofDawnFemale(NpcInstance actor, Location telePoint) {
         super(actor);
         AI_TASK_ATTACK_DELAY = 200;
-        setTelePoint(telePoint);
-    }
-
-    public class Teleportation extends RunnableImpl {
-
-        final Location _telePoint;
-        final Playable _target;
-
-        Teleportation(Location telePoint, Playable target) {
-            _telePoint = telePoint;
-            _target = target;
-        }
-
-        @Override
-        public void runImpl() {
-            _target.teleToLocation(_telePoint);
-            noCheckPlayers = false;
-        }
+        location = telePoint;
     }
 
     @Override
     public boolean thinkActive() {
-        NpcInstance actor = getActor();
-
         // проверяем игроков вокруг
         if (!noCheckPlayers)
-            checkAroundPlayers(actor);
-
+            checkAroundPlayers(getActor());
         return true;
     }
 
     private boolean checkAroundPlayers(NpcInstance actor) {
-        for (Playable target : World.getAroundPlayables(actor, _aggrorange, _aggrorange)) {
-            if (!canSeeInSilentMove(target) || !canSeeInHide(target))
-                continue;
-
-            if (target != null && target.isPlayer() && !target.isSilentMoving() && !target.isInvul() && GeoEngine.canSeeTarget(actor, target, false) && PositionUtils.isFacing(actor, target, 150)) {
-                actor.doCast(deathStrike, target, true);
-                Functions.npcSay(actor, "Who are you?! A new face like you can't approach this place!");
-                noCheckPlayers = true;
-                ThreadPoolManager.INSTANCE.schedule(new Teleportation(getTelePoint(), target), 3000);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void setTelePoint(Location loc) {
-        locTele = loc;
-    }
-
-    private Location getTelePoint() {
-        return locTele;
+        return World.getAroundPlayables(actor, AGGRORANGE, AGGRORANGE).stream()
+                .filter(Objects::nonNull)
+                .filter(this::canSeeInSilentMove)
+                .filter(this::canSeeInHide)
+                .filter(GameObject::isPlayer)
+                .filter(Playable::isSilentMoving)
+                .filter(target -> !target.isInvul())
+                .filter(target -> GeoEngine.canSeeTarget(actor, target, false))
+                .filter(target -> PositionUtils.isFacing(actor, target, 150))
+                .peek(target -> {
+                    actor.doCast(deathStrike, target, true);
+                    Functions.npcSay(actor, "Who are you?! A new face like you can't approach this place!");
+                    noCheckPlayers = true;
+                    ThreadPoolManager.INSTANCE.schedule(() -> {
+                        target.teleToLocation(location);
+                        noCheckPlayers = false;
+                    }, 3000);
+                }).findFirst().isPresent();
     }
 
     @Override

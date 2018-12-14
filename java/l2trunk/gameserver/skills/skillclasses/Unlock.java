@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
@@ -7,11 +8,10 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.ChestInstance;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Unlock extends Skill {
+public final class Unlock extends Skill {
     private final int _unlockPower;
 
     public Unlock(StatsSet set) {

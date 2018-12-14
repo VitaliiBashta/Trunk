@@ -8,13 +8,8 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Byldas
- * @date 26.09.11
- * @Instance for Mobs Furnace is MOS
- */
 
-public class FurnaceInstance extends NpcInstance {
+public final class FurnaceInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(FurnaceInstance.class);
     private static final int MobsID = 18914;
     private static final int[][] locs = {
@@ -26,7 +21,7 @@ public class FurnaceInstance extends NpcInstance {
             {109468, -76098, -1119}, {109574, -76094, -1119}, {109682, -76095, -1119}, {109803, -76093, -1119},
     };
 
-    private FurnaceInstance(int objectId, NpcTemplate template) {
+    public FurnaceInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

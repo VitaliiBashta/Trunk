@@ -1,6 +1,5 @@
 package l2trunk.gameserver.network.clientpackets;
 
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.PartyMatchingBBSManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
@@ -53,7 +52,7 @@ public class Logout extends L2GameClientPacket {
             return;
         }
 
-        if (activeChar.isInStoreMode() && !activeChar.isInBuffStore() && !activeChar.isInZone(Zone.ZoneType.offshore) ) {
+        if (activeChar.isInStoreMode() && !activeChar.isInBuffStore() && !activeChar.isInZone(Zone.ZoneType.offshore)) {
             activeChar.sendMessage(new CustomMessage("trade.OfflineNoTradeZoneOnlyOffshore", activeChar));
             activeChar.sendActionFailed();
             return;

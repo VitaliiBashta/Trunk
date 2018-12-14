@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -32,7 +32,7 @@ public final class DominionSiegeRunnerEvent extends GlobalEvent {
     private boolean _isInProgress;
     private boolean _isRegistrationOver;
 
-    public DominionSiegeRunnerEvent(MultiValueSet<String> set) {
+    public DominionSiegeRunnerEvent(StatsSet set) {
         super(set);
         _startTime.setTimeInMillis(0);
     }

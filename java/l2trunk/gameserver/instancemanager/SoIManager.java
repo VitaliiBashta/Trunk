@@ -42,7 +42,7 @@ public class SoIManager {
             openSeed(getOpenedTime());
     }
 
-       public static int getCurrentStage() {
+    public static int getCurrentStage() {
         return ServerVariables.getInt("SoI_stage", 1);
     }
 

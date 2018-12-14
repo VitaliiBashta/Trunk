@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum  MultiSellHolder {
+public enum MultiSellHolder {
     INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(MultiSellHolder.class);
     private static final String NODE_PRODUCTION = "production";

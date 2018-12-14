@@ -65,7 +65,7 @@ public final class _002_WhatWomenWant extends Quest implements ScriptFile {
             st.giveItems(ADENA_ID, 2300, true);
             st.getPlayer().addExpAndSp(4254, 335);
             if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
         }
@@ -103,7 +103,7 @@ public final class _002_WhatWomenWant extends Quest implements ScriptFile {
                 st.giveItems(ADENA_ID, (int) ((Config.RATE_QUESTS_REWARD - 1) * 620 + 1850 * Config.RATE_QUESTS_REWARD), false); // T2
                 st.getPlayer().addExpAndSp(4254, 335);
                 if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("ng1"))
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                    st.getPlayer().sendPacket(new ExShowScreenMessage("  Delivery duty complete.\nGo find the Newbie Guide."));
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
             }

@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.entity.events.objects.SiegeClanObject;
 import l2trunk.gameserver.model.entity.residence.ClanHall;
 import l2trunk.gameserver.model.pledge.Clan;
@@ -9,7 +9,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 public class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
-    public ClanHallNpcSiegeEvent(MultiValueSet<String> set) {
+    public ClanHallNpcSiegeEvent(StatsSet set) {
         super(set);
     }
 

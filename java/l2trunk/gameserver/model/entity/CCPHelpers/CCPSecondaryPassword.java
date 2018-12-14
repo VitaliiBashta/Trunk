@@ -90,7 +90,7 @@ public final class CCPSecondaryPassword {
              PreparedStatement statement = con.prepareStatement("SELECT secondaryPassword FROM accounts WHERE login='" + player.getAccountName() + "'");
              ResultSet rset = statement.executeQuery()) {
             if (rset.next()) {
-                 secondaryPassword = Optional.ofNullable(rset.getString("secondaryPassword"));
+                secondaryPassword = Optional.ofNullable(rset.getString("secondaryPassword"));
             }
 
         } catch (SQLException e) {

@@ -475,11 +475,7 @@
 		<set name="isHandler" val="true" />
 	</skill>
 	<skill id="2139" levels="1" name="Special Tree Recovery Bonus">
-		<!--
-			Last modify:	27.12.2007
 
-			Descriptions: Produces a special Christmas tree during the Christmas event. Increases HP and MP regeneration.
-		-->
 		<set name="magicType" val="SPECIAL" />
 		<set name="icon" val="icon.skill1044" />
 		<set name="target" val="TARGET_ONE" />

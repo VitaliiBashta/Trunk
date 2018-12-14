@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _115_TheOtherSideOfTruth extends Quest implements ScriptFile {
+public final class _115_TheOtherSideOfTruth extends Quest implements ScriptFile {
     // NPCs
     private static final int Rafforty = 32020;
     private static final int Misa = 32018;

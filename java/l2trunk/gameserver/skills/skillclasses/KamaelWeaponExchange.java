@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -9,12 +10,11 @@ import l2trunk.gameserver.network.serverpackets.InventoryUpdate;
 import l2trunk.gameserver.network.serverpackets.ShortCutInit;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 
 import java.util.List;
 
-public class KamaelWeaponExchange extends Skill {
+public final class KamaelWeaponExchange extends Skill {
     public KamaelWeaponExchange(StatsSet set) {
         super(set);
     }

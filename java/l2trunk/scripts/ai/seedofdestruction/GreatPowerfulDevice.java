@@ -16,7 +16,7 @@ public final class GreatPowerfulDevice extends DefaultAI {
 
     public GreatPowerfulDevice(NpcInstance actor) {
         super(actor);
-        actor.block();
+        actor.setBlock(true);
         actor.startDamageBlocked();
     }
 

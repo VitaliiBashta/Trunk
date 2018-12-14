@@ -181,7 +181,7 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
             _isActive = true;
             inzone.stream()
                     .filter(izp -> getBuffLevel(izp) > 0)
-                    .forEach(izp -> izp.altOnMagicUseTimer(izp, SkillTable.INSTANCE.getInfo(6885, getBuffLevel(izp))));
+                    .forEach(izp -> izp.altOnMagicUseTimer(izp, 6885, getBuffLevel(izp)));
             _isActive = false;
         }
     }

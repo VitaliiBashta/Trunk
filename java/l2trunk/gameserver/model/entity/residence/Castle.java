@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.residence;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.math.SafeMath;
 import l2trunk.gameserver.Config;
@@ -19,7 +20,6 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.support.MerchantGuard;
 import l2trunk.gameserver.templates.manor.CropProcure;

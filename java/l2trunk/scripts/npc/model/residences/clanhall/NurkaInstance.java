@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class NurkaInstance extends SiegeGuardInstance {
-    private  final Skill SKILL = SkillTable.INSTANCE.getInfo(5456);
+    private final static int SKILL = 5456;
 
     public NurkaInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -19,7 +19,7 @@ public final class NurkaInstance extends SiegeGuardInstance {
 
     @Override
     public void reduceCurrentHp(double damage, Creature attacker, Skill skill, boolean awake, boolean standUp, boolean directHp, boolean canReflect, boolean transferDamage, boolean isDot, boolean sendMessage) {
-        if (attacker.getLevel() > (getLevel() + 8) && attacker.getEffectList().getEffectsCountForSkill(SKILL.getId()) == 0) {
+        if (attacker.getLevel() > (getLevel() + 8) && attacker.getEffectList().getEffectsCountForSkill(SKILL) == 0) {
             doCast(SKILL, attacker, false);
             return;
         }

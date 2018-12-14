@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -16,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.HtmlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,11 +86,11 @@ public enum Hero {
     }
 
     public static void addSkills(Player player) {
-        player.addSkill(SkillTable.INSTANCE.getInfo(395));
-        player.addSkill(SkillTable.INSTANCE.getInfo(396));
-        player.addSkill(SkillTable.INSTANCE.getInfo(1374));
-        player.addSkill(SkillTable.INSTANCE.getInfo(1375));
-        player.addSkill(SkillTable.INSTANCE.getInfo(1376));
+        player.addSkill(395);
+        player.addSkill(396);
+        player.addSkill(1374);
+        player.addSkill(1375);
+        player.addSkill(1376);
     }
 
     public static void removeSkills(Player player) {

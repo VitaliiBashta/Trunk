@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.VillageMasterInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-class Occupation extends Functions {
+public final class Occupation extends Functions {
     public void onTalk30026() {
         Player pl = getSelf();
         NpcInstance npc = getNpc();

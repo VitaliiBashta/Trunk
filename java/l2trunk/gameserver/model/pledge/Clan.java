@@ -25,7 +25,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Log;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +91,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     private final ArrayList<Integer> classesNeeded = new ArrayList<>();
     private final ArrayList<SinglePetition> _petitions = new ArrayList<>();
     private int _allyId;
-    private int _level;
+    private int level;
     private int _hasCastle;
     private int _hasFortress;
     private int _hasHideout;
@@ -232,7 +231,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public String getName() {
-        return getUnitName(SUBUNIT_MAIN_CLAN);
+        return getUnitName();
     }
 
     public long getExpelledMemberTime() {
@@ -295,21 +294,15 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getAllSize() {
-        int size = 0;
-
-        for (SubUnit unit : getAllSubUnits()) {
-            size += unit.size();
-        }
-
-        return size;
+        return getAllSubUnits().stream().mapToInt(SubUnit::size).sum();
     }
 
-    private String getUnitName(int unitType) {
-        if (unitType == SUBUNIT_NONE || !_subUnits.containsKey(unitType)) {
+    private String getUnitName() {
+        if (!_subUnits.containsKey(Clan.SUBUNIT_MAIN_CLAN)) {
             return StringUtils.EMPTY;
         }
 
-        return getSubUnit(unitType).getName();
+        return getSubUnit(Clan.SUBUNIT_MAIN_CLAN).getName();
     }
 
     public String getLeaderName(int unitType) {
@@ -374,17 +367,9 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public List<UnitMember> getAllMembers() {
-        Collection<SubUnit> units = getAllSubUnits();
-        int size = 0;
+        List<UnitMember> members = new ArrayList<>();
 
-        for (SubUnit unit : units) {
-            size += unit.size();
-        }
-        List<UnitMember> members = new ArrayList<>(size);
-
-        for (SubUnit unit : units) {
-            members.addAll(unit.getUnitMembers());
-        }
+        getAllSubUnits().forEach(unit -> members.addAll(unit.getUnitMembers()));
         return members;
     }
 
@@ -419,13 +404,11 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int getLevel() {
-        return _level;
+        return level;
     }
 
     public void setLevel(int level) {
-        _level = level;
-        // if (_level <= 1)
-        // ClanRequest.updateList();
+        this.level = level;
     }
 
     /**
@@ -522,7 +505,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             statement.setLong(3, getExpelledMemberTime() / 1000);
             statement.setLong(4, getLeavedAllyTime() / 1000);
             statement.setLong(5, getDissolvedAllyTime() / 1000);
-            statement.setInt(6, _level);
+            statement.setInt(6, level);
             statement.setInt(7, getWhBonus());
             statement.setInt(8, isHaveAirshipLicense() ? getAirshipFuel() : -1);
             statement.setInt(9, getClanId());
@@ -539,7 +522,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             try (PreparedStatement statement = con.prepareStatement("INSERT INTO clan_data (clan_id,clan_level,hasCastle,hasFortress,hasHideout,ally_id,expelled_member,leaved_ally,dissolved_ally,airship) values (?,?,?,?,?,?,?,?,?,?)")) {
                 statement.setInt(1, _clanId);
-                statement.setInt(2, _level);
+                statement.setInt(2, level);
                 statement.setInt(3, _hasCastle);
                 statement.setInt(4, _hasFortress);
                 statement.setInt(5, _hasHideout);
@@ -759,7 +742,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int incReputation(int inc, boolean rate, String source) {
-        if (_level < 5)
+        if (level < 5)
             return 0;
 
         if (rate && Math.abs(inc) <= Config.RATE_CLAN_REP_SCORE_MAX_AFFECTED)
@@ -776,7 +759,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public int incReputation(int inc) {
-        if (_level < 5)
+        if (level < 5)
             return 0;
 
         setReputationScore(_reputation + inc);
@@ -798,10 +781,8 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
             while (rset.next()) {
                 int id = rset.getInt("skill_id");
                 int level = rset.getInt("skill_level");
-                // Create a L2Skill object for each record
-                Skill skill = SkillTable.INSTANCE.getInfo(id, level);
                 // Add the L2Skill object to the L2Clan skills
-                _skills.put(skill.getId(), skill);
+                _skills.put(id, SkillTable.INSTANCE.getInfo(id, level));
             }
         } catch (SQLException e) {
             _log.warn("Could not restore clan skills: ", e);
@@ -935,8 +916,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public void restartMembers() {
-        for (SubUnit unit : _subUnits.values())
-            unit.restartMembers();
+        _subUnits.values().forEach(SubUnit::restartMembers);
     }
 
     public final SubUnit getSubUnit(int pledgeType) {
@@ -1049,7 +1029,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
 
     public int getSubPledgeLimit(int pledgeType) {
         int limit;
-        switch (_level) {
+        switch (level) {
             case 0:
                 limit = 10;
                 break;
@@ -1488,7 +1468,7 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     @Override
-    public int compareTo(@NotNull Clan o) {
+    public int compareTo(Clan o) {
         if (o == null) return 1;
         return this.getReputationScore() - o.getReputationScore();
     }

@@ -22,7 +22,7 @@ public enum CubicParser {
 
     public void load() {
         ParserUtil.INSTANCE.load(xmlFile).forEach(this::readData);
-        LOG.info("loaded " + CubicHolder.size()+ " items");
+        LOG.info("loaded " + CubicHolder.size() + " items");
     }
 
     private void readData(Element rootElement) {

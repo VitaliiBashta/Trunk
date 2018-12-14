@@ -67,7 +67,7 @@ public final class RequestSetSeed extends L2GameClientPacket {
 
         List<SeedProduction> seeds = new ArrayList<>(_count);
         for (int i = 0; i < _count; i++) {
-            int id = (int) _items[i * 3 ];
+            int id = (int) _items[i * 3];
             long sales = _items[i * 3 + 1];
             long price = _items[i * 3 + 2];
             if (id > 0) {

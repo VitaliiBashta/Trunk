@@ -99,7 +99,7 @@ public enum AugmentationDataParser {
             int allGroupChance = 0;
             for (Element groupElement : variantElement.elements()) {
                 OptionGroup optionGroup = new OptionGroup();
-                int chance = (int) (toDouble(groupElement.attributeValue("chance")) * 10000.0D );
+                int chance = (int) (toDouble(groupElement.attributeValue("chance")) * 10000.0D);
                 allGroupChance += chance;
 
                 rnd.add(optionGroup, chance);

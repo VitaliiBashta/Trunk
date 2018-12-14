@@ -14,15 +14,14 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
  * packet type id 0x37
  * format:		cddb, b - array if (ddd)
  */
-public class RequestSellItem extends L2GameClientPacket {
-    private int _listId;
+public final class RequestSellItem extends L2GameClientPacket {
     private int _count;
     private int[] _items; // object id
     private long[] _itemQ; // count
 
     @Override
     protected void readImpl() {
-        _listId = readD();
+        readD();
         _count = readD();
         if (_count * 16 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
             _count = 0;

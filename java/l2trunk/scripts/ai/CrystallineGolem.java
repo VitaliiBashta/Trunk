@@ -78,7 +78,7 @@ public final class CrystallineGolem extends Fighter {
             int dx = actor.getX() - 142999;
             int dy = actor.getY() - 151671;
             if (dx * dx + dy * dy < 10000) {
-                actor.broadcastPacket(new MagicSkillUse(actor, actor, 5441, 1, 1, 0));
+                actor.broadcastPacket(new MagicSkillUse(actor,  5441));
                 info.stage1 = true;
             }
         }
@@ -87,7 +87,7 @@ public final class CrystallineGolem extends Fighter {
             int dx = actor.getX() - 139494;
             int dy = actor.getY() - 151668;
             if (dx * dx + dy * dy < 10000) {
-                actor.broadcastPacket(new MagicSkillUse(actor, actor, 5441, 1, 1, 0));
+                actor.broadcastPacket(new MagicSkillUse(actor,  5441));
                 info.stage2 = true;
             }
         }

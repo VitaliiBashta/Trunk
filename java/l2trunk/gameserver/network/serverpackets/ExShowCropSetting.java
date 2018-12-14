@@ -21,7 +21,7 @@ public final class ExShowCropSetting extends L2GameServerPacket {
         _cropData = new long[_count * 14];
         int i = 0;
         for (int cr : crops) {
-            _cropData[i * 14 ] = cr;
+            _cropData[i * 14] = cr;
             _cropData[i * 14 + 1] = Manor.INSTANCE.getSeedLevelByCrop(cr);
             _cropData[i * 14 + 2] = Manor.INSTANCE.getRewardItem(cr, 1);
             _cropData[i * 14 + 3] = Manor.INSTANCE.getRewardItem(cr, 2);

@@ -510,12 +510,7 @@
 		</for>
 	</skill>
 	<skill id="5230" levels="1" name="Stun">
-		<!--
-			Last modify:	18.05.2009
 
-			Description:
-			You are stunned and temporarily prohibited from movement.
-		-->
 		<set name="levelModifier" val="1" />
 		<set name="icon" val="icon.skill0100" />
 		<set name="power" val="2784" />
@@ -535,12 +530,6 @@
 		</for>
 	</skill>
 	<skill id="5231" levels="1" name="Stun">
-		<!--
-			Last modify:	18.05.2009
-
-			Description:
-			You are stunned and temporarily prohibited from movement.
-		-->
 		<set name="levelModifier" val="1" />
 		<set name="icon" val="icon.skill0100" />
 		<set name="power" val="5704" />
@@ -560,12 +549,6 @@
 		</for>
 	</skill>
 	<skill id="5232" levels="1" name="Stun">
-		<!--
-			Last modify:	18.05.2009
-
-			Description:
-			You are stunned and temporarily prohibited from movement.
-		-->
 		<set name="levelModifier" val="1" />
 		<set name="icon" val="icon.skill0100" />
 		<set name="power" val="11407" />

@@ -1,8 +1,7 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.BalancerConfig;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -56,7 +55,6 @@ import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.taskmanager.DecayTaskManager;
 import l2trunk.gameserver.taskmanager.LazyPrecisionTaskManager;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.npc.Faction;
@@ -89,7 +87,7 @@ public class NpcInstance extends Creature {
     private int _personalAggroRange = -1;
     private int level = 0;
     private long _dieTime = 0L;
-    private int _aiSpawnParam;
+    private int aiSpawnParam;
     private int currentLHandId;
     private int currentRHandId;
     private double _currentCollisionRadius;
@@ -107,8 +105,8 @@ public class NpcInstance extends Creature {
     private Spawner spawn;
     private Location spawnedLoc = new Location();
     private SpawnRange _spawnRange;
-    private MultiValueSet<String> _parameters = StatsSet.EMPTY;
-    private int _displayId = 0;
+    private StatsSet parameters = StatsSet.EMPTY;
+    private int displayId = 0;
     private ScheduledFuture<?> _broadcastCharInfoTask;
     private boolean _isBusy;
     private String _busyMessage = "";
@@ -125,11 +123,9 @@ public class NpcInstance extends Creature {
         setShowName(getParameter(SHOW_NAME, true));
         _showBoard = getParameter(SHOW_BOARD, "");
 
-        if (template.getSkills().size() > 0) {
-            for (Skill skill : template.getSkills().values()) {
-                addSkill(skill);
-            }
-        }
+        template.getSkills().values().stream()
+                .mapToInt(Skill::getId)
+                .forEach(this::addSkill);
 
         setName(template.name);
 
@@ -252,16 +248,11 @@ public class NpcInstance extends Creature {
     }
 
     @Override
-    public CharacterAI getAI() {
-        if (ai == null) {
-            synchronized (this) {
-                if (ai == null) {
-                    ai = getTemplate().getNewAI(this);
-                }
-            }
+    public synchronized CharacterAI getAI() {
+        if (super.getAI() == null) {
+            setAI(getTemplate().getNewAI(this));
         }
-
-        return ai;
+        return super.getAI();
     }
 
     /**
@@ -645,11 +636,11 @@ public class NpcInstance extends Creature {
     }
 
     public int getDisplayId() {
-        return _displayId > 0 ? _displayId : getTemplate().displayId;
+        return displayId > 0 ? displayId : getTemplate().displayId;
     }
 
     public void setDisplayId(int displayId) {
-        _displayId = displayId;
+        this.displayId = displayId;
     }
 
     @Override
@@ -720,7 +711,10 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        _broadcastCharInfoTask = ThreadPoolManager.INSTANCE.schedule(new BroadcastCharInfoTask(), Config.BROADCAST_CHAR_INFO_INTERVAL);
+        _broadcastCharInfoTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            broadcastCharInfoImpl();
+            _broadcastCharInfoTask = null;
+        }, Config.BROADCAST_CHAR_INFO_INTERVAL);
     }
 
     public void broadcastCharInfoImpl() {
@@ -1693,43 +1687,41 @@ public class NpcInstance extends Creature {
     }
 
     public void setParameter(String str, Object val) {
-        if (_parameters == StatsSet.EMPTY) {
-            _parameters = new StatsSet();
+        if (parameters == StatsSet.EMPTY) {
+            parameters = new StatsSet();
         }
 
-        _parameters.set(str, val);
+        parameters.set(str, val);
     }
 
     public int getParameter(String str, int val) {
-        return _parameters.getInteger(str, val);
+        return parameters.getInteger(str, val);
     }
 
     public long getParameter(String str, long val) {
-        return _parameters.getLong(str, val);
+        return parameters.getLong(str, val);
     }
 
     public boolean getParameter(String str, boolean val) {
-        return _parameters.getBool(str, val);
+        return parameters.getBool(str, val);
     }
 
     public String getParameter(String str, String val) {
-        return _parameters.getString(str, val);
+        return parameters.getString(str, val);
     }
 
-    public MultiValueSet<String> getParameters() {
-        return _parameters;
+    public StatsSet getParameters() {
+        return parameters;
     }
 
-    public void setParameters(MultiValueSet<String> set) {
+    public void setParameters(StatsSet set) {
         if (set.isEmpty()) {
             return;
         }
 
-        if (_parameters == StatsSet.EMPTY) {
-            _parameters = new MultiValueSet<>(set.size());
+        if (parameters == StatsSet.EMPTY) {
+            parameters = new StatsSet(set);
         }
-
-        _parameters.putAll(set);
     }
 
     @Override
@@ -1746,14 +1738,7 @@ public class NpcInstance extends Creature {
     }
 
     public int getAISpawnParam() {
-        return _aiSpawnParam;
+        return aiSpawnParam;
     }
 
-    public class BroadcastCharInfoTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            broadcastCharInfoImpl();
-            _broadcastCharInfoTask = null;
-        }
-    }
 }

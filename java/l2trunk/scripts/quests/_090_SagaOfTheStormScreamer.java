@@ -1,73 +1,23 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _090_SagaOfTheStormScreamer extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _090_SagaOfTheStormScreamer extends SagasSuperclass implements ScriptFile {
     public _090_SagaOfTheStormScreamer() {
         super(false);
-        NPC = new int[]{
-                30175,
-                31627,
-                31287,
-                31287,
-                31598,
-                31646,
-                31649,
-                31652,
-                31654,
-                31655,
-                31659,
-                31287
-        };
-        Items = new int[]{
-                7080,
-                7531,
-                7081,
-                7505,
-                7288,
-                7319,
-                7350,
-                7381,
-                7412,
-                7443,
-                7084,
-                0
-        };
-        Mob = new int[]{
-                27252,
-                27239,
-                27256
-        };
+        NPC = List.of(30175, 31627, 31287, 31287, 31598, 31646, 31649, 31652, 31654, 31655, 31659, 31287);
+        Items = List.of(7080, 7531, 7081, 7505, 7288, 7319, 7350, 7381, 7412, 7443, 7084, 0);
+        Mob = List.of(27252, 27239, 27256);
         classid = 110;
         prevclass = 0x28;
-        X = new int[]{
-                161719,
-                124376,
-                124355
-        };
-        Y = new int[]{
-                -92823,
-                82127,
-                82155
-        };
-        Z = new int[]{
-                -1893,
-                -2796,
-                -2803
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(161719, -92823, -1893),
+                new Location(124376, 82127, -2796),
+                new Location(124355, 82155, -2803));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -85,9 +35,20 @@ public class _090_SagaOfTheStormScreamer extends SagasSuperclass implements Scri
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

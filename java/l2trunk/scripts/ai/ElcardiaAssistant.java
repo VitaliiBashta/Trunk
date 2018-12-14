@@ -33,11 +33,11 @@ public final class ElcardiaAssistant extends DefaultAI {
     private boolean _thinking = false;
     private ScheduledFuture<?> _followTask;
     private long _chatTimer;
-    private final Skill vampRage = SkillTable.INSTANCE.getInfo(6727, 1);
-    private final Skill holyResist = SkillTable.INSTANCE.getInfo(6729, 1);
-    private final Skill blessBlood = SkillTable.INSTANCE.getInfo(6725, 1);
-    private final Skill recharge = SkillTable.INSTANCE.getInfo(6728, 1);
-    private final Skill heal = SkillTable.INSTANCE.getInfo(6724, 1);
+    private final Skill vampRage = SkillTable.INSTANCE.getInfo(6727);
+    private final Skill holyResist = SkillTable.INSTANCE.getInfo(6729);
+    private final Skill blessBlood = SkillTable.INSTANCE.getInfo(6725);
+    private final Skill recharge = SkillTable.INSTANCE.getInfo(6728);
+    private final Skill heal = SkillTable.INSTANCE.getInfo(6724);
 
     private ElcardiaAssistant(NpcInstance actor) {
         super(actor);

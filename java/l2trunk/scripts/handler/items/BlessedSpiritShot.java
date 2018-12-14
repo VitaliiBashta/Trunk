@@ -98,7 +98,7 @@ public final class BlessedSpiritShot extends ScriptItemHandler implements Script
         if (Config.ALLOW_SOUL_SPIRIT_SHOT_INFINITELY && count >= 1) {
             weaponInst.setChargedSpiritshot(ItemInstance.CHARGED_BLESSED_SPIRITSHOT);
             player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, player, _skillIds[grade], 1, 0, 0));
+            player.broadcastPacket(new MagicSkillUse(player, _skillIds[grade]));
         } else if (!Config.ALLOW_SOUL_SPIRIT_SHOT_INFINITELY) {
             if (!player.getInventory().destroyItem(item, blessedsoulSpiritConsumption, null)) {
                 if (isAutoSoulShot) {
@@ -112,7 +112,7 @@ public final class BlessedSpiritShot extends ScriptItemHandler implements Script
 
             weaponInst.setChargedSpiritshot(ItemInstance.CHARGED_BLESSED_SPIRITSHOT);
             player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, player, _skillIds[grade], 1, 0, 0));
+            player.broadcastPacket(new MagicSkillUse(player,  _skillIds[grade]));
         }
         return true;
     }

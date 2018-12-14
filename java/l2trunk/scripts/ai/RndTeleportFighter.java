@@ -49,7 +49,7 @@ public class RndTeleportFighter extends Fighter {
             isInside = ((Territory) spawnRange).isInside(x, y);
 
         if (isInside) {
-            actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 4671, 1, 500, 0));
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor,  4671,  500));
             ThreadPoolManager.INSTANCE.schedule(new Teleport(new Location(x, y, z)), 500);
             lastTeleport = System.currentTimeMillis();
         }

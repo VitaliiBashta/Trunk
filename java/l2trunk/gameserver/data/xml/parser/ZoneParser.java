@@ -1,5 +1,6 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Circle;
 import l2trunk.commons.geometry.Polygon;
@@ -9,7 +10,6 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ZoneHolder;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.model.World;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Element;

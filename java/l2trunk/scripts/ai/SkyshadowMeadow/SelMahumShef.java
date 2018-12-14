@@ -27,9 +27,8 @@ public final class SelMahumShef extends Fighter {
         NpcInstance actor = getActor();
         if (actor != null) {
             if (_wait_timeout < System.currentTimeMillis()) {
-                List<Player> players = World.getAroundPlayers(actor, 100, 100);
-                for (Player p : players)
-                    actor.doCast(SkillTable.INSTANCE.getInfo(6330), p, true);
+                World.getAroundPlayers(actor, 100, 100).forEach(p ->
+                    actor.doCast(6330, p, true));
                 _wait_timeout = (System.currentTimeMillis() + 30000);
             }
 

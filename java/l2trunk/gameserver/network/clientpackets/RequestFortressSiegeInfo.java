@@ -5,8 +5,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.residence.Fortress;
 import l2trunk.gameserver.network.serverpackets.ExShowFortressSiegeInfo;
 
-import java.util.List;
-
 public final class RequestFortressSiegeInfo extends L2GameClientPacket {
     @Override
     protected void readImpl() {

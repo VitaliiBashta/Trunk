@@ -7,14 +7,12 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.SetupGauge;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public enum  AwayManager {
+public enum AwayManager {
     INSTANCE;
     private final Map<Player, RestoreData> _awayPlayers;
 

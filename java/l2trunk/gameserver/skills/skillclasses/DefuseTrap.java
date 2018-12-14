@@ -1,14 +1,16 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.TrapInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
+import java.util.Objects;
 
-public class DefuseTrap extends Skill {
+public final class DefuseTrap extends Skill {
     public DefuseTrap(StatsSet set) {
         super(set);
     }
@@ -25,15 +27,12 @@ public class DefuseTrap extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets) {
-            if (target != null && target.isTrap()) {
-                TrapInstance trap = (TrapInstance) target;
-                if (trap.getLevel() <= getPower()) {
-                    trap.deleteMe();
-                }
-            }
-        }
-
+        targets.stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isTrap)
+                .map(trap -> (TrapInstance) trap)
+                .filter(trap -> trap.getLevel() <= getPower())
+                .forEach(GameObject::deleteMe);
         if (isSSPossible()) {
             activeChar.unChargeShots(isMagic());
         }

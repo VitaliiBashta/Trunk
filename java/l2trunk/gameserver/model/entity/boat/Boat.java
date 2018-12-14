@@ -174,10 +174,9 @@ public abstract class Boat extends Creature {
     //=========================================================================================================
     @Override
     public CharacterAI getAI() {
-        if (ai == null)
-            ai = new BoatAI(this);
-
-        return ai;
+        if (super.getAI() == null)
+            super.setAI(new BoatAI(this));
+        return super.getAI();
     }
 
     @Override

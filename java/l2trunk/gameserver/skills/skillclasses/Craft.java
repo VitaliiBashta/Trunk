@@ -1,14 +1,14 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.RecipeBookItemList;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Craft extends Skill {
+public final class Craft extends Skill {
     private final boolean _dwarven;
 
     public Craft(StatsSet set) {

@@ -42,7 +42,7 @@ public final class ZakenDaytime extends Fighter {
     static void scheduleTeleport(long _teleportSelfTimer, long _teleportSelfReuse, NpcInstance actor) {
         if (_teleportSelfTimer + _teleportSelfReuse < System.currentTimeMillis()) {
             if (Rnd.chance(20)) {
-                actor.doCast(SkillTable.INSTANCE.getInfo(4222), actor, false);
+                actor.doCast(4222, actor, false);
                 ThreadPoolManager.INSTANCE.schedule(() -> {
                     actor.teleToLocation(Rnd.get(_locations));
                     actor.getAggroList().clear(true);

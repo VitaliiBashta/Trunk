@@ -1,8 +1,8 @@
 package l2trunk.gameserver.templates.item.support;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 
-class FishTemplate {
+public final class FishTemplate {
     private final FishGroup _group;
     private final FishGrade _grade;
     private final double _biteRate;
@@ -19,7 +19,7 @@ class FishTemplate {
     private final int _combatDuration;
     private final int _gutsCheckTime;
 
-    public FishTemplate(MultiValueSet<String> map) {
+    public FishTemplate(StatsSet map) {
         _group = map.getEnum("group", FishGroup.class);
         _grade = map.getEnum("grade", FishGrade.class);
 

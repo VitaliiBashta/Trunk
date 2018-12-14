@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ExBR_GamePoint;
 import l2trunk.gameserver.scripts.Functions;
 
-class CoinPoinExch extends Functions {
+public final class CoinPoinExch extends Functions {
 
     public void Show() {
         Player player = getSelf();
@@ -64,7 +64,7 @@ class CoinPoinExch extends Functions {
 
         player.reducePremiumPoints(_coinsToEx);
         player.sendPacket(new ExBR_GamePoint(player));
-        double _coinsToExDouble = _coinsToEx / 30;
+        double _coinsToExDouble = _coinsToEx / 30.;
         int _finalAmmount = (int) Math.ceil(_coinsToExDouble);
         addItem(player, Config._coinID, _finalAmmount, "DoP2C Transfer");
         player.sendMessage("" + player.getName() + ", successfully added " + _finalAmmount + " L2Game Coin");

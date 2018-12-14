@@ -242,7 +242,7 @@ public final class SubUnit {
                 player.removeUnActiveSkill(skill);
     }
 
-    public void disableSkills(Player player) {
+    void disableSkills(Player player) {
         for (Skill skill : _skills.values())
             player.addUnActiveSkill(skill);
     }
@@ -297,7 +297,7 @@ public final class SubUnit {
         }
     }
 
-    public void restartMembers() {
+    void restartMembers() {
         _members.clear();
         restore();
     }

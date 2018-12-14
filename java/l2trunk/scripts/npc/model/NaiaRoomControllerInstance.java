@@ -237,8 +237,8 @@ public final class NaiaRoomControllerInstance extends NpcInstance {
     private void spawnToRoom(int mobId, int count, Territory territory, int roomId) {
         for (int i = 0; i < count; i++) {
             SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(mobId)
-            .setLoc(Territory.getRandomLoc(territory).setH(Rnd.get(65535)))
-            .stopRespawn();
+                    .setLoc(Territory.getRandomLoc(territory).setH(Rnd.get(65535)))
+                    .stopRespawn();
             sp.doSpawn(true);
             _roomMobList.add(sp.getLastSpawn());
 

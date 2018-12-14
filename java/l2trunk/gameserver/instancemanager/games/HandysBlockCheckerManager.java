@@ -27,11 +27,11 @@ public enum HandysBlockCheckerManager {
      */
 
     // Arena votes to start the game
-    private  final Map<Integer, Integer> _arenaVotes = new HashMap<>();
+    private final Map<Integer, Integer> _arenaVotes = new HashMap<>();
     // Registration request penalty (10 seconds)
-    private  final List<Integer> _registrationPenalty = new ArrayList<>();
+    private final List<Integer> _registrationPenalty = new ArrayList<>();
     // All the participants and their team classifed by arena
-    private  List<ArenaParticipantsHolder> arenaPlayers = new ArrayList<>();
+    private List<ArenaParticipantsHolder> arenaPlayers = new ArrayList<>();
     // Arena Status, True = is being used, otherwise, False
     private Map<Integer, Boolean> _arenaStatus = new HashMap<>();
 

@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Creature;
@@ -8,7 +9,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.templates.InstantZone;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 import static l2trunk.gameserver.model.Zone.ZoneType.no_restart;
 import static l2trunk.gameserver.model.Zone.ZoneType.no_summon;
 
-public class Call extends Skill {
+public final class Call extends Skill {
     private final boolean _party;
 
     public Call(StatsSet set) {
@@ -25,7 +25,7 @@ public class Call extends Skill {
     }
 
     public static SystemMessage canSummonHere(Player activeChar) {
-        if (activeChar.isAlikeDead() || activeChar.isInOlympiadMode() || activeChar.isInObserverMode() || activeChar.isFlying() || activeChar.isFestivalParticipant() )
+        if (activeChar.isAlikeDead() || activeChar.isInOlympiadMode() || activeChar.isInObserverMode() || activeChar.isFlying() || activeChar.isFestivalParticipant())
             return Msg.NOTHING_HAPPENED;
 
         if (activeChar.getPlayer().isJailed()) {

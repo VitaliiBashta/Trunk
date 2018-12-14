@@ -1,26 +1,19 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.reference.HardReference;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Request extends MultiValueSet<String> {
-    private static final long serialVersionUID = 1L;
-
-    @SuppressWarnings("unused")
-    private static final Logger _log = LoggerFactory.getLogger(Request.class);
+public class Request extends StatsSet {
     private final static AtomicInteger _nextId = new AtomicInteger();
-    private final int _id;
+    private final int id;
     private final L2RequestType _type;
-    private final HardReference<Player> _requestor;
-    private HardReference<Player> _reciever;
+    private final HardReference<Player> requestor;
+    private HardReference<Player> reciever;
     private boolean _isRequestorConfirmed;
     private boolean _isRecieverConfirmed;
     private boolean _isCancelled;
@@ -32,34 +25,22 @@ public class Request extends MultiValueSet<String> {
      * Создает запрос
      */
     public Request(L2RequestType type, Player requestor, Player reciever) {
-        _id = _nextId.incrementAndGet();
-        _requestor = requestor.getRef();
-        _reciever = reciever.getRef();
+        id = _nextId.incrementAndGet();
+        this.requestor = requestor.getRef();
+        this.reciever = reciever.getRef();
         _type = type;
         requestor.setRequest(this);
         reciever.setRequest(this);
     }
 
-    private Request(L2RequestType type, Player requestor) {
-        _id = _nextId.incrementAndGet();
-        _requestor = requestor.getRef();
-        _type = type;
-        requestor.setRequest(this);
-    }
-
     public Request setTimeout(long timeout) {
         _timeout = timeout > 0 ? System.currentTimeMillis() + timeout : 0;
-        _timeoutTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-            @Override
-            public void runImpl() {
-                timeout();
-            }
-        }, timeout);
+        _timeoutTask = ThreadPoolManager.INSTANCE.schedule(this::timeout, timeout);
         return this;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     /**
@@ -70,7 +51,7 @@ public class Request extends MultiValueSet<String> {
         if (_timeoutTask != null)
             _timeoutTask.cancel(false);
         _timeoutTask = null;
-        Player player = getRequestor();
+        Player player = requestor.get();
         if (player != null && player.getRequest() == this)
             player.setRequest(null);
         player = getReciever();
@@ -114,11 +95,11 @@ public class Request extends MultiValueSet<String> {
     }
 
     public Player getRequestor() {
-        return _requestor.get();
+        return requestor.get();
     }
 
     private Player getReciever() {
-        return _reciever.get();
+        return reciever.get();
     }
 
     /**
@@ -131,9 +112,7 @@ public class Request extends MultiValueSet<String> {
             return false;
         if (_timeout == 0)
             return true;
-        if (_timeout > System.currentTimeMillis())
-            return true;
-        return false;
+        return _timeout > System.currentTimeMillis();
     }
 
     /**

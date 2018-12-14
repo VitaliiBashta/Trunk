@@ -6,6 +6,7 @@ import l2trunk.gameserver.data.xml.holder.SoulCrystalHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.ActionFail;
@@ -75,9 +76,9 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
         }
 
         // Soul Crystal Casting section
-        int skillHitTime = SkillTable.INSTANCE.getInfo(2096, 1).getHitTime();
-        player.broadcastPacket(new MagicSkillUse(player, 2096, 1, skillHitTime, 0));
-        player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, skillHitTime));
+        Skill soulCrystal = SkillTable.INSTANCE.getInfo(2096);
+        player.broadcastPacket(new MagicSkillUse(player, soulCrystal));
+        player.sendPacket(new SetupGauge(player, SetupGauge.BLUE, soulCrystal.getHitTime()));
         // End Soul Crystal Casting section
 
         // Continue execution later
@@ -87,7 +88,7 @@ public final class SoulCrystals extends ScriptItemHandler implements ScriptFile 
             if (player.isDead() || player.isDead())
                 return;
             target.addAbsorber(player);
-        }, skillHitTime);
+        }, soulCrystal.getHitTime());
         return true;
     }
 

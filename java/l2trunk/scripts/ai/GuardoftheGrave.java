@@ -38,10 +38,10 @@ public final class GuardoftheGrave extends Fighter {
     }
 
     private void spawnChest(NpcInstance actor) {
-        NpcInstance npc = NpcHolder.getTemplate(CHIEFTAINS_TREASURE_CHEST).getNewInstance();
-        npc.setSpawnedLoc(actor.getLoc());
-        npc.setFullHpMp();
-        npc.spawnMe(npc.getSpawnedLoc());
+        Creature npc = NpcHolder.getTemplate(CHIEFTAINS_TREASURE_CHEST).getNewInstance()
+                .setSpawnedLoc(actor.getLoc())
+                .setFullHpMp();
+        npc.spawnMe(actor.getLoc());
     }
 
 }

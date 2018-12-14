@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.commons.util.Rnd;
@@ -18,8 +18,6 @@ import l2trunk.gameserver.stats.funcs.FuncAdd;
 import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +35,7 @@ public final class Zone {
      * TODO: сравнить ордер с оффом, пока от фонаря
      */
     private final static int ZONE_STATS_ORDER = 0x40;
-    private static final Logger _log = LoggerFactory.getLogger(Zone.class);
-    private final MultiValueSet<String> _params;
+    private final StatsSet params;
     private final ZoneTemplate template;
     private final ZoneListenerList listeners = new ZoneListenerList();
     private final List<Creature> objects = new CopyOnWriteArrayList<>();
@@ -56,7 +53,7 @@ public final class Zone {
     private Zone(ZoneType type, ZoneTemplate template) {
         this.type = type;
         this.template = template;
-        _params = template.getParams();
+        params = template.getParams();
     }
 
     public ZoneTemplate getTemplate() {
@@ -414,7 +411,7 @@ public final class Zone {
     }
 
     public List<Creature> getObjects() {
-        return new ArrayList<>(objects);
+        return objects;
     }
 
     public List<Player> getInsidePlayers() {
@@ -479,15 +476,15 @@ public final class Zone {
     }
 
     public void setParam(String name, String value) {
-        _params.put(name, value);
+        params.set(name, value);
     }
 
     public void setParam(String name, Object value) {
-        _params.put(name, value);
+        params.set(name, value);
     }
 
-    public MultiValueSet<String> getParams() {
-        return _params;
+    public StatsSet getParams() {
+        return params;
     }
 
     public <T extends Listener<Zone>> boolean addListener(T listener) {
@@ -577,13 +574,11 @@ public final class Zone {
                     continue;
 
                 if (Rnd.chance(getTemplate().getSkillProb()) && !target.isDead()) {
-                    _skill.getEffects(target, target, false, false);
+                    _skill.getEffects(target);
                 }
             }
 
-            // Ady - Soporte para efectos de daño que se activan y desactivan segun tiempo online, como los de Den of Evil, que duran algo asi como 10 minutos activos y 1 minuto inactivos
             // TODO: This is not the same as in l2j, as we dont have on, off times, only unit ticks, so we use the same for both
-            // Si el efecto posee un tiempo de online, entonces debemos calcular cuando termina para desactivar la zona
             if (_activateTime == 0) {
                 _activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
             }
@@ -673,15 +668,15 @@ public final class Zone {
 
     class ZoneListenerList extends ListenerList<Zone> {
         void onEnter(Creature actor) {
-            if (!getListeners().isEmpty())
-                for (Listener<Zone> listener : getListeners())
-                    ((OnZoneEnterLeaveListener) listener).onZoneEnter(Zone.this, actor);
+            getListeners().stream()
+                    .map(l -> (OnZoneEnterLeaveListener) l)
+                    .forEach(l -> l.onZoneEnter(Zone.this, actor));
         }
 
         void onLeave(Creature actor) {
-            if (!getListeners().isEmpty())
-                for (Listener<Zone> listener : getListeners())
-                    ((OnZoneEnterLeaveListener) listener).onZoneLeave(Zone.this, actor);
+            getListeners().stream()
+                    .map(l -> (OnZoneEnterLeaveListener) l)
+                    .forEach(l -> l.onZoneLeave(Zone.this, actor));
         }
     }
 }

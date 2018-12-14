@@ -1,8 +1,8 @@
 package l2trunk.gameserver.data.xml.holder;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.templates.PlayerTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.CreateItem;
 
 import java.util.HashMap;

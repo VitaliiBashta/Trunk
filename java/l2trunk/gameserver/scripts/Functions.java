@@ -240,11 +240,11 @@ public class Functions {
         return NpcUtils.spawnSingle(npcId, loc, reflection, 0);
     }
 
-     @Deprecated
+    //     @Deprecated
     // TODO [VISTALL] use NpcUtils
     protected static void SpawnNPCs(int npcId, int[][] locations, List<SimpleSpawner> list) {
         for (int[] location : locations) {
-            NpcUtils.spawnSingle(npcId,location[0], location[1], location[2]);
+            NpcUtils.spawnSingle(npcId, location[0], location[1], location[2]);
             if (list != null)
                 list.add(new SimpleSpawner(npcId));
         }
@@ -284,12 +284,6 @@ public class Functions {
 
     protected static boolean SimpleCheckDrop(Creature mob, Creature killer) {
         return mob != null && mob.isMonster() && !mob.isRaid() && killer != null && killer.getPlayer() != null && killer.getLevel() - mob.getLevel() < 9;
-    }
-
-    public static boolean isPvPEventStarted() {
-        if ((Boolean) callScripts("events.TvT.TvT", "isRunned", new Object[0]))
-            return true;
-        return (Boolean) callScripts("events.lastHero.LastHero", "isRunned", new Object[]{});
     }
 
     public static boolean isEventStarted(String event) {

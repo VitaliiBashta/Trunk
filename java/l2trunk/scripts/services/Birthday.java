@@ -13,11 +13,7 @@ import l2trunk.gameserver.utils.PositionUtils;
 
 import java.util.Calendar;
 
-/**
- * @author Prims
- * <p>
- * High Five: Exchanges Explorer Hat for Birthday Hat
- */
+
 public final class Birthday extends Functions {
     private static final int EXPLORERHAT = 10250;
     private static final int HAT = 13488; // Birthday Hat

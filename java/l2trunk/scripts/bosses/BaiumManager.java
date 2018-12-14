@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +33,7 @@ import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
 public final class BaiumManager extends Functions implements ScriptFile, OnDeathListener {
     private static final Logger LOG = LoggerFactory.getLogger(BaiumManager.class);
-    private static final List<NpcInstance> _monsters = new ArrayList<>();
+    private static final List<NpcInstance> MONSTERS = new ArrayList<>();
     private static final Map<Integer, SimpleSpawner> _monsterSpawn = new ConcurrentHashMap<>();
     private static final List<NpcInstance> _angels = new ArrayList<>();
     private static final List<SimpleSpawner> _angelSpawns = new ArrayList<>();
@@ -48,7 +47,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private final static int BAIUM = 29020;
     private final static int BAIUM_NPC = 29025;
     // location of arcangels.
-    private final  List<Location> ANGEL_LOCATION = Arrays.asList(
+    private final  List<Location> ANGEL_LOCATION = List.of(
                     new Location(113004, 16209, 10076, 60242),
                     new Location(114053, 16642, 10076, 4411),
                     new Location(114563, 17184, 10076, 49241),
@@ -80,7 +79,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private static ScheduledFuture<?> _socialTask2 = null;
     private static ScheduledFuture<?> _onAnnihilatedTask = null;
     private static EpicBossState state;
-    private static long _lastAttackTime = 0;
+    private static long lastAttackTime = 0;
     private static NpcInstance _npcBaium;
     private static NpcInstance _teleportCube = null;
     private static SimpleSpawner _teleportCubeSpawn = null;
@@ -162,7 +161,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     }
 
     public static void setLastAttackTime() {
-        _lastAttackTime = System.currentTimeMillis();
+        lastAttackTime = System.currentTimeMillis();
     }
 
     // clean Baium's lair.
@@ -172,11 +171,11 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
         // delete monsters.
         deleteArchangels();
-        for (NpcInstance mob : _monsters) {
+        MONSTERS.forEach(mob -> {
             mob.getSpawn().stopRespawn();
             mob.deleteMe();
-        }
-        _monsters.clear();
+        });
+        MONSTERS.clear();
 
         // delete teleport cube.
         if (_teleportCube != null) {
@@ -253,7 +252,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         _npcBaium.deleteMe();
 
         final BossInstance baium = (BossInstance) baiumSpawn.doSpawn(true);
-        _monsters.add(baium);
+        MONSTERS.add(baium);
 
         state.setRespawnDate(getRespawnInterval());
         state.setState(State.ALIVE);
@@ -384,7 +383,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         @Override
         public void runImpl() {
             if (state.getState().equals(State.ALIVE))
-                if (_lastAttackTime + FWB_LIMITUNTILSLEEP < System.currentTimeMillis())
+                if (lastAttackTime + FWB_LIMITUNTILSLEEP < System.currentTimeMillis())
                     sleepBaium();
                 else
                     _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 60000);
@@ -404,10 +403,9 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
         @Override
         public void runImpl() {
-            Skill skill = SkillTable.INSTANCE.getInfo(4136, 1);
-            if (_target != null && skill != null) {
+            if (_target != null) {
                 _boss.setTarget(_target);
-                _boss.doCast(skill, _target, false);
+                _boss.doCast(4136, _target, false);
             }
         }
     }

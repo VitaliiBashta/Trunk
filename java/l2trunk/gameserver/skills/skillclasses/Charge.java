@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -7,11 +8,10 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.Formulas.AttackInfo;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Charge extends Skill {
+public final class Charge extends Skill {
     public static final int MAX_CHARGE = 8;
 
     private final int _charges;
@@ -35,7 +35,7 @@ public class Charge extends Skill {
             activeChar.sendPacket(SystemMsg.YOUR_FORCE_HAS_REACHED_MAXIMUM_CAPACITY);
             return false;
         } else if (getId() == 2165)
-            player.sendPacket(new MagicSkillUse(player, player, 2165, 1, 0, 0));
+            player.sendPacket(new MagicSkillUse(player,  2165));
 
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
     }

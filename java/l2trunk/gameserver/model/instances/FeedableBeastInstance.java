@@ -88,7 +88,7 @@ public class FeedableBeastInstance extends MonsterInstance {
             feedableBeasts.add(i);
     }
 
-    FeedableBeastInstance(int objectId, NpcTemplate template) {
+    public FeedableBeastInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

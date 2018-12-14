@@ -449,7 +449,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
                 if (npcObj[1] == i && npcObj[2] == 0) {
                     order[i] = 1;
                     npcObj[2] = 1;
-                    npc.broadcastPacket(new MagicSkillUse(npc, npc, 5441, 1, 1, 0));
+                    npc.broadcastPacket(new MagicSkillUse(npc,  5441));
                     return;
                 }
         spawnRndGolem(world);

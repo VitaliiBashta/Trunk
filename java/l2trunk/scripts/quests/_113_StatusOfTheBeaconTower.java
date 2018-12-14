@@ -5,9 +5,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Last editor - LEXX
- */
 public class _113_StatusOfTheBeaconTower extends Quest implements ScriptFile {
     // NPC
     private static final int MOIRA = 31979;

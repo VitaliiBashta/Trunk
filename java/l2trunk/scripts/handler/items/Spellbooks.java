@@ -117,7 +117,7 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
         player.updateStats();
         player.sendPacket(new SkillList(player));
         // Анимация изучения книги над головой чара (на самом деле, для каждой книги своя анимация, но они одинаковые)
-        player.broadcastPacket(new MagicSkillUse(player, player, 2790, 1, 1, 0));
+        player.broadcastPacket(new MagicSkillUse(player,  2790));
         return true;
     }
 

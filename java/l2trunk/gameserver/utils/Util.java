@@ -1020,7 +1020,7 @@ public class Util {
     }
 
     private static void enoughtItem(Player player, int itemid, long count) {
-        player.sendPacket(new ExShowScreenMessage("You do not have " + formatPay(player, count, itemid) + ".", 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, 1, -1, false));
+        player.sendPacket(new ExShowScreenMessage("You do not have " + formatPay(player, count, itemid) + "."));
         player.sendMessage("You do not have " + formatPay(player, count, itemid) + ".");
     }
 

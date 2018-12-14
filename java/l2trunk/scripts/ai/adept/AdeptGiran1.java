@@ -3,7 +3,7 @@ package l2trunk.scripts.ai.adept;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-class AdeptGiran1 extends Adept {
+public class AdeptGiran1 extends Adept {
     public AdeptGiran1(NpcInstance actor) {
         super(actor);
         _points = new Location[]

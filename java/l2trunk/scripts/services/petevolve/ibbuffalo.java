@@ -10,12 +10,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 
-/**
- * User: darkevil
- * Date: 04.06.2008
- * Time: 1:06:26
- */
-class ibbuffalo extends Functions {
+public final class ibbuffalo extends Functions {
     private static final int BABY_BUFFALO = PetDataTable.BABY_BUFFALO_ID;
     private static final int BABY_BUFFALO_PANPIPE = L2Pet.BABY_BUFFALO.getControlItemId();
     private static final int IN_BABY_BUFFALO_NECKLACE = L2Pet.IMPROVED_BABY_BUFFALO.getControlItemId();

@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.quests._240_ImTheOnlyOneYouCanTrust;
 
-class TeleToStakatoNest extends Functions {
+public final class TeleToStakatoNest extends Functions {
     private final static Location[] teleports = {
             new Location(80456, -52322, -5640),
             new Location(88718, -46214, -4640),
@@ -34,7 +34,7 @@ class TeleToStakatoNest extends Functions {
     public void teleTo(String[] args) {
         Player player = getSelf();
         NpcInstance npc = getNpc();
-        if (player == null || npc == null || !npc.isInRange(player, 1000L))
+        if (npc == null || !npc.isInRange(player, 1000L))
             return;
         if (args.length != 1)
             return;

@@ -10,7 +10,6 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.templates.spawn.SpawnRange;
 import org.dom4j.Element;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -194,6 +193,7 @@ public class Location extends Point3D implements SpawnRange {
     public static Location findNearest(Creature creature, Location loc) {
         return findNearest(creature, Collections.singletonList(loc));
     }
+
     public static Location findNearest(Creature creature, List<Location> locs) {
         Location defloc = null;
         for (Location loc : locs) {

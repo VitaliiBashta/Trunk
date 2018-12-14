@@ -1,6 +1,6 @@
 package l2trunk.gameserver.templates.item.support;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ class LureTemplate {
     private final Map<FishGroup, Integer> _chances;
 
     @SuppressWarnings("unchecked")
-    public LureTemplate(MultiValueSet<String> set) {
+    public LureTemplate(StatsSet set) {
         _itemId = set.getInteger("item_id");
         _lengthBonus = set.getInteger("length_bonus");
         _revisionNumber = set.getDouble("revision_number");

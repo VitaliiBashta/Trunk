@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.*;
@@ -9,7 +10,6 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.FishTable;
 import l2trunk.gameserver.templates.FishTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2trunk.gameserver.utils.Location;
@@ -18,7 +18,7 @@ import l2trunk.gameserver.utils.PositionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FishingSkill extends Skill {
+public final class FishingSkill extends Skill {
     public FishingSkill(StatsSet set) {
         super(set);
     }

@@ -14,6 +14,7 @@ import java.util.Calendar;
 
 
 public final class NewYearTimer implements ScriptFile {
+    private static final Skill firework = SkillTable.INSTANCE.getInfo(3266);
     private static NewYearTimer instance;
 
     public NewYearTimer() {
@@ -64,17 +65,10 @@ public final class NewYearTimer implements ScriptFile {
         return c.getTime().getTime() - System.currentTimeMillis();
     }
 
-    /**
-     * Вызывается при загрузке классов скриптов
-     */
     @Override
     public void onLoad() {
     }
 
-    /**
-     * Вызывается при перезагрузке
-     * После перезагрузки onLoad() вызывается автоматически
-     */
     @Override
     public void onReload() {
     }
@@ -94,14 +88,9 @@ public final class NewYearTimer implements ScriptFile {
         public void runImpl() {
             Announcements.INSTANCE.announceToAll(message);
 
-            // Через жопу сделано, но не суть важно :)
             if (message.length() == 1)
                 return;
-            Skill skill = SkillTable.INSTANCE.getInfo(3266, 1);
-            GameObjectsStorage.getAllPlayers().forEach(player -> {
-                MagicSkillUse msu = new MagicSkillUse(player, player, 3266, 1, skill.getHitTime(), 0);
-                player.broadcastPacket(msu);
-            });
+            GameObjectsStorage.getAllPlayers().forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, firework)));
 
             instance = null;
             new NewYearTimer();

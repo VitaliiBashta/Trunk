@@ -16,14 +16,14 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.tables.SkillTable;
 
 public final class FreyaStandNormal extends Fighter {
-    private final Skill Skill_EternalBlizzard = SkillTable.INSTANCE.getInfo(6274, 1); // Мощнейшая атака ледяного урагана с силой 38к по площади в 3000 радиуса
-    private final Skill Skill_IceBall = SkillTable.INSTANCE.getInfo(6278); // Мощный клинок льда по Топ дамагеру
-    private final Skill Skill_SummonElemental = SkillTable.INSTANCE.getInfo(6277, 1); // Вселяет мощь льда в окружающих гвардов
-    private final Skill Skill_SelfNova = SkillTable.INSTANCE.getInfo(6279, 1); // Детонация льда, наносит АоЕ урон всем целям в радиусе 350
-    private final Skill Skill_DeathSentence = SkillTable.INSTANCE.getInfo(6280, 1); // Суровый вердикт Фреи, по истечении 10 секунд наносит мощный урон случайной цели
-    private final Skill Skill_ReflectMagic = SkillTable.INSTANCE.getInfo(6282, 1); // Щит, отражающий магию
-    private final Skill Skill_IceStorm = SkillTable.INSTANCE.getInfo(6283, 1); // Ледяной шторм по площади 1200 радиуса
-    private final Skill Skill_Anger = SkillTable.INSTANCE.getInfo(6285, 1); // Селф-бафф Фреи, призывает силы зимы
+    private static final int Skill_EternalBlizzard = 6274; // Мощнейшая атака ледяного урагана с силой 38к по площади в 3000 радиуса
+    private static final int Skill_IceBall = 6278; // Мощный клинок льда по Топ дамагеру
+    private static final int Skill_SummonElemental = 6277; // Вселяет мощь льда в окружающих гвардов
+    private static final int Skill_SelfNova = 6279; // Детонация льда, наносит АоЕ урон всем целям в радиусе 350
+    private static final int Skill_DeathSentence = 6280; // Суровый вердикт Фреи, по истечении 10 секунд наносит мощный урон случайной цели
+    private static final int Skill_ReflectMagic = 6282; // Щит, отражающий магию
+    private static final int Skill_IceStorm = 6283; // Ледяной шторм по площади 1200 радиуса
+    private static final int Skill_Anger = 6285; // Селф-бафф Фреи, призывает силы зимы
     private long _eternalblizzardReuseTimer = 0; // Таймер отката умения
     private long _iceballReuseTimer = 0;
     private long _summonReuseTimer = 0;

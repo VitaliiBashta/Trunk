@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.VillageMasterInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-public class Clan extends Functions {
+public final class Clan extends Functions {
     public void CheckCreateClan() {
         if (getNpc() == null || getSelf() == null)
             return;

@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
@@ -11,12 +12,11 @@ import l2trunk.gameserver.model.reward.RewardItem;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.List;
 
-public class Harvesting extends Skill {
+public final class Harvesting extends Skill {
     public Harvesting(StatsSet set) {
         super(set);
     }

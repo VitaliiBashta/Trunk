@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.BalancerConfig;
@@ -10,7 +11,10 @@ import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.instancemanager.games.HandysBlockCheckerManager;
 import l2trunk.gameserver.instancemanager.games.HandysBlockCheckerManager.ArenaParticipantsHolder;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.base.*;
+import l2trunk.gameserver.model.base.BaseStats;
+import l2trunk.gameserver.model.base.ClassId;
+import l2trunk.gameserver.model.base.Element;
+import l2trunk.gameserver.model.base.SkillTrait;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.instances.ChestInstance;
 import l2trunk.gameserver.model.instances.DecoyInstance;
@@ -32,7 +36,6 @@ import l2trunk.gameserver.stats.conditions.Condition;
 import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.stats.funcs.FuncTemplate;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.PositionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +83,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     protected final int _displayId;
     protected final int _effectPoint;
     protected final int _npcId;
-    protected final int _skillRadius;
+    protected final int skillRadius;
     protected final double _absorbPart;
     private final int[] _itemConsume;
     private final int _referenceItemId;
@@ -89,10 +92,10 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private final int hashCode;
     private final List<Integer> _teachers; // which NPC teaches
     private final List<ClassId> _canLearn; // which classes can learn
-    private final boolean _isAltUse;
-    private final boolean _isBehind;
-    private final boolean _isCancelable;
-    private final boolean _isCorpse;
+    private final boolean isAltUse;
+    private final boolean isBehind;
+    private final boolean isCancelable;
+    private final boolean isCorpse;
     private final boolean common;
     private final boolean offensive;
     private final boolean _isBuff;
@@ -123,7 +126,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private final boolean deathlink;
     private final boolean _hideStartMessage;
     private final boolean _hideUseMessage;
-    private final boolean _skillInterrupt;
     private final boolean _flyingTransformUsage;
     private final boolean _canUseTeleport;
     private final boolean _isProvoke;
@@ -157,9 +159,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private final int criticalRate;
     private final double powerPvP;
     private final double powerPvE;
-    private final String _baseValues;
     private final String _icon;
-    public boolean _isStandart = false;
     protected int id;
     protected int _displayLevel;
     protected double power;
@@ -179,7 +179,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private int hitTime;
     private int _hpConsume;
     private int _magicLevel;
-    private int _skillInterruptTime;
+    private int skillInterruptTime;
     private int _enchantLevelCount;
     private long _reuseDelay;
     private double _mpConsume1;
@@ -201,7 +201,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _ignoreSkillMastery = set.getBool("ignoreSkillMastery", false);
         _isPreservedOnDeath = set.getBool("isPreservedOnDeath", false);
         _isHeroic = set.getBool("isHeroic", false);
-        _isAltUse = set.getBool("altUse", false);
+        isAltUse = set.getBool("altUse", false);
         _mpConsume1 = set.getInteger("mpConsume1", 0);
         _mpConsume2 = set.getInteger("mpConsume2", 0);
         energyConsume = set.getInteger("energyConsume", 0);
@@ -217,7 +217,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _magicLevel = set.getInteger("magicLevel", 0);
         _castCount = set.getInteger("castCount", 0);
         _castRange = set.getInteger("castRange", 40);
-        _baseValues = set.getString("baseValues", null);
+        String _baseValues = set.getString("baseValues", null);
 
         String s1 = set.getString("itemConsumeCount", "");
         String s2 = set.getString("itemConsumeId", "");
@@ -255,10 +255,10 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         common = set.getBool("common", false);
         _isSaveable = set.getBool("isSaveable", true);
         _coolTime = set.getInteger("coolTime", 0);
-        _skillInterruptTime = set.getInteger("hitCancelTime", 0);
+        skillInterruptTime = set.getInteger("hitCancelTime", 0);
         _reuseDelay = set.getLong("reuseDelay", 0);
         hitTime = set.getInteger("hitTime", 0);
-        _skillRadius = set.getInteger("skillRadius", 80);
+        skillRadius = set.getInteger("skillRadius", 80);
         targetType = set.getEnum("target", SkillTargetType.class);
         _magicType = set.getEnum("magicType", SkillMagicType.class, SkillMagicType.PHYSIC);
         _traitType = set.getEnum("trait", SkillTrait.class, null);
@@ -266,7 +266,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _hideStartMessage = set.getBool("isHideStartMessage", false);
         _hideUseMessage = set.getBool("isHideUseMessage", false);
         _isUndeadOnly = set.getBool("undeadOnly", false);
-        _isCorpse = set.getBool("corpse", false);
+        isCorpse = set.getBool("corpse", false);
         power = set.getDouble("power", 0.);
         powerPvP = set.getDouble("powerPvP", 0.);
         powerPvE = set.getDouble("powerPvE", 0.);
@@ -293,7 +293,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _activateRate = set.getInteger("activateRate", -1);
         _affectLimit = set.getIntegerList("affectLimit", Arrays.asList(0, 0));
         _levelModifier = set.getInteger("levelModifier", 1);
-        _isCancelable = set.getBool("cancelable", true);
+        isCancelable = set.getBool("cancelable", true);
         _isReflectable = set.getBool("reflectable", true);
         isShieldignore = set.getBool("shieldignore", false);
         criticalRate = set.getInteger("criticalRate", 0);
@@ -307,7 +307,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _isFishingSkill = set.getBool("isFishingSkill", false);
         _isPvm = set.getBool("isPvm", _skillType.isPvM());
         _isForceUse = set.getBool("isForceUse", false);
-        _isBehind = set.getBool("behind", false);
+        isBehind = set.getBool("behind", false);
         _symbolId = set.getInteger("symbolId", 0);
         _npcId = set.getInteger("npcId", 0);
         _flyType = FlyType.valueOf(set.getString("flyType", "NONE").toUpperCase());
@@ -319,7 +319,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _condCharges = set.getInteger("cond_charges", 0);
         _delayedEffect = set.getInteger("delayedEffect", 0);
         _cancelTarget = set.getInteger("cancelTarget", 0);
-        _skillInterrupt = set.getBool("skillInterrupt", false);
+        boolean _skillInterrupt = set.getBool("skillInterrupt", false);
         _lethal1 = set.getDouble("lethal1", 0.);
         _lethal2 = set.getDouble("lethal2", 0.);
         _absorbPart = set.getDouble("absorbPart", 0.);
@@ -458,7 +458,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             return false;
         }
 
-        if (!(_isItemHandler || _isAltUse) && activeChar.isMuted(this)) {
+        if (!(_isItemHandler || isAltUse) && activeChar.isMuted(this)) {
             return false;
         }
 
@@ -466,12 +466,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             activeChar.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_SOULS);
             return false;
         }
-
-//		if (activeChar.isFlyingDisabled() && (_flyType == FlyType.DUMMY || _flyType == FlyType.CHARGE))
-//		{
-//			activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-//			return false;
-//		}
 
         // TODO move the consumption of the formulas here
         if ((activeChar.getIncreasedForce() < _condCharges) || (activeChar.getIncreasedForce() < _numCharges)) {
@@ -597,17 +591,14 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         if (_skillType == SkillType.TAKECASTLE || _skillType == SkillType.TAKEFORTRESS || _skillType == SkillType.TAKEFLAG)
             return null;
         // Cone skills
-        if (!first && target != activeChar && (targetType == SkillTargetType.TARGET_MULTIFACE || targetType == SkillTargetType.TARGET_MULTIFACE_AURA || targetType == SkillTargetType.TARGET_TUNNEL) && (_isBehind ? PositionUtils.isFacing(activeChar, target, 120) : !PositionUtils.isFacing(activeChar, target, 60)))
+        if (!first && target != activeChar && (targetType == SkillTargetType.TARGET_MULTIFACE || targetType == SkillTargetType.TARGET_MULTIFACE_AURA || targetType == SkillTargetType.TARGET_TUNNEL) && (isBehind ? PositionUtils.isFacing(activeChar, target, 120) : !PositionUtils.isFacing(activeChar, target, 60)))
             return SystemMsg.YOUR_TARGET_IS_OUT_OF_RANGE;
 
-//		if (activeChar.isFlyingDisabled() && (_flyType == FlyType.DUMMY || _flyType == FlyType.CHARGE))
-//			return SystemMsg.INVALID_TARGET;
-
         // Check on castes over the corpse
-        if (target.isDead() != _isCorpse && targetType != SkillTargetType.TARGET_AREA_AIM_CORPSE || _isUndeadOnly && !target.isUndead())
+        if (target.isDead() != isCorpse && targetType != SkillTargetType.TARGET_AREA_AIM_CORPSE || _isUndeadOnly && !target.isUndead())
             return SystemMsg.INVALID_TARGET;
         // For various bottles and feeding skill, further checks are needed
-        if (_isAltUse || targetType == SkillTargetType.TARGET_FEEDABLE_BEAST || targetType == SkillTargetType.TARGET_UNLOCKABLE || targetType == SkillTargetType.TARGET_CHEST)
+        if (isAltUse || targetType == SkillTargetType.TARGET_FEEDABLE_BEAST || targetType == SkillTargetType.TARGET_UNLOCKABLE || targetType == SkillTargetType.TARGET_CHEST)
             return null;
         Player player = activeChar.getPlayer();
         if (player != null) {
@@ -802,14 +793,14 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_PET:
             case TARGET_PET_AURA:
                 target = activeChar.getPet();
-                return (target != null) && (target.isDead() == _isCorpse) ? target : null;
+                return (target != null) && (target.isDead() == isCorpse) ? target : null;
             case TARGET_OWNER:
                 if (activeChar.isSummon() || activeChar.isPet()) {
                     target = activeChar.getPlayer();
                 } else {
                     return null;
                 }
-                return (target != null) && (target.isDead() == _isCorpse) ? target : null;
+                return (target != null) && (target.isDead() == isCorpse) ? target : null;
             case TARGET_ENEMY_PET:
                 if ((target == null) || (target == activeChar.getPet()) || !target.isPet()) {
                     return null;
@@ -828,7 +819,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_EVENT:
                 return (target != null) && !target.isDead() && (target.getPlayer().getBlockCheckerArena() > -1) ? target : null;
             case TARGET_ONE:
-                return (target != null) && (target.isDead() == _isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead()) ? target : null;
+                return (target != null) && (target.isDead() == isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead()) ? target : null;
             case TARGET_PARTY_ONE:
                 if (target == null) {
                     return null;
@@ -840,18 +831,18 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     return target;
                 }
                 // olympiad party member or olympiad party member pet.
-                if ((player != null) && player.isInOlympiadMode() && (ptarget != null) && (player.getOlympiadSide() == ptarget.getOlympiadSide()) && (player.getOlympiadGame() == ptarget.getOlympiadGame()) && (target.isDead() == _isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead())) {
+                if ((player != null) && player.isInOlympiadMode() && (ptarget != null) && (player.getOlympiadSide() == ptarget.getOlympiadSide()) && (player.getOlympiadGame() == ptarget.getOlympiadGame()) && (target.isDead() == isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead())) {
                     return target;
                 }
                 // party member or party member pet.
-                if ((ptarget != null) && (player != null) && (player.getParty() != null) && player.getParty().containsMember(ptarget) && (target.isDead() == _isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead())) {
+                if ((ptarget != null) && (player != null) && (player.getParty() != null) && player.getParty().containsMember(ptarget) && (target.isDead() == isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead())) {
                     return target;
                 }
                 return null;
             case TARGET_AREA:
             case TARGET_MULTIFACE:
             case TARGET_TUNNEL:
-                return (target != null) && (target.isDead() == _isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead()) ? target : null;
+                return (target != null) && (target.isDead() == isCorpse) && !((target == activeChar) && isOffensive()) && (!_isUndeadOnly || target.isUndead()) ? target : null;
             case TARGET_AREA_AIM_CORPSE:
                 return (target != null) && target.isDead() ? target : null;
             case TARGET_CORPSE:
@@ -906,7 +897,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_AREA:
             case TARGET_MULTIFACE:
             case TARGET_TUNNEL: {
-                if ((aimingTarget.isDead() == _isCorpse) && (!_isUndeadOnly || aimingTarget.isUndead())) {
+                if ((aimingTarget.isDead() == isCorpse) && (!_isUndeadOnly || aimingTarget.isUndead())) {
                     targets.add(aimingTarget);
                 }
                 addTargetsToList(targets, aimingTarget, activeChar, forceUse);
@@ -922,7 +913,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     if (activeChar.getPlayer().isInParty()) {
                         if (activeChar.getPlayer().getParty().isInCommandChannel()) {
                             for (Player p : activeChar.getPlayer().getParty().getCommandChannel()) {
-                                if (!p.isDead() && p.isInRange(activeChar, _skillRadius == 0 ? 600 : _skillRadius)) {
+                                if (!p.isDead() && p.isInRange(activeChar, skillRadius == 0 ? 600 : skillRadius)) {
                                     targets.add(p);
                                 }
                             }
@@ -930,7 +921,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                             break;
                         }
                         for (Player p : activeChar.getPlayer().getParty().getMembers()) {
-                            if (!p.isDead() && p.isInRange(activeChar, _skillRadius == 0 ? 600 : _skillRadius)) {
+                            if (!p.isDead() && p.isInRange(activeChar, skillRadius == 0 ? 600 : skillRadius)) {
                                 targets.add(p);
                             }
                         }
@@ -954,7 +945,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_ALLY: {
                 if (activeChar.isMonster() || activeChar.isSiegeGuard()) {
                     targets.add(activeChar);
-                    for (Creature c : World.getAroundCharacters(activeChar, _skillRadius, 600)) {
+                    for (Creature c : World.getAroundCharacters(activeChar, skillRadius, 600)) {
                         if (!c.isDead() && (c.isMonster() || c.isSiegeGuard()) /* && ((L2MonsterInstance) c).getFactionId().equals(mob.getFactionId()) */) {
                             targets.add(c);
                         }
@@ -965,7 +956,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                 if (player == null) {
                     break;
                 }
-                for (Player target : World.getAroundPlayers(player, _skillRadius, 600)) {
+                for (Player target : World.getAroundPlayers(player, skillRadius, 600)) {
                     boolean check = false;
                     switch (targetType) {
                         case TARGET_PARTY:
@@ -1010,7 +1001,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_FRIEND: {
                 if (activeChar.isMonster() || activeChar.isSiegeGuard()) {
                     targets.add(activeChar);
-                    for (Creature c : World.getAroundCharacters(activeChar, _skillRadius, 900)) {
+                    for (Creature c : World.getAroundCharacters(activeChar, skillRadius, 900)) {
                         if (!c.isDead() && (c.isMonster() || c.isSiegeGuard())) {
                             targets.add(c);
                         }
@@ -1018,8 +1009,8 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     break;
                 }
                 Player player = activeChar.getPlayer();
-                for (Player target : World.getAroundPlayers(player, _skillRadius, 350)) {
-                    boolean check = false;
+                for (Player target : World.getAroundPlayers(player, skillRadius, 350)) {
+                    boolean check;
                     if (check = (player.getParty() != null) && ((player.getParty() == target.getParty()) || ((player.getClanId() != 0) && (target.getClanId() == player.getClanId())) || ((player.getAllyId() != 0) && (target.getAllyId() == player.getAllyId())))) {
                         if (!check) {
                             continue;
@@ -1043,11 +1034,11 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         if (!GeoEngine.canSeeTarget(actor, target, false) && isNotTargetAoE() && getSkillType() != SkillType.RECALL)
             return;
 
-        if (((actor == target) || actor.isInRange(target, _skillRadius)) && (target.isDead() == _isCorpse)) {
+        if (((actor == target) || actor.isInRange(target, skillRadius)) && (target.isDead() == isCorpse)) {
             targets.add(target);
         }
         Summon pet = target.getPet();
-        if (actor.isInRange(pet, _skillRadius) && (pet.isDead() == _isCorpse)) {
+        if (actor.isInRange(pet, skillRadius) && (pet.isDead() == isCorpse)) {
             targets.add(pet);
         }
     }
@@ -1072,7 +1063,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         }
 
         final int affectLimit = _affectLimit.get(0) <= 0 ? Integer.MAX_VALUE : Rnd.get(_affectLimit.get(0), _affectLimit.get(_affectLimit.size() - 1));
-        List<Creature> list = aimingTarget.getAroundCharacters(_skillRadius, 300);
+        List<Creature> list = aimingTarget.getAroundCharacters(skillRadius, 300);
         if (_skillType == SkillType.AGGRESSION) {
             list.sort((c1, c2) -> Boolean.compare(c1.getAI().getAttackTarget() == activeChar, c2.getAI().getAttackTarget() == activeChar));
         } else if (_skillType == SkillType.SPOIL) {
@@ -1101,11 +1092,23 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         }
     }
 
+    public final void getEffects(Creature effector) {
+        getEffects(effector, effector, false, false, false);
+
+    }
+    public final void getEffects(Creature effector, boolean calcChance, boolean applyOnCaster) {
+        getEffects(effector, effector, calcChance, applyOnCaster, false);
+    }
+
+    public final void getEffects(Creature effector, Creature effected) {
+        getEffects(effector, effected, false, false, false);
+    }
+
     public final void getEffects(Creature effector, Creature effected, boolean calcChance, boolean applyOnCaster) {
         getEffects(effector, effected, calcChance, applyOnCaster, false);
     }
 
-    public final void getEffects(Creature effector, Creature effected, boolean calcChance, boolean applyOnCaster, boolean skillReflected, boolean inNewThread) {
+    private void getEffects(Creature effector, Creature effected, boolean calcChance, boolean applyOnCaster, boolean skillReflected, boolean inNewThread) {
         double timeMult = 1.0;
 
         if (isMusic()) {
@@ -1386,7 +1389,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public final boolean altUse() {
-        return _isAltUse;
+        return isAltUse;
     }
 
     public final boolean canTeachBy(int npcId) {
@@ -1417,7 +1420,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public final int getAOECastRange() {
-        return Math.max(_castRange, _skillRadius);
+        return Math.max(_castRange, skillRadius);
     }
 
     public int getCondCharges() {
@@ -1429,7 +1432,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public boolean getCorpse() {
-        return _isCorpse;
+        return isCorpse;
     }
 
     public int getDelayedEffect() {
@@ -1780,15 +1783,11 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public final int getSkillInterruptTime() {
-        return _skillInterruptTime;
-    }
-
-    public void setSkillInterruptTime(int skillInterruptTime) {
-        _skillInterruptTime = skillInterruptTime;
+        return skillInterruptTime;
     }
 
     public final int getSkillRadius() {
-        return _skillRadius;
+        return skillRadius;
     }
 
     public final SkillType getSkillType() {
@@ -1827,10 +1826,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         return _lethal2;
     }
 
-    public String getBaseValues() {
-        return _baseValues;
-    }
-
     private boolean isBlockedByChar(Creature effected, EffectTemplate et) {
         if (et.getAttachedFuncs() == null) {
             return false;
@@ -1844,7 +1839,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public final boolean isCancelable() {
-        return _isCancelable && (getSkillType() != SkillType.TRANSFORMATION) && !isToggle();
+        return isCancelable && (getSkillType() != SkillType.TRANSFORMATION) && !isToggle();
     }
 
     public final boolean isCommon() {
@@ -1947,7 +1942,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public boolean isBehind() {
-        return _isBehind;
+        return isBehind;
     }
 
     public boolean isHideStartMessage() {
@@ -2079,10 +2074,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         return _cancelTarget;
     }
 
-    public boolean isSkillInterrupt() {
-        return _skillInterrupt;
-    }
-
     public boolean isNotUsedByAI() {
         return _isNotUsedByAI;
     }
@@ -2207,13 +2198,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         enchantLvl = (enchantLvl == 0 ? getEnchantLevelCount() : enchantLvl);
 
         return enchantLvl < 0 ? 0 : enchantLvl;
-    }
-
-    public String getCurrentEnchantType() {
-        int baseMaxLvl = SkillTable.INSTANCE.getBaseLevel(getId());
-        int enchantType = (getLevel() - baseMaxLvl) / getEnchantLevelCount();
-
-        return enchantType >= 3 ? "Power" : enchantType >= 2 ? "Cost" : (enchantType >= 1 ? "Time" : "Normal");
     }
 
     @Override

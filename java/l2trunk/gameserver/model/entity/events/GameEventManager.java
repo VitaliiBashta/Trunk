@@ -1,18 +1,16 @@
 package l2trunk.gameserver.model.entity.events;
 
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.concurrent.ScheduledFuture;
 
 public enum GameEventManager {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(GameEventManager.class);
-    private final HashMap<String, GameEvent> _events= new HashMap<>();
+    private final HashMap<String, GameEvent> _events = new HashMap<>();
     private ScheduledFuture<?> event_sched;
     private GameEvent event;
 

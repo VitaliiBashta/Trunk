@@ -5,24 +5,19 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 
-/**
- * AI Emperor's Seal Device.
- *
- * @author pchayka
- */
 public final class SealDevice extends Fighter {
     private boolean _firstAttack = false;
 
     public SealDevice(NpcInstance actor) {
         super(actor);
-        actor.block();
+        actor.setBlock(true);
     }
 
     @Override
     public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (!_firstAttack) {
-            actor.broadcastPacket(new MagicSkillUse(actor, actor, 5980, 1, 0, 0));
+            actor.broadcastPacket(new MagicSkillUse(actor,  5980));
             _firstAttack = true;
         }
     }

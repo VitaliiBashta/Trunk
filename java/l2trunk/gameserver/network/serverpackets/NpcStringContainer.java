@@ -2,10 +2,6 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-/**
- * @author VISTALL
- * @date 16:43/25.03.2011
- */
 abstract class NpcStringContainer extends L2GameServerPacket {
     private final NpcString _npcString;
     private final String[] _parameters = new String[5];

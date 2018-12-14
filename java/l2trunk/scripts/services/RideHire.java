@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.SetupGauge;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.PetDataTable;
 
-class RideHire extends Functions {
+public final class RideHire extends Functions {
     public String DialogAppend_30827(Integer val) {
 
         if (!Config.SERVICES_RIDE_HIRE_ENABLED) {

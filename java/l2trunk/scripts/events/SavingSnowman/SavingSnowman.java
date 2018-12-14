@@ -358,14 +358,14 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
             return;
         }
 
-        player.broadcastPacket(new MagicSkillUse(player, player, 23017, 1, 0, 0));
-        player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(23017));
+        player.broadcastPacket(new MagicSkillUse(player,  23017));
+        player.altOnMagicUseTimer(player, 23017);
         player.setVar("santaEventTime", String.valueOf(System.currentTimeMillis() + SANTA_BUFF_REUSE), -1);
 
         Summon pet = player.getPet();
         if (pet != null) {
-            pet.broadcastPacket(new MagicSkillUse(pet, pet, 23017, 1, 0, 0));
-            pet.altOnMagicUseTimer(pet, SkillTable.INSTANCE.getInfo(23017));
+            pet.broadcastPacket(new MagicSkillUse(pet,  23017));
+            pet.altOnMagicUseTimer(pet, 23017);
         }
     }
 

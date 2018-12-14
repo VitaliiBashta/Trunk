@@ -1,7 +1,7 @@
 package l2trunk.gameserver.data.xml.holder;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.stats.Stats;
-import l2trunk.gameserver.templates.StatsSet;
 
 public final class NpcStatsBalancerHolder {
     private final Stats stat;

@@ -10,7 +10,7 @@ public class StringUtils {
     public static String defaultString(String text) {
         if (text != null && text.length() > 0)
             return text;
-        return EMPTY;
+        return "";
     }
 
     public static boolean containsIgnoreCase(String str, String searchStr)     {

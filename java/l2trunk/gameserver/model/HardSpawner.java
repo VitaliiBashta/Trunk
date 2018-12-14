@@ -1,8 +1,7 @@
 package l2trunk.gameserver.model;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.spawn.SpawnNpcInfo;
 import l2trunk.gameserver.templates.spawn.SpawnRange;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
@@ -10,11 +9,7 @@ import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class HardSpawner extends Spawner {
-    /**
-     *
-     */
-    private static final long serialVersionUID = -3566741484655685267L;
+public final class HardSpawner extends Spawner {
     private final SpawnTemplate _template;
     private final List<NpcInstance> _reSpawned = new CopyOnWriteArrayList<>();
     private int _pointIndex;
@@ -50,7 +45,7 @@ public class HardSpawner extends Spawner {
     }
 
     @Override
-    protected NpcInstance initNpc(NpcInstance mob, boolean spawn, MultiValueSet<String> set) {
+    protected NpcInstance initNpc(NpcInstance mob, boolean spawn, StatsSet set) {
         _reSpawned.remove(mob);
 
         SpawnRange range = _template.getSpawnRange(getNextRangeId());

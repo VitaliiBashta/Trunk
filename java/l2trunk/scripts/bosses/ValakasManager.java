@@ -17,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -34,21 +33,24 @@ import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
 public final class ValakasManager extends Functions implements ScriptFile, OnDeathListener {
     private static final Logger _log = LoggerFactory.getLogger(ValakasManager.class);
-    private static final int _teleportCubeLocation[][] = {{214880, -116144, -1644, 0},
-            {213696, -116592, -1644, 0},
-            {212112, -116688, -1644, 0},
-            {211184, -115472, -1664, 0},
-            {210336, -114592, -1644, 0},
-            {211360, -113904, -1644, 0},
-            {213152, -112352, -1644, 0},
-            {214032, -113232, -1644, 0},
-            {214752, -114592, -1644, 0},
-            {209824, -115568, -1421, 0},
-            {210528, -112192, -1403, 0},
-            {213120, -111136, -1408, 0},
-            {215184, -111504, -1392, 0},
-            {215456, -117328, -1392, 0},
-            {213200, -118160, -1424, 0}};
+    private static final List<Integer> taskDelays = List.of(
+            16, 1500, 3300, 2900, 2700, 1, 3200, 1400, 6700, 5700, 600000, 500, 3500, 4500, 500, 4600, 750, 2500);
+    private static final List<Location> _teleportCubeLocation = List.of(
+            new Location(214880, -116144, -1644),
+            new Location(213696, -116592, -1644),
+            new Location(212112, -116688, -1644),
+            new Location(211184, -115472, -1664),
+            new Location(210336, -114592, -1644),
+            new Location(211360, -113904, -1644),
+            new Location(213152, -112352, -1644),
+            new Location(214032, -113232, -1644),
+            new Location(214752, -114592, -1644),
+            new Location(209824, -115568, -1421),
+            new Location(210528, -112192, -1403),
+            new Location(213120, -111136, -1408),
+            new Location(215184, -111504, -1392),
+            new Location(215456, -117328, -1392),
+            new Location(213200, -118160, -1424));
 
     private static final List<NpcInstance> _teleportCube = new ArrayList<>();
     private static final List<NpcInstance> _spawnedMinions = new ArrayList<>();
@@ -57,9 +59,9 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     private static final int FWV_LIMITUNTILSLEEP = 20 * 60000; // 20
     private static final int FWV_APPTIMEOFVALAKAS = 15 * 60000;     // 10
     private static final Location TELEPORT_POSITION = new Location(203940, -111840, 66);
-    private static BossInstance _valakas;
+    private static BossInstance valakas;
     // Tasks.
-    private static ScheduledFuture<?> _valakasSpawnTask = null;
+    private static ScheduledFuture<?> valakasSpawnTask = null;
     private static ScheduledFuture<?> _intervalEndTask = null;
     private static ScheduledFuture<?> _socialTask = null;
     private static ScheduledFuture<?> _mobiliseTask = null;
@@ -68,8 +70,8 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     private static ScheduledFuture<?> _sleepCheckTask = null;
     private static ScheduledFuture<?> onAnnihilatedTask = null;
     private static EpicBossState state;
-    private static Zone _zone;
-    private static long _lastAttackTime = 0;
+    private static Zone zone;
+    private static long lastAttackTime = 0;
     private static boolean dying = false;
     private static boolean _entryLocked = false;
 
@@ -92,14 +94,12 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     }
 
     public static Zone getZone() {
-        return _zone;
+        return zone;
     }
 
     private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
+        return getPlayersInside().stream()
+                .allMatch(Player::isDead);
     }
 
     private static void onValakasDie() {
@@ -112,8 +112,8 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
         state.update();
 
         _entryLocked = false;
-        for (int[] ints : _teleportCubeLocation)
-            _teleportCube.add(Functions.spawn(new Location(ints[0], ints[1], ints[2], ints[3]), _teleportCubeId));
+        _teleportCubeLocation.forEach(loc ->
+                _teleportCube.add(Functions.spawn(loc, _teleportCubeId)));
         Log.add("Valakas died", "bosses");
     }
 
@@ -143,22 +143,22 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
 
         _entryLocked = false;
 
-        if (_valakas != null)
-            _valakas.deleteMe();
+        if (valakas != null)
+            valakas.deleteMe();
 
         for (NpcInstance npc : _spawnedMinions)
             npc.deleteMe();
 
         // Delete teleport cube.
-        for (NpcInstance cube : _teleportCube) {
+        _teleportCube.forEach(cube -> {
             cube.getSpawn().stopRespawn();
             cube.deleteMe();
-        }
+        });
         _teleportCube.clear();
 
-        if (_valakasSpawnTask != null) {
-            _valakasSpawnTask.cancel(false);
-            _valakasSpawnTask = null;
+        if (valakasSpawnTask != null) {
+            valakasSpawnTask.cancel(false);
+            valakasSpawnTask = null;
         }
         if (_intervalEndTask != null) {
             _intervalEndTask.cancel(false);
@@ -199,14 +199,13 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     }
 
     public static void setLastAttackTime() {
-        _lastAttackTime = System.currentTimeMillis();
+        lastAttackTime = System.currentTimeMillis();
     }
 
     // Setting Valakas spawn task.
     private synchronized static void setValakasSpawnTask() {
-        if (_valakasSpawnTask == null)
-            _valakasSpawnTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(1), FWV_APPTIMEOFVALAKAS);
-        //_entryLocked = true;
+        if (valakasSpawnTask == null)
+            valakasSpawnTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(1), FWV_APPTIMEOFVALAKAS);
     }
 
     public static boolean isEnableEnterToLair() {
@@ -214,12 +213,8 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     }
 
     public static void broadcastScreenMessage(NpcString npcs) {
-        for (Player p : getPlayersInside())
-            p.sendPacket(new ExShowScreenMessage(npcs, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false));
-    }
-
-    public static void addValakasMinion(NpcInstance npc) {
-        _spawnedMinions.add(npc);
+        getPlayersInside().forEach(p ->
+            p.sendPacket(new ExShowScreenMessage(npcs)));
     }
 
     public static void enterTheLair(Player player) {
@@ -243,7 +238,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
             player.sendMessage("Valakas is still reborning. You cannot invade the nest now");
             return;
         }
-        if (_entryLocked || state.getState() == State.ALIVE) {
+        if (_entryLocked) {
             player.sendMessage("Valakas has already been reborned and is being attacked. The entrance is sealed.");
             return;
         }
@@ -261,9 +256,114 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
         return state;
     }
 
+    private static void showMovie(int dist, int yaw, int pitch, int time, int turn, int rise, int unk) {
+        getPlayersInside().stream()
+                .filter(pc -> pc.getDistance(valakas) <= dist)
+                .forEach(pc -> {
+                    pc.enterMovieMode();
+                    pc.specialCamera(valakas, dist, yaw, pitch, time, 15000, turn, rise, 1, unk);
+                });
+
+        getPlayersInside().stream()
+                .filter(pc -> pc.getDistance(valakas) > dist)
+                .forEach(Player::leaveMovieMode);
+    }
+
+    private static void spawnDespawn(int taskId) {
+        switch (taskId) {
+            case 1:
+                // Do spawn.
+                valakas = (BossInstance) Functions.spawn(new Location(212852, -114842, -1632, 833), Valakas);
+
+                valakas.setBlock(true);
+                valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS03_A", 1, valakas.getObjectId(), valakas.getLoc()));
+
+                state.setRespawnDate(getRespawnInterval());
+                state.setState(State.ALIVE);
+                state.update();
+
+                break;
+            case 2:
+                // Do social.
+                valakas.broadcastPacket(new SocialAction(valakas.getObjectId(), 1));
+                showMovie(1800, 180, -1, 1500, 0, 0, 0);
+                break;
+            case 3:
+                // Set camera.
+                showMovie(1300, 180, -5, 3000, 0, -5, 0);
+                break;
+            case 4:
+                // Set camera.
+                showMovie(500, 180, -8, 600, 0, 60, 0);
+                break;
+            case 5:
+                // Set camera.
+                showMovie(800, 180, -8, 2700, 0, 30, 0);
+                break;
+            case 6:
+                // Set camera.
+                showMovie(200, 250, 70, 0, 30, 80, 0);
+                break;
+            case 7:
+                // Set camera.
+                showMovie(1100, 250, 70, 2500, 30, 80, 0);
+                break;
+            case 8:
+                showMovie(700, 150, 30, 0, -10, 60, 0);
+                break;
+            case 9:
+                showMovie(1200, 150, 20, 2900, -10, 30, 0);
+                break;
+            case 10:
+                // Set camera.
+                showMovie(750, 170, -10, 3400, 10, -15, 0);
+                break;
+            case 11:
+                // Reset camera.
+                getPlayersInside().forEach(Player::leaveMovieMode);
+                valakas.setBlock();
+                broadcastScreenMessage(NpcString.VALAKAS_ARROGAANT_FOOL_YOU_DARE_TO_CHALLENGE_ME);
+                // Move at random.
+                if (valakas.getAI().getIntention() == AI_INTENTION_ACTIVE)
+                    valakas.moveToLocation(new Location(Rnd.get(211080, 214909), Rnd.get(-115841, -112822), -1662, 0), 0, false);
+                break;
+
+            // Death Movie
+            case 12:
+                valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "B03_D", 1, valakas.getObjectId(), valakas.getLoc()));
+                broadcastScreenMessage(NpcString.VALAKAS_THE_EVIL_FIRE_DRAGON_VALAKAS_DEFEATED);
+                onValakasDie();
+                showMovie(2000, 130, -1, 0, 0, 0, 1);
+                break;
+            case 13:
+                showMovie(1100, 210, -5, 3000, -13, 0, 1);
+                break;
+            case 14:
+                showMovie(1300, 200, -8, 3000, 0, 15, 1);
+                break;
+            case 15:
+                showMovie(1000, 190, 0, 500, 0, 10, 1);
+                break;
+            case 16:
+                showMovie(1700, 120, 0, 2500, 12, 40, 1);
+                break;
+            case 17:
+                showMovie(1700, 20, 0, 700, 10, 10, 1);
+                break;
+            case 18:
+                showMovie(1700, 10, 0, 1000, 20, 70, 1);
+                break;
+            case 19:
+                getPlayersInside().forEach(pc -> {
+                    pc.leaveMovieMode();
+                    pc.altOnMagicUseTimer(pc, 23312);
+                });
+        }
+    }
+
     @Override
     public void onDeath(Creature self, Creature killer) {
-        if (self.isPlayer() && state != null && state.getState() == State.ALIVE && _zone != null && _zone.checkIfInZone(self.getX(), self.getY()))
+        if (self.isPlayer() && state != null && state.getState() == State.ALIVE && zone != null && zone.checkIfInZone(self.getX(), self.getY()))
             checkAnnihilated();
         else if (self.isNpc() && self.getNpcId() == Valakas)
             ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(12), 1);
@@ -272,7 +372,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     private void init() {
         CharListenerList.addGlobal(this);
         state = new EpicBossState(Valakas);
-        _zone = ReflectionUtils.getZone("[valakas_epic]");
+        zone = ReflectionUtils.getZone("[valakas_epic]");
         _log.info("ValakasManager: State of Valakas is " + state.getState() + ".");
         if (!state.getState().equals(State.NOTSPAWN))
             setIntervalEndTask();
@@ -280,17 +380,14 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
         _log.info("ValakasManager: Next spawn date of Valakas is " + TimeUtils.toSimpleFormat(state.getRespawnDate()) + ".");
     }
 
-    @Override
     public void onLoad() {
         init();
     }
 
-    @Override
     public void onReload() {
         sleep();
     }
 
-    @Override
     public void onShutdown() {
     }
 
@@ -298,7 +395,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
         @Override
         public void runImpl() {
             if (state.getState() == State.ALIVE)
-                if (_lastAttackTime + FWV_LIMITUNTILSLEEP < System.currentTimeMillis())
+                if (lastAttackTime + FWV_LIMITUNTILSLEEP < System.currentTimeMillis())
                     sleep();
                 else
                     _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 60000);
@@ -318,228 +415,24 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     }
 
     private static class SpawnDespawn extends RunnableImpl {
-        private final int _distance = 3000;
-        private final int _taskId;
-        private final List<Player> players = getPlayersInside();
+        private final int taskId;
 
         SpawnDespawn(int taskId) {
-            _taskId = taskId;
+            this.taskId = taskId;
         }
 
         @Override
         public void runImpl() {
             _entryLocked = true;
-            switch (_taskId) {
-                case 1:
-                    // Do spawn.
-                    _valakas = (BossInstance) Functions.spawn(new Location(212852, -114842, -1632, 833), Valakas);
-
-                    _valakas.block();
-                    _valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS03_A", 1, _valakas.getObjectId(), _valakas.getLoc()));
-
-                    state.setRespawnDate(getRespawnInterval());
-                    state.setState(State.ALIVE);
-                    state.update();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(2), 16);
-                    break;
-                case 2:
-                    // Do social.
-                    _valakas.broadcastPacket(new SocialAction(_valakas.getObjectId(), 1));
-
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1800, 180, -1, 1500, 15000, 0, 0, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(3), 1500);
-                    break;
-                case 3:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1300, 180, -5, 3000, 15000, 0, -5, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(4), 3300);
-                    break;
-                case 4:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 500, 180, -8, 600, 15000, 0, 60, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(5), 2900);
-                    break;
-                case 5:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 800, 180, -8, 2700, 15000, 0, 30, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(6), 2700);
-                    break;
-                case 6:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 200, 250, 70, 0, 15000, 30, 80, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(7), 1);
-                    break;
-                case 7:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1100, 250, 70, 2500, 15000, 30, 80, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(8), 3200);
-                    break;
-                case 8:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 700, 150, 30, 0, 15000, -10, 60, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(9), 1400);
-                    break;
-                case 9:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1200, 150, 20, 2900, 15000, -10, 30, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(10), 6700);
-                    break;
-                case 10:
-                    // Set camera.
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 750, 170, -10, 3400, 15000, 10, -15, 1, 0);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(11), 5700);
-                    break;
-                case 11:
-                    // Reset camera.
-                    for (Player pc : players)
-                        pc.leaveMovieMode();
-
-                    _valakas.unblock();
-                    broadcastScreenMessage(NpcString.VALAKAS_ARROGAANT_FOOL_YOU_DARE_TO_CHALLENGE_ME);
-
-                    // Move at random.
-                    if (_valakas.getAI().getIntention() == AI_INTENTION_ACTIVE)
-                        _valakas.moveToLocation(new Location(Rnd.get(211080, 214909), Rnd.get(-115841, -112822), -1662, 0), 0, false);
-
-                    _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 600000);
-                    break;
-
-                // Death Movie
-                case 12:
-                    _valakas.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "B03_D", 1, _valakas.getObjectId(), _valakas.getLoc()));
-                    broadcastScreenMessage(NpcString.VALAKAS_THE_EVIL_FIRE_DRAGON_VALAKAS_DEFEATED);
-                    onValakasDie();
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 2000, 130, -1, 0, 15000, 0, 0, 1, 1);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(13), 500);
-                    break;
-                case 13:
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1100, 210, -5, 3000, 15000, -13, 0, 1, 1);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(14), 3500);
-                    break;
-                case 14:
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1300, 200, -8, 3000, 15000, 0, 15, 1, 1);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(15), 4500);
-                    break;
-                case 15:
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1000, 190, 0, 500, 15000, 0, 10, 1, 1);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(16), 500);
-                    break;
-                case 16:
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1700, 120, 0, 2500, 15000, 12, 40, 1, 1);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(17), 4600);
-                    break;
-                case 17:
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1700, 20, 0, 700, 15000, 10, 10, 1, 1);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(18), 750);
-                    break;
-                case 18:
-                    for (Player pc : players)
-                        if (pc.getDistance(_valakas) <= _distance) {
-                            pc.enterMovieMode();
-                            pc.specialCamera(_valakas, 1700, 10, 0, 1000, 15000, 20, 70, 1, 1);
-                        } else
-                            pc.leaveMovieMode();
-
-                    _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(19), 2500);
-                    break;
-                case 19:
-                    for (Player pc : players) {
-                        pc.leaveMovieMode();
-                        pc.altOnMagicUseTimer(pc, SkillTable.INSTANCE.getInfo(23312, 1));
-                    }
-                    break;
+            if (taskId == 11) {
+                // Reset camera.
+                spawnDespawn(taskId);
+                _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), taskDelays.get(taskId));
+            } else if (taskId == 19) {
+                spawnDespawn(taskId);
+            } else {
+                spawnDespawn(taskId);
+                _socialTask = ThreadPoolManager.INSTANCE.schedule(new SpawnDespawn(taskId + 1), taskDelays.get(taskId));
             }
         }
     }

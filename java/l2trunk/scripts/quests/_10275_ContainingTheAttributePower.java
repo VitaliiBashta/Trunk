@@ -88,12 +88,12 @@ public final class _10275_ContainingTheAttributePower extends Quest implements S
             st.giveItems(YangSword, 1, Element.EARTH, 10);
         } else if (event.equalsIgnoreCase("32325-09.htm")) {
             st.setCond(5);
-            SkillTable.INSTANCE.getInfo(2635).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(2635).getEffects(player);
             st.giveItems(YinSword, 1, Element.FIRE, 10);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("32326-09.htm")) {
             st.setCond(10);
-            SkillTable.INSTANCE.getInfo(2636).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(2636).getEffects(player);
             st.giveItems(YangSword, 1, Element.EARTH, 10);
             st.playSound(SOUND_MIDDLE);
         } else {

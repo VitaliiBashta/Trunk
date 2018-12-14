@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.util.Rnd;
@@ -64,7 +64,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     private boolean _isInProgress;
     private boolean _isRegistrationOver;
 
-    public SiegeEvent(MultiValueSet<String> set) {
+    public SiegeEvent(StatsSet set) {
         super(set);
         _dayOfWeek = set.getInteger(DAY_OF_WEEK, 0);
         _hourOfDay = set.getInteger(HOUR_OF_DAY, 0);

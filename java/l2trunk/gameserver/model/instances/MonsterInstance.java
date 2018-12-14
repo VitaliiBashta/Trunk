@@ -118,7 +118,7 @@ public class MonsterInstance extends NpcInstance {
             removeSkill(4407);
             isChampion = 0;
         } else {
-            addSkill(SkillTable.INSTANCE.getInfo(4407, level));
+            addSkill(4407, level);
             isChampion = level;
         }
     }
@@ -716,9 +716,7 @@ public class MonsterInstance extends NpcInstance {
         } else if (distance >= MIN_DISTANCE_FOR_USE_UD) {
             double chance = UD_USE_CHANCE / (getMaxHp() / damage);
             if (Rnd.chance(chance)) {
-                Skill skill = SkillTable.INSTANCE.getInfo(skillId, skillLvl);
-                if (skill != null)
-                    skill.getEffects(this, this, false, false);
+                SkillTable.INSTANCE.getInfo(skillId, skillLvl).getEffects(this);
             }
         }
     }

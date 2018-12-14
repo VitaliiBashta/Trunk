@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _076_SagaOfTheGrandKhavatari extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _076_SagaOfTheGrandKhavatari extends SagasSuperclass implements ScriptFile {
     public _076_SagaOfTheGrandKhavatari() {
         super(false);
 
-        NPC = new int[]{
-                31339,
-                31624,
-                31589,
-                31290,
-                31637,
-                31646,
-                31647,
-                31652,
-                31654,
-                31655,
-                31659,
-                31290
-        };
-        Items = new int[]{
-                7080,
-                7539,
-                7081,
-                7491,
-                7274,
-                7305,
-                7336,
-                7367,
-                7398,
-                7429,
-                7099,
-                0
-        };
-        Mob = new int[]{
-                27293,
-                27226,
-                27284
-        };
+        NPC = List.of(31339, 31624, 31589, 31290, 31637, 31646, 31647, 31652, 31654, 31655, 31659, 31290);
+        Items = List.of(7080, 7539, 7081, 7491, 7274, 7305, 7336, 7367, 7398, 7429, 7099, 0);
+        Mob = List.of(27293, 27226, 27284);
         classid = 114;
         prevclass = 0x30;
-        X = new int[]{
-                161719,
-                124355,
-                124376
-        };
-        Y = new int[]{
-                -92823,
-                82155,
-                82127
-        };
-        Z = new int[]{
-                -1893,
-                -2803,
-                -2796
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(161719, -92823, -1893),
+                new Location(124355, 82155, -2803),
+                new Location(124376, 82127, -2796));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _076_SagaOfTheGrandKhavatari extends SagasSuperclass implements Scr
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

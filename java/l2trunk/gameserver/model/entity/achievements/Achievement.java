@@ -101,7 +101,7 @@ public final class Achievement {
                 iu.addNewItem(item);
             }
 
-            player.broadcastPacket(iu, new MagicSkillUse(player, player, 2528, 1, 0, 500));
+            player.broadcastPacket(iu, new MagicSkillUse(player,  2528,  0, 500));
         }
     }
 

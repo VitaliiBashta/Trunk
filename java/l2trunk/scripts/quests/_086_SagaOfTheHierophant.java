@@ -1,74 +1,27 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _086_SagaOfTheHierophant extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.Arrays;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _086_SagaOfTheHierophant extends SagasSuperclass implements ScriptFile {
     public _086_SagaOfTheHierophant() {
         super(false);
 
-        NPC = new int[]{
-                30191,
-                31626,
-                31588,
-                31280,
-                31591,
-                31646,
-                31648,
-                31652,
-                31654,
-                31655,
-                31659,
-                31280
-        };
-        Items = new int[]{
-                7080,
-                7523,
-                7081,
-                7501,
-                7284,
-                7315,
-                7346,
-                7377,
-                7408,
-                7439,
-                7089,
-                0
-        };
-        Mob = new int[]{
-                27269,
-                27235,
-                27275
-        };
+        NPC = Arrays.asList(30191, 31626, 31588, 31280, 31591, 31646, 31648, 31652, 31654, 31655, 31659, 31280);
+        Items = Arrays.asList(7080, 7523, 7081, 7501, 7284, 7315, 7346, 7377, 7408, 7439, 7089, 0);
+        Mob = Arrays.asList(27269, 27235, 27275);
         classid = 98;
         prevclass = 0x11;
-        X = new int[]{
-                161719,
-                124355,
-                124376
-        };
-        Y = new int[]{
-                -92823,
-                82155,
-                82127
-        };
-        Z = new int[]{
-                -1893,
-                -2803,
-                -2796
-        };
-        Text = new String[]{
+
+        locs = Arrays.asList(
+                new Location(161719, -92823, -1893),
+                new Location(124355, 82155, -2803),
+                new Location(124376, 82127, -2796));
+
+
+        Text = Arrays.asList(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +39,20 @@ public class _086_SagaOfTheHierophant extends SagasSuperclass implements ScriptF
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

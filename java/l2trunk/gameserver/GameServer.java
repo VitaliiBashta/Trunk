@@ -36,7 +36,6 @@ import l2trunk.gameserver.listener.game.OnShutdownListener;
 import l2trunk.gameserver.listener.game.OnStartListener;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.Hero;
-import l2trunk.gameserver.model.entity.MonsterRace;
 import l2trunk.gameserver.model.entity.SevenSigns;
 import l2trunk.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
 import l2trunk.gameserver.model.entity.achievements.AchievementNotification;
@@ -46,7 +45,6 @@ import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.network.GameClient;
 import l2trunk.gameserver.network.GamePacketHandler;
 import l2trunk.gameserver.network.loginservercon.AuthServerCommunication;
-import l2trunk.gameserver.network.telnet.TelnetServer;
 import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.tables.*;
 import l2trunk.gameserver.taskmanager.AutoImageSenderManager;
@@ -71,7 +69,6 @@ public class GameServer {
     private final SelectorThread<GameClient> _selectorThreads[];
     private final GameServerListenerList _listeners;
     private final int _serverStarted;
-    private TelnetServer statusServer;
 
     private GameServer() throws Exception {
         int update = 993;
@@ -113,7 +110,7 @@ public class GameServer {
 
 
         _log.info("===============[Loading Scripts]==================");
-//        Scripts.INSTANCE.init2();
+        Scripts.INSTANCE.load2();
         BalancerConfig.LoadConfig();
         GeoEngine.load();
         Strings.reload();
@@ -163,7 +160,6 @@ public class GameServer {
         if (Config.AUTODESTROY_ITEM_AFTER > 0) {
             ItemsAutoDestroy.INSTANCE.init();
         }
-        MonsterRace.INSTANCE.toString();
         printSection("Seven Signs");
         SevenSigns.INSTANCE.init();
         SevenSignsFestival.INSTANCE.restoreFestivalData();
@@ -265,7 +261,6 @@ public class GameServer {
 
         getListeners().onStart();
         if (Config.IS_TELNET_ENABLED) {
-            statusServer = new TelnetServer();
         } else {
             _log.info("Telnet server is currently disabled.");
         }
@@ -343,10 +338,6 @@ public class GameServer {
 
     public <T extends GameListener> boolean removeListener(T listener) {
         return _listeners.remove(listener);
-    }
-
-    public TelnetServer getStatusServer() {
-        return statusServer;
     }
 
     public class GameServerListenerList extends ListenerList<GameServer> {

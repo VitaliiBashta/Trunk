@@ -1,21 +1,21 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.Formulas.AttackInfo;
 import l2trunk.gameserver.stats.Stats;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Drain extends Skill {
-    private final double _absorbAbs;
+public final class Drain extends Skill {
+    private final double absorbAbs;
 
     public Drain(StatsSet set) {
         super(set);
-        _absorbAbs = set.getDouble("absorbAbs", 0.f);
+        absorbAbs = set.getDouble("absorbAbs", 0.f);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Drain extends Skill {
                 reflected = !corpseSkill && target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
 
-                if (getPower() > 0 || _absorbAbs > 0) // Если == 0 значит скилл "отключен"
+                if (getPower() > 0 || absorbAbs > 0) // Если == 0 значит скилл "отключен"
                 {
                     if (realTarget.isDead() && !corpseSkill)
                         continue;
@@ -61,10 +61,10 @@ public class Drain extends Skill {
                             realTarget.doCounterAttack(this, activeChar, false);
                     }
 
-                    if (_absorbAbs == 0 && _absorbPart == 0)
+                    if (absorbAbs == 0 && _absorbPart == 0)
                         continue;
 
-                    hp += _absorbAbs;
+                    hp += absorbAbs;
 
                     // Нельзя восстановить больше hp, чем есть у цели.
                     if (hp > targetHp && !corpseSkill)

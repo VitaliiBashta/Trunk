@@ -1,7 +1,7 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
 import l2trunk.commons.collections.JoinedIterator;
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.listener.actor.player.OnPlayerExitListener;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.base.TeamType;
@@ -25,7 +25,7 @@ public abstract class DuelEvent extends GlobalEvent implements Iterable<DuelSnap
     TeamType _winner = TeamType.NONE;
     boolean _aborted;
 
-    public DuelEvent(MultiValueSet<String> set) {
+    public DuelEvent(StatsSet set) {
         super(set);
     }
 

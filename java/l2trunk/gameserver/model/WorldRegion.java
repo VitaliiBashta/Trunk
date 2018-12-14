@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -39,7 +40,7 @@ public final class WorldRegion implements Iterable<GameObject> {
     /**
      * Зоны пересекающие этот регион
      */
-    private volatile List<Zone> _zones = new ArrayList<>();
+    private volatile List<Zone> _zones = new CopyOnWriteArrayList<>();
     /**
      * Количество игроков в регионе
      */
@@ -226,11 +227,11 @@ public final class WorldRegion implements Iterable<GameObject> {
     }
 
     synchronized void addZone(Zone zone) {
-            _zones.add(zone);
+        _zones.add(zone);
     }
 
     synchronized void removeZone(Zone zone) {
-            _zones.remove(zone);
+        _zones.remove(zone);
     }
 
     List<Zone> getZones() {

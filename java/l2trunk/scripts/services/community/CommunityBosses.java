@@ -1,5 +1,6 @@
 package l2trunk.scripts.services.community;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.cache.ImagesCache;
@@ -16,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.RadarControl;
 import l2trunk.gameserver.network.serverpackets.ShowBoard;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.taskmanager.AutoImageSenderManager;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.npc.MinionData;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Util;
@@ -339,10 +339,9 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     }
 
     private static int getMinionsCount(NpcTemplate template) {
-        int minionsCount = 0;
-        for (MinionData minion : template.getMinionData())
-            minionsCount += minion.getAmount();
-        return minionsCount;
+        return template.getMinionData().stream()
+                .mapToInt(MinionData::getAmount)
+                .sum();
     }
 
     private static String getTextColor(boolean alive) {
@@ -408,7 +407,6 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
      * Comparator of Bosses
      */
     private static class ValueComparator implements Comparator<Integer>, Serializable {
-        private static final long serialVersionUID = 4782405190873267622L;
         private final Map<Integer, StatsSet> base;
         private final SortType sortType;
 

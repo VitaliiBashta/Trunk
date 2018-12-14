@@ -97,7 +97,7 @@ public class AugmentationData {
         // Lookup tables structure: STAT1 represent first stat, STAT2 - second.
         // If both values are the same - use solo stat, if different - combined.
         int idx;
-        // weapon augmentation block: solo values first
+        // weapon augmentation setBlock: solo values first
         // 00-00, 01-01 ... 11-11,12-12
         for (idx = 0; idx < STAT_NUM; idx++) {
             // solo stats
@@ -118,7 +118,7 @@ public class AugmentationData {
                 STATS2_MAP[idx] = (byte) j;
             }
         idx = 0;
-        // accessory augmentation block, structure is different:
+        // accessory augmentation setBlock, structure is different:
         // 00-00,00-01,00-02,00-03,00-04,00-05
         // 01-01,01-02,01-03,01-04,01-05
         // 02-02,02-03,02-04,02-05
@@ -540,7 +540,7 @@ public class AugmentationData {
 
         if (triggerInfo == null) {
             // second augmentation (stats)
-            // calculating any different from stat12 value inside sub-block
+            // calculating any different from stat12 value inside sub-setBlock
             // starting from next and wrapping over using remainder
             stat34 = (stat12 + 1 + Rnd.get(ACC_STAT_SUBBLOCKSIZE - 1)) % ACC_STAT_SUBBLOCKSIZE;
             // this is a stats - skipping skills

@@ -1,13 +1,13 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.stats.Formulas;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class MDam extends Skill {
+public final class MDam extends Skill {
     public MDam(StatsSet set) {
         super(set);
     }

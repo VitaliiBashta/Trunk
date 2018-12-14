@@ -1,9 +1,9 @@
 package l2trunk.gameserver.data.xml.holder;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Recipe;
 import l2trunk.gameserver.model.RecipeComponent;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static l2trunk.commons.lang.NumberUtils.toBoolean;
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class RecipeHolder {
@@ -147,7 +148,7 @@ public final class RecipeHolder {
                                 _log.error("Missing type for recipe item id: " + id + ", skipping");
                                 continue;
                             }
-                            set.set("isDvarvenCraft", Boolean.parseBoolean(att.getNodeValue()));
+                            set.set("isDvarvenCraft", toBoolean(att.getNodeValue()));
 
                             for (Node c = d.getFirstChild(); c != null; c = c.getNextSibling()) {
                                 if ("recitem".equalsIgnoreCase(c.getNodeName())) {

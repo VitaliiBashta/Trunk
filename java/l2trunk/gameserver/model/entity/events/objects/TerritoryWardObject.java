@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity.events.objects;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
@@ -124,7 +123,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
 
 
         DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
-        runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
+        runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!"));
 
         stopTerrFlagCountDown();
         _isOutOfZone = false;
@@ -153,7 +152,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
             teleportBackTask = ThreadPoolManager.INSTANCE.schedule(new ReturnFlagThread(), RETURN_FLAG_DELAY);
         } else {
             _wardNpcInstance.spawnMe(location);
-            runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
+            runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, false));
         }
 
         runnerEvent.broadcastTo(new SystemMessage2(SystemMsg.THE_CHARACTER_THAT_ACQUIRED_S1S_WARD_HAS_BEEN_KILLED).addResidenceName(getDominionId()));
@@ -292,7 +291,7 @@ public final class TerritoryWardObject implements SpawnableObject, FlagItemAttac
             if (_wardNpcInstance != null) {
                 _wardNpcInstance.teleToLocation(location);
                 DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
-                runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000, ScreenMessageAlign.TOP_CENTER, false));
+                runnerEvent.broadcastTo(new ExShowScreenMessage("Territory Ward returned to the castle!", 3000,  false));
             }
         }
     }

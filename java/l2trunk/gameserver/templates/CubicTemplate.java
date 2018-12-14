@@ -2,19 +2,15 @@ package l2trunk.gameserver.templates;
 
 import l2trunk.gameserver.model.Skill;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public final class CubicTemplate {
-    private  int id;
-    private  int level;
-    private  int delay;
+    private int id;
+    private int level;
+    private int delay;
 
     private final List<Map.Entry<Integer, List<SkillInfo>>> _skills = new ArrayList<>(3);
 

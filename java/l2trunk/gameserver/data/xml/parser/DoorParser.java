@@ -1,11 +1,11 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.DoorHolder;
 import l2trunk.gameserver.templates.DoorTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Location;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
-import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -24,7 +23,7 @@ public enum DoorParser {
 
     public void load() {
         ParserUtil.INSTANCE.load(xml).forEach(this::readData);
-        LOG.info("Loaded " + DoorHolder.size() +" items");
+        LOG.info("Loaded " + DoorHolder.size() + " items");
     }
 
     private StatsSet initBaseStats() {
@@ -108,14 +107,14 @@ public enum DoorParser {
                     }
                 }
 
-                doorSet.set("uid", doorElement.attributeValue("id"));
-                doorSet.set("name", doorElement.attributeValue("name"));
-                doorSet.set("baseHpMax", doorElement.attributeValue("hp"));
-                doorSet.set("basePDef", doorElement.attributeValue("pdef"));
-                doorSet.set("baseMDef", doorElement.attributeValue("mdef"));
+                doorSet.set("uid", doorElement.attributeValue("id"))
+                        .set("name", doorElement.attributeValue("name"))
+                        .set("baseHpMax", doorElement.attributeValue("hp"))
+                        .set("basePDef", doorElement.attributeValue("pdef"))
+                        .set("baseMDef", doorElement.attributeValue("mdef"))
 
-                doorSet.set("collision_height", maxz - minz & 0xfff0);
-                doorSet.set("collision_radius", Math.max(50, Math.min(doorPos.x - shape.getXmin(), doorPos.y - shape.getYmin())));
+                        .set("collision_height", maxz - minz & 0xfff0)
+                        .set("collision_radius", Math.max(50, Math.min(doorPos.x - shape.getXmin(), doorPos.y - shape.getYmin())));
 
                 DoorTemplate template = new DoorTemplate(doorSet);
                 DoorHolder.addTemplate(template);

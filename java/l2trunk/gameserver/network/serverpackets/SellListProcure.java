@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.templates.manor.CropProcure;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

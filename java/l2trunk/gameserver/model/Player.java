@@ -3,8 +3,9 @@ package l2trunk.gameserver.model;
 import Elemental.datatables.OfflineBuffersTable;
 import Elemental.managers.GmEventManager;
 import Elemental.managers.OfflineBufferManager;
-import javafx.util.Pair;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
+import l2trunk.commons.lang.Pair;
 import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.commons.threading.RunnableImpl;
@@ -40,8 +41,8 @@ import l2trunk.gameserver.model.GameObjectTasks.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
 import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.instances.player.*;
+import l2trunk.gameserver.model.actor.instances.player.FriendList;
 import l2trunk.gameserver.model.actor.listener.PlayerListenerList;
 import l2trunk.gameserver.model.actor.recorder.PlayerStatsChangeRecorder;
 import l2trunk.gameserver.model.base.*;
@@ -74,7 +75,6 @@ import l2trunk.gameserver.model.items.Warehouse.WarehouseType;
 import l2trunk.gameserver.model.items.attachment.FlagItemAttachment;
 import l2trunk.gameserver.model.items.attachment.PickableAttachment;
 import l2trunk.gameserver.model.matching.MatchingRoom;
-import l2trunk.gameserver.model.petition.PetitionMainGroup;
 import l2trunk.gameserver.model.pledge.*;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestEventType;
@@ -107,7 +107,10 @@ import l2trunk.gameserver.taskmanager.AutoRechargeManager;
 import l2trunk.gameserver.taskmanager.AutoSaveManager;
 import l2trunk.gameserver.taskmanager.CancelTaskManager;
 import l2trunk.gameserver.taskmanager.LazyPrecisionTaskManager;
-import l2trunk.gameserver.templates.*;
+import l2trunk.gameserver.templates.FishTemplate;
+import l2trunk.gameserver.templates.Henna;
+import l2trunk.gameserver.templates.InstantZone;
+import l2trunk.gameserver.templates.PlayerTemplate;
 import l2trunk.gameserver.templates.item.ArmorTemplate;
 import l2trunk.gameserver.templates.item.ArmorTemplate.ArmorType;
 import l2trunk.gameserver.templates.item.ItemTemplate;
@@ -120,8 +123,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.sql.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -213,7 +216,7 @@ public final class Player extends Playable implements PlayerGroup {
     private final AtomicBoolean _isLogout = new AtomicBoolean();
     private final Set<Integer> activeSoulShots = new CopyOnWriteArraySet<>();
     private final AtomicInteger _observerMode = new AtomicInteger(0);
-    private final Map<Integer, String> _blockList = new ConcurrentSkipListMap<>(); // characters blocked with '/block <charname>' cmd
+    private final Map<Integer, String> _blockList = new ConcurrentSkipListMap<>(); // characters blocked with '/setBlock <charname>' cmd
     private final FriendList _friendList = new FriendList(this);
     private final Bonus _bonus = new Bonus();
     private final Fishing _fishing = new Fishing(this);
@@ -412,7 +415,6 @@ public final class Player extends Playable implements PlayerGroup {
     private long _lastItemAuctionInfoRequest;
     private Pair<Integer, OnAnswerListener> _askDialog = null;
     private MatchingRoom _matchingRoom;
-    private PetitionMainGroup _petitionGroup;
     // Ady
     private long _resurrectionMaxTime = 0;
     private long _resurrectionBuffBlockedTime = 0;
@@ -514,7 +516,7 @@ public final class Player extends Playable implements PlayerGroup {
     private Player(final int objectId, final PlayerTemplate template) {
         this(objectId, template, null);
 
-        ai = new PlayerAI(this);
+        super.setAI(new PlayerAI(this));
 
         if (!Config.EVERYBODY_HAS_ADMIN_RIGHTS) {
             setPlayerAccess(Config.gmlist.get(objectId));
@@ -700,7 +702,7 @@ public final class Player extends Playable implements PlayerGroup {
                     long period = player.getVarTimeToExpire("jailed");
                     player.updateNoChannel(period);
                     player.sitDown(null);
-                    player.block();
+                    player.setBlock(true);
 
                     if (period != -1) {
                         player._unjailTask = ThreadPoolManager.INSTANCE.schedule(new UnJailTask(player, true), period);
@@ -1111,7 +1113,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public PlayerAI getAI() {
-        return (PlayerAI) ai;
+        return (PlayerAI) super.getAI();
     }
 
     @Override
@@ -1840,7 +1842,7 @@ public final class Player extends Playable implements PlayerGroup {
                 }
 
                 if ((olymp_game.getType() == CompType.CLASSED) || (olymp_game.getType() == CompType.NON_CLASSED)) {
-                    olymp_game.getTeamMembers(this).forEach(member -> member.sendPacket(olympiadSpelledInfo);
+                    olymp_game.getTeamMembers(this).forEach(member -> member.sendPacket(olympiadSpelledInfo));
                 }
 
                 olymp_game.getSpectators().forEach(member -> member.sendPacket(olympiadSpelledInfo));
@@ -1879,7 +1881,7 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         if (newWeightPenalty > 0) {
-            super.addSkill(SkillTable.INSTANCE.getInfo(4270, newWeightPenalty));
+            super.addSkill(4270, newWeightPenalty);
         } else {
             super.removeSkill(getKnownSkill(4270));
         }
@@ -1922,7 +1924,7 @@ public final class Player extends Playable implements PlayerGroup {
             expertiseIndex = i;
             if ((expertiseIndex > 0) && Config.EXPERTISE_PENALTY) // TODO who to do? No need here! redo with a check for an item epic! added Config.EPIC_EXPERTISE_PENALTY
             {
-                addSkill(SkillTable.INSTANCE.getInfo(239, expertiseIndex), false);
+                addSkill(239, expertiseIndex, false);
                 skillUpdate = true;
             }
         }
@@ -1965,7 +1967,7 @@ public final class Player extends Playable implements PlayerGroup {
         if (weaponExpertise != newWeaponPenalty) {
             weaponExpertise = newWeaponPenalty;
             if ((newWeaponPenalty > 0) && Config.EXPERTISE_PENALTY) {
-                addSkill(SkillTable.INSTANCE.getInfo(6209, weaponExpertise));
+                addSkill(6209, weaponExpertise);
             } else {
                 removeSkill(getKnownSkill(6209));
             }
@@ -1974,7 +1976,7 @@ public final class Player extends Playable implements PlayerGroup {
         if (armorExpertise != newArmorPenalty) {
             armorExpertise = newArmorPenalty;
             if ((newArmorPenalty > 0) && Config.EXPERTISE_PENALTY) {
-                addSkill(SkillTable.INSTANCE.getInfo(6213, armorExpertise));
+                addSkill(6213, armorExpertise);
             } else {
                 removeSkill(getKnownSkill(6213));
             }
@@ -2119,7 +2121,7 @@ public final class Player extends Playable implements PlayerGroup {
             storeCharSubClasses();
 
             if (fromQuest) {
-                broadcastPacket(new MagicSkillUse(this, this, 5103, 1, 1000, 0));
+                broadcastPacket(new MagicSkillUse(this, 5103, 1000));
                 sendPacket(new PlaySound("ItemSound.quest_fanfare_2"));
             }
             broadcastCharInfo();
@@ -3116,7 +3118,7 @@ public final class Player extends Playable implements PlayerGroup {
                 }
                 // Ady - Support for buff stores
                 else if (temp.getPrivateStoreType() == STORE_PRIVATE_BUFF) {
-                    OfflineBufferManager.getInstance().processBypass(this, "BuffStore bufflist " + temp.getObjectId());
+                    OfflineBufferManager.INSTANCE.processBypass(this, "BuffStore bufflist " + temp.getObjectId());
                 }
                 sendActionFailed();
             } else if (getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT) {
@@ -3153,12 +3155,14 @@ public final class Player extends Playable implements PlayerGroup {
                 return;
             }
             List<Skill> skills = item.getTemplate().getAttachedSkills();
-            for (Skill skill : skills) {
-                altUseSkill(skill, this);
-                if ((getPet() != null) && getPet().isSummon() && !getPet().isDead()) {
-                    getPet().altUseSkill(skill, getPet());
-                }
-            }
+            skills.stream()
+                    .mapToInt(Skill::getId)
+                    .forEach(skill -> {
+                        altUseSkill(skill, this);
+                        if ((getPet() != null) && getPet().isSummon() && !getPet().isDead()) {
+                            getPet().altUseSkill(skill, getPet());
+                        }
+                    });
             item.deleteMe();
         }
 
@@ -3214,15 +3218,14 @@ public final class Player extends Playable implements PlayerGroup {
 
             // Herbs
             if (item.isHerb()) {
-                Skill[] skills = item.getTemplate().getAttachedSkills().toArray(new Skill[0]);
-                if (skills.length > 0) {
-                    for (Skill skill : skills) {
-                        altUseSkill(skill, this);
-                        if ((getPet() != null) && getPet().isSummon() && !getPet().isDead()) {
-                            getPet().altUseSkill(skill, getPet());
-                        }
-                    }
-                }
+                item.getTemplate().getAttachedSkills().stream()
+                        .mapToInt(Skill::getId)
+                        .forEach(skill -> {
+                            altUseSkill(skill, this);
+                            if ((getPet() != null) && getPet().isSummon() && !getPet().isDead()) {
+                                getPet().altUseSkill(skill, getPet());
+                            }
+                        });
 
                 broadcastPacket(new GetItem(item, getObjectId()));
                 item.deleteMe();
@@ -3984,17 +3987,13 @@ public final class Player extends Playable implements PlayerGroup {
                     if (syndromeLvl < 5) {
                         getEffectList().stopEffect(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME);
                         Skill skill = SkillTable.INSTANCE.getInfo(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME, syndromeLvl + 1);
-                        skill.getEffects(this, this, false, false);
+                        skill.getEffects(this);
                     } else if (syndromeLvl == 5) {
                         getEffectList().stopEffect(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME);
-                        Skill skill = SkillTable.INSTANCE.getInfo(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME, 5);
-                        skill.getEffects(this, this, false, false);
+                        SkillTable.INSTANCE.getInfo(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME, 5).getEffects(this);
                     }
                 } else {
-                    Skill skill = SkillTable.INSTANCE.getInfo(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME, 1);
-                    if (skill != null) {
-                        skill.getEffects(this, this, false, false);
-                    }
+                    SkillTable.INSTANCE.getInfo(Skill.SKILL_BATTLEFIELD_DEATH_SYNDROME).getEffects(this);
                 }
             }
         }
@@ -4383,15 +4382,15 @@ public final class Player extends Playable implements PlayerGroup {
         if ((oldClan != null) && (clan == null)) {
             // Remove clan skills
             for (Skill skill : oldClan.getSkills()) {
-                removeSkill(skill, false);
+                removeSkill(skill.getId(), false);
             }
 
             // Also remove subunit skills
-            for (SubUnit subUnit : oldClan.getAllSubUnits()) {
-                for (Skill sk : subUnit.getSkills()) {
-                    removeSkill(sk, false);
-                }
-            }
+            oldClan.getAllSubUnits().forEach(su -> {
+                su.getSkills().stream()
+                        .mapToInt(Skill::getId)
+                        .forEach(sk -> removeSkill(sk, false));
+            });
         }
 
         _clan = clan;
@@ -4857,13 +4856,15 @@ public final class Player extends Playable implements PlayerGroup {
         return raids;
     }
 
-    /**
-     * Add a skill to the L2Player skills and its Func objects to the calculator set of the L2Player and save update in the character_skills table of the database.
-     *
-     * @param newSkill
-     * @param store
-     * @return The L2Skill replaced or null if just added a new L2Skill
-     */
+
+    public Skill addSkill(int skillId, int skillLvl, final boolean store) {
+        return addSkill(SkillTable.INSTANCE.getInfo(skillId, skillLvl), store);
+    }
+
+    public Skill addSkill(int skillId, final boolean store) {
+        return addSkill(skillId, 1, store);
+    }
+
     public Skill addSkill(final Skill newSkill, final boolean store) {
         if (newSkill == null) {
             return null;
@@ -4875,7 +4876,7 @@ public final class Player extends Playable implements PlayerGroup {
                     SkillTable.INSTANCE.getInfo(newSkill.getId(), newSkill.getLevel()).hashCode());
         }
         // Add a skill to the L2Player skills and its Func objects to the calculator set of the L2Player
-        Skill oldSkill = super.addSkill(newSkill);
+        Skill oldSkill = super.addSkill(newSkill.getId(), newSkill.getLevel());
 
         if (newSkill.equals(oldSkill)) {
             return oldSkill;
@@ -4889,12 +4890,12 @@ public final class Player extends Playable implements PlayerGroup {
         return oldSkill;
     }
 
-    public Skill removeSkill(Skill skill, boolean fromDB) {
-        if (skill == null) {
-            return null;
-        }
-        return removeSkill(skill.getId(), fromDB);
-    }
+//    private Skill removeSkill(Skill skill, boolean fromDB) {
+//        if (skill == null) {
+//            return null;
+//        }
+//        return removeSkill(skill.getId(), fromDB);
+//    }
 
     /**
      * Remove a skill from the L2Character and its Func objects from calculator set of the L2Character and save update in the character_skills table of the database.
@@ -4986,14 +4987,14 @@ public final class Player extends Playable implements PlayerGroup {
                         // int ReturnSP = SkillTreeTable.INSTANCE().getSkillCost(this, skill);
                         // if (ReturnSP == Integer.MAX_VALUE || ReturnSP < 0)
                         // ReturnSP = 0;
-                        removeSkill(skill, true);
+                        removeSkill(id, true);
                         removeSkillFromShortCut(skill.getId());
                         // if (ReturnSP > 0)
                         // setSp(getSp() + ReturnSP);
                         continue;
                     }
 
-                    super.addSkill(skill);
+                    super.addSkill(id, level);
                 }
             }
 
@@ -5019,13 +5020,13 @@ public final class Player extends Playable implements PlayerGroup {
 
             // Give dwarven craft skill
             if (((getActiveClassId() >= 53) && (getActiveClassId() <= 57)) || (getActiveClassId() == 117) || (getActiveClassId() == 118)) {
-                super.addSkill(SkillTable.INSTANCE.getInfo(1321, 1));
+                super.addSkill(1321);
             }
 
-            super.addSkill(SkillTable.INSTANCE.getInfo(1322, 1));
+            super.addSkill(1322);
 
             if (Config.UNSTUCK_SKILL && (getSkillLevel(1050) < 0)) {
-                super.addSkill(SkillTable.INSTANCE.getInfo(2099, 1));
+                super.addSkill(2099);
             }
         } catch (SQLException e) {
             _log.warn("Could not restore skills for player objId: " + getObjectId(), e);
@@ -5406,13 +5407,13 @@ public final class Player extends Playable implements PlayerGroup {
             case PetDataTable.GUARDIANS_STRIDER_ID:
                 setRiding(true);
                 if (isNoble()) {
-                    addSkill(SkillTable.INSTANCE.getInfo(325), false);
+                    addSkill(325, false);
                 }
                 break;
             case PetDataTable.WYVERN_ID:
                 setFlying(true);
                 setLoc(getLoc().changeZ(32));
-                addSkill(SkillTable.INSTANCE.getInfo(4289), false);
+                addSkill(4289, false);
                 break;
             case PetDataTable.WGREAT_WOLF_ID:
             case PetDataTable.FENRIR_WOLF_ID:
@@ -5854,7 +5855,7 @@ public final class Player extends Playable implements PlayerGroup {
         _lastClientPosition = null;
         _lastServerPosition = null;
 
-        unblock();
+        setBlock(false);
         standUp();
         setFlying(false);
 
@@ -5887,7 +5888,7 @@ public final class Player extends Playable implements PlayerGroup {
             oldGame.removeSpectator(this);
             sendPacket(ExOlympiadMatchEnd.STATIC);
         } else {
-            block();
+            setBlock(true);
 
             broadcastCharInfo();
 
@@ -6180,10 +6181,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public boolean FakeHeroSkill() {
-        if ((isFakeHero() && (Config.SERVICES_HERO_SELL_SKILL)) || (getVarB("hasFakeHeroSkills"))) {
-            return true;
-        }
-        return false;
+        return (isFakeHero() && (Config.SERVICES_HERO_SELL_SKILL)) || (getVarB("hasFakeHeroSkills"));
     }
 
     @Override
@@ -6243,13 +6241,13 @@ public final class Player extends Playable implements PlayerGroup {
     public void updateNobleSkills() {
         if (isNoble()) {
             if (isClanLeader() && (getClan().getCastle() > 0)) {
-                super.addSkill(SkillTable.INSTANCE.getInfo(327));
+                super.addSkill(327);
             }
-            super.addSkill(SkillTable.INSTANCE.getInfo(1374));
-            super.addSkill(SkillTable.INSTANCE.getInfo(1324));
-            super.addSkill(SkillTable.INSTANCE.getInfo(1325));
-            super.addSkill(SkillTable.INSTANCE.getInfo(1326));
-            super.addSkill(SkillTable.INSTANCE.getInfo(1327));
+            super.addSkill(1374);
+            super.addSkill(1324);
+            super.addSkill(1325);
+            super.addSkill(1326);
+            super.addSkill(1327);
         } else {
             super.removeSkill(327);
             super.removeSkill(1374);
@@ -6266,7 +6264,7 @@ public final class Player extends Playable implements PlayerGroup {
 
     public void setNoble(boolean noble) {
         if (noble) {
-            broadcastPacket(new MagicSkillUse(this, this, 6673, 1, 1000, 0));
+            broadcastPacket(new MagicSkillUse(this, 6673, 1000));
         }
         this.noble = noble;
     }
@@ -9960,13 +9958,6 @@ public final class Player extends Playable implements PlayerGroup {
         sendPacket(new RadarControl(0, 2, x, y, z));
     }
 
-    public PetitionMainGroup getPetitionGroup() {
-        return _petitionGroup;
-    }
-
-    public void setPetitionGroup(PetitionMainGroup petitionGroup) {
-        _petitionGroup = petitionGroup;
-    }
 
     public int getLectureMark() {
         return _lectureMark;
@@ -10026,9 +10017,9 @@ public final class Player extends Playable implements PlayerGroup {
             if (item.isCursed()) {
                 int skillLvl = CursedWeaponsManager.INSTANCE.getLevel(item.getItemId());
                 if (item.getItemId() == 8190) {
-                    addSkill(SkillTable.INSTANCE.getInfo(3603, skillLvl), false);
+                    addSkill(3603, skillLvl, false);
                 } else if (item.getItemId() == 8689) {
-                    addSkill(SkillTable.INSTANCE.getInfo(3629, skillLvl), false);
+                    addSkill(3629, skillLvl, false);
                 }
             }
         }
@@ -10462,7 +10453,7 @@ public final class Player extends Playable implements PlayerGroup {
         boolean performSocialAction = (level < 1);
 
         if (!performSocialAction)
-            broadcastPacket(new MagicSkillUse(this, this, id, level, hitTime, 0));
+            broadcastPacket(new MagicSkillUse(this, id, level, hitTime));
         else
             broadcastPacket(new SocialAction(getObjectId(), id));
     }

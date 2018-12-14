@@ -1770,7 +1770,7 @@
 		<set name="rewardSp" value="0" />
 		<set name="shots" value="NONE" />
 		<set name="texture" value="" />
-		<set name="type" value="fightClub.TreasureChest" />
+		<set name="type" value="Npc"/>
 		<ai_params>
 			<set name="noRandomWalk" value="true" />
 		</ai_params>
@@ -2485,7 +2485,7 @@
         <set name="rewardSp" value="0" />
         <set name="shots" value="NONE" />
         <set name="texture" value="" />
-        <set name="type" value="fightClub.TreasureChest" />
+		<set name="type" value="Npc"/>
         <ai_params>
             <set name="noRandomWalk" value="true" />
         </ai_params>

@@ -4,7 +4,7 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Functions;
 
-class TeleToCatacomb extends Functions {
+public final class TeleToCatacomb extends Functions {
     public String DialogAppend_31212(Integer val) {
         return getHtmlAppends(val);
     }

@@ -22,7 +22,7 @@ public class GMViewSkillInfo extends L2GameServerPacket {
         writeC(0x97);
         writeS(_charName);
         writeD(_skills.size());
-        _skills.forEach(skill ->  {
+        _skills.forEach(skill -> {
             writeD(skill.isPassive() ? 1 : 0);
             writeD(skill.getDisplayLevel());
             writeD(skill.getId());

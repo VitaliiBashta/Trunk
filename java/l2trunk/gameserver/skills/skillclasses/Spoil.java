@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -12,11 +13,10 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.Formulas.AttackInfo;
-import l2trunk.gameserver.templates.StatsSet;
 
 import java.util.List;
 
-public class Spoil extends Skill {
+public final class Spoil extends Skill {
     public Spoil(StatsSet set) {
         super(set);
     }
@@ -83,7 +83,7 @@ public class Spoil extends Skill {
                     target.doCounterAttack(this, activeChar, false);
                 }
 
-                getEffects(activeChar, target, false, false);
+                getEffects(activeChar, target  );
 
                 target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, Math.max(_effectPoint, 1));
             }

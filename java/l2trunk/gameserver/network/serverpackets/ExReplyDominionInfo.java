@@ -26,7 +26,7 @@ public final class ExReplyDominionInfo extends L2GameServerPacket {
     protected void writeImpl() {
         writeEx(0x92);
         writeD(dominionList.size());
-        dominionList.forEach( cf-> {
+        dominionList.forEach(cf -> {
             writeD(cf.id);
             writeS(cf.terr);
             writeS(cf.clan);

@@ -5,13 +5,13 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.HennaItemInfo;
 import l2trunk.gameserver.templates.Henna;
 
-public class RequestHennaItemInfo extends L2GameClientPacket {
+public final class RequestHennaItemInfo extends L2GameClientPacket {
     // format  cd
-    private int _symbolId;
+    private int symbolId;
 
     @Override
     protected void readImpl() {
-        _symbolId = readD();
+        symbolId = readD();
     }
 
     @Override
@@ -20,7 +20,7 @@ public class RequestHennaItemInfo extends L2GameClientPacket {
         if (player == null)
             return;
 
-        Henna henna = HennaHolder.getHenna(_symbolId);
+        Henna henna = HennaHolder.getHenna(symbolId);
         player.sendPacket(new HennaItemInfo(henna, player));
     }
 }

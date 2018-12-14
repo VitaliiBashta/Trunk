@@ -1,10 +1,11 @@
 package l2trunk.gameserver.skills;
 
+import l2trunk.commons.collections.StatsSet;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Skill.SkillType;
 import l2trunk.gameserver.model.base.EnchantSkillLearn;
 import l2trunk.gameserver.stats.conditions.Condition;
 import l2trunk.gameserver.tables.SkillTreeTable;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -13,20 +14,18 @@ import org.w3c.dom.Node;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class DocumentSkill extends DocumentBase {
-    private static final Logger _log = LoggerFactory.getLogger(DocumentSkill.class);
-    private final int skillToParse;
+    private static final Logger LOG = LoggerFactory.getLogger(DocumentSkill.class);
     private final Set<String> usedTables = new HashSet<>();
-    private final List<l2trunk.gameserver.model.Skill> skillsInFile = new LinkedList<>();
-    private Skill currentSkill;
+    private final List<Skill> skillsInFile = new LinkedList<>();
+    private SkillData currentSkill;
 
-    DocumentSkill(Path file, int... skillToParse) {
+    DocumentSkill(Path file) {
         super(file);
-        if (skillToParse != null && skillToParse.length > 0)
-            this.skillToParse = skillToParse[0];
-        else
-            this.skillToParse = -1;
     }
 
     @Override
@@ -34,32 +33,34 @@ public final class DocumentSkill extends DocumentBase {
         if (!usedTables.isEmpty())
             for (String table : tables.keySet())
                 if (!usedTables.contains(table))
-                    if (_log.isDebugEnabled())
-                        _log.debug("Unused table " + table + " for skill " + currentSkill.id);
+                    if (LOG.isDebugEnabled())
+                        LOG.debug("Unused table " + table + " for skill " + currentSkill.id);
         usedTables.clear();
         super.resetTable();
     }
 
-    private void setCurrentSkill(Skill skill) {
+    private void setCurrentSkill(SkillData skill) {
         currentSkill = skill;
     }
 
-    List<l2trunk.gameserver.model.Skill> getSkills() {
+    List<Skill> getSkills() {
         return skillsInFile;
     }
 
     @Override
-    protected Object getTableValue(String name) {
-        try {
-            usedTables.add(name);
-            Object[] a = tables.get(name);
-            if (a.length - 1 >= currentSkill.currentLevel)
-                return a[currentSkill.currentLevel];
-            return a[(a.length - 1)];
-        } catch (RuntimeException e) {
-            _log.error("Error in table " + name + " of skill Id " + currentSkill.id, e);
-            return 0;
-        }
+    protected String getTableValue(String name) {
+//        try {
+        usedTables.add(name);
+        List<String> a = tables.get(name);
+
+        a.stream().filter(s -> !s.matches(".*\\d+.*")).findFirst().ifPresent(s -> LOG.error("found not number " + s));
+    if (a.size() - 1 >= currentSkill.currentLevel)
+            return a.get(currentSkill.currentLevel);
+        return a.get((a.size() - 1));
+//        } catch (RuntimeException e) {
+//            LOG.error("Error in table " + name + " of skill Id " + currentSkill.id, e);
+//            return 0;
+//        }
     }
 
     @Override
@@ -67,12 +68,12 @@ public final class DocumentSkill extends DocumentBase {
         idx--;
         try {
             usedTables.add(name);
-            Object[] a = tables.get(name);
-            if (a.length - 1 >= idx)
-                return a[idx];
-            return a[a.length - 1];
+            List<String> a = tables.get(name);
+            if (a.size() - 1 >= idx)
+                return a.get(idx);
+            return a.get(a.size() - 1);
         } catch (RuntimeException e) {
-            _log.error("Wrong level count in skill Id " + currentSkill.id + " table " + name + " level " + idx, e);
+            LOG.error("Wrong level count in skill Id " + currentSkill.id + " table " + name + " level " + idx, e);
             return 0;
         }
     }
@@ -83,15 +84,13 @@ public final class DocumentSkill extends DocumentBase {
             if ("list".equalsIgnoreCase(n.getNodeName())) {
                 for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling())
                     if ("skill".equalsIgnoreCase(d.getNodeName())) {
-                        if (skillToParse > 0 && Integer.parseInt(d.getAttributes().getNamedItem("id").getNodeValue()) != skillToParse)
-                            continue;
-                        setCurrentSkill(new Skill());
+                        setCurrentSkill(new SkillData());
                         parseSkill(d);
                         skillsInFile.addAll(currentSkill.skills);
                         resetTable();
                     }
             } else if ("skill".equalsIgnoreCase(n.getNodeName())) {
-                setCurrentSkill(new Skill());
+                setCurrentSkill(new SkillData());
                 parseSkill(n);
                 skillsInFile.addAll(currentSkill.skills);
             }
@@ -99,17 +98,17 @@ public final class DocumentSkill extends DocumentBase {
 
     private void parseSkill(Node n) {
         NamedNodeMap attrs = n.getAttributes();
-        int skillId = Integer.parseInt(attrs.getNamedItem("id").getNodeValue());
+        int skillId = toInt(attrs.getNamedItem("id").getNodeValue());
         String skillName = attrs.getNamedItem("name").getNodeValue();
         String levels = attrs.getNamedItem("levels").getNodeValue();
-        int lastLvl = Integer.parseInt(levels);
+        int lastLvl = toInt(levels);
 
         try {
             Map<Integer, Integer> displayLevels = new HashMap<>();
 
             // iterate enchants
-            Node enchant = null;
-            Map<String, Object[]> etables = new HashMap<>();
+            Node enchant;
+            Map<String, String[]> etables = new HashMap<>();
             int count = 0;
             int eLevels = 0;
             Node d = n.cloneNode(true);
@@ -119,7 +118,7 @@ public final class DocumentSkill extends DocumentBase {
                     continue;
                 if (eLevels == 0)
                     if (enchant.getAttributes().getNamedItem("levels") != null)
-                        eLevels = Integer.parseInt(enchant.getAttributes().getNamedItem("levels").getNodeValue());
+                        eLevels = toInt(enchant.getAttributes().getNamedItem("levels").getNodeValue());
                     else
                         eLevels = 30;
                 String ename = enchant.getAttributes().getNamedItem("name").getNodeValue();
@@ -136,16 +135,16 @@ public final class DocumentSkill extends DocumentBase {
                 }
                 count++;
                 Node first = enchant.getFirstChild();
-                Node curr = null;
+                Node curr;
                 for (curr = first; curr != null; curr = curr.getNextSibling())
                     if ("table".equalsIgnoreCase(curr.getNodeName())) {
                         NamedNodeMap a = curr.getAttributes();
                         String name = a.getNamedItem("name").getNodeValue();
                         Object[] table = parseTable(curr);
                         table = fillTableToSize(table, eLevels);
-                        Object[] fulltable = etables.get(name);
+                        String[] fulltable = etables.get(name);
                         if (fulltable == null)
-                            fulltable = new Object[lastLvl + eLevels * 8 + 1];
+                            fulltable = new String[lastLvl + eLevels * 8 + 1];
                         System.arraycopy(table, 0, fulltable, lastLvl + (count - 1) * eLevels, eLevels);
                         etables.put(name, fulltable);
                     }
@@ -154,18 +153,18 @@ public final class DocumentSkill extends DocumentBase {
 
             currentSkill.id = skillId;
             currentSkill.name = skillName;
-            currentSkill.sets = new StatsSet[lastLvl];
+            currentSkill.sets = new ArrayList<>();
 
             for (int i = 0; i < lastLvl; i++) {
-                currentSkill.sets[i] = new StatsSet();
-                currentSkill.sets[i].set("skill_id", currentSkill.id);
-                currentSkill.sets[i].set("level", i + 1);
-                currentSkill.sets[i].set("name", currentSkill.name);
-                currentSkill.sets[i].set("base_level", levels);
+                currentSkill.sets.add(new StatsSet()
+                        .set("skill_id", currentSkill.id)
+                        .set("level", i + 1)
+                        .set("name", currentSkill.name)
+                        .set("base_level", levels));
             }
 
-            if (currentSkill.sets.length != lastLvl)
-                throw new RuntimeException("Skill id=" + skillId + " number of levels missmatch, " + lastLvl + " levels expected");
+            if (currentSkill.sets.size() != lastLvl)
+                throw new RuntimeException("SkillData id=" + skillId + " number of levels missmatch, " + lastLvl + " levels expected");
 
             Node first = n.getFirstChild();
             for (n = first; n != null; n = n.getNextSibling())
@@ -174,27 +173,28 @@ public final class DocumentSkill extends DocumentBase {
 
             // handle table merging them with enchants
             for (String tn : tables.keySet()) {
-                Object[] et = etables.get(tn);
+                String[] et = etables.get(tn);
                 if (et != null) {
-                    Object[] t = tables.get(tn);
-                    Object max = t[t.length - 1];
+                    String[] t = tables.get(tn).toArray(new String[0]);
+                    String max = t[t.length - 1];
                     System.arraycopy(t, 0, et, 0, t.length);
                     for (int j = 0; j < et.length; j++)
                         if (et[j] == null)
                             et[j] = max;
-                    tables.put(tn, et);
+                    List<String> objs = Arrays.asList(et);
+                    tables.put(tn, objs);
                 }
             }
 
             for (int i = 1; i <= lastLvl; i++)
                 for (n = first; n != null; n = n.getNextSibling())
                     if ("set".equalsIgnoreCase(n.getNodeName()))
-                        parseBeanSet(n, currentSkill.sets[i - 1], i);
+                        parseBeanSet(n, currentSkill.sets.get(i - 1), i);
 
             makeSkills();
             for (int i = 0; i < lastLvl; i++) {
                 currentSkill.currentLevel = i;
-                l2trunk.gameserver.model.Skill current = currentSkill.currentSkills.get(i);
+                Skill current = currentSkill.currentSkills.get(i);
                 if (displayLevels.get(current.getLevel()) != null)
                     current.setDisplayLevel(displayLevels.get(current.getLevel()));
                 current.setEnchantLevelCount(eLevels);
@@ -219,7 +219,7 @@ public final class DocumentSkill extends DocumentBase {
 
             currentSkill.skills.addAll(currentSkill.currentSkills);
         } catch (RuntimeException e) {
-            _log.error("Error loading skill " + skillId, e);
+            LOG.error("Error loading skill " + skillId, e);
         }
     }
 
@@ -236,18 +236,20 @@ public final class DocumentSkill extends DocumentBase {
     }
 
     private void makeSkills() {
-        currentSkill.currentSkills = new ArrayList<>(currentSkill.sets.length);
-        //_log.info.println(sets.length);
-        for (int i = 0; i < currentSkill.sets.length; i++)
-            currentSkill.currentSkills.add(i, currentSkill.sets[i].getEnum("skillType", SkillType.class).makeSkill(currentSkill.sets[i]));
+        currentSkill.currentSkills = currentSkill.sets.stream()
+                .map(set -> set.getEnum("skillType", SkillType.class).makeSkill(set))
+                .collect(Collectors.toList());
+
+//                .forEach(set ->
+//            currentSkill.currentSkills.add(set.getEnum("skillType", SkillType.class).makeSkill(set)));
     }
 
-    class Skill {
-        final List<l2trunk.gameserver.model.Skill> skills = new ArrayList<>();
+    class SkillData {
+        final List<Skill> skills = new ArrayList<>();
         int id;
         String name;
-        StatsSet[] sets;
+        List<StatsSet> sets;
         int currentLevel;
-        List<l2trunk.gameserver.model.Skill> currentSkills = new ArrayList<>();
+        List<Skill> currentSkills = new ArrayList<>();
     }
 }

@@ -67,7 +67,7 @@ public class OfflineBuffersTable {
                     }
 
                     // Add the buffer data to the manager
-                    OfflineBufferManager.getInstance().getBuffStores().put(player.getObjectId(), buffer);
+                    OfflineBufferManager.INSTANCE.getBuffStores().put(player.getObjectId(), buffer);
 
                     // Sit the player, put it on store and and change the colors and titles
                     player.sitDown(null);
@@ -98,7 +98,7 @@ public class OfflineBuffersTable {
     public synchronized void onLogin(Player trader) {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             // Remove the buffer from the manager
-            OfflineBufferManager.getInstance().getBuffStores().remove(trader.getObjectId());
+            OfflineBufferManager.INSTANCE.getBuffStores().remove(trader.getObjectId());
 
             // Borramos el buff store
             try (PreparedStatement st = con.prepareStatement("DELETE FROM character_offline_buffers WHERE charId=?")) {
@@ -122,7 +122,7 @@ public class OfflineBuffersTable {
      * @param trader
      */
     public synchronized void onLogout(Player trader) {
-        final BufferData buffer = OfflineBufferManager.getInstance().getBuffStores().get(trader.getObjectId());
+        final BufferData buffer = OfflineBufferManager.INSTANCE.getBuffStores().get(trader.getObjectId());
         if (buffer == null)
             return;
 

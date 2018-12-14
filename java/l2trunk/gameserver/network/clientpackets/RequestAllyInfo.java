@@ -9,7 +9,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 

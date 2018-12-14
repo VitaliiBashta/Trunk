@@ -13,6 +13,6 @@ public final class SolinaGuardian extends Fighter {
     @Override
     public void onEvtSpawn() {
         super.onEvtSpawn();
-        getActor().altOnMagicUseTimer(getActor(), SkillTable.INSTANCE.getInfo(6371));
+        getActor().altOnMagicUseTimer(getActor(), 6371);
     }
 }

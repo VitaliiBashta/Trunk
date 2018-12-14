@@ -1,6 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.BuyListHolder;
 import l2trunk.gameserver.data.xml.holder.BuyListHolder.NpcTradeList;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;

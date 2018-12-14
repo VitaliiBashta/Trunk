@@ -2,7 +2,6 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInfo;
-import l2trunk.gameserver.model.items.ItemInstance;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,7 +13,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.events.GvG.GvG;
 
@@ -84,7 +83,7 @@ public final class GvGInstance extends Reflection {
         addSpawnWithoutRespawn(35426, new Location(139672, 145896, -15264), 0); //Blue team flag
 
         _bossSpawnTask = ThreadPoolManager.INSTANCE.schedule(() -> {
-            broadCastPacketToBothTeams(new ExShowScreenMessage("There was a guard Treasure Herald", 5000, ScreenMessageAlign.MIDDLE_CENTER, true));
+            broadCastPacketToBothTeams(new ExShowScreenMessage("There was a guard Treasure Herald"));
             addSpawnWithoutRespawn(BOSS_ID, new Location(147304, 142824, -15864, 32768), 0);
             openDoor(24220042);
         }, bossSpawnTime); //
@@ -262,9 +261,6 @@ public final class GvGInstance extends Reflection {
         return score.get(player.getObjectId());
     }
 
-    /**
-     * Paralyzes everybody in instance to prevent any actions while event is !isActive
-     */
     private void paralyzePlayers() {
         for (Player tm : HardReferences.unwrap(bothTeams)) {
             if (tm.isDead()) {
@@ -277,13 +273,13 @@ public final class GvGInstance extends Reflection {
             tm.setCurrentCp(tm.getMaxCp());
 
             tm.getEffectList().stopEffect(Skill.SKILL_MYSTIC_IMMUNITY);
-            tm.block();
+            tm.setBlock(true);
         }
     }
 
     private void unParalyzePlayers() {
         HardReferences.unwrap(bothTeams).forEach(tm -> {
-            tm.unblock();
+            tm.setBlock();
             removePlayer(tm, true);
         });
     }
@@ -307,7 +303,7 @@ public final class GvGInstance extends Reflection {
             //player.setCurrentMp(player.getMaxMp());
             player.broadcastPacket(new Revive(player));
         }
-        player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(5660, 2)); // Battlefield Death Syndrome
+        player.altOnMagicUseTimer(player, 5660, 2); // Battlefield Death Syndrome
 
     }
 
@@ -388,7 +384,7 @@ public final class GvGInstance extends Reflection {
                     else if (team2.containsMember(killer.getPlayer()))
                         changeScore(2, SCORE_BOSS, 0, false, false, killer.getPlayer());
 
-                    broadCastPacketToBothTeams(new ExShowScreenMessage("Treasure guard Gerald died at the hands of " + killer.getName(), 5000, ScreenMessageAlign.MIDDLE_CENTER, true));
+                    broadCastPacketToBothTeams(new ExShowScreenMessage("Treasure guard Gerald died at the hands of " + killer.getName()));
                     end();
                 }
             }

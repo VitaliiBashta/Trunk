@@ -1,6 +1,6 @@
 package l2trunk.gameserver.templates.item;
 
-import l2trunk.gameserver.templates.StatsSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.templates.item.ArmorTemplate.ArmorType;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 

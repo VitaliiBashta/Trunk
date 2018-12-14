@@ -59,13 +59,13 @@ public class ArenaManagerInstance extends WarehouseInstance {
             for (int[] buff : _arenaBuff) {
                 if (player.isMageClass() && player.getTemplate().race != Race.orc) {
                     if (buff[1] == 1 || buff[1] == 2) {
-                        broadcastPacket(new MagicSkillUse(this, player, buff[0], 1, 0, 0));
-                        callSkill(SkillTable.INSTANCE.getInfo(buff[0], 1), target, true);
+                        broadcastPacket(new MagicSkillUse(this, player, buff[0]));
+                        callSkill(buff[0], target, true);
                     }
                 } else {
                     if (buff[1] == 0 || buff[1] == 2) {
-                        broadcastPacket(new MagicSkillUse(this, player, buff[0], 1, 0, 0));
-                        callSkill(SkillTable.INSTANCE.getInfo(buff[0], 1), target, true);
+                        broadcastPacket(new MagicSkillUse(this, player, buff[0]));
+                        callSkill(buff[0], target, true);
                     }
                 }
             }

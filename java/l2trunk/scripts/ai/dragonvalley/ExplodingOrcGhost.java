@@ -8,7 +8,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class ExplodingOrcGhost extends Fighter {
 
-    private final Skill SELF_DESTRUCTION = SkillTable.INSTANCE.getInfo(6850, 1);
+    private static final int SELF_DESTRUCTION = 6850;
 
     public ExplodingOrcGhost(NpcInstance actor) {
         super(actor);

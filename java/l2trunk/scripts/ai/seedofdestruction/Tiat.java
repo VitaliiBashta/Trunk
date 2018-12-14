@@ -33,7 +33,7 @@ public final class Tiat extends Fighter {
             "You'll regret challenging me!",
             "You shall die in pain!",
             "I will wipe out your entire kind!");
-    private final Skill TIAT_TRANSFORMATION_SKILL = SkillTable.INSTANCE.getInfo(5974);
+    private static final int TIAT_TRANSFORMATION_SKILL = 5974;
     private boolean _notUsedTransform = true;
     private long _lastAttackTime = 0;
     private long _lastFactionNotifyTime = 0;
@@ -70,7 +70,7 @@ public final class Tiat extends Fighter {
             ThreadPoolManager.INSTANCE.schedule(() -> {
                 getActor().setFullHpMp();
                 getActor().setInvul(false);
-            }, TIAT_TRANSFORMATION_SKILL.getHitTime());
+            }, SkillTable.INSTANCE.getInfo(TIAT_TRANSFORMATION_SKILL).getHitTime());
         }
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();

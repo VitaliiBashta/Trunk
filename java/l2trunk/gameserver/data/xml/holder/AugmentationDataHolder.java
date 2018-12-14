@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class AugmentationDataHolder  {
+public final class AugmentationDataHolder {
     private final static Set<AugmentationInfo> AUGMENTATION_INFOS = new HashSet<>();
     private final static List<Integer> lifestones = new ArrayList<>();
 

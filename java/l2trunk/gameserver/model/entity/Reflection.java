@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -38,7 +39,7 @@ public class Reflection {
     private static final Logger _log = LoggerFactory.getLogger(Reflection.class);
     private final static AtomicInteger _nextId = new AtomicInteger();
     protected final Lock lock = new ReentrantLock();
-    protected final List<GameObject> _objects = new ArrayList<>();
+    protected final List<GameObject> objects = new CopyOnWriteArrayList<>();
     private final int id;
     private final ReflectionListenerList listeners = new ReflectionListenerList();
     private final List<Spawner> _spawns = new ArrayList<>();
@@ -46,7 +47,7 @@ public class Reflection {
     int _playerCount;
     // vars
     private Map<Integer, DoorInstance> doors = new HashMap<>();
-    private Map<String, Zone> _zones = Collections.emptyMap();
+    private Map<String, Zone> zones = Collections.emptyMap();
     private Map<String, List<Spawner>> _spawners = Collections.emptyMap();
     private Party party;
     private CommandChannel _commandChannel;
@@ -170,11 +171,11 @@ public class Reflection {
     }
 
     public Zone getZone(String name) {
-        if (!_zones.containsKey(name)) {
+        if (!zones.containsKey(name)) {
             _log.warn("not found zone for name1: " + name);
 //            System.exit(1);
         }
-        return _zones.get(name);
+        return zones.get(name);
     }
 
     /**
@@ -238,7 +239,7 @@ public class Reflection {
         }
         lock.lock();
         try {
-            for (GameObject o : _objects) {
+            for (GameObject o : objects) {
                 if (o.isPlayer()) {
                     Player player = (Player) o;
                     if (player.isInParty())
@@ -291,17 +292,17 @@ public class Reflection {
             }
             doors.clear();
 
-            for (Zone zone : _zones.values()) {
+            for (Zone zone : zones.values()) {
                 zone.setActive(false);
             }
-            _zones.clear();
+            zones.clear();
 
             List<Player> teleport = new ArrayList<>();
             List<GameObject> delete = new ArrayList<>();
 
             lock.lock();
             try {
-                for (GameObject o : _objects) {
+                for (GameObject o : objects) {
                     if (o.isPlayer()) {
                         teleport.add((Player) o);
                     } else if (!o.isPlayable()) {
@@ -345,7 +346,7 @@ public class Reflection {
             }
 
             _spawns.clear();
-            _objects.clear();
+            objects.clear();
             _visitors.clear();
             doors.clear();
 
@@ -368,7 +369,7 @@ public class Reflection {
 
         lock.lock();
         try {
-            _objects.add(o);
+            objects.add(o);
             if (o.isPlayer()) {
                 _playerCount++;
                 _visitors.add(o.getObjectId());
@@ -390,7 +391,7 @@ public class Reflection {
 
         lock.lock();
         try {
-            if (!_objects.remove(o)) {
+            if (!objects.remove(o)) {
                 return;
             }
             if (o.isPlayer()) {
@@ -421,40 +422,31 @@ public class Reflection {
     }
 
     public synchronized List<Player> getPlayers() {
-        return _objects.stream().filter(GameObject::isPlayer).map(o -> (Player)o).collect(Collectors.toList());
+        return objects.stream()
+                .filter(GameObject::isPlayer)
+                .map(o -> (Player) o)
+                .collect(Collectors.toList());
     }
 
-    public List<NpcInstance> getNpcs() {
-        List<NpcInstance> result = new ArrayList<>();
+    public synchronized List<NpcInstance> getNpcs() {
         lock.lock();
         try {
-            for (GameObject o : _objects) {
-                if (o.isNpc()) {
-                    result.add((NpcInstance) o);
-                }
-            }
+            return objects.stream()
+                    .filter(GameObject::isNpc)
+                    .map(o -> (NpcInstance) o)
+                    .collect(Collectors.toList());
         } finally {
             lock.unlock();
         }
-        return result;
     }
 
     public List<NpcInstance> getAllByNpcId(int npcId, boolean onlyAlive) {
-        List<NpcInstance> result = new ArrayList<>();
-        lock.lock();
-        try {
-            for (GameObject o : _objects) {
-                if (o.isNpc()) {
-                    NpcInstance npc = (NpcInstance) o;
-                    if ((npcId == npc.getNpcId()) && (!onlyAlive || !npc.isDead())) {
-                        result.add(npc);
-                    }
-                }
-            }
-        } finally {
-            lock.unlock();
-        }
-        return result;
+        return objects.stream()
+                .filter(GameObject::isNpc)
+                .map(o -> (NpcInstance) o)
+                .filter(npc -> npcId == npc.getNpcId())
+                .filter(npc -> (!onlyAlive || !npc.isDead()))
+                .collect(Collectors.toList());
     }
 
     public boolean canChampions() {
@@ -552,7 +544,7 @@ public class Reflection {
         initDoors();
 
         if (!zones.isEmpty()) {
-            _zones = new HashMap<>(zones.size());
+            this.zones = new HashMap<>(zones.size());
         }
 
         for (ZoneTemplate template : zones.values()) {
@@ -575,7 +567,7 @@ public class Reflection {
                 zone.setActive(true);
             }
 
-            _zones.put(template.getName(), zone);
+            this.zones.put(template.getName(), zone);
         }
     }
 
@@ -600,7 +592,7 @@ public class Reflection {
         initDoors();
 
         if (!zones.isEmpty()) {
-            _zones = new HashMap<>(zones.size());
+            this.zones = new HashMap<>(zones.size());
         }
 
         for (InstantZone.ZoneInfo t : zones.values()) {
@@ -623,7 +615,7 @@ public class Reflection {
                 zone.setActive(true);
             }
 
-            _zones.put(t.getTemplate().getName(), zone);
+            this.zones.put(t.getTemplate().getName(), zone);
         }
     }
 
@@ -812,7 +804,7 @@ public class Reflection {
     }
 
     public Collection<Zone> getZones() {
-        return _zones.values();
+        return zones.values();
     }
 
     public <T extends Listener<Reflection>> boolean addListener(T listener) {

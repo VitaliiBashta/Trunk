@@ -7,21 +7,19 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.services.TeleToFantasyIsle;
 
-/**
- * @author VISTALL
- * @date 23:26/16.06.2011
- */
-public class ColiseumHelperInstance extends NpcInstance {
-    private final Location[][] LOCS = new Location[][]
-            {
-                    {new Location(-84451, -45452, -10728), new Location(-84580, -45587, -10728)},
-                    {new Location(-86154, -50429, -10728), new Location(-86118, -50624, -10728)},
-                    {new Location(-82009, -53652, -10728), new Location(-81802, -53665, -10728)},
-                    {new Location(-77603, -50673, -10728), new Location(-77586, -50503, -10728)},
-                    {new Location(-79186, -45644, -10728), new Location(-79309, -45561, -10728)}
-            };
+import java.util.Arrays;
+import java.util.List;
 
-    ColiseumHelperInstance(int objectId, NpcTemplate template) {
+public class ColiseumHelperInstance extends NpcInstance {
+    private final List<List<Location>> LOCS = Arrays.asList(
+            Arrays.asList(new Location(-84451, -45452, -10728), new Location(-84580, -45587, -10728)),
+            Arrays.asList(new Location(-86154, -50429, -10728), new Location(-86118, -50624, -10728)),
+            Arrays.asList(new Location(-82009, -53652, -10728), new Location(-81802, -53665, -10728)),
+            Arrays.asList(new Location(-77603, -50673, -10728), new Location(-77586, -50503, -10728)),
+            Arrays.asList(new Location(-79186, -45644, -10728), new Location(-79309, -45561, -10728))
+    );
+
+    public ColiseumHelperInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
@@ -31,12 +29,12 @@ public class ColiseumHelperInstance extends NpcInstance {
             return;
 
         if (command.equals("teleOut"))
-            player.teleToLocation(TeleToFantasyIsle.POINTS[Rnd.get(TeleToFantasyIsle.POINTS.length)]);
+            player.teleToLocation(Rnd.get(TeleToFantasyIsle.POINTS));
         else if (command.startsWith("coliseum")) {
             int a = Integer.parseInt(String.valueOf(command.charAt(9)));
-            Location[] locs = LOCS[a];
+            List<Location> locs = LOCS.get(a);
 
-            player.teleToLocation(locs[Rnd.get(locs.length)]);
+            player.teleToLocation(Rnd.get(locs));
         } else
             super.onBypassFeedback(player, command);
     }

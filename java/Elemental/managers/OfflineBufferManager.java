@@ -37,25 +37,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-/**
- * Manager para manejar todas las funciones del offline buffer
- * Creacion de los schemes de venta, chequeos, precios, consumos, buffeos, htmls, etc
- *
- * @author GipsyGrierosu Andrei
- */
-public final class OfflineBufferManager {
-    protected static final Logger _log = LoggerFactory.getLogger(OfflineBufferManager.class);
+public enum  OfflineBufferManager {
+    INSTANCE;
+    private final Logger _log = LoggerFactory.getLogger(OfflineBufferManager.class);
 
     private static final int MAX_INTERACT_DISTANCE = 100;
 
     private final Map<Integer, BufferData> _buffStores = new ConcurrentHashMap<>();
 
-    private OfflineBufferManager() {
+    OfflineBufferManager() {
     }
 
-    public static OfflineBufferManager getInstance() {
-        return SingletonHolder._instance;
-    }
 
     /**
      * @return Devuelve todas las stores de buffs
@@ -345,9 +337,9 @@ public final class OfflineBufferManager {
 
                     // Give the target the buff
                     if (isPlayer)
-                        buffer.getBuffs().get(buffId).getEffects(player, player, false, false);
+                        buffer.getBuffs().get(buffId).getEffects(player);
                     else
-                        buffer.getBuffs().get(buffId).getEffects(player.getPet(), player.getPet(), false, false);
+                        buffer.getBuffs().get(buffId).getEffects(player.getPet());
 
                     // Send message
                     player.sendMessage("You have bought " + buffer.getBuffs().get(buffId).getName() + " from " + buffer.getOwner().getName());
@@ -466,10 +458,6 @@ public final class OfflineBufferManager {
         html.replace("%pageCount%", (currentPage + 1) + "/" + (maxPage + 1));
 
         player.sendPacket(html);
-    }
-
-    private static class SingletonHolder {
-        static final OfflineBufferManager _instance = new OfflineBufferManager();
     }
 
     // Clase donde se guardan todos los datos de cada offline buffer activo

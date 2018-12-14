@@ -45,7 +45,7 @@ public final class ArmorSetListener implements OnEquipListener {
             if (armorSet.containAll(player)) {
                 Map<Integer, Integer> skills = armorSet.getSkills();
                 for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                    player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
+                    player.addSkill(skill.getKey(), skill.getValue(), false);
                     update = true;
                 }
 
@@ -53,7 +53,7 @@ public final class ArmorSetListener implements OnEquipListener {
                 {
                     skills = armorSet.getShieldSkills();
                     for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                        player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
+                        player.addSkill(skill.getKey(), skill.getValue(), false);
                         update = true;
                     }
                 }
@@ -61,7 +61,7 @@ public final class ArmorSetListener implements OnEquipListener {
                 {
                     skills = armorSet.getEnchant6skills();
                     for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                        player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
+                        player.addSkill(skill.getKey(), skill.getValue(), false);
                         update = true;
                     }
                 }
@@ -70,7 +70,7 @@ public final class ArmorSetListener implements OnEquipListener {
             if (armorSet.containAll(player)) {
                 Map<Integer, Integer> skills = armorSet.getShieldSkills();
                 for (Map.Entry<Integer, Integer> skill : skills.entrySet()) {
-                    player.addSkill(SkillTable.INSTANCE.getInfo(skill.getKey(), skill.getValue()), false);
+                    player.addSkill(skill.getKey(), skill.getValue(), false);
                     update = true;
                 }
             }

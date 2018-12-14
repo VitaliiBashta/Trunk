@@ -24,12 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class AdminAdmin implements IAdminCommandHandler {
+public final class AdminAdmin implements IAdminCommandHandler {
     private static final Logger _log = LoggerFactory.getLogger(AdminAdmin.class);
 
-    @SuppressWarnings("incomplete-switch")
     @Override
-    public boolean useAdminCommand(@SuppressWarnings("rawtypes") Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand( Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
         StringTokenizer st;
 
@@ -339,7 +338,7 @@ public class AdminAdmin implements IAdminCommandHandler {
                     break;
                 case admin_show_memory:
                     _log.info("=================================================");
-                    String memUsage = new StringBuilder().append(StatsUtils.getMemUsage()).toString();
+                    String memUsage = String.valueOf(StatsUtils.getMemUsage());
                     for (String line : memUsage.split("\n")) {
                         _log.info(line);
                     }

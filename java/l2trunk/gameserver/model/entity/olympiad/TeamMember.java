@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.olympiad;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
@@ -18,7 +19,6 @@ import l2trunk.gameserver.skills.EffectType;
 import l2trunk.gameserver.skills.TimeStamp;
 import l2trunk.gameserver.taskmanager.CancelTaskManager;
 import l2trunk.gameserver.templates.InstantZone;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.FixEnchantOlympiad;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;

@@ -4,44 +4,38 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.actor.instances.player.Friend;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 23:37/22.03.2011
- */
-public class FriendList extends L2GameServerPacket {
-    private List<FriendInfo> _friends = Collections.emptyList();
+public final class FriendList extends L2GameServerPacket {
+    private List<FriendInfo> friends;
 
     public FriendList(Player player) {
         Map<Integer, Friend> friends = player.getFriendList().getList();
-        _friends = new ArrayList<>(friends.size());
-        for (Map.Entry<Integer, Friend> entry : friends.entrySet()) {
-            Friend friend = entry.getValue();
+        this.friends = new ArrayList<>(friends.size());
+        friends.forEach( (k,v) -> {
             FriendInfo f = new FriendInfo();
-            f.name = friend.getName();
-            f.classId = friend.getClassId();
-            f.objectId = entry.getKey();
-            f.level = friend.getLevel();
-            f.online = friend.isOnline();
-            _friends.add(f);
-        }
+            f.name = v.getName();
+            f.classId = v.getClassId();
+            f.objectId = k;
+            f.level = v.getLevel();
+            f.online = v.isOnline();
+            this.friends.add(f);
+        });
     }
 
     @Override
     protected void writeImpl() {
         writeC(0x58);
-        writeD(_friends.size());
-        for (FriendInfo f : _friends) {
+        writeD(friends.size());
+        friends.forEach(f -> {
             writeD(f.objectId);
             writeS(f.name);
             writeD(f.online);
             writeD(f.online ? f.objectId : 0);
             writeD(f.classId);
             writeD(f.level);
-        }
+        });
     }
 
     private class FriendInfo {

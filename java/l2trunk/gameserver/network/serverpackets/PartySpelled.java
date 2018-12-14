@@ -1,10 +1,10 @@
 package l2trunk.gameserver.network.serverpackets;
 
-import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.utils.EffectsComparator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PartySpelled extends L2GameServerPacket {

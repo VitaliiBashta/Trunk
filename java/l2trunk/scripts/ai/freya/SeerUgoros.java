@@ -13,7 +13,7 @@ import l2trunk.scripts.quests._288_HandleWithCare;
 
 public final class SeerUgoros extends Mystic {
     private int _weeds = 0;
-    private final Skill priestsIre = SkillTable.INSTANCE.getInfo(6426);
+    private final static int priestsIre = 6426;
 
     public SeerUgoros(NpcInstance actor) {
         super(actor);
@@ -31,7 +31,7 @@ public final class SeerUgoros extends Mystic {
     @Override
     public void thinkAttack() {
         NpcInstance actor = getActor();
-        if (!actor.isMuted(priestsIre) && actor.getCurrentHpPercents() < 80) {
+        if (!actor.isMuted(SkillTable.INSTANCE.getInfo(priestsIre)) && actor.getCurrentHpPercents() < 80) {
             for (NpcInstance n : actor.getAroundNpc(2000, 300))
                 if (n.getNpcId() == 18867 && !n.isDead()) {
                     actor.doCast(priestsIre, n, true);

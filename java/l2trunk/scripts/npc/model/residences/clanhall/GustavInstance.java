@@ -57,15 +57,15 @@ public final class GustavInstance extends SiegeGuardInstance implements _34Siege
                 final NpcInstance npc = obj.getSpawns().get(i).getFirstSpawned();
 
                 Functions.npcSay(npc, ((_34SiegeGuard) npc).teleChatSay());
-                npc.broadcastPacket(new MagicSkillUse(npc, npc, 4235, 1, 10000, 0));
+                npc.broadcastPacket(new MagicSkillUse(npc,  4235, 1, 10000));
 
-                _teleportTask = ThreadPoolManager.INSTANCE.schedule(()-> {
-                        Location loc = Location.findAroundPosition(new Location(177134, -18807, -2256), 50, 100, npc.getGeoIndex());
+                _teleportTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+                    Location loc = Location.findAroundPosition(new Location(177134, -18807, -2256), 50, 100, npc.getGeoIndex());
 
-                        npc.teleToLocation(loc);
+                    npc.teleToLocation(loc);
 
-                        if (npc == GustavInstance.this)
-                            npc.reduceCurrentHp(npc.getCurrentHp(), npc, null, false, false, false, false, false, false, false);
+                    if (npc == GustavInstance.this)
+                        npc.reduceCurrentHp(npc.getCurrentHp(), npc, null, false, false, false, false, false, false, false);
                 }, 10000L);
             }
         } else {

@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _079_SagaOfTheAdventurer extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _079_SagaOfTheAdventurer extends SagasSuperclass implements ScriptFile {
     public _079_SagaOfTheAdventurer() {
         super(false);
 
-        NPC = new int[]{
-                31603,
-                31584,
-                31579,
-                31615,
-                31619,
-                31646,
-                31647,
-                31651,
-                31654,
-                31655,
-                31658,
-                31616
-        };
-        Items = new int[]{
-                7080,
-                7516,
-                7081,
-                7494,
-                7277,
-                7308,
-                7339,
-                7370,
-                7401,
-                7432,
-                7102,
-                0
-        };
-        Mob = new int[]{
-                27299,
-                27228,
-                27302
-        };
+        NPC = List.of(31603, 31584, 31579, 31615, 31619, 31646, 31647, 31651, 31654, 31655, 31658, 31616);
+        Items = List.of(7080, 7516, 7081, 7494, 7277, 7308, 7339, 7370, 7401, 7432, 7102, 0);
+        Mob = List.of(27299, 27228, 27302);
         classid = 93;
         prevclass = 0x08;
-        X = new int[]{
-                119518,
-                181205,
-                181215
-        };
-        Y = new int[]{
-                -28658,
-                36676,
-                36676
-        };
-        Z = new int[]{
-                -3811,
-                -4816,
-                -4812
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(119518, -28658, -3811),
+                new Location(181205, 36676, -4816),
+                new Location(181215, 36676, -4812));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -87,8 +37,20 @@ public class _079_SagaOfTheAdventurer extends SagasSuperclass implements ScriptF
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
                 "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+        );
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

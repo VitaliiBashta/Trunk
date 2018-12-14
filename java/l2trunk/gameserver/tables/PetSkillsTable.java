@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum  PetSkillsTable {
+public enum PetSkillsTable {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(PetSkillsTable.class);
     private final Map<Integer, List<SkillLearn>> skillTrees = new HashMap<>();

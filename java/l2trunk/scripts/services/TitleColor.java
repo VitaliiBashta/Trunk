@@ -21,7 +21,7 @@ public final class TitleColor extends Functions {
 
         String html = HtmCache.INSTANCE.getNotNull("scripts/services/TitleColor/index.htm", player);
         String template = HtmCache.INSTANCE.getNotNull("scripts/services/TitleColor/template.htm", player);
-        String block = "";
+        String block;
         String list = "";
 
         for (int i = (page - 1) * perpage; i < Config.SERVICES_CHANGE_Title_COLOR_LIST.length; i++) {

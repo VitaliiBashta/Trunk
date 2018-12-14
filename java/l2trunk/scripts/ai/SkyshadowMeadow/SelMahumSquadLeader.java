@@ -49,12 +49,12 @@ public final class SelMahumSquadLeader extends Fighter {
         if (!statsIsChanged) {
             switch (actor.getNpcState()) {
                 case 1: {
-                    actor.doCast(SkillTable.INSTANCE.getInfo(6332), actor, true);
+                    actor.doCast(6332, actor, true);
                     statsIsChanged = true;
                     break;
                 }
                 case 2: {
-                    actor.doCast(SkillTable.INSTANCE.getInfo(6331), actor, true);
+                    actor.doCast(6331, actor, true);
                     statsIsChanged = true;
                     break;
                 }

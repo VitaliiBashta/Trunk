@@ -12,6 +12,7 @@ public final class StaticObjectHolder {
     private static final Logger LOG = LoggerFactory.getLogger(StaticObjectHolder.class);
     private static final Map<Integer, StaticObjectTemplate> TEMPLATES = new HashMap<>();
     private static final Map<Integer, StaticObjectInstance> SPAWNED = new HashMap<>();
+
     private StaticObjectHolder() {
     }
 

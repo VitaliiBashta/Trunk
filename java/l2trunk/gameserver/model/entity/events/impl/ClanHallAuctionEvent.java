@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.dao.SiegeClanDAO;
@@ -8,7 +8,6 @@ import l2trunk.gameserver.instancemanager.PlayerMessageStack;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.actions.StartStopAction;
 import l2trunk.gameserver.model.entity.events.objects.AuctionSiegeClanObject;
-import l2trunk.gameserver.model.entity.events.objects.SiegeClanObject;
 import l2trunk.gameserver.model.entity.residence.ClanHall;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
@@ -16,14 +15,14 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.ClanTable;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanObject> {
-    private final Calendar _endSiegeDate = Calendar.getInstance();
+public final class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanObject> {
+    private final Calendar endSiegeDate = Calendar.getInstance();
 
-    public ClanHallAuctionEvent(MultiValueSet<String> set) {
+    public ClanHallAuctionEvent(StatsSet set) {
         super(set);
     }
 
@@ -34,7 +33,7 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
 
         Clan owner = getResidence().getOwner();
 
-        _endSiegeDate.setTimeInMillis(0);
+        endSiegeDate.setTimeInMillis(0);
         // first start
         if (getResidence().getAuctionLength() == 0 && owner == null) {
             getResidence().getSiegeDate().setTimeInMillis(System.currentTimeMillis());
@@ -53,7 +52,7 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
             addOnTimeAction(0, new StartStopAction(EVENT, true));
             addOnTimeAction(getResidence().getAuctionLength() * 86400, new StartStopAction(EVENT, false));
 
-            _endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
+            endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
 
             registerActions();
         } else if (getResidence().getAuctionLength() == 0 && owner != null) {
@@ -64,14 +63,14 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
             // end date is far from the current date
             if (endDate <= System.currentTimeMillis()) {
                 getResidence().getSiegeDate().setTimeInMillis(System.currentTimeMillis() + 60000);
-                _endSiegeDate.setTimeInMillis(System.currentTimeMillis() + 60000);
+                endSiegeDate.setTimeInMillis(System.currentTimeMillis() + 60000);
                 _onTimeActions.clear();
                 addOnTimeAction(0, new StartStopAction(EVENT, true));
                 addOnTimeAction(60, new StartStopAction(EVENT, false));
 
                 registerActions();
             } else {
-                _endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
+                endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
                 _onTimeActions.clear();
                 addOnTimeAction(0, new StartStopAction(EVENT, true));
                 addOnTimeAction((int) getEndSiegeForCH(), new StartStopAction(EVENT, false));
@@ -85,11 +84,11 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
     public void stopEvent(boolean step) {
         List<AuctionSiegeClanObject> siegeClanObjects = removeObjects(ATTACKERS);
         // sort with Max to Min
-        AuctionSiegeClanObject[] clans = siegeClanObjects.toArray(new AuctionSiegeClanObject[siegeClanObjects.size()]);
-        Arrays.sort(clans, SiegeClanObject.SiegeClanComparatorImpl.getInstance());
+        List<AuctionSiegeClanObject> clans = new ArrayList<>(siegeClanObjects);
+        clans.sort((o1, o2) -> Long.compare(o2.getParam(), o1.getParam()));
 
         Clan oldOwner = getResidence().getOwner();
-        AuctionSiegeClanObject winnerSiegeClan = clans.length > 0 ? clans[0] : null;
+        AuctionSiegeClanObject winnerSiegeClan = clans.size() > 0 ? clans.get(0) : null;
 
         // if there is a winner (is more than one clan)
         if (winnerSiegeClan != null) {
@@ -152,7 +151,7 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
         getResidence().getSiegeDate().set(Calendar.MILLISECOND, 0);
         getResidence().setJdbcState(JdbcEntityState.UPDATED);
         getResidence().update();
-        _endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
+        endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
         _onTimeActions.clear();
         addOnTimeAction(0, new StartStopAction(EVENT, true));
         addOnTimeAction(getResidence().getAuctionLength() * 86400, new StartStopAction(EVENT, false));
@@ -181,6 +180,6 @@ public class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSiegeClanO
     }
 
     public Calendar getEndSiegeDate() {
-        return _endSiegeDate;
+        return endSiegeDate;
     }
 }

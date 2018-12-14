@@ -6,12 +6,10 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.AutoAttackStart;
 import l2trunk.gameserver.network.serverpackets.CharInfo;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.MyTargetSelected;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.ArrayList;
@@ -33,7 +31,7 @@ public final class DecoyInstance extends NpcInstance {
         _timeRemaining = _lifeTime;
         int skilllevel = getNpcId() < 13257 ? getNpcId() - 13070 : getNpcId() - 13250;
         _decoyLifeTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DecoyLifetime(), 1000, 1000);
-        _hateSpam = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new HateSpam(SkillTable.INSTANCE.getInfo(5272, skilllevel)), 1000, 3000);
+        _hateSpam = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new HateSpam(5272, skilllevel), 1000, 3000);
     }
 
     @Override
@@ -157,17 +155,20 @@ public final class DecoyInstance extends NpcInstance {
     }
 
     class HateSpam extends RunnableImpl {
-        private final Skill _skill;
+        private final int skillId;
+        private final int skillLvl;
 
-        HateSpam(Skill skill) {
-            _skill = skill;
+
+        HateSpam(int skillId, int skillLvl) {
+            this.skillId = skillId;
+            this.skillLvl = skillLvl;
         }
 
         @Override
         public void runImpl() {
             try {
                 setTarget(DecoyInstance.this);
-                doCast(_skill, DecoyInstance.this, true);
+                doCast(skillId,skillLvl, DecoyInstance.this, true);
             } catch (RuntimeException e) {
                 _log.error("Error while Changing Target to DecoyInstance", e);
             }

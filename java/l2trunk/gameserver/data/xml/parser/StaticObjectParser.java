@@ -1,10 +1,10 @@
 package l2trunk.gameserver.data.xml.parser;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.StaticObjectHolder;
 import l2trunk.gameserver.templates.StaticObjectTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +15,10 @@ import java.util.Iterator;
 public enum StaticObjectParser {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
-    private final Path xmlFile = Config.DATAPACK_ROOT.resolve("data/staticobjects.xml");
+    private final Path xml = Config.DATAPACK_ROOT.resolve("data/staticobjects.xml");
 
     public void load() {
-        ParserUtil.INSTANCE.load(xmlFile).forEach(this::readData);
+        ParserUtil.INSTANCE.load(xml).forEach(this::readData);
         LOG.info("loaded " + StaticObjectHolder.size() + " items");
     }
 

@@ -9,15 +9,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.bosses.BaiumManager;
 
-/**
- * @author pchayka
- */
-
 public final class BaiumGatekeeperInstance extends NpcInstance {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 6974998740709244515L;
     private static final int Baium = 29020;
     private static final int BaiumNpc = 29025;
     private static final int BloodedFabric = 4295;

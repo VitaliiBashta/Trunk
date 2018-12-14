@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 /**
- * @author VISTALL
- * @date 15:13/14.02.2011
  * Barracks:
  * 0 - Archer Captain
  * 1 - Guard Captain
@@ -38,7 +36,7 @@ import java.util.concurrent.Future;
  * 3 - Control Room
  * 4 - General
  */
-public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
+public final class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
     public static final String FLAG_POLE = "flag_pole";
     public static final String SIEGE_COMMANDERS = "siege_commanders";
     public static final String PEACE_COMMANDERS = "peace_commanders";
@@ -61,7 +59,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject> {
     private Future<?> _commanderSpawnTask;
     private boolean[] _barrackStatus;
 
-    public FortressSiegeEvent(MultiValueSet<String> set) {
+    public FortressSiegeEvent(StatsSet set) {
         super(set);
     }
 

@@ -29,6 +29,7 @@ import l2trunk.gameserver.templates.item.WeaponTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -184,21 +185,18 @@ public final class DoorInstance extends Creature implements GeoCollision {
     }
 
     @Override
-    public DoorAI getAI() {
+    public synchronized DoorAI getAI() {
         if (ai == null)
-            synchronized (this) {
-                if (ai == null)
-                    ai = getTemplate().getNewAI(this);
-            }
+            ai = getTemplate().getNewAI(this);
 
         return (DoorAI) ai;
     }
 
     @Override
     public void broadcastStatusUpdate() {
-        for (Player player : World.getAroundPlayers(this))
-            if (player != null)
-                player.sendPacket(new StaticObject(this, player));
+        World.getAroundPlayers(this).stream()
+                .filter(Objects::nonNull)
+                .forEach(player -> player.sendPacket(new StaticObject(this, player)));
     }
 
     public boolean openMe() {

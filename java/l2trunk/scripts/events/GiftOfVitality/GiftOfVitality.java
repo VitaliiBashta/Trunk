@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,42 +21,42 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     private static final int EVENT_MANAGER_ID = 109; // npc id
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
     private static final Logger _log = LoggerFactory.getLogger(GiftOfVitality.class);
+    private static final int blessingOfEnergy = 23179;
+    private final static List<Integer> MAGE_BUFF = List.of(
+            5627,  // windwalk
+            5628,  // shield
+            5637,  // Magic Barrier 1
+            5633,  // blessthesoul
+            5634,  // acumen
+            5635,  // concentration
+            5636 ); // empower
 
-    private final static int[][] _mageBuff = new int[][]{{5627, 1}, // windwalk
-            {5628, 1}, // shield
-            {5637, 1}, // Magic Barrier 1
-            {5633, 1}, // blessthesoul
-            {5634, 1}, // acumen
-            {5635, 1}, // concentration
-            {5636, 1}, // empower
-    };
+    private final static List<Integer> WARR_BUFF = List.of(
+            5627,  // windwalk
+            5628,  // shield
+            5637,  // Magic Barrier 1
+            5629,  // btb
+            5630,  // vampirerage
+            5631,  // regeneration
+            5632); // haste 2
 
-    private final static int[][] _warrBuff = new int[][]{{5627, 1}, // windwalk
-            {5628, 1}, // shield
-            {5637, 1}, // Magic Barrier 1
-            {5629, 1}, // btb
-            {5630, 1}, // vampirerage
-            {5631, 1}, // regeneration
-            {5632, 1}, // haste 2
-    };
+    private final static List<Integer> _summonBuff = List.of(
+            5627,  // windwalk
+            5628,  // shield
+            5637,  // Magic Barrier 1
+            5629,  // btb
+            5633,  // vampirerage
+            5634,  // blessthesoul
+            5631,  // acumen
+            5635,  // concentration
+            5632,  // empower
+            5636); // haste 2
 
-    private final static int[][] _summonBuff = new int[][]{{5627, 1}, // windwalk
-            {5628, 1}, // shield
-            {5637, 1}, // Magic Barrier 1
-            {5629, 1}, // btb
-            {5633, 1}, // vampirerage
-            {5630, 1}, // regeneration
-            {5634, 1}, // blessthesoul
-            {5631, 1}, // acumen
-            {5635, 1}, // concentration
-            {5632, 1}, // empower
-            {5636, 1}, // haste 2
-    };
-
-    public enum BuffType {
-        PLAYER,
-        SUMMON,
-        VITALITY,
+    /**
+     * Читает статус эвента из базы.
+     */
+    private static boolean isActive() {
+        return isActive(EVENT_NAME);
     }
 
     /**
@@ -93,13 +92,6 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
      */
     private void unSpawnEventManagers() {
         deSpawnNPCs(_spawns);
-    }
-
-    /**
-     * Читает статус эвента из базы.
-     */
-    private static boolean isActive() {
-        return isActive(EVENT_NAME);
     }
 
     /**
@@ -173,8 +165,8 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
 //				else if (player.getBaseClassId() != player.getActiveClassId())
 //					htmltext = "jack-onSub.htm";
                 else {
-                    npc.broadcastPacket(new MagicSkillUse(npc, player, 23179, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(23179, 1));
+                    npc.broadcastPacket(new MagicSkillUse(npc, player, blessingOfEnergy));
+                    player.altOnMagicUseTimer(player, blessingOfEnergy);
                     player.setVar("govEventTime", String.valueOf(System.currentTimeMillis() + REUSE_HOURS * 60 * 60 * 1000L), -1);
                     player.setVitality(Config.VITALITY_LEVELS[4]);
                     htmltext = "jack-okvitality.htm";
@@ -186,10 +178,10 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
                 else if (player.getPet() == null || !player.getPet().isSummon())
                     htmltext = "jack-nosummon.htm";
                 else {
-                    for (int[] buff : _summonBuff) {
-                        npc.broadcastPacket(new MagicSkillUse(npc, player.getPet(), buff[0], buff[1], 0, 0));
-                        player.altOnMagicUseTimer(player.getPet(), SkillTable.INSTANCE.getInfo(buff[0], buff[1]));
-                    }
+                    _summonBuff.forEach(skill -> {
+                        npc.broadcastPacket(new MagicSkillUse(npc, player.getPet(), skill));
+                        player.altOnMagicUseTimer(player.getPet(), skill);
+                    });
                     htmltext = "jack-okbuff.htm";
                 }
                 break;
@@ -198,15 +190,15 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
                     htmltext = "jack-nolevel.htm";
                 else {
                     if (!player.isMageClass() || player.getTemplate().race == Race.orc)
-                        for (int[] buff : _warrBuff) {
-                            npc.broadcastPacket(new MagicSkillUse(npc, player, buff[0], buff[1], 0, 0));
-                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(buff[0], buff[1]));
-                        }
+                        WARR_BUFF.forEach(skill -> {
+                            npc.broadcastPacket(new MagicSkillUse(npc, player, skill));
+                            player.altOnMagicUseTimer(player, skill);
+                        });
                     else
-                        for (int[] buff : _mageBuff) {
-                            npc.broadcastPacket(new MagicSkillUse(npc, player, buff[0], buff[1], 0, 0));
-                            player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(buff[0], buff[1]));
-                        }
+                        MAGE_BUFF.forEach(skill -> {
+                            npc.broadcastPacket(new MagicSkillUse(npc, player, skill));
+                            player.altOnMagicUseTimer(player, skill);
+                        });
                     htmltext = "jack-okbuff.htm";
                 }
                 break;
@@ -224,5 +216,11 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
 
     public void buffPlayer() {
         buffMe(BuffType.PLAYER);
+    }
+
+    public enum BuffType {
+        PLAYER,
+        SUMMON,
+        VITALITY,
     }
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum  ReflectionManager {
+public enum ReflectionManager {
     INSTANCE;
     public static final Reflection DEFAULT = Reflection.createReflection(0);
     public static final Reflection PARNASSUS = Reflection.createReflection(-1);

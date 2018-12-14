@@ -113,13 +113,13 @@ public enum SpawnTaskManager {
                     }
 
                     tasks.stream()
-                    .filter(task -> task.getSpawn() !=null)
-                    .forEach(work ->{
-                        Spawner spawn = work.getSpawn();
-                        spawn.decreaseScheduledCount();
-                        if (spawn.isDoRespawn())
-                            spawn.respawnNpc(work);
-                    });
+                            .filter(task -> task.getSpawn() != null)
+                            .forEach(work -> {
+                                Spawner spawn = work.getSpawn();
+                                spawn.decreaseScheduledCount();
+                                if (spawn.isDoRespawn())
+                                    spawn.respawnNpc(work);
+                            });
                 } catch (RuntimeException e) {
                     _log.error("SpawnScheduler", e);
                 }

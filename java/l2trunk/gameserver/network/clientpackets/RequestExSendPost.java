@@ -1,7 +1,6 @@
 package l2trunk.gameserver.network.clientpackets;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.CharacterDAO;
 import l2trunk.gameserver.database.mysql;
@@ -64,7 +63,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
         _itemQ = new ArrayList<>();
 
         for (int i = 0; i < _count; i++) {
-            int tempS=  readD(); // objectId
+            int tempS = readD(); // objectId
             long tempQ = readQ(); // the amount
             _items.add(tempS);
             _itemQ.add(tempQ); // the amount

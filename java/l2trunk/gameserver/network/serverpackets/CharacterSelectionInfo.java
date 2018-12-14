@@ -1,5 +1,6 @@
 package l2trunk.gameserver.network.serverpackets;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.dao.CharacterDAO;
 import l2trunk.gameserver.data.xml.holder.CharTemplateHolder;
@@ -8,7 +9,6 @@ import l2trunk.gameserver.model.CharSelectInfoPackage;
 import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.templates.PlayerTemplate;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
 
     private final int sessionId;
 
-    private final CharSelectInfoPackage[] characterPackages;
+    private final List<CharSelectInfoPackage> characterPackages;
 
     public CharacterSelectionInfo(String loginName, int sessionId) {
         this.sessionId = sessionId;
@@ -35,7 +35,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
         characterPackages = loadCharacterSelectInfo(loginName);
     }
 
-    public static CharSelectInfoPackage[] loadCharacterSelectInfo(String loginName) {
+    public static List<CharSelectInfoPackage> loadCharacterSelectInfo(String loginName) {
         CharSelectInfoPackage charInfoPackage;
         List<CharSelectInfoPackage> characterList = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
             _log.error("could not restore charInfo:", e);
         }
 
-        return characterList.toArray(new CharSelectInfoPackage[characterList.size()]);
+        return characterList;
     }
 
     private static StatsSet restoreClasses(int objId, Connection con) {
@@ -150,7 +150,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
                 points = 0;
             charInfoPackage.setVitalityPoints(points);
 
-            if (charInfoPackage.getAccessLevel() < 0 )
+            if (charInfoPackage.getAccessLevel() < 0)
                 charInfoPackage.setAccessLevel(0);
         } catch (SQLException e) {
             _log.error("SQLException in CharacterSelectionInfo ", e);
@@ -159,13 +159,13 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
         return charInfoPackage;
     }
 
-    public CharSelectInfoPackage[] getCharInfo() {
+    public List<CharSelectInfoPackage> getCharInfo() {
         return characterPackages;
     }
 
     @Override
     protected final void writeImpl() {
-        int size = characterPackages != null ? characterPackages.length : 0;
+        int size = characterPackages != null ? characterPackages.size() : 0;
 
         writeC(0x09);
         writeD(size);
@@ -174,14 +174,14 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
 
         long lastAccess = -1L;
         int lastUsed = -1;
-        for (int i = 0; i < size; i++)
-            if (lastAccess < characterPackages[i].getLastAccess()) {
-                lastAccess = characterPackages[i].getLastAccess();
+        for (int i = 0; i < characterPackages.size(); i++)
+            if (lastAccess < characterPackages.get(i).getLastAccess()) {
+                lastAccess = characterPackages.get(i).getLastAccess();
                 lastUsed = i;
             }
 
         for (int i = 0; i < size; i++) {
-            CharSelectInfoPackage charInfoPackage = characterPackages[i];
+            CharSelectInfoPackage charInfoPackage = characterPackages.get(i);
 
             writeS(charInfoPackage.getName());
             writeD(charInfoPackage.getCharId()); // ?

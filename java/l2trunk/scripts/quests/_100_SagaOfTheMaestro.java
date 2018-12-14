@@ -1,74 +1,24 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _100_SagaOfTheMaestro extends SagasSuperclass implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _100_SagaOfTheMaestro extends SagasSuperclass implements ScriptFile {
     public _100_SagaOfTheMaestro() {
         super(false);
 
-        NPC = new int[]{
-                31592,
-                31273,
-                31597,
-                31597,
-                31596,
-                31646,
-                31648,
-                31653,
-                31654,
-                31655,
-                31656,
-                31597
-        };
-        Items = new int[]{
-                7080,
-                7607,
-                7081,
-                7515,
-                7298,
-                7329,
-                7360,
-                7391,
-                7422,
-                7453,
-                7108,
-                0
-        };
-        Mob = new int[]{
-                27260,
-                27249,
-                27308
-        };
+        NPC = List.of(31592, 31273, 31597, 31597, 31596, 31646, 31648, 31653, 31654, 31655, 31656, 31597);
+        Items = List.of(7080, 7607, 7081, 7515, 7298, 7329, 7360, 7391, 7422, 7453, 7108, 0);
+        Mob = List.of(27260, 27249, 27308);
         classid = 118;
         prevclass = 0x39;
-        X = new int[]{
-                164650,
-                47429,
-                47391
-        };
-        Y = new int[]{
-                -74121,
-                -56923,
-                -56929
-        };
-        Z = new int[]{
-                -2871,
-                -2383,
-                -2370
-        };
-        Text = new String[]{
+        locs = List.of(
+                new Location(164650, -74121, -2871),
+                new Location(47429, -56923, -2383),
+                new Location(47391, -56929, -2370));
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -86,9 +36,20 @@ public class _100_SagaOfTheMaestro extends SagasSuperclass implements ScriptFile
                 "The human nation was foolish to try and fight a giant's strength.",
                 "Must...Retreat... Too...Strong.",
                 "PLAYERNAME. Defeat...by...retaining...and...Mo...Hacker",
-                "....! Fight...Defeat...It...Fight...Defeat...It..."
-        };
+                "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
+    @Override
+    public void onReload() {
+    }
+
+    @Override
+    public void onShutdown() {
     }
 }

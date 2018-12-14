@@ -64,10 +64,10 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
             qs.set("max_kills", max_kills);
             qs.set("current_kills", 1);
             if (player.getParty() == null)
-                player.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, false, String.valueOf(max_kills)));
+                player.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max_kills)));
             else
-                for (Player member : player.getParty().getMembers())
-                    member.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, false, String.valueOf(max_kills)));
+                player.getParty().getMembers().forEach(member ->
+                        member.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max_kills))));
 
         } else {
             int current_kills = qs.getInt("current_kills") + 1;
@@ -79,18 +79,18 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
                 qs.exitCurrentQuest(true);
 
                 if (player.getParty() == null)
-                    player.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, false));
+                    player.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000));
                 else
                     for (Player member : player.getParty().getMembers())
-                        member.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, false));
+                        member.sendPacket(new ExShowScreenMessage(doneNpcString(), 2000));
 
             } else {
                 qs.set("current_kills", current_kills);
                 if (player.getParty() == null)
-                    player.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, false, String.valueOf(max_kills), String.valueOf(current_kills)));
+                    player.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, String.valueOf(max_kills), String.valueOf(current_kills)));
                 else
                     for (Player member : player.getParty().getMembers())
-                        member.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, false, String.valueOf(max_kills), String.valueOf(current_kills)));
+                        member.sendPacket(new ExShowScreenMessage(progressNpcString(), 2000, String.valueOf(max_kills), String.valueOf(current_kills)));
 
             }
         }

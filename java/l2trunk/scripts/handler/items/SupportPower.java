@@ -11,10 +11,19 @@ import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public final class SupportPower extends ScriptItemHandler implements ScriptFile {
     private static final Integer ITEM_IDS = 24001;
-    private static final int[] CLASS_IDS = new int[]{97, 98, 100, 105, 107, 112, 115, 116};
+    private static final Map<Integer, Integer> classSkills = Map.of(
+            97, 24001,//Cardinal
+            98, 24002,//Hierophant
+            100, 24003,//SwordMuse
+            105, 24004,//EvaSaint
+            107, 24005,//SpectralDancer
+            112, 24006,//ShillienSaint
+            115, 24007,//Dominator
+            116, 24008);//Doomcryer
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -41,10 +50,6 @@ public final class SupportPower extends ScriptItemHandler implements ScriptFile 
         return Collections.singletonList(ITEM_IDS);
     }
 
-    private int[] getClassIds() {
-        return CLASS_IDS;
-    }
-
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
         if (playable == null || !playable.isPlayer())
             return false;
@@ -69,51 +74,13 @@ public final class SupportPower extends ScriptItemHandler implements ScriptFile 
             player.sendMessage("Use only on the main class!");
             return false;
         }
+        Integer skillID = classSkills.get(classId);
+        if (skillID == null) return false;
 
-        switch (classId) {
-            case 97://Cardinal
-                player.addSkill(SkillTable.INSTANCE.getInfo(24001, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            case 98://Hierophant
-                player.addSkill(SkillTable.INSTANCE.getInfo(24002, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            case 100://SwordMuse
-                player.addSkill(SkillTable.INSTANCE.getInfo(24003, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            case 105://EvaSaint
-                player.addSkill(SkillTable.INSTANCE.getInfo(24004, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            case 107://SpectralDancer
-                player.addSkill(SkillTable.INSTANCE.getInfo(24005, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            case 112://ShillienSaint
-                player.addSkill(SkillTable.INSTANCE.getInfo(24006, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            case 115://Dominator
-                player.addSkill(SkillTable.INSTANCE.getInfo(24007, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            case 116://Doomcryer
-                player.addSkill(SkillTable.INSTANCE.getInfo(24008, 1), false);
-                player.updateStats();
-                player.sendPacket(new SkillList(player));
-                break;
-            default:
-                return false;
-        }
+        player.addSkill(skillID, false);
+        player.updateStats();
+        player.sendPacket(new SkillList(player));
+
         return true;
     }
 }

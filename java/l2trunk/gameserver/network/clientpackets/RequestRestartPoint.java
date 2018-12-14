@@ -1,8 +1,8 @@
 package l2trunk.gameserver.network.clientpackets;
 
 import Elemental.managers.GmEventManager;
-import javafx.util.Pair;
 import l2trunk.commons.lang.ArrayUtils;
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;

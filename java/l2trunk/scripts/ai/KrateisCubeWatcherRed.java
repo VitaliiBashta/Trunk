@@ -5,15 +5,23 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class KrateisCubeWatcherRed extends DefaultAI {
-    private static final int[][] SKILLS = {{1064, 14}, {1160, 15}, {1164, 19}, {1167, 6}, {1168, 7}};
+    private static final Map<Integer, Integer> SKILLS = Map.of(
+            1064, 14,
+            1160, 15,
+            1164, 19,
+            1167, 6,
+            1168, 7);
     private static final int SKILL_CHANCE = 25;
 
     public KrateisCubeWatcherRed(NpcInstance actor) {
@@ -32,13 +40,14 @@ public final class KrateisCubeWatcherRed extends DefaultAI {
         if (around.isEmpty())
             return;
 
-        for (Creature cha : around)
-            if (cha.isPlayer() && !cha.isDead() && Rnd.chance(SKILL_CHANCE)) {
-                int rnd = Rnd.get(SKILLS.length);
-                Skill skill = SkillTable.INSTANCE.getInfo(SKILLS[rnd][0], SKILLS[rnd][1]);
-                if (skill != null)
-                    skill.getEffects(cha, cha, false, false);
-            }
+        around.stream()
+                .filter(GameObject::isPlayer)
+                .filter(cha -> !cha.isDead())
+                .filter(cha -> Rnd.chance(SKILL_CHANCE))
+                .forEach(cha -> {
+                    int rnd = Rnd.get(new ArrayList<>(SKILLS.keySet()));
+                    SkillTable.INSTANCE.getInfo(rnd, SKILLS.get(rnd)).getEffects(cha);
+                });
     }
 
     @Override

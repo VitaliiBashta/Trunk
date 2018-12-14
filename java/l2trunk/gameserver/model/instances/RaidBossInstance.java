@@ -193,7 +193,7 @@ public class RaidBossInstance extends MonsterInstance {
     @Override
     protected void onSpawn() {
         super.onSpawn();
-        addSkill(SkillTable.INSTANCE.getInfo(4045, 1)); // Resist Full Magic Attack
+        addSkill(4045); // Resist Full Magic Attack
         RaidBossSpawnManager.INSTANCE.onBossSpawned(this);
     }
 

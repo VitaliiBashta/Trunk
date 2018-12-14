@@ -67,7 +67,7 @@ public class _261_CollectorsDream extends Quest implements ScriptFile {
 
             if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q4")) {
                 st.getPlayer().setVar("p1q4", "1", -1);
-                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide.", 5000, ScreenMessageAlign.TOP_CENTER, true));
+                st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
             }
 
             htmltext = "moneylender_alshupes_q0261_05.htm";

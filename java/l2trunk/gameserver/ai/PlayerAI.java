@@ -15,7 +15,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
-public class PlayerAI extends PlayableAI {
+public final class PlayerAI extends PlayableAI {
     public PlayerAI(Player actor) {
         super(actor);
     }
@@ -197,7 +197,7 @@ public class PlayerAI extends PlayableAI {
                 return;
             }
 
-        // block the player for 10 minutes to summon a pet after the resurrection.
+        // setBlock the player for 10 minutes to summon a pet after the resurrection.
         //actor.setPetSummonBlockedTime(System.currentTimeMillis() + 600 * 1000);
 
         super.Cast(skill, target, forceUse, dontMove);

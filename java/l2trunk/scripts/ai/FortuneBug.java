@@ -10,17 +10,19 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.NpcUtils;
 
+import java.util.List;
+
 public final class FortuneBug extends DefaultAI {
     private static final int MAX_RADIUS = 500;
 
-    private final Skill s_display_bug_of_fortune1 = SkillTable.INSTANCE.getInfo(6045);
-    private final Skill s_display_jackpot_firework = SkillTable.INSTANCE.getInfo(5778);
+    private final static int s_display_bug_of_fortune1 = 6045;
+    private final static int s_display_jackpot_firework = 5778;
 
     private final int Wingless_Luckpy = 2502;
     private final int Wingless_Luckpy_Gold = 2503;
 
-    private final int[] Cristall = {9552, 9553, 9554, 9555, 9556, 9557};
-    private final int[] Cristall_Dush = {5577, 5578, 5579};
+    private final List<Integer> Cristall = List.of(9552, 9553, 9554, 9555, 9556, 9557);
+    private final List<Integer> Cristall_Dush = List.of(5577, 5578, 5579);
 
     private long _nextEat;
     private int i_ai0, i_ai1, i_ai2;
@@ -74,13 +76,13 @@ public final class FortuneBug extends DefaultAI {
 
                     switch (actor.getLevel()) {
                         case 52:
-                            npc.addSkill(SkillTable.INSTANCE.getInfo(24009));
+                            npc.addSkill(24009);
                             break;
                         case 70:
-                            npc.addSkill(SkillTable.INSTANCE.getInfo(24009, 2));
+                            npc.addSkill(24009, 2);
                             break;
                         case 80:
-                            npc.addSkill(SkillTable.INSTANCE.getInfo(24009, 3));
+                            npc.addSkill(24009, 3);
                             break;
                     }
                     npc.setLevel(actor.getLevel());
@@ -147,11 +149,11 @@ public final class FortuneBug extends DefaultAI {
                         actor.dropItem(killer.getPlayer(), 14678, 1);
                         return;
                     case 70:
-                        actor.dropItem(killer.getPlayer(), Cristall_Dush[Rnd.get(3)], Rnd.get(1, 2));
+                        actor.dropItem(killer.getPlayer(), Rnd.get(Cristall_Dush), Rnd.get(1, 2));
                         actor.dropItem(killer.getPlayer(), 14679, 1);
                         return;
                     case 80:
-                        actor.dropItem(killer.getPlayer(), Cristall[Rnd.get(6)], Rnd.get(1, 2));
+                        actor.dropItem(killer.getPlayer(), Rnd.get(Cristall), Rnd.get(1, 2));
                         actor.dropItem(killer.getPlayer(), 14680, 1);
                 }
         }

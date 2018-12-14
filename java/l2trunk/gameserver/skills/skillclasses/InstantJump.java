@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -11,18 +12,12 @@ import l2trunk.gameserver.network.serverpackets.FlyToLocation;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.ValidateLocation;
 import l2trunk.gameserver.stats.Stats;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 
 import java.util.List;
 
-/**
- * @author Grivesky
- * @date 13.03.2015
- **/
-
-public class InstantJump extends Skill {
+public final class InstantJump extends Skill {
     public InstantJump(StatsSet set) {
         super(set);
     }

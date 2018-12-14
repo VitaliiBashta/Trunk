@@ -318,7 +318,7 @@ public enum Achievements {
 
     }
 
-    public  void log(){
+    public void log() {
         _log.info("Achievement System: Loaded " + _achievementCategories.size() + " achievement categories and " + _achievementMaxLevels.size() + " achievements.");
 
     }

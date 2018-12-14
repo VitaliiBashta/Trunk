@@ -9,12 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetDataTable.L2Pet;
 
-/**
- * User: darkevil
- * Date: 02.06.2008
- * Time: 12:19:36
- */
-class fenrir extends Functions {
+public final class fenrir extends Functions {
     private static final int GREAT_WOLF = PetDataTable.GREAT_WOLF_ID;
     private static final int GREAT_WOLF_NECKLACE = L2Pet.GREAT_WOLF.getControlItemId();
     private static final int FENRIR_NECKLACE = L2Pet.FENRIR_WOLF.getControlItemId();

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 public final class Scarecrow extends Fighter {
     public Scarecrow(NpcInstance actor) {
         super(actor);
-        actor.block();
+        actor.setBlock(true);
         actor.setInvul(true);
     }
 

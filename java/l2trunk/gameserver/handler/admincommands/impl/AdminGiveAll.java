@@ -5,9 +5,6 @@ import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AdminGiveAll implements IAdminCommandHandler {

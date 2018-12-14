@@ -1,10 +1,10 @@
 package l2trunk.gameserver.tables;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.SpawnHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.SimpleSpawner;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import l2trunk.gameserver.templates.spawn.SpawnNpcInfo;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;

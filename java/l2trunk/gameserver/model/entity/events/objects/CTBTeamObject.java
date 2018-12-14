@@ -26,7 +26,8 @@ public class CTBTeamObject implements SpawnableObject {
     public void spawnObject(GlobalEvent event) {
         if (_flag == null) {
             _flag = new NpcInstance(IdFactory.getInstance().getNextId(), _flagTemplate);
-            _flag.setFullHpMp();;
+            _flag.setFullHpMp();
+            ;
             _flag.setHasChatWindow(false);
             _flag.spawnMe(_flagLoc);
         } else if (_mob == null) {

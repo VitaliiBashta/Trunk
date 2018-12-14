@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-class ItemBroker extends Functions {
+public final class ItemBroker extends Functions {
     private static final int MAX_ITEMS_PER_PAGE = 10;
     private static final int MAX_PAGES_PER_LIST = 9;
 

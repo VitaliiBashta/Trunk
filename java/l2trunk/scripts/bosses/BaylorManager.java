@@ -130,23 +130,22 @@ public final class BaylorManager extends Functions implements ScriptFile {
 
         if (pc.getParty() == null) {
             pc.teleToLocation(153569 + Rnd.get(-80, 80), 142075 + Rnd.get(-80, 80), -12732);
-            pc.block();
+            pc.setBlock(true);
         } else {
-            List<Player> members = new ArrayList<>(); // list of member of teleport candidate.
-            for (Player mem : pc.getParty().getMembers())
-                // teleporting it within alive and the range of recognition of the leader of the party.
-                if (!mem.isDead() && mem.isInRange(pc, 1500))
-                    members.add(mem);
-            for (Player mem : members) {
-                mem.teleToLocation(153569 + Rnd.get(-80, 80), 142075 + Rnd.get(-80, 80), -12732);
-                mem.block();
-            }
+
+            pc.getParty().getMembers().stream()
+                    .filter(mem -> !mem.isDead())
+                    .filter(mem -> mem.isInRange(pc, 1500))
+                    .forEach(mem -> {
+                        mem.teleToLocation(153569 + Rnd.get(-80, 80), 142075 + Rnd.get(-80, 80), -12732);
+                        mem.setBlock(true);
+                    });
         }
         _isAlreadyEnteredOtherParty = true;
     }
 
     private static List<Player> getPlayersInside() {
-        return new ArrayList<>(getZone().getInsidePlayers());
+        return getZone().getInsidePlayers();
     }
 
     private static int getRespawnInterval() {
@@ -347,7 +346,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
         @Override
         public void runImpl() {
             for (Player player : getPlayersInside()) {
-                player.unblock();
+                player.setBlock();
                 if (_baylor != null) {
                     double angle = PositionUtils.convertHeadingToDegree(_baylor.getHeading());
                     double radian = Math.toRadians(angle - 90);

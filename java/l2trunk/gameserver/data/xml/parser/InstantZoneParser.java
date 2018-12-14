@@ -1,16 +1,18 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractDirParser;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.data.xml.ParserUtil;
 import l2trunk.commons.geometry.Polygon;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.data.xml.holder.*;
+import l2trunk.gameserver.data.xml.holder.DoorHolder;
+import l2trunk.gameserver.data.xml.holder.InstantZoneHolder;
+import l2trunk.gameserver.data.xml.holder.SpawnHolder;
+import l2trunk.gameserver.data.xml.holder.ZoneHolder;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.templates.InstantZone.SpawnInfo;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import l2trunk.gameserver.utils.Location;
@@ -23,7 +25,7 @@ import java.util.*;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public enum  InstantZoneParser {
+public enum InstantZoneParser {
     INSTANCE;
     private final Path xml = Config.DATAPACK_ROOT.resolve("data/instances/");
     private Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
@@ -143,7 +145,7 @@ public enum  InstantZoneParser {
                         boolean active = e.attributeValue("active") != null && Boolean.parseBoolean(e.attributeValue("active"));
                         ZoneTemplate template = ZoneHolder.getTemplate(e.attributeValue("name"));
                         if (template == null) {
-                            LOG.error("Zone: " + e.attributeValue("name") + " not found; file: " );
+                            LOG.error("Zone: " + e.attributeValue("name") + " not found; file: ");
                             continue;
                         }
                         zones.put(template.getName(), new InstantZone.ZoneInfo(template, active));
@@ -159,7 +161,7 @@ public enum  InstantZoneParser {
                             boolean spawned = e.attributeValue("spawned") != null && Boolean.parseBoolean(e.attributeValue("spawned"));
                             List<SpawnTemplate> templates = SpawnHolder.getSpawn(group);
                             if (templates == null)
-                                LOG.info("not find spawn group: " + group + " in file: " );
+                                LOG.info("not find spawn group: " + group + " in file: ");
                             else {
                                 if (spawns2.isEmpty())
                                     spawns2 = new Hashtable<>();

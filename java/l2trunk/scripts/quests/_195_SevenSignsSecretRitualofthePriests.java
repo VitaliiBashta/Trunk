@@ -157,7 +157,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest impleme
             }
             st.playSound(SOUND_MIDDLE);
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE.getInfo(6204).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6204).getEffects(player);
             st.setCond(3);
         } else if (event.equalsIgnoreCase("transformagain")) {
             if (player.getTransformation() != 0 || player.isMounted()) {
@@ -165,7 +165,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest impleme
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE.getInfo(6204).getEffects(player, player, false, false);
+            SkillTable.INSTANCE.getInfo(6204).getEffects(player);
             htmltext = "raymond_q195_4c.htm";
         } else if (event.equalsIgnoreCase("dispel")) {
             if (player.getTransformation() == 113) {

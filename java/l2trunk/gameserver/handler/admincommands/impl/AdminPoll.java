@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class AdminPoll implements IAdminCommandHandler {
     private static final String MAIN_FOLDER = "admin/poll/";
 
@@ -107,7 +109,7 @@ public final class AdminPoll implements IAdminCommandHandler {
                 }
 
                 try {
-                    int minutesToPollOver = Integer.parseInt(wordList[1]);
+                    int minutesToPollOver = toInt(wordList[1]);
 
                     currentPoll.setEndTime(minutesToPollOver * 60 * 1000);
                     activeChar.sendMessage("End time has been changed!");
@@ -119,7 +121,7 @@ public final class AdminPoll implements IAdminCommandHandler {
                 //Starting quietly(1) or with announce(2)
             case admin_poll_start:
                 try {
-                    int type = Integer.parseInt(wordList[1]);
+                    int type = toInt(wordList[1]);
                     PollEngine.INSTANCE.startPoll((type == 2), true);
                     activeChar.sendMessage("Voting started!");
                 } catch (Exception e) {
@@ -130,7 +132,7 @@ public final class AdminPoll implements IAdminCommandHandler {
             //Ending poll quietly(1) or with announce(2)
             case admin_poll_end:
                 try {
-                    int type = Integer.parseInt(wordList[1]);
+                    int type = toInt(wordList[1]);
                     PollEngine.INSTANCE.stopPoll(type == 2);
                     activeChar.sendMessage("Voting finished!");
                 } catch (Exception e) {
@@ -169,7 +171,7 @@ public final class AdminPoll implements IAdminCommandHandler {
                 break;
             //Deleting existing answer
             case admin_poll_delete_answer:
-                int answerId = Integer.parseInt(wordList[1]);
+                int answerId = toInt(wordList[1]);
 
                 currentPoll.deleteAnswer(answerId);
 

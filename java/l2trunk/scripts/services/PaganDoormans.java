@@ -7,12 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * Используется в локации Pagan Temple
- *
- * @Author: SYS
- */
-class PaganDoormans extends Functions {
+public final class PaganDoormans extends Functions {
     private static final int MainDoorId = 19160001;
     private static final int SecondDoor1Id = 19160011;
     private static final int SecondDoor2Id = 19160010;
@@ -82,7 +77,6 @@ class PaganDoormans extends Functions {
     }
 
     private static void openDoor(int doorId) {
-        DoorInstance door = ReflectionUtils.getDoor(doorId);
-        door.openMe();
+        ReflectionUtils.getDoor(doorId).openMe();
     }
 }

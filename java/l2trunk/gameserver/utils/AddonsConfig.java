@@ -2,7 +2,6 @@ package l2trunk.gameserver.utils;
 
 import l2trunk.commons.configuration.ExProperties;
 import l2trunk.commons.lang.FileUtils;
-import static l2trunk.commons.lang.NumberUtils.*;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.quest.Quest;
 import org.slf4j.Logger;
@@ -16,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static l2trunk.commons.lang.NumberUtils.toDouble;
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class AddonsConfig {
     private static final Logger log = LoggerFactory.getLogger(AddonsConfig.class);

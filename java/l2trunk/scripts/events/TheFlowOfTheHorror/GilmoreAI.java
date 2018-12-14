@@ -102,7 +102,7 @@ public final class GilmoreAI extends Fighter {
                         case 2:
                             actor.setHeading(0);
                             actor.stopMove();
-                            actor.broadcastPacketToOthers(new MagicSkillUse(actor, actor, 454, 1, 3000, 0));
+                            actor.broadcastPacketToOthers(new MagicSkillUse(actor, 454, 3000));
                             step_stage2 = 3;
                             return true;
                         case 3:
@@ -110,7 +110,7 @@ public final class GilmoreAI extends Fighter {
                             actor.addStatFunc(new FuncMul(Stats.MAGIC_DAMAGE, 0x40, actor, 10));
                             actor.addStatFunc(new FuncMul(Stats.PHYSICAL_DAMAGE, 0x40, actor, 10));
                             actor.addStatFunc(new FuncMul(Stats.RUN_SPEED, 0x40, actor, 3));
-                            actor.addSkill(SkillTable.INSTANCE.getInfo(1467, 1));
+                            actor.addSkill(1467);
                             actor.sendChanges();
                             step_stage2 = 4;
                             return true;

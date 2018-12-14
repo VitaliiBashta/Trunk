@@ -45,13 +45,13 @@ public final class SeducedInvestigator extends Fighter {
                 _reuse = System.currentTimeMillis();
                 int[] buffs = {5970, 5971, 5972, 5973};
                 if (actor.getNpcId() == 36562)
-                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[0]), player, true);
+                    actor.doCast(buffs[0], player, true);
                 else if (actor.getNpcId() == 36563)
-                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[1]), player, true);
+                    actor.doCast(buffs[1], player, true);
                 else if (actor.getNpcId() == 36564)
-                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[2]), player, true);
+                    actor.doCast(buffs[2], player, true);
                 else
-                    actor.doCast(SkillTable.INSTANCE.getInfo(buffs[3]), player, true);
+                    actor.doCast(buffs[3], player, true);
             }
         }
 
@@ -64,7 +64,7 @@ public final class SeducedInvestigator extends Fighter {
         Reflection r = actor.getReflection();
         List<Player> players = r.getPlayers();
         for (Player p : players)
-            p.sendPacket(new ExShowScreenMessage("The Investigator has been killed. The mission is failed.", 3000, ScreenMessageAlign.TOP_CENTER, true));
+            p.sendPacket(new ExShowScreenMessage("The Investigator has been killed. The mission is failed."));
 
         r.startCollapseTimer(5 * 1000L);
 

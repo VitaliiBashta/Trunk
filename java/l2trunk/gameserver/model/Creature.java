@@ -52,6 +52,7 @@ import l2trunk.gameserver.stats.Formulas.AttackInfo;
 import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.stats.triggers.TriggerInfo;
 import l2trunk.gameserver.stats.triggers.TriggerType;
+import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.taskmanager.LazyPrecisionTaskManager;
 import l2trunk.gameserver.taskmanager.RegenTaskManager;
 import l2trunk.gameserver.templates.CharTemplate;
@@ -64,10 +65,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -91,23 +89,23 @@ public abstract class Creature extends GameObject {
     final Map<Integer, TimeStamp> _skillReuses = new HashMap<>();
     final CharTemplate baseTemplate;
     private final Map<Integer, Long[]> receivedDebuffs;
-    private final AtomicState _afraid = new AtomicState();
-    private final AtomicState _muted = new AtomicState();
-    private final AtomicState _pmuted = new AtomicState();
-    private final AtomicState _amuted = new AtomicState();
-    private final AtomicState _paralyzed = new AtomicState();
+    private final AtomicState afraid = new AtomicState();
+    private final AtomicState muted = new AtomicState();
+    private final AtomicState pmuted = new AtomicState();
+    private final AtomicState amuted = new AtomicState();
+    private final AtomicState paralyzed = new AtomicState();
     private final AtomicState rooted = new AtomicState();
-    private final AtomicState _sleeping = new AtomicState();
-    private final AtomicState _stunned = new AtomicState();
-    private final AtomicState _immobilized = new AtomicState();
+    private final AtomicState sleeping = new AtomicState();
+    private final AtomicState stunned = new AtomicState();
+    private final AtomicState immobilized = new AtomicState();
     private final AtomicState confused = new AtomicState();
-    private final AtomicState _frozen = new AtomicState();
-    private final AtomicState _healBlocked = new AtomicState();
-    private final AtomicState _damageBlocked = new AtomicState();
+    private final AtomicState frozen = new AtomicState();
+    private final AtomicState healBlocked = new AtomicState();
+    private final AtomicState damageBlocked = new AtomicState();
     private final AtomicState buffImmunity = new AtomicState(); // Иммунитет к бафам
-    private final AtomicState _debuffImmunity = new AtomicState(); // Иммунитет к дебафам
+    private final AtomicState debuffImmunity = new AtomicState(); // Иммунитет к дебафам
     private final AtomicState _effectImmunity = new AtomicState(); // Иммунитет ко всем эффектам
-    private final AtomicState _weaponEquipBlocked = new AtomicState();
+    private final AtomicState weaponEquipBlocked = new AtomicState();
     private final Lock moveLock = new ReentrantLock();
     /**
      * при moveToLocation используется для хранения геокоординат в которые мы двигаемся для того что бы избежать повторного построения одного и того же пути при followToCharacter используется для хранения мировых координат в которых находилась последний раз преследуемая цель для отслеживания
@@ -137,17 +135,17 @@ public abstract class Creature extends GameObject {
     protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
     protected boolean invul;
     protected CharTemplate template;
-    protected volatile CharacterAI ai;
     protected String name;
     protected volatile CharListenerList listeners;
     protected int storedId;
+    protected volatile CharacterAI ai;
     double _currentMp = 1;
     String title;
     private int _scheduledCastCount;
     private int _scheduledCastInterval;
     private Future<?> _skillLaunchedTask;
 
-    private long _reuseDelay = 0L;
+    private long reuseDelay = 0L;
     private double currentCp = 0;
     private double _currentHp = 1;
     private boolean _isAttackAborted;
@@ -175,9 +173,9 @@ public abstract class Creature extends GameObject {
     private int _abnormalEffects3;
     private Map<Integer, Integer> _skillMastery;
     private boolean _fakeDeath;
-    private boolean _isBlessedByNoblesse; // Восстанавливает все бафы после смерти
+    private boolean isblessedbynoblesse; // Восстанавливает все бафы после смерти
     private boolean _isSalvation; // Восстанавливает все бафы после смерти и полностью CP, MP, HP
-    private boolean _meditated;
+    private boolean meditated;
     private boolean _lockedTarget;
     private boolean blocked;
     private boolean _flying;
@@ -436,7 +434,15 @@ public abstract class Creature extends GameObject {
         _blockedStats.addAll(stats);
     }
 
-    public Skill addSkill(Skill newSkill) {
+    public Skill addSkill(int newSkillId) {
+        return addSkill(SkillTable.INSTANCE.getInfo(newSkillId, 1));
+    }
+
+    public Skill addSkill(int newSkillId, int lvl) {
+        return addSkill(SkillTable.INSTANCE.getInfo(newSkillId, lvl));
+    }
+
+    private Skill addSkill(Skill newSkill) {
         if (newSkill == null)
             return null;
 
@@ -510,7 +516,15 @@ public abstract class Creature extends GameObject {
         }
     }
 
-    public void altOnMagicUseTimer(Creature aimingTarget, Skill skill) {
+    public void altOnMagicUseTimer(Creature aimingTarget, int skillId, int skillLvl) {
+        altOnMagicUseTimer(aimingTarget, SkillTable.INSTANCE.getInfo(skillId, skillLvl));
+    }
+
+    public void altOnMagicUseTimer(Creature aimingTarget, int skillId) {
+        altOnMagicUseTimer(aimingTarget, SkillTable.INSTANCE.getInfo(skillId));
+    }
+
+    private void altOnMagicUseTimer(Creature aimingTarget, Skill skill) {
         if (isAlikeDead())
             return;
         int magicId = skill.getDisplayId();
@@ -531,7 +545,16 @@ public abstract class Creature extends GameObject {
         callSkill(skill, targets, false);
     }
 
-    public void altUseSkill(Skill skill, Creature target) {
+
+    public void altUseSkill(int skillId, int skillLvl, Creature target) {
+        altUseSkill(SkillTable.INSTANCE.getInfo(skillId, skillLvl), target);
+    }
+
+    public void altUseSkill(int skillId, Creature target) {
+        altUseSkill(skillId, 1, target);
+    }
+
+    private void altUseSkill(Skill skill, Creature target) {
         if (skill == null)
             return;
 
@@ -595,7 +618,7 @@ public abstract class Creature extends GameObject {
         if (!skill.isHandler())
             disableSkill(skill, reuseDelay);
 
-        ThreadPoolManager.INSTANCE.schedule(new AltMagicUseTask(this, target, skill), skill.getHitTime());
+        ThreadPoolManager.INSTANCE.schedule(new AltMagicUseTask(this, target, skill.getId()), skill.getHitTime());
     }
 
     public void sendReuseMessage(Skill skill) {
@@ -784,6 +807,14 @@ public abstract class Creature extends GameObject {
         return Formulas.calcPAtkSpd(getPAtkSpd());
     }
 
+    public void callSkill(int skillId, int skillLvl, List<Creature> targets, boolean useActionSkills) {
+        callSkill(SkillTable.INSTANCE.getInfo(skillId, skillLvl), targets, useActionSkills);
+    }
+
+    public void callSkill(int skillId, List<Creature> targets, boolean useActionSkills) {
+        callSkill(SkillTable.INSTANCE.getInfo(skillId), targets, useActionSkills);
+    }
+
     public void callSkill(Skill skill, List<Creature> targets, boolean useActionSkills) {
         try {
             if (useActionSkills && !skill.isUsingWhileCasting() && _triggers != null)
@@ -855,7 +886,7 @@ public abstract class Creature extends GameObject {
             // Особое условие для атакующих аура-скиллов (Vengeance 368):
             // если ни одна цель не задета то селфэффекты не накладываются
             if (!(skill.isNotTargetAoE() && skill.isOffensive() && targets.size() == 0))
-                skill.getEffects(this, this, false, true);
+                skill.getEffects(this,  false, true);
 
             skill.useSkill(this, targets);
         } catch (Exception e) {
@@ -904,7 +935,7 @@ public abstract class Creature extends GameObject {
 
             if (trigger.getType() != TriggerType.SUPPORT_MAGICAL_SKILL_USE) {
                 for (Creature cha : targets)
-                    broadcastPacket(new MagicSkillUse(this, cha, displayId, displayLevel, 0, 0));
+                    broadcastPacket(new MagicSkillUse(this, cha, displayId, displayLevel));
             }
 
             Formulas.calcSkillMastery(skill, this);
@@ -1189,7 +1220,14 @@ public abstract class Creature extends GameObject {
         return _animationEndTime;
     }
 
-    @SuppressWarnings("incomplete-switch")
+    public void doCast(int skillId, int skillLvl, Creature target, boolean forceUse) {
+        doCast(SkillTable.INSTANCE.getInfo(skillId, skillLvl), target, forceUse);
+    }
+
+    public void doCast(int skillId, Creature target, boolean forceUse) {
+        doCast(SkillTable.INSTANCE.getInfo(skillId), target, forceUse);
+    }
+
     public void doCast(Skill skill, Creature target, boolean forceUse) {
         if (skill == null)
             return;
@@ -1425,7 +1463,7 @@ public abstract class Creature extends GameObject {
         //   getPlayer().getPet().unSummon();
         // }
 
-        boolean fightClubKeepBuffs = isPlayable() ;
+        boolean fightClubKeepBuffs = isPlayable();
         // Stop all active skills effects in progress on the L2Character
         if (isBlessedByNoblesse() || isSalvation() || fightClubKeepBuffs) {
             if (isSalvation() && isPlayer() && !getPlayer().isInOlympiadMode()) {
@@ -1434,7 +1472,7 @@ public abstract class Creature extends GameObject {
             for (Effect e : getEffectList().getAllEffects()) {
                 // Noblesse Blessing Buff/debuff effects are retained after
                 // death. However, Noblesse Blessing and Lucky Charm are lost as normal.
-                if (e.getEffectType() == EffectType.BlessNoblesse || e.getSkill().getId() ==1325 || e.getSkill().getId() == Skill.SKILL_RAID_BLESSING)
+                if (e.getEffectType() == EffectType.BlessNoblesse || e.getSkill().getId() == 1325 || e.getSkill().getId() == Skill.SKILL_RAID_BLESSING)
                     e.exit();
                 else if (e.getEffectType() == EffectType.AgathionResurrect && !isPlayable()) {
                     if (isPlayer())
@@ -1529,7 +1567,6 @@ public abstract class Creature extends GameObject {
 
     /**
      * Возвращает шанс магического крита в процентах
-     *
      */
     public double getMagicCriticalRate(Creature target, Skill skill) {
         return calcStat(Stats.MCRITICAL_RATE, target, skill);
@@ -1842,7 +1879,7 @@ public abstract class Creature extends GameObject {
     }
 
     private boolean isBlessedByNoblesse() {
-        return _isBlessedByNoblesse;
+        return isblessedbynoblesse;
     }
 
     final boolean isSalvation() {
@@ -1858,7 +1895,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isDebuffImmune() {
-        return _debuffImmunity.get();
+        return debuffImmunity.get();
     }
 
     public boolean isDead() {
@@ -1900,11 +1937,11 @@ public abstract class Creature extends GameObject {
     }
 
     public final long getReuseDelay() {
-        return _reuseDelay;
+        return reuseDelay;
     }
 
     public final void setReuseDelay(long newReuseDelay) {
-        _reuseDelay = (newReuseDelay + System.currentTimeMillis());
+        reuseDelay = (newReuseDelay + System.currentTimeMillis());
     }
 
     public boolean isSkillDisabled(Skill skill) {
@@ -2354,7 +2391,7 @@ public abstract class Creature extends GameObject {
         if (isInObserverMode())
             return;
 
-        List<Zone> zones = isVisible() ? getCurrentRegion().getZones() : new ArrayList<>();
+        List<Zone> zones = isVisible() ? getCurrentRegion().getZones() : new CopyOnWriteArrayList<>();
 
         List<Zone> entering = null;
         List<Zone> leaving = null;
@@ -2811,7 +2848,7 @@ public abstract class Creature extends GameObject {
             getEffectList().stopEffects(EffectType.Sleep);
 
         if (attacker != this || (skill != null && skill.isOffensive())) {
-            if (isMeditated()) {
+            if (meditated) {
                 Effect effect = getEffectList().getEffectByType(EffectType.Meditation);
                 if (effect != null)
                     getEffectList().stopEffect(effect.getSkill());
@@ -2841,7 +2878,7 @@ public abstract class Creature extends GameObject {
             if (isSleeping())
                 getEffectList().stopEffects(EffectType.Sleep);
 
-            if (isMeditated()) {
+            if (meditated) {
                 Effect effect = getEffectList().getEffectByType(EffectType.Meditation);
                 if (effect != null)
                     getEffectList().stopEffect(effect.getSkill());
@@ -2970,20 +3007,15 @@ public abstract class Creature extends GameObject {
         return ai != null;
     }
 
-    public CharacterAI getAI() {
+    public synchronized CharacterAI getAI() {
         if (ai == null)
-            synchronized (this) {
-                if (ai == null)
-                    ai = new CharacterAI(this);
-            }
-
+            ai = new CharacterAI(this);
         return ai;
     }
 
     public void setAI(CharacterAI newAI) {
         if (newAI == null)
             return;
-
         CharacterAI oldAI = ai;
 
         synchronized (this) {
@@ -3285,236 +3317,139 @@ public abstract class Creature extends GameObject {
         sendChanges();
     }
 
-    /**
-     * Блокируем персонажа
-     */
-    public void block() {
-        blocked = true;
+    public void setBlock(boolean state) {
+        blocked = state;
     }
 
-    /**
-     * Разблокируем персонажа
-     */
-    public void unblock() {
+    public void setBlock() {
         blocked = false;
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startConfused() {
-        return confused.getAndSet(true);
+    public void startConfused() {
+        confused.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
     public boolean stopConfused() {
         return confused.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
     public boolean startFear() {
-        return _afraid.getAndSet(true);
+        return !afraid.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopFear() {
-        return _afraid.setAndGet(false);
+    public void stopFear() {
+        afraid.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
     public boolean startMuted() {
-        return _muted.getAndSet(true);
+        return muted.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopMuted() {
-        return _muted.setAndGet(false);
+    public void stopMuted() {
+        muted.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
     public boolean startPMuted() {
-        return _pmuted.getAndSet(true);
+        return pmuted.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopPMuted() {
-        return _pmuted.setAndGet(false);
+    public void stopPMuted() {
+        pmuted.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
     public boolean startAMuted() {
-        return _amuted.getAndSet(true);
+        return amuted.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopAMuted() {
-        return _amuted.setAndGet(false);
+    public void stopAMuted() {
+        amuted.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startRooted() {
-        return rooted.getAndSet(true);
+    public void startRooted() {
+        rooted.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopRooted() {
-        return rooted.setAndGet(false);
+    public void stopRooted() {
+        rooted.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startSleeping() {
-        return _sleeping.getAndSet(true);
+    public void startSleeping() {
+        sleeping.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopSleeping() {
-        return _sleeping.setAndGet(false);
+    public void stopSleeping() {
+        sleeping.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startStunning() {
-        return _stunned.getAndSet(true);
+    public void startStunning() {
+        stunned.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopStunning() {
-        return _stunned.setAndGet(false);
+    public void stopStunning() {
+        stunned.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startParalyzed() {
-        return _paralyzed.getAndSet(true);
+    public void startParalyzed() {
+        paralyzed.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopParalyzed() {
-        return _paralyzed.setAndGet(false);
+    public void stopParalyzed() {
+        paralyzed.setAndGet(false);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startImmobilized() {
-        return _immobilized.getAndSet(true);
+    public void startImmobilized() {
+        /*return*/ immobilized.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopImmobilized() {
-        return _immobilized.setAndGet(false);
+    public void stopImmobilized() {
+        immobilized.setAndGet(false);
+    }
+    public void startHealBlocked() {
+        healBlocked.getAndSet(true);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startHealBlocked() {
-        return _healBlocked.getAndSet(true);
+    public void stopHealBlocked() {
+        healBlocked.setAndGet(false);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopHealBlocked() {
-        return _healBlocked.setAndGet(false);
+    public void startDamageBlocked() {
+        damageBlocked.getAndSet(true);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startDamageBlocked() {
-        return _damageBlocked.getAndSet(true);
+    public void stopDamageBlocked() {
+        damageBlocked.setAndGet(false);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopDamageBlocked() {
-        return _damageBlocked.setAndGet(false);
+    public void startBuffImmunity() {
+        buffImmunity.getAndSet(true);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startBuffImmunity() {
-        return buffImmunity.getAndSet(true);
+    public void stopBuffImmunity() {
+        buffImmunity.setAndGet(false);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopBuffImmunity() {
-        return buffImmunity.setAndGet(false);
+    public void startDebuffImmunity() {
+        debuffImmunity.getAndSet(true);
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startDebuffImmunity() {
-        return _debuffImmunity.getAndSet(true);
+    public void stopDebuffImmunity() {
+        debuffImmunity.setAndGet(false);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopDebuffImmunity() {
-        return _debuffImmunity.setAndGet(false);
+    public void startWeaponEquipBlocked() {
+        weaponEquipBlocked.getAndSet(true);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean startWeaponEquipBlocked() {
-        return _weaponEquipBlocked.getAndSet(true);
+    public void stopWeaponEquipBlocked() {
+        weaponEquipBlocked.getAndSet(false);
     }
 
-    /**
-     * @return текущее состояние
-     */
-    public boolean stopWeaponEquipBlocked() {
-        return _weaponEquipBlocked.getAndSet(false);
+    public void startFrozen() {
+        frozen.getAndSet(true);
     }
 
-    public boolean startFrozen() {
-        return _frozen.getAndSet(true);
-    }
-
-    public boolean stopFrozen() {
-        return _frozen.setAndGet(false);
+    public void stopFrozen() {
+        frozen.setAndGet(false);
     }
 
     public void breakFakeDeath() {
@@ -3522,7 +3457,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final void setIsBlessedByNoblesse(boolean value) {
-        _isBlessedByNoblesse = value;
+        isblessedbynoblesse = value;
     }
 
     public final void setIsSalvation(boolean value) {
@@ -3542,7 +3477,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isAfraid() {
-        return _afraid.get();
+        return afraid.get();
     }
 
     public boolean isBlocked() {
@@ -3552,19 +3487,11 @@ public abstract class Creature extends GameObject {
     public boolean isMuted(Skill skill) {
         if (skill == null || skill.isNotAffectedByMute())
             return false;
-        return isMMuted() && skill.isMagic() || isPMuted() && !skill.isMagic();
-    }
-
-    private boolean isPMuted() {
-        return _pmuted.get();
-    }
-
-    private boolean isMMuted() {
-        return _muted.get();
+        return muted.get() && skill.isMagic() || pmuted.get() && !skill.isMagic();
     }
 
     public boolean isAMuted() {
-        return _amuted.get();
+        return amuted.get();
     }
 
     public boolean isRooted() {
@@ -3572,43 +3499,39 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isSleeping() {
-        return _sleeping.get();
+        return sleeping.get();
     }
 
     public boolean isStunned() {
-        return _stunned.get();
-    }
-
-    private boolean isMeditated() {
-        return _meditated;
+        return stunned.get();
     }
 
     public void setMeditated(boolean value) {
-        _meditated = value;
+        meditated = value;
     }
 
     public boolean isWeaponEquipBlocked() {
-        return _weaponEquipBlocked.get();
+        return weaponEquipBlocked.get();
     }
 
     public boolean isParalyzed() {
-        return _paralyzed.get();
+        return paralyzed.get();
     }
 
     public boolean isFrozen() {
-        return _frozen.get();
+        return frozen.get();
     }
 
     public boolean isImmobilized() {
-        return _immobilized.get() || getRunSpeed() < 1;
+        return immobilized.get() || getRunSpeed() < 1;
     }
 
     public boolean isHealBlocked() {
-        return isAlikeDead() || _healBlocked.get();
+        return isAlikeDead() || healBlocked.get();
     }
 
     boolean isDamageBlocked() {
-        return isInvul() || _damageBlocked.get();
+        return isInvul() || damageBlocked.get();
     }
 
     public boolean isCastingNow() {
@@ -3625,10 +3548,6 @@ public abstract class Creature extends GameObject {
 
     public boolean isMovementDisabled() {
         return isBlocked() || isRooted() || isImmobilized() || isAlikeDead() || isStunned() || isSleeping() || isParalyzed() || isAttackingNow() || isCastingNow() || isFrozen();
-    }
-
-    public boolean isFlyingDisabled() {
-        return isBlocked() || isRooted() || isImmobilized() || isAlikeDead() || isStunned() || isSleeping() || isParalyzed() || isFrozen();
     }
 
     public boolean isActionsDisabled() {
@@ -3659,9 +3578,8 @@ public abstract class Creature extends GameObject {
         teleToLocation(x, y, z, getReflection());
     }
 
-    public void checkAndRemoveInvisible() {
-        InvisibleType invisibleType = getInvisibleType();
-        if (invisibleType == InvisibleType.EFFECT)
+    void checkAndRemoveInvisible() {
+        if (getInvisibleType() == InvisibleType.EFFECT)
             getEffectList().stopEffects(EffectType.Invisible);
     }
 

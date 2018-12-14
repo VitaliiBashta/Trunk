@@ -57,7 +57,7 @@ public final class HolyWater extends SimpleItemHandler implements ScriptFile {
             return false;
         }
 
-        player.broadcastPacket(new MagicSkillUse(player, npc, 2358, 1, 0, 0));
+        player.broadcastPacket(new MagicSkillUse(player, npc, 2358));
         npc.onUseHolyWater(player);
 
         return true;

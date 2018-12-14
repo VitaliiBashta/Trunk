@@ -47,9 +47,10 @@ public abstract class Summon extends Playable {
     protected Summon(int objectId, NpcTemplate template, Player owner) {
         super(objectId, template);
         _owner = owner;
-        for (Skill iterator : template.getSkills().values()) {
-            addSkill(iterator);
-        }
+        template.getSkills().values().stream()
+                .mapToInt(Skill::getId)
+                .forEach(this::addSkill);
+
 
         setXYZ(owner.getX() + Rnd.get(-100, 100), owner.getY() + Rnd.get(-100, 100), owner.getZ());
     }
@@ -74,16 +75,11 @@ public abstract class Summon extends Playable {
     }
 
     @Override
-    public SummonAI getAI() {
-        if (ai == null) {
-            synchronized (this) {
-                if (ai == null) {
-                    ai = new SummonAI(this);
-                }
-            }
+    public synchronized SummonAI getAI() {
+        if (super.getAI() == null) {
+            super.setAI(new SummonAI(this));
         }
-
-        return (SummonAI) ai;
+        return (SummonAI) super.getAI();
     }
 
     @Override

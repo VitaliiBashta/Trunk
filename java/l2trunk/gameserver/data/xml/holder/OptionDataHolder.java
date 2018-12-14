@@ -5,7 +5,7 @@ import l2trunk.gameserver.templates.OptionDataTemplate;
 
 import java.util.*;
 
-public final class OptionDataHolder  {
+public final class OptionDataHolder {
     private OptionDataHolder() {
     }
 

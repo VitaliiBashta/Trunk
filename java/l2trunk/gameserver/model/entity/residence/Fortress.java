@@ -1,5 +1,6 @@
 package l2trunk.gameserver.model.entity.residence;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.gameserver.dao.ClanDataDAO;
 import l2trunk.gameserver.dao.FortressDAO;
@@ -8,7 +9,6 @@ import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.UnitMember;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

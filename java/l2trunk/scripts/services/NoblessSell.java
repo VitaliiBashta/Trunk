@@ -13,7 +13,7 @@ import l2trunk.gameserver.network.serverpackets.SkillList;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.scripts.quests._234_FatesWhisper;
 
-class NoblessSell extends Functions {
+public final class NoblessSell extends Functions {
     public void get() {
         Player player = getSelf();
 
@@ -77,6 +77,6 @@ class NoblessSell extends Functions {
         player.getInventory().addItem(7694, 1L, "nobleTiara");
         player.sendMessage("Congratulations! You gained noblesse rank.");
         player.broadcastUserInfo(true);
-        player.broadcastPacket(new L2GameServerPacket[]{new MagicSkillUse(player, player, 6696, 1, 1000, 0)});
+        player.broadcastPacket(new MagicSkillUse(player,  6696,  1000));
     }
 }

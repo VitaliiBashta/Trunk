@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.quest;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.logging.LogUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;

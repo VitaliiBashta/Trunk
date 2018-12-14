@@ -37,49 +37,49 @@ public final class Battleground extends SimpleItemHandler implements ScriptFile 
             //Battleground Spell - Shield Master
             case 10143:
                 Arrays.asList(2379, 2380, 2381, 2382, 2383).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
+                    player.broadcastPacket(new MagicSkillUse(player,  skill ));
+                    player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Wizard
             case 10144:
                 Arrays.asList(2379, 2380, 2381, 2384, 2385).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
+                    player.broadcastPacket(new MagicSkillUse(player, skill ));
+                    player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Healer
             case 10145:
                 Arrays.asList(2379, 2380, 2381, 2384, 2386).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
+                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                    player.altOnMagicUseTimer(player,skill);
                 });
                 break;
             // Battleground Spell - Dagger Master
             case 10146:
                 Arrays.asList(2379, 2380, 2381, 2388, 2383).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
+                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                    player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Bow Master
             case 10147:
                 Arrays.asList(2379, 2380, 2381, 2389, 2383).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
+                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                    player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Bow Master
             case 10148:
                 Arrays.asList(2390, 2391).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player, player, skill, 1, 0, 0));
-                    player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(skill));
+                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                    player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             //Full Bottle of Souls - 5 Souls (For Combat)
             case 10411:
-                player.broadcastPacket(new MagicSkillUse(player, player, 2499, 1, 0, 0));
-                player.altOnMagicUseTimer(player, SkillTable.INSTANCE.getInfo(2499));
+                player.broadcastPacket(new MagicSkillUse(player,  2499));
+                player.altOnMagicUseTimer(player, 2499);
                 break;
             default:
                 return false;

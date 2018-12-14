@@ -62,7 +62,7 @@ public final class CoralGardenGolem extends DefaultAI {
 
         if (!trapped && (actor.isInZone("[cry_cav_cor_gar_golem_trap_1]") || actor.isInZone("[cry_cav_cor_gar_golem_trap_2]"))) {
             trapped = true;
-            actor.broadcastPacket(new MagicSkillUse(actor, actor, 5441, 1, 3000, 0));
+            actor.broadcastPacket(new MagicSkillUse(actor,  5441,  3000));
             if (!actor.getReflection().isDefault() && actor.getReflection().getInstancedZoneId() == 10)
                 ((CrystalCaverns) actor.getReflection()).notifyGolemTrapped();
         }

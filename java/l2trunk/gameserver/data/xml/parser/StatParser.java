@@ -1,7 +1,5 @@
 package l2trunk.gameserver.data.xml.parser;
 
-import l2trunk.commons.data.xml.AbstractDirParser;
-import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.model.entity.residence.ResidenceType;
 import l2trunk.gameserver.stats.StatTemplate;
 import l2trunk.gameserver.stats.Stats;
@@ -13,14 +11,19 @@ import l2trunk.gameserver.templates.item.ArmorTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H> {
-    StatParser(H holder) {
-        super(holder);
+import static l2trunk.commons.lang.NumberUtils.toBoolean;
+
+public final class StatParser {
+    public static final Logger LOG = LoggerFactory.getLogger(StatParser.class);
+
+    private StatParser() {
     }
 
     static Condition parseFirstCond(Element sub) {
@@ -90,7 +93,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
             String name = attribute.getName();
             String value = attribute.getValue();
             if (name.equalsIgnoreCase("pvp"))
-                cond = joinAnd(cond, new ConditionTargetPlayable(Boolean.valueOf(value)));
+                cond = joinAnd(cond, new ConditionTargetPlayable(toBoolean(value)));
         }
 
         return cond;
@@ -189,7 +192,7 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return and;
     }
 
-    public static void parseFor(Element forElement, StatTemplate template) {
+    static void parseFor(Element forElement, StatTemplate template) {
         for (Iterator<Element> iterator = forElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();
             final String elementName = element.getName();
@@ -242,8 +245,6 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
     }
 
     static Number parseNumber(String value) {
-//        if (value.charAt(0) == '#')
-//            value = getTableValue(value).toString();
         if (value.indexOf('.') == -1) {
             int radix = 10;
             if (value.length() > 2 && value.substring(0, 2).equalsIgnoreCase("0x")) {
@@ -255,5 +256,4 @@ abstract class StatParser<H extends AbstractHolder> extends AbstractDirParser<H>
         return Double.valueOf(value);
     }
 
-    protected abstract Object getTableValue(String name);
 }

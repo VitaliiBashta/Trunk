@@ -2,7 +2,7 @@ package l2trunk.gameserver.model.entity.events.impl;
 
 import l2trunk.commons.collections.CollectionUtils;
 import l2trunk.commons.collections.JoinedIterator;
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.data.xml.holder.InstantZoneHolder;
 import l2trunk.gameserver.model.*;
@@ -17,8 +17,8 @@ import l2trunk.gameserver.templates.InstantZone;
 import java.util.Iterator;
 import java.util.List;
 
-public class PartyVsPartyDuelEvent extends DuelEvent {
-    public PartyVsPartyDuelEvent(MultiValueSet<String> set) {
+public final class PartyVsPartyDuelEvent extends DuelEvent {
+    public PartyVsPartyDuelEvent(StatsSet set) {
         super(set);
     }
 
@@ -121,7 +121,7 @@ public class PartyVsPartyDuelEvent extends DuelEvent {
         while (iterator.hasNext()) {
             Player $member = iterator.next();
 
-            IStaticPacket packet = null;
+            IStaticPacket packet;
             if ((packet = canDuel0(player, $member)) != null) {
                 player.sendPacket(packet);
                 target.sendPacket(packet);

@@ -26,7 +26,7 @@ public final class RequestTutorialPassCmdToServer extends L2GameClientPacket {
         if (player == null)
             return;
 
-        // Alexander - Support for handling scripts events on tutorial windows
+            // Alexander - Support for handling scripts events on tutorial windows
         else if (_bypass.startsWith("scripts_")) {
             String command = _bypass.substring(8).trim();
             String[] word = command.split("\\s+");

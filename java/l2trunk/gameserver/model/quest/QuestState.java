@@ -31,7 +31,7 @@ public final class QuestState {
     private static final int RESTART_MINUTES = 30;
     private static final Logger _log = LoggerFactory.getLogger(QuestState.class);
     private final Player _player;
-    private final Quest _quest;
+    private final Quest quest;
     private final Map<String, String> _vars = new ConcurrentHashMap<>();
     private final Map<String, QuestTimer> _timers = new ConcurrentHashMap<>();
     private int _state;
@@ -52,7 +52,7 @@ public final class QuestState {
      * @param state  : state of the quest
      */
     public QuestState(Quest quest, Player player, int state) {
-        _quest = quest;
+        this.quest = quest;
         _player = player;
 
         // Save the state of the quest for the player in the player's list of quest onwed
@@ -153,20 +153,20 @@ public final class QuestState {
 
         removePlayerOnKillListener();
         // Clean drops
-        for (int itemId : _quest.getItems()) {
+        for (int itemId : quest.getItems()) {
             // Get [item from] / [presence of the item in] the inventory of the player
             ItemInstance item = player.getInventory().getItemByItemId(itemId);
             if (item == null || itemId == 57)
                 continue;
             long count = item.getCount();
             // If player has the item in inventory, destroy it (if not gold)
-            player.getInventory().destroyItemByItemId(itemId, count, "Exiting Quest " + _quest.getName());
-            player.getWarehouse().destroyItemByItemId(itemId, count, "WH " + player.toString(), "Exiting Quest " + _quest.getName());//TODO [G1ta0] analyze this
+            player.getInventory().destroyItemByItemId(itemId, count, "Exiting Quest " + quest.getName());
+            player.getWarehouse().destroyItemByItemId(itemId, count, "WH " + player.toString(), "Exiting Quest " + quest.getName());//TODO [G1ta0] analyze this
         }
 
         // If quest is repeatable, delete quest from list of quest of the player and from database (quest CAN be created again => repeatable)
         if (repeatable) {
-            player.removeQuestState(_quest.getName());
+            player.removeQuestState(quest.getName());
             Quest.deleteQuestInDb(this);
             _vars.clear();
         } else { // Otherwise, delete variables for quest and update database (quest CANNOT be created again => not repeatable)
@@ -181,7 +181,7 @@ public final class QuestState {
     }
 
     public void abortQuest() {
-        _quest.onAbort(this);
+        quest.onAbort(this);
         exitCurrentQuest(true);
     }
 
@@ -242,7 +242,7 @@ public final class QuestState {
      * @return Quest
      */
     public Quest getQuest() {
-        return _quest;
+        return quest;
     }
 
     public boolean checkQuestItemsCount(int... itemIds) {
@@ -333,7 +333,7 @@ public final class QuestState {
         if (rate)
             count = (long) (count * getRateQuestsReward());
 
-        ItemFunctions.addItem(player, itemId, count, true, "Quest " + _quest.getName());
+        ItemFunctions.addItem(player, itemId, count, true, "Quest " + quest.getName());
         player.sendChanges();
     }
 
@@ -357,7 +357,7 @@ public final class QuestState {
                 item.setAttributeElement(element, power);
 
             // Add items to player's inventory
-            player.getInventory().addItem(item, "Quest " + _quest.getName());
+            player.getInventory().addItem(item, "Quest " + quest.getName());
         }
 
         player.sendPacket(SystemMessage2.obtainItems(template.getItemId(), count, 0));
@@ -777,7 +777,7 @@ public final class QuestState {
             count = item.getCount();
 
         // Destroy the quantity of items wanted
-        player.getInventory().destroyItemByItemId(itemId, count, "Quest " + _quest.getName());
+        player.getInventory().destroyItemByItemId(itemId, count, "Quest " + quest.getName());
         // Send message of destruction to client
         player.sendPacket(SystemMessage2.removeItems(itemId, count));
 
@@ -997,7 +997,7 @@ public final class QuestState {
 
             player.removeListener(this);
 
-            _quest.notifyDeath(killer, actor, QuestState.this);
+            quest.notifyDeath(killer, actor, QuestState.this);
         }
     }
 
@@ -1009,7 +1009,7 @@ public final class QuestState {
 
             Player actorPlayer = (Player) actor;
             List<Player> players = null;
-            switch (_quest.getParty()) {
+            switch (quest.getParty()) {
                 case Quest.PARTY_NONE:
                     players = Collections.singletonList(actorPlayer);
                     break;
@@ -1029,9 +1029,9 @@ public final class QuestState {
             }
 
             for (Player player : players) {
-                QuestState questState = player.getQuestState(_quest.getClass());
+                QuestState questState = player.getQuestState(quest.getClass());
                 if (questState != null && !questState.isCompleted())
-                    _quest.notifyKill((Player) victim, questState);
+                    quest.notifyKill((Player) victim, questState);
             }
         }
 

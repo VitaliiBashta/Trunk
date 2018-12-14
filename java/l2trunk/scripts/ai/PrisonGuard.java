@@ -19,7 +19,7 @@ import l2trunk.gameserver.tables.SkillTable;
  */
 public final class PrisonGuard extends Fighter {
     private static final int RACE_STAMP = 10013;
-    private Skill petrification = SkillTable.INSTANCE.getInfo(4578, 1); // Petrification
+    private static final int  petrification = 4578; // Petrification
     public PrisonGuard(NpcInstance actor) {
         super(actor);
     }

@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 public final class EventHolder {
     private static final Map<Integer, GlobalEvent> EVENTS = new TreeMap<>();
+
     private EventHolder() {
     }
 

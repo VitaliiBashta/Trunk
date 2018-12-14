@@ -9,7 +9,7 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class SpikeSlasherMinion extends Fighter {
 
-    private final Skill paralysis = SkillTable.INSTANCE.getInfo(6878);
+    private final static int paralysis = 6878;
 
     private long last_cast_anchor = 0;
 

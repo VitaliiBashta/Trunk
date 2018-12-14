@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.dao.SiegeClanDAO;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
@@ -12,10 +12,10 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class ClanHallSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
+public final class ClanHallSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
     public static final String BOSS = "boss";
 
-    public ClanHallSiegeEvent(MultiValueSet<String> set) {
+    public ClanHallSiegeEvent(StatsSet set) {
         super(set);
     }
 

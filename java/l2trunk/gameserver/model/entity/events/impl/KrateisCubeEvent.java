@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
@@ -11,7 +11,6 @@ import l2trunk.gameserver.listener.actor.player.OnTeleportListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.base.RestartType;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.events.EventType;
@@ -38,15 +37,26 @@ public final class KrateisCubeEvent extends GlobalEvent {
     private static final String PREPARE = "prepare";
     private static final SchedulingPattern DATE_PATTERN = new SchedulingPattern("0,30 * * * *");
     private static final Location RETURN_LOC = new Location(-70381, -70937, -1428);
-    private static final List<Integer> SKILL_IDS = Arrays.asList(1086, 1204, 1059, 1085, 1078, 1068, 1240, 1077, 1242, 1062, 5739);
-    private static final List<Integer> SKILL_LEVEL = Arrays.asList(2, 2, 3, 3, 6, 3, 3, 3, 3, 2, 1);
+    private static final Map<Integer, Integer> SKILL_IDS = Map.of(
+            1086, 2,
+            1204, 2,
+            1059, 3,
+            1085, 3,
+            1078, 6,
+            1068, 3,
+            1240, 3,
+            1077, 3,
+            1242, 3,
+            1062, 2);
+
+    //    private static final List<Integer> SKILL_LEVEL = Arrays.asList(2, 2, 3, 3, 6, 3, 3, 3, 3, 2, 1);
     private final int _minLevel;
     private final int _maxLevel;
     private final Calendar _calendar = Calendar.getInstance();
     private final Listeners _listeners = new Listeners();
     private KrateisCubeRunnerEvent _runnerEvent;
 
-    public KrateisCubeEvent(MultiValueSet<String> set) {
+    public KrateisCubeEvent(StatsSet set) {
         super(set);
         _minLevel = set.getInteger("min_level");
         _maxLevel = set.getInteger("max_level");
@@ -110,7 +120,7 @@ public final class KrateisCubeEvent extends GlobalEvent {
             Player player = krateisPlayer.getPlayer();
             pos++;
             if (krateisPlayer.getPoints() >= 10) {
-                int count = (int) (krateisPlayer.getPoints() * dif * (1.0 + players.size() / pos * 0.04));
+                int count = (int) (krateisPlayer.getPoints() * dif * (1.0 + players.size() * 0.04 / pos ));
                 dif -= 0.0016;
                 if (count > 0) {
                     Functions.addItem(player, 13067, count, "Kratei Reward");
@@ -131,11 +141,8 @@ public final class KrateisCubeEvent extends GlobalEvent {
     private void giveEffects(Player player) {
         player.setFullHpMp();
         player.setCurrentCp(player.getMaxCp());
+        SKILL_IDS.forEach((k, v) -> SkillTable.INSTANCE.getInfo(k, v).getEffects(player));
 
-        for (int j = 0; j < SKILL_IDS.size(); j++) {
-            Skill skill = SkillTable.INSTANCE.getInfo(SKILL_IDS.get(j), SKILL_LEVEL.get(j));
-            skill.getEffects(player, player, false, false);
-        }
     }
 
     @Override

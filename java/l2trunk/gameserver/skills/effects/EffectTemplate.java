@@ -1,6 +1,6 @@
 package l2trunk.gameserver.skills.effects;
 
-import l2trunk.gameserver.model.Creature;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.EffectList;
 import l2trunk.gameserver.skills.AbnormalEffect;
@@ -8,7 +8,6 @@ import l2trunk.gameserver.skills.EffectType;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.StatTemplate;
 import l2trunk.gameserver.stats.conditions.Condition;
-import l2trunk.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public final class EffectTemplate extends StatTemplate {
-    public static final EffectTemplate[] EMPTY_ARRAY = new EffectTemplate[0];
-    public static final String NO_STACK = "none".intern();
-    public static final String HP_RECOVER_CAST = "HpRecoverCast".intern();
+    public static final String NO_STACK = "none";
+    public static final String HP_RECOVER_CAST = "HpRecoverCast";
     private static final Logger _log = LoggerFactory.getLogger(EffectTemplate.class);
     public final double _value;
     public final int _count;
@@ -39,7 +37,7 @@ public final class EffectTemplate extends StatTemplate {
     private final Boolean _isSaveable;
     private final Boolean _isCancelable;
     private final Boolean _isOffensive;
-    private final StatsSet _paramSet;
+    private final StatsSet param;
     private final int _chance;
     private Condition _attachCond;
 
@@ -64,7 +62,7 @@ public final class EffectTemplate extends StatTemplate {
         _displayLevel = set.getInteger("displayLevel", 0);
         _effectType = set.getEnum("name", EffectType.class);
         _chance = set.getInteger("chance", Integer.MAX_VALUE);
-        _paramSet = set;
+        param = set;
     }
 
     public Effect getEffect(Env env) {
@@ -102,16 +100,8 @@ public final class EffectTemplate extends StatTemplate {
         return null;
     }
 
-    public Effect getSameByStackType(EffectList list) {
-        return getSameByStackType(list.getAllEffects());
-    }
-
-    public Effect getSameByStackType(Creature actor) {
-        return getSameByStackType(actor.getEffectList().getAllEffects());
-    }
-
     public StatsSet getParam() {
-        return _paramSet;
+        return param;
     }
 
     public int chance(int val) {

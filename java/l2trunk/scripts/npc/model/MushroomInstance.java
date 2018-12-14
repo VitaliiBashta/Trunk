@@ -94,12 +94,12 @@ public final class MushroomInstance extends MonsterInstance {
                 return;
 
             if (_actor != null && _actor.getNpcId() == FANTASY_MUSHROOM) {
-                _actor.broadcastPacket(new MagicSkillUse(_actor, _skill.getId(), _skill.getLevel(), 0, 0));
+                _actor.broadcastPacket(new MagicSkillUse(_actor, _skill.getId(), _skill.getLevel()));
                 List<NpcInstance> around = _actor.getAroundNpc(200, 300);
                 if (around != null && !around.isEmpty())
                     for (NpcInstance npc : around)
                         if (npc.isMonster() && npc.getNpcId() >= 22768 && npc.getNpcId() <= 22774)
-                            _skill.getEffects(npc, npc, false, false);
+                            _skill.getEffects(npc   );
                 _actor.doDie(_killer);
                 return;
             }
@@ -107,7 +107,7 @@ public final class MushroomInstance extends MonsterInstance {
             if (_killer != null && _killer.isPlayer() && !_killer.isDead()) {
                 List<Creature> targets = new ArrayList<>();
                 targets.add(_killer);
-                _killer.broadcastPacket(new MagicSkillUse(_killer, _killer, _skill.getId(), _skill.getLevel(), 0, 0));
+                _killer.broadcastPacket(new MagicSkillUse(_killer, _skill));
                 _skill.useSkill(_killer, targets);
             }
         }

@@ -9,13 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Используется для выдачи талисманов в крепостях и замках за Knight's
- * Epaulette.
- *
- * @Author: SYS
- */
-class ObtainTalisman extends Functions {
+public final class ObtainTalisman extends Functions {
     public void Obtain() {
         Player player = getSelf();
         NpcInstance npc = getNpc();

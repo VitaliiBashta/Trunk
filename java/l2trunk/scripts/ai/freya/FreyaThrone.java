@@ -16,11 +16,11 @@ import l2trunk.gameserver.tables.SkillTable;
 
 public final class FreyaThrone extends Fighter {
     private static final int Skill_IceBall = 6278; // Мощный клинок льда по Топ дамагеру
-    private final Skill Skill_SummonElemental = SkillTable.INSTANCE.getInfo(6277); // Вселяет мощь льда в окружающих гвардов
-    private final Skill Skill_SelfNova = SkillTable.INSTANCE.getInfo(6279); // Детонация льда, наносит АоЕ урон всем целям в радиусе 350
-    private final Skill Skill_DeathSentence = SkillTable.INSTANCE.getInfo(6280); // Суровый вердикт Фреи, по истечении 10 секунд наносит мощный урон случайной цели
-    private final Skill Skill_Anger = SkillTable.INSTANCE.getInfo(6285); // Селф-бафф Фреи, призывает силы зимы
-    private final Skill Skill_EternalBlizzard = SkillTable.INSTANCE.getInfo(6274); // Мощнейшая атака ледяного урагана с силой 38к по площади в 3000 радиуса
+    private static final int Skill_SummonElemental = 6277; // Вселяет мощь льда в окружающих гвардов
+    private static final int Skill_SelfNova = 6279; // Детонация льда, наносит АоЕ урон всем целям в радиусе 350
+    private static final int Skill_DeathSentence = 6280; // Суровый вердикт Фреи, по истечении 10 секунд наносит мощный урон случайной цели
+    private static final int Skill_Anger = 6285; // Селф-бафф Фреи, призывает силы зимы
+    private static final int Skill_EternalBlizzard = 6274; // Мощнейшая атака ледяного урагана с силой 38к по площади в 3000 радиуса
     private final int _eternalblizzardReuseDelay = 60; // Откат умения в секундах ()
     private long _eternalblizzardReuseTimer = 0; // Таймер отката умения
     private long _iceballReuseTimer = 0;
@@ -57,7 +57,7 @@ public final class FreyaThrone extends Fighter {
         int _iceballChance = 60;
         if (!actor.isCastingNow() && !actor.isMoving && _iceballReuseTimer < System.currentTimeMillis() && Rnd.chance(_iceballChance)) {
             if (topDamager != null && !topDamager.isDead() && topDamager.isInRangeZ(actor, 1000)) {
-                actor.doCast(SkillTable.INSTANCE.getInfo(Skill_IceBall, 1), topDamager, true);
+                actor.doCast(Skill_IceBall, topDamager, true);
                 int _iceballReuseDelay = 20;
                 _iceballReuseTimer = System.currentTimeMillis() + _iceballReuseDelay * 1000L;
             }

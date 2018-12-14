@@ -6,7 +6,10 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.entity.olympiad.Olympiad;
-import l2trunk.gameserver.network.serverpackets.*;
+import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
+import l2trunk.gameserver.network.serverpackets.PledgeShowInfoUpdate;
+import l2trunk.gameserver.network.serverpackets.SkillList;
+import l2trunk.gameserver.network.serverpackets.UserInfo;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 

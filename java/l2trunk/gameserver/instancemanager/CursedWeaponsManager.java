@@ -250,7 +250,7 @@ public enum CursedWeaponsManager {
                 player.setCursedWeaponEquippedId(0);
                 player.setTransformation(0);
                 player.setTransformationName(null);
-                player.removeSkill(SkillTable.INSTANCE.getInfo(cw.getSkillId(), player.getSkillLevel(cw.getSkillId())), false);
+                player.removeSkill(cw.getSkillId(), false);
                 player.getInventory().destroyItemByItemId(cw.getItemId(), 1L, "CursedWeapon");
                 player.broadcastCharInfo();
             } else {
@@ -455,7 +455,7 @@ public enum CursedWeaponsManager {
     private void showUsageTime(Player player, CursedWeapon cw) {
         SystemMessage sm = new SystemMessage(SystemMessage.S2_MINUTE_OF_USAGE_TIME_ARE_LEFT_FOR_S1);
         sm.addString(cw.getName());
-        sm.addNumber(new Long(cw.getTimeLeft() / 60000).intValue());
+        sm.addNumber(cw.getTimeLeft() / 60000);
         player.sendPacket(sm);
     }
 

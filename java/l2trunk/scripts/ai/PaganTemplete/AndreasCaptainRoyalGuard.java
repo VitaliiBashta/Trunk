@@ -59,7 +59,7 @@ public final class AndreasCaptainRoyalGuard extends Fighter {
         NpcInstance actor = getActor();
 
         if (actor.getCurrentHpPercents() <= 70) {
-            actor.doCast(SkillTable.INSTANCE.getInfo(4612, 9), attacker, true);
+            actor.doCast(4612, 9, attacker, true);
             actor.doDie(attacker);
         }
         super.onEvtAttacked(attacker, damage);

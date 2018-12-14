@@ -79,7 +79,7 @@ public final class Catapult extends DefaultAI {
             Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
             for (Player player : GameObjectsStorage.getAllPlayers()) {
                 if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                    player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+                    player.sendPacket(new ExShowScreenMessage(msg));
 
                     QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
                     if (questState == null) {
@@ -107,7 +107,7 @@ public final class Catapult extends DefaultAI {
         NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
         for (Player player : GameObjectsStorage.getAllPlayers()) {
             if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                player.sendPacket(new ExShowScreenMessage(msg, 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER));
+                player.sendPacket(new ExShowScreenMessage(msg));
 
                 QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
                 if (questState != null)

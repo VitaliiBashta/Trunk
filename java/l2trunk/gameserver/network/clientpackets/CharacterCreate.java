@@ -181,7 +181,7 @@ public final class CharacterCreate extends L2GameClientPacket {
         newChar.getInventory().addItem(item, "New Char Item");
 
         for (SkillLearn skill : SkillAcquireHolder.getAvailableSkills(newChar, AcquireType.NORMAL))
-            newChar.addSkill(SkillTable.INSTANCE.getInfo(skill.getId(), skill.getLevel()), true);
+            newChar.addSkill(skill.getId(), skill.getLevel(), true);
 
         if (newChar.getSkillLevel(1001) > 0) // Soul Cry
             newChar.registerShortCut(new ShortCut(1, 0, ShortCut.TYPE_SKILL, 1001, 1, 1));

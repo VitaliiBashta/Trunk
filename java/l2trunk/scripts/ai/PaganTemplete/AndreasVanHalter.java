@@ -302,7 +302,7 @@ public final class AndreasVanHalter extends Fighter {
                     // Ставим таргет на жертву
                     actor.setTarget(npc1);
                     // Нашли, теперь можно кастонуть на неё скилом
-                    actor.doCast(SkillTable.INSTANCE.getInfo(1168, 7), npc1, false);
+                    actor.doCast(1168, 7, npc1, false);
 
                     // Включаем на всякие пажарные запрет хождения что бы не испортить мувик
                     actor.startImmobilized();

@@ -133,8 +133,8 @@ public final class AdminPanel implements IAdminCommandHandler {
                 String text2 = fullString.substring(15);
 
                 if (!text2.isEmpty()) {
-                    GameObjectsStorage.getAllPlayers().forEach(player ->
-                            player.sendPacket(new ExShowScreenMessage(text2, 5000, ScreenMessageAlign.TOP_CENTER, true)));
+                    world.forEach(pl ->
+                            pl.sendPacket(new ExShowScreenMessage(text2)));
                 }
 
                 html = new NpcHtmlMessage(5);
@@ -148,7 +148,7 @@ public final class AdminPanel implements IAdminCommandHandler {
 
                 if (!text.equals("")) {
                     String text3 = text.substring(1);
-                    GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(new CreatureSay(0, 15, activeChar.getName(), text3)));
+                    world.forEach(player -> player.sendPacket(new CreatureSay(0, 15, activeChar.getName(), text3)));
                 }
 
 
@@ -182,8 +182,7 @@ public final class AdminPanel implements IAdminCommandHandler {
                     return false;
                 }
 
-                for (Player ppl : p.getMembers())
-                    ppl.sitDown(null);
+                p.getMembers().forEach(ppl -> ppl.sitDown(null));
 
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
@@ -210,30 +209,21 @@ public final class AdminPanel implements IAdminCommandHandler {
                     return false;
                 }
 
-                for (Player ppl : p.getMembers())
-                    ppl.standUp();
+                p.getMembers().forEach(Player::standUp);
 
                 html = new NpcHtmlMessage(5);
                 html.setFile("admin/panel/controlpanel.htm");
                 activeChar.sendPacket(html);
                 break;
             case admin_smallfirework:
-                for (Player player : world) {
-                    MagicSkillUse MSU = new MagicSkillUse(player, player, 2023, 1, 1, 0);
-                    player.broadcastPacket(MSU);
-                }
+                world.forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, 2023)));
+
                 break;
             case admin_mediumfirework:
-                for (Player player : world) {
-                    MagicSkillUse MSU = new MagicSkillUse(player, player, 2024, 1, 1, 0);
-                    player.broadcastPacket(MSU);
-                }
+                world.forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, 2024)));
                 break;
             case admin_bigfirework:
-                for (Player player : world) {
-                    MagicSkillUse MSU = new MagicSkillUse(player, player, 2025, 1, 1, 0);
-                    player.broadcastPacket(MSU);
-                }
+                world.forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, 2025)));
                 break;
             case admin_cppanel:
                 CppanelMainPage(activeChar);
@@ -343,74 +333,6 @@ public final class AdminPanel implements IAdminCommandHandler {
 
         _player.broadcastCharInfo();
     }
-
-    /*public void removeAio(Player activeChar, Player _player, String _playername)
-    {
-        _player.unsetVar("DonateAio");
-        //_player.lostAioSkills();
-        //_player.getInventory().destroyItemByItemId(8689, 1);
-        _player.setNameColor(0xFFFFFF);
-        _player.setTitleColor(0xFFFFFF);
-        _player.broadcastUserInfo(false);
-        _player.sendPacket(new EtcStatusUpdate(_player));
-
-        GmListTable.broadcastMessageToGMs("GM "+activeChar.getName()+" remove aio stat of player "+ _playername);
-        _player.sendMessage("Your aio status removed by admin.");
-        activeChar.sendMessage("The aio status removed from: "+_player.getName());
-
-        _player.broadcastCharInfo();
-    }
-*/
-
-	/*public void doAio(Player activeChar, Player _player, String _playername, String _time)
-	{
-		int days = Integer.parseInt(_time);
-
-		if (_player == null)
-		{
-			activeChar.sendMessage("not found char" + _playername);
-			return;
-		}
-
-		if(days > 0)
-		{
-			long expire = ((long)60 * 1000 * 60 * 24 * days);
-			_player.setVar("DonateAio", "true", System.currentTimeMillis() + expire);
-			Long exp_add = Experience.LEVEL[85] - _player.getExp();
-			_player.addExpAndSp(exp_add, 0);
-
-			if(Config.ALLOW_AIO_NCOLOR){
-				_player.setNameColor(Config.AIO_NCOLOR);
-			}
-
-			if(Config.ALLOW_AIO_TCOLOR){
-				_player.setTitleColor(Config.AIO_TCOLOR);
-			}
-				
-			//_player.rewardAioSkills();
-
-			//_player.getInventory().addItem(13539, 1);
-			ItemInstance item = _player.getInventory().getItemByItemId(13539);
-			_player.getInventory().equipItem(item);
-			
-			 Location loc = TeleportUtils.getRestartLocation(activeChar, RestartType.TO_VILLAGE);
-			_player.teleToLocation(loc, ReflectionManager.DEFAULT);
-
-			_player.broadcastUserInfo(false);
-			_player.sendPacket(new EtcStatusUpdate(_player));
-
-			GmListTable.broadcastMessageToGMs("GM "+ activeChar.getName()+ " set aio stat for player "+ _playername + " for " + _time + " day(s)");
-			_player.sendMessage(activeChar.getName()+", added you aio for "+days+" days.");
-			activeChar.sendMessage("The aio status added to "+_player.getName()+" for "+days+" days.");
-			
-			_player.broadcastCharInfo();
-		}
-		else
-		{
-			activeChar.sendMessage("You must put up to 1 day for aio.");
-		}
-	}
-	*/
 
 
     @Override

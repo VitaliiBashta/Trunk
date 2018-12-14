@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public class KamalokaNightmare extends Reflection {
+public final class KamalokaNightmare extends Reflection {
     private static final int PATHFINDER = 32485;
 
     private static final int RANK_1_MIN_POINTS = 500;
@@ -112,7 +112,7 @@ public class KamalokaNightmare extends Reflection {
                     List<GameObject> delete = new ArrayList<>();
                     lock.lock();
                     try {
-                        for (GameObject o : _objects)
+                        for (GameObject o : objects)
                             if (!o.isPlayable())
                                 delete.add(o);
                     } finally {

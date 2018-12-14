@@ -1,35 +1,18 @@
 package l2trunk.gameserver.network.serverpackets;
 
-/**
- * sample
- * <p>
- * 4b
- * c1 b2 e0 4a
- * 00 00 00 00
- * <p>
- * <p>
- * format
- * cdd
- *
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
-public class AskJoinParty extends L2GameServerPacket {
-    private final String _requestorName;
-    private final int _itemDistribution;
+public final class AskJoinParty extends L2GameServerPacket {
+    private final String requestorName;
+    private final int itemDistribution;
 
-    /**
-     * @param int objectId of the target
-     * @param int
-     */
     public AskJoinParty(String requestorName, int itemDistribution) {
-        _requestorName = requestorName;
-        _itemDistribution = itemDistribution;
+        this.requestorName = requestorName;
+        this.itemDistribution = itemDistribution;
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x39);
-        writeS(_requestorName);
-        writeD(_itemDistribution);
+        writeS(requestorName);
+        writeD(itemDistribution);
     }
 }

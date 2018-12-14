@@ -34,12 +34,14 @@ public enum TaskManager {
     private final Map<Integer, Task> _tasks = new ConcurrentHashMap<>();
 
     TaskManager() {
-         }
+    }
+
     public void init() {
         initializate();
         startAllTasks();
 
     }
+
     public boolean addUniqueTask(String task, TaskTypes type, String param1, String param2, String param3) {
         return addUniqueTask(task, type, param1, param2, param3, 0);
     }

@@ -23,6 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class Config {
     public static final Path CONFIG = Paths.get("config");
@@ -53,33 +56,33 @@ public final class Config {
     public static final int[] CHATFILTER_CHANNELS = new int[18];
     public static final int CHATFILTER_WORK_TYPE = 1;
     public static final List<Location> HEIN_FIELDS_LOCATIONS = new ArrayList<>();
-    public static final List<int[]> NpcBuffer_BuffSetMage = new ArrayList<>();
-    public static final List<int[]> NpcBuffer_BuffSetFighter = new ArrayList<>();
-    public static final List<int[]> NpcBuffer_BuffSetDagger = new ArrayList<>();
-    public static final List<int[]> NpcBuffer_BuffSetSupport = new ArrayList<>();
-    public static final List<int[]> NpcBuffer_BuffSetTank = new ArrayList<>();
-    public static final List<int[]> NpcBuffer_BuffSetArcher = new ArrayList<>();
+    public static final Map<Integer,Integer> NpcBuffer_BuffSetMage = new ConcurrentHashMap<>();
+    public static final Map<Integer,Integer> NpcBuffer_BuffSetFighter = new ConcurrentHashMap<>();
+    public static final Map<Integer,Integer> NpcBuffer_BuffSetDagger = new ConcurrentHashMap<>();
+    public static final Map<Integer,Integer> NpcBuffer_BuffSetSupport = new ConcurrentHashMap<>();
+    public static final Map<Integer,Integer> NpcBuffer_BuffSetTank = new ConcurrentHashMap<>();
+    public static final Map<Integer,Integer> NpcBuffer_BuffSetArcher = new ConcurrentHashMap<>();
     public static final List<Integer> SERVICES_AUGMENTATION_DISABLED_LIST = new ArrayList<>();
     /**
      * Network settings
      */
-    public static final SelectorConfig SELECTOR_CONFIG = new SelectorConfig();
+    static final SelectorConfig SELECTOR_CONFIG = new SelectorConfig();
     public static final int CNAME_MAXLEN = 32;
     public static final List<Integer> ALT_OLY_DATE_END = new ArrayList<>();
     public static final Map<Integer, PlayerAccess> gmlist = new HashMap<>();
     public static final List<Integer> ALLOW_CLASS_MASTERS_LIST = new ArrayList<>();
     public static final int[] CLASS_MASTERS_PRICE_LIST = new int[4];
-    public static final ArrayList<Integer> ENCHANT_WEAPON_FIGHT = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_WEAPON_FIGHT_CRYSTAL = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_WEAPON_FIGHT_BLESSED = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_ARMOR = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_ARMOR_CRYSTAL = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_ARMOR_BLESSED = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_ARMOR_JEWELRY = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_ARMOR_JEWELRY_CRYSTAL = new ArrayList<>();
-    public static final ArrayList<Integer> ENCHANT_ARMOR_JEWELRY_BLESSED = new ArrayList<>();
+    public static final List<Integer> ENCHANT_WEAPON_FIGHT = new ArrayList<>();
+    public static final List<Integer> ENCHANT_WEAPON_FIGHT_CRYSTAL = new ArrayList<>();
+    public static final List<Integer> ENCHANT_WEAPON_FIGHT_BLESSED = new ArrayList<>();
+    public static final List<Integer> ENCHANT_ARMOR = new ArrayList<>();
+    public static final List<Integer> ENCHANT_ARMOR_CRYSTAL = new ArrayList<>();
+    public static final List<Integer> ENCHANT_ARMOR_BLESSED = new ArrayList<>();
+    public static final List<Integer> ENCHANT_ARMOR_JEWELRY = new ArrayList<>();
+    public static final List<Integer> ENCHANT_ARMOR_JEWELRY_CRYSTAL = new ArrayList<>();
+    public static final List<Integer> ENCHANT_ARMOR_JEWELRY_BLESSED = new ArrayList<>();
     public static final boolean GOODS_INVENTORY_ENABLED = false;
-    public static final ArrayList<Integer> ENCHANT_WEAPON_FIGHT_PA = new ArrayList<>();
+    public static final List<Integer> ENCHANT_WEAPON_FIGHT_PA = new ArrayList<>();
     public static final ArrayList<Integer> ENCHANT_WEAPON_FIGHT_BLESSED_PA = new ArrayList<>();
     public static final ArrayList<Integer> ENCHANT_WEAPON_FIGHT_CRYSTAL_PA = new ArrayList<>();
     public static final ArrayList<Integer> ENCHANT_ARMOR_PA = new ArrayList<>();
@@ -1926,37 +1929,37 @@ public final class Config {
         String[] skills = npcbuffer.getProperty("BuffSetMage", "192,1").split(";");
         for (String sk : skills) {
             parts = sk.split(",");
-            NpcBuffer_BuffSetMage.add(new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
+            NpcBuffer_BuffSetMage.put(toInt(parts[0]), toInt(parts[1]));
         }
 
         skills = npcbuffer.getProperty("BuffSetFighter", "192,1").split(";");
         for (String sk : skills) {
             parts = sk.split(",");
-            NpcBuffer_BuffSetFighter.add(new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
+            NpcBuffer_BuffSetFighter.put(toInt(parts[0]), toInt(parts[1]));
         }
 
         skills = npcbuffer.getProperty("BuffSetDagger", "192,1").split(";");
         for (String sk : skills) {
             parts = sk.split(",");
-            NpcBuffer_BuffSetDagger.add(new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
+            NpcBuffer_BuffSetDagger.put(toInt(parts[0]), toInt(parts[1]));
         }
 
         skills = npcbuffer.getProperty("BuffSetSupport", "192,1").split(";");
         for (String sk : skills) {
             parts = sk.split(",");
-            NpcBuffer_BuffSetSupport.add(new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
+            NpcBuffer_BuffSetSupport.put(toInt(parts[0]), toInt(parts[1]));
         }
 
         skills = npcbuffer.getProperty("BuffSetTank", "192,1").split(";");
         for (String sk : skills) {
             parts = sk.split(",");
-            NpcBuffer_BuffSetTank.add(new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
+            NpcBuffer_BuffSetTank.put(toInt(parts[0]), toInt(parts[1]));
         }
 
         skills = npcbuffer.getProperty("BuffSetArcher", "192,1").split(";");
         for (String sk : skills) {
             parts = sk.split(",");
-            NpcBuffer_BuffSetArcher.add(new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
+            NpcBuffer_BuffSetArcher.put(toInt(parts[0]), toInt(parts[1]));
         }
     }
 
@@ -1998,7 +2001,7 @@ public final class Config {
         NO_RATE_RAIDBOSS = ratesSettings.getProperty("NoRateRaidBoss", false);
         RATE_DROP_RAIDBOSS = ratesSettings.getProperty("RateRaidBoss", 1.);
         RATE_DROP_SPOIL = ratesSettings.getProperty("RateDropSpoil", 1.);
-        NO_RATE_ITEMS = ratesSettings.getProperty("NoRateItemIds", Arrays.asList(
+        NO_RATE_ITEMS = ratesSettings.getProperty("NoRateItemIds", List.of(
                 6660, 6662, 6661, 6659, 6656, 6658, 8191, 6657, 10170, 10314, 16025, 16026));
         NO_RATE_EQUIPMENT = ratesSettings.getProperty("NoRateEquipment", true);
         NO_RATE_SIEGE_GUARD = ratesSettings.getProperty("NoRateSiegeGuard", false);
@@ -2097,31 +2100,31 @@ public final class Config {
         ENCHANT_CHANCE_ACCESSORY_BLESS = otherSettings.getProperty("EnchantChanceAccessoryBless", ENCHANT_CHANCE_ARMOR);
         USE_ALT_ENCHANT = Boolean.parseBoolean(otherSettings.getProperty("UseAltEnchant", "False"));
         for (String prop : otherSettings.getProperty("EnchantWeaponFighter", "100,100,100,70,70,70,70,70,70,70,70,70,70,70,70,35,35,35,35,35").split(",")) {
-            ENCHANT_WEAPON_FIGHT.add(Integer.parseInt(prop));
+            ENCHANT_WEAPON_FIGHT.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantWeaponFighterCrystal", "100,100,100,70,70,70,70,70,70,70,70,70,70,70,70,35,35,35,35,35").split(",")) {
-            ENCHANT_WEAPON_FIGHT_BLESSED.add(Integer.parseInt(prop));
+            ENCHANT_WEAPON_FIGHT_BLESSED.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantWeaponFighterBlessed", "100,100,100,70,70,70,70,70,70,70,70,70,70,70,70,35,35,35,35,35").split(",")) {
-            ENCHANT_WEAPON_FIGHT_CRYSTAL.add(Integer.parseInt(prop));
+            ENCHANT_WEAPON_FIGHT_CRYSTAL.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantArmor", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(",")) {
-            ENCHANT_ARMOR.add(Integer.parseInt(prop));
+            ENCHANT_ARMOR.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantArmorCrystal", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(",")) {
-            ENCHANT_ARMOR_CRYSTAL.add(Integer.parseInt(prop));
+            ENCHANT_ARMOR_CRYSTAL.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantArmorBlessed", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(",")) {
-            ENCHANT_ARMOR_BLESSED.add(Integer.parseInt(prop));
+            ENCHANT_ARMOR_BLESSED.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantJewelry", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(",")) {
-            ENCHANT_ARMOR_JEWELRY.add(Integer.parseInt(prop));
+            ENCHANT_ARMOR_JEWELRY.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantJewelryCrystal", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(",")) {
-            ENCHANT_ARMOR_JEWELRY_CRYSTAL.add(Integer.parseInt(prop));
+            ENCHANT_ARMOR_JEWELRY_CRYSTAL.add(toInt(prop));
         }
         for (String prop : otherSettings.getProperty("EnchantJewelryBlessed", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(",")) {
-            ENCHANT_ARMOR_JEWELRY_BLESSED.add(Integer.parseInt(prop));
+            ENCHANT_ARMOR_JEWELRY_BLESSED.add(toInt(prop));
         }
 
         ENCHANT_ATTRIBUTE_STONE_CHANCE = otherSettings.getProperty("EnchantAttributeChance", 50);
@@ -2194,8 +2197,8 @@ public final class Config {
 //		RAID_EVENT_NOTIFY_DELAY = raidEventConfig.getProperty("EventNotifyDelay", 2) * 60 * 1000;
 //
 //		final String[] time = raidEventConfig.getProperty("EventTime", "20:00").split(":");
-//		RAID_EVENT_TIME_HOUR = Integer.parseInt(time[0]);
-//		RAID_EVENT_TIME_MINUTE = Integer.parseInt(time[1]);
+//		RAID_EVENT_TIME_HOUR = toInt(time[0]);
+//		RAID_EVENT_TIME_MINUTE = toInt(time[1]);
 //	}
 
     private static void loadSpoilConfig() {
@@ -2502,10 +2505,10 @@ public final class Config {
         ALT_ITEM_AUCTION_MAX_CANCEL_TIME_IN_MILLIS = altSettings.getProperty("AltItemAuctionMaxCancelTimeInMillis", 604800000);
 
         ENABLE_AUCTION_SYSTEM = altSettings.getProperty("EnableAuctionSystem", true);
-        AUCTION_FEE = Integer.parseInt(altSettings.getProperty("AuctionFee", "10000"));
-        AUCTION_INACTIVITY_DAYS_TO_DELETE = Integer.parseInt(altSettings.getProperty("AuctionInactivityDaysToDelete", "7"));
+        AUCTION_FEE = toInt(altSettings.getProperty("AuctionFee", "10000"));
+        AUCTION_INACTIVITY_DAYS_TO_DELETE = toInt(altSettings.getProperty("AuctionInactivityDaysToDelete", "7"));
         ALLOW_AUCTION_OUTSIDE_TOWN = altSettings.getProperty("AuctionOutsideTown", false);
-        SECONDS_BETWEEN_ADDING_AUCTIONS = Integer.parseInt(altSettings.getProperty("AuctionAddDelay", "30"));
+        SECONDS_BETWEEN_ADDING_AUCTIONS = toInt(altSettings.getProperty("AuctionAddDelay", "30"));
         AUCTION_PRIVATE_STORE_AUTO_ADDED = altSettings.getProperty("AuctionPrivateStoreAutoAdded", true);
 
         ALT_FISH_CHAMPIONSHIP_ENABLED = altSettings.getProperty("AltFishChampionshipEnabled", true);
@@ -2563,7 +2566,7 @@ public final class Config {
                     _log.warn("[SkillDurationList]: invalid config property -> SkillDurationList \"" + skill + "\"");
                 } else {
                     try {
-                        SKILL_DURATION_LIST.put(Integer.parseInt(skillSplit[0]), Integer.parseInt(skillSplit[1]));
+                        SKILL_DURATION_LIST.put(toInt(skillSplit[0]), toInt(skillSplit[1]));
                     } catch (NumberFormatException nfe) {
                         if (!skill.isEmpty()) {
                             _log.warn("[SkillDurationList]: invalid config property -> SkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
@@ -2582,9 +2585,9 @@ public final class Config {
         for (String string : locs) {
             if (string != null) {
                 String[] cords = string.split(",");
-                int x = Integer.parseInt(cords[0]);
-                int y = Integer.parseInt(cords[1]);
-                int z = Integer.parseInt(cords[2]);
+                int x = toInt(cords[0]);
+                int y = toInt(cords[1]);
+                int z = toInt(cords[2]);
                 HEIN_FIELDS_LOCATIONS.add(new Location(x, y, z));
             }
         }
@@ -2926,7 +2929,7 @@ public final class Config {
         if (CLASS_MASTERS_PRICE.length() >= 5) {
             int level = 1;
             for (String id : CLASS_MASTERS_PRICE.split(",")) {
-                CLASS_MASTERS_PRICE_LIST[level] = Integer.parseInt(id);
+                CLASS_MASTERS_PRICE_LIST[level] = toInt(id);
                 level++;
             }
         }
@@ -3127,7 +3130,7 @@ public final class Config {
         ALT_OLY_WPERIOD = olympSettings.getProperty("AltOlyWPeriod", 604800000);
         ALT_OLY_VPERIOD = olympSettings.getProperty("AltOlyVPeriod", 43200000);
         for (String prop : olympSettings.getProperty("AltOlyDateEnd", "1,15").split(",")) {
-            ALT_OLY_DATE_END.add(Integer.parseInt(prop));
+            ALT_OLY_DATE_END.add(toInt(prop));
         }
         CLASS_GAME_MIN = olympSettings.getProperty("ClassGameMin", 5);
         NONCLASS_GAME_MIN = olympSettings.getProperty("NonClassGameMin", 9);
@@ -3227,7 +3230,7 @@ public final class Config {
         BUFF_STORE_ALLOWED_CLASS_LIST = new ArrayList<>();
         if (classes.length > 0) {
             for (String classId : classes) {
-                BUFF_STORE_ALLOWED_CLASS_LIST.add(Integer.parseInt(classId));
+                BUFF_STORE_ALLOWED_CLASS_LIST.add(toInt(classId));
             }
         }
 
@@ -3235,7 +3238,7 @@ public final class Config {
         BUFF_STORE_FORBIDDEN_SKILL_LIST = new ArrayList<>();
         if (skills.length > 0) {
             for (String skillId : skills) {
-                BUFF_STORE_FORBIDDEN_SKILL_LIST.add(Integer.parseInt(skillId));
+                BUFF_STORE_FORBIDDEN_SKILL_LIST.add(toInt(skillId));
             }
         }
     }
@@ -3406,7 +3409,7 @@ public final class Config {
             AdvIP advip = new AdvIP();
             advip.channelId = channelId;
             advip.channelAdress = channels.split(";")[0];
-            advip.channelPort = Integer.parseInt(channels.split(";")[1]);
+            advip.channelPort = toInt(channels.split(";")[1]);
             GAMEIPS.add(advip);
 
             _log.info("Added Proxy Channel: " + advip.channelId + " - " + advip.channelAdress + ":" + advip.channelPort);

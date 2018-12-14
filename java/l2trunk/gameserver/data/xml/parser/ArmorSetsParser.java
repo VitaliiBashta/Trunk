@@ -10,9 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Iterator;
-import java.util.List;
 
-public enum  ArmorSetsParser {
+public enum ArmorSetsParser {
     INSTANCE;
     private static Path xmlFile = Config.DATAPACK_ROOT.resolve("data/armor_sets.xml");
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());

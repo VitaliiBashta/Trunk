@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.time.cron.SchedulingPattern;
 import l2trunk.gameserver.model.Player;
@@ -18,7 +18,7 @@ public class UndergroundColiseumEvent extends GlobalEvent {
     private final List<Player> _registeredPlayers = new CopyOnWriteArrayList<>();
     private UndergroundColiseumBattleEvent _battleEvent;
 
-    public UndergroundColiseumEvent(MultiValueSet<String> set) {
+    public UndergroundColiseumEvent(StatsSet set) {
         super(set);
         _minLevel = set.getInteger("min_level");
         _maxLevel = set.getInteger("max_level");

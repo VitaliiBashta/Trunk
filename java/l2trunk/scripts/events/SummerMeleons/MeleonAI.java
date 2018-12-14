@@ -227,10 +227,10 @@ public final class MeleonAI extends Fighter {
                 if (Rnd.chance(50)) {
                     _nectar++;
                     Functions.npcSay(actor, textSuccess0[Rnd.get(textSuccess0.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Level_up, 1, NECTAR_REUSE, 0));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
                     Functions.npcSay(actor, textFail0[Rnd.get(textFail0.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Poisoned, 1, NECTAR_REUSE, 0));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 1:
@@ -242,27 +242,27 @@ public final class MeleonAI extends Fighter {
                 _lastNectarUse = System.currentTimeMillis();
                 if (Rnd.chance(50)) {
                     _nectar++;
-                    Functions.npcSay(actor, textSuccess1[Rnd.get(textSuccess1.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Level_up, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textSuccess1));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
-                    Functions.npcSay(actor, textFail1[Rnd.get(textFail1.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Poisoned, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textFail1));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 2:
                 if (System.currentTimeMillis() - _lastNectarUse < NECTAR_REUSE) {
-                    Functions.npcSay(actor, textTooFast[Rnd.get(textTooFast.length)]);
+                    Functions.npcSay(actor, Rnd.get(textTooFast));
                     return;
                 }
                 _tryCount++;
                 _lastNectarUse = System.currentTimeMillis();
                 if (Rnd.chance(50)) {
                     _nectar++;
-                    Functions.npcSay(actor, textSuccess2[Rnd.get(textSuccess2.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Level_up, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textSuccess2));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
-                    Functions.npcSay(actor, textFail2[Rnd.get(textFail2.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Poisoned, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textFail2));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 3:
@@ -274,11 +274,11 @@ public final class MeleonAI extends Fighter {
                 _lastNectarUse = System.currentTimeMillis();
                 if (Rnd.chance(50)) {
                     _nectar++;
-                    Functions.npcSay(actor, textSuccess3[Rnd.get(textSuccess3.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Level_up, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textSuccess3));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
-                    Functions.npcSay(actor, textFail3[Rnd.get(textFail3.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Poisoned, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textFail3));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 4:
@@ -290,11 +290,11 @@ public final class MeleonAI extends Fighter {
                 _lastNectarUse = System.currentTimeMillis();
                 if (Rnd.chance(50)) {
                     _nectar++;
-                    Functions.npcSay(actor, textSuccess4[Rnd.get(textSuccess4.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Level_up, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textSuccess4));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
-                    Functions.npcSay(actor, textFail4[Rnd.get(textFail4.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor, actor, Squash_Poisoned, 1, NECTAR_REUSE, 0));
+                    Functions.npcSay(actor, Rnd.get(textFail4));
+                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 if (_npcId == Young_Watermelon) {
                     if (_nectar < 3)
@@ -320,7 +320,7 @@ public final class MeleonAI extends Fighter {
     public void onEvtAttacked(Creature attacker, int damage) {
         MeleonInstance actor = getActor();
         if (actor != null && Rnd.chance(5))
-            Functions.npcSay(actor, textOnAttack[Rnd.get(textOnAttack.length)]);
+            Functions.npcSay(actor, Rnd.get(textOnAttack));
     }
 
     @Override

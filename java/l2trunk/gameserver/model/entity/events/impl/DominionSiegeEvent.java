@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.MultiValueSet;
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntityState;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.dao.DominionRewardDAO;
@@ -55,7 +55,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     private DominionSiegeRunnerEvent _runnerEvent;
     private Quest _forSakeQuest;
 
-    public DominionSiegeEvent(MultiValueSet<String> set) {
+    public DominionSiegeEvent(StatsSet set) {
         super(set);
         _killListener = new KillListener();
         _doorDeathListener = new DoorDeathListener();

@@ -41,32 +41,32 @@ public final class AdminGmEvent implements IAdminCommandHandler {
                 }
                 break;
             case "setminlvl":
-                    final int minLvl = toInt(st.nextToken());
-                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MIN_LVL, minLvl);
+                final int minLvl = toInt(st.nextToken());
+                GmEventManager.INSTANCE.changeEventParameter(EventParameter.MIN_LVL, minLvl);
                 break;
             case "setmaxlvl":
-                    final int maxLvl = toInt(st.nextToken());
-                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MAX_LVL, maxLvl);
+                final int maxLvl = toInt(st.nextToken());
+                GmEventManager.INSTANCE.changeEventParameter(EventParameter.MAX_LVL, maxLvl);
                 break;
             case "setmintime":
-                    final int minTime = toInt(st.nextToken());
-                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MIN_TIME, minTime);
+                final int minTime = toInt(st.nextToken());
+                GmEventManager.INSTANCE.changeEventParameter(EventParameter.MIN_TIME, minTime);
                 break;
             case "setmaxtime":
-                    final int maxTime = toInt(st.nextToken());
-                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.MAX_TIME, maxTime);
+                final int maxTime = toInt(st.nextToken());
+                GmEventManager.INSTANCE.changeEventParameter(EventParameter.MAX_TIME, maxTime);
                 break;
             case "setpvpevent":
-                    final int isPvp = toInt(st.nextToken());
-                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_PVP_EVENT, isPvp);
+                final int isPvp = toInt(st.nextToken());
+                GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_PVP_EVENT, isPvp);
                 break;
             case "setpeaceevent":
-                    final int isPeace = toInt(st.nextToken());
-                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_PEACE_EVENT, isPeace);
+                final int isPeace = toInt(st.nextToken());
+                GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_PEACE_EVENT, isPeace);
                 break;
             case "setautores":
-                    final int autoRes = toInt(st.nextToken());
-                    GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_AUTO_RES, autoRes);
+                final int autoRes = toInt(st.nextToken());
+                GmEventManager.INSTANCE.changeEventParameter(EventParameter.IS_AUTO_RES, autoRes);
                 break;
             case "register":
                 GmEventManager.INSTANCE.startRegistration();

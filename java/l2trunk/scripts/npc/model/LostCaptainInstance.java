@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.Location;
 public class LostCaptainInstance extends ReflectionBossInstance {
     private static final int TELE_DEVICE_ID = 4314;
 
-    LostCaptainInstance(int objectId, NpcTemplate template) {
+    public LostCaptainInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

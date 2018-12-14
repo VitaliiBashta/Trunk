@@ -325,13 +325,6 @@ public abstract class GameObject extends EventOwner {
         return getDistance(loc.x, loc.y, loc.z);
     }
 
-    /**
-     * Проверяет в досягаемости расстояния ли объект
-     *
-     * @param obj   проверяемый объект
-     * @param range расстояние
-     * @return true, если объект досягаем
-     */
     public final boolean isInRange(GameObject obj, long range) {
         if (obj == null)
             return false;

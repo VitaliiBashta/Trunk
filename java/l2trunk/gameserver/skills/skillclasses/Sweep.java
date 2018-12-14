@@ -1,5 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
+import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -8,13 +9,12 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.reward.RewardItem;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.templates.StatsSet;
 import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sweep extends Skill {
+public final class Sweep extends Skill {
     public Sweep(StatsSet set) {
         super(set);
     }
