@@ -38,12 +38,12 @@ public final class L2LoginPacketHandler implements IPacketHandler<L2LoginClient>
 				else if (opcode == 0x02)
 					packet = new RequestServerLogin();
 				break;
-			case FAKE_LOGIN:
-				if (opcode == 0x05)
-					packet = new RequestServerList(true);
-				else if (opcode == 0x02)
-					packet = new RequestServerLogin();
-				break;
+//			case FAKE_LOGIN:
+//				if (opcode == 0x05)
+//					packet = new RequestServerList(true);
+//				else if (opcode == 0x02)
+//					packet = new RequestServerLogin();
+//				break;
 		}
 		return packet;
 	}

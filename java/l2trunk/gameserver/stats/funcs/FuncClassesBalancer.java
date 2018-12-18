@@ -9,9 +9,6 @@ import l2trunk.gameserver.stats.Stats;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Grivesky
- */
 public class FuncClassesBalancer extends Func {
     private static final Map<Stats, FuncClassesBalancer> _fh_instance = new HashMap<>();
 

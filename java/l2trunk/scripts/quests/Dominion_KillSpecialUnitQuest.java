@@ -65,10 +65,11 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
             qs.set("current_kills", 1);
             if (player.getParty() == null)
                 player.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max_kills)));
-            else
+            else {
+                int max = max_kills;
                 player.getParty().getMembers().forEach(member ->
-                        member.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max_kills))));
-
+                        member.sendPacket(new ExShowScreenMessage(startNpcString(), 2000, String.valueOf(max))));
+            }
         } else {
             int current_kills = qs.getInt("current_kills") + 1;
             if (current_kills >= max_kills) {

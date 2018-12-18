@@ -66,7 +66,7 @@ public enum Scripts {
                     handlers.add(new ScriptClassAndMethod(clazz.getName(), method.getName()));
                 } else if (method.getName().contains("OnAction_")) {
                     String name = method.getName().substring(9);
-                    onAction.put(name, new ScriptClassAndMethod(clazz.getName(), method.getName()));
+                    onAction.put(name, new ScriptClassAndMethod(clazz.getSimpleName(), method.getName()));
                 } else if (method.getName().contains("OnActionShift_")) {
                     String name = method.getName().substring(14);
                     onActionShift.put(name, new ScriptClassAndMethod(clazz.getName(), method.getName()));

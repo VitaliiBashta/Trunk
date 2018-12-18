@@ -1,7 +1,6 @@
 package l2trunk.loginserver.serverpackets;
 
-import javafx.util.Pair;
-import l2trunk.commons.lang.ArrayUtils;
+import l2trunk.commons.lang.Pair;
 import l2trunk.commons.net.AdvIP;
 import l2trunk.commons.net.utils.NetUtils;
 import l2trunk.loginserver.GameServerManager;
@@ -10,7 +9,8 @@ import l2trunk.loginserver.gameservercon.GameServer;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public final class ServerList extends L2LoginServerPacket {
     private final Map<Integer, ServerData> _servers;

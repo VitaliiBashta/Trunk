@@ -1,6 +1,6 @@
 package l2trunk.loginserver.accounts;
 
-import javafx.util.Pair;
+import l2trunk.commons.lang.Pair;
 import l2trunk.commons.net.utils.Net;
 import l2trunk.commons.net.utils.NetList;
 import l2trunk.loginserver.database.L2DatabaseFactory;
