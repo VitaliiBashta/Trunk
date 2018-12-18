@@ -1,6 +1,5 @@
 package l2trunk.scripts.handler.items;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Playable;
@@ -13,21 +12,20 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
-    private final List<Integer> ITEM_IDS = Arrays.asList(
-                    13677, // Gludio Disguise Scroll
-                    13678, // Dion Disguise Scroll
-                    13679, // Giran Disguise Scroll
-                    13680, // Oren Disguise Scroll
-                    13681, // Aden Disguise Scroll
-                    13682, // Innadril Disguise Scroll
-                    13683, // Goddard Disguise Scroll
-                    13684, // Rune Disguise Scroll
-                    13685);  // Schuttgart Disguise Scroll
-    private final int[] DOMINION_IDS = {81, 82, 83, 84, 85, 86, 87, 88, 89};
+    private final List<Integer> ITEM_IDS = List.of(
+            13677, // Gludio Disguise Scroll
+            13678, // Dion Disguise Scroll
+            13679, // Giran Disguise Scroll
+            13680, // Oren Disguise Scroll
+            13681, // Aden Disguise Scroll
+            13682, // Innadril Disguise Scroll
+            13683, // Goddard Disguise Scroll
+            13684, // Rune Disguise Scroll
+            13685);  // Schuttgart Disguise Scroll
+    private final List<Integer> DOMINION_IDS = List.of(81, 82, 83, 84, 85, 86, 87, 88, 89);
 
 
     @Override
@@ -68,7 +66,7 @@ public class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
             player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addName(item));
             return false;
         }
-        if (siegeEvent.getId() != DOMINION_IDS[index]) {
+        if (siegeEvent.getId() != DOMINION_IDS.get(index)) {
             player.sendPacket(SystemMsg.THE_DISGUISE_SCROLL_CANNOT_BE_USED_BECAUSE_IT_IS_MEANT_FOR_USE_IN_A_DIFFERENT_TERRITORY);
             return false;
         }

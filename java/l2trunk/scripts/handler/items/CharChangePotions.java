@@ -7,11 +7,10 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class CharChangePotions extends ScriptItemHandler implements ScriptFile {
-    private static final Integer[] _itemIds = {5235, 5236, 5237, // Face
+    private static final List<Integer> ITEM_IDS = List.of(5235, 5236, 5237, // Face
             5238,
             5239,
             5240,
@@ -22,8 +21,7 @@ public final class CharChangePotions extends ScriptItemHandler implements Script
             5245,
             5246,
             5247,
-            5248 // Hair Style
-    };
+            5248); // Hair Style
 
 
     @Override
@@ -116,6 +114,6 @@ public final class CharChangePotions extends ScriptItemHandler implements Script
 
     @Override
     public final List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

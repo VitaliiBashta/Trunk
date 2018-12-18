@@ -33,7 +33,7 @@ public final class Frintezza extends Reflection {
     private static final int TeleportCube = 29061;
     private static final int _frintezzasSwordId = 7903;
     private static final int DewdropItem = 8556;
-    private static final List<Integer> hallADoors = Arrays.asList(17130051, 17130052, 17130053, 17130054, 17130055, 17130056, 17130057, 17130058);
+    private static final List<Integer> hallADoors = List.of(17130051, 17130052, 17130053, 17130054, 17130055, 17130056, 17130057, 17130058);
     private static final List<Integer> corridorADoors = List.of(17130042, 17130043);
     private static final List<Integer> hallBDoors = List.of(17130061, 17130062, 17130063, 17130064, 17130065, 17130066, 17130067, 17130068, 17130069, 17130070);
     private static final List<Integer> corridorBDoors = List.of(17130045, 17130046);

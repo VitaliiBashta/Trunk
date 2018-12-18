@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Battleground extends SimpleItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = Arrays.asList(10143, 10144, 10145, 10146, 10147, 10148, 10411);
+    private static final List<Integer> ITEM_IDS = List.of(10143, 10144, 10145, 10146, 10147, 10148, 10411);
 
     @Override
     public List<Integer> getItemIds() {

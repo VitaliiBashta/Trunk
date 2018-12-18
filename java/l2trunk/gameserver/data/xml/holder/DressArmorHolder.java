@@ -15,19 +15,9 @@ public final class DressArmorHolder {
         DRESS.add(armorset);
     }
 
-    public static List<DressArmorData> getAllDress() {
-        return DRESS;
-    }
-
-    public static DressArmorData getArmor(int id) {
-        return DRESS.stream()
-                .filter(dress -> dress.getId() == id)
-                .findFirst().orElse(null);
-    }
-
     public static DressArmorData getArmorByPartId(int partId) {
         return DRESS.stream()
-                .filter(dress -> (dress.getChest() == partId || dress.getLegs() == partId || dress.getGloves() == partId || dress.getFeet() == partId))
+                .filter(dress -> dress.getVisualIds().contains(partId))
                 .findFirst().orElse(null);
     }
 

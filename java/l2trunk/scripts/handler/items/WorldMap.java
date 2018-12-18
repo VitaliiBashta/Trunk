@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class WorldMap extends ScriptItemHandler implements ScriptFile {
     // all the items ids that this handler knowns
-    private static final Integer[] _itemIds = {1665, 1863, 9994};
+    private static final List<Integer> ITEM_IDS = List.of(1665, 1863, 9994);
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -46,6 +46,6 @@ public final class WorldMap extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public final List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

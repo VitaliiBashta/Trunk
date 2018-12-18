@@ -36,7 +36,7 @@ public final class TeleportBookmark extends SimpleItemHandler implements ScriptF
 
     @Override
     public List<Integer> getItemIds() {
-        return Collections.singletonList(ITEM_IDS);
+        return List.of(ITEM_IDS);
     }
 
     @Override

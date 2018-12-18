@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final  class Kamaloka extends SimpleItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = Arrays.asList(
+    private static final List<Integer> ITEM_IDS = List.of(
             13010, 13297, 20026, 13011, 13298, 20027, 13012, 13299, 20028);
 
     @Override

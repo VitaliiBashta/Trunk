@@ -56,7 +56,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
             "Well, I wish I could continue all night long, but this is it for today. Thank you."};
     private static final Map<String, Talk> TALKS = new HashMap<>();
     private static ScheduledFuture<?> _startTask;
-    private static boolean _isStarted;
+    private static boolean isStarted;
 
     static {
         WALKS.put("npc1_1", new Walk(-56546, -56384, -2008, "npc1_2", 1200));
@@ -170,7 +170,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
     }
 
     private static boolean isStarted() {
-        return _isStarted;
+        return isStarted;
     }
 
     private static NpcInstance addSpawn(int npcId, int x, int y, int z, int heading) {
@@ -178,9 +178,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
     }
 
     private static void startQuestTimer(String event, int time, NpcInstance temp_npc) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("npc", temp_npc.getRef());
-        executeTask("services.FantasyIsle", "start", new Object[]{event}, variables, time);
+        ThreadPoolManager.INSTANCE.schedule(() ->start(event, temp_npc), time);
     }
 
     @Override
@@ -191,8 +189,8 @@ public final class FantasyIsle extends Functions implements ScriptFile {
                 int h = gameTime / 60 % 24;
                 int m = gameTime % 60;
                 if (h == 20 && m >= 27 && m <= 33) {
-                    _isStarted = true;
-                    start("Start");
+                    isStarted = true;
+                    start("Start", null);
                 }
             }
         }, 60000, 60000);
@@ -204,7 +202,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
             _startTask.cancel(false);
             _startTask = null;
         }
-        _isStarted = false;
+        isStarted = false;
     }
 
     @Override
@@ -213,13 +211,13 @@ public final class FantasyIsle extends Functions implements ScriptFile {
 
     public void manualStart() {
         if (!isStarted()) {
-            _isStarted = true;
-            start("Start");
+            isStarted = true;
+            start("Start", null);
         }
     }
 
-    private void start(String event) {
-        NpcInstance temp_npc = getNpc();
+    private static void start(String event, NpcInstance temp_npc) {
+//        NpcInstance temp_npc = getNpc();
         if (event.equals("Start")) {
             NpcInstance mc = addSpawn(MC, -56698, -56430, -2008, 32768);
             Functions.npcSay(mc, TEXT[0]);
@@ -368,7 +366,7 @@ public final class FantasyIsle extends Functions implements ScriptFile {
         } else if (event.equals("29") && temp_npc != null) {
             temp_npc.moveToLocation(new Location(-56730, -56340, -2008), 0, true);
             startQuestTimer("clean_npc", 4100, temp_npc);
-            _isStarted = false;
+            isStarted = false;
         } else if ((event.equals("social1") || event.equals("social1_1")) && temp_npc != null)
             temp_npc.broadcastPacket(new SocialAction(temp_npc.getObjectId(), 1));
         else if (event.equals("clean_npc") && temp_npc != null)

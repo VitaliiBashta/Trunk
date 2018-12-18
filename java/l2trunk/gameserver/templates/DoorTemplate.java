@@ -5,6 +5,7 @@ import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.ai.DoorAI;
 import l2trunk.gameserver.model.instances.DoorInstance;
+import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,15 +58,15 @@ public final class DoorTemplate extends CharTemplate {
     @SuppressWarnings("unchecked")
     private void setAI(String ai) {
         Class<DoorAI> classAI = null;
-        try {
-            classAI = (Class<DoorAI>) Class.forName("l2trunk.gameserver.ai." + ai);
-        } catch (ClassNotFoundException e) {
-            try {
-                classAI = (Class<DoorAI>) Class.forName("l2trunk.scripts.ai.door." + ai);
-            } catch (ClassNotFoundException e1) {
-                e1.printStackTrace();
-            }
-        }
+//        try {
+            classAI = (Class<DoorAI>) Scripts.INSTANCE.getAI("ai."+ai);
+//        } catch (ClassNotFoundException e) {
+//            try {
+//                classAI = (Class<DoorAI>) Class.forName("l2trunk.scripts.ai.door." + ai);
+//            } catch (ClassNotFoundException e1) {
+//                e1.printStackTrace();
+//            }
+//        }
 
         if (classAI == null)
             LOG.error("Not found ai class for ai: " + ai + ". DoorId: " + _id);

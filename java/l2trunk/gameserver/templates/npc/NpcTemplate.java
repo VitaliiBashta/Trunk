@@ -105,12 +105,11 @@ public final class NpcTemplate extends CharTemplate {
         String ai = set.getString("ai_type", null);
         setType(type);
         setAI(ai);
-//        try {
-        _constructorType = (Constructor<? extends Creature>) NpcInstance.class.getConstructors()[0];
-//        (int.class, NpcTemplate.class);
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            _constructorType = NpcInstance.class.getConstructor(int.class, NpcTemplate.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     public Class<? extends Creature> getInstanceClass() {

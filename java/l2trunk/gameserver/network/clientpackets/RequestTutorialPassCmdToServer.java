@@ -35,12 +35,10 @@ public final class RequestTutorialPassCmdToServer extends L2GameClientPacket {
             if (path.length != 2)
                 return;
 
-            Map<String, Object> variables = null;
-
             if (word.length == 1)
-                Scripts.INSTANCE.callScripts(player, path[0], path[1], variables);
+                Scripts.INSTANCE.callScripts(player, path[0], path[1], new Object[0]);
             else
-                Scripts.INSTANCE.callScripts(player, path[0], path[1], new Object[]{args}, variables);
+                Scripts.INSTANCE.callScripts(player, path[0], path[1], new Object[]{args});
         } else if (Config.ENABLE_ACHIEVEMENTS && _bypass.startsWith("_bbs_achievements")) {
             String[] cm = _bypass.split(" ");
             if (_bypass.startsWith("_bbs_achievements_cat")) {

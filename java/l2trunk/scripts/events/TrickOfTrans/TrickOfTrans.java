@@ -17,9 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-/**
- * Trick Of Transmutation Event
- */
 public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(TrickOfTrans.class);
     // Эвент Менеджеры

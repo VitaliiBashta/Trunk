@@ -44,6 +44,6 @@ public final class Calculator extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Collections.singletonList(CALCULATOR);
+        return List.of(CALCULATOR);
     }
 }

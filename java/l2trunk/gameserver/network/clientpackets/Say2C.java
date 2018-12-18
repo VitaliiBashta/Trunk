@@ -23,6 +23,7 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.MapUtils;
 import l2trunk.gameserver.utils.Strings;
+import l2trunk.scripts.events.Viktorina.Viktorina;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,11 +119,10 @@ public final class Say2C extends L2GameClientPacket {
             return;
         }
 
-        if (Functions.isEventStarted("events.Viktorina.Viktorina")) {
+        if (Viktorina.isRunned()) {
             String answer = _text.trim();
             if (answer.length() > 0) {
-                Object[] objects = {answer, activeChar};
-                Functions.callScripts("events.Viktorina.Viktorina", "checkAnswer", objects);
+                Viktorina.checkAnswer(answer, activeChar);
             }
         }
 

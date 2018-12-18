@@ -1,18 +1,18 @@
 package l2trunk.gameserver.network.serverpackets;
 
-public class ExAskCoupleAction extends L2GameServerPacket {
-    private final int _objectId;
-    private final int _socialId;
+public final class ExAskCoupleAction extends L2GameServerPacket {
+    private final int objectId;
+    private final int socialId;
 
     public ExAskCoupleAction(int objectId, int socialId) {
-        _objectId = objectId;
-        _socialId = socialId;
+        this.objectId = objectId;
+        this.socialId = socialId;
     }
 
     @Override
     protected void writeImpl() {
         writeEx(0xBB);
-        writeD(_socialId);
-        writeD(_objectId);
+        writeD(socialId);
+        writeD(objectId);
     }
 }

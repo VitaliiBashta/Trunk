@@ -7,16 +7,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
+import java.util.List;
 import java.util.StringTokenizer;
 
-/**
- * @author pchayka
- */
-public class _254_LegendaryTales extends Quest implements ScriptFile {
+
+public final class _254_LegendaryTales extends Quest implements ScriptFile {
     private static final int Gilmore = 30754;
     private static final int LargeBone = 17249;
-    private static final int[] raids =
-            {25718, 25719, 25720, 25721, 25722, 25723, 25724};
+    private static final List<Integer> raids = List.of(
+            25718, 25719, 25720, 25721, 25722, 25723, 25724);
 
     public _254_LegendaryTales() {
         super(PARTY_ALL);

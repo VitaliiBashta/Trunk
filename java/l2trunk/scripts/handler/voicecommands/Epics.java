@@ -14,11 +14,10 @@ import l2trunk.scripts.bosses.BaiumManager;
 import l2trunk.scripts.bosses.ValakasManager;
 import l2trunk.scripts.services.community.CommunityNpcs;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Epics implements IVoicedCommandHandler, ScriptFile {
-    private final List<String> _commandList = Arrays.asList(
+    private final List<String> commandList = List.of(
             "epicAntharas",
             "epicValakas",
             "epicBaium",
@@ -131,6 +130,6 @@ public final class Epics implements IVoicedCommandHandler, ScriptFile {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return _commandList;
+        return commandList;
     }
 }

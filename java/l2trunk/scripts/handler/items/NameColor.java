@@ -10,12 +10,12 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public class NameColor extends SimpleItemHandler implements ScriptFile {
-    private static final Integer[] ITEM_IDS = {13021, 13307};
+public final class NameColor extends SimpleItemHandler implements ScriptFile {
+    private static final List<Integer> ITEM_IDS = List.of(13021, 13307);
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(ITEM_IDS);
+        return ITEM_IDS;
     }
 
     @Override

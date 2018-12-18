@@ -78,14 +78,6 @@ public final class EventsConfig extends Functions implements ScriptFile {
         return properties.get(name);
     }
 
-    public static float getFloat(String name) {
-        return getFloat(name, Float.MAX_VALUE);
-    }
-
-    public static boolean getBoolean(String name) {
-        return getBoolean(name, false);
-    }
-
     public static int getInt(String name) {
         return getInt(name, Integer.MAX_VALUE);
     }

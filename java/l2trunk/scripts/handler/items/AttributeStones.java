@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class AttributeStones extends ScriptItemHandler implements ScriptFile {
-    private static final List<Integer> SCROLL_IDS = Arrays.asList(
+    private static final List<Integer> SCROLL_IDS = List.of(
             9546, 9547, 9548, 9549, 9550, 9551, 9552, 9553, 9554, 9555, 9556, 9557,
             9558, 9563, 9561, 9560, 9562, 9559, 9567, 9566, 9568, 9565, 9564, 9569,
             10521, 10522, 10523, 10524, 10525, 10526);

@@ -122,7 +122,7 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
             new RewardData(9572, 1, 1, 30) // Blue 14      0.003%
     };
     // Дроп для эвентого сундука Coffer of Shadows
-    private static final int _itemIds = 8659;
+    private static final int ITEM_IDS = 8659;
     private final RewardData[] _dropmats = new RewardData[]{
             //                                     Item                      Chance
             // Материалы
@@ -216,7 +216,7 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public final List<Integer> getItemIds() {
-        return Collections.singletonList(_itemIds);
+        return Collections.singletonList(ITEM_IDS);
     }
 
 }

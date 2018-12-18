@@ -159,9 +159,7 @@ public class NpcHtmlMessage extends L2GameServerPacket {
         }
 
         Matcher m = objectId.matcher(_html);
-        if (m != null) {
-            _html = m.replaceAll(String.valueOf(_npcObjId));
-        }
+        _html = m.replaceAll(String.valueOf(_npcObjId));
 
         _html = playername.matcher(_html).replaceAll(player.getName());
 

@@ -1,6 +1,7 @@
 package l2trunk.scripts.events.PiratesTreasure;
 
 import l2trunk.gameserver.Announcements;
+import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
@@ -15,11 +16,11 @@ public final class PiratesTreasure extends Functions implements ScriptFile {
     public static boolean eventStoped;
     private Location loc;
 
-    private static final Logger _log = LoggerFactory.getLogger(PiratesTreasure.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PiratesTreasure.class);
 
     @Override
     public void onLoad() {
-        _log.info("Loaded Event: PiratesTreasure loaded.");
+        LOG.info("Loaded Event: PiratesTreasure loaded.");
     }
 
     @Override
@@ -39,8 +40,8 @@ public final class PiratesTreasure extends Functions implements ScriptFile {
             return;
         id = Integer.parseInt(args[0]);
         sayToAll("The Pirate Ship is approaching!");
-        executeTask("events.PiratesTreasure.PiratesTreasure", "callPirates", new Object[0], 60000);
-        executeTask("events.PiratesTreasure.PiratesTreasure", "stopEvent", new Object[0], 31 * 60000);
+        ThreadPoolManager.INSTANCE.schedule(this::callPirates, 60000);
+        ThreadPoolManager.INSTANCE.schedule(PiratesTreasure::stopEvent, 31 * 60000);
 
     }
 
@@ -53,7 +54,7 @@ public final class PiratesTreasure extends Functions implements ScriptFile {
         Announcements.INSTANCE.announceToAll(text);
     }
 
-    public void callPirates() {
+    private void callPirates() {
 
         switch (id) {
             case 1:

@@ -99,7 +99,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         rewarder.setSpawnedLoc(targetLoc);
         rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), rewarder.getLoc(), targetLoc));
 
-        executeTask("events.SavingSnowman.SavingSnowman", "reward", new Object[]{rewarder, rewarded}, 5000);
+        ThreadPoolManager.INSTANCE.schedule(() ->reward(rewarder, rewarded), 5000);
     }
 
     public static void reward(NpcInstance rewarder, Player rewarded) {
@@ -107,10 +107,10 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
             return;
         Functions.npcSayCustomMessage(rewarder, "scripts.events.SavingSnowman.RewarderPhrase2", rewarded.getName());
         Functions.addItem(rewarded, 14616, 1, "SavingSnowman"); // Gift from Santa Claus
-        executeTask("events.SavingSnowman.SavingSnowman", "removeRewarder", new Object[]{rewarder}, 5000);
+        ThreadPoolManager.INSTANCE.schedule(() -> removeRewarder(rewarder), 5000);
     }
 
-    public static void removeRewarder(NpcInstance rewarder) {
+    private static void removeRewarder(NpcInstance rewarder) {
         if (!_active || rewarder == null)
             return;
 
@@ -125,10 +125,10 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
         rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), loc, new Location(x, y, z)));
 
-        executeTask("events.SavingSnowman.SavingSnowman", "unspawnRewarder", new Object[]{rewarder}, 2000);
+        ThreadPoolManager.INSTANCE.schedule(() -> unspawnRewarder(rewarder), 2000);
     }
 
-    public static void unspawnRewarder(NpcInstance rewarder) {
+    private static void unspawnRewarder(NpcInstance rewarder) {
         if (!_active || rewarder == null)
             return;
         rewarder.deleteMe();
@@ -532,13 +532,13 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
             _eatTask.cancel(false);
             _eatTask = null;
         }
-        _eatTask = executeTask("events.SavingSnowman.SavingSnowman", "eatSnowman", new Object[0], THOMAS_EAT_DELAY);
+        _eatTask = ThreadPoolManager.INSTANCE.schedule(SavingSnowman::eatSnowman, THOMAS_EAT_DELAY);
     }
 
     public enum SnowmanState {
         CAPTURED,
         KILLED,
-        SAVED;
+        SAVED
     }
 
     public class SayTask extends RunnableImpl {

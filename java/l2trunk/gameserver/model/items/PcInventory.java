@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.items;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.data.xml.holder.DressArmorHolder;
 import l2trunk.gameserver.instancemanager.CursedWeaponsManager;
@@ -21,6 +20,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public final class PcInventory extends Inventory {
     private static final int[][] arrows = {
@@ -50,7 +50,7 @@ public final class PcInventory extends Inventory {
     private LockType _lockType = LockType.NONE;
     private List<Integer> _lockItems = Collections.emptyList();
     // Alexander - Vars to check when visual ids for items of dressme must be used. Only when the set is complete
-    private boolean _mustShowDressMe = false;
+    private boolean mustShowDressMe = false;
 
     public PcInventory(Player owner) {
         super(owner.getObjectId());
@@ -526,11 +526,10 @@ public final class PcInventory extends Inventory {
     }
 
     public void stopAllTimers() {
-        for (ItemInstance item : getItems()) {
-            if (item.isShadowItem() || item.isTemporalItem()) {
-                item.stopTimer();
-            }
-        }
+        getItems().stream()
+                .filter(item -> (item.isShadowItem() || item.isTemporalItem()))
+                .forEach(ItemInstance::stopTimer);
+
     }
 
     @Override
@@ -539,23 +538,18 @@ public final class PcInventory extends Inventory {
         if (item.getVisualItemId() > 0) {
             DressArmorData dress = DressArmorHolder.getArmorByPartId(item.getVisualItemId());
             if (dress != null) {
-                for (ItemInstance invItem : getItems()) {
-                    if (invItem.getObjectId() == item.getObjectId())
-                        continue;
-
-                    if (invItem.getVisualItemId() < 1)
-                        continue;
-
-                    if (invItem.getVisualItemId() == dress.getChest() || invItem.getVisualItemId() == dress.getLegs() || invItem.getVisualItemId() == dress.getGloves()
-                            || invItem.getVisualItemId() == dress.getFeet()) {
-                        invItem.setVisualItemId(0);
-                        invItem.setJdbcState(JdbcEntityState.UPDATED);
-                        invItem.update();
-                    }
-                }
+                getItems().stream()
+                        .filter(i -> i.getObjectId() != item.getObjectId())
+                        .filter(i -> i.getVisualItemId() > 0)
+                        .filter(i -> dress.getVisualIds().contains(i.getVisualItemId()))
+                        .forEach(i -> {
+                            i.setVisualItemId(0);
+                            i.setJdbcState(JdbcEntityState.UPDATED);
+                            i.update();
+                        });
 
                 // Refund the price paid for this set so he can pay for it again
-                ItemFunctions.addItem(owner, dress.getPriceId(), dress.getPriceCount(), true, "DressMeRefund");
+                ItemFunctions.addItem(owner, dress.priceId, dress.priceCount, true, "DressMeRefund");
 
                 // Send message
                 owner.sendPacket(new Say2(owner.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "DressMe", "You have destroyed a part of a dressMe set, for that you will be refunded with the original price, so you can make it again"));
@@ -566,63 +560,19 @@ public final class PcInventory extends Inventory {
     }
 
     public void setMustShowDressMe(boolean val) {
-        _mustShowDressMe = val;
+        mustShowDressMe = val;
     }
 
     public boolean mustShowDressMe() {
-        return _mustShowDressMe;
+        return mustShowDressMe;
     }
 
-    /**
-     * @return Returns true if all the armor items equipped in the player are from a dress me set. Doesnt check if they are all from the same set, that is done on another place
-     */
     public boolean hasAllDressMeItemsEquipped() {
-        final ItemInstance chestItem = getPaperdollItem(Inventory.PAPERDOLL_CHEST);
-        final ItemInstance legsItem = getPaperdollItem(Inventory.PAPERDOLL_LEGS);
-        final ItemInstance glovesItem = getPaperdollItem(Inventory.PAPERDOLL_GLOVES);
-        final ItemInstance feetItem = getPaperdollItem(Inventory.PAPERDOLL_FEET);
-
-        if (chestItem == null || legsItem == null || glovesItem == null || feetItem == null)
-            return false;
-
-        if (chestItem.getVisualItemId() != 0 && legsItem.getVisualItemId() != 0 && glovesItem.getVisualItemId() != 0 && feetItem.getVisualItemId() != 0)
-            return true;
-
-		/*
-		DressArmorData dress = DressArmorHolder.INSTANCE().getArmorByPartId(glovesItem.getVisualItemId() != 0 ? glovesItem.getVisualItemId() : feetItem.getVisualItemId());
-		if (dress == null)
-			return false;
-
-		if (chestItem.getVisualItemId() == 0)
-		{
-			chestItem.setVisualItemId(dress.getChest());
-			chestItem.setJdbcState(JdbcEntityState.UPDATED);
-			chestItem.update();
-		}
-
-		if (legsItem.getVisualItemId() == 0)
-		{
-			legsItem.setVisualItemId(dress.getLegs());
-			legsItem.setJdbcState(JdbcEntityState.UPDATED);
-			legsItem.update();
-		}
-
-		if (glovesItem.getVisualItemId() == 0)
-		{
-			glovesItem.setVisualItemId(dress.getGloves());
-			glovesItem.setJdbcState(JdbcEntityState.UPDATED);
-			glovesItem.update();
-		}
-
-		if (feetItem.getVisualItemId() == 0)
-		{
-			feetItem.setVisualItemId(dress.getFeet());
-			feetItem.setJdbcState(JdbcEntityState.UPDATED);
-			feetItem.update();
-		}
-		*/
-
-        return false;
+        return List.of(PAPERDOLL_CHEST, PAPERDOLL_LEGS, PAPERDOLL_GLOVES, PAPERDOLL_FEET).stream()
+                .map(this::getPaperdollItem)
+                .filter(Objects::nonNull)
+                .filter(i -> i.getVisualItemId() != 0)
+                .count() == 4;
     }
 
     protected class ShadowLifeTimeTask extends RunnableImpl {

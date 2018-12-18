@@ -119,7 +119,7 @@ public class TeleToParnassus extends Functions implements ScriptFile {
     public void toParnassus() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
-        if (player == null || npc == null || !npc.isInRange(player, 1000L))
+        if (npc == null || !npc.isInRange(player, 1000L))
             return;
 
         if (!NpcInstance.canBypassCheck(player, npc))

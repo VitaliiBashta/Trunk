@@ -6,20 +6,15 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.scripts.custom.QuizEvent;
 
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Ionescu Leontin-Ovidiu
- * @date 07.05.2013
- * @project_name l2jeuropa
- */
+
 public class Quiz implements IVoicedCommandHandler, ScriptFile {
-    private static final List<String> _voicedCommands = Arrays.asList("quiz", "1", "2", "3");
+    private static final List<String> VOICED_COMMANDS = List.of("quiz", "1", "2", "3");
 
     @Override
     public List<String> getVoicedCommandList() {
-        return _voicedCommands;
+        return VOICED_COMMANDS;
     }
 
     @Override
@@ -53,7 +48,6 @@ public class Quiz implements IVoicedCommandHandler, ScriptFile {
 
     @Override
     public void onShutdown() {
-        // TODO Auto-generated method stub
 
     }
 }

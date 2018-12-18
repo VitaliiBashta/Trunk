@@ -190,10 +190,6 @@ public class Location extends Point3D implements SpawnRange {
         return new Location((int) (x + radius * Math.cos(angle)), (int) (y + radius * Math.sin(angle)), z, heading);
     }
 
-    public static Location findNearest(Creature creature, Location loc) {
-        return findNearest(creature, Collections.singletonList(loc));
-    }
-
     public static Location findNearest(Creature creature, List<Location> locs) {
         Location defloc = null;
         for (Location loc : locs) {

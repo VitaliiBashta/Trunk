@@ -14,7 +14,7 @@ public final class NevitVoice extends SimpleItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Collections.singletonList(ITEM_IDS);
+        return List.of(ITEM_IDS);
     }
 
     @Override

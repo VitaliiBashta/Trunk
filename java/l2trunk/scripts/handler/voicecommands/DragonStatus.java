@@ -7,12 +7,10 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.scripts.quests._254_LegendaryTales;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public final class DragonStatus implements IVoicedCommandHandler, ScriptFile {
-    private final String _commandList = "7rb";
+    private static final String COMMAND_LIST = "7rb";
 
     @Override
     public void onLoad() {
@@ -42,6 +40,6 @@ public final class DragonStatus implements IVoicedCommandHandler, ScriptFile {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.singletonList(_commandList);
+        return List.of(COMMAND_LIST);
     }
 }

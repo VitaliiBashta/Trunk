@@ -12,13 +12,13 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class BlessedSpiritShot extends ScriptItemHandler implements ScriptFile {
     // all the items ids that this handler knowns
-    private static final Integer[] _itemIds = {3947, 3948, 3949, 3950, 3951, 3952, 22072, 22073, 22074, 22075, 22076};
-    private static final Integer[] _skillIds = {2061, 2160, 2161, 2162, 2163, 2164};
+    private static final List<Integer> ITEM_IDS = List.of(
+            3947, 3948, 3949, 3950, 3951, 3952, 22072, 22073, 22074, 22075, 22076);
+    private static final List<Integer> _skillIds = List.of(2061, 2160, 2161, 2162, 2163, 2164);
 
 
     @Override
@@ -98,7 +98,7 @@ public final class BlessedSpiritShot extends ScriptItemHandler implements Script
         if (Config.ALLOW_SOUL_SPIRIT_SHOT_INFINITELY && count >= 1) {
             weaponInst.setChargedSpiritshot(ItemInstance.CHARGED_BLESSED_SPIRITSHOT);
             player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, _skillIds[grade]));
+            player.broadcastPacket(new MagicSkillUse(player, _skillIds.get(grade)));
         } else if (!Config.ALLOW_SOUL_SPIRIT_SHOT_INFINITELY) {
             if (!player.getInventory().destroyItem(item, blessedsoulSpiritConsumption, null)) {
                 if (isAutoSoulShot) {
@@ -112,13 +112,13 @@ public final class BlessedSpiritShot extends ScriptItemHandler implements Script
 
             weaponInst.setChargedSpiritshot(ItemInstance.CHARGED_BLESSED_SPIRITSHOT);
             player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player,  _skillIds[grade]));
+            player.broadcastPacket(new MagicSkillUse(player,  _skillIds.get(grade)));
         }
         return true;
     }
 
     @Override
     public final List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

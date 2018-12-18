@@ -13,12 +13,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class HelpBook extends ScriptItemHandler implements ScriptFile {
-    private static final Integer[] _itemIds = {
+    private static final List<Integer> ITEM_IDS = List.of(
             5588, 6317, 7561, 7063, 7064, 7065, 7066, 7082, 7083, 7084, 7085,
             7086, 7087, 7088, 7089, 7090, 7091, 7092, 7093, 7094, 7095, 7096,
             7097, 7098, 7099, 7100, 7101, 7102, 7103, 7104, 7105, 7106, 7107,
             7108, 7109, 7110, 7111, 7112, 8059, 13130, 13131, 13132, 13133,
-            13134, 13135, 13136, 17213};
+            13134, 13135, 13136, 17213);
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -52,6 +52,6 @@ public final class HelpBook extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

@@ -22,13 +22,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.commons.lang.NumberUtils.toLong;
 
 public final class HuntersGuild extends Functions implements ScriptFile, IVoicedCommandHandler, OnDeathListener {
-    private static final List<String> _commandList = Arrays.asList("gettask", "declinetask");
+    private static final List<String> COMMAND_LIST = List.of("gettask", "declinetask");
     private static final Logger LOG = LoggerFactory.getLogger(HuntersGuild.class);
 
     @Override
@@ -161,7 +161,7 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
         if (!Config.EVENT_BOUNTY_HUNTERS_ENABLED)
             return;
         int rewardid = toInt(player.getVar("bhRewardId"));
-        long rewardcount = Long.parseLong(player.getVar("bhRewardCount"));
+        long rewardcount = toLong(player.getVar("bhRewardCount"));
         player.unsetVar("bhMonstersId");
         player.unsetVar("bhMonstersNeeded");
         player.unsetVar("bhMonstersKilled");
@@ -177,7 +177,7 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
 
     @Override
     public List<String> getVoicedCommandList() {
-        return _commandList;
+        return COMMAND_LIST;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package l2trunk.scripts.handler.items;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.handler.items.ItemHandler;
@@ -13,11 +12,10 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Extractable extends SimpleItemHandler implements ScriptFile {
-    private static final Integer[] ITEM_IDS = {
+public final class Extractable extends SimpleItemHandler implements ScriptFile {
+    private static final List<Integer> ITEM_IDS = List.of(
             53, 54, 55, 56, 136, 137, 138, 139, 140, 141, 163, 170, 5906, 5907, 5909,
             5910, 5912, 5913, 5916, 5944, 5955, 5966, 5967, 5968, 5969, 6007, 6008,
             6009, 6010, 7629, 7630, 7631, 7632, 7633, 7634, 7635, 7636, 7637, 7725,
@@ -130,7 +128,171 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
             21664, 21665, 21666, 21667, 21668, 21669, 21670, 21671, 21672, 21673,
             21674, 21675, 21676, 21677, 21678, 21679, 21680, 21681, 21682, 21683,
             21684, 21685, 21686, 21747, 21748, 21749, 21752, 21753, 22000, 22001,
-            22002, 22003, 22004, 22005, 22087, 22088, 22187, 37004};
+            22002, 22003, 22004, 22005, 22087, 22088, 22187, 37004);
+    private static final int[] SOI_books = {14209, // Forgotten Scroll - Hide
+            14212, // Forgotten Scroll - Enlightenment - Wizard
+            14213, // Forgotten Scroll - Enlightenment - Healer
+            10554, // Forgotten Scroll - Anti-Magic Armor
+            14208, // Forgotten Scroll - Final Secret
+            10577 // Forgotten Scroll - Excessive Loyalty
+    };
+
+    private static void extract_item(int[] list, int[] counts, Player player) {
+        int index = Rnd.get(list.length);
+        int id = list[index];
+        int count = counts[index];
+        addItem(player, id, count);
+    }
+
+    private static List<int[]> mass_extract_item(long source_count, int[] list, int[] counts, Player player) {
+        List<int[]> result = new ArrayList<>((int) Math.min(list.length, source_count));
+
+        for (int n = 1; n <= source_count; n++) {
+            int index = Rnd.get(list.length);
+            int item = list[index];
+            int count = counts[index];
+
+            int[] old = null;
+            for (int[] res : result)
+                if (res[0] == item)
+                    old = res;
+
+            if (old == null)
+                result.add(new int[]{item, count});
+            else
+                old[1] += count;
+        }
+
+        return result;
+    }
+
+    private static void capsulate(Player player, int[][] items, double[] chances) {
+        int c = 0;
+        boolean empty = true;
+        for (int[] i : items) {
+            // если шанс < 0, min <= 0, max <= 0 или max < min
+            if (chances[c] <= 0 || i[1] <= 0 || i[2] <= 0 || i[2] < i[1])
+                continue;
+
+            if (Rnd.chance(chances[c])) {
+                addItem(player, i[0], Rnd.get(i[1], i[2]));
+                empty = false;
+            }
+        }
+
+        if (empty) {
+            player.sendPacket(SystemMsg.THERE_WAS_NOTHING_FOUND_INSIDE);
+        }
+    }
+
+    private static void extract_item_r(int[] list, int[] count_min, int[] count_max, int[] chances, Player player) {
+        for (int i = 0; i < count_min.length; i++)
+            count_min[i] = Rnd.get(count_min[i], count_max[i]);
+        extract_item_r(list, count_min, chances, player);
+    }
+
+    private static void extract_item_r(int[] list, int[] counts, int[] chances, Player player) {
+        int sum = 0;
+
+        for (int i = 0; i < list.length; i++)
+            sum += chances[i];
+
+        int[] table = new int[sum];
+        int k = 0;
+
+        for (int i = 0; i < list.length; i++)
+            for (int j = 0; j < chances[i]; j++) {
+                table[k] = i;
+                k++;
+            }
+
+        int i = table[Rnd.get(table.length)];
+        int item = list[i];
+        int count = counts[i];
+
+        addItem(player, item, count);
+    }
+
+    private static List<int[]> mass_extract_item_r(long source_count, int[] list, int[] count_min, int[] count_max, int[] chances, Player player) {
+        for (int i = 0; i < count_min.length; i++)
+            count_min[i] = Rnd.get(count_min[i], count_max[i]);
+        return mass_extract_item_r(source_count, list, count_min, chances, player);
+    }
+
+    private static List<int[]> mass_extract_item_r(long source_count, int[] list, int[] counts, int[] chances, Player player) {
+        List<int[]> result = new ArrayList<>((int) Math.min(list.length, source_count));
+
+        int sum = 0;
+        for (int i = 0; i < list.length; i++)
+            sum += chances[i];
+
+        int[] table = new int[sum];
+        int k = 0;
+
+        for (int i = 0; i < list.length; i++)
+            for (int j = 0; j < chances[i]; j++) {
+                table[k] = i;
+                k++;
+            }
+
+        for (int n = 1; n <= source_count; n++) {
+            int i = table[Rnd.get(table.length)];
+            int item = list[i];
+            int count = counts[i];
+
+            int[] old = null;
+            for (int[] res : result)
+                if (res[0] == item)
+                    old = res;
+
+            if (old == null)
+                result.add(new int[]{item, count});
+            else
+                old[1] += count;
+        }
+
+        return result;
+    }
+
+    private static boolean canBeExtracted(Player player, ItemInstance item) {
+        if (player.getWeightPenalty() >= 3 || player.getInventory().getSize() > player.getInventoryLimit() - 10) {
+            player.sendPacket(Msg.YOUR_INVENTORY_IS_FULL, new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(item.getItemId()));
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean extractRandomOneItem(Player player, int[][] items, double[] chances) {
+        if (items.length != chances.length)
+            return false;
+
+        double extractChance = 0;
+        for (double c : chances)
+            extractChance += c;
+
+        if (Rnd.chance(extractChance)) {
+            List<Integer> successfulItems = new ArrayList<>();
+            while (successfulItems.size() == 0)
+                for (int i = 0; i < items.length; i++)
+                    if (Rnd.chance(chances[i]))
+                        successfulItems.add(i);
+            int[] item = items[successfulItems.get(Rnd.get(successfulItems.size()))];
+            if (item.length < 2)
+                return false;
+
+            addItem(player, item[0], item[1]);
+        }
+        return true;
+    }
+
+    private static void addItem(Player player, int itemId, long count) {
+        Functions.addItem(player, itemId, count, "Extractable");
+    }
+
+    private static void addItem(Player player, int itemId, long count, String log) {
+        Functions.addItem(player, itemId, count, log);
+    }
+
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
         return true;
@@ -151,7 +313,7 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(ITEM_IDS);
+        return ITEM_IDS;
     }
 
     @Override
@@ -3800,7 +3962,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         capsulate(player, items, chances);
     }
 
-
     private void use17029(Player player, boolean ctrl) {
 
         addItem(player, 9409, 1, "use17029");
@@ -6395,7 +6556,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 15277, 1, "Extractable");
     }
 
-
     private void use15200(Player player, boolean ctrl) {
 
         addItem(player, 15222, 1);
@@ -6818,7 +6978,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         capsulate(player, items, chances);
     }
 
-
     private void use13385(Player player, boolean ctrl) {
 
         addItem(player, 13383, 1);
@@ -6828,7 +6987,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
 
         addItem(player, 13383, 3);
     }
-
 
     private void use13381(Player player, boolean ctrl) {
 
@@ -8304,7 +8462,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 10179, 5);
     }
 
-
     //4th Place Treasure Sack
     private void use10257(Player player, boolean ctrl) { /* by 4ipolino*/
         int items[][] = new int[][]
@@ -8671,6 +8828,8 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 20346, 1);
     }
 
+    // ------ AGNOLIC © 2012 ---------
+
     private void use21611(Player player, boolean ctrl) {
 
         addItem(player, 20345, 1);
@@ -8700,6 +8859,8 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
 
         addItem(player, 20340, 1);
     }
+
+    // ------ Adventurer's Boxes ------
 
     private void use21605(Player player, boolean ctrl) {
 
@@ -8732,8 +8893,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 21595, 1);
         addItem(player, 21594, 1);
     }
-
-    // ------ AGNOLIC © 2012 ---------
 
     // NO GRADE BEGINNER'S ADVENTURER SUPPORT PACK
     private void use20635(Player player, boolean ctrl) {
@@ -8818,8 +8977,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
     private void use21092(Player player, boolean ctrl) {
         addItem(player, 20346, 1);
     }
-
-    // ------ Adventurer's Boxes ------
 
     // Adventurer's Box: C-Grade Accessory (Low Grade)
     private void use8534(Player player, boolean ctrl) {
@@ -9493,6 +9650,8 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 13241, 1);
     }
 
+    // ****** End Item Mall ******
+
     // Brown Bear Hat 7-Day Pack
     private void use13285(Player player, boolean ctrl) {
         addItem(player, 13242, 1);
@@ -9566,8 +9725,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 22052, 1);
         addItem(player, 22053, 1);
     }
-
-    // ****** End Item Mall ******
 
     // ****** Belts ******
     // Gludio Supply Box - Belt: Grade B, C
@@ -10636,14 +10793,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
             addItem(player, 20203, 1);
     }
 
-    private static final int[] SOI_books = {14209, // Forgotten Scroll - Hide
-            14212, // Forgotten Scroll - Enlightenment - Wizard
-            14213, // Forgotten Scroll - Enlightenment - Healer
-            10554, // Forgotten Scroll - Anti-Magic Armor
-            14208, // Forgotten Scroll - Final Secret
-            10577 // Forgotten Scroll - Excessive Loyalty
-    };
-
     // Jewel Ornamented Duel Supplies
     private void use13777(Player player, boolean ctrl) {
         int rnd = Rnd.get(100);
@@ -11029,7 +11178,6 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 21595, 1);
         addItem(player, 13488, 1);
     }
-
 
     // Pablo's Box
     private void use21753(Player player, boolean ctrl) {
@@ -13138,163 +13286,5 @@ public class Extractable extends SimpleItemHandler implements ScriptFile {
     private void use15468(Player player, boolean ctrl) {
         addItem(player, 15461, 6);
         addItem(player, 15464, 1);
-    }   // |==========================================| END LINE by CosMOsiS |==========================================|
-
-
-    private static void extract_item(int[] list, int[] counts, Player player) {
-        int index = Rnd.get(list.length);
-        int id = list[index];
-        int count = counts[index];
-        addItem(player, id, count);
-    }
-
-    private static List<int[]> mass_extract_item(long source_count, int[] list, int[] counts, Player player) {
-        List<int[]> result = new ArrayList<>((int) Math.min(list.length, source_count));
-
-        for (int n = 1; n <= source_count; n++) {
-            int index = Rnd.get(list.length);
-            int item = list[index];
-            int count = counts[index];
-
-            int[] old = null;
-            for (int[] res : result)
-                if (res[0] == item)
-                    old = res;
-
-            if (old == null)
-                result.add(new int[]{item, count});
-            else
-                old[1] += count;
-        }
-
-        return result;
-    }
-
-
-    private static void capsulate(Player player, int[][] items, double[] chances) {
-        int c = 0;
-        boolean empty = true;
-        for (int[] i : items) {
-            // если шанс < 0, min <= 0, max <= 0 или max < min
-            if (chances[c] <= 0 || i[1] <= 0 || i[2] <= 0 || i[2] < i[1])
-                continue;
-
-            if (Rnd.chance(chances[c])) {
-                addItem(player, i[0], Rnd.get(i[1], i[2]));
-                empty = false;
-            }
-        }
-
-        if (empty) {
-            player.sendPacket(SystemMsg.THERE_WAS_NOTHING_FOUND_INSIDE);
-        }
-    }
-
-    private static void extract_item_r(int[] list, int[] count_min, int[] count_max, int[] chances, Player player) {
-        for (int i = 0; i < count_min.length; i++)
-            count_min[i] = Rnd.get(count_min[i], count_max[i]);
-        extract_item_r(list, count_min, chances, player);
-    }
-
-    private static void extract_item_r(int[] list, int[] counts, int[] chances, Player player) {
-        int sum = 0;
-
-        for (int i = 0; i < list.length; i++)
-            sum += chances[i];
-
-        int[] table = new int[sum];
-        int k = 0;
-
-        for (int i = 0; i < list.length; i++)
-            for (int j = 0; j < chances[i]; j++) {
-                table[k] = i;
-                k++;
-            }
-
-        int i = table[Rnd.get(table.length)];
-        int item = list[i];
-        int count = counts[i];
-
-        addItem(player, item, count);
-    }
-
-    private static List<int[]> mass_extract_item_r(long source_count, int[] list, int[] count_min, int[] count_max, int[] chances, Player player) {
-        for (int i = 0; i < count_min.length; i++)
-            count_min[i] = Rnd.get(count_min[i], count_max[i]);
-        return mass_extract_item_r(source_count, list, count_min, chances, player);
-    }
-
-    private static List<int[]> mass_extract_item_r(long source_count, int[] list, int[] counts, int[] chances, Player player) {
-        List<int[]> result = new ArrayList<>((int) Math.min(list.length, source_count));
-
-        int sum = 0;
-        for (int i = 0; i < list.length; i++)
-            sum += chances[i];
-
-        int[] table = new int[sum];
-        int k = 0;
-
-        for (int i = 0; i < list.length; i++)
-            for (int j = 0; j < chances[i]; j++) {
-                table[k] = i;
-                k++;
-            }
-
-        for (int n = 1; n <= source_count; n++) {
-            int i = table[Rnd.get(table.length)];
-            int item = list[i];
-            int count = counts[i];
-
-            int[] old = null;
-            for (int[] res : result)
-                if (res[0] == item)
-                    old = res;
-
-            if (old == null)
-                result.add(new int[]{item, count});
-            else
-                old[1] += count;
-        }
-
-        return result;
-    }
-
-    private static boolean canBeExtracted(Player player, ItemInstance item) {
-        if (player.getWeightPenalty() >= 3 || player.getInventory().getSize() > player.getInventoryLimit() - 10) {
-            player.sendPacket(Msg.YOUR_INVENTORY_IS_FULL, new SystemMessage(SystemMessage.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(item.getItemId()));
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean extractRandomOneItem(Player player, int[][] items, double[] chances) {
-        if (items.length != chances.length)
-            return false;
-
-        double extractChance = 0;
-        for (double c : chances)
-            extractChance += c;
-
-        if (Rnd.chance(extractChance)) {
-            List<Integer> successfulItems = new ArrayList<>();
-            while (successfulItems.size() == 0)
-                for (int i = 0; i < items.length; i++)
-                    if (Rnd.chance(chances[i]))
-                        successfulItems.add(i);
-            int[] item = items[successfulItems.get(Rnd.get(successfulItems.size()))];
-            if (item.length < 2)
-                return false;
-
-            addItem(player, item[0], item[1]);
-        }
-        return true;
-    }
-
-    private static void addItem(Player player, int itemId, long count) {
-        Functions.addItem(player, itemId, count, "Extractable");
-    }
-
-    private static void addItem(Player player, int itemId, long count, String log) {
-        Functions.addItem(player, itemId, count, log);
     }
 }

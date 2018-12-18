@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EquipableItem extends ScriptItemHandler implements ScriptFile {
+public final class EquipableItem extends ScriptItemHandler implements ScriptFile {
     private final Set<Integer> itemIds;
 
     public EquipableItem() {

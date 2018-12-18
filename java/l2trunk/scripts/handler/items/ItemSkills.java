@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
-    private final Set<Integer> _itemIds;
+    private static List<Integer> _itemIds;
 
 
     @Override
@@ -51,7 +51,7 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
                 if (skill.isHandler())
                     set.add(template.getItemId());
         }
-        _itemIds = set;
+        _itemIds = new ArrayList<>(set);
     }
 
     @Override
@@ -113,6 +113,6 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return new ArrayList<>(_itemIds);
+        return _itemIds;
     }
 }

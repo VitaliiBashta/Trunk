@@ -5,49 +5,21 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _642_APowerfulPrimevalCreature extends Quest implements ScriptFile {
+import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class _642_APowerfulPrimevalCreature extends Quest implements ScriptFile {
     // NPCs
     private static final int Dinn = 32105;
     // Mobs
     private static final int Ancient_Egg = 18344;
-    private static final int[] Dino = {
-            22196,
-            22197,
-            22198,
-            22199,
-            22200,
-            22201,
-            22202,
-            22203,
-            22204,
-            22205,
-            22218,
-            22219,
-            22220,
-            22223,
-            22224,
-            22225,
-            22226,
-            22227,
-            22742,
-            22743,
-            22744,
-            22745
-    };
+    private static final List<Integer> Dino = List.of(
+            22196, 22197, 22198, 22199, 22200, 22201, 22202, 22203, 22204, 22205, 22218,
+            22219, 22220, 22223, 22224, 22225, 22226, 22227, 22742, 22743, 22744, 22745);
     // Items
-    private static final int[] Rewards = {
-            8690,
-            8692,
-            8694,
-            8696,
-            8698,
-            8700,
-            8702,
-            8704,
-            8706,
-            8708,
-            8710
-    };
+    private static final List<Integer> Rewards = List.of(
+            8690, 8692, 8694, 8696, 8698, 8700, 8702, 8704, 8706, 8708, 8710);
     // Quest Items
     private static final int Dinosaur_Tissue = 8774;
     private static final int Dinosaur_Egg = 8775;
@@ -59,21 +31,20 @@ public class _642_APowerfulPrimevalCreature extends Quest implements ScriptFile 
         super(true);
         addStartNpc(Dinn);
         addKillId(Ancient_Egg);
-        for (int dino_id : Dino)
-            addKillId(dino_id);
+        addKillId(Dino);
         addQuestItem(Dinosaur_Tissue);
         addQuestItem(Dinosaur_Egg);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        int _state = st.getState();
+        int state = st.getState();
         long Dinosaur_Tissue_Count = st.getQuestItemsCount(Dinosaur_Tissue);
-        if (event.equalsIgnoreCase("dindin_q0642_04.htm") && _state == CREATED) {
+        if (event.equalsIgnoreCase("dindin_q0642_04.htm") && state == CREATED) {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("dindin_q0642_12.htm") && _state == STARTED) {
+        } else if (event.equalsIgnoreCase("dindin_q0642_12.htm") && state == STARTED) {
             if (Dinosaur_Tissue_Count == 0)
                 return "dindin_q0642_08a.htm";
             st.takeItems(Dinosaur_Tissue, -1);
@@ -81,23 +52,24 @@ public class _642_APowerfulPrimevalCreature extends Quest implements ScriptFile 
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("0"))
             return null;
-        else if (_state == STARTED)
-            try {
-                int rew_id = Integer.valueOf(event);
-                if (Dinosaur_Tissue_Count < 150 || st.getQuestItemsCount(Dinosaur_Egg) == 0)
-                    return "dindin_q0642_08a.htm";
-                for (int reward : Rewards)
-                    if (reward == rew_id) {
+        else if (state == STARTED) {
+            int rew_id = toInt(event);
+            if (Dinosaur_Tissue_Count < 150 || st.getQuestItemsCount(Dinosaur_Egg) == 0)
+                return "dindin_q0642_08a.htm";
+            if (Rewards.stream()
+                    .filter(reward -> reward == rew_id)
+                    .peek(reward -> {
                         st.takeItems(Dinosaur_Tissue, 150);
                         st.takeItems(Dinosaur_Egg, 1);
-                        st.giveItems(reward, 1, false);
-                        st.giveItems(ADENA_ID, 44000, false);
+                        st.giveItems(reward, 1);
+                        st.giveItems(ADENA_ID, 44000);
                         st.playSound(SOUND_MIDDLE);
-                        return "dindin_q0642_12.htm";
-                    }
-                return null;
-            } catch (Exception E) {
-            }
+
+                    })
+                    .findFirst().isPresent())
+                return "dindin_q0642_12.htm";
+            return null;
+        }
 
         return event;
     }

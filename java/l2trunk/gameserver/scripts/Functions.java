@@ -3,7 +3,6 @@ package l2trunk.gameserver.scripts;
 import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.dao.CharacterDAO;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.instancemanager.ServerVariables;
@@ -23,39 +22,10 @@ import l2trunk.gameserver.utils.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
 
 public class Functions {
     public HardReference<Player> self = HardReferences.emptyRef();
     public HardReference<NpcInstance> npc = HardReferences.emptyRef();
-
-    private static ScheduledFuture<?> executeTask(final Player caller, final String className, final String methodName, final Object[] args, final Map<String, Object> variables, long delay) {
-        return ThreadPoolManager.INSTANCE.schedule(() -> callScripts(caller, className, methodName, args, variables), delay);
-    }
-
-    protected static ScheduledFuture<?> executeTask(String className, String methodName, Object[] args, Map<String, Object> variables, long delay) {
-        return executeTask(null, className, methodName, args, variables, delay);
-    }
-
-    protected static ScheduledFuture<?> executeTask(Player player, String className, String methodName, Object[] args, long delay) {
-        return executeTask(player, className, methodName, args, null, delay);
-    }
-
-    public static ScheduledFuture<?> executeTask(String className, String methodName, Object[] args, long delay) {
-        return executeTask(className, methodName, args, null, delay);
-    }
-
-    public static Object callScripts(String className, String methodName, Object[] args) {
-        return callScripts(className, methodName, args, null);
-    }
-
-    private static Object callScripts(String className, String methodName, Object[] args, Map<String, Object> variables) {
-        return callScripts(null, className, methodName, args, variables);
-    }
-
-    private static Object callScripts(Player player, String className, String methodName, Object[] args, Map<String, Object> variables) {
-        return Scripts.INSTANCE.callScripts(player, className, methodName, args, variables);
-    }
 
     public static void show(String text, Player self, NpcInstance npc, Object... arg) {
         if (text == null || self == null)
@@ -284,10 +254,6 @@ public class Functions {
 
     protected static boolean SimpleCheckDrop(Creature mob, Creature killer) {
         return mob != null && mob.isMonster() && !mob.isRaid() && killer != null && killer.getPlayer() != null && killer.getLevel() - mob.getLevel() < 9;
-    }
-
-    public static boolean isEventStarted(String event) {
-        return (Boolean) callScripts(event, "isRunned", new Object[]{});
     }
 
     public static void sendDebugMessage(Player player, String message) {

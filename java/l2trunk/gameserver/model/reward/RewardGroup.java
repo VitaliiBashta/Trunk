@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RewardGroup implements Cloneable {
+public final class RewardGroup implements Cloneable {
     private final List<RewardData> _items = new ArrayList<>();
     private double _chance;
     private boolean _isAdena = false; // Шанс фиксирован, растет только количество
@@ -23,14 +23,6 @@ public class RewardGroup implements Cloneable {
 
     public boolean notRate() {
         return _notRate;
-    }
-
-    public double getChanceSum() {
-        return _chanceSum;
-    }
-
-    public void setNotRate(boolean notRate) {
-        _notRate = notRate;
     }
 
     public double getChance() {
@@ -160,13 +152,9 @@ public class RewardGroup implements Cloneable {
                 else
                     count = Rnd.get(Math.round(i.getMinDrop() * imult), Math.round(i.getMaxDrop() * imult));
 
-                RewardItem t = null;
-
-                for (RewardItem r : ret)
-                    if (i.getItemId() == r.itemId) {
-                        t = r;
-                        break;
-                    }
+                RewardItem t = ret.stream()
+                        .filter(r -> i.getItemId() == r.itemId)
+                        .findFirst().orElse(null);
 
                 if (t == null) {
                     ret.add(t = new RewardItem(i.getItemId()));

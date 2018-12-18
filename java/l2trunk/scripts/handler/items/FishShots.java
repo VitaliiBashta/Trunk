@@ -12,13 +12,12 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class FishShots extends ScriptItemHandler implements ScriptFile {
     // All the item IDs that this handler knows.
-    private static final List<Integer> _itemIds = List.of(6535, 6536, 6537, 6538, 6539, 6540);
-    private static final List<Integer> _skillIds = List.of(2181, 2182, 2183, 2184, 2185, 2186);
+    private static final List<Integer> ITEM_IDS = List.of(6535, 6536, 6537, 6538, 6539, 6540);
+    private static final List<Integer> SKILL_IDS = List.of(2181, 2182, 2183, 2184, 2185, 2186);
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -86,13 +85,13 @@ public final class FishShots extends ScriptItemHandler implements ScriptFile {
         if (player.getInventory().destroyItem(item, 1L, "FishShots")) {
             weaponInst.setChargedFishshot(true);
             player.sendPacket(Msg.POWER_OF_MANA_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, _skillIds.get(grade)));
+            player.broadcastPacket(new MagicSkillUse(player, SKILL_IDS.get(grade)));
         }
         return true;
     }
 
     @Override
     public List<Integer> getItemIds() {
-        return _itemIds;
+        return ITEM_IDS;
     }
 }

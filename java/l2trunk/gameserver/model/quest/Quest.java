@@ -93,7 +93,7 @@ public class Quest {
      *
      * @param qs : QuestState
      */
-    public static void updateQuestInDb(QuestState qs) {
+    static void updateQuestInDb(QuestState qs) {
         updateQuestVarInDb(qs, "<state>", qs.getStateName());
     }
 
@@ -104,7 +104,7 @@ public class Quest {
      * @param var   : String designating the name of the variable for the quest
      * @param value : String designating the value of the variable for the quest
      */
-    public static void updateQuestVarInDb(QuestState qs, String var, String value) {
+    static void updateQuestVarInDb(QuestState qs, String var, String value) {
         Player player = qs.getPlayer();
         if (player == null)
             return;
@@ -126,7 +126,7 @@ public class Quest {
      *
      * @param qs : QuestState pointing out the player's quest
      */
-    public static void deleteQuestInDb(QuestState qs) {
+    static void deleteQuestInDb(QuestState qs) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_quests WHERE char_id=? AND name=?")) {
             statement.setInt(1, qs.getPlayer().getObjectId());
@@ -143,7 +143,7 @@ public class Quest {
      * @param qs  : object QuestState pointing out the player's quest
      * @param var : String designating the variable characterizing the quest
      */
-    public static void deleteQuestVarInDb(QuestState qs, String var) {
+    static void deleteQuestVarInDb(QuestState qs, String var) {
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("DELETE FROM character_quests WHERE char_id=? AND name=? AND var=?")) {
             statement.setInt(1, qs.getPlayer().getObjectId());
@@ -219,7 +219,7 @@ public class Quest {
         }
     }
 
-    public static String getStateName(int state) {
+    static String getStateName(int state) {
         switch (state) {
             case CREATED:
                 return "Start";

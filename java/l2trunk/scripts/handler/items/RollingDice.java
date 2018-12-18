@@ -15,7 +15,7 @@ import java.util.List;
 
 public final class RollingDice extends ScriptItemHandler implements ScriptFile {
     // all the items ids that this handler knowns
-    private static final Integer[] _itemIds = {4625, 4626, 4627, 4628};
+    private static final List<Integer> ITEM_IDS = List.of(4625, 4626, 4627, 4628);
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -69,6 +69,6 @@ public final class RollingDice extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public final List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

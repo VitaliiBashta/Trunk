@@ -5,16 +5,14 @@ import l2trunk.gameserver.Announcements;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.Calendar;
 
 
 public final class NewYearTimer implements ScriptFile {
-    private static final Skill firework = SkillTable.INSTANCE.getInfo(3266);
+    private static final int firework = 3266;
     private static NewYearTimer instance;
 
     public NewYearTimer() {

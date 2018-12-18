@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Cocktails extends SimpleItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = Arrays.asList(10178, 15356, 20393, 10179, 15357, 20394, 14739);
+    private static final List<Integer> ITEM_IDS = List.of(10178, 15356, 20393, 10179, 15357, 20394, 14739);
 
     @Override
     public List<Integer> getItemIds() {
@@ -42,7 +42,7 @@ public final class Cocktails extends SimpleItemHandler implements ScriptFile {
     }
 
     // Sweet Fruit Cocktail
-    private static final List<Integer> sweet_list = Arrays.asList(2404, // Might
+    private static final List<Integer> sweet_list = List.of(2404, // Might
             2405, // Shield
             2406, // Wind Walk
             2407, // Focus
@@ -54,7 +54,7 @@ public final class Cocktails extends SimpleItemHandler implements ScriptFile {
             2413); // Vampiric Rage
 
     // Fresh Fruit Cocktail
-    private static final int[] fresh_list = {2414, // Berserker Spirit
+    private static final List<Integer> fresh_list = List.of(2414, // Berserker Spirit
             2411, // Bless Body
             2415, // Magic Barrier
             2405, // Shield
@@ -62,11 +62,10 @@ public final class Cocktails extends SimpleItemHandler implements ScriptFile {
             2416, // Bless Soul
             2417, // Empower
             2418, // Acumen
-            2419, // Clarity
-    };
+            2419); // Clarity
 
     //Event - Fresh Milk
-    private static final List<Integer> milk_list = Arrays.asList(
+    private static final List<Integer> milk_list = List.of(
             2873, 2874, 2875, 2876, 2877, 2878, 2879, 2885, 2886, 2887, 2888, 2889, 2890);
 
     @Override

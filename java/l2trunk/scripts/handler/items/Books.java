@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Books extends SimpleItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = Arrays.asList(5555, 5707);
+    private static final List<Integer> ITEM_IDS = List.of(5555, 5707);
 
 
     @Override

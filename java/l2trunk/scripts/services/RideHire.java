@@ -1,12 +1,16 @@
 package l2trunk.scripts.services;
 
 import l2trunk.gameserver.Config;
+import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SetupGauge;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.PetDataTable;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.commons.lang.NumberUtils.toLong;
 
 public final class RideHire extends Functions {
     public String DialogAppend_30827(Integer val) {
@@ -80,16 +84,9 @@ public final class RideHire extends Functions {
                 return;
         }
 
-		/*
-		if ((npc_id == PetDataTable.WYVERN_ID || npc_id == PetDataTable.STRIDER_WIND_ID) && !SiegeUtils.getCanRide())
-		{
-			show(ru ? "Прокат виверн/страйдеров не работает во время осады." : "Can't ride wyvern/strider while Siege in progress.", player, npc);
-			return;
-		}
-		*/
 
-        Integer time = Integer.parseInt(args[1]);
-        long price = Long.parseLong(args[2]);
+        Integer time = toInt(args[1]);
+        long price = toLong(args[2]);
 
         if (time > 1800) {
             show("Too long time to ride.", player, npc);
@@ -110,10 +107,10 @@ public final class RideHire extends Functions {
         if (!ride(player, npc_id))
             return;
         player.sendPacket(new SetupGauge(player, 3, time * 1000));
-        executeTask(player, "services.RideHire", "rideOver", new Object[0], time * 1000);
+        ThreadPoolManager.INSTANCE.schedule(this::rideOver, time * 1000);
     }
 
-    public void rideOver() {
+    private void rideOver() {
         Player player = getSelf();
         if (player == null)
             return;

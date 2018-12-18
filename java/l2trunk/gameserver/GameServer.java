@@ -110,7 +110,7 @@ public class GameServer {
 
 
         _log.info("===============[Loading Scripts]==================");
-        Scripts.INSTANCE.load2();
+        Scripts.INSTANCE.load();
         BalancerConfig.LoadConfig();
         GeoEngine.load();
         Strings.reload();
@@ -145,7 +145,7 @@ public class GameServer {
         ItemAuctionManager.INSTANCE.init();
         NaiaTowerManager.init();
         _log.info("===============[Adding handlers to scripts]==================");
-        Scripts.INSTANCE.init2();
+        Scripts.INSTANCE.init();
         SpawnManager.INSTANCE.spawnAll();
         printSection("Boats");
         BoatHolder.getInstance().spawnAll();

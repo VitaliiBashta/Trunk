@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Player;
 
 import java.util.regex.Pattern;
 
-public class TutorialShowHtml extends L2GameServerPacket {
+public final class TutorialShowHtml extends L2GameServerPacket {
     private static final Pattern playername = Pattern.compile("%playername%");
     private static final Pattern playerClassName = Pattern.compile("%className%");
 
@@ -26,10 +26,10 @@ public class TutorialShowHtml extends L2GameServerPacket {
      * <p>
      * ВНИМАНИЕ!!! Клиент отсылает назад action!!! Используется как БАЙПАСС В RequestTutorialLinkHtml!!!
      */
-    private String _html;
+    private String html;
 
     public TutorialShowHtml(String html) {
-        _html = html;
+        this.html = html;
     }
 
     @Override
@@ -39,12 +39,12 @@ public class TutorialShowHtml extends L2GameServerPacket {
             return;
 
         // Player name replace
-        _html = playername.matcher(_html).replaceAll(player.getName());
+        html = playername.matcher(html).replaceAll(player.getName());
 
         // Player class name replace
-        _html = playerClassName.matcher(_html).replaceAll(player.getClassId().getName());
+        html = playerClassName.matcher(html).replaceAll(player.getClassId().getName());
 
         writeC(0xa6);
-        writeS(_html);
+        writeS(html);
     }
 }

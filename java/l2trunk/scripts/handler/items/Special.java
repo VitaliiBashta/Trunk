@@ -1,6 +1,5 @@
 package l2trunk.scripts.handler.items;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.handler.items.ItemHandler;
@@ -20,7 +19,6 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.bosses.AntharasManager;
 import l2trunk.scripts.bosses.ValakasManager;
@@ -32,6 +30,11 @@ import java.util.List;
 
 public final class Special extends SimpleItemHandler implements ScriptFile {
     private static final Integer[] ITEM_IDS = {8060, 8556, 13853, 13808, 13809, 20630, 21106, 21107, 14835, 15537, 10632, 21899, 21900, 21901, 21902, 21903, 21904, 17268};
+
+    private static long useItem(Player player, int itemId, long count) {
+        player.sendPacket(new SystemMessage(SystemMessage.YOU_USE_S1).addItemName(itemId));
+        return Functions.removeItem(player, itemId, count, "useItem");
+    }
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -543,11 +546,5 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
         player.doCast(9179, player, false);
         Functions.removeItem(player, 17268, 1, "use17268");
         return true;
-    }
-
-
-    private static long useItem(Player player, int itemId, long count) {
-        player.sendPacket(new SystemMessage(SystemMessage.YOU_USE_S1).addItemName(itemId));
-        return Functions.removeItem(player, itemId, count, "useItem");
     }
 }

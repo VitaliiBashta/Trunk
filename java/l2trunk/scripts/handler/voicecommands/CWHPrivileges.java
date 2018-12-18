@@ -18,7 +18,7 @@ import java.util.List;
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
-    private final String _commandList = "clan";
+    private static final String _commandList = "clan";
 
     @Override
     public void onLoad() {
@@ -35,7 +35,7 @@ public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.singletonList(_commandList);
+        return List.of(_commandList);
     }
 
     @Override

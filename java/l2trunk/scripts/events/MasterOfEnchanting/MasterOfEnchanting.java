@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MasterOfEnchanting extends Functions implements ScriptFile, OnPlayerEnterListener {
+public final class MasterOfEnchanting extends Functions implements ScriptFile, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(MasterOfEnchanting.class);
     private static final String EVENT_NAME = "MasterOfEnchanting";
     private static final int EVENT_MANAGER_ID = 32599;

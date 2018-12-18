@@ -7,13 +7,8 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Autor: Bonux
- * Date: 30.08.09
- * Time: 17:49
- * http://www.lineage2.com/archive/2009/06/master_of_encha.html
- **/
-public class EnchantingReward extends Functions implements ScriptFile {
+
+public final class EnchantingReward extends Functions implements ScriptFile {
     private static final int MASTER_YOGI_STAFF = 13539;
     private static final int MASTER_YOGI_SCROLL = 13540;
 
@@ -25,11 +20,8 @@ public class EnchantingReward extends Functions implements ScriptFile {
     private static final int ONE_SCROLL_PRICE = 250000;
     private static final int TEN_SCROLLS_PRICE = 2500000;
 
-    @SuppressWarnings("unused")
     private static int[] HAT_SHADOW = new int[]{13074, 13075, 13076};
-    @SuppressWarnings("unused")
     private static int[] HAT_EVENT = new int[]{13518, 13519, 13522};
-    @SuppressWarnings("unused")
     private static int[] SOUL_CRYSTALL = new int[]{9570, 9571, 9572};
 
     public void buy_staff() {
@@ -117,7 +109,7 @@ public class EnchantingReward extends Functions implements ScriptFile {
         ItemInstance enchanteditem = player.getInventory().getItemByItemId(Equip_Id);
         int Ench_Lvl = enchanteditem.getEnchantLevel();
 
-        if (Equip_Id == MASTER_YOGI_STAFF && Ench_Lvl > 3) {
+        if (Ench_Lvl > 3) {
             switch (Ench_Lvl) {
                 case 4:
                     addItem(player, 6406, 2, "MasterOfEnchanting"); // Firework
@@ -165,8 +157,7 @@ public class EnchantingReward extends Functions implements ScriptFile {
                     addItem(player, 21587, 1, "MasterOfEnchanting"); // 7th Anniv Cloak
                     break;
                 default:
-                    if (Ench_Lvl > 18)
-                        addItem(player, 21587, 1, "MasterOfEnchanting"); // S80 Grade Weapon Chest (Event)
+                    addItem(player, 21587, 1, "MasterOfEnchanting"); // S80 Grade Weapon Chest (Event)
                     break;
             }
             removeItem(player, Equip_Id, 1, "MasterOfEnchanting");

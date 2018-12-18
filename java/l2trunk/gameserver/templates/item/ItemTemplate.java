@@ -19,11 +19,6 @@ import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
 import java.util.*;
 
-//import org.napile.primitive.Containers;
-//import org.napile.primitive.maps.IntObjectMap;
-//import org.napile.primitive.maps.impl.HashIntObjectMap;
-
-
 public abstract class ItemTemplate extends StatTemplate {
     public static final int ITEM_ID_PC_BANG_POINTS = -100;
     public static final int ITEM_ID_CLAN_REPUTATION_SCORE = -200;
@@ -32,7 +27,7 @@ public abstract class ItemTemplate extends StatTemplate {
     /**
      * Item ID для замковых корон
      */
-    public static final List<Integer> ITEM_ID_CASTLE_CIRCLET = Arrays.asList(
+    public static final List<Integer> ITEM_ID_CASTLE_CIRCLET = List.of(
             0, // no castle - no circlet.. :)
             6838, // Circlet of Gludio
             6835, // Circlet of Dion
@@ -44,7 +39,7 @@ public abstract class ItemTemplate extends StatTemplate {
             8182, // Circlet of Rune
             8183); // Circlet of Schuttgart
 
-    public static final List<Integer> ITEM_ID_CASTLE_CLOAK = Arrays.asList(
+    public static final List<Integer> ITEM_ID_CASTLE_CLOAK = List.of(
             0, // no castle - no cloak..
             37018, // Cloak of Gludio
             37016, // Cloak of Dion
@@ -167,7 +162,7 @@ public abstract class ItemTemplate extends StatTemplate {
     private int[] _baseAttributes = new int[6];
     private Map<Integer, int[]> _enchantOptions = new HashMap<>();//Containers.emptyIntObjectMap();
     private Condition _condition;
-    private IItemHandler _handler = IItemHandler.NULL;
+    private IItemHandler handler = IItemHandler.NULL;
 
     ItemTemplate(final StatsSet set) {
         _itemId = set.getInteger("item_id");
@@ -758,11 +753,11 @@ public abstract class ItemTemplate extends StatTemplate {
     }
 
     public IItemHandler getHandler() {
-        return _handler;
+        return handler;
     }
 
     public void setHandler(IItemHandler handler) {
-        _handler = handler;
+        this.handler = handler;
     }
 
     public int getReuseDelay() {

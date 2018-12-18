@@ -11,7 +11,6 @@ import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
             if (!_isActive)
                 inzone.remove(player.getPlayer());
             else
-                Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{player}, 5000);
+                ThreadPoolManager.INSTANCE.schedule(() -> addPlayer(player), 5000);
         }
     }
 
@@ -160,7 +159,7 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
                 if (!_isActive)
                     inzone.add(cha.getPlayer());
                 else
-                    Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{cha.getPlayer()}, 5000);
+                    ThreadPoolManager.INSTANCE.schedule(() ->addPlayer(cha.getPlayer()), 5000);
             }
         }
 
@@ -170,7 +169,7 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
                 if (!_isActive)
                     inzone.remove(cha.getPlayer());
                 else
-                    Functions.executeTask("zones.DragonValley", "addPlayer", new Object[]{cha.getPlayer()}, 5000);
+                    ThreadPoolManager.INSTANCE.schedule(() -> addPlayer(cha.getPlayer()), 5000);
             }
         }
     }

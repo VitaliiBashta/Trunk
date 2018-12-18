@@ -15,12 +15,12 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class SoulShots extends ScriptItemHandler implements ScriptFile {
-    private static final Integer[] _itemIds = {5789, 1835, 1463, 1464, 1465, 1466, 1467, 13037, 13045, 13055, 22082, 22083, 22084, 22085, 22086};
-    private static final Integer[] _skillIds = {2039, 2150, 2151, 2152, 2153, 2154};
+    private static final List<Integer> ITEM_IDS = List.of(
+            5789, 1835, 1463, 1464, 1465, 1466, 1467, 13037, 13045, 13055, 22082, 22083, 22084, 22085, 22086);
+    private static final List<Integer> _skillIds = List.of(2039, 2150, 2151, 2152, 2153, 2154);
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -106,7 +106,7 @@ public final class SoulShots extends ScriptItemHandler implements ScriptFile {
         if (Config.ALLOW_SOUL_SPIRIT_SHOT_INFINITELY && count >= 1) {
             weaponInst.setChargedSoulshot(ItemInstance.CHARGED_SOULSHOT);
             player.sendPacket(Msg.POWER_OF_THE_SPIRITS_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, _skillIds[grade]));
+            player.broadcastPacket(new MagicSkillUse(player, _skillIds.get(grade)));
         } else if (!Config.ALLOW_SOUL_SPIRIT_SHOT_INFINITELY) {
             if (!player.getInventory().destroyItem(item, soulShotConsumption, null)) {
                 player.sendPacket(Msg.NOT_ENOUGH_SOULSHOTS);
@@ -114,13 +114,13 @@ public final class SoulShots extends ScriptItemHandler implements ScriptFile {
             }
             weaponInst.setChargedSoulshot(ItemInstance.CHARGED_SOULSHOT);
             player.sendPacket(Msg.POWER_OF_THE_SPIRITS_ENABLED);
-            player.broadcastPacket(new MagicSkillUse(player, _skillIds[grade]));
+            player.broadcastPacket(new MagicSkillUse(player, _skillIds.get(grade)));
         }
         return true;
     }
 
     @Override
     public final List<Integer> getItemIds() {
-        return Arrays.asList(_itemIds);
+        return ITEM_IDS;
     }
 }

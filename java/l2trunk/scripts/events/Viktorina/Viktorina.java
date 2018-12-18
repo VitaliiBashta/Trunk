@@ -60,9 +60,9 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         return status;
     }
 
-    public static void preLoad() {
+    private void preLoad() {
         if (Config.VIKTORINA_ENABLED)
-            executeTask("events.Viktorina.Viktorina", "Start", new Object[0], 5000);
+            ThreadPoolManager.INSTANCE.schedule(this::Start, 5000);
     }
 
     /**
@@ -116,7 +116,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         answer = st.nextToken();
     }
 
-    public void checkAnswer(String chat, Player player) {
+    public static void checkAnswer(String chat, Player player) {
         if (chat.equalsIgnoreCase(answer) && isQuestionStatus()) {
             if (!playerList.contains(player))
                 playerList.add(player);
@@ -146,9 +146,6 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
             player.sendPacket(cs);
     }
 
-    /**
-     * Подсчет правильно ответивших
-     */
     private void winners() {
         if (!isStatus()) {
             _log.info("Tried to declare a winner, but the quiz was off", "Viktorina");
@@ -241,9 +238,6 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
 
     }
 
-    /**
-     * Останавливаем эвент.
-     */
     private void stop() {
         playerList.clear();
         if (_taskStartQuestion != null)
@@ -319,11 +313,6 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         show(help.toString(), player);
     }
 
-    /**
-     * выводит топ
-     *
-     * @param player
-     */
     private void top(Player player) {
         StringBuilder top = new StringBuilder("<html><body>");
         top.append("<center>Top the fastest");
@@ -378,7 +367,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         show(top.toString(), player);
     }
 
-    private boolean isQuestionStatus() {
+    private static boolean isQuestionStatus() {
         return _questionStatus;
     }
 
@@ -389,7 +378,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
     @Override
     public void onLoad() {
         CharListenerList.addGlobal(this);
-        executeTask("events.Viktorina.Viktorina", "preLoad", new Object[0], 20000);
+        ThreadPoolManager.INSTANCE.schedule(this::preLoad, 20000);
         VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
         _log.info("Loaded Event: Viktorina");
     }

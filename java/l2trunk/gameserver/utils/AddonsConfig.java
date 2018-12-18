@@ -39,12 +39,6 @@ public final class AddonsConfig {
 
     private static void parseFiles(List<Path> files) {
         for (Path f : files) {
-            try {
-                if (Files.isHidden(f))
-                    continue;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             if (f.toString().startsWith("quest_reward_rates")) {
                 try (InputStream is = Files.newInputStream(f)) {
                     ExProperties p = new ExProperties();

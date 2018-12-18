@@ -30,7 +30,7 @@ public final class QuestState {
     private static final int RESTART_HOUR = 6;
     private static final int RESTART_MINUTES = 30;
     private static final Logger _log = LoggerFactory.getLogger(QuestState.class);
-    private final Player _player;
+    private final Player player;
     private final Quest quest;
     private final Map<String, String> _vars = new ConcurrentHashMap<>();
     private final Map<String, QuestTimer> _timers = new ConcurrentHashMap<>();
@@ -53,7 +53,7 @@ public final class QuestState {
      */
     public QuestState(Quest quest, Player player, int state) {
         this.quest = quest;
-        _player = player;
+        this.player = player;
 
         // Save the state of the quest for the player in the player's list of quest onwed
         player.setQuestState(this);
@@ -100,12 +100,12 @@ public final class QuestState {
             throw new IllegalArgumentException("Cant add twice kill listener to player");
 
         _onKillListener = new PlayerOnKillListenerImpl();
-        _player.addListener(_onKillListener);
+        player.addListener(_onKillListener);
     }
 
     public void removePlayerOnKillListener() {
         if (_onKillListener != null)
-            _player.removeListener(_onKillListener);
+            player.removeListener(_onKillListener);
     }
 
     public void addRadar(int x, int y, int z) {
@@ -215,7 +215,7 @@ public final class QuestState {
                 return 0;
             varint = Integer.parseInt(val);
         } catch (NumberFormatException e) {
-            _log.error(_player.getName() + ": variable " + var + " isn't an integer: " + varint, e);
+            _log.error(player.getName() + ": variable " + var + " isn't an integer: " + varint, e);
         }
         return varint;
     }
@@ -233,7 +233,7 @@ public final class QuestState {
      * @return L2Player
      */
     public Player getPlayer() {
-        return _player;
+        return player;
     }
 
     /**
@@ -287,10 +287,6 @@ public final class QuestState {
         if (getQuestItemsCount(itemId) >= count)
             return true;
         return false;
-    }
-
-    public boolean haveQuestItem(int itemId) {
-        return haveQuestItem(itemId, 1);
     }
 
     public int getState() {
@@ -413,7 +409,7 @@ public final class QuestState {
         if (getQuest().getParty() > Quest.PARTY_NONE) {
             Player player = getPlayer();
             if (player.getParty() != null)
-                calcChance *= Config.ALT_PARTY_BONUS.get(player.getParty().getMemberCountInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) - 1)/100.;
+                calcChance *= Config.ALT_PARTY_BONUS.get(player.getParty().getMemberCountInRange(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) - 1) / 100.;
         }
         if (calcChance > 100) {
             if ((int) Math.ceil(calcChance / 100) <= calcChance / 100)
@@ -427,13 +423,13 @@ public final class QuestState {
     private double getRateQuestsDrop() {
         Player player = getPlayer();
         if (Config.ALLOW_ADDONS_CONFIG)
-            return Config.RATE_QUESTS_DROP *  AddonsConfig.getQuestDropRates(getQuest());
-        return Config.RATE_QUESTS_DROP ;
+            return Config.RATE_QUESTS_DROP * AddonsConfig.getQuestDropRates(getQuest());
+        return Config.RATE_QUESTS_DROP;
     }
 
     public double getRateQuestsReward() {
         Player player = getPlayer();
-        double Bonus =  1.;
+        double Bonus = 1.;
         if (Config.ALLOW_ADDONS_CONFIG)
             return Config.RATE_QUESTS_REWARD * Bonus * AddonsConfig.getQuestRewardRates(getQuest());
         return Config.RATE_QUESTS_REWARD * Bonus;
@@ -667,26 +663,26 @@ public final class QuestState {
 
     public void closeTutorial() {
         onTutorialClientEvent(0);
-        if (_player != null) {
-            _player.sendPacket(TutorialCloseHtml.STATIC);
-            _player.deleteQuickVar("watchingTutorial");
+        if (player != null) {
+            player.sendPacket(TutorialCloseHtml.STATIC);
+            player.deleteQuickVar("watchingTutorial");
             Quest q = QuestManager.getQuest(255);
             if (q != null)
-                _player.processQuestEvent(q.getName(), "onTutorialClose", null);
+                player.processQuestEvent(q.getName(), "onTutorialClose", null);
         }
     }
 
     public void showTutorialHTML(String html) {
-        if (_player != null) {
+        if (player != null) {
             // Alexander - Added support for showing crest images on tutorial windows
-            html = ImagesCache.sendUsedImages(html, _player);
+            html = ImagesCache.sendUsedImages(html, player);
 
             // Alexander - If the html has crests then we should delay the tutorial html so the images reach their destination before the htm
             if (html.startsWith("CREST")) {
                 ThreadPoolManager.INSTANCE.schedule(new TutorialShowThread(html.substring(5)), 200);
             } else {
-                _player.sendPacket(new TutorialShowHtml(html));
-                _player.addQuickVar("watchingTutorial", true);
+                player.sendPacket(new TutorialShowHtml(html));
+                player.addQuickVar("watchingTutorial", true);
             }
         }
     }
@@ -1001,14 +997,14 @@ public final class QuestState {
         }
     }
 
-    public class PlayerOnKillListenerImpl implements OnKillListener {
+    private class PlayerOnKillListenerImpl implements OnKillListener {
         @Override
         public void onKill(Creature actor, Creature victim) {
             if (!victim.isPlayer())
                 return;
 
             Player actorPlayer = (Player) actor;
-            List<Player> players = null;
+            List<Player> players;
             switch (quest.getParty()) {
                 case Quest.PARTY_NONE:
                     players = Collections.singletonList(actorPlayer);
@@ -1028,11 +1024,13 @@ public final class QuestState {
                     break;
             }
 
-            for (Player player : players) {
-                QuestState questState = player.getQuestState(quest.getClass());
-                if (questState != null && !questState.isCompleted())
-                    quest.notifyKill((Player) victim, questState);
-            }
+            players.stream()
+                    .map(player1 -> player.getQuestState(quest.getClass()))
+                    .filter(Objects::nonNull)
+                    .filter(questState -> !questState.isCompleted())
+                    .forEach(questState ->
+                            quest.notifyKill((Player) victim, questState));
+
         }
 
         @Override
@@ -1042,19 +1040,19 @@ public final class QuestState {
     }
 
     private class TutorialShowThread implements Runnable {
-        private final String _html;
+        private final String html;
 
         TutorialShowThread(String html) {
-            _html = html;
+            this.html = html;
         }
 
         @Override
         public void run() {
-            if (_player == null)
+            if (player == null)
                 return;
 
-            _player.sendPacket(new TutorialShowHtml(_html));
-            _player.addQuickVar("watchingTutorial", true);
+            player.sendPacket(new TutorialShowHtml(html));
+            player.addQuickVar("watchingTutorial", true);
         }
     }
 }

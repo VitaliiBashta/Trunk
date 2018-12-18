@@ -10,12 +10,14 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _147_PathToBecomingAnEliteMercenary extends Quest implements ScriptFile {
-    private final Integer[] MERCENARY_CAPTAINS = {
-            36481, 36482, 36483, 36484, 36485, 36486, 36487, 36488, 36489};
+import java.util.List;
 
-    private final int[] CATAPULTAS = {
-            36499, 36500, 36501, 36502, 36503, 36504, 36505, 36506, 36507};
+public final class _147_PathToBecomingAnEliteMercenary extends Quest implements ScriptFile {
+    private static final List<Integer> MERCENARY_CAPTAINS = List.of(
+            36481, 36482, 36483, 36484, 36485, 36486, 36487, 36488, 36489);
+
+    private static final List<Integer> CATAPULTAS = List.of(
+            36499, 36500, 36501, 36502, 36503, 36504, 36505, 36506, 36507);
 
     public _147_PathToBecomingAnEliteMercenary() {
         super(PARTY_ALL);

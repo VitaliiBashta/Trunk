@@ -26,8 +26,6 @@ public enum DressArmorParser {
     private void readData(Element rootElement) {
         for (Iterator<Element> iterator = rootElement.elementIterator("dress"); iterator.hasNext(); ) {
             Element dress = iterator.next();
-            int id = toInt(dress.attributeValue("id"));
-            String name = dress.attributeValue("name");
 
             Element set = dress.element("set");
 
@@ -40,7 +38,7 @@ public enum DressArmorParser {
             int itemId = toInt(price.attributeValue("id"));
             long itemCount = Long.parseLong(price.attributeValue("count"));
 
-            DressArmorHolder.addDress(new DressArmorData(id, name, chest, legs, gloves, feet, itemId, itemCount));
+            DressArmorHolder.addDress(new DressArmorData(chest, legs, gloves, feet, itemId, itemCount));
         }
     }
 }
