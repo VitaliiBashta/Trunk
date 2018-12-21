@@ -4,7 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 
 public class UndergroundColiseumBattleEvent extends GlobalEvent {
-    UndergroundColiseumBattleEvent(Player player1, Player player2) {
+    public UndergroundColiseumBattleEvent(Player player1, Player player2) {
         super(0, player1.getObjectId() + "_" + player2.getObjectId());
     }
 

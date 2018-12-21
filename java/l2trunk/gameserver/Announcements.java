@@ -15,7 +15,6 @@ import l2trunk.gameserver.utils.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,11 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public enum Announcements {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(Announcements.class);
-    private final List<Announce> _announcements = new ArrayList<>();
+    private final List<Announce> announcements = new ArrayList<>();
     private int lastAnnounceId = 5000000;
 
     Announcements() {
@@ -61,11 +61,11 @@ public enum Announcements {
     }
 
     public List<Announce> getAnnouncements() {
-        return _announcements;
+        return announcements;
     }
 
     public void loadAnnouncements() {
-        _announcements.clear();
+        announcements.clear();
 
         String[] lines = FileUtils.readFileToString(Config.CONFIG.resolve("announcements.txt")).split("\n");
         for (String line : lines) {
@@ -78,21 +78,20 @@ public enum Announcements {
     }
 
     public void showAnnouncements(Player activeChar) {
-        for (Announce announce : _announcements)
-            announce.showAnnounce(activeChar);
+        announcements.forEach(a -> a.showAnnounce(activeChar));
     }
 
     public void addAnnouncement(int val, String text, boolean save) {
         Announce announce = new Announce(val, text);
         announce.start();
 
-        _announcements.add(announce);
+        announcements.add(announce);
         if (save)
             saveToDisk();
     }
 
     public void delAnnouncement(int line) {
-        Announce announce = _announcements.remove(line);
+        Announce announce = announcements.remove(line);
         if (announce != null)
             announce.stop();
 
@@ -101,17 +100,16 @@ public enum Announcements {
 
     private void saveToDisk() {
         Path f = Config.CONFIG.resolve("announcements.txt");
-        try (BufferedWriter writer = Files.newBufferedWriter(f)) {
-            for (Announce announce : _announcements)
-                writer.write(announce.time + "\t" + announce.getAnnounce() + "\n");
+        List<String> lines = announcements.stream().map(a -> a.time + "\t" + a.getAnnounce() + "\n").collect(Collectors.toList());
+        try {
+            Files.write(f, lines);
         } catch (IOException e) {
             _log.error("Error while saving config/announcements.txt!", e);
         }
     }
 
     public void announceToAll(SystemMessage sm) {
-        for (Player player : GameObjectsStorage.getAllPlayers())
-            player.sendPacket(sm);
+        GameObjectsStorage.getAllPlayers().forEach(pl -> pl.sendPacket(sm));
     }
 
     public void announceToAll(String text) {
@@ -120,7 +118,7 @@ public enum Announcements {
 
     public void announceToAll(String text, ChatType type) {
         Say2 cs = new Say2(0, type, "", text);
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(cs));
+        GameObjectsStorage.getAllPlayers().forEach(pl -> pl.sendPacket(cs));
     }
 
     /**

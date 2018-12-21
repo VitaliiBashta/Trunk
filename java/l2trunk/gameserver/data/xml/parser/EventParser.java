@@ -8,6 +8,7 @@ import l2trunk.gameserver.model.entity.events.EventAction;
 import l2trunk.gameserver.model.entity.events.EventType;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.events.actions.*;
+import l2trunk.gameserver.model.entity.events.impl.*;
 import l2trunk.gameserver.model.entity.events.objects.*;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
@@ -34,6 +35,53 @@ public enum EventParser {
     public void load() {
         ParserUtil.INSTANCE.load(xml).forEach(this::readData);
         LOG.info("Loaded " + EventHolder.size() + " items");
+    }
+
+    private GlobalEvent getEventByName(String name, StatsSet set) {
+        switch (name) {
+            case "UndergroundColiseumEvent":
+                return new UndergroundColiseumEvent(set);
+//            case "UndergroundColiseumBattleEvent":
+//                return new UndergroundColiseumBattleEvent(set);
+//            case "SiegeEvent":
+//                return new SiegeEvent(set);
+            case "PlayerVsPlayerDuelEvent":
+                return new PlayerVsPlayerDuelEvent(set);
+            case "PartyVsPartyDuelEvent":
+                return new PartyVsPartyDuelEvent(set);
+            case "MonasteryFurnaceEvent":
+                return new MonasteryFurnaceEvent(set);
+            case "March8Event":
+                return new March8Event(set);
+            case "KrateisCubeRunnerEvent":
+                return new KrateisCubeRunnerEvent(set);
+            case "KrateisCubeEvent":
+                return new KrateisCubeEvent(set);
+            case "FortressSiegeEvent":
+                return new FortressSiegeEvent(set);
+            case "FantasiIsleParadEvent":
+                return new FantasiIsleParadEvent(set);
+            case "DominionSiegeRunnerEvent":
+                return new DominionSiegeRunnerEvent(set);
+            case "DominionSiegeEvent":
+                return new DominionSiegeEvent(set);
+            case "ClanHallTeamBattleEvent":
+                return new ClanHallTeamBattleEvent(set);
+            case "ClanHallSiegeEvent":
+                return new ClanHallSiegeEvent(set);
+            case "ClanHallNpcSiegeEvent":
+                return new ClanHallNpcSiegeEvent(set);
+            case "ClanHallMiniGameEvent":
+                return new ClanHallMiniGameEvent(set);
+            case "ClanHallAuctionEvent":
+                return new ClanHallAuctionEvent(set);
+            case "CastleSiegeEvent":
+                return new CastleSiegeEvent(set);
+            case "BoatWayEvent":
+                return new BoatWayEvent(set);
+            default:
+                throw new IllegalArgumentException("no event with name:" + name);
+        }
     }
 
     protected void readData(Element rootElement) {
@@ -64,7 +112,8 @@ public enum EventParser {
                     set.set(parameterElement.attributeValue("name"), parameterElement.attributeValue("value"));
                 }
 
-                GlobalEvent event = constructor.newInstance(set);
+                GlobalEvent event = getEventByName(impl+ "Event",set);
+//                constructor.newInstance(set);
 
                 event.addOnStartActions(parseActions(eventElement.element("on_start"), Integer.MAX_VALUE));
                 event.addOnStopActions(parseActions(eventElement.element("on_stop"), Integer.MAX_VALUE));
@@ -93,12 +142,12 @@ public enum EventParser {
 
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+//            } catch (InstantiationException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
             }
 
 

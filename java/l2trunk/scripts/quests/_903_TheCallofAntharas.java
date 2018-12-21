@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _903_TheCallofAntharas extends Quest implements ScriptFile {
+public final class _903_TheCallofAntharas extends Quest implements ScriptFile {
     private static final int Theodric = 30755;
     private static final int BehemothDragonLeather = 21992;
     private static final int TaraskDragonsLeatherFragment = 21991;

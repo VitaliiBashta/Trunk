@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 
-@SuppressWarnings("unused")
 public class AdminTarget implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {

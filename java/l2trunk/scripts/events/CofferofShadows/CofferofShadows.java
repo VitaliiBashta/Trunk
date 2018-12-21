@@ -12,6 +12,7 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Util;
+import l2trunk.scripts.events.EventsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,24 +28,8 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
     private static final Logger _log = LoggerFactory.getLogger(CofferofShadows.class);
     private static boolean _active = false;
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {{-14823, 123567, -3143, 8192}, // Gludio
-                {-83159, 150914, -3155, 49152}, // Gludin
-                {18600, 145971, -3095, 40960}, // Dion
-                {82158, 148609, -3493, 60}, // Giran
-                {110992, 218753, -3568, 0}, // Hiene
-                {116339, 75424, -2738, 0}, // Hunter Village
-                {81140, 55218, -1551, 32768}, // Oren
-                {147148, 27401, -2231, 2300}, // Aden
-                {43532, -46807, -823, 31471}, // Rune
-                {87765, -141947, -1367, 6500}, // Schuttgart
-                {147154, -55527, -2807, 61300} // Goddard
-        };
-
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_coffer_march8, _spawns);
     }
 
     /**
@@ -54,11 +39,6 @@ public class CofferofShadows extends Functions implements ScriptFile, OnPlayerEn
         deSpawnNPCs(_spawns);
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return isActive("CofferofShadows");
     }

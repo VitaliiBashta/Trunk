@@ -10,18 +10,42 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 
 public final class _254_LegendaryTales extends Quest implements ScriptFile {
     private static final int Gilmore = 30754;
     private static final int LargeBone = 17249;
     private static final List<Integer> raids = List.of(
             25718, 25719, 25720, 25721, 25722, 25723, 25724);
+    private static final List<Integer> items = List.of(
+            13467, 13462, 13464, 13461, 13465, 13463, 13460, 13466, 13459, 13457, 13458);
+
 
     public _254_LegendaryTales() {
         super(PARTY_ALL);
         addStartNpc(Gilmore);
         addKillId(raids);
         addQuestItem(LargeBone);
+    }
+
+    public static void checkKilledRaids(Player player, int var) {
+        player.sendMessage("=== Remaining Dragon(s) ===");
+        for (int i : raids) {
+            int mask = 1;
+            for (int raid : raids) {
+                if (raid == i) {
+                    break;
+                }
+                mask = mask << 1;
+            }
+
+            if ((var & mask) == 0) // этого босса еще не убивали
+            {
+                String name = NpcHolder.getTemplate(i).getName();
+                player.sendMessage(name);
+            }
+        }
     }
 
     @Override
@@ -35,43 +59,8 @@ public final class _254_LegendaryTales extends Quest implements ScriptFile {
             st.takeAllItems(LargeBone);
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();
-            switch (Integer.parseInt(tokenizer.nextToken())) {
-                case 1:
-                    st.giveItems(13467, 1);
-                    break;
-                case 2:
-                    st.giveItems(13462, 1);
-                    break;
-                case 3:
-                    st.giveItems(13464, 1);
-                    break;
-                case 4:
-                    st.giveItems(13461, 1);
-                    break;
-                case 5:
-                    st.giveItems(13465, 1);
-                    break;
-                case 6:
-                    st.giveItems(13463, 1);
-                    break;
-                case 7:
-                    st.giveItems(13460, 1);
-                    break;
-                case 8:
-                    st.giveItems(13466, 1);
-                    break;
-                case 9:
-                    st.giveItems(13459, 1);
-                    break;
-                case 10:
-                    st.giveItems(13457, 1);
-                    break;
-                case 11:
-                    st.giveItems(13458, 1);
-                    break;
-                default:
-                    break;
-            }
+            int i = toInt(tokenizer.nextToken()) + 1;
+            st.giveItems(items.get(i), 1);
             st.playSound(SOUND_FINISH);
             st.setState(COMPLETED);
             st.exitCurrentQuest(false);
@@ -113,10 +102,8 @@ public final class _254_LegendaryTales extends Quest implements ScriptFile {
                     break;
                 mask = mask << 1;
             }
-
             var = st.getInt("RaidsKilled");
-            if ((var & mask) == 0) // этого босса еще не убивали
-            {
+            if ((var & mask) == 0) { // этого босса еще не убивали
                 var |= mask;
                 st.set("RaidsKilled", var);
                 st.giveItems(LargeBone, 1);
@@ -127,25 +114,6 @@ public final class _254_LegendaryTales extends Quest implements ScriptFile {
             checkKilledRaids(st.getPlayer(), var);
         }
         return null;
-    }
-
-    public static void checkKilledRaids(Player player, int var) {
-        player.sendMessage("=== Remaining Dragon(s) ===");
-        for (int i : raids) {
-            int mask = 1;
-            for (int raid : raids) {
-                if (raid == i) {
-                    break;
-                }
-                mask = mask << 1;
-            }
-
-            if ((var & mask) == 0) // этого босса еще не убивали
-            {
-                String name = NpcHolder.getTemplate(i).getName();
-                player.sendMessage(name);
-            }
-        }
     }
 
     @Override

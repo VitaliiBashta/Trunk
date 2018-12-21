@@ -7,10 +7,7 @@ import l2trunk.gameserver.data.xml.holder.ResidenceHolder;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.TeleportLocation;
 import l2trunk.gameserver.model.entity.SevenSigns;
-import l2trunk.gameserver.model.entity.residence.Castle;
-import l2trunk.gameserver.model.entity.residence.Fortress;
-import l2trunk.gameserver.model.entity.residence.Residence;
-import l2trunk.gameserver.model.entity.residence.ResidenceFunction;
+import l2trunk.gameserver.model.entity.residence.*;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.support.MerchantGuard;
@@ -20,8 +17,6 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -37,9 +32,24 @@ public enum ResidenceParser {
         LOG.info("Loaded " + ResidenceHolder.size() + " items ");
     }
 
+    private Residence getResidencebyName(String name, StatsSet set) {
+        switch (name) {
+            case "Fortress":
+                return new Fortress(set);
+            case "Castle":
+                return new Castle(set);
+            case "Dominion":
+                return new Dominion(set);
+            case "ClanHall":
+                return new ClanHall(set);
+
+            default:
+                throw new IllegalArgumentException("No residence for name: " + name);
+        }
+    }
+
     private void readData(Element rootElement) {
         String impl = rootElement.attributeValue("impl");
-        Class<?> clazz;
 
         StatsSet set = new StatsSet();
         for (Iterator<Attribute> iterator = rootElement.attributeIterator(); iterator.hasNext(); ) {
@@ -47,16 +57,8 @@ public enum ResidenceParser {
             set.set(element.getName(), element.getValue());
         }
 
-        Residence residence;
-        try {
-            clazz = Class.forName("l2trunk.gameserver.model.entity.residence." + impl);
-            Constructor<?> constructor = clazz.getConstructor(StatsSet.class);
-            residence = (Residence) constructor.newInstance(set);
-            ResidenceHolder.addResidence(residence);
-        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            LOG.error("fail to init: " + impl, e);
-            return;
-        }
+        Residence residence = getResidencebyName(impl, set);
+        ResidenceHolder.addResidence(residence);
 
         for (Iterator<Element> iterator = rootElement.elementIterator(); iterator.hasNext(); ) {
             Element element = iterator.next();

@@ -15,13 +15,22 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.DoorTemplate;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class Keys extends ScriptItemHandler implements ScriptFile {
     private final Set<Integer> itemIds;
 
+
+    public Keys() {
+        itemIds = DoorHolder.getDoors().values().stream()
+                .filter(Objects::nonNull)
+                .filter(door -> door.getKey() > 0)
+                .map(DoorTemplate::getKey)
+                .collect(Collectors.toSet());
+    }
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -41,14 +50,6 @@ public final class Keys extends ScriptItemHandler implements ScriptFile {
     @Override
     public void onShutdown() {
 
-    }
-
-    public Keys() {
-        Set<Integer> keys = new HashSet<>();
-        for (DoorTemplate door : DoorHolder.getDoors().values())
-            if (door != null && door.getKey() > 0)
-                keys.add(door.getKey());
-        itemIds = keys;
     }
 
     @Override

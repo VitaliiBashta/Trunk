@@ -26,6 +26,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.gameserver.utils.Util;
+import l2trunk.scripts.events.EventsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -260,40 +261,9 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Спавнит эвент менеджеров и рядом ёлки
-     */
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {
-                {81921, 148921, -3467, 16384},
-                {146405, 28360, -2269, 49648},
-                {19319, 144919, -3103, 31135},
-                {-82805, 149890, -3129, 16384},
-                {-12347, 122549, -3104, 16384},
-                {110642, 220165, -3655, 61898},
-                {116619, 75463, -2721, 20881},
-                {85513, 16014, -3668, 23681},
-                {81999, 53793, -1496, 61621},
-                {148159, -55484, -2734, 44315},
-                {44185, -48502, -797, 27479},
-                {86899, -143229, -1293, 8192}};
-
-        final int CTREES[][] = {
-                {81961, 148921, -3467, 0},
-                {146445, 28360, -2269, 0},
-                {19319, 144959, -3103, 0},
-                {-82845, 149890, -3129, 0},
-                {-12387, 122549, -3104, 0},
-                {110602, 220165, -3655, 0},
-                {116659, 75463, -2721, 0},
-                {85553, 16014, -3668, 0},
-                {81999, 53743, -1496, 0},
-                {148199, -55484, -2734, 0},
-                {44185, -48542, -797, 0},
-                {86859, -143229, -1293, 0}};
-
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
-        SpawnNPCs(CTREE_ID, CTREES, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS, _spawns);
+        SpawnNPCs(CTREE_ID, EventsConfig.CTREES, _spawns);
     }
 
     /**

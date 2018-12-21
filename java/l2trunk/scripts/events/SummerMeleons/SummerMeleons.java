@@ -13,6 +13,8 @@ import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
+import l2trunk.scripts.events.EventsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +25,9 @@ import java.util.List;
 public final class SummerMeleons extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(SummerMeleons.class);
     private static final int EVENT_MANAGER_ID = 32636;
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
 
-    private static boolean _active = false;
+    private static boolean active = false;
     private static boolean MultiSellLoaded = false;
 
     private final Path multiSellFile = Config.DATAPACK_ROOT.resolve("data/multisell/events/SummerMeleons/3790004.xml");
@@ -34,7 +36,7 @@ public final class SummerMeleons extends Functions implements ScriptFile, OnDeat
     public void onLoad() {
         CharListenerList.addGlobal(this);
         if (isActive()) {
-            _active = true;
+            active = true;
             loadMultiSell();
             spawnEventManagers();
             _log.info("Loaded Event: Summer Meleons [state: activated]");
@@ -42,16 +44,10 @@ public final class SummerMeleons extends Functions implements ScriptFile, OnDeat
             _log.info("Loaded Event: Summer Meleons [state: deactivated]");
     }
 
-    /**
-     * Читает статус эвента из базы.
-     */
     private static boolean isActive() {
         return isActive("SummerMeleons");
     }
 
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -65,14 +61,11 @@ public final class SummerMeleons extends Functions implements ScriptFile, OnDeat
         } else
             player.sendMessage("Event 'Summer Meleons' already started.");
 
-        _active = true;
+        active = true;
 
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -84,34 +77,17 @@ public final class SummerMeleons extends Functions implements ScriptFile, OnDeat
         } else
             player.sendMessage("Event 'Summer Meleons' not started.");
 
-        _active = false;
+        active = false;
 
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {
-                {81921, 148921, -3467, 16384},
-                {146405, 28360, -2269, 49648},
-                {19319, 144919, -3103, 31135},
-                {-82805, 149890, -3129, 33202},
-                {-12347, 122549, -3104, 32603},
-                {110642, 220165, -3655, 61898},
-                {116619, 75463, -2721, 20881},
-                {85513, 16014, -3668, 23681},
-                {81999, 53793, -1496, 61621},
-                {148159, -55484, -2734, 44315},
-                {44185, -48502, -797, 27479},
-                {86899, -143229, -1293, 22021}};
-
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_harvest_meleons, SPAWNS);
     }
 
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
+        deSpawnNPCs(SPAWNS);
     }
 
     private void loadMultiSell() {
@@ -132,21 +108,18 @@ public final class SummerMeleons extends Functions implements ScriptFile, OnDeat
 
     @Override
     public void onShutdown() {
-
     }
 
-    /**
-     * Обработчик смерти мобов, управляющий эвентовым дропом
-     */
+
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TFH_POLLEN_CHANCE * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
+        if (active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TFH_POLLEN_CHANCE * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
             ((NpcInstance) cha).dropItem(killer.getPlayer(), 6391, 1);
     }
 
     @Override
     public void onPlayerEnter(Player player) {
-        if (_active)
+        if (active)
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SummerMeleons.AnnounceEventStarted");
     }
 }

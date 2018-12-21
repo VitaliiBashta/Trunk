@@ -260,8 +260,7 @@ public class GameServer {
         }
 
         getListeners().onStart();
-        if (Config.IS_TELNET_ENABLED) {
-        } else {
+        if (!Config.IS_TELNET_ENABLED) {
             _log.info("Telnet server is currently disabled.");
         }
 

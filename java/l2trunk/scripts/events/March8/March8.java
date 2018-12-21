@@ -15,6 +15,7 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Util;
+import l2trunk.scripts.events.EventsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,41 +28,22 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
     private static final int RECIPE_PRICE = 50000; // 50.000 adena at x1 servers
     private static final int RECIPE_ID = 20191;
     private static final int EVENT_MANAGER_ID = 4301;
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
-    private static final int[] DROP = {20192, 20193, 20194};
+    private static final List<SimpleSpawner> SPAWNER_LIST = new ArrayList<>();
+    private static final List<Integer> DROP = List.of(20192, 20193, 20194);
     private static boolean _active = false;
-
-    private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {{-14823, 123567, -3143, 8192}, // Gludio
-                {-83159, 150914, -3155, 49152}, // Gludin
-                {18600, 145971, -3095, 40960}, // Dion
-                {82158, 148609, -3493, 60}, // Giran
-                {110992, 218753, -3568, 0}, // Hiene
-                {116339, 75424, -2738, 0}, // Hunter Village
-                {81140, 55218, -1551, 32768}, // Oren
-                {147148, 27401, -2231, 2300}, // Aden
-                {43532, -46807, -823, 31471}, // Rune
-                {87765, -141947, -1367, 6500}, // Schuttgart
-                {147154, -55527, -2807, 61300} // Goddard
-        };
-
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
-    }
-
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
-    private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
-    }
 
     private static boolean isActive() {
         return isActive(EVENT_NAME);
     }
 
-    /**
-     * Запускает эвент
-     */
+    private void spawnEventManagers() {
+        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS_coffer_march8, SPAWNER_LIST);
+    }
+
+    private void unSpawnEventManagers() {
+        deSpawnNPCs(SPAWNER_LIST);
+    }
+
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -78,9 +60,6 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -96,9 +75,6 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Продает рецепт игроку
-     */
     public void buyrecipe() {
         Player player = getSelf();
 
@@ -158,12 +134,9 @@ public final class March8 extends Functions implements ScriptFile, OnDeathListen
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.March8.AnnounceEventStarted");
     }
 
-    /**
-     * Обработчик смерти мобов, управляющий эвентовым дропом
-     */
     @Override
     public void onDeath(Creature cha, Creature killer) {
         if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_MARCH8_DROP_CHANCE * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
-            ((NpcInstance) cha).dropItem(killer.getPlayer(), DROP[Rnd.get(DROP.length)], 1);
+            ((NpcInstance) cha).dropItem(killer.getPlayer(), Rnd.get(DROP), 1);
     }
 }

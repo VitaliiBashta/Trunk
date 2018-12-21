@@ -12,13 +12,15 @@ import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
-    private static final Logger _log = LoggerFactory.getLogger(TrickOfTrans.class);
+public final class TrickOfTrans extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
+    private static final Logger LOG = LoggerFactory.getLogger(TrickOfTrans.class);
     // Эвент Менеджеры
     private static final int EVENT_MANAGER_ID = 32132; // Alchemist\'s Servitor
     private static final int CHESTS_ID = 13036; // Alchemist\'s Chest
@@ -42,9 +44,9 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
     // Ключ
     private static final int A_CHEST_KEY = 9205; // Alchemist''s Chest Key
 
-    private static boolean _active = false;
+    private static boolean active = false;
 
-    private static final ArrayList<SimpleSpawner> _em_spawns = new ArrayList<>();
+    private static final List<SimpleSpawner> EM_SPAWNS = new ArrayList<>();
     private static final ArrayList<SimpleSpawner> _ch_spawns = new ArrayList<>();
 
     // Ингридиенты
@@ -58,29 +60,19 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
     public void onLoad() {
         CharListenerList.addGlobal(this);
         if (isActive()) {
-            _active = true;
+            active = true;
             spawnEventManagers();
-            _log.info("Loaded Event: Trick of Trnasmutation [state: activated]");
+            LOG.info("Loaded Event: Trick of Trnasmutation [state: activated]");
         } else
-            _log.info("Loaded Event: Trick of Trnasmutation [state: deactivated]");
+            LOG.info("Loaded Event: Trick of Trnasmutation [state: deactivated]");
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return isActive("trickoftrans");
     }
 
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         final Player player = getSelf();
-        if (!player.getPlayerAccess().IsEventGm)
-            return;
 
         if (SetActive("trickoftrans", true)) {
             spawnEventManagers();
@@ -89,14 +81,11 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
         } else
             player.sendMessage("Event 'Trick of Transmutation' already started.");
 
-        _active = true;
+        active = true;
 
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         final Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -108,17 +97,14 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
         } else
             player.sendMessage("Event 'Trick of Transmutation' not started.");
 
-        _active = false;
+        active = false;
 
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Анонсируется при заходе игроком в мир
-     */
     @Override
     public void onPlayerEnter(final Player player) {
-        if (_active)
+        if (active)
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.TrickOfTrans.AnnounceEventStarted");
     }
 
@@ -132,66 +118,55 @@ public class TrickOfTrans extends Functions implements ScriptFile, OnDeathListen
         unSpawnEventManagers();
     }
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
         // Эвент Менеджер
-        final int EVENT_MANAGERS[][] = //
-                { //
-                        {147992, 28616, -2295, 0}, // Aden
-                        {81919, 148290, -3472, 51432}, // Giran
-                        {18293, 145208, -3081, 6470}, // Dion
-                        {-14694, 122699, -3122, 0}, // Gludio
-                        {-81634, 150275, -3155, 15863}, // Gludin
-                };
+        final List<Location> EVENT_MANAGERS = List.of(
+                        new Location(147992, 28616, -2295, 0), // Aden
+                        new Location(81919, 148290, -3472, 51432), // Giran
+                        new Location(18293, 145208, -3081, 6470), // Dion
+                        new Location(-14694, 122699, -3122, 0), // Gludio
+                        new Location(-81634, 150275, -3155, 15863)); // Gludin
 
         // Сундуки
-        final int CHESTS[][] = {{148081, 28614, -2274, 2059}, // Aden
-                {147918, 28615, -2295, 31471}, // Aden
-                {147998, 28534, -2274, 49152}, // Aden
-                {148053, 28550, -2274, 55621}, // Aden
-                {147945, 28563, -2274, 40159}, // Aden
-                {82012, 148286, -3472, 61567}, // Giran
-                {81822, 148287, -3493, 29413}, // Giran
-                {81917, 148207, -3493, 49152}, // Giran
-                {81978, 148228, -3472, 53988}, // Giran
-                {81851, 148238, -3472, 40960}, // Giran
-                {18343, 145253, -3096, 7449}, // Dion
-                {18284, 145274, -3090, 19740}, // Dion
-                {18351, 145186, -3089, 61312}, // Dion
-                {18228, 145265, -3079, 21674}, // Dion
-                {18317, 145140, -3078, 55285}, // Dion
-                {-14584, 122694, -3122, 65082}, // Gludio
-                {-14610, 122756, -3143, 13029}, // Gludio
-                {-14628, 122627, -3122, 50632}, // Gludio
-                {-14697, 122607, -3143, 48408}, // Gludio
-                {-14686, 122787, -3122, 12416}, // Gludio
-                {-81745, 150275, -3134, 32768}, // Gludin
-                {-81520, 150275, -3134, 0}, // Gludin
-                {-81628, 150379, -3134, 16025}, // Gludin
-                {-81696, 150347, -3155, 22854}, // Gludin
-                {-81559, 150332, -3134, 3356}, // Gludin
-        };
+        final List<Location> CHESTS = List.of(
+                new Location(148081, 28614, -2274, 2059), // Aden
+                new Location(147918, 28615, -2295, 31471), // Aden
+                new Location(147998, 28534, -2274, 49152), // Aden
+                new Location(148053, 28550, -2274, 55621), // Aden
+                new Location(147945, 28563, -2274, 40159), // Aden
+                new Location(82012, 148286, -3472, 61567), // Giran
+                new Location(81822, 148287, -3493, 29413), // Giran
+                new Location(81917, 148207, -3493, 49152), // Giran
+                new Location(81978, 148228, -3472, 53988), // Giran
+                new Location(81851, 148238, -3472, 40960), // Giran
+                new Location(18343, 145253, -3096, 7449), // Dion
+                new Location(18284, 145274, -3090, 19740), // Dion
+                new Location(18351, 145186, -3089, 61312), // Dion
+                new Location(18228, 145265, -3079, 21674), // Dion
+                new Location(18317, 145140, -3078, 55285), // Dion
+                new Location(-14584, 122694, -3122, 65082), // Gludio
+                new Location(-14610, 122756, -3143, 13029), // Gludio
+                new Location(-14628, 122627, -3122, 50632), // Gludio
+                new Location(-14697, 122607, -3143, 48408), // Gludio
+                new Location(-14686, 122787, -3122, 12416), // Gludio
+                new Location(-81745, 150275, -3134, 32768), // Gludin
+                new Location(-81520, 150275, -3134, 0), // Gludin
+                new Location(-81628, 150379, -3134, 16025), // Gludin
+                new Location(-81696, 150347, -3155, 22854), // Gludin
+                new Location(-81559, 150332, -3134, 3356)); // Gludin
 
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _em_spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, EM_SPAWNS);
         SpawnNPCs(CHESTS_ID, CHESTS, _ch_spawns, 300);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_em_spawns);
+        deSpawnNPCs(EM_SPAWNS);
         deSpawnNPCs(_ch_spawns);
     }
 
-    /**
-     * Обработчик смерти мобов, управляющий эвентовым дропом
-     */
     @Override
     public void onDeath(final Creature cha, final Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TRICK_OF_TRANS_CHANCE * killer.getPlayer().getRateItems() * Config.RATE_DROP_ITEMS * ((NpcInstance) cha).getTemplate().rateHp))
+        if (active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TRICK_OF_TRANS_CHANCE * killer.getPlayer().getRateItems() * Config.RATE_DROP_ITEMS * ((NpcInstance) cha).getTemplate().rateHp))
             ((NpcInstance) cha).dropItem(killer.getPlayer(), A_CHEST_KEY, 1);
     }
 

@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _348_ArrogantSearch extends Quest implements ScriptFile {
+public final class _348_ArrogantSearch extends Quest implements ScriptFile {
     private final static int ARK_GUARDIAN_ELBEROTH = 27182;
     private final static int ARK_GUARDIAN_SHADOWFANG = 27183;
     private final static int ANGEL_KILLER = 27184;
@@ -222,8 +222,7 @@ public class _348_ArrogantSearch extends Quest implements ScriptFile {
         for (int i : DROPS.keySet())
             addKillId(i);
 
-        addQuestItem(new int[]{
-                HANELLINS_FIRST_LETTER,
+        addQuestItem(HANELLINS_FIRST_LETTER,
                 HANELLINS_SECOND_LETTER,
                 HANELLINS_THIRD_LETTER,
                 HANELLINS_WHITE_FLOWER,
@@ -237,29 +236,34 @@ public class _348_ArrogantSearch extends Quest implements ScriptFile {
                 WHITE_FABRIC_2,
                 FIRST_KEY_OF_ARK,
                 SECOND_KEY_OF_ARK,
-                THIRD_KEY_OF_ARK
-        });
+                THIRD_KEY_OF_ARK);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("30864_02")) {
-            st.setCond(2);
-            htmltext = "30864-03.htm";
-        } else if (event.equals("30864_04a"))//work alone
-        {
-            st.setCond(4);
-            st.takeItems(SHELL_OF_MONSTERS, -1);
-            htmltext = "30864-04c.htm";
-            st.set("companions", "0");
-        } else if (event.equals("30864_04b"))//work with friends
-        {
-            st.setCond(3);
-            st.set("companions", "1");
-            st.takeItems(SHELL_OF_MONSTERS, -1);
-            htmltext = "not yet implemented";
-            //todo: give flowers & handle the multiperson quest...
+        switch (event) {
+            case "30864_02":
+                st.setCond(2);
+                htmltext = "30864-03.htm";
+                break;
+            case "30864_04a":
+//work alone
+
+                st.setCond(4);
+                st.takeItems(SHELL_OF_MONSTERS, -1);
+                htmltext = "30864-04c.htm";
+                st.set("companions", "0");
+                break;
+            case "30864_04b":
+//work with friends
+
+                st.setCond(3);
+                st.set("companions", "1");
+                st.takeItems(SHELL_OF_MONSTERS, -1);
+                htmltext = "not yet implemented";
+                //todo: give flowers & handle the multiperson quest...
+                break;
         }
         if (event.equals("30864-09a.htm")) {
             st.setCond(29);

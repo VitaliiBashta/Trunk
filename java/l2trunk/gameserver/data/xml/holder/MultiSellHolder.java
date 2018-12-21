@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public enum MultiSellHolder {
     INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(MultiSellHolder.class);
@@ -86,16 +88,6 @@ public enum MultiSellHolder {
         parse();
     }
 
-    private void hashFiles(List<Path> hash) {
-        Path dir = Config.DATAPACK_ROOT.resolve("data/multisell");
-        if (!Files.exists(dir)) {
-            LOG.info("Dir " + dir.toAbsolutePath() + " not exists");
-            return;
-        }
-        hash.addAll(FileUtils.getAllFiles(dir, true, ".xml"));
-
-    }
-
     public void addMultiSellListContainer(int id, MultiSellListContainer list) {
         if (entries.containsKey(id))
             LOG.warn("MultiSell redefined: " + id);
@@ -109,11 +101,7 @@ public enum MultiSellHolder {
     }
 
     public MultiSellListContainer remove(Path f) {
-        return remove(Integer.parseInt(f.toString().replaceAll(".xml", "")));
-    }
-
-    private MultiSellListContainer remove(int id) {
-        return entries.remove(id);
+        return entries.remove(toInt(f.toString().replaceAll(".xml", "")));
     }
 
     public void parseFile(Path f) {
@@ -142,10 +130,12 @@ public enum MultiSellHolder {
     }
 
     private void parse() {
-        List<Path> files = new ArrayList<>();
-        hashFiles(files);
-        for (Path f : files)
-            parseFile(f);
+        Path dir = Config.DATAPACK_ROOT.resolve("data/multisell");
+        if (!Files.exists(dir)) {
+            LOG.info("Dir " + dir.toAbsolutePath() + " not exists");
+            return;
+        }
+        FileUtils.getAllFiles(dir, true, ".xml").forEach(this::parseFile);
     }
 
     private MultiSellListContainer parseDocument(Document doc, int id) {

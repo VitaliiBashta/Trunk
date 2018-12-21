@@ -14,20 +14,20 @@ import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public final class glitmedal extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final int EVENT_MANAGER_ID1 = 31228; // Roy
     private static final int EVENT_MANAGER_ID2 = 31229; // Winnie
 
-    private static final Logger _log = LoggerFactory.getLogger(glitmedal.class);
+    private static final Logger LOG = LoggerFactory.getLogger(glitmedal.class);
     // Медали
     private static final int EVENT_MEDAL = 6392;
     private static final int EVENT_GLITTMEDAL = 6393;
@@ -35,10 +35,10 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     private static final int Badge_of_Hyena = 6400;
     private static final int Badge_of_Fox = 6401;
     private static final int Badge_of_Wolf = 6402;
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
     private static boolean _active = false;
     private static boolean MultiSellLoaded = false;
-    private final List<Path> multiSellFiles = Arrays.asList(
+    private final List<Path> multiSellFiles = List.of(
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/502.xml"),
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/503.xml"),
             Config.DATAPACK_ROOT.resolve("data/multisell/events/glitmedal/504.xml"),
@@ -47,9 +47,6 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     // Для временного статуса который выдается в игре рандомно либо 0 либо 1
     private int isTalker;
 
-    /**
-     * Читает статус эвента из базы.
-     */
     private static boolean isActive() {
         return isActive("glitter");
     }
@@ -61,14 +58,11 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
             _active = true;
             loadMultiSell();
             spawnEventManagers();
-            _log.info("Loaded Event: L2 Medal Collection Event [state: activated]");
+            LOG.info("Loaded Event: L2 Medal Collection Event [state: activated]");
         } else
-            _log.info("Loaded Event: L2 Medal Collection Event [state: deactivated]");
+            LOG.info("Loaded Event: L2 Medal Collection Event [state: deactivated]");
     }
 
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -87,9 +81,6 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
         show("admin/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -112,55 +103,49 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.glitmedal.AnnounceEventStarted");
     }
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
         // 1й эвент кот
-        final int EVENT_MANAGERS1[][] = {
-                {147893, -56622, -2776, 0},
-                {-81070, 149960, -3040, 0},
-                {82882, 149332, -3464, 49000},
-                {44176, -48732, -800, 33000},
-                {147920, 25664, -2000, 16384},
-                {117498, 76630, -2695, 38000},
-                {111776, 221104, -3543, 16384},
-                {-84516, 242971, -3730, 34000},
-                {-13073, 122801, -3117, 0},
-                {-44337, -113669, -224, 0},
-                {11281, 15652, -4584, 25000},
-                {44122, 50784, -3059, 57344},
-                {80986, 54504, -1525, 32768},
-                {114733, -178691, -821, 0},
-                {18178, 145149, -3054, 7400},};
+        final List<Location> EVENT_MANAGERS1 = List.of(
+                new Location(147893, -56622, -2776, 0),
+                new Location(-81070, 149960, -3040, 0),
+                new Location(82882, 149332, -3464, 49000),
+                new Location(44176, -48732, -800, 33000),
+                new Location(147920, 25664, -2000, 16384),
+                new Location(117498, 76630, -2695, 38000),
+                new Location(111776, 221104, -3543, 16384),
+                new Location(-84516, 242971, -3730, 34000),
+                new Location(-13073, 122801, -3117, 0),
+                new Location(-44337, -113669, -224, 0),
+                new Location(11281, 15652, -4584, 25000),
+                new Location(44122, 50784, -3059, 57344),
+                new Location(80986, 54504, -1525, 32768),
+                new Location(114733, -178691, -821, 0),
+                new Location(18178, 145149, -3054, 7400));
 
         // 2й эвент кот
-        final int EVENT_MANAGERS2[][] = {
-                {147960, -56584, -2776, 0},
-                {-81070, 149860, -3040, 0},
-                {82798, 149332, -3464, 49000},
-                {44176, -48688, -800, 33000},
-                {147985, 25664, -2000, 16384},
-                {117459, 76664, -2695, 38000},
-                {111724, 221111, -3543, 16384},
-                {-84516, 243015, -3730, 34000},
-                {-13073, 122841, -3117, 0},
-                {-44342, -113726, -240, 0},
-                {11327, 15682, -4584, 25000},
-                {44157, 50827, -3059, 57344},
-                {80986, 54452, -1525, 32768},
-                {114719, -178742, -821, 0},
-                {18154, 145192, -3054, 7400},};
+        final List<Location> EVENT_MANAGERS2 = List.of(
+                new Location(147960, -56584, -2776, 0),
+                new Location(-81070, 149860, -3040, 0),
+                new Location(82798, 149332, -3464, 49000),
+                new Location(44176, -48688, -800, 33000),
+                new Location(147985, 25664, -2000, 16384),
+                new Location(117459, 76664, -2695, 38000),
+                new Location(111724, 221111, -3543, 16384),
+                new Location(-84516, 243015, -3730, 34000),
+                new Location(-13073, 122841, -3117, 0),
+                new Location(-44342, -113726, -240, 0),
+                new Location(11327, 15682, -4584, 25000),
+                new Location(44157, 50827, -3059, 57344),
+                new Location(80986, 54452, -1525, 32768),
+                new Location(114719, -178742, -821, 0),
+                new Location(18154, 145192, -3054, 7400));
 
-        SpawnNPCs(EVENT_MANAGER_ID1, EVENT_MANAGERS1, _spawns);
-        SpawnNPCs(EVENT_MANAGER_ID2, EVENT_MANAGERS2, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID1, EVENT_MANAGERS1, SPAWNS);
+        SpawnNPCs(EVENT_MANAGER_ID2, EVENT_MANAGERS2, SPAWNS);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
+        deSpawnNPCs(SPAWNS);
     }
 
     private void loadMultiSell() {

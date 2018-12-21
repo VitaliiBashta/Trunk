@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class _233_TestOfWarspirit extends Quest implements ScriptFile {
+public final class _233_TestOfWarspirit extends Quest implements ScriptFile {
     // NPCs
     private static final int Somak = 30510;
     private static final int Vivyan = 30030;
@@ -73,13 +73,12 @@ public class _233_TestOfWarspirit extends Quest implements ScriptFile {
     private static final int HERMODTS_REMAINS2 = 2913;
     private static final int KIRUNAS_REMAINS2 = 2914;
 
-    private static final int[] Noble_Ant_Drops = {
+    private static final List<Integer> Noble_Ant_Drops = List.of(
             KIRUNAS_THIGH_BONE,
             KIRUNAS_ARM_BONE,
             KIRUNAS_SPINE,
             KIRUNAS_RIB_BONE,
-            KIRUNAS_SKULL
-    };
+            KIRUNAS_SKULL);
     private static final int[] Leto_Lizardman_Drops = {
             TONARS_SKULL,
             TONARS_RIB_BONE,
@@ -186,7 +185,7 @@ public class _233_TestOfWarspirit extends Quest implements ScriptFile {
             st.giveItems(MARK_OF_WARSPIRIT, 1);
             if (!st.getPlayer().getVarB("prof2.3")) {
                 st.addExpAndSp(447444, 30704);
-                st.giveItems(ADENA_ID, 100000); // FIXME: с потолка
+                st.giveItems(ADENA_ID, 1000000);
                 st.getPlayer().setVar("prof2.3", "1", -1);
             }
             st.playSound(SOUND_FINISH);

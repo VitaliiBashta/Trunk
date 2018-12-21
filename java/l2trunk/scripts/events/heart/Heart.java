@@ -15,6 +15,7 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,24 +26,12 @@ import java.util.List;
 import java.util.Map;
 
 public final class Heart extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
-    private static final Logger _log = LoggerFactory.getLogger(Heart.class);
-    private static boolean _active = false;
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static final Logger LOG = LoggerFactory.getLogger(Heart.class);
+    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
     private static final Map<Integer, Integer> Guesses = new HashMap<>();
-    private static String links_en = "";
-    private static String links_ru = "";
     private static final String[][] variants = {{"Rock", "Камень"}, {"Scissors", "Ножницы"}, {"Paper", "Бумага"}};
-
-    static {
-        PrintfFormat fmt = new PrintfFormat("<br><a action=\"bypass -h scripts_events.Heart.Heart:play %d\">\"%s!\"</a>");
-        for (int i = 0; i < variants.length; i++) {
-            links_en += fmt.sprintf(i, variants[i][0]);
-            links_ru += fmt.sprintf(i, variants[i][1]);
-        }
-    }
-
     private static final int EVENT_MANAGER_ID = 31227; //Buzz the Cat
-    private static final int[] hearts = {4209, 4210, 4211, 4212, 4213, 4214, 4215, 4216, 4217};
+    private static final List<Integer> hearts = List.of(4209, 4210, 4211, 4212, 4213, 4214, 4215, 4216, 4217);
     private static final int[] potions = {1374, // Greater Haste Potion
             1375, // Greater Swift Attack Potion
             6036, // Greater Magic Haste Potion
@@ -59,6 +48,21 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
             3934, //	L2Day - Scroll of Windwalk
             3935 //	L2Day - Scroll of Shield
     };
+    private static boolean active = false;
+    private static String links_en = "";
+    private static String links_ru = "";
+
+    static {
+        PrintfFormat fmt = new PrintfFormat("<br><a action=\"bypass -h scripts_events.Heart.Heart:play %d\">\"%s!\"</a>");
+        for (int i = 0; i < variants.length; i++) {
+            links_en += fmt.sprintf(i, variants[i][0]);
+            links_ru += fmt.sprintf(i, variants[i][1]);
+        }
+    }
+
+    private static boolean isActive() {
+        return isActive("Heart");
+    }
 
     public void startEvent() {
         Player player = getSelf();
@@ -72,7 +76,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         } else
             player.sendMessage("Event 'Change of Heart' already started.");
 
-        _active = true;
+        active = true;
         show("admin/events/events.htm", player);
     }
 
@@ -87,7 +91,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
         } else
             player.sendMessage("Event 'Change of Heart' not started.");
 
-        _active = false;
+        active = false;
 
         show("admin/events/events.htm", player);
     }
@@ -243,56 +247,50 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     private boolean haveAllHearts(Player player) {
-        for (int heart_id : hearts)
-            if (player.getInventory().getCountOf(heart_id) < 1)
-                return false;
-        return true;
+        return hearts.stream()
+                .noneMatch(heart_id -> (player.getInventory().getCountOf(heart_id) < 1));
     }
 
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer))
-            ((NpcInstance) cha).dropItem(killer.getPlayer(), hearts[Rnd.get(hearts.length)], Util.rollDrop(1, 1, Config.EVENT_CHANGE_OF_HEART_CHANCE * killer.getPlayer().getRateItems() * ((MonsterInstance) cha).getTemplate().rateHp * 10000L, true));
+        if (active && SimpleCheckDrop(cha, killer))
+            ((NpcInstance) cha).dropItem(killer.getPlayer(), Rnd.get(hearts), Util.rollDrop(1, 1, Config.EVENT_CHANGE_OF_HEART_CHANCE * killer.getPlayer().getRateItems() * ((MonsterInstance) cha).getTemplate().rateHp * 10000L, true));
     }
 
     @Override
     public void onPlayerEnter(Player player) {
-        if (_active)
+        if (active)
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.ChangeofHeart.AnnounceEventStarted");
     }
 
-    private static boolean isActive() {
-        return isActive("Heart");
-    }
-
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {{146936, 26654, -2208, 16384}, // Aden
-                {82168, 148842, -3464, 7806}, // Giran
-                {82204, 53259, -1488, 16384}, // Oren
-                {18924, 145782, -3088, 44034}, // Dion
-                {111794, 218967, -3536, 20780}, // Heine
-                {-14539, 124066, -3112, 50874}, // Gludio
-                {147271, -55573, -2736, 60304}, // Goddard
-                {87801, -143150, -1296, 28800}, // Shuttgard
-                {-80684, 149458, -3040, 16384}, // Gludin
-        };
+        final List<Location> EVENT_MANAGERS = List.of(
+                new Location(146936, 26654, -2208, 16384), // Aden
+                new Location(82168, 148842, -3464, 7806), // Giran
+                new Location(82204, 53259, -1488, 16384), // Oren
+                new Location(18924, 145782, -3088, 44034), // Dion
+                new Location(111794, 218967, -3536, 20780), // Heine
+                new Location(-14539, 124066, -3112, 50874), // Gludio
+                new Location(147271, -55573, -2736, 60304), // Goddard
+                new Location(87801, -143150, -1296, 28800), // Shuttgard
+                new Location(-80684, 149458, -3040, 16384)); // Gludin
 
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, SPAWNS);
     }
 
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
+        deSpawnNPCs(SPAWNS);
     }
 
     @Override
     public void onLoad() {
         CharListenerList.addGlobal(this);
         if (isActive()) {
-            _active = true;
+            active = true;
             spawnEventManagers();
-            _log.info("Loaded Event: Change of Heart [state: activated]");
+            LOG.info("Loaded Event: Change of Heart [state: activated]");
         } else
-            _log.info("Loaded Event: Change of Heart[state: deactivated]");
+            LOG.info("Loaded Event: Change of Heart[state: deactivated]");
     }
 
     @Override

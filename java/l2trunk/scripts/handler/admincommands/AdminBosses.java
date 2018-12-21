@@ -10,13 +10,13 @@ import l2trunk.scripts.bosses.BaiumManager;
 import l2trunk.scripts.bosses.ValakasManager;
 
 import java.util.Calendar;
+import java.util.List;
 
-public class AdminBosses implements IAdminCommandHandler, ScriptFile {
+public final class AdminBosses implements IAdminCommandHandler, ScriptFile {
     private enum Commands {
         admin_epics_respawn
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, final Player activeChar) {
         Commands command = (Commands) comm;
@@ -24,10 +24,8 @@ public class AdminBosses implements IAdminCommandHandler, ScriptFile {
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
 
-        switch (command) {
-            case admin_epics_respawn:
-                getEpicsRespawn(activeChar);
-                break;
+        if (command == Commands.admin_epics_respawn) {
+            getEpicsRespawn(activeChar);
         }
 
         return true;
@@ -47,7 +45,6 @@ public class AdminBosses implements IAdminCommandHandler, ScriptFile {
         return c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public Enum[] getAdminCommandEnum() {
         return Commands.values();

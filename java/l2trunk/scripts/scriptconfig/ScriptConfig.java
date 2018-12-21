@@ -11,8 +11,8 @@ import java.io.*;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ScriptConfig extends Functions implements ScriptFile {
-    private static final Logger _log = LoggerFactory.getLogger(ScriptConfig.class);
+public final class ScriptConfig extends Functions implements ScriptFile {
+    private static final Logger LOG = LoggerFactory.getLogger(ScriptConfig.class);
 
     private static final String dir = (Config.DATAPACK_ROOT + "/config/ScripsConfig");
     private static ConcurrentHashMap<String, String> properties;
@@ -21,7 +21,7 @@ public class ScriptConfig extends Functions implements ScriptFile {
     public void onLoad() {
         properties = new ConcurrentHashMap<>();
         LoadConfig();
-        _log.info("Loaded Service: ScripsConfig");
+        LOG.info("Loaded Service: ScripsConfig");
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ScriptConfig extends Functions implements ScriptFile {
     private static void LoadConfig() {
         File files = new File(dir);
         if (!files.exists())
-            _log.warn("WARNING! " + dir + " not exists! Config not loaded!");
+            LOG.warn("WARNING! " + dir + " not exists! Config not loaded!");
         else
             parseFiles(files.listFiles());
     }
@@ -64,9 +64,9 @@ public class ScriptConfig extends Functions implements ScriptFile {
         for (String name : p.stringPropertyNames()) {
             if (properties.get(name) != null) {
                 properties.replace(name, p.getProperty(name).trim());
-                _log.info("Duplicate properties name \"" + name + "\" replaced with new value.");
+                LOG.info("Duplicate properties name \"" + name + "\" replaced with new value.");
             } else if (p.getProperty(name) == null)
-                _log.info("Null property for key " + name);
+                LOG.info("Null property for key " + name);
             else
                 properties.put(name, p.getProperty(name).trim());
         }
@@ -75,32 +75,12 @@ public class ScriptConfig extends Functions implements ScriptFile {
 
     private static String get(String name) {
         if (properties.get(name) == null)
-            _log.warn("ConfigSystem: Null value for key: " + name);
+            LOG.warn("ConfigSystem: Null value for key: " + name);
         return properties.get(name);
     }
 
-    public static float getFloat(String name) {
-        return getFloat(name, Float.MAX_VALUE);
-    }
-
-    public static boolean getBoolean(String name) {
-        return getBoolean(name, false);
-    }
-
-    public static int getInt(String name) {
+    private static int getInt(String name) {
         return getInt(name, Integer.MAX_VALUE);
-    }
-
-    public static int[] getIntArray(String name) {
-        return getIntArray(name, new int[0]);
-    }
-
-    public static int getIntHex(String name) {
-        return getIntHex(name, Integer.decode("0xFFFFFF"));
-    }
-
-    public static byte getByte(String name) {
-        return getByte(name, Byte.MAX_VALUE);
     }
 
     public static long getLong(String name) {
@@ -115,31 +95,8 @@ public class ScriptConfig extends Functions implements ScriptFile {
         return get(name) == null ? def : get(name);
     }
 
-    private static float getFloat(String name, float def) {
-        return Float.parseFloat(get(name, String.valueOf(def)));
-    }
-
-    private static boolean getBoolean(String name, boolean def) {
-        return Boolean.parseBoolean(get(name, String.valueOf(def)));
-    }
-
     private static int getInt(String name, int def) {
         return Integer.parseInt(get(name, String.valueOf(def)));
-    }
-
-    private static int[] getIntArray(String name, int[] def) {
-        return get(name, null) == null ? def : Util.parseCommaSeparatedIntegerArray(get(name, null));
-    }
-
-    private static int getIntHex(String name, int def) {
-        if (!get(name, String.valueOf(def)).trim().startsWith("0x"))
-            return Integer.decode("0x" + get(name, String.valueOf(def)));
-        else
-            return Integer.decode(get(name, String.valueOf(def)));
-    }
-
-    private static byte getByte(String name, byte def) {
-        return Byte.parseByte(get(name, String.valueOf(def)));
     }
 
     private static double getDouble(String name, double def) {

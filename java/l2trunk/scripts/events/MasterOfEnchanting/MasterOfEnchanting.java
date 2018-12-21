@@ -7,6 +7,7 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MasterOfEnchanting extends Functions implements ScriptFile, OnPlayerEnterListener {
-    private static final Logger _log = LoggerFactory.getLogger(MasterOfEnchanting.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MasterOfEnchanting.class);
     private static final String EVENT_NAME = "MasterOfEnchanting";
     private static final int EVENT_MANAGER_ID = 32599;
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
@@ -27,8 +28,9 @@ public final class MasterOfEnchanting extends Functions implements ScriptFile, O
             {20005, 100}}; //Energy Red Ginseng
 
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {{-119494, 44882, 360, 24576}, //Kamael Village
-                {86865, -142915, -1336, 26000}};
+        final List<Location> EVENT_MANAGERS = List.of(
+                new Location(-119494, 44882, 360, 24576), //Kamael Village
+                new Location(86865, -142915, -1336, 26000));
 
         SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
     }
@@ -79,9 +81,9 @@ public final class MasterOfEnchanting extends Functions implements ScriptFile, O
         if (isActive()) {
             _active = true;
             spawnEventManagers();
-            _log.info("Loaded Event: Master of Enchanting [state: activated]");
+            LOG.info("Loaded Event: Master of Enchanting [state: activated]");
         } else
-            _log.info("Loaded Event: Master of Enchanting [state: deactivated]");
+            LOG.info("Loaded Event: Master of Enchanting [state: deactivated]");
     }
 
     @Override

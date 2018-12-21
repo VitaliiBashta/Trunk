@@ -13,6 +13,7 @@ import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.scripts.events.EventsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,15 +58,15 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
              */
     };
 
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static final List<SimpleSpawner> SPAWNER_LIST = new ArrayList<>();
 
-    private static boolean _active = false;
+    private static boolean active = false;
 
     @Override
     public void onLoad() {
         CharListenerList.addGlobal(this);
         if (isActive()) {
-            _active = true;
+            active = true;
             spawnEventManagers();
             _log.info("Loaded Event: Christmas [state: activated]");
         } else
@@ -91,7 +92,7 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         } else
             player.sendMessage("Event 'Christmas' already started.");
 
-        _active = true;
+        active = true;
 
         show("admin/events/events.htm", player);
     }
@@ -107,52 +108,19 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         } else
             player.sendMessage("Event 'Christmas' not started.");
 
-        _active = false;
+        active = false;
 
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Спавнит эвент менеджеров и рядом ёлки
-     */
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] = {
-                {81921, 148921, -3467, 16384},
-                {146405, 28360, -2269, 49648},
-                {19319, 144919, -3103, 31135},
-                {-82805, 149890, -3129, 16384},
-                {-12347, 122549, -3104, 16384},
-                {110642, 220165, -3655, 61898},
-                {116619, 75463, -2721, 20881},
-                {85513, 16014, -3668, 23681},
-                {81999, 53793, -1496, 61621},
-                {148159, -55484, -2734, 44315},
-                {44185, -48502, -797, 27479},
-                {86899, -143229, -1293, 8192}};
-
-        final int CTREES[][] = {
-                {81961, 148921, -3467, 0},
-                {146445, 28360, -2269, 0},
-                {19319, 144959, -3103, 0},
-                {-82845, 149890, -3129, 0},
-                {-12387, 122549, -3104, 0},
-                {110602, 220165, -3655, 0},
-                {116659, 75463, -2721, 0},
-                {85553, 16014, -3668, 0},
-                {81999, 53743, -1496, 0},
-                {148199, -55484, -2734, 0},
-                {44185, -48542, -797, 0},
-                {86859, -143229, -1293, 0}};
-
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
-        SpawnNPCs(CTREE_ID, CTREES, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS, SPAWNER_LIST);
+        SpawnNPCs(CTREE_ID, EventsConfig.CTREES, SPAWNER_LIST);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
+
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
+        deSpawnNPCs(SPAWNER_LIST);
     }
 
     @Override
@@ -170,7 +138,7 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
      */
     @Override
     public void onDeath(Creature cha, Creature killer) {
-        if (_active && SimpleCheckDrop(cha, killer)) {
+        if (active && SimpleCheckDrop(cha, killer)) {
             int dropCounter = 0;
             for (int[] drop : _dropdata)
                 if (Rnd.chance(drop[1] * killer.getPlayer().getRateItems() * Config.RATE_DROP_ITEMS * 0.1)) {
@@ -240,7 +208,7 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
 
     @Override
     public void onPlayerEnter(Player player) {
-        if (_active)
+        if (active)
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.Christmas.AnnounceEventStarted");
     }
 }

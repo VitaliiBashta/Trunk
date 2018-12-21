@@ -15,6 +15,7 @@ import l2trunk.gameserver.model.reward.RewardData;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
+import l2trunk.scripts.events.EventsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,6 @@ public final class LettersCollection extends Functions implements ScriptFile, On
     private static boolean _active;
     static String _name;
     static int[][] letters;
-    static final int[][] EVENT_MANAGERS = null;
     static String _msgStarted;
     static String _msgEnded;
 
@@ -69,25 +69,14 @@ public final class LettersCollection extends Functions implements ScriptFile, On
             _log.info("Loaded Event: " + _name + " [state: deactivated]");
     }
 
-    /**
-     * Читает статус эвента из базы.
-     *
-     * @return
-     */
     private static boolean isActive() {
         return isActive(_name);
     }
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, SPAWNS);
+        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS, SPAWNS);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
     private void unSpawnEventManagers() {
         deSpawnNPCs(SPAWNS);
     }
@@ -102,21 +91,15 @@ public final class LettersCollection extends Functions implements ScriptFile, On
         unSpawnEventManagers();
     }
 
-    /**
-     * Обработчик смерти мобов, управляющий эвентовым дропом
-     */
     @Override
     public void onDeath(Creature cha, Creature killer) {
         if (_active && SimpleCheckDrop(cha, killer)) {
-            int[] letter = letters[Rnd.get(letters.length)];
+            int[] letter = Rnd.get(letters);
             if (Rnd.chance(letter[1] * Config.EVENT_L2DAY_LETTER_CHANCE * ((NpcTemplate) cha.getTemplate()).rateHp))
                 ((NpcInstance) cha).dropItem(killer.getPlayer(), letter[0], 1);
         }
     }
 
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -134,9 +117,6 @@ public final class LettersCollection extends Functions implements ScriptFile, On
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -153,9 +133,6 @@ public final class LettersCollection extends Functions implements ScriptFile, On
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Обмен эвентовых вещей, где var[0] - слово.
-     */
     public void exchange(String[] var) {
         Player player = getSelf();
 

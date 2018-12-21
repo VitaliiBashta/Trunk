@@ -9,6 +9,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +20,8 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     private static final String EVENT_NAME = "GiftOfVitality";
     private static final int REUSE_HOURS = 6; // reuse
     private static final int EVENT_MANAGER_ID = 109; // npc id
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
-    private static final Logger _log = LoggerFactory.getLogger(GiftOfVitality.class);
+    private static final List<SimpleSpawner> SPAWNER_LIST = new ArrayList<>();
+    private static final Logger LOG = LoggerFactory.getLogger(GiftOfVitality.class);
     private static final int blessingOfEnergy = 23179;
     private final static List<Integer> MAGE_BUFF = List.of(
             5627,  // windwalk
@@ -52,51 +53,37 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
             5632,  // empower
             5636); // haste 2
 
-    /**
-     * Читает статус эвента из базы.
-     */
     private static boolean isActive() {
         return isActive(EVENT_NAME);
     }
 
-    /**
-     * Спавнит эвент менеджеров
-     */
     private void spawnEventManagers() {
-        final int EVENT_MANAGERS[][] =
-                {
-                        {-119494, 44882, 360, 24576},  // Kamael Village
-                        {-82687, 243157, -3734, 4096},  // Talking Island Village
-                        {45538, 48357, -3056, 18000},   // Elven Village
-                        {9929, 16324, -4568, 62999},    // Dark Elven Village
-                        {115096, -178370, -880, 0},     // Dwarven Village
-                        {-45372, -114104, -240, 16384}, // Orc Village
-                        {-83156, 150994, -3120, 0},     // Gludin
-                        {-13727, 122117, -2984, 16384}, // Gludio
-                        {16111, 142850, -2696, 16000},  // Dion
-                        {111176, 220968, -3544, 16384}, // Heine
-                        {82792, 149448, -3494, 0},      // Giran
-                        {81083, 56118, -1552, 32768},   // Oren
-                        {117016, 77240, -2688, 49151},  // Hunters Village
-                        {147016, 25928, -2038, 16384},  // Aden
-                        {43966, -47709, -792, 49999},   // Rune
-                        {148088, -55416, -2728, 49151}, // Goddart
-                        {87080, -141336, -1344, 0},     // Schutgard
-                };
+        final List<Location> EVENT_MANAGERS = List.of(
+                        new Location(-119494, 44882, 360, 24576),  // Kamael Village
+                        new Location(-82687, 243157, -3734, 4096),  // Talking Island Village
+                        new Location(45538, 48357, -3056, 18000),   // Elven Village
+                        new Location(9929, 16324, -4568, 62999),    // Dark Elven Village
+                        new Location(115096, -178370, -880, 0),     // Dwarven Village
+                        new Location(-45372, -114104, -240, 16384), // Orc Village
+                        new Location(-83156, 150994, -3120, 0),     // Gludin
+                        new Location(-13727, 122117, -2984, 16384), // Gludio
+                        new Location(16111, 142850, -2696, 16000),  // Dion
+                        new Location(111176, 220968, -3544, 16384), // Heine
+                        new Location(82792, 149448, -3494, 0),      // Giran
+                        new Location(81083, 56118, -1552, 32768),   // Oren
+                        new Location(117016, 77240, -2688, 49151),  // Hunters Village
+                        new Location(147016, 25928, -2038, 16384),  // Aden
+                        new Location(43966, -47709, -792, 49999),   // Rune
+                        new Location(148088, -55416, -2728, 49151), // Goddart
+                        new Location(87080, -141336, -1344, 0));     // Schutgard
 
-        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EVENT_MANAGERS, SPAWNER_LIST);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
+        deSpawnNPCs(SPAWNER_LIST);
     }
 
-    /**
-     * Запускает эвент
-     */
     public void startEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -112,9 +99,6 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
         show("admin/events/events.htm", player);
     }
 
-    /**
-     * Останавливает эвент
-     */
     public void stopEvent() {
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)
@@ -133,9 +117,9 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     public void onLoad() {
         if (isActive()) {
             spawnEventManagers();
-            _log.info("Loaded Event: Gift Of Vitality [state: activated]");
+            LOG.info("Loaded Event: Gift Of Vitality [state: activated]");
         } else
-            _log.info("Loaded Event: Gift Of Vitality [state: deactivated]");
+            LOG.info("Loaded Event: Gift Of Vitality [state: deactivated]");
     }
 
     @Override
@@ -149,7 +133,7 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
     }
 
     private void buffMe(BuffType type) {
-        if (getSelf() == null || getNpc() == null || getSelf().getPlayer() == null)
+        if (getSelf() == null || getNpc() == null)
             return;
 
         String htmltext = null;
@@ -161,9 +145,6 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
             case VITALITY:
                 if (var != null && Long.parseLong(var) > System.currentTimeMillis())
                     htmltext = "jack-notime.htm";
-                    // Allow Jack Saga to give you bless vitality on subclass too !
-//				else if (player.getBaseClassId() != player.getActiveClassId())
-//					htmltext = "jack-onSub.htm";
                 else {
                     npc.broadcastPacket(new MagicSkillUse(npc, player, blessingOfEnergy));
                     player.altOnMagicUseTimer(player, blessingOfEnergy);

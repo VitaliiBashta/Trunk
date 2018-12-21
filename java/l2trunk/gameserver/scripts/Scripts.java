@@ -63,7 +63,7 @@ public enum Scripts {
     INSTANCE;
     public static final Map<Integer, List<ScriptClassAndMethod>> dialogAppends = new HashMap<>();
     public static final Map<String, ScriptClassAndMethod> onAction = new HashMap<>();
-//    public static final Map<String, ScriptClassAndMethod> onActionShift = new HashMap<>();
+    //    public static final Map<String, ScriptClassAndMethod> onActionShift = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(Scripts.class);
     private Map<String, Functions> functions = new HashMap<>();
     private Map<String, Class<? extends CharacterAI>> AIs = new HashMap<>();
@@ -173,8 +173,9 @@ public enum Scripts {
         loadScripts();
         scripts.forEach((k, v) -> v.onLoad());
 
-        scripts.forEach((k,s) -> addHandlers(s.getClass()) );
-        functions.forEach((k,s) -> addHandlers(s.getClass()) );
+        scripts.forEach((k, s) -> addHandlers(s.getClass()));
+        functions.forEach((k, s) -> addHandlers(s.getClass()));
+
 
     }
 
@@ -190,7 +191,6 @@ public enum Scripts {
         functions.put("bosses.SailrenManager", new SailrenManager());
         functions.put("bosses.ValakasManager", new ValakasManager());
         functions.put("events.AprilFoolsDay.AprilFoolsDay", new AprilFoolsDay());
-//        functions.put("events.arena.ArenaTemplate", new ArenaTemplate() );
         functions.put("events.BossRandom.BossRandom", new BossRandom());
         functions.put("events.bountyhunters.HuntersGuild", new HuntersGuild());
         functions.put("events.Christmas.Christmas", new Christmas());
@@ -964,7 +964,7 @@ public enum Scripts {
         scripts.put("events.TheFallHarvest.Seed", new l2trunk.scripts.events.TheFallHarvest.Seed());
         scripts.put("events.TheFallHarvest.TheFallHarvest", new l2trunk.scripts.events.TheFallHarvest.TheFallHarvest());
         scripts.put("events.TheFlowOfTheHorror.TheFlowOfTheHorror", new l2trunk.scripts.events.TheFlowOfTheHorror.TheFlowOfTheHorror());
-        scripts.put("events.TrickOfTrans.TrickOfTrans", new l2trunk.scripts.events.TrickOfTrans.TrickOfTrans());
+        scripts.put("events.TrickOfTrans.TrickOfTrans", new TrickOfTrans());
         scripts.put("events.TvT.TvT", new l2trunk.scripts.events.TvT.TvT());
         scripts.put("events.Viktorina.Viktorina", new l2trunk.scripts.events.Viktorina.Viktorina());
         scripts.put("handler.admincommands.AdminBosses", new AdminBosses());

@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Util;
 
-public class Delevel extends Functions implements ScriptFile {
+public final class Delevel extends Functions implements ScriptFile {
     public void delevel_page() {
         Player player = getSelf();
         if (player == null) {
@@ -33,10 +33,8 @@ public class Delevel extends Functions implements ScriptFile {
         }
         if (player.getLevel() <= Config.SERVICES_DELEVEL_MIN_LEVEL) {
             player.sendMessage("This service is available to characters with " + Config.SERVICES_DELEVEL_MIN_LEVEL + " level.");
-            return;
         } else if (getItemCount(player, Config.SERVICES_DELEVEL_ITEM) < Config.SERVICES_DELEVEL_COUNT) {
             player.sendMessage("You don't have enought items.");
-            return;
         } else {
             long pXp = player.getExp();
             long tXp = Experience.LEVEL[(player.getLevel() - 1)];
