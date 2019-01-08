@@ -49,7 +49,7 @@ public class _184_NikolasCooperationContract extends Quest implements ScriptFile
         } else if (event.equalsIgnoreCase("30621-04.htm")) {
             st.playSound(SOUND_ACCEPT);
             st.setCond(1);
-            st.giveItems(NicolasMap, 1);
+            st.giveItems(NicolasMap);
         } else if (event.equalsIgnoreCase("30673-03.htm")) {
             st.playSound(SOUND_MIDDLE);
             st.setCond(2);

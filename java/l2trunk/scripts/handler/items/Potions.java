@@ -51,16 +51,6 @@ public final class Potions extends SimpleItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     protected boolean useItemImpl(Player player, ItemInstance item, boolean ctrl) {
         int itemId = item.getItemId();
 

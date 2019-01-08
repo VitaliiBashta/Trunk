@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PlayerTemplate extends CharTemplate {
+public final class PlayerTemplate extends CharTemplate {
     /**
      * The Class<?> object of the L2Player
      */

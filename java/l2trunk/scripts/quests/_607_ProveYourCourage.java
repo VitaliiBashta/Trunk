@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _607_ProveYourCourage extends Quest implements ScriptFile {
+public final class _607_ProveYourCourage extends Quest implements ScriptFile {
     private final static int KADUN_ZU_KETRA = 31370;
     private final static int VARKAS_HERO_SHADITH = 25309;
 
@@ -13,26 +13,9 @@ public class _607_ProveYourCourage extends Quest implements ScriptFile {
     private final static int HEAD_OF_SHADITH = 7235;
     private final static int TOTEM_OF_VALOR = 7219;
 
-    // etc
-    @SuppressWarnings("unused")
-    private final static int MARK_OF_KETRA_ALLIANCE1 = 7211;
-    @SuppressWarnings("unused")
-    private final static int MARK_OF_KETRA_ALLIANCE2 = 7212;
     private final static int MARK_OF_KETRA_ALLIANCE3 = 7213;
     private final static int MARK_OF_KETRA_ALLIANCE4 = 7214;
     private final static int MARK_OF_KETRA_ALLIANCE5 = 7215;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _607_ProveYourCourage() {
         super(true);

@@ -14,7 +14,7 @@ import java.util.List;
 public final class PetSummon extends ScriptItemHandler implements ScriptFile {
     private final Skill wolvesNecklace = SkillTable.INSTANCE.getInfo(2046);
     // all the items ids that this handler knowns
-    private final List<Integer> _itemIds = PetDataTable.getPetControlItems();
+    private static final List<Integer> ITEM_IDS = PetDataTable.getPetControlItems();
 
     @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
@@ -38,17 +38,7 @@ public final class PetSummon extends ScriptItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public final List<Integer> getItemIds() {
-        return _itemIds;
+        return ITEM_IDS;
     }
 }

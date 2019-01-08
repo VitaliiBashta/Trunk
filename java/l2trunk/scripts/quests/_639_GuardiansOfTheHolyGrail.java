@@ -6,18 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _639_GuardiansOfTheHolyGrail extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+public final class _639_GuardiansOfTheHolyGrail extends Quest implements ScriptFile {
 
     private static final int DROP_CHANCE = 10; // Для х1 мобов
 
@@ -49,34 +38,43 @@ public class _639_GuardiansOfTheHolyGrail extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("falsepriest_dominic_q0639_04.htm")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("falsepriest_dominic_q0639_09.htm")) {
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
-        } else if (event.equals("falsepriest_dominic_q0639_08.htm")) {
-            st.giveItems(ADENA_ID, st.takeAllItems(SCRIPTURES) * 1625, false);
-        } else if (event.equals("falsepriest_gremory_q0639_05.htm")) {
-            st.setCond(2);
-            st.playSound(SOUND_MIDDLE);
-            st.giveItems(WATER_BOTTLE, 1, false);
-        } else if (event.equals("holy_grail_q0639_02.htm")) {
-            st.setCond(3);
-            st.playSound(SOUND_MIDDLE);
-            st.takeItems(WATER_BOTTLE, -1);
-            st.giveItems(HOLY_WATER_BOTTLE, 1);
-        } else if (event.equals("falsepriest_gremory_q0639_09.htm")) {
-            st.setCond(4);
-            st.playSound(SOUND_MIDDLE);
-            st.takeItems(HOLY_WATER_BOTTLE, -1);
-        } else if (event.equals("falsepriest_gremory_q0639_11.htm")) {
-            st.takeItems(SCRIPTURES, 4000);
-            st.giveItems(EWS, 1, false);
-        } else if (event.equals("falsepriest_gremory_q0639_13.htm")) {
-            st.takeItems(SCRIPTURES, 400);
-            st.giveItems(EAS, 1, false);
+        switch (event) {
+            case "falsepriest_dominic_q0639_04.htm":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "falsepriest_dominic_q0639_09.htm":
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
+            case "falsepriest_dominic_q0639_08.htm":
+                st.giveItems(ADENA_ID, st.takeAllItems(SCRIPTURES) * 1625, false);
+                break;
+            case "falsepriest_gremory_q0639_05.htm":
+                st.setCond(2);
+                st.playSound(SOUND_MIDDLE);
+                st.giveItems(WATER_BOTTLE, 1, false);
+                break;
+            case "holy_grail_q0639_02.htm":
+                st.setCond(3);
+                st.playSound(SOUND_MIDDLE);
+                st.takeItems(WATER_BOTTLE, -1);
+                st.giveItems(HOLY_WATER_BOTTLE, 1);
+                break;
+            case "falsepriest_gremory_q0639_09.htm":
+                st.setCond(4);
+                st.playSound(SOUND_MIDDLE);
+                st.takeItems(HOLY_WATER_BOTTLE, -1);
+                break;
+            case "falsepriest_gremory_q0639_11.htm":
+                st.takeItems(SCRIPTURES, 4000);
+                st.giveItems(EWS, 1, false);
+                break;
+            case "falsepriest_gremory_q0639_13.htm":
+                st.takeItems(SCRIPTURES, 400);
+                st.giveItems(EAS, 1, false);
+                break;
         }
         return event;
     }

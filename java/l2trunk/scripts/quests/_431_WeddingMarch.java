@@ -5,22 +5,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _431_WeddingMarch extends Quest implements ScriptFile {
+public final class _431_WeddingMarch extends Quest implements ScriptFile {
     private static final int MELODY_MAESTRO_KANTABILON = 31042;
     private static final int SILVER_CRYSTAL = 7540;
     private static final int WEDDING_ECHO_CRYSTAL = 7062;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _431_WeddingMarch() {
         super(false);

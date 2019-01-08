@@ -53,7 +53,6 @@ public final class _715_PathToBecomingALordGoddard extends Quest implements Scri
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
-        int npcId = npc.getNpcId();
         int cond = st.getCond();
         Castle castle = ResidenceHolder.getResidence(GoddardCastle);
         if (castle.getOwner() == null)
@@ -107,15 +106,4 @@ public final class _715_PathToBecomingALordGoddard extends Quest implements Scri
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

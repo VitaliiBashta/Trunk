@@ -8,12 +8,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class _716_PathToBecomingALordRune extends Quest implements ScriptFile {
+public final class _716_PathToBecomingALordRune extends Quest {
     private static final int Frederick = 35509;
     private static final int Agripel = 31348;
     private static final int Innocentin = 31328;
@@ -41,21 +40,28 @@ public final class _716_PathToBecomingALordRune extends Quest implements ScriptF
         if (castle.getOwner() == null)
             return "Castle has no lord";
         Player castleOwner = castle.getOwner().getLeader().getPlayer();
-        if (event.equals("frederick_q716_03.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("agripel_q716_03.htm"))
-            st.setCond(3);
-        else if (event.equals("frederick_q716_08.htm")) {
-            castleOwner.getQuestState(this.getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
-            castleOwner.getQuestState(this.getClass()).setCond(5);
-            st.setState(STARTED);
-        } else if (event.equals("innocentin_q716_03.htm")) {
-            if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this.getClass()) != null && castleOwner.getQuestState(this.getClass()).getCond() == 5)
-                castleOwner.getQuestState(this.getClass()).setCond(6);
-        } else if (event.equals("agripel_q716_08.htm"))
-            st.setCond(8);
+        switch (event) {
+            case "frederick_q716_03.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "agripel_q716_03.htm":
+                st.setCond(3);
+                break;
+            case "frederick_q716_08.htm":
+                castleOwner.getQuestState(this.getClass()).set("confidant", String.valueOf(st.getPlayer().getObjectId()), true);
+                castleOwner.getQuestState(this.getClass()).setCond(5);
+                st.setState(STARTED);
+                break;
+            case "innocentin_q716_03.htm":
+                if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(this.getClass()) != null && castleOwner.getQuestState(this.getClass()).getCond() == 5)
+                    castleOwner.getQuestState(this.getClass()).setCond(6);
+                break;
+            case "agripel_q716_08.htm":
+                st.setCond(8);
+                break;
+        }
         return event;
     }
 
@@ -80,7 +86,7 @@ public final class _716_PathToBecomingALordRune extends Quest implements ScriptF
                     }
                 }
                 // Лидер клана в игре, говорящий не лидер, у лидера взят квест и пройден до стадии назначения поверенного
-                else if (castleOwner != null && castleOwner != st.getPlayer() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == 4) {
+                else if (castleOwner != null && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == 4) {
                     if (castleOwner.isInRangeZ(npc, 200))
                         htmltext = "frederick_q716_07.htm";
                     else
@@ -157,14 +163,5 @@ public final class _716_PathToBecomingALordRune extends Quest implements ScriptF
             }
         }
         return null;
-    }
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
     }
 }

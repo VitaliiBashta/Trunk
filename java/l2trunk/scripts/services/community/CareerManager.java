@@ -34,12 +34,8 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
 
     @Override
     public void onReload() {
-        if (Config.COMMUNITYBOARD_ENABLED/* && Config.BBS_PVP_CB_ENABLED*/)
+        if (Config.COMMUNITYBOARD_ENABLED)
             CommunityBoardManager.removeHandler(this);
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

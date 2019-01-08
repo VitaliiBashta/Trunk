@@ -82,7 +82,7 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
             return "gludio_fort_a_campkeeper_q0511_01.htm";
         if (st.getQuestItemsCount(DungeonLeaderMark) > 0) {
             st.giveItems(KnightsEpaulette, st.getQuestItemsCount(DungeonLeaderMark));
-            st.takeItems(DungeonLeaderMark, -1);
+            st.takeItems(DungeonLeaderMark);
             st.playSound(SOUND_FINISH);
             return "gludio_fort_a_campkeeper_q0511_09.htm";
         }

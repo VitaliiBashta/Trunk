@@ -7,28 +7,12 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест проверен и работает.
- * Рейты прописаны путем повышения шанса получения квестовых вещей.
- */
-public class _257_GuardIsBusy extends Quest implements ScriptFile {
+public final class _257_GuardIsBusy extends Quest implements ScriptFile {
     private final int GLUDIO_LORDS_MARK = 1084;
     private final int ORC_AMULET = 752;
     private final int ORC_NECKLACE = 1085;
     private final int WEREWOLF_FANG = 1086;
     private final int ADENA = 57;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _257_GuardIsBusy() {
         super(false);

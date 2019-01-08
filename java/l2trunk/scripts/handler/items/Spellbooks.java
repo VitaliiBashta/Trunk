@@ -14,13 +14,14 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
-    private final Set<Integer> _itemIds = new HashSet<>();
+    private final List<Integer> itemIds;
+
+    public Spellbooks() {
+        itemIds = SkillAcquireHolder.getAllSpellbookIds();
+    }
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -40,12 +41,6 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
     @Override
     public void onShutdown() {
 
-    }
-
-    public Spellbooks() {
-        List<SkillLearn> l = SkillAcquireHolder.getAllNormalSkillTreeWithForgottenScrolls();
-        for (SkillLearn learn : l)
-            _itemIds.add(learn.getItemId());
     }
 
     @Override
@@ -117,12 +112,12 @@ public final class Spellbooks extends ScriptItemHandler implements ScriptFile {
         player.updateStats();
         player.sendPacket(new SkillList(player));
         // Анимация изучения книги над головой чара (на самом деле, для каждой книги своя анимация, но они одинаковые)
-        player.broadcastPacket(new MagicSkillUse(player,  2790));
+        player.broadcastPacket(new MagicSkillUse(player, 2790));
         return true;
     }
 
     @Override
     public List<Integer> getItemIds() {
-        return new ArrayList<>(_itemIds);
+        return itemIds;
     }
 }

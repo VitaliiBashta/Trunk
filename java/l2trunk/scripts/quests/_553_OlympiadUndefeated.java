@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _553_OlympiadUndefeated extends Quest implements ScriptFile {
+public final class _553_OlympiadUndefeated extends Quest implements ScriptFile {
     // NPCs
     private static final int OLYMPIAD_MANAGER = 31688;
 
@@ -128,17 +128,5 @@ public class _553_OlympiadUndefeated extends Quest implements ScriptFile {
             if (count < 2 && qs.getQuestItemsCount(WINS_CONFIRMATION1) > 0)
                 qs.takeItems(WINS_CONFIRMATION1, -1);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -6,37 +6,25 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _660_AidingtheFloranVillage extends Quest implements ScriptFile {
+public final class _660_AidingtheFloranVillage extends Quest implements ScriptFile {
+    // MOBS
+    private static final int CARSED_SEER = 21106;
+    private static final int PLAIN_WATCMAN = 21102;
+    private static final int DELU_LIZARDMAN_SHAMAN = 20781;
+    private static final int DELU_LIZARDMAN_SAPPLIER = 21104;
+    private static final int DELU_LIZARDMAN_COMMANDER = 21107;
+    private static final int DELU_LIZARDMAN_SPESIAL_AGENT = 21105;
+    //REWARDS
+    private static final int SCROLL_ENCANT_ARMOR = 956;
+    private static final int SCROLL_ENCHANT_WEAPON = 955;
     // NPC
     private final int MARIA = 30608;
     private final int ALEX = 30291;
-    // MOBS
-    private final int CARSED_SEER = 21106;
-    private final int PLAIN_WATCMAN = 21102;
     private final int ROUGH_HEWN_ROCK_GOLEM = 21103;
-    private final int DELU_LIZARDMAN_SHAMAN = 20781;
-    private final int DELU_LIZARDMAN_SAPPLIER = 21104;
-    private final int DELU_LIZARDMAN_COMMANDER = 21107;
-    private final int DELU_LIZARDMAN_SPESIAL_AGENT = 21105;
     //ITEMS
     private final int WATCHING_EYES = 8074;
     private final int ROUGHLY_HEWN_ROCK_GOLEM_SHARD = 8075;
     private final int DELU_LIZARDMAN_SCALE = 8076;
-    //REWARDS
-    private final int SCROLL_ENCANT_ARMOR = 956;
-    private final int SCROLL_ENCHANT_WEAPON = 955;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _660_AidingtheFloranVillage() {
         super(false);
@@ -122,7 +110,7 @@ public class _660_AidingtheFloranVillage extends Quest implements ScriptFile {
                 if (luck < 9) {
                     st.giveItems(ADENA_ID, 20000);
                     st.giveItems(SCROLL_ENCANT_ARMOR, 1);
-                } else if (luck > 8 && luck < 12)
+                } else if (luck < 12)
                     st.giveItems(SCROLL_ENCHANT_WEAPON, 1);
                 else
                     st.giveItems(ADENA_ID, 2000);

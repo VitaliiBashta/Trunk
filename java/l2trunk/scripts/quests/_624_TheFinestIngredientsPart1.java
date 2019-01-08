@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _624_TheFinestIngredientsPart1 extends Quest implements ScriptFile {
+public final class _624_TheFinestIngredientsPart1 extends Quest implements ScriptFile {
     //NPC
     private static final int JEREMY = 31521;
 
@@ -21,18 +21,6 @@ public class _624_TheFinestIngredientsPart1 extends Quest implements ScriptFile 
     private static final int FOOT_OF_BANDERSNATCHLING = 7203;
     private static final int CRYOLITE = 7080;
     private static final int SAUCE = 7205;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _624_TheFinestIngredientsPart1() {
         super(true);
@@ -80,7 +68,7 @@ public class _624_TheFinestIngredientsPart1 extends Quest implements ScriptFile 
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
         if (cond == 0)
             htmltext = "jeremy_q0624_0101.htm";

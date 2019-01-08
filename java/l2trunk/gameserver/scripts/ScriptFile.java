@@ -5,5 +5,6 @@ public interface ScriptFile {
 
     void onReload();
 
-    void onShutdown();
+    default void onShutdown() {
+    }
 }

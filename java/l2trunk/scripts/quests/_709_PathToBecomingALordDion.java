@@ -10,12 +10,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _709_PathToBecomingALordDion extends Quest implements ScriptFile {
+public final class _709_PathToBecomingALordDion extends Quest {
     private static final int Crosby = 35142;
     private static final int Rouke = 31418;
     private static final int Sophia = 30735;
@@ -23,8 +21,8 @@ public final class _709_PathToBecomingALordDion extends Quest implements ScriptF
     private static final int MandragoraRoot = 13849;
     private static final int Epaulette = 13850;
 
-    private static final List<Integer> OlMahums = Arrays.asList(20208, 20209, 20210, 20211);
-    private static final List<Integer> Manragoras = Arrays.asList(20154, 20155, 20156);
+    private static final List<Integer> OlMahums = List.of(20208, 20209, 20210, 20211);
+    private static final List<Integer> Manragoras = List.of(20154, 20155, 20156);
 
     private static final int DionCastle = 2;
 
@@ -179,15 +177,4 @@ public final class _709_PathToBecomingALordDion extends Quest implements ScriptF
         return false;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

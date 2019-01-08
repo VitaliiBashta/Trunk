@@ -297,13 +297,10 @@ public final class QuestState {
         return Quest.getStateName(_state);
     }
 
-    /**
-     * Добавить предмет игроку
-     * By default if item is adena rates 'll be applyed, else no
-     *
-     * @param itemId
-     * @param count
-     */
+    public void giveItems(int itemId) {
+        giveItems(itemId, 1);
+    }
+
     public void giveItems(int itemId, long count) {
         if (itemId == ItemTemplate.ITEM_ID_ADENA)
             giveItems(itemId, count, true);
@@ -749,6 +746,10 @@ public final class QuestState {
 
     Map<String, QuestTimer> getTimers() {
         return _timers;
+    }
+
+    public long takeItems(int itemId) {
+        return takeItems(itemId, -1);
     }
 
     /**

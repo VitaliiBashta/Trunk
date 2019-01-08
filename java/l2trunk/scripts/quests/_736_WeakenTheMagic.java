@@ -38,7 +38,7 @@ public final class _736_WeakenTheMagic extends Dominion_KillSpecialUnitQuest {
 
     @Override
     protected List<ClassId> getTargetClassIds() {
-        return Arrays.asList(
+        return List.of(
                 ClassId.sorceror,
                 ClassId.warlock,
                 ClassId.spellsinger,

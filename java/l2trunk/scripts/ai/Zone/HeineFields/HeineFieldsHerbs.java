@@ -37,9 +37,6 @@ public final class HeineFieldsHerbs implements ScriptFile {
         DeleteAncientHerbTask.cancel(false);
     }
 
-    @Override
-    public void onShutdown() {
-    }
 
     public class DropAncientHerbTask extends RunnableImpl {
         @Override
@@ -57,4 +54,4 @@ public final class HeineFieldsHerbs implements ScriptFile {
             });
         }
     }
-    }
+}

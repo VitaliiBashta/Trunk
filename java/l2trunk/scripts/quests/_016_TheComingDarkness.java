@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _016_TheComingDarkness extends Quest implements ScriptFile {
+public final class _016_TheComingDarkness extends Quest implements ScriptFile {
     //npc
     private final int HIERARCH = 31517;
     //ALTAR_LIST (MOB_ID, cond)
@@ -33,18 +33,6 @@ public class _016_TheComingDarkness extends Quest implements ScriptFile {
     };
     //items
     private final int CRYSTAL_OF_SEAL = 7167;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _016_TheComingDarkness() {
         super(false);
@@ -87,9 +75,9 @@ public class _016_TheComingDarkness extends Quest implements ScriptFile {
                     st.exitCurrentQuest(true);
                 } else
                     htmltext = "31517-01.htm";
-            } else if (cond > 0 && cond < 6 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) > 0)
+            } else if (cond < 6 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) > 0)
                 htmltext = "31517-02r.htm";
-            else if (cond > 0 && cond < 6 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) < 1) {
+            else if (cond < 6 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) < 1) {
                 htmltext = "31517-proeb.htm";
                 st.exitCurrentQuest(false);
             } else if (cond > 5 && st.getQuestItemsCount(CRYSTAL_OF_SEAL) < 1) {

@@ -3,24 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _611_AllianceWithVarkaSilenos extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    //Varka mobs
-    private final int[] VARKA_NPC_LIST = new int[20];
-
+public class _611_AllianceWithVarkaSilenos extends Quest {
     // Items
     private static final int MARK_OF_VARKA_ALLIANCE1 = 7221;
     private static final int MARK_OF_VARKA_ALLIANCE2 = 7222;
@@ -32,14 +18,12 @@ public class _611_AllianceWithVarkaSilenos extends Quest implements ScriptFile {
     private static final int KB_GENERAL = 7228;
     private static final int TOTEM_OF_VALOR = 7229;
     private static final int TOTEM_OF_WISDOM = 7230;
-
     //hunt for soldier
     private static final int RAIDER = 21327;
     private static final int FOOTMAN = 21324;
     private static final int SCOUT = 21328;
     private static final int WAR_HOUND = 21325;
     private static final int SHAMAN = 21329;
-
     //hunt for captain
     private static final int SEER = 21338;
     private static final int WARRIOR = 21331;
@@ -49,7 +33,6 @@ public class _611_AllianceWithVarkaSilenos extends Quest implements ScriptFile {
     private static final int COMMAND = 21343;
     private static final int ELITE_GUARD = 21344;
     private static final int WHITE_CAPTAIN = 21336;
-
     //hunt for general
     private static final int BATTALION_COMMANDER_SOLDIER = 21340;
     private static final int GENERAL = 21339;
@@ -60,43 +43,18 @@ public class _611_AllianceWithVarkaSilenos extends Quest implements ScriptFile {
     private static final int PROPHET_AIDE = 21349;
     private static final int HEAD_SHAMAN = 21345;
     private static final int HEAD_GUARDS = 21346;
-
-    private static void takeAllMarks(QuestState st) {
-        st.takeItems(MARK_OF_VARKA_ALLIANCE1, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE2, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE3, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE4, -1);
-        st.takeItems(MARK_OF_VARKA_ALLIANCE5, -1);
-    }
+    //Varka mobs
+    private final List<Integer> VARKA_NPC_LIST = List.of(
+            21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362,
+            21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
 
     public _611_AllianceWithVarkaSilenos() {
         super(true);
 
         addStartNpc(31378);
 
-        VARKA_NPC_LIST[0] = 21350;
-        VARKA_NPC_LIST[1] = 21351;
-        VARKA_NPC_LIST[2] = 21353;
-        VARKA_NPC_LIST[3] = 21354;
-        VARKA_NPC_LIST[4] = 21355;
-        VARKA_NPC_LIST[5] = 21357;
-        VARKA_NPC_LIST[6] = 21358;
-        VARKA_NPC_LIST[7] = 21360;
-        VARKA_NPC_LIST[8] = 21361;
-        VARKA_NPC_LIST[9] = 21362;
-        VARKA_NPC_LIST[10] = 21364;
-        VARKA_NPC_LIST[11] = 21365;
-        VARKA_NPC_LIST[12] = 21366;
-        VARKA_NPC_LIST[13] = 21368;
-        VARKA_NPC_LIST[14] = 21369;
-        VARKA_NPC_LIST[15] = 21370;
-        VARKA_NPC_LIST[16] = 21371;
-        VARKA_NPC_LIST[17] = 21372;
-        VARKA_NPC_LIST[18] = 21373;
-        VARKA_NPC_LIST[19] = 21374;
 
-        for (int npcId : VARKA_NPC_LIST)
-            addKillId(npcId);
+        addKillId(VARKA_NPC_LIST);
 
         //hunt for soldier
         addKillId(RAIDER);
@@ -130,11 +88,12 @@ public class _611_AllianceWithVarkaSilenos extends Quest implements ScriptFile {
         addQuestItem(KB_GENERAL);
     }
 
-    private boolean isVarkaNpc(int npc) {
-        for (int i : VARKA_NPC_LIST)
-            if (npc == i)
-                return true;
-        return false;
+    private static void takeAllMarks(QuestState st) {
+        st.takeItems(MARK_OF_VARKA_ALLIANCE1, -1);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE2, -1);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE3, -1);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE4, -1);
+        st.takeItems(MARK_OF_VARKA_ALLIANCE5, -1);
     }
 
     private static void checkMarks(QuestState st) {
@@ -271,7 +230,7 @@ public class _611_AllianceWithVarkaSilenos extends Quest implements ScriptFile {
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        if (isVarkaNpc(npcId))
+        if (VARKA_NPC_LIST.contains(npcId))
             if (st.getQuestItemsCount(MARK_OF_VARKA_ALLIANCE5) > 0) {
                 takeAllMarks(st);
                 st.giveItems(MARK_OF_VARKA_ALLIANCE4, 1);

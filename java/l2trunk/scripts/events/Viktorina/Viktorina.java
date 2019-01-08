@@ -45,7 +45,7 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
     private static String question;
     private static String answer;
     private static Viktorina instance;
-    private final List<String> _commandList = Arrays.asList("o", "voff", "von", "vhelp", "vtop", "v", "vo");
+    private final List<String> _commandList = List.of("o", "voff", "von", "vhelp", "vtop", "v", "vo");
     private final ArrayList<String> questions = new ArrayList<>();
     private long _timeStopViktorina = 0;
     //Перменные ниже, перенес в конфиг.

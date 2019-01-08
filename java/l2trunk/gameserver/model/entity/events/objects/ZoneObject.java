@@ -6,11 +6,11 @@ import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public class ZoneObject implements InitableObject {
     private final String _name;
-    private Zone _zone;
+    private Zone zone;
 
     public ZoneObject(String name) {
         _name = name;
@@ -20,11 +20,11 @@ public class ZoneObject implements InitableObject {
     public void initObject(GlobalEvent e) {
         Reflection r = e.getReflection();
 
-        _zone = r.getZone(_name);
+        zone = r.getZone(_name);
     }
 
     public void setActive(boolean a) {
-        _zone.setActive(a);
+        zone.setActive(a);
     }
 
     public void setActive(boolean a, GlobalEvent event) {
@@ -34,14 +34,14 @@ public class ZoneObject implements InitableObject {
     }
 
     public Zone getZone() {
-        return _zone;
+        return zone;
     }
 
-    public List<Player> getInsidePlayers() {
-        return _zone.getInsidePlayers();
+    public Stream<Player> getInsidePlayers() {
+        return zone.getInsidePlayers();
     }
 
     public boolean checkIfInZone(Creature c) {
-        return _zone.checkIfInZone(c);
+        return zone.checkIfInZone(c);
     }
 }

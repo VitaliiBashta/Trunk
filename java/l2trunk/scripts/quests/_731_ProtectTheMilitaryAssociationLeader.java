@@ -13,18 +13,4 @@ public final class _731_ProtectTheMilitaryAssociationLeader extends Quest implem
         runnerEvent.addBreakQuest(this);
     }
 
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 }

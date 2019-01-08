@@ -10,7 +10,10 @@ import l2trunk.commons.lang.reference.HardReference;
 import l2trunk.commons.lang.reference.HardReferences;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.*;
+import l2trunk.gameserver.Config;
+import l2trunk.gameserver.GameTimeController;
+import l2trunk.gameserver.PartyMatchingBBSManager;
+import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.PlayableAI.nextAction;
@@ -141,8 +144,6 @@ public final class Player extends Playable implements PlayerGroup {
     public static final int MAX_FRIEND_SIZE = 128;
     public static final String NO_TRADERS_VAR = "notraders";
     public static final String NO_ANIMATION_OF_CAST_VAR = "notShowBuffAnim";
-    public static final String MY_BIRTHDAY_RECEIVE_YEAR = "MyBirthdayReceiveYear";
-    public static final String NOT_CONNECTED = "<not connected>";
     public final static int OBSERVER_STARTING = 1;
     public final static int OBSERVER_STARTED = 3;
     public final static int OBSERVER_LEAVING = 2;
@@ -154,11 +155,12 @@ public final class Player extends Playable implements PlayerGroup {
     public static final int STORE_PRIVATE_SELL_PACKAGE = 8;
     public static final int STORE_PRIVATE_BUFF = 20;
     public static final int RANK_KNIGHT = 3;
-    public static final int RANK_WISEMAN = 4;
-    public static final int RANK_BARON = 5;
     public final static int autoMp = 728;
     public final static int autoCp = 5592;
     public final static int autoHp = 1539;
+    static final int RANK_BARON = 5;
+    private static final String NOT_CONNECTED = "<not connected>";
+    private static final int RANK_WISEMAN = 4;
     private final static int OBSERVER_NONE = 0;
     private static final int RANK_VAGABOND = 0;
     private static final int RANK_VASSAL = 1;
@@ -172,8 +174,8 @@ public final class Player extends Playable implements PlayerGroup {
     private static final int LANG_ENG = 0;
     private static final int LANG_RUS = 1;
     private static final int LANG_UNK = -1;
-    private static final int[] EXPERTISE_LEVELS =
-            {0, 20, 40, 52, 61, 76, 80, 84, Integer.MAX_VALUE};
+    private static final List<Integer> EXPERTISE_LEVELS = List.of(
+            0, 20, 40, 52, 61, 76, 80, 84, Integer.MAX_VALUE);
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
     private static boolean _isNoAttackEvents = false;
     public final BookMarkList bookmarks = new BookMarkList(this, 0);
@@ -1904,14 +1906,12 @@ public final class Player extends Playable implements PlayerGroup {
         boolean skillUpdate = false;
 
         int level = (int) calcStat(Stats.GRADE_EXPERTISE_LEVEL, getLevel(), null, null);
-        int i;
-        for (i = 0; (i < EXPERTISE_LEVELS.length) && (level >= EXPERTISE_LEVELS[(i + 1)]); i++) {
-            ;
-        }
+        int i = EXPERTISE_LEVELS.stream()
+                .filter(l -> l > level)
+                .findFirst().orElse(0);
         if (expertiseIndex != i) {
             expertiseIndex = i;
-            if ((expertiseIndex > 0) && Config.EXPERTISE_PENALTY) // TODO who to do? No need here! redo with a check for an item epic! added Config.EPIC_EXPERTISE_PENALTY
-            {
+            if ((expertiseIndex > 0) && Config.EXPERTISE_PENALTY) {
                 addSkill(239, expertiseIndex, false);
                 skillUpdate = true;
             }
@@ -3540,8 +3540,6 @@ public final class Player extends Playable implements PlayerGroup {
         // Check if the attacker has a PK counter greater than 0
         final int pkCountMulti = Math.max(killer.getPkKills() / 2, 1);
 
-        // Calculate the level difference Multiplier between attacker and killed L2Player
-        // final int lvlDiffMulti = Math.max(killer.getLevel() / _level, 1);
 
         // Calculate the new Karma of the attacker : newKarma = baseKarma*pkCountMulti*lvlDiffMulti
         // Add karma to attacker and increase its PK counter
@@ -3555,16 +3553,8 @@ public final class Player extends Playable implements PlayerGroup {
         if (karma <= 0) {
             if (Config.SERVICES_PK_PVP_KILL_ENABLE) {
                 if (Config.SERVICES_PK_PVP_TIE_IF_SAME_IP) {
-                    if (getIP() != killer.getIP()) {
-                        if (Config.SERVICES_ANNOUNCE_PK_ENABLED) {
-                            Announcements.INSTANCE.announceToAll("Player " + killer.getName() + " has pk" + killer.getTarget().getName());
-                        }
-                        ItemFunctions.addItem(killer, Config.SERVICES_PK_KILL_REWARD_ITEM, Config.SERVICES_PK_KILL_REWARD_COUNT, true, "Pk");
-                    }
+                    ItemFunctions.addItem(killer, Config.SERVICES_PK_KILL_REWARD_ITEM, Config.SERVICES_PK_KILL_REWARD_COUNT, true, "Pk");
                 } else {
-                    if (Config.SERVICES_ANNOUNCE_PK_ENABLED) {
-                        Announcements.INSTANCE.announceToAll("Player " + killer.getName() + " has pk" + killer.getTarget().getName());
-                    }
                     ItemFunctions.addItem(killer, Config.SERVICES_PK_KILL_REWARD_ITEM, Config.SERVICES_PK_KILL_REWARD_COUNT, true, "Pk");
                 }
             }
@@ -3665,16 +3655,8 @@ public final class Player extends Playable implements PlayerGroup {
             if ((_pvpFlag > 0) || (war) || (Config.SIEGE_PVP_COUNT) || (Config.ZONE_PVP_COUNT) || isInZonePvP()) {
                 if (Config.SERVICES_PK_PVP_KILL_ENABLE) {
                     if (Config.SERVICES_PK_PVP_TIE_IF_SAME_IP) {
-                        if (getIP() != pk.getIP()) {
-                            if (Config.SERVICES_ANNOUNCE_PVP_ENABLED) {
-                                Announcements.INSTANCE.announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
-                            }
-                            ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
-                        }
+                        ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
                     } else {
-                        if (Config.SERVICES_ANNOUNCE_PVP_ENABLED) {
-                            Announcements.INSTANCE.announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
-                        }
                         ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
                     }
                 }
@@ -5096,7 +5078,7 @@ public final class Player extends Playable implements PlayerGroup {
                     }
                 }
             }
-        } catch (final Exception e) {
+        } catch (final SQLException e) {
             _log.warn("could not restore henna: " + e);
         }
 
@@ -6160,10 +6142,6 @@ public final class Player extends Playable implements PlayerGroup {
         return hero;
     }
 
-    public void setHero(final boolean hero) {
-        this.hero = hero;
-    }
-
     public void setHero(Player player) {
         StatsSet hero = new StatsSet();
         hero.set(Olympiad.CLASS_ID, player.getBaseClassId());
@@ -6182,6 +6160,10 @@ public final class Player extends Playable implements PlayerGroup {
             player.broadcastPacket(new SocialAction(player.getObjectId(), 16));
         }
         player.broadcastUserInfo(true);
+    }
+
+    public void setHero(final boolean hero) {
+        this.hero = hero;
     }
 
     public int getPing() {
@@ -6508,6 +6490,13 @@ public final class Player extends Playable implements PlayerGroup {
         return _nameColor;
     }
 
+    public void setNameColor(String RGB) {
+        if (RGB.length() == 6) {
+            RGB = RGB.substring(4, 6) + RGB.substring(2, 4) + RGB.substring(0, 2);
+        }
+        setNameColor(Integer.decode("0x" + RGB));
+    }
+
     public void setNameColor(final int nameColor) {
         if ((nameColor != Config.NORMAL_NAME_COLOUR) && (nameColor != Config.CLANLEADER_NAME_COLOUR) && (nameColor != Config.GM_NAME_COLOUR)) {
             setVar("namecolor", Integer.toHexString(nameColor), -1);
@@ -6515,13 +6504,6 @@ public final class Player extends Playable implements PlayerGroup {
             unsetVar("namecolor");
         }
         _nameColor = nameColor;
-    }
-
-    public void setNameColor(String RGB) {
-        if (RGB.length() == 6) {
-            RGB = RGB.substring(4, 6) + RGB.substring(2, 4) + RGB.substring(0, 2);
-        }
-        setNameColor(Integer.decode("0x" + RGB));
     }
 
     public void setNameColor(final int red, final int green, final int blue) {
@@ -7640,27 +7622,27 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public double getRateAdena() {
-        return party == null ? _bonus.getDropAdena() : party._rateAdena;
+        return party == null ? _bonus.getDropAdena() : party.rateAdena;
     }
 
     @Override
     public double getRateItems() {
-        return party == null ? _bonus.getDropItems() : party._rateDrop;
+        return party == null ? _bonus.getDropItems() : party.rateDrop;
     }
 
     @Override
     public double getRateExp() {
-        return calcStat(Stats.EXP, (party == null ? _bonus.getRateXp() : party._rateExp), null, null);
+        return calcStat(Stats.EXP, (party == null ? _bonus.getRateXp() : party.rateExp), null, null);
     }
 
     @Override
     public double getRateSp() {
-        return calcStat(Stats.SP, (party == null ? _bonus.getRateSp() : party._rateSp), null, null);
+        return calcStat(Stats.SP, (party == null ? _bonus.getRateSp() : party.rateSp), null, null);
     }
 
     @Override
     public double getRateSpoil() {
-        return party == null ? _bonus.getDropSpoil() : party._rateSpoil;
+        return party == null ? _bonus.getDropSpoil() : party.rateSpoil;
     }
 
     public boolean isMaried() {
@@ -9183,12 +9165,12 @@ public final class Player extends Playable implements PlayerGroup {
         return _petControlItem;
     }
 
-    private void setPetControlItem(int itemObjId) {
-        setPetControlItem(getInventory().getItemByObjectId(itemObjId));
-    }
-
     public void setPetControlItem(ItemInstance item) {
         _petControlItem = item;
+    }
+
+    private void setPetControlItem(int itemObjId) {
+        setPetControlItem(getInventory().getItemByObjectId(itemObjId));
     }
 
     public boolean isActive() {

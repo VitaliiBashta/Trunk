@@ -93,15 +93,4 @@ public final class _903_TheCallofAntharas extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

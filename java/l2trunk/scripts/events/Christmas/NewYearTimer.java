@@ -10,7 +10,6 @@ import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.Calendar;
 
-
 public final class NewYearTimer implements ScriptFile {
     private static final int firework = 3266;
     private static NewYearTimer instance;
@@ -61,18 +60,6 @@ public final class NewYearTimer implements ScriptFile {
 
     private long getDelay(Calendar c) {
         return c.getTime().getTime() - System.currentTimeMillis();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private class NewYearAnnouncer extends RunnableImpl {

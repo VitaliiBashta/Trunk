@@ -25,10 +25,6 @@ public enum SkillTable {
         return skillId * 1000 + skillLevel;
     }
 
-    public Collection<Skill> getAllSkills() {
-        return skills.values();
-    }
-
     public void load() {
         skills = SkillsEngine.INSTANCE.loadAllSkills();
         int maxId = skills.values().stream().mapToInt(Skill::getId).max().orElse(0);

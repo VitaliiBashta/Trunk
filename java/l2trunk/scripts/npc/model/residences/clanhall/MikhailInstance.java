@@ -3,12 +3,7 @@ package l2trunk.scripts.npc.model.residences.clanhall;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 20:05/07.05.2011
- * 35409
- */
-public class MikhailInstance extends _34BossMinionInstance {
+public final class MikhailInstance extends _34BossMinionInstance {
     public MikhailInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

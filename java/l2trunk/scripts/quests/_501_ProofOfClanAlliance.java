@@ -40,7 +40,7 @@ public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile 
     private static final int POTION_OF_RECOVERY = 3889;
 
     // Quest mobs, drop, rates and prices
-    private static final List<Integer> CHESTS = Arrays.asList(27173, 27174, 27175, 27176, 27177);
+    private static final List<Integer> CHESTS = List.of(27173, 27174, 27175, 27176, 27177);
     private static final int[][] MOBS = {
             {
                     20685,
@@ -78,18 +78,6 @@ public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile 
         }
 
         CHESTS.forEach(this::addKillId);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private QuestState getLeader(QuestState st) {

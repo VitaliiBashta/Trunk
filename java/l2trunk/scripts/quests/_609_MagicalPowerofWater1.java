@@ -3,13 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _609_MagicalPowerofWater1 extends Quest implements ScriptFile {
+public final class _609_MagicalPowerofWater1 extends Quest {
     // NPC
     private static final int WAHKAN = 31371;
     private static final int ASEFA = 31372;
@@ -28,7 +25,9 @@ public final class _609_MagicalPowerofWater1 extends Quest implements ScriptFile
     private static final int MARK_OF_KETRA_ALLIANCE5 = 7215;
     private static final int THIEF_KEY = 1661;
 
-    private static final List<Integer> VARKA_NPC_LIST = Arrays.asList(21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362, 21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
+    private static final List<Integer> VARKA_NPC_LIST = List.of(
+            21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362,
+            21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
 
     public _609_MagicalPowerofWater1() {
         super(false);
@@ -36,18 +35,6 @@ public final class _609_MagicalPowerofWater1 extends Quest implements ScriptFile
         addTalkId(ASEFA);
         addTalkId(UDANS_MARDUI_BOX);
         VARKA_NPC_LIST.forEach(this::addAttackId);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

@@ -6,13 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Get a Pet
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _419_GetaPet extends Quest implements ScriptFile {
+public final class _419_GetaPet extends Quest {
     //NPC
     private static final int PET_MANAGER_MARTIN = 30731;
     private static final int GK_BELLA = 30256;
@@ -226,18 +220,6 @@ public class _419_GetaPet extends Quest implements ScriptFile {
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _419_GetaPet() {
         super(false);

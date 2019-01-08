@@ -25,16 +25,6 @@ public final class TeleportBookmark extends SimpleItemHandler implements ScriptF
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public List<Integer> getItemIds() {
         return List.of(ITEM_IDS);
     }

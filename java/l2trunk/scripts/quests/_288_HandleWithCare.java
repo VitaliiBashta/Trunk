@@ -6,11 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _288_HandleWithCare extends Quest implements ScriptFile {
+public final class _288_HandleWithCare extends Quest {
     private static final int Ankumi = 32741;
     private static final int MiddleGradeLizardScale = 15498;
     private static final int HighestGradeLizardScale = 15497;
@@ -104,15 +100,4 @@ public class _288_HandleWithCare extends Quest implements ScriptFile {
         return htmltext;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _621_EggDelivery extends Quest implements ScriptFile {
+public final class _621_EggDelivery extends Quest implements ScriptFile {
     //NPC
     private static final int JEREMY = 31521;
     private static final int VALENTINE = 31584;
@@ -132,15 +132,4 @@ public class _621_EggDelivery extends Quest implements ScriptFile {
         return htmltext;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

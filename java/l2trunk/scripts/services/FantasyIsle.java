@@ -205,10 +205,6 @@ public final class FantasyIsle extends Functions implements ScriptFile {
         isStarted = false;
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     public void manualStart() {
         if (!isStarted()) {
             isStarted = true;

@@ -13,16 +13,15 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class Dominion_ForTheSakeOfTerritory extends Quest {
     private final OnPlayerEnterListener _onPlayerEnterListener = new OnPlayerEnterListenerImpl();
-    private List<Integer> supplyBoxes = Arrays.asList(36591, 36592, 36593, 36594, 36595, 36596, 36597, 36598, 36599);
-    private List<Integer> catapultas = Arrays.asList(36499, 36500, 36501, 36502, 36503, 36504, 36505, 36506, 36507);
-    private List<Integer> militaryUnitLeaders = Arrays.asList(36508, 36514, 36520, 36526, 36532, 36538, 36544, 36550, 36556);
-    private List<Integer> religionUnitLeaders = Arrays.asList(36510, 36516, 36522, 36528, 36534, 36540, 36546, 36552, 36558);
-    private List<Integer> economicUnitLeaders = Arrays.asList(36513, 36519, 36525, 36531, 36537, 36543, 36549, 36555, 36561);
+    private List<Integer> supplyBoxes = List.of(36591, 36592, 36593, 36594, 36595, 36596, 36597, 36598, 36599);
+    private List<Integer> catapultas = List.of(36499, 36500, 36501, 36502, 36503, 36504, 36505, 36506, 36507);
+    private List<Integer> militaryUnitLeaders = List.of(36508, 36514, 36520, 36526, 36532, 36538, 36544, 36550, 36556);
+    private List<Integer> religionUnitLeaders = List.of(36510, 36516, 36522, 36528, 36534, 36540, 36546, 36552, 36558);
+    private List<Integer> economicUnitLeaders = List.of(36513, 36519, 36525, 36531, 36537, 36543, 36549, 36555, 36561);
 
     Dominion_ForTheSakeOfTerritory() {
         super(PARTY_ALL);

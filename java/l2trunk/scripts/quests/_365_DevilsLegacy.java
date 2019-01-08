@@ -6,19 +6,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _365_DevilsLegacy extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _365_DevilsLegacy extends Quest implements ScriptFile {
     //NPC
     private static final int RANDOLF = 30095;
 
     //MOBS
-    private final int[] MOBS = new int[]{
-            20836,
-            29027,
-            20845,
-            21629,
-            21630,
-            29026
-    };
+    private static final List<Integer> MOBS = List.of(
+            20836, 29027, 20845, 21629, 21630, 29026);
 
     //VARIABLES
     private static final int CHANCE_OF_DROP = 25;
@@ -26,18 +22,6 @@ public class _365_DevilsLegacy extends Quest implements ScriptFile {
 
     //ITEMS
     private static final int TREASURE_CHEST = 5873;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _365_DevilsLegacy() {
         super(false);

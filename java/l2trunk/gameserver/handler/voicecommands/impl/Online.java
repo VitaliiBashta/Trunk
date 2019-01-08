@@ -8,14 +8,13 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.Collections;
 import java.util.List;
 
-public class Online extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Collections.singletonList("online");
+public final class Online extends Functions implements IVoicedCommandHandler {
+    private static final List<String> COMMANDS = List.of("online");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
         String answer = CCPSmallCommands.showOnlineCount();
-        if (answer != null)
-            activeChar.sendMessage(answer);
+        activeChar.sendMessage(answer);
         return true;
     }
 

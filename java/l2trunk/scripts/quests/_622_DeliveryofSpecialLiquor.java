@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _622_DeliveryofSpecialLiquor extends Quest implements ScriptFile {
+public final class _622_DeliveryofSpecialLiquor extends Quest implements ScriptFile {
     //NPCs
     private static final int JEREMY = 31521;
     private static final int LIETTA = 31267;
@@ -133,15 +133,4 @@ public class _622_DeliveryofSpecialLiquor extends Quest implements ScriptFile {
         return htmltext;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

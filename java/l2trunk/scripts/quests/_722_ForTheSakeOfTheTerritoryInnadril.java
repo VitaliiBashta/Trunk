@@ -1,8 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
-
-public final class _722_ForTheSakeOfTheTerritoryInnadril extends Dominion_ForTheSakeOfTerritory implements ScriptFile {
+public final class _722_ForTheSakeOfTheTerritoryInnadril extends Dominion_ForTheSakeOfTerritory {
     public _722_ForTheSakeOfTheTerritoryInnadril() {
         super();
     }
@@ -12,18 +10,4 @@ public final class _722_ForTheSakeOfTheTerritoryInnadril extends Dominion_ForThe
         return 86;
     }
 
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 }

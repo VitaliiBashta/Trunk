@@ -97,14 +97,4 @@ public final class Battleground extends SimpleItemHandler implements ScriptFile 
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 }

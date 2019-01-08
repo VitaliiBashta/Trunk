@@ -5,20 +5,8 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _274_SkirmishWithTheWerewolves extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+public final class _274_SkirmishWithTheWerewolves extends Quest {
 
     private static final int MARAKU_WEREWOLF_HEAD = 1477;
     private static final int NECKLACE_OF_VALOR = 1507;

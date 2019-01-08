@@ -42,7 +42,7 @@ public interface IItemHandler {
 
         @Override
         public List<Integer> getItemIds() {
-            return Collections.emptyList();
+            return List.of();
         }
     };
 

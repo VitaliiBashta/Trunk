@@ -6,19 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _377_GiantsExploration2 extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _377_GiantsExploration2 extends Quest implements ScriptFile {
     // Titan Ancient Books drop rate in %
     private static final int DROP_RATE = 20;
 
@@ -50,28 +40,17 @@ public class _377_GiantsExploration2 extends Quest implements ScriptFile {
     private static final int HR_SOBLING = 31147;
 
     // Mobs
-    private static final int[] MOBS = {
+    private static final List<Integer> MOBS = List.of(
             // список мобов для квеста
-            22661,
-            // Lesser Giant Soldier L81
-            22662,
-            // Lesser Giant Shooter L82
-            22663,
-            // Lesser Giant Scout L82
-            22664,
-            // Lesser Giant Mage L82
-            22665,
-            // Lesser Giant Elder L82
-            22666,
-            // Barif L82
-            22667,
-            // Barif's Pet L81
-            22668,
-            // Gamlin L81
-            22669,
-            // Leogul L82
-    };
-
+            22661,            // Lesser Giant Soldier L81
+            22662,            // Lesser Giant Shooter L82
+            22663,            // Lesser Giant Scout L82
+            22664,            // Lesser Giant Mage L82
+            22665,            // Lesser Giant Elder L82
+            22666,            // Barif L82
+            22667,            // Barif's Pet L81
+            22668,            // Gamlin L81
+            22669);            // Leogul L82
     public _377_GiantsExploration2() {
         super(true);
         addStartNpc(HR_SOBLING);
@@ -102,7 +81,7 @@ public class _377_GiantsExploration2 extends Quest implements ScriptFile {
                         st.takeItems(j, count);
                     for (int n = 0; n < count; n++) {
                         int luck = Rnd.get(100);
-                        int item = 0;
+                        int item;
                         if (luck > 75)
                             item = 5420; // nightmare leather 60%
                         else if (luck > 50)

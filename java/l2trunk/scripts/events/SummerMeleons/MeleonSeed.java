@@ -17,10 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class MeleonSeed extends ScriptItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = Arrays.asList(15366, // Watermelon seed
+    private static final List<Integer> ITEM_IDS = List.of(15366, // Watermelon seed
             15367);// Honey Watermelon Seed
 
-    private static final List<Integer> NPC_IDS = Arrays.asList(13271, // Young Watermelon
+    private static final List<Integer> NPC_IDS = List.of(13271, // Young Watermelon
             13275);// Young Honey Watermelon
 
     @Override

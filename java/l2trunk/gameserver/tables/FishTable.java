@@ -16,8 +16,8 @@ public enum FishTable {
     INSTANCE;
     private static final Logger LOG = LoggerFactory.getLogger(FishTable.class);
 
-    private Map<Integer, List<FishTemplate>> _fishes;
-    private Map<Integer, List<RewardData>> _fishRewards;
+    private final Map<Integer, List<FishTemplate>> _fishes= new HashMap<>();
+    private final Map<Integer, List<RewardData>> fishRewards =new HashMap<>();
 
 
     public void init() {
@@ -29,9 +29,6 @@ public enum FishTable {
     }
 
     private void load() {
-        _fishes = new HashMap<>();
-        _fishRewards = new HashMap<>();
-
         int count = 0;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
             PreparedStatement statement = con.prepareStatement("SELECT id, level, name, hp, hpregen, fish_type, fish_group, fish_guts, guts_check_time, wait_time, combat_time FROM fish ORDER BY id");
@@ -76,8 +73,8 @@ public enum FishTable {
                 int chance = resultSet.getInt("chance");
 
                 reward = new RewardData(rewardid, mindrop, maxdrop, chance * 10000.);
-                if ((rewards = _fishRewards.get(fishid)) == null)
-                    _fishRewards.put(fishid, rewards = new ArrayList<>());
+                if ((rewards = fishRewards.get(fishid)) == null)
+                    fishRewards.put(fishid, rewards = new ArrayList<>());
 
                 rewards.add(reward);
                 count++;
@@ -90,7 +87,7 @@ public enum FishTable {
     }
 
     public Set<Integer> getFishIds() {
-        return _fishRewards.keySet();
+        return fishRewards.keySet();
     }
 
     public List<FishTemplate> getFish(int group, int type, int lvl) {
@@ -118,11 +115,7 @@ public enum FishTable {
     }
 
     public List<RewardData> getFishReward(int fishid) {
-        List<RewardData> result = _fishRewards.get(fishid);
-        if (_fishRewards == null) {
-            LOG.warn("No fish rewards defined for fish id: " + fishid + "!");
-            return null;
-        }
+        List<RewardData> result = fishRewards.get(fishid);
 
         if (result.isEmpty())
             LOG.warn("No fish rewards for fish id: " + fishid + "!");

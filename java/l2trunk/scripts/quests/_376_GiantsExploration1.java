@@ -6,21 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест проверен и работает, рейты применены путем увеличения шанса выпадения квестовых вещей
- */
-public class _376_GiantsExploration1 extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+public final class _376_GiantsExploration1 extends Quest implements ScriptFile {
 
     // Ancient parchment drop rate in %
     private static final int DROP_RATE = 3;
@@ -90,25 +78,17 @@ public class _376_GiantsExploration1 extends Quest implements ScriptFile {
     private static final int WF_CLIFF = 30182;
 
     // Mobs
-    private static final int[] MOBS = {
+    private static final List<Integer> MOBS = List.of(
             // список мобов для квеста
-            22670,
-            // Cursed Lord L80
-            22671,
-            // Cursed Guardian L80
-            22672,
-            // Cursed Seer L80
-            22673,
-            // Hirokai L80
-            22674,
-            // Imagro L80
-            22675,
-            // Palit L80
-            22676,
-            // Hamlet L80
-            22677,
-            // Klennot L80
-    };
+            22670,            // Cursed Lord L80
+            22671,            // Cursed Guardian L80
+            22672,            // Cursed Seer L80
+            22673,            // Hirokai L80
+            22674,            // Imagro L80
+            22675,            // Palit L80
+            22676,            // Hamlet L80
+            22677);            // Klennot L80
+
 
     public _376_GiantsExploration1() {
         super(true);
@@ -182,8 +162,8 @@ public class _376_GiantsExploration1 extends Quest implements ScriptFile {
         } else if (npcId == WF_CLIFF)
             if (cond == 2 & st.getQuestItemsCount(MST_BK) > 0) {
                 htmltext = "ok_part2.htm";
-                st.takeItems(MST_BK, -1);
-                st.giveItems(DICT2, 1);
+                st.takeItems(MST_BK);
+                st.giveItems(DICT2);
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
             }

@@ -2,10 +2,7 @@ package l2trunk.scripts.quests;
 
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-public class _720_ForTheSakeOfTheTerritoryOren extends Dominion_ForTheSakeOfTerritory implements ScriptFile {
+public final class _720_ForTheSakeOfTheTerritoryOren extends Dominion_ForTheSakeOfTerritory implements ScriptFile {
     public _720_ForTheSakeOfTheTerritoryOren() {
         super();
     }
@@ -15,18 +12,4 @@ public class _720_ForTheSakeOfTheTerritoryOren extends Dominion_ForTheSakeOfTerr
         return 84;
     }
 
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 }

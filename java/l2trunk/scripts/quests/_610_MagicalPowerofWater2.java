@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _610_MagicalPowerofWater2 extends Quest implements ScriptFile {
+public final class _610_MagicalPowerofWater2 extends Quest implements ScriptFile {
     // NPC
     private static final int ASEFA = 31372;
     private static final int VARKAS_HOLY_ALTAR = 31560;
@@ -24,18 +24,6 @@ public class _610_MagicalPowerofWater2 extends Quest implements ScriptFile {
 
     private static final int SoulOfWaterAshutar = 25316;
     private NpcInstance SoulOfWaterAshutarSpawn = null;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public  _610_MagicalPowerofWater2() {
         super(true);

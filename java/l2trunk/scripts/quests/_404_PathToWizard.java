@@ -32,18 +32,6 @@ public class _404_PathToWizard extends Quest implements ScriptFile {
     private final int EARTH_RING_ID = 1291;
     private final int BEAD_OF_SEASON_ID = 1292;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _404_PathToWizard() {
         super(false);
 
@@ -59,8 +47,7 @@ public class _404_PathToWizard extends Quest implements ScriptFile {
         addKillId(RATMAN_WARRIOR);
         addKillId(WATER_SEER);
 
-        addQuestItem(new int[]{
-                KEY_OF_FLAME_ID,
+        addQuestItem(KEY_OF_FLAME_ID,
                 MAP_OF_LUSTER_ID,
                 WIND_FEATHER_ID,
                 BROKEN_BRONZE_MIRROR_ID,
@@ -71,8 +58,7 @@ public class _404_PathToWizard extends Quest implements ScriptFile {
                 FLAME_EARING_ID,
                 WIND_BANGEL_ID,
                 WATER_NECKLACE_ID,
-                EARTH_RING_ID
-        });
+                EARTH_RING_ID);
     }
 
     @Override
@@ -126,7 +112,6 @@ public class _404_PathToWizard extends Quest implements ScriptFile {
                     if (!st.getPlayer().getVarB("prof1")) {
                         st.getPlayer().setVar("prof1", "1", -1);
                         st.addExpAndSp(295862, 18274);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }

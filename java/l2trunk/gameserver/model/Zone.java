@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class Zone {
     public static final String BLOCKED_ACTION_PRIVATE_STORE = "open_private_store";
@@ -43,7 +43,7 @@ public final class Zone {
     private Future<?> _effectThread = null;
     private Future<?> _damageThread = null;
     private ZoneType type;
-    private boolean _active;
+    private boolean active;
     private Reflection _reflection;
 
     public Zone(ZoneTemplate template) {
@@ -407,8 +407,7 @@ public final class Zone {
             if (player == null)
                 return false;
             // если раса не подходит
-            if (player.getRace() != getAffectRace())
-                return false;
+            return player.getRace() == getAffectRace();
         }
 
         return true;
@@ -418,11 +417,10 @@ public final class Zone {
         return objects;
     }
 
-    public List<Player> getInsidePlayers() {
+    public Stream<Player> getInsidePlayers() {
         return objects.stream()
                 .filter(GameObject::isPlayer)
-                .map(o -> (Player) o)
-                .collect(Collectors.toList());
+                .map(o -> (Player) o);
     }
 
     public List<Playable> getInsidePlayables() {
@@ -450,20 +448,20 @@ public final class Zone {
     }
 
     public boolean isActive() {
-        return _active;
+        return active;
     }
 
     /**
      * Установка активности зоны. При установки флага активности, зона добавляется в соотвествующие регионы. В случае сброса
      * - удаляется.
      *
-     * @param value активна ли зона
+     * @param active активна ли зона
      */
-    public void setActive(boolean value) {
-        if (_active == value)
+    public void setActive(boolean active) {
+        if (this.active == active)
             return;
 
-        _active = value;
+        this.active = active;
 
         if (isActive())
             World.addZone(Zone.this);
@@ -505,15 +503,13 @@ public final class Zone {
     }
 
     public void broadcastPacket(L2GameServerPacket packet, boolean toAliveOnly) {
-        List<Player> insideZoners = getInsidePlayers();
-
-        if (insideZoners != null && !insideZoners.isEmpty())
-            for (Player player : insideZoners)
-                if (toAliveOnly) {
-                    if (!player.isDead())
-                        player.broadcastPacket(packet);
-                } else
+        getInsidePlayers().forEach(player -> {
+            if (toAliveOnly) {
+                if (!player.isDead())
                     player.broadcastPacket(packet);
+            } else
+                player.broadcastPacket(packet);
+        });
     }
 
     public enum ZoneType {

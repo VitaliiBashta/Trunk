@@ -19,23 +19,16 @@ public final class _727_HopewithintheDarkness extends Quest implements ScriptFil
     // MOB's
     private static final int KanadisGuide3 = 25661;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _727_HopewithintheDarkness() {
         super(true);
 
         addStartNpc(36403, 36404, 36405, 36406, 36407, 36408, 36409, 36410, 36411);
         addKillId(KanadisGuide3);
+    }
+
+    private static boolean checkAllDestroyed(int refId) {
+        return GameObjectsStorage.getAllByNpcId(_727_HopewithintheDarkness.KanadisGuide3, true).stream()
+                .noneMatch(npc -> npc.getReflectionId() == refId);
     }
 
     @Override
@@ -47,7 +40,7 @@ public final class _727_HopewithintheDarkness extends Quest implements ScriptFil
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("reward") && cond == 1 && player.getVar("q727").equalsIgnoreCase("done")) {
+        } else if (event.equals("reward") && cond == 1 && "done".equalsIgnoreCase(player.getVar("q727"))) {
             player.unsetVar("q727");
             player.unsetVar("q727done");
             st.giveItems(KnightsEpaulette, 159);
@@ -94,7 +87,7 @@ public final class _727_HopewithintheDarkness extends Quest implements ScriptFil
         Player player = st.getPlayer();
         Party party = player.getParty();
 
-        if (cond == 1 && npcId == KanadisGuide3 && checkAllDestroyed(KanadisGuide3, player.getReflectionId())) {
+        if (cond == 1 && npcId == KanadisGuide3 && checkAllDestroyed(player.getReflectionId())) {
             if (player.isInParty())
                 for (Player member : party.getMembers())
                     if (!member.isDead() && member.getParty().isInReflection()) {
@@ -103,16 +96,9 @@ public final class _727_HopewithintheDarkness extends Quest implements ScriptFil
                         member.setVar("q727done", "done", -1);
                         st.playSound(SOUND_ITEMGET);
                     }
-            player.getReflection().startCollapseTimer(1 * 60 * 1000L);
+            player.getReflection().startCollapseTimer(60 * 1000L);
         }
         return null;
-    }
-
-    private static boolean checkAllDestroyed(int mobId, int refId) {
-        for (NpcInstance npc : GameObjectsStorage.getAllByNpcId(mobId, true))
-            if (npc.getReflectionId() == refId)
-                return false;
-        return true;
     }
 
     private boolean check(Player player) {

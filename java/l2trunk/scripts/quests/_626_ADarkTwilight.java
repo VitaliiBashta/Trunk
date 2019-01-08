@@ -6,23 +6,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _626_ADarkTwilight extends Quest implements ScriptFile {
+public final class _626_ADarkTwilight extends Quest {
     //NPC
     private static final int Hierarch = 31517;
     //QuestItem
     private static final int BloodOfSaint = 7169;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _626_ADarkTwilight() {
         super(true);

@@ -32,13 +32,4 @@ public final class TeleToFantasyIsle implements ScriptFile, IBypassHandler {
         BypassHandler.getInstance().registerBypass(this);
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 }

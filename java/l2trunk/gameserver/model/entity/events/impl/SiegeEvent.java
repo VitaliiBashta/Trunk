@@ -212,8 +212,8 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     List<Player> getPlayersInZone() {
         List<ZoneObject> zones = getObjects(SIEGE_ZONES);
         List<Player> result = new ArrayList<>();
-        for (ZoneObject zone : zones)
-            result.addAll(zone.getInsidePlayers());
+        zones.forEach(zone ->
+                result.addAll(zone.getInsidePlayers().collect(Collectors.toList())));
         return result;
     }
 
@@ -236,13 +236,13 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     }
 
     public void broadcastInZone2(IStaticPacket... packet) {
-        for (Player player : getResidence().getZone().getInsidePlayers())
-            player.sendPacket(packet);
+        getResidence().getZone().getInsidePlayers().forEach(player ->
+                player.sendPacket(packet));
     }
 
     void broadcastInZone2(L2GameServerPacket... packet) {
-        for (Player player : getResidence().getZone().getInsidePlayers())
-            player.sendPacket(packet);
+        getResidence().getZone().getInsidePlayers().forEach(player ->
+                player.sendPacket(packet));
     }
 
     // ========================================================================================================================================================================

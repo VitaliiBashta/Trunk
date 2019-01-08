@@ -11,7 +11,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.List;
 import java.util.Objects;
 
-public class Transformation extends Skill {
+public final class Transformation extends Skill {
     public final boolean isDisguise;
     public final String transformationName;
     private final boolean useSummon;
@@ -38,13 +38,13 @@ public class Transformation extends Skill {
 
         // Нельзя использовать летающую трансформу на территории Aden, или слишком высоко/низко, или при вызванном пете/саммоне, или в инстансе
         if ((getId() == SKILL_FINAL_FLYING_FORM || getId() == SKILL_AURA_BIRD_FALCON || getId() == SKILL_AURA_BIRD_OWL) && (player.getX() > -166168 || player.getZ() <= 0 || player.getZ() >= 6000 || player.getPet() != null || player.getReflection() != ReflectionManager.DEFAULT)) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, _level));
+            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, level));
             return false;
         }
 
         // Нельзя отменять летающую трансформу слишком высоко над землей
         if (player.isInFlyingTransform() && getId() == SKILL_TRANSFORM_DISPEL && Math.abs(player.getZ() - player.getLoc().correctGeoZ().z) > 333) {
-            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, _level));
+            activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addSkillName(id, level));
             return false;
         }
 
@@ -106,7 +106,7 @@ public class Transformation extends Skill {
                 .forEach(target -> getEffects(activeChar, target));
 
         if (isSSPossible())
-            if (!(Config.SAVING_SPS && _skillType == SkillType.BUFF))
+            if (!(Config.SAVING_SPS && skillType == SkillType.BUFF))
                 activeChar.unChargeShots(isMagic());
     }
 }

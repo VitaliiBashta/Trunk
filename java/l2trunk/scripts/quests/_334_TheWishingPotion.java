@@ -4,15 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест The Wishing Potion
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _334_TheWishingPotion extends Quest implements ScriptFile {
+public final class _334_TheWishingPotion extends Quest {
     //NPC
     private static final int GRIMA = 27135;
     private static final int SUCCUBUS_OF_SEDUCTION = 27136;
@@ -196,18 +189,6 @@ public class _334_TheWishingPotion extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _334_TheWishingPotion() {
         super(false);
 
@@ -219,8 +200,7 @@ public class _334_TheWishingPotion extends Quest implements ScriptFile {
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(new int[]{
-                ALCHEMY_TEXT_ID,
+        addQuestItem(ALCHEMY_TEXT_ID,
                 SECRET_BOOK_ID,
                 AMBER_SCALE_ID,
                 WIND_SOULSTONE_ID,
@@ -229,8 +209,7 @@ public class _334_TheWishingPotion extends Quest implements ScriptFile {
                 SILENOS_HORN_ID,
                 ANT_SOLDIER_APHID_ID,
                 TYRANTS_CHITIN_ID,
-                BUGBEAR_BLOOD_ID
-        });
+                BUGBEAR_BLOOD_ID);
     }
 
     private boolean checkIngr(QuestState st) {
@@ -394,8 +373,7 @@ public class _334_TheWishingPotion extends Quest implements ScriptFile {
                 st.takeItems(FORBIDDEN_LOVE_SCROLL_ID, 1);
                 st.giveItems(ADENA_ID, 500000);
                 htmltext = "30557-01.htm";
-            } else
-                htmltext = "noquest";
+            }
         } else if (npcId == WISDOM_CHEST) {
             int DROP_CHANCE = Rnd.get(100) + 1;
             if (DROP_CHANCE <= 20) {

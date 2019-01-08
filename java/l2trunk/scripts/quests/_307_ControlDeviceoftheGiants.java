@@ -8,12 +8,7 @@ import l2trunk.gameserver.network.serverpackets.RadarControl;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author: pchayka
- * @date: 17.02.2011
- */
-
-public class _307_ControlDeviceoftheGiants extends Quest implements ScriptFile {
+public final class _307_ControlDeviceoftheGiants extends Quest {
     private static final int Droph = 32711;
 
     private static final int HekatonPrime = 25687;
@@ -110,15 +105,4 @@ public class _307_ControlDeviceoftheGiants extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

@@ -3,15 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на профессию Path To Elven Knight
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _406_PathToElvenKnight extends Quest implements ScriptFile {
+public final class _406_PathToElvenKnight extends Quest {
     //NPC
     private static final int Sorius = 30327;
     private static final int Kluto = 30317;
@@ -95,18 +88,6 @@ public class _406_PathToElvenKnight extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _406_PathToElvenKnight() {
         super(false);
 
@@ -116,13 +97,11 @@ public class _406_PathToElvenKnight extends Quest implements ScriptFile {
         // Mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(new int[]{
-                TopazPiece,
+        addQuestItem(TopazPiece,
                 EmeraldPiece,
                 SoriussLetter,
                 KlutosMemo,
-                KlutoBox
-        });
+                KlutoBox);
     }
 
     @Override

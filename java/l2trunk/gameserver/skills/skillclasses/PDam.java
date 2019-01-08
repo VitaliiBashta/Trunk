@@ -39,7 +39,7 @@ public final class PDam extends Skill {
                     target.broadcastPacket(new StartRotating(target, target.getHeading(), 1, 65535));
                     target.broadcastPacket(new FinishRotating(target, activeChar.getHeading(), 65535));
                     target.setHeading(activeChar.getHeading());
-                    target.sendPacket(new SystemMessage2(SystemMsg.S1S_EFFECT_CAN_BE_FELT).addSkillName(_displayId, _displayLevel));
+                    target.sendPacket(new SystemMessage2(SystemMsg.S1S_EFFECT_CAN_BE_FELT).addSkillName(displayId, displayLevel));
                 }
 
                 reflected = target.checkReflectSkill(activeChar, this);

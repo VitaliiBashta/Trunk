@@ -13,28 +13,16 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Calendar;
 import java.util.concurrent.ScheduledFuture;
 
-public class _457_LostAndFound extends Quest implements ScriptFile {
+public final class _457_LostAndFound extends Quest implements ScriptFile {
     private static final int RESET_HOUR = 6;
     private static final int RESET_MIN = 30;
     private static final int GUMIEL =32759;
 
     private ScheduledFuture<?> FollowTask;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _457_LostAndFound() {
         super(true);
-        addStartNpc(32759);
+        addStartNpc(GUMIEL);
     }
 
     @Override
@@ -73,7 +61,7 @@ public class _457_LostAndFound extends Quest implements ScriptFile {
                 return "lost_villager_q0457_03.htm";
             }
             if (state == 2) {
-                if (DefaultAI.namechar != null && DefaultAI.namechar != player.getName())
+                if (DefaultAI.namechar != null && !DefaultAI.namechar.equals(player.getName()))
                     return "lost_villager_q0457_01a.htm";
                 if (cond == 2) {
                     st.giveItems(15716, 1);

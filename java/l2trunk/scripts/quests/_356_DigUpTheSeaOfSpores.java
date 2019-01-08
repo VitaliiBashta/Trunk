@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _356_DigUpTheSeaOfSpores extends Quest implements ScriptFile {
+public final class _356_DigUpTheSeaOfSpores extends Quest implements ScriptFile {
     //NPC
     private static final int GAUEN = 30717;
 
@@ -17,18 +17,6 @@ public class _356_DigUpTheSeaOfSpores extends Quest implements ScriptFile {
     private static final int CARNIVORE_SPORE = 5865;
     private static final int HERBIBOROUS_SPORE = 5866;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _356_DigUpTheSeaOfSpores() {
         super(false);
         addStartNpc(GAUEN);
@@ -38,7 +26,6 @@ public class _356_DigUpTheSeaOfSpores extends Quest implements ScriptFile {
 
         addQuestItem(CARNIVORE_SPORE);
         addQuestItem(HERBIBOROUS_SPORE);
-
     }
 
     @Override
@@ -70,14 +57,13 @@ public class _356_DigUpTheSeaOfSpores extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
         if (cond == 0)
             htmltext = "magister_gauen_q0356_02.htm";
         else if (cond != 3)
             htmltext = "magister_gauen_q0356_07.htm";
-        else if (cond == 3)
-            htmltext = "magister_gauen_q0356_10.htm";
+        else htmltext = "magister_gauen_q0356_10.htm";
         return htmltext;
     }
 

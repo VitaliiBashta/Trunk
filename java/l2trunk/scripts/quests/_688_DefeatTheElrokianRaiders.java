@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _688_DefeatTheElrokianRaiders extends Quest implements ScriptFile {
+public final class _688_DefeatTheElrokianRaiders extends Quest implements ScriptFile {
     // NPC's
     private static final int dindin = 32105;
 
@@ -18,18 +18,6 @@ public class _688_DefeatTheElrokianRaiders extends Quest implements ScriptFile {
     private static final int DROP_CHANCE = 50;
 
     private static final int q_necklace_of_storming_party = 8785;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _688_DefeatTheElrokianRaiders() {
         super(false);
@@ -58,16 +46,15 @@ public class _688_DefeatTheElrokianRaiders extends Quest implements ScriptFile {
         } else if (event.equalsIgnoreCase("reply_9")) {
             if (count < 100)
                 htmltext = "dindin_q0688_11.htm";
-            else if (count >= 100)
-                if (Rnd.get(1000) < 500) {
-                    st.takeItems(q_necklace_of_storming_party, 100);
-                    st.giveItems(ADENA_ID, 450000);
-                    htmltext = "dindin_q0688_12.htm";
-                } else {
-                    st.takeItems(q_necklace_of_storming_party, 100);
-                    st.giveItems(ADENA_ID, 150000);
-                    htmltext = "dindin_q0688_13.htm";
-                }
+            else if (Rnd.get(1000) < 500) {
+                st.takeItems(q_necklace_of_storming_party, 100);
+                st.giveItems(ADENA_ID, 450000);
+                htmltext = "dindin_q0688_12.htm";
+            } else {
+                st.takeItems(q_necklace_of_storming_party, 100);
+                st.giveItems(ADENA_ID, 150000);
+                htmltext = "dindin_q0688_13.htm";
+            }
         } else if (event.equalsIgnoreCase("reply_8"))
             htmltext = "dindin_q0688_10.htm";
         else if (event.equalsIgnoreCase("reply_7")) {

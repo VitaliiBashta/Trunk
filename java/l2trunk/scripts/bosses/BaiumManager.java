@@ -5,7 +5,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
-import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.SimpleSpawner;
+import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.actor.listener.CharListenerList;
 import l2trunk.gameserver.model.instances.BossInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -14,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -24,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,28 +40,9 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private static final Map<Integer, SimpleSpawner> _monsterSpawn = new ConcurrentHashMap<>();
     private static final List<NpcInstance> _angels = new ArrayList<>();
     private static final List<SimpleSpawner> _angelSpawns = new ArrayList<>();
-    private static BaiumManager instance;
-    public static BaiumManager getInstance() {
-        if (instance == null)
-            instance = new BaiumManager();
-        return instance;
-    }
     private final static int ARCHANGEL = 29021;
     private final static int BAIUM = 29020;
     private final static int BAIUM_NPC = 29025;
-    // location of arcangels.
-    private final  List<Location> ANGEL_LOCATION = List.of(
-                    new Location(113004, 16209, 10076, 60242),
-                    new Location(114053, 16642, 10076, 4411),
-                    new Location(114563, 17184, 10076, 49241),
-                    new Location(116356, 16402, 10076, 31109),
-                    new Location(115015, 16393, 10076, 32760),
-                    new Location(115481, 15335, 10076, 16241),
-                    new Location(114680, 15407, 10051, 32485),
-                    new Location(114886, 14437, 10076, 16868),
-                    new Location(115391, 17593, 10076, 55346),
-                    new Location(115245, 17558, 10076, 35536));
-
     // location of teleport cube.
     private final static Location CUBE_LOCATION = new Location(115203, 16620, 10078, 0);
     private final static Location STATUE_LOCATION = new Location(115996, 17417, 10106, 41740);
@@ -66,7 +50,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private final static int FWB_LIMITUNTILSLEEP = 30 * 60000;
     private final static int FWB_FIXINTERVALOFBAIUM = Config.BAIUM_DEFAULT_SPAWN_HOURS * 60 * 60000;
     private final static int FWB_RANDOMINTERVALOFBAIUM = Config.BAIUM_RANDOM_SPAWN_HOURS * 60 * 60000;
-    public SimpleSpawner _statueSpawn = null;
+    private static BaiumManager instance;
     // tasks.
     private static ScheduledFuture<?> _callAngelTask = null;
     private static ScheduledFuture<?> _cubeSpawnTask = null;
@@ -85,15 +69,24 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private static SimpleSpawner _teleportCubeSpawn = null;
     private static Zone zone;
     private static boolean Dying = false;
+    // location of arcangels.
+    private final List<Location> ANGEL_LOCATION = List.of(
+            new Location(113004, 16209, 10076, 60242),
+            new Location(114053, 16642, 10076, 4411),
+            new Location(114563, 17184, 10076, 49241),
+            new Location(116356, 16402, 10076, 31109),
+            new Location(115015, 16393, 10076, 32760),
+            new Location(115481, 15335, 10076, 16241),
+            new Location(114680, 15407, 10051, 32485),
+            new Location(114886, 14437, 10076, 16868),
+            new Location(115391, 17593, 10076, 55346),
+            new Location(115245, 17558, 10076, 35536));
+    public SimpleSpawner _statueSpawn = null;
 
-    private static void banishForeigners() {
-        for (Player player : getPlayersInside())
-            player.teleToClosestTown();
-    }
-
-    private synchronized void checkAnnihilated() {
-        if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(this::sleepBaium, 5000);
+    public static BaiumManager getInstance() {
+        if (instance == null)
+            instance = new BaiumManager();
+        return instance;
     }
 
     // Archangel ascension.
@@ -107,16 +100,8 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         _angels.clear();
     }
 
-    private static List<Player> getPlayersInside() {
-        return zone.getInsidePlayers();
-    }
-
     public static Zone getZone() {
         return zone;
-    }
-
-    private static boolean isPlayersAnnihilated() {
-        return getPlayersInside().stream().allMatch(Player::isDead);
     }
 
     private static void onBaiumDie(Creature creature) {
@@ -140,26 +125,6 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         return (long) (Config.ALT_RAID_RESPAWN_MULTIPLIER * (FWB_FIXINTERVALOFBAIUM + Rnd.get(0, FWB_RANDOMINTERVALOFBAIUM)));
     }
 
-    // start interval.
-    private void setIntervalEndTask() {
-        setUnspawn();
-
-        //init state of Baium's lair.
-        if (!state.getState().equals(State.INTERVAL)) {
-            state.setRespawnDate(getRespawnInterval());
-            state.setState(State.INTERVAL);
-            state.update();
-        }
-
-        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(() -> {
-            state.setState(State.NOTSPAWN);
-            state.update();
-
-            // statue of Baium respawn.
-            _statueSpawn.doSpawn(true);
-        }, state.getInterval());
-    }
-
     public static void setLastAttackTime() {
         lastAttackTime = System.currentTimeMillis();
     }
@@ -167,7 +132,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     // clean Baium's lair.
     private static void setUnspawn() {
         // eliminate players.
-        banishForeigners();
+        zone.getInsidePlayers().forEach(Player::teleToClosestTown);
 
         // delete monsters.
         deleteArchangels();
@@ -227,6 +192,35 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         }
     }
 
+    public static EpicBossState getState() {
+        return state;
+    }
+
+    private synchronized void checkAnnihilated() {
+        if (_onAnnihilatedTask == null && zone.getInsidePlayers().allMatch(Player::isDead))
+            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(this::sleepBaium, 5000);
+    }
+
+    // start interval.
+    private void setIntervalEndTask() {
+        setUnspawn();
+
+        //init state of Baium's lair.
+        if (!state.getState().equals(State.INTERVAL)) {
+            state.setRespawnDate(getRespawnInterval());
+            state.setState(State.INTERVAL);
+            state.update();
+        }
+
+        _intervalEndTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            state.setState(State.NOTSPAWN);
+            state.update();
+
+            // statue of Baium respawn.
+            _statueSpawn.doSpawn(true);
+        }, state.getInterval());
+    }
+
     // Baium sleeps if not attacked for 30 minutes.
     private void sleepBaium() {
         setUnspawn();
@@ -269,22 +263,26 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
         _socialTask = ThreadPoolManager.INSTANCE.schedule(new Social(baium, 3), 15000);
 
-        ThreadPoolManager.INSTANCE.schedule(new EarthquakeTask(baium), 25000);
+        ThreadPoolManager.INSTANCE.schedule(() -> baium.broadcastPacket(new Earthquake(baium.getLoc(), 40, 5)), 25000);
 
         _socialTask2 = ThreadPoolManager.INSTANCE.schedule(new Social(baium, 1), 25000);
-        _killPcTask = ThreadPoolManager.INSTANCE.schedule(new KillPc(awakeBy, baium), 26000);
+        _killPcTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            if (awakeBy != null) {
+                baium.setTarget(awakeBy);
+                baium.doCast(4136, awakeBy, false);
+            }
+        }, 26000);
         _callAngelTask = ThreadPoolManager.INSTANCE.schedule(new CallArchAngel(), 35000);
-        _mobiliseTask = ThreadPoolManager.INSTANCE.schedule(new SetMobilised(baium), 35500);
+        _mobiliseTask = ThreadPoolManager.INSTANCE.schedule(baium::stopImmobilized, 35500);
 
         // move at random.
         Location pos = new Location(Rnd.get(112826, 116241), Rnd.get(15575, 16375), 10078, 0);
-        _moveAtRandomTask = ThreadPoolManager.INSTANCE.schedule(new MoveAtRandom(baium, pos), 36000);
+        _moveAtRandomTask = ThreadPoolManager.INSTANCE.schedule(() -> {
+            if (baium.getAI().getIntention() == AI_INTENTION_ACTIVE)
+                baium.moveToLocation(pos, 0, false);
+        }, 36000);
 
         _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 600000);
-    }
-
-    public static EpicBossState getState() {
-        return state;
     }
 
     private void init() {
@@ -318,22 +316,16 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         // Archangels
         _angelSpawns.clear();
 
-        // 5 random numbers of 10, no duplicates
-        List<Integer> random = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            int r = -1;
-            while (r == -1 || random.contains(r))
-                r = Rnd.get(10);
-            random.add(r);
-        }
+        List<Location> angels = new ArrayList<>(ANGEL_LOCATION);
+        Collections.shuffle(angels);
 
-        random.forEach(i -> {
+        for (int i = 0; i < 5; i++) {
             SimpleSpawner spawnDat = (SimpleSpawner) new SimpleSpawner(ARCHANGEL)
-                    .setLoc(ANGEL_LOCATION.get(i))
+                    .setLoc(angels.get(i))
                     .setAmount(1)
                     .setRespawnDelay(300000);
             _angelSpawns.add(spawnDat);
-        });
+        }
 
         LOG.info("BaiumManager: State of Baium is " + state.getState() + '.');
         if (state.getState().equals(State.NOTSPAWN))
@@ -379,67 +371,6 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         }
     }
 
-    public class CheckLastAttack extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            if (state.getState().equals(State.ALIVE))
-                if (lastAttackTime + FWB_LIMITUNTILSLEEP < System.currentTimeMillis())
-                    sleepBaium();
-                else
-                    _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 60000);
-        }
-    }
-
-
-    // kill pc
-    public static class KillPc extends RunnableImpl {
-        private final BossInstance _boss;
-        private final Player _target;
-
-        KillPc(Player target, BossInstance boss) {
-            _target = target;
-            _boss = boss;
-        }
-
-        @Override
-        public void runImpl() {
-            if (_target != null) {
-                _boss.setTarget(_target);
-                _boss.doCast(4136, _target, false);
-            }
-        }
-    }
-
-    // Move at random on after Baium appears.
-    public static class MoveAtRandom extends RunnableImpl {
-        private final NpcInstance _npc;
-        private final Location _pos;
-
-        MoveAtRandom(NpcInstance npc, Location pos) {
-            _npc = npc;
-            _pos = pos;
-        }
-
-        @Override
-        public void runImpl() {
-            if (_npc.getAI().getIntention() == AI_INTENTION_ACTIVE)
-                _npc.moveToLocation(_pos, 0, false);
-        }
-    }
-
-    public static class SetMobilised extends RunnableImpl {
-        private final BossInstance _boss;
-
-        SetMobilised(BossInstance boss) {
-            _boss = boss;
-        }
-
-        @Override
-        public void runImpl() {
-            _boss.stopImmobilized();
-        }
-    }
-
     // do social.
     public static class Social extends RunnableImpl {
         private final int _action;
@@ -457,24 +388,15 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         }
     }
 
-    public class onAnnihilated extends RunnableImpl {
+    public class CheckLastAttack extends RunnableImpl {
         @Override
         public void runImpl() {
-            sleepBaium();
+            if (state.getState().equals(State.ALIVE))
+                if (lastAttackTime + FWB_LIMITUNTILSLEEP < System.currentTimeMillis())
+                    sleepBaium();
+                else
+                    _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 60000);
         }
     }
 
-    public static class EarthquakeTask extends RunnableImpl {
-        private final BossInstance baium;
-
-        EarthquakeTask(BossInstance baium) {
-            this.baium = baium;
-        }
-
-        @Override
-        public void runImpl() {
-            Earthquake eq = new Earthquake(baium.getLoc(), 40, 5);
-            baium.broadcastPacket(eq);
-        }
-    }
 }

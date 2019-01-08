@@ -255,7 +255,7 @@ public class AggroList {
             // Now choose player that did most damage in the party that did the most of the damage
             Player topDamagePlayer;
             for (Entry<Long, Integer> entry : orderedMap.entrySet()) {
-                final Party party = Party.getParties().get(entry.getKey());
+                final Party party = Party.getParties().get(entry.getValue());
                 if (party == null) {
                     // Single players, without party
                     topDamagePlayer = World.getPlayer((entry.getKey().intValue()));

@@ -29,7 +29,7 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class BelethManager extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(BelethManager.class);
-    private final Zone _zone = ReflectionUtils.getZone("[Beleth_room]");
+    private final Zone zone = ReflectionUtils.getZone("[Beleth_room]");
     private final ZoneListener _zoneListener = new ZoneListener();
     private static final List<Player> _indexedPlayers = new ArrayList<>();
     private static final List<NpcInstance> _npcList = new ArrayList<>();
@@ -56,7 +56,7 @@ public final class BelethManager extends Functions implements ScriptFile {
 
     private static boolean _taskStarted = false;
     private static boolean _entryLocked = false;
-    private static boolean _ringAvailable = false;
+    private static boolean ringAvailable = false;
     private static boolean _belethAlive = false;
 
     private static final int VORTEX = 29125; // Vortex.
@@ -107,7 +107,7 @@ public final class BelethManager extends Functions implements ScriptFile {
     }
 
     private Zone getZone() {
-        return _zone;
+        return zone;
     }
 
     private static boolean checkPlayer(Player player) {
@@ -265,8 +265,8 @@ public final class BelethManager extends Functions implements ScriptFile {
                     setRingAvailable(true);
                     _belethAlive = false;
                     ServerVariables.set("BelethKillTime", System.currentTimeMillis() + _belethRespawnTime);
-                    for (Player i : _zone.getInsidePlayers())
-                        i.sendMessage("Beleth's Lair will push you out in 10 minutes");
+                    zone.getInsidePlayers().forEach( i->
+                        i.sendMessage("Beleth's Lair will push you out in 10 minutes"));
                     ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.clone_despawn), 10);
                     ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.ring_unset), _ringAvailableTime);
                     ThreadPoolManager.INSTANCE.schedule(new eventExecutor(Event.entity_clear), _clearEntityTime);
@@ -285,10 +285,10 @@ public final class BelethManager extends Functions implements ScriptFile {
                     ReflectionUtils.getDoor(COFFDOOR).closeMe();
 
                     //oust players
-                    for (Player i : _zone.getInsidePlayers()) {
+                    zone.getInsidePlayers().forEach(i -> {
                         i.teleToLocation(new Location(-11802, 236360, -3271));
                         i.sendMessage("Beleth's Lair has become unstable so you've been teleported out");
-                    }
+                    });
                     _entryLocked = false;
                     _taskStarted = false;
                     break;
@@ -308,11 +308,11 @@ public final class BelethManager extends Functions implements ScriptFile {
     }
 
     public static boolean isRingAvailable() {
-        return _ringAvailable;
+        return ringAvailable;
     }
 
-    public static void setRingAvailable(boolean value) {
-        _ringAvailable = value;
+    public static void setRingAvailable(boolean ringAvailable) {
+        BelethManager.ringAvailable = ringAvailable;
     }
 
     public void setBelethDead() {

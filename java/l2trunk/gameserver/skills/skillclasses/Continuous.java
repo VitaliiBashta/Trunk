@@ -82,7 +82,7 @@ public final class Continuous extends Skill {
             }
 
         if (isSSPossible())
-            if (!(Config.SAVING_SPS && _skillType == SkillType.BUFF))
+            if (!(Config.SAVING_SPS && skillType == SkillType.BUFF))
                 activeChar.unChargeShots(isMagic());
     }
 }

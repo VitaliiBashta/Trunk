@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Stream;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
@@ -75,17 +76,12 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     private static boolean dying = false;
     private static boolean _entryLocked = false;
 
-    private static void banishForeigners() {
-        for (Player player : getPlayersInside())
-            player.teleToClosestTown();
-    }
-
     private synchronized static void checkAnnihilated() {
-        if (onAnnihilatedTask == null && isPlayersAnnihilated())
+        if (onAnnihilatedTask == null && getPlayersInside().allMatch(Player::isDead))
             onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(ValakasManager::sleep, 5000);
     }
 
-    private static List<Player> getPlayersInside() {
+    private static Stream<Player> getPlayersInside() {
         return getZone().getInsidePlayers();
     }
 
@@ -95,11 +91,6 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
 
     public static Zone getZone() {
         return zone;
-    }
-
-    private static boolean isPlayersAnnihilated() {
-        return getPlayersInside().stream()
-                .allMatch(Player::isDead);
     }
 
     private static void onValakasDie() {
@@ -139,7 +130,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     // Clean Valakas's lair.
     private static void setUnspawn() {
         // Eliminate players.
-        banishForeigners();
+        getPlayersInside().forEach(Player::teleToClosestTown);
 
         _entryLocked = false;
 
@@ -214,7 +205,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
 
     public static void broadcastScreenMessage(NpcString npcs) {
         getPlayersInside().forEach(p ->
-            p.sendPacket(new ExShowScreenMessage(npcs)));
+                p.sendPacket(new ExShowScreenMessage(npcs)));
     }
 
     public static void enterTheLair(Player player) {
@@ -230,7 +221,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
             player.sendMessage("The maximum of 200 players can invade the Valakas Nest");
             return;
         }
-        if (getPlayersInside().size() > 200) {
+        if (getPlayersInside().count() > 200) {
             player.sendMessage("The maximum of 200 players can invade the Valakas Nest");
             return;
         }
@@ -257,14 +248,14 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
     }
 
     private static void showMovie(int dist, int yaw, int pitch, int time, int turn, int rise, int unk) {
-        getPlayersInside().stream()
+        getPlayersInside()
                 .filter(pc -> pc.getDistance(valakas) <= dist)
                 .forEach(pc -> {
                     pc.enterMovieMode();
                     pc.specialCamera(valakas, dist, yaw, pitch, time, 15000, turn, rise, 1, unk);
                 });
 
-        getPlayersInside().stream()
+        getPlayersInside()
                 .filter(pc -> pc.getDistance(valakas) > dist)
                 .forEach(Player::leaveMovieMode);
     }
@@ -386,9 +377,6 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
 
     public void onReload() {
         sleep();
-    }
-
-    public void onShutdown() {
     }
 
     private static class CheckLastAttack extends RunnableImpl {

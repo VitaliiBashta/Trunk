@@ -225,7 +225,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
                 if (locs == null || locs.isEmpty())
                     return;
 
-                player.sendPacket(new RadarControl(2, 2, 0, 0, 0));
+                player.sendPacket(new RadarControl(2, 2));
                 player.sendPacket(new Say2(player.getObjectId(), ChatType.COMMANDCHANNEL_ALL, "", "Open Map to see Locations"));
 
                 for (Location loc : locs)

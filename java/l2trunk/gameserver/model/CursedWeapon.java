@@ -73,7 +73,7 @@ public final class CursedWeapon {
      * Выпадение оружия из владельца, или исчезновение с определенной вероятностью.
      * Вызывается при смерти игрока.
      */
-    public boolean dropIt(NpcInstance attackable, Player killer, Player owner) {
+    public boolean dropIt(Player owner) {
         if (Rnd.chance(_disapearChance))
             return false;
 
@@ -121,14 +121,14 @@ public final class CursedWeapon {
     }
 
     private void giveSkill(Player player) {
-        for (Skill s : getSkills(player)) {
+        for (Skill s : getSkills()) {
             player.addSkill(s, false);
             player._transformationSkills.put(s.getId(), s);
         }
         player.sendPacket(new SkillList(player));
     }
 
-    private Collection<Skill> getSkills(Player player) {
+    private Collection<Skill> getSkills() {
         int level = 1 + _nbKills / _stageKills;
         if (level > _skillMaxLevel)
             level = _skillMaxLevel;

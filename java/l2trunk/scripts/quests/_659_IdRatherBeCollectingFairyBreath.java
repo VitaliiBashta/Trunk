@@ -1,38 +1,21 @@
 package l2trunk.scripts.quests;
 
-// Created by Artful
-
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _659_IdRatherBeCollectingFairyBreath extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _659_IdRatherBeCollectingFairyBreath extends Quest implements ScriptFile {
     //NPC
     private final int GALATEA = 30634;
     //Mobs
-    private final int[] MOBS = {
-            20078,
-            21026,
-            21025,
-            21024,
-            21023
-    };
+    private final List<Integer> MOBS = List.of(
+            20078, 21026, 21025, 21024, 21023);
     //Quest Item
     private final int FAIRY_BREATH = 8286;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _659_IdRatherBeCollectingFairyBreath() {
         super(false);
@@ -41,9 +24,7 @@ public class _659_IdRatherBeCollectingFairyBreath extends Quest implements Scrip
         addTalkId(GALATEA);
         addTalkId(GALATEA);
         addTalkId(GALATEA);
-
-        for (int i : MOBS)
-            addKillId(i);
+        addKillId(MOBS);
     }
 
     @Override
@@ -95,11 +76,12 @@ public class _659_IdRatherBeCollectingFairyBreath extends Quest implements Scrip
         int npcId = npc.getNpcId();
         int cond = st.getCond();
         if (cond == 1)
-            for (int i : MOBS)
-                if (npcId == i && Rnd.chance(30)) {
-                    st.giveItems(FAIRY_BREATH, 1);
-                    st.playSound(SOUND_ITEMGET);
-                }
+            MOBS.stream()
+                    .filter(i -> (npcId == i && Rnd.chance(30)))
+                    .forEach(i -> {
+                        st.giveItems(FAIRY_BREATH, 1);
+                        st.playSound(SOUND_ITEMGET);
+                    });
         return null;
     }
 }

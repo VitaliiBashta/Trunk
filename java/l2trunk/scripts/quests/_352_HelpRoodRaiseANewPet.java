@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _352_HelpRoodRaiseANewPet extends Quest implements ScriptFile {
+public final class _352_HelpRoodRaiseANewPet extends Quest implements ScriptFile {
     //NPCs
     private static final int Rood = 31067;
     //Mobs
@@ -87,15 +87,4 @@ public class _352_HelpRoodRaiseANewPet extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

@@ -6,7 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _617_GatherTheFlames extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _617_GatherTheFlames extends Quest implements ScriptFile {
     //npc
     private final static int VULCAN = 31539;
     private final static int HILDA = 31271;
@@ -99,31 +101,8 @@ public class _617_GatherTheFlames extends Quest implements ScriptFile {
                     74
             }
     };
-
-    private static final int[] Recipes = {
-            6881,
-            6883,
-            6885,
-            6887,
-            7580,
-            6891,
-            6893,
-            6895,
-            6897,
-            6899
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final List<Integer> Recipes = List.of(
+            6881, 6883, 6885, 6887, 7580, 6891, 6893, 6895, 6897, 6899);
 
     public _617_GatherTheFlames() {
         super(true);
@@ -159,7 +138,7 @@ public class _617_GatherTheFlames extends Quest implements ScriptFile {
             if (st.getQuestItemsCount(TORCH) < 1000)
                 return "warsmith_vulcan_q0617_05.htm";
             st.takeItems(TORCH, 1000);
-            st.giveItems(Recipes[Rnd.get(Recipes.length)], 1);
+            st.giveItems(Rnd.get(Recipes), 1);
             st.playSound(SOUND_MIDDLE);
         }
         return event;

@@ -13,15 +13,15 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.handler.items.ScriptItemHandler;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
 public final class Coffer extends ScriptItemHandler implements ScriptFile {
-    private final RewardData[] _dropacc = new RewardData[]{
+    // Дроп для эвентого сундука Coffer of Shadows
+    private static final List<Integer> ITEM_IDS = List.of(8659);
+    private final List<RewardData> _dropacc = List.of(
             // Аксессуары и сувениры
             new RewardData(8660, 1, 1, 1000), // Demon Horns        0.1%
             new RewardData(8661, 1, 1, 1000), // Mask of Spirits    0.1%
@@ -61,8 +61,8 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
             new RewardData(9202, 1, 1, 100), // Dapper Hat - Firework
             new RewardData(9203, 1, 1, 100), // Romantic Chapeau - Firework
             new RewardData(9204, 1, 1, 100) // Iron Circlet - Firework
-    };
-    private final RewardData[] _dropevents = new RewardData[]{
+    );
+    private final List<RewardData> _dropevents = List.of(
             // Эвентовые скролы
             new RewardData(9146, 1, 1, 3000), // Scroll of Guidance        0.3%
             new RewardData(9147, 1, 1, 3000), // Scroll of Death Whisper   0.3%
@@ -93,8 +93,8 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
             new RewardData(1375, 1, 5, 20000), // GSAP                     1%
             new RewardData(1540, 1, 3, 20000), // Quick Healing Potion     1%
             new RewardData(5126, 1, 1, 1000) // Dualsword Craft Stamp      0.1%
-    };
-    private final RewardData[] _dropench = new RewardData[]{
+    );
+    private final List<RewardData> _dropench = List.of(
             // Заточки
             new RewardData(955, 1, 1, 400), // EWD          0.04%
             new RewardData(956, 1, 1, 2000), // EAD         0.2%
@@ -120,10 +120,8 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
             new RewardData(9570, 1, 1, 30), // Red 14       0.003%
             new RewardData(9571, 1, 1, 30), // Green 14     0.003%
             new RewardData(9572, 1, 1, 30) // Blue 14      0.003%
-    };
-    // Дроп для эвентого сундука Coffer of Shadows
-    private static final int ITEM_IDS = 8659;
-    private final RewardData[] _dropmats = new RewardData[]{
+    );
+    private final List<RewardData> _dropmats = List.of(
             //                                     Item                      Chance
             // Материалы
             new RewardData(4041, 1, 1, 250), // Mold Hardener         0.025%
@@ -154,8 +152,8 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
             new RewardData(1870, 1, 15, 25000), // Coal               2.5%
             new RewardData(1871, 1, 15, 25000), // Charcoal           2.5%
             new RewardData(1872, 1, 20, 30000), // Animal Bone        3%
-            new RewardData(1867, 1, 20, 33333), // Animal Skin        3.3333%
-    };
+            new RewardData(1867, 1, 20, 33333) // Animal Skin        3.3333%
+    );
 
     @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
@@ -186,7 +184,7 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
     /*
      * Выбирает 1 предмет из группы
      */
-    private void getGroupItem(Player activeChar, RewardData[] dropData, Map<Integer, Long> report) {
+    private void getGroupItem(Player activeChar, List<RewardData> dropData, Map<Integer, Long> report) {
         ItemInstance item;
         for (RewardData d : dropData)
             if (Rnd.get(1, RewardList.MAX_CHANCE) <= d.getChance() * Config.EVENT_CofferOfShadowsRewardRate) {
@@ -204,19 +202,10 @@ public final class Coffer extends ScriptItemHandler implements ScriptFile {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 
     @Override
     public final List<Integer> getItemIds() {
-        return Collections.singletonList(ITEM_IDS);
+        return ITEM_IDS;
     }
 
 }

@@ -28,8 +28,10 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class AntharasManager extends Functions implements ScriptFile, OnDeathListener {
+public final class AntharasManager extends Functions implements ScriptFile, OnDeathListener {
     private static final Logger _log = LoggerFactory.getLogger(AntharasManager.class);
 
     // Constants
@@ -51,7 +53,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
     private static ScheduledFuture<?> _socialTask;
     private static ScheduledFuture<?> _moveAtRandomTask;
     private static ScheduledFuture<?> _sleepCheckTask;
-    private static ScheduledFuture<?> _onAnnihilatedTask;
+    private static ScheduledFuture<?> onAnnihilatedTask;
     // Vars
     private static EpicBossState _state;
     private static Zone zone;
@@ -64,11 +66,11 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
     }
 
     private synchronized static void checkAnnihilated() {
-        if (_onAnnihilatedTask == null && isPlayersAnnihilated())
-            _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(AntharasManager::sleep, 5000);
+        if (onAnnihilatedTask == null && getPlayersInside().allMatch(Player::isDead))
+            onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(AntharasManager::sleep, 5000);
     }
 
-    private static List<Player> getPlayersInside() {
+    private static Stream<Player> getPlayersInside() {
         return zone.getInsidePlayers();
     }
 
@@ -78,13 +80,6 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
     public static Zone getZone() {
         return zone;
-    }
-
-    private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
     }
 
     private static void onAntharasDie() {
@@ -154,9 +149,9 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
             _sleepCheckTask.cancel(false);
             _sleepCheckTask = null;
         }
-        if (_onAnnihilatedTask != null) {
-            _onAnnihilatedTask.cancel(false);
-            _onAnnihilatedTask = null;
+        if (onAnnihilatedTask != null) {
+            onAnnihilatedTask.cancel(false);
+            onAnnihilatedTask = null;
         }
     }
 
@@ -201,7 +196,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
             player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
             return;
         }
-        if (getPlayersInside().size() > 200) {
+        if (getPlayersInside().count() > 200) {
             player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
             return;
         }
@@ -209,7 +204,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
             player.sendMessage("Antharas is still reborning. You cannot invade the nest now");
             return;
         }
-        if (_entryLocked || _state.getState() == State.ALIVE) {
+        if (_entryLocked) {
             player.sendMessage("Antharas has already been reborned and is being attacked. The entrance is sealed.");
             return;
         }
@@ -264,7 +259,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
     private static class AntharasSpawn extends RunnableImpl {
         private final int _distance = 3000;
-        private final List<Player> _players = getPlayersInside();
+        private final List<Player> players = getPlayersInside().collect(Collectors.toList());
         private int taskId;
 
         AntharasSpawn(int taskId) {
@@ -285,7 +280,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     break;
                 case 2:
                     // set camera.
-                    for (Player pc : _players)
+                    for (Player pc : players)
                         if (pc.getDistance(_antharas) <= _distance) {
                             pc.enterMovieMode();
                             pc.specialCamera(_antharas, 700, 13, -19, 0, 20000, 0, 0, 0, 0);
@@ -298,18 +293,19 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     _antharas.broadcastPacket(new SocialAction(_antharas.getObjectId(), 1));
 
                     // set camera.
-                    for (Player pc : _players)
+                    players.forEach(pc -> {
                         if (pc.getDistance(_antharas) <= _distance) {
                             pc.enterMovieMode();
                             pc.specialCamera(_antharas, 700, 13, 0, 6000, 20000, 0, 0, 0, 0);
                         } else
                             pc.leaveMovieMode();
+                    });
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(4), 10000);
                     break;
                 case 4:
                     _antharas.broadcastPacket(new SocialAction(_antharas.getObjectId(), 2));
                     // set camera.
-                    for (Player pc : _players)
+                    for (Player pc : players)
                         if (pc.getDistance(_antharas) <= _distance) {
                             pc.enterMovieMode();
                             pc.specialCamera(_antharas, 3700, 0, -3, 0, 10000, 0, 0, 0, 0);
@@ -319,7 +315,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     break;
                 case 5:
                     // set camera.
-                    for (Player pc : _players)
+                    for (Player pc : players)
                         if (pc.getDistance(_antharas) <= _distance) {
                             pc.enterMovieMode();
                             pc.specialCamera(_antharas, 1100, 0, -3, 22000, 30000, 0, 0, 0, 0);
@@ -329,7 +325,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     break;
                 case 6:
                     // set camera.
-                    for (Player pc : _players)
+                    for (Player pc : players)
                         if (pc.getDistance(_antharas) <= _distance) {
                             pc.enterMovieMode();
                             pc.specialCamera(_antharas, 1100, 0, -3, 300, 7000, 0, 0, 0, 0);
@@ -339,7 +335,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     break;
                 case 7:
                     // reset camera.
-                    for (Player pc : _players)
+                    for (Player pc : players)
                         pc.leaveMovieMode();
 
                     broadcastScreenMessage(NpcString.ANTHARAS_YOU_CANNOT_HOPE_TO_DEFEAT_ME);
@@ -350,7 +346,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     _sleepCheckTask = ThreadPoolManager.INSTANCE.schedule(new CheckLastAttack(), 600000);
                     break;
                 case 8:
-                    for (Player pc : _players)
+                    for (Player pc : players)
                         if (pc.getDistance(_antharas) <= _distance) {
                             pc.enterMovieMode();
                             pc.specialCamera(_antharas, 1200, 20, -10, 0, 13000, 0, 0, 0, 0);
@@ -359,7 +355,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
                     _socialTask = ThreadPoolManager.INSTANCE.schedule(new AntharasSpawn(9), 13000);
                     break;
                 case 9:
-                    _players.forEach(pc -> {
+                    players.forEach(pc -> {
                         pc.leaveMovieMode();
                         pc.altOnMagicUseTimer(pc, 23312);
                     });
@@ -394,10 +390,4 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
         }
     }
 
-    private static class onAnnihilated extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            sleep();
-        }
-    }
 }

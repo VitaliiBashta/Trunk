@@ -61,11 +61,11 @@ public final class Orfen extends Fighter {
             teleToLocation(attacker, Location.findFrontPosition(actor, attacker, 0, 50));
             Skill r_skill = _damSkills.get(Rnd.get(_damSkills.size()));
             if (canUseSkill(r_skill, attacker, -1))
-                addTaskAttack(attacker, r_skill, 1000000);
+                addTaskAttack(attacker, r_skill);
         } else if (_paralyze.size() > 0 && Rnd.chance(20)) {
             Skill r_skill = _paralyze.get(Rnd.get(_paralyze.size()));
             if (canUseSkill(r_skill, attacker, -1))
-                addTaskAttack(attacker, r_skill, 1000000);
+                addTaskAttack(attacker, r_skill);
         }
     }
 
@@ -82,7 +82,7 @@ public final class Orfen extends Fighter {
             teleToLocation(caster, Location.findFrontPosition(actor, caster, 0, 50));
             Skill r_skill = Rnd.get(_damSkills);
             if (canUseSkill(r_skill, caster, -1))
-                addTaskAttack(caster, r_skill, 1000000);
+                addTaskAttack(caster, r_skill);
         }
     }
 

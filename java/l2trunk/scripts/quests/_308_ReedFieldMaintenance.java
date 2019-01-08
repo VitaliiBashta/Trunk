@@ -4,21 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _308_ReedFieldMaintenance extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _308_ReedFieldMaintenance extends Quest {
     private static final int Katensa = 32646;
 
     private static final int MucrokianHide = 14871;
@@ -30,28 +19,10 @@ public class _308_ReedFieldMaintenance extends Quest implements ScriptFile {
     private static final int MucrokianPreacher = 22653;
     private static final int ContaminatedMucrokian = 22654;
     private static final int ChangedMucrokian = 22655;
-    private static final int[] MoiraiRecipes = {
-            15777,
-            15780,
-            15783,
-            15786,
-            15789,
-            15790,
-            15812,
-            15813,
-            15814
-    };
-    private static final int[] Moiraimaterials = {
-            15647,
-            15650,
-            15653,
-            15656,
-            15659,
-            15692,
-            15772,
-            15773,
-            15774
-    };
+    private static final List<Integer> MoiraiRecipes = List.of(
+            15777, 15780, 15783, 15786, 15789, 15790, 15812, 15813, 15814);
+    private static final List<Integer> Moiraimaterials = List.of(
+            15647, 15650, 15653, 15656, 15659, 15692, 15772, 15773, 15774);
 
     public _308_ReedFieldMaintenance() {
         super(false);
@@ -71,14 +42,14 @@ public class _308_ReedFieldMaintenance extends Quest implements ScriptFile {
         else if (event.equalsIgnoreCase("moirairec")) {
             if (st.getQuestItemsCount(MucrokianHide) >= 180) {
                 st.takeItems(MucrokianHide, 180);
-                st.giveItems(MoiraiRecipes[Rnd.get(MoiraiRecipes.length - 1)], 1);
+                st.giveItems(Rnd.get(MoiraiRecipes), 1);
                 return null;
             } else
                 htmltext = "32646-16.htm";
         } else if (event.equalsIgnoreCase("moiraimat")) {
             if (st.getQuestItemsCount(MucrokianHide) >= 100) {
                 st.takeItems(MucrokianHide, 100);
-                st.giveItems(Moiraimaterials[Rnd.get(Moiraimaterials.length - 1)], 1);
+                st.giveItems(Rnd.get(Moiraimaterials), 1);
                 return null;
             } else
                 htmltext = "32646-16.htm";

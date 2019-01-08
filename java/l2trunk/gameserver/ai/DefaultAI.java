@@ -118,8 +118,7 @@ public class DefaultAI extends CharacterAI {
         return rnd.select();
     }
 
-    private static Skill selectTopSkillByDebuff(Creature actor, Creature target, double distance, List<Skill> skills) // FIXME
-    {
+    private static Skill selectTopSkillByDebuff(Creature actor, Creature target, double distance, List<Skill> skills) {
         if ((skills == null) || (skills.size() == 0)) {
             return null;
         }
@@ -220,12 +219,12 @@ public class DefaultAI extends CharacterAI {
         _def_think = true;
     }
 
-    public void addTaskAttack(Creature target, Skill skill, int weight) {
+    protected void addTaskAttack(Creature target, Skill skill) {
         Task task = new Task();
         task.type = skill.isOffensive() ? TaskType.CAST : TaskType.BUFF;
         task.target = target.getRef();
         task.skill = skill;
-        task.weight = weight;
+        task.weight = 1000000;
         _tasks.add(task);
         _def_think = true;
     }
@@ -398,10 +397,6 @@ public class DefaultAI extends CharacterAI {
         return true;
     }
 
-    private void setIsInRandomAnimation(long time) {
-        _randomAnimationEnd = System.currentTimeMillis() + time;
-    }
-
     public boolean randomAnimation() {
         NpcInstance actor = getActor();
 
@@ -410,7 +405,7 @@ public class DefaultAI extends CharacterAI {
         }
 
         if (actor.hasRandomAnimation() && !actor.isActionsDisabled() && !actor.isMoving && !actor.isInCombat() && Rnd.chance(Config.RND_ANIMATION_RATE)) {
-            setIsInRandomAnimation(3000);
+            _randomAnimationEnd = System.currentTimeMillis() + (long) 3000;
             actor.onRandomAnimation();
             return true;
         }
@@ -515,12 +510,7 @@ public class DefaultAI extends CharacterAI {
         if (randomAnimation()) {
             return true;
         }
-
-        if (randomWalk()) {
-            return true;
-        }
-
-        return false;
+        return randomWalk();
     }
 
     @Override
@@ -658,10 +648,6 @@ public class DefaultAI extends CharacterAI {
     }
 
     private void tryMoveToTarget(Creature target) {
-        tryMoveToTarget(target, 0);
-    }
-
-    private void tryMoveToTarget(Creature target, int range) {
         NpcInstance actor = getActor();
 
         if (!actor.followToCharacter(target, actor.getPhysicalAttackRange(), true)) {
@@ -803,7 +789,7 @@ public class DefaultAI extends CharacterAI {
                     return true;
                 }
 
-                tryMoveToTarget(target, castRange);
+                tryMoveToTarget(target);
             }
             break;
             // Task "to run - use skill"
@@ -1166,13 +1152,8 @@ public class DefaultAI extends CharacterAI {
         return skills.stream().filter(a -> canUseSkill(a, target, distance)).collect(Collectors.toList());
     }
 
-    protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill[] skills) {
-        if ((skills == null) || (skills.length == 0) || (target == null)) {
-            return;
-        }
-        for (Skill sk : skills) {
-            addDesiredSkill(skillMap, target, distance, sk);
-        }
+    protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, int skillId, int skillLvl) {
+        addDesiredSkill(skillMap, target, distance, SkillTable.INSTANCE.getInfo(skillId, skillLvl));
     }
 
     protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, int skillId) {
@@ -1191,40 +1172,6 @@ public class DefaultAI extends CharacterAI {
         }
         skillMap.put(skill, weight);
     }
-
-    protected void addDesiredHeal(Map<Skill, Integer> skillMap, Skill[] skills) {
-        if ((skills == null) || (skills.length == 0)) {
-            return;
-        }
-        NpcInstance actor = getActor();
-        double hpReduced = actor.getMaxHp() - actor.getCurrentHp();
-        double hpPercent = actor.getCurrentHpPercents();
-        if (hpReduced < 1) {
-            return;
-        }
-        int weight;
-        for (Skill sk : skills) {
-            if (canUseSkill(sk, actor) && (sk.getPower() <= hpReduced)) {
-                weight = (int) sk.getPower();
-                if (hpPercent < 50) {
-                    weight += 1000000;
-                }
-                skillMap.put(sk, weight);
-            }
-        }
-    }
-
-//    protected void addDesiredBuff(Map<Skill, Integer> skillMap, Skill[] skills) {
-//        if ((skills == null) || (skills.length == 0)) {
-//            return;
-//        }
-//        NpcInstance actor = getActor();
-//        for (Skill sk : skills) {
-//            if (canUseSkill(sk, actor)) {
-//                skillMap.put(sk, 1000000);
-//            }
-//        }
-//    }
 
     protected Skill selectTopSkill(Map<Skill, Integer> skillMap) {
         if ((skillMap == null) || skillMap.isEmpty()) {
@@ -1360,9 +1307,6 @@ public class DefaultAI extends CharacterAI {
 
     /**
      * Оповестить дружественные цели об атаке.
-     *
-     * @param attacker
-     * @param damage
      */
     protected void notifyFriends(Creature attacker, int damage) {
         NpcInstance actor = getActor();

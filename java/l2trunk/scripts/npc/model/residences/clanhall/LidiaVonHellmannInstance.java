@@ -13,11 +13,7 @@ import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 12:25/08.05.2011
- */
-public class LidiaVonHellmannInstance extends SiegeGuardInstance {
+public final class LidiaVonHellmannInstance extends SiegeGuardInstance {
     public LidiaVonHellmannInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

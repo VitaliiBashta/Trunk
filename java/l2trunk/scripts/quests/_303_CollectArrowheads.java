@@ -5,20 +5,8 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _303_CollectArrowheads extends Quest implements ScriptFile {
+public final class _303_CollectArrowheads extends Quest {
     private final int ORCISH_ARROWHEAD = 963;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _303_CollectArrowheads() {
         super(false);

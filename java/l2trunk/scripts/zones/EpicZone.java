@@ -8,8 +8,8 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class EpicZone implements ScriptFile {
-    private static ZoneListener _zoneListener;
+public final class EpicZone implements ScriptFile {
+    private static ZoneListener _zoneListener= new ZoneListener();
 
     @Override
     public void onLoad() {
@@ -20,17 +20,7 @@ public class EpicZone implements ScriptFile {
         zone2.addListener(_zoneListener);
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    public class ZoneListener implements OnZoneEnterLeaveListener {
+    public static class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
         public void onZoneEnter(Zone zone, Creature cha) {
             if (zone.getParams() == null || !cha.isPlayable() || cha.getPlayer().isGM())

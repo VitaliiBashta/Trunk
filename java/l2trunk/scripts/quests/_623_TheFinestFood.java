@@ -3,30 +3,15 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _623_TheFinestFood extends Quest implements ScriptFile {
-    private final int JEREMY = 31521;
-
+public final class _623_TheFinestFood extends Quest {
     private static final int HOT_SPRINGS_BUFFALO = 21315;
     private static final int HOT_SPRINGS_FLAVA = 21316;
     private static final int HOT_SPRINGS_ANTELOPE = 21318;
-
     private static final int LEAF_OF_FLAVA = 7199;
     private static final int BUFFALO_MEAT = 7200;
     private static final int ANTELOPE_HORN = 7201;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private final int JEREMY = 31521;
 
     public _623_TheFinestFood() {
         super(true);

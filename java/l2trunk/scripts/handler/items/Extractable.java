@@ -12,9 +12,12 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class Extractable extends SimpleItemHandler implements ScriptFile {
+
     private static final List<Integer> ITEM_IDS = List.of(
             53, 54, 55, 56, 136, 137, 138, 139, 140, 141, 163, 170, 5906, 5907, 5909,
             5910, 5912, 5913, 5916, 5944, 5955, 5966, 5967, 5968, 5969, 6007, 6008,
@@ -136,6 +139,8 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             14208, // Forgotten Scroll - Final Secret
             10577 // Forgotten Scroll - Excessive Loyalty
     };
+
+    private static Map<Integer,Integer> singleRewardItem = new HashMap<>();
 
     private static void extract_item(int[] list, int[] counts, Player player) {
         int index = Rnd.get(list.length);
@@ -289,6 +294,11 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         Functions.addItem(player, itemId, count, "Extractable");
     }
 
+    private static boolean addItem(Player player, int itemId) {
+        addItem(player, itemId, 1, "use"+itemId);
+        return true;
+    }
+
     private static void addItem(Player player, int itemId, long count, String log) {
         Functions.addItem(player, itemId, count, log);
     }
@@ -304,16 +314,2373 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public List<Integer> getItemIds() {
         return ITEM_IDS;
+    }
+
+
+    // Simple Valentine Cake
+    private void use20195(Player player, boolean ctrl) {
+        // Velvety Valentine Cake
+        if (Rnd.chance(20))
+            addItem(player, 20196, 1);
+        else {
+            // Dragon Bomber Transformation Scroll
+            if (Rnd.chance(5))
+                addItem(player, 20371, 1);
+
+            // Unicorn Transformation Scroll
+            if (Rnd.chance(5))
+                addItem(player, 20367, 1);
+
+            // Quick Healing Potion
+            if (Rnd.chance(10))
+                addItem(player, 1540, 1);
+
+            // Greater Healing Potion
+            if (Rnd.chance(15))
+                addItem(player, 1539, 1);
+        }
+    }
+
+    // Velvety Valentine Cake
+    private void use20196(Player player, boolean ctrl) {
+        // Delectable Valentine Cake
+        if (Rnd.chance(15))
+            addItem(player, 20197, 1);
+        else {
+            // Scroll: Enchant Armor (C)
+            if (Rnd.chance(10))
+                addItem(player, 952, 1);
+
+            // Scroll: Enchant Armor (B)
+            if (Rnd.chance(5))
+                addItem(player, 948, 1);
+
+            // Blessed Scroll of Escape
+            if (Rnd.chance(10))
+                addItem(player, 1538, 1);
+
+            // Blessed Scroll of Resurrection
+            if (Rnd.chance(5))
+                addItem(player, 3936, 1);
+
+            // Agathion of Love - 3 Day Expiration Period
+            if (Rnd.chance(10))
+                addItem(player, 20200, 1);
+        }
+    }
+
+    // Delectable Valentine Cake
+    private void use20197(Player player, boolean ctrl) {
+        // Decadent Valentine Cake
+        if (Rnd.chance(10))
+            addItem(player, 20198, 1);
+        else {
+            // Scroll: Enchant Weapon (C)
+            if (Rnd.chance(10))
+                addItem(player, 951, 1);
+
+            // Scroll: Enchant Weapon (B)
+            if (Rnd.chance(5))
+                addItem(player, 947, 1);
+
+            // Agathion of Love - 7 Day Expiration Period
+            if (Rnd.chance(5))
+                addItem(player, 20201, 1);
+        }
+    }
+
+    // Decadent Valentine Cake
+    private void use20198(Player player, boolean ctrl) {
+        // Scroll: Enchant Weapon (S)
+        if (Rnd.chance(5))
+            addItem(player, 959, 1);
+
+        // Scroll: Enchant Weapon (A)
+        if (Rnd.chance(10))
+            addItem(player, 729, 1);
+
+        // Agathion of Love - 15 Day Expiration Period
+        if (Rnd.chance(10))
+            addItem(player, 20202, 1);
+
+        // Agathion of Love - 30 Day Expiration Period
+        if (Rnd.chance(5))
+            addItem(player, 20203, 1);
+    }
+
+    // Jewel Ornamented Duel Supplies
+    private void use13777(Player player, boolean ctrl) {
+        int rnd = Rnd.get(100);
+        if (rnd <= 65) {
+            addItem(player, 9630, 3); // 3 Orichalcum
+            addItem(player, 9629, 3); // 3 Adamantine
+            addItem(player, 9628, 4); // 4 Leonard
+            addItem(player, 8639, 6); // 6 Elixir of CP (S-Grade)
+            addItem(player, 8627, 6); // 6 Elixir of Life (S-Grade)
+            addItem(player, 8633, 6); // 6 Elixir of Mental Strength (S-Grade)
+        } else if (rnd <= 95)
+            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
+        else
+            addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
+    }
+
+    // Mother-of-Pearl Ornamented Duel Supplies
+    private void use13778(Player player, boolean ctrl) {
+        int rnd = Rnd.get(100);
+        if (rnd <= 65) {
+            addItem(player, 9630, 2); // 3 Orichalcum
+            addItem(player, 9629, 2); // 3 Adamantine
+            addItem(player, 9628, 3); // 4 Leonard
+            addItem(player, 8639, 5); // 5 Elixir of CP (S-Grade)
+            addItem(player, 8627, 5); // 5 Elixir of Life (S-Grade)
+            addItem(player, 8633, 5); // 5 Elixir of Mental Strength (S-Grade)
+        } else if (rnd <= 95)
+            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
+        else
+            addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
+    }
+
+    // Gold-Ornamented Duel Supplies
+    private void use13779(Player player, boolean ctrl) {
+        int rnd = Rnd.get(100);
+        if (rnd <= 65) {
+            addItem(player, 9630, 1); // 1 Orichalcum
+            addItem(player, 9629, 1); // 1 Adamantine
+            addItem(player, 9628, 2); // 2 Leonard
+            addItem(player, 8639, 4); // 4 Elixir of CP (S-Grade)
+            addItem(player, 8627, 4); // 4 Elixir of Life (S-Grade)
+            addItem(player, 8633, 4); // 4 Elixir of Mental Strength (S-Grade)
+        } else if (rnd <= 95)
+            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
+        else
+            addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
+    }
+
+    // Silver-Ornamented Duel Supplies
+    private void use13780(Player player, boolean ctrl) {
+        addItem(player, 8639, 4); // 4 Elixir of CP (S-Grade)
+        addItem(player, 8627, 4); // 4 Elixir of Life (S-Grade)
+        addItem(player, 8633, 4); // 4 Elixir of Mental Strength (S-Grade)
+    }
+
+    // Bronze-Ornamented Duel Supplies
+    private void use13781(Player player, boolean ctrl) {
+        addItem(player, 8639, 4); // 4 Elixir of CP (S-Grade)
+        addItem(player, 8627, 4); // 4 Elixir of Life (S-Grade)
+        addItem(player, 8633, 4); // 4 Elixir of Mental Strength (S-Grade)
+    }
+
+    // Non-Ornamented Duel Supplies
+    private void use13782(Player player, boolean ctrl) {
+        addItem(player, 8639, 3); // 3 Elixir of CP (S-Grade)
+        addItem(player, 8627, 3); // 3 Elixir of Life (S-Grade)
+        addItem(player, 8633, 3); // 3 Elixir of Mental Strength (S-Grade)
+    }
+
+    // Weak-Looking Duel Supplies
+    private void use13783(Player player, boolean ctrl) {
+        addItem(player, 8639, 3); // 3 Elixir of CP (S-Grade)
+        addItem(player, 8627, 3); // 3 Elixir of Life (S-Grade)
+        addItem(player, 8633, 3); // 3 Elixir of Mental Strength (S-Grade)
+    }
+
+    // Sad-Looking Duel Supplies
+    private void use13784(Player player, boolean ctrl) {
+        addItem(player, 8639, 3); // 3 Elixir of CP (S-Grade)
+        addItem(player, 8627, 3); // 3 Elixir of Life (S-Grade)
+        addItem(player, 8633, 3); // 3 Elixir of Mental Strength (S-Grade)
+    }
+
+    // Poor-Looking Duel Supplies
+    private void use13785(Player player, boolean ctrl) {
+        addItem(player, 8639, 2); // 2 Elixir of CP (S-Grade)
+        addItem(player, 8627, 2); // 2 Elixir of Life (S-Grade)
+        addItem(player, 8633, 2); // 2 Elixir of Mental Strength (S-Grade)
+    }
+
+    // Worthless Duel Supplies
+    private void use13786(Player player, boolean ctrl) {
+        addItem(player, 8639, 1); // 1 Elixir of CP (S-Grade)
+        addItem(player, 8627, 1); // 1 Elixir of Life (S-Grade)
+        addItem(player, 8633, 1); // 1 Elixir of Mental Strength (S-Grade)
+    }
+
+    // Kahman's Supply Box
+    private void use14849(Player player, boolean ctrl) {
+        int[] list = new int[]{9625, 9626}; // codex_of_giant_forgetting, codex_of_giant_training
+        int[] chances = new int[]{100, 80};
+        int[] counts = new int[]{1, 1};
+        extract_item_r(list, counts, chances, player);
+    }
+
+    // Big Stakato Cocoon
+    private void use14834(Player player, boolean ctrl) {
+        int[][] items = new int[][]{{9575, 1}, // rare_80_s
+                {10485, 1}, // rare_82_s
+                {10577, 1}, // sb_excessive_loyalty
+                {14209, 1}, // sb_hide1
+                {14208, 1}, // sb_final_secret1
+                {14212, 1}, // sb_enlightenment_wizard1
+                {960, 1}, // scrl_of_ench_am_s
+                {9625, 1}, // codex_of_giant_forgetting
+                {9626, 1}, // codex_of_giant_training
+                {959, 1}, // scrl_of_ench_wp_s
+                {10373, 1}, // rp_icarus_sowsword_i
+                {10374, 1}, // rp_icarus_disperser_i
+                {10375, 1}, // rp_icarus_spirits_i
+                {10376, 1}, // rp_icarus_heavy_arms_i
+                {10377, 1}, // rp_icarus_trident_i
+                {10378, 1}, // rp_icarus_chopper_i
+                {10379, 1}, // rp_icarus_knuckle_i
+                {10380, 1}, // rp_icarus_wand_i
+                {10381, 1}}; // rp_icarus_accipiter_i
+        double[] chances = new double[]{2.77, 2.31, 3.2, 3.2, 3.2, 3.2, 6.4, 3.2, 2.13, 0.64, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54};
+        extractRandomOneItem(player, items, chances);
+    }
+
+    // Small Stakato Cocoon
+    private void use14833(Player player, boolean ctrl) {
+        int[][] items = new int[][]{{9575, 1}, // rare_80_s
+                {10485, 1}, // rare_82_s
+                {10577, 1}, // sb_excessive_loyalty
+                {14209, 1}, // sb_hide1
+                {14208, 1}, // sb_final_secret1
+                {14212, 1}, // sb_enlightenment_wizard1
+                {960, 1}, // scrl_of_ench_am_s
+                {9625, 1}, // codex_of_giant_forgetting
+                {9626, 1}, // codex_of_giant_training
+                {959, 1}, // scrl_of_ench_wp_s
+                {10373, 1}, // rp_icarus_sowsword_i
+                {10374, 1}, // rp_icarus_disperser_i
+                {10375, 1}, // rp_icarus_spirits_i
+                {10376, 1}, // rp_icarus_heavy_arms_i
+                {10377, 1}, // rp_icarus_trident_i
+                {10378, 1}, // rp_icarus_chopper_i
+                {10379, 1}, // rp_icarus_knuckle_i
+                {10380, 1}, // rp_icarus_wand_i
+                {10381, 1}}; // rp_icarus_accipiter_i
+        double[] chances = new double[]{2.36, 1.96, 2.72, 2.72, 2.72, 2.72, 5.44, 2.72, 1.81, 0.54, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31};
+        extractRandomOneItem(player, items, chances);
+    }
+
+    private void use13988(Player player, boolean ctrl) {
+        int[] list = new int[]{9442, 9443, 9444, 9445, 9446, 9447, 9448, 9450, 10252, 10253, 10215, 10216, 10217, 10218, 10219, 10220, 10221, 10222, 10223};
+        int[] chances = new int[]{64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 40, 40, 40, 40, 40, 40, 40, 40, 40};
+        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        extract_item_r(list, counts, chances, player);
+    }
+
+    private void use13989(Player player, boolean ctrl) {
+        int[] list = new int[]{9514, 9515, 9516, 9517, 9518, 9519, 9520, 9521, 9522, 9523, 9524, 9525, 9526, 9527, 9528};
+        int[] chances = new int[]{50, 63, 70, 75, 75, 50, 63, 70, 75, 75, 50, 63, 70, 75, 75};
+        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        extract_item_r(list, counts, chances, player);
+    }
+
+    // Pathfinder's Reward - D-Grade
+    private void use13003(Player player, boolean ctrl) {
+        if (Rnd.chance(3.2))
+            addItem(player, 947, 1); // Scroll: Enchant Weapon B
+    }
+
+    // Pathfinder's Reward - C-Grade
+    private void use13004(Player player, boolean ctrl) {
+        if (Rnd.chance(1.6111))
+            addItem(player, 729, 1); // Scroll: Enchant Weapon A
+    }
+
+    // Pathfinder's Reward - B-Grade
+    private void use13005(Player player, boolean ctrl) {
+        if (Rnd.chance(1.14))
+            addItem(player, 959, 1); // Scroll: Enchant Weapon S
+    }
+
+    // Pathfinder's Reward - A-Grade
+    private void use13006(Player player, boolean ctrl) {
+        int[][] items = new int[][]{{9546, 1}, {9548, 1}, {9550, 1}, {959, 1}, {9442, 1}, {9443, 1}, {9444, 1}, {9445, 1}, {9446, 1}, {9447, 1}, {9448, 1}, {9449, 1}, {9450, 1}, {10252, 1}, {10253, 1}, {15645, 1}, {15646, 1}, {15647, 1}};
+        double[] chances = new double[]{19.8, 19.8, 19.8, 1.98, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1, 1, 1};
+        extractRandomOneItem(player, items, chances);
+    }
+
+    // Pathfinder's Reward - S-Grade
+    private void use13007(Player player, boolean ctrl) {
+        int[][] items = new int[][]{{9546, 1}, {9548, 1}, {9550, 1}, {959, 1}, {10215, 1}, {10216, 1}, {10217, 1}, {10218, 1}, {10219, 1}, {10220, 1}, {10221, 1}, {10222, 1}, {10223, 1}};
+        double[] chances = new double[]{26.4, 26.4, 26.4, 3.84, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13};
+        extractRandomOneItem(player, items, chances);
+    }
+
+    //Pathfinder's Reward - AU Karm
+    private void use13270(Player player, boolean ctrl) {
+        if (Rnd.chance(30))
+            addItem(player, 13236, 1);
+    }
+
+    //Pathfinder's Reward - AR Karm
+    private void use13271(Player player, boolean ctrl) {
+        if (Rnd.chance(30))
+            addItem(player, 13237, 1);
+    }
+
+    //Pathfinder's Reward - AE Karm
+    private void use13272(Player player) {
+        if (Rnd.chance(30))
+            addItem(player, 13238, 1);
+    }
+
+    private void use13990(Player player) {
+        int[] list = new int[]{6364, 6365, 6366, 6367, 6368, 6369, 6370, 6371, 6372, 6534, 6579, 7575};
+        int[] chances = new int[]{83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83};
+        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        extract_item_r(list, counts, chances, player);
+    }
+
+    private void use13991(Player player, boolean ctrl) {
+        int[] list = new int[]{6674, 6675, 6676, 6677, 6679, 6680, 6681, 6682, 6683, 6684, 6685, 6686, 6687};
+        int[] chances = new int[]{70, 80, 95, 95, 90, 55, 95, 95, 90, 55, 95, 95, 90};
+        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        extract_item_r(list, counts, chances, player);
+    }
+
+    private void use13992(Player player, boolean ctrl) {
+        int[] list = new int[]{6724, 6725, 6726};
+        int[] chances = new int[]{25, 32, 42};
+        int[] counts = new int[]{1, 1, 1};
+        extract_item_r(list, counts, chances, player);
+    }
+
+    //Droph's Support Items
+    private void use14850(Player player, boolean ctrl) {
+        int rndAA = Rnd.get(80000, 100000);
+        addItem(player, 5575, rndAA); // Ancient Adena
+    }
+
+    //Greater Elixir Gift Box (No-Grade)
+    private void use14713(Player player, boolean ctrl) {
+        addItem(player, 14682, 50); // Greater Elixir of Life (No-Grade)
+        addItem(player, 14688, 50); // Greater Elixir of Mental Strength (No-Grade)
+        addItem(player, 14694, 50); // Greater Elixir of CP (No Grade)
+    }
+
+    //Greater Elixir Gift Box (D-Grade)
+    private void use14714(Player player, boolean ctrl) {
+        addItem(player, 14683, 50); // Greater Elixir of Life (D-Grade)
+        addItem(player, 14689, 50); // Greater Elixir of Mental Strength (D-Grade)
+        addItem(player, 14695, 50); // Greater Elixir of CP (D Grade)
+    }
+
+    //Greater Elixir Gift Box (C-Grade)
+    private void use14715(Player player, boolean ctrl) {
+        addItem(player, 14684, 50); // Greater Elixir of Life (C-Grade)
+        addItem(player, 14690, 50); // Greater Elixir of Mental Strength (C-Grade)
+        addItem(player, 14696, 50); // Greater Elixir of CP (C Grade)
+    }
+
+    //Greater Elixir Gift Box (B-Grade)
+    private void use14716(Player player, boolean ctrl) {
+        addItem(player, 14685, 50); // Greater Elixir of Life (B-Grade)
+        addItem(player, 14691, 50); // Greater Elixir of Mental Strength (B-Grade)
+        addItem(player, 14697, 50); // Greater Elixir of CP (B Grade)
+    }
+
+    //Greater Elixir Gift Box (A-Grade)
+    private void use14717(Player player, boolean ctrl) {
+        addItem(player, 14686, 50); // Greater Elixir of Life (A-Grade)
+        addItem(player, 14692, 50); // Greater Elixir of Mental Strength (A-Grade)
+        addItem(player, 14698, 50); // Greater Elixir of CP (A Grade)
+    }
+
+    //Greater Elixir Gift Box (S-Grade)
+    private void use14718(Player player, boolean ctrl) {
+        addItem(player, 14687, 50); // Greater Elixir of Life (S-Grade)
+        addItem(player, 14693, 50); // Greater Elixir of Mental Strength (S-Grade)
+        addItem(player, 14699, 50); // Greater Elixir of CP (S Grade)
+    }
+
+    // Freya's Gift
+    private void use17138(Player player, boolean ctrl) {
+        int[][] items = new int[][]{{16026, 1}, {9627, 1}, {17140, 1}, {14052, 1}, {6622, 1}, {2134, 2}, {14701, 1}};
+        double[] chances = new double[]{0.0001, 0.1417, 1.4172, 1.4172, 2.8345, 18.424, 21.2585, 54.5068};
+        extractRandomOneItem(player, items, chances);
+    }
+
+    // Beginner Adventurer's Treasure Sack
+    private void use21747(Player player, boolean ctrl) {
+        int group = Rnd.get(7);
+        int[] items = new int[0];
+        if (group < 4) //Low D-Grade rewards
+            items = new int[]{312, 167, 220, 258, 178, 221, 123, 156, 291, 166, 274};
+        else if (group >= 4) //Low C-Grade rewards
+            items = new int[]{160, 298, 72, 193, 192, 281, 7887, 226, 2524, 191, 71, 263};
+
+        addItem(player, items[Rnd.get(items.length)], 1);
+    }
+
+    // Experienced Adventurer's Treasure Sack
+    private void use21748(Player player, boolean ctrl) {
+        int group = Rnd.get(10);
+        int[] items = new int[0];
+        if (group < 4) //Low B-Grade rewards
+            items = new int[]{78, 2571, 300, 284, 142, 267, 229, 148, 243, 92, 7892, 91};
+        else if (group >= 7 && group < 9) //Low A-Grade rewards
+            items = new int[]{98, 5233, 80, 235, 269, 288, 7884, 2504, 150, 7899, 212};
+        else if (group == 9) //Low S-Grade rewards
+            items = new int[]{6365, 6371, 6364, 6366, 6580, 7575, 6579, 6372, 6370, 6369, 6367};
+
+        addItem(player, items[Rnd.get(items.length)], 1);
+    }
+
+    // Great Adventurer's Treasure Sack
+    private void use21749(Player player, boolean ctrl) {
+        int group = Rnd.get(9);
+        int[] items = new int[0];
+        if (group < 5) //Top S-Grade rewards
+            items = new int[]{9447, 9384, 9449, 9380, 9448, 9443, 9450, 10253, 9445, 9442, 9446, 10004, 10252, 9376, 9444};
+        else if (group >= 5 && group < 8) //S80-Grade rewards
+            items = new int[]{10226, 10217, 10224, 10215, 10225, 10223, 10220, 10415, 10216, 10221, 10219, 10218, 10222};
+        else if (group == 8) //Low S84-Grade rewards
+            items = new int[]{13467, 13462, 13464, 13461, 13465, 13468, 13463, 13470, 13460, 52, 13466, 13459, 13457, 13469, 13458};
+
+        addItem(player, items[Rnd.get(items.length)], 1);
+    }
+
+    // Golden Spice Crate
+    private void use15482(Player player, boolean ctrl) {
+        if (Rnd.chance(10)) {
+            addItem(player, 15474, 40);
+            if (Rnd.chance(50))
+                addItem(player, 15476, 5);
+            else
+                addItem(player, 15478, 5);
+        } else
+            addItem(player, 15474, 50);
+    }
+
+    // Crystal Spice Crate
+    private void use15483(Player player, boolean ctrl) {
+        if (Rnd.chance(10)) {
+            addItem(player, 15475, 40);
+            if (Rnd.chance(50))
+                addItem(player, 15477, 5);
+            else
+                addItem(player, 15479, 5);
+        } else
+            addItem(player, 15475, 50);
+    }
+
+    // Gold Maned Lion Mounting Bracelet 7 Day Pack
+    private void use14231(Player player, boolean ctrl) {
+        addItem(player, 14053, 1);
+    }
+
+    // Steam Beatle Mounting Bracelet 7 Day Pack
+    private void use14232(Player player, boolean ctrl) {
+        addItem(player, 14054, 1);
+    }
+
+    // Olympiad Treasure Chest
+    private void use17169(Player player, boolean ctrl) {
+        int[][] items = new int[][]{{13750, 1}, {13751, 1}, {13754, 1}, {13753, 1}, {13752, 1}, {6622, 1}, {8621, 1}};
+        double[] chances = new double[]{34.7, 12.3, 2.65, 1.2, 1.98, 46.5, 5.4};
+        if (Rnd.chance(60))
+            extractRandomOneItem(player, items, chances);
+        int[] counts = {100, 150, 200, 250, 300, 350};
+        addItem(player, 13722, counts[Rnd.get(counts.length)]);
+    }
+
+    // Birthday Present Pack
+    private void use21169(Player player, boolean ctrl) {
+        addItem(player, 21170, 3);
+        addItem(player, 21595, 1);
+        addItem(player, 13488, 1);
+    }
+
+    // Pablo's Box
+    private void use21753(Player player, boolean ctrl) {
+        int category = Rnd.get(7);
+        switch (category) {
+            case 0:
+                addItem(player, 21122, 1);
+                break;
+            case 1:
+                addItem(player, 21118, 1);
+                break;
+            case 2:
+                addItem(player, 21116, 1);
+                break;
+            case 3:
+                addItem(player, 21114, 1);
+                break;
+            case 4:
+                addItem(player, 21112, 1);
+                break;
+            case 5:
+                addItem(player, 21120, 1);
+                break;
+            case 6:
+                addItem(player, 21126, 1);
+                break;
+        }
+    }
+
+    // Rune Jewelry Box - Talisman
+    private void use21752(Player player, boolean ctrl) {
+        final List<Integer> talismans = new ArrayList<>();
+
+        //9914-9965
+        for (int i = 9914; i <= 9965; i++)
+            if (i != 9923)
+                talismans.add(i);
+        //10416-10424
+        for (int i = 10416; i <= 10424; i++)
+            talismans.add(i);
+        //10518-10519
+        for (int i = 10518; i <= 10519; i++)
+            talismans.add(i);
+        //10533-10543
+        for (int i = 10533; i <= 10543; i++)
+            talismans.add(i);
+
+        addItem(player, talismans.get(Rnd.get(talismans.size())), 1);
+    }
+
+    //(Not In Use)
+    private void use53(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13024, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // (Not In Use)
+    private void use54(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13025, 1, 3}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        72.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Shiny Agathion 7 Day Pack (Event)
+    private void use55(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14102, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Sobbing Agathion 7 Day Pack (Event)
+    private void use56(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14103, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //(Not In Use)
+    private void use136(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14075, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //(Not In Use)
+    private void use137(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14076, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //(Not In Use)
+    private void use138(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14077, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Sudden Agathion 7 Day Pack
+    private void use139(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14093, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Shiny Agathion 7 Day Pack
+    private void use140(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14094, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Sobbing Agathion 7 Day Pack
+    private void use141(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14095, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //(Not In Use)
+    private void use163(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13026, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Sudden Agathion 7 Day Pack (Event)
+    private void use170(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {14101, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Five-Year Anniversary Gift Box (10 Honey Rice Cake Set)
+    private void use5906(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13420, 10, 10},
+                        {13419, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Five-Year Anniversary Gift Box (9 Honey Rice Cake Set)
+    private void use5907(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13420, 9, 9},
+                        {13419, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Five-Year Anniversary Gift Box (8 Honey Rice Cake Set)
+    private void use5909(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13420, 8, 8},
+                        {13419, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Five-Year Anniversary Gift Box (7 Honey Rice Cake Set)
+    private void use5910(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13420, 7, 7},
+                        {13419, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Five-Year Anniversary Gift Box (6 Honey Rice Cake Set)
+    private void use5912(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13420, 6, 6},
+                        {13419, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Five-Year Anniversary Gift Box (3 Honey Wheat Cake Set)
+    private void use5913(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13420, 3, 3},
+                        {13419, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Old Box
+    private void use8547(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {8034, 1, 3},
+                        {2134, 1, 3},
+                        {2133, 1, 7}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        85.0,
+                        4.0,
+                        11.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Box of Cheerleading Gear Used to encourage victory.
+    private void use8551(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {8552, 1, 1},
+                        {8187, 1, 1},
+                        {8555, 1, 5},
+                        {6406, 1, 10},
+                        {6407, 1, 5},
+                        {5577, 1, 1},
+                        {5578, 1, 1},
+                        {5579, 1, 1},
+                        {5580, 1, 1},
+                        {5581, 1, 1},
+                        {5582, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        25.0,
+                        25.0,
+                        25.0,
+                        15.0,
+                        9.991,
+                        0.002,
+                        0.002,
+                        0.002,
+                        0.001,
+                        0.001,
+                        0.001
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Event Gift Box
+    private void use8570(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {8592, 1, 1},
+                        {1539, 1, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        50.0,
+                        50.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Event Gift Box
+    private void use8571(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {8592, 1, 1},
+                        {1539, 1, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        50.0,
+                        50.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Event Gift Box
+    private void use8572(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1539, 1, 20},
+                        {952, 1, 1},
+                        {951, 1, 1},
+                        {1538, 1, 1},
+                        {3936, 1, 1},
+                        {4637, 1, 1},
+                        {4659, 1, 10},
+                        {4648, 1, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        87.0,
+                        7.0,
+                        2.05,
+                        2.0,
+                        1.05,
+                        0.3,
+                        0.3,
+                        0.3
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Event Gift Box
+    private void use8573(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1539, 1, 20},
+                        {948, 1, 1},
+                        {947, 1, 1},
+                        {1538, 1, 1},
+                        {3936, 1, 1},
+                        {4638, 1, 1},
+                        {4660, 1, 1},
+                        {4649, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        90.70,
+                        1.5,
+                        2.0,
+                        1.05,
+                        0.25,
+                        0.25,
+                        0.25
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Event Gift Box
+    private void use8574(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1539, 1, 20},
+                        {730, 1, 1},
+                        {729, 1, 1},
+                        {1538, 1, 1},
+                        {3936, 1, 1},
+                        {4639, 1, 1},
+                        {4650, 1, 1},
+                        {4661, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        93.0,
+                        2.0,
+                        0.5,
+                        3.0,
+                        1.41,
+                        0.03,
+                        0.03,
+                        0.03
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Event Gift Box
+    private void use8575(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1539, 1, 20},
+                        {730, 1, 1},
+                        {729, 1, 1},
+                        {1538, 1, 1},
+                        {3936, 1, 1},
+                        {4639, 1, 1},
+                        {4650, 1, 1},
+                        {4661, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        93.0,
+                        2.0,
+                        0.5,
+                        3.0,
+                        1.41,
+                        0.03,
+                        0.03,
+                        0.03
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // No Grade Item Set Box (Warrior Use)
+    private void use8966(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1835, 1000, 1000},
+                        {8622, 10, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // D Grade Item Set Box (Warrior Use)
+    private void use8967(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1463, 1000, 1000},
+                        {8623, 10, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // C Grade Item Set Box (Warrior Use)
+    private void use8968(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1464, 1000, 1000},
+                        {8624, 10, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // B Grade Item Set Box (Warrior Use)
+    private void use8969(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1465, 500, 500},
+                        {8625, 7, 7}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // A Grade Item Set Box (Warrior Use)
+    private void use8970(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1466, 300, 300},
+                        {8626, 7, 7}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // A, S Grade Item Set Box (Warrior Use)
+    private void use8971(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {1466, 300, 300},
+                        {8627, 5, 5}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Composite Bow and Wooden Arrow
+    private void use9104(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {8980, 1, 1},
+                        {17, 1000, 1000}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Gastraphetes and Bone Arrow
+    private void use9105(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {8989, 1, 1},
+                        {1341, 1000, 1000}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Akat Long Bow and Steel Arrow
+    private void use9106(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {8997, 1, 1},
+                        {1342, 1000, 1000}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Dark Elven Long Bow and Silver Arrow
+    private void use9107(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9008, 1, 1},
+                        {1343, 1000, 1000}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Carnage Bow and Mithril Arrow
+    private void use9108(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9016, 1, 1},
+                        {1344, 1000, 1000}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Soul Bow and Mithril Arrow
+    private void use9109(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9027, 1, 1},
+                        {1344, 1000, 1000}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // No Grade Shadow Armor Set Box (Heavy Armor Use)
+    private void use9110(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9030, 1, 1},
+                        {9031, 1, 1},
+                        {9038, 1, 1},
+                        {9039, 1, 1},
+                        {9037, 1, 1},
+                        {9036, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // D-Grade Shadow Armor Set Box (Heavy Armor Use)
+    private void use9111(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9040, 1, 1},
+                        {9041, 1, 1},
+                        {9042, 1, 1},
+                        {9043, 1, 1},
+                        {9044, 1, 1},
+                        {9053, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // C-Grade Shadow Armor Set Box (Heavy Armor Use)
+    private void use9112(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9054, 1, 1},
+                        {9055, 1, 1},
+                        {9056, 1, 1},
+                        {9057, 1, 1},
+                        {9028, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // B-Grade Shadow Armor Set Box (Heavy Armor Use)
+    private void use9113(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9067, 1, 1},
+                        {9068, 1, 1},
+                        {9069, 1, 1},
+                        {9070, 1, 1},
+                        {9071, 1, 1},
+                        {9072, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Low A-Grade Shadow Armor Set Box (Heavy Armor Use)
+    private void use9114(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9081, 1, 1},
+                        {9082, 1, 1},
+                        {9083, 1, 1},
+                        {9084, 1, 1},
+                        {9085, 1, 1},
+                        {9086, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // High A-Grade Shadow Armor Set Box (Heavy Armor Use)
+    private void use9115(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9094, 1, 1},
+                        {9095, 1, 1},
+                        {9096, 1, 1},
+                        {9097, 1, 1},
+                        {9029, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // No Grade Shadow Armor Set Box (Light Armor Use)
+    private void use9116(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9032, 1, 1},
+                        {9033, 1, 1},
+                        {9037, 1, 1},
+                        {9038, 1, 1},
+                        {9039, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // D-Grade Shadow Armor Set Box (Light Armor Use)
+    private void use9117(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9045, 1, 1},
+                        {9046, 1, 1},
+                        {9047, 1, 1},
+                        {9048, 1, 1},
+                        {9053, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // C-Grade Shadow Armor Set Box (Light Armor Use
+    private void use9118(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9058, 1, 1},
+                        {9059, 1, 1},
+                        {9060, 1, 1},
+                        {9061, 1, 1},
+                        {9066, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // B-Grade Shadow Armor Set Box (Light Armor Use)
+    private void use9119(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9073, 1, 1},
+                        {9074, 1, 1},
+                        {9075, 1, 1},
+                        {9076, 1, 1},
+                        {9069, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Low A-Grade Shadow Armor Set Box (Light Armor Use)
+    private void use9120(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9087, 1, 1},
+                        {9088, 1, 1},
+                        {9089, 1, 1},
+                        {9090, 1, 1},
+                        {9083, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // High A-Grade Shadow Armor Set Box (Light Armor Use
+    private void use9121(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9098, 1, 1},
+                        {9099, 1, 1},
+                        {9100, 1, 1},
+                        {9095, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // No Grade Shadow Armor Set Box (Robe Use)
+    private void use9122(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9034, 1, 1},
+                        {9035, 1, 1},
+                        {9037, 1, 1},
+                        {9038, 1, 1},
+                        {9036, 1, 1},
+                        {9039, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // D-Grade Shadow Armor Set Box (Robe Use)
+    private void use9123(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9049, 1, 1},
+                        {9050, 1, 1},
+                        {9051, 1, 1},
+                        {9052, 1, 1},
+                        {9053, 1, 1},
+                        {9044, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // C-Grade Shadow Armor Set Box (Robe Use)
+    private void use9124(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9062, 1, 1},
+                        {9063, 1, 1},
+                        {9064, 1, 1},
+                        {9065, 1, 1},
+                        {9066, 1, 1},
+                        {9056, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // B-Grade Shadow Armor Set Box (Robe Use)
+    private void use9125(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9077, 1, 1},
+                        {9078, 1, 1},
+                        {9079, 1, 1},
+                        {9080, 1, 1},
+                        {9069, 1, 1},
+                        {9070, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Low A-Grade Shadow Armor Set Box (Robe Use)
+    private void use9126(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9091, 1, 1},
+                        {9092, 1, 1},
+                        {9093, 1, 1},
+                        {9084, 1, 1},
+                        {9083, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // High A-Grade Shadow Armor Set Box (Robe Use)
+    private void use9127(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9101, 1, 1},
+                        {9102, 1, 1},
+                        {9103, 1, 1},
+                        {9095, 1, 1},
+                        {9129, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // No Grade Item Set Box (Magic Use)
+    private void use9130(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {2509, 1000, 1000},
+                        {8622, 10, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // D Grade Item Set Box (Magic Use)
+    private void use9131(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {2510, 1000, 1000},
+                        {8623, 10, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // C Grade Item Set Box (Magic Use)
+    private void use9132(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {2511, 1000, 1000},
+                        {8624, 10, 10}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // B Grade Item Set Box (Magic Use)
+    private void use9133(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {2512, 500, 500},
+                        {8625, 7, 7}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // A Grade Item Set Box (Magic Use)
+    private void use9134(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {2513, 300, 300},
+                        {8626, 7, 7}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // A, S Grade Item Set Box (Magic Use
+    private void use9135(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {2513, 300, 300},
+                        {8627, 5, 5}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Pirate's Booty
+    private void use9144(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9143, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        50.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // White Seed of Evil Lump
+    private void use10205(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9597, 2, 2}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Black Seed of Evil Lump
+    private void use10206(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {9598, 2, 2}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // 1st Place Treasure Sack
+    private void use10254(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {6373, 1, 1},
+                        {6374, 1, 1},
+                        {6375, 1, 1},
+                        {6376, 1, 1},
+                        {6377, 1, 1},
+                        {6378, 1, 1},
+                        {6379, 1, 1},
+                        {6380, 1, 1},
+                        {6381, 1, 1},
+                        {6382, 1, 1},
+                        {6383, 1, 1},
+                        {6384, 1, 1},
+                        {6385, 1, 1},
+                        {6386, 1, 1},
+                        {9570, 1, 1},
+                        {9571, 1, 1},
+                        {9572, 1, 1},
+                        {5908, 1, 1},
+                        {5911, 1, 1},
+                        {5914, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        1.19,
+                        1.84,
+                        4.47,
+                        4.47,
+                        4.25,
+                        3.01,
+                        0.19,
+                        4.47,
+                        4.47,
+                        3.01,
+                        0.19,
+                        4.47,
+                        4.47,
+                        3.01,
+                        3.16,
+                        3.16,
+                        3.16,
+                        15.67,
+                        15.67,
+                        15.67
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // My teleport Spellbook 1-Sheet Pack
+    private void use13079(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13015, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // My teleport Scroll 30-Sheet Pack
+    private void use13080(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13016, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Feather of Blessing 3-Sheet Pack
+    private void use13082(Player player, boolean ctrl) {
+             /*int items[][] = new int[][]
+             {
+              // itemId, min, max
+			  {10649, 3, 3}
+             };
+
+             double chances[] = new double[]
+             {
+              // chance
+              100.0
+             };
+
+          capsulate(player, items, chances); */
+    }
+
+    // Agathion of Love 30-Day Pack
+    private void use13083(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13023, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Pumpkin Transformation Stick 30-Day Pack
+    private void use13084(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12800, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Kamaloka Entrance Pass 3-Sheet Pack
+    private void use13085(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13010, 5, 5},
+                        {13011, 5, 5},
+                        {13012, 5, 5}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Kat the Cat Hat 30-Day Pack
+    private void use13086(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12782, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Feline Queen Hat 30-Day Pack
+    private void use13087(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12783, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Monster Eye Hat 30-Day Pack
+    private void use13088(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12786, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Brown Bear Hat 30-Day Pack
+    private void use13089(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12787, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Fungus Hat 30-Day Pack
+    private void use13090(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12788, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Skull Hat 30-Day Pack
+    private void use13091(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12789, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Ornithomimus Hat 30-Day Pack
+    private void use13092(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12790, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Feline King Hat 30-Day Pack
+    private void use13093(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12791, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Kai the Cat Hat 30-Day Pack
+    private void use13094(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12792, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //OX Stick 30-Day Pack
+    private void use13095(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12793, 1, 1},
+                        {12794, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Rock-Paper-Scissors Stick 30-Day Pack
+    private void use13096(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {12795, 1, 1},
+                        {12796, 1, 1},
+                        {12797, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0,
+                        100.0,
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Purple Maned Horse Bracelet Pack
+    private void use13097(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13022, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    //Color Name 3-Sheet Pack
+    private void use13098(Player player, boolean ctrl) {
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {13021, 3, 3}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        100.0
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // |========================================| Start Line by CosMOsiS |==========================================|
+    private void use21225(Player player, boolean ctrl) {
+        addItem(player, 10178, 3);
+    }
+
+    // Коктейль из сладких фруктов ивент by (CosMOsiS)
+    private void use21226(Player player, boolean ctrl) {
+        addItem(player, 10178, 3);
+    }
+
+    // Коктейль из свежих фруктов by (CosMOsiS)
+    private void use21229(Player player, boolean ctrl) {
+        addItem(player, 10179, 3);
+    }
+
+    // Коктейль из свежих фруктов ивент by (CosMOsiS)
+    private void use21230(Player player, boolean ctrl) {
+        addItem(player, 10179, 3);
+    }
+
+    // Парное молоко by (CosMOsiS)
+    private void use21233(Player player, boolean ctrl) {
+        addItem(player, 14739, 3);
+    }
+
+    // Парное молоко ивент by (CosMOsiS)
+    private void use21234(Player player, boolean ctrl) {
+        addItem(player, 14739, 3);
+    }
+
+    // Коктейль из свежих фруктов by (CosMOsiS)
+    private void use21237(Player player, boolean ctrl) {
+        addItem(player, 21239, 3);
+    }
+
+    // Коктейль из свежих фруктов ивент by (CosMOsiS)
+    private void use21238(Player player, boolean ctrl) {
+        addItem(player, 21240, 3);
+    }
+
+    // Парное молоко by (CosMOsiS)
+    private void use21240(Player player, boolean ctrl) {
+        addItem(player, 21243, 3);
+    }
+
+    // Парное молоко ивент by (CosMOsiS)
+    private void use21241(Player player, boolean ctrl) {
+        addItem(player, 21244, 3);
+    }
+
+    private void use37004(Player player, boolean ctrl) {
+        addItem(player, 40000, 1);
+        addItem(player, 37007, 15);
+        addItem(player, 57, 15000000);
     }
 
     @Override
@@ -325,14 +2692,10 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
         if (!useItem(player, item, 1))
             return false;
+        if (extractSingleItem(itemId,player))
+            return true;
 
         switch (itemId) {
-            case 17086:
-                use17086(player, ctrl);
-                break;
-            case 17085:
-                use17085(player, ctrl);
-                break;
             case 17084:
                 use17084(player, ctrl);
                 break;
@@ -3125,117 +5488,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 20809:
                 use20809(player, ctrl);
                 break;
-            case 20842:
-                use20842(player, ctrl);
-                break;
-            case 20843:
-                use20843(player, ctrl);
-                break;
-            case 20844:
-                use20844(player, ctrl);
-                break;
-            case 20845:
-                use20845(player, ctrl);
-                break;
-            case 20846:
-                use20846(player, ctrl);
-                break;
-            case 20847:
-                use20847(player, ctrl);
-                break;
-            case 20848:
-                use20848(player, ctrl);
-                break;
-            case 20849:
-                use20849(player, ctrl);
-                break;
-            case 20850:
-                use20850(player, ctrl);
-                break;
-            case 20851:
-                use20851(player, ctrl);
-                break;
-            case 20852:
-                use20852(player, ctrl);
-                break;
-            case 20853:
-                use20853(player, ctrl);
-                break;
-            case 20854:
-                use20854(player, ctrl);
-                break;
-            case 20855:
-                use20855(player, ctrl);
-                break;
-            case 20856:
-                use20856(player, ctrl);
-                break;
-            case 20857:
-                use20857(player, ctrl);
-                break;
-            case 20858:
-                use20858(player, ctrl);
-                break;
-            case 20859:
-                use20859(player, ctrl);
-                break;
-            case 20860:
-                use20860(player, ctrl);
-                break;
-            case 20861:
-                use20861(player, ctrl);
-                break;
-            case 20862:
-                use20862(player, ctrl);
-                break;
-            case 20863:
-                use20863(player, ctrl);
-                break;
-            case 20864:
-                use20864(player, ctrl);
-                break;
-            case 20811:
-                use20811(player, ctrl);
-                break;
-            case 20812:
-                use20812(player, ctrl);
-                break;
-            case 20813:
-                use20813(player, ctrl);
-                break;
-            case 20814:
-                use20814(player, ctrl);
-                break;
-            case 20815:
-                use20815(player, ctrl);
-                break;
-            case 20816:
-                use20816(player, ctrl);
-                break;
-            case 20817:
-                use20817(player, ctrl);
-                break;
-            case 20810:
-                use20810(player, ctrl);
-                break;
-            case 20865:
-                use20865(player, ctrl);
-                break;
-            case 20748:
-                use20748(player, ctrl);
-                break;
-            case 20749:
-                use20749(player, ctrl);
-                break;
-            case 20750:
-                use20750(player, ctrl);
-                break;
-            case 20751:
-                use20751(player, ctrl);
-                break;
-            case 20752:
-                use20752(player, ctrl);
-                break;
             case 20195:
                 use20195(player, ctrl);
                 break;
@@ -3309,7 +5561,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                 use13007(player, ctrl);
                 break;
             case 13990:
-                use13990(player, ctrl);
+                use13990(player);
                 break;
             case 13991:
                 use13991(player, ctrl);
@@ -3354,7 +5606,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                 use13271(player, ctrl);
                 break;
             case 13272:
-                use13272(player, ctrl);
+                use13272(player);
                 break;
             case 14231:
                 use14231(player, ctrl);
@@ -3683,27 +5935,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 21240:
                 use21240(player, ctrl);
                 break;
-            case 15404:
-                use15404(player, ctrl);
-                break;
-            case 15405:
-                use15405(player, ctrl);
-                break;
-            case 15406:
-                use15406(player, ctrl);
-                break;
-            case 15407:
-                use15407(player, ctrl);
-                break;
-            case 15408:
-                use15408(player, ctrl);
-                break;
-            case 15409:
-                use15409(player, ctrl);
-                break;
-            case 15410:
-                use15410(player, ctrl);
-                break;
             case 15411:
                 use15411(player, ctrl);
                 break;
@@ -3737,48 +5968,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 15437:
                 use15437(player, ctrl);
                 break;
-            case 15454:
-                use15454(player, ctrl);
-                break;
-            case 15455:
-                use15455(player, ctrl);
-                break;
-            case 15456:
-                use15456(player, ctrl);
-                break;
-            case 15457:
-                use15457(player, ctrl);
-                break;
-            case 15458:
-                use15458(player, ctrl);
-                break;
-            case 15459:
-                use15459(player, ctrl);
-                break;
-            case 15460:
-                use15460(player, ctrl);
-                break;
             case 15462:
                 use15462(player, ctrl);
-                break;
-            case 15465:
-                use15465(player, ctrl);
-                break;
-            case 15466:
-                use15466(player, ctrl);
                 break;
             case 15468:
                 use15468(player, ctrl);
                 break;
-            case 21421:
-                use21421(player, ctrl);
-                break;
-            case 21422:
-                use21422(player, ctrl);
-                break;
             case 21241:
                 use21241(player, ctrl);
-
                 break;
             case 37004:
                 use37004(player, ctrl);
@@ -3788,6 +5985,139 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         }
 
         return true;
+    }
+
+
+    // Transformation Scroll Box by (CosMOsiS)
+    private void use15437(Player player, boolean ctrl) { /* by CosMOsiS*/
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {10131, 1, 1},
+                        {10132, 1, 1},
+                        {10133, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        33.00,
+                        33.00,
+                        34.00
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Halloween King Pumpkin by (CosMOsiS)
+    private void use15462(Player player, boolean ctrl) {
+        addItem(player, 15461, 6);
+        addItem(player, 15464, 1);
+    }
+
+    // Halloween King Pumpkin - event by (CosMOsiS)
+    private void use15468(Player player, boolean ctrl) {
+        addItem(player, 15461, 6);
+        addItem(player, 15464, 1);
+    }
+
+    // 6th Anniversary Party Gift Set (2003) by (CosMOsiS)
+    private void use15411(Player player, boolean ctrl) {
+        addItem(player, 15425, 1);
+        addItem(player, 15418, 1);
+    }
+
+    // 6th Anniversary Party Gift Set (2004) by (CosMOsiS)
+    private void use15412(Player player, boolean ctrl) {
+        addItem(player, 15425, 1);
+        addItem(player, 15419, 1);
+    }
+
+    // 6th Anniversary Party Gift Set (2005) by (CosMOsiS)
+    private void use15413(Player player, boolean ctrl) {
+        addItem(player, 15425, 1);
+        addItem(player, 15420, 1);
+    }
+
+    // 6th Anniversary Party Gift Set (2006) by (CosMOsiS)
+    private void use15414(Player player, boolean ctrl) {
+        addItem(player, 15425, 1);
+        addItem(player, 15421, 1);
+    }
+
+    // 6th Anniversary Party Gift Set (2007) by (CosMOsiS)
+    private void use15415(Player player, boolean ctrl) {
+        addItem(player, 15425, 1);
+        addItem(player, 15422, 1);
+    }
+
+    // 6th Anniversary Party Gift Set (2008) by (CosMOsiS)
+    private void use15416(Player player, boolean ctrl) {
+        addItem(player, 15425, 1);
+        addItem(player, 15423, 1);
+    }
+
+    // 6th Anniversary Party Gift Set (2009) by (CosMOsiS)
+    private void use15417(Player player, boolean ctrl) {
+        addItem(player, 15425, 1);
+        addItem(player, 15424, 1);
+    }
+
+    // Hero's Treasure Box by (CosMOsiS)
+    private void use15425(Player player, boolean ctrl) {
+        addItem(player, 15211, 1);
+        addItem(player, 13273, 1);
+        addItem(player, 15426, 1);
+    }
+
+    // Halloween Toy Chest by (CosMOsiS)
+    private void use15434(Player player, boolean ctrl) { /* by CosMOsiS*/
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {15443, 1, 1},
+                        {15444, 1, 1},
+                        {15445, 1, 1},
+                        {15446, 1, 1},
+                        {15447, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        20.00,
+                        20.00,
+                        20.00,
+                        20.00,
+                        20.00
+                };
+
+        capsulate(player, items, chances);
+    }
+
+    // Shiny Halloween Toy Chest by (CosMOsiS)
+    private void use15435(Player player, boolean ctrl) { /* by CosMOsiS*/
+        int items[][] = new int[][]
+                {
+                        // itemId, min, max
+                        {15450, 1, 1},
+                        {15451, 1, 1},
+                        {15452, 1, 1},
+                        {15453, 1, 1},
+                        {15449, 1, 1}
+                };
+
+        double chances[] = new double[]
+                {
+                        // chance
+                        20.00,
+                        20.00,
+                        20.00,
+                        20.00,
+                        20.00
+                };
+
+        capsulate(player, items, chances);
     }
 
     // Red Philosopher's Stone
@@ -3838,13 +6168,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         extract_item_r(list, counts, chances, player);
     }
 
-    private void use17086(Player player, boolean ctrl) {
-        addItem(player, 9201, 1, "use17086");
-    }
-
-    private void use17085(Player player, boolean ctrl) {
-        addItem(player, 9194, 1, "use17085");
-    }
 
     private void use17084(Player player, boolean ctrl) {
         addItem(player, 9187, 1, "use17084");
@@ -6124,7 +8447,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use15252(Player player, boolean ctrl) {
-
         addItem(player, 15008, 1, "Extractable");
         addItem(player, 15009, 1, "Extractable");
         addItem(player, 15010, 1, "Extractable");
@@ -6133,7 +8455,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private void use15251(Player player, boolean ctrl) {
-
         addItem(player, 15000, 1, "Extractable");
         addItem(player, 15001, 1, "Extractable");
         addItem(player, 15003, 1, "Extractable");
@@ -10517,2774 +12838,70 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 20787, 1);
     }
 
-    // Iken Agathion Pack
-    private void use20842(Player player, boolean ctrl) {
-        addItem(player, 20818, 1);
-    }
-
-    // Iken Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20843(Player player, boolean ctrl) {
-        addItem(player, 20819, 1);
-    }
-
-    // Lana Agathion Pack
-    private void use20844(Player player, boolean ctrl) {
-        addItem(player, 20820, 1);
-    }
-
-    // Lana Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20845(Player player, boolean ctrl) {
-        addItem(player, 20821, 1);
-    }
-
-    // Gnocian Agathion Pack
-    private void use20846(Player player, boolean ctrl) {
-        addItem(player, 20822, 1);
-    }
-
-    // Gnocian Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20847(Player player, boolean ctrl) {
-        addItem(player, 20823, 1);
-    }
-
-    // Orodriel Agathion Pack
-    private void use20848(Player player, boolean ctrl) {
-        addItem(player, 20824, 1);
-    }
-
-    // Orodriel Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20849(Player player, boolean ctrl) {
-        addItem(player, 20825, 1);
-    }
-
-    // Lakinos Agathion Pack
-    private void use20850(Player player, boolean ctrl) {
-        addItem(player, 20826, 1);
-    }
-
-    // Lakinos Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20851(Player player, boolean ctrl) {
-        addItem(player, 20827, 1);
-    }
-
-    // Mortia Agathion Pack
-    private void use20852(Player player, boolean ctrl) {
-        addItem(player, 20828, 1);
-    }
-
-    // Mortia Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20853(Player player, boolean ctrl) {
-        addItem(player, 20829, 1);
-    }
-
-    // Hayance Agathion Pack
-    private void use20854(Player player, boolean ctrl) {
-        addItem(player, 20830, 1);
-    }
-
-    // Hayance Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20855(Player player, boolean ctrl) {
-        addItem(player, 20831, 1);
-    }
-
-    // Meruril Agathion Pack
-    private void use20856(Player player, boolean ctrl) {
-        addItem(player, 20832, 1);
-    }
-
-    // Meruril Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20857(Player player, boolean ctrl) {
-        addItem(player, 20833, 1);
-    }
-
-    // Taman ze Lapatui Agathion Pack
-    private void use20858(Player player, boolean ctrl) {
-        addItem(player, 20834, 1);
-    }
-
-    // Taman ze Lapatui Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20859(Player player, boolean ctrl) {
-        addItem(player, 20835, 1);
-    }
-
-    // Kaurin Agathion Pack
-    private void use20860(Player player, boolean ctrl) {
-        addItem(player, 20836, 1);
-    }
-
-    // Kaurin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20861(Player player, boolean ctrl) {
-        addItem(player, 20837, 1);
-    }
-
-    // Ahertbein Agathion Pack
-    private void use20862(Player player, boolean ctrl) {
-        addItem(player, 20838, 1);
-    }
-
-    // Ahertbein Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20863(Player player, boolean ctrl) {
-        addItem(player, 20839, 1);
-    }
-
-    // Naonin Agathion Pack
-    private void use20864(Player player, boolean ctrl) {
-        addItem(player, 20840, 1);
-    }
-
-    // Rocket Gun Hat Pack Continuous Fireworks
-    private void use20811(Player player, boolean ctrl) {
-        addItem(player, 20789, 1);
-    }
-
-    // Yellow Paper Hat 7-Day Pack Bless the Body
-    private void use20812(Player player, boolean ctrl) {
-        addItem(player, 20790, 1);
-    }
-
-    // Pink Paper Mask Set 7-Day Pack Bless the Soul
-    private void use20813(Player player, boolean ctrl) {
-        addItem(player, 20791, 1);
-    }
-
-    // Flavorful Cheese Hat Pack
-    private void use20814(Player player, boolean ctrl) {
-        addItem(player, 20792, 1);
-    }
-
-    // Sweet Cheese Hat Pack
-    private void use20815(Player player, boolean ctrl) {
-        addItem(player, 20793, 1);
-    }
-
-    // Flavorful Cheese Hat 7-Day Pack Scent of Flavorful Cheese
-    private void use20816(Player player, boolean ctrl) {
-        addItem(player, 20794, 1);
-    }
-
-    // Sweet Cheese Hat 7-Day Pack Scent of Sweet Cheese
-    private void use20817(Player player, boolean ctrl) {
-        addItem(player, 20795, 1);
-    }
-
-    // Flame Box Pack
-    private void use20810(Player player, boolean ctrl) {
-        addItem(player, 20725, 1);
-    }
-
-    // Naonin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-    private void use20865(Player player, boolean ctrl) {
-        addItem(player, 20841, 1);
-    }
-
-    // Shiny Mask of Giant Hercules 7 day Pack
-    private void use20748(Player player, boolean ctrl) {
-        addItem(player, 20743, 1);
-    }
-
-    // Shiny Mask of Silent Scream 7 day Pack
-    private void use20749(Player player, boolean ctrl) {
-        addItem(player, 20744, 1);
-    }
-
-    // Shiny Spirit of Wrath Mask 7 day Pack
-    private void use20750(Player player, boolean ctrl) {
-        addItem(player, 20745, 1);
-    }
-
-    // Shiny Undecaying Corpse Mask 7 Day Pack
-    private void use20751(Player player, boolean ctrl) {
-        addItem(player, 20746, 1);
-    }
-
-    // Shiny Planet X235 Alien Mask 7 day Pack
-    private void use20752(Player player, boolean ctrl) {
-        addItem(player, 20747, 1);
-    }
-
-    // Simple Valentine Cake
-    private void use20195(Player player, boolean ctrl) {
-        // Velvety Valentine Cake
-        if (Rnd.chance(20))
-            addItem(player, 20196, 1);
-        else {
-            // Dragon Bomber Transformation Scroll
-            if (Rnd.chance(5))
-                addItem(player, 20371, 1);
-
-            // Unicorn Transformation Scroll
-            if (Rnd.chance(5))
-                addItem(player, 20367, 1);
-
-            // Quick Healing Potion
-            if (Rnd.chance(10))
-                addItem(player, 1540, 1);
-
-            // Greater Healing Potion
-            if (Rnd.chance(15))
-                addItem(player, 1539, 1);
-        }
-    }
-
-    // Velvety Valentine Cake
-    private void use20196(Player player, boolean ctrl) {
-        // Delectable Valentine Cake
-        if (Rnd.chance(15))
-            addItem(player, 20197, 1);
-        else {
-            // Scroll: Enchant Armor (C)
-            if (Rnd.chance(10))
-                addItem(player, 952, 1);
-
-            // Scroll: Enchant Armor (B)
-            if (Rnd.chance(5))
-                addItem(player, 948, 1);
-
-            // Blessed Scroll of Escape
-            if (Rnd.chance(10))
-                addItem(player, 1538, 1);
-
-            // Blessed Scroll of Resurrection
-            if (Rnd.chance(5))
-                addItem(player, 3936, 1);
-
-            // Agathion of Love - 3 Day Expiration Period
-            if (Rnd.chance(10))
-                addItem(player, 20200, 1);
-        }
-    }
-
-    // Delectable Valentine Cake
-    private void use20197(Player player, boolean ctrl) {
-        // Decadent Valentine Cake
-        if (Rnd.chance(10))
-            addItem(player, 20198, 1);
-        else {
-            // Scroll: Enchant Weapon (C)
-            if (Rnd.chance(10))
-                addItem(player, 951, 1);
-
-            // Scroll: Enchant Weapon (B)
-            if (Rnd.chance(5))
-                addItem(player, 947, 1);
-
-            // Agathion of Love - 7 Day Expiration Period
-            if (Rnd.chance(5))
-                addItem(player, 20201, 1);
-        }
-    }
-
-    // Decadent Valentine Cake
-    private void use20198(Player player, boolean ctrl) {
-        // Scroll: Enchant Weapon (S)
-        if (Rnd.chance(5))
-            addItem(player, 959, 1);
-
-        // Scroll: Enchant Weapon (A)
-        if (Rnd.chance(10))
-            addItem(player, 729, 1);
-
-        // Agathion of Love - 15 Day Expiration Period
-        if (Rnd.chance(10))
-            addItem(player, 20202, 1);
-
-        // Agathion of Love - 30 Day Expiration Period
-        if (Rnd.chance(5))
-            addItem(player, 20203, 1);
-    }
-
-    // Jewel Ornamented Duel Supplies
-    private void use13777(Player player, boolean ctrl) {
-        int rnd = Rnd.get(100);
-        if (rnd <= 65) {
-            addItem(player, 9630, 3); // 3 Orichalcum
-            addItem(player, 9629, 3); // 3 Adamantine
-            addItem(player, 9628, 4); // 4 Leonard
-            addItem(player, 8639, 6); // 6 Elixir of CP (S-Grade)
-            addItem(player, 8627, 6); // 6 Elixir of Life (S-Grade)
-            addItem(player, 8633, 6); // 6 Elixir of Mental Strength (S-Grade)
-        } else if (rnd <= 95)
-            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
-        else
-            addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
-    }
-
-    // Mother-of-Pearl Ornamented Duel Supplies
-    private void use13778(Player player, boolean ctrl) {
-        int rnd = Rnd.get(100);
-        if (rnd <= 65) {
-            addItem(player, 9630, 2); // 3 Orichalcum
-            addItem(player, 9629, 2); // 3 Adamantine
-            addItem(player, 9628, 3); // 4 Leonard
-            addItem(player, 8639, 5); // 5 Elixir of CP (S-Grade)
-            addItem(player, 8627, 5); // 5 Elixir of Life (S-Grade)
-            addItem(player, 8633, 5); // 5 Elixir of Mental Strength (S-Grade)
-        } else if (rnd <= 95)
-            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
-        else
-            addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
-    }
-
-    // Gold-Ornamented Duel Supplies
-    private void use13779(Player player, boolean ctrl) {
-        int rnd = Rnd.get(100);
-        if (rnd <= 65) {
-            addItem(player, 9630, 1); // 1 Orichalcum
-            addItem(player, 9629, 1); // 1 Adamantine
-            addItem(player, 9628, 2); // 2 Leonard
-            addItem(player, 8639, 4); // 4 Elixir of CP (S-Grade)
-            addItem(player, 8627, 4); // 4 Elixir of Life (S-Grade)
-            addItem(player, 8633, 4); // 4 Elixir of Mental Strength (S-Grade)
-        } else if (rnd <= 95)
-            addItem(player, SOI_books[Rnd.get(SOI_books.length)], 1);
-        else
-            addItem(player, 14027, 1); // Collection Agathion Summon Bracelet
-    }
-
-    // Silver-Ornamented Duel Supplies
-    private void use13780(Player player, boolean ctrl) {
-        addItem(player, 8639, 4); // 4 Elixir of CP (S-Grade)
-        addItem(player, 8627, 4); // 4 Elixir of Life (S-Grade)
-        addItem(player, 8633, 4); // 4 Elixir of Mental Strength (S-Grade)
-    }
-
-    // Bronze-Ornamented Duel Supplies
-    private void use13781(Player player, boolean ctrl) {
-        addItem(player, 8639, 4); // 4 Elixir of CP (S-Grade)
-        addItem(player, 8627, 4); // 4 Elixir of Life (S-Grade)
-        addItem(player, 8633, 4); // 4 Elixir of Mental Strength (S-Grade)
-    }
-
-    // Non-Ornamented Duel Supplies
-    private void use13782(Player player, boolean ctrl) {
-        addItem(player, 8639, 3); // 3 Elixir of CP (S-Grade)
-        addItem(player, 8627, 3); // 3 Elixir of Life (S-Grade)
-        addItem(player, 8633, 3); // 3 Elixir of Mental Strength (S-Grade)
-    }
-
-    // Weak-Looking Duel Supplies
-    private void use13783(Player player, boolean ctrl) {
-        addItem(player, 8639, 3); // 3 Elixir of CP (S-Grade)
-        addItem(player, 8627, 3); // 3 Elixir of Life (S-Grade)
-        addItem(player, 8633, 3); // 3 Elixir of Mental Strength (S-Grade)
-    }
-
-    // Sad-Looking Duel Supplies
-    private void use13784(Player player, boolean ctrl) {
-        addItem(player, 8639, 3); // 3 Elixir of CP (S-Grade)
-        addItem(player, 8627, 3); // 3 Elixir of Life (S-Grade)
-        addItem(player, 8633, 3); // 3 Elixir of Mental Strength (S-Grade)
-    }
-
-    // Poor-Looking Duel Supplies
-    private void use13785(Player player, boolean ctrl) {
-        addItem(player, 8639, 2); // 2 Elixir of CP (S-Grade)
-        addItem(player, 8627, 2); // 2 Elixir of Life (S-Grade)
-        addItem(player, 8633, 2); // 2 Elixir of Mental Strength (S-Grade)
-    }
-
-    // Worthless Duel Supplies
-    private void use13786(Player player, boolean ctrl) {
-        addItem(player, 8639, 1); // 1 Elixir of CP (S-Grade)
-        addItem(player, 8627, 1); // 1 Elixir of Life (S-Grade)
-        addItem(player, 8633, 1); // 1 Elixir of Mental Strength (S-Grade)
-    }
-
-    // Kahman's Supply Box
-    private void use14849(Player player, boolean ctrl) {
-        int[] list = new int[]{9625, 9626}; // codex_of_giant_forgetting, codex_of_giant_training
-        int[] chances = new int[]{100, 80};
-        int[] counts = new int[]{1, 1};
-        extract_item_r(list, counts, chances, player);
-    }
-
-    // Big Stakato Cocoon
-    private void use14834(Player player, boolean ctrl) {
-        int[][] items = new int[][]{{9575, 1}, // rare_80_s
-                {10485, 1}, // rare_82_s
-                {10577, 1}, // sb_excessive_loyalty
-                {14209, 1}, // sb_hide1
-                {14208, 1}, // sb_final_secret1
-                {14212, 1}, // sb_enlightenment_wizard1
-                {960, 1}, // scrl_of_ench_am_s
-                {9625, 1}, // codex_of_giant_forgetting
-                {9626, 1}, // codex_of_giant_training
-                {959, 1}, // scrl_of_ench_wp_s
-                {10373, 1}, // rp_icarus_sowsword_i
-                {10374, 1}, // rp_icarus_disperser_i
-                {10375, 1}, // rp_icarus_spirits_i
-                {10376, 1}, // rp_icarus_heavy_arms_i
-                {10377, 1}, // rp_icarus_trident_i
-                {10378, 1}, // rp_icarus_chopper_i
-                {10379, 1}, // rp_icarus_knuckle_i
-                {10380, 1}, // rp_icarus_wand_i
-                {10381, 1}}; // rp_icarus_accipiter_i
-        double[] chances = new double[]{2.77, 2.31, 3.2, 3.2, 3.2, 3.2, 6.4, 3.2, 2.13, 0.64, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54, 1.54};
-        extractRandomOneItem(player, items, chances);
-    }
-
-    // Small Stakato Cocoon
-    private void use14833(Player player, boolean ctrl) {
-        int[][] items = new int[][]{{9575, 1}, // rare_80_s
-                {10485, 1}, // rare_82_s
-                {10577, 1}, // sb_excessive_loyalty
-                {14209, 1}, // sb_hide1
-                {14208, 1}, // sb_final_secret1
-                {14212, 1}, // sb_enlightenment_wizard1
-                {960, 1}, // scrl_of_ench_am_s
-                {9625, 1}, // codex_of_giant_forgetting
-                {9626, 1}, // codex_of_giant_training
-                {959, 1}, // scrl_of_ench_wp_s
-                {10373, 1}, // rp_icarus_sowsword_i
-                {10374, 1}, // rp_icarus_disperser_i
-                {10375, 1}, // rp_icarus_spirits_i
-                {10376, 1}, // rp_icarus_heavy_arms_i
-                {10377, 1}, // rp_icarus_trident_i
-                {10378, 1}, // rp_icarus_chopper_i
-                {10379, 1}, // rp_icarus_knuckle_i
-                {10380, 1}, // rp_icarus_wand_i
-                {10381, 1}}; // rp_icarus_accipiter_i
-        double[] chances = new double[]{2.36, 1.96, 2.72, 2.72, 2.72, 2.72, 5.44, 2.72, 1.81, 0.54, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31, 1.31};
-        extractRandomOneItem(player, items, chances);
-    }
-
-    private void use13988(Player player, boolean ctrl) {
-        int[] list = new int[]{9442, 9443, 9444, 9445, 9446, 9447, 9448, 9450, 10252, 10253, 10215, 10216, 10217, 10218, 10219, 10220, 10221, 10222, 10223};
-        int[] chances = new int[]{64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 40, 40, 40, 40, 40, 40, 40, 40, 40};
-        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        extract_item_r(list, counts, chances, player);
-    }
-
-    private void use13989(Player player, boolean ctrl) {
-        int[] list = new int[]{9514, 9515, 9516, 9517, 9518, 9519, 9520, 9521, 9522, 9523, 9524, 9525, 9526, 9527, 9528};
-        int[] chances = new int[]{50, 63, 70, 75, 75, 50, 63, 70, 75, 75, 50, 63, 70, 75, 75};
-        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        extract_item_r(list, counts, chances, player);
-    }
-
-    // Pathfinder's Reward - D-Grade
-    private void use13003(Player player, boolean ctrl) {
-        if (Rnd.chance(3.2))
-            addItem(player, 947, 1); // Scroll: Enchant Weapon B
-    }
-
-    // Pathfinder's Reward - C-Grade
-    private void use13004(Player player, boolean ctrl) {
-        if (Rnd.chance(1.6111))
-            addItem(player, 729, 1); // Scroll: Enchant Weapon A
-    }
-
-    // Pathfinder's Reward - B-Grade
-    private void use13005(Player player, boolean ctrl) {
-        if (Rnd.chance(1.14))
-            addItem(player, 959, 1); // Scroll: Enchant Weapon S
-    }
-
-    // Pathfinder's Reward - A-Grade
-    private void use13006(Player player, boolean ctrl) {
-        int[][] items = new int[][]{{9546, 1}, {9548, 1}, {9550, 1}, {959, 1}, {9442, 1}, {9443, 1}, {9444, 1}, {9445, 1}, {9446, 1}, {9447, 1}, {9448, 1}, {9449, 1}, {9450, 1}, {10252, 1}, {10253, 1}, {15645, 1}, {15646, 1}, {15647, 1}};
-        double[] chances = new double[]{19.8, 19.8, 19.8, 1.98, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1, 1, 1};
-        extractRandomOneItem(player, items, chances);
-    }
-
-    // Pathfinder's Reward - S-Grade
-    private void use13007(Player player, boolean ctrl) {
-        int[][] items = new int[][]{{9546, 1}, {9548, 1}, {9550, 1}, {959, 1}, {10215, 1}, {10216, 1}, {10217, 1}, {10218, 1}, {10219, 1}, {10220, 1}, {10221, 1}, {10222, 1}, {10223, 1}};
-        double[] chances = new double[]{26.4, 26.4, 26.4, 3.84, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13};
-        extractRandomOneItem(player, items, chances);
-    }
-
-    //Pathfinder's Reward - AU Karm
-    private void use13270(Player player, boolean ctrl) {
-        if (Rnd.chance(30))
-            addItem(player, 13236, 1);
-    }
-
-    //Pathfinder's Reward - AR Karm
-    private void use13271(Player player, boolean ctrl) {
-        if (Rnd.chance(30))
-            addItem(player, 13237, 1);
-    }
-
-    //Pathfinder's Reward - AE Karm
-    private void use13272(Player player, boolean ctrl) {
-        if (Rnd.chance(30))
-            addItem(player, 13238, 1);
-    }
-
-    private void use13990(Player player, boolean ctrl) {
-        int[] list = new int[]{6364, 6365, 6366, 6367, 6368, 6369, 6370, 6371, 6372, 6534, 6579, 7575};
-        int[] chances = new int[]{83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83};
-        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        extract_item_r(list, counts, chances, player);
-    }
-
-    private void use13991(Player player, boolean ctrl) {
-        int[] list = new int[]{6674, 6675, 6676, 6677, 6679, 6680, 6681, 6682, 6683, 6684, 6685, 6686, 6687};
-        int[] chances = new int[]{70, 80, 95, 95, 90, 55, 95, 95, 90, 55, 95, 95, 90};
-        int[] counts = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        extract_item_r(list, counts, chances, player);
-    }
-
-    private void use13992(Player player, boolean ctrl) {
-        int[] list = new int[]{6724, 6725, 6726};
-        int[] chances = new int[]{25, 32, 42};
-        int[] counts = new int[]{1, 1, 1};
-        extract_item_r(list, counts, chances, player);
-    }
-
-    //Droph's Support Items
-    private void use14850(Player player, boolean ctrl) {
-        int rndAA = Rnd.get(80000, 100000);
-        addItem(player, 5575, rndAA); // Ancient Adena
-    }
-
-    //Greater Elixir Gift Box (No-Grade)
-    private void use14713(Player player, boolean ctrl) {
-        addItem(player, 14682, 50); // Greater Elixir of Life (No-Grade)
-        addItem(player, 14688, 50); // Greater Elixir of Mental Strength (No-Grade)
-        addItem(player, 14694, 50); // Greater Elixir of CP (No Grade)
-    }
-
-    //Greater Elixir Gift Box (D-Grade)
-    private void use14714(Player player, boolean ctrl) {
-        addItem(player, 14683, 50); // Greater Elixir of Life (D-Grade)
-        addItem(player, 14689, 50); // Greater Elixir of Mental Strength (D-Grade)
-        addItem(player, 14695, 50); // Greater Elixir of CP (D Grade)
-    }
-
-    //Greater Elixir Gift Box (C-Grade)
-    private void use14715(Player player, boolean ctrl) {
-        addItem(player, 14684, 50); // Greater Elixir of Life (C-Grade)
-        addItem(player, 14690, 50); // Greater Elixir of Mental Strength (C-Grade)
-        addItem(player, 14696, 50); // Greater Elixir of CP (C Grade)
-    }
-
-    //Greater Elixir Gift Box (B-Grade)
-    private void use14716(Player player, boolean ctrl) {
-        addItem(player, 14685, 50); // Greater Elixir of Life (B-Grade)
-        addItem(player, 14691, 50); // Greater Elixir of Mental Strength (B-Grade)
-        addItem(player, 14697, 50); // Greater Elixir of CP (B Grade)
-    }
-
-    //Greater Elixir Gift Box (A-Grade)
-    private void use14717(Player player, boolean ctrl) {
-        addItem(player, 14686, 50); // Greater Elixir of Life (A-Grade)
-        addItem(player, 14692, 50); // Greater Elixir of Mental Strength (A-Grade)
-        addItem(player, 14698, 50); // Greater Elixir of CP (A Grade)
-    }
-
-    //Greater Elixir Gift Box (S-Grade)
-    private void use14718(Player player, boolean ctrl) {
-        addItem(player, 14687, 50); // Greater Elixir of Life (S-Grade)
-        addItem(player, 14693, 50); // Greater Elixir of Mental Strength (S-Grade)
-        addItem(player, 14699, 50); // Greater Elixir of CP (S Grade)
-    }
-
-    // Freya's Gift
-    private void use17138(Player player, boolean ctrl) {
-        int[][] items = new int[][]{{16026, 1}, {9627, 1}, {17140, 1}, {14052, 1}, {6622, 1}, {2134, 2}, {14701, 1}};
-        double[] chances = new double[]{0.0001, 0.1417, 1.4172, 1.4172, 2.8345, 18.424, 21.2585, 54.5068};
-        extractRandomOneItem(player, items, chances);
-    }
-
-    // Beginner Adventurer's Treasure Sack
-    private void use21747(Player player, boolean ctrl) {
-        int group = Rnd.get(7);
-        int[] items = new int[0];
-        if (group < 4) //Low D-Grade rewards
-            items = new int[]{312, 167, 220, 258, 178, 221, 123, 156, 291, 166, 274};
-        else if (group >= 4) //Low C-Grade rewards
-            items = new int[]{160, 298, 72, 193, 192, 281, 7887, 226, 2524, 191, 71, 263};
-
-        addItem(player, items[Rnd.get(items.length)], 1);
-    }
-
-    // Experienced Adventurer's Treasure Sack
-    private void use21748(Player player, boolean ctrl) {
-        int group = Rnd.get(10);
-        int[] items = new int[0];
-        if (group < 4) //Low B-Grade rewards
-            items = new int[]{78, 2571, 300, 284, 142, 267, 229, 148, 243, 92, 7892, 91};
-        else if (group >= 7 && group < 9) //Low A-Grade rewards
-            items = new int[]{98, 5233, 80, 235, 269, 288, 7884, 2504, 150, 7899, 212};
-        else if (group == 9) //Low S-Grade rewards
-            items = new int[]{6365, 6371, 6364, 6366, 6580, 7575, 6579, 6372, 6370, 6369, 6367};
-
-        addItem(player, items[Rnd.get(items.length)], 1);
-    }
-
-    // Great Adventurer's Treasure Sack
-    private void use21749(Player player, boolean ctrl) {
-        int group = Rnd.get(9);
-        int[] items = new int[0];
-        if (group < 5) //Top S-Grade rewards
-            items = new int[]{9447, 9384, 9449, 9380, 9448, 9443, 9450, 10253, 9445, 9442, 9446, 10004, 10252, 9376, 9444};
-        else if (group >= 5 && group < 8) //S80-Grade rewards
-            items = new int[]{10226, 10217, 10224, 10215, 10225, 10223, 10220, 10415, 10216, 10221, 10219, 10218, 10222};
-        else if (group == 8) //Low S84-Grade rewards
-            items = new int[]{13467, 13462, 13464, 13461, 13465, 13468, 13463, 13470, 13460, 52, 13466, 13459, 13457, 13469, 13458};
-
-        addItem(player, items[Rnd.get(items.length)], 1);
-    }
-
-    // Golden Spice Crate
-    private void use15482(Player player, boolean ctrl) {
-        if (Rnd.chance(10)) {
-            addItem(player, 15474, 40);
-            if (Rnd.chance(50))
-                addItem(player, 15476, 5);
-            else
-                addItem(player, 15478, 5);
-        } else
-            addItem(player, 15474, 50);
-    }
-
-    // Crystal Spice Crate
-    private void use15483(Player player, boolean ctrl) {
-        if (Rnd.chance(10)) {
-            addItem(player, 15475, 40);
-            if (Rnd.chance(50))
-                addItem(player, 15477, 5);
-            else
-                addItem(player, 15479, 5);
-        } else
-            addItem(player, 15475, 50);
-    }
-
-    // Gold Maned Lion Mounting Bracelet 7 Day Pack
-    private void use14231(Player player, boolean ctrl) {
-        addItem(player, 14053, 1);
-    }
-
-    // Steam Beatle Mounting Bracelet 7 Day Pack
-    private void use14232(Player player, boolean ctrl) {
-        addItem(player, 14054, 1);
-    }
-
-    // Olympiad Treasure Chest
-    private void use17169(Player player, boolean ctrl) {
-        int[][] items = new int[][]{{13750, 1}, {13751, 1}, {13754, 1}, {13753, 1}, {13752, 1}, {6622, 1}, {8621, 1}};
-        double[] chances = new double[]{34.7, 12.3, 2.65, 1.2, 1.98, 46.5, 5.4};
-        if (Rnd.chance(60))
-            extractRandomOneItem(player, items, chances);
-        int[] counts = {100, 150, 200, 250, 300, 350};
-        addItem(player, 13722, counts[Rnd.get(counts.length)]);
-    }
-
-    // Birthday Present Pack
-    private void use21169(Player player, boolean ctrl) {
-        addItem(player, 21170, 3);
-        addItem(player, 21595, 1);
-        addItem(player, 13488, 1);
-    }
-
-    // Pablo's Box
-    private void use21753(Player player, boolean ctrl) {
-        int category = Rnd.get(7);
-        switch (category) {
-            case 0:
-                addItem(player, 21122, 1);
-                break;
-            case 1:
-                addItem(player, 21118, 1);
-                break;
-            case 2:
-                addItem(player, 21116, 1);
-                break;
-            case 3:
-                addItem(player, 21114, 1);
-                break;
-            case 4:
-                addItem(player, 21112, 1);
-                break;
-            case 5:
-                addItem(player, 21120, 1);
-                break;
-            case 6:
-                addItem(player, 21126, 1);
-                break;
-        }
-    }
-
-    // Rune Jewelry Box - Talisman
-    private void use21752(Player player, boolean ctrl) {
-        final List<Integer> talismans = new ArrayList<>();
-
-        //9914-9965
-        for (int i = 9914; i <= 9965; i++)
-            if (i != 9923)
-                talismans.add(i);
-        //10416-10424
-        for (int i = 10416; i <= 10424; i++)
-            talismans.add(i);
-        //10518-10519
-        for (int i = 10518; i <= 10519; i++)
-            talismans.add(i);
-        //10533-10543
-        for (int i = 10533; i <= 10543; i++)
-            talismans.add(i);
-
-        addItem(player, talismans.get(Rnd.get(talismans.size())), 1);
-    }
-
-    //(Not In Use)
-    private void use53(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13024, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // (Not In Use)
-    private void use54(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13025, 1, 3}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        72.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Shiny Agathion 7 Day Pack (Event)
-    private void use55(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14102, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Sobbing Agathion 7 Day Pack (Event)
-    private void use56(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14103, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //(Not In Use)
-    private void use136(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14075, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //(Not In Use)
-    private void use137(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14076, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //(Not In Use)
-    private void use138(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14077, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Sudden Agathion 7 Day Pack
-    private void use139(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14093, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Shiny Agathion 7 Day Pack
-    private void use140(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14094, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Sobbing Agathion 7 Day Pack
-    private void use141(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14095, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //(Not In Use)
-    private void use163(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13026, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Sudden Agathion 7 Day Pack (Event)
-    private void use170(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {14101, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Five-Year Anniversary Gift Box (10 Honey Rice Cake Set)
-    private void use5906(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13420, 10, 10},
-                        {13419, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Five-Year Anniversary Gift Box (9 Honey Rice Cake Set)
-    private void use5907(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13420, 9, 9},
-                        {13419, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Five-Year Anniversary Gift Box (8 Honey Rice Cake Set)
-    private void use5909(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13420, 8, 8},
-                        {13419, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Five-Year Anniversary Gift Box (7 Honey Rice Cake Set)
-    private void use5910(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13420, 7, 7},
-                        {13419, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Five-Year Anniversary Gift Box (6 Honey Rice Cake Set)
-    private void use5912(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13420, 6, 6},
-                        {13419, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Five-Year Anniversary Gift Box (3 Honey Wheat Cake Set)
-    private void use5913(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13420, 3, 3},
-                        {13419, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Old Box
-    private void use8547(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {8034, 1, 3},
-                        {2134, 1, 3},
-                        {2133, 1, 7}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        85.0,
-                        4.0,
-                        11.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Box of Cheerleading Gear Used to encourage victory.
-    private void use8551(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {8552, 1, 1},
-                        {8187, 1, 1},
-                        {8555, 1, 5},
-                        {6406, 1, 10},
-                        {6407, 1, 5},
-                        {5577, 1, 1},
-                        {5578, 1, 1},
-                        {5579, 1, 1},
-                        {5580, 1, 1},
-                        {5581, 1, 1},
-                        {5582, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        25.0,
-                        25.0,
-                        25.0,
-                        15.0,
-                        9.991,
-                        0.002,
-                        0.002,
-                        0.002,
-                        0.001,
-                        0.001,
-                        0.001
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Event Gift Box
-    private void use8570(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {8592, 1, 1},
-                        {1539, 1, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        50.0,
-                        50.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Event Gift Box
-    private void use8571(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {8592, 1, 1},
-                        {1539, 1, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        50.0,
-                        50.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Event Gift Box
-    private void use8572(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1539, 1, 20},
-                        {952, 1, 1},
-                        {951, 1, 1},
-                        {1538, 1, 1},
-                        {3936, 1, 1},
-                        {4637, 1, 1},
-                        {4659, 1, 10},
-                        {4648, 1, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        87.0,
-                        7.0,
-                        2.05,
-                        2.0,
-                        1.05,
-                        0.3,
-                        0.3,
-                        0.3
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Event Gift Box
-    private void use8573(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1539, 1, 20},
-                        {948, 1, 1},
-                        {947, 1, 1},
-                        {1538, 1, 1},
-                        {3936, 1, 1},
-                        {4638, 1, 1},
-                        {4660, 1, 1},
-                        {4649, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        90.70,
-                        1.5,
-                        2.0,
-                        1.05,
-                        0.25,
-                        0.25,
-                        0.25
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Event Gift Box
-    private void use8574(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1539, 1, 20},
-                        {730, 1, 1},
-                        {729, 1, 1},
-                        {1538, 1, 1},
-                        {3936, 1, 1},
-                        {4639, 1, 1},
-                        {4650, 1, 1},
-                        {4661, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        93.0,
-                        2.0,
-                        0.5,
-                        3.0,
-                        1.41,
-                        0.03,
-                        0.03,
-                        0.03
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Event Gift Box
-    private void use8575(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1539, 1, 20},
-                        {730, 1, 1},
-                        {729, 1, 1},
-                        {1538, 1, 1},
-                        {3936, 1, 1},
-                        {4639, 1, 1},
-                        {4650, 1, 1},
-                        {4661, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        93.0,
-                        2.0,
-                        0.5,
-                        3.0,
-                        1.41,
-                        0.03,
-                        0.03,
-                        0.03
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // No Grade Item Set Box (Warrior Use)
-    private void use8966(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1835, 1000, 1000},
-                        {8622, 10, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // D Grade Item Set Box (Warrior Use)
-    private void use8967(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1463, 1000, 1000},
-                        {8623, 10, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // C Grade Item Set Box (Warrior Use)
-    private void use8968(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1464, 1000, 1000},
-                        {8624, 10, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // B Grade Item Set Box (Warrior Use)
-    private void use8969(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1465, 500, 500},
-                        {8625, 7, 7}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // A Grade Item Set Box (Warrior Use)
-    private void use8970(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1466, 300, 300},
-                        {8626, 7, 7}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // A, S Grade Item Set Box (Warrior Use)
-    private void use8971(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {1466, 300, 300},
-                        {8627, 5, 5}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Composite Bow and Wooden Arrow
-    private void use9104(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {8980, 1, 1},
-                        {17, 1000, 1000}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Gastraphetes and Bone Arrow
-    private void use9105(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {8989, 1, 1},
-                        {1341, 1000, 1000}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Akat Long Bow and Steel Arrow
-    private void use9106(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {8997, 1, 1},
-                        {1342, 1000, 1000}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Dark Elven Long Bow and Silver Arrow
-    private void use9107(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9008, 1, 1},
-                        {1343, 1000, 1000}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Carnage Bow and Mithril Arrow
-    private void use9108(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9016, 1, 1},
-                        {1344, 1000, 1000}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Soul Bow and Mithril Arrow
-    private void use9109(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9027, 1, 1},
-                        {1344, 1000, 1000}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // No Grade Shadow Armor Set Box (Heavy Armor Use)
-    private void use9110(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9030, 1, 1},
-                        {9031, 1, 1},
-                        {9038, 1, 1},
-                        {9039, 1, 1},
-                        {9037, 1, 1},
-                        {9036, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // D-Grade Shadow Armor Set Box (Heavy Armor Use)
-    private void use9111(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9040, 1, 1},
-                        {9041, 1, 1},
-                        {9042, 1, 1},
-                        {9043, 1, 1},
-                        {9044, 1, 1},
-                        {9053, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // C-Grade Shadow Armor Set Box (Heavy Armor Use)
-    private void use9112(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9054, 1, 1},
-                        {9055, 1, 1},
-                        {9056, 1, 1},
-                        {9057, 1, 1},
-                        {9028, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // B-Grade Shadow Armor Set Box (Heavy Armor Use)
-    private void use9113(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9067, 1, 1},
-                        {9068, 1, 1},
-                        {9069, 1, 1},
-                        {9070, 1, 1},
-                        {9071, 1, 1},
-                        {9072, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Low A-Grade Shadow Armor Set Box (Heavy Armor Use)
-    private void use9114(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9081, 1, 1},
-                        {9082, 1, 1},
-                        {9083, 1, 1},
-                        {9084, 1, 1},
-                        {9085, 1, 1},
-                        {9086, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // High A-Grade Shadow Armor Set Box (Heavy Armor Use)
-    private void use9115(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9094, 1, 1},
-                        {9095, 1, 1},
-                        {9096, 1, 1},
-                        {9097, 1, 1},
-                        {9029, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // No Grade Shadow Armor Set Box (Light Armor Use)
-    private void use9116(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9032, 1, 1},
-                        {9033, 1, 1},
-                        {9037, 1, 1},
-                        {9038, 1, 1},
-                        {9039, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // D-Grade Shadow Armor Set Box (Light Armor Use)
-    private void use9117(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9045, 1, 1},
-                        {9046, 1, 1},
-                        {9047, 1, 1},
-                        {9048, 1, 1},
-                        {9053, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // C-Grade Shadow Armor Set Box (Light Armor Use
-    private void use9118(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9058, 1, 1},
-                        {9059, 1, 1},
-                        {9060, 1, 1},
-                        {9061, 1, 1},
-                        {9066, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // B-Grade Shadow Armor Set Box (Light Armor Use)
-    private void use9119(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9073, 1, 1},
-                        {9074, 1, 1},
-                        {9075, 1, 1},
-                        {9076, 1, 1},
-                        {9069, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Low A-Grade Shadow Armor Set Box (Light Armor Use)
-    private void use9120(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9087, 1, 1},
-                        {9088, 1, 1},
-                        {9089, 1, 1},
-                        {9090, 1, 1},
-                        {9083, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // High A-Grade Shadow Armor Set Box (Light Armor Use
-    private void use9121(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9098, 1, 1},
-                        {9099, 1, 1},
-                        {9100, 1, 1},
-                        {9095, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // No Grade Shadow Armor Set Box (Robe Use)
-    private void use9122(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9034, 1, 1},
-                        {9035, 1, 1},
-                        {9037, 1, 1},
-                        {9038, 1, 1},
-                        {9036, 1, 1},
-                        {9039, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // D-Grade Shadow Armor Set Box (Robe Use)
-    private void use9123(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9049, 1, 1},
-                        {9050, 1, 1},
-                        {9051, 1, 1},
-                        {9052, 1, 1},
-                        {9053, 1, 1},
-                        {9044, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // C-Grade Shadow Armor Set Box (Robe Use)
-    private void use9124(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9062, 1, 1},
-                        {9063, 1, 1},
-                        {9064, 1, 1},
-                        {9065, 1, 1},
-                        {9066, 1, 1},
-                        {9056, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // B-Grade Shadow Armor Set Box (Robe Use)
-    private void use9125(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9077, 1, 1},
-                        {9078, 1, 1},
-                        {9079, 1, 1},
-                        {9080, 1, 1},
-                        {9069, 1, 1},
-                        {9070, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Low A-Grade Shadow Armor Set Box (Robe Use)
-    private void use9126(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9091, 1, 1},
-                        {9092, 1, 1},
-                        {9093, 1, 1},
-                        {9084, 1, 1},
-                        {9083, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // High A-Grade Shadow Armor Set Box (Robe Use)
-    private void use9127(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9101, 1, 1},
-                        {9102, 1, 1},
-                        {9103, 1, 1},
-                        {9095, 1, 1},
-                        {9129, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // No Grade Item Set Box (Magic Use)
-    private void use9130(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {2509, 1000, 1000},
-                        {8622, 10, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // D Grade Item Set Box (Magic Use)
-    private void use9131(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {2510, 1000, 1000},
-                        {8623, 10, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // C Grade Item Set Box (Magic Use)
-    private void use9132(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {2511, 1000, 1000},
-                        {8624, 10, 10}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // B Grade Item Set Box (Magic Use)
-    private void use9133(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {2512, 500, 500},
-                        {8625, 7, 7}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // A Grade Item Set Box (Magic Use)
-    private void use9134(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {2513, 300, 300},
-                        {8626, 7, 7}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // A, S Grade Item Set Box (Magic Use
-    private void use9135(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {2513, 300, 300},
-                        {8627, 5, 5}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Pirate's Booty
-    private void use9144(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9143, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        50.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // White Seed of Evil Lump
-    private void use10205(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9597, 2, 2}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Black Seed of Evil Lump
-    private void use10206(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {9598, 2, 2}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // 1st Place Treasure Sack
-    private void use10254(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {6373, 1, 1},
-                        {6374, 1, 1},
-                        {6375, 1, 1},
-                        {6376, 1, 1},
-                        {6377, 1, 1},
-                        {6378, 1, 1},
-                        {6379, 1, 1},
-                        {6380, 1, 1},
-                        {6381, 1, 1},
-                        {6382, 1, 1},
-                        {6383, 1, 1},
-                        {6384, 1, 1},
-                        {6385, 1, 1},
-                        {6386, 1, 1},
-                        {9570, 1, 1},
-                        {9571, 1, 1},
-                        {9572, 1, 1},
-                        {5908, 1, 1},
-                        {5911, 1, 1},
-                        {5914, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        1.19,
-                        1.84,
-                        4.47,
-                        4.47,
-                        4.25,
-                        3.01,
-                        0.19,
-                        4.47,
-                        4.47,
-                        3.01,
-                        0.19,
-                        4.47,
-                        4.47,
-                        3.01,
-                        3.16,
-                        3.16,
-                        3.16,
-                        15.67,
-                        15.67,
-                        15.67
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // My teleport Spellbook 1-Sheet Pack
-    private void use13079(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13015, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // My teleport Scroll 30-Sheet Pack
-    private void use13080(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13016, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Feather of Blessing 3-Sheet Pack
-    private void use13082(Player player, boolean ctrl) {
-             /*int items[][] = new int[][]
-             {
-              // itemId, min, max
-			  {10649, 3, 3}
-             };
-
-             double chances[] = new double[]
-             {
-              // chance
-              100.0
-             };
-
-          capsulate(player, items, chances); */
-    }
-
-    // Agathion of Love 30-Day Pack
-    private void use13083(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13023, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Pumpkin Transformation Stick 30-Day Pack
-    private void use13084(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12800, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Kamaloka Entrance Pass 3-Sheet Pack
-    private void use13085(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13010, 5, 5},
-                        {13011, 5, 5},
-                        {13012, 5, 5}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Kat the Cat Hat 30-Day Pack
-    private void use13086(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12782, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Feline Queen Hat 30-Day Pack
-    private void use13087(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12783, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Monster Eye Hat 30-Day Pack
-    private void use13088(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12786, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Brown Bear Hat 30-Day Pack
-    private void use13089(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12787, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Fungus Hat 30-Day Pack
-    private void use13090(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12788, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Skull Hat 30-Day Pack
-    private void use13091(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12789, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Ornithomimus Hat 30-Day Pack
-    private void use13092(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12790, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Feline King Hat 30-Day Pack
-    private void use13093(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12791, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Kai the Cat Hat 30-Day Pack
-    private void use13094(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12792, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //OX Stick 30-Day Pack
-    private void use13095(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12793, 1, 1},
-                        {12794, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Rock-Paper-Scissors Stick 30-Day Pack
-    private void use13096(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {12795, 1, 1},
-                        {12796, 1, 1},
-                        {12797, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0,
-                        100.0,
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Purple Maned Horse Bracelet Pack
-    private void use13097(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13022, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    //Color Name 3-Sheet Pack
-    private void use13098(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13021, 3, 3}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // |========================================| Start Line by CosMOsiS |==========================================|
-    private void use21225(Player player, boolean ctrl) {
-        addItem(player, 10178, 3);
-    }
-
-    // Коктейль из сладких фруктов ивент by (CosMOsiS)
-    private void use21226(Player player, boolean ctrl) {
-        addItem(player, 10178, 3);
-    }
-
-    // Коктейль из свежих фруктов by (CosMOsiS)
-    private void use21229(Player player, boolean ctrl) {
-        addItem(player, 10179, 3);
-    }
-
-    // Коктейль из свежих фруктов ивент by (CosMOsiS)
-    private void use21230(Player player, boolean ctrl) {
-        addItem(player, 10179, 3);
-    }
-
-    // Парное молоко by (CosMOsiS)
-    private void use21233(Player player, boolean ctrl) {
-        addItem(player, 14739, 3);
-    }
-
-    // Парное молоко ивент by (CosMOsiS)
-    private void use21234(Player player, boolean ctrl) {
-        addItem(player, 14739, 3);
-    }
-
-    // Коктейль из свежих фруктов by (CosMOsiS)
-    private void use21237(Player player, boolean ctrl) {
-        addItem(player, 21239, 3);
-    }
-
-    // Коктейль из свежих фруктов ивент by (CosMOsiS)
-    private void use21238(Player player, boolean ctrl) {
-        addItem(player, 21240, 3);
-    }
-
-    // Парное молоко by (CosMOsiS)
-    private void use21240(Player player, boolean ctrl) {
-        addItem(player, 21243, 3);
-    }
-
-    // Парное молоко ивент by (CosMOsiS)
-    private void use21241(Player player, boolean ctrl) {
-        addItem(player, 21244, 3);
-    }
-
-    private void use37004(Player player, boolean ctrl) {
-        addItem(player, 40000, 1);
-        addItem(player, 37007, 15);
-        addItem(player, 57, 15000000);
-    }
-
-    // 6th Anniversary Party Gift Box (2003) by (CosMOsiS)
-    private void use15404(Player player, boolean ctrl) {
-        addItem(player, 15418, 1);
-    }
-
-    // 6th Anniversary Party Gift Box (2004) by (CosMOsiS)
-    private void use15405(Player player, boolean ctrl) {
-        addItem(player, 15419, 1);
-    }
-
-    // 6th Anniversary Party Gift Box (2005) by (CosMOsiS)
-    private void use15406(Player player, boolean ctrl) {
-        addItem(player, 15420, 1);
-    }
-
-    // 6th Anniversary Party Gift Box (2006) by (CosMOsiS)
-    private void use15407(Player player, boolean ctrl) {
-        addItem(player, 15421, 1);
-    }
-
-    // 6th Anniversary Party Gift Box (2007) by (CosMOsiS)
-    private void use15408(Player player, boolean ctrl) {
-        addItem(player, 15422, 1);
-    }
-
-    // 6th Anniversary Party Gift Box (2008) by (CosMOsiS)
-    private void use15409(Player player, boolean ctrl) {
-        addItem(player, 15423, 1);
-    }
-
-    // 6th Anniversary Party Gift Box (2009) by (CosMOsiS)
-    private void use15410(Player player, boolean ctrl) {
-        addItem(player, 15424, 1);
-    }
-
-    // 6th Anniversary Party Gift Set (2003) by (CosMOsiS)
-    private void use15411(Player player, boolean ctrl) {
-        addItem(player, 15425, 1);
-        addItem(player, 15418, 1);
-    }
-
-    // 6th Anniversary Party Gift Set (2004) by (CosMOsiS)
-    private void use15412(Player player, boolean ctrl) {
-        addItem(player, 15425, 1);
-        addItem(player, 15419, 1);
-    }
-
-    // 6th Anniversary Party Gift Set (2005) by (CosMOsiS)
-    private void use15413(Player player, boolean ctrl) {
-        addItem(player, 15425, 1);
-        addItem(player, 15420, 1);
-    }
-
-    // 6th Anniversary Party Gift Set (2006) by (CosMOsiS)
-    private void use15414(Player player, boolean ctrl) {
-        addItem(player, 15425, 1);
-        addItem(player, 15421, 1);
-    }
-
-    // 6th Anniversary Party Gift Set (2007) by (CosMOsiS)
-    private void use15415(Player player, boolean ctrl) {
-        addItem(player, 15425, 1);
-        addItem(player, 15422, 1);
-    }
-
-    // 6th Anniversary Party Gift Set (2008) by (CosMOsiS)
-    private void use15416(Player player, boolean ctrl) {
-        addItem(player, 15425, 1);
-        addItem(player, 15423, 1);
-    }
-
-    // 6th Anniversary Party Gift Set (2009) by (CosMOsiS)
-    private void use15417(Player player, boolean ctrl) {
-        addItem(player, 15425, 1);
-        addItem(player, 15424, 1);
-    }
-
-    // Hero's Treasure Box by (CosMOsiS)
-    private void use15425(Player player, boolean ctrl) {
-        addItem(player, 15211, 1);
-        addItem(player, 13273, 1);
-        addItem(player, 15426, 1);
-    }
-
-    // Halloween Toy Chest by (CosMOsiS)
-    private void use15434(Player player, boolean ctrl) { /* by CosMOsiS*/
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {15443, 1, 1},
-                        {15444, 1, 1},
-                        {15445, 1, 1},
-                        {15446, 1, 1},
-                        {15447, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        20.00,
-                        20.00,
-                        20.00,
-                        20.00,
-                        20.00
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Shiny Halloween Toy Chest by (CosMOsiS)
-    private void use15435(Player player, boolean ctrl) { /* by CosMOsiS*/
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {15450, 1, 1},
-                        {15451, 1, 1},
-                        {15452, 1, 1},
-                        {15453, 1, 1},
-                        {15449, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        20.00,
-                        20.00,
-                        20.00,
-                        20.00,
-                        20.00
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Transformation Scroll Box by (CosMOsiS)
-    private void use15437(Player player, boolean ctrl) { /* by CosMOsiS*/
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {10131, 1, 1},
-                        {10132, 1, 1},
-                        {10133, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        33.00,
-                        33.00,
-                        34.00
-                };
-
-        capsulate(player, items, chances);
-    }
-
-    // Shiny Planet X235 Alien's Mask Pack by (CosMOsiS)
-    private void use15454(Player player, boolean ctrl) {
-        addItem(player, 15449, 1);
-    }
-
-    // Shiny Super Strong Giant's Mask Pack by (CosMOsiS)
-    private void use15455(Player player, boolean ctrl) {
-        addItem(player, 15450, 1);
-    }
-
-    // Shiny Silent Scream's Mask Pack by (CosMOsiS)
-    private void use15456(Player player, boolean ctrl) {
-        addItem(player, 15451, 1);
-    }
-
-    // Shiny Wrathful Spirit's Mask Pack by (CosMOsiS)
-    private void use15457(Player player, boolean ctrl) {
-        addItem(player, 15452, 1);
-    }
-
-    // Shiny Unrotten Corpse's Mask Pack by (CosMOsiS)
-    private void use15458(Player player, boolean ctrl) {
-        addItem(player, 15453, 1);
-    }
-
-    // Halloween Nectar Pumpkin Pack by (CosMOsiS)
-    private void use15459(Player player, boolean ctrl) {
-        addItem(player, 15461, 1);
-    }
-
-    // Halloween King Pumpkin Pack by (CosMOsiS)
-    private void use15460(Player player, boolean ctrl) {
-        addItem(player, 15462, 1);
-    }
-
-    // Halloween King Pumpkin by (CosMOsiS)
-    private void use15462(Player player, boolean ctrl) {
-        addItem(player, 15461, 6);
-        addItem(player, 15464, 1);
-    }
-
-    // Halloween Nectar Pumpkin Pack - event by (CosMOsiS)
-    private void use15465(Player player, boolean ctrl) {
-        addItem(player, 15461, 1);
-    }
-
-    // Halloween King Pumpkin Pack - event by (CosMOsiS)
-    private void use15466(Player player, boolean ctrl) {
-        addItem(player, 15462, 1);
-    }
-
-    // Color Title - event by (CosMOsiS)
-    private void use21421(Player player, boolean ctrl) {
-        addItem(player, 13021, 1);
-    }
-
-    // Color title - event by (CosMOsiS)
-    private void use21422(Player player, boolean ctrl) {
-        addItem(player, 13307, 1);
-    }
-
-    // Halloween King Pumpkin - event by (CosMOsiS)
-    private void use15468(Player player, boolean ctrl) {
-        addItem(player, 15461, 6);
-        addItem(player, 15464, 1);
+    public Extractable() {
+//        singleRewardItem.put();
+        singleRewardItem.put(20842, 20818);// Iken Agathion Pack
+        singleRewardItem.put(20843, 20819); // Iken Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20844,20820); // Lana Agathion Pack
+        singleRewardItem.put(20845, 20821); // Lana Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20846, 20822);// Gnocian Agathion Pack
+        singleRewardItem.put(20847,20823);// Gnocian Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20848, 20824); // Orodriel Agathion Pack
+        singleRewardItem.put( 20849,20825); // Orodriel Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put( 20850,20826); // Lakinos Agathion Pack
+        singleRewardItem.put( 20851,20827); // Lakinos Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put( 20852,20828); // Mortia Agathion Pack
+        singleRewardItem.put(20853,20829 ); // Mortia Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20854, 20830); // Hayance Agathion Pack
+        singleRewardItem.put(20855, 20831); // Hayance Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20856, 20832); // Meruril Agathion Pack
+        singleRewardItem.put( 20857, 20833); // Meruril Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20858,20834 ); // Taman ze Lapatui Agathion Pack
+        singleRewardItem.put(20859, 20835); // Taman ze Lapatui Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20860, 20836 ); // Kaurin Agathion Pack
+        singleRewardItem.put( 20861, 20837 ); // Kaurin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20862, 20838); // Ahertbein Agathion Pack
+        singleRewardItem.put(20863, 20839); // Ahertbein Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20864, 20840); // Naonin Agathion Pack
+        singleRewardItem.put(20811, 20789); // Rocket Gun Hat Pack Continuous Fireworks
+        singleRewardItem.put(20812, 20790); // Yellow Paper Hat 7-Day Pack Bless the Body
+        singleRewardItem.put(20813,20791); // Pink Paper Mask Set 7-Day Pack Bless the Soul
+        singleRewardItem.put(20814, 20792); // Flavorful Cheese Hat Pack
+        singleRewardItem.put(20815, 20793); // Sweet Cheese Hat Pack
+        singleRewardItem.put(20816, 20794); // Flavorful Cheese Hat 7-Day Pack Scent of Flavorful Cheese
+        singleRewardItem.put(20817, 20795); // Sweet Cheese Hat 7-Day Pack Scent of Sweet Cheese
+        singleRewardItem.put(20810, 20725); // Flame Box Pack
+        singleRewardItem.put(20865, 20841); // Naonin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20748, 20743); // Shiny Mask of Giant Hercules 7 day Pack
+        singleRewardItem.put(20749, 20744); // Shiny Mask of Silent Scream 7 day Pack
+        singleRewardItem.put(20750, 20745); // Shiny Spirit of Wrath Mask 7 day Pack
+        singleRewardItem.put(20751,20746); // Shiny Undecaying Corpse Mask 7 Day Pack
+        singleRewardItem.put(20752,20747 );// Shiny Planet X235 Alien Mask 7 day Pack
+        singleRewardItem.put(15404, 15418); // 6th Anniversary Party Gift Box (2003) by (CosMOsiS)
+        singleRewardItem.put(15405, 15419);// 6th Anniversary Party Gift Box (2004) by (CosMOsiS)
+        singleRewardItem.put(15406,15420); // 6th Anniversary Party Gift Box (2005) by (CosMOsiS)
+        singleRewardItem.put(17086,9201);
+        singleRewardItem.put(17085,9194);
+        singleRewardItem.put(15460,15462);// Halloween King Pumpkin Pack by (CosMOsiS)
+        singleRewardItem.put(15455,15450);// Shiny Super Strong Giant's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(21421, 13021);// Color Title - event by (CosMOsiS)
+        singleRewardItem.put(21422,13307 );// Color title - event by (CosMOsiS)
+        singleRewardItem.put(15466, 15462);// Halloween King Pumpkin Pack - event by (CosMOsiS)
+        singleRewardItem.put(15465, 15461);// Halloween Nectar Pumpkin Pack - event by (CosMOsiS)
+        singleRewardItem.put(15459, 15461 ); // Halloween Nectar Pumpkin Pack by (CosMOsiS)
+        singleRewardItem.put(15458, 15453); // Shiny Unrotten Corpse's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15457,15452);// Shiny Wrathful Spirit's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15456, 15451);// Shiny Silent Scream's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15454, 15449);// Shiny Planet X235 Alien's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15410, 15424);// 6th Anniversary Party Gift Box (2009) by (CosMOsiS)
+        singleRewardItem.put(15409, 15423); // 6th Anniversary Party Gift Box (2008) by (CosMOsiS)
+        singleRewardItem.put(15408, 15422); // 6th Anniversary Party Gift Box (2007) by (CosMOsiS)
+        singleRewardItem.put(15407, 15421); // 6th Anniversary Party Gift Box (2006) by (CosMOsiS)
+    }
+
+    private boolean extractSingleItem(int usedItemId, Player player) {
+        if (singleRewardItem.containsKey(usedItemId))
+            return addItem(player, singleRewardItem.get(usedItemId));
+        return false;
     }
 }

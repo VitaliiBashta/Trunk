@@ -55,13 +55,4 @@ public final class AdminBosses implements IAdminCommandHandler, ScriptFile {
         AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 }

@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Util;
 
-public class _508_TheClansReputation extends Quest implements ScriptFile {
+public final class _508_TheClansReputation extends Quest {
     // Quest NPC
     private static final int SIR_ERIC_RODEMAI = 30868;
 
@@ -105,18 +105,6 @@ public class _508_TheClansReputation extends Quest implements ScriptFile {
                     -4722
             },
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _508_TheClansReputation() {
         super(PARTY_ALL);

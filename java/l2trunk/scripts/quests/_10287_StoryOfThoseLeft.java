@@ -10,9 +10,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 
 import java.util.StringTokenizer;
 
-/**
- * @author pchayka
- */
 
 public class _10287_StoryOfThoseLeft extends Quest implements ScriptFile {
     private static final int Rafforty = 32020;

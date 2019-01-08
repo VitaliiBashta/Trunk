@@ -14,18 +14,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class _450_GraveRobberMemberRescue extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+public final class _450_GraveRobberMemberRescue extends Quest {
 
     private static final int KANEMIKA = 32650;
     private static final int WARRIOR_NPC = 32651;

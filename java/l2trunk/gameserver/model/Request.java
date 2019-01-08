@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Request extends StatsSet {
+public final class Request extends StatsSet {
     private final static AtomicInteger _nextId = new AtomicInteger();
     private final int id;
     private final L2RequestType _type;

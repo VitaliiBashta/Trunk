@@ -13,14 +13,13 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.handler.items.ScriptItemHandler;
 import l2trunk.scripts.npc.model.SquashInstance;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Seed extends ScriptItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = Arrays.asList(6389, // small seed
+    private static final List<Integer> ITEM_IDS = List.of(6389, // small seed
             6390 // large seed
     );
-    private static final List<Integer> NPC_IDS = Arrays.asList(12774, // Young Pumpkin
+    private static final List<Integer> NPC_IDS = List.of(12774, // Young Pumpkin
             12777 // Large Young Pumpkin
     );
 

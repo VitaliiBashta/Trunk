@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class BeastShot extends ScriptItemHandler implements ScriptFile {
@@ -24,16 +23,6 @@ public final class BeastShot extends ScriptItemHandler implements ScriptFile {
     @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 
     @Override

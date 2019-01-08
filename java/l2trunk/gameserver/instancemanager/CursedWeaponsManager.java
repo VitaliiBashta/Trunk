@@ -12,7 +12,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -422,7 +421,7 @@ public enum CursedWeaponsManager {
         if (cw == null)
             return;
 
-        if (cw.dropIt(null, null, player)) {
+        if (cw.dropIt(player)) {
             saveData(cw);
             announce(new SystemMessage(SystemMessage.S2_WAS_DROPPED_IN_THE_S1_REGION).addZoneName(player.getLoc()).addItemName(cw.getItemId()));
         } else

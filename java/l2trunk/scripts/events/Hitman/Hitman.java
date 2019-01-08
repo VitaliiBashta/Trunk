@@ -25,12 +25,13 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Hitman extends Functions implements ScriptFile, OnDeathListener, OnPlayerExitListener {
+public final class Hitman extends Functions implements ScriptFile, OnDeathListener, OnPlayerExitListener {
 
     private static final Logger _log = LoggerFactory.getLogger(Hitman.class);
 
@@ -39,9 +40,9 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
     private static final String LOAD_FROM_DATABASE = "SELECT * FROM event_hitman";
     private static final String DELETE_STOREID_FROM_DATABASE = "DELETE FROM event_hitman WHERE storedId=?";
 
-    private static Map<Integer, Order> _orderMap;
+    private static Map<Integer, Order> orderMap;
     private static StringBuilder _itemsList;
-    private static Map<String, Integer> _allowedItems;
+    private static Map<String, Integer> allowedItems;
     private static List<Integer> _inList;
 
     private static boolean checkPlayer(Player player) {
@@ -93,65 +94,13 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
         return true;
     }
 
-    @Override
-    public void onLoad() {
-        _orderMap = new HashMap<>();
-        _itemsList = new StringBuilder();
-        _allowedItems = new HashMap<>();
-        _inList = new ArrayList<>();
-
-        CharListenerList.addGlobal(this);
-
-        for (String EVENT_HITMAN_ALLOWED_ITEM_LIST : Config.EVENT_HITMAN_ALLOWED_ITEM_LIST) {
-            final String itemName = ItemFunctions.createItem(Integer.parseInt(EVENT_HITMAN_ALLOWED_ITEM_LIST)).getTemplate().getName();
-            _itemsList.append(itemName).append(";");
-            _allowedItems.put(itemName, Integer.parseInt(EVENT_HITMAN_ALLOWED_ITEM_LIST));
-        }
-        loadFromDatabase();
-        _log.info("Loaded Event: Hitman");
-    }
-
-    @Override
-    public void onDeath(Creature actor, Creature killer) {
-        if (killer instanceof MonsterInstance || killer instanceof GuardInstance)
-            return;
-        if (getOrderByTargetName(actor.getName()) != null && !actor.getName().equals(killer.getName())) {
-            final Order order = getOrderByTargetName(actor.getName());
-            Functions.addItem(killer.getPlayer(), order.getItemId(), order.getItemCount(), "Killed");
-            Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.AnnounceKill", killer.getPlayer(), killer.getName(), actor.getName(), order.getItemCount(), ItemFunctions.createItem(order.getItemId()).getTemplate().getName()).toString());
-
-            if (order.getKillsCount() > 1) {
-                order.decrementKillsCount();
-            } else {
-                _orderMap.remove(World.getPlayer(order.getOwner()).getObjectId());
-                _inList.remove((Object) World.getPlayer(order.getOwner()).getObjectId());
-                deleteFromDatabase(actor.getName());
-            }
-        }
-    }
-
     private static void deleteFromDatabase(String target) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(DELETE_TERGET_FROM_DATABASE);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(DELETE_TERGET_FROM_DATABASE)) {
             statement.setString(1, target);
             statement.execute();
-        } catch (Exception e) {
-
+        } catch (SQLException ignored) {
         }
-    }
-
-    @Override
-    public void onReload() {
-        _orderMap.clear();
-        _allowedItems.clear();
-    }
-
-    @Override
-    public void onShutdown() {
-        onReload();
     }
 
     public static String getItemsList() {
@@ -159,7 +108,7 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
     }
 
     public static Order getOrderById(int index) {
-        return _orderMap.get(_inList.get(index));
+        return orderMap.get(_inList.get(index));
     }
 
     public static int addOrder(Player player, String name, int killsCount, int itemcount, String itemname) {
@@ -178,11 +127,11 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
             return 0;
         }
 
-        if (Functions.getItemCount(player, _allowedItems.get(itemname)) < (itemcount * killsCount)) {
+        if (Functions.getItemCount(player, allowedItems.get(itemname)) < (itemcount * killsCount)) {
             return 0;
         }
 
-        if (_allowedItems.get(itemname) == 57 && Functions.getItemCount(player, _allowedItems.get(itemname)) < (itemcount * killsCount + Config.EVENT_HITMAN_COST_ITEM_COUNT)) {
+        if (allowedItems.get(itemname) == 57 && Functions.getItemCount(player, allowedItems.get(itemname)) < (itemcount * killsCount + Config.EVENT_HITMAN_COST_ITEM_COUNT)) {
             return 0;
         }
 
@@ -198,13 +147,13 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
             return 3;
         }
 
-        final Order order = new Order(player.getName(), name, _allowedItems.get(itemname), itemcount, killsCount);
+        final Order order = new Order(player.getName(), name, allowedItems.get(itemname), itemcount, killsCount);
 
-        _orderMap.put(player.getObjectId(), order);
+        orderMap.put(player.getObjectId(), order);
         _inList.add(0, player.getObjectId());
-        saveToDatabase(player.getObjectId(), player.getName(), name, _allowedItems.get(itemname), itemcount, killsCount);
+        saveToDatabase(player.getObjectId(), player.getName(), name, allowedItems.get(itemname), itemcount, killsCount);
         Functions.removeItem(player, Config.EVENT_HITMAN_COST_ITEM_ID, Config.EVENT_HITMAN_COST_ITEM_COUNT, "RemovedHitItem");
-        Functions.removeItem(player, _allowedItems.get(itemname), itemcount * killsCount, "Removed Hit Event");
+        Functions.removeItem(player, allowedItems.get(itemname), itemcount * killsCount, "Removed Hit Event");
 
         Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.Announce", player, player.getName(), itemcount, itemname, name).toString());
 
@@ -214,15 +163,12 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
     }
 
     public static int getOrdersCount() {
-        return _orderMap.size();
+        return orderMap.size();
     }
 
     private static void saveToDatabase(int objectId, String ownerName, String targetName, int itemId, int itemCount, int killsCount) {
-        Connection con = null;
-        PreparedStatement statement = null;
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(SAVE_TO_DATABASE);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SAVE_TO_DATABASE)) {
             statement.setInt(1, objectId);
             statement.setString(2, ownerName);
             statement.setString(3, targetName);
@@ -230,54 +176,43 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
             statement.setInt(5, itemCount);
             statement.setInt(6, killsCount);
             statement.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private static void loadFromDatabase() {
-        Connection con;
-        PreparedStatement statement = null;
-        ResultSet rset = null;
-
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(LOAD_FROM_DATABASE);
-            rset = statement.executeQuery();
-
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(LOAD_FROM_DATABASE);
+             ResultSet rset = statement.executeQuery()) {
             while (rset.next()) {
-                _orderMap.put(rset.getInt(1), new Order(rset.getString(2), rset.getString(3), rset.getInt(4), rset.getInt(5), rset.getInt(6)));
+                orderMap.put(rset.getInt(1), new Order(rset.getString(2), rset.getString(3), rset.getInt(4), rset.getInt(5), rset.getInt(6)));
                 _inList.add(0, rset.getInt(1));
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private static void deleteFromDatabase(int storedId) {
-        Connection con;
-        PreparedStatement statement = null;
-
-        try {
-            con = DatabaseFactory.getInstance().getConnection();
-            statement = con.prepareStatement(DELETE_STOREID_FROM_DATABASE);
+        try (Connection con = DatabaseFactory.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(DELETE_STOREID_FROM_DATABASE)) {
             statement.setInt(1, storedId);
             statement.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public static boolean deleteOrder(int storedId) {
-        if (!_orderMap.containsKey(storedId)) {
+        if (!orderMap.containsKey(storedId)) {
             return false;
         }
-        if (GameObjectsStorage.getPlayer(_orderMap.get(storedId).getTargetName()) != null) {
-            GameObjectsStorage.getPlayer(_orderMap.get(storedId).getTargetName()).setOrdered(0);
+        if (GameObjectsStorage.getPlayer(orderMap.get(storedId).getTargetName()) != null) {
+            GameObjectsStorage.getPlayer(orderMap.get(storedId).getTargetName()).setOrdered(0);
         }
-        Functions.addItem(World.getPlayer(storedId), _orderMap.get(storedId).getItemId(), _orderMap.get(storedId).getItemCount() * _orderMap.get(storedId).getKillsCount(), "AddingHitItem");
-        _orderMap.remove(storedId);
+        Functions.addItem(World.getPlayer(storedId), orderMap.get(storedId).getItemId(), orderMap.get(storedId).getItemCount() * orderMap.get(storedId).getKillsCount(), "AddingHitItem");
+        orderMap.remove(storedId);
         _inList.remove((Object) storedId);
         deleteFromDatabase(storedId);
 
@@ -285,31 +220,73 @@ public class Hitman extends Functions implements ScriptFile, OnDeathListener, On
     }
 
     private static boolean isRegistered(Player player) {
-        if (_orderMap.containsKey(player.getObjectId())) {
-            return true;
+        return orderMap.containsKey(player.getObjectId());
+    }
+
+    @Override
+    public void onLoad() {
+        orderMap = new HashMap<>();
+        _itemsList = new StringBuilder();
+        allowedItems = new HashMap<>();
+        _inList = new ArrayList<>();
+
+        CharListenerList.addGlobal(this);
+
+        for (String EVENT_HITMAN_ALLOWED_ITEM_LIST : Config.EVENT_HITMAN_ALLOWED_ITEM_LIST) {
+            final String itemName = ItemFunctions.createItem(Integer.parseInt(EVENT_HITMAN_ALLOWED_ITEM_LIST)).getTemplate().getName();
+            _itemsList.append(itemName).append(";");
+            allowedItems.put(itemName, Integer.parseInt(EVENT_HITMAN_ALLOWED_ITEM_LIST));
         }
-        return false;
+        loadFromDatabase();
+        _log.info("Loaded Event: Hitman");
+    }
+
+    @Override
+    public void onDeath(Creature actor, Creature killer) {
+        if (killer instanceof MonsterInstance || killer instanceof GuardInstance)
+            return;
+        if (getOrderByTargetName(actor.getName()) != null && !actor.getName().equals(killer.getName())) {
+            final Order order = getOrderByTargetName(actor.getName());
+            Functions.addItem(killer.getPlayer(), order.getItemId(), order.getItemCount(), "Killed");
+            Announcements.INSTANCE.announceToAll(new CustomMessage("scripts.events.Hitman.AnnounceKill", killer.getPlayer(), killer.getName(), actor.getName(), order.getItemCount(), ItemFunctions.createItem(order.getItemId()).getTemplate().getName()).toString());
+
+            if (order.getKillsCount() > 1) {
+                order.decrementKillsCount();
+            } else {
+                orderMap.remove(World.getPlayer(order.getOwner()).getObjectId());
+                _inList.remove((Object) World.getPlayer(order.getOwner()).getObjectId());
+                deleteFromDatabase(actor.getName());
+            }
+        }
+    }
+
+    @Override
+    public void onReload() {
+        orderMap.clear();
+        allowedItems.clear();
+    }
+
+    @Override
+    public void onShutdown() {
+        onReload();
     }
 
     private Order getOrderByTargetName(String name) {
-        for (final Order order : _orderMap.values()) {
-            if (name.equals(order.getTargetName())) {
-                return order;
-            }
-        }
-        return null;
+        return orderMap.values().stream()
+                .filter(e -> name.equals(e.getTargetName()))
+                .findFirst().orElse(null);
     }
 
     @Override
     public void onPlayerExit(Player player) {
         // /Выходит тот за кого назначили награду
-        if (_orderMap.containsKey(player.getOrdered())) {
+        if (orderMap.containsKey(player.getOrdered())) {
             Player gamer = GameObjectsStorage.getPlayer(player.getOrdered());
             gamer.sendMessage("Event Hitman :" + " Reward for murder returned");
             deleteOrder(player.getOrdered());
         }
         // /Выходит тот кто назначил награду
-        else if (_orderMap.containsKey(player.getObjectId())) {
+        else if (orderMap.containsKey(player.getObjectId())) {
             Player gamer = GameObjectsStorage.getPlayer(player.getObjectId());
             gamer.sendMessage("Event Hitman :" + " Reward for murder returned");
             deleteOrder(player.getOrdered());

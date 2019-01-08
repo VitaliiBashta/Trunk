@@ -4,21 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _336_CoinOfMagic extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _336_CoinOfMagic extends Quest {
     private static final int COIN_DIAGRAM = 3811;
     private static final int KALDIS_COIN = 3812;
     private static final int MEMBERSHIP_1 = 3813;
@@ -320,13 +307,11 @@ public class _336_CoinOfMagic extends Quest implements ScriptFile {
         addKillId(HaritLizardmanMatriarch);
         addKillId(HaritLizardmanShaman);
 
-        addQuestItem(new int[]{
-                COIN_DIAGRAM,
+        addQuestItem(COIN_DIAGRAM,
                 KALDIS_COIN,
                 MEMBERSHIP_1,
                 MEMBERSHIP_2,
-                MEMBERSHIP_3
-        });
+                MEMBERSHIP_3);
     }
 
     @Override

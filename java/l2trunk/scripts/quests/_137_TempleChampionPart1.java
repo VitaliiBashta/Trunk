@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _137_TempleChampionPart1 extends Quest implements ScriptFile {
+public final class _137_TempleChampionPart1 extends Quest {
     // NPCs
     private static final int SYLVAIN = 30070;
 
@@ -21,18 +20,6 @@ public class _137_TempleChampionPart1 extends Quest implements ScriptFile {
     private final static int Strain = 20200;
     private final static int Ghoul = 20201;
     private final static int DeadSeeker = 20202;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _137_TempleChampionPart1() {
         super(false);

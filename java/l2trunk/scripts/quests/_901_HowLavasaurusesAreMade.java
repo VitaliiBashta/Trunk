@@ -1,19 +1,12 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author B0nux
- * http://l2wiki.info/Способ_сборки_Лавазавра
- */
-public class _901_HowLavasaurusesAreMade extends Quest implements ScriptFile {
+public final class _901_HowLavasaurusesAreMade extends Quest {
     // NPC's
     private static final int ROONEY = 32049; // Rooney	Blacksmith of Wind
     // Item's
@@ -28,7 +21,7 @@ public class _901_HowLavasaurusesAreMade extends Quest implements ScriptFile {
     private static final int LAVASAURUS_BODY_FRAGMENT = 21911; // Lavasaurus Body Fragment
     private static final int LAVASAURUS_HORN_FRAGMENT = 21912; // Lavasaurus Horn Fragment
     // Monster's
-    private static final List<Integer> KILLING_MONSTERS = Arrays.asList(18799, 18800, 18801, 18802, 18803);
+    private static final List<Integer> KILLING_MONSTERS = List.of(18799, 18800, 18801, 18802, 18803);
     // Chance's
     private static final int DROP_CHANCE = 5;
 
@@ -125,15 +118,4 @@ public class _901_HowLavasaurusesAreMade extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

@@ -9,8 +9,8 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.Arrays;
 import java.util.List;
 
-public class Cfg extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Arrays.asList("control", "cfg", "menu");
+public final class Cfg extends Functions implements IVoicedCommandHandler {
+    private static final List<String> COMMANDS = List.of("control", "cfg", "menu");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {

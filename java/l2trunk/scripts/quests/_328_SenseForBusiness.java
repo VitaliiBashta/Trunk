@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _328_SenseForBusiness extends Quest implements ScriptFile {
+public final class _328_SenseForBusiness extends Quest implements ScriptFile {
     //NPC
     private final int SARIEN = 30436;
     //items
     private final int MONSTER_EYE_CARCASS = 1347;
     private final int MONSTER_EYE_LENS = 1366;
     private final int BASILISK_GIZZARD = 1348;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _328_SenseForBusiness() {
         super(false);

@@ -174,7 +174,6 @@ public abstract class SysMsgContainer<T extends SysMsgContainer<T>> extends L2Ga
     }
 
 
-    @SuppressWarnings("rawtypes")
     static class IntegerArgument extends IArgument {
         private final int _data;
 

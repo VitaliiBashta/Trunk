@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _294_CovertBusiness extends Quest implements ScriptFile {
+public final class _294_CovertBusiness extends Quest implements ScriptFile {
     private static final int BatFang = 1491;
     private static final int RingOfRaccoon = 1508;
 
@@ -14,18 +14,6 @@ public class _294_CovertBusiness extends Quest implements ScriptFile {
     private static final int BladeBat = 20480;
 
     private static final int Keef = 30534;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _294_CovertBusiness() {
         super(false);
@@ -51,7 +39,7 @@ public class _294_CovertBusiness extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int id = st.getState();
 
         if (id == CREATED) {

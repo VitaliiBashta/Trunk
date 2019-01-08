@@ -10,9 +10,8 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _726_LightwithintheDarkness extends Quest implements ScriptFile {
+public final class _726_LightwithintheDarkness extends Quest {
     // ITEMS
     private static final int KnightsEpaulette = 9912;
 
@@ -26,22 +25,11 @@ public final class _726_LightwithintheDarkness extends Quest implements ScriptFi
         addKillId(KanadisGuide3);
     }
 
-    private static boolean checkAllDestroyed(int mobId, int refId) {
-        return GameObjectsStorage.getAllByNpcId(mobId, true).stream()
+    private static boolean checkAllDestroyed(int refId) {
+        return GameObjectsStorage.getAllByNpcId(_726_LightwithintheDarkness.KanadisGuide3, true).stream()
                 .noneMatch(npc -> npc.getReflectionId() == refId);
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
@@ -99,7 +87,7 @@ public final class _726_LightwithintheDarkness extends Quest implements ScriptFi
         Player player = st.getPlayer();
         Party party = player.getParty();
 
-        if (cond == 1 && npcId == KanadisGuide3 && checkAllDestroyed(KanadisGuide3, player.getReflectionId())) {
+        if (cond == 1 && npcId == KanadisGuide3 && checkAllDestroyed(player.getReflectionId())) {
             if (player.isInParty())
                 for (Player member : party.getMembers())
                     if (!member.isDead() && member.getParty().isInReflection()) {
@@ -108,7 +96,7 @@ public final class _726_LightwithintheDarkness extends Quest implements ScriptFi
                         member.setVar("q726done", "done", -1);
                         st.playSound(SOUND_ITEMGET);
                     }
-            player.getReflection().startCollapseTimer( 60 * 1000L);
+            player.getReflection().startCollapseTimer(60 * 1000L);
         }
         return null;
     }

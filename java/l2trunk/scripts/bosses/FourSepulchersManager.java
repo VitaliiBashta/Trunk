@@ -21,16 +21,20 @@ import l2trunk.scripts.npc.model.SepulcherNpcInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Stream;
 
 public class FourSepulchersManager extends Functions implements ScriptFile, OnDeathListener {
     public static final String QUEST_ID = "_620_FourGoblets";
     private static final Logger _log = LoggerFactory.getLogger(FourSepulchersManager.class);
-    private static final Zone[] _zone = new Zone[4];
+    private static final List<Zone> ZONES = List.of(
+            ReflectionUtils.getZone("[FourSepulchers1]"),
+            ReflectionUtils.getZone("[FourSepulchers2]"),
+            ReflectionUtils.getZone("[FourSepulchers3]"),
+            ReflectionUtils.getZone("[FourSepulchers4]"));
 
     private static final int ENTRANCE_PASS = 7075;
     private static final int USED_PASS = 7261;
@@ -87,8 +91,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
     }
 
     private static void cleanUp() {
-        for (Player player : getPlayersInside())
-            player.teleToClosestTown();
+        getPlayersInside().forEach(Player::teleToClosestTown);
 
         FourSepulchersSpawn.deleteAllMobs();
 
@@ -186,19 +189,16 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
     }
 
     private static void checkAnnihilated(final Player player) {
-        if (isPlayersAnnihilated())
-            ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                @Override
-                public void runImpl() {
-                    if (player.getParty() != null)
-                        for (Player mem : player.getParty().getMembers()) {
-                            if (!mem.isDead())
-                                break;
-                            mem.teleToLocation(169589 + Rnd.get(-80, 80), -90493 + Rnd.get(-80, 80), -2914);
-                        }
-                    else
-                        player.teleToLocation(169589 + Rnd.get(-80, 80), -90493 + Rnd.get(-80, 80), -2914);
-                }
+        if (getPlayersInside().allMatch(Player::isDead))
+            ThreadPoolManager.INSTANCE.schedule(() -> {
+                if (player.getParty() != null)
+                    for (Player mem : player.getParty().getMembers()) {
+                        if (!mem.isDead())
+                            break;
+                        mem.teleToLocation(169589 + Rnd.get(-80, 80), -90493 + Rnd.get(-80, 80), -2914);
+                    }
+                else
+                    player.teleToLocation(169589 + Rnd.get(-80, 80), -90493 + Rnd.get(-80, 80), -2914);
             }, 5000);
     }
 
@@ -258,38 +258,16 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
         player.sendPacket(html);
     }
 
-    private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
-    }
-
-    private static List<Player> getPlayersInside() {
-        List<Player> result = new ArrayList<>();
-        for (Zone zone : getZones())
-            result.addAll(zone.getInsidePlayers());
-        return result;
+    private static Stream<Player> getPlayersInside() {
+        return ZONES.stream().flatMap(Zone::getInsidePlayers);
     }
 
     private static boolean checkIfInZone(Creature cha) {
-        for (Zone zone : getZones())
-            if (zone.checkIfInZone(cha))
-                return true;
-        return false;
-    }
-
-    private static Zone[] getZones() {
-        return _zone;
+        return ZONES.stream().anyMatch(zone -> zone.checkIfInZone(cha));
     }
 
     private void init() {
         CharListenerList.addGlobal(this);
-
-        _zone[0] = ReflectionUtils.getZone("[FourSepulchers1]");
-        _zone[1] = ReflectionUtils.getZone("[FourSepulchers2]");
-        _zone[2] = ReflectionUtils.getZone("[FourSepulchers3]");
-        _zone[3] = ReflectionUtils.getZone("[FourSepulchers4]");
 
         if (_changeCoolDownTimeTask != null)
             _changeCoolDownTimeTask.cancel(false);
@@ -358,7 +336,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
             _inEntryTime = true;
             _inAttackTime = false;
 
-            long interval = 0;
+            long interval;
             // if this is first launch - search time when entry time will be ended:
             // counting difference between time when entry time ends and current time and then launching change time task
             if (_firstTimeRun)
@@ -381,7 +359,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
             _inEntryTime = true;
             _inAttackTime = false;
 
-            long interval = 0;
+            long interval;
             // searching time when warmup time will be ended:
             // counting difference between time when warmup time ends and current time and then launching change time task
             if (_firstTimeRun)
@@ -419,7 +397,7 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
             if (!_firstTimeRun)
                 _warmUpTimeEnd = System.currentTimeMillis();
 
-            long interval = 0;
+            long interval;
             //say task
             if (_firstTimeRun) {
                 for (double min = Calendar.getInstance().get(Calendar.MINUTE); min < _newCycleMin; min++)

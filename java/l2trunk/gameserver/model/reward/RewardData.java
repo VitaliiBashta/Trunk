@@ -40,10 +40,6 @@ public final class RewardData implements Cloneable {
         return notRate;
     }
 
-    public void setNotRate(boolean notRate) {
-        this.notRate = notRate;
-    }
-
     public int getItemId() {
         return _item.getItemId();
     }

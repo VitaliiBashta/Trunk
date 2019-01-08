@@ -18,12 +18,12 @@ import l2trunk.gameserver.utils.Log;
 import java.util.List;
 
 
-public class TradeDone extends L2GameClientPacket {
-    private int _response;
+public final class TradeDone extends L2GameClientPacket {
+    private int response;
 
     @Override
     protected void readImpl() {
-        _response = readD();
+        response = readD();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class TradeDone extends L2GameClientPacket {
             return;
         }
 
-        if (_response == 0) {
+        if (response == 0) {
             request.cancel();
             parthner1.sendPacket(SendTradeDone.FAIL);
             parthner2.sendPacket(SendTradeDone.FAIL, new SystemMessage2(SystemMsg.C1_HAS_CANCELLED_THE_TRADE).addString(parthner1.getName()));
@@ -99,8 +99,6 @@ public class TradeDone extends L2GameClientPacket {
         parthner1.getInventory().writeLock();
         parthner2.getInventory().writeLock();
         try {
-            slots = 0;
-            weight = 0;
 
             for (TradeItem ti : tradeList1) {
                 ItemInstance item = parthner1.getInventory().getItemByObjectId(ti.getObjectId());

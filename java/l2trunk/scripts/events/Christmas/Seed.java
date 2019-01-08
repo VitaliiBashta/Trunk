@@ -18,10 +18,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Seed extends ScriptItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = Arrays.asList(5560, // Christmas Tree
+    private static final List<Integer> ITEM_IDS = List.of(5560, // Christmas Tree
             5561 // Special Christmas Tree
     );
-    private static final List<Integer> NPC_IDS = Arrays.asList(13006, // Christmas Tree
+    private static final List<Integer> NPC_IDS = List.of(13006, // Christmas Tree
             13007 // Special Christmas Tree
     );
     private static final int DESPAWN_TIME = 3600000; //60 min

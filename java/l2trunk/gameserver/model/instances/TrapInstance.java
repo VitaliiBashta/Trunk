@@ -23,7 +23,7 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class TrapInstance extends NpcInstance {
     private final HardReference<? extends Creature> _ownerRef;
-    private final Skill _skill;
+    private final Skill skill;
     private ScheduledFuture<?> _targetTask;
     private ScheduledFuture<?> _destroyTask;
     private boolean _detected;
@@ -35,7 +35,7 @@ public final class TrapInstance extends NpcInstance {
     public TrapInstance(int objectId, NpcTemplate template, Creature owner, Skill skill, Location loc) {
         super(objectId, template);
         _ownerRef = owner.getRef();
-        _skill = skill;
+        this.skill = skill;
 
         setReflection(owner.getReflection());
         setLevel(owner.getLevel());
@@ -188,16 +188,16 @@ public final class TrapInstance extends NpcInstance {
 
             for (Creature target : trap.getAroundCharacters(200, 200))
                 if (target != owner)
-                    if (trap._skill.checkTarget(owner, target, null, false, false) == null) {
+                    if (trap.skill.checkTarget(owner, target, null, false, false) == null) {
                         List<Creature> targets = new ArrayList<>();
-                        if (trap._skill.getTargetType() != SkillTargetType.TARGET_AREA)
+                        if (trap.skill.getTargetType() != SkillTargetType.TARGET_AREA)
                             targets.add(target);
                         else
-                            for (Creature t : trap.getAroundCharacters(trap._skill.getSkillRadius(), 128))
-                                if (trap._skill.checkTarget(owner, t, null, false, false) == null)
+                            for (Creature t : trap.getAroundCharacters(trap.skill.getSkillRadius(), 128))
+                                if (trap.skill.checkTarget(owner, t, null, false, false) == null)
                                     targets.add(target);
 
-                        trap._skill.useSkill(trap, targets);
+                        trap.skill.useSkill(trap, targets);
                         if (target.isPlayer())
                             target.sendMessage(new CustomMessage("common.Trap", target.getPlayer()));
                         trap.deleteMe();

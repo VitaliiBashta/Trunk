@@ -51,7 +51,7 @@ public final class SelfSacrifice extends Skill {
                 }
             }
         }
-        if ((isSSPossible()) && ((!Config.SAVING_SPS) || (this._skillType != Skill.SkillType.SELF_SACRIFICE))) {
+        if ((isSSPossible()) && ((!Config.SAVING_SPS) || (this.skillType != Skill.SkillType.SELF_SACRIFICE))) {
             activeChar.unChargeShots(isMagic());
         }
     }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _699_GuardianoftheSkies extends Quest implements ScriptFile {
+public final class _699_GuardianoftheSkies extends Quest implements ScriptFile {
     // NPC's
     private static final int engineer_recon = 32557;
 
@@ -18,18 +18,6 @@ public class _699_GuardianoftheSkies extends Quest implements ScriptFile {
     private static final int vulture_rider_2lv = 22615;
     private static final int vulture_rider_3lv = 25633;
     private static final int master_rider = 25623;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _699_GuardianoftheSkies() {
         super(PARTY_ALL);

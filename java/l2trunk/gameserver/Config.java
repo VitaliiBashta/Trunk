@@ -1217,9 +1217,6 @@ public final class Config {
     public static int SERVICES_PK_KILL_REWARD_ITEM;
     public static long SERVICES_PK_KILL_REWARD_COUNT;
     public static boolean SERVICES_PK_PVP_TIE_IF_SAME_IP;
-    //Announce PK/PvP
-    public static boolean SERVICES_ANNOUNCE_PK_ENABLED;
-    public static boolean SERVICES_ANNOUNCE_PVP_ENABLED;
     public static boolean ALT_OPEN_CLOAK_SLOT;
     public static boolean ALT_SHOW_SERVER_TIME;
     /**
@@ -2757,11 +2754,6 @@ public final class Config {
         AWAY_TIMER = servicesSettings.getProperty("AwayTimer", 30);
         BACK_TIMER = servicesSettings.getProperty("BackTimer", 30);
         AWAY_PEACE_ZONE = servicesSettings.getProperty("AwayOnlyInPeaceZone", false);
-
-        //Announce
-        SERVICES_ANNOUNCE_PK_ENABLED = servicesSettings.getProperty("AnnouncePK", false);
-        SERVICES_ANNOUNCE_PVP_ENABLED = servicesSettings.getProperty("AnnouncePvP", false);
-
 
         ITEM_BROKER_ITEM_SEARCH = servicesSettings.getProperty("UseItemBrokerItemSearch", false);
 

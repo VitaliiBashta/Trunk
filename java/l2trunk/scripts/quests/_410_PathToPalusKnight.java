@@ -87,7 +87,7 @@ public class _410_PathToPalusKnight extends Quest implements ScriptFile {
         } else if (event.equalsIgnoreCase("30422_1")) {
             htmltext = "kalinta_q0410_02.htm";
             st.takeItems(VIRGILS_LETTER_ID, -1);
-            st.giveItems(MORTE_TALISMAN_ID, 1);
+            st.giveItems(MORTE_TALISMAN_ID);
             st.setCond(4);
         } else if (event.equalsIgnoreCase("30422_2")) {
             htmltext = "kalinta_q0410_06.htm";

@@ -1,11 +1,6 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
-
-/**
- * @author pchayka
- */
-public class _724_ForTheSakeOfTheTerritoryRune extends Dominion_ForTheSakeOfTerritory implements ScriptFile {
+public final class _724_ForTheSakeOfTheTerritoryRune extends Dominion_ForTheSakeOfTerritory {
     public _724_ForTheSakeOfTheTerritoryRune() {
         super();
     }
@@ -13,20 +8,5 @@ public class _724_ForTheSakeOfTheTerritoryRune extends Dominion_ForTheSakeOfTerr
     @Override
     public int getDominionId() {
         return 88;
-    }
-
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

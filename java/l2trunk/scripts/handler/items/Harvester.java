@@ -11,7 +11,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class Harvester extends SimpleItemHandler implements ScriptFile {
@@ -35,12 +34,10 @@ public final class Harvester extends SimpleItemHandler implements ScriptFile {
 
     @Override
     public void onReload() {
-
     }
 
     @Override
     public void onShutdown() {
-
     }
 
     @Override
@@ -63,7 +60,6 @@ public final class Harvester extends SimpleItemHandler implements ScriptFile {
             player.getAI().Cast(skill, monster);
             return true;
         }
-
         return false;
     }
 }

@@ -173,7 +173,7 @@ public class GameServer {
         _log.info("===================[Olympiad System Loaded]=======================");
         PetitionManager.getInstance();
         CursedWeaponsManager.INSTANCE.log();
-        ItemHandler.INSTANCE.toString();
+//        ItemHandler.INSTANCE.toString();
         _log.info("======================[Loading BALANCER]==========================");
         ClassesStatsBalancerParser.getInstance();
         _log.info("======================[Loading BALANCER]==========================");

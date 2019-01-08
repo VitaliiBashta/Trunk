@@ -6,12 +6,10 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.ShowCalc;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class Calculator extends ScriptItemHandler implements ScriptFile {
     private static final int CALCULATOR = 4393;
-
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -23,15 +21,6 @@ public final class Calculator extends ScriptItemHandler implements ScriptFile {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
 
     @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {

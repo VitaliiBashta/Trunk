@@ -18,7 +18,7 @@ public final class LindviorMovie implements ScriptFile {
         Zone zone = ReflectionUtils.getZone("[keucereus_alliance_base_town_peace]");
         zone.setActive(true);
 
-        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> zone.getInsidePlayers().stream()
+        ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> zone.getInsidePlayers()
                 .filter(player -> !player.isInBoat())
                 .filter(player -> !player.isInFlyingTransform())
                 .forEach(player -> player.showQuestMovie(ExStartScenePlayer.SCENE_LINDVIOR)), movieDelay, movieDelay);

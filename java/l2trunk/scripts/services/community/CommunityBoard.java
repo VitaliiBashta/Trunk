@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -75,14 +74,10 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
             CommunityBoardManager.removeHandler(this);
     }
 
-    @Override
-    public void onShutdown() {
-
-    }
 
     @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_bbshome", "_bbsmultisell", "_bbssell", "_bbsaugment", "_bbsdeaugment", "_bbspage", "_bbsfile", "_bbsscripts");
+        return List.of("_bbshome", "_bbsmultisell", "_bbssell", "_bbsaugment", "_bbsdeaugment", "_bbspage", "_bbsfile", "_bbsscripts");
     }
 
     @Override

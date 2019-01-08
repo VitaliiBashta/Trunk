@@ -124,10 +124,6 @@ public final class TeleToGH extends Functions implements ScriptFile {
         _spawns.clear();
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     public void toGH() {
         Player player = getSelf();
         NpcInstance npc = getNpc();

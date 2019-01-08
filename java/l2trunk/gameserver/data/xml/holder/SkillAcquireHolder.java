@@ -11,9 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
-public final class SkillAcquireHolder /*extends AbstractHolder*/ {
+public final class SkillAcquireHolder {
     private static final Logger LOG = LoggerFactory.getLogger(SkillAcquireHolder.class);
     // классовые зависимости
     private static final Map<Integer, List<SkillLearn>> NORMAL_SKILL_TREE = new HashMap<>();
@@ -273,15 +274,14 @@ public final class SkillAcquireHolder /*extends AbstractHolder*/ {
         return l;
     }
 
-    public static List<SkillLearn> getAllNormalSkillTreeWithForgottenScrolls() {
-        List<SkillLearn> a = new ArrayList<>();
-        for (Map.Entry<Integer, List<SkillLearn>> i : NORMAL_SKILL_TREE.entrySet()) {
-            for (SkillLearn learn : i.getValue())
-                if (learn.getItemId() > 0 && learn.isClicked())
-                    a.add(learn);
-        }
-
-        return a;
+    public static List<Integer> getAllSpellbookIds() {
+        return NORMAL_SKILL_TREE.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .flatMap(List::stream)
+                .filter(learn -> learn.getItemId() > 0)
+                .filter(SkillLearn::isClicked)
+                .map(SkillLearn::getItemId)
+                .collect(Collectors.toList());
     }
 
     public static void addAllNormalSkillLearns(Map<Integer, List<SkillLearn>> map) {

@@ -104,7 +104,7 @@ public abstract class Creature extends GameObject {
     private final AtomicState damageBlocked = new AtomicState();
     private final AtomicState buffImmunity = new AtomicState(); // Иммунитет к бафам
     private final AtomicState debuffImmunity = new AtomicState(); // Иммунитет к дебафам
-    private final AtomicState _effectImmunity = new AtomicState(); // Иммунитет ко всем эффектам
+    private final AtomicState effectImmunity = new AtomicState(); // Иммунитет ко всем эффектам
     private final AtomicState weaponEquipBlocked = new AtomicState();
     private final Lock moveLock = new ReentrantLock();
     /**
@@ -1887,7 +1887,7 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isEffectImmune() {
-        return _effectImmunity.get();
+        return effectImmunity.get();
     }
 
     public boolean isBuffImmune() {

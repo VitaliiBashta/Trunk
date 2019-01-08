@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _432_BirthdayPartySong extends Quest implements ScriptFile {
+public final class _432_BirthdayPartySong extends Quest {
     //NPC
     private static final int MELODY_MAESTRO_OCTAVIA = 31043;
     //MOB
@@ -13,18 +13,6 @@ public class _432_BirthdayPartySong extends Quest implements ScriptFile {
     //Quest items
     private static final int RED_CRYSTALS = 7541;
     private static final int BIRTHDAY_ECHO_CRYSTAL = 7061;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _432_BirthdayPartySong() {
         super(false);

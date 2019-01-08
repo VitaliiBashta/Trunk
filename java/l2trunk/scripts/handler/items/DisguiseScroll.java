@@ -14,7 +14,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
+public final class DisguiseScroll extends ScriptItemHandler implements ScriptFile {
     private final List<Integer> ITEM_IDS = List.of(
             13677, // Gludio Disguise Scroll
             13678, // Dion Disguise Scroll

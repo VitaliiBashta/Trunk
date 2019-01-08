@@ -56,26 +56,13 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     private static boolean isAlreadyEnteredOtherParty = false;
     private static boolean Dying = false;
 
-    private static void banishForeigners() {
-        getPlayersInside().forEach(Player::teleToClosestTown);
-    }
-
     private synchronized static void checkAnnihilated() {
-        if (_onAnnihilatedTask == null && isPlayersAnnihilated())
+        if (_onAnnihilatedTask == null && zone.getInsidePlayers().allMatch(Player::isDead))
             _onAnnihilatedTask = ThreadPoolManager.INSTANCE.schedule(SailrenManager::sleep, 5000);
-    }
-
-    private static List<Player> getPlayersInside() {
-        return zone.getInsidePlayers();
     }
 
     private static int getRespawnInterval() {
         return (int) (Config.ALT_RAID_RESPAWN_MULTIPLIER * (FWS_FIXINTERVALOFSAILRENSPAWN + Rnd.get(0, FWS_RANDOMINTERVALOFSAILRENSPAWN)));
-    }
-
-    private static boolean isPlayersAnnihilated() {
-        return getPlayersInside().stream().allMatch(Player::isDead);
-
     }
 
     private static void onSailrenDie() {
@@ -117,7 +104,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     }
 
     private static void setUnspawn() {
-        banishForeigners();
+        zone.getInsidePlayers().forEach(Player::teleToClosestTown);
 
         if (_velociraptor != null) {
             if (_velociraptor.getSpawn() != null)
@@ -212,7 +199,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
                 if (mem != null && !mem.isDead() && mem.isInRange(pc, 1000))
                     members.add(mem);
             members.forEach(mem ->
-                mem.teleToLocation(Location.findPointToStay(_enter, 80, mem.getGeoIndex())));
+                    mem.teleToLocation(Location.findPointToStay(_enter, 80, mem.getGeoIndex())));
         }
         isAlreadyEnteredOtherParty = true;
     }

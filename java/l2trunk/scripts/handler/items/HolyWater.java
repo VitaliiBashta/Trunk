@@ -33,16 +33,6 @@ public final class HolyWater extends SimpleItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     protected boolean useItemImpl(Player player, ItemInstance item, boolean ctrl) {
         GameObject target = player.getTarget();
 

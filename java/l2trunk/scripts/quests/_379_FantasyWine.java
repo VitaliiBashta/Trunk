@@ -4,9 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _379_FantasyWine extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _379_FantasyWine extends Quest {
     //NPC
     private final int HARLAN = 30074;
     //Mobs
@@ -16,23 +17,7 @@ public class _379_FantasyWine extends Quest implements ScriptFile {
     private final int LEAF_OF_EUCALYPTUS = 5893;
     private final int STONE_OF_CHILL = 5894;
     //Item
-    private final int[] REWARD = {
-            5956,
-            5957,
-            5958
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private final List<Integer> REWARD = List.of(5956, 5957, 5958);
 
     public _379_FantasyWine() {
         super(false);
@@ -55,13 +40,13 @@ public class _379_FantasyWine extends Quest implements ScriptFile {
             st.takeItems(STONE_OF_CHILL, -1);
             int rand = Rnd.get(100);
             if (rand < 25) {
-                st.giveItems(REWARD[0], 1);
+                st.giveItems(REWARD.get(0), 1);
                 htmltext = "hitsran_q0379_11.htm";
             } else if (rand < 50) {
-                st.giveItems(REWARD[1], 1);
+                st.giveItems(REWARD.get(1), 1);
                 htmltext = "hitsran_q0379_12.htm";
             } else {
-                st.giveItems(REWARD[2], 1);
+                st.giveItems(REWARD.get(2), 1);
                 htmltext = "hitsran_q0379_13.htm";
             }
             st.playSound(SOUND_FINISH);

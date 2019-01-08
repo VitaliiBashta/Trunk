@@ -6,20 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _634_InSearchofDimensionalFragments extends Quest implements ScriptFile {
-    private final int DIMENSION_FRAGMENT_ID = 7079;
+public final class _634_InSearchofDimensionalFragments extends Quest {
+    private static final int DIMENSION_FRAGMENT_ID = 7079;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _634_InSearchofDimensionalFragments() {
         super(true);

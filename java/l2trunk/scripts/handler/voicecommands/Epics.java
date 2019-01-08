@@ -32,14 +32,6 @@ public final class Epics implements IVoicedCommandHandler, ScriptFile {
     }
 
     @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {
         if (activeChar == null)
             return false;

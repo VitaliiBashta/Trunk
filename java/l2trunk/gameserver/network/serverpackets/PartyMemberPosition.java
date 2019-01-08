@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PartyMemberPosition extends L2GameServerPacket {
+public final class PartyMemberPosition extends L2GameServerPacket {
     private final Map<Integer, Location> positions = new HashMap<>();
 
     public PartyMemberPosition add(Player actor) {
@@ -23,11 +23,11 @@ public class PartyMemberPosition extends L2GameServerPacket {
     protected final void writeImpl() {
         writeC(0xba);
         writeD(positions.size());
-        for (Map.Entry<Integer, Location> e : positions.entrySet()) {
-            writeD(e.getKey());
-            writeD(e.getValue().x);
-            writeD(e.getValue().y);
-            writeD(e.getValue().z);
-        }
+        positions.forEach((k, v) -> {
+            writeD(k);
+            writeD(v.x);
+            writeD(v.y);
+            writeD(v.z);
+        });
     }
 }

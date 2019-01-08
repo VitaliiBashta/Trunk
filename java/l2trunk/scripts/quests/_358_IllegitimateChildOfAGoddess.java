@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _358_IllegitimateChildOfAGoddess extends Quest implements ScriptFile {
+public final class _358_IllegitimateChildOfAGoddess extends Quest implements ScriptFile {
     //Variables
     private static final int DROP_RATE = 70; //in %
     private static final int REQUIRED = 108; //how many items will be paid for a reward (affects onkill sounds too)
@@ -35,18 +35,6 @@ public class _358_IllegitimateChildOfAGoddess extends Quest implements ScriptFil
     //Mobs
     private static final int MOB1 = 20672;
     private static final int MOB2 = 20673;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _358_IllegitimateChildOfAGoddess() {
         super(true);

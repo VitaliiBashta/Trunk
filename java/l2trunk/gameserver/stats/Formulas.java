@@ -135,22 +135,7 @@ public class Formulas {
                     if (target.isPlayer()) {
                         info.lethal = true;
                         info.lethal_dmg = (target.getCurrentHp() + target.getCurrentCp()) - 1.1; // Oly
-                        // \
-                        // Duel
-                        // hack
-                        // installation
-                        // is
-                        // not
-                        // exactly
-                        // 1
-                        // HP,
-                        // and
-                        // a
-                        // little
-                        // more
-                        // to
-                        // prevent
-                        // psevdosmerti
+
                         target.sendPacket(SystemMsg.LETHAL_STRIKE);
                     } else {
                         info.lethal_dmg = target.getCurrentHp() - 1;

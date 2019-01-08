@@ -5,26 +5,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SkillList;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _247_PossessorOfaPreciousSoul4 extends Quest implements ScriptFile {
+public final class _247_PossessorOfaPreciousSoul4 extends Quest {
     private static final int CARADINE = 31740;
     private static final int LADY_OF_LAKE = 31745;
 
     private static final int CARADINE_LETTER_LAST = 7679;
     private static final int NOBLESS_TIARA = 7694;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _247_PossessorOfaPreciousSoul4() {
         super(false);
@@ -52,32 +39,34 @@ public class _247_PossessorOfaPreciousSoul4 extends Quest implements ScriptFile 
                 return htmltext;
             }
         } else if (cond == 2) {
-            if (event.equals("caradine_q0247_06.htm"))
-                return htmltext;
-            else if (event.equals("caradine_q0247_05.htm")) {
-                st.getPlayer().teleToLocation(143230, 44030, -3030);
-                return htmltext;
-            } else if (event.equals("lady_of_the_lake_q0247_02.htm"))
-                return htmltext;
-            else if (event.equals("lady_of_the_lake_q0247_03.htm"))
-                return htmltext;
-            else if (event.equals("lady_of_the_lake_q0247_04.htm"))
-                return htmltext;
-            else if (event.equals("lady_of_the_lake_q0247_05.htm")) {
-                if (st.getPlayer().getLevel() >= 75) {
-                    st.giveItems(NOBLESS_TIARA, 1);
-                    st.addExpAndSp(93836, 0);
-                    st.playSound(SOUND_FINISH);
-                    st.unset("cond");
-                    st.exitCurrentQuest(false);
-                    Olympiad.addNoble(st.getPlayer());
-                    st.getPlayer().setNoble(true);
-                    st.getPlayer().updatePledgeClass();
-                    st.getPlayer().updateNobleSkills();
-                    st.getPlayer().sendPacket(new SkillList(st.getPlayer()));
-                    st.getPlayer().broadcastUserInfo(true);
-                } else
-                    htmltext = "lady_of_the_lake_q0247_06.htm";
+            switch (event) {
+                case "caradine_q0247_06.htm":
+                    return htmltext;
+                case "caradine_q0247_05.htm":
+                    st.getPlayer().teleToLocation(143230, 44030, -3030);
+                    return htmltext;
+                case "lady_of_the_lake_q0247_02.htm":
+                    return htmltext;
+                case "lady_of_the_lake_q0247_03.htm":
+                    return htmltext;
+                case "lady_of_the_lake_q0247_04.htm":
+                    return htmltext;
+                case "lady_of_the_lake_q0247_05.htm":
+                    if (st.getPlayer().getLevel() >= 75) {
+                        st.giveItems(NOBLESS_TIARA, 1);
+                        st.addExpAndSp(93836, 0);
+                        st.playSound(SOUND_FINISH);
+                        st.unset("cond");
+                        st.exitCurrentQuest(false);
+                        Olympiad.addNoble(st.getPlayer());
+                        st.getPlayer().setNoble(true);
+                        st.getPlayer().updatePledgeClass();
+                        st.getPlayer().updateNobleSkills();
+                        st.getPlayer().sendPacket(new SkillList(st.getPlayer()));
+                        st.getPlayer().broadcastUserInfo(true);
+                    } else
+                        htmltext = "lady_of_the_lake_q0247_06.htm";
+                    break;
             }
         }
         return htmltext;

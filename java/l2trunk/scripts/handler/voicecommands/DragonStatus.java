@@ -18,14 +18,6 @@ public final class DragonStatus implements IVoicedCommandHandler, ScriptFile {
     }
 
     @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public boolean useVoicedCommand(String command, Player player, String args) {
         QuestState qs = player.getQuestState(_254_LegendaryTales.class);
         if (qs == null) {

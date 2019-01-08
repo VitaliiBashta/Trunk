@@ -6,13 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Keen Claws
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _264_KeenClaws extends Quest implements ScriptFile {
+public final class _264_KeenClaws extends Quest implements ScriptFile {
     //NPC
     private static final int Payne = 30136;
     //Quest Items
@@ -51,18 +45,6 @@ public class _264_KeenClaws extends Quest implements ScriptFile {
                     2
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _264_KeenClaws() {
         super(false);

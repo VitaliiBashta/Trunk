@@ -4,13 +4,15 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _281_HeadForTheHills extends Quest implements ScriptFile {
+import java.util.Map;
+
+public final class _281_HeadForTheHills extends Quest implements ScriptFile {
+    //Items
+    private static final int ScrollOfEscape = 736;
     //NPC
     private final int Marcela = 32173;
-
     //Mobs
     private final int GreenGoblin = 22234;
     private final int MountainWerewolf = 22235;
@@ -18,61 +20,23 @@ public class _281_HeadForTheHills extends Quest implements ScriptFile {
     private final int MountainFungus = 22237;
     private final int MountainWerewolfChief = 22238;
     private final int MuertosGuard = 22239;
-
     //QuestItem
     private final int HillsOfGoldMonsterClaw = 9796;
-    //Items
-    private final int ScrollOfEscape = 736;
-    public final int SoulshotNoGradeforBeginners = 5789;
-
     //Drop Cond
     //# [ID, CHANCE]
-    private final int[][] DROPLIST = {
-            {
-                    GreenGoblin,
-                    70
-            },
-            {
-                    MountainWerewolf,
-                    75
-            },
-            {
-                    MuertosArcher,
-                    80
-            },
-            {
-                    MountainFungus,
-                    70
-            },
-            {
-                    MountainWerewolfChief,
-                    90
-            },
-            {
-                    MuertosGuard,
-                    90
-            }
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private final Map<Integer, Integer> DROPLIST_CHANCES = Map.of(
+            GreenGoblin, 70,
+            MountainWerewolf, 75,
+            MuertosArcher, 80,
+            MountainFungus, 70,
+            MountainWerewolfChief, 90,
+            MuertosGuard, 90
+    );
 
     public _281_HeadForTheHills() {
         super(false);
         addStartNpc(Marcela);
-
-        for (int[] element : DROPLIST)
-            addKillId(element[0]);
-
+        addKillId(DROPLIST_CHANCES.keySet());
         addQuestItem(HillsOfGoldMonsterClaw);
     }
 
@@ -150,11 +114,9 @@ public class _281_HeadForTheHills extends Quest implements ScriptFile {
         int cond = st.getCond();
         if (cond != 1)
             return null;
-        for (int[] element : DROPLIST)
-            if (npcId == element[0]) {
-                st.rollAndGive(HillsOfGoldMonsterClaw, 1, element[1]);
-                return null;
-            }
+        DROPLIST_CHANCES.entrySet().stream()
+                .filter(e -> e.getKey() == npcId)
+                .findFirst().ifPresent(e -> st.rollAndGive(HillsOfGoldMonsterClaw, 1, e.getValue()));
         return null;
     }
 }

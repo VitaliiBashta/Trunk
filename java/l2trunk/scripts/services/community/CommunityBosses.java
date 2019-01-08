@@ -247,7 +247,7 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
                 else
                     player.sendMessage("Boss isn't alive!");
             case 4://Show Location
-                player.sendPacket(new RadarControl(2, 2, 0, 0, 0));
+                player.sendPacket(new RadarControl(2, 2));
         }
     }
 

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Stream;
 
 public final class BaylorManager extends Functions implements ScriptFile {
     private static final int Baylor = 29099;
@@ -111,7 +112,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
     }
 
     private synchronized static void checkAnnihilated() {
-        if (isPlayersAnnihilated())
+        if (getPlayersInside().allMatch(Player::isDead))
             setIntervalEndTask();
     }
 
@@ -144,7 +145,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
         _isAlreadyEnteredOtherParty = true;
     }
 
-    private static List<Player> getPlayersInside() {
+    private static Stream<Player> getPlayersInside() {
         return getZone().getInsidePlayers();
     }
 
@@ -170,13 +171,6 @@ public final class BaylorManager extends Functions implements ScriptFile {
         Date dt = new Date(_state.getRespawnDate());
         Log.add("BaylorManager : Next spawn date of Baylor is " + dt + ".", "bosses");
         Log.add("BaylorManager : Init BaylorManager.", "bosses");
-    }
-
-    private static boolean isPlayersAnnihilated() {
-        for (Player pc : getPlayersInside())
-            if (!pc.isDead())
-                return false;
-        return true;
     }
 
     private static void onBaylorDie() {
@@ -265,10 +259,6 @@ public final class BaylorManager extends Functions implements ScriptFile {
         setUnspawn();
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     private static class BaylorSpawn extends RunnableImpl {
         private final int _npcId;
         private final Location _pos = new Location(153569, 142075, -12711, 44732);
@@ -344,7 +334,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
     private static class EndScene extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (Player player : getPlayersInside()) {
+            getPlayersInside().forEach(player ->  {
                 player.setBlock();
                 if (_baylor != null) {
                     double angle = PositionUtils.convertHeadingToDegree(_baylor.getHeading());
@@ -355,7 +345,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
                     player.setLoc(flyLoc);
                     player.broadcastPacket(new FlyToLocation(player, flyLoc, FlyType.THROW_HORIZONTAL));
                 }
-            }
+            });
             CRYSTALINE.forEach(npc ->
                     npc.reduceCurrentHp(npc.getMaxHp() + 1, npc, null, true, true, false, false, false, false, false));
         }

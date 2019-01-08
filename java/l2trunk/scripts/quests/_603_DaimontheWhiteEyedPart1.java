@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _603_DaimontheWhiteEyedPart1 extends Quest implements ScriptFile {
+public final class _603_DaimontheWhiteEyedPart1 extends Quest {
     //NPC
     private static final int EYE = 31683;
     private static final int TABLE1 = 31548;
@@ -21,18 +20,6 @@ public class _603_DaimontheWhiteEyedPart1 extends Quest implements ScriptFile {
     private static final int EVIL_SPIRIT = 7190;
     private static final int BROKEN_CRYSTAL = 7191;
     private static final int U_SUMMON = 7192;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _603_DaimontheWhiteEyedPart1() {
         super(true);

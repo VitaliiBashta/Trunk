@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _341_HuntingForWildBeasts extends Quest implements ScriptFile {
+public final class _341_HuntingForWildBeasts extends Quest {
     //NPCs
     private static final int PANO = 30078;
     //Mobs
@@ -85,15 +85,4 @@ public class _341_HuntingForWildBeasts extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

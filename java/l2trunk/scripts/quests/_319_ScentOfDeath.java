@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Scent Of Death
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _319_ScentOfDeath extends Quest implements ScriptFile {
+public final class _319_ScentOfDeath extends Quest implements ScriptFile {
     //NPC
     private static final int MINALESS = 30138;
     //Item
@@ -44,17 +38,6 @@ public class _319_ScentOfDeath extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _319_ScentOfDeath() {
         super(false);

@@ -8,12 +8,10 @@ import l2trunk.gameserver.network.serverpackets.SSQStatus;
 import l2trunk.gameserver.network.serverpackets.ShowXMasSeal;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Books extends SimpleItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = List.of(5555, 5707);
-
 
     @Override
     public boolean pickupItem(Playable playable, ItemInstance item) {
@@ -23,16 +21,6 @@ public final class Books extends SimpleItemHandler implements ScriptFile {
     @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 
     @Override
@@ -54,7 +42,6 @@ public final class Books extends SimpleItemHandler implements ScriptFile {
             default:
                 return false;
         }
-
         return true;
     }
 }

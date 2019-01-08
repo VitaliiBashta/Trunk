@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _362_BardsMandolin extends Quest implements ScriptFile {
+public final class _362_BardsMandolin extends Quest {
     //NPC
     private static final int SWAN = 30957;
     private static final int NANARIN = 30956;
@@ -82,15 +81,4 @@ public class _362_BardsMandolin extends Quest implements ScriptFile {
         return event;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

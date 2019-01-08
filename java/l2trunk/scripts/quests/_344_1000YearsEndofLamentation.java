@@ -4,20 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _344_1000YearsEndofLamentation extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+public final class _344_1000YearsEndofLamentation extends Quest {
 
     // Quest Items
     private static final int ARTICLES_DEAD_HEROES = 4269;
@@ -49,13 +37,11 @@ public class _344_1000YearsEndofLamentation extends Quest implements ScriptFile 
         for (int mob = 20236; mob < 20241; mob++)
             addKillId(mob);
 
-        addQuestItem(new int[]{
-                ARTICLES_DEAD_HEROES,
+        addQuestItem(ARTICLES_DEAD_HEROES,
                 OLD_KEY,
                 OLD_HILT,
                 OLD_TOTEM,
-                CRUCIFIX
-        });
+                CRUCIFIX);
     }
 
     @Override

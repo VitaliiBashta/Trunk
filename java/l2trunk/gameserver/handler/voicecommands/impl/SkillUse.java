@@ -13,7 +13,7 @@ import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class SkillUse extends Functions implements IVoicedCommandHandler {
+public final class SkillUse extends Functions implements IVoicedCommandHandler {
     private static final String _commandList = "useskill";
 
     @Override
@@ -33,6 +33,6 @@ public class SkillUse extends Functions implements IVoicedCommandHandler {
 
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.singletonList(_commandList);
+        return List.of(_commandList);
     }
 }

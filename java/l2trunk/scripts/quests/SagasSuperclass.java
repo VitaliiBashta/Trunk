@@ -319,7 +319,7 @@ public abstract class SagasSuperclass extends Quest {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-            st.giveItems(Items.get(10), 1);
+            st.giveItems(Items.get(10));
             htmltext = "0-03.htm";
         } else if (event.equalsIgnoreCase("0-1")) {
             if (player.getLevel() < 76) {

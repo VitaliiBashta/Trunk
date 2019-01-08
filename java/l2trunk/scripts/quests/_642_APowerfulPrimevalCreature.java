@@ -109,17 +109,4 @@ public final class _642_APowerfulPrimevalCreature extends Quest implements Scrip
             st.rollAndGive(Dinosaur_Tissue, 1, Dinosaur_Tissue_Chance);
         return null;
     }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
 }

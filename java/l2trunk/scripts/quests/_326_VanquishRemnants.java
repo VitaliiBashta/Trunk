@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Vanquish Remnants
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _326_VanquishRemnants extends Quest implements ScriptFile {
+public final class _326_VanquishRemnants extends Quest {
     //NPC
     private static final int Leopold = 30435;
     //Quest Items
@@ -70,18 +64,6 @@ public class _326_VanquishRemnants extends Quest implements ScriptFile {
                     BlackCrossBadge
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _326_VanquishRemnants() {
         super(false);

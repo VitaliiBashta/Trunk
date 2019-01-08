@@ -11,7 +11,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _371_ShriekOfGhosts extends Quest implements ScriptFile {
+public final class _371_ShriekOfGhosts extends Quest implements ScriptFile {
     // NPCs
     private static final int REVA = 30867;
     private static final int PATRIN = 30929;
@@ -145,15 +145,4 @@ public class _371_ShriekOfGhosts extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

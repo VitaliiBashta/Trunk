@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _714_PathToBecomingALordSchuttgart extends Quest implements ScriptFile {
+public final class _714_PathToBecomingALordSchuttgart extends Quest {
     private static final int August = 35555;
     private static final int Newyear = 31961;
     private static final int Yasheni = 31958;
@@ -63,7 +63,6 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest implements S
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        int id = st.getState();
         int cond = st.getCond();
         Castle castle = ResidenceHolder.getResidence(ShuttgartCastle);
         if (castle.getOwner() == null)
@@ -135,15 +134,4 @@ public final class _714_PathToBecomingALordSchuttgart extends Quest implements S
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

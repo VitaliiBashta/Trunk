@@ -5,13 +5,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _902_ReclaimOurEra extends Quest implements ScriptFile {
     private static final int Mathias = 31340;
-    private static final List<Integer> OrcsSilenos = Arrays.asList(25309, 25312, 25315, 25299, 25302, 25305);
-    private static final List<Integer> CannibalisticStakatoChief = Arrays.asList(25667, 25668, 25669, 25670);
+    private static final List<Integer> OrcsSilenos = List.of(25309, 25312, 25315, 25299, 25302, 25305);
+    private static final List<Integer> CannibalisticStakatoChief = List.of(25667, 25668, 25669, 25670);
     private static final int Anais = 25701;
 
     private static final int ShatteredBones = 21997;
@@ -109,15 +108,4 @@ public final class _902_ReclaimOurEra extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

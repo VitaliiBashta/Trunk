@@ -79,10 +79,6 @@ public final class KashaNegate implements ScriptFile {
         }
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     private void changeAura(NpcInstance actor, int npcId) {
         if (npcId != actor.getDisplayId()) {
             actor.setDisplayId(npcId);

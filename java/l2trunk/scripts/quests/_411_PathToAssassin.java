@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _411_PathToAssassin extends Quest implements ScriptFile {
+public final class _411_PathToAssassin extends Quest implements ScriptFile {
     //npc
     private final int TRISKEL = 30416;
     private final int LEIKAN = 30382;
@@ -23,18 +23,6 @@ public class _411_PathToAssassin extends Quest implements ScriptFile {
     private final int ARKENIA_RECOMMEND_ID = 1251;
     private final int IRON_HEART_ID = 1252;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _411_PathToAssassin() {
         super(false);
 
@@ -46,15 +34,13 @@ public class _411_PathToAssassin extends Quest implements ScriptFile {
         addKillId(MOONSTONE_BEAST);
         addKillId(CALPICO);
 
-        addQuestItem(new int[]{
-                SHILENS_CALL_ID,
+        addQuestItem(SHILENS_CALL_ID,
                 LEIKANS_NOTE_ID,
                 LEIKANS_KNIFE_ID,
                 ARKENIA_RECOMMEND_ID,
                 ARKENIAS_LETTER_ID,
                 ONYX_BEASTS_MOLAR_ID,
-                SHILENS_TEARS_ID
-        });
+                SHILENS_TEARS_ID);
     }
 
     @Override
@@ -74,10 +60,10 @@ public class _411_PathToAssassin extends Quest implements ScriptFile {
                     htmltext = "triskel_q0411_02.htm";
                     st.exitCurrentQuest(true);
                 }
-            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().getId() == 0x1f) {
+            } else if (st.getPlayer().getLevel() < 18) {
                 htmltext = "triskel_q0411_03.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x1f && st.getQuestItemsCount(IRON_HEART_ID) > 0)
+            } else if (st.getQuestItemsCount(IRON_HEART_ID) > 0)
                 htmltext = "triskel_q0411_04.htm";
         } else if (event.equalsIgnoreCase("30419_1")) {
             htmltext = "arkenia_q0411_05.htm";
@@ -114,7 +100,6 @@ public class _411_PathToAssassin extends Quest implements ScriptFile {
                     if (!st.getPlayer().getVarB("prof1")) {
                         st.getPlayer().setVar("prof1", "1", -1);
                         st.addExpAndSp(228064, 16455);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }
@@ -124,14 +109,13 @@ public class _411_PathToAssassin extends Quest implements ScriptFile {
                 htmltext = "triskel_q0411_07.htm";
             else if (cond == 1)
                 htmltext = "triskel_q0411_11.htm";
-            else if (cond > 2 && cond < 7)
-                if (cond > 2 && cond < 5)
+            else if (cond < 7)
+                if (cond < 5)
                     htmltext = "triskel_q0411_08.htm";
-                else if (cond > 4 && cond < 7)
-                    if (st.getQuestItemsCount(SHILENS_TEARS_ID) < 1)
-                        htmltext = "triskel_q0411_09.htm";
-                    else
-                        htmltext = "triskel_q0411_10.htm";
+                else if (st.getQuestItemsCount(SHILENS_TEARS_ID) < 1)
+                    htmltext = "triskel_q0411_09.htm";
+                else
+                    htmltext = "triskel_q0411_10.htm";
         } else if (npcId == ARKENIA) {
             if (cond == 1 && st.getQuestItemsCount(SHILENS_CALL_ID) > 0)
                 htmltext = "arkenia_q0411_01.htm";
@@ -155,12 +139,8 @@ public class _411_PathToAssassin extends Quest implements ScriptFile {
                 htmltext = "guard_leikan_q0411_01.htm";
             else if (cond > 2 && cond < 4 && st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) < 1) {
                 htmltext = "guard_leikan_q0411_05.htm";
-                if (cond == 4)
-                    st.setCond(3);
             } else if (cond > 2 && cond < 4 && st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) < 10) {
                 htmltext = "guard_leikan_q0411_06.htm";
-                if (cond == 4)
-                    st.setCond(3);
             } else if (cond == 4 && st.getQuestItemsCount(ONYX_BEASTS_MOLAR_ID) > 9) {
                 htmltext = "guard_leikan_q0411_07.htm";
                 st.takeItems(ONYX_BEASTS_MOLAR_ID, -1);

@@ -11,7 +11,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class _232_TestOfLord extends Quest implements ScriptFile {
+public final class _232_TestOfLord extends Quest {
     // NPCs
     private static final int Somak = 30510;
     private static final int Manakia = 30515;
@@ -492,15 +492,4 @@ public final class _232_TestOfLord extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

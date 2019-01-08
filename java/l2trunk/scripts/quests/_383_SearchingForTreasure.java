@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class _383_SearchingForTreasure extends Quest implements ScriptFile {
+public final class _383_SearchingForTreasure extends Quest implements ScriptFile {
     // Items
     private static final int PIRATES_TREASURE_MAP = 5915;
 
@@ -32,18 +32,6 @@ public class _383_SearchingForTreasure extends Quest implements ScriptFile {
     }
 
     private static final List<rewardInfo> rewards = new ArrayList<>();
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _383_SearchingForTreasure() {
         super(false);

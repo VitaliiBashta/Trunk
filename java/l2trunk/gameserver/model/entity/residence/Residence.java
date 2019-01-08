@@ -49,7 +49,7 @@ public abstract class Residence implements JdbcEntity {
     private final List<Location> _otherRestartPoints = new ArrayList<>();
     private final List<Location> _chaosRestartPoints = new ArrayList<>();
     Clan _owner;
-    private Zone _zone;
+    private Zone zone;
     private SiegeEvent<?, ?> _siegeEvent;
     // rewards
     private ScheduledFuture<?> _cycleTask;
@@ -76,8 +76,8 @@ public abstract class Residence implements JdbcEntity {
     }
 
     void initZone() {
-        _zone = ReflectionUtils.getZone("residence_" + id);
-        _zone.setParam("residence", this);
+        zone = ReflectionUtils.getZone("residence_" + id);
+        zone.setParam("residence", this);
     }
 
     void initEvent() {
@@ -105,7 +105,7 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public Zone getZone() {
-        return _zone;
+        return zone;
     }
 
     protected abstract void loadData();
@@ -141,13 +141,11 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public void banishForeigner() {
-        for (Player player : _zone.getInsidePlayers()) {
-            if (player.getClanId() == getOwnerId())
-                continue;
-
-            player.teleToLocation(getBanishPoint());
-        }
+        zone.getInsidePlayers()
+                .filter(pl -> pl.getClanId() != getOwnerId())
+                .forEach(pl -> pl.teleToLocation(getBanishPoint()));
     }
+
 
     /**
      * Gets the clan that owns the residence skills

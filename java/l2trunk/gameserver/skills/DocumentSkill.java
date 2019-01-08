@@ -239,9 +239,6 @@ public final class DocumentSkill extends DocumentBase {
         currentSkill.currentSkills = currentSkill.sets.stream()
                 .map(set -> set.getEnum("skillType", SkillType.class).makeSkill(set))
                 .collect(Collectors.toList());
-
-//                .forEach(set ->
-//            currentSkill.currentSkills.add(set.getEnum("skillType", SkillType.class).makeSkill(set)));
     }
 
     class SkillData {
