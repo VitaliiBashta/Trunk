@@ -46,16 +46,15 @@ public enum Announcements {
         int ry = MapUtils.regionY(activeChar);
         int offset = Config.SHOUT_OFFSET;
 
-        for (Player player : GameObjectsStorage.getAllPlayers()) {
-            if (player == activeChar || activeChar.getReflection() != player.getReflection())
-                continue;
-
-            int tx = MapUtils.regionX(player);
-            int ty = MapUtils.regionY(player);
-
-            if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || activeChar.isInRangeZ(player, Config.CHAT_RANGE))
-                player.sendPacket(cs);
-        }
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(p -> p != activeChar)
+                .filter(p -> activeChar.getReflection() == p.getReflection())
+                .forEach(p -> {
+                    int tx = MapUtils.regionX(p);
+                    int ty = MapUtils.regionY(p);
+                    if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || activeChar.isInRangeZ(p, Config.CHAT_RANGE))
+                        p.sendPacket(cs);
+                });
 
         activeChar.sendPacket(cs);
     }
@@ -109,7 +108,7 @@ public enum Announcements {
     }
 
     public void announceToAll(SystemMessage sm) {
-        GameObjectsStorage.getAllPlayers().forEach(pl -> pl.sendPacket(sm));
+        GameObjectsStorage.getAllPlayersStream().forEach(pl -> pl.sendPacket(sm));
     }
 
     public void announceToAll(String text) {
@@ -118,21 +117,16 @@ public enum Announcements {
 
     public void announceToAll(String text, ChatType type) {
         Say2 cs = new Say2(0, type, "", text);
-        GameObjectsStorage.getAllPlayers().forEach(pl -> pl.sendPacket(cs));
+        GameObjectsStorage.getAllPlayersStream().forEach(pl -> pl.sendPacket(cs));
     }
 
-    /**
-     * Отправляет анонсом CustomMessage, приминимо к примеру в шатдауне.
-     *
-     * @param address адрес в {@link l2trunk.gameserver.network.serverpackets.components.CustomMessage}
-     */
     public void announceByCustomMessage(String address) {
-        GameObjectsStorage.getAllPlayers().forEach(player ->
+        GameObjectsStorage.getAllPlayersStream().forEach(player ->
                 announceToPlayerByCustomMessage(player, address));
     }
 
     public void announceByCustomMessage(String address, String[] replacements, ChatType type) {
-        GameObjectsStorage.getAllPlayers().forEach(player ->
+        GameObjectsStorage.getAllPlayersStream().forEach(player ->
                 announceToPlayerByCustomMessage(player, address, replacements, type));
     }
 
@@ -150,7 +144,7 @@ public enum Announcements {
     }
 
     public void announceToAll(SystemMessage2 sm) {
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(sm));
     }
 
     public class Announce extends RunnableImpl {
@@ -171,17 +165,17 @@ public enum Announcements {
         public void runImpl() {
             IStaticPacket csNoQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", announce);
             IStaticPacket csQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", announce + getQuestionMark(id));
-            for (Player player : GameObjectsStorage.getAllPlayers()) {
-                if (player.containsQuickVar("DisabledAnnounce" + id))
-                    continue;
-                int newValue = player.getQuickVarI("Announce: " + id, 0) + 1;
-                if (newValue >= 3)
-                    player.sendPacket(csQuestion);
-                else {
-                    player.sendPacket(csNoQuestion);
-                    player.addQuickVar("Announce: " + id, newValue);
-                }
-            }
+            GameObjectsStorage.getAllPlayersStream()
+                    .filter(p -> !p.containsQuickVar("DisabledAnnounce" + id))
+                    .forEach(p -> {
+                        int newValue = p.getQuickVarI("Announce: " + id, 0) + 1;
+                        if (newValue >= 3)
+                            p.sendPacket(csQuestion);
+                        else {
+                            p.sendPacket(csNoQuestion);
+                            p.addQuickVar("Announce: " + id, newValue);
+                        }
+                    });
         }
 
         void showAnnounce(Player player) {

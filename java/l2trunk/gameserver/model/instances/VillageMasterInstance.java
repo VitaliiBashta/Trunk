@@ -99,7 +99,7 @@ public final class VillageMasterInstance extends NpcInstance {
                 }
 
                 // Remove possible sub their parents, if they have chara
-                ClassId parent = ClassId.VALUES[availSub.ordinal()].getParent(player.getSex());
+                ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent(player.getSex());
                 if (parent != null && parent.getId() == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
@@ -107,7 +107,7 @@ public final class VillageMasterInstance extends NpcInstance {
 
                 // Remove possible sbb parents current subclass, or if you take a sub berserker
                 // And bring to a third Profiles - doombringer, the player will be offered a berserker again (deja vu)
-                ClassId subParent = ClassId.VALUES[subClass.getClassId()].getParent(player.getSex());
+                ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent(player.getSex());
                 if (subParent != null && subParent.getId() == availSub.ordinal())
                     availSubs.remove(availSub);
             }

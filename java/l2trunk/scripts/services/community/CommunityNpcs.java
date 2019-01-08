@@ -383,7 +383,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
 
     @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList(
+        return List.of(
                 "_bbsgetfav",
                 "_bbsnpcs",
                 "_bbsgatekeeper",

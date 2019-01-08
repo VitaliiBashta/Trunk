@@ -17,7 +17,6 @@ import l2trunk.scripts.bosses.FourSepulchersManager;
 import l2trunk.scripts.bosses.FourSepulchersSpawn;
 import l2trunk.scripts.bosses.FourSepulchersSpawn.GateKeeper;
 
-import java.util.List;
 import java.util.concurrent.Future;
 
 public final class SepulcherNpcInstance extends NpcInstance {
@@ -114,7 +113,7 @@ public final class SepulcherNpcInstance extends NpcInstance {
         if (command.startsWith("open_gate")) {
             ItemInstance hallsKey = player.getInventory().getItemByItemId(HALLS_KEY);
             if (hallsKey == null)
-                showHtmlFile(player, "Gatekeeper-no.htm");
+                showHtmlFile(player);
             else if (FourSepulchersManager.isAttackTime()) {
                 switch (getNpcId()) {
                     case 31929:
@@ -153,30 +152,23 @@ public final class SepulcherNpcInstance extends NpcInstance {
         if (msg == null || msg.isEmpty())
             return; //wrong usage
 
-        List<Player> knownPlayers = GameObjectsStorage.getAllPlayers();
-        if (knownPlayers == null || knownPlayers.isEmpty())
-            return;
         Say2 sm = new Say2(0, ChatType.SHOUT, getName(), msg);
-        for (Player player : knownPlayers) {
-            if (player == null)
-                continue;
-            if (PositionUtils.checkIfInRange(15000, player, this, true))
-                player.sendPacket(sm);
-        }
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(p -> PositionUtils.checkIfInRange(15000, p, this, true))
+                .forEach(p -> p.sendPacket(sm));
+
     }
 
-    private void showHtmlFile(Player player, String file) {
+    private void showHtmlFile(Player player) {
         NpcHtmlMessage html = new NpcHtmlMessage(player, this);
-        html.setFile("SepulcherNpc/" + file);
+        html.setFile("SepulcherNpc/" + "Gatekeeper-no.htm");
         html.replace("%npcname%", getName());
         player.sendPacket(html);
     }
 
     private boolean hasPartyAKey(Player player) {
-        for (Player m : player.getParty().getMembers())
-            if (ItemFunctions.getItemCount(m, HALLS_KEY) > 0)
-                return true;
-        return false;
+        return player.getParty().getMembers().stream()
+        .anyMatch(m -> (ItemFunctions.getItemCount(m, HALLS_KEY) > 0));
     }
 
     private class CloseNextDoor extends RunnableImpl {

@@ -11,7 +11,7 @@ public final class NaiaLock extends Fighter {
     private static boolean attacked = false;
     private static boolean entranceActive = false;
 
-    private NaiaLock(NpcInstance actor) {
+    public NaiaLock(NpcInstance actor) {
         super(actor);
         actor.startImmobilized();
     }

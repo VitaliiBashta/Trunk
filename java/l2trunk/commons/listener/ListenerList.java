@@ -4,18 +4,18 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class ListenerList<T> {
-    private final Set<Listener<T>> listeners = new CopyOnWriteArraySet<>();
+public class ListenerList {
+    private final Set<Listener> listeners = new CopyOnWriteArraySet<>();
 
-    public Collection<Listener<T>> getListeners() {
+    public Collection<Listener> getListeners() {
         return listeners;
     }
 
-    public boolean add(Listener<T> listener) {
+    public boolean add(Listener listener) {
         return listeners.add(listener);
     }
 
-    public boolean remove(Listener<T> listener) {
+    public boolean remove(Listener listener) {
         return listeners.remove(listener);
     }
 

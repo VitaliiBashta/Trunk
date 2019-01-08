@@ -327,16 +327,16 @@ public final class KrateisCubeEvent extends GlobalEvent {
         }
 
         @Override
-        public void onTeleport(Player player, int x, int y, int z, Reflection reflection) {
+        public void onTeleport(Player player, Location loc, Reflection reflection) {
             List<Location> waitLocs = getObjects(WAIT_LOCS);
-            for (Location loc : waitLocs)
-                if (loc.x == x && loc.y == y)
+            for (Location l : waitLocs)
+                if (l.x == loc.x && l.y == loc.y)
                     return;
 
             waitLocs = getObjects(TELEPORT_LOCS);
 
-            for (Location loc : waitLocs)
-                if (loc.x == x && loc.y == y)
+            for (Location l : waitLocs)
+                if (l.x == loc.x && l.y == loc.y)
                     return;
 
             exitCube(player, false);

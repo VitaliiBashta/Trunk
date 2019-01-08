@@ -21,7 +21,7 @@ public final class TaskRecom extends Task {
     @Override
     public void onTimeElapsed(ExecutedTask task) {
         _log.info("Recommendation Global Task: launched.");
-        GameObjectsStorage.getAllPlayers().forEach(Player::restartRecom);
+        GameObjectsStorage.getAllPlayersStream().forEach(Player::restartRecom);
         _log.info("Recommendation Global Task: completed.");
     }
 

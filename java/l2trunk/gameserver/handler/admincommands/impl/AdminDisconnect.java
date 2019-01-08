@@ -50,14 +50,11 @@ public final class AdminDisconnect implements IAdminCommandHandler {
                 ThreadPoolManager.INSTANCE.schedule(player::kick, 500);
                 break;
             case admin_kick_count:
-                GameObjectsStorage.getAllPlayers().stream()
+                GameObjectsStorage.getAllPlayersStream()
                         .filter(Player::isOnline)
                         .filter(playerToKick -> playerToKick.getNetConnection() != null)
                         .filter(playerToKick -> !playerToKick.equals(activeChar))
-                        .forEach(playerToKick -> {
-                            ThreadPoolManager.INSTANCE.schedule(playerToKick::kick, 500);
-
-                        });
+                        .forEach(playerToKick -> ThreadPoolManager.INSTANCE.schedule(playerToKick::kick, 500));
                 break;
         }
         return true;

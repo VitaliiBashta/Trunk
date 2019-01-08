@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Catapult extends DefaultAI {
-    private static final Map<Integer,NpcString[]> MESSAGES = new HashMap<>(9);
+    private static final Map<Integer, NpcString[]> MESSAGES = new HashMap<>(9);
 
     static {
         MESSAGES.put(81, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GLUDIO, NpcString.THE_CATAPULT_OF_GLUDIO_HAS_BEEN_DESTROYED});
@@ -32,25 +32,6 @@ public final class Catapult extends DefaultAI {
         MESSAGES.put(87, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GODDARD, NpcString.THE_CATAPULT_OF_GODDARD_HAS_BEEN_DESTROYED});
         MESSAGES.put(88, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_RUNE, NpcString.THE_CATAPULT_OF_RUNE_HAS_BEEN_DESTROYED});
         MESSAGES.put(89, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_SCHUTTGART, NpcString.THE_CATAPULT_OF_SCHUTTGART_HAS_BEEN_DESTROYED});
-    }
-
-    private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {
-        @Override
-        public void onPlayerEnter(Player player) {
-            NpcInstance actor = getActor();
-            DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-            if (siegeEvent == null)
-                return;
-
-            if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
-                return;
-
-            Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
-
-            QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-            questState.setCond(1, false);
-            questState.setStateAndNotSave(Quest.STARTED);
-        }
     }
 
     private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
@@ -77,18 +58,17 @@ public final class Catapult extends DefaultAI {
             actor.setParameter("dominion_first_attack", false);
             NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
             Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
-            for (Player player : GameObjectsStorage.getAllPlayers()) {
-                if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                    player.sendPacket(new ExShowScreenMessage(msg));
-
-                    QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
-                    if (questState == null) {
-                        questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-                        questState.setCond(1, false);
-                        questState.setStateAndNotSave(Quest.STARTED);
-                    }
-                }
-            }
+            GameObjectsStorage.getAllPlayersStream()
+                    .filter(p -> p.getEvent(DominionSiegeEvent.class) == siegeEvent)
+                    .forEach(p -> {
+                        p.sendPacket(new ExShowScreenMessage(msg));
+                        QuestState questState = p.getQuestState(_729_ProtectTheTerritoryCatapult.class);
+                        if (questState == null) {
+                            questState = q.newQuestStateAndNotSave(p, Quest.CREATED);
+                            questState.setCond(1, false);
+                            questState.setStateAndNotSave(Quest.STARTED);
+                        }
+                    });
         }
     }
 
@@ -105,15 +85,14 @@ public final class Catapult extends DefaultAI {
             return;
 
         NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
-        for (Player player : GameObjectsStorage.getAllPlayers()) {
-            if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                player.sendPacket(new ExShowScreenMessage(msg));
-
-                QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
-                if (questState != null)
-                    questState.abortQuest();
-            }
-        }
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(player -> player.getEvent(DominionSiegeEvent.class) == siegeEvent)
+                .forEach(player -> {
+                    player.sendPacket(new ExShowScreenMessage(msg));
+                    QuestState questState = player.getQuestState(_729_ProtectTheTerritoryCatapult.class);
+                    if (questState != null)
+                        questState.abortQuest();
+                });
 
         siegeEvent.doorAction(DominionSiegeEvent.CATAPULT_DOORS, true);
 
@@ -152,5 +131,24 @@ public final class Catapult extends DefaultAI {
         super.onEvtDeSpawn();
 
         PlayerListenerList.removeGlobal(_listener);
+    }
+
+    private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {
+        @Override
+        public void onPlayerEnter(Player player) {
+            NpcInstance actor = getActor();
+            DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+            if (siegeEvent == null)
+                return;
+
+            if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
+                return;
+
+            Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
+
+            QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
+            questState.setCond(1, false);
+            questState.setStateAndNotSave(Quest.STARTED);
+        }
     }
 }

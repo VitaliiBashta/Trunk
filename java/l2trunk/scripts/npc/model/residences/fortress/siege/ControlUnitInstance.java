@@ -7,11 +7,7 @@ import l2trunk.gameserver.model.entity.events.objects.SpawnExObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 19:36/19.04.2011
- */
-public class ControlUnitInstance extends NpcInstance {
+public final class ControlUnitInstance extends NpcInstance {
     private static final int ITEM_ID = 10014;
     private static final int COND_CAN_OPEN = 0;
     private static final int COND_NO_ITEM = 1;

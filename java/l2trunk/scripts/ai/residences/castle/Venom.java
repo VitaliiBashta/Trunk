@@ -5,14 +5,10 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
+import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
-/**
- * @author VISTALL
- * @date 22:01/23.05.2011
- * 29054
- */
-public class Venom extends Fighter {
+public final class Venom extends Fighter {
     public Venom(NpcInstance actor) {
         super(actor);
     }
@@ -30,6 +26,6 @@ public class Venom extends Fighter {
 
         Functions.npcShout(getActor(), NpcString.ITS_NOT_OVER_YET__IT_WONT_BE__OVER__LIKE_THIS__NEVER);
 
-        NpcUtils.spawnSingle(29055, 12589, -49044, -3008, 120000);
+        NpcUtils.spawnSingle(29055, new Location(12589, -49044, -3008), 120000);
     }
 }

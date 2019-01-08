@@ -14,11 +14,10 @@ public final class AdminGiveAll implements IAdminCommandHandler {
         if (wordList.length >= 3) {
             int _id = toInt(wordList[1]);
             int _count = toInt(wordList[2]);
-            GameObjectsStorage.getAllPlayers()
-                    .forEach(player -> {
-                        Functions.addItem(player, _id, _count, "Give ALl");
-                        player.sendMessage("You have been rewarded!");
-                    });
+            GameObjectsStorage.getAllPlayersStream().forEach(player -> {
+                Functions.addItem(player, _id, _count, "Give ALl");
+                player.sendMessage("You have been rewarded!");
+            });
         } else {
             activeChar.sendMessage("use: //giveall itemId count");
             return false;

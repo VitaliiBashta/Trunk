@@ -220,7 +220,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
     }
 
     private String online() {
-        return Util.formatAdena(GameObjectsStorage.getAllPlayers().size());
+        return Util.formatAdena(GameObjectsStorage.getAllPlayersStream().count());
     }
 
     @Override

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
 public class Ranger extends DefaultAI {
-    protected Ranger(NpcInstance actor) {
+    public Ranger(NpcInstance actor) {
         super(actor);
     }
 

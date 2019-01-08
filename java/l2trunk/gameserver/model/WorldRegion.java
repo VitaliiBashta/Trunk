@@ -32,7 +32,7 @@ public final class WorldRegion implements Iterable<GameObject> {
     /**
      * Все объекты в регионе
      */
-    private volatile GameObject[] _objects = GameObject.EMPTY_L2OBJECT_ARRAY;
+    private volatile GameObject[] _objects = new GameObject[0];
     /**
      * Количество объектов в регионе
      */

@@ -72,7 +72,7 @@ public final class CCPSmallCommands {
     }
 
     public static String showOnlineCount() {
-        return "Players Online: " + GameObjectsStorage.getAllPlayers().size();
+        return "Players Online: " + GameObjectsStorage.getAllPlayersStream().count();
     }
 
     public static boolean getPing(Player activeChar) {

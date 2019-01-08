@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
 public final class Pylon extends Fighter {
-    private Pylon(NpcInstance actor) {
+    public Pylon(NpcInstance actor) {
         super(actor);
         actor.startImmobilized();
     }

@@ -3,7 +3,7 @@ package l2trunk.gameserver.ai;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 public class Priest extends DefaultAI {
-    protected Priest(NpcInstance actor) {
+    public Priest(NpcInstance actor) {
         super(actor);
     }
 

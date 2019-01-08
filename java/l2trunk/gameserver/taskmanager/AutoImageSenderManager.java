@@ -71,7 +71,7 @@ public final class AutoImageSenderManager {
         @Override
         public void run() {
             if (Config.ALLOW_SENDING_IMAGES && Config.COMMUNITYBOARD_ENABLED) {
-                GameObjectsStorage.getAllPlayers().stream()
+                GameObjectsStorage.getAllPlayersStream()
                         .filter(Player::isOnline)
                         .forEach(player -> {//Check in case of No-Carrier System
                             int pictureToLoad = getNextPicture(player);

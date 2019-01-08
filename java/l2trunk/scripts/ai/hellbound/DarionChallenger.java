@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.Location;
 public final class DarionChallenger extends Fighter {
     private static final int TeleportCube = 32467;
 
-    private DarionChallenger(NpcInstance actor) {
+    public DarionChallenger(NpcInstance actor) {
         super(actor);
     }
 

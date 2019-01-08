@@ -2,7 +2,7 @@ package l2trunk.gameserver.model.base;
 
 import l2trunk.gameserver.Config;
 
-public class Experience {
+public final class Experience {
 
     public final static long LEVEL[] = {-1L, // level 0 (unreachable)
             /* Lvl:1 */        0L,
@@ -106,40 +106,14 @@ public class Experience {
             /* Lvl:99 */    408728781109L,
             /* Lvl:100 */    495946820937L};
 
-    /**
-     * Return PenaltyModifier (can use in all cases)
-     *
-     * @param count    - how many times <percents> will be substructed
-     * @param percents - percents to substruct
-     * @author Styx
-     */
-
-    /*
-     *  This is for fine view only ;)
-     *
-     *	public final static double penaltyModifier(int count, int percents)
-     *	{
-     *		int allPercents = 100;
-     *		int allSubstructedPercents = count * percents;
-     *		int penaltyInPercents = allPercents - allSubstructedPercents;
-     *		double penalty = penaltyInPercents / 100.0;
-     *		return penalty;
-     *	}
-     */
     public static double penaltyModifier(long count, double percents) {
         return Math.max(1. - count * percents / 100, 0);
     }
 
-    /**
-     * Максимальный достижимый уровень
-     */
     public static int getMaxLevel() {
         return Config.ALT_MAX_LEVEL;
     }
 
-    /**
-     * Максимальный уровень для саба
-     */
     public static int getMaxSubLevel() {
         return Config.ALT_MAX_SUB_LEVEL;
     }

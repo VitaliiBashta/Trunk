@@ -9,19 +9,14 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * AI босса Oi Ariosh для Kamaloka.<br>
- * - Спавнит "миньонов" при атаке.<br>
- * - _hps - таблица процентов hp, после которых спавнит "миньонов".<br>
- *
- * @author n0nam3
- */
+import java.util.List;
+
 public final class OiAriosh extends Fighter {
     private static final int MOB = 18556;
-    private static final int[] _hps = {80, 60, 40, 30, 20, 10, 5, -5};
+    private static final List<Integer> _hps = List.of(80, 60, 40, 30, 20, 10, 5, -5);
     private int _hpCount = 0;
 
-    private OiAriosh(NpcInstance actor) {
+    public OiAriosh(NpcInstance actor) {
         super(actor);
     }
 
@@ -29,7 +24,7 @@ public final class OiAriosh extends Fighter {
     public void onEvtAttacked(Creature attacker, int damage) {
         NpcInstance actor = getActor();
         if (!actor.isDead())
-            if (_hpCount < _hps.length && actor.getCurrentHpPercents() < _hps[_hpCount]) {
+            if (_hpCount < _hps.size() && actor.getCurrentHpPercents() < _hps.get(_hpCount)) {
                 spawnMob(attacker);
                 _hpCount++;
             }

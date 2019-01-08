@@ -22,10 +22,9 @@ import java.util.List;
  * Hot Springs Nepenthes (id 21319)
  */
 public final class HotSpringsMob extends Mystic {
-    private static final Logger _log = LoggerFactory.getLogger(HotSpringsMob.class);
-    private static final List<Integer> DeBuffs = Arrays.asList(4554, 4552);
+    private static final List<Integer> DeBuffs = List.of(4554, 4552);
 
-    private HotSpringsMob(NpcInstance actor) {
+    public HotSpringsMob(NpcInstance actor) {
         super(actor);
     }
 

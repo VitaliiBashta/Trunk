@@ -143,10 +143,10 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
 
             //																															 [Party Find]: [?] Nik (3/9) free slots. Message
             Say2 packet = new Say2(activeChar.getObjectId(), ChatType.PARTY, "[Find Party]", "\b\tType=1 \tID=" + partyRequestObjId + " \tColor=0 \tUnderline=0 \tTitle=\u001B\u001B\b" + activeChar.getName() + " (" + freeSlots + "/" + Party.MAX_SIZE + ")" + " free slots. " + request.message);
-            GameObjectsStorage.getAllPlayers().stream()
-                    .filter(player -> (player.canJoinParty(activeChar) == null
-                            && (activeChar.isInParty()
-                            && !activeChar.getParty().containsMember(player))))
+            GameObjectsStorage.getAllPlayersStream()
+                    .filter(player -> (player.canJoinParty(activeChar) == null))
+                    .filter(player -> (activeChar.isInParty()))
+                    .filter(player -> !activeChar.getParty().containsMember(player))
                     .forEach(player -> player.sendPacket(packet));
         }
         return false;

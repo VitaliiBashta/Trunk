@@ -4,16 +4,16 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.World;
 
-public class MapUtils {
+public final class MapUtils {
     private MapUtils() {
     }
 
     public static int regionX(GameObject o) {
-        return regionX(o.getX());
+        return regionX(o.getLoc().x);
     }
 
     public static int regionY(GameObject o) {
-        return regionY(o.getY());
+        return regionY(o.getLoc().y);
     }
 
     public static int regionX(int x) {

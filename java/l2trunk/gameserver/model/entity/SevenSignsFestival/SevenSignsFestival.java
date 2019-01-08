@@ -334,8 +334,8 @@ public enum SevenSignsFestival {
         _festivalData.put(SevenSigns.INSTANCE.getCurrentCycle(), newData);
         saveFestivalData(updateSettings);
         // Remove any unused blood offerings from online players.
-        for (Player onlinePlayer : GameObjectsStorage.getAllPlayers())
-            Functions.removeItem(onlinePlayer, FESTIVAL_BLOOD_OFFERING, Functions.getItemCount(onlinePlayer, FESTIVAL_BLOOD_OFFERING), "resetFestivalData");
+        GameObjectsStorage.getAllPlayersStream().forEach(p ->
+            Functions.removeItem(p, FESTIVAL_BLOOD_OFFERING, Functions.getItemCount(p, FESTIVAL_BLOOD_OFFERING), "resetFestivalData"));
         _log.info("SevenSignsFestival: Reinitialized engine for next competition period.");
     }
 

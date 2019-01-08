@@ -150,7 +150,7 @@ public final class CharacterCreate extends L2GameClientPacket {
                 newChar.getInventory().equipItem(item);
         }
 
-        ClassId nclassId = ClassId.VALUES[_classId];
+        ClassId nclassId = ClassId.VALUES.get(_classId);
         if (Config.ALLOW_START_ITEMS) {
             if (nclassId.isMage()) {
                 for (int i = 0; i < Config.START_ITEMS_MAGE.size(); i++) {

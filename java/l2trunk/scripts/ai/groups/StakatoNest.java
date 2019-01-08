@@ -22,9 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class StakatoNest extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(StakatoNest.class);
-
-    private static final List<Integer> BIZARRE_COCOON = Arrays.asList(18793, 18794, 18795, 18796, 18797, 18798);
+    private static final List<Integer> BIZARRE_COCOON = List.of(18793, 18794, 18795, 18796, 18797, 18798);
     private static final int CANNIBALISTIC_STAKATO_LEADER = 22625;
     private static final int SPIKE_STAKATO_NURSE = 22630;
     private static final int SPIKE_STAKATO_NURSE_CHANGED = 22631;
@@ -46,7 +44,7 @@ public final class StakatoNest extends Fighter {
     private final Zone _zone_mob_buff_pc_display = ReflectionUtils.getZone("[stakato_mob_buff_display]");
     private final Zone _zone_pc_buff = ReflectionUtils.getZone("[stakato_pc_buff]");
 
-    private StakatoNest(NpcInstance actor) {
+    public StakatoNest(NpcInstance actor) {
         super(actor);
         if (BIZARRE_COCOON.contains(actor.getNpcId())) {
             actor.setInvul(true);

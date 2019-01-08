@@ -40,16 +40,6 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
         this.tickPerStepInMillis = tickPerStepInMillis;
     }
 
-    /**
-     * Method schedule.
-     *
-     * @param r     Runnable
-     * @param delay long
-     * @return SteppingScheduledFuture<?>
-     */
-    protected SteppingScheduledFuture<?> schedule(Runnable r, long delay) {
-        return schedule(r, delay, delay, false);
-    }
 
     /**
      * Method scheduleAtFixedRate.
@@ -60,23 +50,10 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
      * @return SteppingScheduledFuture<?>
      */
     public SteppingScheduledFuture<?> scheduleAtFixedRate(Runnable r, long initial, long delay) {
-        return schedule(r, initial, delay, true);
-    }
-
-    /**
-     * Method schedule.
-     *
-     * @param r          Runnable
-     * @param initial    long
-     * @param delay      long
-     * @param isPeriodic boolean
-     * @return SteppingScheduledFuture<?>
-     */
-    private SteppingScheduledFuture<?> schedule(Runnable r, long initial, long delay, boolean isPeriodic) {
         SteppingScheduledFuture<?> sr;
         long initialStepping = getStepping(initial);
         long stepping = getStepping(delay);
-        queue.add(sr = new SteppingScheduledFuture<Boolean>(r, initialStepping, stepping, isPeriodic));
+        queue.add(sr = new SteppingScheduledFuture<Boolean>(r, initialStepping, stepping, true));
         return sr;
     }
 
@@ -91,11 +68,6 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
         return (delay % tickPerStepInMillis) > (tickPerStepInMillis / 2) ? (delay / tickPerStepInMillis) + 1 : delay < tickPerStepInMillis ? 1 : delay / tickPerStepInMillis;
     }
 
-    /**
-     * Method run.
-     *
-     * @see java.lang.Runnable#run()
-     */
     @Override
     public void run() {
         if (!isRunning.compareAndSet(false, true)) {
@@ -116,9 +88,6 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
         }
     }
 
-    /**
-     * Method purge.
-     */
     public void purge() {
         final List<SteppingScheduledFuture<?>> purge = new ArrayList<>();
         for (SteppingScheduledFuture<?> sr : queue) {
@@ -128,11 +97,6 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
         queue.removeAll(purge);
     }
 
-    /**
-     * Method getStats.
-     *
-     * @return CharSequence
-     */
     public CharSequence getStats() {
         StringBuilder list = new StringBuilder();
         Map<String, Long> stats = new TreeMap<>();

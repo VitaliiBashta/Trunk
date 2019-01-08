@@ -59,7 +59,6 @@ import l2trunk.gameserver.model.entity.auction.Auction;
 import l2trunk.gameserver.model.entity.auction.AuctionManager;
 import l2trunk.gameserver.model.entity.boat.Boat;
 import l2trunk.gameserver.model.entity.boat.ClanAirShip;
-import l2trunk.gameserver.model.entity.events.GameEvent;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.events.impl.*;
 import l2trunk.gameserver.model.entity.olympiad.CompType;
@@ -157,7 +156,6 @@ public final class Player extends Playable implements PlayerGroup {
     public static final int RANK_KNIGHT = 3;
     public static final int RANK_WISEMAN = 4;
     public static final int RANK_BARON = 5;
-    public static final int RANK_EMPEROR = 12; // unused
     public final static int autoMp = 728;
     public final static int autoCp = 5592;
     public final static int autoHp = 1539;
@@ -180,7 +178,6 @@ public final class Player extends Playable implements PlayerGroup {
     private static boolean _isNoAttackEvents = false;
     public final BookMarkList bookmarks = new BookMarkList(this, 0);
     public final AntiFlood antiFlood = new AntiFlood();
-    public final GameEvent _event = null;
     final Map<Integer, Skill> _transformationSkills = new HashMap<>();
     private final PcInventory inventory = new PcInventory(this);
     private final Warehouse _warehouse = new PcWarehouse(this);
@@ -1122,11 +1119,6 @@ public final class Player extends Playable implements PlayerGroup {
             return;
         }
 
-        if ((_event != null) && !_event.canUseSkill(this, target, skill)) {
-            sendActionFailed();
-            return;
-        }
-
         super.doCast(skill, target, forceUse);
 
         // if (getUseSeed() != 0 && skill.getSkillType() == SkillType.SOWING)
@@ -1135,10 +1127,6 @@ public final class Player extends Playable implements PlayerGroup {
 
     @Override
     public void doAttack(Creature target) {
-        if ((_event != null) && !_event.canAttack(this, target)) {
-            sendActionFailed();
-            return;
-        }
         super.doAttack(target);
     }
 
@@ -2013,9 +2001,9 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     private void addClanPointsOnProfession(final int id) {
-        if ((getLvlJoinedAcademy() != 0) && (_clan != null) && (_clan.getLevel() >= 5) && (ClassId.VALUES[id].getLevel() == 2)) {
+        if ((getLvlJoinedAcademy() != 0) && (_clan != null) && (_clan.getLevel() >= 5) && (ClassId.VALUES.get(id).getLevel() == 2)) {
             _clan.incReputation(100, true, "Academy");
-        } else if ((getLvlJoinedAcademy() != 0) && (_clan != null) && (_clan.getLevel() >= 5) && (ClassId.VALUES[id].getLevel() == 3)) {
+        } else if ((getLvlJoinedAcademy() != 0) && (_clan != null) && (_clan.getLevel() >= 5) && (ClassId.VALUES.get(id).getLevel() == 3)) {
             int earnedPoints = 0;
             if (getLvlJoinedAcademy() <= 16) {
                 earnedPoints = Config.MAX_ACADEM_POINT;
@@ -2055,7 +2043,7 @@ public final class Player extends Playable implements PlayerGroup {
      */
     public synchronized void setClassId(final int id, boolean noban, boolean fromQuest) {
         boolean cannotChangeClass = !getPlayerAccess().CanChangeClass && !Config.EVERYBODY_HAS_ADMIN_RIGHTS;
-        if (!noban && !ClassId.VALUES[id].equalsOrChildOf(ClassId.VALUES[getActiveClassId()]) && cannotChangeClass) {
+        if (!noban && !ClassId.VALUES.get(id).equalsOrChildOf(ClassId.VALUES.get(getActiveClassId())) && cannotChangeClass) {
             _log.error("Error while setting new class as :" + id + " Player:" + getName() + " current Class:" + getActiveClassId() + "|cannot change class? " + cannotChangeClass);
             Thread.dumpStack();
             return;
@@ -2069,7 +2057,7 @@ public final class Player extends Playable implements PlayerGroup {
                 setBaseClass(id);
                 addClanPointsOnProfession(id);
                 ItemInstance coupons = null;
-                if (ClassId.VALUES[id].getLevel() == 2) {
+                if (ClassId.VALUES.get(id).getLevel() == 2) {
                     if (fromQuest && Config.ALT_ALLOW_SHADOW_WEAPONS) {
                         coupons = ItemFunctions.createItem(8869);
                     }
@@ -2082,7 +2070,7 @@ public final class Player extends Playable implements PlayerGroup {
                     unsetVar("ng2");
                     unsetVar("ng3");
                     unsetVar("ng4");
-                } else if (ClassId.VALUES[id].getLevel() == 3) {
+                } else if (ClassId.VALUES.get(id).getLevel() == 3) {
                     if (fromQuest && Config.ALT_ALLOW_SHADOW_WEAPONS) {
                         coupons = ItemFunctions.createItem(8870);
                     }
@@ -2103,7 +2091,7 @@ public final class Player extends Playable implements PlayerGroup {
             }
 
             //Holy Pomander
-            switch (ClassId.VALUES[id]) {
+            switch (ClassId.VALUES.get(id)) {
                 case cardinal:
                     ItemFunctions.addItem(this, 15307, 1, true, "Class Change");
                     break;
@@ -3489,15 +3477,6 @@ public final class Player extends Playable implements PlayerGroup {
             }
         }
 
-        if ((getPvPTeam() != 0) && (_event != null)) {
-            if (hp <= damage) // if x <= 1 - killed
-            {
-                setCurrentHp(1, true);
-                _event.doDie(attacker, this);
-                return;
-            }
-        }
-
         if (isInOlympiadMode()) {
             addDamageOnOlympiad(attacker, skill, damage, hp);
 
@@ -3876,10 +3855,6 @@ public final class Player extends Playable implements PlayerGroup {
         // And in the end of process notify death penalty that owner died :)
         getDeathPenalty().notifyDead(killer);
 
-        if (_event != null) {
-            _event.doDie(killer, this);
-        }
-
         setIncreasedForce(0);
 
         if (isInParty() && getParty().isInReflection() && (getParty().getReflection() instanceof DimensionalRift)) {
@@ -3999,10 +3974,6 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         if (getNevitSystem().isBlessingActive()) {
-            return;
-        }
-
-        if ((_event != null) && !_event.canLostExpOnDie()) {
             return;
         }
 
@@ -7206,7 +7177,7 @@ public final class Player extends Playable implements PlayerGroup {
             return false;
         }
 
-        final ClassId newId = ClassId.VALUES[classId];
+        final ClassId newId = ClassId.VALUES.get(classId);
 
         final SubClass newClass = new SubClass();
         newClass.setBase(false);
@@ -7906,7 +7877,7 @@ public final class Player extends Playable implements PlayerGroup {
                         30
                 };
 
-        double percent = getMaxHp() / 100;
+        double percent = getMaxHp() / 100.;
         double _curHpPercent = curHp / percent;
         double _newHpPercent = newHp / percent;
         boolean needsUpdate = false;
@@ -7971,7 +7942,6 @@ public final class Player extends Playable implements PlayerGroup {
         boolean lastInDangerArea = (_zoneMask & ZONE_ALTERED_FLAG) == ZONE_ALTERED_FLAG;
         boolean lastOnSiegeField = (_zoneMask & ZONE_SIEGE_FLAG) == ZONE_SIEGE_FLAG;
         boolean lastInPeaceZone = (_zoneMask & ZONE_PEACE_FLAG) == ZONE_PEACE_FLAG;
-        @SuppressWarnings("unused")
         boolean lastInSSQZone = (_zoneMask & ZONE_SSQ_FLAG) == ZONE_SSQ_FLAG;
 
         boolean isInCombatZone = isInCombatZone();
@@ -8288,9 +8258,6 @@ public final class Player extends Playable implements PlayerGroup {
         broadcastRelationChanged();
     }
 
-    /**
-     * @return The remaning time of the pvp flag in miliseconds.
-     */
     public int getPvpFlagRemaningTime() {
         if (_PvPRegTask == null || _PvPRegTask.isDone())
             return 0;
@@ -8344,11 +8311,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public void setKeyBindings(byte[] keyBindings) {
-        if (keyBindings == null) {
-            _keyBindings = new byte[0];
-        } else {
-            _keyBindings = keyBindings;
-        }
+        _keyBindings = Objects.requireNonNullElseGet(keyBindings, () -> new byte[0]);
     }
 
     private void preparateToTransform(Skill transSkill) {
@@ -8365,7 +8328,7 @@ public final class Player extends Playable implements PlayerGroup {
         return (_transformationId == 8) || (_transformationId == 9) || (_transformationId == 260);
     }
 
-    public boolean isInMountTransform() {
+    boolean isInMountTransform() {
         return (_transformationId == 106) || (_transformationId == 109) || (_transformationId == 110) || (_transformationId == 20001);
     }
 
@@ -9403,7 +9366,7 @@ public final class Player extends Playable implements PlayerGroup {
         return (PlayerStatsChangeRecorder) _statsRecorder;
     }
 
-    public int getHoursInGame() {
+    int getHoursInGame() {
         _hoursInGame++;
         return _hoursInGame;
     }
@@ -9548,8 +9511,8 @@ public final class Player extends Playable implements PlayerGroup {
         if ((item != null) && (item.getTemplate().getAttachedSkills() != null)) {
             for (Skill skill : item.getTemplate().getAttachedSkills()) {
                 for (FuncTemplate func : skill.getAttachedFuncs()) {
-                    if (func._stat == Stats.INVENTORY_LIMIT) {
-                        return (int) func._value;
+                    if (func.stat == Stats.INVENTORY_LIMIT) {
+                        return (int) func.value;
                     }
                 }
             }

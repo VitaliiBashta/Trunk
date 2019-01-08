@@ -1,6 +1,6 @@
 package l2trunk.gameserver.handler.bypass;
 
-public class BypassHandler {
+public final class BypassHandler {
     private static final BypassHandler _instance = new BypassHandler();
 
     public static BypassHandler getInstance() {

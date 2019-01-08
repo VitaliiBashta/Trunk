@@ -11,19 +11,12 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * AI моба Frost Buffalo для Frozen Labyrinth.<br>
- * - Если был атакован физическим скилом, спавнится миньон-мобы Lost Buffalo 22093 в количестве 4 штук.<br>
- * - Не используют функцию Random Walk, если были заспавнены "миньоны"<br>
- *
- * @author SYS
- */
 public final class FrostBuffalo extends Fighter {
     private static final int MOBS = 22093;
     private static final int MOBS_COUNT = 4;
     private boolean _mobsNotSpawned = true;
 
-    private FrostBuffalo(NpcInstance actor) {
+    public FrostBuffalo(NpcInstance actor) {
         super(actor);
     }
 

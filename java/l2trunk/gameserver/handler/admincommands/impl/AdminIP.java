@@ -50,9 +50,9 @@ public final class AdminIP implements IAdminCommandHandler {
 
                 activeChar.sendMessage("IP:" + target.getIP());
 
-                GameObjectsStorage.getAllPlayers().stream()
-                        .filter(player -> player.getIP().equals(target.getIP())).forEach(player ->
-                        activeChar.sendMessage("Player with same IP:" + player.getName()));
+                GameObjectsStorage.getAllPlayersStream()
+                        .filter(player -> player.getIP().equals(target.getIP()))
+                        .forEach(player -> activeChar.sendMessage("Player with same IP:" + player.getName()));
                 break;
         }
         return true;

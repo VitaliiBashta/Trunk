@@ -241,7 +241,6 @@ public class NpcInstance extends Creature {
         return Math.max(charLevel - mobLevel - deepblue_maxdiff, 0);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public HardReference<NpcInstance> getRef() {
         return (HardReference<NpcInstance>) super.getRef();
@@ -255,11 +254,6 @@ public class NpcInstance extends Creature {
         return super.getAI();
     }
 
-    /**
-     * Return the position of the spawned point.<BR>
-     * <BR>
-     * Может возвращать случайную точку, поэтому всегда следует кешировать результат вызова!
-     */
     public Location getSpawnedLoc() {
         return spawnedLoc;
     }
@@ -508,18 +502,10 @@ public class NpcInstance extends Creature {
         return getTemplate().aggroRange;
     }
 
-    /**
-     * Устанавливает данному npc новый aggroRange. Если установленый aggroRange < 0, то будет братся аггрорейндж с темплейта.
-     *
-     * @param aggroRange новый agrroRange
-     */
     public void setAggroRange(int aggroRange) {
         _personalAggroRange = aggroRange;
     }
 
-    /**
-     * Возвращает группу социальности
-     */
     public Faction getFaction() {
         return getTemplate().getFaction();
     }
@@ -836,8 +822,7 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        if (!isInRangeZ(player, INTERACTION_DISTANCE)) // Nik: Changed to isInRangeZ because players can exploit it like waking Baium from TOI 13
-        {
+        if (!isInRangeZ(player, INTERACTION_DISTANCE)){ // Nik: Changed to isInRangeZ because players can exploit it like waking Baium from TOI 13
             if (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT) {
                 player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
             }
@@ -866,21 +851,19 @@ public class NpcInstance extends Creature {
         player.sendActionFailed();
         player.stopMove(false);
 
-        if ((player._event == null) || !player._event.talkWithNpc(player, this)) {
-            if (_isBusy) {
-                showBusyWindow(player);
-            } else if (isHasChatWindow()) {
-                boolean flag = false;
-                List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
-                for (Quest element : qlst) {
-                    QuestState qs = player.getQuestState(element.getName());
-                    if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
-                        flag = true;
-                    }
+        if (_isBusy) {
+            showBusyWindow(player);
+        } else if (isHasChatWindow()) {
+            boolean flag = false;
+            List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.NPC_FIRST_TALK);
+            for (Quest element : qlst) {
+                QuestState qs = player.getQuestState(element.getName());
+                if (((qs == null) || !qs.isCompleted()) && element.notifyFirstTalk(this, player)) {
+                    flag = true;
                 }
-                if (!flag) {
-                    showChatWindow(player, 0);
-                }
+            }
+            if (!flag) {
+                showChatWindow(player, 0);
             }
         }
     }

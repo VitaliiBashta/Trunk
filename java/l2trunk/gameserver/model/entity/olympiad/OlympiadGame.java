@@ -264,7 +264,7 @@ public class OlympiadGame {
 
         // Alexander - Announce on critical to all players in the world, who won this match
         IStaticPacket criticalAnn = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", "Olympiad: " + _team1.getName() + " VS " + _team2.getName() + ". Winner is: " + winnerTeam.getName() + "!");
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(criticalAnn));
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(criticalAnn));
 
 
         Log.add("Olympiad Result: " + winnerTeam.getName() + " vs " + looseTeam.getName() + " ... (" + (int) winnerTeam.getDamage() + " vs " + (int) looseTeam.getDamage() + ") " + winnerTeam.getName() + " win " + pointDiff + " points", "olympiad");

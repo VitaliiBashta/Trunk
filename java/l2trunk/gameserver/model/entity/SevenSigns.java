@@ -912,14 +912,9 @@ public enum SevenSigns {
         }
     }
 
-    /**
-     * Sends the built-in system message specified by sysMsgId to all online players.
-     *
-     * @param sysMsgId
-     */
     private void sendMessageToAll(int sysMsgId) {
         SystemMessage sm = new SystemMessage(sysMsgId);
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(sm));
     }
 
     /**
@@ -1160,13 +1155,13 @@ public enum SevenSigns {
         }
     }
 
-    protected class SSListenerList extends ListenerList<GameServer> {
+    private class SSListenerList extends ListenerList {
         void onPeriodChange() {
             int mode = 0;
             if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION)
                 mode = SevenSigns.INSTANCE.getCabalHighestScore();
 
-            for (Listener<GameServer> listener : getListeners())
+            for (Listener listener : getListeners())
                 if (listener instanceof OnSSPeriodListener)
                     ((OnSSPeriodListener) listener).onPeriodChange(mode);
         }
@@ -1174,7 +1169,7 @@ public enum SevenSigns {
 
     public class SevenSignsAnnounce extends RunnableImpl {
         public void runImpl() {
-            GameObjectsStorage.getAllPlayers().forEach(SevenSigns.this::sendCurrentPeriodMsg);
+            GameObjectsStorage.getAllPlayersStream().forEach(SevenSigns.this::sendCurrentPeriodMsg);
             ThreadPoolManager.INSTANCE.schedule(new SevenSignsAnnounce(), Config.SS_ANNOUNCE_PERIOD * 1000L * 60);
         }
     }
@@ -1240,7 +1235,7 @@ public enum SevenSigns {
                 _log.info("SevenSigns: Change Catacomb spawn...");
                 getListenerEngine().onPeriodChange();
                 SSQInfo ss = new SSQInfo();
-                GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(ss));
+                GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(ss));
                 _log.info("SevenSigns: Spawning NPCs...");
                 spawnSevenSignsNPC();
                 _log.info("SevenSigns: The " + getCurrentPeriodName() + " period has begun!");

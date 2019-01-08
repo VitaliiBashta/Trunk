@@ -13,10 +13,6 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.Set;
 
-/**
- * @author VISTALL
- * @date 5:47/07.06.2011
- */
 public abstract class SiegeToggleNpcInstance extends NpcInstance {
     private NpcInstance _fakeInstance;
     private int _maxHp;

@@ -59,7 +59,7 @@ public final class RequestDestroyItem extends L2GameClientPacket {
         ItemInstance item2 = activeChar.getInventory().getItemByObjectId(objectId);
         ItemInstance item = item2;
         if (item2 == null) {  // Support for GMs deleting items from alt+g inventory.
-            item = GameObjectsStorage.getAllPlayers().stream()
+            item = GameObjectsStorage.getAllPlayersStream()
                     .filter(player -> item2 == player.getInventory().getItemByObjectId(objectId))
                     .map(p -> p.getInventory().getItemByObjectId(objectId))
                     .findFirst().orElse(null);

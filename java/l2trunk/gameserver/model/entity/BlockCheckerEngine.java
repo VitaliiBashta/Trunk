@@ -618,7 +618,7 @@ public final class BlockCheckerEngine {
         private boolean _isExit = false;
 
         @Override
-        public void onTeleport(Player player, int x, int y, int z, Reflection reflection) {
+        public void onTeleport(Player player, Location loc, Reflection reflection) {
             if (_isExit)
                 return;
             onPlayerExit(player);

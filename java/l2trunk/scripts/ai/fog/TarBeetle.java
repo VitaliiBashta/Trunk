@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class TarBeetle extends DefaultAI {
-    private static final List<Location> POSITIONS = Arrays.asList(
+    private static final List<Location> POSITIONS =List.of(
             new Location(179256, -117160, -3608),
             new Location(179752, -115000, -3608),
             new Location(177944, -119528, -4112),
@@ -59,7 +59,7 @@ public final class TarBeetle extends DefaultAI {
     private long LAST_TELEPORT = System.currentTimeMillis();
 
 
-    private TarBeetle(NpcInstance actor) {
+    public TarBeetle(NpcInstance actor) {
         super(actor);
     }
 

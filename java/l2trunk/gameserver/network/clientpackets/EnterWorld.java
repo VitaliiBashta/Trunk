@@ -28,8 +28,8 @@ import l2trunk.gameserver.model.pledge.SubUnit;
 import l2trunk.gameserver.model.pledge.UnitMember;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.network.GameClient;
-import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.ConfirmDlg;
+import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
@@ -135,20 +135,14 @@ public final class EnterWorld extends L2GameClientPacket {
         int myObjectId = activeChar.getObjectId();
         int myStoreId = activeChar.getStoredId();
 
-        synchronized (_lock)// TODO [G1ta0] Th is for garbage, and why is it here?
-        {
-            for (Player cha : GameObjectsStorage.getAllPlayers()) {
-                if (myStoreId == cha.getStoredId())
-                    continue;
-                try {
-                    if (cha.getObjectId() == myObjectId) {
+        synchronized (_lock) { // TODO [G1ta0] Th is for garbage, and why is it here?
+            GameObjectsStorage.getAllPlayersStream()
+                    .filter(cha -> myStoreId != cha.getStoredId())
+                    .filter(cha -> cha.getObjectId() == myObjectId)
+                    .forEach(cha -> {
                         LOG.warn("Double EnterWorld for char: " + activeChar.getName());
                         cha.kick();
-                    }
-                } catch (RuntimeException e) {
-                    LOG.error("Error while kicking copyed Char!", e);
-                }
-            }
+                    });
         }
 
         GameStats.incrementPlayerEnterGame();

@@ -186,6 +186,10 @@ public final class Zone {
         return getTerritory().isInside(x, y);
     }
 
+    public boolean checkIfInZone(Location loc, Reflection reflection) {
+        return checkIfInZone(loc.x, loc.y, loc.z, reflection);
+    }
+
     public boolean checkIfInZone(int x, int y, int z) {
         return checkIfInZone(x, y, z, getReflection());
     }
@@ -487,11 +491,11 @@ public final class Zone {
         return params;
     }
 
-    public <T extends Listener<Zone>> boolean addListener(T listener) {
+    public <T extends Listener> boolean addListener(T listener) {
         return listeners.add(listener);
     }
 
-    public <T extends Listener<Zone>> boolean removeListener(T listener) {
+    public <T extends Listener> boolean removeListener(T listener) {
         return listeners.remove(listener);
     }
 
@@ -666,7 +670,7 @@ public final class Zone {
         }
     }
 
-    class ZoneListenerList extends ListenerList<Zone> {
+    class ZoneListenerList extends ListenerList {
         void onEnter(Creature actor) {
             getListeners().stream()
                     .map(l -> (OnZoneEnterLeaveListener) l)

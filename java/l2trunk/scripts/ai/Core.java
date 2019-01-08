@@ -13,13 +13,6 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * AI боса Core:
- * <br> - Бубнит при атаке и смерти.
- * <br> - При смерти играет музыку и спаунит обратные порталы, которые удаляются через 15 минут
- *
- * @author SYS
- */
 public final class Core extends Fighter {
     private static final int TELEPORTATION_CUBIC_ID = 31842;
     private static final Location CUBIC_1_POSITION = new Location(16502, 110165, -6394, 0);
@@ -27,7 +20,7 @@ public final class Core extends Fighter {
     private static final int CUBIC_DESPAWN_TIME = 15 * 60 * 1000; // 15 min
     private boolean _firstTimeAttacked = true;
 
-    private Core(NpcInstance actor) {
+    public Core(NpcInstance actor) {
         super(actor);
     }
 

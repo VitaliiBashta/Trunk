@@ -221,7 +221,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
         getAI().onEvtOpen(opener);
 
-        for (Listener<Creature> l : getListeners().getListeners())
+        for (Listener l : getListeners().getListeners())
             if (l instanceof OnOpenCloseListener)
                 ((OnOpenCloseListener) l).onOpen(this);
 
@@ -258,7 +258,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
         getAI().onEvtClose(closer);
 
-        for (Listener<Creature> l : getListeners().getListeners())
+        for (Listener l : getListeners().getListeners())
             if (l instanceof OnOpenCloseListener)
                 ((OnOpenCloseListener) l).onClose(this);
 

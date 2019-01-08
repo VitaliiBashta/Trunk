@@ -1831,7 +1831,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             return false;
         }
         for (FuncTemplate func : et.getAttachedFuncs()) {
-            if ((func != null) && effected.checkBlockedStat(func._stat)) {
+            if ((func != null) && effected.checkBlockedStat(func.stat)) {
                 return true;
             }
         }

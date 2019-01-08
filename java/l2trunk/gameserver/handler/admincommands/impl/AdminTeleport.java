@@ -22,8 +22,10 @@ import l2trunk.gameserver.utils.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 
 public final class AdminTeleport implements IAdminCommandHandler {
@@ -214,25 +216,18 @@ public final class AdminTeleport implements IAdminCommandHandler {
                     activeChar.sendMessage("->" + targetName + "<- is incorrect, or reflection is default.");
                 break;
             case admin_recallserver:
-                final List<Player> targets = new ArrayList<>();
-                for (Player plr : GameObjectsStorage.getAllPlayers()) {
-                    if (plr == null)
-                        continue;
-
-                    if (plr.isInBuffStore()
-                            || plr.isInStoreMode()
-                            || !plr.isOnline()
-                            || plr.isInOlympiadMode()
-                            || Olympiad.isRegistered(plr)
-                            || plr.isJailed()
-                            || plr.isInZone(ZoneType.SIEGE)
-                            || plr.getReflection() != ReflectionManager.DEFAULT
-                            || plr.getPvpFlag() > 0
-                            || plr.getKarma() > 0)
-                        continue;
-
-                    targets.add(plr);
-                }
+                final List<Player> targets = GameObjectsStorage.getAllPlayersStream()
+                        .filter(plr -> (!plr.isInBuffStore()
+                                || !plr.isInStoreMode()
+                                || plr.isOnline()
+                                || !plr.isInOlympiadMode()
+                                || !Olympiad.isRegistered(plr)
+                                || !plr.isJailed()
+                                || !plr.isInZone(ZoneType.SIEGE)
+                                || plr.getReflection() == ReflectionManager.DEFAULT
+                                || plr.getPvpFlag() <= 0
+                                || plr.getKarma() <= 0))
+                        .collect(Collectors.toList());
                 activeChar.sendMessage("Recalling " + targets.size() + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
                 recall(activeChar, true, true, targets.toArray(new Player[0]));
                 break;
@@ -242,7 +237,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
                     return false;
                 }
 
-                int ref_id = Integer.parseInt(wordList[1]);
+                int ref_id = toInt(wordList[1]);
                 if (ref_id != 0 && ReflectionManager.INSTANCE.get(ref_id) == null) {
                     activeChar.sendMessage("Reflection <" + ref_id + "> not found.");
                     return false;

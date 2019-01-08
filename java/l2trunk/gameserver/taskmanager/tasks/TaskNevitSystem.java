@@ -20,7 +20,7 @@ public final class TaskNevitSystem extends Task {
     @Override
     public void onTimeElapsed(ExecutedTask task) {
         _log.info("Navit System Global Task: launched.");
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.getNevitSystem().restartSystem());
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> player.getNevitSystem().restartSystem());
         _log.info("Navit System Task: completed.");
     }
 

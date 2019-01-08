@@ -6,14 +6,14 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.WarehouseFunctions;
 
-public abstract class WarehouseInstance extends NpcInstance {
-    protected WarehouseInstance(int objectId, NpcTemplate template) {
+public class WarehouseInstance extends NpcInstance {
+    public WarehouseInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
     @Override
     public String getHtmlPath(int npcId, int val, Player player) {
-        String pom = "";
+        String pom;
         if (val == 0)
             pom = "" + npcId;
         else

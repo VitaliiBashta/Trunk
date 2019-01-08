@@ -69,7 +69,7 @@ public class AdminReload implements IAdminCommandHandler {
             case admin_reload_gmaccess: {
                 try {
                     Config.loadGMAccess();
-                    GameObjectsStorage.getAllPlayers().forEach(player -> {
+                    GameObjectsStorage.getAllPlayersStream().forEach(player -> {
                         if (!Config.EVERYBODY_HAS_ADMIN_RIGHTS)
                             player.setPlayerAccess(Config.gmlist.get(player.getObjectId()));
                         else
@@ -91,7 +91,7 @@ public class AdminReload implements IAdminCommandHandler {
             }
             case admin_reload_qs: {
                 if (fullString.endsWith("all"))
-                    GameObjectsStorage.getAllPlayers().forEach(this::reloadQuestStates);
+                    GameObjectsStorage.getAllPlayersStream().forEach(this::reloadQuestStates);
                 else {
                     GameObject t = activeChar.getTarget();
 

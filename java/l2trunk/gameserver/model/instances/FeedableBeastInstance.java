@@ -15,7 +15,6 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -214,15 +213,11 @@ public class FeedableBeastInstance extends MonsterInstance {
     }
 
     private MonsterInstance spawn(int npcId, int x, int y, int z) {
-        try {
-            MonsterInstance monster = (MonsterInstance) NpcHolder.getTemplate(npcId).getInstanceConstructor().newInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(npcId));
-            monster.setSpawnedLoc(new Location(x, y, z));
-            monster.spawnMe(monster.getSpawnedLoc());
-            return monster;
-        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-            _log.error("Could not spawn Npc " + npcId, e);
-        }
-        return null;
+        MonsterInstance monster = (MonsterInstance) NpcHolder.getTemplate(npcId)
+                .getNewInstance(IdFactory.getInstance().getNextId());
+        monster.setSpawnedLoc(new Location(x, y, z));
+        monster.spawnMe(monster.getSpawnedLoc());
+        return monster;
     }
 
     public void onSkillUse(Player player, int skillId) {

@@ -4,6 +4,7 @@ import l2trunk.gameserver.listener.CharListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 
+@FunctionalInterface
 public interface OnCurrentHpDamageListener extends CharListener {
     void onCurrentHpDamage(Creature actor, double damage, Creature attacker, Skill skill);
 }

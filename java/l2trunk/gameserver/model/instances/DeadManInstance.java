@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.Die;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class DeadManInstance extends NpcInstance {
+public final class DeadManInstance extends NpcInstance {
     public DeadManInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         setAI(new CharacterAI(this));

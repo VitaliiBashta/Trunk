@@ -1,7 +1,6 @@
 package l2trunk.gameserver.taskmanager.tasks;
 
 import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.taskmanager.Task;
 import l2trunk.gameserver.taskmanager.TaskManager;
@@ -10,8 +9,8 @@ import l2trunk.gameserver.taskmanager.TaskTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TaskEndHero extends Task {
-    private static final Logger _log = LoggerFactory.getLogger(TaskEndHero.class);
+public final class TaskEndHero extends Task {
+    private static final Logger LOG = LoggerFactory.getLogger(TaskEndHero.class);
     private static final String NAME = "TaskEndHero";
 
     @Override
@@ -21,18 +20,18 @@ public class TaskEndHero extends Task {
 
     @Override
     public void onTimeElapsed(ExecutedTask task) {
-        _log.info("Hero End Global Task: launched.");
-        for (Player player : GameObjectsStorage.getAllPlayers()) {
-            if (player.getVarLong("HeroPeriod") <= System.currentTimeMillis()) {
-                player.setHero(false);
-                player.updatePledgeClass();
-                player.broadcastUserInfo(true);
-                Hero.deleteHero(player);
-                Hero.removeSkills(player);
-                player.unsetVar("HeroPeriod");
-            }
-        }
-        _log.info("Hero End Global Task: completed.");
+        LOG.info("Hero End Global Task: launched.");
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(p -> p.getVarLong("HeroPeriod") <= System.currentTimeMillis())
+                .forEach(p -> {
+                    p.setHero(false);
+                    p.updatePledgeClass();
+                    p.broadcastUserInfo(true);
+                    Hero.deleteHero(p);
+                    Hero.removeSkills(p);
+                    p.unsetVar("HeroPeriod");
+                });
+        LOG.info("Hero End Global Task: completed.");
     }
 
     @Override

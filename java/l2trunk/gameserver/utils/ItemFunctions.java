@@ -152,8 +152,6 @@ public final class ItemFunctions {
                 return new SystemMessage2(SystemMsg.YOU_DO_NOT_MEET_THE_REQUIRED_CONDITION_TO_EQUIP_THAT_ITEM);
             if (player.isCursedWeaponEquipped() && itemId != player.getCursedWeaponEquippedId())
                 return new SystemMessage2(SystemMsg.YOU_DO_NOT_MEET_THE_REQUIRED_CONDITION_TO_EQUIP_THAT_ITEM);
-            if (player._event != null && player._event.getName().equalsIgnoreCase("Capture The Flag") && player.getVar("CtF_Flag") != null)
-                return new SystemMessage2(SystemMsg.THIS_ITEM_CANNOT_BE_MOVED);
         }
 
         if (item.getTemplate().isCloak()) {

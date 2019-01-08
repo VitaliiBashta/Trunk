@@ -14,7 +14,7 @@ import l2trunk.gameserver.utils.Location;
 public class RndTeleportFighter extends Fighter {
     private long lastTeleport;
 
-    RndTeleportFighter(NpcInstance actor) {
+    public RndTeleportFighter(NpcInstance actor) {
         super(actor);
     }
 

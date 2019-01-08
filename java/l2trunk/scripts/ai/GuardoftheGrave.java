@@ -11,7 +11,7 @@ public final class GuardoftheGrave extends Fighter {
     private static final int DESPAWN_TIME = 2 * 45 * 1000;
     private static final int CHIEFTAINS_TREASURE_CHEST = 18816;
 
-    private GuardoftheGrave(NpcInstance actor) {
+    public GuardoftheGrave(NpcInstance actor) {
         super(actor);
         actor.setInvul(true);
         actor.startImmobilized();

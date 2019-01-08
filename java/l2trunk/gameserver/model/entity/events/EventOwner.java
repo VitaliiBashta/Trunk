@@ -6,7 +6,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public abstract class EventOwner {
     private final Set<GlobalEvent> events = new CopyOnWriteArraySet<>();
 
-    @SuppressWarnings("unchecked")
     public <E extends GlobalEvent> E getEvent(Class<E> eventClass) {
         for (GlobalEvent e : events) {
             if (e.getClass() == eventClass)    // fast hack

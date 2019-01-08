@@ -10,8 +10,8 @@ import l2trunk.gameserver.listener.actor.ai.OnAiIntentionListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 
-public class CharListenerList extends ListenerList<Creature> {
-    final static ListenerList<Creature> global = new ListenerList<>();
+public class CharListenerList extends ListenerList {
+    final static ListenerList global = new ListenerList();
 
     final Creature actor;
 
@@ -19,11 +19,11 @@ public class CharListenerList extends ListenerList<Creature> {
         this.actor = actor;
     }
 
-    public static boolean addGlobal(Listener<Creature> listener) {
+    public static boolean addGlobal(Listener listener) {
         return global.add(listener);
     }
 
-    public static void removeGlobal(Listener<Creature> listener) {
+    public static void removeGlobal(Listener listener) {
         global.remove(listener);
     }
 
@@ -32,112 +32,114 @@ public class CharListenerList extends ListenerList<Creature> {
     }
 
     public void onAiIntention(CtrlIntention intention, Object arg0, Object arg1) {
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnAiIntentionListener)
-                    ((OnAiIntentionListener) listener).onAiIntention(getActor(), intention, arg0, arg1);
+        getListeners().stream()
+                .filter(l -> l instanceof OnAiIntentionListener)
+                .map(l -> (OnAiIntentionListener) l)
+                .forEach(l -> l.onAiIntention(getActor(), intention, arg0, arg1));
     }
 
     public void onAiEvent(CtrlEvent evt, Object[] args) {
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnAiEventListener)
-                    ((OnAiEventListener) listener).onAiEvent(getActor(), evt, args);
+        getListeners().stream()
+                .filter(l -> l instanceof OnAiEventListener)
+                .map(l -> (OnAiEventListener) l)
+                .forEach(l -> l.onAiEvent(getActor(), evt, args));
     }
 
     public void onAttack(Creature target) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnAttackListener)
-                    ((OnAttackListener) listener).onAttack(getActor(), target);
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnAttackListener)
-                    ((OnAttackListener) listener).onAttack(getActor(), target);
+        onAttack(global, target);
+        onAttack(this, target);
     }
 
     public void onAttackHit(Creature attacker) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnAttackHitListener)
-                    ((OnAttackHitListener) listener).onAttackHit(getActor(), attacker);
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnAttackHitListener)
-                    ((OnAttackHitListener) listener).onAttackHit(getActor(), attacker);
+        onAttackHit(global,attacker);
+        onAttackHit(this,attacker);
     }
-
     public void onMagicUse(Skill skill, Creature target, boolean alt) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnMagicUseListener)
-                    ((OnMagicUseListener) listener).onMagicUse(getActor(), skill, target, alt);
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnMagicUseListener)
-                    ((OnMagicUseListener) listener).onMagicUse(getActor(), skill, target, alt);
+        onMagicUse(global, skill, target, alt);
+        onMagicUse(this, skill, target, alt);
     }
 
     public void onMagicHit(Skill skill, Creature caster) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnMagicHitListener)
-                    ((OnMagicHitListener) listener).onMagicHit(getActor(), skill, caster);
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnMagicHitListener)
-                    ((OnMagicHitListener) listener).onMagicHit(getActor(), skill, caster);
+        onMagicHit(global, skill, caster);
+        onMagicHit(this, skill, caster);
     }
 
     public void onDeath(Creature killer) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnDeathListener)
-                    ((OnDeathListener) listener).onDeath(getActor(), killer);
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnDeathListener)
-                    ((OnDeathListener) listener).onDeath(getActor(), killer);
+        onDeath(global, killer);
+        onDeath(this, killer);
     }
 
     public void onKill(Creature victim) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnKillListener && !((OnKillListener) listener).ignorePetOrSummon())
-                    ((OnKillListener) listener).onKill(getActor(), victim);
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnKillListener && !((OnKillListener) listener).ignorePetOrSummon())
-                    ((OnKillListener) listener).onKill(getActor(), victim);
+        onKill(global, victim);
+        onKill(this, victim);
     }
 
     public void onKillIgnorePetOrSummon(Creature victim) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnKillListener && ((OnKillListener) listener).ignorePetOrSummon())
-                    ((OnKillListener) listener).onKill(getActor(), victim);
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnKillListener && ((OnKillListener) listener).ignorePetOrSummon())
-                    ((OnKillListener) listener).onKill(getActor(), victim);
+        onKillIgnorePetOrSummon(global, victim);
+        onKillIgnorePetOrSummon(this, victim);
     }
 
     public void onCurrentHpDamage(double damage, Creature attacker, Skill skill) {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (listener instanceof OnCurrentHpDamageListener)
-                    ((OnCurrentHpDamageListener) listener).onCurrentHpDamage(getActor(), damage, attacker, skill);
+        onCurrentHpDamage(global, damage, attacker, skill);
+        onCurrentHpDamage(this, damage, attacker, skill);
+    }
 
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (listener instanceof OnCurrentHpDamageListener)
-                    ((OnCurrentHpDamageListener) listener).onCurrentHpDamage(getActor(), damage, attacker, skill);
+    private void onAttackHit(ListenerList list,Creature attacker) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnAttackHitListener)
+                .map( l ->(OnAttackHitListener) l)
+                .forEach(l ->l.onAttackHit(getActor(), attacker));
+    }
+
+    private void onMagicUse(ListenerList list, Skill skill, Creature target, boolean alt) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnMagicUseListener)
+                .map(l -> (OnMagicUseListener) l)
+                .forEach(l -> l.onMagicUse(getActor(), skill, target, alt));
+    }
+
+    private void onAttack(ListenerList list, Creature target) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnAttackListener)
+                .map(l -> (OnAttackListener) l)
+                .forEach(l -> l.onAttack(getActor(), target));
+
+    }
+
+    private void onMagicHit(ListenerList list, Skill skill, Creature caster) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnMagicHitListener)
+                .map(l -> (OnMagicHitListener) l)
+                .forEach(l -> l.onMagicHit(getActor(), skill, caster));
+    }
+
+    private void onDeath(ListenerList list, Creature killer) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnDeathListener)
+                .map(l -> (OnDeathListener) l)
+                .forEach(l -> l.onDeath(getActor(), killer));
+    }
+
+    private void onKill(ListenerList list, Creature victim) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnKillListener)
+                .map(l -> (OnKillListener) l)
+                .filter(l -> !l.ignorePetOrSummon())
+                .forEach(l -> l.onKill(getActor(), victim));
+    }
+
+    private void onCurrentHpDamage(ListenerList list, double damage, Creature attacker, Skill skill) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnCurrentHpDamageListener)
+                .map(l -> (OnCurrentHpDamageListener) l)
+                .forEach(l -> l.onCurrentHpDamage(getActor(), damage, attacker, skill));
+    }
+
+    private void onKillIgnorePetOrSummon(ListenerList list, Creature victim) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnKillListener)
+                .map(l -> (OnKillListener) l)
+                .filter(OnKillListener::ignorePetOrSummon)
+                .forEach(l -> l.onKill(getActor(), victim));
     }
 }

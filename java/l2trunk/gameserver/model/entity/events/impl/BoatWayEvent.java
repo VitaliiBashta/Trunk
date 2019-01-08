@@ -118,16 +118,15 @@ public final class BoatWayEvent extends GlobalEvent {
             int ry = MapUtils.regionY(_boat.getY());
             int offset = Config.SHOUT_OFFSET;
 
-            for (Player player : GameObjectsStorage.getAllPlayers()) {
-                if (player.getReflection() != _boat.getReflection())
-                    continue;
+            GameObjectsStorage.getAllPlayersStream()
+                    .filter(p -> p.getReflection() == _boat.getReflection())
+                    .forEach(p -> {
+                        int tx = MapUtils.regionX(p);
+                        int ty = MapUtils.regionY(p);
 
-                int tx = MapUtils.regionX(player);
-                int ty = MapUtils.regionY(player);
-
-                if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
-                    list.add(player);
-            }
+                        if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
+                            list.add(p);
+                    });
 
             return list;
         } else

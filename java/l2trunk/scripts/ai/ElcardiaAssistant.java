@@ -39,7 +39,7 @@ public final class ElcardiaAssistant extends DefaultAI {
     private final Skill recharge = SkillTable.INSTANCE.getInfo(6728);
     private final Skill heal = SkillTable.INSTANCE.getInfo(6724);
 
-    private ElcardiaAssistant(NpcInstance actor) {
+    public ElcardiaAssistant(NpcInstance actor) {
         super(actor);
         _chatTimer = System.currentTimeMillis() + 8000L;
     }

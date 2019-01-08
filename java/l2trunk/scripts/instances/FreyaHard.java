@@ -414,7 +414,7 @@ public final class FreyaHard extends Reflection {
         }
     }
 
-    public class CurrentHpListener implements OnCurrentHpDamageListener {
+    public final class CurrentHpListener implements OnCurrentHpDamageListener {
         @Override
         public void onCurrentHpDamage(Creature actor, double damage, Creature attacker, Skill skill) {
             if (actor == null || actor.isDead() || actor.getNpcId() != FreyaStandHard)

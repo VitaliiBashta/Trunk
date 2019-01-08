@@ -90,7 +90,7 @@ public class ClanAirShip extends AirShip {
             _deleteTask = null;
         }
 
-        for (Player player : _players) {
+        for (Player player : players) {
             player.showQuestMovie(_platform.getOustMovie());
 
             oustPlayer(player, getReturnLoc(), true);
@@ -325,7 +325,7 @@ public class ClanAirShip extends AirShip {
         @Override
         public void runImpl() {
             boolean empty = true;
-            for (Player player : _players)
+            for (Player player : players)
                 if (player.isOnline())
                     empty = false;
 

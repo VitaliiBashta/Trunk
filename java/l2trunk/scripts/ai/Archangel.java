@@ -84,7 +84,6 @@ public final class Archangel extends Fighter {
         NpcInstance actor = getActor();
         Location sloc = actor.getSpawnedLoc();
 
-        // РЈРґР°Р»СЏРµРј РІСЃРµ Р·Р°РґР°РЅРёСЏ
         clearTasks();
         actor.stopMove();
 

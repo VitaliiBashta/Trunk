@@ -9,17 +9,12 @@ import l2trunk.gameserver.utils.PositionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Author: Bonux
- * При ударе монстра спавнятся 2 х Tanta Lizardman Scout и они агрятся на игрока.
- **/
 public final class LizardmanSummoner extends Mystic {
-    private static final Logger LOG = LoggerFactory.getLogger(LizardmanSummoner.class);
-    private final int TANTA_LIZARDMAN_SCOUT = 22768;
-    private final int SPAWN_COUNT = 2;
+    private static final int TANTA_LIZARDMAN_SCOUT = 22768;
+    private static final int SPAWN_COUNT = 2;
     private boolean spawnedMobs = false;
 
-    private LizardmanSummoner(NpcInstance actor) {
+    public LizardmanSummoner(NpcInstance actor) {
         super(actor);
     }
 
@@ -34,15 +29,11 @@ public final class LizardmanSummoner extends Mystic {
         if (!spawnedMobs && attacker.isPlayable()) {
             NpcInstance actor = getActor();
             for (int i = 0; i < SPAWN_COUNT; i++) {
-                try {
-                    SimpleSpawner sp = new SimpleSpawner(TANTA_LIZARDMAN_SCOUT);
-                    sp.setLoc(actor.getLoc());
-                    NpcInstance npc = sp.doSpawn(true);
-                    npc.setHeading(PositionUtils.calculateHeadingFrom(npc, attacker));
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 1000);
-                } catch (RuntimeException e) {
-                    LOG.error("Error while Spawning Tanta Lizardman Scout by Lizardman Summoner", e);
-                }
+                SimpleSpawner sp = new SimpleSpawner(TANTA_LIZARDMAN_SCOUT);
+                sp.setLoc(actor.getLoc());
+                NpcInstance npc = sp.doSpawn(true);
+                npc.setHeading(PositionUtils.calculateHeadingFrom(npc, attacker));
+                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 1000);
             }
             spawnedMobs = true;
         }

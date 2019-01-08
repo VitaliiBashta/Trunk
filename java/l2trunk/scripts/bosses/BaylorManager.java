@@ -35,7 +35,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
     private static final int CrystalPrisonGuard = 29100;
     private static final int Parme = 32271;
     private static final int Oracle = 32273;
-    private static final Location _crystalineLocation[] = {
+    private static final List<Location> _crystalineLocation = List.of(
             new Location(154404, 140596, -12711, 44732),
             new Location(153574, 140402, -12711, 44732),
             new Location(152105, 141230, -12711, 44732),
@@ -43,8 +43,8 @@ public final class BaylorManager extends Functions implements ScriptFile {
             new Location(152109, 142920, -12711, 44732),
             new Location(152730, 143555, -12711, 44732),
             new Location(154439, 143538, -12711, 44732),
-            new Location(155246, 142068, -12711, 44732)};
-    private static final Location _baylorChestLocation[] = {
+            new Location(155246, 142068, -12711, 44732));
+    private static final List<Location> _baylorChestLocation = List.of(
             new Location(153763, 142075, -12741, 64792),
             new Location(153701, 141942, -12741, 57739),
             new Location(153573, 141894, -12741, 49471),
@@ -60,10 +60,11 @@ public final class BaylorManager extends Functions implements ScriptFile {
             new Location(154192, 142697, -12741, 7894),
             new Location(152924, 142677, -12741, 25072),
             new Location(152907, 141428, -12741, 39590),
-            new Location(154243, 141411, -12741, 55500)};
-    private static final int[] doors = {24220009, 24220011, 24220012, 24220014, 24220015, 24220016, 24220017, 24220019};
+            new Location(154243, 141411, -12741, 55500));
+    private static final List<Integer> doors = List.of(
+            24220009, 24220011, 24220012, 24220014, 24220015, 24220016, 24220017, 24220019);
     // Instance of monsters
-    private static final List<NpcInstance> _crystaline = new ArrayList<>();
+    private static final List<NpcInstance> CRYSTALINE = new ArrayList<>();
     private static final int FWBA_ACTIVITYTIMEOFMOBS = 120 * 60000;
     private static final int FWBA_FIXINTERVALOFBAYLORSPAWN = Config.FIXINTERVALOFBAYLORSPAWN_HOUR * 60 * 60000;
     private static final int FWBA_RANDOMINTERVALOFBAYLORSPAWN = Config.RANDOMINTERVALOFBAYLORSPAWN * 60 * 60000;
@@ -83,13 +84,12 @@ public final class BaylorManager extends Functions implements ScriptFile {
 
     public static NpcInstance spawn(Location loc, int npcId) {
         NpcTemplate template = NpcHolder.getTemplate(npcId);
-        NpcInstance npc = template.getNewInstance();
-        npc.setSpawnedLoc(loc);
-        npc.setHeading(loc.h);
-        npc.setLoc(loc);
-        npc.setReflection(currentReflection);
-        npc.spawnMe();
-        return npc;
+        return (NpcInstance) template.getNewInstance()
+                .setSpawnedLoc(loc)
+                .setHeading(loc.h)
+                .setLoc(loc)
+                .setReflection(currentReflection)
+                .spawnMe();
     }
 
     // Whether it is permitted to enter the baylor's lair is confirmed.
@@ -190,7 +190,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
 
         Log.add("Baylor died", "bosses");
 
-        spawn(_baylorChestLocation[Rnd.get(_baylorChestLocation.length)], 29116);
+        spawn(Rnd.get(_baylorChestLocation), 29116);
 
         spawn(new Location(153570, 142067, -9727, 55500), Parme);
         spawn(new Location(153569, 142075, -12732, 55500), Oracle);
@@ -232,7 +232,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
             _baylor.deleteMe();
         _baylor = null;
 
-        for (NpcInstance npc : _crystaline)
+        for (NpcInstance npc : CRYSTALINE)
             if (npc != null)
                 npc.deleteMe();
 
@@ -283,14 +283,13 @@ public final class BaylorManager extends Functions implements ScriptFile {
                 case CrystalPrisonGuard:
 
                     Reflection ref = ReflectionManager.INSTANCE.get(currentReflection);
-                    for (int doorId : doors)
-                        ref.openDoor(doorId);
+                    doors.forEach(ref::openDoor);
 
-                    for (int i = 0; i < _crystalineLocation.length; i++) {
-                        _crystaline.add(spawn(_crystalineLocation[i], CrystalPrisonGuard));
-                        _crystaline.get(i).setRunning();
-                        _crystaline.get(i).moveToLocation(_pos, 300, false);
-                        ThreadPoolManager.INSTANCE.schedule(new Social(_crystaline.get(i), 2), 15000);
+                    for (int i = 0; i < _crystalineLocation.size(); i++) {
+                        CRYSTALINE.add(spawn(_crystalineLocation.get(i), CrystalPrisonGuard));
+                        CRYSTALINE.get(i).setRunning();
+                        CRYSTALINE.get(i).moveToLocation(_pos, 300, false);
+                        ThreadPoolManager.INSTANCE.schedule(new Social(CRYSTALINE.get(i), 2), 15000);
                     }
 
                     break;
@@ -328,17 +327,17 @@ public final class BaylorManager extends Functions implements ScriptFile {
     }
 
     private static class Social extends RunnableImpl {
-        private final int _action;
-        private final NpcInstance _npc;
+        private final int action;
+        private final NpcInstance npc;
 
         Social(NpcInstance npc, int actionId) {
-            _npc = npc;
-            _action = actionId;
+            this.npc = npc;
+            action = actionId;
         }
 
         @Override
         public void runImpl() {
-            _npc.broadcastPacket(new SocialAction(_npc.getObjectId(), _action));
+            npc.broadcastPacket(new SocialAction(npc.getObjectId(), action));
         }
     }
 
@@ -357,7 +356,7 @@ public final class BaylorManager extends Functions implements ScriptFile {
                     player.broadcastPacket(new FlyToLocation(player, flyLoc, FlyType.THROW_HORIZONTAL));
                 }
             }
-            _crystaline.forEach(npc ->
+            CRYSTALINE.forEach(npc ->
                     npc.reduceCurrentHp(npc.getMaxHp() + 1, npc, null, true, true, false, false, false, false, false));
         }
     }

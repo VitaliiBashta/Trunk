@@ -10,11 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Support for command: /clanpenalty
- */
+
 public final class ClanPenalty implements IUserCommandHandler {
-    private static final List<Integer> COMMAND_IDS = Arrays.asList(100, 114);
+    private static final List<Integer> COMMAND_IDS = List.of(100, 114);
 
 
     @Override

@@ -8,14 +8,14 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class TeleToFantasyIsle implements ScriptFile, IBypassHandler {
-    private static final Location[] POINTS =
-            {
+import java.util.List;
+
+public final class TeleToFantasyIsle implements ScriptFile, IBypassHandler {
+    private static final List<Location> POINTS = List.of(
                     new Location(-60695, -56896, -2032),
                     new Location(-59716, -55920, -2032),
                     new Location(-58752, -56896, -2032),
-                    new Location(-59716, -57864, -2032)
-            };
+                    new Location(-59716, -57864, -2032));
 
     @Override
     public String[] getBypasses() {

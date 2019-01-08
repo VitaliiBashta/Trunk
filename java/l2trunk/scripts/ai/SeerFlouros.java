@@ -10,20 +10,13 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * AI Seer Flouros.<br>
- * - Спавнит "миньонов" при атаке.<br>
- * - _hps - таблица процентов hp, после которых спавнит "миньонов".<br>
- *
- * @author n0nam3
- */
 public final class SeerFlouros extends Mystic {
     private static final int MOB = 18560;
     private static final int MOBS_COUNT = 2;
     private static final int[] _hps = {80, 60, 40, 30, 20, 10, 5, -5};
     private int _hpCount = 0;
 
-    private SeerFlouros(NpcInstance actor) {
+    public SeerFlouros(NpcInstance actor) {
         super(actor);
     }
 

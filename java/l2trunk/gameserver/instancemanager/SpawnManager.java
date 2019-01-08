@@ -58,7 +58,7 @@ public enum SpawnManager {
             NpcTemplate npcTemplate = NpcHolder.getTemplate(spawner.getCurrentNpcId());
 
             int toAdd;
-            if ((Config.RATE_MOB_SPAWN > 1) && (npcTemplate.getInstanceClass() == MonsterInstance.class) && (npcTemplate.level >= Config.RATE_MOB_SPAWN_MIN_LEVEL) && (npcTemplate.level <= Config.RATE_MOB_SPAWN_MAX_LEVEL)) {
+            if ((Config.RATE_MOB_SPAWN > 1) && (npcTemplate.type.equals("MonsterInstance")) && (npcTemplate.level >= Config.RATE_MOB_SPAWN_MIN_LEVEL) && (npcTemplate.level <= Config.RATE_MOB_SPAWN_MAX_LEVEL)) {
                 toAdd = template.getCount() * Config.RATE_MOB_SPAWN;
                 spawner.setAmount(toAdd);
             } else {
@@ -143,7 +143,7 @@ public enum SpawnManager {
 
     public List<Spawner> getSpawners(String group) {
         List<Spawner> list = _spawns.get(group);
-        return list == null ? Collections.<Spawner>emptyList() : list;
+        return list == null ? Collections.emptyList() : list;
     }
 
     public int getSpawnedCountByNpc(int npcId) {

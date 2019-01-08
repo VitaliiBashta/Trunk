@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class GameObject extends EventOwner {
-    public static final GameObject[] EMPTY_L2OBJECT_ARRAY = new GameObject[0];
     /**
      * Основные состояния объекта
      */
@@ -73,14 +72,14 @@ public abstract class GameObject extends EventOwner {
         return reflection;
     }
 
-    public void setReflection(int reflectionId) {
+    public GameObject setReflection(int reflectionId) {
         Reflection r = ReflectionManager.INSTANCE.get(reflectionId);
         if (r == null) {
             Log.debug("Trying to set unavailable reflection: " + reflectionId + " for object: " + this + "!", new Throwable().fillInStackTrace());
-            return;
+            return this;
         }
 
-        setReflection(r);
+        return setReflection(r);
     }
 
     public GameObject setReflection(Reflection reflection) {
@@ -149,13 +148,9 @@ public abstract class GameObject extends EventOwner {
         return new Location(x, y, z, getHeading());
     }
 
-    /**
-     * Устанавливает позицию (x, y, z) L2Object
-     *
-     * @param loc Location
-     */
-    public void setLoc(Location loc) {
+    public GameObject setLoc(Location loc) {
         setXYZ(loc.x, loc.y, loc.z);
+        return this;
     }
 
     protected int getGeoZ(Location loc) {
@@ -203,13 +198,11 @@ public abstract class GameObject extends EventOwner {
         spawn0(dropper);
     }
 
-    public final void spawnMe() {
+    public GameObject spawnMe() {
         spawn0(null);
+        return this;
     }
 
-    /**
-     * Добавляет обьект в мир, добавляет в текущий регион. Делает обьект видимым.
-     */
     private void spawn0(Creature dropper) {
         if (!_state.compareAndSet(CREATED, VISIBLE))
             return;

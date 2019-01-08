@@ -9,8 +9,8 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.Collections;
 import java.util.List;
 
-public class BuffStoreVoiced extends Functions implements IVoicedCommandHandler {
-    private static final List<String> VOICED_COMMANDS = Collections.singletonList("buffstore");
+public final class BuffStoreVoiced extends Functions implements IVoicedCommandHandler {
+    private static final List<String> VOICED_COMMANDS = List.of("buffstore");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String params) {

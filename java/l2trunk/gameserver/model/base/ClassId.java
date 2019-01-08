@@ -1,5 +1,7 @@
 package l2trunk.gameserver.model.base;
 
+import java.util.List;
+
 /**
  * This class defines all classes (ex : human fighter, darkFighter...) that a player can chose.<BR><BR>
  * <p>
@@ -180,7 +182,7 @@ public enum ClassId {
     inspector(135, "Inspector", false, Race.kamael, trooper, 3, ClassType2.Enchanter),
     judicator(136, "Judicator", false, Race.kamael, inspector, 4, ClassType2.Enchanter);
 
-    public static final ClassId[] VALUES = values();
+    public static final List<ClassId> VALUES = List.of(values());
     private final int id;
     private final String name;
     private final boolean isMage;

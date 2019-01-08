@@ -443,7 +443,7 @@ public enum CursedWeaponsManager {
     }
 
     private void announce(SystemMessage sm) {
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(sm));
     }
 
     public void showUsageTime(Player player, int itemId) {

@@ -2,11 +2,11 @@ package l2trunk.gameserver.data;
 
 import l2trunk.commons.data.xml.AbstractHolder;
 import l2trunk.gameserver.idfactory.IdFactory;
+import l2trunk.gameserver.model.entity.boat.AirShip;
 import l2trunk.gameserver.model.entity.boat.Boat;
+import l2trunk.gameserver.model.entity.boat.Vehicle;
 import l2trunk.gameserver.templates.CharTemplate;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,20 +29,22 @@ public final class BoatHolder extends AbstractHolder {
         }
     }
 
-    public Boat initBoat(String name, String clazz) {
-        try {
-            Class<?> cl = Class.forName("l2trunk.gameserver.model.entity.boat." + clazz);
-            Constructor<?> constructor = cl.getConstructor(Integer.TYPE, CharTemplate.class);
-
-            Boat boat = (Boat) constructor.newInstance(IdFactory.getInstance().getNextId(), TEMPLATE);
-            boat.setName(name);
-            addBoat(boat);
-            return boat;
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            LOG.error("Fail to init boat: " + clazz, e);
+    private Boat getBoatByname(String className, int id) {
+        switch (className) {
+            case "AirShip":
+                return new AirShip(id, TEMPLATE);
+            case "Vehicle":
+                return new Vehicle(id, TEMPLATE);
+            default:
+                throw new IllegalArgumentException("no boat for name: " + className);
         }
+    }
 
-        return null;
+    public Boat initBoat(String name, String clazz) {
+        Boat boat = getBoatByname(clazz, IdFactory.getInstance().getNextId());
+        boat.setName(name);
+        addBoat(boat);
+        return boat;
     }
 
     public Boat getBoat(String name) {

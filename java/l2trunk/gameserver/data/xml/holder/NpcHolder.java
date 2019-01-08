@@ -28,8 +28,17 @@ public final class NpcHolder {
         return npcs.get(id);
     }
 
+    public static NpcTemplate getTemplateByType(String NpcType) {
+        return npcs.values().stream()
+                .filter(n -> n.type.equals(NpcType))
+                .findFirst()
+                .orElse(null);
+    }
     public static NpcTemplate getTemplateByName(String NpcName) {
-        return npcs.values().stream().filter(a -> a.name.equals(NpcName)).findFirst().orElse(null);
+        return npcs.values().stream()
+                .filter(a -> a.name.equals(NpcName))
+                .findFirst()
+                .orElse(null);
     }
 
     public static Collection<NpcTemplate> getAll() {

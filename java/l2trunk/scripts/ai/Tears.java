@@ -18,8 +18,8 @@ import java.util.concurrent.ScheduledFuture;
 public final class Tears extends DefaultAI {
     private static final int Water_Dragon_Scale = 2369;
     private static final int Tears_Copy = 25535;
-    private final Skill Invincible;
-    private final Skill Freezing;
+    private final int Invincible = 5420;
+    private final int Freezing = 5238;
     private final List<NpcInstance> spawns = new ArrayList<>();
     private ScheduledFuture<?> spawnTask;
     private ScheduledFuture<?> despawnTask;
@@ -27,13 +27,13 @@ public final class Tears extends DefaultAI {
     private int _scale_count = 0;
     private long _last_scale_time = 0;
 
-    private Tears(NpcInstance actor) {
+    public Tears(NpcInstance actor) {
         super(actor);
 
-        Map<Integer, Skill> skills = getActor().getTemplate().getSkills();
-
-        Invincible = skills.get(5420);
-        Freezing = skills.get(5238);
+//        Map<Integer, Skill> skills = getActor().getTemplate().getSkills();
+//
+//        Invincible = skills.get(5420);
+//        Freezing = skills.get(5238);
     }
 
     @Override

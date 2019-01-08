@@ -981,14 +981,14 @@ public abstract class Inventory extends ItemContainer {
         }
     }
 
-    protected class InventoryListenerList extends ListenerList<Playable> {
+    protected class InventoryListenerList extends ListenerList {
         void onEquip(int slot, ItemInstance item) {
-            for (Listener<Playable> listener : getListeners())
+            for (Listener listener : getListeners())
                 ((OnEquipListener) listener).onEquip(slot, item, getActor());
         }
 
         void onUnequip(int slot, ItemInstance item) {
-            for (Listener<Playable> listener : getListeners())
+            for (Listener listener : getListeners())
                 ((OnEquipListener) listener).onUnequip(slot, item, getActor());
         }
     }

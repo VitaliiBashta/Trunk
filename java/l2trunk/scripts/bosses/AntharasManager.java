@@ -389,7 +389,7 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
             _state.update();
             //Earthquake
             Location loc = new Location(185708, 114298, -8221);
-            GameObjectsStorage.getAllPlayers().forEach(p -> p.broadcastPacket(new Earthquake(loc, 20, 10)));
+            GameObjectsStorage.getAllPlayersStream().forEach(p -> p.broadcastPacket(new Earthquake(loc, 20, 10)));
 
         }
     }

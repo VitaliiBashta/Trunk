@@ -464,7 +464,7 @@ public final class Util extends Functions {
         if (!checkCertificationCondition(75, SubClass.CERTIFICATION_75))
             return;
 
-        ClassId cl = ClassId.VALUES[clzz.getClassId()];
+        ClassId cl = ClassId.VALUES.get(clzz.getClassId());
         if (cl.getType2() == null)
             return;
 
@@ -490,7 +490,7 @@ public final class Util extends Functions {
         if (!checkCertificationCondition(80, SubClass.CERTIFICATION_80))
             return;
 
-        ClassId cl = ClassId.VALUES[clzz.getClassId()];
+        ClassId cl = ClassId.VALUES.get(clzz.getClassId());
         if (cl.getType2() == null)
             return;
 

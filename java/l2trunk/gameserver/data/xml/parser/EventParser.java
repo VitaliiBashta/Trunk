@@ -20,8 +20,6 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -41,10 +39,6 @@ public enum EventParser {
         switch (name) {
             case "UndergroundColiseumEvent":
                 return new UndergroundColiseumEvent(set);
-//            case "UndergroundColiseumBattleEvent":
-//                return new UndergroundColiseumBattleEvent(set);
-//            case "SiegeEvent":
-//                return new SiegeEvent(set);
             case "PlayerVsPlayerDuelEvent":
                 return new PlayerVsPlayerDuelEvent(set);
             case "PartyVsPartyDuelEvent":
@@ -91,67 +85,55 @@ public enum EventParser {
             String name = eventElement.attributeValue("name");
             String impl = eventElement.attributeValue("impl");
             EventType type = EventType.valueOf(eventElement.attributeValue("type"));
-            Class<GlobalEvent> eventClass;
-            try {
-                eventClass = (Class<GlobalEvent>) Class.forName("l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
-            } catch (ClassNotFoundException e) {
-                LOG.error("Not found impl class: " + impl, e);
-                continue;
+
+            StatsSet set = new StatsSet()
+                    .set("id", id)
+                    .set("name", name)
+                    .set("eventClass", impl + "Event");
+
+            for (Iterator<Element> parameterIterator = eventElement.elementIterator("parameter"); parameterIterator.hasNext(); ) {
+                Element parameterElement = parameterIterator.next();
+                set.set(parameterElement.attributeValue("name"), parameterElement.attributeValue("value"));
             }
 
-            try {
-                Constructor<GlobalEvent> constructor = eventClass.getConstructor(StatsSet.class);
+            GlobalEvent event = getEventByName(impl + "Event", set);
 
-                StatsSet set = new StatsSet()
-                        .set("id", id)
-                        .set("name", name)
-                        .set("eventClass", "l2trunk.gameserver.model.entity.events.impl." + impl + "Event");
+            event.addOnStartActions(parseActions(eventElement.element("on_start"), Integer.MAX_VALUE));
+            event.addOnStopActions(parseActions(eventElement.element("on_stop"), Integer.MAX_VALUE));
+            event.addOnInitActions(parseActions(eventElement.element("on_init"), Integer.MAX_VALUE));
 
-                for (Iterator<Element> parameterIterator = eventElement.elementIterator("parameter"); parameterIterator.hasNext(); ) {
-                    Element parameterElement = parameterIterator.next();
-                    set.set(parameterElement.attributeValue("name"), parameterElement.attributeValue("value"));
+            Element onTime = eventElement.element("on_time");
+            if (onTime != null)
+                for (Iterator<Element> onTimeIterator = onTime.elementIterator("on"); onTimeIterator.hasNext(); ) {
+                    Element on = onTimeIterator.next();
+                    int time = toInt(on.attributeValue("time"));
+
+                    List<EventAction> actions = parseActions(on, time);
+
+                    event.addOnTimeActions(time, actions);
                 }
 
-                GlobalEvent event = getEventByName(impl+ "Event",set);
-//                constructor.newInstance(set);
+            for (Iterator<Element> objectIterator = eventElement.elementIterator("objects"); objectIterator.hasNext(); ) {
+                Element objectElement = objectIterator.next();
+                String objectsName = objectElement.attributeValue("name");
+                List<Object> objects = parseObjects(objectElement);
 
-                event.addOnStartActions(parseActions(eventElement.element("on_start"), Integer.MAX_VALUE));
-                event.addOnStopActions(parseActions(eventElement.element("on_stop"), Integer.MAX_VALUE));
-                event.addOnInitActions(parseActions(eventElement.element("on_init"), Integer.MAX_VALUE));
+                event.addObjects(objectsName, objects);
+            }
+            EventHolder.addEvent(type, event);
 
-                Element onTime = eventElement.element("on_time");
-                if (onTime != null)
-                    for (Iterator<Element> onTimeIterator = onTime.elementIterator("on"); onTimeIterator.hasNext(); ) {
-                        Element on = onTimeIterator.next();
-                        int time = toInt(on.attributeValue("time"));
-
-                        List<EventAction> actions = parseActions(on, time);
-
-                        event.addOnTimeActions(time, actions);
-                    }
-
-                for (Iterator<Element> objectIterator = eventElement.elementIterator("objects"); objectIterator.hasNext(); ) {
-                    Element objectElement = objectIterator.next();
-                    String objectsName = objectElement.attributeValue("name");
-                    List<Object> objects = parseObjects(objectElement);
-
-                    event.addObjects(objectsName, objects);
-                }
-                EventHolder.addEvent(type, event);
-            } catch (IndexOutOfBoundsException e) {
-
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+//            } catch (NoSuchMethodException e) {
+//                e.printStackTrace();
 //            } catch (InstantiationException e) {
 //                e.printStackTrace();
 //            } catch (IllegalAccessException e) {
 //                e.printStackTrace();
 //            } catch (InvocationTargetException e) {
 //                e.printStackTrace();
-            }
 
 
         }
+
     }
 
     private List<Object> parseObjects(Element element) {

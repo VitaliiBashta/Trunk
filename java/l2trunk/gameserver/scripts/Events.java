@@ -5,8 +5,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.scripts.Scripts.ScriptClassAndMethod;
 import l2trunk.gameserver.utils.Strings;
 import l2trunk.scripts.actions.OnActionShift;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Events {
+    private static final Logger LOG= LoggerFactory.getLogger(Events.class);
     public static boolean onAction(Player player, GameObject obj, boolean shift) {
         OnActionShift act = new OnActionShift();
         ScriptClassAndMethod handler = null ;
@@ -28,9 +31,10 @@ public final class Events {
             if ((handler == null) && obj.isDoor()) {
                 return act.OnActionShift_DoorInstance(player,obj);
             }
-//            if (handler == null) {
-//                return false;
-//            }
+            if (handler == null) {
+                LOG.error("no handlers for: " + obj);
+                return false;
+            }
             return Strings.parseBoolean(Scripts.INSTANCE.callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
         }
     }

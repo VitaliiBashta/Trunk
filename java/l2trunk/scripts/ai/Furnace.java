@@ -14,21 +14,21 @@ import java.util.List;
 
 public final class Furnace extends Fighter {
     private static final long NEXT_ATACK = 10 * 1000L; // 10 seconds supposedly
-    private static final List<Integer> Magic_Power = Arrays.asList(
+    private static final List<Integer> Magic_Power =List.of(
             22800, 22800, 22800, 22800, 22800, 22800, 22800, 22800, 22800,
             22800, 22800, 22800, 22800, 22800, 22798, 22798, 22799, 22799);
-    private static final List<Integer> Protection = Arrays.asList(
+    private static final List<Integer> Protection =List.of(
             22798, 22798, 22798, 22798, 22798, 22798, 22798, 22798, 22798,
             22798, 22798, 22798, 22798, 22798, 22800, 22800, 22799, 22799);
-    private static final List<Integer> Fighting_Spirit = Arrays.asList(
+    private static final List<Integer> Fighting_Spirit =List.of(
             22799, 22799, 22799, 22799, 22799, 22799, 22799, 22799, 22799,
             22799, 22799, 22799, 22799, 22799, 22800, 22800, 22798, 22798);
-    private static final List<Integer> Balance = Arrays.asList(
+    private static final List<Integer> Balance =List.of(
             22800, 22800, 22800, 22800, 22800, 22800, 22798, 22798, 22798,
             22798, 22798, 22798, 22799, 22799, 22799, 22799, 22799, 22799);
     private long _lastAttackTime = 0;
 
-    private Furnace(NpcInstance actor) {
+    public Furnace(NpcInstance actor) {
         super(actor);
         actor.startImmobilized();
     }

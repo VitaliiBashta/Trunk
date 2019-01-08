@@ -117,16 +117,16 @@ public class Functions {
         int ry = MapUtils.regionY(npc);
         int offset = Config.SHOUT_OFFSET;
 
-        for (Player player : GameObjectsStorage.getAllPlayers()) {
-            if (player.getReflection() != npc.getReflection())
-                continue;
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(player -> player.getReflection() == npc.getReflection())
+                .forEach(player -> {
 
-            int tx = MapUtils.regionX(player);
-            int ty = MapUtils.regionY(player);
+                    int tx = MapUtils.regionX(player);
+                    int ty = MapUtils.regionY(player);
 
-            if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
-                player.sendPacket(cs);
-        }
+                    if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
+                        player.sendPacket(cs);
+                });
     }
 
     public static void npcShoutCustomMessage(NpcInstance npc, String address, Object... replacements) {
@@ -137,16 +137,15 @@ public class Functions {
         int ry = MapUtils.regionY(npc);
         int offset = Config.SHOUT_OFFSET;
 
-        for (Player player : GameObjectsStorage.getAllPlayers()) {
-            if (player.getReflection() != npc.getReflection())
-                continue;
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(p -> p.getReflection() == npc.getReflection())
+                .forEach(p -> {
+                    int tx = MapUtils.regionX(p);
+                    int ty = MapUtils.regionY(p);
 
-            int tx = MapUtils.regionX(player);
-            int ty = MapUtils.regionY(player);
-
-            if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || npc.isInRange(player, Config.CHAT_RANGE))
-                player.sendPacket(new NpcSay(npc, ChatType.SHOUT, new CustomMessage(address, player, replacements).toString()));
-        }
+                    if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || npc.isInRange(p, Config.CHAT_RANGE))
+                        p.sendPacket(new NpcSay(npc, ChatType.SHOUT, new CustomMessage(address, p, replacements).toString()));
+                });
     }
 
     public static void npcSay(NpcInstance npc, NpcString address, ChatType type, int range, String... replacements) {

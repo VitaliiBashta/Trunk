@@ -34,13 +34,11 @@ public final class UseItem extends L2GameClientPacket {
         activeChar.setActive();
 
         ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
-        if (item == null)    // Support for GMs deleting items from alt+g inventory.
-        {
-            for (Player player : GameObjectsStorage.getAllPlayers()) // There is no way to get item by objectId!!! Or im very stupid to not know such.
-            {
-                if ((item = player.getInventory().getItemByObjectId(_objectId)) != null)
-                    break;
-            }
+        if (item == null) {   // Support for GMs deleting items from alt+g inventory.
+            item = GameObjectsStorage.getAllPlayersStream()
+                    .filter(player -> player.getInventory().getItemByObjectId(_objectId) != null)
+                    .map(player -> player.getInventory().getItemByObjectId(_objectId))
+                    .findFirst().orElse(null);
         }
 
         if (item == null) {

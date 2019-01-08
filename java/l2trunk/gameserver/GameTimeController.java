@@ -1,6 +1,5 @@
 package l2trunk.gameserver;
 
-import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.listener.GameListener;
@@ -124,24 +123,26 @@ public enum GameTimeController {
             else
                 INSTANCE.getListenerEngine().onDay();
 
-            GameObjectsStorage.getAllPlayers().forEach(player -> {
+            GameObjectsStorage.getAllPlayersStream().forEach(player -> {
                 player.checkDayNightMessages();
                 player.sendPacket(new ClientSetTime());
             });
         }
     }
 
-    protected class GameTimeListenerList extends ListenerList<GameServer> {
+    protected class GameTimeListenerList extends ListenerList {
         void onDay() {
-            for (Listener<GameServer> listener : getListeners())
-                if (listener instanceof OnDayNightChangeListener)
-                    ((OnDayNightChangeListener) listener).onDay();
+            getListeners().stream()
+                    .filter(l -> l instanceof OnDayNightChangeListener)
+                    .map(l -> (OnDayNightChangeListener) l)
+                    .forEach(OnDayNightChangeListener::onDay);
         }
 
         void onNight() {
-            for (Listener<GameServer> listener : getListeners())
-                if (listener instanceof OnDayNightChangeListener)
-                    ((OnDayNightChangeListener) listener).onNight();
+            getListeners().stream()
+                    .filter(l -> l instanceof OnDayNightChangeListener)
+                    .map(l -> (OnDayNightChangeListener) l)
+                    .forEach(OnDayNightChangeListener::onNight);
         }
     }
 }

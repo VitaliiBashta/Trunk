@@ -67,7 +67,7 @@ public class AirShip extends Boat {
 
     @Override
     public void oustPlayers() {
-        for (Player player : _players) {
+        for (Player player : players) {
             oustPlayer(player, getReturnLoc(), true);
         }
     }

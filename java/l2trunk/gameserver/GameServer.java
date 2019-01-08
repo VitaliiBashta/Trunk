@@ -94,7 +94,6 @@ public class GameServer {
         // Initialize database
         System.out.println("Server is Loading on IP " + Config.EXTERNAL_HOSTNAME + "");
 
-//        Class.forName(Config.DATABASE_DRIVER).newInstance();
         DatabaseFactory.getInstance().getConnection().close();
         LoginDatabaseFactory.getInstance().getConnection().close();
         ThreadPoolManager.INSTANCE.init();
@@ -339,7 +338,7 @@ public class GameServer {
         return _listeners.remove(listener);
     }
 
-    public class GameServerListenerList extends ListenerList<GameServer> {
+    public class GameServerListenerList extends ListenerList {
         void onStart() {
             getListeners().stream()
                     .filter(listener -> listener instanceof OnStartListener)

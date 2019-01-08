@@ -5,8 +5,8 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public abstract class GuardInstance extends NpcInstance {
-    protected GuardInstance(int objectId, NpcTemplate template) {
+public class GuardInstance extends NpcInstance {
+    public GuardInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 

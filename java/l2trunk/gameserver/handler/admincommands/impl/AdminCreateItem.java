@@ -55,7 +55,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
 
                     int item_id = Integer.parseInt(wordList[1]);
                     long item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
-                    GameObjectsStorage.getAllPlayers().stream()
+                    GameObjectsStorage.getAllPlayersStream()
                             .filter(player -> player.getNetConnection() != null)
                             .filter(player -> !player.isInStoreMode())
                             .forEach(player -> {
@@ -76,7 +76,7 @@ public class AdminCreateItem implements IAdminCommandHandler {
 
                     int item_id = Integer.parseInt(wordList[1]);
                     long item_count = wordList.length < 3 ? 1 : Long.parseLong(wordList[2]);
-                    GameObjectsStorage.getAllPlayers().stream()
+                    GameObjectsStorage.getAllPlayersStream()
                             .filter(player -> player.getNetConnection() != null)
                             .filter(player -> !player.isInStoreMode())
                             .forEach(player -> createItem(player, item_id, item_count));

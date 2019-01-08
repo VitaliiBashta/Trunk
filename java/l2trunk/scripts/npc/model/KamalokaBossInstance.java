@@ -8,10 +8,10 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.concurrent.ScheduledFuture;
 
-public abstract class KamalokaBossInstance extends LostCaptainInstance {
+public class KamalokaBossInstance extends LostCaptainInstance {
     private ScheduledFuture<?> manaRegen;
 
-    KamalokaBossInstance(int objectId, NpcTemplate template) {
+    public KamalokaBossInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         manaRegen = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ManaRegen(), 20000, 20000);
     }

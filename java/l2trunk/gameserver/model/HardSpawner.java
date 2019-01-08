@@ -49,7 +49,13 @@ public final class HardSpawner extends Spawner {
         _reSpawned.remove(mob);
 
         SpawnRange range = _template.getSpawnRange(getNextRangeId());
-        mob.setSpawnRange(range);
+        try {
+
+            mob.setSpawnRange(range);
+        } catch (NullPointerException e) {
+            System.out.println("NPE");
+        }
+
         return initNpc0(mob, range.getRandomLoc(getReflection().getGeoIndex()), spawn, set);
     }
 

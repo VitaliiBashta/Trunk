@@ -8,6 +8,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.TeleportLocation;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.base.Element;
+import l2trunk.gameserver.model.instances.AllNpcInstances;
 import l2trunk.gameserver.model.reward.RewardData;
 import l2trunk.gameserver.model.reward.RewardGroup;
 import l2trunk.gameserver.model.reward.RewardList;
@@ -187,7 +188,7 @@ public enum NpcParser {
 
                         int id = toInt(nextElement.attributeValue("id"));
 
-                        template.addTeachInfo(ClassId.VALUES[id]);
+                        template.addTeachInfo(ClassId.VALUES.get(id));
                     }
                 } else if (nodeName.equalsIgnoreCase("absorblist")) {
                     for (Iterator<org.dom4j.Element> nextIterator = secondElement.elementIterator(); nextIterator.hasNext(); ) {
@@ -223,7 +224,6 @@ public enum NpcParser {
                     }
                 }
             }
-
             NpcHolder.addTemplate(template);
         }
     }

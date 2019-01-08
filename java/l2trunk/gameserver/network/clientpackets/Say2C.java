@@ -18,7 +18,6 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 import l2trunk.gameserver.utils.MapUtils;
@@ -60,21 +59,21 @@ public final class Say2C extends L2GameClientPacket {
         int rx = MapUtils.regionX(activeChar);
         int ry = MapUtils.regionY(activeChar);
         int offset = Config.SHOUT_OFFSET;
-
-        for (Player player : GameObjectsStorage.getAllPlayers()) {
-            if (player == activeChar || activeChar.getReflection() != player.getReflection() || player.isBlockAll() || player.isInBlockList(activeChar))
-                continue;
-
-            int tx = MapUtils.regionX(player);
-            int ty = MapUtils.regionY(player);
-
-            if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || activeChar.isInRangeZ(player, Config.CHAT_RANGE))
-                player.sendPacket(cs);
-        }
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(player -> player != activeChar)
+                .filter(player -> activeChar.getReflection() == player.getReflection())
+                .filter(player -> !player.isBlockAll())
+                .filter(player -> !player.isInBlockList(activeChar))
+                .forEach(player -> {
+                    int tx = MapUtils.regionX(player);
+                    int ty = MapUtils.regionY(player);
+                    if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset || activeChar.isInRangeZ(player, Config.CHAT_RANGE))
+                        player.sendPacket(cs);
+                });
     }
 
     private static void announce(Player activeChar, Say2 cs) {
-        GameObjectsStorage.getAllPlayers().stream()
+        GameObjectsStorage.getAllPlayersStream()
                 .filter(player -> player != activeChar)
                 .filter(player -> activeChar.getReflection() == player.getReflection())
                 .filter(player -> !player.isBlockAll())
@@ -380,7 +379,7 @@ public final class Say2C extends L2GameClientPacket {
                             activeChar.sendMessage("Hero chat is allowed once per 10 seconds.");
                             return;
                         }
-                    GameObjectsStorage.getAllPlayers().stream()
+                    GameObjectsStorage.getAllPlayersStream()
                             .filter(player -> !player.isInBlockList(activeChar))
                             .filter(player -> !player.isBlockAll())
                             .forEach(player -> player.sendPacket(cs));
@@ -399,7 +398,7 @@ public final class Say2C extends L2GameClientPacket {
                 if (activeChar.getBattlefieldChatId() == 0)
                     return;
 
-                GameObjectsStorage.getAllPlayers().stream()
+                GameObjectsStorage.getAllPlayersStream()
                         .filter(player -> !player.isInBlockList(activeChar))
                         .filter(player -> !player.isBlockAll())
                         .filter(player -> player.getBattlefieldChatId() == activeChar.getBattlefieldChatId())

@@ -38,7 +38,7 @@ public final class OlympiadNobleDAO {
             while (rset.next()) {
                 int tempId = rset.getInt(Olympiad.CLASS_ID);
 //                if (tempId < 88) // Если это не 3-я профа, то исправляем со 2-й на 3-ю.
-                int classId = Stream.of(ClassId.VALUES)
+                int classId = ClassId.VALUES.stream()
                         .filter(id -> id.level() == 3)
                         .filter(id -> id.getParent(0).getId() == tempId)
                         .mapToInt(ClassId::getId).findFirst().orElse(tempId);

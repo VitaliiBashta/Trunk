@@ -9,20 +9,18 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public final class TimakOrcTroopLeader extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(TimakOrcTroopLeader.class);
 
-    private static final int[] BROTHERS = {20768, // Timak Orc Troop Shaman
+    private static final List<Integer> BROTHERS = List.of(20768, // Timak Orc Troop Shaman
             20769, // Timak Orc Troop Warrior
-            20770 // Timak Orc Troop Archer
-    };
+            20770); // Timak Orc Troop Archer
 
     private boolean firstTimeAttacked = true;
 
-    private TimakOrcTroopLeader(NpcInstance actor) {
+    public TimakOrcTroopLeader(NpcInstance actor) {
         super(actor);
     }
 
@@ -32,15 +30,14 @@ public final class TimakOrcTroopLeader extends Fighter {
         if (!actor.isDead() && firstTimeAttacked) {
             firstTimeAttacked = false;
             Functions.npcSay(actor, NpcString.SHOW_YOURSELVES);
-            for (int bro : BROTHERS)
-                {
-                    NpcInstance npc = NpcHolder.getTemplate(bro).getNewInstance();
-                    npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
-                    npc.setReflection(actor.getReflection());
-                    npc.setFullHpMp();
-                    npc.spawnMe(npc.getSpawnedLoc());
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
-                }
+            BROTHERS.forEach(bro -> {
+                NpcInstance npc = NpcHolder.getTemplate(bro).getNewInstance();
+                npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
+                npc.setReflection(actor.getReflection());
+                npc.setFullHpMp();
+                npc.spawnMe(npc.getSpawnedLoc());
+                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
+            });
         }
         super.onEvtAttacked(attacker, damage);
     }

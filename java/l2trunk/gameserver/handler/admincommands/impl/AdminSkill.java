@@ -86,7 +86,7 @@ public final class AdminSkill implements IAdminCommandHandler {
                 break;
             case admin_people_having_effect:
                 int skillId = toInt(wordList[1]);
-                GameObjectsStorage.getAllPlayers().forEach(player -> {
+                GameObjectsStorage.getAllPlayersStream().forEach(player -> {
                     player.getEffectList().getAllEffects().stream()
                             .filter(e -> e.getSkill().getId() == skillId)
                             .forEach(e -> {

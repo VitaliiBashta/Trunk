@@ -88,7 +88,7 @@ public final class CertificationFunctions {
         }
 
         if (classCertifi) {
-            ClassId cl = ClassId.VALUES[clzz.getClassId()];
+            ClassId cl = ClassId.VALUES.get(clzz.getClassId());
             if (cl.getType2() == null)
                 return;
 
@@ -114,7 +114,7 @@ public final class CertificationFunctions {
             return;
         }
 
-        ClassId cl = ClassId.VALUES[clzz.getClassId()];
+        ClassId cl = ClassId.VALUES.get(clzz.getClassId());
         if (cl.getType2() == null)
             return;
 

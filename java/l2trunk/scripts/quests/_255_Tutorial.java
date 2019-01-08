@@ -525,7 +525,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                 if (player.isBlocked()) {
                     //player.stopAbnormalEffect(AbnormalEffect.FIREROOT_STUN);
                     player.broadcastPacket(new SocialAction(player.getObjectId(), SocialAction.VICTORY));
-                    final MagicSkillUse msu = new MagicSkillUse(player,  23312,  0, 500);
+                    final MagicSkillUse msu = new MagicSkillUse(player, 23312, 0, 500);
                     player.broadcastPacket(msu);
                     player.broadcastCharInfo();
                     player.setBlock();
@@ -539,7 +539,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                     if (player.getClan() == null) {
                         player.sendPacket(new NpcHtmlMessage(5).setFile("advertise.htm").replace("%playername%", player.getName()));
                     }
-                    if (player.getNetConnection() != null ) {
+                    if (player.getNetConnection() != null) {
                         String msg = "You don't have Premium Account, you can buy it from Community Board.";
                         player.sendPacket(new ExShowScreenMessage(msg, 10000));
                         player.sendMessage(msg);
@@ -591,8 +591,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
                 return null;
             }
 
-            if (!ClassId.VALUES[newClassId].equalsOrChildOf(ClassId.VALUES[player.getActiveClassId()]))//Somebody cheating
-            {
+            if (!ClassId.VALUES.get(newClassId).equalsOrChildOf(ClassId.VALUES.get(player.getActiveClassId()))) {//Somebody cheating
                 st.closeTutorial();
                 return null;
             }
@@ -614,7 +613,7 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
 
                 player.setClassId(newClassId, false, false);
 
-                final MagicSkillUse msu = new MagicSkillUse(player,  5103);
+                final MagicSkillUse msu = new MagicSkillUse(player, 5103);
                 player.broadcastPacket(msu);
                 player.broadcastUserInfo(true);
                 st.closeTutorial();

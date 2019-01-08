@@ -9,18 +9,14 @@ import l2trunk.gameserver.utils.Location;
 import java.util.Set;
 
 public final class SiegeToggleNpcObject implements SpawnableObject {
-    private SiegeToggleNpcInstance toggleNpc;
     private final Location location;
+    private SiegeToggleNpcInstance toggleNpc;
 
     public SiegeToggleNpcObject(int id, int fakeNpcId, Location loc, int hp, Set<String> set) {
         location = loc;
         NpcTemplate template = NpcHolder.getTemplate(id);
-        template.setType("residences.castle.CastleControlTower");
-        try {
-            toggleNpc = (SiegeToggleNpcInstance) template.getNewInstance();
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+//        template.setType("residences.castle.CastleControlTowerInstance");
+        toggleNpc = (SiegeToggleNpcInstance) template.getNewInstance();
 
         toggleNpc.initFake(fakeNpcId);
         toggleNpc.setMaxHp(hp);

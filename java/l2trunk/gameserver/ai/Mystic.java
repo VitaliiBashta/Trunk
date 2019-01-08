@@ -3,7 +3,7 @@ package l2trunk.gameserver.ai;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 public class Mystic extends DefaultAI {
-    protected Mystic(NpcInstance actor) {
+    public Mystic(NpcInstance actor) {
         super(actor);
     }
 

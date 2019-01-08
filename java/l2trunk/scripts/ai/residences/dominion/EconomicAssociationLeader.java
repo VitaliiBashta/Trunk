@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class EconomicAssociationLeader extends SiegeGuardFighter {
-    private static final Map<Integer,NpcString[]> MESSAGES = new HashMap<>(9);
+    private static final Map<Integer, NpcString[]> MESSAGES = new HashMap<>(9);
 
     static {
         MESSAGES.put(81, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GLUDIO, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GLUDIO_IS_DEAD});
@@ -32,25 +32,6 @@ public final class EconomicAssociationLeader extends SiegeGuardFighter {
         MESSAGES.put(87, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_GODDARD, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_GODDARD_IS_DEAD});
         MESSAGES.put(88, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_RUNE, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_RUNE_IS_DEAD});
         MESSAGES.put(89, new NpcString[]{NpcString.PROTECT_THE_ECONOMIC_ASSOCIATION_LEADER_OF_SCHUTTGART, NpcString.THE_ECONOMIC_ASSOCIATION_LEADER_OF_SCHUTTGART_IS_DEAD});
-    }
-
-    private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {
-        @Override
-        public void onPlayerEnter(Player player) {
-            NpcInstance actor = getActor();
-            DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
-            if (siegeEvent == null)
-                return;
-
-            if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
-                return;
-
-            Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
-
-            QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-            questState.setCond(1, false);
-            questState.setStateAndNotSave(Quest.STARTED);
-        }
     }
 
     private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
@@ -74,15 +55,14 @@ public final class EconomicAssociationLeader extends SiegeGuardFighter {
             actor.setParameter("dominion_first_attack", false);
             NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
             Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
-            for (Player player : GameObjectsStorage.getAllPlayers()) {
-                if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                    player.sendPacket(new ExShowScreenMessage(msg));
-
-                    QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
-                    questState.setCond(1, false);
-                    questState.setStateAndNotSave(Quest.STARTED);
-                }
-            }
+            GameObjectsStorage.getAllPlayersStream()
+                    .filter(p -> p.getEvent(DominionSiegeEvent.class) == siegeEvent)
+                    .forEach(p -> {
+                        p.sendPacket(new ExShowScreenMessage(msg));
+                        QuestState questState = q.newQuestStateAndNotSave(p, Quest.CREATED);
+                        questState.setCond(1, false);
+                        questState.setStateAndNotSave(Quest.STARTED);
+                    });
             PlayerListenerList.addGlobal(_listener);
         }
     }
@@ -98,15 +78,15 @@ public final class EconomicAssociationLeader extends SiegeGuardFighter {
             return;
 
         NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
-        for (Player player : GameObjectsStorage.getAllPlayers()) {
-            if (player.getEvent(DominionSiegeEvent.class) == siegeEvent) {
-                player.sendPacket(new ExShowScreenMessage(msg));
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(player -> player.getEvent(DominionSiegeEvent.class) == siegeEvent)
+                .forEach(player -> {
+                    player.sendPacket(new ExShowScreenMessage(msg));
+                    QuestState questState = player.getQuestState(_733_ProtectTheEconomicAssociationLeader.class);
+                    if (questState != null)
+                        questState.abortQuest();
+                });
 
-                QuestState questState = player.getQuestState(_733_ProtectTheEconomicAssociationLeader.class);
-                if (questState != null)
-                    questState.abortQuest();
-            }
-        }
 
         Player player = killer.getPlayer();
         if (player == null)
@@ -134,5 +114,24 @@ public final class EconomicAssociationLeader extends SiegeGuardFighter {
         super.onEvtDeSpawn();
 
         PlayerListenerList.removeGlobal(_listener);
+    }
+
+    private class OnPlayerEnterListenerImpl implements OnPlayerEnterListener {
+        @Override
+        public void onPlayerEnter(Player player) {
+            NpcInstance actor = getActor();
+            DominionSiegeEvent siegeEvent = actor.getEvent(DominionSiegeEvent.class);
+            if (siegeEvent == null)
+                return;
+
+            if (player.getEvent(DominionSiegeEvent.class) != siegeEvent)
+                return;
+
+            Quest q = QuestManager.getQuest(_733_ProtectTheEconomicAssociationLeader.class);
+
+            QuestState questState = q.newQuestStateAndNotSave(player, Quest.CREATED);
+            questState.setCond(1, false);
+            questState.setStateAndNotSave(Quest.STARTED);
+        }
     }
 }

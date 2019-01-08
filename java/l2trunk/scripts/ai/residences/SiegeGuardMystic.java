@@ -3,7 +3,7 @@ package l2trunk.scripts.ai.residences;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 public class SiegeGuardMystic extends SiegeGuard {
-    protected SiegeGuardMystic(NpcInstance actor) {
+    public SiegeGuardMystic(NpcInstance actor) {
         super(actor);
     }
 

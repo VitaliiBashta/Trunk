@@ -14,7 +14,7 @@ public final class Pronghorn extends Fighter {
     private static final int MOBS_COUNT = 4;
     private boolean mobsNotSpawned = true;
 
-    private Pronghorn(NpcInstance actor) {
+    public Pronghorn(NpcInstance actor) {
         super(actor);
     }
 

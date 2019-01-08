@@ -240,7 +240,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
                     ownerClan.incReputation(Config.SIEGE_WINNER_REPUTATION_REWARD / 2, false, "SiegeWinnerCustomReward");
             } else {
                 L2GameServerPacket packet = new Say2(0, ChatType.CRITICAL_ANNOUNCE, getResidence().getName() + " Castle", "Clan " + ownerClan.getName() + " is victorious over " + getResidence().getName() + "'s castle siege!");
-                GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(packet));
+                GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(packet));
 
                 ownerClan.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.SINCE_YOUR_CLAN_EMERGED_VICTORIOUS_FROM_THE_SIEGE_S1_POINTS_HAVE_BEEN_ADDED_TO_YOUR_CLANS_REPUTATION_SCORE).addInteger(ownerClan.incReputation(3000, false, toString())));
 
@@ -279,7 +279,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
 
                 String msg = "20.000 Clan Reputation Points has been added to " + ownerClan.getName() + " clan for capturing " + getResidence().getName() + " of castle!";
                 L2GameServerPacket packet = new Say2(0, ChatType.CRITICAL_ANNOUNCE, getResidence().getName() + " Castle", msg);
-                GameObjectsStorage.getAllPlayers().forEach(player -> {
+                GameObjectsStorage.getAllPlayersStream().forEach(player -> {
                     player.sendPacket(packet);
                     player.sendPacket(new ExShowScreenMessage(msg, 3000, false));
                 });
@@ -450,11 +450,6 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
     // Суппорт Методы для установки времени осады
     // ========================================================================================================================================================================
 
-    /**
-     * Ставит осадное время вручну, вызывается с пакета {@link l2trunk.gameserver.network.clientpackets.RequestSetCastleSiegeTime}
-     *
-     * @param id
-     */
     public void setNextSiegeTime(int id) {
         if (!_nextSiegeTimes.contains(id) || (_nextSiegeDateSetTask == null)) {
             return;
@@ -467,9 +462,6 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
         setNextSiegeTime(id * 1000L);
     }
 
-    /**
-     * Автоматически генерит и устанавливает дату осады
-     */
     private void setNextSiegeTime() {
         final Calendar calendar = (Calendar) Config.CASTLE_VALIDATION_DATE.clone();
         calendar.set(Calendar.DAY_OF_WEEK, _dayOfWeek);
@@ -481,11 +473,6 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
         setNextSiegeTime(calendar.getTimeInMillis());
     }
 
-    /**
-     * Ставит дату осады, запускает действия, аннонсирует по миру
-     *
-     * @param g
-     */
     private void setNextSiegeTime(long g) {
         broadcastToWorld(new SystemMessage2(SystemMsg.S1_HAS_ANNOUNCED_THE_NEXT_CASTLE_SIEGE_TIME).addResidenceName(getResidence()));
 

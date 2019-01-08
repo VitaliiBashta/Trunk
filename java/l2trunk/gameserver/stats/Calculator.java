@@ -14,7 +14,7 @@ import java.util.List;
  * <p>
  * FuncAtkAccuracy -> Math.sqrt(_player.getDEX())*6+_player.getLevel()<BR><BR>
  * <p>
- * When the calc method of a calculator is launched, each mathematic function is called according to its priority <B>_order</B>.
+ * When the calc method of a calculator is launched, each mathematic function is called according to its priority <B>order</B>.
  * Indeed, Func with lowest priority order is executed firsta and Funcs with the same order are executed in unspecified order.
  * The result of the calculation is stored in the value property of an Env class instance.<BR><BR>
  * <p>

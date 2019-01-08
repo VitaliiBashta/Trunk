@@ -65,7 +65,7 @@ public final class CursedWeapon {
             // RedSky and Earthquake
             L2GameServerPacket redSky = new ExRedSky(10);
             L2GameServerPacket eq = new Earthquake(killer.getLoc(), 30, 12);
-            GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(redSky, eq));
+            GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(redSky, eq));
         }
     }
 

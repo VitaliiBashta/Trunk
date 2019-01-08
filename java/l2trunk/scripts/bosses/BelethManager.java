@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
-public class BelethManager extends Functions implements ScriptFile {
+public final class BelethManager extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(BelethManager.class);
     private final Zone _zone = ReflectionUtils.getZone("[Beleth_room]");
     private final ZoneListener _zoneListener = new ZoneListener();
@@ -154,7 +154,7 @@ public class BelethManager extends Functions implements ScriptFile {
     private static class CloneRespawnTask extends RunnableImpl {
         @Override
         public void runImpl() {
-            if (_clones == null || _clones.isEmpty())
+            if (_clones.isEmpty())
                 return;
 
             MonsterInstance nextclone;
@@ -404,7 +404,7 @@ public class BelethManager extends Functions implements ScriptFile {
 
     private static void checkElpySpawn() {
         if (ServerVariables.getLong("BelethKillTime", 0) > System.currentTimeMillis() && _elpyThread == null) {
-            _elpyThread = ThreadPoolManager.INSTANCE.schedule(() -> spawnElpy(), (ServerVariables.getLong("BelethKillTime", 0) - System.currentTimeMillis()));
+            _elpyThread = ThreadPoolManager.INSTANCE.schedule(BelethManager::spawnElpy, (ServerVariables.getLong("BelethKillTime", 0) - System.currentTimeMillis()));
         } else if (ServerVariables.getLong("BelethKillTime", 0) < System.currentTimeMillis() && _elpy == null) {
             spawnElpy();
         }

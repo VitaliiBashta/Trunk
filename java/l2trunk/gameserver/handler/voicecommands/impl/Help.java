@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Help extends Functions implements IVoicedCommandHandler {
-    private static final List<String> _commandList = Arrays.asList("changes", "whereis", "exp");
+    private static final List<String> _commandList = List.of("changes", "whereis", "exp");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {

@@ -50,10 +50,6 @@ public class PetInstance extends Summon {
     /**
      * Create a new pet
      */
-    //Fixme нет такого конструктора
-    public PetInstance(int objectId, NpcTemplate template) {
-        this(objectId, template, null, null);
-    }
 
     public PetInstance(int objectId, NpcTemplate template, Player owner, ItemInstance control) {
         this(objectId, template, owner, control, 0, 0);

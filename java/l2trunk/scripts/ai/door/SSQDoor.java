@@ -17,7 +17,7 @@ public final class SSQDoor extends DoorAI {
     private static final Territory room3 = new Territory().add(new Rectangle(-87485, 220463, -86501, 220804).setZmin(-7520).setZmax(-7320));
     private static final Territory room4 = new Territory().add(new Rectangle(-85646, 219054, -84787, 219408).setZmin(-7520).setZmax(-7320));
     private static final Territory room5 = new Territory().add(new Rectangle(-87739, 216646, -87159, 217842).setZmin(-7520).setZmax(-7320));
-    private static final List<Integer> ssqDoors = Arrays.asList(17240102, 17240104, 17240106, 17240108, 17240110);
+    private static final List<Integer> ssqDoors = List.of(17240102, 17240104, 17240106, 17240108, 17240110);
 
     public SSQDoor(DoorInstance actor) {
         super(actor);

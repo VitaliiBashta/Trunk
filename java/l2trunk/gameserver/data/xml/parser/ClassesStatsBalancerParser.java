@@ -4,7 +4,6 @@ import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.data.xml.holder.ClassesStatsBalancerHolder;
 import l2trunk.gameserver.data.xml.newreader.IXmlReader;
 import l2trunk.gameserver.model.GameObjectsStorage;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.UserInfo;
 import l2trunk.gameserver.stats.Stats;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class ClassesStatsBalancerParser implements IXmlReader {
-    private static final Logger _log = LoggerFactory.getLogger(ClassesStatsBalancerParser.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ClassesStatsBalancerParser.class.getName());
     private final Map<Integer, Map<Stats, ClassesStatsBalancerHolder>> _balance = new HashMap<>();
 
     private ClassesStatsBalancerParser() {
@@ -72,23 +71,19 @@ public final class ClassesStatsBalancerParser implements IXmlReader {
                 }
             }
         }
-        _log.info(": Loaded: " + classes + " balances for " + _balance.size() + " classes.");
+        LOG.info(": Loaded: " + classes + " balances for " + _balance.size() + " classes.");
     }
 
     private void synchronizePlayers() {
-        try {
-            for (Player onlinePlayer : GameObjectsStorage.getAllPlayers()) {
-                onlinePlayer.updateStats();
-                onlinePlayer.broadcastUserInfo(true);
-                onlinePlayer.broadcastCharInfo();
-                onlinePlayer.broadcastStatusUpdate();
-                UserInfo info2 = new UserInfo(onlinePlayer);
-                onlinePlayer.sendPacket(info2);
-            }
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
-        _log.info(getClass().getSimpleName() + ": Synchronize Players in game done.");
+        GameObjectsStorage.getAllPlayersStream().forEach(p -> {
+            p.updateStats();
+            p.broadcastUserInfo(true);
+            p.broadcastCharInfo();
+            p.broadcastStatusUpdate();
+            UserInfo info2 = new UserInfo(p);
+            p.sendPacket(info2);
+        });
+        LOG.info(getClass().getSimpleName() + ": Synchronize Players in game done.");
     }
 
     public ClassesStatsBalancerHolder getBalanceForClass(int classId, Stats stat) {

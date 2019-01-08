@@ -13,7 +13,10 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
 
 public final class SumielInstance extends NpcInstance {
     private final int i_quest9 = 0;
@@ -104,7 +107,7 @@ public final class SumielInstance extends NpcInstance {
                     showChatWindow(player, "event/monastyre/minigame_instructor005.htm");
                 else if (c_ai1 != player)
                     showChatWindow(player, "event/monastyre/minigame_instructor004.htm");
-                else if (c_ai1 == player) {
+                else {
                     switch (getAISpawnParam()) {
                         case 1:
                             if (HURRY_UP_1 != null) {
@@ -142,8 +145,6 @@ public final class SumielInstance extends NpcInstance {
                     i_ai8 = Rnd.get(9) + 1;
                     i_ai9 = Rnd.get(9) + 1;
                     c_ai0 = player;
-                    if (i_quest9 == 1) {
-                    }
 
                     switch (getAISpawnParam()) {
                         case 1:
@@ -155,19 +156,6 @@ public final class SumielInstance extends NpcInstance {
                     }
                     GAME_TIME = ThreadPoolManager.INSTANCE.schedule(() -> i_quest2 = 0, 3 * 60 * 1000 + 10 * 1000);
                     TIMER_0 = ThreadPoolManager.INSTANCE.schedule(new TIMER_0(), 1000);
-                } else if (command.equals("restart")) {
-                    i_quest1 = 1;
-                    i_ai1 = Rnd.get(9) + 1;
-                    i_ai2 = Rnd.get(9) + 1;
-                    i_ai3 = Rnd.get(9) + 1;
-                    i_ai4 = Rnd.get(9) + 1;
-                    i_ai5 = Rnd.get(9) + 1;
-                    i_ai6 = Rnd.get(9) + 1;
-                    i_ai7 = Rnd.get(9) + 1;
-                    i_ai8 = Rnd.get(9) + 1;
-                    i_ai9 = Rnd.get(9) + 1;
-                    c_ai0 = player;
-                    TIMER_0 = ThreadPoolManager.INSTANCE.schedule(new TIMER_0(), 1 * 1000);
                 }
                 break;
             default:
@@ -178,42 +166,23 @@ public final class SumielInstance extends NpcInstance {
 
     public void setSCE_POT_ON(int i) {
         if (i == i_ai1 && i_ai0 == 1) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 2;
         } else if (i == i_ai2 && i_ai0 == 2) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 3;
         } else if (i == i_ai3 && i_ai0 == 3) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 4;
         } else if (i == i_ai4 && i_ai0 == 4) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 5;
         } else if (i == i_ai5 && i_ai0 == 5) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 6;
         } else if (i == i_ai6 && i_ai0 == 6) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 7;
         } else if (i == i_ai7 && i_ai0 == 7) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 8;
         } else if (i == i_ai8 && i_ai0 == 8) {
-            if (i_quest9 == 1) {
-            }
             i_ai0 = 9;
         } else if (i == i_ai9 && i_ai0 == 9) {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setSCE_GAME_END();
-            }
+            getAroundFurnface().forEach(FurnfaceInstance::setSCE_GAME_END);
 
             SimpleSpawner sp = new SimpleSpawner(18934);
             switch (getAISpawnParam()) {
@@ -252,12 +221,8 @@ public final class SumielInstance extends NpcInstance {
             i_quest0 = 0;
             i_quest1 = 0;
         } else {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setSCE_GAME_FAILURE();
-            }
-            if (i_quest9 == 1) {
-            } else if (i_quest0 < 2) {
+            getAroundFurnface().forEach(FurnfaceInstance::setSCE_GAME_FAILURE);
+            if (i_quest0 < 2) {
                 i_quest0 = i_quest0 + 1;
                 Functions.npcShout(this, NpcString.FURNFACE7);
                 i_quest1 = 0;
@@ -292,13 +257,24 @@ public final class SumielInstance extends NpcInstance {
         }
     }
 
+    private void setActiveAi(int ai) {
+        getAroundFurnface().forEach(npc -> npc.setActive2114001(ai));
+    }
+
+    private List<FurnfaceInstance> getAroundFurnface() {
+        return GameObjectsStorage.getAllNpcs().stream()
+                .filter(Objects::nonNull)
+                .filter(npc -> npc.getNpcId() == 18913)
+                .filter(npc -> getDistance(npc) <= 1200)
+                .map(npc -> (FurnfaceInstance) npc)
+                .collect(Collectors.toList());
+    }
+
+
     private class TIMER_0 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114002();
-            }
+            getAroundFurnface().forEach(FurnfaceInstance::setActive2114002);
             TIMER_1 = ThreadPoolManager.INSTANCE.schedule(new TIMER_1(), interval_time * 2000);
         }
     }
@@ -306,10 +282,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_1 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai1);
-            }
+            setActiveAi(i_ai1);
             TIMER_2 = ThreadPoolManager.INSTANCE.schedule(new TIMER_2(), interval_time * 1000);
         }
     }
@@ -317,10 +290,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_2 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai2);
-            }
+            setActiveAi(i_ai2);
             TIMER_3 = ThreadPoolManager.INSTANCE.schedule(new TIMER_3(), interval_time * 1000);
         }
     }
@@ -328,10 +298,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_3 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai3);
-            }
+            setActiveAi(i_ai3);
             TIMER_4 = ThreadPoolManager.INSTANCE.schedule(new TIMER_4(), interval_time * 1000);
         }
     }
@@ -339,10 +306,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_4 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai4);
-            }
+            setActiveAi(i_ai4);
             TIMER_5 = ThreadPoolManager.INSTANCE.schedule(new TIMER_5(), interval_time * 1000);
         }
     }
@@ -350,10 +314,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_5 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai5);
-            }
+            setActiveAi(i_ai5);
             TIMER_6 = ThreadPoolManager.INSTANCE.schedule(new TIMER_6(), interval_time * 1000);
         }
     }
@@ -361,10 +322,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_6 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai6);
-            }
+            setActiveAi(i_ai6);
             TIMER_7 = ThreadPoolManager.INSTANCE.schedule(new TIMER_7(), interval_time * 1000);
         }
     }
@@ -372,10 +330,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_7 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai7);
-            }
+            setActiveAi(i_ai7);
             TIMER_8 = ThreadPoolManager.INSTANCE.schedule(new TIMER_8(), interval_time * 1000);
         }
     }
@@ -383,10 +338,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_8 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai8);
-            }
+            setActiveAi(i_ai8);
             TIMER_9 = ThreadPoolManager.INSTANCE.schedule(new TIMER_9(), interval_time * 1000);
         }
     }
@@ -394,10 +346,7 @@ public final class SumielInstance extends NpcInstance {
     private class TIMER_9 extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setActive2114001(i_ai9);
-            }
+            setActiveAi(i_ai9);
             PC_TURN = ThreadPoolManager.INSTANCE.schedule(new PC_TURN(), interval_time * 1000);
         }
     }
@@ -432,10 +381,12 @@ public final class SumielInstance extends NpcInstance {
         public void runImpl() {
             NpcInstance npc1 = GameObjectsStorage.getAsNpc(storedId);
             Functions.npcShout(npc1, NpcString.FURNFACE4);
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setSCE_GAME_PLAYER_START();
-            }
+            GameObjectsStorage.getAllNpcs().stream()
+                    .filter(Objects::nonNull)
+                    .filter(npc -> npc.getNpcId() == 18913)
+                    .filter(npc -> getDistance(npc) <= 1200)
+                    .map(npc -> (FurnfaceInstance) npc)
+                    .forEach(FurnfaceInstance::setSCE_GAME_PLAYER_START);
             i_ai0 = 1;
         }
     }
@@ -445,10 +396,7 @@ public final class SumielInstance extends NpcInstance {
         public void runImpl() {
             NpcInstance npc1 = GameObjectsStorage.getAsNpc(storedId);
             Functions.npcShout(npc1, NpcString.FURNFACE5);
-            for (NpcInstance npc : GameObjectsStorage.getAllNpcs()) {
-                if (npc != null && npc.getNpcId() == 18913 && getDistance(npc) <= 1200)
-                    ((FurnfaceInstance) npc).setSCE_GAME_END();
-            }
+            getAroundFurnface().forEach(FurnfaceInstance::setSCE_GAME_END);
             c_ai0 = null;
             i_quest0 = 0;
             i_quest1 = 0;

@@ -11,6 +11,8 @@ public final class SpawnNpcInfo {
 
     public SpawnNpcInfo(int npcId, int max, StatsSet set) {
         template = NpcHolder.getTemplate(npcId);
+        if (npcId == 16043)
+            System.out.println("PEt!!!");
         this.max = max;
         parameters = set;
     }

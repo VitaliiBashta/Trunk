@@ -35,7 +35,7 @@ public class PlayerTemplate extends CharTemplate {
 
     public PlayerTemplate(int id, StatsSet set, boolean isMale, List<CreateItem> items) {
         super(set);
-        classId = ClassId.VALUES[id];
+        classId = ClassId.VALUES.get(id);
         race = Race.values()[set.getInteger("raceId")];
         className = set.getString("name");
 

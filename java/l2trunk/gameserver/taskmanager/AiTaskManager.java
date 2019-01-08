@@ -30,7 +30,7 @@ public final class AiTaskManager extends SteppingRunnableQueueManager {
         return _instances.get(randomizer++ & _instances.size() - 1);
     }
 
-    public CharSequence getStats(int num) {
-        return _instances.get(num).getStats();
-    }
+//    public CharSequence getStats(int num) {
+//        return _instances.get(num).getStats();
+//    }
 }

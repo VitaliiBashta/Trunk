@@ -11,11 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class OriginalSinWarden extends Fighter {
-    private static final List<Integer> servants1 = Arrays.asList(22424, 22425, 22426, 22427, 22428, 22429, 22430);
-    private static final List<Integer> servants2 = Arrays.asList(22432, 22433, 22434, 22435, 22436, 22437, 22438);
-    private static final List<Integer> DarionsFaithfulServants = Arrays.asList(22405, 22406, 2240);
+    private static final List<Integer> servants1 = List.of(22424, 22425, 22426, 22427, 22428, 22429, 22430);
+    private static final List<Integer> servants2 = List.of(22432, 22433, 22434, 22435, 22436, 22437, 22438);
+    private static final List<Integer> DarionsFaithfulServants = List.of(22405, 22406, 2240);
 
-    private OriginalSinWarden(NpcInstance actor) {
+    public OriginalSinWarden(NpcInstance actor) {
         super(actor);
     }
 

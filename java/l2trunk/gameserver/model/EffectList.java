@@ -316,11 +316,11 @@ public class EffectList {
 
         // TODO [G1ta0] затычка на статы повышающие HP/MP/CP
         for (FuncTemplate ft : effect.getTemplate().getAttachedFuncs()) {
-            if (ft._stat == Stats.MAX_HP) {
+            if (ft.stat == Stats.MAX_HP) {
                 _actor.setCurrentHp(hp, false);
-            } else if (ft._stat == Stats.MAX_MP) {
+            } else if (ft.stat == Stats.MAX_MP) {
                 _actor.setCurrentMp(mp);
-            } else if (ft._stat == Stats.MAX_CP) {
+            } else if (ft.stat == Stats.MAX_CP) {
                 _actor.setCurrentCp(cp);
             }
         }

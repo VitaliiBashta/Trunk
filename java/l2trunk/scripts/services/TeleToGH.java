@@ -17,7 +17,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeleToGH extends Functions implements ScriptFile {
+public final class TeleToGH extends Functions implements ScriptFile {
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
 
     private final Zone _zone = ReflectionUtils.getZone("[giran_harbor_offshore]");

@@ -53,7 +53,7 @@ public class Shutdown extends Thread {
     }
 
     private static void disconnectAllPlayers() {
-        GameObjectsStorage.getAllPlayers().forEach(Player::logout);
+        GameObjectsStorage.getAllPlayersStream().forEach(Player::logout);
     }
 
     private static void removeVoidItems() {

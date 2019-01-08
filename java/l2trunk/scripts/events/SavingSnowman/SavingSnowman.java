@@ -20,7 +20,6 @@ import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
@@ -36,7 +35,7 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class SavingSnowman extends Functions implements ScriptFile, OnDeathListener, OnPlayerEnterListener {
     private static final Logger _log = LoggerFactory.getLogger(SavingSnowman.class);
-    private static final List<SimpleSpawner> _spawns = new ArrayList<>();
+    private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
     private static final int INITIAL_SAVE_DELAY = 10 * 60 * 1000; // 10 мин
     private static final int SAVE_INTERVAL = 60 * 60 * 1000; // 60 мин
     private static final int SNOWMAN_SHOUT_INTERVAL = 60 * 1000; // 1 мин
@@ -100,7 +99,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         rewarder.setSpawnedLoc(targetLoc);
         rewarder.broadcastPacket(new CharMoveToLocation(rewarder.getObjectId(), rewarder.getLoc(), targetLoc));
 
-        ThreadPoolManager.INSTANCE.schedule(() ->reward(rewarder, rewarded), 5000);
+        ThreadPoolManager.INSTANCE.schedule(() -> reward(rewarder, rewarded), 5000);
     }
 
     public static void reward(NpcInstance rewarder, Player rewarded) {
@@ -143,11 +142,11 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     }
 
     // Индюк захавывает снеговика
-    public static void eatSnowman() {
+    private static void eatSnowman() {
         if (_snowman == null || _thomas == null)
             return;
 
-        GameObjectsStorage.getAllPlayers().forEach(player ->
+        GameObjectsStorage.getAllPlayersStream().forEach(player ->
                 Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanKilled", null, ChatType.CRITICAL_ANNOUNCE));
 
         _snowmanState = SnowmanState.KILLED;
@@ -166,7 +165,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         if (_snowman == null || topDamager == null || !topDamager.isPlayable())
             return;
 
-        GameObjectsStorage.getAllPlayers().forEach(player ->
+        GameObjectsStorage.getAllPlayersStream().forEach(player ->
                 Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanSaved", null, ChatType.CRITICAL_ANNOUNCE));
 
         _snowmanState = SnowmanState.SAVED;
@@ -262,15 +261,12 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     }
 
     private void spawnEventManagers() {
-        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS, _spawns);
-        SpawnNPCs(CTREE_ID, EventsConfig.CTREES, _spawns);
+        SpawnNPCs(EVENT_MANAGER_ID, EventsConfig.EVENT_MANAGERS, SPAWNS);
+        SpawnNPCs(CTREE_ID, EventsConfig.CTREES, SPAWNS);
     }
 
-    /**
-     * Удаляет спавн эвент менеджеров
-     */
     private void unSpawnEventManagers() {
-        deSpawnNPCs(_spawns);
+        deSpawnNPCs(SPAWNS);
     }
 
     @Override
@@ -290,9 +286,6 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         unSpawnEventManagers();
     }
 
-    /**
-     * Обработчик смерти мобов
-     */
     @Override
     public void onDeath(Creature cha, Creature killer) {
         if (_active && killer != null) {
@@ -328,13 +321,13 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
             return;
         }
 
-        player.broadcastPacket(new MagicSkillUse(player,  23017));
+        player.broadcastPacket(new MagicSkillUse(player, 23017));
         player.altOnMagicUseTimer(player, 23017);
         player.setVar("santaEventTime", String.valueOf(System.currentTimeMillis() + SANTA_BUFF_REUSE), -1);
 
         Summon pet = player.getPet();
         if (pet != null) {
-            pet.broadcastPacket(new MagicSkillUse(pet,  23017));
+            pet.broadcastPacket(new MagicSkillUse(pet, 23017));
             pet.altOnMagicUseTimer(pet, 23017);
         }
     }
@@ -462,7 +455,7 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
     private void captureSnowman() {
         Location spawnPoint = getRandomSpawnPoint();
 
-        GameObjectsStorage.getAllPlayers().forEach(player -> {
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> {
             Announcements.INSTANCE.announceToPlayerByCustomMessage(player, "scripts.events.SavingSnowman.AnnounceSnowmanCaptured", null, ChatType.CRITICAL_ANNOUNCE);
             player.sendPacket(new SystemMessage(SystemMessage.S2_S1).addZoneName(spawnPoint).addString("Look snowman in "));
             // Убираем и ставим флажок на карте и стрелку на компасе
@@ -516,14 +509,13 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
         public void runImpl() {
             if (!_active)
                 return;
-
-            for (SimpleSpawner s : _spawns)
-                if (s.getCurrentNpcId() == EVENT_MANAGER_ID)
-                    Functions.npcSayCustomMessage(s.getLastSpawn(), "scripts.events.SavingSnowman.SantaSay");
+            SPAWNS.stream()
+                    .filter(s -> s.getCurrentNpcId() == EVENT_MANAGER_ID)
+                    .forEach(s -> Functions.npcSayCustomMessage(s.getLastSpawn(), "scripts.events.SavingSnowman.SantaSay"));
         }
     }
 
-    public class ShoutTask extends RunnableImpl {
+    private class ShoutTask extends RunnableImpl {
         @Override
         public void runImpl() {
             if (!_active || _snowman == null || _snowmanState != SnowmanState.CAPTURED)

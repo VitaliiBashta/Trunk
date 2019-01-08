@@ -70,7 +70,7 @@ public class NegateStats extends Skill {
 
     private boolean containsStat(Effect e, Stats stat) {
         for (FuncTemplate ft : e.getTemplate().getAttachedFuncs())
-            if (ft._stat == stat)
+            if (ft.stat == stat)
                 return true;
         return false;
     }

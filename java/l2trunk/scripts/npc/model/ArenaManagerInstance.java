@@ -8,31 +8,26 @@ import l2trunk.gameserver.model.instances.WarehouseInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-/**
- * @author VISTALL
- * @date 17:17/07.07.2011
- */
-public class ArenaManagerInstance extends WarehouseInstance {
-    private final static int[][] _arenaBuff = new int[][]
-            {
-                    // ID, warrior = 0, mage = 1, both = 2
-                    {6803, 0}, // Arena Haste
-                    {6804, 2}, // Arena Wind Walk
-                    {6805, 1}, // Arena Empower
-                    {6806, 1}, // Arena Acumen
-                    {6807, 1}, // Arena Concentration
-                    {6808, 2}, // Arena Might
-                    {6809, 0}, // Arena Guidance
-                    //{6810, 0}, // Arena Focus
-                    {6811, 0}, // Arena Death Whisper
-                    {6812, 2}, // Arena Berserker Spirit
-            };
+public final class ArenaManagerInstance extends WarehouseInstance {
+    private final static Map<Integer, Integer> _arenaBuff = Map.of(
+            // ID, warrior = 0, mage = 1, both = 2
+            6803, 0, // Arena Haste
+            6804, 2, // Arena Wind Walk
+            6805, 1, // Arena Empower
+            6806, 1, // Arena Acumen
+            6807, 1, // Arena Concentration
+            6808, 2, // Arena Might
+            6809, 0, // Arena Guidance
+            6810, 0, // Arena Focus
+            6811, 0, // Arena Death Whisper
+            6812, 2); // Arena Berserker Spirit
+
 
     public ArenaManagerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -56,19 +51,19 @@ public class ArenaManagerInstance extends WarehouseInstance {
             player.reduceAdena(neededmoney, true, "ArenaManagerInstance");
             List<Creature> target = new ArrayList<>();
             target.add(player);
-            for (int[] buff : _arenaBuff) {
+            _arenaBuff.forEach((k, v) -> {
                 if (player.isMageClass() && player.getTemplate().race != Race.orc) {
-                    if (buff[1] == 1 || buff[1] == 2) {
-                        broadcastPacket(new MagicSkillUse(this, player, buff[0]));
-                        callSkill(buff[0], target, true);
+                    if (v == 1 || v == 2) {
+                        broadcastPacket(new MagicSkillUse(this, player, k));
+                        callSkill(k, target, true);
                     }
                 } else {
-                    if (buff[1] == 0 || buff[1] == 2) {
-                        broadcastPacket(new MagicSkillUse(this, player, buff[0]));
-                        callSkill(buff[0], target, true);
+                    if (v == 0 || v == 2) {
+                        broadcastPacket(new MagicSkillUse(this, player, k));
+                        callSkill(k, target, true);
                     }
                 }
-            }
+            });
         } else if (command.equals("CPRecovery")) {
             if (player.isCursedWeaponEquipped() || player.isInZone(Zone.ZoneType.battle_zone))
                 return;

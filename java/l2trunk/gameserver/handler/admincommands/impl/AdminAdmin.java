@@ -345,7 +345,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
                     _log.info("=================================================");
                     break;
                 case admin_gath_tele:
-                    GameObjectsStorage.getAllPlayers().stream()
+                    GameObjectsStorage.getAllPlayersStream()
                             .filter(player -> player != activeChar)
                             .forEach(player -> player.ask(new ConfirmDlg(SystemMsg.S1, 60000).addString("Would you like teleport to Admin Recall?"), new AnswerGathTeleInvitation(player, activeChar)));
                     break;

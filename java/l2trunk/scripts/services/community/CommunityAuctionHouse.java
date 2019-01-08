@@ -586,8 +586,8 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
      */
     private int getFunc(ItemInstance item, Stats stat) {
         for (FuncTemplate func : item.getTemplate().getAttachedFuncs())
-            if (func._stat == stat)
-                return (int) func._value;
+            if (func.stat == stat)
+                return (int) func.value;
         return 0;
     }
 

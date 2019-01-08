@@ -1,6 +1,5 @@
 package l2trunk.scripts.ai.fog;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
@@ -16,14 +15,14 @@ import java.util.List;
 public final class GroupAI extends Fighter {
     private static final Logger LOG = LoggerFactory.getLogger(GroupAI.class);
 
-    private static final List<Integer> RANDOM_SPAWN_MOBS = Arrays.asList(
+    private static final List<Integer> RANDOM_SPAWN_MOBS = List.of(
             18799, 18800, 18801, 18802, 18803);
 
-    private static final List<Integer> FOG_MOBS = Arrays.asList(
+    private static final List<Integer> FOG_MOBS = List.of(
             22634, 22635, 22636, 22637, 22638, 22639, 22640, 22641,
             22642, 22643, 22644, 22645, 22646, 22647, 22648, 22649);
 
-    private GroupAI(NpcInstance actor) {
+    public GroupAI(NpcInstance actor) {
         super(actor);
 
         if (RANDOM_SPAWN_MOBS.contains(actor.getNpcId()))
@@ -47,7 +46,6 @@ public final class GroupAI extends Fighter {
                 LOG.error("Error on GroupAI Death", e);
             }
         }
-
         super.onEvtDead(killer);
     }
 }

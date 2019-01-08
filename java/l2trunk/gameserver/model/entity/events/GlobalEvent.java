@@ -59,7 +59,7 @@ public abstract class GlobalEvent {
     }
 
     protected static void broadcastToWorld(L2GameServerPacket packet) {
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(packet));
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(packet));
     }
 
     public void initEvent() {
@@ -311,7 +311,7 @@ public abstract class GlobalEvent {
     protected abstract long startTimeMillis();
 
     protected void broadcastToWorld(IStaticPacket packet) {
-        GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(packet));
+        GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(packet));
     }
 
     // ===============================================================================================================
@@ -459,11 +459,11 @@ public abstract class GlobalEvent {
     // ===============================================================================================================
     // Listeners
     // ===============================================================================================================
-    public void addListener(Listener<GlobalEvent> l) {
+    public void addListener(Listener l) {
         _listenerList.add(l);
     }
 
-    public void removeListener(Listener<GlobalEvent> l) {
+    public void removeListener(Listener l) {
         _listenerList.remove(l);
     }
 
@@ -484,15 +484,15 @@ public abstract class GlobalEvent {
             e.addOnTimeActions(entry.getKey(), entry.getValue());
     }
 
-    private class ListenerListImpl extends ListenerList<GlobalEvent> {
+    private class ListenerListImpl extends ListenerList {
         void onStart() {
-            for (Listener<GlobalEvent> listener : getListeners())
+            for (Listener listener : getListeners())
                 if (listener instanceof OnStartStopListener)
                     ((OnStartStopListener) listener).onStart(GlobalEvent.this);
         }
 
         void onStop() {
-            for (Listener<GlobalEvent> listener : getListeners())
+            for (Listener listener : getListeners())
                 if (listener instanceof OnStartStopListener)
                     ((OnStartStopListener) listener).onStop(GlobalEvent.this);
         }

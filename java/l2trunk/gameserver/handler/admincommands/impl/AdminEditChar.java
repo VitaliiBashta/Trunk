@@ -743,7 +743,6 @@ public final class AdminEditChar implements IAdminCommandHandler {
 
     private void findCharacter(Player activeChar, String CharacterToFind) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-        int CharactersFound = 0;
 
         StringBuilder replyMSG = new StringBuilder("<html><body>");
         replyMSG.append("<table width=260><tr>");
@@ -752,20 +751,19 @@ public final class AdminEditChar implements IAdminCommandHandler {
         replyMSG.append("<td width=40><button value=\"Back\" action=\"bypass -h admin_show_characters 0\" width=40 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("</tr></table>");
         replyMSG.append("<br><br>");
-
-        for (Player element : GameObjectsStorage.getAllPlayers())
-            if (element.getName().toLowerCase().contains(CharacterToFind.toLowerCase())) {
-                CharactersFound = CharactersFound + 1;
-                replyMSG.append("<table width=270>")
-                        .append("<tr><td width=80>Name</td><td width=110>Class</td><td width=40>Level</td></tr>")
-                        .append("<tr><td width=80><a action=\"bypass -h admin_character_list ")
-                        .append(element.getName()).append("\">")
-                        .append(element.getName())
-                        .append("</a></td><td width=110>")
-                        .append(element.getTemplate().className)
-                        .append("</td><td width=40>").append(element.getLevel()).append("</td></tr>")
-                        .append("</table>");
-            }
+        long CharactersFound =
+                GameObjectsStorage.getAllPlayersStream()
+                        .filter(p -> p.getName().toLowerCase().contains(CharacterToFind.toLowerCase()))
+                        .peek(p -> replyMSG.append("<table width=270>")
+                                .append("<tr><td width=80>Name</td><td width=110>Class</td><td width=40>Level</td></tr>")
+                                .append("<tr><td width=80><a action=\"bypass -h admin_character_list ")
+                                .append(p.getName()).append("\">")
+                                .append(p.getName())
+                                .append("</a></td><td width=110>")
+                                .append(p.getTemplate().className)
+                                .append("</td><td width=40>").append(p.getLevel()).append("</td></tr>")
+                                .append("</table>"))
+                        .count();
 
         if (CharactersFound == 0) {
             replyMSG.append("<table width=270>");
@@ -917,7 +915,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 }
 
                 // Удаляем из возможных сабов их родителей, если таковые есть у чара
-                ClassId parent = ClassId.VALUES[availSub.ordinal()].getParent(player.getSex());
+                ClassId parent = ClassId.VALUES.get(availSub.ordinal()).getParent(player.getSex());
                 if (parent != null && parent.getId() == subClass.getClassId()) {
                     availSubs.remove(availSub);
                     continue;
@@ -925,7 +923,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
 
                 // Удаляем из возможных сабов родителей текущих сабклассов, иначе если взять саб berserker
                 // и довести до 3ей профы - doombringer, игроку будет предложен berserker вновь (дежавю)
-                ClassId subParent = ClassId.VALUES[subClass.getClassId()].getParent(player.getSex());
+                ClassId subParent = ClassId.VALUES.get(subClass.getClassId()).getParent(player.getSex());
                 if (subParent != null && subParent.getId() == availSub.ordinal())
                     availSubs.remove(availSub);
             }

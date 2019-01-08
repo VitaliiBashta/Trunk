@@ -173,7 +173,7 @@ public class OnActionShift extends Functions {
         droplist(player, npc);
     }
 
-    private void droplist(Player player, NpcInstance npc) {
+    public void droplist(Player player, NpcInstance npc) {
         if (player == null || npc == null)
             return;
 
@@ -202,7 +202,7 @@ public class OnActionShift extends Functions {
         skills(new String[]{"-1"});
     }
 
-    private void skills(String[] param) {
+    public void skills(String[] param) {
         int id = Integer.parseInt(param[0]);
         Player player = getSelf();
         NpcInstance npc = id == -1 ? getNpc() : GameObjectsStorage.getByNpcId(id);
@@ -253,7 +253,7 @@ public class OnActionShift extends Functions {
         stats(new String[]{"-1"});
     }
 
-    private void stats(String[] param) {
+    public void stats(String[] param) {
         int id = Integer.parseInt(param[0]);
         Player player = getSelf();
         NpcInstance npc = id == -1 ? getNpc() : GameObjectsStorage.getByNpcId(id);

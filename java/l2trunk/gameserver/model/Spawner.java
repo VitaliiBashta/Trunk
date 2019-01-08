@@ -164,11 +164,17 @@ public abstract class Spawner extends EventOwner implements Cloneable {
 
     //-----------------------------------------------------------------------------------------------------------------------------------
     NpcInstance doSpawn0(NpcTemplate template, boolean spawn, StatsSet set) {
-        if (template.isInstanceOf(PetInstance.class) || template.isInstanceOf(MinionInstance.class)) {
+        if (template.isInstanceOf(PetInstance.class) || template.isInstanceOf(MinionInstance.class)
+        || template.type.equals("Pet")
+        ) {
             _currentCount++;
             return null;
         }
-
+//        if (template.classType == null) {
+////            _currentCount++;
+////            return null;
+//            System.out.println("classtype is null ! "+ template.name);
+//        }
         NpcInstance tmp = template.getNewInstance();
 
         if (!spawn)

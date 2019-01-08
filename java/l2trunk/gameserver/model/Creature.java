@@ -3620,7 +3620,7 @@ public abstract class Creature extends GameObject {
         if (isPlayer()) {
             Player player = (Player) this;
 
-            player.getListeners().onTeleport(x, y, z, r);
+            player.getListeners().onTeleport(new Location(x, y, z), r);
 
             // Alexander - Send a teleport event to the tutorial for the player
             Quest q = QuestManager.getQuest(255);
@@ -3917,8 +3917,9 @@ public abstract class Creature extends GameObject {
     }
 
     @Override
-    public void setLoc(Location loc) {
+    public Creature setLoc(Location loc) {
         setXYZ(loc.x, loc.y, loc.z);
+        return this;
     }
 
     public void setLoc(Location loc, boolean MoveTask) {
@@ -4047,11 +4048,11 @@ public abstract class Creature extends GameObject {
         return listeners;
     }
 
-    public <T extends Listener<Creature>> boolean addListener(T listener) {
+    public <T extends Listener> boolean addListener(T listener) {
         return getListeners().add(listener);
     }
 
-    public <T extends Listener<Creature>> boolean removeListener(T listener) {
+    public <T extends Listener> boolean removeListener(T listener) {
         return getListeners().remove(listener);
     }
 

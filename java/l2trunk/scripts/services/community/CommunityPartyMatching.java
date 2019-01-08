@@ -21,10 +21,33 @@ import l2trunk.gameserver.utils.BbsUtil;
 import l2trunk.gameserver.utils.Util;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class CommunityPartyMatching extends Functions implements ScriptFile, ICommunityBoardHandler {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+import static l2trunk.gameserver.model.base.ClassId.*;
+
+public final class CommunityPartyMatching extends Functions implements ScriptFile, ICommunityBoardHandler {
     private static final int CHECKED_COUNT = 9; // last checked + 1
     private static final int MAX_PER_PAGE = 14;
+
+    private static String canJoinParty(Player player) {
+        String name = player.getName();
+        if (player.isGM())
+            return "Don't invite GMs...";
+        if (player.getParty() != null)
+            return name + " has already found a party.";
+        if (player.isInOlympiadMode())
+            return name + " is currently fighting in the Olympiad.";
+        if (player.isInObserverMode())
+            return name + " is currently observing an Olympiad Match.";
+        if (player.getCursedWeaponEquippedId() != 0)
+            return name + " cannot join the party because he is holding a cursed weapon.";
+        if (!player.isPartyMatchingVisible())
+            return name + " doesn't want to join any party.";
+        if (player.getPrivateStoreType() > 0)
+            return name + " cannot join the party because he is currently having a private store.";
+        return "";
+    }
 
     @Override
     public List<String> getBypassCommands() {
@@ -41,15 +64,15 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
             if (!st.hasMoreTokens())
                 showMainPage(player, 0, 0, 0, 0, 0);
             else {
-                int classesSortType = Integer.parseInt(st.nextToken());
-                int sortType = Integer.parseInt(st.nextToken());
-                int asc = Integer.parseInt(st.nextToken());
-                int page = Integer.parseInt(st.nextToken());
-                int charObjId = Integer.parseInt(st.nextToken());
+                int classesSortType = toInt(st.nextToken());
+                int sortType = toInt(st.nextToken());
+                int asc = toInt(st.nextToken(), 0);
+                int page = toInt(st.nextToken());
+                int charObjId = toInt(st.nextToken());
                 showMainPage(player, classesSortType, sortType, asc, page, charObjId);
 
                 if (st.hasMoreTokens()) {
-                    int nextNumber = Integer.parseInt(st.nextToken());
+                    int nextNumber = toInt(st.nextToken());
 
                     if (nextNumber == -1) // Show/Hide on list
                     {
@@ -59,8 +82,7 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
                         else
                             player.sendMessage("You are NO LONGER visible on Party Matching list!");
                         showMainPage(player, classesSortType, sortType, asc, page, charObjId);
-                    } else // Invite to party
-                    {
+                    } else { // Invite to party
                         Player invited = GameObjectsStorage.getPlayer(charObjId);
                         if (invited != null && player != invited && invited.getParty() == null) {
                             String partyMsg = canJoinParty(invited);
@@ -162,61 +184,25 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
     private List<Player> getPlayerList(Player player, int sortType, int asc, int classSortType) {
 
         List<Player> allPlayers = new ArrayList<>();
-        if (classSortType == 8) // Party
-        {
+        if (classSortType == 8) { // Party
             if (player.getParty() == null)
                 allPlayers.add(player);
             else {
-                for (Player member : player.getParty().getMembers())
-                    allPlayers.add(member);
+                allPlayers.addAll(player.getParty().getMembers());
             }
         } else {
-            for (Player singlePlayer : GameObjectsStorage.getAllPlayers()) {
-                String party_checker = canJoinParty(singlePlayer);
-                if (party_checker.isEmpty()) {
-                    if (!isClassTestPassed(singlePlayer, classSortType)) {
-                        continue;
-                    } else {
-                        allPlayers.add(singlePlayer);
-                    }
-                }
-            }
+            allPlayers.addAll(GameObjectsStorage.getAllPlayersStream()
+                    .filter(p -> canJoinParty(p).isEmpty())
+                    .filter(p -> isClassTestPassed(p, classSortType))
+                    .collect(Collectors.toList()));
         }
 
         allPlayers.sort(new CharComparator(sortType, classSortType, asc));
         return allPlayers;
     }
 
-    private class CharComparator implements Comparator<Player> {
-        final int _type;
-        final int _classType;
-        final int _asc;
-
-        private CharComparator(int sortType, int classType, int asc) {
-            _type = sortType;
-            _classType = classType;
-            _asc = asc;
-        }
-
-        @Override
-        public int compare(Player o1, Player o2) {
-            if (_asc == 1) {
-                Player temp = o1;
-                o1 = o2;
-                o2 = temp;
-            }
-            if (_type == 0) // Name
-                return o1.getName().compareTo(o2.getName());
-            if (_type == 1) // lvl
-                return Integer.compare(getMaxLevel(o2, _classType), getMaxLevel(o1, _classType));
-            if (_type == 2) // unlocks
-                return Integer.compare(getUnlocksSize(o2, _classType), getUnlocksSize(o1, _classType));
-            return 0;
-        }
-    }
-
     private int getMaxLevel(Player player, int classSortType) {
-        ClassId[] group = getNeededClasses(classSortType);
+        ClassId[] group = getNeededClasses(classSortType).toArray(new ClassId[0]);
         int maxLevel = 0;
 
         for (SubClass sub : player.getSubClasses().values()) {
@@ -233,45 +219,24 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
         return player.getSubClasses().size();
     }
 
-    private static String canJoinParty(Player player) {
-        String name = player.getName();
-        if (player.isGM())
-            return "Don't invite GMs...";
-        if (player.getParty() != null)
-            return name + " has already found a party.";
-        if (player.isInOlympiadMode())
-            return name + " is currently fighting in the Olympiad.";
-        if (player.isInObserverMode())
-            return name + " is currently observing an Olympiad Match.";
-        if (player.getCursedWeaponEquippedId() != 0)
-            return name + " cannot join the party because he is holding a cursed weapon.";
-        if (!player.isPartyMatchingVisible())
-            return name + " doesn't want to join any party.";
-        if (player.getPrivateStoreType() > 0)
-            return name + " cannot join the party because he is currently having a private store.";
-        return "";
-    }
-
-    private ClassId[] getNeededClasses(int type) {
+    private List<ClassId> getNeededClasses(int type) {
         switch (type) {
-            case 0: //All
-                return ClassId.values();
             case 1: //Buffers
-                return new ClassId[]{ClassId.inspector, ClassId.judicator, ClassId.oracle, ClassId.orcShaman, ClassId.prophet, ClassId.warcryer, ClassId.overlord, ClassId.shillienElder, ClassId.shillienSaint, ClassId.hierophant, ClassId.evaSaint, ClassId.shillienSaint, ClassId.dominator, ClassId.doomcryer};
+                return List.of(inspector, judicator, oracle, orcShaman, prophet, warcryer, overlord, shillienElder, shillienSaint, hierophant, evaSaint, shillienSaint, dominator, doomcryer);
             case 2: //BD
-                return new ClassId[]{ClassId.bladedancer, ClassId.spectralDancer};
+                return List.of(bladedancer, spectralDancer);
             case 3: //SWS
-                return new ClassId[]{ClassId.swordSinger, ClassId.swordMuse};
+                return List.of(swordSinger, swordMuse);
             case 4: //Healers
-                return new ClassId[]{ClassId.bishop, ClassId.shillienElder, ClassId.cardinal, ClassId.evaSaint, ClassId.shillienSaint};
+                return List.of(bishop, shillienElder, cardinal, evaSaint, shillienSaint);
             case 5: //Tanks
-                return new ClassId[]{ClassId.knight, ClassId.darkAvenger, ClassId.paladin, ClassId.palusKnight, ClassId.shillienKnight, ClassId.shillienTemplar, ClassId.phoenixKnight, ClassId.hellKnight, ClassId.evaTemplar, ClassId.shillienTemplar};
+                return List.of(knight, darkAvenger, paladin, palusKnight, shillienKnight, shillienTemplar, phoenixKnight, hellKnight, evaTemplar, shillienTemplar);
             case 6: //Mage DD
-                return new ClassId[]{ClassId.elvenMage, ClassId.mage, ClassId.orcShaman, ClassId.darkMage, ClassId.wizard, ClassId.warcryer, ClassId.overlord, ClassId.spellsinger, ClassId.spellhowler, ClassId.necromancer, ClassId.sorceror, ClassId.archmage, ClassId.soultaker, ClassId.arcanaLord, ClassId.mysticMuse, ClassId.elementalMaster, ClassId.stormScreamer, ClassId.spectralMaster, ClassId.dominator, ClassId.doomcryer};
+                return List.of(elvenMage, mage, orcShaman, darkMage, wizard, warcryer, overlord, spellsinger, spellhowler, necromancer, sorceror, archmage, soultaker, arcanaLord, mysticMuse, elementalMaster, stormScreamer, spectralMaster, dominator, doomcryer);
             case 7: //Fighter DD
-                return new ClassId[]{ClassId.inspector, ClassId.judicator, ClassId.abyssWalker, ClassId.swordSinger, ClassId.swordMuse, ClassId.assassin, ClassId.berserker, ClassId.bountyHunter, ClassId.artisan, ClassId.arbalester, ClassId.darkFighter, ClassId.destroyer, ClassId.doombringer, ClassId.elvenFighter, ClassId.darkFighter, ClassId.dreadnought, ClassId.warlord, ClassId.warsmith, ClassId.warrior, ClassId.femaleSoldier, ClassId.bladedancer, ClassId.spectralDancer, ClassId.femaleSoulbreaker, ClassId.femaleSoulhound, ClassId.maleSoldier, ClassId.maleSoulbreaker, ClassId.maleSoulhound, ClassId.maestro, ClassId.hawkeye, ClassId.treasureHunter, ClassId.titan, ClassId.trickster, ClassId.trooper, ClassId.tyrant, ClassId.gladiator, ClassId.duelist, ClassId.phantomRanger, ClassId.plainsWalker, ClassId.rogue, ClassId.silverRanger, ClassId.orcRaider, ClassId.orcFighter, ClassId.orcMonk, ClassId.dreadnought, ClassId.duelist, ClassId.adventurer, ClassId.sagittarius, ClassId.windRider, ClassId.moonlightSentinel, ClassId.ghostHunter, ClassId.ghostSentinel, ClassId.titan, ClassId.grandKhauatari, ClassId.fortuneSeeker};
+                return List.of(inspector, judicator, abyssWalker, swordSinger, swordMuse, assassin, berserker, bountyHunter, artisan, arbalester, darkFighter, destroyer, doombringer, elvenFighter, darkFighter, dreadnought, warlord, warsmith, warrior, femaleSoldier, bladedancer, spectralDancer, femaleSoulbreaker, femaleSoulhound, maleSoldier, maleSoulbreaker, maleSoulhound, maestro, hawkeye, treasureHunter, titan, trickster, trooper, tyrant, gladiator, duelist, phantomRanger, plainsWalker, rogue, silverRanger, orcRaider, orcFighter, orcMonk, dreadnought, duelist, adventurer, sagittarius, windRider, moonlightSentinel, ghostHunter, ghostSentinel, titan, grandKhauatari, fortuneSeeker);
         }
-        return ClassId.values();
+        return List.of(ClassId.values());
     }
 
     private String getChecked(int i, int classSortType) {
@@ -293,6 +258,25 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
             return "8f3d3f";
 
         return "327b39";
+    }
+
+    @Override
+    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
+    }
+
+    @Override
+    public void onLoad() {
+        CommunityBoardManager.registerHandler(this);
+    }
+
+    @Override
+    public void onReload() {
+        CommunityBoardManager.removeHandler(this);
+    }
+
+    @Override
+    public void onShutdown() {
+
     }
 
     public static class InviteAnswer implements OnAnswerListener {
@@ -326,22 +310,31 @@ public class CommunityPartyMatching extends Functions implements ScriptFile, ICo
         }
     }
 
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
+    private class CharComparator implements Comparator<Player> {
+        final int _type;
+        final int _classType;
+        final int _asc;
 
-    @Override
-    public void onLoad() {
-        CommunityBoardManager.registerHandler(this);
-    }
+        private CharComparator(int sortType, int classType, int asc) {
+            _type = sortType;
+            _classType = classType;
+            _asc = asc;
+        }
 
-    @Override
-    public void onReload() {
-        CommunityBoardManager.removeHandler(this);
-    }
-
-    @Override
-    public void onShutdown() {
-
+        @Override
+        public int compare(Player o1, Player o2) {
+            if (_asc == 1) {
+                Player temp = o1;
+                o1 = o2;
+                o2 = temp;
+            }
+            if (_type == 0) // Name
+                return o1.getName().compareTo(o2.getName());
+            if (_type == 1) // lvl
+                return Integer.compare(getMaxLevel(o2, _classType), getMaxLevel(o1, _classType));
+            if (_type == 2) // unlocks
+                return Integer.compare(getUnlocksSize(o2, _classType), getUnlocksSize(o1, _classType));
+            return 0;
+        }
     }
 }

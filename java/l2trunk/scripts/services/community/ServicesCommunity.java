@@ -44,7 +44,7 @@ public final class ServicesCommunity extends Functions implements ScriptFile, IC
 
     @Override
     public List<String> getBypassCommands() {
-        return Collections.singletonList("");
+        return List.of("_bbsservices");
     }
 
     @Override
@@ -94,7 +94,7 @@ public final class ServicesCommunity extends Functions implements ScriptFile, IC
             player.sendMessage("Raising is not possible");
             return false;
         }
-        return false;
+        return true;
     }
 
 

@@ -1,6 +1,5 @@
 package l2trunk.gameserver.templates;
 
-
 import l2trunk.commons.collections.StatsSet;
 
 import java.util.ArrayList;
@@ -8,44 +7,33 @@ import java.util.Collections;
 import java.util.List;
 
 public class CharTemplate {
-    public final int baseSTR;
-    public final int baseCON;
-    public final int baseDEX;
-    public final int baseINT;
-    public final int baseWIT;
-    public final int baseMEN;
-    public final double baseHpMax;
-    public final double baseCpMax;
-    public final double baseMpMax;
-    /**
-     * HP Regen base
-     */
-    public final double baseHpReg;
-    /**
-     * MP Regen base
-     */
-    public final double baseMpReg;
-    public final int basePAtk;
-    public final int baseMAtk;
-    public final int basePDef;
-    public final int baseMDef;
-    public final int basePAtkSpd;
-    public final int baseMAtkSpd;
-    public final int baseShldDef;
-    public final int baseAtkRange;
-    public final int baseShldRate;
-    public final int baseCritRate;
-    public final int baseRunSpd;
-    public final int baseWalkSpd;
-    public final List<Integer> baseAttributeAttack;
-    public final List<Integer> baseAttributeDefence;
-    public final double collisionRadius;
-    public final double collisionHeight;
-    private final List<Integer> EMPTY_ATTRIBUTES = Collections.nCopies(6,0);
-    /**
-     * CP Regen base
-     */
-    private final double baseCpReg;
+    public  int baseSTR;
+    public  int baseCON;
+    public  int baseDEX;
+    public  int baseINT;
+    public  int baseWIT;
+    public  int baseMEN;
+    public  double baseHpMax;
+    public  double baseCpMax;
+    public  double baseMpMax;
+    public  double baseHpReg;
+    public  double baseMpReg;
+    public  int basePAtk;
+    public  int baseMAtk;
+    public  int basePDef;
+    public  int baseMDef;
+    public  int basePAtkSpd;
+    public  int baseMAtkSpd;
+    public  int baseShldDef;
+    public  int baseAtkRange;
+    public  int baseShldRate;
+    public  int baseCritRate;
+    public  int baseRunSpd;
+    public  int baseWalkSpd;
+    public  List<Integer> baseAttributeAttack;
+    public  List<Integer> baseAttributeDefence;
+    public  double collisionRadius;
+    public  double collisionHeight;
 
     public CharTemplate(StatsSet set) {
         baseSTR = set.getInteger("baseSTR");
@@ -58,7 +46,6 @@ public class CharTemplate {
         baseCpMax = set.getDouble("baseCpMax");
         baseMpMax = set.getDouble("baseMpMax");
         baseHpReg = set.getDouble("baseHpReg");
-        baseCpReg = set.getDouble("baseCpReg");
         baseMpReg = set.getDouble("baseMpReg");
         basePAtk = set.getInteger("basePAtk");
         baseMAtk = set.getInteger("baseMAtk");
@@ -72,6 +59,7 @@ public class CharTemplate {
         baseCritRate = set.getInteger("baseCritRate");
         baseRunSpd = set.getInteger("baseRunSpd");
         baseWalkSpd = set.getInteger("baseWalkSpd");
+        List<Integer> EMPTY_ATTRIBUTES = Collections.nCopies(6, 0);
         baseAttributeAttack = set.getIntegerList("baseAttributeAttack", EMPTY_ATTRIBUTES);
         baseAttributeDefence = set.getIntegerList("baseAttributeDefence", EMPTY_ATTRIBUTES);
         // Geometry

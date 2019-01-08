@@ -807,18 +807,18 @@ public class Reflection {
         return zones.values();
     }
 
-    public <T extends Listener<Reflection>> boolean addListener(T listener) {
+    public <T extends Listener> boolean addListener(T listener) {
         return listeners.add(listener);
     }
 
-    public <T extends Listener<Reflection>> boolean removeListener(T listener) {
+    public <T extends Listener> boolean removeListener(T listener) {
         return listeners.remove(listener);
     }
 
-    class ReflectionListenerList extends ListenerList<Reflection> {
+    class ReflectionListenerList extends ListenerList {
         void onCollapse() {
             if (!getListeners().isEmpty()) {
-                for (Listener<Reflection> listener : getListeners()) {
+                for (Listener listener : getListeners()) {
                     ((OnReflectionCollapseListener) listener).onReflectionCollapse(Reflection.this);
                 }
             }

@@ -5,8 +5,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class GameObjectsStorage {
     private static final Map<Integer, Creature> objects = new ConcurrentHashMap<>();
@@ -14,7 +16,7 @@ public final class GameObjectsStorage {
     private GameObjectsStorage() {
     }
 
-    private static List<NpcInstance> getStorageNpcs() {
+    public static List<NpcInstance> getAllNpcs() {
         return objects.values().stream()
                 .filter(o -> o instanceof NpcInstance)
                 .map(o -> (NpcInstance) o)
@@ -32,13 +34,15 @@ public final class GameObjectsStorage {
     }
 
     public static Player getAsPlayer(int storedId) {
-        return (Player) get(storedId);
+        GameObject o = get(storedId);
+        if (o instanceof Player) return (Player) o;
+        return null;
     }
 
     public static Player getPlayer(String name) {
-        return getAllPlayers().stream()
+        return getAllPlayersStream()
                 .filter(p -> p.getName().equals(name))
-                .findFirst().orElseThrow(IllegalArgumentException::new);
+                .findFirst().orElse(null);
     }
 
     public static Player getPlayer(int objId) {
@@ -48,44 +52,36 @@ public final class GameObjectsStorage {
 //        throw new IllegalArgumentException("no player with id:" + objId);
     }
 
-    public static List<Player> getAllPlayers() {
+    public static Stream<Player> getAllPlayersStream() {
         return objects.values().stream()
+                .filter(Objects::nonNull)
                 .filter(o -> o instanceof Player)
-                .map(o -> (Player) o)
+                .map(o -> (Player) o);
+    }
+    public static List<Player> getAllPlayers() {
+        return getAllPlayersStream()
                 .collect(Collectors.toList());
     }
 
-    public static int getAllPlayersCount() {
-        return getAllPlayers().size();
-    }
-
-    public static List<GameObject> getAllObjects() {
-        return new ArrayList<>(objects.values());
+    public static long getAllPlayersCount() {
+        return getAllPlayersStream().count();
     }
 
     public static GameObject findObject(int objId) {
         return objects.get(objId);
     }
 
-    public static List<NpcInstance> getAllNpcs() {
-        return objects.values().stream()
-                .filter((v) -> v instanceof NpcInstance)
-                .map(v -> (NpcInstance) v)
-                .collect(Collectors.toList());
-//        return getStorageNpcs().getAll();
-    }
-
     /**
      * использовать только для перебора типа for(L2Player player : getAllPlayersForIterate()) ...
      */
     public static Iterable<NpcInstance> getAllNpcsForIterate() {
-        return getStorageNpcs();
+        return getAllNpcs();
     }
 
     public static NpcInstance getByNpcId(int npc_id) {
         NpcInstance result = null;
 
-        for (NpcInstance temp : getStorageNpcs())
+        for (NpcInstance temp : getAllNpcs())
             if (npc_id == temp.getNpcId()) {
                 if (!temp.isDead())
                     return temp;
@@ -100,7 +96,7 @@ public final class GameObjectsStorage {
 
     public static List<NpcInstance> getAllByNpcId(int npc_id, boolean justAlive, boolean visible) {
         List<NpcInstance> result = new ArrayList<>();
-        for (NpcInstance temp : getStorageNpcs())
+        for (NpcInstance temp : getAllNpcs())
             if (temp.getTemplate() != null && npc_id == temp.getTemplate().getNpcId() && (!justAlive || !temp.isDead()) && (!visible || temp.isVisible()))
                 result.add(temp);
         return result;
@@ -108,7 +104,7 @@ public final class GameObjectsStorage {
 
     public static List<NpcInstance> getAllByNpcId(List<Integer> npc_ids, boolean justAlive) {
         List<NpcInstance> result = new ArrayList<>();
-        for (NpcInstance temp : getStorageNpcs())
+        for (NpcInstance temp : getAllNpcs())
             if (!justAlive || !temp.isDead())
                 for (int npc_id : npc_ids)
                     if (npc_id == temp.getNpcId())
@@ -117,7 +113,7 @@ public final class GameObjectsStorage {
     }
 
     public static NpcInstance getNpc(String s) {
-        List<NpcInstance> npcs = getStorageNpcs().stream()
+        List<NpcInstance> npcs = getAllNpcs().stream()
                 .filter(npc -> npc.getName().equalsIgnoreCase(s))
                 .collect(Collectors.toList());
         if (npcs.size() == 0)
@@ -132,7 +128,7 @@ public final class GameObjectsStorage {
     }
 
     public static NpcInstance getNpc(int objId) {
-        return getStorageNpcs().get(objId);
+        return getAllNpcs().get(objId);
     }
 
     public static void put(Creature o) {

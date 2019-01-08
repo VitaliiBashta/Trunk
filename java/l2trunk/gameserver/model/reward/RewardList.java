@@ -5,11 +5,7 @@ import l2trunk.gameserver.model.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @reworked VISTALL
- */
-@SuppressWarnings("serial")
-public class RewardList extends ArrayList<RewardGroup> {
+public final class RewardList extends ArrayList<RewardGroup> {
     public static final int MAX_CHANCE = 1000000;
     private final RewardType _type;
     private final boolean _autoLoot;
@@ -37,8 +33,7 @@ public class RewardList extends ArrayList<RewardGroup> {
         for (RewardGroup g : this) {
             List<RewardItem> tdl = g.roll(_type, player, mod, isRaid, isSiegeGuard);
             if (!tdl.isEmpty())
-                for (RewardItem itd : tdl)
-                    temp.add(itd);
+                temp.addAll(tdl);
         }
         return temp;
     }

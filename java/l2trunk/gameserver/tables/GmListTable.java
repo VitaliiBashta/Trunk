@@ -8,18 +8,19 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class GmListTable {
     private GmListTable() {
     }
 
-    public static List<Player> getAllGMs() {
-        return GameObjectsStorage.getAllPlayers().stream()
-                .filter(Player::isGM).collect(Collectors.toList());
+    private static Stream<Player> getAllGMsStream() {
+        return GameObjectsStorage.getAllPlayersStream()
+                .filter(Player::isGM);
     }
 
     public static List<Player> getAllVisibleGMs() {
-        return GameObjectsStorage.getAllPlayers().stream()
+        return GameObjectsStorage.getAllPlayersStream()
                 .filter(Player::isGM)
                 .filter(player -> player.getVarInt("gmOnList", 1) == 1)
                 .collect(Collectors.toList());
@@ -37,10 +38,10 @@ public final class GmListTable {
     }
 
     public static void broadcastToGMs(L2GameServerPacket packet) {
-        getAllGMs().forEach(gm -> gm.sendPacket(packet));
+        getAllGMsStream().forEach(gm -> gm.sendPacket(packet));
     }
 
     public static void broadcastMessageToGMs(String message) {
-        getAllGMs().forEach(gm -> gm.sendMessage(message));
+        getAllGMsStream().forEach(gm -> gm.sendMessage(message));
     }
 }

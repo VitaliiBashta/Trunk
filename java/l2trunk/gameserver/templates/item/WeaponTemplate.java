@@ -136,8 +136,8 @@ public final class WeaponTemplate extends ItemTemplate {
     @Override
     public void attachFunc(FuncTemplate f) {
         //TODO для параметров set с дп,может считать стат с L2ItemInstance? (VISTALL)
-        if (f._stat == Stats.CRITICAL_BASE && f._order == 0x08) {
-            _critical = (int) Math.round(f._value / 10);
+        if (f.stat == Stats.CRITICAL_BASE && f.order == 0x08) {
+            _critical = (int) Math.round(f.value / 10);
         }
         super.attachFunc(f);
     }

@@ -224,11 +224,6 @@ public class World {
         }
     }
 
-    /**
-     * Удаляет обьект из текущего региона
-     *
-     * @param object обьект для удаления
-     */
     public static void removeVisibleObject(GameObject object) {
         if (object == null || object.isVisible() || object.isInObserverMode())
             return;

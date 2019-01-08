@@ -21,7 +21,7 @@ import java.util.List;
 public final class GuardianAltar extends DefaultAI {
     private static final int DarkShamanVarangka = 18808;
 
-    private GuardianAltar(NpcInstance actor) {
+    public GuardianAltar(NpcInstance actor) {
         super(actor);
         actor.setInvul(true);
     }

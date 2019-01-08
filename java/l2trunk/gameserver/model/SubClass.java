@@ -41,7 +41,7 @@ public final class SubClass {
         level = Experience.getLevel(_exp);
     }
 
-    public long getMaxExp() {
+    long getMaxExp() {
         return maxExp;
     }
 
@@ -138,10 +138,10 @@ public final class SubClass {
 
     @Override
     public String toString() {
-        return ClassId.VALUES[classId].toString() + " " + level;
+        return ClassId.VALUES.get(classId).toString() + " " + level;
     }
 
     public String toStringCB() {
-        return ClassId.VALUES[classId].toString();
+        return ClassId.VALUES.get(classId).toString();
     }
 }

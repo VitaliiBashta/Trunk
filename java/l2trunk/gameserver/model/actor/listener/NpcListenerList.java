@@ -1,12 +1,11 @@
 package l2trunk.gameserver.model.actor.listener;
 
-import l2trunk.commons.listener.Listener;
+import l2trunk.commons.listener.ListenerList;
 import l2trunk.gameserver.listener.actor.npc.OnDecayListener;
 import l2trunk.gameserver.listener.actor.npc.OnSpawnListener;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class NpcListenerList extends CharListenerList {
+public final class NpcListenerList extends CharListenerList {
     public NpcListenerList(NpcInstance actor) {
         super(actor);
     }
@@ -17,26 +16,26 @@ public class NpcListenerList extends CharListenerList {
     }
 
     public void onSpawn() {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (OnSpawnListener.class.isInstance(listener))
-                    ((OnSpawnListener) listener).onSpawn(getActor());
-
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (OnSpawnListener.class.isInstance(listener))
-                    ((OnSpawnListener) listener).onSpawn(getActor());
+        onSpawn(global);
+        onSpawn(this);
     }
 
     public void onDecay() {
-        if (!global.getListeners().isEmpty())
-            for (Listener<Creature> listener : global.getListeners())
-                if (OnDecayListener.class.isInstance(listener))
-                    ((OnDecayListener) listener).onDecay(getActor());
+        onDecay(global);
+        onDecay(this);
+    }
 
-        if (!getListeners().isEmpty())
-            for (Listener<Creature> listener : getListeners())
-                if (OnDecayListener.class.isInstance(listener))
-                    ((OnDecayListener) listener).onDecay(getActor());
+    private void onSpawn(ListenerList list) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnSpawnListener)
+                .map(l -> (OnSpawnListener) l)
+                .forEach(l -> l.onSpawn(getActor()));
+    }
+
+    private void onDecay(ListenerList list) {
+        list.getListeners().stream()
+                .filter(l -> l instanceof OnDecayListener)
+                .map(l -> (OnDecayListener) l)
+                .forEach(l -> l.onDecay(getActor()));
     }
 }

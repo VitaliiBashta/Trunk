@@ -68,9 +68,7 @@ public class MercenaryCaptionInstance extends MonsterInstance {
         if (event == null)
             return false;
         SiegeClanObject object = event.getSiegeClan(FortressSiegeEvent.DEFENDERS, attacker.getClan());
-        if (object == null)
-            return false;
-        return true;
+        return object != null;
     }
 
     @Override

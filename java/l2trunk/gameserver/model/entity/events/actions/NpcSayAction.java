@@ -36,16 +36,15 @@ public final class NpcSayAction implements EventAction {
             int ry = MapUtils.regionY(npc);
             int offset = Config.SHOUT_OFFSET;
 
-            for (Player player : GameObjectsStorage.getAllPlayers()) {
-                if (npc.getReflection() != player.getReflection())
-                    continue;
+            GameObjectsStorage.getAllPlayersStream()
+                    .filter(player -> npc.getReflection() == player.getReflection())
+                    .forEach(player -> {
+                        int tx = MapUtils.regionX(player);
+                        int ty = MapUtils.regionY(player);
 
-                int tx = MapUtils.regionX(player);
-                int ty = MapUtils.regionY(player);
-
-                if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
-                    packet(npc, player);
-            }
+                        if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
+                            packet(npc, player);
+                    });
         } else {
             for (Player player : World.getAroundPlayers(npc, _range, Math.max(_range / 2, 200)))
                 if (npc.getReflection() == player.getReflection())

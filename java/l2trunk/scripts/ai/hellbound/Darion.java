@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Darion extends Fighter {
-    private static final List<Integer> doors = Arrays.asList(
+    private static final List<Integer> doors = List.of(
             20250009, 20250004, 20250005, 20250006, 20250007);
 
-    private Darion(NpcInstance actor) {
+    public Darion(NpcInstance actor) {
         super(actor);
     }
 

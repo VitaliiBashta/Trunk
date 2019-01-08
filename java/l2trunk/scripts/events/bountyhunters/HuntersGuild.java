@@ -93,7 +93,7 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
                 show(new CustomMessage("scripts.events.bountyhunters.NoTargets", player), player);
                 return;
             }
-            target = targets.get(Rnd.get(targets.size()));
+            target = Rnd.get(targets);
         } else {
             target = NpcHolder.getTemplate(id);
             if (target == null || !checkTarget(target)) {

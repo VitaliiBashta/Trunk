@@ -13,7 +13,7 @@ import l2trunk.gameserver.utils.Location;
 public final class DarionFaithfulServant extends Fighter {
     private static final int MysteriousAgent = 32372;
 
-    private DarionFaithfulServant(NpcInstance actor) {
+    public DarionFaithfulServant(NpcInstance actor) {
         super(actor);
     }
 

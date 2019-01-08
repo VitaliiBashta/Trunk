@@ -3,7 +3,7 @@ package l2trunk.gameserver.ai;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
 public class Fighter extends DefaultAI {
-    protected Fighter(NpcInstance actor) {
+    public Fighter(NpcInstance actor) {
         super(actor);
     }
 

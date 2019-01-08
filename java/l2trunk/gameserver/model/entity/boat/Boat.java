@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public abstract class Boat extends Creature {
-    final Set<Player> _players = new CopyOnWriteArraySet<>();
+    final Set<Player> players = new CopyOnWriteArraySet<>();
     private final BoatWayEvent[] _ways = new BoatWayEvent[2];
     int _fromHome;
     int _runState;
@@ -53,15 +53,15 @@ public abstract class Boat extends Creature {
     }
 
     void updatePeopleInTheBoat(int x, int y, int z) {
-        for (Player player : _players) {
+        for (Player player : players) {
             if (player != null)
                 player.setXYZ(x, y, z, true);
         }
     }
 
     public void addPlayer(Player player, Location boatLoc) {
-        synchronized (_players) {
-            _players.add(player);
+        synchronized (players) {
+            players.add(player);
 
             player.setBoat(this);
             player.setLoc(getLoc(), true);
@@ -112,7 +112,7 @@ public abstract class Boat extends Creature {
         if (isMoving)
             stopMove(false);
 
-        for (Player player : _players)
+        for (Player player : players)
             player.teleToLocation(x, y, z);
 
         setHeading(calcHeading(x, y));
@@ -123,7 +123,7 @@ public abstract class Boat extends Creature {
     }
 
     public void oustPlayer(Player player, Location loc, boolean teleport) {
-        synchronized (_players) {
+        synchronized (players) {
             player._stablePoint = null;
 
             player.setBoat(null);
@@ -133,18 +133,18 @@ public abstract class Boat extends Creature {
             if (teleport)
                 player.teleToLocation(loc);
 
-            _players.remove(player);
+            players.remove(player);
         }
     }
 
     public void removePlayer(Player player) {
-        synchronized (_players) {
-            _players.remove(player);
+        synchronized (players) {
+            players.remove(player);
         }
     }
 
     void broadcastPacketToPassengers(IStaticPacket packet) {
-        for (Player player : _players)
+        for (Player player : players)
             player.sendPacket(packet);
     }
 
@@ -187,7 +187,7 @@ public abstract class Boat extends Creature {
     @Override
     public void broadcastPacket(L2GameServerPacket... packets) {
         List<Player> players = new ArrayList<>();
-        players.addAll(_players);
+        players.addAll(this.players);
         players.addAll(World.getAroundPlayers(this));
 
         for (Player player : players) {
@@ -274,7 +274,7 @@ public abstract class Boat extends Creature {
     }
 
     public Set<Player> getPlayers() {
-        return _players;
+        return players;
     }
 
     public boolean isDocked() {

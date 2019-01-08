@@ -5,17 +5,16 @@ import l2trunk.commons.geometry.Polygon;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.ai.DoorAI;
 import l2trunk.gameserver.model.instances.DoorInstance;
-import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.scripts.ai.door.ResidenceDoor;
+import l2trunk.scripts.ai.door.SSQDoor;
+import l2trunk.scripts.ai.door.SiegeDoor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 public final class DoorTemplate extends CharTemplate {
-    private static final Constructor<DoorAI> DEFAULT_AI_CONSTRUCTOR = (Constructor<DoorAI>) CharacterAI.class.getConstructors()[0];
-    private static final Logger LOG = LoggerFactory.getLogger(DoorTemplate.class);
     private final int _id;
     private final String _name;
     private final DoorType _doorType;
@@ -31,8 +30,7 @@ public final class DoorTemplate extends CharTemplate {
     private final int _closeTime;
     private final int masterDoor;
     private final StatsSet _aiParams;
-    private Class<DoorAI> _classAI = DoorAI.class;
-    private Constructor<DoorAI> _constructorAI = DEFAULT_AI_CONSTRUCTOR;
+    private String classAI = "DoorAI";
 
     public DoorTemplate(StatsSet set) {
         super(set);
@@ -52,41 +50,23 @@ public final class DoorTemplate extends CharTemplate {
         masterDoor = set.getInteger("master_door", 0);
         _aiParams = (StatsSet) set.getObject("ai_params", StatsSet.EMPTY);
 
-        setAI(set.getString("ai", "DoorAI"));
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setAI(String ai) {
-        Class<DoorAI> classAI = null;
-//        try {
-            classAI = (Class<DoorAI>) Scripts.INSTANCE.getAI("ai."+ai);
-//        } catch (ClassNotFoundException e) {
-//            try {
-//                classAI = (Class<DoorAI>) Class.forName("l2trunk.scripts.ai.door." + ai);
-//            } catch (ClassNotFoundException e1) {
-//                e1.printStackTrace();
-//            }
-//        }
-
-        if (classAI == null)
-            LOG.error("Not found ai class for ai: " + ai + ". DoorId: " + _id);
-        else {
-            _classAI = classAI;
-            _constructorAI = (Constructor<DoorAI>) _classAI.getConstructors()[0];
-        }
-
-        if (_classAI.isAnnotationPresent(Deprecated.class))
-            LOG.error("Ai type: " + ai + ", is deprecated. DoorId: " + _id);
+        classAI =set.getString("ai", "DoorAI");
     }
 
     public CharacterAI getNewAI(DoorInstance door) {
-        try {
-            return _constructorAI.newInstance(door);
-        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-            LOG.error("Unable to create ai of doorId " + _id, e);
+        switch (classAI) {
+            case "DoorAI":
+                return new DoorAI(door);
+            case "SiegeDoor":
+                return new SiegeDoor(door);
+            case "ResidenceDoor":
+                return new ResidenceDoor(door);
+            case "SSQDoor":
+                return new SSQDoor(door);
+            default:
+                throw new IllegalArgumentException("no AI for door: " + classAI);
         }
 
-        return new DoorAI(door);
     }
 
     @Override

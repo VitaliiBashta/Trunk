@@ -1154,8 +1154,8 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      */
     public double getStatFunc(Stats stat) {
         for (FuncTemplate func : template.getAttachedFuncs())
-            if (func._stat == stat)
-                return func._value;
+            if (func.stat == stat)
+                return func.value;
         return 0.0;
     }
 

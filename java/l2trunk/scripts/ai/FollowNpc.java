@@ -20,7 +20,7 @@ public final class FollowNpc extends DefaultAI {
     private boolean _thinking = false;
     private ScheduledFuture<?> _followTask;
 
-    private FollowNpc(NpcInstance actor) {
+    public FollowNpc(NpcInstance actor) {
         super(actor);
     }
 

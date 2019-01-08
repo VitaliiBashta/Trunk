@@ -10,9 +10,6 @@ import l2trunk.gameserver.templates.mapregion.RestartArea;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Support for /loc command
- */
 public final class Loc implements IUserCommandHandler {
     private static final int COMMAND_ID = 0;
 

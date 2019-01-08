@@ -60,6 +60,22 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         return status;
     }
 
+    public static void checkAnswer(String chat, Player player) {
+        if (chat.equalsIgnoreCase(answer) && isQuestionStatus()) {
+            if (!playerList.contains(player))
+                playerList.add(player);
+            _log.info("Viktorina: player - " + player.getName() + " gave the correct answer. Was added to the list.");
+        }
+    }
+
+    private static boolean isQuestionStatus() {
+        return _questionStatus;
+    }
+
+    private void setQuestionStatus(boolean b) {
+        _questionStatus = b;
+    }
+
     private void preLoad() {
         if (Config.VIKTORINA_ENABLED)
             ThreadPoolManager.INSTANCE.schedule(this::Start, 5000);
@@ -116,33 +132,26 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
         answer = st.nextToken();
     }
 
-    public static void checkAnswer(String chat, Player player) {
-        if (chat.equalsIgnoreCase(answer) && isQuestionStatus()) {
-            if (!playerList.contains(player))
-                playerList.add(player);
-            _log.info("Viktorina: player - " + player.getName() + " gave the correct answer. Was added to the list.");
-        }
-    }
-
     private void announseViktorina(String text) {
         Say2 cs = new Say2(0, ChatType.TELL, "quiz", text);
-        GameObjectsStorage.getAllPlayers().stream()
+        GameObjectsStorage.getAllPlayersStream()
                 .filter(player -> ("on".equals(player.getVar("viktorina"))))
                 .forEach(player -> player.sendPacket(cs));
     }
 
     private void checkPlayers() {
         Say2 cs = new Say2(0, ChatType.TELL, "Quiz ", " to refuse to participate in a quiz type .voff, a reference type .vhelp");
-        for (Player player : GameObjectsStorage.getAllPlayers())
-            if (player.getVar("viktorina") == null) {
-                player.sendPacket(cs);
-                player.setVar("viktorina", "on", -1);
-            }
+        GameObjectsStorage.getAllPlayersStream()
+                .filter(p -> p.getVar("viktorina") == null)
+                .forEach(p -> {
+                    p.sendPacket(cs);
+                    p.setVar("viktorina", "on", -1);
+                });
     }
 
     private void viktorinaSay(Player player, String text) {
         Say2 cs = new Say2(0, ChatType.TELL, "Quiz", text);
-        if (player.getVar("viktorina") == "on")
+        if (player.getVar("viktorina").equals("on"))
             player.sendPacket(cs);
     }
 
@@ -365,14 +374,6 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
 
         top.append("</body></html>");
         show(top.toString(), player);
-    }
-
-    private static boolean isQuestionStatus() {
-        return _questionStatus;
-    }
-
-    private void setQuestionStatus(boolean b) {
-        _questionStatus = b;
     }
 
     @Override

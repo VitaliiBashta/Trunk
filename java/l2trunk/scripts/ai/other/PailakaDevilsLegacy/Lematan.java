@@ -11,7 +11,7 @@ import java.util.List;
 
 public final class Lematan extends Fighter {
     private static final int LEMATAN_FOLLOWER = 18634;
-    private static final List<Location> _position = Arrays.asList(
+    private static final List<Location> _position = List.of(
             new Location(84840, -208488, -3336, 0),
             new Location(85160, -208488, -3336, 0),
             new Location(84696, -208744, -3336, 0),
@@ -20,7 +20,7 @@ public final class Lematan extends Fighter {
             new Location(85160, -209000, -3336, 0));
     private boolean _teleported = false;
 
-    private Lematan(NpcInstance actor) {
+    public Lematan(NpcInstance actor) {
         super(actor);
     }
 

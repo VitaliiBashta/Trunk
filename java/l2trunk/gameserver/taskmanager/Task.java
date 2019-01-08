@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledFuture;
 public abstract class Task {
     public abstract void initializate();
 
-    public ScheduledFuture<?> launchSpecial(ExecutedTask instance) {
+    ScheduledFuture<?> launchSpecial(ExecutedTask instance) {
         return null;
     }
 
@@ -15,6 +15,6 @@ public abstract class Task {
 
     public abstract void onTimeElapsed(ExecutedTask task);
 
-    public void onDestroy() {
+    void onDestroy() {
     }
 }

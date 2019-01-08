@@ -102,11 +102,11 @@ public final class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_para_everybody:
             case admin_para:
-                ArrayList<Creature> targets = new ArrayList<>();
+                List<Creature> targets = new ArrayList<>();
                 int minutes = -1;
                 String reason = null;
                 if (command == Commands.admin_para_everybody) {
-                    GameObjectsStorage.getAllPlayers().stream()
+                    GameObjectsStorage.getAllPlayersStream()
                             .filter(Player::isOnline)
                             .filter(p -> p.getNetConnection() != null)
                             .filter(p -> !p.isGM())
@@ -149,13 +149,13 @@ public final class AdminEffects implements IAdminCommandHandler {
             case admin_unpara:
                 targets = new ArrayList<>();
                 if (command == Commands.admin_unpara_everybody) {
-                    GameObjectsStorage.getAllPlayers().stream()
+                    GameObjectsStorage.getAllPlayersStream()
                             .filter(Player::isOnline)
                             .filter(p -> p.getNetConnection() != null)
                             .filter(p -> !p.isGM())
                             .forEach(targets::add);
                 } else if (wordList.length > 1) {
-                    int radius = Integer.parseInt(wordList[1]);
+                    int radius = toInt(wordList[1]);
                     targets.addAll(World.getAroundPlayables(activeChar, radius, 500));
                 } else if (target == null || !target.isCreature()) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);

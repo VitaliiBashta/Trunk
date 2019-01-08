@@ -72,7 +72,7 @@ public final class TakeCastle extends Skill {
                 if (siegeEvent != null) {
                     IStaticPacket lostPacket = siegeEvent.getResidence().getOwner() != null ? new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + siegeEvent.getResidence().getOwner().getName() + " has lost " + siegeEvent.getResidence().getName() + " Castle") : null;
                     IStaticPacket winPacket = new Say2(activeChar.getObjectId(), ChatType.CRITICAL_ANNOUNCE, siegeEvent.getResidence().getName() + " Castle", "Clan " + player.getClan().getName() + " has taken " + siegeEvent.getResidence().getName() + " Castle");
-                    GameObjectsStorage.getAllPlayers().forEach(pl -> {
+                    GameObjectsStorage.getAllPlayersStream().forEach(pl -> {
                         if (lostPacket != null)
                             pl.sendPacket(lostPacket);
                         pl.sendPacket(winPacket);

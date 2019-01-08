@@ -10,7 +10,7 @@ import java.util.Map;
 
 public enum UserCommandHandler {
     INSTANCE;
-    private static final Logger LOG = LoggerFactory.getLogger(UserCommandHandler.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass().getName());
     private final Map<Integer, IUserCommandHandler> datatable = new HashMap<>();
 
     UserCommandHandler() {
@@ -36,15 +36,11 @@ public enum UserCommandHandler {
         return datatable.get(userCommand);
     }
 
-    public int size() {
-        return datatable.size();
-    }
-
     public void clear() {
         datatable.clear();
     }
 
     public void log() {
-        LOG.info(String.format("loaded %d %s(s) count.", size(), getClass().getSimpleName()));
+        LOG.info("loaded " + datatable.size() + "user commands");
     }
 }

@@ -107,7 +107,7 @@ public final class Dominion extends Residence {
             newLordObjectId = clan.getLeaderId();
 
             SystemMessage2 message = new SystemMessage2(SystemMsg.CLAN_LORD_C2_WHO_LEADS_CLAN_S1_HAS_BEEN_DECLARED_THE_LORD_OF_THE_S3_TERRITORY).addName(clan.getLeader().getPlayer()).addString(clan.getName()).addResidenceName(getCastle());
-            GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(message));
+            GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(message));
         }
 
         _lordObjectId = newLordObjectId;

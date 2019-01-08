@@ -112,7 +112,7 @@ public enum PollEngine {
         ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> {
             if (getActivePoll() != null) {
                 Say2 say = new Say2(0, ChatType.ANNOUNCEMENT, "", "You didn't vote on the poll yet! Write .poll to vote!");
-                GameObjectsStorage.getAllPlayers().stream()
+                GameObjectsStorage.getAllPlayersStream()
                         .filter(Player::isOnline)
                         .forEach(p -> p.sendPacket(say));
             }

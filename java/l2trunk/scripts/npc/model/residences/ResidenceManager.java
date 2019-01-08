@@ -29,7 +29,7 @@ public abstract class ResidenceManager extends MerchantInstance {
     protected String _mainDialog;
     protected String _failDialog;
 
-    protected ResidenceManager(int objectId, NpcTemplate template) {
+    public ResidenceManager(int objectId, NpcTemplate template) {
         super(objectId, template);
 
         setDialogs();
