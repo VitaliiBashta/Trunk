@@ -7,10 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class _734_PierceThroughAShield extends Dominion_KillSpecialUnitQuest {
-    public _734_PierceThroughAShield() {
-        super();
-    }
-
     @Override
     protected NpcString startNpcString() {
         return NpcString.DEFEAT_S1_ENEMY_KNIGHTS;
@@ -38,7 +34,7 @@ public final class _734_PierceThroughAShield extends Dominion_KillSpecialUnitQue
 
     @Override
     protected List<ClassId> getTargetClassIds() {
-        return Arrays.asList(
+        return List.of(
                 ClassId.darkAvenger,
                 ClassId.hellKnight,
                 ClassId.paladin,

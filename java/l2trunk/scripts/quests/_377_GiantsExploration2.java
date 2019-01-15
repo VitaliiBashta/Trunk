@@ -4,11 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public final class _377_GiantsExploration2 extends Quest implements ScriptFile {
+public final class _377_GiantsExploration2 extends Quest {
     // Titan Ancient Books drop rate in %
     private static final int DROP_RATE = 20;
 
@@ -51,6 +50,7 @@ public final class _377_GiantsExploration2 extends Quest implements ScriptFile {
             22667,            // Barif's Pet L81
             22668,            // Gamlin L81
             22669);            // Leogul L82
+
     public _377_GiantsExploration2() {
         super(true);
         addStartNpc(HR_SOBLING);

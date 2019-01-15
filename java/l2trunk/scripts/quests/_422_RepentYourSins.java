@@ -9,7 +9,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.PetDataTable;
 
-public class _422_RepentYourSins extends Quest implements ScriptFile {
+public final class _422_RepentYourSins extends Quest {
     // Items
     private final static int SCAVENGER_WERERAT_SKULL = 4326;
     private final static int TUREK_WARHOUND_TAIL = 4327;
@@ -51,18 +51,6 @@ public class _422_RepentYourSins extends Quest implements ScriptFile {
         if (pet.getNpcId() != Sin_Eater)
             return 0;
         return pet.getLevel();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     public _422_RepentYourSins() {

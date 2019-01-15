@@ -5,8 +5,6 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-import java.util.List;
-
 public final class JiniaGuild extends Fighter {
     public JiniaGuild(NpcInstance actor) {
         super(actor);
@@ -17,12 +15,10 @@ public final class JiniaGuild extends Fighter {
         NpcInstance actor = getActor();
         if (actor.isDead())
             return false;
-
-        List<NpcInstance> around = actor.getAroundNpc(4000, 300);
-        if (around != null && !around.isEmpty())
-            for (NpcInstance npc : around)
-                if (npc.getNpcId() == 29179 || npc.getNpcId() == 29180)
-                    actor.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, npc, 3000);
+        actor.getAroundNpc(4000, 300)
+                .filter(npc -> npc.getNpcId() == 29179 || npc.getNpcId() == 29180)
+                .forEach(npc ->
+                        actor.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, npc, 3000));
         return true;
     }
 

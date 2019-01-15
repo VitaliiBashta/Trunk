@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _187_NikolasHeart extends Quest implements ScriptFile {
+public final class _187_NikolasHeart extends Quest {
     private static final int Kusto = 30512;
     private static final int Lorain = 30673;
     private static final int Nikola = 30621;
 
     private static final int Certificate = 10362;
     private static final int Metal = 10368;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _187_NikolasHeart() {
         super(false);

@@ -6,19 +6,17 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public final class _10294_SevenSignsMonasteryofSilence extends Quest implements ScriptFile {
+public final class _10294_SevenSignsMonasteryofSilence extends Quest {
     private static final int Elcardia = 32784;
     private static final int ErisEvilThoughts = 32792;
     private static final int ElcardiaInzone1 = 32787;
     private static final int RelicGuard = 32803;
-    private static final List<Integer> RelicWatcher = ArrayUtils.createAscendingList(32804, 32807);
+    private static final List<Integer> RelicWatcher = List.of(32804,32805,32806, 32807);
     private static final int YellowRelicWatcher = RelicWatcher.get(0);
     private static final int GreenRelicWatcher = RelicWatcher.get(1);
     private static final int BlueRelicWatcher = RelicWatcher.get(2);
@@ -33,20 +31,20 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest implements 
     // reading desks
     private static final List<Integer> ReadingDesk = ArrayUtils.createAscendingList(32821, 32836);
 
-    private static final List<Integer> YellowRoomDesks = ReadingDesk.subList(0,4);
+    private static final List<Integer> YellowRoomDesks = ReadingDesk.subList(0, 4);
     private static final int YellowTrueReadingDesk = YellowRoomDesks.get(2);
 
-    private static final List<Integer> GreenRoomDesks = Arrays.asList(
+    private static final List<Integer> GreenRoomDesks = List.of(
             ReadingDesk.get(4), ReadingDesk.get(5),
             ReadingDesk.get(6), ReadingDesk.get(7));
     private static final int GreenTrueReadingDesk = GreenRoomDesks.get(3);
 
-    private static final List<Integer> BlueRoomDesks = Arrays.asList(
+    private static final List<Integer> BlueRoomDesks = List.of(
             ReadingDesk.get(8), ReadingDesk.get(9),
             ReadingDesk.get(10), ReadingDesk.get(11));
     private static final int BlueTrueReadingDesk = BlueRoomDesks.get(1);
 
-    private static final List<Integer> RedRoomDesks = Arrays.asList(ReadingDesk.get(12), ReadingDesk.get(13),
+    private static final List<Integer> RedRoomDesks = List.of(ReadingDesk.get(12), ReadingDesk.get(13),
             ReadingDesk.get(14), ReadingDesk.get(15));
     private static final int RedTrueReadingDesk = RedRoomDesks.get(0);
 
@@ -253,7 +251,7 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest implements 
     }
 
     private void teleportElcardia(Player player) {
-        player.getReflection().getNpcs().stream()
+        player.getReflection().getNpcs()
                 .filter(n -> n.getNpcId() == ElcardiaInzone1)
                 .forEach(n -> n.teleToLocation(Location.findPointToStay(player, 100)));
     }
@@ -266,17 +264,5 @@ public final class _10294_SevenSignsMonasteryofSilence extends Quest implements 
         if (checkComplete(st))
             st.getPlayer().showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_HOLY_BURIAL_GROUND_CLOSING);
 
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

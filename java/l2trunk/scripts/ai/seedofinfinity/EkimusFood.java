@@ -54,7 +54,7 @@ public final class EkimusFood extends DefaultAI {
 
     @Override
     public boolean thinkActive() {
-        if (!_def_think)
+        if (!defThink)
             startMoveTask();
         return true;
     }

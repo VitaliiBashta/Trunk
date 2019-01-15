@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _366_SilverHairedShaman extends Quest implements ScriptFile {
+public final class _366_SilverHairedShaman extends Quest {
     //NPC
     private static final int DIETER = 30111;
 
@@ -20,18 +20,6 @@ public class _366_SilverHairedShaman extends Quest implements ScriptFile {
 
     //QUEST ITEMS
     private static final int SAIRONS_SILVER_HAIR = 5874;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _366_SilverHairedShaman() {
         super(false);

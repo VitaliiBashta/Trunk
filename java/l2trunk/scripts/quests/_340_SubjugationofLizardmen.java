@@ -5,12 +5,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Drop;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class _340_SubjugationofLizardmen extends Quest implements ScriptFile {
+public final class _340_SubjugationofLizardmen extends Quest {
     // NPCs
     private static final int WEITSZ = 30385;
     private static final int LEVIAN = 30037;
@@ -176,17 +175,5 @@ public class _340_SubjugationofLizardmen extends Quest implements ScriptFile {
         }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

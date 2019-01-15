@@ -5,11 +5,10 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class SSQLilithMinion extends Fighter {
-    private final List<Integer> enemies = Arrays.asList(32719, 32720, 32721);
+    private final List<Integer> enemies = List.of(32719, 32720, 32721);
 
     public SSQLilithMinion(NpcInstance actor) {
         super(actor);
@@ -26,7 +25,7 @@ public final class SSQLilithMinion extends Fighter {
     }
 
     private NpcInstance getEnemy() {
-        return getActor().getAroundNpc(1000, 300).stream()
+        return getActor().getAroundNpc(1000, 300)
                 .filter(npc -> enemies.contains(npc.getNpcId()))
                 .findFirst().orElse(null);
     }

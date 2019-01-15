@@ -4,13 +4,15 @@ import l2trunk.gameserver.data.xml.holder.EnchantItemHolder;
 import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.WarehouseInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.ChooseInventoryItem;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class EnchantScrolls extends ScriptItemHandler implements ScriptFile {
     private static final List<Integer> ITEM_IDS = List.of(
@@ -46,14 +48,11 @@ public final class EnchantScrolls extends ScriptItemHandler implements ScriptFil
             return false;
         }
 
-        final List<NpcInstance> wh = player.getAroundNpc(200, 200);
-
-        for (NpcInstance warehouse : wh) {
-            if (warehouse instanceof WarehouseInstance) {
-                player.sendMessage("You can't enchant near warehouse.");
-                return false;
-            }
-        }
+        if (player.getAroundNpc(200, 200)
+                .filter(n -> n instanceof WarehouseInstance)
+                .peek(n -> player.sendMessage("You can't enchant near warehouse."))
+                .findFirst().isPresent())
+            return false;
 
         player.setEnchantScroll(item);
         player.sendPacket(new ChooseInventoryItem(item.getItemId()));

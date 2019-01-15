@@ -27,10 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Community Board page containing Drop Calculator
@@ -238,9 +235,10 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
                 if (!canTeleToMonster(player, monsterId)) {
                     return;
                 }
-                List<NpcInstance> aliveInstance = GameObjectsStorage.getAllByNpcId(monsterId, true);
-                if (!aliveInstance.isEmpty())
-                    player.teleToLocation(aliveInstance.get(0).getLoc());
+                Optional<NpcInstance> aliveInstance = GameObjectsStorage.getAllByNpcId(monsterId, true)
+                        .findFirst();
+                if (aliveInstance.isPresent())
+                    player.teleToLocation(aliveInstance.get().getLoc());
                 else
                     player.sendMessage("Monster isn't alive!");
                 break;
@@ -323,12 +321,8 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     }
 
     @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_friendlist_", "_dropCalc", "_dropItemsByName", "_dropMonstersByItem", "_dropMonstersByName", "_dropMonsterDetailsByItem", "_dropMonsterDetailsByName");
+        return List.of("_friendlist_", "_dropCalc", "_dropItemsByName", "_dropMonstersByItem", "_dropMonstersByName", "_dropMonsterDetailsByItem", "_dropMonsterDetailsByName");
     }
 
     @Override

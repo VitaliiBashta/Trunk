@@ -11,7 +11,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.TimeUtils;
 
-public final class _504_CompetitionForTheBanditStronghold extends Quest implements ScriptFile {
+public final class _504_CompetitionForTheBanditStronghold extends Quest {
     // NPC
     private static final int MESSENGER = 35437;
     // MOBS
@@ -96,20 +96,5 @@ public final class _504_CompetitionForTheBanditStronghold extends Quest implemen
             st.playSound(SOUND_ITEMGET);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

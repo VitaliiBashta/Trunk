@@ -15,8 +15,8 @@ public enum ItemHandler {
         handler.getItemIds().forEach(itemId -> {
             ItemTemplate template = ItemHolder.getTemplate(itemId);
              if (template.getHandler() != IItemHandler.NULL)
-                LOG.warn("Duplicate handler for item: " + itemId + "(" + template.getHandler().getClass().getSimpleName()
-                        + "," + handler.getClass().getSimpleName() + ")");
+                LOG.warn("Duplicate handler for item: " + itemId + "(" + template.getHandler().getClass()
+                        + "," + handler.getClass() + ")");
             else
                 template.setHandler(handler);
         });

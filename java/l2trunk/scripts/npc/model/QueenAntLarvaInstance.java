@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class QueenAntLarvaInstance extends MonsterInstance {
+public final class QueenAntLarvaInstance extends MonsterInstance {
     public QueenAntLarvaInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

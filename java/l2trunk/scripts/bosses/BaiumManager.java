@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
@@ -38,8 +39,8 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private static final Logger LOG = LoggerFactory.getLogger(BaiumManager.class);
     private static final List<NpcInstance> MONSTERS = new ArrayList<>();
     private static final Map<Integer, SimpleSpawner> _monsterSpawn = new ConcurrentHashMap<>();
-    private static final List<NpcInstance> _angels = new ArrayList<>();
-    private static final List<SimpleSpawner> _angelSpawns = new ArrayList<>();
+    private static List<NpcInstance> angels;
+    private static final List<SimpleSpawner> ANGEL_SPAWNS = new ArrayList<>();
     private final static int ARCHANGEL = 29021;
     private final static int BAIUM = 29020;
     private final static int BAIUM_NPC = 29025;
@@ -64,7 +65,6 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     private static ScheduledFuture<?> _onAnnihilatedTask = null;
     private static EpicBossState state;
     private static long lastAttackTime = 0;
-    private static NpcInstance _npcBaium;
     private static NpcInstance _teleportCube = null;
     private static SimpleSpawner _teleportCubeSpawn = null;
     private static Zone zone;
@@ -91,13 +91,13 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
 
     // Archangel ascension.
     private static void deleteArchangels() {
-        _angels.stream()
+        angels.stream()
                 .filter(angel -> angel.getSpawn() != null)
                 .forEach(angel -> {
                     angel.getSpawn().stopRespawn();
                     angel.deleteMe();
                 });
-        _angels.clear();
+        angels.clear();
     }
 
     public static Zone getZone() {
@@ -235,15 +235,14 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
     // do spawn Baium.
     public void spawnBaium(NpcInstance npcBaium, Player awakeBy) {
         Dying = false;
-        _npcBaium = npcBaium;
 
         // do spawn.
         SimpleSpawner baiumSpawn = _monsterSpawn.get(BAIUM);
-        baiumSpawn.setLoc(_npcBaium.getLoc());
+        baiumSpawn.setLoc(npcBaium.getLoc());
 
         // delete statue
-        _npcBaium.getSpawn().stopRespawn();
-        _npcBaium.deleteMe();
+        npcBaium.getSpawn().stopRespawn();
+        npcBaium.deleteMe();
 
         final BossInstance baium = (BossInstance) baiumSpawn.doSpawn(true);
         MONSTERS.add(baium);
@@ -314,7 +313,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
                 .setRespawnDelay(60);
 
         // Archangels
-        _angelSpawns.clear();
+        ANGEL_SPAWNS.clear();
 
         List<Location> angels = new ArrayList<>(ANGEL_LOCATION);
         Collections.shuffle(angels);
@@ -324,7 +323,7 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
                     .setLoc(angels.get(i))
                     .setAmount(1)
                     .setRespawnDelay(300000);
-            _angelSpawns.add(spawnDat);
+            ANGEL_SPAWNS.add(spawnDat);
         }
 
         LOG.info("BaiumManager: State of Baium is " + state.getState() + '.');
@@ -358,16 +357,15 @@ public final class BaiumManager extends Functions implements ScriptFile, OnDeath
         sleepBaium();
     }
 
-    @Override
-    public void onShutdown() {
-    }
 
     // call Arcangels
     public static class CallArchAngel extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (SimpleSpawner spawn : _angelSpawns)
-                _angels.add(spawn.doSpawn(true));
+            angels = ANGEL_SPAWNS.stream()
+            .map(spawn -> spawn.doSpawn(true))
+                .collect(Collectors.toList());
+
         }
     }
 

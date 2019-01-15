@@ -8,15 +8,17 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Jaradine extends DefaultAI {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             new Location(44964, 50568, -3056),
             new Location(44435, 50025, -3056),
             new Location(44399, 49078, -3056),
             new Location(45058, 48437, -3056),
             new Location(46132, 48724, -3056),
             new Location(46452, 49743, -3056),
-            new Location(45730, 50590, -3056)};
+            new Location(45730, 50590, -3056));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -37,7 +39,7 @@ public final class Jaradine extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -65,10 +67,10 @@ public final class Jaradine extends DefaultAI {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

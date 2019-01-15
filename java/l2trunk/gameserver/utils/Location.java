@@ -10,8 +10,10 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.templates.spawn.SpawnRange;
 import org.dom4j.Element;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public class Location extends Point3D implements SpawnRange {
     public int h;
@@ -24,9 +26,19 @@ public class Location extends Point3D implements SpawnRange {
         h = heading;
     }
 
+    public Location(String[] loc) {
+        if (loc.length < 3 )
+             throw new IllegalArgumentException("invalid coord for location " + Arrays.toString(loc));
+        this.x=toInt(loc[0]);
+        this.y=toInt(loc[1]);
+        this.z=toInt(loc[2]);
+        if (loc.length ==4)
+            this.h= toInt(loc[3]);
+    }
     public Location(int x, int y, int z) {
         this(x, y, z, 0);
     }
+
 
     public Location(GameObject obj) {
         this(obj.getX(), obj.getY(), obj.getZ(), obj.getHeading());
@@ -135,16 +147,8 @@ public class Location extends Point3D implements SpawnRange {
 
     /**
      * Найти стабильную точку в пределах радиуса от начальной
-     *
-     * @param x
-     * @param y
-     * @param z
-     * @param radiusmin
-     * @param radiusmax
-     * @param geoIndex
-     * @return
      */
-    public static Location findPointToStay(int x, int y, int z, int radiusmin, int radiusmax, int geoIndex) {
+    private static Location findPointToStay(int x, int y, int z, int radiusmin, int radiusmax, int geoIndex) {
         Location pos;
         int tempz;
         for (int i = 0; i < 100; i++) {
@@ -186,7 +190,7 @@ public class Location extends Point3D implements SpawnRange {
         if (radiusmax == 0 || radiusmax < radiusmin)
             return new Location(x, y, z, heading);
         int radius = Rnd.get(radiusmin, radiusmax);
-        double angle = Rnd.nextDouble() * 2 * Math.PI;
+        float angle = (float) (Rnd.nextFloat() * 2 * Math.PI);
         return new Location((int) (x + radius * Math.cos(angle)), (int) (y + radius * Math.sin(angle)), z, heading);
     }
 

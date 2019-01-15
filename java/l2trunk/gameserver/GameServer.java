@@ -19,7 +19,6 @@ import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.database.LoginDatabaseFactory;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.handler.admincommands.AdminCommandHandler;
-import l2trunk.gameserver.handler.items.ItemHandler;
 import l2trunk.gameserver.handler.usercommands.UserCommandHandler;
 import l2trunk.gameserver.handler.voicecommands.VoicedCommandHandler;
 import l2trunk.gameserver.hibenate.HibernateUtil;
@@ -55,18 +54,18 @@ import net.sf.ehcache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.nio.file.Files;
 import java.util.Date;
 
-public class GameServer {
+public final class GameServer {
     public static final int AUTH_SERVER_PROTOCOL = 2;
-    private static final Logger _log = LoggerFactory.getLogger(GameServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GameServer.class);
     public static Date server_started;
     private static GameServer _instance;
-    private final SelectorThread<GameClient> _selectorThreads[];
+    private final SelectorThread<GameClient>[] _selectorThreads;
     private final GameServerListenerList _listeners;
     private final int _serverStarted;
 
@@ -76,13 +75,13 @@ public class GameServer {
         _serverStarted = time();
         _listeners = new GameServerListenerList();
 
-        new File(Config.DATAPACK_ROOT + "/log/").mkdir();
+        Files.createDirectories(Config.DATAPACK_ROOT.resolve("log/"));
 
-        _log.info("=================================================");
-        _log.info("Copyright: ............... " + "L2Mythras.EU");
-        _log.info("Update: .................. " + update + " contact L2Mythras.eu Team");
-        _log.info("Chronicle: ............... " + "High Five Part 5");
-        _log.info("=================================================");
+        LOG.info("=================================================");
+        LOG.info("Copyright: ............... " + "L2Mythras.EU");
+        LOG.info("Update: .................. " + update + " contact L2Mythras.eu Team");
+        LOG.info("Chronicle: ............... " + "High Five Part 5");
+        LOG.info("=================================================");
 
         // Initialize config
         Config.load();
@@ -97,18 +96,18 @@ public class GameServer {
         DatabaseFactory.getInstance().getConnection().close();
         LoginDatabaseFactory.getInstance().getConnection().close();
         ThreadPoolManager.INSTANCE.init();
-        _log.info("=======[Loading Protection Configuration]========");
+        LOG.info("=======[Loading Protection Configuration]========");
 
         IdFactory idFactory = IdFactory.getInstance();
         if (!idFactory.isInitialized()) {
-            _log.error("Could not read object IDs from DB. Please Check Your Data.", new Exception("Could not initialize the ID factory"));
+            LOG.error("Could not read object IDs from DB. Please Check Your Data.", new Exception("Could not initialize the ID factory"));
             throw new Exception("Could not initialize the ID factory");
         }
 
         CacheManager.getInstance();
 
 
-        _log.info("===============[Loading Scripts]==================");
+        LOG.info("===============[Loading Scripts]==================");
         Scripts.INSTANCE.load();
         BalancerConfig.LoadConfig();
         GeoEngine.load();
@@ -121,11 +120,7 @@ public class GameServer {
         ItemsDAO.INSTANCE.init();
         printSection("Clan Crests");
         CrestCache.init();
-        // Alexander - Load all the information for the Server Ranking
-        //_log.info("===================[Ranking]=======================");
-        //ServerRanking.INSTANCE();
-        //CharacterMonthlyRanking.INSTANCE();
-        _log.info("===============[Loading Images]==================");
+        LOG.info("===============[Loading Images]==================");
         ImagesCache.init();
         printSection("");
 //        CharacterDAO.INSTANCE.toString();
@@ -143,13 +138,13 @@ public class GameServer {
         printSection("Auctioneer");
         ItemAuctionManager.INSTANCE.init();
         NaiaTowerManager.init();
-        _log.info("===============[Adding handlers to scripts]==================");
+        LOG.info("===============[Adding handlers to scripts]==================");
         Scripts.INSTANCE.init();
         SpawnManager.INSTANCE.spawnAll();
         printSection("Boats");
         BoatHolder.getInstance().spawnAll();
         StaticObjectHolder.spawnAll();
-        _log.info("===============[Spawn Manager]==================");
+        LOG.info("===============[Spawn Manager]==================");
         RaidBossSpawnManager.INSTANCE.init();
         printSection("Dimensional Rift");
         DimensionalRiftManager.INSTANCE.init();
@@ -165,32 +160,32 @@ public class GameServer {
         SevenSigns.INSTANCE.updateFestivalScore();
         AutoSpawnManager.getInstance();
         SevenSigns.INSTANCE.spawnSevenSignsNPC();
-        _log.info("===================[Loading Olympiad System]=======================");
+        LOG.info("===================[Loading Olympiad System]=======================");
         if (Config.ENABLE_OLYMPIAD) {
             Olympiad.load();
             Hero.INSTANCE.log();
         }
-        _log.info("===================[Olympiad System Loaded]=======================");
+        LOG.info("===================[Olympiad System Loaded]=======================");
         PetitionManager.getInstance();
         CursedWeaponsManager.INSTANCE.log();
 //        ItemHandler.INSTANCE.toString();
-        _log.info("======================[Loading BALANCER]==========================");
+        LOG.info("======================[Loading BALANCER]==========================");
         ClassesStatsBalancerParser.getInstance();
-        _log.info("======================[Loading BALANCER]==========================");
+        LOG.info("======================[Loading BALANCER]==========================");
         printSection("Admin Commands");
         AdminCommandHandler.INSTANCE.log();
         printSection("Players Commands");
         UserCommandHandler.INSTANCE.log();
         VoicedCommandHandler.INSTANCE.log();
         TaskManager.INSTANCE.init();
-        _log.info("======================[Loading Castels & Clan Halls]==========================");
+        LOG.info("======================[Loading Castels & Clan Halls]==========================");
         ResidenceHolder.callInit();
         EventHolder.callInit();
         CastleManorManager.INSTANCE.init(); // schedule all manor related events
         printSection("");
         Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
         printSection("Auto Cleaner");
-        _log.info("IdFactory: Free ObjectID's remaining: " + IdFactory.getInstance().size());
+        LOG.info("IdFactory: Free ObjectID's remaining: " + IdFactory.getInstance().size());
         printSection("");
 //        CoupleManager.INSTANCE();
         if (Config.ALT_FISH_CHAMPIONSHIP_ENABLED) {
@@ -206,20 +201,20 @@ public class GameServer {
         BloodAltarManager.INSTANCE.init();
         AuctionManager.getInstance();
         if (Config.ALLOW_DROP_CALCULATOR) {
-            _log.info("Preparing Drop Calculator");
+            LOG.info("Preparing Drop Calculator");
             ItemHolder.getDroppableTemplates();
         }
         MiniGameScoreManager.INSTANCE.init();
 
         if (Config.BUFF_STORE_ENABLED) {
             printSection("Offline Buffers");
-            OfflineBuffersTable.getInstance().restoreOfflineBuffers();
+            OfflineBuffersTable.INSTANCE.restoreOfflineBuffers();
         }
         Shutdown.getInstance().schedule(Config.RESTART_AT_TIME, 2);
         printSection("");
-        _log.info(">>>>>>>>>> GameServer Started <<<<<<<<<");
-        _log.info("Maximum Numbers of Connected Players: " + Config.MAXIMUM_ONLINE_USERS);
-        _log.info("===============[Protection Database]==================");
+        LOG.info(">>>>>>>>>> GameServer Started <<<<<<<<<");
+        LOG.info("Maximum Numbers of Connected Players: " + Config.MAXIMUM_ONLINE_USERS);
+        LOG.info("===============[Protection Database]==================");
         CharacterDAO.checkCharactersToDelete();
         printSection("");
         GamePacketHandler gph = new GamePacketHandler();
@@ -232,7 +227,7 @@ public class GameServer {
                 _selectorThreads[i].openServerSocket(serverAddr, Config.PORTS_GAME.get(i));
                 _selectorThreads[i].start();
             } catch (IOException ioe) {
-                _log.error("Cannot bind address: " + serverAddr + ":" + Config.PORTS_GAME.get(i), ioe);
+                LOG.error("Cannot bind address: " + serverAddr + ":" + Config.PORTS_GAME.get(i), ioe);
             }
         }
         if (!Config.GAMEIPS.isEmpty()) // AdvIP support. server.ini ports are ignored and accepted only IPs and ports from advipsystem.ini
@@ -243,9 +238,9 @@ public class GameServer {
                     _selectorThreads[i] = new SelectorThread<>(Config.SELECTOR_CONFIG, gph, gph, gph, null);
                     _selectorThreads[i].openServerSocket(InetAddress.getByName(advip.channelAdress), advip.channelPort);
                     _selectorThreads[i++].start();
-                    _log.info("AdvIP: Channel " + advip.channelId + " is open on: " + advip.channelAdress + ":" + advip.channelPort);
+                    LOG.info("AdvIP: Channel " + advip.channelId + " is open on: " + advip.channelAdress + ":" + advip.channelPort);
                 } catch (IOException ioe) {
-                    _log.error("Cannot bind address: " + advip.channelAdress + ":" + advip.channelPort, ioe);
+                    LOG.error("Cannot bind address: " + advip.channelAdress + ":" + advip.channelPort, ioe);
                 }
             }
         }
@@ -260,7 +255,7 @@ public class GameServer {
 
         getListeners().onStart();
         if (!Config.IS_TELNET_ENABLED) {
-            _log.info("Telnet server is currently disabled.");
+            LOG.info("Telnet server is currently disabled.");
         }
 
         AuthServerCommunication.getInstance().start();
@@ -271,12 +266,13 @@ public class GameServer {
         if (s.isEmpty()) {
             s = "==============================================================================";
         } else {
-            s = "=[ " + s + " ]";
-            while (s.length() < 78) {
-                s = "-" + s;
+            StringBuilder sBuilder = new StringBuilder("=[ " + s + " ]");
+            while (sBuilder.length() < 78) {
+                sBuilder.insert(0, "-");
             }
+            s = sBuilder.toString();
         }
-        _log.info(s);
+        LOG.info(s);
     }
 
     public static GameServer getInstance() {
@@ -296,12 +292,12 @@ public class GameServer {
                     }
                     ss.close();
                     binded = true;
-                } catch (Exception e) {
-                    _log.warn("Port " + PORT_GAME + " is allready binded. Please free it and restart server.");
+                } catch (IOException e) {
+                    LOG.warn("Port " + PORT_GAME + " is allready binded. Please free it and restart server.");
                     binded = false;
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException e2) {
+                    } catch (InterruptedException ignored) {
                     }
                 }
             }
@@ -338,17 +334,15 @@ public class GameServer {
         return _listeners.remove(listener);
     }
 
-    public class GameServerListenerList extends ListenerList {
+    private class GameServerListenerList extends ListenerList {
         void onStart() {
-            getListeners().stream()
-                    .filter(listener -> listener instanceof OnStartListener)
+            getListeners().filter(listener -> listener instanceof OnStartListener)
                     .map(listener -> (OnStartListener) listener)
                     .forEach(OnStartListener::onStart);
         }
 
         public void onShutdown() {
-            getListeners().stream()
-                    .filter(listener -> listener instanceof OnShutdownListener)
+            getListeners().filter(listener -> listener instanceof OnShutdownListener)
                     .map(listener -> (OnShutdownListener) listener)
                     .forEach(OnShutdownListener::onShutdown);
         }

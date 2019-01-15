@@ -40,7 +40,7 @@ public class AirshipGuard1 extends Guard {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }

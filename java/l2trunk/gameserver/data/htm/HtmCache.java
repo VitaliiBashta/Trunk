@@ -1,6 +1,5 @@
 package l2trunk.gameserver.data.htm;
 
-import l2trunk.commons.crypt.CryptUtil;
 import l2trunk.commons.lang.FileUtils;
 import l2trunk.commons.lang.StringUtils;
 import l2trunk.gameserver.Config;
@@ -14,12 +13,8 @@ import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.DatabaseMetaData;
 import java.util.List;
 
 public enum HtmCache {
@@ -81,22 +76,6 @@ public enum HtmCache {
     }
 
 
-    private String getContent(Path file) throws IOException {
-        InputStream stream = CryptUtil.decryptOnDemand(new ByteArrayInputStream(FileUtils.readFileToString(file).getBytes()));
-        InputStream _stream = Files.newInputStream(file);
-        StringBuilder builder = new StringBuilder();
-        if ((byte) _stream.read() == 0x00) {
-            byte[] buffer = new byte[1024];
-            int num;
-            while ((num = stream.read(buffer)) >= 0) {
-                String tmp = new String(buffer);
-                builder.append(tmp, 0, num);
-            }
-            return builder.toString();
-        }
-        return FileUtils.readFileToString(file);
-    }
-
     private void putContent(Language lang, Path f, final String rootPath) {
         String content = FileUtils.readFileToString(f);
 
@@ -106,26 +85,23 @@ public enum HtmCache {
     }
 
     public String getNotNull(String fileName, Player player) {
-        Language lang = player == null ? Language.ENGLISH : player.getLanguage();
-
         if (player.isGM())
             Functions.sendDebugMessage(player, "HTML: " + fileName);
 
-        return getNotNull(fileName, lang);
+        return getNotNull(fileName);
     }
 
-    public String getNotNull(String fileName, Language lang) {
-        String cache = getCache(fileName, lang);
+    public String getNotNull(String fileName) {
+        String cache = getCache(fileName);
 
         if (StringUtils.isEmpty(cache))
-            cache = "Dialog not found: " + fileName + "; Lang: " + lang;
+            cache = "Dialog not found: " + fileName + "; Lang: " + Language.ENGLISH;
 
         return cache;
     }
 
-    public String getNullable(String fileName, Player player) {
-        Language lang = player == null ? Language.ENGLISH : player.getLanguage();
-        String cache = getCache(fileName, lang);
+    public String getNullable(String fileName) {
+        String cache = getCache(fileName);
 
         if (StringUtils.isEmpty(cache))
             return null;
@@ -133,26 +109,22 @@ public enum HtmCache {
         return cache;
     }
 
-    private String getCache(String file, Language lang) {
+    private String getCache(String file) {
         if (file == null)
             return null;
 
         final String fileLower = file.toLowerCase();
-        String cache = get(lang, fileLower);
+        String cache = get(fileLower);
 
         if (cache == null) {
             switch (Config.HTM_CACHE_MODE) {
                 case ENABLED:
                     break;
                 case LAZY:
-                    cache = loadLazy(lang, file);
-                    if (cache == null && lang != Language.ENGLISH)
-                        cache = loadLazy(Language.ENGLISH, file);
+                    cache = loadLazy(file);
                     break;
                 case DISABLED:
-                    cache = loadDisabled(lang, file);
-                    if (cache == null && lang != Language.ENGLISH)
-                        cache = loadDisabled(Language.ENGLISH, file);
+                    cache = loadDisabled(file);
                     break;
             }
         }
@@ -160,9 +132,9 @@ public enum HtmCache {
         return cache;
     }
 
-    private String loadDisabled(Language lang, String file) {
+    private String loadDisabled(String file) {
         String cache = null;
-        Path f = Config.DATAPACK_ROOT.resolve("data/html-" + lang.getShortName() + "/" + file);
+        Path f = Config.DATAPACK_ROOT.resolve("data/html-" + Language.ENGLISH.getShortName() + "/" + file);
         if (Files.exists(f)) {
             cache = FileUtils.readFileToString(f);
             cache = Strings.bbParse(cache);
@@ -170,20 +142,20 @@ public enum HtmCache {
         return cache;
     }
 
-    private String loadLazy(Language lang, String file) {
+    private String loadLazy(String file) {
         String cache = null;
-        Path f = Config.DATAPACK_ROOT.resolve("data/html-" + lang.getShortName() + "/" + file);
+        Path f = Config.DATAPACK_ROOT.resolve("data/html-" + Language.ENGLISH.getShortName() + "/" + file);
         if (Files.exists(f)) {
             cache = FileUtils.readFileToString(f);
             cache = Strings.bbParse(cache);
 
-            _cache[lang.ordinal()].put(new Element(file, cache));
+            _cache[Language.ENGLISH.ordinal()].put(new Element(file, cache));
         }
         return cache;
     }
 
-    private String get(Language lang, String f) {
-        Element element = _cache[lang.ordinal()].get(f);
+    private String get(String f) {
+        Element element = _cache[Language.ENGLISH.ordinal()].get(f);
 
         if (element == null)
             element = _cache[Language.ENGLISH.ordinal()].get(f);

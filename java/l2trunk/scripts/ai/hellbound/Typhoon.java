@@ -58,7 +58,7 @@ public final class Typhoon extends Fighter {
                 current_point--;
 
             actor.getAggroList().addDamageHate(target, 0, 1);
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
         }
 
         return true;
@@ -70,7 +70,7 @@ public final class Typhoon extends Fighter {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             if (doTask())
                 clearTasks();
             return true;

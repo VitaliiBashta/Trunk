@@ -10,22 +10,19 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @autor 4ipolino
- * AI уборщицы
- * <br> - Собирает все предметы в радиусе MAX_RADIUS
- * <br> - убивает всех кто нанес удар (_firstTimeAttacked = true;) с выводом сообщения
- */
 public final class Scrubwoman extends DefaultAI {
     private static final int MAX_RADIUS = 900;
     private long _nextEat;
-    protected Location[] _points;
+
+    public Scrubwoman(NpcInstance actor) {
+        super(actor);
+        this.AI_TASK_ACTIVE_DELAY = 5000; //30 sek
+    }
 
     @Override
     public boolean isGlobalAI() {
         return true;
     }
-
 
     @Override
     public void onEvtArrived() {
@@ -34,18 +31,19 @@ public final class Scrubwoman extends DefaultAI {
         if (actor == null)
             return;
 
-        ItemInstance closestItem = null;
         if (_nextEat < System.currentTimeMillis()) {
-            for (GameObject obj : World.getAroundObjects(actor, MAX_RADIUS, 200))
-                if (obj.isItem() && ((ItemInstance) obj).getItemId() > 1)
-                    closestItem = (ItemInstance) obj;
+            ItemInstance closestItem = World.getAroundObjects(actor, MAX_RADIUS, 200)
+                    .filter(GameObject::isItem)
+                    .map(obj -> (ItemInstance) obj)
+                    .filter(i -> i.getItemId() > 1)
+                    .findFirst().orElse(null);
 
             if (closestItem != null) {
                 closestItem.deleteMe();
                 Functions.npcSay(actor, "What a mess! Already throw things! Neither shame nor conscience!");
 
                 if (getFirstSpawned(actor)) {
-                    NpcInstance npc = NpcHolder.getTemplate(getCurrActor(actor)).getNewInstance();
+                    NpcInstance npc = NpcHolder.getTemplate(getCurrActor()).getNewInstance();
                     npc.setLevel(actor.getLevel());
                     npc.setSpawnedLoc(actor.getLoc());
                     npc.setReflection(actor.getReflection());
@@ -54,23 +52,17 @@ public final class Scrubwoman extends DefaultAI {
                     actor.doDie(actor);
                     actor.deleteMe();
                 }
-                _nextEat = System.currentTimeMillis() +  1000;
+                _nextEat = System.currentTimeMillis() + 1000;
             }
 
         }
     }
 
-
-    private int getCurrActor(NpcInstance npc) {
+    private int getCurrActor() {
         if (Rnd.chance(90))
             return 18583;
         return 18583;
 
-    }
-
-    public Scrubwoman(NpcInstance actor) {
-        super(actor);
-        this.AI_TASK_ACTIVE_DELAY = 5000; //30 sek
     }
 
     private boolean getFirstSpawned(NpcInstance actor) {
@@ -83,15 +75,12 @@ public final class Scrubwoman extends DefaultAI {
         if (actor == null || actor.isDead())
             return true;
         if (!actor.isMoving && _nextEat < System.currentTimeMillis()) {
-            ItemInstance closestItem = null;
-            for (GameObject obj : World.getAroundObjects(actor, MAX_RADIUS, 200))
-                if (obj.isItem() && ((ItemInstance) obj).getItemId() > 1)
-                    closestItem = (ItemInstance) obj;
-
-            if (closestItem != null)
-                actor.moveToLocation(closestItem.getLoc(), 0, true);
+            World.getAroundObjects(actor, MAX_RADIUS, 200)
+                    .filter(GameObject::isItem)
+                    .map(obj -> (ItemInstance) obj)
+                    .filter(i -> i.getItemId() > 1)
+                    .findFirst().ifPresent(closestItem -> actor.moveToLocation(closestItem.getLoc(), 0, true));
         }
-
         return false;
     }
 }

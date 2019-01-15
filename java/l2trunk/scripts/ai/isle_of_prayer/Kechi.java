@@ -131,7 +131,7 @@ public final class Kechi extends DefaultAI {
         addDesiredSkill(d_skill, target, distance, KechiDoubleCutter);
         addDesiredSkill(d_skill, target, distance, KechiAirBlade);
 
-        Skill r_skill = selectTopSkill(d_skill);
+        int r_skill = selectTopSkill(d_skill);
 
         return chooseTaskAndTargets(r_skill, target, distance);
     }

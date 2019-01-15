@@ -6,30 +6,16 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _106_ForgottenTruth extends Quest implements ScriptFile {
+public final class _106_ForgottenTruth extends Quest {
     private final int ONYX_TALISMAN1 = 984;
     private final int ONYX_TALISMAN2 = 985;
     private final int ANCIENT_SCROLL = 986;
     private final int ANCIENT_CLAY_TABLET = 987;
     private final int KARTAS_TRANSLATION = 988;
-    private final int ELDRITCH_DAGGER = 989;
-    private final int ELDRITCH_STAFF = 2373;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+    private static final int ELDRITCH_DAGGER = 989;
+    private static final int ELDRITCH_STAFF = 2373;
     public _106_ForgottenTruth() {
         super(false);
 

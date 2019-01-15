@@ -4,7 +4,6 @@ import l2trunk.gameserver.data.xml.holder.EventHolder;
 import l2trunk.gameserver.model.entity.events.EventType;
 import l2trunk.gameserver.model.entity.events.impl.DominionSiegeRunnerEvent;
 import l2trunk.gameserver.model.quest.Quest;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _732_ProtectTheReligiousAssociationLeader extends Quest {
     public _732_ProtectTheReligiousAssociationLeader() {

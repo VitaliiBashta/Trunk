@@ -33,6 +33,6 @@ public final class Orfen_RibaIren extends Fighter {
             heal_chance = attacked_member.getNpcId() == Orfen_id ? 90 : 10;
 
         if (Rnd.chance(heal_chance) && canUseSkill(_healSkills.get(0), attacked_member, -1))
-            addTaskAttack(attacked_member, _healSkills.get(0));
+            addTaskAttack(attacked_member, _healSkills.get(0).getId(), _healSkills.get(0).getLevel());
     }
 }

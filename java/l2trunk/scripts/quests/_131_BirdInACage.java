@@ -8,28 +8,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author Diamond changed Magistr & KilRoy
- */
-public class _131_BirdInACage extends Quest implements ScriptFile {
+public final class _131_BirdInACage extends Quest {
     // NPC's
     private static final int KANIS = 32264;
     private static final int PARME = 32271;
     // ITEMS
     private static final int KANIS_ECHO_CRY = 9783;
     private static final int PARMES_LETTER = 9784;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _131_BirdInACage() {
         super(false);

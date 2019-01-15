@@ -4,53 +4,17 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _643_RiseAndFallOfTheElrokiTribe extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _643_RiseAndFallOfTheElrokiTribe extends Quest {
     private static final int DROP_CHANCE = 75;
     private static final int BONES_OF_A_PLAINS_DINOSAUR = 8776;
 
-    private static final int[] PLAIN_DINOSAURS = {
-            22208,
-            22209,
-            22210,
-            22211,
-            22212,
-            22213,
-            22221,
-            22222,
-            22226,
-            22227,
-            22742,
-            22743,
-            22744,
-            22745
-    };
-    private static final int[] REWARDS = {
-            8712,
-            8713,
-            8714,
-            8715,
-            8716,
-            8717,
-            8718,
-            8719,
-            8720,
-            8721,
-            8722
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final List<Integer> PLAIN_DINOSAURS = List.of(
+            22208, 22209, 22210, 22211, 22212, 22213, 22221, 22222, 22226, 22227, 22742, 22743, 22744, 22745);
+    private static final List<Integer> REWARDS = List.of(
+            8712, 8713, 8714, 8715, 8716, 8717, 8718, 8719, 8720, 8721, 8722);
 
     public _643_RiseAndFallOfTheElrokiTribe() {
         super(true);
@@ -75,7 +39,7 @@ public class _643_RiseAndFallOfTheElrokiTribe extends Quest implements ScriptFil
         } else if (event.equalsIgnoreCase("shaman_caracawe_q0643_06.htm")) {
             if (count >= 300) {
                 st.takeItems(BONES_OF_A_PLAINS_DINOSAUR, 300);
-                st.giveItems(REWARDS[Rnd.get(REWARDS.length)], 5, false);
+                st.giveItems(Rnd.get(REWARDS), 5, false);
             } else
                 htmltext = "shaman_caracawe_q0643_05.htm";
         } else if (event.equalsIgnoreCase("None"))

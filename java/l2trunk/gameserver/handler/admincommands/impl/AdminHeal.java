@@ -7,6 +7,8 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class AdminHeal implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
@@ -15,13 +17,11 @@ public final class AdminHeal implements IAdminCommandHandler {
         if (!activeChar.getPlayerAccess().Heal)
             return false;
 
-        switch (command) {
-            case admin_heal:
-                if (wordList.length == 1)
-                    handleRes(activeChar);
-                else
-                    handleRes(activeChar, wordList[1]);
-                break;
+        if (command == Commands.admin_heal) {
+            if (wordList.length == 1)
+                handleRes(activeChar);
+            else
+                handleRes(activeChar, wordList[1]);
         }
 
         return true;
@@ -45,12 +45,11 @@ public final class AdminHeal implements IAdminCommandHandler {
             if (plyr != null)
                 obj = plyr;
             else {
-                int radius = Math.max(Integer.parseInt(player), 100);
-                for (Creature character : activeChar.getAroundCharacters(radius, 200)) {
-                    character.setFullHpMp();
-                    if (character.isPlayer())
-                        character.setCurrentCp(character.getMaxCp());
-                }
+                int radius = Math.max(toInt(player), 100);
+                activeChar.getAroundCharacters(radius, 200)
+                        .peek(Creature::setFullHpMp)
+                        .filter(GameObject::isPlayer)
+                        .forEach(c -> c.setCurrentCp(c.getMaxCp()));
                 activeChar.sendMessage("Healed within " + radius + " unit radius.");
                 return;
             }

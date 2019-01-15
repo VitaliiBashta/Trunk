@@ -382,7 +382,7 @@ public final class EnterWorld extends L2GameClientPacket {
 
         if (first) {
             if (Config.BUFF_STORE_ENABLED)
-                OfflineBuffersTable.getInstance().onLogin(activeChar);
+                OfflineBuffersTable.INSTANCE.onLogin(activeChar);
         }
 
         if (first) {

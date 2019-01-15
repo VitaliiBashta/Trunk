@@ -28,7 +28,7 @@ public class BlacksmithInstance extends NpcInstance {
         } else {
             player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel() - getLevel()));
             if (!isInRange(player, INTERACTION_DISTANCE)) {
-                player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
+                player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
                 player.sendActionFailed();
             } else {
                 if (CastleManorManager.INSTANCE.isDisabled()) {

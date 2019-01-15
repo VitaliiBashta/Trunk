@@ -48,56 +48,6 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
             25544 //Tully
     };
 
-    @Override
-    public void onLoad() {
-        if (Config.COMMUNITYBOARD_ENABLED) {
-            _log.info("CommunityBoard: Bosses loaded.");
-            CommunityBoardManager.registerHandler(this);
-        }
-    }
-
-    @Override
-    public void onReload() {
-        if (Config.COMMUNITYBOARD_ENABLED)
-            CommunityBoardManager.removeHandler(this);
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    @Override
-    public List<String> getBypassCommands() {
-        return Arrays.asList("_bbsmemo", "_bbsbosslist", "_bbsboss");
-    }
-
-    @Override
-    public void onBypassCommand(Player player, String bypass) {
-        StringTokenizer st = new StringTokenizer(bypass, "_");
-        String cmd = st.nextToken();
-        player.setSessionVar("add_fav", null);
-
-        if ("bbsmemo".equals(cmd) || "bbsbosslist".equals(cmd))//_bbsbosslist_sort_page_search
-        {
-            int sort = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "1");
-            int page = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
-            String search = st.hasMoreTokens() ? st.nextToken().trim() : "";
-
-            sendBossListPage(player, getSortByIndex(sort), page, search);
-        } else if ("bbsboss".equals(cmd))//_bbsboss_sort_page_search_rbId_btn
-        {
-            int sort = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "3");
-            int page = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
-            String search = st.hasMoreTokens() ? st.nextToken().trim() : "";
-            int bossId = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "25044");
-            int buttonClick = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
-
-            manageButtons(player, buttonClick, bossId);
-
-            sendBossDetails(player, getSortByIndex(sort), page, search, bossId);
-        }
-    }
-
     /**
      * Showing list of bosses in Community Board with their Name, Level, Status and Show Details button
      *
@@ -327,15 +277,9 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
         return "<font color=\"b02e31\">" + Strhours + ":" + Strmins + ":" + Strsecs + "</font>";
     }
 
-    /**
-     * Getting alive and visible instance of the bossId
-     *
-     * @param bossId Id of the boss
-     * @return Instance of the boss
-     */
     private static NpcInstance getAliveBoss(int bossId) {
-        List<NpcInstance> instances = GameObjectsStorage.getAllByNpcId(bossId, true, true);
-        return instances.isEmpty() ? null : instances.get(0);
+        return GameObjectsStorage.getAllByNpcId(bossId, true, true)
+                .findFirst().orElse(null);
     }
 
     private static int getMinionsCount(NpcTemplate template) {
@@ -404,6 +348,84 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     }
 
     /**
+     * Getting SortType by index
+     *
+     * @param i index
+     * @return SortType
+     */
+    private static SortType getSortByIndex(int i) {
+        for (SortType type : SortType.values())
+            if (type.index == i)
+                return type;
+        return SortType.NAME_ASC;
+    }
+
+    @Override
+    public void onLoad() {
+        if (Config.COMMUNITYBOARD_ENABLED) {
+            _log.info("CommunityBoard: Bosses loaded.");
+            CommunityBoardManager.registerHandler(this);
+        }
+    }
+
+    @Override
+    public void onReload() {
+        if (Config.COMMUNITYBOARD_ENABLED)
+            CommunityBoardManager.removeHandler(this);
+    }
+
+    @Override
+    public List<String> getBypassCommands() {
+        return List.of("_bbsmemo", "_bbsbosslist", "_bbsboss");
+    }
+
+    @Override
+    public void onBypassCommand(Player player, String bypass) {
+        StringTokenizer st = new StringTokenizer(bypass, "_");
+        String cmd = st.nextToken();
+        player.setSessionVar("add_fav", null);
+
+        if ("bbsmemo".equals(cmd) || "bbsbosslist".equals(cmd))//_bbsbosslist_sort_page_search
+        {
+            int sort = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "1");
+            int page = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
+            String search = st.hasMoreTokens() ? st.nextToken().trim() : "";
+
+            sendBossListPage(player, getSortByIndex(sort), page, search);
+        } else if ("bbsboss".equals(cmd))//_bbsboss_sort_page_search_rbId_btn
+        {
+            int sort = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "3");
+            int page = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
+            String search = st.hasMoreTokens() ? st.nextToken().trim() : "";
+            int bossId = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "25044");
+            int buttonClick = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
+
+            manageButtons(player, buttonClick, bossId);
+
+            sendBossDetails(player, getSortByIndex(sort), page, search, bossId);
+        }
+    }
+
+    @Override
+    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
+    }
+
+    private enum SortType {
+        NAME_ASC(1),
+        NAME_DESC(-1),
+        LEVEL_ASC(2),
+        LEVEL_DESC(-2),
+        STATUS_ASC(3),
+        STATUS_DESC(-3);
+
+        final int index;
+
+        SortType(int index) {
+            this.index = index;
+        }
+    }
+
+    /**
      * Comparator of Bosses
      */
     private static class ValueComparator implements Comparator<Integer>, Serializable {
@@ -452,37 +474,5 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
             }
             return 0;
         }
-    }
-
-    private enum SortType {
-        NAME_ASC(1),
-        NAME_DESC(-1),
-        LEVEL_ASC(2),
-        LEVEL_DESC(-2),
-        STATUS_ASC(3),
-        STATUS_DESC(-3);
-
-        final int index;
-
-        SortType(int index) {
-            this.index = index;
-        }
-    }
-
-    /**
-     * Getting SortType by index
-     *
-     * @param i index
-     * @return SortType
-     */
-    private static SortType getSortByIndex(int i) {
-        for (SortType type : SortType.values())
-            if (type.index == i)
-                return type;
-        return SortType.NAME_ASC;
-    }
-
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
     }
 }

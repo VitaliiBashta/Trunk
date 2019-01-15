@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class _648_AnIceMerchantsDream extends Quest implements ScriptFile {
+public final class _648_AnIceMerchantsDream extends Quest {
     // NPCs
     private static final int Rafforty = 32020;
     private static final int Ice_Shelf = 32023;
@@ -150,17 +150,5 @@ public class _648_AnIceMerchantsDream extends Quest implements ScriptFile {
         }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

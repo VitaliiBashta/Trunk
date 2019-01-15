@@ -36,11 +36,8 @@ public final class KrateisCubeWatcherRed extends DefaultAI {
     @Override
     public void onEvtThink() {
         NpcInstance actor = getActor();
-        List<Creature> around = World.getAroundCharacters(actor, 600, 300);
-        if (around.isEmpty())
-            return;
 
-        around.stream()
+        World.getAroundCharacters(actor, 600, 300)
                 .filter(GameObject::isPlayer)
                 .filter(cha -> !cha.isDead())
                 .filter(cha -> Rnd.chance(SKILL_CHANCE))

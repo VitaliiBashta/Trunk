@@ -132,15 +132,13 @@ public enum GameTimeController {
 
     protected class GameTimeListenerList extends ListenerList {
         void onDay() {
-            getListeners().stream()
-                    .filter(l -> l instanceof OnDayNightChangeListener)
+            getListeners().filter(l -> l instanceof OnDayNightChangeListener)
                     .map(l -> (OnDayNightChangeListener) l)
                     .forEach(OnDayNightChangeListener::onDay);
         }
 
         void onNight() {
-            getListeners().stream()
-                    .filter(l -> l instanceof OnDayNightChangeListener)
+            getListeners().filter(l -> l instanceof OnDayNightChangeListener)
                     .map(l -> (OnDayNightChangeListener) l)
                     .forEach(OnDayNightChangeListener::onNight);
         }

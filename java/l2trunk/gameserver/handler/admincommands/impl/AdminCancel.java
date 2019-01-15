@@ -4,6 +4,8 @@ import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public class AdminCancel implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(@SuppressWarnings("rawtypes") Enum comm, String[] wordList, String fullString, Player activeChar) {
@@ -43,9 +45,9 @@ public class AdminCancel implements IAdminCommandHandler {
                 obj = plyr;
             else
                 try {
-                    int radius = Math.max(Integer.parseInt(targetName), 100);
-                    for (Creature character : activeChar.getAroundCharacters(radius, 200))
-                        character.getEffectList().stopAllEffects();
+                    int radius = Math.max(toInt(targetName), 100);
+                    activeChar.getAroundCharacters(radius, 200)
+                    .forEach(c ->c.getEffectList().stopAllEffects());
                     activeChar.sendMessage("Apply Cancel within " + radius + " unit radius.");
                     return;
                 } catch (NumberFormatException e) {

@@ -167,11 +167,10 @@ public final class QuizEvent {
                     for (Node child = root.getFirstChild(); child != null; child = child.getNextSibling()) {
 
                         if ("question".equalsIgnoreCase(child.getNodeName())) {
-                            int id, correct;
+                            int correct;
                             String ask, answer1, answer2, answer3;
                             NamedNodeMap attrs = child.getAttributes();
 
-                            id = Integer.parseInt(attrs.getNamedItem("id").getNodeValue());
                             correct = Integer.parseInt(attrs.getNamedItem("correct").getNodeValue());
                             ask = attrs.getNamedItem("ask").getNodeValue();
                             answer1 = attrs.getNamedItem("answer1").getNodeValue();

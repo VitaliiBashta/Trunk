@@ -4,14 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- * Начинается по двойному клику по итему 15537
- */
-
-public class _464_Oath extends Quest implements ScriptFile {
+public final class _464_Oath extends Quest {
     private static final int Sophia = 32596;
     private static final int Seresin = 30657;
     private static final int Holly = 30839;
@@ -168,17 +162,5 @@ public class _464_Oath extends Quest implements ScriptFile {
                 htmltext = "agnes_q464_01.htm";
         }
         return htmltext;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

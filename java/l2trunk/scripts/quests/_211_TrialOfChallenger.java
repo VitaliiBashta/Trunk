@@ -4,9 +4,9 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _211_TrialOfChallenger extends Quest implements ScriptFile {
+public final class _211_TrialOfChallenger extends Quest {
     // Npcs
     private static final int Filaur = 30535;
     private static final int Kash = 30644;
@@ -42,12 +42,6 @@ public class _211_TrialOfChallenger extends Quest implements ScriptFile {
 
     private NpcInstance Raldo_Spawn;
 
-    private void Spawn_Raldo(QuestState st) {
-        if (Raldo_Spawn != null)
-            Raldo_Spawn.deleteMe();
-        Raldo_Spawn = addSpawn(Raldo, st.getPlayer().getLoc(), 100, 300000);
-    }
-
     public _211_TrialOfChallenger() {
         super(false);
 
@@ -64,13 +58,17 @@ public class _211_TrialOfChallenger extends Quest implements ScriptFile {
         addKillId(Baraham);
         addKillId(SuccubusQueen);
 
-        addQuestItem(new int[]{
-                SCROLL_OF_SHYSLASSY_ID,
+        addQuestItem(SCROLL_OF_SHYSLASSY_ID,
                 LETTER_OF_KASH_ID,
                 WATCHERS_EYE1_ID,
                 BROKEN_KEY_ID,
-                WATCHERS_EYE2_ID
-        });
+                WATCHERS_EYE2_ID);
+    }
+
+    private void Spawn_Raldo(QuestState st) {
+        if (Raldo_Spawn != null)
+            Raldo_Spawn.deleteMe();
+        Raldo_Spawn = addSpawn(Raldo, st.getPlayer().getLoc(), 100, 300000);
     }
 
     @Override
@@ -166,49 +164,52 @@ public class _211_TrialOfChallenger extends Quest implements ScriptFile {
             st.takeItems(SCROLL_OF_SHYSLASSY_ID, 1);
             st.giveItems(LETTER_OF_KASH_ID, 1);
             st.setCond(3);
-        } else if (npcId == Kash && cond == 1 && st.getQuestItemsCount(LETTER_OF_KASH_ID) == 1)
-            htmltext = "kash_q0211_08.htm";
-        else if (npcId == Kash && cond >= 7)
-            htmltext = "kash_q0211_09.htm";
-        else if (npcId == Martien && cond == 3 && st.getQuestItemsCount(LETTER_OF_KASH_ID) == 1)
-            htmltext = "martian_q0211_01.htm";
-        else if (npcId == Martien && cond == 4 && st.getQuestItemsCount(WATCHERS_EYE1_ID) == 0)
-            htmltext = "martian_q0211_03.htm";
-        else if (npcId == Martien && cond == 5 && st.getQuestItemsCount(WATCHERS_EYE1_ID) > 0) {
-            htmltext = "martian_q0211_04.htm";
-            st.takeItems(WATCHERS_EYE1_ID, 1);
-            st.setCond(6);
-        } else if (npcId == Martien && cond == 6)
-            htmltext = "martian_q0211_05.htm";
-        else if (npcId == Martien && cond >= 7)
-            htmltext = "martian_q0211_06.htm";
-        else if (npcId == ChestOfShyslassys && cond == 2)
-            htmltext = "chest_of_shyslassys_q0211_01.htm";
-        else if (npcId == Raldo && cond == 7 && st.getQuestItemsCount(WATCHERS_EYE2_ID) > 0)
-            htmltext = "raldo_q0211_01.htm";
-        else if (npcId == Raldo && cond == 8)
-            htmltext = "raldo_q0211_06a.htm";
-        else if (npcId == Raldo && cond == 10) {
-            htmltext = "raldo_q0211_07.htm";
-            st.takeItems(BROKEN_KEY_ID, -1);
-            st.giveItems(MARK_OF_CHALLENGER_ID, 1);
-            if (!st.getPlayer().getVarB("prof2.1")) {
-                st.addExpAndSp(RewardExp, RewardSP);
-                st.giveItems(ADENA_ID, RewardAdena);
-                st.getPlayer().setVar("prof2.1", "1", -1);
+        } else {
+            if (npcId == Kash && cond == 1) {
+                st.getQuestItemsCount(LETTER_OF_KASH_ID);
             }
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
-        } else if (npcId == 30535 && cond == 8)
-            if (st.getPlayer().getLevel() >= 36) {
-                htmltext = "elder_filaur_q0211_01.htm";
-                st.addRadar(176560, -184969, -3729);
-                st.setCond(9);
-            } else
-                htmltext = "elder_filaur_q0211_03.htm";
-        else if (npcId == 30535 && cond == 9) {
-            htmltext = "elder_filaur_q0211_02.htm";
-            st.addRadar(176560, -184969, -3729);
+            if (npcId == Kash && cond >= 7)
+                htmltext = "kash_q0211_09.htm";
+            else if (npcId == Martien && cond == 3 && st.getQuestItemsCount(LETTER_OF_KASH_ID) == 1)
+                htmltext = "martian_q0211_01.htm";
+            else if (npcId == Martien && cond == 4 && st.getQuestItemsCount(WATCHERS_EYE1_ID) == 0)
+                htmltext = "martian_q0211_03.htm";
+            else if (npcId == Martien && cond == 5 && st.getQuestItemsCount(WATCHERS_EYE1_ID) > 0) {
+                htmltext = "martian_q0211_04.htm";
+                st.takeItems(WATCHERS_EYE1_ID, 1);
+                st.setCond(6);
+            } else if (npcId == Martien && cond == 6)
+                htmltext = "martian_q0211_05.htm";
+            else if (npcId == Martien && cond >= 7)
+                htmltext = "martian_q0211_06.htm";
+            else if (npcId == ChestOfShyslassys && cond == 2)
+                htmltext = "chest_of_shyslassys_q0211_01.htm";
+            else if (npcId == Raldo && cond == 7 && st.getQuestItemsCount(WATCHERS_EYE2_ID) > 0)
+                htmltext = "raldo_q0211_01.htm";
+            else if (npcId == Raldo && cond == 8)
+                htmltext = "raldo_q0211_06a.htm";
+            else if (npcId == Raldo && cond == 10) {
+                htmltext = "raldo_q0211_07.htm";
+                st.takeItems(BROKEN_KEY_ID, -1);
+                st.giveItems(MARK_OF_CHALLENGER_ID, 1);
+                if (!st.getPlayer().getVarB("prof2.1")) {
+                    st.addExpAndSp(RewardExp, RewardSP);
+                    st.giveItems(ADENA_ID, RewardAdena);
+                    st.getPlayer().setVar("prof2.1", "1", -1);
+                }
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(false);
+            } else if (npcId == 30535 && cond == 8)
+                if (st.getPlayer().getLevel() >= 36) {
+                    htmltext = "elder_filaur_q0211_01.htm";
+                    st.addRadar(new Location(176560, -184969, -3729));
+                    st.setCond(9);
+                } else
+                    htmltext = "elder_filaur_q0211_03.htm";
+            else if (npcId == 30535 && cond == 9) {
+                htmltext = "elder_filaur_q0211_02.htm";
+                st.addRadar(new Location(176560, -184969, -3729));
+            }
         }
         return htmltext;
     }
@@ -238,17 +239,5 @@ public class _211_TrialOfChallenger extends Quest implements ScriptFile {
             Spawn_Raldo(st);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

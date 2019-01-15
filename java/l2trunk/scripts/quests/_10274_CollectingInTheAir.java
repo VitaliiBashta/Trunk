@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10274_CollectingInTheAir extends Quest implements ScriptFile {
+public final class _10274_CollectingInTheAir extends Quest {
     private final static int Lekon = 32557;
 
     private final static int StarStoneExtractionScroll = 13844;
@@ -13,18 +13,6 @@ public class _10274_CollectingInTheAir extends Quest implements ScriptFile {
     private final static int ExtractedCoarseRedStarStone = 13858;
     private final static int ExtractedCoarseBlueStarStone = 13859;
     private final static int ExtractedCoarseGreenStarStone = 13860;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10274_CollectingInTheAir() {
         super(false);
@@ -45,7 +33,7 @@ public class _10274_CollectingInTheAir extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int id = st.getState();
         if (id == COMPLETED)
             htmltext = "32557-0a.htm";

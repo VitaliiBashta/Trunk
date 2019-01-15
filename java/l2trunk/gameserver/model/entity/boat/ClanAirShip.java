@@ -125,7 +125,7 @@ public class ClanAirShip extends AirShip {
 
     @Override
     public void trajetEnded(boolean oust) {
-        _runState = 0;
+        runState = 0;
 
         if (_fromHome == 0) {
             _fromHome = 1;

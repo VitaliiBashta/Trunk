@@ -5,19 +5,17 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 
 public final class LafiLakfi extends DefaultAI {
     private static final int MAX_RADIUS = 500;
-    private  final static int s_display_bug_of_fortune1 = 6045;
-    private  final static int s_display_jackpot_firework = 5778;
+    private final static int s_display_bug_of_fortune1 = 6045;
+    private final static int s_display_jackpot_firework = 5778;
 
     private long _nextEat;
     private int i_ai2, actor_lvl, prev_st;
@@ -61,11 +59,13 @@ public final class LafiLakfi extends DefaultAI {
             }
             return;
         }
-        ItemInstance closestItem = null;
         if (_nextEat < System.currentTimeMillis()) {
-            for (GameObject obj : World.getAroundObjects(actor, 20, 200))
-                if (obj.isItem() && ((ItemInstance) obj).getItemId() == 57)
-                    closestItem = (ItemInstance) obj;
+            ItemInstance closestItem = World.getAroundObjects(actor, 20, 200)
+                    .filter(GameObject::isItem)
+                    .map(i -> (ItemInstance) i)
+                    .filter(obj -> obj.getItemId() == 57)
+                    .findFirst().orElse(null);
+
 
             if (closestItem != null && closestItem.getCount() >= 15000) {
                 closestItem.deleteMe();
@@ -113,15 +113,13 @@ public final class LafiLakfi extends DefaultAI {
             return true;
 
         if (!actor.isMoving && _nextEat < System.currentTimeMillis()) {
-            ItemInstance closestItem = null;
-            for (GameObject obj : World.getAroundObjects(actor, MAX_RADIUS, 200))
-                if (obj.isItem() && ((ItemInstance) obj).getItemId() == 57)
-                    closestItem = (ItemInstance) obj;
+            World.getAroundObjects(actor, MAX_RADIUS, 200)
+                    .filter(GameObject::isItem)
+                    .map(obj -> (ItemInstance) obj)
+                    .filter(i -> i.getItemId() == 57)
+                    .findFirst().ifPresent(closestItem -> actor.moveToLocation(closestItem.getLoc(), 0, true));
 
-            if (closestItem != null)
-                actor.moveToLocation(closestItem.getLoc(), 0, true);
         }
-
         return false;
     }
 
@@ -226,7 +224,7 @@ public final class LafiLakfi extends DefaultAI {
     }
 
     @Override
-    public void onEvtTimer(int timerId, Object arg1, Object arg2) {
+    public void onEvtTimer(int timerId) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -280,7 +278,7 @@ public final class LafiLakfi extends DefaultAI {
             }
 
         } else
-            super.onEvtTimer(timerId, arg1, arg2);
+            super.onEvtTimer(timerId);
     }
 
     @Override

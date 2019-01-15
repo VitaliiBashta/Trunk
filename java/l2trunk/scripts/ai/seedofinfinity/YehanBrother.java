@@ -1,18 +1,16 @@
 package l2trunk.scripts.ai.seedofinfinity;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
 public final class YehanBrother extends Fighter {
-    private static final List<Integer> _minions = ArrayUtils.createAscendingList(22509, 22512);
+    private static final List<Integer> _minions = List.of(22509, 22510, 22511, 22512);
     private long _spawnTimer = 0;
 
     public YehanBrother(NpcInstance actor) {
@@ -32,10 +30,10 @@ public final class YehanBrother extends Fighter {
             brotherId = 25666;
         else if (actor.getNpcId() == 25666)
             brotherId = 25665;
-        for (NpcInstance npc : actor.getReflection().getNpcs())
-            if (npc.getNpcId() == brotherId)
-                return npc;
-        return null;
+        int id = brotherId;
+        return actor.getReflection().getNpcs()
+                .filter(npc -> npc.getNpcId() == id)
+                .findFirst().orElse(null);
     }
 
     @Override

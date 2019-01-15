@@ -3,13 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _10291_FireDragonDestroyer extends Quest implements ScriptFile {
+public final class _10291_FireDragonDestroyer extends Quest {
     private static final int Klein = 31540;
     private static final int PoorNecklace = 15524;
     private static final int ValorNecklace = 15525;
@@ -76,17 +71,5 @@ public class _10291_FireDragonDestroyer extends Quest implements ScriptFile {
             st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

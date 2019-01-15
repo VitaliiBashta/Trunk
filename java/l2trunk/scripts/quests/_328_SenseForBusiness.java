@@ -4,11 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _328_SenseForBusiness extends Quest implements ScriptFile {
+public final class _328_SenseForBusiness extends Quest {
     //NPC
-    private final int SARIEN = 30436;
+    private static final int SARIEN = 30436;
     //items
     private final int MONSTER_EYE_CARCASS = 1347;
     private final int MONSTER_EYE_LENS = 1366;

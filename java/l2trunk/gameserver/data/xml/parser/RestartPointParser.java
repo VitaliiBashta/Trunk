@@ -22,7 +22,7 @@ import java.util.*;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public enum RestartPointParser /*extends AbstractFileParser<MapRegionHolder>*/ {
+public enum RestartPointParser {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
     Path xml = Config.DATAPACK_ROOT.resolve("data/mapregion/restart_points.xml");

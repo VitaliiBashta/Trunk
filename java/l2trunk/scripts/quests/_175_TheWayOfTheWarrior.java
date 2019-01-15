@@ -5,16 +5,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию The Way Of The Warrior
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _175_TheWayOfTheWarrior extends Quest implements ScriptFile {
+public final class _175_TheWayOfTheWarrior extends Quest {
     //NPC
     private static final int Kekropus = 32138;
     private static final int Perwan = 32133;
@@ -128,18 +121,6 @@ public class _175_TheWayOfTheWarrior extends Quest implements ScriptFile {
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _175_TheWayOfTheWarrior() {
         super(false);

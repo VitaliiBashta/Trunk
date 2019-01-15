@@ -8,15 +8,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.Calendar;
 import java.util.concurrent.ScheduledFuture;
 
-public final class _457_LostAndFound extends Quest implements ScriptFile {
+public final class _457_LostAndFound extends Quest {
     private static final int RESET_HOUR = 6;
     private static final int RESET_MIN = 30;
-    private static final int GUMIEL =32759;
+    private static final int GUMIEL = 32759;
 
     private ScheduledFuture<?> FollowTask;
 

@@ -26,12 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
-
-//import l2trunk.gameserver.instancemanager.CoupleManager;
-
-//import Elemental.datatables.CharacterMonthlyRanking;
-
-public class Shutdown extends Thread {
+public final class Shutdown extends Thread {
     public static final int SHUTDOWN = 0;
     public static final int RESTART = 2;
     public static final int NONE = -1;

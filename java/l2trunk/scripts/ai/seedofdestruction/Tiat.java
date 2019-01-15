@@ -7,7 +7,6 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.instancemanager.SoDManager;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -17,19 +16,18 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Tiat extends Fighter {
-    private static final List<Location> TRAP_LOCS = Arrays.asList(
+    private static final List<Location> TRAP_LOCS = List.of(
             new Location(-252022, 210130, -11995, 16384),
             new Location(-248782, 210130, -11995, 16384),
             new Location(-248782, 206875, -11995, 16384),
             new Location(-252022, 206875, -11995, 16384));
     private static final long COLLAPSE_BY_INACTIVITY_INTERVAL = 10 * 60 * 1000; // 10 мин
     private static final int TRAP_NPC_ID = 18696;
-    private static final List<Integer> TIAT_MINION_IDS = Arrays.asList(29162, 22538, 22540, 22547, 22542, 22548);
-    private static final List<String> TIAT_TEXT = Arrays.asList(
+    private static final List<Integer> TIAT_MINION_IDS = List.of(29162, 22538, 22540, 22547, 22542, 22548);
+    private static final List<String> TIAT_TEXT = List.of(
             "You'll regret challenging me!",
             "You shall die in pain!",
             "I will wipe out your entire kind!");
@@ -74,8 +72,7 @@ public final class Tiat extends Fighter {
         }
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
-            World.getAroundNpc(actor).stream()
-                    .filter(npc -> (TIAT_MINION_IDS.contains(npc.getNpcId())))
+            World.getAroundNpc(actor).filter(npc -> (TIAT_MINION_IDS.contains(npc.getNpcId())))
                     .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 30000));
             if (Rnd.chance(15) && !_notUsedTransform)
                 actor.broadcastPacket(new ExShowScreenMessage(Rnd.get(TIAT_TEXT), 4000, ScreenMessageAlign.MIDDLE_CENTER, false));

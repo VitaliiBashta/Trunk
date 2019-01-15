@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class EvasGiftBox extends Fighter {
-    private static final List<Integer> KISS_OF_EVA = Arrays.asList(1073, 3141, 3252);
+    private static final List<Integer> KISS_OF_EVA = List.of(1073, 3141, 3252);
 
     private static final int Red_Coral = 9692;
     private static final int Crystal_Fragment = 9693;

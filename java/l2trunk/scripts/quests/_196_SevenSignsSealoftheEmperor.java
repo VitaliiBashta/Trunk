@@ -15,7 +15,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class _196_SevenSignsSealoftheEmperor extends Quest implements ScriptFile {
+public final class _196_SevenSignsSealoftheEmperor extends Quest {
     // NPCs
     private static final int IasonHeine = 30969;
     private static final int MerchantofMammon = 32584;
@@ -58,8 +58,8 @@ public class _196_SevenSignsSealoftheEmperor extends Quest implements ScriptFile
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("iasonheine_q196_2.htm")) {
-            if (GameObjectsStorage.getAllByNpcId(MerchantofMammon, false).isEmpty()) {
+        } else if ("iasonheine_q196_2.htm".equalsIgnoreCase(event)) {
+            if (GameObjectsStorage.getAllByNpcId(MerchantofMammon, false).count() ==0) {
                 MerchantofMammonSpawn = st.addSpawn(MerchantofMammon, 109763, 219944, -3512, 16384, 0, 120 * 1000);
                 Functions.npcSay(MerchantofMammonSpawn, "Who dares summon the Merchant of Mammon?!");
             }
@@ -208,17 +208,5 @@ public class _196_SevenSignsSealoftheEmperor extends Quest implements ScriptFile
                 reflection.addSpawnWithoutRespawn(32720, new Location(-83134, 216443, -7504, 16384), 0); //anakims_divine_ssq
             }
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

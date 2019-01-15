@@ -9,7 +9,6 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,7 +16,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class WorldRegion implements Iterable<GameObject> {
-    public final static WorldRegion[] EMPTY_L2WORLDREGION_ARRAY = new WorldRegion[0];
 
     @SuppressWarnings("unused")
     private static final Logger _log = LoggerFactory.getLogger(WorldRegion.class);
@@ -40,7 +38,7 @@ public final class WorldRegion implements Iterable<GameObject> {
     /**
      * Зоны пересекающие этот регион
      */
-    private volatile List<Zone> _zones = new CopyOnWriteArrayList<>();
+    private volatile List<Zone> zones = new CopyOnWriteArrayList<>();
     /**
      * Количество игроков в регионе
      */
@@ -183,14 +181,6 @@ public final class WorldRegion implements Iterable<GameObject> {
             }
     }
 
-    public int getObjectsSize() {
-        return _objectsCount;
-    }
-
-    public int getPlayersCount() {
-        return _playersCount;
-    }
-
     public boolean isEmpty() {
         return _playersCount == 0;
     }
@@ -227,16 +217,16 @@ public final class WorldRegion implements Iterable<GameObject> {
     }
 
     synchronized void addZone(Zone zone) {
-        _zones.add(zone);
+        zones.add(zone);
     }
 
     synchronized void removeZone(Zone zone) {
-        _zones.remove(zone);
+        zones.remove(zone);
     }
 
     List<Zone> getZones() {
         // Без синхронизации и копирования, т.к. удаление/добавление зон происходит достаточно редко
-        return _zones;
+        return zones;
     }
 
     @Override

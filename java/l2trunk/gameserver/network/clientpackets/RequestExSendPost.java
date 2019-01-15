@@ -101,7 +101,7 @@ public final class RequestExSendPost extends L2GameClientPacket {
                     map.put(item.getItemId(), _itemQ.get(i));
                 }
 
-            GameObjectsStorage.getAllPlayers().stream()
+            GameObjectsStorage.getAllPlayersStream()
                     .filter(Player::isOnline)
                     .forEach(p -> Functions.sendSystemMail(p, _topic, _body, map));
 

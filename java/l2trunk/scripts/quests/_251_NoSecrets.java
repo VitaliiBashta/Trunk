@@ -1,18 +1,15 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _251_NoSecrets extends Quest implements ScriptFile {
+public final class _251_NoSecrets extends Quest {
     private static final int GuardPinaps = 30201;
-    private static final List<Integer> SelMahumTrainers = Arrays.asList(22775, 22777, 22778);
-    private static final List<Integer> SelMahumRecruits = Arrays.asList(22780, 22782, 22784);
+    private static final List<Integer> SelMahumTrainers = List.of(22775, 22777, 22778);
+    private static final List<Integer> SelMahumRecruits = List.of(22780, 22782, 22784);
     private static final int SelMahumTrainingDiary = 15508;
     private static final int SelMahumTrainingTimetable = 15509;
 
@@ -73,17 +70,5 @@ public final class _251_NoSecrets extends Quest implements ScriptFile {
                 st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

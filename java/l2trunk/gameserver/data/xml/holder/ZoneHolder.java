@@ -5,7 +5,10 @@ import l2trunk.gameserver.templates.ZoneTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ZoneHolder {
+public final class ZoneHolder {
+    private ZoneHolder() {
+    }
+
     private static final Map<String, ZoneTemplate> zones = new HashMap<>();
 
     public static void addTemplate(ZoneTemplate zone) {
@@ -24,7 +27,4 @@ public class ZoneHolder {
         return zones.size();
     }
 
-    public void clear() {
-        zones.clear();
-    }
 }

@@ -1,21 +1,16 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class _290_ThreatRemoval extends Quest implements ScriptFile {
+public final class _290_ThreatRemoval extends Quest {
     private static final int GuardPinaps = 30201;
-    private static final List<Integer> SelMahumTrainers =
-            Arrays.asList(22775, 22776, 22777, 22778);
-    private static final List<Integer> SelMahumRecruits =
-            Arrays.asList(22780, 22781, 22782, 22783, 22784, 22785);
+    private static final List<Integer> SelMahumTrainers = List.of(22775, 22776, 22777, 22778);
+    private static final List<Integer> SelMahumRecruits = List.of(22780, 22781, 22782, 22783, 22784, 22785);
     private static final int SelMahumIDTag = 15714;
 
     public _290_ThreatRemoval() {
@@ -97,17 +92,5 @@ public class _290_ThreatRemoval extends Quest implements ScriptFile {
                 st.rollAndGive(SelMahumIDTag, 1, 36.3);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

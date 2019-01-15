@@ -6,29 +6,17 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _637_ThroughOnceMore extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _637_ThroughOnceMore extends Quest {
     //Drop rate
-    private final int CHANCE = 40;
+    private static final int CHANCE = 40;
 
     //Npc
-    private final int FLAURON = 32010;
+    private static final int FLAURON = 32010;
 
     //Items
     private final int VISITORSMARK = 8064;
     private final int NECROHEART = 8066;
-    private final int MARK = 8067;
+    private static final int MARK = 8067;
 
     public _637_ThroughOnceMore() {
         super(false);

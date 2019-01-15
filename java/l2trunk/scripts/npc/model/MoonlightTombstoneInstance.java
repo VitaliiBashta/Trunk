@@ -12,11 +12,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 
-/**
- * Данный инстанс используется в городе-инстансе на Hellbound как точка выхода
- *
- * @author SYS
- */
+
 public final class MoonlightTombstoneInstance extends NpcInstance {
     private static final int KEY_ID = 9714;
     private final static long COLLAPSE_TIME = 5; // 5 мин

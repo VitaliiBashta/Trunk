@@ -67,9 +67,9 @@ public class Functions {
         if (npc == null)
             return;
         NpcSay cs = new NpcSay(npc, ChatType.ALL, fStringId, params);
-        for (Player player : World.getAroundPlayers(npc, range, Math.max(range / 2, 200)))
-            if (npc.getReflection() == player.getReflection())
-                player.sendPacket(cs);
+        World.getAroundPlayers(npc, range, Math.max(range / 2, 200))
+                .filter(player -> npc.getReflection() == player.getReflection())
+                .forEach(player -> player.sendPacket(cs));
     }
 
     public static void npcSay(NpcInstance npc, String text) {
@@ -83,9 +83,9 @@ public class Functions {
     public static void npcSayInRangeCustomMessage(NpcInstance npc, int range, String address, Object... replacements) {
         if (npc == null)
             return;
-        for (Player player : World.getAroundPlayers(npc, range, Math.max(range / 2, 200)))
-            if (npc.getReflection() == player.getReflection())
-                player.sendPacket(new NpcSay(npc, ChatType.ALL, new CustomMessage(address, player, replacements).toString()));
+        World.getAroundPlayers(npc, range, Math.max(range / 2, 200))
+                .filter(player -> npc.getReflection() == player.getReflection())
+                .forEach(player -> player.sendPacket(new NpcSay(npc, ChatType.ALL, new CustomMessage(address, player, replacements).toString())));
     }
 
     public static void npcSayCustomMessage(NpcInstance npc, String address, Object... replacements) {
@@ -151,10 +151,10 @@ public class Functions {
     public static void npcSay(NpcInstance npc, NpcString address, ChatType type, int range, String... replacements) {
         if (npc == null)
             return;
-        for (Player player : World.getAroundPlayers(npc, range, Math.max(range / 2, 200))) {
-            if (player.getReflection() == npc.getReflection())
-                player.sendPacket(new NpcSay(npc, type, address, replacements));
-        }
+        World.getAroundPlayers(npc, range, Math.max(range / 2, 200))
+                .filter(player -> player.getReflection() == npc.getReflection())
+                .forEach(player ->
+                        player.sendPacket(new NpcSay(npc, type, address, replacements)));
     }
 
     public static void addItem(Playable playable, int itemId, long count, String log) {
@@ -200,7 +200,6 @@ public class Functions {
     }
 
     // @Deprecated
-    // TODO [VISTALL] use NpcUtils
     public static NpcInstance spawn(Location loc, int npcId) {
         return spawn(loc, npcId, ReflectionManager.DEFAULT);
     }
@@ -350,4 +349,5 @@ public class Functions {
     protected NpcInstance getNpc() {
         return npc.get();
     }
+
 }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _330_AdeptOfTaste extends Quest implements ScriptFile {
+public final class _330_AdeptOfTaste extends Quest {
     // NPCs
     private static final int Sonia = 30062;
     private static final int Glyvka = 30067;
@@ -213,8 +213,7 @@ public class _330_AdeptOfTaste extends Quest implements ScriptFile {
                     for (int i = Miriens_Reviews.length; i > 0; i--)
                         if (st.getQuestItemsCount(Miriens_Reviews[i - 1]) > 0) {
                             st.takeAllItems(Miriens_Reviews);
-                            if (adena_rewards[i - 1] > 0)
-                                st.giveItems(ADENA_ID, adena_rewards[i - 1]);
+                            st.giveItems(ADENA_ID, adena_rewards[i - 1]);
                             if (rewards[i - 1] > 0)
                                 st.giveItems(rewards[i - 1], 1);
                             st.playSound(SOUND_FINISH);
@@ -429,17 +428,5 @@ public class _330_AdeptOfTaste extends Quest implements ScriptFile {
         st.takeItems(Royal_Jelly, -1);
         st.playSound(SOUND_MIDDLE);
         st.giveItems(honey_id, 1);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

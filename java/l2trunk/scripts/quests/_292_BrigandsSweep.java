@@ -5,15 +5,8 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Brigands Sweep
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _292_BrigandsSweep extends Quest implements ScriptFile {
+public final class _292_BrigandsSweep extends Quest {
     // NPCs
     private static final int Spiron = 30532;
     private static final int Balanki = 30533;
@@ -85,18 +78,6 @@ public class _292_BrigandsSweep extends Quest implements ScriptFile {
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _292_BrigandsSweep() {
         super(false);

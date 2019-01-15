@@ -6,19 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _215_TrialOfPilgrim extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _215_TrialOfPilgrim extends Quest {
     private static final int MARK_OF_PILGRIM_ID = 2721;
     private static final int BOOK_OF_SAGE_ID = 2722;
     private static final int VOUCHER_OF_TRIAL_ID = 2723;
@@ -60,9 +48,7 @@ public class _215_TrialOfPilgrim extends Quest implements ScriptFile {
         addKillId(27117);
         addKillId(27118);
 
-        addQuestItem(new int[]{
-
-                BOOK_OF_SAGE_ID,
+        addQuestItem(BOOK_OF_SAGE_ID,
                 VOUCHER_OF_TRIAL_ID,
                 ESSENSE_OF_FLAME_ID,
                 BOOK_OF_GERALD_ID,
@@ -73,8 +59,7 @@ public class _215_TrialOfPilgrim extends Quest implements ScriptFile {
                 DEBRIS_OF_WILLOW_ID,
                 GREY_BADGE_ID,
                 SPIRIT_OF_FLAME_ID,
-                STATUE_OF_EINHASAD_ID,
-        });
+                STATUE_OF_EINHASAD_ID);
     }
 
     @Override

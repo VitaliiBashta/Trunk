@@ -6,27 +6,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _050_LanoscosSpecialBait extends Quest implements ScriptFile {
+public final class _050_LanoscosSpecialBait extends Quest {
     // NPC
     private final int Lanosco = 31570;
     private final int SingingWind = 21026;
     // Items
-    private final int EssenceofWind = 7621;
-    private final int WindFishingLure = 7610;
+    private static final int EssenceofWind = 7621;
+    private static final int WindFishingLure = 7610;
     // Skill
-    private final Integer FishSkill = 1315;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final Integer FishSkill = 1315;
 
     public _050_LanoscosSpecialBait() {
         super(false);

@@ -3,14 +3,9 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _736_WeakenTheMagic extends Dominion_KillSpecialUnitQuest {
-    public _736_WeakenTheMagic() {
-        super();
-    }
-
     @Override
     protected NpcString startNpcString() {
         return NpcString.DEFEAT_S1_WIZARDS_AND_SUMMONERS;

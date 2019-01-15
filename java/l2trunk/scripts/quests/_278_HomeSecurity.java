@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
@@ -10,9 +9,9 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _278_HomeSecurity extends Quest implements ScriptFile {
+public final class _278_HomeSecurity extends Quest {
     private static final int Tunatun = 31537;
-    private static final List<Integer> FarmMonsters = Arrays.asList(18905, 18906);
+    private static final List<Integer> FarmMonsters = List.of(18905, 18906);
     private static final int SelMahumMane = 15531;
 
     public _278_HomeSecurity() {
@@ -112,17 +111,5 @@ public final class _278_HomeSecurity extends Quest implements ScriptFile {
                     st.setCond(2);
             }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

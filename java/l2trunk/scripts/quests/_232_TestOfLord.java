@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Drop;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;

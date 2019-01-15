@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _411_PathToAssassin extends Quest implements ScriptFile {
+public final class _411_PathToAssassin extends Quest {
     //npc
     private final int TRISKEL = 30416;
     private final int LEIKAN = 30382;

@@ -4,26 +4,13 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _152_ShardsOfGolem extends Quest implements ScriptFile {
+public final class _152_ShardsOfGolem extends Quest {
+    private static final int WOODEN_BP = 23;
     private final int HARRYS_RECEIPT1 = 1008;
     private final int HARRYS_RECEIPT2 = 1009;
     private final int GOLEM_SHARD = 1010;
     private final int TOOL_BOX = 1011;
-    private final int WOODEN_BP = 23;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _152_ShardsOfGolem() {
         super(false);
@@ -38,12 +25,10 @@ public class _152_ShardsOfGolem extends Quest implements ScriptFile {
         addKillId(20016);
         addKillId(20101);
 
-        addQuestItem(new int[]{
-                HARRYS_RECEIPT1,
+        addQuestItem(HARRYS_RECEIPT1,
                 GOLEM_SHARD,
                 TOOL_BOX,
-                HARRYS_RECEIPT2
-        });
+                HARRYS_RECEIPT2);
     }
 
     @Override

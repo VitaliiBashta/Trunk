@@ -1,7 +1,6 @@
 package l2trunk.gameserver.instancemanager;
 
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.utils.Location;
@@ -10,11 +9,8 @@ import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author pchayka
- */
 
-public class SoDManager {
+public final class SoDManager {
     private static final String SPAWN_GROUP = "sod_free";
     private static final Logger _log = LoggerFactory.getLogger(SoDManager.class);
     private static final long SOD_OPEN_TIME = 12 * 60 * 60 * 1000L;
@@ -96,8 +92,8 @@ public class SoDManager {
         ServerVariables.unset("SoD_opened");
         SpawnManager.INSTANCE.despawn(SPAWN_GROUP);
         // Телепортируем всех внутри СоДа наружу
-        for (Playable p : getZone().getInsidePlayables())
-            p.teleToLocation(getZone().getRestartPoints().get(0));
+        getZone().getInsidePlayables().forEach(p ->
+                p.teleToLocation(getZone().getRestartPoints().get(0)));
         handleDoors(false);
     }
 }

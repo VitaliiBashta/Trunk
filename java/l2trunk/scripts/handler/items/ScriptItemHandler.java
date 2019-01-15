@@ -16,22 +16,7 @@ public abstract class ScriptItemHandler implements IItemHandler {
 
     @Override
     public void dropItem(Player player, ItemInstance item, long count, Location loc) {
-        if (item.isEquipped()) {
-            player.getInventory().unEquipItem(item);
-            player.sendUserInfo(true);
-        }
-
-        item = player.getInventory().removeItemByObjectId(item.getObjectId(), count, "DropItem");
-        if (item == null) {
-            player.sendActionFailed();
-            return;
-        }
-
-        item.dropToTheGround(player, loc);
-        player.disableDrop(1000);
-
-        player.sendChanges();
-
+        NULL.dropItem(player,item,count,loc);
         ItemLogHandler.getInstance().addLog(player, item, count, ItemActionType.DROPPED_ON_PURPOSE);
     }
 }

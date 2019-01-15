@@ -4,28 +4,13 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _051_OFullesSpecialBait extends Quest implements ScriptFile {
+public final class _051_OFullesSpecialBait extends Quest {
+    private static final int IcyAirFishingLure = 7611;
+    private static final int FishSkill = 1315;
     private final int OFulle = 31572;
     private final int FetteredSoul = 20552;
-
     private final int LostBaitIngredient = 7622;
-    private final int IcyAirFishingLure = 7611;
-
-    private final Integer FishSkill = 1315;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _051_OFullesSpecialBait() {
         super(false);

@@ -9,19 +9,15 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Collection;
+import java.util.List;
 
-/**
- * Guardian Waterspirit (22659).
- * Срывается на защиту кристалла в радиусе. Атакует крокодилов в пределах радиуса.
- */
 public final class GuardianWaterspirit extends Fighter {
 
+    private static final List<NpcString> MsgText = List.of(
+            NpcString.AH_AH_FROM_THE_MAGIC_FORCE_NO_MORE_I_WILL_BE_FREED,
+            NpcString.EVEN_THE_MAGIC_FORCE_BINDS_YOU_YOU_WILL_NEVER_BE_FORGIVEN);
     private NpcInstance mob = null;
     private boolean _firstTimeAttacked = true;
-    private static final NpcString[] MsgText = {
-            NpcString.AH_AH_FROM_THE_MAGIC_FORCE_NO_MORE_I_WILL_BE_FREED,
-            NpcString.EVEN_THE_MAGIC_FORCE_BINDS_YOU_YOU_WILL_NEVER_BE_FORGIVEN};
 
     public GuardianWaterspirit(NpcInstance actor) {
         super(actor);
@@ -44,17 +40,14 @@ public final class GuardianWaterspirit extends Fighter {
         }
 
         if (mob == null) {
-            Collection<NpcInstance> around = getActor().getAroundNpc(300, 300);
-            if (around != null && !around.isEmpty()) {
-                for (NpcInstance npc : around) {
-                    if (npc.getNpcId() >= 22650 && npc.getNpcId() <= 22655) {
+            getActor().getAroundNpc(300, 300)
+                    .filter(npc -> npc.getNpcId() >= 22650)
+                    .filter(npc -> npc.getNpcId() <= 22655)
+                    .forEach(npc -> {
                         if (mob == null || getActor().getDistance3D(npc) < getActor().getDistance3D(mob)) {
                             mob = npc;
                         }
-                    }
-                }
-            }
-
+                    });
         }
         if (mob != null) {
             actor.stopMove();

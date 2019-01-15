@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _185_NikolasCooperationConsideration extends Quest implements ScriptFile {
+public final class _185_NikolasCooperationConsideration extends Quest {
     private static final int Lorain = 30673;
     private static final int Nikola = 30621;
     private static final int Device = 32366;
@@ -17,18 +17,6 @@ public class _185_NikolasCooperationConsideration extends Quest implements Scrip
     private static final int Metal = 10359;
     private static final int BrokenMetal = 10360;
     private static final int NicolasMap = 10361;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _185_NikolasCooperationConsideration() {
         super(false);

@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public final class _10275_ContainingTheAttributePower extends Quest implements ScriptFile {
+public final class _10275_ContainingTheAttributePower extends Quest {
     private final static int Holly = 30839;
     private final static int Weber = 31307;
     private final static int Yin = 32325;
@@ -22,18 +22,6 @@ public final class _10275_ContainingTheAttributePower extends Quest implements S
     private final static int YangSword = 13881;
     private final static int SoulPieceWater = 13861;
     private final static int SoulPieceAir = 13862;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10275_ContainingTheAttributePower() {
         super(false);

@@ -42,7 +42,7 @@ public final class MonstersAI extends Fighter {
         if (actor == null || actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -53,7 +53,7 @@ public final class MonstersAI extends Fighter {
                 if (target != null && !target.isDead()) {
                     clearTasks();
                     // TODO actor.addDamageHate(target, 0, 1000);
-                    setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+                    setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
                     return true;
                 }
                 return true;

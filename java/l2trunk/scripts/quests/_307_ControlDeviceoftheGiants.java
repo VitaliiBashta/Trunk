@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.RadarControl;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 public final class _307_ControlDeviceoftheGiants extends Quest {

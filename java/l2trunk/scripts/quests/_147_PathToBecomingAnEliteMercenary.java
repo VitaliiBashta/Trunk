@@ -12,7 +12,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public final class _147_PathToBecomingAnEliteMercenary extends Quest implements ScriptFile {
+public final class _147_PathToBecomingAnEliteMercenary extends Quest {
     private static final List<Integer> MERCENARY_CAPTAINS = List.of(
             36481, 36482, 36483, 36484, 36485, 36486, 36487, 36488, 36489);
 
@@ -136,21 +136,5 @@ public final class _147_PathToBecomingAnEliteMercenary extends Quest implements 
     public void onAbort(QuestState qs) {
         qs.removePlayerOnKillListener();
         super.onAbort(qs);
-    }
-
-
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

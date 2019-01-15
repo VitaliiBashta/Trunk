@@ -54,10 +54,10 @@ public abstract class Bingo {
             return "";
         String result = template_board;
         for (int i = 1; i <= 9; i++) {
-            String cell = "%cell" + String.valueOf(i) + "%";
+            String cell = "%cell" + i + "%";
             int num = board.get(i - 1);
             if (guesses.contains(num))
-                result = result.replaceFirst(cell, "<font color=\"" + (guesses.size() == 6 ? "ff0000" : "ffff00") + "\">" + String.valueOf(num) + "</font>");
+                result = result.replaceFirst(cell, "<font color=\"" + (guesses.size() == 6 ? "ff0000" : "ffff00") + "\">" + num + "</font>");
             else
                 result = result.replaceFirst(cell, "?");
         }

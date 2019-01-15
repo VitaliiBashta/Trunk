@@ -10,12 +10,11 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 
 public final class LogisticsOfficerInstance extends FacilityManagerInstance {
-    private static final List<Integer> SUPPLY_NPC = Arrays.asList(
+    private static final List<Integer> SUPPLY_NPC = List.of(
             35665, 35697, 35734, 35766, 35803, 35834);
 
     private static final int ITEM_ID = 9910; // Blood Oath
@@ -36,23 +35,23 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
             return;
         }
 
-        if (command.equalsIgnoreCase("guardInfo")) {
+        if ("guardInfo".equalsIgnoreCase(command)) {
             if (fortress.getContractState() != Fortress.CONTRACT_WITH_CASTLE) {
                 showChatWindow(player, "residence2/fortress/fortress_supply_officer005.htm");
                 return;
             }
 
             showChatWindow(player, "residence2/fortress/fortress_supply_officer002.htm", "%guard_buff_level%", fortress.getFacilityLevel(Fortress.GUARD_BUFF));
-        } else if (command.equalsIgnoreCase("supplyInfo")) {
+        } else if ("supplyInfo".equalsIgnoreCase(command)) {
             if (fortress.getContractState() != Fortress.CONTRACT_WITH_CASTLE) {
                 showChatWindow(player, "residence2/fortress/fortress_supply_officer005.htm");
                 return;
             }
 
             showChatWindow(player, "residence2/fortress/fortress_supply_officer009.htm", "%supply_count%", fortress.getSupplyCount());
-        } else if (command.equalsIgnoreCase("rewardInfo")) {
+        } else if ("rewardInfo".equalsIgnoreCase(command)) {
             showChatWindow(player, "residence2/fortress/fortress_supply_officer010.htm", "%blood_oaths%", fortress.getRewardCount());
-        } else if (command.equalsIgnoreCase("receiveSupply")) {
+        } else if ("receiveSupply".equalsIgnoreCase(command)) {
             String filename;
             if (fortress.getSupplyCount() > 0) {
                 filename = "residence2/fortress/fortress_supply_officer016.htm";
@@ -70,7 +69,7 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile(filename);
             player.sendPacket(html);
-        } else if (command.equalsIgnoreCase("receiveRewards")) {
+        } else if ("receiveRewards".equalsIgnoreCase(command)) {
             String filename;
             int count = fortress.getRewardCount();
             if (count > 0) {
@@ -86,9 +85,9 @@ public final class LogisticsOfficerInstance extends FacilityManagerInstance {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile(filename);
             player.sendPacket(html);
-        } else if (command.equalsIgnoreCase("toLevel1"))
+        } else if ("toLevel1".equalsIgnoreCase(command))
             buyFacility(player, Fortress.GUARD_BUFF, 1, 100000);
-        else if (command.equalsIgnoreCase("toLevel2"))
+        else if ("toLevel2".equalsIgnoreCase(command))
             buyFacility(player, Fortress.GUARD_BUFF, 2, 150000);
         else
             super.onBypassFeedback(player, command);

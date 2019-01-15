@@ -39,7 +39,7 @@ public final class AdminAnnouncements implements IAdminCommandHandler {
                 listAnnouncements(activeChar);
                 break;
             case admin_announce_announcements:
-                GameObjectsStorage.getAllPlayers().forEach(Announcements.INSTANCE::showAnnouncements);
+                GameObjectsStorage.getAllPlayersStream().forEach(Announcements.INSTANCE::showAnnouncements);
                 listAnnouncements(activeChar);
                 break;
             case admin_add_announcement:
@@ -88,7 +88,7 @@ public final class AdminAnnouncements implements IAdminCommandHandler {
                 String text = activeChar.getName() + ": " + fullString.replaceFirst("admin_toscreen ", "").replaceFirst("admin_s ", "");
                 int time = 3000 + text.length() * 100; // 3 секунды + 100мс на символ
                 ExShowScreenMessage sm = new ExShowScreenMessage(text, time);
-                GameObjectsStorage.getAllPlayers().forEach(player -> player.sendPacket(sm));
+                GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(sm));
                 break;
             case admin_reload_announcements:
                 Announcements.INSTANCE.loadAnnouncements();

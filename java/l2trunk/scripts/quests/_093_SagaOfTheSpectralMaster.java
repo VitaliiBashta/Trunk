@@ -5,7 +5,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _093_SagaOfTheSpectralMaster extends SagasSuperclass implements ScriptFile {
+public final class _093_SagaOfTheSpectralMaster extends SagasSuperclass {
     public _093_SagaOfTheSpectralMaster() {
         super(false);
 
@@ -39,17 +39,5 @@ public final class _093_SagaOfTheSpectralMaster extends SagasSuperclass implemen
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -8,15 +8,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _713_PathToBecomingALordAden extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _713_PathToBecomingALordAden extends Quest {
     private static final int Logan = 35274;
     private static final int Orven = 30857;
-    private static final int[] Orcs = {
-            20669,
-            20665
-    };
+    private static final List<Integer> Orcs = List.of(20669, 20665);
 
     private static final int AdenCastle = 5;
     private int _mobs = 0;
@@ -58,7 +56,6 @@ public class _713_PathToBecomingALordAden extends Quest implements ScriptFile {
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        int id = st.getState();
         int cond = st.getCond();
         Castle castle = ResidenceHolder.getResidence(AdenCastle);
         if (castle.getOwner() == null)
@@ -108,17 +105,5 @@ public class _713_PathToBecomingALordAden extends Quest implements ScriptFile {
                 st.setCond(5);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _118_ToLeadAndBeLed extends Quest implements ScriptFile {
+public final class _118_ToLeadAndBeLed extends Quest {
     private static final int PINTER = 30298;
     private static final int MAILLE_LIZARDMAN = 20919;
     private static final int BLOOD_OF_MAILLE_LIZARDMAN = 8062;
@@ -30,18 +30,6 @@ public class _118_ToLeadAndBeLed extends Quest implements ScriptFile {
     private static final int CLAN_OATH_PADDED_GLOVES = 7858;
     private static final int CLAN_OATH_SANDALS = 7859;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _118_ToLeadAndBeLed() {
         super(false);
 
@@ -55,27 +43,33 @@ public class _118_ToLeadAndBeLed extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("30298-02.htm")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("30298-05a.htm")) {
-            st.set("choose", "1");
-            st.setCond(3);
-        } else if (event.equals("30298-05b.htm")) {
-            st.set("choose", "2");
-            st.setCond(4);
-        } else if (event.equals("30298-05c.htm")) {
-            st.set("choose", "3");
-            st.setCond(5);
-        } else if (event.equals("30298-08.htm")) {
-            int choose = st.getInt("choose");
-            int need_dcry = choose == 1 ? D_CRY_COUNT_HEAVY : D_CRY_COUNT_LIGHT_MAGIC;
-            if (st.getQuestItemsCount(D_CRY) < need_dcry)
-                return "30298-07.htm";
-            st.setCond(7);
-            st.takeItems(D_CRY, need_dcry);
-            st.playSound(SOUND_MIDDLE);
+        switch (event) {
+            case "30298-02.htm":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "30298-05a.htm":
+                st.set("choose", "1");
+                st.setCond(3);
+                break;
+            case "30298-05b.htm":
+                st.set("choose", "2");
+                st.setCond(4);
+                break;
+            case "30298-05c.htm":
+                st.set("choose", "3");
+                st.setCond(5);
+                break;
+            case "30298-08.htm":
+                int choose = st.getInt("choose");
+                int need_dcry = choose == 1 ? D_CRY_COUNT_HEAVY : D_CRY_COUNT_LIGHT_MAGIC;
+                if (st.getQuestItemsCount(D_CRY) < need_dcry)
+                    return "30298-07.htm";
+                st.setCond(7);
+                st.takeItems(D_CRY, need_dcry);
+                st.playSound(SOUND_MIDDLE);
+                break;
         }
         return event;
     }

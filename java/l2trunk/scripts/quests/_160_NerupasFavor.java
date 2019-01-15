@@ -6,9 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
-
-public class _160_NerupasFavor extends Quest implements ScriptFile {
+public final class _160_NerupasFavor extends Quest {
     private static final int SILVERY_SPIDERSILK = 1026;
     private static final int UNOS_RECEIPT = 1027;
     private static final int CELS_TICKET = 1028;
@@ -44,18 +42,6 @@ public class _160_NerupasFavor extends Quest implements ScriptFile {
      * You've obtained the nightshade leaf that Creamees stored in the warehouse. Deliver it to Nerupa.
      */
     private static final int COND4 = 4;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _160_NerupasFavor() {
         super(false);

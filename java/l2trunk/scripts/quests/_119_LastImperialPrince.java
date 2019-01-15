@@ -5,19 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _119_LastImperialPrince extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _119_LastImperialPrince extends Quest {
     // NPC
     private static final int SPIRIT = 31453; // Nameless Spirit
     private static final int DEVORIN = 32009; // Devorin

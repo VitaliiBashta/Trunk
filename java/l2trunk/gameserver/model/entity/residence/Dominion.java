@@ -115,9 +115,9 @@ public final class Dominion extends Residence {
         setJdbcState(JdbcEntityState.UPDATED);
         update();
 
-        for (NpcInstance npc : GameObjectsStorage.getAllNpcsForIterate())
-            if (npc.getDominion() == this)
-                npc.broadcastCharInfoImpl();
+        GameObjectsStorage.getAllNpcs()
+                .filter(npc -> npc.getDominion() == this)
+                .forEach(NpcInstance::broadcastCharInfoImpl);
     }
 
     public int getLordObjectId() {

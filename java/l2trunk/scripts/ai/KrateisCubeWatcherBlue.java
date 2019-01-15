@@ -5,12 +5,11 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-
-import java.util.List;
 
 public final class KrateisCubeWatcherBlue extends DefaultAI {
     private static final int RESTORE_CHANCE = 60;
@@ -27,30 +26,30 @@ public final class KrateisCubeWatcherBlue extends DefaultAI {
     @Override
     public void onEvtThink() {
         NpcInstance actor = getActor();
-        List<Creature> around = World.getAroundCharacters(actor, 600, 300);
-        if (around.isEmpty())
-            return;
 
-        for (Creature cha : around)
-            if (cha.isPlayer() && !cha.isDead() && Rnd.chance(RESTORE_CHANCE)) {
-                double valCP = cha.getMaxCp() - cha.getCurrentCp();
-                if (valCP > 0) {
-                    cha.setCurrentCp(valCP + cha.getCurrentCp());
-                    cha.sendPacket(new SystemMessage2(SystemMsg.S1_CP_HAS_BEEN_RESTORED).addInteger(Math.round(valCP)));
-                }
+        World.getAroundCharacters(actor, 600, 300)
+                .filter(GameObject::isPlayer)
+                .filter(cha -> !cha.isDead())
+                .filter(cha -> Rnd.chance(RESTORE_CHANCE))
+                .forEach(cha -> {
+                    double valCP = cha.getMaxCp() - cha.getCurrentCp();
+                    if (valCP > 0) {
+                        cha.setCurrentCp(valCP + cha.getCurrentCp());
+                        cha.sendPacket(new SystemMessage2(SystemMsg.S1_CP_HAS_BEEN_RESTORED).addInteger(Math.round(valCP)));
+                    }
 
-                double valHP = cha.getMaxHp() - cha.getCurrentHp();
-                if (valHP > 0) {
-                    cha.setCurrentHp(valHP + cha.getCurrentHp(), false);
-                    cha.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(valHP)));
-                }
+                    double valHP = cha.getMaxHp() - cha.getCurrentHp();
+                    if (valHP > 0) {
+                        cha.setCurrentHp(valHP + cha.getCurrentHp(), false);
+                        cha.sendPacket(new SystemMessage2(SystemMsg.S1_HP_HAS_BEEN_RESTORED).addInteger(Math.round(valHP)));
+                    }
 
-                double valMP = cha.getMaxMp() - cha.getCurrentMp();
-                if (valMP > 0) {
-                    cha.setCurrentMp(valMP + cha.getCurrentMp());
-                    cha.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(valMP)));
-                }
-            }
+                    double valMP = cha.getMaxMp() - cha.getCurrentMp();
+                    if (valMP > 0) {
+                        cha.setCurrentMp(valMP + cha.getCurrentMp());
+                        cha.sendPacket(new SystemMessage2(SystemMsg.S1_MP_HAS_BEEN_RESTORED).addInteger(Math.round(valMP)));
+                    }
+                });
     }
 
     @Override

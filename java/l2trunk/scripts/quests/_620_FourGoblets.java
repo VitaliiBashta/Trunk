@@ -1,19 +1,18 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.scripts.bosses.FourSepulchersManager;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class _620_FourGoblets extends Quest implements ScriptFile {
-    public final static int Sealed_Box = 7255;
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class _620_FourGoblets extends Quest {
+    final static int Sealed_Box = 7255;
     // NPC
     private static final int NAMELESS_SPIRIT = 31453;
     private static final int GHOST_OF_WIGOTH_1 = 31452;
@@ -26,25 +25,21 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
     private static final int GHOST_CHAMBERLAIN_2 = 31920;
     // ITEMS
     private static final int GRAVE_PASS = 7261;
-    private static final int[] GOBLETS = new int[]{
-            7256,
-            7257,
-            7258,
-            7259
-    };
+    private static final List<Integer> GOBLETS = List.of(
+            7256, 7257, 7258, 7259);
     private static final int RELIC = 7254;
     // REWARDS
     private static final int ANTIQUE_BROOCH = 7262;
-    private static final List<Integer> RCP_REWARDS = Arrays.asList(
+    private static final List<Integer> RCP_REWARDS = List.of(
             6881, 6883, 6885, 6887, 6891, 6893, 6895, 6897, 6899, 7580);
 
     public _620_FourGoblets() {
         super(false);
-        List<Integer> startNPCs = Arrays.asList(NAMELESS_SPIRIT, CONQ_SM, EMPER_SM, SAGES_SM, JUDGE_SM, GHOST_CHAMBERLAIN_1, GHOST_CHAMBERLAIN_2);
+        List<Integer> startNPCs = List.of(NAMELESS_SPIRIT, CONQ_SM, EMPER_SM, SAGES_SM, JUDGE_SM, GHOST_CHAMBERLAIN_1, GHOST_CHAMBERLAIN_2);
 
         addStartNpc(startNPCs);
 
-        addTalkId(Arrays.asList(GHOST_OF_WIGOTH_1, GHOST_OF_WIGOTH_2));
+        addTalkId(List.of(GHOST_OF_WIGOTH_1, GHOST_OF_WIGOTH_2));
 
         addQuestItem(Sealed_Box, GRAVE_PASS);
         addQuestItem(GOBLETS);
@@ -60,18 +55,6 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
             e.printStackTrace();
             return "Dont try to cheat with me!";
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override
@@ -163,11 +146,7 @@ public class _620_FourGoblets extends Quest implements ScriptFile {
         else if (event.equalsIgnoreCase("11"))
             return "<html><body><a action=\"bypass -h Quest _620_FourGoblets 19\">\"Please open a box.\"</a><br><a action=\"bypass -h Quest _620_FourGoblets 19 5\">\"Please open 5 boxes.\"</a><br><a action=\"bypass -h Quest _620_FourGoblets 19 10\">\"Please open 10 boxes.\"</a><br><a action=\"bypass -h Quest _620_FourGoblets 19 50\">\"Please open 50 boxes.\"</a><br></body></html>";
         else {
-            int id = 0;
-            try {
-                id = Integer.parseInt(event);
-            } catch (Exception e) {
-            }
+            int id = toInt(event);
             if (RCP_REWARDS.contains(id)) {
                 st.takeItems(RELIC, 1000);
                 st.giveItems(id, 1);

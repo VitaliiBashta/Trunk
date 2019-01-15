@@ -5,16 +5,17 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
+
+import java.util.List;
 
 public final class EvilNpc extends DefaultAI {
     private long _lastAction;
-    private static final String[] _txt = {
+    private static final List<String> TEXT = List.of(
             "Leave me alone!",
             "Calm down!",
             "I will avenge you, then you will ask for forgiveness!",
             "you will be in trouble!",
-            "I complain to you, have you arrested!"};
+            "I complain to you, have you arrested!");
 
     public EvilNpc(NpcInstance actor) {
         super(actor);
@@ -36,7 +37,7 @@ public final class EvilNpc extends DefaultAI {
             else
                 actor.doCast(4185, 7, attacker, true); // Sleep
 
-            Functions.npcSay(actor, attacker.getName() + ", " + Rnd.get(_txt));
+            Functions.npcSay(actor, attacker.getName() + ", " + Rnd.get(TEXT));
             _lastAction = System.currentTimeMillis();
         }
     }

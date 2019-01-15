@@ -14,11 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 public final class HolyWater extends SimpleItemHandler implements ScriptFile {
-    private static final int ITEM_IDS = 9673;
-
     @Override
     public List<Integer> getItemIds() {
-        return List.of(ITEM_IDS);
+        return List.of(9673);
     }
 
 

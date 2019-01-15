@@ -22,19 +22,9 @@ public enum ParserUtil {
     INSTANCE;
     private final SAXReader reader = new SAXReader();
     private final Logger LOG = LoggerFactory.getLogger(ParserUtil.class);
-    InputSource inputSource = new InputSource();
 
     ParserUtil() {
         reader.setValidation(true);
-    }
-
-    public static void main(String[] args) {
-        Path xml1 = Config.DATAPACK_ROOT.resolve("data/armor_sets.xml");
-        Path xml2 = Config.DATAPACK_ROOT.resolve("data/residences/");
-
-        ParserUtil.INSTANCE.load(xml1);
-        ParserUtil.INSTANCE.load(xml2);
-
     }
 
     public List<Element> load(Path xmlDir) {
@@ -64,7 +54,7 @@ public enum ParserUtil {
             LOG.warn("file " + xmlFile.toAbsolutePath() + " not exists");
             throw new IllegalArgumentException("File " + xmlFile + " not found");
         }
-        // TODO:  переделать через InputSource
+
         reader.setEntityResolver((publicId, systemId) -> new InputSource(Files.newInputStream(dtdFile.toAbsolutePath())));
 
         try {

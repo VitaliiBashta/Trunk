@@ -56,7 +56,7 @@ public final class StaticObjectInstance extends GameObject {
 
         if (!isInRange(player, 150)) {
             if (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT)
-                player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
+                player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
             return;
         }
 
@@ -81,8 +81,8 @@ public final class StaticObjectInstance extends GameObject {
 
     public void broadcastInfo(boolean force) {
         StaticObject p = new StaticObject(this);
-        for (Player player : World.getAroundPlayers(this))
-            player.sendPacket(p);
+        World.getAroundPlayers(this)
+                .forEach(pl -> pl.sendPacket(p));
     }
 
     @Override

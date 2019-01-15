@@ -48,12 +48,12 @@ public enum InstantZoneParser {
             boolean dispelBuffs;
             boolean onPartyDismiss = true;
             int mobId, respawn, respawnRnd, count, sharedReuseGroup = 0;
-            int collapseIfEmpty = 0;
+            int collapseIfEmpty;
             // 0 - точечный, в каждой указанной точке; 1 - один точечный спаун в рандомной точке; 2 - локационный
-            int spawnType = 0;
-            SpawnInfo spawnDat = null;
+            int spawnType;
+            SpawnInfo spawnDat;
             int removedItemId = 0, removedItemCount = 0, giveItemId = 0, givedItemCount = 0, requiredQuestId = 0;
-            int maxChannels = 20;
+            int maxChannels;
             boolean removedItemNecessity = false;
             boolean setReuseUponEntry = true;
             StatsSet params = new StatsSet();
@@ -99,7 +99,7 @@ public enum InstantZoneParser {
                 } else if ("party".equalsIgnoreCase(subElement.getName())) {
                     if (Config.ALLOW_INSTANCES_PARTY_MANUAL) {
                         minParty = Config.INSTANCES_PARTY_MIN;
-                        minParty = Config.INSTANCES_PARTY_MAX;
+                        maxParty = Config.INSTANCES_PARTY_MAX;
                     } else {
                         minParty = Integer.parseInt(subElement.attributeValue("min"));
                         maxParty = Integer.parseInt(subElement.attributeValue("max"));
@@ -184,11 +184,11 @@ public enum InstantZoneParser {
                             spawnType = 0;
 
                             String spawnTypeNode = e.attributeValue("type");
-                            if (spawnTypeNode == null || spawnTypeNode.equalsIgnoreCase("point"))
+                            if (spawnTypeNode == null || "point".equalsIgnoreCase(spawnTypeNode))
                                 spawnType = 0;
-                            else if (spawnTypeNode.equalsIgnoreCase("rnd"))
+                            else if ("rnd".equalsIgnoreCase(spawnTypeNode))
                                 spawnType = 1;
-                            else if (spawnTypeNode.equalsIgnoreCase("loc"))
+                            else if ("loc".equalsIgnoreCase(spawnTypeNode))
                                 spawnType = 2;
                             else
                                 LOG.error("Spawn type  '" + spawnTypeNode + "' is unknown!");

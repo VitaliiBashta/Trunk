@@ -23,7 +23,7 @@ public final class Furnface extends DefaultAI {
             actor.setNpcState(1);
             actor.setTargetable(false);
             actor.doCast(5144, caster, true);
-            GameObjectsStorage.getAllNpcs().stream()
+            GameObjectsStorage.getAllNpcs()
                     .filter(Objects::nonNull)
                     .filter(npc -> npc.getNpcId() == 32758)
                     .filter(npc -> actor.getDistance(npc) <= 1000)

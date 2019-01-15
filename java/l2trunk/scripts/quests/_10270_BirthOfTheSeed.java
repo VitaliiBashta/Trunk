@@ -3,13 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: pchayka
- * @date: 09.06.2010
- */
-public class _10270_BirthOfTheSeed extends Quest implements ScriptFile {
+public final class _10270_BirthOfTheSeed extends Quest {
     // NPC's
     private static final int PLENOS = 32563;
     private static final int ARTIUS = 32559;
@@ -23,18 +18,6 @@ public class _10270_BirthOfTheSeed extends Quest implements ScriptFile {
     private static final int Yehan_Klodekus = 25665;
     private static final int Yehan_Klanikus = 25666;
     private static final int Cohemenes = 25634;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10270_BirthOfTheSeed() {
         super(true);

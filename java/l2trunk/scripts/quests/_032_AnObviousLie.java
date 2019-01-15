@@ -4,39 +4,26 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _032_AnObviousLie extends Quest implements ScriptFile {
+public final class _032_AnObviousLie extends Quest {
+    //MOBS
+    private static final int ALLIGATOR = 20135;
+    //CHANCE FOR DROP
+    private static final int CHANCE_FOR_DROP = 30;
+    //REWARDS
+    private static final int RACCOON_EAR = 7680;
+    private static final int CAT_EAR = 6843;
+    private static final int RABBIT_EAR = 7683;
     //NPC
     private final int MAXIMILIAN = 30120;
     private final int GENTLER = 30094;
     private final int MIKI_THE_CAT = 31706;
-    //MOBS
-    private final int ALLIGATOR = 20135;
-    //CHANCE FOR DROP
-    private final int CHANCE_FOR_DROP = 30;
     //ITEMS
     private final int MAP = 7165;
     private final int MEDICINAL_HERB = 7166;
     private final int SPIRIT_ORES = 3031;
     private final int THREAD = 1868;
     private final int SUEDE = 1866;
-    //REWARDS
-    private final int RACCOON_EAR = 7680;
-    private final int CAT_EAR = 6843;
-    private final int RABBIT_EAR = 7683;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _032_AnObviousLie() {
         super(false);

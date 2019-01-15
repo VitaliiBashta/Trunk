@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _109_InSearchOfTheNest extends Quest implements ScriptFile {
+public final class _109_InSearchOfTheNest extends Quest {
     //NPC
     private static final int PIERCE = 31553;
     private static final int CORPSE = 32015;
@@ -15,18 +15,6 @@ public class _109_InSearchOfTheNest extends Quest implements ScriptFile {
     private static final int MEMO = 8083;
     private static final int GOLDEN_BADGE_RECRUIT = 7246;
     private static final int GOLDEN_BADGE_SOLDIER = 7247;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _109_InSearchOfTheNest() {
         super(false);

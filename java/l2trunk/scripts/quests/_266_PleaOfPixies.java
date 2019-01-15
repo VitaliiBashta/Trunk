@@ -7,19 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _266_PleaOfPixies extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _266_PleaOfPixies extends Quest {
     private static final int PREDATORS_FANG = 1334;
     private static final int EMERALD = 1337;
     private static final int BLUE_ONYX = 1338;
@@ -31,12 +19,10 @@ public class _266_PleaOfPixies extends Quest implements ScriptFile {
     public _266_PleaOfPixies() {
         super(false);
         addStartNpc(31852);
-        addKillId(new int[]{
-                20525,
+        addKillId(20525,
                 20530,
                 20534,
-                20537
-        });
+                20537);
         addQuestItem(PREDATORS_FANG);
     }
 

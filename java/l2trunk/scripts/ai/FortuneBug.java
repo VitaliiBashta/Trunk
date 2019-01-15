@@ -2,12 +2,14 @@ package l2trunk.scripts.ai;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.NpcUtils;
 
 import java.util.List;
@@ -25,7 +27,8 @@ public final class FortuneBug extends DefaultAI {
     private final List<Integer> Cristall_Dush = List.of(5577, 5578, 5579);
 
     private long _nextEat;
-    private int i_ai0, i_ai1, i_ai2;
+    private int i_ai0;
+    private int i_ai1;
 
     public FortuneBug(NpcInstance actor) {
         super(actor);
@@ -35,6 +38,7 @@ public final class FortuneBug extends DefaultAI {
     public void onEvtSpawn() {
         super.onEvtSpawn();
         addTimer(7778, 1000);
+        int i_ai2;
         i_ai0 = i_ai1 = i_ai2 = 0;
     }
 
@@ -48,11 +52,13 @@ public final class FortuneBug extends DefaultAI {
         if (actor.getNpcId() == Wingless_Luckpy || actor.getNpcId() == Wingless_Luckpy_Gold)
             return;
 
-        ItemInstance closestItem = null;
         if (_nextEat < System.currentTimeMillis()) {
-            for (GameObject obj : World.getAroundObjects(actor, 20, 200))
-                if (obj.isItem() && ((ItemInstance) obj).isStackable() && ((ItemInstance) obj).isAdena())
-                    closestItem = (ItemInstance) obj;
+            ItemInstance closestItem = World.getAroundObjects(actor, 20, 200)
+                    .filter(GameObject::isItem)
+                    .map(obj -> (ItemInstance) obj)
+                    .filter(ItemInstance::isStackable)
+                    .filter(ItemInstance::isAdena)
+                    .findFirst().orElse(null);
 
             if (closestItem != null) {
                 closestItem.deleteMe();
@@ -106,13 +112,12 @@ public final class FortuneBug extends DefaultAI {
             return true;
 
         if (!actor.isMoving && _nextEat < System.currentTimeMillis()) {
-            ItemInstance closestItem = null;
-            for (GameObject obj : World.getAroundObjects(actor, MAX_RADIUS, 200))
-                if (obj.isItem() && ((ItemInstance) obj).isStackable() && ((ItemInstance) obj).isAdena())
-                    closestItem = (ItemInstance) obj;
-
-            if (closestItem != null)
-                actor.moveToLocation(closestItem.getLoc(), 0, true);
+            World.getAroundObjects(actor, MAX_RADIUS, 200)
+                    .filter(GameObject::isItem)
+                    .map(obj -> (ItemInstance) obj)
+                    .filter(ItemInstance::isStackable)
+                    .filter(ItemInstance::isAdena)
+                    .findFirst().ifPresent(closestItem -> actor.moveToLocation(closestItem.getLoc(), 0, true));
         }
 
         return false;
@@ -160,7 +165,7 @@ public final class FortuneBug extends DefaultAI {
     }
 
     @Override
-    public void onEvtTimer(int timerId, Object arg1, Object arg2) {
+    public void onEvtTimer(int timerId) {
         NpcInstance actor = getActor();
         if (actor == null)
             return;
@@ -191,7 +196,7 @@ public final class FortuneBug extends DefaultAI {
             }
             addTimer(7778, 10000 + Rnd.get(10) * 1000);
         } else
-            super.onEvtTimer(timerId, arg1, arg2);
+            super.onEvtTimer(timerId);
     }
 
     @Override

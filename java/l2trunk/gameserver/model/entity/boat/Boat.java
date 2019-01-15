@@ -26,9 +26,9 @@ public abstract class Boat extends Creature {
     final Set<Player> players = new CopyOnWriteArraySet<>();
     private final BoatWayEvent[] _ways = new BoatWayEvent[2];
     int _fromHome;
-    int _runState;
+    int runState;
     private int _moveSpeed; //speed 1
-    private int _rotationSpeed; //speed 2
+    private int rotationSpeed; //speed 2
 
     Boat(int objectId, CharTemplate template) {
         super(objectId, template);
@@ -95,7 +95,7 @@ public abstract class Boat extends Creature {
     }
 
     public void trajetEnded(boolean oust) {
-        _runState = 0;
+        runState = 0;
         _fromHome = _fromHome == 1 ? 0 : 1;
 
         L2GameServerPacket checkLocation = checkLocationPacket();
@@ -186,14 +186,10 @@ public abstract class Boat extends Creature {
 
     @Override
     public void broadcastPacket(L2GameServerPacket... packets) {
-        List<Player> players = new ArrayList<>();
-        players.addAll(this.players);
-        players.addAll(World.getAroundPlayers(this));
+        this.players.forEach(p -> p.sendPacket(packets));
+        World.getAroundPlayers(this)
+                .forEach(p -> p.sendPacket(packets));
 
-        for (Player player : players) {
-            if (player != null)
-                player.sendPacket(packets);
-        }
     }
 
     @Override
@@ -250,19 +246,19 @@ public abstract class Boat extends Creature {
 
     //=========================================================================================================
     public int getRunState() {
-        return _runState;
+        return runState;
     }
 
     public void setRunState(int runState) {
-        _runState = runState;
+        this.runState = runState;
     }
 
     public int getRotationSpeed() {
-        return _rotationSpeed;
+        return rotationSpeed;
     }
 
     public void setRotationSpeed(int rotationSpeed) {
-        _rotationSpeed = rotationSpeed;
+        this.rotationSpeed = rotationSpeed;
     }
 
     public BoatWayEvent getCurrentWay() {
@@ -278,7 +274,7 @@ public abstract class Boat extends Creature {
     }
 
     public boolean isDocked() {
-        return _runState == 0;
+        return runState == 0;
     }
 
     public Location getReturnLoc() {

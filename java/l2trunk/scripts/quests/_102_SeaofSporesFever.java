@@ -6,10 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _102_SeaofSporesFever extends Quest implements ScriptFile {
+public final class _102_SeaofSporesFever extends Quest {
     private final int ALBERRYUS_LETTER = 964;
     private final int EVERGREEN_AMULET = 965;
     private final int DRYAD_TEARS = 966;
@@ -19,21 +18,9 @@ public class _102_SeaofSporesFever extends Quest implements ScriptFile {
     private final int COBS_MEDICINE3 = 1132;
     private final int COBS_MEDICINE4 = 1133;
     private final int COBS_MEDICINE5 = 1134;
-    private final int SWORD_OF_SENTINEL = 743;
-    private final int STAFF_OF_SENTINEL = 744;
+    private static final int SWORD_OF_SENTINEL = 743;
+    private static final int STAFF_OF_SENTINEL = 744;
     private final int ALBERRYUS_LIST = 746;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _102_SeaofSporesFever() {
         super(false);

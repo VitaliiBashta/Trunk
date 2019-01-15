@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -27,12 +26,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class FourSepulchersSpawn extends Functions implements ScriptFile {
-    public static final Map<Integer, Location> _startHallSpawns = new HashMap<>();
-    public static final Map<Integer, Boolean> _hallInUse = new HashMap<>();
-    public static final List<GateKeeper> _GateKeepers = new ArrayList<>();
-    public static final Map<Integer, Boolean> _archonSpawned = new HashMap<>();
-    public static final List<NpcInstance> _allMobs = new ArrayList<>();
+public final class FourSepulchersSpawn extends Functions {
+    static final Map<Integer, Location> _startHallSpawns = new HashMap<>();
+    static final Map<Integer, Boolean> _hallInUse = new HashMap<>();
+    static final List<GateKeeper> _GateKeepers = new ArrayList<>();
+    static final Map<Integer, Boolean> _archonSpawned = new HashMap<>();
+    static final List<NpcInstance> _allMobs = new ArrayList<>();
     private static final Logger LOG = LoggerFactory.getLogger(FourSepulchersSpawn.class);
     private static final Map<Integer, NpcLocation> _shadowSpawns = new HashMap<>();
     private static final Map<Integer, NpcLocation> _mysteriousBoxSpawns = new HashMap<>();
@@ -71,7 +70,7 @@ public final class FourSepulchersSpawn extends Functions implements ScriptFile {
                     new NpcLocation(189534, -88969, -7216, 32768, 25346),
                     new NpcLocation(173195, -76560, -7215, 49277, 25342),
                     new NpcLocation(175591, -72744, -7215, 49317, 25339)}};
-    public static List<SepulcherNpcInstance> _managers;
+    static List<SepulcherNpcInstance> _managers;
 
     public static void init() {
         initFixedInfo();
@@ -491,18 +490,6 @@ public final class FourSepulchersSpawn extends Functions implements ScriptFile {
             if (n.getNpcId() == 18149)
                 return true;
         return false;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     static class NpcLocation extends Location {

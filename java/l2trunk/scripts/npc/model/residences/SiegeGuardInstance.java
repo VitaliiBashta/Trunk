@@ -41,9 +41,7 @@ public class SiegeGuardInstance extends NpcInstance {
         Clan clan = player.getClan();
         if (siegeEvent == null)
             return false;
-        if (clan != null && siegeEvent == siegeEvent2 && siegeEvent.getSiegeClan(SiegeEvent.DEFENDERS, clan) != null)
-            return false;
-        return true;
+        return clan == null || siegeEvent != siegeEvent2 || siegeEvent.getSiegeClan(SiegeEvent.DEFENDERS, clan) == null;
     }
 
     @Override

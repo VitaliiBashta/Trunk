@@ -5,29 +5,16 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _107_MercilessPunishment extends Quest implements ScriptFile {
+public final class _107_MercilessPunishment extends Quest {
     private final int HATOSS_ORDER1 = 1553;
     private final int HATOSS_ORDER2 = 1554;
     private final int HATOSS_ORDER3 = 1555;
     private final int LETTER_TO_HUMAN = 1557;
     private final int LETTER_TO_DARKELF = 1556;
     private final int LETTER_TO_ELF = 1558;
-    private final int BUTCHER = 1510;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int BUTCHER = 1510;
 
     public _107_MercilessPunishment() {
         super(false);

@@ -11,10 +11,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.TimeUtils;
 
-/**
- * @author VISTALL
- */
-public class _655_AGrandPlanForTamingWildBeasts extends Quest implements ScriptFile {
+public final class _655_AGrandPlanForTamingWildBeasts extends Quest {
     private static final int MESSENGER = 35627;
 
     private final static int STONE = 8084;
@@ -71,20 +68,5 @@ public class _655_AGrandPlanForTamingWildBeasts extends Quest implements ScriptF
             htmlText = "farm_messenger_q0655_09.htm";
 
         return htmlText;
-    }
-
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

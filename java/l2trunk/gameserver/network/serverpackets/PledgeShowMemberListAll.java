@@ -7,6 +7,7 @@ import l2trunk.gameserver.model.pledge.UnitMember;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class PledgeShowMemberListAll extends L2GameServerPacket {
@@ -51,10 +52,10 @@ public class PledgeShowMemberListAll extends L2GameServerPacket {
             _allianceCrestId = ally.getAllyCrestId();
         }
 
-        _members = new ArrayList<>(sub.size());
+        _members = sub.getUnitMembers().stream()
+        .map(PledgePacketMember::new)
+        .collect(Collectors.toList());
 
-        for (UnitMember m : sub.getUnitMembers())
-            _members.add(new PledgePacketMember(m));
     }
 
     @Override

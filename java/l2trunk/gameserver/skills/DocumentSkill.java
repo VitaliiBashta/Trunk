@@ -54,7 +54,7 @@ public final class DocumentSkill extends DocumentBase {
         List<String> a = tables.get(name);
 
         a.stream().filter(s -> !s.matches(".*\\d+.*")).findFirst().ifPresent(s -> LOG.error("found not number " + s));
-    if (a.size() - 1 >= currentSkill.currentLevel)
+        if (a.size() - 1 >= currentSkill.currentLevel)
             return a.get(currentSkill.currentLevel);
         return a.get((a.size() - 1));
 //        } catch (RuntimeException e) {
@@ -140,7 +140,7 @@ public final class DocumentSkill extends DocumentBase {
                     if ("table".equalsIgnoreCase(curr.getNodeName())) {
                         NamedNodeMap a = curr.getAttributes();
                         String name = a.getNamedItem("name").getNodeValue();
-                        Object[] table = parseTable(curr);
+                        String[] table = parseTable(curr);
                         table = fillTableToSize(table, eLevels);
                         String[] fulltable = etables.get(name);
                         if (fulltable == null)
@@ -181,7 +181,7 @@ public final class DocumentSkill extends DocumentBase {
                     for (int j = 0; j < et.length; j++)
                         if (et[j] == null)
                             et[j] = max;
-                    List<String> objs = Arrays.asList(et);
+                    List<String> objs = List.of(et);
                     tables.put(tn, objs);
                 }
             }
@@ -223,9 +223,9 @@ public final class DocumentSkill extends DocumentBase {
         }
     }
 
-    private Object[] fillTableToSize(Object[] table, int size) {
+    private String[] fillTableToSize(String[] table, int size) {
         if (table.length < size) {
-            Object[] ret = new Object[size];
+            String[] ret = new String[size];
             System.arraycopy(table, 0, ret, 0, table.length);
             table = ret;
         }

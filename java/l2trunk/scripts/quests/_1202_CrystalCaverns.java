@@ -12,17 +12,18 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncMul;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.bosses.BaylorManager;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
+public final class _1202_CrystalCaverns extends Quest {
     private static final int INCSTANCED_ZONE_ID = 10;
     // Items
     //private static final int CONTAMINATED_CRYSTAL = 9690;
@@ -77,7 +78,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private static final int OG3 = 32276;
     private static final int OG4 = 32277;
 
-    private static final List<Integer> MOBLIST = Arrays.asList(
+    private static final List<Integer> MOBLIST = List.of(
             KechisCaptain1,
             KechisCaptain2,
             KechisCaptain3,
@@ -115,49 +116,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     private static final int CORAL_GARDEN_GATEWAY = 24220025; // Starting Room
 
     // --------- End Coral Garden ------------
-
-    class World {
-        int instanceId;
-        int status;
-        int killedCaptains;
-        int bosses;
-        Room OracleTriggered;
-        boolean OracleTriggeredRoom1 = true;
-        boolean OracleTriggeredRoom2 = true;
-        boolean OracleTriggeredRoom3 = true;
-        List<Integer> rewarded;
-        Room emeraldRoom;
-        Room steamRoom1;
-        Room steamRoom2;
-        Room steamRoom3;
-        Room steamRoom4;
-        Room SecretRoom1;
-        Room SecretRoom2;
-        Room SecretRoom3;
-        Room SecretRoom4;
-        Room DarnelRoom;
-        Room kechiRoom;
-        Room CoralGardenHall;
-    }
-
-    public class Room {
-        Map<NpcInstance, Boolean> npclist;
-        List<long[]> og;
-    }
-
-    private static final Map<Integer,World> worlds = new HashMap<>();
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final Map<Integer, World> worlds = new HashMap<>();
 
     public _1202_CrystalCaverns() {
         super(true);
@@ -226,10 +185,7 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     }
 
     private void despawnNpcF(World world) {
-        for (long[] list : world.OracleTriggered.og) {
-            NpcInstance npc = GameObjectsStorage.getAsNpc(OG1);
-            npc.decayMe();
-        }
+        world.OracleTriggered.og.forEach(l -> GameObjectsStorage.getAsNpc(OG1).decayMe());
     }
 
     @Override
@@ -291,11 +247,11 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
 
         if (teleto != null) {
             Party party = player.getParty();
+            Location loc = teleto;
             if (party != null)
-                for (Player partyMember : party.getMembers())
-                    partyMember.teleToLocation(teleto);
+                party.getMembers().forEach(pl -> pl.teleToLocation(loc));
             else
-                player.teleToLocation(teleto);
+                player.teleToLocation(loc);
         }
 
         return null;
@@ -305,15 +261,15 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         Player player = st.getPlayer();
 
-        if (event.equalsIgnoreCase("EnterEmeraldSteam")) {
+        if ("EnterEmeraldSteam".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             enterInstance(player, 1);
             return null;
-        } else if (event.equalsIgnoreCase("EnterCoralGarden")) {
+        } else if ("EnterCoralGarden".equalsIgnoreCase(event)) {
             st.setState(STARTED);
             enterInstance(player, 2);
             return null;
-        } else if (event.equalsIgnoreCase("meet")) {
+        } else if ("meet".equalsIgnoreCase(event)) {
             int state = BaylorManager.canIntoBaylorLair(player);
             if (state == 1 || state == 2)
                 return "meetingNo.htm";
@@ -324,13 +280,14 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
             st.giveItems(PRISON_KEY, 1, false);
             BaylorManager.entryToBaylorLair(player);
             return "meeting.htm";
-        } else if (event.equalsIgnoreCase("out")) {
+        } else if ("out".equalsIgnoreCase(event)) {
+            Location loc = new Location(149361, 172327, -945);
             if (player.getParty() != null) {
                 player.getParty().setReflection(null);
-                for (Player pl : player.getParty().getMembers())
-                    pl.teleToLocation(149361, 172327, -945, 0);
+                player.getParty().getMembers().forEach(pl ->
+                        pl.teleToLocation(loc, 0));
             } else
-                player.teleToLocation(149361, 172327, -945, 0);
+                player.teleToLocation(loc, 0);
             return null;
         }
         return event;
@@ -499,8 +456,6 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
         }
     }
 
-    // -------- Start Emerald Steam -----------
-
     private void runEmeraldAndSteamFirstRoom(World world) {
         world.status = 0;
         addSpawnToInstance(GK1, new Location(148206, 149486, -12140, 32308), 0, world.instanceId);
@@ -663,6 +618,8 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
         world.emeraldRoom.npclist.put(newNpc, false);
     }
 
+    // -------- Start Emerald Steam -----------
+
     private void runSecretRoom1(World world) {
         world.SecretRoom1 = new Room();
         world.SecretRoom1.npclist = new HashMap<>();
@@ -793,15 +750,15 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
         NpcInstance NewNpc4;
         NewNpc1 = addSpawnToInstance(OG1, new Location(147090, 152505, -12169, 31613), 0, world.instanceId);
         NewNpc1.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc1.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc1.getObjectId());
         NewNpc2 = addSpawnToInstance(OG2, new Location(147090, 152575, -12169, 31613), 0, world.instanceId);
         NewNpc2.setCurrentHp(1, false, true);
         NewNpc3 = addSpawnToInstance(OG1, new Location(147090, 152645, -12169, 31613), 0, world.instanceId);
         NewNpc3.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc3.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc3.getObjectId());
         NewNpc4 = addSpawnToInstance(OG1, new Location(147090, 152715, -12169, 31613), 0, world.instanceId);
         NewNpc4.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc4.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc4.getObjectId());
     }
 
     private void runSteamRoom2(World world) {
@@ -844,15 +801,15 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
         NpcInstance NewNpc4;
         NewNpc1 = addSpawnToInstance(OG1, new Location(149783, 152505, -12169, 31613), 0, world.instanceId);
         NewNpc1.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc1.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc1.getObjectId());
         NewNpc2 = addSpawnToInstance(OG1, new Location(149783, 152575, -12169, 31613), 0, world.instanceId);
         NewNpc2.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc2.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc2.getObjectId());
         NewNpc3 = addSpawnToInstance(OG3, new Location(149783, 152645, -12169, 31613), 0, world.instanceId);
         NewNpc3.setCurrentHp(1, false, true);
         NewNpc4 = addSpawnToInstance(OG1, new Location(149783, 152715, -12169, 31613), 0, world.instanceId);
         NewNpc4.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc4.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc4.getObjectId());
     }
 
     private void runSteamRoom3(World world) {
@@ -901,13 +858,13 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
         NpcInstance NewNpc4;
         NewNpc1 = addSpawnToInstance(OG1, new Location(152461, 152505, -12169, 31613), 0, world.instanceId);
         NewNpc1.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc1.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc1.getObjectId());
         NewNpc2 = addSpawnToInstance(OG1, new Location(152461, 152575, -12169, 31613), 0, world.instanceId);
         NewNpc2.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc2.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc2.getObjectId());
         NewNpc3 = addSpawnToInstance(OG1, new Location(152461, 152645, -12169, 31613), 0, world.instanceId);
         NewNpc3.setCurrentHp(1, false, true);
-        world.OracleTriggered.og.add(new long[]{NewNpc3.getObjectId()});
+        world.OracleTriggered.og.add(NewNpc3.getObjectId());
         NewNpc4 = addSpawnToInstance(OG4, new Location(152461, 152715, -12169, 31613), 0, world.instanceId);
         NewNpc4.setCurrentHp(1, false, true);
     }
@@ -949,16 +906,11 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
         world.kechiRoom.npclist.put(newNpc, false);
         newNpc = addSpawnToInstance(KechisGuard2, new Location(154165, 149734, -12159, 4087), 0, world.instanceId);
         world.kechiRoom.npclist.put(newNpc, false);
-        if (captain.getReflection().getAllByNpcId(KECHI, true).isEmpty())//Fix for Second KECHI exploit
-        {
+        if (captain.getReflection().getAllByNpcId(KECHI, true).count() == 0) {//Fix for Second KECHI exploit
             newNpc = addSpawnToInstance(KECHI, new Location(154069, 149525, -12158, 51165), 0, world.instanceId);
             world.kechiRoom.npclist.put(newNpc, false);
         }
     }
-
-    // --------- End Emerald Steam ------------
-
-    // -------- Start Coral Garden ------------
 
     private void runCoralGardenHall(World world) {
         world.status = 30;
@@ -1068,14 +1020,45 @@ public final class _1202_CrystalCaverns extends Quest implements ScriptFile {
         addSpawnToInstance(32328, new Location(141941, 151684, -11813, 63371), 0, world.instanceId);
     }
 
-    //----------- End Coral Garden ------------
+    // --------- End Emerald Steam ------------
+
+    // -------- Start Coral Garden ------------
 
     private boolean checkKillProgress(NpcInstance npc, Room room) {
         if (room.npclist.containsKey(npc))
             room.npclist.put(npc, true);
-        for (boolean value : room.npclist.values())
-            if (!value)
-                return false;
-        return true;
+        return room.npclist.values().stream()
+                .allMatch(value -> value);
+    }
+
+    class World {
+        int instanceId;
+        int status;
+        int killedCaptains;
+        int bosses;
+        Room OracleTriggered;
+        boolean OracleTriggeredRoom1 = true;
+        boolean OracleTriggeredRoom2 = true;
+        boolean OracleTriggeredRoom3 = true;
+        List<Integer> rewarded;
+        Room emeraldRoom;
+        Room steamRoom1;
+        Room steamRoom2;
+        Room steamRoom3;
+        Room steamRoom4;
+        Room SecretRoom1;
+        Room SecretRoom2;
+        Room SecretRoom3;
+        Room SecretRoom4;
+        Room DarnelRoom;
+        Room kechiRoom;
+        Room CoralGardenHall;
+    }
+
+    //----------- End Coral Garden ------------
+
+    public class Room {
+        Map<NpcInstance, Boolean> npclist;
+        List<Integer> og;
     }
 }

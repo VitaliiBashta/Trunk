@@ -10,9 +10,8 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _727_HopewithintheDarkness extends Quest implements ScriptFile {
+public final class _727_HopewithintheDarkness extends Quest {
     // ITEMS
     private static final int KnightsEpaulette = 9912;
 
@@ -27,7 +26,7 @@ public final class _727_HopewithintheDarkness extends Quest implements ScriptFil
     }
 
     private static boolean checkAllDestroyed(int refId) {
-        return GameObjectsStorage.getAllByNpcId(_727_HopewithintheDarkness.KanadisGuide3, true).stream()
+        return GameObjectsStorage.getAllByNpcId(_727_HopewithintheDarkness.KanadisGuide3, true)
                 .noneMatch(npc -> npc.getReflectionId() == refId);
     }
 

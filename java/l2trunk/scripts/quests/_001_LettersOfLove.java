@@ -5,10 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _001_LettersOfLove extends Quest implements ScriptFile {
+public final class _001_LettersOfLove extends Quest {
     private final static int DARIN = 30048;
     private final static int ROXXY = 30006;
     private final static int BAULRO = 30033;
@@ -18,18 +16,6 @@ public class _001_LettersOfLove extends Quest implements ScriptFile {
     private final static int DARINGS_RECEIPT = 1079;
     private final static int BAULS_POTION = 1080;
     private final static int NECKLACE = 906;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _001_LettersOfLove() {
         super(false);

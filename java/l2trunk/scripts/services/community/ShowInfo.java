@@ -13,7 +13,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
  * Вызов всплывающего окна из комьюнити - [bypass _bbsscripts:services.community.ShowInfo:show info_folder info_page|Имя папки, Имя страницы]
  **/
 
-public final class ShowInfo extends Functions implements ScriptFile {
+public final class ShowInfo extends Functions {
     public void show(String[] param) {
         Player player = getSelf();
         String info_folder;
@@ -35,15 +35,4 @@ public final class ShowInfo extends Functions implements ScriptFile {
         show(html, player);
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

@@ -3,6 +3,7 @@ package l2trunk.gameserver.data.xml.holder;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.residence.Residence;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.*;
 
@@ -46,7 +47,7 @@ public final class ResidenceHolder {
     private static <R extends Residence> R getResidenceByCoord(Class<R> type, int x, int y, int z, Reflection ref) {
         Collection<Residence> residences = type == null ? RESIDENCES.values() : (Collection<Residence>) getResidenceList(type);
         for (Residence residence : residences) {
-            if (residence.checkIfInZone(x, y, z, ref))
+            if (residence.checkIfInZone(new Location(x, y, z), ref))
                 return (R) residence;
         }
         return null;

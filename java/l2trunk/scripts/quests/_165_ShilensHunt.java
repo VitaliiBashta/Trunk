@@ -7,21 +7,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _165_ShilensHunt extends Quest implements ScriptFile {
+public final class _165_ShilensHunt extends Quest {
     private static final int DARK_BEZOAR = 1160;
     private static final int LESSER_HEALING_POTION = 1060;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _165_ShilensHunt() {
         super(false);

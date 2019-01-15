@@ -8,13 +8,11 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class Ranku extends Fighter {
+public final class Ranku extends Fighter {
     private static final int TELEPORTATION_CUBIC_ID = 32375;
     private static final Location CUBIC_POSITION = new Location(-19056, 278732, -15000, 0);
     private static final int SCAPEGOAT_ID = 32305;
-
     private long _massacreTimer = 0;
-    private final long _massacreDelay = 30000L;
 
     public Ranku(NpcInstance actor) {
         super(actor);
@@ -35,6 +33,7 @@ public class Ranku extends Fighter {
         if (actor.isDead())
             return;
 
+        long _massacreDelay = 30000L;
         if (_massacreTimer + _massacreDelay < System.currentTimeMillis()) {
             NpcInstance victim = getScapegoat();
             _massacreTimer = System.currentTimeMillis();
@@ -56,10 +55,10 @@ public class Ranku extends Fighter {
     }
 
     private NpcInstance getScapegoat() {
-        for (NpcInstance n : getActor().getReflection().getNpcs())
-            if (n.getNpcId() == SCAPEGOAT_ID && !n.isDead())
-                return n;
-        return null;
+        return getActor().getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == SCAPEGOAT_ID)
+                .filter(n -> !n.isDead())
+                .findFirst().orElse(null);
     }
 
     private int getMaximumHate() {

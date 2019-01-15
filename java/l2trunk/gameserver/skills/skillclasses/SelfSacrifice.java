@@ -3,11 +3,14 @@ package l2trunk.gameserver.skills.skillclasses;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public final class SelfSacrifice extends Skill {
     private final int _effRadius;
@@ -21,24 +24,11 @@ public final class SelfSacrifice extends Skill {
 
     @Override
     public List<Creature> getTargets(final Creature activeChar, final Creature aimingTarget, final boolean forceUse) {
-        List<Creature> result = new ArrayList<>();
-        if (((activeChar.getAroundCharacters(this._effRadius, 1000) == null) || (activeChar.getAroundCharacters(this._effRadius, 1000).isEmpty())) && (((Player) activeChar).getParty() == null)) {
-            return result;
-        }
-        for (int i = 0; i < activeChar.getAroundCharacters(this._effRadius, 1000).size(); i++) {
-            Creature target = activeChar.getAroundCharacters(this._effRadius, 1000).get(i);
-            if ((target != null) && (target.isPlayer()) && (!target.isAutoAttackable(activeChar))) {
-                if (target.isPlayer()) {
-                    Player activeCharTarget = (Player) target;
-                    if ((activeCharTarget.isInDuel()) || (activeCharTarget.isCursedWeaponEquipped())) {
-
-                    }
-                } else {
-                    result.add(target);
-                }
-            }
-        }
-        return result;
+        return activeChar.getAroundCharacters(this._effRadius, 1000)
+                .filter(Objects::nonNull)
+                .filter(GameObject::isPlayer)
+                .filter(target -> !target.isAutoAttackable(activeChar))
+                .collect(Collectors.toList());
     }
 
     @Override

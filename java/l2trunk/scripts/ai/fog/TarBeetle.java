@@ -10,12 +10,10 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 
 public final class TarBeetle extends DefaultAI {
-    private static final List<Location> POSITIONS =List.of(
+    private static final List<Location> POSITIONS = List.of(
             new Location(179256, -117160, -3608),
             new Location(179752, -115000, -3608),
             new Location(177944, -119528, -4112),
@@ -69,12 +67,13 @@ public final class TarBeetle extends DefaultAI {
 
     private void CancelTarget(NpcInstance actor) {
         if (TAR_BEETLE != actor.getDisplayId()) {
-            for (Player player : World.getAroundPlayers(actor))
-                if (player.getTarget() == actor) {
-                    player.setTarget(null);
-                    player.abortAttack(true, false);
-                    player.abortCast(true, true);
-                }
+            World.getAroundPlayers(actor)
+                    .filter(p -> p.getTarget() == actor)
+                    .forEach(p -> {
+                        p.setTarget(null);
+                        p.abortAttack(true, false);
+                        p.abortCast(true, true);
+                    });
         }
     }
 
@@ -95,8 +94,8 @@ public final class TarBeetle extends DefaultAI {
             CAN_DEBUF = true;
 
         if (CAN_DEBUF) {
-            for (Player player : World.getAroundPlayers(actor, 500, 200))
-                addEffect(actor, player);
+            World.getAroundPlayers(actor, 500, 200)
+                    .forEach(p -> addEffect(actor, p));
             CAN_DEBUF = false;
         }
 
@@ -112,7 +111,7 @@ public final class TarBeetle extends DefaultAI {
             int y = loc.y + Rnd.get(1, 8);
             int z = GeoEngine.getHeight(x, y, loc.z, actor.getReflection().getGeoIndex());
 
-            actor.broadcastPacketToOthers(new MagicSkillUse(actor,  4671,  500));
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor, 4671, 500));
             ThreadPoolManager.INSTANCE.schedule(new Teleport(new Location(x, y, z)), 500);
             LAST_TELEPORT = System.currentTimeMillis();
             break;
@@ -126,14 +125,12 @@ public final class TarBeetle extends DefaultAI {
             int level = effect.get(0).getSkill().getLevel();
             if (level < 3) {
                 effect.get(0).exit();
-                Skill skill = SkillTable.INSTANCE.getInfo(6142, level + 1);
-                skill.getEffects(actor, player);
-                actor.broadcastPacket(new MagicSkillUse(actor, player, 6142,level + 1));
+                SkillTable.INSTANCE.getInfo(6142, level + 1).getEffects(actor, player);
+                actor.broadcastPacket(new MagicSkillUse(actor, player, 6142, level + 1));
             }
         } else {
-            Skill skill = SkillTable.INSTANCE.getInfo(6142);
-            skill.getEffects(actor, player);
-            actor.broadcastPacket(new MagicSkillUse(actor, player, 6142 ));
+            SkillTable.INSTANCE.getInfo(6142).getEffects(actor, player);
+            actor.broadcastPacket(new MagicSkillUse(actor, player, 6142));
         }
     }
 }

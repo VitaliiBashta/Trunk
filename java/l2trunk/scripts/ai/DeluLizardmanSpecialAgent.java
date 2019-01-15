@@ -6,11 +6,6 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * AI для Delu Lizardman Special Agent ID: 21105
- *
- * @author Diamond
- */
 public final class DeluLizardmanSpecialAgent extends Ranger {
     private boolean _firstTimeAttacked = true;
 

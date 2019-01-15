@@ -11,10 +11,6 @@ import l2trunk.scripts.bosses.BelethManager;
 
 import java.util.StringTokenizer;
 
-/**
- * @author pchayka
- */
-
 public final class BelethCoffinInstance extends NpcInstance {
     private static final int RING = 10314;
 
@@ -28,7 +24,7 @@ public final class BelethCoffinInstance extends NpcInstance {
             return;
 
         StringTokenizer st = new StringTokenizer(command);
-        if (st.nextToken().equals("request_ring")) {
+        if ("request_ring".equals(st.nextToken())) {
             if (!BelethManager.isRingAvailable()) {
                 player.sendPacket(new NpcHtmlMessage(player, this).setHtml("Stone Coffin:<br><br>Ring is not available. Get lost!"));
                 return;
@@ -53,7 +49,6 @@ public final class BelethCoffinInstance extends NpcInstance {
 
             BelethManager.setRingAvailable(false);
             deleteMe();
-
         } else
             super.onBypassFeedback(player, command);
     }

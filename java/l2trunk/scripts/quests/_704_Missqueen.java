@@ -3,30 +3,13 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * WTF?
- */
-public class _704_Missqueen extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _704_Missqueen extends Quest {
+    //items
+    private static final int item_1 = 7832;
+    private static final int item_2 = 7833;
     //Npc
     private final int m_q = 31760;
-
-    //items
-    private final int item_1 = 7832;
-    private final int item_2 = 7833;
 
     public _704_Missqueen() {
         super(false);

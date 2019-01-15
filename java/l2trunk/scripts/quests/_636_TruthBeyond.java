@@ -3,28 +3,14 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _636_TruthBeyond extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _636_TruthBeyond extends Quest {
+    //Items
+    private static final int MARK = 8067;
+    private static final int VISITORSMARK = 8064;
     //Npc
     private final int ELIYAH = 31329;
     private final int FLAURON = 32010;
-
-    //Items
-    private final int MARK = 8067;
-    private final int VISITORSMARK = 8064;
 
     public _636_TruthBeyond() {
         super(false);

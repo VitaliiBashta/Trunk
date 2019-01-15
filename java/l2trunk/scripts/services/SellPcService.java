@@ -16,7 +16,6 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 public final class SellPcService extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
 
-
     public void dialog() {
         Player player = getSelf();
         if (player == null)
@@ -55,11 +54,4 @@ public final class SellPcService extends Functions implements ScriptFile {
         _log.info("Loaded Service: SellPcService");
     }
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

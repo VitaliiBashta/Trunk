@@ -85,13 +85,9 @@ public final class SubUnit {
     }
 
     public UnitMember getUnitMember(String obj) {
-        for (UnitMember m : getUnitMembers()) {
-            if (m.getName().equalsIgnoreCase(obj)) {
-                return m;
-            }
-        }
-
-        return null;
+        return getUnitMembers().stream()
+                .filter(m -> m.getName().equalsIgnoreCase(obj))
+                .findFirst().orElse(null);
     }
 
     public void removeUnitMember(int objectId) {

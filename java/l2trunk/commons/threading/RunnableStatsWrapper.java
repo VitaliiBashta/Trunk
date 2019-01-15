@@ -19,7 +19,6 @@ public final class RunnableStatsWrapper implements Runnable {
         long begin = System.nanoTime();
         try {
             runnable.run();
-
             RunnableStatsManager.INSTANCE.handleStats(runnable.getClass(), System.nanoTime() - begin);
         } catch (RuntimeException e) {
             LOG.error("Exception in a Runnable execution:", e);

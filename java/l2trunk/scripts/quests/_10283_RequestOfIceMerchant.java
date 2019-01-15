@@ -6,23 +6,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10283_RequestOfIceMerchant extends Quest implements ScriptFile {
+public final class _10283_RequestOfIceMerchant extends Quest {
     // NPC's
     private static final int _rafforty = 32020;
     private static final int _kier = 32022;
     private static final int _jinia = 32760;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10283_RequestOfIceMerchant() {
         super(false);

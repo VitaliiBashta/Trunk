@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class _021_HiddenTruth extends Quest implements ScriptFile {
+public final class _021_HiddenTruth extends Quest {
     public static final int DARIN = 30048;
     public static final int ROXXY = 30006;
     public static final int BAULRO = 30033;
@@ -52,18 +52,6 @@ public class _021_HiddenTruth extends Quest implements ScriptFile {
         if (GhostofvonHellmann != null)
             GhostofvonHellmann.deleteMe();
         GhostofvonHellmann = null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     public _021_HiddenTruth() {

@@ -38,14 +38,13 @@ import l2trunk.gameserver.instancemanager.games.HandysBlockCheckerManager;
 import l2trunk.gameserver.instancemanager.games.HandysBlockCheckerManager.ArenaParticipantsHolder;
 import l2trunk.gameserver.listener.actor.player.OnAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.ReviveAnswerListener;
-import l2trunk.gameserver.listener.actor.player.impl.ScriptAnswerListener;
 import l2trunk.gameserver.listener.actor.player.impl.SummonAnswerListener;
 import l2trunk.gameserver.model.GameObjectTasks.*;
 import l2trunk.gameserver.model.Request.L2RequestType;
 import l2trunk.gameserver.model.Skill.AddedSkill;
 import l2trunk.gameserver.model.Zone.ZoneType;
-import l2trunk.gameserver.model.actor.instances.player.*;
 import l2trunk.gameserver.model.actor.instances.player.FriendList;
+import l2trunk.gameserver.model.actor.instances.player.*;
 import l2trunk.gameserver.model.actor.listener.PlayerListenerList;
 import l2trunk.gameserver.model.actor.recorder.PlayerStatsChangeRecorder;
 import l2trunk.gameserver.model.base.*;
@@ -125,8 +124,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.sql.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -134,6 +133,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 import static l2trunk.gameserver.network.serverpackets.ExSetCompassZoneCode.*;
@@ -177,7 +177,6 @@ public final class Player extends Playable implements PlayerGroup {
     private static final List<Integer> EXPERTISE_LEVELS = List.of(
             0, 20, 40, 52, 61, 76, 80, 84, Integer.MAX_VALUE);
     private static final Logger _log = LoggerFactory.getLogger(Player.class);
-    private static boolean _isNoAttackEvents = false;
     public final BookMarkList bookmarks = new BookMarkList(this, 0);
     public final AntiFlood antiFlood = new AntiFlood();
     final Map<Integer, Skill> _transformationSkills = new HashMap<>();
@@ -242,7 +241,6 @@ public final class Player extends Playable implements PlayerGroup {
      * new race ticket *
      */
     private final int[] _race = new int[2];
-    private final List<TeleportPoints> teleportPoints = new ArrayList<>();
     public boolean sittingTaskLaunched;
     /**
      * The current higher Expertise of the L2Player (None=0, D=1, C=2, B=3, A=4, S=5, S80=6, S84=7)
@@ -253,7 +251,6 @@ public final class Player extends Playable implements PlayerGroup {
     public boolean _autoHp;
     public boolean entering = true;
     public Location _stablePoint = null;
-    public boolean achievement_nf_open;
     private boolean _gmVisible = false;
     private int _telemode = 0;
     //    public AccountReportDAO _account = null;
@@ -458,13 +455,9 @@ public final class Player extends Playable implements PlayerGroup {
 
     // ----------------- End of Quest Engine -------------------
     private int _hoursInGame = 0;
-    private int _team = 0;
-    @SuppressWarnings("unused")
-    private boolean _checksForTeam = false;
     private boolean _agathionResAvailable = false;
     private Map<String, String> _userSession;
     private boolean is_bbs_use = false;
-    private int _pvp_team = 0;
     private AutoHuntingPunish _AutoHuntingPunish = null;
     private boolean _isVoting = false;
     // Ady - Support for visible non permanent colors
@@ -478,8 +471,6 @@ public final class Player extends Playable implements PlayerGroup {
     private PlayerCounters _playerCountersExtension = null;
     private int soloInstance;
     private int partyInstance;
-    // Captcha
-    private int _capchaCount = 0;
     // Alexander - Used for catpcha system, sets when was the last time that this player did damage to a monster
     private long _lastMonsterDamageTime = 0;
 
@@ -877,14 +868,6 @@ public final class Player extends Playable implements PlayerGroup {
                     _log.error("Error while restoring FightClubRate", e);
                 }
 
-                try {
-                    String var = player.getVar("EnItemOlyRec");
-                    if (Config.OLY_ENCH_LIMIT_ENABLE && (var != null)) {
-                        FixEnchantOlympiad.restoreEnchantItemsOly(player);
-                    }
-                } catch (RuntimeException e) {
-                    _log.error("Error while restoring EnItemOlyRec", e);
-                }
                 player.updateKetraVarka();
                 player.updateRam();
                 player.checkRecom();
@@ -897,14 +880,7 @@ public final class Player extends Playable implements PlayerGroup {
                 if (Config.ENABLE_ACHIEVEMENTS)
                     player.loadAchivements();
 
-                // Alexander - Get dinamically characters values getting names from the ranking
-//				for (Ranking top : Ranking.values())
-//				{
-//					if (top.getDbLocation().equalsIgnoreCase("characters"))
-//					{
-//						player.getStats().setPlayerStats(top, rset.getLong(top.getDbName()));
-//					}
-//				}
+
             }
         } catch (IllegalArgumentException | SQLException e) {
             _log.error("Could not restore char data! ", e);
@@ -1469,12 +1445,11 @@ public final class Player extends Playable implements PlayerGroup {
         return quests.values();
     }
 
-    public List<QuestState> getQuestsForEvent(NpcInstance npc, QuestEventType event) {
+    public Stream<QuestState> getQuestsForEvent(NpcInstance npc, QuestEventType event) {
         return npc.getTemplate().getEventQuests(event).stream()
                 .map(quest -> getQuestState(quest.getName()))
                 .filter(Objects::nonNull)
-                .filter(qs -> !qs.isCompleted())
-                .collect(Collectors.toList());
+                .filter(qs -> !qs.isCompleted());
     }
 
 
@@ -2343,7 +2318,7 @@ public final class Player extends Playable implements PlayerGroup {
 
             // Remove Karma when the player kills L2MonsterInstance
             if (!isCursedWeaponEquipped() && (addToSp > 0) && (karma > 0)) {
-                long toDecrease = Config.KARMA_MIN_KARMA / 10 + getPkKills() * Config.KARMA_SP_DIVIDER;
+                int toDecrease = Config.KARMA_MIN_KARMA / 10 + getPkKills() * Config.KARMA_SP_DIVIDER;
                 setKarma(karma - (int) Rnd.get(toDecrease / 2, toDecrease * 2));
             }
 
@@ -2676,7 +2651,7 @@ public final class Player extends Playable implements PlayerGroup {
         }
 
         resetWaitSitTime();
-        getAI().setIntention(CtrlIntention.AI_INTENTION_REST, null, null);
+        getAI().setIntention(CtrlIntention.AI_INTENTION_REST);
 
         if (throne == null) {
             broadcastPacket(new ChangeWaitType(this, ChangeWaitType.WT_SITTING));
@@ -2805,7 +2780,7 @@ public final class Player extends Playable implements PlayerGroup {
         } else if (getPrivateStoreType() != Player.STORE_PRIVATE_NONE) {
             if ((getDistance(player) > INTERACTION_DISTANCE) && (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT)) {
                 if (!shift) {
-                    player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
+                    player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
                 } else {
                     player.sendPacket(ActionFail.STATIC);
                 }
@@ -2902,19 +2877,19 @@ public final class Player extends Playable implements PlayerGroup {
     private void broadcastCharInfoImpl() {
         L2GameServerPacket exCi = new ExBR_ExtraUserInfo(this);
         L2GameServerPacket dominion = getEvent(DominionSiegeEvent.class) != null ? new ExDominionWarStart(this) : null;
-        for (Player player : World.getAroundPlayers(this)) {
-            player.sendPacket(isPolymorphed() ? new NpcInfoPoly(this) : new CharInfo(this, player), exCi);
-            player.sendPacket(RelationChanged.update(player, this, player));
-            if (dominion != null) {
-                player.sendPacket(dominion);
-            }
-        }
+        World.getAroundPlayers(this)
+                .forEach(p -> {
+                    p.sendPacket(isPolymorphed() ? new NpcInfoPoly(this) : new CharInfo(this, p), exCi);
+                    p.sendPacket(RelationChanged.update(p, this, p));
+                    if (dominion != null) {
+                        p.sendPacket(dominion);
+                    }
+                });
     }
 
     public void broadcastRelationChanged() {
-        for (Player player : World.getAroundPlayers(this)) {
-            player.sendPacket(RelationChanged.update(player, this, player));
-        }
+        World.getAroundPlayers(this)
+                .forEach(p -> p.sendPacket(RelationChanged.update(p, this, p)));
     }
 
     public void sendEtcStatusUpdate() {
@@ -3110,7 +3085,7 @@ public final class Player extends Playable implements PlayerGroup {
                 }
                 sendActionFailed();
             } else if (getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT) {
-                getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
+                getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
             }
         } else {
             target.onAction(this, false);
@@ -3295,7 +3270,7 @@ public final class Player extends Playable implements PlayerGroup {
         if ((party != null) && party.isInDimensionalRift()) {
             int riftType = party.getDimensionalRift().getType();
             int riftRoom = party.getDimensionalRift().getCurrentRoom();
-            if ((newTarget != null) && !DimensionalRiftManager.INSTANCE.getRoom(riftType, riftRoom).checkIfInZone(newTarget.getX(), newTarget.getY(), newTarget.getZ())) {
+            if ((newTarget != null) && !DimensionalRiftManager.INSTANCE.getRoom(riftType, riftRoom).checkIfInZone(newTarget.getLoc())) {
                 newTarget = null;
             }
         }
@@ -5671,12 +5646,12 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     @Override
-    public void teleToLocation(int x, int y, int z, int refId) {
+    public void teleToLocation(Location loc, int refId) {
         if (isDeleted()) {
             return;
         }
 
-        super.teleToLocation(x, y, z, refId);
+        super.teleToLocation(loc, refId);
     }
 
     @Override
@@ -6272,15 +6247,6 @@ public final class Player extends Playable implements PlayerGroup {
         }
     }
 
-    //   /**
-    // * Block time that the player cannot summon a pet
-    // * @return
-    // */
-    // public long getPetSummonBlockedTime()
-    // {
-    //    return _petSummonBlockedTime;
-    // }
-
     public int getRam() {
         return _ram;
     }
@@ -6490,13 +6456,6 @@ public final class Player extends Playable implements PlayerGroup {
         return _nameColor;
     }
 
-    public void setNameColor(String RGB) {
-        if (RGB.length() == 6) {
-            RGB = RGB.substring(4, 6) + RGB.substring(2, 4) + RGB.substring(0, 2);
-        }
-        setNameColor(Integer.decode("0x" + RGB));
-    }
-
     public void setNameColor(final int nameColor) {
         if ((nameColor != Config.NORMAL_NAME_COLOUR) && (nameColor != Config.CLANLEADER_NAME_COLOUR) && (nameColor != Config.GM_NAME_COLOUR)) {
             setVar("namecolor", Integer.toHexString(nameColor), -1);
@@ -6504,15 +6463,6 @@ public final class Player extends Playable implements PlayerGroup {
             unsetVar("namecolor");
         }
         _nameColor = nameColor;
-    }
-
-    public void setNameColor(final int red, final int green, final int blue) {
-        _nameColor = (red & 0xFF) + ((green & 0xFF) << 8) + ((blue & 0xFF) << 16);
-        if ((_nameColor != Config.NORMAL_NAME_COLOUR) && (_nameColor != Config.CLANLEADER_NAME_COLOUR) && (_nameColor != Config.GM_NAME_COLOUR)) {
-            setVar("namecolor", Integer.toHexString(_nameColor), -1);
-        } else {
-            unsetVar("namecolor");
-        }
     }
 
     public void setVar(String name, String value, long expireDate) {
@@ -6569,10 +6519,8 @@ public final class Player extends Playable implements PlayerGroup {
     public long getVarTimeToExpire(String name) {
         try {
             return getVarObject(name).getTimeToExpire();
-        } catch (NullPointerException npe) {
-
+        } catch (NullPointerException ignored) {
         }
-
         return 0;
     }
 
@@ -6595,11 +6543,7 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     public long getVarLong(String name) {
-        return getVarLong(name, 0L);
-    }
-
-    private long getVarLong(String name, long defaultVal) {
-        long result = defaultVal;
+        long result = 0;
         String var = getVar(name);
         if (var != null) {
             result = Long.parseLong(var);
@@ -6809,27 +6753,12 @@ public final class Player extends Playable implements PlayerGroup {
         return LANG_UNK;
     }
 
-    public Language getLanguage() {
-        String lang = getLang();
-        if ((lang == null) || lang.equalsIgnoreCase("en") || lang.equalsIgnoreCase("e") || lang.equalsIgnoreCase("eng")) {
-            return Language.ENGLISH;
-        }
-        if (lang.equalsIgnoreCase("ru") || lang.equalsIgnoreCase("r") || lang.equalsIgnoreCase("rus")) {
-            return Language.RUSSIAN;
-        }
-        return Language.ENGLISH;
-    }
-
     public boolean isLangRus() {
         return getLangId() == LANG_RUS;
     }
 
     public int isAtWarWith(final Integer id) {
         return (_clan == null) || !_clan.isAtWarWith(id) ? 0 : 1;
-    }
-
-    public int isAtWar() {
-        return (_clan == null) || (_clan.isAtWarOrUnderAttack() <= 0) ? 0 : 1;
     }
 
     public void stopWaterTask() {
@@ -6920,10 +6849,6 @@ public final class Player extends Playable implements PlayerGroup {
         ask(cd, new SummonAnswerListener(this, loc, summonConsumeCrystal));
     }
 
-    public void scriptRequest(String text, String scriptName, Object[] args) {
-        ask(new ConfirmDlg(SystemMsg.S1, 30000).addString(text), new ScriptAnswerListener(this, scriptName, args));
-    }
-
     public void updateNoChannel(final long time) {
         setNoChannel(time);
 
@@ -6951,7 +6876,7 @@ public final class Player extends Playable implements PlayerGroup {
         temp.set(Calendar.MINUTE, 30);
         temp.set(Calendar.SECOND, 0);
         temp.set(Calendar.MILLISECOND, 0);
-        long count = Math.round(((System.currentTimeMillis() / 1000) - _lastAccess) / 86400);
+        long count = Math.round(((System.currentTimeMillis() / 1000.) - _lastAccess) / 86400.);
         if ((count == 0) && (_lastAccess < (temp.getTimeInMillis() / 1000)) && (System.currentTimeMillis() > temp.getTimeInMillis())) {
             count++;
         }
@@ -7013,10 +6938,6 @@ public final class Player extends Playable implements PlayerGroup {
         return activeClass;
     }
 
-    public void setActiveClass(SubClass activeClass) {
-        this.activeClass = activeClass;
-    }
-
     public int getActiveClassId() {
         if (getActiveClass() == null)
             return -1;
@@ -7026,9 +6947,6 @@ public final class Player extends Playable implements PlayerGroup {
 
     /**
      * Changing index of class in DB, used for changing class when finished professional quests
-     *
-     * @param oldclass
-     * @param newclass
      */
     private synchronized void changeClassInDb(final int oldclass, final int newclass) {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
@@ -8438,9 +8356,9 @@ public final class Player extends Playable implements PlayerGroup {
         sendPacket(new ExBasicActionList(this));
         sendPacket(new SkillList(this));
         sendPacket(new ShortCutInit(this));
-        for (int shotId : getAutoSoulShot()) {
-            sendPacket(new ExAutoSoulShot(shotId, true));
-        }
+        getAutoSoulShot().forEach(shotId ->
+                sendPacket(new ExAutoSoulShot(shotId, true)));
+
         broadcastUserInfo(true);
     }
 
@@ -9290,14 +9208,10 @@ public final class Player extends Playable implements PlayerGroup {
         if ((traps == null) || traps.isEmpty()) {
             return;
         }
-        TrapInstance trap;
-        for (Integer trapId : traps.keySet()) {
-            if ((trap = (TrapInstance) GameObjectsStorage.get(traps.get(trapId))) != null) {
-                trap.deleteMe();
-                return;
-            }
-            return;
-        }
+        traps.keySet().stream()
+                .filter(trapId -> Objects.nonNull(GameObjectsStorage.get(traps.get(trapId))))
+                .map(trapId -> (TrapInstance) GameObjectsStorage.get(traps.get(trapId)))
+                .findFirst().ifPresent(GameObject::deleteMe);
     }
 
     private void destroyAllTraps() {
@@ -9309,11 +9223,9 @@ public final class Player extends Playable implements PlayerGroup {
         for (int trapId : traps.keySet()) {
             toRemove.add((TrapInstance) GameObjectsStorage.get(traps.get(trapId)));
         }
-        for (TrapInstance t : toRemove) {
-            if (t != null) {
-                t.deleteMe();
-            }
-        }
+        toRemove.stream()
+                .filter(Objects::nonNull)
+                .forEach(GameObject::deleteMe);
     }
 
     public int getBlockCheckerArena() {
@@ -9376,22 +9288,6 @@ public final class Player extends Playable implements PlayerGroup {
             getPet().sendChanges();
     }
 
-    public void setTeamEvents(final int team, boolean checksForTeam) {
-        _checksForTeam = checksForTeam;
-        if (_team != team) {
-            _team = team;
-
-            broadcastUserInfo(true);
-            if (getPet() != null) {
-                getPet().broadcastCharInfo();
-            }
-        }
-    }
-
-    public int getTeamEvents() {
-        return _team;
-    }
-
     public long getPremiumPoints() {
         if (Config.GAME_POINT_ITEM_ID != -1) {
             return ItemFunctions.getItemCount(this, Config.GAME_POINT_ITEM_ID);
@@ -9444,10 +9340,6 @@ public final class Player extends Playable implements PlayerGroup {
 
     public FriendList getFriendList() {
         return _friendList;
-    }
-
-    public boolean isNotShowTraders() {
-        return _notShowTraders;
     }
 
     public void setNotShowTraders(boolean notShowTraders) {
@@ -9865,11 +9757,11 @@ public final class Player extends Playable implements PlayerGroup {
         return _blockedActions.contains(action);
     }
 
-    public void blockActions(String... actions) {
+    void blockActions(String... actions) {
         Collections.addAll(_blockedActions, actions);
     }
 
-    public void unblockActions(String... actions) {
+    void unblockActions(String... actions) {
         for (String action : actions) {
             _blockedActions.remove(action);
         }
@@ -9895,8 +9787,8 @@ public final class Player extends Playable implements PlayerGroup {
         _olympiadObserveGame = olympiadObserveGame;
     }
 
-    public void addRadar(int x, int y, int z) {
-        sendPacket(new RadarControl(0, 1, x, y, z));
+    public void addRadar(Location loc) {
+        sendPacket(new RadarControl(0, 1, loc));
     }
 
     public void addRadarWithMap(int x, int y, int z) {
@@ -9910,27 +9802,6 @@ public final class Player extends Playable implements PlayerGroup {
 
     public void setLectureMark(int lectureMark) {
         _lectureMark = lectureMark;
-    }
-
-    public TeleportPoints getTeleportPoint(String name) {
-        for (TeleportPoints point : teleportPoints) {
-            if (point.getName().equalsIgnoreCase(name)) {
-                return point;
-            }
-        }
-        return null;
-    }
-
-    public void addTeleportPoint(String name, int id, int itemId, long price) {
-        teleportPoints.add(new TeleportPoints(name, new Location(getX(), getY(), getZ()), id, itemId, price));
-    }
-
-    public void delTeleportPoint(String name) {
-        for (TeleportPoints point : teleportPoints) {
-            if (point.getName().equals(name)) {
-                teleportPoints.remove(point);
-            }
-        }
     }
 
     public void setLastHeroTrue(boolean value) {
@@ -9949,14 +9820,6 @@ public final class Player extends Playable implements PlayerGroup {
         AuthServerCommunication.getInstance().sendPacket(new ChangeAccessLevel(getAccountName(), level, banTime));
     }
 
-    public boolean isNoAttackEvents() {
-        return _isNoAttackEvents;
-    }
-
-    public static void setNoAttackEvents(boolean set) {
-        _isNoAttackEvents = set;
-    }
-
     private void restoreCursedWeapon() {
         for (ItemInstance item : getInventory().getItems()) {
             if (item.isCursed()) {
@@ -9971,104 +9834,16 @@ public final class Player extends Playable implements PlayerGroup {
         updateStats();
     }
 
-    public void allowPvPTeam() {
-        if (_pvp_team == 0) {
-            setTeam(TeamType.NONE);
-        } else if (_pvp_team == 2) {
-            setTeam(TeamType.RED);
-        } else if (_pvp_team == 1) {
-            setTeam(TeamType.BLUE);
-        }
-    }
-
-    private int getPvPTeam() {
-        return _pvp_team;
-    }
-
-    public void setPvPTeam(final int team) {
-        if (_pvp_team != team) {
-            _pvp_team = team;
-            broadcastUserInfo(true);
-            if (getPet() != null) {
-                getPet().broadcastCharInfo();
-            }
-        }
-    }
-
-    public void startUnjailTask(Player player, long time, boolean msg) {
-        if (time < 1) {
-            return;
-        }
-
-        if (_unjailTask != null) {
-            _unjailTask.cancel(false);
-        }
-
-        _unjailTask = ThreadPoolManager.INSTANCE.schedule(new UnJailTask(player, msg), time);
-    }
-
-    public void stopUnjailTask() {
-        if (_unjailTask != null) {
-            _unjailTask.cancel(false);
-        }
-        _unjailTask = null;
-    }
-
-    /**
-     * Initializes his _botPunish object with the specified punish and for the specified time
-     *
-     * @param punishType
-     * @param minsOfPunish
-     */
-    public synchronized void setPunishDueBotting(AutoHuntingPunish.Punish punishType, int minsOfPunish) {
-        if (_AutoHuntingPunish == null) {
-            _AutoHuntingPunish = new AutoHuntingPunish(punishType, minsOfPunish);
-        }
-    }
-
-    /**
-     * Returns the current object-representative player punish
-     *
-     * @return
-     */
     public AutoHuntingPunish getPlayerPunish() {
         return _AutoHuntingPunish;
     }
 
-    /**
-     * Returns the type of punish being applied
-     *
-     * @return
-     */
     public AutoHuntingPunish.Punish getBotPunishType() {
         return _AutoHuntingPunish.getBotPunishType();
     }
 
-    /**
-     * Will return true if the player has any bot punishment active
-     *
-     * @return
-     */
     public boolean isBeingPunished() {
         return _AutoHuntingPunish != null;
-    }
-
-    /**
-     * Sets exp holded by the character on log in
-     *
-     * @param value
-     */
-    public void setFirstExp(long value) {
-        _firstExp = value;
-    }
-
-    /**
-     * Will return true if the player has gained exp since logged in
-     *
-     * @return
-     */
-    public boolean hasEarnedExp() {
-        return (getExp() - _firstExp) != 0;
     }
 
     /**
@@ -10080,35 +9855,8 @@ public final class Player extends Playable implements PlayerGroup {
         this.sendMessage("Your punishment has expired. Do not bot again!");
     }
 
-    public boolean isInSameParty(Player target) {
-        return ((getParty() != null) && (target.getParty() != null) && (getParty() == target.getParty()));
-    }
-
-    public boolean isInSameChannel(Player target) {
-        Party activeCharP = getParty();
-        Party targetP = target.getParty();
-        if ((activeCharP == null) || (targetP == null))
-            return false;
-        CommandChannel chan = activeCharP.getCommandChannel();
-
-        return chan != null && chan == targetP.getCommandChannel();
-    }
-
     public boolean isInSameClan(Player target) {
         return getClanId() != 0 && getClanId() == target.getClanId();
-    }
-
-    public final boolean isInSameAlly(Player target) {
-        return getAllyId() != 0 && getAllyId() == target.getAllyId();
-    }
-
-
-    public boolean isVoting() {
-        return _isVoting;
-    }
-
-    public void setIsVoting(boolean value) {
-        _isVoting = value;
     }
 
     public Skill getMacroSkill() {
@@ -10165,10 +9913,6 @@ public final class Player extends Playable implements PlayerGroup {
         return getName();
     }
 
-    public void setVisibleName(final String name) {
-        _visibleName = name;
-    }
-
     public String getVisibleTitle() {
         if (_visibleTitle != null)
             return _visibleTitle;
@@ -10221,7 +9965,7 @@ public final class Player extends Playable implements PlayerGroup {
         broadcastCharInfo();
 
         // Guardamos el offline buffer en la db al salir
-        OfflineBuffersTable.getInstance().onLogout(this);
+        OfflineBuffersTable.INSTANCE.onLogout(this);
 
         // Stop all tasks
         stopWaterTask();
@@ -10286,16 +10030,11 @@ public final class Player extends Playable implements PlayerGroup {
     }
 
     /**
-     * Alexander - This is used to transfer the skill reuse to a new skill. This happens when a player level up or enchants an skill, its reused is lost due to its hashCode
-     *
-     * @param oldSkillReuseHashCode
-     * @param newSkillReuseHashCode
+     * Alexander - This is used to transfer the skill reuse to a new skill.
+     * This happens when a player level up or enchants an skill, its reused is lost due to its hashCode
      */
-    private void disableSkillByNewLvl(Integer oldSkillReuseHashCode, Integer newSkillReuseHashCode) {
+    private void disableSkillByNewLvl(int oldSkillReuseHashCode, int newSkillReuseHashCode) {
         if (oldSkillReuseHashCode == newSkillReuseHashCode)
-            return;
-
-        if (_skillReuses == null)
             return;
 
         final TimeStamp timeStamp = _skillReuses.get(oldSkillReuseHashCode);
@@ -10373,24 +10112,6 @@ public final class Player extends Playable implements PlayerGroup {
         return _playerCountersExtension;
     }
 
-    // Alexander - Custom stats holder
-//	private PcStats _stats;
-//
-//	public final PcStats getStats()
-//	{
-//		return _stats;
-//	}
-//
-//	public final void addPlayerStats(Ranking rank)
-//	{
-//		getStats().addPlayerStats(rank);
-//	}
-//
-//	public final void addPlayerStats(Ranking rank, long points)
-//	{
-//		getStats().addPlayerStats(rank, points);
-//	}
-
     public void broadcastSkillOrSocialAnimation(int id, int level, int hitTime, int lockActivityTime) {
         if (isAlikeDead())
             return;
@@ -10435,18 +10156,6 @@ public final class Player extends Playable implements PlayerGroup {
         sendPacket(new ExAutoSoulShot(autoHp, flag));
     }
 
-    public int getCapchaCount() {
-        return _capchaCount;
-    }
-
-    public void updateCapchaCount(int count) {
-        _capchaCount = count;
-    }
-
-    public long getLastMonsterDamageTime() {
-        return _lastMonsterDamageTime;
-    }
-
     public void setLastMonsterDamageTime() {
         _lastMonsterDamageTime = System.currentTimeMillis();
     }
@@ -10464,14 +10173,6 @@ public final class Player extends Playable implements PlayerGroup {
         public void runImpl() {
             broadcastCharInfoImpl();
             _broadcastCharInfoTask = null;
-        }
-    }
-
-    private class UserInfoTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            sendUserInfoImpl();
-            _userInfoTask = null;
         }
     }
 
@@ -10506,8 +10207,5 @@ public final class Player extends Playable implements PlayerGroup {
             return itemId;
         }
 
-        public Location getXYZ() {
-            return location;
-        }
     }
 }

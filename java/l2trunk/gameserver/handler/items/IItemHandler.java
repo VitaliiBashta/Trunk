@@ -22,16 +22,13 @@ public interface IItemHandler {
                 player.getInventory().unEquipItem(item);
                 player.sendUserInfo(true);
             }
-
             item = player.getInventory().removeItemByObjectId(item.getObjectId(), count, "DropItem");
             if (item == null) {
                 player.sendActionFailed();
                 return;
             }
-
             item.dropToTheGround(player, loc);
             player.disableDrop(1000);
-
             player.sendChanges();
         }
 

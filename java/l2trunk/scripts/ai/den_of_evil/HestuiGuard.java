@@ -1,7 +1,6 @@
 package l2trunk.scripts.ai.den_of_evil;
 
 import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
@@ -27,12 +26,9 @@ public final class HestuiGuard extends DefaultAI {
     @Override
     public boolean thinkActive() {
         NpcInstance actor = getActor();
-
-        for (Player player : World.getAroundPlayers(actor)) {
-            if (player.getLevel() <= 37)
-                Functions.npcSay(actor, NpcString.THIS_PLACE_IS_DANGEROUS_S1, player.getName());
-        }
-
+        World.getAroundPlayers(actor)
+                .filter(p -> p.getLevel() <= 37)
+                .forEach(p -> Functions.npcSay(actor, NpcString.THIS_PLACE_IS_DANGEROUS_S1, p.getName()));
         return false;
     }
 }

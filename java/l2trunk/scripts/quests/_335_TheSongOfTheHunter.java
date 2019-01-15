@@ -5,13 +5,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
+public final class _335_TheSongOfTheHunter extends Quest {
     // NPCs
     private static final int Grey = 30744;
     private static final int Tor = 30745;
@@ -56,31 +56,10 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
     private static final int Moturas_Head = 3725;
     private static final int Kalaths_Head = 3726;
 
-    private static final int[] q_blood_crystal = {
-            3708,
-            3698,
-            3699,
-            3700,
-            3701,
-            3702,
-            3703,
-            3704,
-            3705,
-            3706,
-            3707
-    };
-    private static final int[] q_blood_crystal_lizardmen = {
-            20578,
-            20579,
-            20580,
-            20581,
-            20582,
-            20641,
-            20642,
-            20643,
-            20644,
-            20645
-    };
+    private static final List<Integer> q_blood_crystal = List.of(
+            3708, 3698, 3699, 3700, 3701, 3702, 3703, 3704, 3705, 3706, 3707);
+    private static final List<Integer> q_blood_crystal_lizardmen = List.of(
+            20578, 20579, 20580, 20581, 20582, 20641, 20642, 20643, 20644, 20645);
     private static final int[][][] Items_1st_Circle = {
             {
                     {Guardian_Basilisk_Scale},
@@ -195,7 +174,7 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
                     {5}
             }
     };
-    private static final Request[] Requests1 = {
+    private static final List<Request> Requests1 = List.of(
             new Request(3727, 3769, 40, 2090, "C: 40 Totems of Kadesh").addDrop(20578, 80).addDrop(20579, 83),
             new Request(3728, 3770, 50, 6340, "C: 50 Jade Necklaces of Timak").addDrop(20586, 89).addDrop(20588, 100),
             new Request(3729, 3771, 50, 9480, "C: 50 Enchanted Golem Shards").addDrop(20565, 100),
@@ -221,8 +200,8 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
             new Request(3746, 3788, 1, 27540, "A: Titan's Tablet").addSpawn(20554, 27160, 10).addDrop(27160, 100),
             // grandis_chief_gok_magok
             new Request(3747, 3789, 1, 20560, "A: Book of Shunaiman").addSpawn(20600, 27164, 10).addDrop(27164, 100)
-    }; // karul_chief_orooto
-    private static final Request[] Requests2 = {
+    ); // karul_chief_orooto
+    private static final List<Request> Requests2 = List.of(
             new Request(3748, 3790, 40, 6850, "C: 40 Rotting Tree Spores").addDrop(20558, 67),
             new Request(3749, 3791, 40, 7250, "C: 40 Trisalim Venom Sacs").addDrop(20560, 66).addDrop(20561, 75),
             new Request(3750, 3792, 50, 7160, "C: 50 Totems of Taik Orc").addDrop(20633, 53).addDrop(20634, 99),
@@ -253,7 +232,7 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
             new Request(3767, 3809, 1, 39550, "A: Bust of Travis").addSpawn(20662, 27162, 10).addDrop(27162, 100),
             // hatar_chieftain_kubel
             new Request(3768, 3810, 10, 41200, "A: 10 Swords of Cadmus").addDrop(20676, 64)
-    };
+    );
 
     public _335_TheSongOfTheHunter() {
         super(false);
@@ -312,6 +291,115 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
         addQuestItem(q_blood_crystal);
     }
 
+    private static int CalcItemsConds(QuestState st, int[][][] ItemsConds) {
+        int result = 0;
+        for (int[][] ItemsCond : ItemsConds)
+            if (st.getQuestItemsCount(ItemsCond[0]) >= ItemsCond[1][0])
+                result++;
+        return result;
+    }
+
+    private static void DelItemsConds(QuestState st, int[][][] ItemsConds) {
+        for (int[][] ItemsCond : ItemsConds)
+            st.takeAllItems(ItemsCond[0]);
+    }
+
+    private static int Get_Blood_Crystal_Level(QuestState st) {
+        for (int i = q_blood_crystal.size() - 1; i >= 0; i--)
+            if (st.getQuestItemsCount(q_blood_crystal.get(i)) > 0)
+                return i;
+        return -1;
+    }
+
+    private static boolean Blood_Crystal2Adena(QuestState st, int Blood_Crystal_Level) {
+        if (Blood_Crystal_Level < 2)
+            return false;
+        st.takeAllItems(q_blood_crystal);
+        st.giveItems(ADENA_ID, 3400 * (int) Math.pow(2, Blood_Crystal_Level - 2));
+        return true;
+    }
+
+    private static void GenList(QuestState st) {
+        final int grade_c = 12;
+        final int grade_b = 6;
+        final int grade_a = 3;
+        if (st.get("list") == null || st.get("list").isEmpty()) {
+            long Laurel_Leaf_Pin_count = st.getQuestItemsCount(Laurel_Leaf_Pin);
+            int[] list = new int[5];
+            if (Laurel_Leaf_Pin_count < 4) {
+                if (Laurel_Leaf_Pin_count == 0 || Rnd.chance(80))
+                    for (int i = 0; i < 5; i++)
+                        list[i] = Rnd.get(grade_c);
+                else {
+                    list[0] = grade_c + Rnd.get(grade_b);
+                    list[1] = Rnd.get(grade_c);
+                    list[2] = Rnd.get(grade_c / 2);
+                    list[3] = grade_c / 2 + Rnd.get(grade_c / 2);
+                    list[4] = Rnd.get(grade_c);
+                }
+            } else if (Rnd.chance(20)) {
+                list[0] = grade_c + Rnd.get(grade_b);
+                list[1] = Rnd.chance(5) ? grade_c + grade_b + Rnd.get(grade_a) : Rnd.get(grade_c);
+                list[2] = Rnd.get(grade_c / 2);
+                list[3] = grade_c / 2 + Rnd.get(grade_c / 2);
+                list[4] = Rnd.get(grade_c);
+            } else {
+                list[0] = Rnd.get(grade_c);
+                list[1] = Rnd.chance(5) ? grade_c + grade_b + Rnd.get(grade_a) : Rnd.get(grade_c);
+                list[2] = Rnd.get(grade_c / 2);
+                list[3] = grade_c / 2 + Rnd.get(grade_c / 2);
+                list[4] = Rnd.get(grade_c);
+            }
+            for (; ; ) {
+                boolean sort_flag = false;
+                for (int i = 1; i < list.length; i++)
+                    if (list[i] < list[i - 1]) {
+                        int tmp = list[i];
+                        list[i] = list[i - 1];
+                        list[i - 1] = tmp;
+                        sort_flag = true;
+                    }
+                if (!sort_flag)
+                    break;
+            }
+            int packedlist = 0;
+            try {
+                packedlist = Util.packInt(list, 5);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            st.set("list", String.valueOf(packedlist));
+        }
+    }
+
+    private static String FormatList(QuestState st, List<Request> requests) {
+        String result = "<html><head><body>Guild Member Tor:<br>%reply%<br>%reply%<br>%reply%<br>%reply%<br>%reply%<br></body></html>";
+        List<Integer> listpacked = List.of(Util.unpackInt(st.getInt("list"), 5));
+        for (int i = 0; i <= 5; i++) {
+            String s = "<a action=\"bypass -h Quest _335_TheSongOfTheHunter 30745-request-"
+                    + requests.get(listpacked.get(i)).request_id + "\">"
+                    + requests.get(listpacked.get(i)).text + "</a>";
+            result = result.replaceFirst("%reply%", s);
+        }
+        return result;
+    }
+
+    private static Request GetCurrentRequest(QuestState st, List<Request> requests) {
+        return requests.stream()
+                .filter(r -> st.getQuestItemsCount(r.request_id) > 0)
+                .findFirst().orElse(null);
+    }
+
+    private static boolean isValidRequest(int id) {
+        for (Request r : Requests1)
+            if (r.request_id == id)
+                return true;
+        for (Request r : Requests2)
+            if (r.request_id == id)
+                return true;
+        return false;
+    }
+
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         int _state = st.getState();
@@ -344,7 +432,7 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
                 st.giveItems(Cybellins_Request, 1);
             st.takeAllItems(q_blood_crystal);
             st.playSound(SOUND_MIDDLE);
-            st.giveItems(q_blood_crystal[1], 1);
+            st.giveItems(q_blood_crystal.get(1), 1);
         } else if (event.equalsIgnoreCase("30746_06.htm") && _state == STARTED) {
             if (!Blood_Crystal2Adena(st, Get_Blood_Crystal_Level(st)))
                 return null;
@@ -564,12 +652,12 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
                     for (int lizardmen_id : q_blood_crystal_lizardmen)
                         if (npcId == lizardmen_id)
                             if (Rnd.chance(50)) {
-                                st.takeAllItems(q_blood_crystal[Blood_Crystal_Level]);
+                                st.takeAllItems(q_blood_crystal.get(Blood_Crystal_Level));
                                 st.playSound(Blood_Crystal_Level < 6 ? SOUND_MIDDLE : SOUND_JACKPOT);
-                                st.giveItems(q_blood_crystal[Blood_Crystal_Level + 1], 1);
+                                st.giveItems(q_blood_crystal.get(Blood_Crystal_Level + 1), 1);
                             } else {
                                 st.takeAllItems(q_blood_crystal);
-                                st.giveItems(q_blood_crystal[0], 1);
+                                st.giveItems(q_blood_crystal.get(0), 1);
                             }
             }
 
@@ -598,106 +686,6 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
         }
 
         return null;
-    }
-
-    private static int CalcItemsConds(QuestState st, int[][][] ItemsConds) {
-        int result = 0;
-        for (int[][] ItemsCond : ItemsConds)
-            if (st.getQuestItemsCount(ItemsCond[0]) >= ItemsCond[1][0])
-                result++;
-        return result;
-    }
-
-    private static void DelItemsConds(QuestState st, int[][][] ItemsConds) {
-        for (int[][] ItemsCond : ItemsConds)
-            st.takeAllItems(ItemsCond[0]);
-    }
-
-    private static int Get_Blood_Crystal_Level(QuestState st) {
-        for (int i = q_blood_crystal.length - 1; i >= 0; i--)
-            if (st.getQuestItemsCount(q_blood_crystal[i]) > 0)
-                return i;
-        return -1;
-    }
-
-    private static boolean Blood_Crystal2Adena(QuestState st, int Blood_Crystal_Level) {
-        if (Blood_Crystal_Level < 2)
-            return false;
-        st.takeAllItems(q_blood_crystal);
-        st.giveItems(ADENA_ID, 3400 * (int) Math.pow(2, Blood_Crystal_Level - 2));
-        return true;
-    }
-
-    private static void GenList(QuestState st) {
-        final int grade_c = 12;
-        final int grade_b = 6;
-        final int grade_a = 3;
-        if (st.get("list") == null || st.get("list").isEmpty()) {
-            long Laurel_Leaf_Pin_count = st.getQuestItemsCount(Laurel_Leaf_Pin);
-            int[] list = new int[5];
-            if (Laurel_Leaf_Pin_count < 4) {
-                if (Laurel_Leaf_Pin_count == 0 || Rnd.chance(80))
-                    for (int i = 0; i < 5; i++)
-                        list[i] = Rnd.get(grade_c);
-                else {
-                    list[0] = grade_c + Rnd.get(grade_b);
-                    list[1] = Rnd.get(grade_c);
-                    list[2] = Rnd.get(grade_c / 2);
-                    list[3] = grade_c / 2 + Rnd.get(grade_c / 2);
-                    list[4] = Rnd.get(grade_c);
-                }
-            } else if (Rnd.chance(20)) {
-                list[0] = grade_c + Rnd.get(grade_b);
-                list[1] = Rnd.chance(5) ? grade_c + grade_b + Rnd.get(grade_a) : Rnd.get(grade_c);
-                list[2] = Rnd.get(grade_c / 2);
-                list[3] = grade_c / 2 + Rnd.get(grade_c / 2);
-                list[4] = Rnd.get(grade_c);
-            } else {
-                list[0] = Rnd.get(grade_c);
-                list[1] = Rnd.chance(5) ? grade_c + grade_b + Rnd.get(grade_a) : Rnd.get(grade_c);
-                list[2] = Rnd.get(grade_c / 2);
-                list[3] = grade_c / 2 + Rnd.get(grade_c / 2);
-                list[4] = Rnd.get(grade_c);
-            }
-            for (; ; ) {
-                boolean sort_flag = false;
-                for (int i = 1; i < list.length; i++)
-                    if (list[i] < list[i - 1]) {
-                        int tmp = list[i];
-                        list[i] = list[i - 1];
-                        list[i - 1] = tmp;
-                        sort_flag = true;
-                    }
-                if (!sort_flag)
-                    break;
-            }
-            int packedlist = 0;
-            try {
-                packedlist = Util.packInt(list, 5);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            st.set("list", String.valueOf(packedlist));
-        }
-    }
-
-    private static String FormatList(QuestState st, Request[] requests) {
-        String result = "<html><head><body>Guild Member Tor:<br>%reply%<br>%reply%<br>%reply%<br>%reply%<br>%reply%<br></body></html>";
-        int[] listpacked = Util.unpackInt(st.getInt("list"), 5);
-        for (int i = 0; i <= 5; i++) {
-            String s = "<a action=\"bypass -h Quest _335_TheSongOfTheHunter 30745-request-" + requests[listpacked[i]].request_id + "\">" + requests[listpacked[i]].text + "</a>";
-            result = result.replaceFirst("%reply%", s);
-        }
-        return result;
-    }
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
     }
 
     public static class Request {
@@ -745,22 +733,5 @@ public class _335_TheSongOfTheHunter extends Quest implements ScriptFile {
             st.unset("list");
             return true;
         }
-    }
-
-    private static Request GetCurrentRequest(QuestState st, Request[] requests) {
-        for (Request r : requests)
-            if (st.getQuestItemsCount(r.request_id) > 0)
-                return r;
-        return null;
-    }
-
-    private static boolean isValidRequest(int id) {
-        for (Request r : Requests1)
-            if (r.request_id == id)
-                return true;
-        for (Request r : Requests2)
-            if (r.request_id == id)
-                return true;
-        return false;
     }
 }

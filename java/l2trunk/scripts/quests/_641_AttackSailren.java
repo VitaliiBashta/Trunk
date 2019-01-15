@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _641_AttackSailren extends Quest implements ScriptFile {
+public final class _641_AttackSailren extends Quest {
     //NPC
     private static final int STATUE = 32109;
 
@@ -19,18 +19,6 @@ public class _641_AttackSailren extends Quest implements ScriptFile {
     //items
     private static final int FRAGMENTS = 8782;
     private static final int GAZKH = 8784;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _641_AttackSailren() {
         super(true);

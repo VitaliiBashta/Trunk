@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class OnActionShift extends Functions {
+public final class OnActionShift extends Functions {
     public boolean OnActionShift_NpcInstance(Player player, GameObject object) {
         if (player == null || object == null)
             return false;

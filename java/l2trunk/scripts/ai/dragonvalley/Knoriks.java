@@ -8,6 +8,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.Arrays;
+import java.util.List;
 
 public final class Knoriks extends Patrollers {
     private static final int KNORIKS_ACTIVATE_SKILL_CHANGE = 5;        // chance for activate skill
@@ -16,7 +17,7 @@ public final class Knoriks extends Patrollers {
 
     public Knoriks(NpcInstance actor) {
         super(actor);
-        points = Arrays.asList(
+        points = List.of(
                 new Location(141848, 121592, -3912),
                 new Location(140440, 120264, -3912),
                 new Location(140664, 118328, -3912),

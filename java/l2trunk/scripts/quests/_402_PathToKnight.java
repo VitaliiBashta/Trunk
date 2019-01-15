@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _402_PathToKnight extends Quest implements ScriptFile {
+public final class _402_PathToKnight extends Quest {
     //npc
     private final int SIR_KLAUS_VASPER = 30417;
     private final int BIOTIN = 30031;
@@ -139,18 +138,6 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _402_PathToKnight() {
         super(false);
 
@@ -168,14 +155,12 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
         for (int[] element : DROPLIST)
             addKillId(element[0]);
 
-        addQuestItem(new int[]{
-                BUGBEAR_NECKLACE,
+        addQuestItem(BUGBEAR_NECKLACE,
                 EINHASAD_CRUCIFIX,
                 POISON_SPIDER_LEG1,
                 LIZARDMAN_TOTEM,
                 GIANT_SPIDER_HUSK,
-                HORRIBLE_SKULL
-        });
+                HORRIBLE_SKULL);
     }
 
     @Override
@@ -301,8 +286,7 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
                     st.giveItems(COIN_OF_LORDS1, 1);
                     st.playSound(SOUND_MIDDLE);
                 }
-            } else if (coin1 > 0)
-                htmltext = "captain_bathia_q0402_05.htm";
+            } else htmltext = "captain_bathia_q0402_05.htm";
         } else if (npcId == RAYMOND && cond == 1 && squire > 0) {
             if (church_mark1 < 1 && coin2 < 1)
                 htmltext = "bishop_raimund_q0402_01.htm";
@@ -316,8 +300,7 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
                     st.giveItems(COIN_OF_LORDS2, 1);
                     st.playSound(SOUND_MIDDLE);
                 }
-            } else if (coin2 > 0)
-                htmltext = "bishop_raimund_q0402_06.htm";
+            } else htmltext = "bishop_raimund_q0402_06.htm";
         } else if (npcId == BEZIQUE && cond == 1 && squire > 0) {
             if (coin3 < 1 && guards_mark2 < 1)
                 htmltext = "captain_bezique_q0402_01.htm";
@@ -331,8 +314,7 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
                     st.giveItems(COIN_OF_LORDS3, 1);
                     st.playSound(SOUND_MIDDLE);
                 }
-            } else if (coin3 > 0)
-                htmltext = "captain_bezique_q0402_05.htm";
+            } else htmltext = "captain_bezique_q0402_05.htm";
         } else if (npcId == LEVIAN && cond == 1 && squire > 0) {
             if (coin4 < 1 && church_mark2 < 1)
                 htmltext = "levian_q0402_01.htm";
@@ -346,8 +328,7 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
                     st.giveItems(COIN_OF_LORDS4, 1);
                     st.playSound(SOUND_MIDDLE);
                 }
-            } else if (coin4 > 0)
-                htmltext = "levian_q0402_05.htm";
+            } else htmltext = "levian_q0402_05.htm";
         } else if (npcId == GILBERT && cond == 1 && squire > 0) {
             if (guards_mark3 < 1 && coin5 < 1)
                 htmltext = "gilbert_q0402_01.htm";
@@ -361,8 +342,7 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
                     st.giveItems(COIN_OF_LORDS5, 1);
                     st.playSound(SOUND_MIDDLE);
                 }
-            } else if (coin5 > 0)
-                htmltext = "gilbert_q0402_05.htm";
+            } else htmltext = "gilbert_q0402_05.htm";
         } else if (npcId == BIOTIN && cond == 1 && squire > 0) {
             if (church_mark3 < 1 && coin6 < 1)
                 htmltext = "quilt_q0402_01.htm";
@@ -376,8 +356,7 @@ public class _402_PathToKnight extends Quest implements ScriptFile {
                     st.giveItems(COIN_OF_LORDS6, 1);
                     st.playSound(SOUND_MIDDLE);
                 }
-            } else if (coin6 > 0)
-                htmltext = "quilt_q0402_05.htm";
+            } else htmltext = "quilt_q0402_05.htm";
         } else if (npcId == SIR_COLLIN_WINDAWOOD && cond == 1 && squire > 0)
             htmltext = "sir_collin_windawood_q0402_01.htm";
         else if (npcId == SIR_ARON_TANFORD && cond == 1 && squire > 0)

@@ -36,10 +36,6 @@ public final class EpicBossState {
         return bossId;
     }
 
-    public void setBossId(int newId) {
-        bossId = newId;
-    }
-
     public State getState() {
         return state;
     }
@@ -112,10 +108,6 @@ public final class EpicBossState {
         } catch (SQLException e) {
             LOG.error("Exception on update EpicBossState: ID " + bossId + ", RespawnDate:" + respawnDate / 1000 + ", State:" + state.toString(), e);
         }
-    }
-
-    public void setNextRespawnDate(long newRespawnDate) {
-        respawnDate = newRespawnDate;
     }
 
     public long getInterval() {

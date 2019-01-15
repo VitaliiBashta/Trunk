@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public abstract class ResidenceManager extends MerchantInstance {
     protected static final int COND_FAIL = 0;
     protected static final int COND_SIEGE = 1;
@@ -59,8 +61,8 @@ public abstract class ResidenceManager extends MerchantInstance {
         L2GameServerPacket decoPacket = decoPacket();
         if (decoPacket == null)
             return;
-        for (Player player : World.getAroundPlayers(this))
-            player.sendPacket(decoPacket);
+        World.getAroundPlayers(this).forEach(player ->
+                player.sendPacket(decoPacket));
     }
 
     protected int getCond(Player player) {
@@ -114,18 +116,18 @@ public abstract class ResidenceManager extends MerchantInstance {
                 return;
         }
 
-        if (actualCommand.equalsIgnoreCase("banish")) {
+        if ("banish".equalsIgnoreCase(actualCommand)) {
             NpcHtmlMessage html = new NpcHtmlMessage(player, this);
             html.setFile("residence/Banish.htm");
             sendHtmlMessage(player, html);
-        } else if (actualCommand.equalsIgnoreCase("banish_foreigner")) {
+        } else if ("banish_foreigner".equalsIgnoreCase(actualCommand)) {
             if (!isHaveRigths(player, getPrivDismiss())) {
                 player.sendPacket(SystemMsg.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
                 return;
             }
             getResidence().banishForeigner();
             return;
-        } else if (actualCommand.equalsIgnoreCase("Buy")) {
+        } else if ("Buy".equalsIgnoreCase(actualCommand)) {
             if (val.equals(""))
                 return;
             try {
@@ -134,11 +136,11 @@ public abstract class ResidenceManager extends MerchantInstance {
                 return;
             }
             showShopWindow(player, Integer.valueOf(val), true);
-        } else if (actualCommand.equalsIgnoreCase("manage_vault")) {
-            if (val.equalsIgnoreCase("deposit"))
+        } else if ("manage_vault".equalsIgnoreCase(actualCommand)) {
+            if ("deposit".equalsIgnoreCase(val)) {
                 WarehouseFunctions.showDepositWindowClan(player);
-            else if (val.equalsIgnoreCase("withdraw")) {
-                int value = Integer.valueOf(st.nextToken());
+            } else if ("withdraw".equalsIgnoreCase(val)) {
+                int value = toInt(st.nextToken(), 0);
                 if (value == 99) {
                     NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                     html.setFile("residence/clan.htm");
@@ -238,13 +240,13 @@ public abstract class ResidenceManager extends MerchantInstance {
                 for (Object[] buff : allBuffs) {
                     Skill s = (Skill) buff[0];
                     support_list.append("<a action=\"bypass -h npc_%objectId%_support ");
-                    support_list.append(String.valueOf(s.getId()));
+                    support_list.append(s.getId());
                     support_list.append(" ");
-                    support_list.append(String.valueOf(s.getLevel()));
+                    support_list.append(s.getLevel());
                     support_list.append("\">");
                     support_list.append(s.getName());
                     support_list.append(" Lv.");
-                    support_list.append(String.valueOf(s.getDisplayLevel()));
+                    support_list.append(s.getDisplayLevel());
                     support_list.append("</a><br1>");
                     if (++i % 5 == 0)
                         support_list.append("<br>");
@@ -259,15 +261,15 @@ public abstract class ResidenceManager extends MerchantInstance {
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                 html.setFile("residence/functions.htm");
                 if (getResidence().isFunctionActive(ResidenceFunction.RESTORE_EXP))
-                    html.replace("%xp_regen%", String.valueOf(getResidence().getFunction(ResidenceFunction.RESTORE_EXP).getLevel()) + "%");
+                    html.replace("%xp_regen%", getResidence().getFunction(ResidenceFunction.RESTORE_EXP).getLevel() + "%");
                 else
                     html.replace("%xp_regen%", "0%");
                 if (getResidence().isFunctionActive(ResidenceFunction.RESTORE_HP))
-                    html.replace("%hp_regen%", String.valueOf(getResidence().getFunction(ResidenceFunction.RESTORE_HP).getLevel()) + "%");
+                    html.replace("%hp_regen%", getResidence().getFunction(ResidenceFunction.RESTORE_HP).getLevel() + "%");
                 else
                     html.replace("%hp_regen%", "0%");
                 if (getResidence().isFunctionActive(ResidenceFunction.RESTORE_MP))
-                    html.replace("%mp_regen%", String.valueOf(getResidence().getFunction(ResidenceFunction.RESTORE_MP).getLevel()) + "%");
+                    html.replace("%mp_regen%", getResidence().getFunction(ResidenceFunction.RESTORE_MP).getLevel() + "%");
                 else
                     html.replace("%mp_regen%", "0%");
                 sendHtmlMessage(player, html);
@@ -380,7 +382,7 @@ public abstract class ResidenceManager extends MerchantInstance {
             sendHtmlMessage(player, html);
             return false;
         }
-        altUseSkill(id,level, player);
+        altUseSkill(id, level, player);
         return true;
     }
 
@@ -392,7 +394,7 @@ public abstract class ResidenceManager extends MerchantInstance {
     private void replace(NpcHtmlMessage html, int type, String replace1, String replace2) {
         boolean proc = type == ResidenceFunction.RESTORE_HP || type == ResidenceFunction.RESTORE_MP || type == ResidenceFunction.RESTORE_EXP;
         if (getResidence().isFunctionActive(type)) {
-            html.replace("%" + replace1 + "%", String.valueOf(getResidence().getFunction(type).getLevel()) + (proc ? "%" : ""));
+            html.replace("%" + replace1 + "%", getResidence().getFunction(type).getLevel() + (proc ? "%" : ""));
             html.replace("%" + replace1 + "Price%", String.valueOf(getResidence().getFunction(type).getLease()));
             html.replace("%" + replace1 + "Date%", TimeUtils.toSimpleFormat(getResidence().getFunction(type).getEndTimeInMillis()));
         } else {

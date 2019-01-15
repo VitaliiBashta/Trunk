@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Party;
@@ -14,8 +13,6 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 
@@ -36,18 +33,9 @@ public class FestivalMonsterInstance extends MonsterInstance {
     protected void onSpawn() {
         super.onSpawn();
 
-        List<Player> pl = World.getAroundPlayers(this);
-        if (pl.isEmpty())
-            return;
-        List<Player> alive = new ArrayList<>(9);
-        for (Player p : pl)
-            if (!p.isDead())
-                alive.add(p);
-        if (alive.isEmpty())
-            return;
-
-        Player target = alive.get(Rnd.get(alive.size()));
-        getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, target, 1);
+        World.getAroundPlayers(this)
+                .filter(p -> !p.isDead())
+                .findAny().ifPresent(p -> getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 1));
     }
 
     /**

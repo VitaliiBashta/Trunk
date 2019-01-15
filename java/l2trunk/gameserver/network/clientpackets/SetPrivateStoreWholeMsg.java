@@ -3,11 +3,11 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.model.Player;
 
 public class SetPrivateStoreWholeMsg extends L2GameClientPacket {
-    private String _storename;
+    private String storename;
 
     @Override
     protected void readImpl() {
-        _storename = readS(32);
+        storename = readS(32);
     }
 
     @Override
@@ -16,6 +16,6 @@ public class SetPrivateStoreWholeMsg extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        activeChar.setSellStoreName(_storename);
+        activeChar.setSellStoreName(storename);
     }
 }

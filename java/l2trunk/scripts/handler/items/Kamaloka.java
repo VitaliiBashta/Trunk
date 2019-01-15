@@ -8,16 +8,12 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final  class Kamaloka extends SimpleItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = List.of(
-            13010, 13297, 20026, 13011, 13298, 20027, 13012, 13299, 20028);
-
+public final class Kamaloka extends SimpleItemHandler implements ScriptFile {
     @Override
     public List<Integer> getItemIds() {
-        return ITEM_IDS;
+        return List.of(13010, 13297, 20026, 13011, 13298, 20027, 13012, 13299, 20028);
     }
 
 
@@ -29,16 +25,6 @@ public final  class Kamaloka extends SimpleItemHandler implements ScriptFile {
     @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 
     @Override

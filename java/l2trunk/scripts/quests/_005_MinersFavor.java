@@ -4,13 +4,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Рейты не учитываются, награда не стекуемая
- */
-public class _005_MinersFavor extends Quest implements ScriptFile {
+public final class _005_MinersFavor extends Quest {
+    //Item
+    private static final int NECKLACE = 906;
     //NPC
     private final int BOLTER = 30554;
     private final int SHARI = 30517;
@@ -24,20 +21,6 @@ public class _005_MinersFavor extends Quest implements ScriptFile {
     private final int BOOMBOOM_POWDER = 1550;
     private final int REDSTONE_BEER = 1551;
     private final int BOLTERS_SMELLY_SOCKS = 1552;
-    //Item
-    private final int NECKLACE = 906;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _005_MinersFavor() {
         super(false);

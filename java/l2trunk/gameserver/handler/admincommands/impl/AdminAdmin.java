@@ -28,7 +28,7 @@ public final class AdminAdmin implements IAdminCommandHandler {
     private static final Logger _log = LoggerFactory.getLogger(AdminAdmin.class);
 
     @Override
-    public boolean useAdminCommand( Enum comm, String[] wordList, String fullString, Player activeChar) {
+    public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
         StringTokenizer st;
 
@@ -123,8 +123,8 @@ public final class AdminAdmin implements IAdminCommandHandler {
                         int range = NumberUtils.toInt(vals[0], 0);
                         int astate = vals.length > 1 ? NumberUtils.toInt(vals[1], 0) : 0;
 
-                        for (NpcInstance n : activeChar.getAroundNpc(range, 200))
-                            n.setNpcState(astate);
+                        activeChar.getAroundNpc(range, 200)
+                                .forEach(n -> n.setNpcState(astate));
                     } catch (Exception e) {
                         Functions.sendDebugMessage(activeChar, "Usage: //setareanpcstate [range] [state]");
                     }

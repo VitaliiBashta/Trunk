@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class _350_EnhanceYourWeapon extends Quest implements ScriptFile {
+public final class _350_EnhanceYourWeapon extends Quest {
     private static class PlayerResult {
         private final Player _player;
         private SystemMsg _message;
@@ -60,19 +60,7 @@ public class _350_EnhanceYourWeapon extends Quest implements ScriptFile {
     private static final int Gideon = 30194;
     private static final int Winonin = 30856;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    public  _350_EnhanceYourWeapon() {
+    public _350_EnhanceYourWeapon() {
         super(false);
         addStartNpc(Jurek);
         addStartNpc(Gideon);
@@ -105,7 +93,7 @@ public class _350_EnhanceYourWeapon extends Quest implements ScriptFile {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         String npcId = str(npc.getNpcId());
-        String htmltext = "noquest";
+        String htmltext;
         int id = st.getState();
         if (st.getQuestItemsCount(RED_SOUL_CRYSTAL0_ID) == 0 && st.getQuestItemsCount(GREEN_SOUL_CRYSTAL0_ID) == 0 && st.getQuestItemsCount(BLUE_SOUL_CRYSTAL0_ID) == 0)
             if (id == CREATED)

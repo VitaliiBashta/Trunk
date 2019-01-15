@@ -5,23 +5,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10269_ToTheSeedOfDestruction extends Quest implements ScriptFile {
+public final class _10269_ToTheSeedOfDestruction extends Quest {
     private final static int Keucereus = 32548;
     private final static int Allenos = 32526;
 
     private final static int Introduction = 13812;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10269_ToTheSeedOfDestruction() {
         super(false);

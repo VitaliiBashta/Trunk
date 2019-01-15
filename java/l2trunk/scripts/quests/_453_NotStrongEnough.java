@@ -4,13 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
+import java.util.List;
 
-public class _453_NotStrongEnough extends Quest implements ScriptFile {
+public final class _453_NotStrongEnough extends Quest {
     private static final int Klemis = 32734;
 
     private static final String A_MOBS = "a_mobs";
@@ -18,30 +15,9 @@ public class _453_NotStrongEnough extends Quest implements ScriptFile {
     private static final String C_MOBS = "c_mobs";
     private static final String E_MOBS = "e_mobs";
 
-    private static final int[] Rewards = {
-            15815,
-            15816,
-            15817,
-            15818,
-            15819,
-            15820,
-            15821,
-            15822,
-            15823,
-            15824,
-            15825,
-            15634,
-            15635,
-            15636,
-            15637,
-            15638,
-            15639,
-            15640,
-            15641,
-            15642,
-            15643,
-            15644
-    };
+    private static final List<Integer> Rewards = List.of(
+            15815, 15816, 15817, 15818, 15819, 15820, 15821, 15822, 15823, 15824, 15825,
+            15634, 15635, 15636, 15637, 15638, 15639, 15640, 15641, 15642, 15643, 15644);
 
     public _453_NotStrongEnough() {
         super(true);
@@ -111,7 +87,7 @@ public class _453_NotStrongEnough extends Quest implements ScriptFile {
                         htmltext = "klemis_q453_11.htm";
                     else if (cond == 5) {
                         htmltext = "klemis_q453_12.htm";
-                        int rewardId = Rewards[Rnd.get(Rewards.length)];
+                        int rewardId = Rnd.get(Rewards);
                         st.giveItems(rewardId, 1);
                         st.setState(COMPLETED);
                         st.playSound(SOUND_FINISH);
@@ -135,17 +111,5 @@ public class _453_NotStrongEnough extends Quest implements ScriptFile {
             st.setCond(5);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

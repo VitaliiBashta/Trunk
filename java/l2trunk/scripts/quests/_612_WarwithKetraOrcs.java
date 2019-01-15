@@ -3,21 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _612_WarwithKetraOrcs extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import static l2trunk.scripts.quests._615_MagicalPowerofFire1.KETRA_NPC_LIST;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _612_WarwithKetraOrcs extends Quest {
     // NPC
     private static final int DURAI = 31377;
 
@@ -26,34 +15,11 @@ public class _612_WarwithKetraOrcs extends Quest implements ScriptFile {
     private static final int MOLAR_OF_KETRA_ORC_DROP_CHANCE = 80;
     private static final int NEPENTHES_SEED = 7187;
 
-    private static final int[] KETRA_NPC_LIST = new int[19];
 
     public _612_WarwithKetraOrcs() {
         super(true);
-
         addStartNpc(DURAI);
-
-        KETRA_NPC_LIST[0] = 21324;
-        KETRA_NPC_LIST[1] = 21325;
-        KETRA_NPC_LIST[2] = 21327;
-        KETRA_NPC_LIST[3] = 21328;
-        KETRA_NPC_LIST[4] = 21329;
-        KETRA_NPC_LIST[5] = 21331;
-        KETRA_NPC_LIST[6] = 21332;
-        KETRA_NPC_LIST[7] = 21334;
-        KETRA_NPC_LIST[8] = 21335;
-        KETRA_NPC_LIST[9] = 21336;
-        KETRA_NPC_LIST[10] = 21338;
-        KETRA_NPC_LIST[11] = 21339;
-        KETRA_NPC_LIST[12] = 21340;
-        KETRA_NPC_LIST[13] = 21342;
-        KETRA_NPC_LIST[14] = 21343;
-        KETRA_NPC_LIST[15] = 21344;
-        KETRA_NPC_LIST[16] = 21345;
-        KETRA_NPC_LIST[17] = 21346;
-        KETRA_NPC_LIST[18] = 21347;
         addKillId(KETRA_NPC_LIST);
-
         addQuestItem(MOLAR_OF_KETRA_ORC);
     }
 

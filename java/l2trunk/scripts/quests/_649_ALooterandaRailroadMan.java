@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест A Looteranda Railroad Man
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _649_ALooterandaRailroadMan extends Quest implements ScriptFile {
+public final class _649_ALooterandaRailroadMan extends Quest {
     //NPC
     private static final int OBI = 32052;
     //Quest Item
@@ -101,18 +95,6 @@ public class _649_ALooterandaRailroadMan extends Quest implements ScriptFile {
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _649_ALooterandaRailroadMan() {
         super(true);

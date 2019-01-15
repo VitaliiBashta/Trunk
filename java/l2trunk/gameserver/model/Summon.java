@@ -501,13 +501,14 @@ public abstract class Summon extends Playable {
     private void broadcastCharInfoImpl() {
         Player owner = getPlayer();
 
-        for (Player player : World.getAroundPlayers(this)) {
-            if (player == owner) {
-                player.sendPacket(new PetInfo(this).update(1));
-            } else {
-                player.sendPacket(new NpcInfo(this, player).update(1));
-            }
-        }
+        World.getAroundPlayers(this)
+                .forEach(player -> {
+                    if (player == owner) {
+                        player.sendPacket(new PetInfo(this).update(1));
+                    } else {
+                        player.sendPacket(new NpcInfo(this, player).update(1));
+                    }
+                });
     }
 
     private void sendPetInfoImpl() {

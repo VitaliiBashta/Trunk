@@ -13,5 +13,4 @@ public interface JdbcDAO<K extends Serializable, E extends JdbcEntity> {
 
     void delete(E e);
 
-    JdbcEntityStats getStats();
 }

@@ -5,25 +5,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _151_CureforFeverDisease extends Quest implements ScriptFile {
+public final class _151_CureforFeverDisease extends Quest {
     private final int POISON_SAC = 703;
     private final int FEVER_MEDICINE = 704;
-    private final int ROUND_SHIELD = 102;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int ROUND_SHIELD = 102;
 
     public _151_CureforFeverDisease() {
         super(false);

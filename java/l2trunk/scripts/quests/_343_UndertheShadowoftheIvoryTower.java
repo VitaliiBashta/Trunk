@@ -4,25 +4,22 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _343_UndertheShadowoftheIvoryTower extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _343_UndertheShadowoftheIvoryTower extends Quest {
+    //Mob
+    private static final List<Integer> MOBS = List.of(
+            20563, 20564, 20565, 20566);
+    private static final int CHANCE = 50;
     //NPC
     private final int CEMA = 30834;
     private final int ICARUS = 30835;
     private final int MARSHA = 30934;
     private final int TRUMPIN = 30935;
-    //Mob
-    private final int[] MOBS = {
-            20563,
-            20564,
-            20565,
-            20566
-    };
-
     //Items
     private final int ORB = 4364;
-    private final int ECTOPLASM = 4365;
+    private static final int ECTOPLASM = 4365;
     //Var
     private final int[] AllowClass = {
             0xb,
@@ -36,19 +33,6 @@ public class _343_UndertheShadowoftheIvoryTower extends Quest implements ScriptF
             0x28,
             0x29
     };
-    private final int CHANCE = 50;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _343_UndertheShadowoftheIvoryTower() {
         super(false);

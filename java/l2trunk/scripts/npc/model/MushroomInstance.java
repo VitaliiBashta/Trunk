@@ -3,6 +3,7 @@ package l2trunk.scripts.npc.model;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -64,51 +65,51 @@ public final class MushroomInstance extends MonsterInstance {
         } else if (getNpcId() == ABYSS_WEED) // TODO: Неизвестно, что он делает.
         {
             doDie(killer);
-        } else if (getNpcId() == FANTASY_MUSHROOM) // Этот моб сзывает всех мобов в окружности и станит их.
-        {
-            List<NpcInstance> around = getAroundNpc(700, 300);
-            if (around != null && !around.isEmpty())
-                for (NpcInstance npc : around)
-                    if (npc.isMonster() && npc.getNpcId() >= 22768 && npc.getNpcId() <= 22774) {
+        } else if (getNpcId() == FANTASY_MUSHROOM) {// Этот моб сзывает всех мобов в окружности и станит их.
+            getAroundNpc(700, 300)
+                    .filter(GameObject::isMonster)
+                    .filter(npc -> npc.getNpcId() >= 22768)
+                    .filter(npc -> npc.getNpcId() <= 22774)
+                    .forEach(npc -> {
                         npc.setRunning();
                         npc.moveToLocation(Location.findPointToStay(this, 20, 50), 0, true);
-                    }
+                    });
             ThreadPoolManager.INSTANCE.schedule(new TaskAfterDead(this, killer, FANTASY_MUSHROOM_SKILL), 4000);
         }
     }
 
     public static class TaskAfterDead extends RunnableImpl {
-        private final NpcInstance _actor;
-        private final Creature _killer;
-        private final Skill _skill;
+        private final NpcInstance actor;
+        private final Creature killer;
+        private final Skill skill;
 
         TaskAfterDead(NpcInstance actor, Creature killer, int skillId) {
-            _actor = actor;
-            _killer = killer;
-            _skill = SkillTable.INSTANCE.getInfo(skillId);
+            this.actor = actor;
+            this.killer = killer;
+            skill = SkillTable.INSTANCE.getInfo(skillId);
         }
 
         @Override
         public void runImpl() {
-            if (_skill == null)
+            if (skill == null)
                 return;
 
-            if (_actor != null && _actor.getNpcId() == FANTASY_MUSHROOM) {
-                _actor.broadcastPacket(new MagicSkillUse(_actor, _skill.getId(), _skill.getLevel()));
-                List<NpcInstance> around = _actor.getAroundNpc(200, 300);
-                if (around != null && !around.isEmpty())
-                    for (NpcInstance npc : around)
-                        if (npc.isMonster() && npc.getNpcId() >= 22768 && npc.getNpcId() <= 22774)
-                            _skill.getEffects(npc   );
-                _actor.doDie(_killer);
+            if (actor != null && actor.getNpcId() == FANTASY_MUSHROOM) {
+                actor.broadcastPacket(new MagicSkillUse(actor, skill.getId(), skill.getLevel()));
+                actor.getAroundNpc(200, 300)
+                        .filter(GameObject::isMonster)
+                        .filter(npc -> npc.getNpcId() >= 22768)
+                        .filter(npc -> npc.getNpcId() <= 22774)
+                        .forEach(skill::getEffects);
+                actor.doDie(killer);
                 return;
             }
 
-            if (_killer != null && _killer.isPlayer() && !_killer.isDead()) {
+            if (killer != null && killer.isPlayer() && !killer.isDead()) {
                 List<Creature> targets = new ArrayList<>();
-                targets.add(_killer);
-                _killer.broadcastPacket(new MagicSkillUse(_killer, _skill));
-                _skill.useSkill(_killer, targets);
+                targets.add(killer);
+                killer.broadcastPacket(new MagicSkillUse(killer, skill));
+                skill.useSkill(killer, targets);
             }
         }
     }

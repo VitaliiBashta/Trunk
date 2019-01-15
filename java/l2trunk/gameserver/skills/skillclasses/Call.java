@@ -12,6 +12,7 @@ import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
+import java.util.Objects;
 
 import static l2trunk.gameserver.model.Zone.ZoneType.no_restart;
 import static l2trunk.gameserver.model.Zone.ZoneType.no_summon;
@@ -149,15 +150,14 @@ public final class Call extends Skill {
             return;
         }
 
-        for (Creature target : targets)
-            if (target != null) {
-                if (canBeSummoned(activeChar, target) != null)
-                    continue;
+        targets.stream()
+                .filter(Objects::nonNull)
+                .filter(target -> canBeSummoned(activeChar, target) == null)
+                .forEach(target -> {
+                    ((Player) target).summonCharacterRequest(activeChar, Location.findAroundPosition(activeChar, 100, 150), getId() == 1403 || getId() == 1404 ? 1 : 0);
 
-                ((Player) target).summonCharacterRequest(activeChar, Location.findAroundPosition(activeChar, 100, 150), getId() == 1403 || getId() == 1404 ? 1 : 0);
-
-                getEffects(activeChar, target, getActivateRate() > 0, false);
-            }
+                    getEffects(activeChar, target, getActivateRate() > 0, false);
+                });
 
         if (isSSPossible())
             activeChar.unChargeShots(isMagic());

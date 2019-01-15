@@ -8,32 +8,19 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class TullyWorkshopZone implements ScriptFile {
-    private static ZoneListener _zoneListener;
-    private static final String[] zones = {
+import java.util.List;
+
+public final class TullyWorkshopZone implements ScriptFile {
+    private static final List<String> zones = List.of(
             "[tully1]",
             "[tully2]",
             "[tully3]",
-            "[tully4]"
-    };
+            "[tully4]");
 
     @Override
     public void onLoad() {
-        _zoneListener = new ZoneListener();
-
-        for (String s : zones) {
-            Zone zone = ReflectionUtils.getZone(s);
-            zone.addListener(_zoneListener);
-        }
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
+        ZoneListener _zoneListener = new ZoneListener();
+        zones.forEach(s -> ReflectionUtils.getZone(s).addListener(_zoneListener));
     }
 
     public class ZoneListener implements OnZoneEnterLeaveListener {
@@ -41,8 +28,6 @@ public class TullyWorkshopZone implements ScriptFile {
         final Location TullyFloor3LocationPoint = new Location(-13361, 272107, -11936);
         final Location TullyFloor4LocationPoint = new Location(-14238, 273002, -10496);
         final Location TullyFloor5LocationPoint = new Location(-10952, 272536, -9062);
-        final int MASTER_ZELOS_ID = 22377;
-        final int MASTER_FESTINA_ID = 22380;
 
         @Override
         public void onZoneEnter(Zone zone, Creature cha) {

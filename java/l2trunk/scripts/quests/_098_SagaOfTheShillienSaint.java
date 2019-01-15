@@ -1,11 +1,10 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _098_SagaOfTheShillienSaint extends SagasSuperclass implements ScriptFile {
+public final class _098_SagaOfTheShillienSaint extends SagasSuperclass {
     public _098_SagaOfTheShillienSaint() {
         super(false);
 
@@ -39,17 +38,5 @@ public final class _098_SagaOfTheShillienSaint extends SagasSuperclass implement
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

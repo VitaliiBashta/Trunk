@@ -8,9 +8,9 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _252_GoodSmell extends Quest implements ScriptFile {
+public final class _252_GoodSmell extends Quest {
     private static final int GuardStan = 30200;
-    private static final List<Integer> SelMahums = Arrays.asList(22786, 22787, 22788);
+    private static final List<Integer> SelMahums = List.of(22786, 22787, 22788);
     private static final int SelChef = 18908;
     private static final int SelMahumDiary = 15500;
     private static final int SelMahumCookbookPage = 15501;
@@ -71,17 +71,5 @@ public final class _252_GoodSmell extends Quest implements ScriptFile {
                 st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

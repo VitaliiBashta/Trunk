@@ -9,14 +9,12 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExSendUIEvent;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ZakenDaytime extends Fighter {
-    private static final List<Location> _locations = Arrays.asList(
+    private static final List<Location> _locations = List.of(
             new Location(55272, 219112, -3496),
             new Location(56296, 218072, -3496),
             new Location(54232, 218072, -3496),
@@ -64,8 +62,8 @@ public final class ZakenDaytime extends Fighter {
     public void onEvtDead(Creature killer) {
         Reflection r = actor.getReflection();
         r.setReenterTime(System.currentTimeMillis());
-        for (Player p : r.getPlayers())
-            p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0));
+        r.getPlayers().forEach(p ->
+            p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0)));
         actor.broadcastPacket(new PlaySound(PlaySound.Type.MUSIC, "BS02_D", 1, actor.getObjectId(), actor.getLoc()));
         super.onEvtDead(killer);
     }

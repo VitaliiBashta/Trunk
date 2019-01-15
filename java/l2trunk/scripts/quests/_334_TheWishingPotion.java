@@ -387,7 +387,7 @@ public final class _334_TheWishingPotion extends Quest {
                 htmltext = "30743-06.htm";
             } else {
                 st.getPlayer().getTarget().decayMe();
-                htmltext = "30743-0" + String.valueOf(Rnd.get(5) + 1) + ".htm";
+                htmltext = "30743-0" + (Rnd.get(5) + 1) + ".htm";
             }
         } else if (npcId == RUPINA) {
             int DROP_CHANCE = Rnd.get(100) + 1;

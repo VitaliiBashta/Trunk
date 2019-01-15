@@ -15,8 +15,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.MapUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public final class BoatWayEvent extends GlobalEvent {
     public static final String BOAT_POINTS = "boat_points";
@@ -110,25 +110,15 @@ public final class BoatWayEvent extends GlobalEvent {
     }
 
     @Override
-    public List<Player> broadcastPlayers(int range) {
+    public Stream<Player> broadcastPlayers(int range) {
         if (range <= 0) {
-            List<Player> list = new ArrayList<>();
-
             int rx = MapUtils.regionX(_boat.getX());
             int ry = MapUtils.regionY(_boat.getY());
             int offset = Config.SHOUT_OFFSET;
 
-            GameObjectsStorage.getAllPlayersStream()
+            return GameObjectsStorage.getAllPlayersStream()
                     .filter(p -> p.getReflection() == _boat.getReflection())
-                    .forEach(p -> {
-                        int tx = MapUtils.regionX(p);
-                        int ty = MapUtils.regionY(p);
-
-                        if (tx >= rx - offset && tx <= rx + offset && ty >= ry - offset && ty <= ry + offset)
-                            list.add(p);
-                    });
-
-            return list;
+                    .filter(p -> (MapUtils.regionX(p) >= rx - offset && MapUtils.regionX(p) <= rx + offset && MapUtils.regionY(p) >= ry - offset && MapUtils.regionY(p) <= ry + offset));
         } else
             return World.getAroundPlayers(_boat, range, Math.max(range / 2, 200));
     }

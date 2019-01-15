@@ -2,7 +2,6 @@ package l2trunk.gameserver.model;
 
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -16,11 +15,10 @@ public final class GameObjectsStorage {
     private GameObjectsStorage() {
     }
 
-    public static List<NpcInstance> getAllNpcs() {
+    public synchronized static Stream<NpcInstance> getAllNpcs() {
         return objects.values().stream()
                 .filter(o -> o instanceof NpcInstance)
-                .map(o -> (NpcInstance) o)
-                .collect(Collectors.toList());
+                .map(o -> (NpcInstance) o);
     }
 
     public static GameObject get(int storedId) {
@@ -58,6 +56,7 @@ public final class GameObjectsStorage {
                 .filter(o -> o instanceof Player)
                 .map(o -> (Player) o);
     }
+
     public static List<Player> getAllPlayers() {
         return getAllPlayersStream()
                 .collect(Collectors.toList());
@@ -71,75 +70,44 @@ public final class GameObjectsStorage {
         return objects.get(objId);
     }
 
-    /**
-     * использовать только для перебора типа for(L2Player player : getAllPlayersForIterate()) ...
-     */
-    public static Iterable<NpcInstance> getAllNpcsForIterate() {
-        return getAllNpcs();
-    }
-
     public static NpcInstance getByNpcId(int npc_id) {
-        NpcInstance result = null;
-
-        for (NpcInstance temp : getAllNpcs())
-            if (npc_id == temp.getNpcId()) {
-                if (!temp.isDead())
-                    return temp;
-                result = temp;
-            }
-        return result;
+        return getAllNpcs()
+                .filter(npc -> npc.getNpcId() == npc_id)
+                .filter(npc -> !npc.isDead())
+                .findFirst().orElse(null);
     }
 
-    public static List<NpcInstance> getAllByNpcId(int npc_id, boolean justAlive) {
+    public static Stream<NpcInstance> getAllByNpcId(int npc_id, boolean justAlive) {
         return getAllByNpcId(npc_id, justAlive, false);
     }
 
-    public static List<NpcInstance> getAllByNpcId(int npc_id, boolean justAlive, boolean visible) {
-        List<NpcInstance> result = new ArrayList<>();
-        for (NpcInstance temp : getAllNpcs())
-            if (temp.getTemplate() != null && npc_id == temp.getTemplate().getNpcId() && (!justAlive || !temp.isDead()) && (!visible || temp.isVisible()))
-                result.add(temp);
-        return result;
+    public static Stream<NpcInstance> getAllByNpcId(int npc_id, boolean justAlive, boolean visible) {
+        return getAllNpcs()
+                .filter(npc -> (npc.getTemplate() != null))
+                .filter(npc -> npc_id == npc.getTemplate().getNpcId())
+                .filter(npc -> (!justAlive || !npc.isDead()))
+                .filter(npc -> (!visible || npc.isVisible()));
     }
 
-    public static List<NpcInstance> getAllByNpcId(List<Integer> npc_ids, boolean justAlive) {
-        List<NpcInstance> result = new ArrayList<>();
-        for (NpcInstance temp : getAllNpcs())
-            if (!justAlive || !temp.isDead())
-                for (int npc_id : npc_ids)
-                    if (npc_id == temp.getNpcId())
-                        result.add(temp);
-        return result;
+    public static Stream<NpcInstance> getAllByNpcId(List<Integer> npc_ids, boolean justAlive) {
+        return getAllNpcs()
+                .filter(npc -> npc_ids.contains(npc.getNpcId()))
+                .filter(temp -> !justAlive || !temp.isDead());
     }
 
     public static NpcInstance getNpc(String s) {
-        List<NpcInstance> npcs = getAllNpcs().stream()
+        return getAllNpcs()
                 .filter(npc -> npc.getName().equalsIgnoreCase(s))
-                .collect(Collectors.toList());
-        if (npcs.size() == 0)
-            return null;
-        for (NpcInstance temp : npcs)
-            if (!temp.isDead())
-                return temp;
-        if (npcs.size() > 0)
-            return npcs.remove(npcs.size() - 1);
-
-        return null;
+                .filter(npc -> !npc.isDead())
+                .findFirst().orElse(null);
     }
 
     public static NpcInstance getNpc(int objId) {
-        return getAllNpcs().get(objId);
+        return getAllNpcs().filter(n -> n.getObjectId() == objId).findFirst().orElse(null);
     }
 
     public static void put(Creature o) {
         objects.put(o.getObjectId(), o);
-    }
-
-    /**
-     * пересчитывает StoredId, необходимо при изменении ObjectId
-     */
-    public static int refreshId(Creature o) {
-        return o.getObjectId();
     }
 
     public static GameObject remove(int storedId) {

@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _124_MeetingTheElroki extends Quest implements ScriptFile {
+public final class _124_MeetingTheElroki extends Quest {
     //NPC
     private final int Marquez = 32113;
     private final int Mushika = 32114;
@@ -14,18 +13,6 @@ public class _124_MeetingTheElroki extends Quest implements ScriptFile {
     private final int Mantarasa = 32118;
     //item
     private final int Mushika_egg = 8778;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _124_MeetingTheElroki() {
         super(false);
@@ -110,8 +97,6 @@ public class _124_MeetingTheElroki extends Quest implements ScriptFile {
 
                 if (st.getInt("id") == 1)
                     htmltext = "shaman_caracawe_q0124_03.htm";
-                else if (cond == 5)
-                    htmltext = "shaman_caracawe_q0124_07.htm";
             }
         } else if (npcId == Mantarasa && cond == 5)
             htmltext = "egg_of_mantarasa_q0124_01.htm";

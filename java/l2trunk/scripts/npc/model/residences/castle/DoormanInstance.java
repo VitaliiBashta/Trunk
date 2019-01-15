@@ -9,11 +9,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author VISTALL
- * @date 17:42/02.04.2011
- */
-public class DoormanInstance extends l2trunk.scripts.npc.model.residences.DoormanInstance {
+public final class DoormanInstance extends l2trunk.scripts.npc.model.residences.DoormanInstance {
     private final Location[] _locs = new Location[2];
 
     public DoormanInstance(int objectId, NpcTemplate template) {

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _275_BlackWingedSpies extends Quest implements ScriptFile {
+public final class _275_BlackWingedSpies extends Quest {
     // NPCs
     private static final int Tantus = 30567;
     // Mobs
@@ -112,17 +112,5 @@ public class _275_BlackWingedSpies extends Quest implements ScriptFile {
             give_Darkwing_Bat_Fang(qs, 5);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

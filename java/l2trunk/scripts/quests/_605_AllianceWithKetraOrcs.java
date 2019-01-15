@@ -5,10 +5,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _605_AllianceWithKetraOrcs extends Quest implements ScriptFile {
-    //ketra mobs
-    private static final int[] KETRA_NPC_LIST = new int[19];
+import static l2trunk.scripts.quests._615_MagicalPowerofFire1.KETRA_NPC_LIST;
 
+public final class _605_AllianceWithKetraOrcs extends Quest {
     // items
     private static final int MARK_OF_KETRA_ALLIANCE1 = 7211;
     private static final int MARK_OF_KETRA_ALLIANCE2 = 7212;
@@ -53,26 +52,6 @@ public class _605_AllianceWithKetraOrcs extends Quest implements ScriptFile {
 
         addStartNpc(Wahkan);
 
-        //ketra mobs
-        KETRA_NPC_LIST[0] = 21324;
-        KETRA_NPC_LIST[1] = 21325;
-        KETRA_NPC_LIST[2] = 21327;
-        KETRA_NPC_LIST[3] = 21328;
-        KETRA_NPC_LIST[4] = 21329;
-        KETRA_NPC_LIST[5] = 21331;
-        KETRA_NPC_LIST[6] = 21332;
-        KETRA_NPC_LIST[7] = 21334;
-        KETRA_NPC_LIST[8] = 21335;
-        KETRA_NPC_LIST[9] = 21336;
-        KETRA_NPC_LIST[10] = 21338;
-        KETRA_NPC_LIST[11] = 21339;
-        KETRA_NPC_LIST[12] = 21340;
-        KETRA_NPC_LIST[13] = 21342;
-        KETRA_NPC_LIST[14] = 21343;
-        KETRA_NPC_LIST[15] = 21344;
-        KETRA_NPC_LIST[16] = 21345;
-        KETRA_NPC_LIST[17] = 21346;
-        KETRA_NPC_LIST[18] = 21347;
         addKillId(KETRA_NPC_LIST);
 
         //hunt for soldier
@@ -111,18 +90,6 @@ public class _605_AllianceWithKetraOrcs extends Quest implements ScriptFile {
             if (npc == i)
                 return true;
         return false;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

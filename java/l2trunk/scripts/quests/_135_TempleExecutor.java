@@ -4,13 +4,11 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class _135_TempleExecutor extends Quest implements ScriptFile {
+public final class _135_TempleExecutor extends Quest {
     // NPCs
     private final static int Shegfield = 30068;
     private final static int Pano = 30078;
@@ -18,13 +16,8 @@ public class _135_TempleExecutor extends Quest implements ScriptFile {
     private final static int Sonin = 31773;
 
     // Mobs
-    private final static int[] mobs = {
-            20781,
-            21104,
-            21105,
-            21106,
-            21107
-    };
+    private final static List<Integer> mobs = List.of(
+            20781, 21104, 21105, 21106, 21107);
 
     // Quest Items
     private final static int Stolen_Cargo = 10328;
@@ -178,17 +171,5 @@ public class _135_TempleExecutor extends Quest implements ScriptFile {
             qs.playSound(SOUND_ITEMGET);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

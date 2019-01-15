@@ -8,6 +8,9 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 
 @SuppressWarnings("unused")
@@ -27,36 +30,21 @@ public class AdminMammon implements IAdminCommandHandler {
             npcIds.add(31113);
             npcIds.add(31126);
             npcIds.add(31092); // Add the Marketeer of Mammon also
-            int teleportIndex = -1;
-
-            try {
-                if (fullString.length() > 16)
-                    teleportIndex = Integer.parseInt(fullString.substring(18));
-            } catch (Exception NumberFormatException) {
-                // activeChar.sendPacket(SystemMessage.sendString("Command format is
-                // //find_mammon <teleportIndex>"));
-            }
+            int teleportIndex = toInt(fullString.substring(18),-1);
 
             findAdminNPCs(activeChar, npcIds, teleportIndex, -1);
-        } else if (fullString.equals("admin_show_mammon")) {
+        } else if ("admin_show_mammon".equals(fullString)) {
             npcIds.add(31113);
             npcIds.add(31126);
 
             findAdminNPCs(activeChar, npcIds, -1, 1);
-        } else if (fullString.equals("admin_hide_mammon")) {
+        } else if ("admin_hide_mammon".equals(fullString)) {
             npcIds.add(31113);
             npcIds.add(31126);
 
             findAdminNPCs(activeChar, npcIds, -1, 0);
         } else if (fullString.startsWith("admin_list_spawns")) {
-            int npcId = 0;
-
-            try {
-                npcId = Integer.parseInt(fullString.substring(18).trim());
-            } catch (Exception NumberFormatException) {
-                activeChar.sendMessage("Command format is //list_spawns <NPC_ID>");
-            }
-
+            int npcId =  toInt(fullString.substring(18).trim());
             npcIds.add(npcId);
             findAdminNPCs(activeChar, npcIds, -1, -1);
         }
@@ -76,22 +64,21 @@ public class AdminMammon implements IAdminCommandHandler {
     private void findAdminNPCs(Player activeChar, List<Integer> npcIdList, int teleportIndex, int makeVisible) {
         int index = 0;
 
-        for (NpcInstance npcInst : GameObjectsStorage.getAllNpcsForIterate()) {
-            int npcId = npcInst.getNpcId();
-            if (npcIdList.contains(npcId)) {
+        for (NpcInstance npc : GameObjectsStorage.getAllNpcs().collect(Collectors.toList())) {
+            if (npcIdList.contains(npc.getNpcId())) {
                 if (makeVisible == 1)
-                    npcInst.spawnMe();
+                    npc.spawnMe();
                 else if (makeVisible == 0)
-                    npcInst.decayMe();
+                    npc.decayMe();
 
-                if (npcInst.isVisible()) {
+                if (npc.isVisible()) {
                     index++;
 
                     if (teleportIndex > -1) {
                         if (teleportIndex == index)
-                            activeChar.teleToLocation(npcInst.getLoc());
+                            activeChar.teleToLocation(npc.getLoc());
                     } else
-                        activeChar.sendMessage(index + " - " + npcInst.getName() + " (" + npcInst.getObjectId() + "): " + npcInst.getX() + " " + npcInst.getY() + " " + npcInst.getZ());
+                        activeChar.sendMessage(index + " - " + npc.getName() + " (" + npc.getObjectId() + "): " + npc.getLoc());
                 }
             }
         }

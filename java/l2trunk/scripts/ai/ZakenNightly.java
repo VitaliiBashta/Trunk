@@ -15,26 +15,8 @@ public final class ZakenNightly extends Fighter {
     private static final int pirates_zombie_captain_b = 29026;
     private static final int pirates_zombie_b = 29027;
 
-    private static final Location[] _locations = new Location[]{
-            new Location(55272, 219112, -3496),
-            new Location(56296, 218072, -3496),
-            new Location(54232, 218072, -3496),
-            new Location(54248, 220136, -3496),
-            new Location(56296, 220136, -3496),
-            new Location(55272, 219112, -3224),
-            new Location(56296, 218072, -3224),
-            new Location(54232, 218072, -3224),
-            new Location(54248, 220136, -3224),
-            new Location(56296, 220136, -3224),
-            new Location(55272, 219112, -2952),
-            new Location(56296, 218072, -2952),
-            new Location(54232, 218072, -2952),
-            new Location(54248, 220136, -2952),
-            new Location(56296, 220136, -2952)
-    };
-    private final long _teleportSelfReuse = 30000L;          // 30 secs
+    private static final long _teleportSelfReuse = 30000L;          // 30 secs
     private final NpcInstance actor = getActor();
-    private long _teleportSelfTimer = 0L;
     private int _stage = 0;
 
     public ZakenNightly(NpcInstance actor) {
@@ -44,7 +26,7 @@ public final class ZakenNightly extends Fighter {
 
     @Override
     public void thinkAttack() {
-        scheduleTeleport(_teleportSelfTimer, _teleportSelfReuse, actor);
+        scheduleTeleport(0, _teleportSelfReuse, actor);
 
         double actor_hp_precent = actor.getCurrentHpPercents();
         Reflection r = actor.getReflection();

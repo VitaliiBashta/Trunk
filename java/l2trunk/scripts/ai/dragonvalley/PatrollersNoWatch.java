@@ -6,19 +6,17 @@ import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class PatrollersNoWatch extends Fighter {
-    private final List<Integer> _teleporters = Arrays.asList(22857, 22833, 22834);
+    private final List<Integer> _teleporters = List.of(22857, 22833, 22834);
     List<Location> _points;
     private int _lastPoint = 0;
     private boolean _firstThought = true;
 
-    PatrollersNoWatch(NpcInstance actor) {
+    public PatrollersNoWatch(NpcInstance actor) {
         super(actor);
         MAX_PURSUE_RANGE = Integer.MAX_VALUE - 10;
     }
@@ -33,7 +31,7 @@ public class PatrollersNoWatch extends Fighter {
         NpcInstance actor = getActor();
         if (target.isPlayable() && !target.isDead() && !target.isInvisible() && !((Playable) target).isSilentMoving()) {
             actor.getAggroList().addDamageHate(target, 0, 1);
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
         }
         return true;
     }

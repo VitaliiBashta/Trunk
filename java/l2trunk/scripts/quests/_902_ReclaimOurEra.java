@@ -3,11 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public final class _902_ReclaimOurEra extends Quest implements ScriptFile {
+public final class _902_ReclaimOurEra extends Quest {
     private static final int Mathias = 31340;
     private static final List<Integer> OrcsSilenos = List.of(25309, 25312, 25315, 25299, 25302, 25305);
     private static final List<Integer> CannibalisticStakatoChief = List.of(25667, 25668, 25669, 25670);

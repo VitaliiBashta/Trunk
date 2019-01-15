@@ -4,29 +4,14 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _007_ATripBegins extends Quest implements ScriptFile {
+public final class _007_ATripBegins extends Quest {
+    private static final int SCROLL_OF_ESCAPE_GIRAN = 7126;
+    private static final int MARK_OF_TRAVELER = 7570;
     private final int MIRABEL = 30146;
     private final int ARIEL = 30148;
     private final int ASTERIOS = 30154;
-
     private final int ARIELS_RECOMMENDATION = 7572;
-
-    private final int SCROLL_OF_ESCAPE_GIRAN = 7126;
-    private final int MARK_OF_TRAVELER = 7570;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _007_ATripBegins() {
         super(false);

@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
@@ -45,13 +44,13 @@ public final class Frintezza extends Reflection {
     // Weak Scarlet Van Halisha.
     private static final NpcLocation scarletSpawnWeak = new NpcLocation(-87784, -153288, -9176, 16384, 29046);
     // Portrait spawns - 4 portraits = 4 spawns
-    private static final List<NpcLocation> portraitSpawns = Arrays.asList(
+    private static final List<NpcLocation> portraitSpawns = List.of(
             new NpcLocation(-86136, -153960, -9168, 35048, 29048),
             new NpcLocation(-86184, -152456, -9168, 28205, 29049),
             new NpcLocation(-89368, -152456, -9168, 64817, 29048),
             new NpcLocation(-89416, -153976, -9168, 57730, 29049));
     // Demon spawns - 4 portraits = 4 demons
-    private static final List<NpcLocation> demonSpawns = Arrays.asList(
+    private static final List<NpcLocation> demonSpawns = List.of(
             new NpcLocation(-86136, -153960, -9168, 35048, 29050),
             new NpcLocation(-86184, -152456, -9168, 28205, 29051),
             new NpcLocation(-89368, -152456, -9168, 64817, 29051),
@@ -96,12 +95,14 @@ public final class Frintezza extends Reflection {
     private void showSocialActionMovie(NpcInstance target, int dist, int yaw, int pitch, int time, int duration, int socialAction) {
         if (target == null)
             return;
-        for (Player pc : getPlayers())
-            if (pc.getDistance(target) <= 2550) {
-                pc.enterMovieMode();
-                pc.specialCamera(target, dist, yaw, pitch, time, duration);
-            } else
-                pc.leaveMovieMode();
+        getPlayers().filter(pc -> pc.getDistance(target) <= 2550)
+                .forEach(pc -> {
+                    if (pc.getDistance(target) <= 2550) {
+                        pc.enterMovieMode();
+                        pc.specialCamera(target, dist, yaw, pitch, time, duration);
+                    } else pc.leaveMovieMode();
+                });
+
         if (socialAction > 0 && socialAction < 5)
             target.broadcastPacket(new SocialAction(target.getObjectId(), socialAction));
     }
@@ -137,8 +138,7 @@ public final class Frintezza extends Reflection {
 
     // Hack: ToRemove when doors will operate normally in reflections
     private void blockUnblockNpcs(boolean block, List<Integer> npcs) {
-        getNpcs().stream()
-                .filter(n -> npcs.contains(n.getNpcId()))
+        getNpcs().filter(n -> npcs.contains(n.getNpcId()))
                 .forEach(n -> {
                     n.setBlock(block);
                     n.setInvul(block);
@@ -274,8 +274,7 @@ public final class Frintezza extends Reflection {
                         weakScarlet.addListener(_currentHpListener);
                         weakScarlet.broadcastPacket(new MagicSkillUse(weakScarlet, 5016, 3000));
                         Earthquake eq = new Earthquake(weakScarlet.getLoc(), 50, 6);
-                        for (Player pc : getPlayers())
-                            pc.broadcastPacket(eq);
+                        getPlayers().forEach(p -> p.broadcastPacket(eq));
                         showSocialActionMovie(weakScarlet, 1000, 160, 20, 6000, 6000, 0);
                         ThreadPoolManager.INSTANCE.schedule(new Spawn(19), 5500);
                         break;
@@ -292,8 +291,7 @@ public final class Frintezza extends Reflection {
                         ThreadPoolManager.INSTANCE.schedule(new Spawn(22), 3000);
                         break;
                     case 22:
-                        for (Player pc : getPlayers())
-                            pc.leaveMovieMode();
+                        getPlayers().forEach(Player::leaveMovieMode);
                         ThreadPoolManager.INSTANCE.schedule(new Spawn(23), 2000);
                         break;
                     case 23:
@@ -361,8 +359,7 @@ public final class Frintezza extends Reflection {
                 return targets;
             } else
                 // Target is the players
-                return getPlayers().stream()
-                        .filter(pc -> !pc.isDead())
+                return getPlayers().filter(pc -> !pc.isDead())
                         .collect(Collectors.toList());
         }
 
@@ -481,8 +478,7 @@ public final class Frintezza extends Reflection {
                 switch (_taskId) {
                     case 1:
                         _angle = Math.abs((weakScarlet.getHeading() < 32768 ? 180 : 540) - (int) (weakScarlet.getHeading() / 182.044444444));
-                        for (Player pc : getPlayers())
-                            pc.enterMovieMode();
+                        getPlayers().forEach(Player::enterMovieMode);
                         blockAll(true);
                         frintezza.broadcastPacket(new MagicSkillCanceled(frintezza.getObjectId()));
                         frintezza.broadcastPacket(new SocialAction(frintezza.getObjectId(), 4));
@@ -567,8 +563,7 @@ public final class Frintezza extends Reflection {
                         ThreadPoolManager.INSTANCE.schedule(new Die(4), 7000);
                         break;
                     case 4:
-                        for (Player pc : getPlayers())
-                            pc.leaveMovieMode();
+                        getPlayers().forEach(Player::leaveMovieMode);
                         cleanUp();
                         break;
                 }
@@ -609,30 +604,28 @@ public final class Frintezza extends Reflection {
                 if (self.getNpcId() == HallAlarmDevice) {
                     hallADoors.forEach(Frintezza.this::openDoor);
                     blockUnblockNpcs(false, blockANpcs);
-                    getNpcs().stream()
-                            .filter(n -> (blockANpcs.contains(n.getNpcId())))
-                            .forEach(n -> n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, Rnd.get(getPlayers()), 200));
+                    getNpcs().filter(n -> (blockANpcs.contains(n.getNpcId())))
+                            .forEach(n -> n.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, Rnd.get(getPlayers().collect(Collectors.toList())), 200));
                 } else if (blockANpcs.contains(self.getNpcId())) {
                     //ToCheck: find easier way
-                    for (NpcInstance n : getNpcs())
-                        if (blockANpcs.contains(n.getNpcId()) && !n.isDead())
-                            return;
+                    if (getNpcs().filter(n -> blockANpcs.contains(n.getNpcId()))
+                            .anyMatch(n -> !n.isDead()))
+                        return;
                     for (int corridorADoor : corridorADoors) openDoor(corridorADoor);
                     blockUnblockNpcs(true, blockBNpcs);
                 } else if (self.getNpcId() == DarkChoirPlayer) {
-                    for (NpcInstance n : getNpcs())
-                        if (n.getNpcId() == DarkChoirPlayer && !n.isDead())
-                            return;
+                    if (getNpcs().filter(n -> n.getNpcId() == DarkChoirPlayer)
+                            .anyMatch(n -> !n.isDead()))
+                        return;
                     for (int hallBDoor : hallBDoors) openDoor(hallBDoor);
                     blockUnblockNpcs(false, blockBNpcs);
                 } else if (blockBNpcs.contains(self.getNpcId())) {
                     if (Rnd.chance(10))
                         ((NpcInstance) self).dropItem(killer.getPlayer(), DewdropItem, 1);
                     //ToCheck: find easier way
-                    for (NpcInstance n : getNpcs())
-                        if (blockBNpcs.contains(n.getNpcId()) || (blockANpcs.contains(n.getNpcId())) && !n.isDead())
-                            return;
-                    for (int corridorBDoor : corridorBDoors) openDoor(corridorBDoor);
+                    if (getNpcs().anyMatch(n -> (blockBNpcs.contains(n.getNpcId()) || (blockANpcs.contains(n.getNpcId())) && !n.isDead())))
+                        return;
+                    corridorBDoors.forEach(Frintezza.this::openDoor);
                     ThreadPoolManager.INSTANCE.schedule(new FrintezzaStart(), battleStartDelay);
                 } else if (self.getNpcId() == _weakScarletId) {
                     self.decayMe();

@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _176_StepsForHonor extends Quest implements ScriptFile {
+public final class _176_StepsForHonor extends Quest {
     private static final int RAPIDUS = 36479;
 
     public _176_StepsForHonor() {
@@ -133,17 +133,4 @@ public final class _176_StepsForHonor extends Quest implements ScriptFile {
         qs.removePlayerOnKillListener();
         super.onAbort(qs);
     }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
 }

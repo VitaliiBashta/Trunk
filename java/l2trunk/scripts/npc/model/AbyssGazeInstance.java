@@ -22,18 +22,15 @@ public final class AbyssGazeInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.startsWith("request_permission")) {
+        if ("request_permission".startsWith(command)) {
             if (SoIManager.getCurrentStage() == 2 || SoIManager.getCurrentStage() == 5) {
                 showChatWindow(player, "default/32540-2.htm");
-                return;
             } else if (SoIManager.getCurrentStage() == 3 && SoIManager.isSeedOpen()) {
                 showChatWindow(player, "default/32540-3.htm");
-                return;
             } else {
                 showChatWindow(player, "default/32540-1.htm");
-                return;
             }
-        } else if (command.equalsIgnoreCase("request_ekimus")) {
+        } else if ("request_ekimus".equalsIgnoreCase(command)) {
             if (SoIManager.getCurrentStage() == 2) {
                 Reflection r = player.getActiveReflection();
                 if (r != null) {
@@ -43,12 +40,11 @@ public final class AbyssGazeInstance extends NpcInstance {
                     ReflectionUtils.enterReflection(player, new HeartInfinityAttack(), ekimusIzId);
                 }
             }
-        } else if (command.equalsIgnoreCase("enter_seed")) {
+        } else if ("enter_seed".equalsIgnoreCase(command)) {
             if (SoIManager.getCurrentStage() == 3) {
                 SoIManager.teleportInSeed(player);
-                return;
             }
-        } else if (command.equalsIgnoreCase("hoi_defence")) {
+        } else if ("hoi_defence".equalsIgnoreCase(command)) {
             if (SoIManager.getCurrentStage() == 5) {
                 Reflection r = player.getActiveReflection();
                 if (r != null) {

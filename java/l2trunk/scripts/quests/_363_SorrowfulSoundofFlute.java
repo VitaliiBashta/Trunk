@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _363_SorrowfulSoundofFlute extends Quest implements ScriptFile {
+public final class _363_SorrowfulSoundofFlute extends Quest {
     //NPC
     private final int NANARIN = 30956;
     private final int BARBADO = 30959;
@@ -19,21 +19,9 @@ public class _363_SorrowfulSoundofFlute extends Quest implements ScriptFile {
     private final int EVENT_CLOTHES = 4318;
     private final int NANARINS_FLUTE = 4319;
     private final int SABRINS_BLACK_BEER = 4320;
-    private final int Musical_Score = 4420;
+    private static final int Musical_Score = 4420;
 
     //Item
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _363_SorrowfulSoundofFlute() {
         super(false);

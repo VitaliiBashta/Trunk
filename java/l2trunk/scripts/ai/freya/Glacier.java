@@ -23,7 +23,7 @@ public final class Glacier extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        getActor().getAroundCharacters(350, 100).stream()
+        getActor().getAroundCharacters(350, 100)
                 .filter(GameObject::isPlayer)
                 .forEach(cha -> cha.altOnMagicUseTimer(cha, skill));
 

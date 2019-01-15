@@ -8,17 +8,13 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Battleground extends SimpleItemHandler implements ScriptFile {
-    private static final List<Integer> ITEM_IDS = List.of(10143, 10144, 10145, 10146, 10147, 10148, 10411);
-
     @Override
     public List<Integer> getItemIds() {
-        return ITEM_IDS;
+        return List.of(10143, 10144, 10145, 10146, 10147, 10148, 10411);
     }
 
     @Override
@@ -36,49 +32,49 @@ public final class Battleground extends SimpleItemHandler implements ScriptFile 
         switch (itemId) {
             //Battleground Spell - Shield Master
             case 10143:
-                Arrays.asList(2379, 2380, 2381, 2382, 2383).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player,  skill ));
+                List.of(2379, 2380, 2381, 2382, 2383).forEach(skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player, skill));
                     player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Wizard
             case 10144:
-                Arrays.asList(2379, 2380, 2381, 2384, 2385).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player, skill ));
+                List.of(2379, 2380, 2381, 2384, 2385).forEach(skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player, skill));
                     player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Healer
             case 10145:
-                Arrays.asList(2379, 2380, 2381, 2384, 2386).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player,  skill));
-                    player.altOnMagicUseTimer(player,skill);
+                List.of(2379, 2380, 2381, 2384, 2386).forEach(skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player, skill));
+                    player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Dagger Master
             case 10146:
-                Arrays.asList(2379, 2380, 2381, 2388, 2383).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                List.of(2379, 2380, 2381, 2388, 2383).forEach(skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player, skill));
                     player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Bow Master
             case 10147:
-                Arrays.asList(2379, 2380, 2381, 2389, 2383).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                List.of(2379, 2380, 2381, 2389, 2383).forEach(skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player, skill));
                     player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             // Battleground Spell - Bow Master
             case 10148:
-                Arrays.asList(2390, 2391).forEach(skill -> {
-                    player.broadcastPacket(new MagicSkillUse(player,  skill));
+                List.of(2390, 2391).forEach(skill -> {
+                    player.broadcastPacket(new MagicSkillUse(player, skill));
                     player.altOnMagicUseTimer(player, skill);
                 });
                 break;
             //Full Bottle of Souls - 5 Souls (For Combat)
             case 10411:
-                player.broadcastPacket(new MagicSkillUse(player,  2499));
+                player.broadcastPacket(new MagicSkillUse(player, 2499));
                 player.altOnMagicUseTimer(player, 2499);
                 break;
             default:

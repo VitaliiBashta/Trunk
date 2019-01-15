@@ -7,23 +7,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _163_LegacyOfPoet extends Quest implements ScriptFile {
+public final class _163_LegacyOfPoet extends Quest {
     private final int RUMIELS_POEM_1_ID = 1038;
     private final int RUMIELS_POEM_3_ID = 1039;
     private final int RUMIELS_POEM_4_ID = 1040;
     private final int RUMIELS_POEM_5_ID = 1041;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _163_LegacyOfPoet() {
         super(false);
@@ -37,12 +25,10 @@ public class _163_LegacyOfPoet extends Quest implements ScriptFile {
         addKillId(20372);
         addKillId(20373);
 
-        addQuestItem(new int[]{
-                RUMIELS_POEM_1_ID,
+        addQuestItem(RUMIELS_POEM_1_ID,
                 RUMIELS_POEM_3_ID,
                 RUMIELS_POEM_4_ID,
-                RUMIELS_POEM_5_ID
-        });
+                RUMIELS_POEM_5_ID);
     }
 
     @Override

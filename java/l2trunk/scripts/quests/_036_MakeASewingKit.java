@@ -3,25 +3,12 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _036_MakeASewingKit extends Quest implements ScriptFile {
+public final class _036_MakeASewingKit extends Quest {
     private final int REINFORCED_STEEL = 7163;
     private final int ARTISANS_FRAME = 1891;
     private final int ORIHARUKON = 1893;
     private final int SEWING_KIT = 7078;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _036_MakeASewingKit() {
         super(false);

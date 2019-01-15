@@ -6,7 +6,7 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 
 public final class EffectTaskManager extends SteppingRunnableQueueManager {
-    private final static long TICK = 250L;
+    private final static int TICK = 250;
 
     private final static EffectTaskManager[] _instances = new EffectTaskManager[Config.EFFECT_TASK_MANAGER_COUNT];
     private static int randomizer = 0;

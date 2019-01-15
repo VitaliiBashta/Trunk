@@ -534,7 +534,7 @@ public final class AdminEditChar implements IAdminCommandHandler {
 
         for (int x = 0; x < MaxPages; x++) {
             int pagenr = x + 1;
-            replyMSG.append("<center><a action=\"bypass -h admin_show_characters " + x + "\">Page " + pagenr + "</a></center>");
+            replyMSG.append("<center><a action=\"bypass -h admin_show_characters ").append(x).append("\">Page ").append(pagenr).append("</a></center>");
         }
         replyMSG.append("<br>");
 
@@ -543,7 +543,15 @@ public final class AdminEditChar implements IAdminCommandHandler {
         replyMSG.append("<tr><td width=80>Name:</td><td width=110>Class:</td><td width=40>Level:</td></tr>");
         for (int i = CharactersStart; i < CharactersEnd; i++) {
             Player p = players.get(i);
-            replyMSG.append("<tr><td width=80>" + "<a action=\"bypass -h admin_character_list " + p.getName() + "\">" + p.getName() + "</a></td><td width=110>" + p.getTemplate().className + "</td><td width=40>" + p.getLevel() + "</td></tr>");
+            replyMSG.append("<tr><td width=80>" + "<a action=\"bypass -h admin_character_list ")
+                    .append(p.getName())
+                    .append("\">")
+                    .append(p.getName())
+                    .append("</a></td><td width=110>")
+                    .append(p.getTemplate().className)
+                    .append("</td><td width=40>")
+                    .append(p.getLevel())
+                    .append("</td></tr>");
         }
         replyMSG.append("</table>");
         replyMSG.append("</body></html>");

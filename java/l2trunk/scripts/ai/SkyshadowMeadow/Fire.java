@@ -3,16 +3,11 @@ package l2trunk.scripts.ai.SkyshadowMeadow;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
-/**
- * @author Grivesky
- * - AI to fire Fire (18927).
- * - When Cook (18908) passes by, if the caster is off, the lights and spawns Katel (18,933).
- * - AI is tested and works.
- */
 public final class Fire extends DefaultAI {
     private static final int FEED = 18933;
     private boolean _firstTime = true;
@@ -39,21 +34,23 @@ public final class Fire extends DefaultAI {
                 actor.setNpcState((byte) 2); // Затушились
         }
 
-        for (NpcInstance npc : actor.getAroundNpc(150, 150)) {
-            if (npc.isMonster() && npc.getNpcId() == 18908) {
-                if (_firstTime) {
-                    // Включаем паузу что бы не спавнилось много Катлов.
-                    _firstTime = false;
-                    if (actor.getNpcState() < 1)
-                        actor.setNpcState((byte) 1); // Зажигаем кастер.
-                    NpcUtils.spawnSingle(FEED, new Location(actor.getX(), actor.getY(), actor.getZ()), 0);
-                    ThreadPoolManager.INSTANCE.schedule(() -> {
-                        if (getActor() == null) return;
-                        _firstTime = true;
-                    }, 20000); // Время паузы
-                }
-            }
-        }
+        actor.getAroundNpc(150, 150)
+                .filter(npc -> npc.getNpcId() == 18908)
+                .filter(GameObject::isMonster)
+                .forEach(npc -> {
+                    if (_firstTime) {
+                        // Включаем паузу что бы не спавнилось много Катлов.
+                        _firstTime = false;
+                        if (actor.getNpcState() < 1)
+                            actor.setNpcState((byte) 1); // Зажигаем кастер.
+                        NpcUtils.spawnSingle(FEED, new Location(actor.getX(), actor.getY(), actor.getZ()), 0);
+                        ThreadPoolManager.INSTANCE.schedule(() -> {
+                            if (getActor() == null) return;
+                            _firstTime = true;
+                        }, 20000); // Время паузы
+                    }
+                });
+
         return true;
     }
 

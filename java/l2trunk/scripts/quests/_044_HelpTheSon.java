@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _044_HelpTheSon extends Quest implements ScriptFile {
+public final class _044_HelpTheSon extends Quest {
     private static final int LUNDY = 30827;
     private static final int DRIKUS = 30505;
 
@@ -17,18 +17,6 @@ public class _044_HelpTheSon extends Quest implements ScriptFile {
     private static final int MAILLE_GUARD = 20921;
     private static final int MAILLE_SCOUT = 20920;
     private static final int MAILLE_LIZARDMAN = 20919;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _044_HelpTheSon() {
         super(false);

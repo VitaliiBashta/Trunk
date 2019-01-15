@@ -11,6 +11,8 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Grivesky
@@ -20,7 +22,7 @@ import java.util.List;
  */
 public final class SelMahumRecruit extends Fighter {
     private long _wait_timeout = System.currentTimeMillis() + 180000;
-    private final List<NpcInstance> _arm = new ArrayList<>();
+    private List<NpcInstance> arm = new ArrayList<>();
     private boolean _firstTimeAttacked = true;
     private static final NpcString[] _text = {NpcString.SCHOOL1, NpcString.SCHOOL2};
 
@@ -39,11 +41,12 @@ public final class SelMahumRecruit extends Fighter {
             actor.broadcastPacket(new SocialAction(actor.getObjectId(), 1));
         }
 
-        if (_arm == null || _arm.isEmpty()) {
-            for (NpcInstance npc : getActor().getAroundNpc(750, 750)) {
-                if (npc != null && (npc.getNpcId() == 22775 || npc.getNpcId() == 22776 || npc.getNpcId() == 22778 || npc.getNpcId() == 22780 || npc.getNpcId() == 22782 || npc.getNpcId() == 22783 || npc.getNpcId() == 22784 || npc.getNpcId() == 22785))
-                    _arm.add(npc);
-            }
+        if (arm == null || arm.isEmpty()) {
+            arm = getActor().getAroundNpc(750, 750)
+            .filter(Objects::nonNull)
+            .filter(npc -> (npc.getNpcId() == 22775 || npc.getNpcId() == 22776 || npc.getNpcId() == 22778 || npc.getNpcId() == 22780 || npc.getNpcId() == 22782 || npc.getNpcId() == 22783 || npc.getNpcId() == 22784 || npc.getNpcId() == 22785))
+                .collect(Collectors.toList());
+
         }
         return true;
     }
@@ -54,7 +57,7 @@ public final class SelMahumRecruit extends Fighter {
         if (actor == null)
             return;
 
-        for (NpcInstance npc : _arm) {
+         arm.forEach(npc -> {
             npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100));
 
             if (npc.isDead()) {
@@ -66,7 +69,7 @@ public final class SelMahumRecruit extends Fighter {
                 }
                 actor.moveToLocation(actor.getSpawnedLoc(), 0, true);
             }
-        }
+        });
 
         super.onEvtAttacked(attacker, damage);
     }

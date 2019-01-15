@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _299_GatherIngredientsforPie extends Quest implements ScriptFile {
+public final class _299_GatherIngredientsforPie extends Quest {
     // NPCs
     private static final int Emily = 30620;
     private static final int Lara = 30063;
@@ -136,17 +136,5 @@ public class _299_GatherIngredientsforPie extends Quest implements ScriptFile {
         }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -6,13 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Wrath Of Ancestors
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _272_WrathOfAncestors extends Quest implements ScriptFile {
+public final class _272_WrathOfAncestors extends Quest {
     //NPC
     private static final int Livina = 30572;
     //Quest Item
@@ -44,18 +38,6 @@ public class _272_WrathOfAncestors extends Quest implements ScriptFile {
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _272_WrathOfAncestors() {
         super(false);

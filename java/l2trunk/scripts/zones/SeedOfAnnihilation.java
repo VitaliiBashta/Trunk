@@ -22,21 +22,20 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 public final class SeedOfAnnihilation extends Functions implements ScriptFile {
     private static final int ANNIHILATION_FURNACE = 18928;
     private static final int[][] ZONE_BUFFS_LIST = {{1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 2, 1}, {3, 1, 2}};
-    private static final Map<String, Location> _teleportZones = new HashMap<>();
+    private static final Map<String, Location> TELEPORT_ZONES = new HashMap<>();
     private static ZoneListener _zoneListener;
 
     static {
-        _teleportZones.put("[14_23_telzone_to_cocracon]", new Location(-213175, 182648, -10992)); // In Kokracon location teleport zone.
-        _teleportZones.put("[14_23_telzone_to_raptilicon]", new Location(-180211, 182984, -15152)); // In Reptilikon location teleport zone.
-        _teleportZones.put("[13_23_telzone_from_cocracon]", new Location(-181217, 186711, -10528)); // Out Kokracon location teleport zone.
-        _teleportZones.put("[14_23_telzone_from_raptilicon]", new Location(-179275, 186802, -10720)); // Out Reptilikon location teleport zone.
+        TELEPORT_ZONES.put("[14_23_telzone_to_cocracon]", new Location(-213175, 182648, -10992)); // In Kokracon location teleport zone.
+        TELEPORT_ZONES.put("[14_23_telzone_to_raptilicon]", new Location(-180211, 182984, -15152)); // In Reptilikon location teleport zone.
+        TELEPORT_ZONES.put("[13_23_telzone_from_cocracon]", new Location(-181217, 186711, -10528)); // Out Kokracon location teleport zone.
+        TELEPORT_ZONES.put("[14_23_telzone_from_raptilicon]", new Location(-179275, 186802, -10720)); // Out Reptilikon location teleport zone.
     }
 
     // 0: Bistakon, 1: Reptilikon, 2: Cokrakon
@@ -45,7 +44,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
 
     private void loadSeedRegionData() {
         _zoneListener = new ZoneListener();
-        for (String s : _teleportZones.keySet()) {
+        for (String s : TELEPORT_ZONES.keySet()) {
             Zone zone = ReflectionUtils.getZone(s);
             zone.addListener(_zoneListener);
         }
@@ -90,14 +89,6 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
     public void onLoad() {
         loadSeedRegionData();
         startEffectZonesControl();
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private void startEffectZonesControl() {
@@ -183,19 +174,17 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
     public class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
         public void onZoneEnter(Zone zone, Creature cha) {
-            if (_teleportZones.containsKey(zone.getName())) {
+            if (TELEPORT_ZONES.containsKey(zone.getName())) {
                 //Заглушка для 454 квеста.
-                List<NpcInstance> around = cha.getAroundNpc(500, 300);
-                if (around != null && !around.isEmpty())
-                    for (NpcInstance npc : around)
-                        if (npc.getNpcId() == 32738 && npc.getFollowTarget() != null) {
-                            if (npc.getFollowTarget().getObjectId() == cha.getObjectId()) {
-                                npc.teleToLocation(_teleportZones.get(zone.getName()));
-                                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, cha, Config.FOLLOW_RANGE);
-                            }
-                        }
-
-                cha.teleToLocation(_teleportZones.get(zone.getName()));
+                cha.getAroundNpc(500, 300)
+                        .filter(npc -> npc.getNpcId() == 32738)
+                        .filter(npc -> npc.getFollowTarget() != null)
+                        .filter(npc -> npc.getFollowTarget().getObjectId() == cha.getObjectId())
+                        .forEach(npc -> {
+                            npc.teleToLocation(TELEPORT_ZONES.get(zone.getName()));
+                            npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, cha, Config.FOLLOW_RANGE);
+                        });
+                cha.teleToLocation(TELEPORT_ZONES.get(zone.getName()));
             }
         }
 

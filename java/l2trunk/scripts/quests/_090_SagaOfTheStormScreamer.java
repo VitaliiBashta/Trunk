@@ -1,11 +1,10 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _090_SagaOfTheStormScreamer extends SagasSuperclass implements ScriptFile {
+public final class _090_SagaOfTheStormScreamer extends SagasSuperclass {
     public _090_SagaOfTheStormScreamer() {
         super(false);
         NPC = List.of(30175, 31627, 31287, 31287, 31598, 31646, 31649, 31652, 31654, 31655, 31659, 31287);
@@ -38,17 +37,5 @@ public final class _090_SagaOfTheStormScreamer extends SagasSuperclass implement
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

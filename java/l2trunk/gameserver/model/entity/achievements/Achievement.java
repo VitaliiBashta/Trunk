@@ -70,7 +70,7 @@ public final class Achievement {
     }
 
     public String getDoneHtml() {
-        String oneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm", null);
+        String oneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm");
 
         oneAchievement = oneAchievement.replaceFirst("%fame%", "" + _fame);
         oneAchievement = oneAchievement.replaceAll("%bar1%", "24");

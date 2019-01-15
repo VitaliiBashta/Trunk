@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _401_PathToWarrior extends Quest implements ScriptFile {
+public final class _401_PathToWarrior extends Quest {
     private final int AURON = 30010;
     private final int SIMPLON = 30253;
 
@@ -24,18 +24,6 @@ public class _401_PathToWarrior extends Quest implements ScriptFile {
     private final int MEDALLION_OF_WARRIOR_ID = 1145;
     private final int RUSTED_BRONZE_SWORD3_ID = 1142;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _401_PathToWarrior() {
         super(false);
 
@@ -48,15 +36,13 @@ public class _401_PathToWarrior extends Quest implements ScriptFile {
         addKillId(TRACKER_SKELETON_LD);
         addKillId(ARACHNID_TRACKER);
 
-        addQuestItem(new int[]{
-                SIMPLONS_LETTER_ID,
+        addQuestItem(SIMPLONS_LETTER_ID,
                 RUSTED_BRONZE_SWORD2_ID,
                 EINS_LETTER_ID,
                 WARRIOR_GUILD_MARK_ID,
                 RUSTED_BRONZE_SWORD1_ID,
                 POISON_SPIDER_LEG2_ID,
-                RUSTED_BRONZE_SWORD3_ID
-        });
+                RUSTED_BRONZE_SWORD3_ID);
 
     }
 

@@ -9,12 +9,11 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
 
-public class _234_FatesWhisper extends Quest implements ScriptFile {
+public final class _234_FatesWhisper extends Quest {
     // items
     private final static int PIPETTE_KNIFE = 4665;
     private final static int REIRIAS_SOUL_ORB = 4666;
@@ -144,18 +143,6 @@ public class _234_FatesWhisper extends Quest implements ScriptFile {
      */
     private final static int COND12 = 12;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _234_FatesWhisper() {
         super(true);
 
@@ -176,8 +163,7 @@ public class _234_FatesWhisper extends Quest implements ScriptFile {
         addKillId(GUARDIAN_ANGEL, SEAL_ANGEL);
         addAttackId(BAIUM);
 
-        addQuestItem(new int[]{
-                REIRIAS_SOUL_ORB,
+        addQuestItem(REIRIAS_SOUL_ORB,
                 HALLATES_INFERNIUM_SCEPTER,
                 KERNONS_INFERNIUM_SCEPTER,
                 GOLCONDAS_INFERNIUM_SCEPTER,
@@ -185,8 +171,7 @@ public class _234_FatesWhisper extends Quest implements ScriptFile {
                 REORINS_HAMMER,
                 REORINS_MOLD,
                 PIPETTE_KNIFE,
-                RED_PIPETTE_KNIFE
-        });
+                RED_PIPETTE_KNIFE);
     }
 
     @Override

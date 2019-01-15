@@ -4,11 +4,9 @@ import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
-public  final class Rnd {
-    private static final Random random = new Random();
+public final class Rnd {
     private static final ThreadLocal<RandomGenerator> rnd = new ThreadLocalGeneratorHolder();
     private static final AtomicLong seedUniquifier = new AtomicLong(8682522807148012L);
 
@@ -27,17 +25,15 @@ public  final class Rnd {
         return rnd().nextInt(n);
     }
 
-    public static long get(long n) {
+    private static long get(long n) {
         return (long) (rnd().nextDouble() * n);
     }
 
-    public static int get(int min, int max)
-    {
+    public static int get(int min, int max) {
         return min + get(max - min + 1);
     }
 
-    public static long get(long min, long max)
-    {
+    public static long get(long min, long max) {
         return min + get(max - min + 1);
     }
 
@@ -45,8 +41,8 @@ public  final class Rnd {
         return rnd().nextInt();
     }
 
-    public static double nextDouble() {
-        return rnd().nextDouble();
+    public static float nextFloat() {
+        return rnd().nextFloat();
     }
 
     public static boolean nextBoolean() {
@@ -68,17 +64,9 @@ public  final class Rnd {
         return list[get(list.length)];
     }
 
-    public static int get(int[] list) {
-        if (list.length == 0)
-            return 0;
-
-        return list[get(list.length)];
-    }
-
-
     public static <E> E get(List<E> list) {
         if (list.size() == 0)
-            throw new IllegalArgumentException("can't get random from emprty list: " );
+            throw new IllegalArgumentException("can't get random from emprty list: ");
 
         return list.get(get(list.size()));
     }

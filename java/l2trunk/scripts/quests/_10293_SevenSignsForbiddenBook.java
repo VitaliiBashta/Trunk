@@ -5,14 +5,12 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-public class _10293_SevenSignsForbiddenBook extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _10293_SevenSignsForbiddenBook extends Quest {
     private static final int Elcardia = 32784;
     private static final int Sophia = 32596;
 
@@ -22,7 +20,7 @@ public class _10293_SevenSignsForbiddenBook extends Quest implements ScriptFile 
 
     private static final int SolinasBiography = 17213;
 
-    private static final Integer[] books = {32809, 32810, 32811, 32812, 32813};
+    private static final List<Integer> books = List.of(32809, 32810, 32811, 32812, 32813);
 
     public _10293_SevenSignsForbiddenBook() {
         super(false);
@@ -40,7 +38,7 @@ public class _10293_SevenSignsForbiddenBook extends Quest implements ScriptFile 
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("enter_library")) {
-            enterInstance(player, 156);
+            enterInstance(player);
             return null;
         } else if (event.equalsIgnoreCase("sophia2_q10293_4.htm")) {
             st.setCond(2);
@@ -158,31 +156,19 @@ public class _10293_SevenSignsForbiddenBook extends Quest implements ScriptFile 
         return htmltext;
     }
 
-    private void enterInstance(Player player, int instancedZoneId) {
+    private void enterInstance(Player player) {
         Reflection r = player.getActiveReflection();
         if (r != null) {
-            if (player.canReenterInstance(instancedZoneId))
+            if (player.canReenterInstance(156))
                 player.teleToLocation(r.getTeleportLoc(), r);
-        } else if (player.canEnterInstance(instancedZoneId)) {
-            ReflectionUtils.enterReflection(player, instancedZoneId);
+        } else if (player.canEnterInstance(156)) {
+            ReflectionUtils.enterReflection(player, 156);
         }
     }
 
     private void teleportElcardia(Player player) {
-        for (NpcInstance n : player.getReflection().getNpcs())
-            if (n.getNpcId() == ElcardiaInzone1)
-                n.teleToLocation(Location.findPointToStay(player, 60));
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
+        player.getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == ElcardiaInzone1)
+                .forEach(n -> n.teleToLocation(Location.findPointToStay(player, 60)));
     }
 }

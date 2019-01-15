@@ -8,10 +8,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.instances.FreyaHard;
 import l2trunk.scripts.instances.FreyaNormal;
 
-/**
- * @author pchayka
- */
-
 public final class JiniaNpcInstance extends NpcInstance {
     private static final int normalFreyaIzId = 139;
     private static final int extremeFreyaIzId = 144;
@@ -25,7 +21,7 @@ public final class JiniaNpcInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("request_normalfreya")) {
+        if ("request_normalfreya".equalsIgnoreCase(command)) {
             Reflection r = player.getActiveReflection();
             if (r != null) {
                 if (player.canReenterInstance(normalFreyaIzId))
@@ -33,7 +29,7 @@ public final class JiniaNpcInstance extends NpcInstance {
             } else if (player.canEnterInstance(normalFreyaIzId)) {
                 ReflectionUtils.enterReflection(player, new FreyaNormal(), normalFreyaIzId);
             }
-        } else if (command.equalsIgnoreCase("request_extremefreya")) {
+        } else if ("request_extremefreya".equalsIgnoreCase(command)) {
             Reflection r = player.getActiveReflection();
             if (r != null) {
                 if (player.canReenterInstance(extremeFreyaIzId))

@@ -19,7 +19,6 @@ import l2trunk.gameserver.network.serverpackets.ExNpcQuestHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.ExQuestNpcLogList;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.Location;
@@ -32,6 +31,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -43,7 +43,7 @@ public class Quest {
     public final static int CREATED = 1;
     public final static int STARTED = 2;
     public final static int COMPLETED = 3;
-    public final static int DELAYED = 4;
+    final static int DELAYED = 4;
     protected static final String SOUND_ACCEPT = "ItemSound.quest_accept";
     protected static final String SOUND_FINISH = "ItemSound.quest_finish";
     protected static final String SOUND_GIVEUP = "ItemSound.quest_giveup";
@@ -67,8 +67,8 @@ public class Quest {
     private final int party;
     private final int questId;
     //карта с приостановленными квестовыми таймерами для каждого игрока
-    private final Map<Integer, Map<String, QuestTimer>> _pausedQuestTimers = new ConcurrentHashMap<>();
-    private final Set<Integer> _questItems = new HashSet<>();
+    private final Map<Integer, Map<String, QuestTimer>> pausedQuestTimers = new ConcurrentHashMap<>();
+    private Set<Integer> questItems = new HashSet<>();
     private Map<Integer, List<QuestNpcLogInfo>> _npcLogList = new HashMap<>();
 
     public Quest(boolean party) {
@@ -263,30 +263,26 @@ public class Quest {
 
     }
 
-    /**
-     * Этот метод для регистрации квестовых вещей, которые будут удалены
-     * при прекращении квеста, независимо от того, был он закончен или
-     * прерван. <strong>Добавлять сюда награды нельзя</strong>.
-     */
     protected void addQuestItem(int... ids) {
-        for (int id : ids)
-            if (id != 0) {
-                ItemTemplate i;
-                i = ItemHolder.getTemplate(id);
+        addQuestItem(Arrays.stream(ids).boxed().collect(Collectors.toList()));
+    }
 
-                if (_questItems.contains(id))
-                    _log.warn("Item " + i + " multiple times in quest drop in " + getName());
-
-                _questItems.add(id);
-            }
+    protected void addQuestItem(List<Integer> ids) {
+        questItems = ids.stream()
+                .filter(id -> id != 0)
+                .peek(id -> {
+                    if (questItems.contains(id))
+                        _log.warn("Item " + ItemHolder.getTemplate(id) + " multiple times in quest drop in " + getName());
+                })
+                .collect(Collectors.toSet());
     }
 
     public Set<Integer> getItems() {
-        return _questItems;
+        return questItems;
     }
 
     protected boolean isQuestItem(int id) {
-        return _questItems.contains(id);
+        return questItems.contains(id);
     }
 
     public List<QuestNpcLogInfo> getNpcLogList(int cond) {
@@ -327,7 +323,7 @@ public class Quest {
         killIds.forEach(killid -> addEventId(killid, QuestEventType.MOB_KILLED_WITH_QUEST));
     }
 
-    private void addKillId(int killid) {
+    protected void addKillId(int killid) {
         addEventId(killid, QuestEventType.MOB_KILLED_WITH_QUEST);
     }
 
@@ -338,15 +334,12 @@ public class Quest {
     }
 
 
-    /**
-     * Добавляет нпц масив для слушателя при их убийстве, и обновлении пакетом {@link l2trunk.gameserver.network.serverpackets.ExQuestNpcLogList}
-     *
-     * @param cond
-     * @param varName
-     * @param killIds
-     */
     protected void addKillNpcWithLog(int cond, String varName, int max, int... killIds) {
-        if (killIds.length == 0)
+        addKillNpcWithLog(cond, varName, max, Arrays.stream(killIds).boxed().collect(Collectors.toList()));
+    }
+
+    protected void addKillNpcWithLog(int cond, String varName, int max, List<Integer> killIds) {
+        if (killIds.size() == 0)
             throw new IllegalArgumentException("Npc list cant be empty!");
 
         addKillId(killIds);
@@ -385,8 +378,7 @@ public class Quest {
     }
 
     protected void addKillId(Collection<Integer> killIds) {
-        for (int killid : killIds)
-            addKillId(killid);
+        killIds.forEach(this::addKillId);
     }
 
     /**
@@ -402,7 +394,7 @@ public class Quest {
     }
 
     protected void addStartNpc(Integer... npcIds) {
-        addStartNpc(Arrays.asList(npcIds));
+        addStartNpc(List.of(npcIds));
     }
 
     protected void addStartNpc(Collection<Integer> npcIds) {
@@ -416,9 +408,6 @@ public class Quest {
 
     /**
      * Add the quest to the NPC's first-talk (default action dialog)
-     *
-     * @param npcIds
-     * @return L2NpcTemplate : Start NPC
      */
     protected void addFirstTalkId(int... npcIds) {
         for (int npcId : npcIds)
@@ -430,7 +419,7 @@ public class Quest {
     }
 
     public void addTalkId(Integer... talkIds) {
-        addTalkId(Arrays.asList(talkIds));
+        addTalkId(List.of(talkIds));
     }
 
     public void addTalkId(Collection<Integer> talkIds) {
@@ -528,7 +517,7 @@ public class Quest {
     }
 
     public void notifyEvent(String event, QuestState qs, NpcInstance npc) {
-        String res = null;
+        String res;
         try {
             res = onEvent(event, qs, npc);
         } catch (RuntimeException e) {
@@ -753,7 +742,7 @@ public class Quest {
             timer.pause();
         }
 
-        _pausedQuestTimers.put(qs.getPlayer().getObjectId(), qs.getTimers());
+        pausedQuestTimers.put(qs.getPlayer().getObjectId(), qs.getTimers());
     }
 
     // =========================================================
@@ -762,7 +751,7 @@ public class Quest {
 
     // Восстанавливаем таймеры (при входе в игру)
     void resumeQuestTimers(QuestState qs) {
-        Map<String, QuestTimer> timers = _pausedQuestTimers.remove(qs.getPlayer().getObjectId());
+        Map<String, QuestTimer> timers = pausedQuestTimers.remove(qs.getPlayer().getObjectId());
         if (timers == null)
             return;
 

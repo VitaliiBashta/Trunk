@@ -24,15 +24,6 @@ public final class CWHPrivileges implements IVoicedCommandHandler, ScriptFile {
     public void onLoad() {
         VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
     }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     @Override
     public List<String> getVoicedCommandList() {
         return List.of(_commandList);

@@ -10,12 +10,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.residences.clanhall.CTBBossInstance;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MatchFighter extends Fighter {
-    MatchFighter(NpcInstance actor) {
+    public MatchFighter(NpcInstance actor) {
         super(actor);
     }
 
@@ -24,7 +23,7 @@ public class MatchFighter extends Fighter {
         NpcInstance actor = getActor();
         if (actor.isActionsDisabled())
             return true;
-        if (_def_think) {
+        if (defThink) {
             if (doTask())
                 clearTasks();
             return true;
@@ -34,13 +33,9 @@ public class MatchFighter extends Fighter {
         if (now - _checkAggroTimestamp > Config.AGGRO_CHECK_INTERVAL) {
             _checkAggroTimestamp = now;
 
-            final List<Creature> knowns = World.getAroundCharacters(actor);
-            final List<Creature> aggroList = new ArrayList<>();
-
-            for (Creature cha : knowns) {
-                if (checkAggression(cha, true))
-                    aggroList.add(cha);
-            }
+            final List<Creature> aggroList = World.getAroundCharacters(actor)
+            .filter(cha -> checkAggression(cha, true))
+                .collect(Collectors.toList());
 
             if (!aggroList.isEmpty()) {
                 aggroList.sort(_nearestTargetComparator);
@@ -80,7 +75,7 @@ public class MatchFighter extends Fighter {
                 actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
 
             startRunningTask(AI_TASK_ATTACK_DELAY);
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
         }
 
         return true;

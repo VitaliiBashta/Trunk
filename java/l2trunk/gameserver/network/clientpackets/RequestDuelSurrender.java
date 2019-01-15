@@ -3,7 +3,7 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
 
-public class RequestDuelSurrender extends L2GameClientPacket {
+public final class RequestDuelSurrender extends L2GameClientPacket {
     @Override
     protected void readImpl() {
     }

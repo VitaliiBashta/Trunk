@@ -7,20 +7,18 @@ import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Patrollers extends Fighter {
     List<Location> points;
-    private final List<Integer> _teleporters = Arrays.asList(22857, 22833, 22834, 22835);
+    private final List<Integer> _teleporters = List.of(22857, 22833, 22834, 22835);
 
     private int _lastPoint = 0;
     private boolean _firstThought = true;
 
-    Patrollers(NpcInstance actor) {
+    public Patrollers(NpcInstance actor) {
         super(actor);
         MAX_PURSUE_RANGE = Integer.MAX_VALUE - 10;
     }
@@ -44,7 +42,7 @@ public class Patrollers extends Fighter {
 
         if (!avoidAttack && getIntention() != CtrlIntention.AI_INTENTION_ATTACK) {
             actor.getAggroList().addDamageHate(target, 0, 1);
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
         }
 
         return true;

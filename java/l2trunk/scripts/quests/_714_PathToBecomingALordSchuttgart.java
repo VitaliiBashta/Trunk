@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _714_PathToBecomingALordSchuttgart extends Quest {
     private static final int August = 35555;

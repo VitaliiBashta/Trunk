@@ -185,17 +185,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
     public static void enterTheLair(Player player) {
         if (player == null)
             return;
-        // teleport allow only for Command Channel
-        if (player.getParty() == null || !player.getParty().isInCommandChannel()) {
-            player.sendPacket(Msg.YOU_CANNOT_ENTER_BECAUSE_YOU_ARE_NOT_IN_A_CURRENT_COMMAND_CHANNEL);
-            return;
-        }
 
-        CommandChannel cc = player.getParty().getCommandChannel();
-        if (cc.size() > 200) {
-            player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
-            return;
-        }
         if (getPlayersInside().count() > 200) {
             player.sendMessage("The maximum of 200 players can invade the Antharas Nest");
             return;
@@ -253,10 +243,6 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
         sleep();
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     private static class AntharasSpawn extends RunnableImpl {
         private final int _distance = 3000;
         private final List<Player> players = getPlayersInside().collect(Collectors.toList());
@@ -272,7 +258,7 @@ public final class AntharasManager extends Functions implements ScriptFile, OnDe
             switch (taskId) {
                 case 1:
                     _antharas = (BossInstance) Functions.spawn(_antharasLocation, ANTHARAS_STRONG);
-                    _antharas.setAggroRange(0);// * (Config.BAIUM_DEFAULT_SPAWN_HOURS * 60 * 60000 + Rnd.get(0, Config.BAIUM_RANDOM_SPAWN_HOURS * 60 * 60000)));
+                    _antharas.setAggroRange(0);
                     _state.setRespawnDate(getRespawnInterval());
                     _state.setState(State.ALIVE);
                     _state.update();

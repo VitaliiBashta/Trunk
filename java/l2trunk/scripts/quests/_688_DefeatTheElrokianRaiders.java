@@ -5,9 +5,8 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _688_DefeatTheElrokianRaiders extends Quest implements ScriptFile {
+public final class _688_DefeatTheElrokianRaiders extends Quest {
     // NPC's
     private static final int dindin = 32105;
 

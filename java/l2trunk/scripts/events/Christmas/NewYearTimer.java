@@ -62,6 +62,11 @@ public final class NewYearTimer implements ScriptFile {
         return c.getTime().getTime() - System.currentTimeMillis();
     }
 
+    @Override
+    public void onLoad() {
+
+    }
+
     private class NewYearAnnouncer extends RunnableImpl {
         private final String message;
 
@@ -75,7 +80,7 @@ public final class NewYearTimer implements ScriptFile {
 
             if (message.length() == 1)
                 return;
-            GameObjectsStorage.getAllPlayers().forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, firework)));
+            GameObjectsStorage.getAllPlayersStream().forEach(pl -> pl.broadcastPacket(new MagicSkillUse(pl, firework)));
 
             instance = null;
             new NewYearTimer();

@@ -28,12 +28,12 @@ public final class Events {
             //            return Strings.parseBoolean(Scripts.INSTANCE.callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
         } else {
             handler = Scripts.onAction.get(obj.getL2ClassShortName());
-            if ((handler == null) && obj.isDoor()) {
-                return act.OnActionShift_DoorInstance(player,obj);
-            }
-            if (handler == null) {
-                LOG.error("no handlers for: " + obj);
-                return false;
+                if ((handler == null) && obj.isDoor()) {
+                    return act.OnActionShift_DoorInstance(player,obj);
+                }
+                if (handler == null) {
+                    LOG.error("no handlers for: " + obj);
+                    return false;
             }
             return Strings.parseBoolean(Scripts.INSTANCE.callScripts(player, handler.className, handler.methodName, new Object[]{player, obj}));
         }

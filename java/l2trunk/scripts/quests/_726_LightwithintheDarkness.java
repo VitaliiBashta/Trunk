@@ -26,7 +26,7 @@ public final class _726_LightwithintheDarkness extends Quest {
     }
 
     private static boolean checkAllDestroyed(int refId) {
-        return GameObjectsStorage.getAllByNpcId(_726_LightwithintheDarkness.KanadisGuide3, true).stream()
+        return GameObjectsStorage.getAllByNpcId(_726_LightwithintheDarkness.KanadisGuide3, true)
                 .noneMatch(npc -> npc.getReflectionId() == refId);
     }
 

@@ -1,6 +1,7 @@
 package l2trunk.gameserver.templates.npc;
 
 import l2trunk.commons.collections.StatsSet;
+import l2trunk.gameserver.ai.AIs;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.idfactory.IdFactory;
 import l2trunk.gameserver.model.Creature;
@@ -9,50 +10,38 @@ import l2trunk.gameserver.model.TeleportLocation;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.AllNpcInstances;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.model.instances.RaidBossInstance;
-import l2trunk.gameserver.model.instances.ReflectionBossInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestEventType;
 import l2trunk.gameserver.model.reward.RewardList;
 import l2trunk.gameserver.model.reward.RewardType;
-import l2trunk.gameserver.scripts.Scripts;
 import l2trunk.gameserver.skills.effects.EffectTemplate;
 import l2trunk.gameserver.templates.CharTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public final class NpcTemplate extends CharTemplate {
-//    private  final Constructor<NpcInstance> DEFAULT_TYPE_CONSTRUCTOR = (Constructor<NpcInstance>) NpcInstance.class.getConstructors()[0];
-
-//    private  final Constructor<NpcInstance> DEFAULT_TYPE_CONSTRUCTOR;
-
-    private static final Logger LOG = LoggerFactory.getLogger(NpcTemplate.class);
     public final String type;
-    public  int npcId;
-    public  String name;
-    public  String title;
-    // не используется - public final String sex;
-    public  int level;
-    public  long rewardExp;
-    public  int rewardSp;
-    public  int rewardRp;
-    public  int aggroRange;
-    public  int rhand;
-    public  int lhand;
-    public  double rateHp;
-    public  int displayId;
-    public Class<? extends NpcInstance> classType;
-    private  StatsSet AIParams;
-    private  int castleId;
     private final Map<Integer, TeleportLocation[]> teleportList = new HashMap<>();
     private final Map<QuestEventType, List<Quest>> questEvents = new HashMap<>();
     private final Map<Integer, Skill> skills = new HashMap<>();
-    private  String _htmRoot;
+    public int npcId;
+    public String name;
+    public String title;
+    // не используется - public final String sex;
+    public int level;
+    public long rewardExp;
+    public int rewardSp;
+    public int rewardRp;
+    public int aggroRange;
+    public int rhand;
+    public int lhand;
+    public double rateHp;
+    public int displayId;
+    public Class<? extends NpcInstance> classType;
     public boolean isRaid;
+    private StatsSet AIParams;
+    private int castleId;
+    private String _htmRoot;
     private Faction faction = Faction.NONE;
     private int race = 0;
     private Map<RewardType, RewardList> _rewards = Collections.emptyMap();
@@ -68,7 +57,7 @@ public final class NpcTemplate extends CharTemplate {
 //    private Constructor<? extends NpcInstance> constructor;
 
 
-    private Constructor<? extends CharacterAI> classAI;
+    private String aiName;
 
     public NpcTemplate(StatsSet set) {
         super(set);
@@ -90,33 +79,8 @@ public final class NpcTemplate extends CharTemplate {
         _htmRoot = set.getString("htm_root", null);
         castleId = set.getInteger("castle_id", 0);
         AIParams = (StatsSet) set.getObject("aiParams", StatsSet.EMPTY);
-
-        String type = set.getString("type", null);
-        this.type = type;
-        if (type.equals("Pet"))
-            System.out.println("Pet found ");
-        String ai = set.getString("ai_type", null);
-//        try {
-//            classType = Scripts.INSTANCE.getNpcInstance(type + "Instance");
-//            if (!type.equalsIgnoreCase("Pet")
-//                    && !type.equalsIgnoreCase("Trap"))
-//                constructor = classType.getConstructor(int.class, NpcTemplate.class);
-//        } catch (NoSuchMethodException e) {
-//            throw new IllegalArgumentException("no NpcTemplate for type: " + type);
-//        }
-
-//        isRaid = isInstanceOf(RaidBossInstance.class) && !isInstanceOf(ReflectionBossInstance.class);
-        Class<? extends CharacterAI> cls = Scripts.INSTANCE.getAI("ai." + ai);
-        try {
-            classAI = cls.getConstructor(Creature.class);
-        } catch (NoSuchMethodException e) {
-            try {
-                classAI = cls.getConstructor(NpcInstance.class);
-            } catch (NoSuchMethodException e1) {
-                throw new IllegalArgumentException("no AI for type: " + ai);
-            }
-
-        }
+        type = set.getString("type", null);
+        aiName = set.getString("ai_type", null);
     }
 
     public boolean isInstanceOf(Class<? extends Creature> clazz) {
@@ -126,16 +90,7 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public NpcInstance getNewInstance(int id) {
-        return AllNpcInstances.getInstance(id, type);
-
-//        if (constructor == null)
-//            return null;
-//        try {
-//            return constructor.newInstance(id, this);
-//        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-//            LOG.error("Unable to create instance of NPC " + npcId, e);
-//            throw new RuntimeException("Can't create instance " + e);
-//        }
+        return AllNpcInstances.getInstance(id, type, name);
     }
 
     public NpcInstance getNewInstance() {
@@ -143,13 +98,7 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public CharacterAI getNewAI(NpcInstance npc) {
-        try {
-            return classAI.newInstance(npc);
-
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            LOG.error("Unable to create ai of NPC " + npcId, e);
-            throw new IllegalArgumentException("no Ai for npc:" + npc.getName());
-        }
+        return AIs.getNewAI(aiName, npc);
     }
 
 

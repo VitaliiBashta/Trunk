@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _552_OlympiadVeteran extends Quest implements ScriptFile {
+public final class _552_OlympiadVeteran extends Quest {
     // NPCs
     private static final int OLYMPIAD_MANAGER = 31688;
 
@@ -129,17 +129,5 @@ public class _552_OlympiadVeteran extends Quest implements ScriptFile {
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

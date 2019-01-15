@@ -6,20 +6,21 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.tables.SkillTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class OfflineBuffersTable {
+public enum OfflineBuffersTable {
+    INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(OfflineBuffersTable.class);
-
-    public static OfflineBuffersTable getInstance() {
-        return SingletonHolder._instance;
-    }
 
     public void restoreOfflineBuffers() {
         _log.info(getClass().getSimpleName() + ": Loading offline buffers...");
@@ -116,11 +117,6 @@ public class OfflineBuffersTable {
         }
     }
 
-    /**
-     * Invocado cuando un pj desloguea estando en un buff store
-     *
-     * @param trader
-     */
     public synchronized void onLogout(Player trader) {
         final BufferData buffer = OfflineBufferManager.INSTANCE.getBuffStores().get(trader.getObjectId());
         if (buffer == null)
@@ -135,34 +131,22 @@ public class OfflineBuffersTable {
                 st.executeUpdate();
             }
 
-            // Luego guardamos cada buff del store
             try (PreparedStatement st = con.prepareStatement("REPLACE INTO character_offline_buffer_buffs VALUES (?,?)")) {
                 st.setInt(1, trader.getObjectId());
                 st.setString(2, joinAllSkillsToString(buffer.getBuffs().values()));
                 st.executeUpdate();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             _log.warn(getClass().getSimpleName() + ": Error while saving offline buffer: " + e, e);
         }
     }
 
-    /**
-     * @param skills
-     * @return Une toda la lista de buffs para que este toda en un string separados por ,
-     */
     private String joinAllSkillsToString(Collection<Skill> skills) {
         if (skills.isEmpty())
             return "";
 
-        String result = "";
-        for (Skill val : skills) {
-            result += val.getId() + ",";
-        }
-
-        return result.substring(0, result.length() - 1);
-    }
-
-    private static class SingletonHolder {
-        static final OfflineBuffersTable _instance = new OfflineBuffersTable();
+        return skills.stream()
+                .map(skill -> skill.getId() + "")
+                .collect(Collectors.joining(","));
     }
 }

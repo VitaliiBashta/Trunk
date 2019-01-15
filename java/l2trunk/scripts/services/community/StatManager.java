@@ -16,7 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -40,16 +39,12 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
             CommunityBoardManager.removeHandler(this);
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     /**
      * Регистратор команд
      */
     @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_bbsstat",
+        return List.of("_bbsstat",
                 "_bbsstat_pk",
                 "_bbsstat_online",
                 "_bbsstat_clan",

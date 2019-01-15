@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _214_TrialOfScholar extends Quest implements ScriptFile {
+public final class _214_TrialOfScholar extends Quest {
     // NPCs
     private static final int Sylvain = 30070;
     private static final int Lucas = 30071;
@@ -117,6 +116,24 @@ public class _214_TrialOfScholar extends Quest implements ScriptFile {
         addQuestItem(Medusas_Blood);
         addQuestItem(Fettered_Souls_Ichor);
         addQuestItem(Enchanted_Gargoyles_Nail);
+    }
+
+    private static boolean Check_cond17_items(QuestState st) {
+        if (st.getQuestItemsCount(Monster_Eye_Destroyer_Skin) < 5)
+            return false;
+        if (st.getQuestItemsCount(Shamans_Necklace) < 5)
+            return false;
+        return st.getQuestItemsCount(Shackles_Scalp) >= 2;
+    }
+
+    private static boolean Check_cond29_items(QuestState st) {
+        if (st.getQuestItemsCount(Ghouls_Skin) < 10)
+            return false;
+        if (st.getQuestItemsCount(Medusas_Blood) < 12)
+            return false;
+        if (st.getQuestItemsCount(Fettered_Souls_Ichor) < 5)
+            return false;
+        return st.getQuestItemsCount(Enchanted_Gargoyles_Nail) >= 5;
     }
 
     @Override
@@ -633,28 +650,6 @@ public class _214_TrialOfScholar extends Quest implements ScriptFile {
         return "noquest";
     }
 
-    private static boolean Check_cond17_items(QuestState st) {
-        if (st.getQuestItemsCount(Monster_Eye_Destroyer_Skin) < 5)
-            return false;
-        if (st.getQuestItemsCount(Shamans_Necklace) < 5)
-            return false;
-        if (st.getQuestItemsCount(Shackles_Scalp) < 2)
-            return false;
-        return true;
-    }
-
-    private static boolean Check_cond29_items(QuestState st) {
-        if (st.getQuestItemsCount(Ghouls_Skin) < 10)
-            return false;
-        if (st.getQuestItemsCount(Medusas_Blood) < 12)
-            return false;
-        if (st.getQuestItemsCount(Fettered_Souls_Ichor) < 5)
-            return false;
-        if (st.getQuestItemsCount(Enchanted_Gargoyles_Nail) < 5)
-            return false;
-        return true;
-    }
-
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
         if (st.getState() != STARTED)
@@ -697,14 +692,5 @@ public class _214_TrialOfScholar extends Quest implements ScriptFile {
                 st.setCond(29);
 
         return null;
-    }
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
     }
 }

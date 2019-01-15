@@ -18,8 +18,8 @@ public final class TeleToFantasyIsle implements ScriptFile, IBypassHandler {
                     new Location(-59716, -57864, -2032));
 
     @Override
-    public String[] getBypasses() {
-        return new String[]{"teleToFantasyIsle"};
+    public String getBypasses() {
+        return "teleToFantasyIsle";
     }
 
     @Override

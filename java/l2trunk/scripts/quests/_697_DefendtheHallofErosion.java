@@ -8,11 +8,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _697_DefendtheHallofErosion extends Quest implements ScriptFile {
+public final class _697_DefendtheHallofErosion extends Quest {
     private static final int TEPIOS = 32603;
     private static final int VesperNobleEnhanceStone = 14052;
 
@@ -64,17 +60,4 @@ public class _697_DefendtheHallofErosion extends Quest implements ScriptFile {
         }
         return htmltext;
     }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
 }

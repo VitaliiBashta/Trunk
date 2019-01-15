@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _551_OlympiadStarter extends Quest implements ScriptFile {
+public final class _551_OlympiadStarter extends Quest {
     // NPCs
     private static final int OLYMPIAD_MANAGER = 31688;
 
@@ -29,34 +29,32 @@ public class _551_OlympiadStarter extends Quest implements ScriptFile {
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
         int npcId = npc.getNpcId();
-        switch (npcId) {
-            case OLYMPIAD_MANAGER:
-                Player player = st.getPlayer();
-                if (!player.isNoble() || player.getLevel() < 75 || player.getClassId().getLevel() < 4)
-                    return "olympiad_operator_q0551_08.htm";
+        if (npcId == OLYMPIAD_MANAGER) {
+            Player player = st.getPlayer();
+            if (!player.isNoble() || player.getLevel() < 75 || player.getClassId().getLevel() < 4)
+                return "olympiad_operator_q0551_08.htm";
 
-                if (st.isCreated()) {
-                    if (st.isNowAvailable())
-                        return "olympiad_operator_q0551_01.htm";
-                    else
-                        return "olympiad_operator_q0551_06.htm";
-                } else if (st.isStarted()) {
-                    if (st.getQuestItemsCount(OLYMPIAD_CERT1, OLYMPIAD_CERT2, OLYMPIAD_CERT3) == 0)
-                        return "olympiad_operator_q0551_04.htm";
+            if (st.isCreated()) {
+                if (st.isNowAvailable())
+                    return "olympiad_operator_q0551_01.htm";
+                else
+                    return "olympiad_operator_q0551_06.htm";
+            } else if (st.isStarted()) {
+                if (st.getQuestItemsCount(OLYMPIAD_CERT1, OLYMPIAD_CERT2, OLYMPIAD_CERT3) == 0)
+                    return "olympiad_operator_q0551_04.htm";
 
-                    if (st.getQuestItemsCount(OLYMPIAD_CERT3) > 0) {
-                        st.giveItems(OLYMPIAD_CHEST, 4);
-                        st.giveItems(MEDAL_OF_GLORY, 5);
-                        st.takeItems(OLYMPIAD_CERT1, -1);
-                        st.takeItems(OLYMPIAD_CERT2, -1);
-                        st.takeItems(OLYMPIAD_CERT3, -1);
-                        st.playSound(SOUND_FINISH);
-                        st.exitCurrentQuest(this);
-                        return "olympiad_operator_q0551_07.htm";
-                    } else
-                        return "olympiad_operator_q0551_05.htm";
-                }
-                break;
+                if (st.getQuestItemsCount(OLYMPIAD_CERT3) > 0) {
+                    st.giveItems(OLYMPIAD_CHEST, 4);
+                    st.giveItems(MEDAL_OF_GLORY, 5);
+                    st.takeItems(OLYMPIAD_CERT1, -1);
+                    st.takeItems(OLYMPIAD_CERT2, -1);
+                    st.takeItems(OLYMPIAD_CERT3, -1);
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(this);
+                    return "olympiad_operator_q0551_07.htm";
+                } else
+                    return "olympiad_operator_q0551_05.htm";
+            }
         }
 
         return null;
@@ -115,17 +113,5 @@ public class _551_OlympiadStarter extends Quest implements ScriptFile {
                 qs.playSound(SOUND_MIDDLE);
             }
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

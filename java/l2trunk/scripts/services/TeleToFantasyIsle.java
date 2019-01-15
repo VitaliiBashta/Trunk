@@ -6,11 +6,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class TeleToFantasyIsle extends Functions {
-    public static final List<Location> POINTS = Arrays.asList(
+    public static final List<Location> POINTS = List.of(
             new Location(-60695, -56896, -2032),
             new Location(-59716, -55920, -2032),
             new Location(-58752, -56896, -2032),

@@ -5,19 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _242_PossessorOfaPreciousSoul2 extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _242_PossessorOfaPreciousSoul2 extends Quest {
     private static final int VIRGILS_LETTER_1_PART = 7677;
     private static final int BLONDE_STRAND = 7590;
     private static final int SORCERY_INGREDIENT = 7596;
@@ -44,11 +32,9 @@ public class _242_PossessorOfaPreciousSoul2 extends Quest implements ScriptFile 
 
         addKillId(27317);
 
-        addQuestItem(new int[]{
-                ORB_OF_BINDING,
+        addQuestItem(ORB_OF_BINDING,
                 SORCERY_INGREDIENT,
-                BLONDE_STRAND
-        });
+                BLONDE_STRAND);
     }
 
     @Override

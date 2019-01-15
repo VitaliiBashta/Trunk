@@ -7,13 +7,12 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
 import java.util.List;
 
-public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
+public final class _129_PailakaDevilsLegacy extends Quest {
     // NPC
     private static final int DISURVIVOR = 32498;
     private static final int SUPPORTER = 32501;
@@ -36,17 +35,10 @@ public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
     private static final int KDROP = 13046;
     private static final int ADROP = 13047;
     private static final int KEY = 13150;
-    private static final int[] HERBS = new int[]{
-            8601,
-            8602,
-            8604,
-            8605
-    };
-    private static final int[] CHESTDROP = new int[]{
-            13033,
-            13048,
-            13049
-    }; // TODO нет скилла для бутылки: , 13059 };
+    private static final List<Integer> HERBS = List.of(
+            8601, 8602, 8604, 8605);
+    private static final List<Integer> CHESTDROP = List.of(
+            13033, 13048, 13049);
 
     // REWARDS
     private static final int PBRACELET = 13295;
@@ -174,10 +166,10 @@ public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
             addSpawnToInstance(DADVENTURER2, new Location(84990, -208376, -3342, 55000), 0, refId);
         } else if (Pailaka2nd.contains(npcId)) {
             if (Rnd.get(100) < 80)
-                st.dropItem(npc, HERBS[Rnd.get(HERBS.length)], Rnd.get(1, 2));
+                st.dropItem(npc, Rnd.get(HERBS), Rnd.get(1, 2));
         } else if (npcId == CHEST)
             if (Rnd.get(100) < 80)
-                st.dropItem(npc, CHESTDROP[Rnd.get(CHESTDROP.length)], Rnd.get(1, 10));
+                st.dropItem(npc, Rnd.get(CHESTDROP), Rnd.get(1, 10));
         // TODO вернуть когда будут работать двери
         //else
         //	dropItem(npc, KEY, 1);
@@ -192,17 +184,5 @@ public class _129_PailakaDevilsLegacy extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(izId)) {
             ReflectionUtils.enterReflection(player, izId);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

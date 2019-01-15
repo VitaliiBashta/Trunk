@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
+public final class _1201_DarkCloudMansion extends Quest {
     private static final int INCSTANCED_ZONE_ID = 9;
 
     // Items
@@ -80,7 +80,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
             {5, 4, 3, 1, 6, 2}};
 
     // Second room - golem spawn locatons - random
-    private static final int[][] golems ={
+    private static final int[][] golems = {
             {CCG[0], 148060, 181389},
             {CCG[1], 147910, 181173},
             {CCG[0], 147810, 181334},
@@ -103,7 +103,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
             {0, 0, 0, 1, 1, 1, 0},
             {1, 0, 1, 0, 0, 1, 0},
             {0, 1, 1, 0, 0, 0, 1}};
-    private static final Map<Integer,World> worlds = new HashMap<>();
+    private static final Map<Integer, World> worlds = new HashMap<>();
 
     public _1201_DarkCloudMansion() {
         super(true);
@@ -121,18 +121,6 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
 
         //addKillId(22318);
         //addKillId(22319);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override
@@ -449,7 +437,7 @@ public final class _1201_DarkCloudMansion extends Quest implements ScriptFile {
                 if (npcObj[1] == i && npcObj[2] == 0) {
                     order[i] = 1;
                     npcObj[2] = 1;
-                    npc.broadcastPacket(new MagicSkillUse(npc,  5441));
+                    npc.broadcastPacket(new MagicSkillUse(npc, 5441));
                     return;
                 }
         spawnRndGolem(world);

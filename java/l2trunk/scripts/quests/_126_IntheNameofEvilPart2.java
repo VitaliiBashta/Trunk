@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _126_IntheNameofEvilPart2 extends Quest implements ScriptFile {
+public final class _126_IntheNameofEvilPart2 extends Quest {
     private final int Mushika = 32114;
     private final int Asamah = 32115;
     private final int UluKaimu = 32119;
@@ -17,18 +17,6 @@ public class _126_IntheNameofEvilPart2 extends Quest implements ScriptFile {
     private final int BONEPOWDER = 8783;
     private final int EPITAPH = 8781;
     private final int EWA = 729;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _126_IntheNameofEvilPart2() {
         super(false);

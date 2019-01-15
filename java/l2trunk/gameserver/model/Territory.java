@@ -111,34 +111,34 @@ public final class Territory implements Shape, SpawnRange {
     }
 
     @Override
-    public boolean isInside(int x, int y, int z) {
-        if (x < this.min.x || x > this.max.x || y < this.min.y || y > this.max.y || z < this.min.z || z > this.max.z)
+    public boolean isInside(Location loc) {
+        if (loc.x < this.min.x
+                || loc.x > this.max.x
+                || loc.y < this.min.y
+                || loc.y > this.max.y
+                || loc.z < this.min.z
+                || loc.z > this.max.z)
             return false;
 
         Shape shape;
         for (Shape anInclude : include) {
             shape = anInclude;
-            if (shape.isInside(x, y, z))
-                return !isExcluded(x, y, z);
+            if (shape.isInside(loc))
+                return !isExcluded(loc);
         }
         return false;
     }
 
     private boolean isExcluded(int x, int y) {
-        Shape shape;
-        for (Shape anExclude : exclude) {
-            shape = anExclude;
-            if (shape.isInside(x, y))
-                return true;
-        }
-        return false;
+        return exclude.stream()
+                .anyMatch(exc -> exc.isInside(x, y));
     }
 
-    private boolean isExcluded(int x, int y, int z) {
+    private boolean isExcluded(Location loc) {
         Shape shape;
         for (Shape anExclude : exclude) {
             shape = anExclude;
-            if (shape.isInside(x, y, z))
+            if (shape.isInside(loc))
                 return true;
         }
         return false;

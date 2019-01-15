@@ -5,23 +5,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10268_ToTheSeedOfInfinity extends Quest implements ScriptFile {
+public final class _10268_ToTheSeedOfInfinity extends Quest {
     private final static int Keucereus = 32548;
     private final static int Tepios = 32603;
 
     private final static int Introduction = 13811;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10268_ToTheSeedOfInfinity() {
         super(false);

@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ColiseumHelperInstance extends NpcInstance {
-    private final List<List<Location>> LOCS = Arrays.asList(
-            Arrays.asList(new Location(-84451, -45452, -10728), new Location(-84580, -45587, -10728)),
-            Arrays.asList(new Location(-86154, -50429, -10728), new Location(-86118, -50624, -10728)),
-            Arrays.asList(new Location(-82009, -53652, -10728), new Location(-81802, -53665, -10728)),
-            Arrays.asList(new Location(-77603, -50673, -10728), new Location(-77586, -50503, -10728)),
-            Arrays.asList(new Location(-79186, -45644, -10728), new Location(-79309, -45561, -10728))
+    private final List<List<Location>> LOCS = List.of(
+            List.of(new Location(-84451, -45452, -10728), new Location(-84580, -45587, -10728)),
+            List.of(new Location(-86154, -50429, -10728), new Location(-86118, -50624, -10728)),
+            List.of(new Location(-82009, -53652, -10728), new Location(-81802, -53665, -10728)),
+            List.of(new Location(-77603, -50673, -10728), new Location(-77586, -50503, -10728)),
+            List.of(new Location(-79186, -45644, -10728), new Location(-79309, -45561, -10728))
     );
 
     public ColiseumHelperInstance(int objectId, NpcTemplate template) {

@@ -6,25 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест проверен и работает.
- * Рейты прописаны путем повышения шанса получения квестовых вещей.
- */
-public class _385_YokeOfThePast extends Quest implements ScriptFile {
+public final class _385_YokeOfThePast extends Quest {
     private final int ANCIENT_SCROLL = 5902;
-    private final int BLANK_SCROLL = 5965;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int BLANK_SCROLL = 5965;
 
     public _385_YokeOfThePast() {
         super(true);
@@ -41,8 +25,7 @@ public class _385_YokeOfThePast extends Quest implements ScriptFile {
 
     private boolean checkNPC(int npc) {
         if (npc >= 31095 && npc <= 31126)
-            if (npc != 31100 && npc != 31111 && npc != 31112 && npc != 31113)
-                return true;
+            return npc != 31100 && npc != 31111 && npc != 31112 && npc != 31113;
         return false;
     }
 

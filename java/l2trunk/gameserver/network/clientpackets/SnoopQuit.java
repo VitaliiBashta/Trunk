@@ -3,21 +3,20 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 
-public class SnoopQuit extends L2GameClientPacket {
-    @SuppressWarnings("unused")
-    private int _snoopID;
+public final class SnoopQuit extends L2GameClientPacket {
+    private int snoopID;
 
     /**
      * format: cd
      */
     @Override
     protected void readImpl() {
-        _snoopID = readD();
+        snoopID = readD();
     }
 
     @Override
     protected void runImpl() {
-        Player player = (Player) GameObjectsStorage.findObject(_snoopID);
+        Player player = (Player) GameObjectsStorage.findObject(snoopID);
         if (player == null)
             return;
         Player activeChar = getClient().getActiveChar();

@@ -5,25 +5,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _113_StatusOfTheBeaconTower extends Quest implements ScriptFile {
+public final class _113_StatusOfTheBeaconTower extends Quest {
     // NPC
     private static final int MOIRA = 31979;
     private static final int TORRANT = 32016;
 
     // QUEST ITEM
     private static final int BOX = 8086;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _113_StatusOfTheBeaconTower() {
         super(false);

@@ -2,7 +2,6 @@ package l2trunk.gameserver.dao;
 
 import l2trunk.commons.dao.JdbcDAO;
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dao.JdbcEntityStats;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.mail.Mail;
@@ -43,27 +42,6 @@ public final class MailDAO implements JdbcDAO<Integer, Mail> {
     private final AtomicLong insert = new AtomicLong();
     private final AtomicLong update = new AtomicLong();
     private final AtomicLong delete = new AtomicLong();
-    private final JdbcEntityStats stats = new JdbcEntityStats() {
-        @Override
-        public long getLoadCount() {
-            return load.get();
-        }
-
-        @Override
-        public long getInsertCount() {
-            return insert.get();
-        }
-
-        @Override
-        public long getUpdateCount() {
-            return update.get();
-        }
-
-        @Override
-        public long getDeleteCount() {
-            return delete.get();
-        }
-    };
 
     private MailDAO() {
         cache = CacheManager.getInstance().getCache(Mail.class.getName());
@@ -77,10 +55,6 @@ public final class MailDAO implements JdbcDAO<Integer, Mail> {
         return cache;
     }
 
-    @Override
-    public JdbcEntityStats getStats() {
-        return stats;
-    }
 
     private void save0(Mail mail) throws SQLException {
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {

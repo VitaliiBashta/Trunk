@@ -4,113 +4,30 @@ import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class _635_InTheDimensionalRift extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _635_InTheDimensionalRift extends Quest {
     private static final int DIMENSION_FRAGMENT = 7079;
 
     // Rift Posts should take you back to the place you came from
-    private static final int[][] COORD = {
-            {},
-            // filler
-            {
-                    -41572,
-                    209731,
-                    -5087
-            },
-            //Necropolis of Sacrifice
-            {
-                    42950,
-                    143934,
-                    -5381
-            },
-            //Catacomb of the Heretic
-            {
-                    45256,
-                    123906,
-                    -5411
-            },
-            //Pilgrim's Necropolis
-            {
-                    46192,
-                    170290,
-                    -4981
-            },
-            //Catacomb of the Branded
-            {
-                    111273,
-                    174015,
-                    -5437
-            },
-            //Necropolis of Worship
-            {
-                    -20221,
-                    -250795,
-                    -8160
-            },
-            //Catacomb of Apostate
-            {
-                    -21726,
-                    77385,
-                    -5171
-            },
-            //Patriot's Necropolis
-            {
-                    140405,
-                    79679,
-                    -5427
-            },
-            //Catacomb of the Witch
-            {
-                    -52366,
-                    79097,
-                    -4741
-            },
-            //Necropolis of Devotion (ex Ascetics)
-            {
-                    118311,
-                    132797,
-                    -4829
-            },
-            //Necropolis of Martyrdom
-            {
-                    172185,
-                    -17602,
-                    -4901
-            },
-            //Disciple's Necropolis
-            {
-                    83000,
-                    209213,
-                    -5439
-            },
-            //Saint's Necropolis
-            {
-                    -19500,
-                    13508,
-                    -4901
-            },
-            //Catacomb of Dark Omens
-            {
-                    113865,
-                    84543,
-                    -6541
-            }
-            //Catacomb of the Forbidden Path
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final List<Location> COORD = List.of(
+            new Location(),            // filler
+            new Location(-41572, 209731, -5087),    //Necropolis of Sacrifice
+            new Location(42950, 143934, -5381),     //Catacomb of the Heretic
+            new Location(45256, 123906, -5411),     //Pilgrim's Necropolis
+            new Location(46192, 170290, -4981),     //Catacomb of the Branded
+            new Location(111273, 174015, -5437),    //Necropolis of Worship
+            new Location(-20221, -250795, -8160),   //Catacomb of Apostate
+            new Location(-21726, 77385, -5171),     //Patriot's Necropolis
+            new Location(140405, 79679, -5427),     //Catacomb of the Witch
+            new Location(-52366, 79097, -4741),     //Necropolis of Devotion (ex Ascetics)
+            new Location(118311, 132797, -4829),    //Necropolis of Martyrdom
+            new Location(172185, -17602, -4901),    //Disciple's Necropolis
+            new Location(83000, 209213, -5439),     //Saint's Necropolis
+            new Location(-19500, 13508, -4901),     //Catacomb of Dark Omens
+            new Location(113865, 84543, -6541));    //Catacomb of the Forbidden Path
 
     public _635_InTheDimensionalRift() {
         super(false);
@@ -152,7 +69,7 @@ public class _635_InTheDimensionalRift extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int npcId = npc.getNpcId();
         int id = st.getInt("id");
         String loc = st.get("loc");
@@ -173,8 +90,7 @@ public class _635_InTheDimensionalRift extends Quest implements ScriptFile {
                     htmltext = "4-ziggurat.htm";
             }
         } else if (id > 0) {
-            int[] coord = COORD[id];
-            st.getPlayer().teleToLocation(coord[0], coord[1], coord[2]);
+            st.getPlayer().teleToLocation(COORD.get(id));
             htmltext = "7.htm";
             st.exitCurrentQuest(true);
         } else if (loc != null) {
@@ -190,7 +106,7 @@ public class _635_InTheDimensionalRift extends Quest implements ScriptFile {
 
     private boolean takeAdena(QuestState st) {
         int level = st.getPlayer().getLevel();
-        int fee = 0;
+        int fee;
         if (level < 30)
             fee = 2000;
         else if (level < 40)

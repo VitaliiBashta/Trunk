@@ -4,10 +4,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _257_GuardIsBusy extends Quest implements ScriptFile {
+public final class _257_GuardIsBusy extends Quest {
     private final int GLUDIO_LORDS_MARK = 1084;
     private final int ORC_AMULET = 752;
     private final int ORC_NECKLACE = 1085;

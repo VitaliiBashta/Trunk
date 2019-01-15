@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.tables.SkillTable;
 
 public final class MatchBerserker extends MatchFighter {
-    private  final Skill ATTACK_SKILL = SkillTable.INSTANCE.getInfo(4032, 6);
+    private  static final int ATTACK_SKILL = 4032;
 
     public MatchBerserker(NpcInstance actor) {
         super(actor);
@@ -18,6 +18,6 @@ public final class MatchBerserker extends MatchFighter {
         super.onEvtAttacked(attacker, dam);
 
         if (Rnd.chance(10))
-            addTaskCast(attacker, ATTACK_SKILL);
+            addTaskCast(attacker, ATTACK_SKILL, 6);
     }
 }

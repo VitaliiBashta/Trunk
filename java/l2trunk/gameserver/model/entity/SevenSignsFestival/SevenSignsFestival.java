@@ -27,24 +27,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum SevenSignsFestival {
     INSTANCE;
-    public static final int FESTIVAL_MANAGER_START = 120000; // 2 mins
-    public static final int FESTIVAL_FIRST_SPAWN = 120000; // 2 mins
-    public static final int FESTIVAL_FIRST_SWARM = 300000; // 5 mins
-    public static final int FESTIVAL_SECOND_SPAWN = 540000; // 9 mins
-    public static final int FESTIVAL_SECOND_SWARM = 720000; // 12 mins
-    public static final int FESTIVAL_CHEST_SPAWN = 900000; // 15 mins
     public static final int FESTIVAL_COUNT = 5;
     public static final int FESTIVAL_LEVEL_MAX_31 = 0;
     public static final int FESTIVAL_LEVEL_MAX_42 = 1;
     public static final int FESTIVAL_LEVEL_MAX_53 = 2;
     public static final int FESTIVAL_LEVEL_MAX_64 = 3;
     public static final int FESTIVAL_LEVEL_MAX_NONE = 4;
-    public static final int[] FESTIVAL_LEVEL_SCORES = {60, 70, 100, 120, 150}; // 500 maximum possible score
+    public static final List<Integer> FESTIVAL_LEVEL_SCORES = List.of(60, 70, 100, 120, 150); // 500 maximum possible score
     public static final int FESTIVAL_BLOOD_OFFERING = 5901;
     public static final int FESTIVAL_OFFERING_VALUE = 1;
-    private static final int FESTIVAL_LENGTH = 1080000; // 18 mins
-    private static final int FESTIVAL_CYCLE_LENGTH = 2280000; // 38 mins
-    public static final int FESTIVAL_SIGNUP_TIME = FESTIVAL_CYCLE_LENGTH - FESTIVAL_LENGTH;
     private static final Logger _log = LoggerFactory.getLogger(SevenSignsFestival.class);
     private static boolean festivalInitialized;
     private static Map<Integer, Long> _dawnFestivalScores = new ConcurrentHashMap<>();
@@ -86,9 +77,6 @@ public enum SevenSignsFestival {
 
     /**
      * Returns the maximum allowed player level for the given festival type.
-     *
-     * @param festivalId
-     * @return int maxLevel
      */
     public static int getMaxLevelForFestival(int festivalId) {
         switch (festivalId) {
@@ -159,6 +147,10 @@ public enum SevenSignsFestival {
                 sb.append(",");
         }
         return sb.toString();
+    }
+
+    public static void setFestivalInitialized(boolean festivalInitialized) {
+        SevenSignsFestival.festivalInitialized = festivalInitialized;
     }
 
     /**
@@ -343,10 +335,6 @@ public enum SevenSignsFestival {
         return festivalInitialized;
     }
 
-//    public static void setFestivalInitialized(boolean isInitialized) {
-//        festivalInitialized = isInitialized;
-//    }
-
     public String getTimeToNextFestivalStr() {
         if (SevenSigns.INSTANCE.isSealValidationPeriod())
             return "<font color=\"FF0000\">This is the Seal Validation period. Festivals will resume next week.</font>";
@@ -360,10 +348,6 @@ public enum SevenSignsFestival {
     /**
      * Returns a stats set containing the highest score <b>this cycle</b> for the
      * the specified cabal and associated festival ID.
-     *
-     * @param oracle
-     * @param festivalId
-     * @return StatsSet festivalDat
      */
     public StatsSet getHighestScoreData(int oracle, int festivalId) {
         int offsetId = festivalId;

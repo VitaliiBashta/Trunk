@@ -6,13 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Рейты не учитываются, награда не стекуемая
- */
-public class _004_LongLivethePaagrioLord extends Quest implements ScriptFile {
+public final class _004_LongLivethePaagrioLord extends Quest {
     private final int HONEY_KHANDAR = 1541;
     private final int BEAR_FUR_CLOAK = 1542;
     private final int BLOODY_AXE = 1543;
@@ -46,18 +42,6 @@ public class _004_LongLivethePaagrioLord extends Quest implements ScriptFile {
                     DEEP_SEA_ORB
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _004_LongLivethePaagrioLord() {
         super(false);
@@ -109,7 +93,7 @@ public class _004_LongLivethePaagrioLord extends Quest implements ScriptFile {
                 st.exitCurrentQuest(false);
             }
         } else if (cond == 1)
-            for (int Id[] : NPC_GIFTS)
+            for (int[] Id : NPC_GIFTS)
                 if (Id[0] == npcId) {
                     int item = Id[1];
                     if (st.getQuestItemsCount(item) > 0)

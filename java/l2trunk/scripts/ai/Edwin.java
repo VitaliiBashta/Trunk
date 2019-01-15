@@ -6,8 +6,11 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Edwin extends DefaultAI {
-    private static final Location[] points = {new Location(89991, -144601, -1467), // start
+    private static final List<Location> points = List.of(
+            new Location(89991, -144601, -1467), // start
             new Location(90538, -143470, -1467),
             new Location(90491, -142848, -1467),
             new Location(89563, -141455, -1467),
@@ -23,8 +26,7 @@ public final class Edwin extends DefaultAI {
             new Location(89563, -141455, -1467),
             new Location(90491, -142848, -1467),
             new Location(90538, -143470, -1467),
-            new Location(89991, -144601, -1467) // start
-    };
+            new Location(89991, -144601, -1467)); // start
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -45,7 +47,7 @@ public final class Edwin extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -67,10 +69,10 @@ public final class Edwin extends DefaultAI {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

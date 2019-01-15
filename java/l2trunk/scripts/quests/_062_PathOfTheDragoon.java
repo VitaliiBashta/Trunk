@@ -6,19 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _062_PathOfTheDragoon extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _062_PathOfTheDragoon extends Quest {
     private final int Shubain = 32194;
     private final int Gwain = 32197;
 
@@ -30,7 +18,7 @@ public class _062_PathOfTheDragoon extends Quest implements ScriptFile {
     private final int VenomousSpiderLeg = 9750;
     private final int TumranBugbearHeart = 9751;
     private final int ShubainsRecommendation = 9752;
-    private final int GwainsRecommendation = 9753;
+    private static final int GwainsRecommendation = 9753;
 
     public _062_PathOfTheDragoon() {
         super(false);

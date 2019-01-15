@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class _10286_ReunionWithSirra extends Quest implements ScriptFile {
+public final class _10286_ReunionWithSirra extends Quest {
     private static final int Rafforty = 32020;
     private static final int Jinia = 32760;
     private static final int Jinia2 = 32781;
@@ -99,17 +99,5 @@ public class _10286_ReunionWithSirra extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(141)) {
             ReflectionUtils.enterReflection(player, 141);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

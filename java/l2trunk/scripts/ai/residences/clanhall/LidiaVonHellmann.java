@@ -2,17 +2,15 @@ package l2trunk.scripts.ai.residences.clanhall;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 
 public final class LidiaVonHellmann extends SiegeGuardFighter {
-    private  final Skill DRAIN_SKILL = SkillTable.INSTANCE.getInfo(4999);
-    private  final Skill DAMAGE_SKILL = SkillTable.INSTANCE.getInfo(4998);
+    private static final int DRAIN_SKILL = 4999;
+    private static final int DAMAGE_SKILL = 4998;
 
     public LidiaVonHellmann(NpcInstance actor) {
         super(actor);

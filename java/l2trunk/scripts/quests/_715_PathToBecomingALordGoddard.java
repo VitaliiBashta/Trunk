@@ -6,9 +6,8 @@ import l2trunk.gameserver.model.entity.residence.Castle;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _715_PathToBecomingALordGoddard extends Quest implements ScriptFile {
+public final class _715_PathToBecomingALordGoddard extends Quest {
     private static final int Alfred = 35363;
 
     private static final int WaterSpiritAshutar = 25316;

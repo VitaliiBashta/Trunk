@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _372_LegacyOfInsolence extends Quest implements ScriptFile {
+public final class _372_LegacyOfInsolence extends Quest {
     // NPCs
     private static final int HOLLY = 30839;
     private static final int WALDERAL = 30844;
@@ -203,7 +203,7 @@ public class _372_LegacyOfInsolence extends Quest implements ScriptFile {
                 st.exitCurrentQuest(true);
             }
         } else if (_state == STARTED)
-            htmltext = String.valueOf(npcId) + "-1.htm";
+            htmltext = npcId + "-1.htm";
 
         return htmltext;
     }
@@ -219,17 +219,5 @@ public class _372_LegacyOfInsolence extends Quest implements ScriptFile {
 
         qs.rollAndGive(drop[0], 1, drop[1]);
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

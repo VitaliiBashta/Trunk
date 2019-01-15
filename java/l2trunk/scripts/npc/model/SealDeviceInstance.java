@@ -3,18 +3,15 @@ package l2trunk.scripts.npc.model;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.MonsterInstance;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author pchayka
- */
 public final class SealDeviceInstance extends MonsterInstance {
     private boolean _gaveItem = false;
 
@@ -42,22 +39,6 @@ public final class SealDeviceInstance extends MonsterInstance {
         super.reduceCurrentHp(i, attacker, skill, awake, standUp, directHp, canReflect, transferDamage, isDot, sendMessage);
     }
 
-    private class TeleportPlayer extends RunnableImpl {
-        final Player _p;
-
-        TeleportPlayer(Player p) {
-            _p = p;
-        }
-
-        @Override
-        public void runImpl() {
-            for (NpcInstance n : _p.getReflection().getNpcs())
-                if (n.getNpcId() != 32586 && n.getNpcId() != 32587)
-                    n.deleteMe();
-            _p.getPlayer().teleToLocation(new Location(-89560, 215784, -7488));
-        }
-    }
-
     @Override
     public boolean isFearImmune() {
         return true;
@@ -76,5 +57,22 @@ public final class SealDeviceInstance extends MonsterInstance {
     @Override
     public boolean isMovementDisabled() {
         return true;
+    }
+
+    private class TeleportPlayer extends RunnableImpl {
+        final Player pl;
+
+        TeleportPlayer(Player pl) {
+            this.pl = pl;
+        }
+
+        @Override
+        public void runImpl() {
+            pl.getReflection().getNpcs()
+                    .filter(n -> n.getNpcId() != 32586)
+                    .filter(n -> n.getNpcId() != 32587)
+                    .forEach(GameObject::deleteMe);
+            pl.getPlayer().teleToLocation(new Location(-89560, 215784, -7488));
+        }
     }
 }

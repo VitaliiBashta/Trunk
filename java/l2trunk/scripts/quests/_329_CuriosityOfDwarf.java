@@ -6,21 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _329_CuriosityOfDwarf extends Quest implements ScriptFile {
+public final class _329_CuriosityOfDwarf extends Quest {
     private final int GOLEM_HEARTSTONE = 1346;
     private final int BROKEN_HEARTSTONE = 1365;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _329_CuriosityOfDwarf() {
         super(false);

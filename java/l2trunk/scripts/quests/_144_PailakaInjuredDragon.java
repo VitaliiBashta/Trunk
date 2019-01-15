@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
@@ -10,16 +9,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
-import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public final class _144_PailakaInjuredDragon extends Quest implements ScriptFile {
+public final class _144_PailakaInjuredDragon extends Quest {
     // NPC
     private static final int KETRAOSHAMAN = 32499;
     private static final int KOSUPPORTER = 32502;
@@ -35,13 +30,13 @@ public final class _144_PailakaInjuredDragon extends Quest implements ScriptFile
     private static final int VSHGAPG1 = 18655;
     private static final int VSHGAPG2 = 18657;
 
-    private static final List<Integer> Pailaka3rd = Arrays.asList(
+    private static final List<Integer> Pailaka3rd = List.of(
             18635, VSWARRIOR1, 18638, 18639, 18640, 18641,
             VSWARRIOR2, 18644, 18645, VSCOMMAO1, 18648,
             VSGMAG1, VSGMAG2, 18652, 18653, VSCOMMAO2,
             VSHGAPG1, 18656, VSHGAPG2, 18658, 18659);
 
-    private static final List<Integer> Antelopes = Arrays.asList(18637, 18643, 18647, 18651);
+    private static final List<Integer> Antelopes = List.of(18637, 18643, 18647, 18651);
 
     // BOSS
     private static final int LATANA = 18660;
@@ -54,7 +49,7 @@ public final class _144_PailakaInjuredDragon extends Quest implements ScriptFile
     private static final int STAGE1 = 13056;
     private static final int STAGE2 = 13057;
 
-    private static final List<Integer> PAILAKA3DROP = Arrays.asList(8600, 8601, 8603, 8604);
+    private static final List<Integer> PAILAKA3DROP = List.of(8600, 8601, 8603, 8604);
     private static final int[] ANTELOPDROP = {13032, 13033};
 
     // REWARDS
@@ -322,17 +317,5 @@ public final class _144_PailakaInjuredDragon extends Quest implements ScriptFile
         } else if (player.canEnterInstance(izId)) {
             ReflectionUtils.enterReflection(player, izId);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -5,17 +5,14 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author pchayka
- */
-public class KegorNpcInstance extends NpcInstance {
+public final class KegorNpcInstance extends NpcInstance {
     public KegorNpcInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
 
     @Override
     public String getHtmlPath(int npcId, int val, Player player) {
-        String htmlpath = null;
+        String htmlpath;
         if (getReflection().isDefault())
             htmlpath = "default/32761-default.htm";
         else
@@ -28,7 +25,7 @@ public class KegorNpcInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("request_stone")) {
+        if ("request_stone".equalsIgnoreCase(command)) {
             if (player.getInventory().getCountOf(15469) == 0 && player.getInventory().getCountOf(15470) == 0)
                 Functions.addItem(player, 15469, 1, "KegorNpcInstance");
             else

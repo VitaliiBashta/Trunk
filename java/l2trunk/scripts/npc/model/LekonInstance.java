@@ -5,11 +5,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author VISTALL
- * @date 10:10/24.06.2011
- */
-public class LekonInstance extends NpcInstance {
+public final class LekonInstance extends NpcInstance {
     private static final int ENERGY_STAR_STONE = 13277;
     private static final int AIRSHIP_SUMMON_LICENSE = 13559;
 
@@ -22,7 +18,7 @@ public class LekonInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equals("get_license")) {
+        if ("get_license".equals(command)) {
             if (player.getClan() == null || !player.isClanLeader() || player.getClan().getLevel() < 5) {
                 showChatWindow(player, 2);
                 return;

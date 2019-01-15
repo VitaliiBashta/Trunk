@@ -6,23 +6,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _190_LostDream extends Quest implements ScriptFile {
+public final class _190_LostDream extends Quest {
     private static final int Kusto = 30512;
     private static final int Lorain = 30673;
     private static final int Nikola = 30621;
     private static final int Juris = 30113;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _190_LostDream() {
         super(false);

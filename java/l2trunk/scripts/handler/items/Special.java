@@ -29,7 +29,9 @@ import java.util.Calendar;
 import java.util.List;
 
 public final class Special extends SimpleItemHandler implements ScriptFile {
-    private static final Integer[] ITEM_IDS = {8060, 8556, 13853, 13808, 13809, 20630, 21106, 21107, 14835, 15537, 10632, 21899, 21900, 21901, 21902, 21903, 21904, 17268};
+    private static final List<Integer> ITEM_IDS = List.of(
+            8060, 8556, 13853, 13808, 13809, 20630, 21106, 21107, 14835, 15537,
+            10632, 21899, 21900, 21901, 21902, 21903, 21904, 17268);
 
     private static long useItem(Player player, int itemId, long count) {
         player.sendPacket(new SystemMessage(SystemMessage.YOU_USE_S1).addItemName(itemId));
@@ -47,18 +49,8 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public List<Integer> getItemIds() {
-        return Arrays.asList(ITEM_IDS);
+        return ITEM_IDS;
     }
 
     @Override
@@ -326,7 +318,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     //Dewdrop of Destruction
     private boolean use8556(Player player, boolean ctrl) {
-        List<Integer> npcs = Arrays.asList(29048, 29049);
+        List<Integer> npcs = List.of(29048, 29049);
 
         GameObject t = player.getTarget();
         if (t == null || !t.isNpc() || !npcs.contains(((NpcInstance) t).getNpcId())) {
@@ -356,7 +348,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     //Holy Water for SSQ 2nd quest
     private boolean use13808(Player player, boolean ctrl) {
-        List<Integer> allowedDoors = Arrays.asList(17240101, 17240105, 17240109);
+        List<Integer> allowedDoors = List.of(17240101, 17240105, 17240109);
 
         GameObject target = player.getTarget();
         if (player.getDistance(target) > 150)
@@ -390,7 +382,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
     //Court Mag Staff for SSQ 2nd quest
     private boolean use13809(Player player, boolean ctrl) {
-        List<Integer> allowedDoors = Arrays.asList(17240103, 17240107);
+        List<Integer> allowedDoors = List.of(17240103, 17240107);
 
         GameObject target = player.getTarget();
         if (target != null && target.isDoor()) {
@@ -418,7 +410,7 @@ public final class Special extends SimpleItemHandler implements ScriptFile {
 
         useItem(player, 14835, 1);
         //Stakato nest entrance
-        player.teleToLocation(89464, -44712, -2167, ReflectionManager.DEFAULT);
+        player.teleToLocation(new Location(89464, -44712, -2167), ReflectionManager.DEFAULT);
         return true;
     }
 

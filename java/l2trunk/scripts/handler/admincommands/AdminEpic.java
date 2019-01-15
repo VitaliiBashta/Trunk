@@ -157,7 +157,6 @@ public final class AdminEpic implements IAdminCommandHandler, ScriptFile {
         return null;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public Enum[] getAdminCommandEnum() {
         return Commands.values();

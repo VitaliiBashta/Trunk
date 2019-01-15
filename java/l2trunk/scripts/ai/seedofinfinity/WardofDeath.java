@@ -4,13 +4,11 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class WardofDeath extends DefaultAI {
-    private static final List<Integer> mobs = Arrays.asList(22516, 22520, 22522, 22524);
+    private static final List<Integer> mobs = List.of(22516, 22520, 22522, 22524);
 
     public WardofDeath(NpcInstance actor) {
         super(actor);

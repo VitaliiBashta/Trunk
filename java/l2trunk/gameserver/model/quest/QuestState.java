@@ -19,6 +19,7 @@ import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import l2trunk.gameserver.utils.AddonsConfig;
 import l2trunk.gameserver.utils.ItemFunctions;
+import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,10 +109,10 @@ public final class QuestState {
             player.removeListener(_onKillListener);
     }
 
-    public void addRadar(int x, int y, int z) {
+    public void addRadar(Location loc) {
         Player player = getPlayer();
         if (player != null)
-            player.addRadar(x, y, z);
+            player.addRadar(loc);
     }
 
     public void addRadarWithMap(int x, int y, int z) {
@@ -236,33 +237,25 @@ public final class QuestState {
         return player;
     }
 
-    /**
-     * Return the quest
-     *
-     * @return Quest
-     */
     public Quest getQuest() {
         return quest;
     }
 
-    public boolean checkQuestItemsCount(int... itemIds) {
+    public boolean checkQuestItemsCount(List<Integer> itemIds) {
         Player player = getPlayer();
         if (player == null)
             return false;
-        for (int itemId : itemIds)
-            if (player.getInventory().getCountOf(itemId) <= 0)
-                return false;
-        return true;
+        return itemIds.stream()
+                .allMatch(itemId -> player.getInventory().getCountOf(itemId) > 0);
     }
 
-    public long getSumQuestItemsCount(int... itemIds) {
+    public long getSumQuestItemsCount(List<Integer> itemIds) {
         Player player = getPlayer();
         if (player == null)
             return 0;
-        long count = 0;
-        for (int itemId : itemIds)
-            count += player.getInventory().getCountOf(itemId);
-        return count;
+        return itemIds.stream()
+                .map(itemId -> player.getInventory().getCountOf(itemId))
+                .count();
     }
 
     /**
@@ -697,7 +690,7 @@ public final class QuestState {
     /**
      * Add a timer to the quest.<BR><BR>
      *
-     * @param name: name of the timer (also passed back as "event" in notifyEvent)
+     * @param name: name of the timer (also passed back as "event" in notifyEventClanAttack)
      * @param time: time in ms for when to fire the timer
      * @param npc:  npc associated with this timer (can be null)
      */
@@ -748,8 +741,9 @@ public final class QuestState {
         return _timers;
     }
 
-    public long takeItems(int itemId) {
-        return takeItems(itemId, -1);
+    public QuestState takeItems(int itemId) {
+        takeItems(itemId, -1);
+        return this;
     }
 
     /**

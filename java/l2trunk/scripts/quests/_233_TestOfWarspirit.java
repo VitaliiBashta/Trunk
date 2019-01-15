@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public final class _233_TestOfWarspirit extends Quest implements ScriptFile {
+public final class _233_TestOfWarspirit extends Quest {
     // NPCs
     private static final int Somak = 30510;
     private static final int Vivyan = 30030;
@@ -79,19 +79,17 @@ public final class _233_TestOfWarspirit extends Quest implements ScriptFile {
             KIRUNAS_SPINE,
             KIRUNAS_RIB_BONE,
             KIRUNAS_SKULL);
-    private static final int[] Leto_Lizardman_Drops = {
+    private static final List<Integer> Leto_Lizardman_Drops = List.of(
             TONARS_SKULL,
             TONARS_RIB_BONE,
             TONARS_SPINE,
             TONARS_ARM_BONE,
-            TONARS_THIGH_BONE
-    };
-    private static final int[] Medusa_Drops = {
+            TONARS_THIGH_BONE    );
+    private static final List<Integer> Medusa_Drops = List.of(
             HERMODTS_RIB_BONE,
             HERMODTS_SPINE,
             HERMODTS_THIGH_BONE,
-            HERMODTS_ARM_BONE
-    };
+            HERMODTS_ARM_BONE    );
 
     public _233_TestOfWarspirit() {
         super(false);
@@ -382,7 +380,7 @@ public final class _233_TestOfWarspirit extends Quest implements ScriptFile {
                 if (qs.getQuestItemsCount(drop_id) == 0)
                     drops.add(drop_id);
             if (drops.size() > 0 && Rnd.chance(30)) {
-                int drop_id = drops.get(Rnd.get(drops.size()));
+                int drop_id = Rnd.get(drops);
                 qs.giveItems(drop_id, 1);
                 qs.playSound(drops.size() == 1 ? SOUND_MIDDLE : SOUND_ITEMGET);
             }
@@ -394,24 +392,22 @@ public final class _233_TestOfWarspirit extends Quest implements ScriptFile {
                 if (qs.getQuestItemsCount(drop_id) == 0)
                     drops.add(drop_id);
             if (drops.size() > 0 && Rnd.chance(25)) {
-                int drop_id = drops.get(Rnd.get(drops.size()));
+                int drop_id = Rnd.get(drops);
                 qs.giveItems(drop_id, 1);
                 qs.playSound(drops.size() == 1 ? SOUND_MIDDLE : SOUND_ITEMGET);
             }
             drops.clear();
-            drops = null;
         } else if (npcId == Medusa && qs.getQuestItemsCount(MANAKIAS_TOTEM) > 0) {
             List<Integer> drops = new ArrayList<>();
             for (int drop_id : Medusa_Drops)
                 if (qs.getQuestItemsCount(drop_id) == 0)
                     drops.add(drop_id);
             if (drops.size() > 0 && Rnd.chance(30)) {
-                int drop_id = drops.get(Rnd.get(drops.size()));
+                int drop_id = Rnd.get(drops);
                 qs.giveItems(drop_id, 1);
                 qs.playSound(drops.size() == 1 && qs.getQuestItemsCount(HERMODTS_SKULL) > 0 ? SOUND_MIDDLE : SOUND_ITEMGET);
             }
             drops.clear();
-            drops = null;
         } else if (npcId == Stenoa_Gorgon_Queen && qs.getQuestItemsCount(MANAKIAS_TOTEM) > 0 && qs.getQuestItemsCount(HERMODTS_SKULL) == 0 && Rnd.chance(30)) {
             qs.giveItems(HERMODTS_SKULL, 1);
             boolean _allset = true;
@@ -428,17 +424,5 @@ public final class _233_TestOfWarspirit extends Quest implements ScriptFile {
             }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

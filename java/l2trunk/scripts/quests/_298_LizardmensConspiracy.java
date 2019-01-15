@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _298_LizardmensConspiracy extends Quest implements ScriptFile {
+public final class _298_LizardmensConspiracy extends Quest {
     //	npc
     private final int PRAGA = 30333;
     private final int ROHMER = 30344;
@@ -46,18 +46,6 @@ public class _298_LizardmensConspiracy extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _298_LizardmensConspiracy() {
         super(false);
 
@@ -69,11 +57,9 @@ public class _298_LizardmensConspiracy extends Quest implements ScriptFile {
         for (int[] element : MobsTable)
             addKillId(element[0]);
 
-        addQuestItem(new int[]{
-                REPORT,
+        addQuestItem(REPORT,
                 SHINING_GEM,
-                SHINING_RED_GEM
-        });
+                SHINING_RED_GEM);
     }
 
     @Override

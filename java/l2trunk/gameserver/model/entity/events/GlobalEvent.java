@@ -31,15 +31,16 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 public abstract class GlobalEvent {
     public static final Logger LOG = LoggerFactory.getLogger(GlobalEvent.class);
     protected static final String EVENT = "event";
     // actions
-    protected final Map<Integer, List<EventAction>> _onTimeActions = new TreeMap<>();
-    private final List<EventAction> _onStartActions = new ArrayList<>(0);
-    private final List<EventAction> _onStopActions = new ArrayList<>(0);
-    private final List<EventAction> _onInitActions = new ArrayList<>(0);
+    protected final Map<Integer, List<EventAction>> onTimeActions = new TreeMap<>();
+    private final List<EventAction> onStartActions = new ArrayList<>(0);
+    private final List<EventAction> onStopActions = new ArrayList<>(0);
+    private final List<EventAction> onInitActions = new ArrayList<>(0);
     // objects
     private final Map<String, List<Object>> _objects = new HashMap<>(0);
     private final int id;
@@ -63,7 +64,7 @@ public abstract class GlobalEvent {
     }
 
     public void initEvent() {
-        callActions(_onInitActions);
+        callActions(onInitActions);
 
         reCalcNextTime(true);
 
@@ -71,13 +72,13 @@ public abstract class GlobalEvent {
     }
 
     public void startEvent() {
-        callActions(_onStartActions);
+        callActions(onStartActions);
 
         _listenerList.onStart();
     }
 
     public void stopEvent() {
-        callActions(_onStopActions);
+        callActions(onStopActions);
 
         _listenerList.onStop();
     }
@@ -101,25 +102,25 @@ public abstract class GlobalEvent {
     }
 
     public void addOnStartActions(List<EventAction> start) {
-        _onStartActions.addAll(start);
+        onStartActions.addAll(start);
     }
 
     public void addOnStopActions(List<EventAction> start) {
-        _onStopActions.addAll(start);
+        onStopActions.addAll(start);
     }
 
     public void addOnInitActions(List<EventAction> start) {
-        _onInitActions.addAll(start);
+        onInitActions.addAll(start);
     }
 
     public void addOnTimeAction(int time, EventAction action) {
-        List<EventAction> list = _onTimeActions.get(time);
+        List<EventAction> list = onTimeActions.get(time);
         if (list != null)
             list.add(action);
         else {
             List<EventAction> actions = new ArrayList<>(1);
             actions.add(action);
-            _onTimeActions.put(time, actions);
+            onTimeActions.put(time, actions);
         }
     }
 
@@ -127,15 +128,15 @@ public abstract class GlobalEvent {
         if (actions.isEmpty())
             return;
 
-        List<EventAction> list = _onTimeActions.get(time);
+        List<EventAction> list = onTimeActions.get(time);
         if (list != null)
             list.addAll(actions);
         else
-            _onTimeActions.put(time, new ArrayList<>(actions));
+            onTimeActions.put(time, new ArrayList<>(actions));
     }
 
     public void timeActions(int time) {
-        List<EventAction> actions = _onTimeActions.get(time);
+        List<EventAction> actions = onTimeActions.get(time);
         if (actions == null) {
             LOG.info("Undefined time : " + time);
             return;
@@ -145,7 +146,7 @@ public abstract class GlobalEvent {
     }
 
     public int[] timeActions() {
-        return _onTimeActions.keySet().stream().mapToInt(Number::intValue).toArray();
+        return onTimeActions.keySet().stream().mapToInt(Number::intValue).toArray();
     }
 
     // ===============================================================================================================
@@ -157,7 +158,7 @@ public abstract class GlobalEvent {
         if (t == 0)
             return;
 
-        for (int key : _onTimeActions.keySet())
+        for (int key : onTimeActions.keySet())
             ActionRunner.INSTANCE.register(t + key * 1000L, new EventWrapper(_timerName, this, key));
     }
 
@@ -381,27 +382,25 @@ public abstract class GlobalEvent {
         throw new UnsupportedOperationException();
     }
 
-    public List<Player> itemObtainPlayers() {
+    public Stream<Player> itemObtainPlayers() {
         throw new UnsupportedOperationException();
     }
 
     public void giveItem(Player player, int itemId, long count) {
-        switch (itemId) {
-            case -300:
-                if (Config.ENABLE_ALT_FAME_REWARD) {
-                    if ((this instanceof CastleSiegeEvent))
-                        count = Config.ALT_FAME_CASTLE;
-                    else if ((this instanceof FortressSiegeEvent))
-                        count = Config.ALT_FAME_FORTRESS;
-                }
-                player.setFame(player.getFame() + (int) count, toString());
-                break;
-            default:
-                Functions.addItem(player, itemId, count, getName() + " Global Event");
+        if (itemId == -300) {
+            if (Config.ENABLE_ALT_FAME_REWARD) {
+                if ((this instanceof CastleSiegeEvent))
+                    count = Config.ALT_FAME_CASTLE;
+                else if ((this instanceof FortressSiegeEvent))
+                    count = Config.ALT_FAME_FORTRESS;
+            }
+            player.setFame(player.getFame() + (int) count, toString());
+        } else {
+            Functions.addItem(player, itemId, count, getName() + " Global Event");
         }
     }
 
-    public List<Player> broadcastPlayers(int range) {
+    public Stream<Player> broadcastPlayers(int range) {
         throw new UnsupportedOperationException();
     }
 
@@ -471,30 +470,24 @@ public abstract class GlobalEvent {
     // Object
     // ===============================================================================================================
     protected void cloneTo(GlobalEvent e) {
-        for (EventAction a : _onInitActions)
-            e._onInitActions.add(a);
+        e.onInitActions.addAll(onInitActions);
+        e.onStartActions.addAll(onStartActions);
+        e.onStopActions.addAll(onStopActions);
 
-        for (EventAction a : _onStartActions)
-            e._onStartActions.add(a);
-
-        for (EventAction a : _onStopActions)
-            e._onStopActions.add(a);
-
-        for (Map.Entry<Integer, List<EventAction>> entry : _onTimeActions.entrySet())
-            e.addOnTimeActions(entry.getKey(), entry.getValue());
+        onTimeActions.forEach(e::addOnTimeActions);
     }
 
     private class ListenerListImpl extends ListenerList {
         void onStart() {
-            for (Listener listener : getListeners())
-                if (listener instanceof OnStartStopListener)
-                    ((OnStartStopListener) listener).onStart(GlobalEvent.this);
+            getListeners().filter(l -> l instanceof OnStartStopListener)
+                    .map(l -> (OnStartStopListener) l)
+                    .forEach(l -> l.onStart(GlobalEvent.this));
         }
 
         void onStop() {
-            for (Listener listener : getListeners())
-                if (listener instanceof OnStartStopListener)
-                    ((OnStartStopListener) listener).onStop(GlobalEvent.this);
+            getListeners().filter(l -> l instanceof OnStartStopListener)
+                    .map(l -> (OnStartStopListener) l)
+                    .forEach(l -> l.onStop(GlobalEvent.this));
         }
     }
 }

@@ -31,7 +31,7 @@ import l2trunk.gameserver.utils.Util;
 import java.util.*;
 
 
-public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterListener {
+public final class _255_Tutorial extends Quest implements OnPlayerEnterListener {
     // table for Quest Timer ( Ex == -2 ) [raceId, voice, html]
     public final String[][] QTEXMTWO = {
             {
@@ -470,18 +470,6 @@ public class _255_Tutorial extends Quest implements ScriptFile, OnPlayerEnterLis
         if (level >= 40 && jobLevel == 2)
             return true;
         return level >= 76 && jobLevel == 3;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

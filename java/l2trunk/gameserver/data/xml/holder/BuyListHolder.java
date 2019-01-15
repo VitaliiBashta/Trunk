@@ -142,10 +142,6 @@ public enum BuyListHolder {
         return lists.get(listId);
     }
 
-    public void addToBuyList(int listId, NpcTradeList list) {
-        lists.put(listId, list);
-    }
-
     public static class NpcTradeList {
         private final List<TradeItem> tradeList = new ArrayList<>();
         private final int _id;

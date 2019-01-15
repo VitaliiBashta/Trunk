@@ -5,18 +5,17 @@ import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-@SuppressWarnings("unused")
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public class AdminRes implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
-        Commands command = (Commands) comm;
-
         if (!activeChar.getPlayerAccess().Res)
             return false;
 
         if (fullString.startsWith("admin_res "))
             handleRes(activeChar, wordList[1]);
-        if (fullString.equals("admin_res"))
+        if ("admin_res".equals(fullString))
             handleRes(activeChar);
 
         return true;
@@ -39,9 +38,9 @@ public class AdminRes implements IAdminCommandHandler {
                 obj = plyr;
             else
                 try {
-                    int radius = Math.max(Integer.parseInt(player), 100);
-                    for (Creature character : activeChar.getAroundCharacters(radius, radius))
-                        handleRes(character);
+                    int radius = Math.max(toInt(player), 100);
+                    activeChar.getAroundCharacters(radius, radius)
+                    .forEach(this::handleRes);
                     activeChar.sendMessage("Resurrected within " + radius + " unit radius.");
                     return;
                 } catch (NumberFormatException e) {

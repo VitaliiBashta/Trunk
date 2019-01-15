@@ -8,12 +8,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _710_PathToBecomingALordGiran extends Quest implements ScriptFile {
+public final class _710_PathToBecomingALordGiran extends Quest {
     private static final int Saul = 35184;
     private static final int Gesto = 30511;
     private static final int Felton = 30879;
@@ -22,7 +20,7 @@ public final class _710_PathToBecomingALordGiran extends Quest implements Script
     private static final int FreightChest = 13014;
     private static final int GestoBox = 13013;
 
-    private static final List<Integer> Mobs = Arrays.asList(
+    private static final List<Integer> Mobs = List.of(
             20832, 20833, 20835, 21602, 21603, 21604, 21605, 21606, 21607, 21608, 21609);
 
     private static final int GiranCastle = 3;
@@ -137,17 +135,5 @@ public final class _710_PathToBecomingALordGiran extends Quest implements Script
                 st.setCond(8);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

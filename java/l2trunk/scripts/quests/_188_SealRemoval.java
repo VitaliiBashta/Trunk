@@ -6,24 +6,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _188_SealRemoval extends Quest implements ScriptFile {
+public final class _188_SealRemoval extends Quest {
     private static final int Dorothy = 30970;
     private static final int Lorain = 30673;
     private static final int Nikola = 30621;
 
     private static final int BrokenMetal = 10369;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _188_SealRemoval() {
         super(false);

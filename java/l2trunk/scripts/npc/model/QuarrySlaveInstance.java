@@ -31,7 +31,7 @@ public final class QuarrySlaveInstance extends NpcInstance {
             this.doDie(null);
             this.endDecayTask();
             //TODO: following
-            //getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE);
+            //getAI().setIntentionAttack(CtrlIntention.AI_INTENTION_FOLLOW, player, Config.FOLLOW_RANGE);
         } else
             super.onBypassFeedback(player, command);
     }

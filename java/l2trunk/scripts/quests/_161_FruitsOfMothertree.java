@@ -6,21 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _161_FruitsOfMothertree extends Quest implements ScriptFile {
+public final class _161_FruitsOfMothertree extends Quest {
     private static final int ANDELLRIAS_LETTER_ID = 1036;
     private static final int MOTHERTREE_FRUIT_ID = 1037;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _161_FruitsOfMothertree() {
         super(false);
@@ -28,10 +16,8 @@ public class _161_FruitsOfMothertree extends Quest implements ScriptFile {
         addStartNpc(30362);
         addTalkId(30371);
 
-        addQuestItem(new int[]{
-                MOTHERTREE_FRUIT_ID,
-                ANDELLRIAS_LETTER_ID
-        });
+        addQuestItem(MOTHERTREE_FRUIT_ID,
+                ANDELLRIAS_LETTER_ID);
     }
 
     @Override

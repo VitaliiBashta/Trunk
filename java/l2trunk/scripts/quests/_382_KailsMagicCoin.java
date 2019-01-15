@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _382_KailsMagicCoin extends Quest implements ScriptFile {
+public final class _382_KailsMagicCoin extends Quest {
     //Quest items
     private static final int ROYAL_MEMBERSHIP = 5898;
     //NPCs
@@ -29,18 +29,6 @@ public class _382_KailsMagicCoin extends Quest implements ScriptFile {
         }); // Fallen Orc Captain
         //MOBS.put(21258, new int[] { 5961, 5962, 5963 }); // Fallen Orc Shaman - WereTiger
         //MOBS.put(21259, new int[] { 5961, 5962, 5963 }); // Fallen Orc Shaman - WereTiger, transformed
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     public _382_KailsMagicCoin() {

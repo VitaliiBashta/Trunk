@@ -11,8 +11,6 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.NpcUtils;
 import l2trunk.gameserver.utils.PositionUtils;
 
-import java.util.Calendar;
-
 
 public final class Birthday extends Functions {
     private static final int EXPLORERHAT = 10250;
@@ -21,9 +19,6 @@ public final class Birthday extends Functions {
 
     private static final String msgSpawned = "scripts/services/Birthday-spawned.htm";
 
-    /**
-     * Вызывается у гейткиперов
-     */
     public void summonAlegria() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
@@ -31,12 +26,12 @@ public final class Birthday extends Functions {
         if (player == null || npc == null || !NpcInstance.canBypassCheck(player, player.getLastNpc()))
             return;
 
-        //TODO: На оффе можно вызвать до 3х нпсов. Но зачем? о.0
-        for (NpcInstance n : World.getAroundNpc(npc))
-            if (n.getNpcId() == NPC_ALEGRIA) {
-                show(msgSpawned, player, npc);
-                return;
-            }
+        if (World.getAroundNpc(npc)
+                .filter(n -> n.getNpcId() == NPC_ALEGRIA)
+                .peek(n -> show(msgSpawned, player, npc))
+                .findFirst().isPresent())
+            return;
+
 
         player.sendPacket(PlaySound.HB01);
 

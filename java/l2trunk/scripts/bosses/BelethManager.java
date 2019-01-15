@@ -343,9 +343,8 @@ public final class BelethManager extends Functions implements ScriptFile {
         }
         // Outer newInstance square
         radius = 1340;
-        angle = Math.asin(1 / Math.sqrt(3));
-        int mulX = 1, mulY = 1, addH = 3;
-        double decX = 1.0, decY = 1.0;
+        int mulX, mulY, addH = 3;
+        double decX, decY;
         for (int i = 0; i < 16; i++) {
             if (i % 8 == 0)
                 mulX = 0;
@@ -431,7 +430,4 @@ public final class BelethManager extends Functions implements ScriptFile {
         getZone().removeListener(_zoneListener);
     }
 
-    @Override
-    public void onShutdown() {
-    }
 }

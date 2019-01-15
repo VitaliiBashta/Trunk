@@ -14,37 +14,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author pchayka
- */
-
 public final class FrintezzaGatekeeperInstance extends NpcInstance {
     private static final int INSTANCE_ID = 136;
     private static final int QUEST_ITEM_ID = 8073;
 
     public FrintezzaGatekeeperInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
-    }
-
-    @Override
-    public void onBypassFeedback(Player player, String command) {
-        if (!canBypassCheck(player, this))
-            return;
-
-        if (command.equalsIgnoreCase("request_frintezza")) {
-            Reflection r = player.getActiveReflection();
-            if (r != null) {
-                if (player.canReenterInstance(INSTANCE_ID))
-                    player.teleToLocation(r.getTeleportLoc(), r);
-            } else if (player.canEnterInstance(INSTANCE_ID)) {
-                final Collection<Player> playersToJoin = getPlayersToJoin(player);
-                if (checkReqiredItem(player, playersToJoin)) {
-                    deleteRequiredItems(playersToJoin);
-                    ReflectionUtils.enterReflection(player, new Frintezza(), INSTANCE_ID);
-                }
-            }
-        } else
-            super.onBypassFeedback(player, command);
     }
 
     private static Collection<Player> getPlayersToJoin(Player player) {
@@ -69,7 +44,7 @@ public final class FrintezzaGatekeeperInstance extends NpcInstance {
 
     private static boolean checkReqiredItem(Player leader, Iterable<Player> allPlayers) {
         for (Player playerToJoin : allPlayers) {
-            if (playerToJoin.getInventory().getCountOf(QUEST_ITEM_ID) < 1L) {
+            if (playerToJoin.getInventory().getCountOf(QUEST_ITEM_ID) < 1) {
                 if (!leader.equals(playerToJoin))
                     leader.sendMessage(playerToJoin.getName() + " doesn't have required item!");
                 playerToJoin.sendMessage("You don't have required item!");
@@ -81,7 +56,28 @@ public final class FrintezzaGatekeeperInstance extends NpcInstance {
     }
 
     private static void deleteRequiredItems(Iterable<Player> players) {
-        for (Player player : players)
-            ItemFunctions.removeItem(player, QUEST_ITEM_ID, 1L, true, "FrintezzaGatekeeper");
+        players.forEach(player ->
+                ItemFunctions.removeItem(player, QUEST_ITEM_ID, 1, true, "FrintezzaGatekeeper"));
+    }
+
+    @Override
+    public void onBypassFeedback(Player player, String command) {
+        if (!canBypassCheck(player, this))
+            return;
+
+        if ("request_frintezza".equalsIgnoreCase(command)) {
+            Reflection r = player.getActiveReflection();
+            if (r != null) {
+                if (player.canReenterInstance(INSTANCE_ID))
+                    player.teleToLocation(r.getTeleportLoc(), r);
+            } else if (player.canEnterInstance(INSTANCE_ID)) {
+                final Collection<Player> playersToJoin = getPlayersToJoin(player);
+                if (checkReqiredItem(player, playersToJoin)) {
+                    deleteRequiredItems(playersToJoin);
+                    ReflectionUtils.enterReflection(player, new Frintezza(), INSTANCE_ID);
+                }
+            }
+        } else
+            super.onBypassFeedback(player, command);
     }
 }

@@ -11,12 +11,7 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.bosses.BaylorManager;
 import l2trunk.scripts.instances.CrystalCaverns;
 
-/**
- * @author pchayka
- */
-public class CrystalCavernControllerInstance extends NpcInstance {
-    private static final long serialVersionUID = -1L;
-
+public final class CrystalCavernControllerInstance extends NpcInstance {
     public CrystalCavernControllerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -48,11 +43,11 @@ public class CrystalCavernControllerInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("request_emerald")) {
+        if ("request_emerald".equalsIgnoreCase(command)) {
             ((CrystalCaverns) getReflection()).notifyEmeraldRequest();
-        } else if (command.equalsIgnoreCase("request_coral")) {
+        } else if ("request_coral".equalsIgnoreCase(command)) {
             ((CrystalCaverns) getReflection()).notifyCoralRequest();
-        } else if (command.equalsIgnoreCase("request_baylor")) {
+        } else if ("request_baylor".equalsIgnoreCase(command)) {
             int state = BaylorManager.canIntoBaylorLair(player);
             if (state == 1 || state == 2) {
                 showChatWindow(player, "default/32276-1.htm");
@@ -93,9 +88,9 @@ public class CrystalCavernControllerInstance extends NpcInstance {
                 BaylorManager.entryToBaylorLair(player);
                 deleteMe();
             }
-        } else if (command.equalsIgnoreCase("request_parme")) {
+        } else if ("request_parme".equalsIgnoreCase(command)) {
             player.teleToLocation(new Location(153736, 142008, -9744));
-        } else if (command.equalsIgnoreCase("request_exit")) {
+        } else if ("request_exit".equalsIgnoreCase(command)) {
             if (getReflection().getInstancedZoneId() == 10)
                 player.teleToLocation(getReflection().getInstancedZone().getReturnCoords(), ReflectionManager.DEFAULT);
         } else

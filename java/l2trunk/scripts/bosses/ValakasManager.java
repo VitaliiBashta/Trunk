@@ -397,7 +397,7 @@ public final class ValakasManager extends Functions implements ScriptFile, OnDea
             state.update();
             //Earthquake
             Location loc = new Location(213896, -115436, -1644);
-            GameObjectsStorage.getAllPlayers().forEach(p ->
+            GameObjectsStorage.getAllPlayersStream().forEach(p ->
                     p.broadcastPacket(new Earthquake(loc, 20, 10)));
         }
     }

@@ -6,10 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Используется для телепорта игроков на фестиваль тьмы.
- */
-public class _1103_OracleTeleport extends Quest implements ScriptFile {
+public final class _1103_OracleTeleport extends Quest {
     private static final int GLUDIN_DAWN = 31078;
     private static final int GLUDIN_DUSK = 31085;
     private static final int GLUDIO_DAWN = 31079;
@@ -32,18 +29,6 @@ public class _1103_OracleTeleport extends Quest implements ScriptFile {
     private static final int SCHUTTGART_DUSK = 31998;
     private static final int HV_DAWN = 31168;
     private static final int HV_DUSK = 31169;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _1103_OracleTeleport() {
         super(false);

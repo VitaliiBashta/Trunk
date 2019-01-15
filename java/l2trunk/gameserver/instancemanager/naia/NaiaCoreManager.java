@@ -12,7 +12,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
 public enum NaiaCoreManager {
@@ -41,10 +40,10 @@ public enum NaiaCoreManager {
     private static final Location spawnLoc = new Location(-45496, 246744, -14209);
     private static Zone _zone;
     private static boolean _active = false;
-    private static boolean _bossSpawned = false;
+    private static boolean bossSpawned = false;
     private final Logger _log = LoggerFactory.getLogger(NaiaTowerManager.class);
-    List<Integer> spores = Arrays.asList(fireSpore, waterSpore, windSpore, earthSpore);
-    List<Integer> epidoses = Arrays.asList(fireEpidos, waterEpidos, windEpidos, earthEpidos);
+    List<Integer> spores = List.of(fireSpore, waterSpore, windSpore, earthSpore);
+    List<Integer> epidoses = List.of(fireEpidos, waterEpidos, windEpidos, earthEpidos);
 
     private static void spawnToRoom(List<Integer> mobIds) {
         for (int mobId : mobIds)
@@ -94,15 +93,15 @@ public enum NaiaCoreManager {
         sp.setLoc(spawnLoc);
         sp.doSpawn(true);
         sp.stopRespawn();
-        _bossSpawned = true;
+        bossSpawned = true;
     }
 
     public boolean isBossSpawned() {
-        return _bossSpawned;
+        return bossSpawned;
     }
 
     public void setBossSpawned(boolean value) {
-        _bossSpawned = value;
+        bossSpawned = value;
     }
 
     public void removeSporesAndSpawnCube() {

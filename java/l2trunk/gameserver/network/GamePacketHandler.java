@@ -1270,11 +1270,11 @@ public final class GamePacketHandler implements IPacketHandler<GameClient>, ICli
             client.onPacketReadFail();
         }
 
-        if (Config.ALLOW_JUST_MOVING && msg != null && !msg.getClass().equals(MoveBackwardToLocation.class) && !msg.getClass().equals(SendBypassBuildCmd.class)) {
-            if (client.getActiveChar() != null)
-                client.getActiveChar().sendActionFailed();
-            return null;
-        }
+//        if (Config.ALLOW_JUST_MOVING && msg != null && !msg.getClass().equals(MoveBackwardToLocation.class) && !msg.getClass().equals(SendBypassBuildCmd.class)) {
+//            if (client.getActiveChar() != null)
+//                client.getActiveChar().sendActionFailed();
+//            return null;
+//        }
 
         return msg;
     }

@@ -9,14 +9,12 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
-import l2trunk.gameserver.tables.SkillTable;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class SeducedInvestigator extends Fighter {
-    private final List<Integer> _allowedTargets = Arrays.asList(25659, 25660, 25661, 25662, 25663, 25664);
+    private final List<Integer> _allowedTargets = List.of(25659, 25660, 25661, 25662, 25663, 25664);
     private long _reuse = 0;
 
     public SeducedInvestigator(NpcInstance actor) {
@@ -32,15 +30,15 @@ public final class SeducedInvestigator extends Fighter {
         if (actor.isDead())
             return false;
 
-        actor.getAroundNpc(1000, 300).stream()
+        actor.getAroundNpc(1000, 300)
                 .filter(npc -> _allowedTargets.contains(npc.getNpcId()))
                 .forEach(npc -> actor.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, npc, 300));
 
         if (Rnd.chance(0.1) && _reuse + 30000 < System.currentTimeMillis()) {
-            List<Player> players = World.getAroundPlayers(actor, 500, 200);
-            if (players == null || players.size() < 1)
+            List<Player> players = World.getAroundPlayers(actor, 500, 200).collect(Collectors.toList());
+            if (players.size() < 1)
                 return false;
-            Player player = players.get(Rnd.get(players.size()));
+            Player player = Rnd.get(players);
             if (player.getReflectionId() == actor.getReflectionId()) {
                 _reuse = System.currentTimeMillis();
                 int[] buffs = {5970, 5971, 5972, 5973};
@@ -60,11 +58,9 @@ public final class SeducedInvestigator extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        NpcInstance actor = getActor();
-        Reflection r = actor.getReflection();
-        List<Player> players = r.getPlayers();
-        for (Player p : players)
-            p.sendPacket(new ExShowScreenMessage("The Investigator has been killed. The mission is failed."));
+        Reflection r = getActor().getReflection();
+        r.getPlayers().forEach(p ->
+                p.sendPacket(new ExShowScreenMessage("The Investigator has been killed. The mission is failed.")));
 
         r.startCollapseTimer(5 * 1000L);
 

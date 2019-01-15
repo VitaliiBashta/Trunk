@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class RateBonus extends Functions {
-    private static final List<Integer> PKS = Arrays.asList(1, 2, 5, 10, 25, 50, 100, 250, 500, 1000);
+    private static final List<Integer> PKS = List.of(1, 2, 5, 10, 25, 50, 100, 250, 500, 1000);
 
     public void list() {
         Player player = getSelf();

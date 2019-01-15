@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10503_CapeEmbroideredSoulThree extends Quest implements ScriptFile {
+public final class _10503_CapeEmbroideredSoulThree extends Quest {
     // NPC's
     private static final int OLF_ADAMS = 32612;
     // Mob's
@@ -15,18 +15,6 @@ public class _10503_CapeEmbroideredSoulThree extends Quest implements ScriptFile
     private static final int SOUL_FRINTEZZA = 21724;
     // Item's
     private static final int CLOAK_FRINTEZZA = 21721;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10503_CapeEmbroideredSoulThree() {
         super(PARTY_ALL);

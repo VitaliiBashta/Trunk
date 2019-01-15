@@ -13,18 +13,16 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Recipes extends ScriptItemHandler implements ScriptFile {
-    private static final List<Integer> _itemIds = new ArrayList<>();
+    private final List<Integer> ITEM_IDS;
 
     public Recipes() {
-        Collection<Recipe> recipes = RecipeHolder.getInstance().getRecipes();
-        for (Recipe recipe : RecipeHolder.getInstance().getRecipes()) {
-            _itemIds.add(recipe.getRecipeId());
-        }
+        ITEM_IDS = RecipeHolder.getInstance().getRecipes().stream()
+                .map(Recipe::getRecipeId)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -35,16 +33,6 @@ public final class Recipes extends ScriptItemHandler implements ScriptFile {
     @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 
     @Override
@@ -104,6 +92,6 @@ public final class Recipes extends ScriptItemHandler implements ScriptFile {
 
     @Override
     public List<Integer> getItemIds() {
-        return _itemIds;
+        return ITEM_IDS;
     }
 }

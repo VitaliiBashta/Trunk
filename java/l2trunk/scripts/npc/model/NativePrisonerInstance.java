@@ -10,11 +10,6 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import java.util.StringTokenizer;
 
 
-/**
- * Данный инстанс используется в городе-инстансе на Hellbound
- *
- * @author SYS
- */
 public final class NativePrisonerInstance extends NpcInstance {
     public NativePrisonerInstance(int objectId, NpcTemplate template) {
         super(objectId, template);

@@ -3,25 +3,12 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _019_GoToThePastureland extends Quest implements ScriptFile {
+public final class _019_GoToThePastureland extends Quest {
     private final int VLADIMIR = 31302;
     private final int TUNATUN = 31537;
 
     private final int BEAST_MEAT = 7547;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _019_GoToThePastureland() {
         super(false);

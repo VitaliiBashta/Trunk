@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.NpcUtils;
 
 public final class DrakosWarrior extends Fighter {
-
     public DrakosWarrior(NpcInstance actor) {
         super(actor);
     }

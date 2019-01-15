@@ -6,13 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Shadowof Light
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _602_ShadowofLight extends Quest implements ScriptFile {
+public final class _602_ShadowofLight extends Quest {
     //NPC
     private static final int ARGOS = 31683;
     //Quest Item
@@ -52,18 +46,6 @@ public class _602_ShadowofLight extends Quest implements ScriptFile {
                     100
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _602_ShadowofLight() {
         super(true);

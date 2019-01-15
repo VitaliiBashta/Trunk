@@ -71,7 +71,7 @@ public final class Furnace extends Fighter {
 
     private void unSpawnMob() {
         NpcInstance actor = getActor();
-        World.getAroundNpc(actor, 500, 100).stream()
+        World.getAroundNpc(actor, 500, 100)
                 .filter(npc -> (npc.getNpcId() == 22799 || npc.getNpcId() == 22798 || npc.getNpcId() == 22800))
                 .forEach(GameObject::decayMe);
     }

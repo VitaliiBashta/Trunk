@@ -1,11 +1,10 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _077_SagaOfTheDominator extends SagasSuperclass implements ScriptFile {
+public final class _077_SagaOfTheDominator extends SagasSuperclass {
     public _077_SagaOfTheDominator() {
         super(false);
 
@@ -41,15 +40,4 @@ public final class _077_SagaOfTheDominator extends SagasSuperclass implements Sc
         registerNPCs();
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

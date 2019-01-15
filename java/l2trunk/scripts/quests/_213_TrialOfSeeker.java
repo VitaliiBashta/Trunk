@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Trial Of Seeker
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _213_TrialOfSeeker extends Quest implements ScriptFile {
+public final class _213_TrialOfSeeker extends Quest {
     //NPC
     private static final int Dufner = 30106;
     private static final int Terry = 30064;
@@ -162,18 +156,6 @@ public class _213_TrialOfSeeker extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _213_TrialOfSeeker() {
         super(false);
 
@@ -187,8 +169,7 @@ public class _213_TrialOfSeeker extends Quest implements ScriptFile {
         //Mob Drop
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(new int[]{
-                DufnersLetter,
+        addQuestItem(DufnersLetter,
                 Terrys1stOrder,
                 Terrys2ndOrder,
                 TerrysLetter,
@@ -213,8 +194,7 @@ public class _213_TrialOfSeeker extends Quest implements ScriptFile {
                 AbyssRunestone1,
                 AbyssRunestone2,
                 AbyssRunestone3,
-                AbyssRunestone4
-        });
+                AbyssRunestone4);
     }
 
     @Override

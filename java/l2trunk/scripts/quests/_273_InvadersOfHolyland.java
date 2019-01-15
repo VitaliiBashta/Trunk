@@ -6,54 +6,41 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _273_InvadersOfHolyland extends Quest implements ScriptFile {
+public final class _273_InvadersOfHolyland extends Quest {
     private final int BLACK_SOULSTONE = 1475;
     private final int RED_SOULSTONE = 1476;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _273_InvadersOfHolyland() {
         super(false);
 
         addStartNpc(30566);
-        addKillId(new int[]{
-                20311,
+        addKillId(20311,
                 20312,
-                20313
-        });
-        addQuestItem(new int[]{
-                BLACK_SOULSTONE,
-                RED_SOULSTONE
-        });
+                20313);
+        addQuestItem(BLACK_SOULSTONE,
+                RED_SOULSTONE);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("atuba_chief_varkees_q0273_03.htm")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("atuba_chief_varkees_q0273_07.htm")) {
-            st.setCond(0);
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
-        } else if (event.equals("atuba_chief_varkees_q0273_08.htm")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
+        switch (event) {
+            case "atuba_chief_varkees_q0273_03.htm":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "atuba_chief_varkees_q0273_07.htm":
+                st.setCond(0);
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
+            case "atuba_chief_varkees_q0273_08.htm":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
         }
         return event;
     }

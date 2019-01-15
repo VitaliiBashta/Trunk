@@ -27,9 +27,9 @@ public final class Obelisk extends DefaultAI {
         NpcInstance actor = getActor();
         actor.broadcastPacket(new ExShowScreenMessage(NpcString.NONE, 3000, ScreenMessageAlign.MIDDLE_CENTER, false, "Obelisk has collapsed. Don't let the enemies jump around wildly anymore!!!"));
         actor.stopDecay();
-        for (NpcInstance n : actor.getReflection().getNpcs())
-            if (n.getNpcId() == 18777)
-                n.stopDamageBlocked();
+        actor.getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == 18777)
+                .forEach(Creature::stopDamageBlocked);
         super.onEvtDead(killer);
     }
 

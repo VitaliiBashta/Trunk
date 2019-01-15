@@ -11,10 +11,6 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-
 public final class OddGlobeInstance extends NpcInstance {
     private static final int instancedZoneId = 151;
 
@@ -27,7 +23,7 @@ public final class OddGlobeInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("monastery_enter")) {
+        if ("monastery_enter".equalsIgnoreCase(command)) {
             Reflection r = player.getActiveReflection();
             if (r != null) {
                 if (player.canReenterInstance(instancedZoneId))

@@ -6,27 +6,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _009_IntoTheCityOfHumans extends Quest implements ScriptFile {
+public final class _009_IntoTheCityOfHumans extends Quest {
     //NPC
     private final int PETUKAI = 30583;
     private final int TANAPI = 30571;
     private final int TAMIL = 30576;
     //Items
-    private final int SCROLL_OF_ESCAPE_GIRAN = 7126;
+    private static final int SCROLL_OF_ESCAPE_GIRAN = 7126;
     //Quest Item
-    private final int MARK_OF_TRAVELER = 7570;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int MARK_OF_TRAVELER = 7570;
 
     public _009_IntoTheCityOfHumans() {
         super(false);

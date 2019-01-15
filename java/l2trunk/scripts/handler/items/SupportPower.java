@@ -36,16 +36,6 @@ public final class SupportPower extends ScriptItemHandler implements ScriptFile 
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public List<Integer> getItemIds() {
         return Collections.singletonList(ITEM_IDS);
     }

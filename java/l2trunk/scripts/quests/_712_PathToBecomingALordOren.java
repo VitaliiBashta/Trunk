@@ -9,9 +9,8 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _712_PathToBecomingALordOren extends Quest implements ScriptFile {
+public final class _712_PathToBecomingALordOren extends Quest {
     private static final int Brasseur = 35226;
     private static final int Croop = 30676;
     private static final int Marty = 30169;
@@ -78,7 +77,6 @@ public final class _712_PathToBecomingALordOren extends Quest implements ScriptF
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        int id = st.getState();
         int cond = st.getCond();
         Castle castle = ResidenceHolder.getResidence(OrenCastle);
         if (castle.getOwner() == null)
@@ -151,17 +149,5 @@ public final class _712_PathToBecomingALordOren extends Quest implements ScriptF
         if (owner != null)
             return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
         return false;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

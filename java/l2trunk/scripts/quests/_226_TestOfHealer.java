@@ -5,25 +5,12 @@ import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class _226_TestOfHealer extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _226_TestOfHealer extends Quest {
     /**
      * The Girl of Prophecy
      * Ancient revelations tell of a girl that will be born to save the world from the forces of darkness.

@@ -4,41 +4,26 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _407_PathToElvenScout extends Quest implements ScriptFile {
+public final class _407_PathToElvenScout extends Quest {
 
+    private static final int REORIA_LETTER2_ID = 1207;
+    private static final int MORETTIS_HERB_ID = 1212;
+    private static final int MORETTIS_LETTER_ID = 1214;
+    private static final int PRIGUNS_LETTER_ID = 1215;
+    private static final int HONORARY_GUARD_ID = 1216;
+    public final int MONORARY_GUARD_ID = 1216;
     private final int REISA = 30328;
     private final int MORETTI = 30337;
     private final int PIPPEN = 30426;
-
     private final int OL_MAHUM_SENTRY = 27031;
     private final int OL_MAHUM_PATROL = 20053;
-
-    private final int REORIA_LETTER2_ID = 1207;
     private final int PRIGUNS_TEAR_LETTER1_ID = 1208;
     private final int PRIGUNS_TEAR_LETTER2_ID = 1209;
     private final int PRIGUNS_TEAR_LETTER3_ID = 1210;
     private final int PRIGUNS_TEAR_LETTER4_ID = 1211;
-    private final int MORETTIS_HERB_ID = 1212;
-    private final int MORETTIS_LETTER_ID = 1214;
-    private final int PRIGUNS_LETTER_ID = 1215;
-    public final int MONORARY_GUARD_ID = 1216;
     private final int REORIA_RECOMMENDATION_ID = 1217;
     private final int RUSTED_KEY_ID = 1293;
-    private final int HONORARY_GUARD_ID = 1216;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _407_PathToElvenScout() {
         super(false);

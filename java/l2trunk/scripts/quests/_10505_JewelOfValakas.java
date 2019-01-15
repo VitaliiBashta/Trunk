@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _10505_JewelOfValakas extends Quest implements ScriptFile {
+public final class _10505_JewelOfValakas extends Quest {
     //NPC's
     private static final int KLEIN = 31540;
     private static final int VALAKAS = 29028;
@@ -79,17 +78,5 @@ public final class _10505_JewelOfValakas extends Quest implements ScriptFile {
             st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

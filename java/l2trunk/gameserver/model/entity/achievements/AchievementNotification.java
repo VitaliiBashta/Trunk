@@ -15,32 +15,29 @@ import l2trunk.scripts.npc.model.residences.SiegeGuardInstance;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
 
-public class AchievementNotification {
+public final class AchievementNotification {
     private static AchievementNotification _instance;
     private static Listener _listener;
     private ScheduledFuture<?> _globalNotification;
 
     private AchievementNotification(int intervalInMiliseconds) {
         _globalNotification = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() ->
-        {
-            for (Player player : GameObjectsStorage.getAllPlayers()) {
+                GameObjectsStorage.getAllPlayersStream().forEach(player ->  {
 
-                for (Entry<Integer, Integer> arco : player.getAchievements().entrySet()) {
-                    int achievementId = arco.getKey();
-                    int achievementLevel = arco.getValue();
-                    if (Achievements.INSTANCE.getMaxLevel(achievementId) <= achievementLevel)
-                        continue;
+                    for (Entry<Integer, Integer> arco : player.getAchievements().entrySet()) {
+                        int achievementId = arco.getKey();
+                        int achievementLevel = arco.getValue();
+                        if (Achievements.INSTANCE.getMaxLevel(achievementId) <= achievementLevel)
+                            continue;
 
-                    Achievement nextLevelAchievement = Achievements.INSTANCE.getAchievement(achievementId, ++achievementLevel);
-                    if (nextLevelAchievement != null && nextLevelAchievement.isDone(player.getCounters().getPoints(nextLevelAchievement.getType()))) {
-                        // Make a question mark button.
-                        player.sendPacket(new TutorialShowQuestionMark(player.getObjectId()));
-                        break;
+                        Achievement nextLevelAchievement = Achievements.INSTANCE.getAchievement(achievementId, ++achievementLevel);
+                        if (nextLevelAchievement != null && nextLevelAchievement.isDone(player.getCounters().getPoints(nextLevelAchievement.getType()))) {
+                            // Make a question mark button.
+                            player.sendPacket(new TutorialShowQuestionMark(player.getObjectId()));
+                            break;
+                        }
                     }
-                }
-            }
-
-        }, intervalInMiliseconds, intervalInMiliseconds);
+                }), intervalInMiliseconds, intervalInMiliseconds);
 
         _listener = new Listener();
         CharListenerList.addGlobal(_listener);
@@ -150,6 +147,5 @@ public class AchievementNotification {
         public boolean ignorePetOrSummon() {
             return true;
         }
-
     }
 }

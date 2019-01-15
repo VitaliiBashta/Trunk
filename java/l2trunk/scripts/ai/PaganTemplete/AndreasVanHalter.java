@@ -8,7 +8,6 @@ import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -256,7 +255,7 @@ public final class AndreasVanHalter extends Fighter {
     }
 
     private void deleteNpc() {
-        List<Integer> npcs = Arrays.asList(
+        List<Integer> npcs = List.of(
                 TriolsRevelation1, TriolsRevelation2, TriolsRevelation3, TriolsRevelation4, TriolsRevelation5,
                 TriolsRevelation6, TriolsRevelation7, TriolsRevelation8, TriolsRevelation9, TriolsRevelation10,
                 TriolsRevelation11, RitualOffering, AltarGatekeeper, AndreasCaptainRoyalGuard1,
@@ -307,13 +306,14 @@ public final class AndreasVanHalter extends Fighter {
                     // Включаем на всякие пажарные запрет хождения что бы не испортить мувик
                     actor.startImmobilized();
                     // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 1500, 88, 89, 0, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
+                    World.getAroundPlayers(actor)
+                            .forEach(player -> {
+                                if (player.getDistance(camera) <= _distance) {
+                                    player.enterMovieMode();
+                                    player.specialCamera(camera, 1500, 88, 89, 0, 5000);
+                                } else
+                                    player.leaveMovieMode();
+                            });
 
                     if (_movieTask != null)
                         _movieTask.cancel(false);
@@ -328,13 +328,14 @@ public final class AndreasVanHalter extends Fighter {
                     // Стави жертве ХП 0
                     npc2.setCurrentHp(0, true);
                     // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 1500, 88, 89, 0, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
+                    World.getAroundPlayers(actor)
+                            .forEach(player -> {
+                                if (player.getDistance(camera) <= _distance) {
+                                    player.enterMovieMode();
+                                    player.specialCamera(camera, 1500, 88, 89, 0, 5000);
+                                } else
+                                    player.leaveMovieMode();
+                            });
 
                     if (_movieTask != null)
                         _movieTask.cancel(false);
@@ -346,13 +347,14 @@ public final class AndreasVanHalter extends Fighter {
                     NpcInstance npc3 = GameObjectsStorage.getByNpcId(RitualOffering);
                     npc3.deleteMe();
                     // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 450, 88, 3, 5500, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
+                    World.getAroundPlayers(actor)
+                            .forEach(player -> {
+                                if (player.getDistance(camera) <= _distance) {
+                                    player.enterMovieMode();
+                                    player.specialCamera(camera, 450, 88, 3, 5500, 5000);
+                                } else
+                                    player.leaveMovieMode();
+                            });
 
                     if (_movieTask != null)
                         _movieTask.cancel(false);
@@ -361,13 +363,14 @@ public final class AndreasVanHalter extends Fighter {
                     break;
                 case 4:
                     // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 500, 88, 4, 5000, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
+                    World.getAroundPlayers(actor)
+                            .forEach(p -> {
+                                if (p.getDistance(camera) <= _distance) {
+                                    p.enterMovieMode();
+                                    p.specialCamera(camera, 500, 88, 4, 5000, 5000);
+                                } else
+                                    p.leaveMovieMode();
+                            });
 
                     if (_movieTask != null)
                         _movieTask.cancel(false);
@@ -376,13 +379,14 @@ public final class AndreasVanHalter extends Fighter {
                     break;
                 case 5:
                     // Ищем игроков в радиусе и показываем мувик
-                    for (Player player : World.getAroundPlayers(actor)) {
-                        if (player.getDistance(camera) <= _distance) {
-                            player.enterMovieMode();
-                            player.specialCamera(camera, 3000, 88, 4, 6000, 5000);
-                        } else
-                            player.leaveMovieMode();
-                    }
+                    World.getAroundPlayers(actor)
+                            .forEach(p -> {
+                                if (p.getDistance(camera) <= _distance) {
+                                    p.enterMovieMode();
+                                    p.specialCamera(camera, 3000, 88, 4, 6000, 5000);
+                                } else
+                                    p.leaveMovieMode();
+                            });
 
                     if (_movieTask != null)
                         _movieTask.cancel(false);
@@ -391,8 +395,7 @@ public final class AndreasVanHalter extends Fighter {
                     break;
                 case 6:
                     // Сбрасываем режим мувиков
-                    for (Player player : World.getAroundPlayers(actor))
-                        player.leaveMovieMode();
+                    World.getAroundPlayers(actor).forEach(Player::leaveMovieMode);
 
                     // Спавним монстров возле Алтаря
                     SpawnNpc2();

@@ -13,9 +13,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
+import java.util.List;
+
 public final class MonsterTrap implements ScriptFile {
     private static ZoneListener _zoneListener;
-    private static final String[] zones = {
+    private static final List<String> zones = List.of(
             "[hellbound_trap1]",
             "[hellbound_trap2]",
             "[hellbound_trap3]",
@@ -25,27 +27,16 @@ public final class MonsterTrap implements ScriptFile {
             "[SoD_trap_left]",
             "[SoD_trap_right]",
             "[SoD_trap_left_back]",
-            "[SoD_trap_right_back]"
-    };
+            "[SoD_trap_right_back]");
 
     @Override
     public void onLoad() {
         _zoneListener = new ZoneListener();
 
-        for (String s : zones) {
+        zones.forEach(s -> {
             Zone zone = ReflectionUtils.getZone(s);
             zone.addListener(_zoneListener);
-        }
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
+        });
     }
 
     private class ZoneListener implements OnZoneEnterLeaveListener {

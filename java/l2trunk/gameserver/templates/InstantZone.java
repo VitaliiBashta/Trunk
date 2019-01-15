@@ -22,13 +22,13 @@ public final class InstantZone {
     private final int _maxParty;
     private final boolean _onPartyDismiss;
     private final int _timer;
-    private final List<Location> _teleportCoords;
+    private final List<Location> teleportCoords;
     private final Location _returnCoords;
     private final int _mapx;
     private final int _mapy;
-    private final Map<Integer, DoorInfo> _doors;
-    private final Map<String, ZoneInfo> _zones;
-    private final Map<String, SpawnInfo2> _spawns;
+    private final Map<Integer, DoorInfo> doors;
+    private final Map<String, ZoneInfo> zones;
+    private final Map<String, SpawnInfo2> spawns;
     private final List<SpawnInfo> _spawnsInfo;
     private final int _collapseIfEmpty;
     private final int _maxChannels;
@@ -39,7 +39,7 @@ public final class InstantZone {
     private final int _givedItemCount;
     private final int _requiredQuestId;
     private final boolean _setReuseUponEntry;
-    private final StatsSet _addParams;
+    private final StatsSet addParams;
     private final InstantZoneEntryType _entryType;
     private final boolean dispelBuffs;
 
@@ -61,7 +61,7 @@ public final class InstantZone {
         this.dispelBuffs = dispelBuffs;
         _minLevel = minLevel;
         _maxLevel = maxLevel;
-        _teleportCoords = tele;
+        teleportCoords = tele;
         _returnCoords = ret;
         this.minParty = minParty;
         _maxParty = maxParty;
@@ -69,10 +69,10 @@ public final class InstantZone {
         _timer = timer;
         _mapx = mapx;
         _mapy = mapy;
-        _doors = doors;
-        _zones = zones;
+        this.doors = doors;
+        this.zones = zones;
         _spawnsInfo = spawnsInfo;
-        _spawns = spawns;
+        this.spawns = spawns;
         _collapseIfEmpty = collapseIfEmpty;
         _maxChannels = maxChannels;
         _removedItemId = removedItemId;
@@ -82,7 +82,7 @@ public final class InstantZone {
         _givedItemCount = givedItemCount;
         _requiredQuestId = requiredQuestId;
         _setReuseUponEntry = setReuseUponEntry;
-        _addParams = params;
+        addParams = params;
 
         if (getMinParty() == 1)
             _entryType = InstantZoneEntryType.SOLO;
@@ -139,11 +139,11 @@ public final class InstantZone {
     }
 
     public Location getTeleportCoord() {
-        if (_teleportCoords == null || _teleportCoords.size() == 0)
+        if (teleportCoords == null || teleportCoords.size() == 0)
             return null;
-        if (_teleportCoords.size() == 1)   // fast hack?
-            return _teleportCoords.get(0);
-        return _teleportCoords.get(Rnd.get(_teleportCoords.size()));
+        if (teleportCoords.size() == 1)   // fast hack?
+            return teleportCoords.get(0);
+        return teleportCoords.get(Rnd.get(teleportCoords.size()));
     }
 
     public Location getReturnCoords() {
@@ -207,23 +207,23 @@ public final class InstantZone {
     }
 
     public Map<Integer, DoorInfo> getDoors() {
-        return _doors;
+        return doors;
     }
 
     public Map<String, ZoneInfo> getZones() {
-        return _zones;
+        return zones;
     }
 
     public List<Location> getTeleportCoords() {
-        return _teleportCoords;
+        return teleportCoords;
     }
 
     public Map<String, SpawnInfo2> getSpawns() {
-        return _spawns;
+        return spawns;
     }
 
     public StatsSet getAddParams() {
-        return _addParams;
+        return addParams;
     }
 
     public static class DoorInfo {
@@ -295,14 +295,6 @@ public final class InstantZone {
         private final int _respawnRnd;
         private final List<Location> _coords;
         private final Territory _territory;
-
-        public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, Territory territory) {
-            this(spawnType, npcId, count, respawn, respawnRnd, null, territory);
-        }
-
-        public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, List<Location> coords) {
-            this(spawnType, npcId, count, respawn, respawnRnd, coords, null);
-        }
 
         public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, List<Location> coords, Territory territory) {
             _spawnType = spawnType;

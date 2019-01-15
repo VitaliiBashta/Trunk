@@ -7,11 +7,9 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.DoorTemplate;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,7 +21,7 @@ import java.util.List;
  * - AI is tested and works.
  */
 public final class AndreasCaptainRoyalGuard extends Fighter {
-    private static final List<Location> locs = Arrays.asList(
+    private static final List<Location> locs = List.of(
             new Location(-16128, -35888, -10726),
             new Location(-17029, -39617, -10724),
             new Location(-15729, -42001, -10724));
@@ -41,16 +39,13 @@ public final class AndreasCaptainRoyalGuard extends Fighter {
         if (actor == null)
             return true;
 
-        for (Player player : World.getAroundPlayers(actor, 500, 500)) {
-            if (player == null || !player.isInParty())
-                continue;
-
-            if (player.getParty().size() >= 9 && _tele) {
-                _tele = false;
-                player.teleToLocation(Rnd.get(locs));
-            }
-        }
-
+        World.getAroundPlayers(actor, 500, 500)
+                .filter(Player::isInParty)
+                .filter(player -> player.getParty().size() > 9 && _tele)
+                .forEach(player -> {
+                    _tele = false;
+                    player.teleToLocation(Rnd.get(locs));
+                });
         return true;
     }
 

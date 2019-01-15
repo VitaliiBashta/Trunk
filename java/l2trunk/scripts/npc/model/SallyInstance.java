@@ -6,11 +6,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.scripts.quests._250_WatchWhatYouEat;
 
-/**
- * @author VISTALL
- * @date 10:17/24.06.2011
- */
-public class SallyInstance extends NpcInstance {
+public final class SallyInstance extends NpcInstance {
     public SallyInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -20,7 +16,7 @@ public class SallyInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equals("ask_about_rare_plants")) {
+        if ("ask_about_rare_plants".equals(command)) {
             QuestState qs = player.getQuestState(_250_WatchWhatYouEat.class);
             if (qs != null && qs.isCompleted())
                 showChatWindow(player, 3);

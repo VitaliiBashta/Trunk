@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.instances;
 
 import l2trunk.commons.geometry.Shape;
-import l2trunk.commons.listener.Listener;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
@@ -37,7 +36,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public final class DoorInstance extends Creature implements GeoCollision {
     private final Lock _openLock = new ReentrantLock();
     private ScheduledFuture<?> _autoActionTask;
-    private boolean _open = true;
+    private boolean open = true;
     private boolean _geoOpen = true;
     private int _upgradeHp;
 
@@ -66,13 +65,13 @@ public final class DoorInstance extends Creature implements GeoCollision {
     }
 
     public boolean isOpen() {
-        return _open;
+        return open;
     }
 
     private boolean setOpen(boolean open) {
-        if (_open == open)
+        if (this.open == open)
             return false;
-        _open = open;
+        this.open = open;
         return true;
     }
 
@@ -176,7 +175,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
             if (!isInRange(player, INTERACTION_DISTANCE)) {
                 if (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT)
-                    player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
+                    player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
                 return;
             }
 
@@ -194,7 +193,7 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
     @Override
     public void broadcastStatusUpdate() {
-        World.getAroundPlayers(this).stream()
+        World.getAroundPlayers(this)
                 .filter(Objects::nonNull)
                 .forEach(player -> player.sendPacket(new StaticObject(this, player)));
     }
@@ -221,9 +220,10 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
         getAI().onEvtOpen(opener);
 
-        for (Listener l : getListeners().getListeners())
-            if (l instanceof OnOpenCloseListener)
-                ((OnOpenCloseListener) l).onOpen(this);
+        getListeners().getListeners()
+                .filter(l -> l instanceof OnOpenCloseListener)
+                .map(l -> (OnOpenCloseListener) l)
+                .forEach(l -> l.onOpen(this));
 
         return true;
     }
@@ -258,9 +258,10 @@ public final class DoorInstance extends Creature implements GeoCollision {
 
         getAI().onEvtClose(closer);
 
-        for (Listener l : getListeners().getListeners())
-            if (l instanceof OnOpenCloseListener)
-                ((OnOpenCloseListener) l).onClose(this);
+        getListeners().getListeners()
+                .filter(l -> l instanceof OnOpenCloseListener)
+                .map(l -> (OnOpenCloseListener) l)
+                .forEach(l -> l.onClose(this));
 
         return true;
     }

@@ -47,40 +47,38 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     private static final Logger _log = LoggerFactory.getLogger(CommunityClan.class);
     private static final int CLANS_PER_PAGE = 6;
     private static final int MEMBERS_PER_PAGE = 17;
-    private static final String[] ALL_CLASSES =
-            {
-                    "Duelist",
-                    "Dreadnought",
-                    "PhoenixKnight",
-                    "HellKnight",
-                    "Adventurer",
-                    "Saggitarius",
-                    "Archmage",
-                    "SoulTaker",
-                    "ArcanaLord",
-                    "Cardinal",
-                    "Hierophant",
-                    "EvaTemplar",
-                    "SwordMuse",
-                    "WindRider",
-                    "MoonlightSentinel",
-                    "MysticMuse",
-                    "ElementalMaster",
-                    "EvaSaint",
-                    "ShillienTemplar",
-                    "SpectralDancer",
-                    "GhostHunter",
-                    "GhostSentinel",
-                    "StormScreamer",
-                    "SpectralMaster",
-                    "ShillienSaint",
-                    "Titan",
-                    "GrandKhauatari",
-                    "Dominator",
-                    "Doomcryer",
-                    "FortuneSeeker",
-                    "Maestro"
-            };
+    private static final List<String> ALL_CLASSES = List.of(
+            "Duelist",
+            "Dreadnought",
+            "PhoenixKnight",
+            "HellKnight",
+            "Adventurer",
+            "Saggitarius",
+            "Archmage",
+            "SoulTaker",
+            "ArcanaLord",
+            "Cardinal",
+            "Hierophant",
+            "EvaTemplar",
+            "SwordMuse",
+            "WindRider",
+            "MoonlightSentinel",
+            "MysticMuse",
+            "ElementalMaster",
+            "EvaSaint",
+            "ShillienTemplar",
+            "SpectralDancer",
+            "GhostHunter",
+            "GhostSentinel",
+            "StormScreamer",
+            "SpectralMaster",
+            "ShillienSaint",
+            "Titan",
+            "GrandKhauatari",
+            "Dominator",
+            "Doomcryer",
+            "FortuneSeeker",
+            "Maestro");
     private static final int[] SLOTS =
             {
                     Inventory.PAPERDOLL_RHAND,
@@ -462,12 +460,8 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
     }
 
     @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_bbsclan",
+        return List.of("_bbsclan",
                 "_clbbsclan_",
                 "_clbbslist_",
                 "_clbbsmanage",
@@ -1111,7 +1105,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             return html;
 
         html = html.replace("%clanName%", clan.getName());
-        boolean firstChecked = clan.getClassesNeeded().size() == ALL_CLASSES.length;
+        boolean firstChecked = clan.getClassesNeeded().size() == ALL_CLASSES.size();
         html = html.replace("%checked1%", firstChecked ? "_checked" : "");
         html = html.replace("%checked2%", firstChecked ? "" : "_checked");
 
@@ -1126,7 +1120,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 list += "</tr><tr>";
             index++;
 
-            list += "<td align=center width=100><button value=\"" + ALL_CLASSES[clas - 88] + "\" action=\"bypass  _clbbsmanage_5 " + ALL_CLASSES[clas - 88] + "\" back=\"l2ui_ct1.button.button_df_small_down\" width=105 height=20 fore=\"l2ui_ct1.button.button_df_small\"></td>";
+            list += "<td align=center width=100><button value=\"" + ALL_CLASSES.get(clas - 88) + "\" action=\"bypass  _clbbsmanage_5 " + ALL_CLASSES.get(clas - 88) + "\" back=\"l2ui_ct1.button.button_df_small_down\" width=105 height=20 fore=\"l2ui_ct1.button.button_df_small\"></td>";
         }
         list += "</tr>";
 
@@ -1666,8 +1660,9 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             case 3:
                 if (wholeText.length() > 2) {
                     String clazz = wholeText.substring(2);
-                    for (int i = 0; i < ALL_CLASSES.length; i++) {
-                        if (ALL_CLASSES[i].equals(clazz)) {
+
+                    for (int i = 0; i < ALL_CLASSES.size(); i++) {
+                        if (ALL_CLASSES.get(i).equals(clazz)) {
                             clan.addClassNeeded(88 + i);
                             break;
                         }
@@ -1676,8 +1671,8 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                 break;
             case 5:
                 String clazz = wholeText.substring(2);
-                for (int i = 0; i < ALL_CLASSES.length; i++) {
-                    if (ALL_CLASSES[i].equals(clazz)) {
+                for (int i = 0; i < ALL_CLASSES.size(); i++) {
+                    if (ALL_CLASSES.get(i).equals(clazz)) {
                         clan.deleteClassNeeded(88 + i);
                         break;
                     }
@@ -1781,14 +1776,14 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
 
         ArrayList<Integer> classes = clan.getClassesNeeded();
 
-        for (int i = 0; i < ALL_CLASSES.length; i++) {
+        for (int i = 0; i < ALL_CLASSES.size(); i++) {
             if (!classes.contains(i + 88)) {
                 int x = 1;
                 if (i % 2 == 0)
                     x = 0;
                 if (!splited[x].equals(""))
                     splited[x] += ";";
-                splited[x] += ALL_CLASSES[i];
+                splited[x] += ALL_CLASSES.get(i);
             }
         }
         return splited;

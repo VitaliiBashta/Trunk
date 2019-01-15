@@ -2,7 +2,7 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.TrapInstance;
@@ -17,18 +17,16 @@ public final class DetectTrap extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : activeChar.getAroundCharacters(skillRadius, 300)) {
-            if (target != null && target.isTrap()) {
-                TrapInstance trap = (TrapInstance) target;
-                if (trap.getLevel() <= getPower()) {
+        activeChar.getAroundCharacters(skillRadius, 300)
+                .filter(GameObject::isTrap)
+                .map(target -> (TrapInstance) target)
+                .filter(trap -> trap.getLevel() <= getPower())
+                .forEach(trap -> {
                     trap.setDetected(true);
-                    for (Player player : World.getAroundPlayers(trap)) {
-                        player.sendPacket(new NpcInfo(trap, player));
-                    }
-                }
-            }
-        }
+                    World.getAroundPlayers(trap)
+                            .forEach(p -> p.sendPacket(new NpcInfo(trap, p)));
 
+                });
         if (isSSPossible()) {
             activeChar.unChargeShots(isMagic());
         }

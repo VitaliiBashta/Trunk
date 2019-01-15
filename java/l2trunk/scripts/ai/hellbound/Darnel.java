@@ -11,7 +11,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.TrapInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.instances.CrystalCaverns;
 
@@ -20,31 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 public final class Darnel extends DefaultAI {
-    private class TrapTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            NpcInstance actor = getActor();
-            if (actor.isDead())
-                return;
-
-            // Спавним 10 ловушек
-            TrapInstance trap;
-            for (int i = 0; i < 10; i++) {
-                trap = new TrapInstance(IdFactory.getInstance().getNextId(),
-                        NpcHolder.getTemplate(13037), actor, Rnd.get(trapSkills), new Location(Rnd.get(151896, 153608), Rnd.get(145032, 146808), -12584));
-                trap.spawnMe();
-            }
-        }
-    }
-
-    private final List<Skill> trapSkills = List.of(
-            SkillTable.INSTANCE.getInfo(5267),
-            SkillTable.INSTANCE.getInfo(5268),
-            SkillTable.INSTANCE.getInfo(5269),
-            SkillTable.INSTANCE.getInfo(5270));
-
-    private final Skill Poison= SkillTable.INSTANCE.getInfo(4182,10);
-    private final Skill Paralysis =SkillTable.INSTANCE.getInfo(4189,10);
+    private static final int Poison = 4182;
+    private static final int Paralysis = 4189;
+    private final List<Integer> trapSkills = List.of(5267, 5268, 5269, 5270);
 
     public Darnel(NpcInstance actor) {
         super(actor);
@@ -64,7 +41,7 @@ public final class Darnel extends DefaultAI {
         int rnd_per = Rnd.get(100);
 
         if (rnd_per < 5) {
-            actor.broadcastPacketToOthers(new MagicSkillUse(actor,  5440,  3000));
+            actor.broadcastPacketToOthers(new MagicSkillUse(actor, 5440, 3000));
             ThreadPoolManager.INSTANCE.schedule(new TrapTask(), 3000);
             return true;
         }
@@ -76,10 +53,10 @@ public final class Darnel extends DefaultAI {
 
         Map<Skill, Integer> d_skill = new HashMap<>();
 
-        addDesiredSkill(d_skill, target, distance, Poison);
-        addDesiredSkill(d_skill, target, distance, Paralysis);
+        addDesiredSkill(d_skill, target, distance, Poison, 10);
+        addDesiredSkill(d_skill, target, distance, Paralysis, 10);
 
-        Skill r_skill = selectTopSkill(d_skill);
+        int r_skill = selectTopSkill(d_skill);
 
         return chooseTaskAndTargets(r_skill, target, distance);
     }
@@ -109,5 +86,22 @@ public final class Darnel extends DefaultAI {
     @Override
     public boolean randomWalk() {
         return false;
+    }
+
+    private class TrapTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            NpcInstance actor = getActor();
+            if (actor.isDead())
+                return;
+
+            // Спавним 10 ловушек
+            TrapInstance trap;
+            for (int i = 0; i < 10; i++) {
+                trap = new TrapInstance(IdFactory.getInstance().getNextId(),
+                        NpcHolder.getTemplate(13037), actor, Rnd.get(trapSkills), new Location(Rnd.get(151896, 153608), Rnd.get(145032, 146808), -12584));
+                trap.spawnMe();
+            }
+        }
     }
 }

@@ -91,7 +91,7 @@ public final class AdminTeleport implements IAdminCommandHandler {
             case admin_gowest:
             case admin_goup:
             case admin_godown:
-                int val = wordList.length < 2 ? 150 : Integer.parseInt(wordList[1]);
+                int val = wordList.length < 2 ? 150 : toInt(wordList[1]);
                 int x = activeChar.getX();
                 int y = activeChar.getY();
                 int z = activeChar.getZ();
@@ -116,9 +116,9 @@ public final class AdminTeleport implements IAdminCommandHandler {
             case admin_teleto:
             case admin_tele_to:
             case admin_instant_move:
-                if (wordList.length > 1 && wordList[1].equalsIgnoreCase("r"))
+                if (wordList.length > 1 && "r".equalsIgnoreCase(wordList[1]))
                     activeChar.setTeleMode(2);
-                else if (wordList.length > 1 && wordList[1].equalsIgnoreCase("end"))
+                else if (wordList.length > 1 && "end".equalsIgnoreCase(wordList[1]))
                     activeChar.setTeleMode(0);
                 else
                     activeChar.setTeleMode(1);
@@ -131,12 +131,9 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 }
                 String npcName = Util.joinStrings(" ", wordList, 1);
                 NpcInstance npc;
-                try {
-                    if ((npc = GameObjectsStorage.getByNpcId(Integer.parseInt(npcName))) != null) {
-                        teleportToCharacter(activeChar, npc);
-                        return true;
-                    }
-                } catch (Exception e) {
+                if ((npc = GameObjectsStorage.getByNpcId(toInt(npcName))) != null) {
+                    teleportToCharacter(activeChar, npc);
+                    return true;
                 }
                 if ((npc = GameObjectsStorage.getNpc(npcName)) != null) {
                     teleportToCharacter(activeChar, npc);
@@ -210,13 +207,13 @@ public final class AdminTeleport implements IAdminCommandHandler {
                 break;
             case admin_recallinstance:
                 if (target != null && !target.getReflection().isDefault()) {
-                    recall(activeChar, target.getReflection().getPlayers().toArray(new Player[0]));
+                    recall(activeChar, target.getReflection().getPlayers().toArray(Player[]::new));
                     return true;
                 } else
                     activeChar.sendMessage("->" + targetName + "<- is incorrect, or reflection is default.");
                 break;
             case admin_recallserver:
-                final List<Player> targets = GameObjectsStorage.getAllPlayersStream()
+                final Player[] targets = GameObjectsStorage.getAllPlayersStream()
                         .filter(plr -> (!plr.isInBuffStore()
                                 || !plr.isInStoreMode()
                                 || plr.isOnline()
@@ -227,9 +224,9 @@ public final class AdminTeleport implements IAdminCommandHandler {
                                 || plr.getReflection() == ReflectionManager.DEFAULT
                                 || plr.getPvpFlag() <= 0
                                 || plr.getKarma() <= 0))
-                        .collect(Collectors.toList());
-                activeChar.sendMessage("Recalling " + targets.size() + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
-                recall(activeChar, true, true, targets.toArray(new Player[0]));
+                        .toArray(Player[]::new);
+                activeChar.sendMessage("Recalling " + targets.length + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
+                recall(activeChar, true, true, targets);
                 break;
             case admin_setref: {
                 if (wordList.length < 2) {
@@ -264,10 +261,8 @@ public final class AdminTeleport implements IAdminCommandHandler {
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
 
-        switch (command) {
-            case admin_recall_npc:
-                recallNPC(activeChar);
-                break;
+        if (command == Commands.admin_recall_npc) {
+            recallNPC(activeChar);
         }
 
         return true;
@@ -365,9 +360,9 @@ public final class AdminTeleport implements IAdminCommandHandler {
 
             target.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
             if (randomTp)
-                target.teleToLocation(activeChar.getX() + Rnd.get(-400, 400), activeChar.getY() + Rnd.get(-400, 400), activeChar.getZ(), activeChar.getReflectionId());
+                target.teleToLocation(new Location(activeChar.getX() + Rnd.get(-400, 400), activeChar.getY() + Rnd.get(-400, 400), activeChar.getZ()), activeChar.getReflectionId());
             else
-                target.teleToLocation(activeChar.getX(), activeChar.getY(), activeChar.getZ(), activeChar.getReflectionId());
+                target.teleToLocation(activeChar.getLoc(), activeChar.getReflectionId());
 
             if (target.equals(activeChar))
                 activeChar.sendMessage("You have been teleported to " + activeChar.getLoc() + ", reflection id: " + activeChar.getReflectionId());

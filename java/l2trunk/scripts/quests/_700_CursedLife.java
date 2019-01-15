@@ -4,13 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: pchayka
- * @date: 22.06.2010
- */
-public class _700_CursedLife extends Quest implements ScriptFile {
+public final class _700_CursedLife extends Quest {
     // NPC's
     private static final int Orbyu = 32560;
 
@@ -30,18 +25,6 @@ public class _700_CursedLife extends Quest implements ScriptFile {
     private static final int _skullprice = 50000;
     private static final int _sternumprice = 5000;
     private static final int _bonesprice = 500;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _700_CursedLife() {
         super(false);

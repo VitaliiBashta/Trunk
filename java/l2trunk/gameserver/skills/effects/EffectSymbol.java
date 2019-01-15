@@ -14,7 +14,6 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class EffectSymbol extends Effect {
@@ -102,15 +101,15 @@ public final class EffectSymbol extends Effect {
 
         effector.reduceCurrentMp(mpConsume, effector);
 
-        for (Creature cha : World.getAroundCharacters(symbol, getSkill().getSkillRadius(), 200))
-            if (!cha.isDoor() && cha.getEffectList().getEffectsBySkill(skill) == null && skill.checkTarget(effector, cha, cha, false, false) == null) {
-                if (skill.isOffensive() && !GeoEngine.canSeeTarget(symbol, cha, false))
-                    continue;
-                List<Creature> targets = new ArrayList<>(1);
-                targets.add(cha);
-                effector.callSkill(skill, targets, true);
-                effector.broadcastPacket(new MagicSkillLaunched(symbol.getObjectId(), getSkill().getDisplayId(), getSkill().getDisplayLevel(), cha));
-            }
+        World.getAroundCharacters(symbol, getSkill().getSkillRadius(), 200)
+                .filter(cha -> !cha.isDoor())
+                .filter(cha -> cha.getEffectList().getEffectsBySkill(skill) == null)
+                .filter(cha -> skill.checkTarget(effector, cha, cha, false, false) == null)
+                .filter(cha -> !skill.isOffensive() || !GeoEngine.canSeeTarget(symbol, cha, false))
+                .forEach(cha -> {
+                    effector.callSkill(skill, List.of(cha), true);
+                    effector.broadcastPacket(new MagicSkillLaunched(symbol.getObjectId(), getSkill().getDisplayId(), getSkill().getDisplayLevel(), cha));
+                });
 
         return true;
     }

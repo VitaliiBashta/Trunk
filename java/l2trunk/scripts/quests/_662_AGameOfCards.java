@@ -4,56 +4,21 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class _662_AGameOfCards extends Quest implements ScriptFile {
+public final class _662_AGameOfCards extends Quest {
     // NPCs
     private final static int KLUMP = 30845;
     // Mobs
-    private final static int[] mobs = {
-            20677,
-            21109,
-            21112,
-            21116,
-            21114,
-            21004,
-            21002,
-            21006,
-            21008,
-            21010,
-            18001,
-            20672,
-            20673,
-            20674,
-            20955,
-            20962,
-            20961,
-            20959,
-            20958,
-            20966,
-            20965,
-            20968,
-            20973,
-            20972,
-            21278,
-            21279,
-            21280,
-            21286,
-            21287,
-            21288,
-            21520,
-            21526,
-            21530,
-            21535,
-            21508,
-            21510,
-            21513,
-            21515
-    };
+    private final static List<Integer> mobs = List.of(
+            20677, 21109, 21112, 21116, 21114, 21004, 21002, 21006, 21008, 21010, 18001,
+            20672, 20673, 20674, 20955, 20962, 20961, 20959, 20958, 20966, 20965, 20968,
+            20973, 20972, 21278, 21279, 21280, 21286, 21287, 21288, 21520, 21526, 21530,
+            21535, 21508, 21510, 21513, 21515);
     // Quest Items
     private final static int RED_GEM = 8765;
     // Items
@@ -93,8 +58,7 @@ public class _662_AGameOfCards extends Quest implements ScriptFile {
                 return "30845_10a.htm";
             st.takeItems(RED_GEM, 50);
             int player_id = st.getPlayer().getObjectId();
-            if (Games.containsKey(player_id))
-                Games.remove(player_id);
+            Games.remove(player_id);
             Games.put(player_id, new CardGame(player_id));
         } else if (event.equalsIgnoreCase("play") && _state == STARTED) {
             int player_id = st.getPlayer().getObjectId();
@@ -140,43 +104,17 @@ public class _662_AGameOfCards extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     private static class CardGame {
-        private final String[] cards = new String[5];
-        private final int player_id;
-        private final static String[] card_chars = new String[]{
-                "A",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "J",
-                "Q",
-                "K"
-        };
+        private final static List<String> card_chars = List.of(
+                "A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K");
         private final static String html_header = "<html><body>";
         private final static String html_footer = "</body></html>";
         private final static String table_header = "<table border=\"1\" cellpadding=\"3\"><tr>";
         private final static String table_footer = "</tr></table><br><br>";
         private final static String td_begin = "<center><td width=\"50\" align=\"center\"><br><br><br> ";
         private final static String td_end = " <br><br><br><br></td></center>";
+        private final String[] cards = new String[5];
+        private final int player_id;
 
         CardGame(int _player_id) {
             player_id = _player_id;
@@ -187,7 +125,7 @@ public class _662_AGameOfCards extends Quest implements ScriptFile {
         String next(int cardn, QuestState st) {
             if (cardn >= cards.length || !cards[cardn].startsWith("<a"))
                 return null;
-            cards[cardn] = card_chars[Rnd.get(card_chars.length)];
+            cards[cardn] = Rnd.get(card_chars);
             for (String card : cards)
                 if (card.startsWith("<a"))
                     return playField();

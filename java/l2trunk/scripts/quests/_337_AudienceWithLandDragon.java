@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _337_AudienceWithLandDragon extends Quest implements ScriptFile {
+public final class _337_AudienceWithLandDragon extends Quest {
     //npc
     private final int MOKE = 30498;
     private final int HELTON = 30678;
@@ -195,15 +195,6 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile {
             },
     };
 
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
     public _337_AudienceWithLandDragon() {
         super(false);
 
@@ -240,8 +231,7 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile {
         addAttackId(ABYSSAL_JEWEL_2);
         addAttackId(ABYSSAL_JEWEL_3);
 
-        addQuestItem(new int[]{
-                FEATHER_OF_GABRIELLE_ID,
+        addQuestItem(FEATHER_OF_GABRIELLE_ID,
                 HERALD_OF_SLAYER_ID,
                 STALKER_HORN_ID,
                 DRAKE_TALON_ID,
@@ -254,8 +244,7 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile {
                 MUSFEL_FANG_ID,
                 SECOND_ABYSS_FRAGMENT_ID,
                 THIRD_ABYSS_FRAGMENT_ID,
-                MARK_OF_WATCHMAN_ID
-        });
+                MARK_OF_WATCHMAN_ID);
     }
 
     @Override

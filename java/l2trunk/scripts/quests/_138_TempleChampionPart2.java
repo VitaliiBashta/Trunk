@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _138_TempleChampionPart2 extends Quest implements ScriptFile {
+public final class _138_TempleChampionPart2 extends Quest {
     // NPCs
     private static final int SYLVAIN = 30070;
     private static final int PUPINA = 30118;
@@ -24,18 +24,6 @@ public class _138_TempleChampionPart2 extends Quest implements ScriptFile {
     private final static int GuardianBasilisk = 20550;
     private final static int RoadScavenger = 20551;
     private final static int FetteredSoul = 20552;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _138_TempleChampionPart2() {
         super(false);

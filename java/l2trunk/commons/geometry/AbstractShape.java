@@ -1,12 +1,14 @@
 package l2trunk.commons.geometry;
 
+import l2trunk.gameserver.utils.Location;
+
 public abstract class AbstractShape implements Shape {
     final Point3D max = new Point3D();
     final Point3D min = new Point3D();
 
     @Override
-    public boolean isInside(int x, int y, int z) {
-        return (min.z <= z) && (max.z >= z) && (isInside(x, y));
+    public boolean isInside(Location loc) {
+        return (min.z <= loc.z) && (max.z >= loc.z) && (isInside(loc.x, loc.y));
     }
 
     @Override

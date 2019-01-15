@@ -58,15 +58,13 @@ public final class PlayerVar {
         }
 
         private static void onUnsetVar(PlayerVar var) {
-            switch (var.name) {
-                case "Para":
-                    if (!var.owner.isBlocked())
-                        return;
-                    var.owner.setBlock(false);
-                    var.owner.stopAbnormalEffect(AbnormalEffect.HOLD_1);
-                    if (var.owner.isPlayable())
-                        var.owner.getPlayer().unsetVar("Para");
-                    break;
+            if ("Para".equals(var.name)) {
+                if (!var.owner.isBlocked())
+                    return;
+                var.owner.setBlock(false);
+                var.owner.stopAbnormalEffect(AbnormalEffect.HOLD_1);
+                if (var.owner.isPlayable())
+                    var.owner.getPlayer().unsetVar("Para");
             }
         }
 
@@ -76,9 +74,7 @@ public final class PlayerVar {
             if (pc == null) {
                 return;
             }
-
             pc.unsetVar(_pv.name);
-
             onUnsetVar(_pv);
         }
     }

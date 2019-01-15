@@ -6,10 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _103_SpiritOfCraftsman extends Quest implements ScriptFile {
+public final class _103_SpiritOfCraftsman extends Quest {
     private final int KAROYDS_LETTER_ID = 968;
     private final int CECKTINONS_VOUCHER1_ID = 969;
     private final int CECKTINONS_VOUCHER2_ID = 970;
@@ -18,19 +17,7 @@ public class _103_SpiritOfCraftsman extends Quest implements ScriptFile {
     private final int PRESERVE_OIL_ID = 972;
     private final int ZOMBIE_HEAD_ID = 973;
     private final int STEELBENDERS_HEAD_ID = 974;
-    private final int BLOODSABER_ID = 975;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int BLOODSABER_ID = 975;
 
     public _103_SpiritOfCraftsman() {
         super(false);

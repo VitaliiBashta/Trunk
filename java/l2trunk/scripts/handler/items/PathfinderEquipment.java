@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PathfinderEquipment extends SimpleItemHandler implements ScriptFile {
+public final class PathfinderEquipment extends SimpleItemHandler implements ScriptFile {
     private static final Map<Integer, int[][]> rewards = new HashMap<>();
 
     static {
@@ -78,14 +78,6 @@ public class PathfinderEquipment extends SimpleItemHandler implements ScriptFile
     @Override
     public void onLoad() {
         ItemHandler.INSTANCE.registerItemHandler(this);
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

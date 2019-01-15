@@ -9,7 +9,7 @@ import l2trunk.scripts.custom.QuizEvent;
 import java.util.List;
 
 
-public class Quiz implements IVoicedCommandHandler, ScriptFile {
+public final class Quiz implements IVoicedCommandHandler, ScriptFile {
     private static final List<String> VOICED_COMMANDS = List.of("quiz", "1", "2", "3");
 
     @Override
@@ -40,14 +40,5 @@ public class Quiz implements IVoicedCommandHandler, ScriptFile {
         System.out.println("Loading Quiz.java");
         VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
         new QuizEvent();
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

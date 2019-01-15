@@ -12,24 +12,12 @@ import l2trunk.gameserver.scripts.ScriptFile;
  * Info: Один из 2х квестов для прохода на остров Hellbound.
  * Info: Пройдя его ведьма Galate открывает ТП до Beleth's stronghold on Hellbound Island
  */
-public class _133_ThatsBloodyHot extends Quest implements ScriptFile {
+public final class _133_ThatsBloodyHot extends Quest {
     // NPC's
     private static final int KANIS = 32264;
     private static final int GALATE = 32292;
     // ITEMS
     private static final int CRYSTAL_SAMPLE = 9785;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _133_ThatsBloodyHot() {
         super(false);

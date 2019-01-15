@@ -16,7 +16,6 @@ import l2trunk.gameserver.model.instances.MinionInstance;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.QuestEventType;
-import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.StatusUpdate;
 import l2trunk.gameserver.stats.Stats;
@@ -31,6 +30,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DefaultAI extends CharacterAI {
     protected static final Logger _log = LoggerFactory.getLogger(DefaultAI.class);
@@ -42,7 +42,7 @@ public class DefaultAI extends CharacterAI {
     /**
      * Список заданий
      */
-    private final NavigableSet<Task> _tasks = new ConcurrentSkipListSet<>();
+    private final NavigableSet<Task> tasks = new ConcurrentSkipListSet<>();
     private final List<Skill> _dotSkills;
     private final List<Skill> _debuffSkills;
     private final List<Skill> _buffSkills;
@@ -55,7 +55,7 @@ public class DefaultAI extends CharacterAI {
     /**
      * Показывает, есть ли задания
      */
-    protected boolean _def_think = false;
+    protected boolean defThink = false;
     /**
      * The L2NpcInstance aggro counter
      */
@@ -189,13 +189,17 @@ public class DefaultAI extends CharacterAI {
         return rnd.select();
     }
 
-    protected void addTaskCast(Creature target, Skill skill) {
+    protected void addTaskCast(Creature target, int skillId) {
+        addTaskCast(target, skillId, 1);
+    }
+
+    protected void addTaskCast(Creature target, int skillId, int skillLvl) {
         Task task = new Task();
         task.type = TaskType.CAST;
         task.target = target.getRef();
-        task.skill = skill;
-        _tasks.add(task);
-        _def_think = true;
+        task.skill = SkillTable.INSTANCE.getInfo(skillId, skillLvl);
+        tasks.add(task);
+        defThink = true;
     }
 
     protected void addTaskBuff(Creature target, int skillid) {
@@ -207,26 +211,27 @@ public class DefaultAI extends CharacterAI {
         task.type = TaskType.BUFF;
         task.target = target.getRef();
         task.skill = skill;
-        _tasks.add(task);
-        _def_think = true;
+        tasks.add(task);
+        defThink = true;
     }
 
     public void addTaskAttack(Creature target) {
         Task task = new Task();
         task.type = TaskType.ATTACK;
         task.target = target.getRef();
-        _tasks.add(task);
-        _def_think = true;
+        tasks.add(task);
+        defThink = true;
     }
 
-    protected void addTaskAttack(Creature target, Skill skill) {
+    protected void addTaskAttack(Creature target, int skillId, int skillLvl) {
         Task task = new Task();
-        task.type = skill.isOffensive() ? TaskType.CAST : TaskType.BUFF;
+        task.type = SkillTable.INSTANCE.getInfo(skillId, skillLvl).isOffensive() ? TaskType.CAST : TaskType.BUFF;
         task.target = target.getRef();
-        task.skill = skill;
+        task.skill = SkillTable.INSTANCE.getInfo(skillId, skillLvl);
+
         task.weight = 1000000;
-        _tasks.add(task);
-        _def_think = true;
+        tasks.add(task);
+        defThink = true;
     }
 
     public void addTaskMove(Location loc, boolean pathfind) {
@@ -234,8 +239,8 @@ public class DefaultAI extends CharacterAI {
         task.type = TaskType.MOVE;
         task.loc = loc;
         task.pathfind = pathfind;
-        _tasks.add(task);
-        _def_think = true;
+        tasks.add(task);
+        defThink = true;
     }
 
     public void addTaskMove(int locX, int locY, int locZ, boolean pathfind) {
@@ -391,7 +396,7 @@ public class DefaultAI extends CharacterAI {
             }
 
             startRunningTask(AI_TASK_ATTACK_DELAY);
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
         }
 
         return true;
@@ -435,7 +440,7 @@ public class DefaultAI extends CharacterAI {
             return true;
         }
 
-        if (_def_think) {
+        if (defThink) {
             if (doTask()) {
                 clearTasks();
             }
@@ -453,16 +458,13 @@ public class DefaultAI extends CharacterAI {
                  * We call checkAggresion but without action, only checking, then if aggrolist is not empty then we sort it by distance and do the attack
                  * If done otherwise, the performance drop is huge
                  */
-                final List<Creature> knowns = World.getAroundCharacters(actor);
+                List<Creature> knowns = World.getAroundCharacters(actor).collect(Collectors.toList());
                 if (!knowns.isEmpty()) {
-                    final List<Creature> aggroList = new ArrayList<>();
+                    final List<Creature> aggroList = World.getAroundCharacters(actor)
+                            .filter(cha -> aggressive || actor.getAggroList().get(cha) != null)
+                            .filter(cha -> checkAggression(cha, true))
+                            .collect(Collectors.toList());
 
-                    for (Creature cha : knowns) {
-                        if (aggressive || (actor.getAggroList().get(cha) != null)) {
-                            if (checkAggression(cha, true))
-                                aggroList.add(cha);
-                        }
-                    }
 
                     if (actor.isDead())
                         return true;
@@ -484,7 +486,7 @@ public class DefaultAI extends CharacterAI {
 							}
 
 							startRunningTask(AI_TASK_ATTACK_DELAY);
-							setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+							setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
 							*/
                             if (checkAggression(target, false))
                                 return true;
@@ -525,7 +527,7 @@ public class DefaultAI extends CharacterAI {
         setAttackTimeout(Long.MAX_VALUE);
         setAttackTarget(null);
 
-        changeIntention(CtrlIntention.AI_INTENTION_IDLE, null, null);
+        changeIntention(CtrlIntention.AI_INTENTION_IDLE);
     }
 
     @Override
@@ -537,7 +539,7 @@ public class DefaultAI extends CharacterAI {
 
         if (getIntention() != CtrlIntention.AI_INTENTION_ACTIVE) {
             switchAITask(AI_TASK_ACTIVE_DELAY);
-            changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+            changeIntention(CtrlIntention.AI_INTENTION_ACTIVE);
         }
 
         onEvtThink();
@@ -556,7 +558,7 @@ public class DefaultAI extends CharacterAI {
         setGlobalAggro(0);
 
         if (getIntention() != CtrlIntention.AI_INTENTION_ATTACK) {
-            changeIntention(CtrlIntention.AI_INTENTION_ATTACK, target, null);
+            changeIntention(CtrlIntention.AI_INTENTION_ATTACK);
             switchAITask(AI_TASK_ATTACK_DELAY);
         }
 
@@ -680,19 +682,19 @@ public class DefaultAI extends CharacterAI {
 
     private boolean maybeNextTask(Task currentTask) {
         // Следующее задание
-        _tasks.remove(currentTask);
+        tasks.remove(currentTask);
         // Если заданий больше нет - определить новое
-        return _tasks.size() == 0;
+        return tasks.size() == 0;
     }
 
     protected boolean doTask() {
         NpcInstance actor = getActor();
 
-        if (!_def_think) {
+        if (!defThink) {
             return true;
         }
 
-        Task currentTask = _tasks.pollFirst();
+        Task currentTask = tasks.pollFirst();
         if (currentTask == null) {
             clearTasks();
             return true;
@@ -935,7 +937,7 @@ public class DefaultAI extends CharacterAI {
 
         Player player = attacker.getPlayer();
 
-        if (player != null) { // FIXME Plugs 7 seals, the 7 seals attacking monster teleports the character to the nearest town
+        if (player != null) {
             if (((SevenSigns.INSTANCE.isSealValidationPeriod()) || (SevenSigns.INSTANCE.isCompResultsPeriod())) && (actor.isSevenSignsMonster()) && (Config.RETAIL_SS)) {
                 int pcabal = SevenSigns.INSTANCE.getPlayerCabal(player);
                 int wcabal = SevenSigns.INSTANCE.getCabalHighestScore();
@@ -945,12 +947,8 @@ public class DefaultAI extends CharacterAI {
                     return;
                 }
             }
-            List<QuestState> quests = player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST);
-            if (quests != null) {
-                for (QuestState qs : quests) {
-                    qs.getQuest().notifyAttack(actor, qs);
-                }
-            }
+            player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST)
+                    .forEach(qs -> qs.getQuest().notifyAttack(actor, qs));
         }
 
         // Добавляем только хейт, урон, если атакующий - игровой персонаж, будет добавлен в L2NpcInstance.onReduceCurrentHp
@@ -965,7 +963,7 @@ public class DefaultAI extends CharacterAI {
             if (!actor.isRunning()) {
                 startRunningTask(AI_TASK_ATTACK_DELAY);
             }
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
         }
 
         notifyFriends(attacker, damage);
@@ -989,7 +987,7 @@ public class DefaultAI extends CharacterAI {
             if (!actor.isRunning()) {
                 startRunningTask(AI_TASK_ATTACK_DELAY);
             }
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
         }
     }
 
@@ -1048,7 +1046,7 @@ public class DefaultAI extends CharacterAI {
         setAttackTimeout(Long.MAX_VALUE);
         setAttackTarget(null);
 
-        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 
         if (teleport) {
             actor.broadcastPacketToOthers(new MagicSkillUse(actor, 2036, 500));
@@ -1134,11 +1132,7 @@ public class DefaultAI extends CharacterAI {
             return false;
         }
 
-        if (target.getEffectList().getEffectsCountForSkill(skill.getId()) != 0) {
-            return false;
-        }
-
-        return true;
+        return target.getEffectList().getEffectsCountForSkill(skill.getId()) == 0;
     }
 
     private boolean canUseSkill(Skill sk, Creature target) {
@@ -1157,7 +1151,7 @@ public class DefaultAI extends CharacterAI {
     }
 
     protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, int skillId) {
-        addDesiredSkill(skillMap, target, distance, SkillTable.INSTANCE.getInfo(skillId));
+        addDesiredSkill(skillMap, target, distance, skillId, 1);
     }
 
     protected void addDesiredSkill(Map<Skill, Integer> skillMap, Creature target, double distance, Skill skill) {
@@ -1173,9 +1167,9 @@ public class DefaultAI extends CharacterAI {
         skillMap.put(skill, weight);
     }
 
-    protected Skill selectTopSkill(Map<Skill, Integer> skillMap) {
+    protected int selectTopSkill(Map<Skill, Integer> skillMap) {
         if ((skillMap == null) || skillMap.isEmpty()) {
-            return null;
+            return 0;
         }
         int nWeight, topWeight = Integer.MIN_VALUE;
         for (Skill next : skillMap.keySet()) {
@@ -1184,16 +1178,16 @@ public class DefaultAI extends CharacterAI {
             }
         }
         if (topWeight == Integer.MIN_VALUE) {
-            return null;
+            return 0;
         }
 
-        Skill[] skills = new Skill[skillMap.size()];
+        int[] skills = new int[skillMap.size()];
         nWeight = 0;
         for (Map.Entry<Skill, Integer> e : skillMap.entrySet()) {
             if (e.getValue() < topWeight) {
                 continue;
             }
-            skills[nWeight++] = e.getKey();
+            skills[nWeight++] = e.getKey().getId();
         }
         return skills[Rnd.get(nWeight)];
     }
@@ -1230,7 +1224,7 @@ public class DefaultAI extends CharacterAI {
 
             // Добавить новое задание
             if (skill.isOffensive()) {
-                addTaskCast(target, skill);
+                addTaskCast(target, skill.getId());
             } else {
                 addTaskBuff(target, skill);
             }
@@ -1267,8 +1261,8 @@ public class DefaultAI extends CharacterAI {
     }
 
     protected void clearTasks() {
-        _def_think = false;
-        _tasks.clear();
+        defThink = false;
+        tasks.clear();
     }
 
     /**
@@ -1341,35 +1335,22 @@ public class DefaultAI extends CharacterAI {
             }
 
             // Оповестить социальных мобов
-            for (NpcInstance npc : activeFactionTargets()) {
-                npc.getAI().notifyEvent(CtrlEvent.EVT_CLAN_ATTACKED, new Object[]
-                        {
-                                actor,
-                                attacker,
-                                damage
-                        });
-            }
+            activeFactionTargets()
+                    .forEach(npc -> npc.getAI().notifyEventClanAttack(actor, attacker, damage));
         }
     }
 
-    private List<NpcInstance> activeFactionTargets() {
+    private Stream<NpcInstance> activeFactionTargets() {
         NpcInstance actor = getActor();
         if (actor.getFaction().isNone()) {
-            return Collections.emptyList();
+            return Stream.empty();
         }
-        List<NpcInstance> npcFriends = new ArrayList<>();
-        for (NpcInstance npc : World.getAroundNpc(actor)) {
-            if (!npc.isDead()) {
-                if (npc.isInFaction(actor)) {
-                    if (npc.isInRangeZ(actor, npc.getFaction().getRange())) {
-                        if (GeoEngine.canSeeTarget(npc, actor, false)) {
-                            npcFriends.add(npc);
-                        }
-                    }
-                }
-            }
-        }
-        return npcFriends;
+        return World.getAroundNpc(actor)
+                .filter(npc -> !npc.isDead())
+                .filter(npc -> npc.isInFaction(actor))
+                .filter(npc -> npc.isInRangeZ(actor, npc.getFaction().getRange()))
+                .filter(npc -> GeoEngine.canSeeTarget(npc, actor, false));
+
     }
 
     boolean defaultThinkBuff(int rateSelf, int rateFriends) {
@@ -1393,20 +1374,13 @@ public class DefaultAI extends CharacterAI {
         }
 
         if (Rnd.chance(rateFriends)) {
-            for (NpcInstance npc : activeFactionTargets()) {
-                double targetHp = npc.getCurrentHpPercents();
+            return activeFactionTargets()
+                    .map(npc -> npc.getCurrentHpPercents() < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills))
+                    .filter(Objects::nonNull)
+                    .peek(skills -> addTaskBuff(actor, Rnd.get(skills)))
+                    .findFirst().isPresent();
 
-                List<Skill> skills = targetHp < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills);
-                if ((skills == null) || (skills.size() == 0)) {
-                    continue;
-                }
-
-                Skill skill = skills.get(Rnd.get(skills.size()));
-                addTaskBuff(actor, skill);
-                return true;
-            }
         }
-
         return false;
     }
 

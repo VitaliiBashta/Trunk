@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _420_LittleWings extends Quest implements ScriptFile {
+public final class _420_LittleWings extends Quest {
     // NPCs
     private static final int Cooper = 30829;
     private static final int Cronos = 30610;
@@ -391,19 +391,19 @@ public class _420_LittleWings extends Quest implements ScriptFile {
 
         if (npcId >= Exarion && npcId <= Shamhai) {
             if (cond == 5 && st.getQuestItemsCount(Juice_of_Monkshood) > 0)
-                return String.valueOf(npcId) + "-01.htm";
+                return npcId + "-01.htm";
             if (cond == 6 && st.getQuestItemsCount(getWyrmScale(npcId)) > 0) {
                 int egg_id = getWyrmEgg(npcId);
                 if (st.getQuestItemsCount(egg_id) < 20)
-                    return String.valueOf(npcId) + "-03.htm";
+                    return npcId + "-03.htm";
                 st.takeItems(getWyrmScale(npcId), -1);
                 st.takeItems(egg_id, -1);
                 st.giveItems(egg_id, 1);
                 st.setCond(7);
-                return String.valueOf(npcId) + "-04.htm";
+                return npcId + "-04.htm";
             }
             if (cond == 7 && st.getQuestItemsCount(getWyrmEgg(npcId)) == 1)
-                return String.valueOf(npcId) + "-05.htm";
+                return npcId + "-05.htm";
         }
 
         return "noquest";
@@ -441,18 +441,6 @@ public class _420_LittleWings extends Quest implements ScriptFile {
         }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private static int getWyrmScale(int npc_id) {

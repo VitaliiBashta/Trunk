@@ -152,7 +152,7 @@ public class BanditMessagerInstance extends NpcInstance {
 
             List<CTBSiegeClanObject> siegeClans = siegeEvent.getObjects(ClanHallTeamBattleEvent.ATTACKERS);
             for (int i = 0; i < 5; i++) {
-                CTBSiegeClanObject siegeClan = CollectionUtils.safeGet(siegeClans, i);
+                CTBSiegeClanObject siegeClan = siegeClans.get(i);
                 if (siegeClan != null)
                     msg.replace("%clan_" + i + "%", siegeClan.getClan().getName());
                 else

@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _192_SevenSignSeriesOfDoubt extends Quest implements ScriptFile {
+public final class _192_SevenSignSeriesOfDoubt extends Quest{
     // NPC
     private static final int CROOP = 30676;
     private static final int HECTOR = 30197;
@@ -114,17 +114,5 @@ public class _192_SevenSignSeriesOfDoubt extends Quest implements ScriptFile {
             if (cond == 7)
                 htmltext = "30191-01.htm";
         return htmltext;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

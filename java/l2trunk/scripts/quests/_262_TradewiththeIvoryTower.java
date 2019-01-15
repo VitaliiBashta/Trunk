@@ -6,9 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _262_TradewiththeIvoryTower extends Quest implements ScriptFile {
+public final class _262_TradewiththeIvoryTower extends Quest {
     //NPC
-    private final int VOLODOS = 30137;
+    private static final int VOLODOS = 30137;
 
     //MOB
     private final int GREEN_FUNGUS = 20007;
@@ -16,27 +16,13 @@ public class _262_TradewiththeIvoryTower extends Quest implements ScriptFile {
 
     private final int FUNGUS_SAC = 707;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _262_TradewiththeIvoryTower() {
         super(false);
 
         addStartNpc(VOLODOS);
-        addKillId(new int[]{
-                BLOOD_FUNGUS,
-                GREEN_FUNGUS
-        });
-        addQuestItem(new int[]{FUNGUS_SAC});
+        addKillId(BLOOD_FUNGUS,
+                GREEN_FUNGUS);
+        addQuestItem(FUNGUS_SAC);
     }
 
     @Override

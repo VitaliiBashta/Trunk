@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _313_CollectSpores extends Quest implements ScriptFile {
+public final class _313_CollectSpores extends Quest {
     //NPC
     private final int Herbiel = 30150;
     //Mobs
     private final int SporeFungus = 20509;
     //Quest Items
     private final int SporeSac = 1118;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _313_CollectSpores() {
         super(false);

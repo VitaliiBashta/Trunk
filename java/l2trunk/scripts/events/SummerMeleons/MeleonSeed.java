@@ -59,13 +59,6 @@ public final class MeleonSeed extends ScriptItemHandler implements ScriptFile {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     @Override
     public List<Integer> getItemIds() {

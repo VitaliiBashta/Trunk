@@ -2,6 +2,7 @@ package l2trunk.gameserver.handler.admincommands.impl;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
+import l2trunk.gameserver.ai.AIs;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
@@ -20,6 +21,8 @@ import java.lang.reflect.Constructor;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 
 public final class AdminSpawn implements IAdminCommandHandler {
@@ -54,7 +57,7 @@ public final class AdminSpawn implements IAdminCommandHandler {
                     String id = st.nextToken();
                     int mobCount = 1;
                     if (st.hasMoreTokens())
-                        mobCount = Integer.parseInt(st.nextToken());
+                        mobCount = toInt(st.nextToken());
                     spawnMonster(activeChar, id, 0, mobCount);
                 } catch (Exception e) {
                     // Case of wrong monster data
@@ -69,9 +72,9 @@ public final class AdminSpawn implements IAdminCommandHandler {
                     int respawnTime = 30;
                     int mobCount = 1;
                     if (st.hasMoreTokens())
-                        mobCount = Integer.parseInt(st.nextToken());
+                        mobCount = toInt(st.nextToken());
                     if (st.hasMoreTokens())
-                        respawnTime = Integer.parseInt(st.nextToken());
+                        respawnTime = toInt(st.nextToken());
                     spawnMonster(activeChar, id, respawnTime, mobCount);
                 } catch (Exception e) {
                     // Case of wrong monster data
@@ -91,24 +94,9 @@ public final class AdminSpawn implements IAdminCommandHandler {
                 }
                 String aiName = st.nextToken();
                 target = (NpcInstance) activeChar.getTarget();
+                target.setAI(AIs.getNewAI("ai." + aiName, target));
+                target.getAI().startAITask();
 
-                Constructor<? extends CharacterAI> aiConstructor = null;
-                if (!aiName.equalsIgnoreCase("npc")) {
-                    try {
-                        aiConstructor = Scripts.INSTANCE.getAI("l2trunk.gameserver.ai." + aiName).getConstructor(Creature.class);
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if (aiConstructor != null) {
-                    try {
-                        target.setAI(aiConstructor.newInstance(target));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    target.getAI().startAITask();
-                }
                 break;
             case admin_setaiparam:
                 if (activeChar.getTarget() == null || !activeChar.getTarget().isNpc()) {
@@ -170,54 +158,7 @@ public final class AdminSpawn implements IAdminCommandHandler {
                 }
                 break;
             case admin_generate_loc:
-                if (wordList.length < 2) {
-                    activeChar.sendMessage("Incorrect argument count!");
-                    return false;
-                }
 
-                int id = Integer.parseInt(wordList[1]);
-                int id2 = 0;
-                if (wordList.length > 2)
-                    id2 = Integer.parseInt(wordList[2]);
-
-                int min_x = Integer.MIN_VALUE;
-                int min_y = Integer.MIN_VALUE;
-                int min_z = Integer.MIN_VALUE;
-                int max_x = Integer.MAX_VALUE;
-                int max_y = Integer.MAX_VALUE;
-                int max_z = Integer.MAX_VALUE;
-
-                String name = "";
-
-                for (NpcInstance _npc : World.getAroundNpc(activeChar))
-                    if (_npc.getNpcId() == id || _npc.getNpcId() == id2) {
-                        name = _npc.getName();
-                        min_x = Math.min(min_x, _npc.getX());
-                        min_y = Math.min(min_y, _npc.getY());
-                        min_z = Math.min(min_z, _npc.getZ());
-                        max_x = Math.max(max_x, _npc.getX());
-                        max_y = Math.max(max_y, _npc.getY());
-                        max_z = Math.max(max_z, _npc.getZ());
-                    }
-
-                min_x -= 500;
-                min_y -= 500;
-                max_x += 500;
-                max_y += 500;
-
-                _log.info("(0,'" + name + "'," + min_x + "," + min_y + "," + min_z + "," + max_z + ",0),");
-                _log.info("(0,'" + name + "'," + min_x + "," + max_y + "," + min_z + "," + max_z + ",0),");
-                _log.info("(0,'" + name + "'," + max_x + "," + max_y + "," + min_z + "," + max_z + ",0),");
-                _log.info("(0,'" + name + "'," + max_x + "," + min_y + "," + min_z + "," + max_z + ",0),");
-
-                _log.info("delete from spawnlist where npc_templateid in (" + id + ", " + id2 + ")" + //
-                        " and locx <= " + min_x + //
-                        " and locy <= " + min_y + //
-                        " and locz <= " + min_z + //
-                        " and locx >= " + max_x + //
-                        " and locy >= " + max_y + //
-                        " and locz >= " + max_z + //
-                        ";");
                 break;
             case admin_dumpspawn:
                 st = new StringTokenizer(fullString, " ");
@@ -236,8 +177,8 @@ public final class AdminSpawn implements IAdminCommandHandler {
                         writer.write("<spawn count=\"1\" respawn=\"60\" respawn_random=\"0\" period_of_day=\"none\">\n\t"
                                 + "<point x=\"" + activeChar.getLoc().x + "\" y=\"" + activeChar.getLoc().y
                                 + "\" z=\"" + activeChar.getLoc().z + "\" h=\"" + activeChar.getLoc().h
-                                + "\" />\n\t" + "<npc id=\"" + Integer.parseInt(id3) + "\" /><!--"
-                                + NpcHolder.getTemplate(Integer.parseInt(id3)).getName() + "-->\n" + "</spawn>\n");
+                                + "\" />\n\t" + "<npc id=\"" + toInt(id3) + "\" /><!--"
+                                + NpcHolder.getTemplate(toInt(id3)).getName() + "-->\n" + "</spawn>\n");
                         writer.close();
                     } catch (Exception e) {
 
@@ -265,11 +206,11 @@ public final class AdminSpawn implements IAdminCommandHandler {
         int templateId;
         if (regexp.matches()) {
             // First parameter was an ID number
-            templateId = Integer.parseInt(monsterId);
+            templateId = toInt(monsterId);
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            templateId = NpcHolder.getTemplateByName(monsterId).npcId;
+            templateId = NpcHolder.getTemplateByName(monsterId).get(0).npcId;
         }
 
         SimpleSpawner spawn = new SimpleSpawner(templateId);

@@ -58,7 +58,7 @@ public class KamalokaBossInstance extends LostCaptainInstance {
     private class ManaRegen implements Runnable {
         @Override
         public void run() {
-            World.getAroundPlayers(KamalokaBossInstance.this).stream()
+            World.getAroundPlayers(KamalokaBossInstance.this)
                     .filter(p -> !p.isHealBlocked())
                     .forEach(p -> {
                         int newMp = getNewMp(p.getCurrentMp(), p.getMaxMp());

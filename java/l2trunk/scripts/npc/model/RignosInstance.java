@@ -11,7 +11,6 @@ import l2trunk.gameserver.utils.ItemFunctions;
 import java.util.concurrent.Future;
 
 public final class RignosInstance extends NpcInstance {
-
     private static final int RACE_STAMP = 10013;
     private static final int SECRET_KEY = 9694;
     private final static int SKILL_EVENT_TIMER = 5239;

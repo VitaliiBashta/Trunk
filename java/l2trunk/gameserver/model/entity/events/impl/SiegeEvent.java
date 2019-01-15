@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject> extends GlobalEvent {
     public static final String ATTACKERS = "attackers";
@@ -482,12 +483,12 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
     }
 
     @Override
-    public List<Player> broadcastPlayers(int range) {
+    public Stream<Player> broadcastPlayers(int range) {
         return itemObtainPlayers();
     }
 
     @Override
-    public List<Player> itemObtainPlayers() {
+    public Stream<Player> itemObtainPlayers() {
         List<Player> playersInZone = getPlayersInZone();
 
         List<Player> list = new ArrayList<>(playersInZone.size());
@@ -495,7 +496,7 @@ public abstract class SiegeEvent<R extends Residence, S extends SiegeClanObject>
             if (player.getEvent(getClass()) == this)
                 list.add(player);
         }
-        return list;
+        return list.stream();
     }
 
     public Location getEnterLoc(Player player) {

@@ -6,19 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _223_TestOfChampion extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _223_TestOfChampion extends Quest {
     /**
      * The Old Soldier's Friend
      * Veteran Ascalon asks you to find his old friend Mason in the southern part of Dion.

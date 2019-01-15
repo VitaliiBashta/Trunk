@@ -15,9 +15,8 @@ import l2trunk.gameserver.utils.Location;
  * - AI is tested and works.
  */
 public final class TriolsBeliever extends Mystic {
-    private boolean _tele = true;
-
     private static final Location[] locs = {new Location(-16128, -35888, -10726), new Location(-16397, -44970, -10724), new Location(-15729, -42001, -10724)};
+    private boolean tele = true;
 
     public TriolsBeliever(NpcInstance actor) {
         super(actor);
@@ -29,22 +28,21 @@ public final class TriolsBeliever extends Mystic {
         if (actor == null)
             return true;
 
-        for (Player player : World.getAroundPlayers(actor, 500, 500)) {
-            if (player == null || !player.isInParty())
-                continue;
+        World.getAroundPlayers(actor, 500, 500)
+                .filter(Player::isInParty)
+                .filter(p -> p.getParty().size() >= 5 && tele)
+                .forEach(p -> {
+                    tele = false;
+                    p.teleToLocation(Rnd.get(locs));
+                });
 
-            if (player.getParty().size() >= 5 && _tele) {
-                _tele = false;
-                player.teleToLocation(Rnd.get(locs));
-            }
-        }
 
         return true;
     }
 
     @Override
     public void onEvtDead(Creature killer) {
-        _tele = true;
+        tele = true;
         super.onEvtDead(killer);
     }
 }

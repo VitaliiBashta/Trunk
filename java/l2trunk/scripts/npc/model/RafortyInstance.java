@@ -5,10 +5,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-/**
- * @author B0nux
- */
-public class RafortyInstance extends NpcInstance {
+public final class RafortyInstance extends NpcInstance {
     private static final int FREYA_NECKLACE = 16025;
     private static final int BLESSED_FREYA_NECKLACE = 16026;
     private static final int BOTTLE_OF_FREYAS_SOUL = 16027;
@@ -22,17 +19,17 @@ public class RafortyInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("exchange_necklace_1")) {
+        if ("exchange_necklace_1".equalsIgnoreCase(command)) {
             if (ItemFunctions.getItemCount(player, FREYA_NECKLACE) > 0)
                 showChatWindow(player, "default/" + getNpcId() + "-ex4.htm");
             else
                 showChatWindow(player, "default/" + getNpcId() + "-ex6.htm");
-        } else if (command.equalsIgnoreCase("exchange_necklace_2")) {
+        } else if ("exchange_necklace_2".equalsIgnoreCase(command)) {
             if (ItemFunctions.getItemCount(player, BOTTLE_OF_FREYAS_SOUL) > 0)
                 showChatWindow(player, "default/" + getNpcId() + "-ex8.htm");
             else
                 showChatWindow(player, "default/" + getNpcId() + "-ex7.htm");
-        } else if (command.equalsIgnoreCase("exchange_necklace_3")) {
+        } else if ("exchange_necklace_3".equalsIgnoreCase(command)) {
             if (ItemFunctions.getItemCount(player, FREYA_NECKLACE) > 0 && ItemFunctions.getItemCount(player, BOTTLE_OF_FREYAS_SOUL) > 0) {
                 ItemFunctions.removeItem(player, FREYA_NECKLACE, 1, true, "RafortyInstance");
                 ItemFunctions.removeItem(player, BOTTLE_OF_FREYAS_SOUL, 1, true, "RafortyInstance");

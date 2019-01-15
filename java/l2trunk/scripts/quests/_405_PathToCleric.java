@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _405_PathToCleric extends Quest implements ScriptFile {
+public final class _405_PathToCleric extends Quest {
     //npc
     private final int GALLINT = 30017;
     private final int ZIGAUNT = 30022;
@@ -29,18 +28,6 @@ public class _405_PathToCleric extends Quest implements ScriptFile {
     private final int LEMONIELLS_COVENANT = 1200;
     private final int MARK_OF_FAITH = 1201;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _405_PathToCleric() {
         super(false);
 
@@ -55,8 +42,7 @@ public class _405_PathToCleric extends Quest implements ScriptFile {
         addKillId(RUIN_ZOMBIE);
         addKillId(RUIN_ZOMBIE_LEADER);
 
-        addQuestItem(new int[]{
-                LEMONIELLS_COVENANT,
+        addQuestItem(LEMONIELLS_COVENANT,
                 LETTER_OF_ORDER2,
                 BOOK_OF_PRAGA,
                 BOOK_OF_VIVI,
@@ -65,8 +51,7 @@ public class _405_PathToCleric extends Quest implements ScriptFile {
                 NECKLACE_OF_MOTHER,
                 PENDANT_OF_MOTHER,
                 CERTIFICATE_OF_GALLINT,
-                BOOK_OF_LEMONIELL
-        });
+                BOOK_OF_LEMONIELL);
     }
 
     private void checkBooks(QuestState st) {
@@ -89,9 +74,9 @@ public class _405_PathToCleric extends Quest implements ScriptFile {
                     htmltext = "gigon_q0405_02a.htm";
                 else
                     htmltext = "gigon_q0405_02.htm";
-            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().getId() == 0x0a)
+            } else if (st.getPlayer().getLevel() < 18)
                 htmltext = "gigon_q0405_03.htm";
-            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x0a && st.getQuestItemsCount(MARK_OF_FAITH) > 0)
+            else if (st.getQuestItemsCount(MARK_OF_FAITH) > 0)
                 htmltext = "gigon_q0405_04.htm";
         return htmltext;
     }
@@ -133,7 +118,6 @@ public class _405_PathToCleric extends Quest implements ScriptFile {
                     if (!st.getPlayer().getVarB("prof1")) {
                         st.getPlayer().setVar("prof1", "1", -1);
                         st.addExpAndSp(295862, 17964);
-                        //FIXME [G1ta0] дать адены, только если первый чар на акке
                         st.giveItems(ADENA_ID, 81900);
                     }
                 }

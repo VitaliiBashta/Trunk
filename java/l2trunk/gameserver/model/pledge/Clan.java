@@ -274,13 +274,10 @@ public final class Clan implements Iterable<UnitMember>, Comparable<Clan> {
     }
 
     public UnitMember getAnyMember(int id) {
-        for (SubUnit unit : getAllSubUnits()) {
-            UnitMember m = unit.getUnitMember(id);
-            if (m != null) {
-                return m;
-            }
-        }
-        return null;
+        return getAllSubUnits().stream()
+        .map(unit -> unit.getUnitMember(id))
+        .filter(Objects::nonNull)
+        .findFirst().orElse(null);
     }
 
     public UnitMember getAnyMember(String name) {

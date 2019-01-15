@@ -9,11 +9,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _698_BlocktheLordsEscape extends Quest implements ScriptFile {
+public final class _698_BlocktheLordsEscape extends Quest {
     // NPC
     private static final int TEPIOS = 32603;
     private static final int VesperNobleEnhanceStone = 14052;
@@ -52,8 +48,6 @@ public class _698_BlocktheLordsEscape extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        Player player = st.getPlayer();
-        int cond = st.getCond();
 
         if (event.equalsIgnoreCase("tepios_q698_3.htm")) {
             st.setState(STARTED);
@@ -63,15 +57,4 @@ public class _698_BlocktheLordsEscape extends Quest implements ScriptFile {
         return event;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

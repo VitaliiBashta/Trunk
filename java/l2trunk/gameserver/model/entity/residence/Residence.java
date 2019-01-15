@@ -133,11 +133,7 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public boolean checkIfInZone(Location loc, Reflection ref) {
-        return checkIfInZone(loc.x, loc.y, loc.z, ref);
-    }
-
-    public boolean checkIfInZone(int x, int y, int z, Reflection ref) {
-        return getZone() != null && getZone().checkIfInZone(x, y, z, ref);
+        return getZone() != null && getZone().checkIfInZone(loc, ref);
     }
 
     public void banishForeigner() {

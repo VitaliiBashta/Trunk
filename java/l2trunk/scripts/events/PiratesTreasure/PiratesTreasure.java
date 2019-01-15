@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class PiratesTreasure extends Functions implements ScriptFile {
-
     private static int id;
     private static String pointInfo;
     public static boolean eventStoped;
@@ -23,17 +22,7 @@ public final class PiratesTreasure extends Functions implements ScriptFile {
         LOG.info("Loaded Event: PiratesTreasure loaded.");
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    public void startEvent(String args[]) {
+    public void startEvent(String[] args) {
 
         Player player = getSelf();
         if (!player.getPlayerAccess().IsEventGm)

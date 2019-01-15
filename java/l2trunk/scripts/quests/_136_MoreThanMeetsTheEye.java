@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _136_MoreThanMeetsTheEye extends Quest implements ScriptFile {
+public final class _136_MoreThanMeetsTheEye extends Quest {
     //NPC
     private static final int HARDIN = 30832;
     private static final int ERRICKIN = 30701;
@@ -75,18 +75,6 @@ public class _136_MoreThanMeetsTheEye extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _136_MoreThanMeetsTheEye() {
         super(false);
 
@@ -95,13 +83,11 @@ public class _136_MoreThanMeetsTheEye extends Quest implements ScriptFile {
         addTalkId(ERRICKIN);
         addTalkId(CLAYTON);
 
-        addQuestItem(new int[]{
-                StabilizedEctoplasm,
+        addQuestItem(StabilizedEctoplasm,
                 HardinsInstructions,
                 BlankSealbook,
                 Ectoplasm,
-                GlassJaguarCrystal
-        });
+                GlassJaguarCrystal);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
     }

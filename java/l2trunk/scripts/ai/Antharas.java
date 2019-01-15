@@ -26,21 +26,21 @@ public final class Antharas extends DefaultAI {
     private static final int DESPAWN_TIME = 180 * 60 * 1000; // 3 часа = 180 минут
     private static long _minionsSpawnDelay = 0;
     // debuffs
-    private final int s_fear = 4108;
-    private final int s_fear2 = 5092;
-    private final int s_curse = 4109;
-    private final int s_paralyze = 4111;
+    private static final int s_fear = 4108;
+    private static final int s_fear2 = 5092;
+    private static final int s_curse = 4109;
+    private static final int s_paralyze = 4111;
     // damage skills
-    private final int s_shock = 4106;
-    private final int s_shock2 = 4107;
-    private final int s_antharas_ordinary_attack = 4112;
-    private final int s_antharas_ordinary_attack2 = 4113;
-    private final int s_meteor = 5093;
-    private final int s_breath = 4110;
+    private static final int s_shock = 4106;
+    private static final int s_shock2 = 4107;
+    private static final int s_antharas_ordinary_attack = 4112;
+    private static final int s_antharas_ordinary_attack2 = 4113;
+    private static final int s_meteor = 5093;
+    private static final int s_breath = 4110;
     // regen skills
-    private final int s_regen1 = 4239;
-    private final int s_regen2 = 4240;
-    private final int s_regen3 = 4241;
+    private static final int s_regen1 = 4239;
+    private static final int s_regen2 = 4240;
+    private static final int s_regen3 = 4241;
     private final List<NpcInstance> minions = new ArrayList<>();
     // Vars
     private int _hpStage = 0;
@@ -146,8 +146,8 @@ public final class Antharas extends DefaultAI {
                 break;
         }
 
-        Skill r_skill = selectTopSkill(d_skill);
-        if (r_skill != null && !r_skill.isOffensive())
+        int r_skill = selectTopSkill(d_skill);
+        if (r_skill != 0 && !SkillTable.INSTANCE.getInfo(r_skill).isOffensive())
             target = actor;
 
         return chooseTaskAndTargets(r_skill, target, distance);

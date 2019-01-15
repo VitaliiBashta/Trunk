@@ -1,37 +1,31 @@
 package l2trunk.gameserver.model.entity.events.actions;
 
 import l2trunk.gameserver.model.GameObject;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.EventAction;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 
-import java.util.List;
-
-public class PlaySoundAction implements EventAction {
-    private final int _range;
-    private final String _sound;
-    private final PlaySound.Type _type;
+public final class PlaySoundAction implements EventAction {
+    private final int range;
+    private final String sound;
+    private final PlaySound.Type type;
 
     public PlaySoundAction(int range, String s, PlaySound.Type type) {
-        _range = range;
-        _sound = s;
-        _type = type;
+        this.range = range;
+        sound = s;
+        this.type = type;
     }
 
     @Override
     public void call(GlobalEvent event) {
         GameObject object = event.getCenterObject();
-        PlaySound packet = null;
+        PlaySound packet;
         if (object != null)
-            packet = new PlaySound(_type, _sound, 1, object.getObjectId(), object.getLoc());
+            packet = new PlaySound(type, sound, 1, object.getObjectId(), object.getLoc());
         else
-            packet = new PlaySound(_type, _sound, 0, 0, 0, 0, 0);
+            packet = new PlaySound(type, sound, 0, 0, 0, 0, 0);
 
-        List<Player> players = event.broadcastPlayers(_range);
-        for (Player player : players) {
-            if (player != null)
-                player.sendPacket(packet);
-        }
+        event.broadcastPlayers(range)
+                .forEach(p -> p.sendPacket(packet));
     }
 }

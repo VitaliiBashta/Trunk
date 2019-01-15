@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class Say2C extends L2GameClientPacket {
     private static final Logger _log = LoggerFactory.getLogger(Say2C.class);
@@ -300,7 +301,7 @@ public final class Say2C extends L2GameClientPacket {
                 if (activeChar.isCursedWeaponEquipped()) {
                     Say2 cs3 = new Say2(activeChar.getObjectId(), _type, activeChar.getTransformationName(), _text);
 
-                    List<Player> list = null;
+                    List<Player> list = List.of();
 
                     if (activeChar.isInObserverMode() && activeChar.getObserverRegion() != null && activeChar.getOlympiadObserveGame() != null) {
                         OlympiadGame game = activeChar.getOlympiadObserveGame();
@@ -310,22 +311,14 @@ public final class Say2C extends L2GameClientPacket {
                         if (game != null)
                             list = game.getAllPlayers();
                     } else
-                        list = World.getAroundPlayers(activeChar);
+                        list = World.getAroundPlayers(activeChar).collect(Collectors.toList());
 
-                    if (list != null) {
-                        final boolean isGmInvis = activeChar.isInvisible() && activeChar.getAccessLevel() > 0;
-                        for (Player player : list) {
-                            if (player == activeChar || player.getReflection() != activeChar.getReflection() || player.isBlockAll() || player.isInBlockList(activeChar))
-                                continue;
-
-                            // Ady - If a gm talks in all when he is invisible, only other gms will be able to read him
-                            if (isGmInvis && player.getAccessLevel() < 1)
-                                continue;
-
-                            player.sendPacket(cs3);
-                        }
-                    }
-
+                    list.stream()
+                            .filter(p -> p != activeChar)
+                            .filter(p -> p.getReflection() == activeChar.getReflection())
+                            .filter(p -> !p.isBlockAll())
+                            .filter(p -> !p.isInBlockList(activeChar))
+                            .forEach(p -> p.sendPacket(cs3));
                     activeChar.sendPacket(cs3);
                 }
                 break;

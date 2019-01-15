@@ -39,10 +39,6 @@ public final class ServicesCommunity extends Functions implements ScriptFile, IC
     }
 
     @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public List<String> getBypassCommands() {
         return List.of("_bbsservices");
     }

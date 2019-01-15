@@ -4,15 +4,12 @@ import l2trunk.gameserver.handler.items.IItemHandler;
 import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
-import l2trunk.gameserver.network.serverpackets.Say2;
-import l2trunk.gameserver.network.serverpackets.components.ChatType;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public final class ACP implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Arrays.asList("acpon", "acpoff");
+    private static final List<String> COMMANDS = List.of("acpon", "acpoff");
 
     // @VoicedCommand "ACP": items id's
     private static final int ID_HEAL_CP = 5592;

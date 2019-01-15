@@ -66,14 +66,6 @@ public final class AprilFoolsDay extends Functions implements ScriptFile, OnDeat
     }
 
     @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public void onPlayerEnter(Player player) {
         if (_active)
             player.sendPacket(new ExBR_BroadcastEventState(ExBR_BroadcastEventState.APRIL_FOOLS_10, 1));

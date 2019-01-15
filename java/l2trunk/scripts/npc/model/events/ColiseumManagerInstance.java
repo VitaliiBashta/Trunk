@@ -58,9 +58,9 @@ public final class ColiseumManagerInstance extends ColiseumHelperInstance {
                 NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
                 msg.setFile("events/kerthang_manager003.htm");
                 for (int i = 0; i < 5; i++) {
-                    Player $player = CollectionUtils.safeGet(reg, i);
+                    Player pl = reg.get(i);
 
-                    msg.replace("%team" + i + "%", $player == null ? StringUtils.EMPTY : $player.getName());
+                    msg.replace("%team" + i + "%", pl == null ? StringUtils.EMPTY : pl.getName());
                 }
 
                 player.sendPacket(msg);

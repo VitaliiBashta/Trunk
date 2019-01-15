@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.entity;
 
 import l2trunk.commons.collections.StatsSet;
-import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.Config;
@@ -886,9 +885,9 @@ public enum SevenSigns {
             long dusk = SevenSignsFestival.INSTANCE.getHighestScore(CABAL_DUSK, i);
             long dawn = SevenSignsFestival.INSTANCE.getHighestScore(CABAL_DAWN, i);
             if (dusk > dawn)
-                _duskFestivalScore += SevenSignsFestival.FESTIVAL_LEVEL_SCORES[i];
+                _duskFestivalScore += SevenSignsFestival.FESTIVAL_LEVEL_SCORES.get(i);
             else if (dusk < dawn)
-                _dawnFestivalScore += SevenSignsFestival.FESTIVAL_LEVEL_SCORES[i];
+                _dawnFestivalScore += SevenSignsFestival.FESTIVAL_LEVEL_SCORES.get(i);
         }
     }
 
@@ -1160,10 +1159,10 @@ public enum SevenSigns {
             int mode = 0;
             if (SevenSigns.INSTANCE.getCurrentPeriod() == SevenSigns.PERIOD_SEAL_VALIDATION)
                 mode = SevenSigns.INSTANCE.getCabalHighestScore();
-
-            for (Listener listener : getListeners())
-                if (listener instanceof OnSSPeriodListener)
-                    ((OnSSPeriodListener) listener).onPeriodChange(mode);
+            int m = mode;
+            getListeners().filter(l -> l instanceof OnSSPeriodListener)
+                    .map(l -> (OnSSPeriodListener) l)
+                    .forEach(l -> l.onPeriodChange(m));
         }
     }
 

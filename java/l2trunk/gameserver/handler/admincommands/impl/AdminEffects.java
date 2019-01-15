@@ -16,6 +16,7 @@ import l2trunk.gameserver.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -92,8 +93,8 @@ public final class AdminEffects implements IAdminCommandHandler {
         switch (command) {
             case admin_earthquake:
                 try {
-                    int intensity = Integer.parseInt(wordList[1]);
-                    int duration = Integer.parseInt(wordList[2]);
+                    int intensity = toInt(wordList[1]);
+                    int duration = toInt(wordList[2]);
                     activeChar.broadcastPacket(new Earthquake(activeChar.getLoc(), intensity, duration));
                 } catch (Exception e) {
                     activeChar.sendMessage("USAGE: //earthquake intensity duration");
@@ -113,7 +114,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                             .forEach(targets::add);
 
                 } else if (wordList.length == 2) {
-                    int radius = Integer.parseInt(wordList[1]);
+                    int radius = toInt(wordList[1]);
                     targets.addAll(World.getAroundPlayables(activeChar, radius, 500));
                 } else if (target == null || !target.isCreature()) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
@@ -121,7 +122,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 } else {
                     targets.add((Creature) activeChar.getTarget());
                     if (wordList.length >= 3) {
-                        minutes = Integer.parseInt(wordList[1]);
+                        minutes = toInt(wordList[1]);
                         StringBuilder reasonBuilder = new StringBuilder();
                         for (int i = 2; i < wordList.length; i++)
                             reasonBuilder.append(wordList[i]).append(' ');
@@ -176,25 +177,23 @@ public final class AdminEffects implements IAdminCommandHandler {
             case admin_flag:
                 targets = new ArrayList<>();
                 if (wordList.length > 1) {
-                    int radius = Integer.parseInt(wordList[1]);
-                    targets.addAll(World.getAroundPlayers(activeChar, radius, 500));
+                    int radius = toInt(wordList[1]);
+                    targets = World.getAroundPlayers(activeChar, radius, 500).collect(Collectors.toList());
                 } else if (target == null || !target.isPlayer()) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
                 } else {
                     targets.add((Player) activeChar.getTarget());
                 }
+                targets.forEach(c -> c.getPlayer().startPvPFlag(c.getPlayer()));
 
-                for (Creature c : targets) {
-                    c.getPlayer().startPvPFlag(c.getPlayer());
-                }
                 activeChar.sendMessage("Targets flagged");
                 break;
             case admin_unflag:
                 targets = new ArrayList<>();
                 if (wordList.length > 1) {
-                    int radius = Integer.parseInt(wordList[1]);
-                    targets.addAll(World.getAroundPlayers(activeChar, radius, 500));
+                    int radius = toInt(wordList[1]);
+                    targets = World.getAroundPlayers(activeChar, radius, 500).collect(Collectors.toList());
                 } else if (target == null || !target.isPlayer()) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return false;
@@ -241,7 +240,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                     val = Rnd.get(1, 7);
                 else
                     try {
-                        val = Integer.parseInt(wordList[1]);
+                        val = toInt(wordList[1]);
                     } catch (NumberFormatException nfe) {
                         activeChar.sendMessage("USAGE: //social value");
                         return false;
@@ -283,7 +282,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_transform:
                 try {
-                    val = Integer.parseInt(wordList[1]);
+                    val = toInt(wordList[1]);
                 } catch (Exception e) {
                     activeChar.sendMessage("USAGE: //transform transform_id");
                     return false;

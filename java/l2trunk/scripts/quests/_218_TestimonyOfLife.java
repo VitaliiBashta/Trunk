@@ -8,16 +8,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _218_TestimonyOfLife extends Quest implements ScriptFile {
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
+public final class _218_TestimonyOfLife extends Quest {
     private static final int MARK_OF_LIFE = 3140;
     private static final int CARDIENS_LETTER = 3141;
     private static final int CAMOMILE_CHARM = 3142;
@@ -81,8 +72,7 @@ public class _218_TestimonyOfLife extends Quest implements ScriptFile {
         addKillId(20087);
         addKillId(20088);
 
-        addQuestItem(new int[]{
-                CAMOMILE_CHARM,
+        addQuestItem(CAMOMILE_CHARM,
                 CARDIENS_LETTER,
                 WATER_OF_LIFE,
                 MOONFLOWER_CHARM,
@@ -107,8 +97,7 @@ public class _218_TestimonyOfLife extends Quest implements ScriptFile {
                 TALINS_AMETHYST,
                 TALINS_PERIDOT,
                 ISAELS_INSTRUCTIONS,
-                GRAIL_OF_PURITY
-        });
+                GRAIL_OF_PURITY);
     }
 
     @Override

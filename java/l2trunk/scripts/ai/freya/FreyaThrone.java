@@ -4,15 +4,14 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
-import l2trunk.gameserver.tables.SkillTable;
 
 public final class FreyaThrone extends Fighter {
     private static final int Skill_IceBall = 6278; // Мощный клинок льда по Топ дамагеру
@@ -24,7 +23,7 @@ public final class FreyaThrone extends Fighter {
     private final int _eternalblizzardReuseDelay = 60; // Откат умения в секундах ()
     private long _eternalblizzardReuseTimer = 0; // Таймер отката умения
     private long _iceballReuseTimer = 0;
-    private long _summonReuseTimer = 0;
+    private long summonReuseTimer = 0;
     private long _selfnovaReuseTimer = 0;
     private long _deathsentenceReuseTimer = 0;
     private long _angerReuseTimer = 0;
@@ -47,8 +46,8 @@ public final class FreyaThrone extends Fighter {
         if (!actor.isCastingNow() && _eternalblizzardReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_EternalBlizzard, actor, true);
             Reflection r = getActor().getReflection();
-            for (Player p : r.getPlayers())
-                p.sendPacket(new ExShowScreenMessage(NpcString.I_FEEL_STRONG_MAGIC_FLOW, 3000, ScreenMessageAlign.MIDDLE_CENTER, true));
+            r.getPlayers().forEach(p ->
+                    p.sendPacket(new ExShowScreenMessage(NpcString.I_FEEL_STRONG_MAGIC_FLOW, 3000, ScreenMessageAlign.MIDDLE_CENTER, true)));
             _eternalblizzardReuseTimer = System.currentTimeMillis() + _eternalblizzardReuseDelay * 1000L;
         }
 
@@ -65,12 +64,11 @@ public final class FreyaThrone extends Fighter {
 
         // Summon Buff Cast
         int _summonChance = 70;
-        if (!actor.isCastingNow() && _summonReuseTimer < System.currentTimeMillis() && Rnd.chance(_summonChance)) {
+        if (!actor.isCastingNow() && summonReuseTimer < System.currentTimeMillis() && Rnd.chance(_summonChance)) {
             actor.doCast(Skill_SummonElemental, actor, true);
-            for (NpcInstance guard : getActor().getAroundNpc(800, 100))
-                guard.altOnMagicUseTimer(guard, Skill_SummonElemental);
-            int _summonReuseDelay = 60;
-            _summonReuseTimer = System.currentTimeMillis() + _summonReuseDelay * 1000L;
+            getActor().getAroundNpc(800, 100)
+                    .forEach(guard -> guard.altOnMagicUseTimer(guard, Skill_SummonElemental));
+            summonReuseTimer = System.currentTimeMillis() + 60 * 1000L;
         }
 
         // Self Nova
@@ -110,9 +108,11 @@ public final class FreyaThrone extends Fighter {
         // Оповещение минионов
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
-            for (NpcInstance npc : actor.getReflection().getNpcs())
-                if (npc.isMonster() && npc != actor)
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggroList().getMostHated(), 5);
+            actor.getReflection().getNpcs()
+                    .filter(GameObject::isMonster)
+                    .filter(npc -> npc != actor)
+                    .forEach(npc ->
+                            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggroList().getMostHated(), 5));
         }
         super.thinkAttack();
     }
@@ -131,14 +131,14 @@ public final class FreyaThrone extends Fighter {
         long generalReuse = System.currentTimeMillis() + 40000L;
         _eternalblizzardReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
         _iceballReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
-        _summonReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
+        summonReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
         _selfnovaReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
         _deathsentenceReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
         _angerReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
 
         Reflection r = getActor().getReflection();
-        for (Player p : r.getPlayers())
-            this.notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 2);
+        r.getPlayers().forEach(p ->
+            this.notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 2));
     }
 
     @Override
@@ -149,8 +149,8 @@ public final class FreyaThrone extends Fighter {
         Reflection ref = getActor().getReflection();
         if (!getActor().isDead() && _idleDelay > 0 && _idleDelay + 60000 < System.currentTimeMillis())
             if (!ref.isDefault()) {
-                for (Player p : ref.getPlayers())
-                    p.sendMessage(new CustomMessage("scripts.ai.freya.FreyaFailure", p));
+                ref.getPlayers().forEach(p ->
+                    p.sendMessage(new CustomMessage("scripts.ai.freya.FreyaFailure", p)));
                 ref.collapse();
             }
 

@@ -6,10 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _169_OffspringOfNightmares extends Quest implements ScriptFile {
+public final class _169_OffspringOfNightmares extends Quest {
     //NPC
     private static final int Vlasty = 30145;
     //QuestItem
@@ -21,18 +20,6 @@ public class _169_OffspringOfNightmares extends Quest implements ScriptFile {
     private static final int DarkHorror = 20105;
     private static final int LesserDarkHorror = 20025;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _169_OffspringOfNightmares() {
         super(false);
 
@@ -43,10 +30,8 @@ public class _169_OffspringOfNightmares extends Quest implements ScriptFile {
         addKillId(DarkHorror);
         addKillId(LesserDarkHorror);
 
-        addQuestItem(new int[]{
-                CrackedSkull,
-                PerfectSkull
-        });
+        addQuestItem(CrackedSkull,
+                PerfectSkull);
     }
 
     @Override

@@ -73,7 +73,7 @@ public final class Gordon extends Fighter {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             if (doTask())
                 clearTasks();
             return true;

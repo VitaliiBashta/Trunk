@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.RaidBossInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class YehanBrotherInstance extends RaidBossInstance {
+public final class YehanBrotherInstance extends RaidBossInstance {
     public YehanBrotherInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -32,9 +32,9 @@ public class YehanBrotherInstance extends RaidBossInstance {
             brotherId = 25666;
         else if (getNpcId() == 25666)
             brotherId = 25665;
-        for (NpcInstance npc : getReflection().getNpcs())
-            if (npc.getNpcId() == brotherId)
-                return npc;
-        return null;
+        int id = brotherId;
+        return getReflection().getNpcs()
+                .filter(npc -> getNpcId() == id)
+                .findFirst().orElse(null);
     }
 }

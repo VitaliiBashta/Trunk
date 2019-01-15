@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AntiGrief implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Arrays.asList("buffshield", "buffShield");
+    private static final List<String> COMMANDS = List.of("buffshield", "buffShield");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {

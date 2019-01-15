@@ -5,15 +5,13 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
-import l2trunk.gameserver.tables.SkillTable;
 
 public final class FreyaStandNormal extends Fighter {
     private static final int Skill_EternalBlizzard = 6274; // Мощнейшая атака ледяного урагана с силой 38к по площади в 3000 радиуса
@@ -60,8 +58,8 @@ public final class FreyaStandNormal extends Fighter {
         if (!actor.isCastingNow() && _eternalblizzardReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_EternalBlizzard, actor, true);
             Reflection r = getActor().getReflection();
-            for (Player p : r.getPlayers())
-                p.sendPacket(new ExShowScreenMessage(NpcString.I_FEEL_STRONG_MAGIC_FLOW, 3000, ScreenMessageAlign.MIDDLE_CENTER, true));
+            r.getPlayers().forEach(p ->
+                    p.sendPacket(new ExShowScreenMessage(NpcString.I_FEEL_STRONG_MAGIC_FLOW, 3000, ScreenMessageAlign.MIDDLE_CENTER, true)));
             // Откат умения в секундах
             int _eternalblizzardReuseDelay = 60;
             _eternalblizzardReuseTimer = System.currentTimeMillis() + _eternalblizzardReuseDelay * 1000L;
@@ -143,9 +141,10 @@ public final class FreyaStandNormal extends Fighter {
         // Оповещение минионов
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
-            for (NpcInstance npc : actor.getReflection().getNpcs())
-                if (npc.isMonster() && npc != actor)
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggroList().getMostHated(), 5);
+            actor.getReflection().getNpcs()
+                    .filter(GameObject::isMonster)
+                    .filter(npc -> npc != actor)
+                    .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggroList().getMostHated(), 5));
         }
         super.thinkAttack();
     }
@@ -166,8 +165,8 @@ public final class FreyaStandNormal extends Fighter {
         _angerReuseTimer += generalReuse + Rnd.get(1, 20) * 1000L;
 
         Reflection r = getActor().getReflection();
-        for (Player p : r.getPlayers())
-            this.notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 2);
+        r.getPlayers().forEach(p ->
+                this.notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 2));
     }
 
     @Override
@@ -178,8 +177,8 @@ public final class FreyaStandNormal extends Fighter {
         Reflection ref = getActor().getReflection();
         if (!getActor().isDead() && _idleDelay > 0 && _idleDelay + 60000 < System.currentTimeMillis())
             if (!ref.isDefault()) {
-                for (Player p : ref.getPlayers())
-                    p.sendMessage(new CustomMessage("scripts.ai.freya.FreyaFailure", p));
+                ref.getPlayers().forEach(p ->
+                        p.sendMessage(new CustomMessage("scripts.ai.freya.FreyaFailure", p)));
                 ref.collapse();
             }
 

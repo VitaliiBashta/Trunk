@@ -9,8 +9,6 @@ import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.Hero;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-import java.util.List;
-
 public class AdminTeam implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
@@ -26,10 +24,10 @@ public class AdminTeam implements IAdminCommandHandler {
         }
 
         if (range > 0) {
-            List<Player> aroundPlayer = World.getAroundPlayers(activeChar, range, 500);
-            for (Player player : aroundPlayer)
-                player.setTeam(team);
-            activeChar.sendMessage("You have changed Team of " + aroundPlayer.size() + " Players!");
+            TeamType team1 = team;
+            World.getAroundPlayers(activeChar, range, 500)
+                    .forEach(p -> p.setTeam(team1));
+            activeChar.sendMessage("You have changed Team");
         } else {
             GameObject object = activeChar.getTarget();
             if (object == null || !object.isCreature()) {

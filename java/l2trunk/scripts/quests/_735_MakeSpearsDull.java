@@ -3,14 +3,9 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class _735_MakeSpearsDull extends Dominion_KillSpecialUnitQuest {
-    public _735_MakeSpearsDull() {
-        super();
-    }
-
+public final class _735_MakeSpearsDull extends Dominion_KillSpecialUnitQuest {
     @Override
     protected NpcString startNpcString() {
         return NpcString.DEFEAT_S1_WARRIORS_AND_ROGUES;
@@ -38,7 +33,7 @@ public class _735_MakeSpearsDull extends Dominion_KillSpecialUnitQuest {
 
     @Override
     protected List<ClassId> getTargetClassIds() {
-        return Arrays.asList(
+        return List.of(
                 ClassId.gladiator,
                 ClassId.warlord,
                 ClassId.treasureHunter,

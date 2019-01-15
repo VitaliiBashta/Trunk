@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _125_InTheNameOfEvilPart1 extends Quest implements ScriptFile {
+public final class _125_InTheNameOfEvilPart1 extends Quest {
     private final int Mushika = 32114;
     private final int Karakawei = 32117;
     private final int UluKaimu = 32119;
@@ -15,15 +15,6 @@ public class _125_InTheNameOfEvilPart1 extends Quest implements ScriptFile {
     private final int ChutaKaimu = 32121;
     private final int OrClaw = 8779;
     private final int DienBone = 8780;
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
 
     public _125_InTheNameOfEvilPart1() {
         super(false);

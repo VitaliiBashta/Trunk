@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _153_DeliverGoods extends Quest implements ScriptFile {
+public final class _153_DeliverGoods extends Quest {
     private final int DELIVERY_LIST = 1012;
     private final int HEAVY_WOOD_BOX = 1013;
     private final int CLOTH_BUNDLE = 1014;
@@ -13,19 +13,7 @@ public class _153_DeliverGoods extends Quest implements ScriptFile {
     private final int JACKSONS_RECEIPT = 1016;
     private final int SILVIAS_RECEIPT = 1017;
     private final int RANTS_RECEIPT = 1018;
-    private final int RING_OF_KNOWLEDGE = 875;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int RING_OF_KNOWLEDGE = 875;
 
     public _153_DeliverGoods() {
         super(false);
@@ -36,15 +24,13 @@ public class _153_DeliverGoods extends Quest implements ScriptFile {
         addTalkId(30003);
         addTalkId(30054);
 
-        addQuestItem(new int[]{
-                HEAVY_WOOD_BOX,
+        addQuestItem(HEAVY_WOOD_BOX,
                 CLOTH_BUNDLE,
                 CLAY_POT,
                 DELIVERY_LIST,
                 JACKSONS_RECEIPT,
                 SILVIAS_RECEIPT,
-                RANTS_RECEIPT
-        });
+                RANTS_RECEIPT);
     }
 
     @Override

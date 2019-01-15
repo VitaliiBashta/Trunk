@@ -4,26 +4,13 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _295_DreamsOfTheSkies extends Quest implements ScriptFile {
+public final class _295_DreamsOfTheSkies extends Quest {
     private static final int FLOATING_STONE = 1492;
     private static final int RING_OF_FIREFLY = 1509;
 
     private static final int Arin = 30536;
     private static final int MagicalWeaver = 20153;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _295_DreamsOfTheSkies() {
         super(false);

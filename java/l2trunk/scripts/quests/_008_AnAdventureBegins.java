@@ -4,29 +4,14 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _008_AnAdventureBegins extends Quest implements ScriptFile {
+public final class _008_AnAdventureBegins extends Quest {
+    private static final int SCROLL_OF_ESCAPE_GIRAN = 7126;
+    private static final int MARK_OF_TRAVELER = 7570;
     private final int JASMINE = 30134;
     private final int ROSELYN = 30355;
     private final int HARNE = 30144;
-
     private final int ROSELYNS_NOTE = 7573;
-
-    private final int SCROLL_OF_ESCAPE_GIRAN = 7126;
-    private final int MARK_OF_TRAVELER = 7570;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _008_AnAdventureBegins() {
         super(false);

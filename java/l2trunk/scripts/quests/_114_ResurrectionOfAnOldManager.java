@@ -6,12 +6,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _114_ResurrectionOfAnOldManager extends Quest implements ScriptFile {
+public final class _114_ResurrectionOfAnOldManager extends Quest {
     // NPC
     private static final int NEWYEAR = 31961;
     private static final int YUMI = 32041;
@@ -30,15 +29,6 @@ public class _114_ResurrectionOfAnOldManager extends Quest implements ScriptFile
     private static final int STARSTONE2 = 8289;
 
     private NpcInstance GUARDIAN_SPAWN = null;
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
 
     public _114_ResurrectionOfAnOldManager() {
         super(false);

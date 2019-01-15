@@ -12,7 +12,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptFile {
+public final class _10292_SevenSignsGirlOfDoubt extends Quest {
     // NPC
     private static final int WOOD = 32593;
     private static final int FRANZ = 32597;
@@ -20,7 +20,7 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptF
     private static final int HARDIN = 30832;
 
     // MOBD
-    private static final List<Integer> MOBS_1 = Arrays.asList(22801, 22802, 22803, 22804, 22805, 22806);
+    private static final List<Integer> MOBS_1 = List.of(22801, 22802, 22803, 22804, 22805, 22806);
     private static final int CREATURE_OF_THE_DUSK_1 = 27422;
     private static final int CREATURE_OF_THE_DUSK_2 = 27424;
 
@@ -172,17 +172,5 @@ public final class _10292_SevenSignsGirlOfDoubt extends Quest implements ScriptF
         } else if (player.canEnterInstance(145)) {
             ReflectionUtils.enterReflection(player, 145);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

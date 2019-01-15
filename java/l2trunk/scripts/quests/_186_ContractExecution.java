@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _186_ContractExecution extends Quest implements ScriptFile {
+public final class _186_ContractExecution extends Quest {
     private static final int Luka = 31437;
     private static final int Lorain = 30673;
     private static final int Nikola = 30621;
@@ -23,18 +23,6 @@ public class _186_ContractExecution extends Quest implements ScriptFile {
     private static final int LetoLizardmanShaman = 20581;
     private static final int LetoLizardmanOverlord = 20582;
     private static final int TimakOrc = 20583;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _186_ContractExecution() {
         super(false);

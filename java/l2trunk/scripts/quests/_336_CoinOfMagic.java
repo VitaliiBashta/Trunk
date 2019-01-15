@@ -299,7 +299,7 @@ public final class _336_CoinOfMagic extends Quest {
                 LORAIN
         );
 
-        for (int mob[] : DROPLIST)
+        for (int[] mob : DROPLIST)
             addKillId(mob[0]);
 
         addKillId(UNKNOWN);
@@ -413,7 +413,7 @@ public final class _336_CoinOfMagic extends Quest {
             else if (grade == 3)
                 htmltext = "30702-05.htm";
         } else
-            for (int e[] : EXCHANGE_LEVEL)
+            for (int[] e : EXCHANGE_LEVEL)
                 if (npcId == e[0] && grade <= e[1])
                     htmltext = npcId + "-01.htm";
         return htmltext;

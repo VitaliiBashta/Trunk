@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.network.clientpackets.Say2C;
 import l2trunk.gameserver.network.serverpackets.CreatureSay;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.tables.GmListTable;
@@ -118,9 +117,9 @@ public final class AdminPanel implements IAdminCommandHandler {
 
                 if (st.hasMoreTokens())
                     text = fullString.substring(14);
-
-                for (Player player : World.getAroundPlayers(activeChar))
-                    player.sendPacket(new CreatureSay(target.getObjectId(), 0, target.getName(), text));
+                String t = text;
+                World.getAroundPlayers(activeChar)
+                        .forEach(pl -> pl.sendPacket(new CreatureSay(target.getObjectId(), 0, target.getName(), t)));
 
                 activeChar.sendPacket(new CreatureSay(target.getObjectId(), 0, target.getName(), text));
                 html = new NpcHtmlMessage(5);
@@ -131,7 +130,6 @@ public final class AdminPanel implements IAdminCommandHandler {
             case admin_sendexmsg:
 
                 String text2 = fullString.substring(15);
-
                 if (!text2.isEmpty()) {
                     world.forEach(pl ->
                             pl.sendPacket(new ExShowScreenMessage(text2)));
@@ -146,7 +144,7 @@ public final class AdminPanel implements IAdminCommandHandler {
 
                 text = fullString.substring(15);
 
-                if (!text.equals("")) {
+                if (!"".equals(text)) {
                     String text3 = text.substring(1);
                     world.forEach(player -> player.sendPacket(new CreatureSay(0, 15, activeChar.getName(), text3)));
                 }

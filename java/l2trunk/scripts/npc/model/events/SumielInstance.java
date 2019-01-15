@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class SumielInstance extends NpcInstance {
     private final int i_quest9 = 0;
@@ -261,13 +262,12 @@ public final class SumielInstance extends NpcInstance {
         getAroundFurnface().forEach(npc -> npc.setActive2114001(ai));
     }
 
-    private List<FurnfaceInstance> getAroundFurnface() {
-        return GameObjectsStorage.getAllNpcs().stream()
+    private Stream<FurnfaceInstance> getAroundFurnface() {
+        return GameObjectsStorage.getAllNpcs()
                 .filter(Objects::nonNull)
                 .filter(npc -> npc.getNpcId() == 18913)
                 .filter(npc -> getDistance(npc) <= 1200)
-                .map(npc -> (FurnfaceInstance) npc)
-                .collect(Collectors.toList());
+                .map(npc -> (FurnfaceInstance) npc);
     }
 
 
@@ -381,7 +381,7 @@ public final class SumielInstance extends NpcInstance {
         public void runImpl() {
             NpcInstance npc1 = GameObjectsStorage.getAsNpc(storedId);
             Functions.npcShout(npc1, NpcString.FURNFACE4);
-            GameObjectsStorage.getAllNpcs().stream()
+            GameObjectsStorage.getAllNpcs()
                     .filter(Objects::nonNull)
                     .filter(npc -> npc.getNpcId() == 18913)
                     .filter(npc -> getDistance(npc) <= 1200)

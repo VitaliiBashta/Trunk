@@ -4,46 +4,29 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _038_DragonFangs extends Quest implements ScriptFile {
+public final class _038_DragonFangs extends Quest {
+    //MOBS
+    private static final int LANGK_LIZARDMAN_LIEUTENANT = 20357;
+    private static final int LANGK_LIZARDMAN_SENTINEL = 21100;
+    private static final int LANGK_LIZARDMAN_LEADER = 20356;
+    private static final int LANGK_LIZARDMAN_SHAMAN = 21101;
+    //CHANCE FOR DROP
+    private static final int CHANCE_FOR_QUEST_ITEMS = 100; // 100%???
+    //REWARD
+    private static final int BONE_HELMET = 45;
+    private static final int ASSAULT_BOOTS = 1125;
+    private static final int BLUE_BUCKSKIN_BOOTS = 1123;
     //NPC
     private final int ROHMER = 30344;
     private final int LUIS = 30386;
     private final int IRIS = 30034;
-
     //QUEST ITEM
     private final int FEATHER_ORNAMENT = 7173;
     private final int TOOTH_OF_TOTEM = 7174;
     private final int LETTER_OF_IRIS = 7176;
     private final int LETTER_OF_ROHMER = 7177;
     private final int TOOTH_OF_DRAGON = 7175;
-
-    //MOBS
-    private final int LANGK_LIZARDMAN_LIEUTENANT = 20357;
-    private final int LANGK_LIZARDMAN_SENTINEL = 21100;
-    private final int LANGK_LIZARDMAN_LEADER = 20356;
-    private final int LANGK_LIZARDMAN_SHAMAN = 21101;
-
-    //CHANCE FOR DROP
-    private final int CHANCE_FOR_QUEST_ITEMS = 100; // 100%???
-
-    //REWARD
-    private final int BONE_HELMET = 45;
-    private final int ASSAULT_BOOTS = 1125;
-    private final int BLUE_BUCKSKIN_BOOTS = 1123;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _038_DragonFangs() {
         super(false);
@@ -129,8 +112,7 @@ public class _038_DragonFangs extends Quest implements ScriptFile {
             if (st.getPlayer().getLevel() < 19) {
                 htmltext = "guard_luis_q0038_0102.htm";
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getLevel() >= 19)
-                htmltext = "guard_luis_q0038_0101.htm";
+            } else htmltext = "guard_luis_q0038_0101.htm";
         if (npcId == LUIS && cond == 1)
             htmltext = "guard_luis_q0038_0202.htm";
         if (npcId == LUIS && cond == 2 && st.getQuestItemsCount(FEATHER_ORNAMENT) == 100)

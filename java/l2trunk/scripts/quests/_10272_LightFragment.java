@@ -7,12 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author: pchayka
- * @date: 10.06.2010
- */
-
-public class _10272_LightFragment extends Quest implements ScriptFile {
+public final class _10272_LightFragment extends Quest {
     // NPC's
     private static final int Orbyu = 32560;
     private static final int Artius = 32559;
@@ -29,18 +24,6 @@ public class _10272_LightFragment extends Quest implements ScriptFile {
 
     private static final Location LELIKIA_POSITION = new Location(-170936, 247768, 1102);
     private static final Location BASE_POSITION = new Location(-185032, 242824, 1553);
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10272_LightFragment() {
         super(true);

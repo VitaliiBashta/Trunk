@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _042_HelpTheUncle extends Quest implements ScriptFile {
+public final class _042_HelpTheUncle extends Quest {
     private static final int WATERS = 30828;
     private static final int SOPHYA = 30735;
 
@@ -18,18 +17,6 @@ public class _042_HelpTheUncle extends Quest implements ScriptFile {
     private static final int MONSTER_EYE_GAZER = 20266;
 
     private static final int MAX_COUNT = 30;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _042_HelpTheUncle() {
         super(false);

@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _319_ScentOfDeath extends Quest implements ScriptFile {
+public final class _319_ScentOfDeath extends Quest {
     //NPC
     private static final int MINALESS = 30138;
     //Item

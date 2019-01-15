@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _117_OceanOfDistantStar extends Quest implements ScriptFile {
+public final class _117_OceanOfDistantStar extends Quest {
     //NPC
     private static final int Abey = 32053;
     private static final int GhostEngineer = 32055;
@@ -19,18 +19,6 @@ public class _117_OceanOfDistantStar extends Quest implements ScriptFile {
     //Mobs
     private static final int BanditWarrior = 22023;
     private static final int BanditInspector = 22024;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _117_OceanOfDistantStar() {
         super(false);
@@ -45,10 +33,8 @@ public class _117_OceanOfDistantStar extends Quest implements ScriptFile {
         addKillId(BanditWarrior);
         addKillId(BanditInspector);
 
-        addQuestItem(new int[]{
-                BookOfGreyStar,
-                EngravedHammer
-        });
+        addQuestItem(BookOfGreyStar,
+                EngravedHammer);
     }
 
     @Override

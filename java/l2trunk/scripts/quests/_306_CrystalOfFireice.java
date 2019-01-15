@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _306_CrystalOfFireice extends Quest implements ScriptFile {
+public final class _306_CrystalOfFireice extends Quest {
     //NPCs
     private static final int Katerina = 30004;
     //Mobs
@@ -99,15 +98,4 @@ public class _306_CrystalOfFireice extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

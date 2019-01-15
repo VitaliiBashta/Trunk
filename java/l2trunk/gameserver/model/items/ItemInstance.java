@@ -408,7 +408,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         if (player.isCursedWeaponEquipped() && CursedWeaponsManager.INSTANCE.isCursed(itemId))
             return;
 
-        player.getAI().setIntention(CtrlIntention.AI_INTENTION_PICK_UP, this, null);
+        player.getAI().setIntention(CtrlIntention.AI_INTENTION_PICK_UP, this);
     }
 
     public boolean isAugmented() {

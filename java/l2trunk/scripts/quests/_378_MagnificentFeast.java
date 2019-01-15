@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _378_MagnificentFeast extends Quest implements ScriptFile {
+public final class _378_MagnificentFeast extends Quest {
     // NPCs
     private static final int RANSPO = 30594;
     // Items
@@ -182,17 +182,5 @@ public class _378_MagnificentFeast extends Quest implements ScriptFile {
         }
 
         return htmltext;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

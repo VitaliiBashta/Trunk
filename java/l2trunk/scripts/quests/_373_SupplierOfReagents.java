@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _373_SupplierOfReagents extends Quest implements ScriptFile {
+public final class _373_SupplierOfReagents extends Quest {
     // Quest items
     private static final int REAGENT_POUCH1 = 6007;
     private static final int REAGENT_POUCH2 = 6008;
@@ -674,15 +674,6 @@ public class _373_SupplierOfReagents extends Quest implements ScriptFile {
                     3
             }
     };
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
 
     public _373_SupplierOfReagents() {
         super(true);

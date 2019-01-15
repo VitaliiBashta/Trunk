@@ -8,22 +8,10 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _510_AClansReputation extends Quest implements ScriptFile {
+public final class _510_AClansReputation extends Quest {
     private static final int VALDIS = 31331;
     private static final int CLAW = 8767;
     private static final int CLAN_POINTS_REWARD = 100;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _510_AClansReputation() {
         super(PARTY_ALL);

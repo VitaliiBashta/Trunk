@@ -3,14 +3,9 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class _738_DestroyKeyTargets extends Dominion_KillSpecialUnitQuest {
-    public _738_DestroyKeyTargets() {
-        super();
-    }
-
     @Override
     protected NpcString startNpcString() {
         return NpcString.DEFEAT_S1_WARSMITHS_AND_OVERLORDS;
@@ -38,7 +33,7 @@ public final class _738_DestroyKeyTargets extends Dominion_KillSpecialUnitQuest 
 
     @Override
     protected List<ClassId> getTargetClassIds() {
-        return Arrays.asList(
+        return List.of(
                 ClassId.necromancer,
                 ClassId.swordSinger,
                 ClassId.bladedancer,

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _010_IntoTheWorld extends Quest implements ScriptFile {
+public final class _010_IntoTheWorld extends Quest {
     private final int VERY_EXPENSIVE_NECKLACE = 7574;
     private final int SCROLL_OF_ESCAPE_GIRAN = 7126;
     private final int MARK_OF_TRAVELER = 7570;
@@ -14,18 +14,6 @@ public class _010_IntoTheWorld extends Quest implements ScriptFile {
     private final int BALANKI = 30533;
     private final int REED = 30520;
     private final int GERALD = 30650;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _010_IntoTheWorld() {
         super(false);

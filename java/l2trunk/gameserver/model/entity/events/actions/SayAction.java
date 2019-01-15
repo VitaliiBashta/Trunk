@@ -10,8 +10,6 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.network.serverpackets.components.SysString;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-import java.util.List;
-
 public class SayAction implements EventAction {
     private final int _range;
     private final ChatType _chatType;
@@ -41,16 +39,15 @@ public class SayAction implements EventAction {
 
     @Override
     public void call(GlobalEvent event) {
-        List<Player> players = event.broadcastPlayers(_range);
-        for (Player player : players)
-            packet(player);
+        event.broadcastPlayers(_range)
+                .forEach(this::packet);
     }
 
     private void packet(Player player) {
         if (player == null)
             return;
 
-        L2GameServerPacket packet = null;
+        L2GameServerPacket packet;
         if (_sysString != null)
             packet = new Say2(0, _chatType, _sysString, _systemMsg);
         else

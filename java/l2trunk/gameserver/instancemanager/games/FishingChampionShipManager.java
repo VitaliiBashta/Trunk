@@ -38,7 +38,7 @@ public enum FishingChampionShipManager {
     private double _minFishLength = 0;
     private boolean _needRefresh = true;
 
-    private FishingChampionShipManager() {
+    FishingChampionShipManager() {
         restoreData();
         refreshWinResult();
         recalculateMinLength();
@@ -86,7 +86,7 @@ public enum FishingChampionShipManager {
             return;
         double p1 = Rnd.get(60, 80);
         if (p1 < 90 && lureId > 8484 && lureId < 8486) {
-            long diff = Math.round(90 - p1);
+            int diff = (int) Math.round(90 - p1);
             if (diff > 1)
                 p1 += Rnd.get(1, diff);
         }

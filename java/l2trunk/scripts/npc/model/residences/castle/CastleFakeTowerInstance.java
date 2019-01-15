@@ -6,10 +6,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 /**
- * @Author: Death
- * @Date: 17/9/2007
- * @Time: 19:11:50
- * <p>
  * Этот инстанс просто для отрисовки умершей вышки на месте оригинальной на осаде
  * Фэйковый инстанс неуязвим.
  */

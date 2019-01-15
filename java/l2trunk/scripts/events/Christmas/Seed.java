@@ -31,13 +31,6 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
@@ -49,7 +42,7 @@ public final class Seed extends ScriptItemHandler implements ScriptFile {
         int npcId = NPC_IDS.get(0);
         if (itemId == ITEM_IDS.get(1)) npcId = NPC_IDS.get(1);
 
-        if (World.getAroundNpc(activeChar, 300, 200).stream()
+        if (World.getAroundNpc(activeChar, 300, 200)
                 .filter(npc -> NPC_IDS.contains(npc.getNpcId()))
                 .peek(npc -> activeChar.sendPacket(new SystemMessage2(SystemMsg.SINCE_S1_ALREADY_EXISTS_NEARBY_YOU_CANNOT_SUMMON_IT_AGAIN).addName(npc)))
                 .findFirst().isPresent())

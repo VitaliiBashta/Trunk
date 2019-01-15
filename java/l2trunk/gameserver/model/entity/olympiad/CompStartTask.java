@@ -8,8 +8,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CompStartTask extends RunnableImpl {
-    private static final Logger _log = LoggerFactory.getLogger(CompStartTask.class);
+public final class CompStartTask extends RunnableImpl {
+    private static final Logger LOG = LoggerFactory.getLogger(CompStartTask.class);
 
     @Override
     public void runImpl() {
@@ -24,6 +24,6 @@ public class CompStartTask extends RunnableImpl {
         ThreadPoolManager.INSTANCE.schedule(new CompEndTask(), Olympiad.getMillisToCompEnd());
 
         Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_STARTED));
-        _log.info("Olympiad System: Olympiad Game Started");
+        LOG.info("Olympiad System: Olympiad Game Started");
     }
 }

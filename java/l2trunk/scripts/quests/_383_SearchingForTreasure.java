@@ -4,13 +4,12 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public final class _383_SearchingForTreasure extends Quest implements ScriptFile {
+public final class _383_SearchingForTreasure extends Quest {
     // Items
     private static final int PIRATES_TREASURE_MAP = 5915;
 

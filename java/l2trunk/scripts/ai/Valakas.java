@@ -5,7 +5,6 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -17,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Valakas extends Fighter {
-    final int s_regen = 4691;
     // Self skills
     private static final int s_lava_skin = 4680;
     private static final int s_fear = 4689;
@@ -31,12 +29,12 @@ public final class Valakas extends Fighter {
     private static final int s_meteor = 4690;
     private static final int s_breath_low = 4683;
     private static final int s_breath_high = 4684;
-
     // Offensive percentage skills
     private static final int s_destroy_body = 5860;
     private static final int s_destroy_soul = 5861;
     private static final int s_destroy_body2 = 5862;
-    private static final int s_destroy_soul2 = 5863 ;
+    private static final int s_destroy_soul2 = 5863;
+    final int s_regen = 4691;
     // Timer reuses
     private final long defenceDownReuse = 120000L;
     // Timers
@@ -58,9 +56,9 @@ public final class Valakas extends Fighter {
             actor.getAI().startAITask();
 
         ValakasManager.setLastAttackTime();
-        for (Playable p : ValakasManager.getZone().getInsidePlayables()) {
-            notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 1);
-        }
+        ValakasManager.getZone().getInsidePlayables()
+                .forEach(p -> notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 1));
+
         if (damage > 100) {
             if (attacker.getDistance(actor) > 400)
                 _rangedAttacksIndex += damage / 1000D;
@@ -174,12 +172,12 @@ public final class Valakas extends Fighter {
                 addDesiredSkill(d_skill, target, distance, s_destroy_soul);
                 addDesiredSkill(d_skill, target, distance, s_meteor);
                 addDesiredSkill(d_skill, target, distance, s_fear);
-                 addDesiredSkill(d_skill, target, distance, Rnd.chance(60) ? s_destroy_soul2 : s_destroy_body);
+                addDesiredSkill(d_skill, target, distance, Rnd.chance(60) ? s_destroy_soul2 : s_destroy_body);
                 break;
         }
 
-        Skill r_skill = selectTopSkill(d_skill);
-        if (r_skill != null && !r_skill.isOffensive())
+        int r_skill = selectTopSkill(d_skill);
+        if (r_skill != 0 && !SkillTable.INSTANCE.getInfo(r_skill).isOffensive())
             target = actor;
 
         return chooseTaskAndTargets(r_skill, target, distance);

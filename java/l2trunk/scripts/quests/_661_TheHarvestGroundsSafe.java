@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _661_TheHarvestGroundsSafe extends Quest implements ScriptFile {
+public final class _661_TheHarvestGroundsSafe extends Quest {
     //NPC
     private static final int NORMAN = 30210;
 
@@ -19,18 +19,6 @@ public class _661_TheHarvestGroundsSafe extends Quest implements ScriptFile {
     private static final int STING_OF_GIANT_POISON = 8283;
     private static final int TALON_OF_YOUNG_ARANEID = 8285;
     private static final int CLOUDY_GEM = 8284;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _661_TheHarvestGroundsSafe() {
         super(false);

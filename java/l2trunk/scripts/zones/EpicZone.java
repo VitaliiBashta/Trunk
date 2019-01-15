@@ -37,7 +37,6 @@ public final class EpicZone implements ScriptFile {
 
         @Override
         public void onZoneLeave(Zone zone, Creature cha) {
-
         }
     }
 }

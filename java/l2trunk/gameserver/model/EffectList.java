@@ -114,19 +114,6 @@ public class EffectList {
         return list.isEmpty() ? null : list;
     }
 
-    public Effect getEffectByIndexAndType(int skillId, EffectType type) {
-        if (isEmpty()) {
-            return null;
-        }
-        for (Effect e : effects) {
-            if ((e.getSkill().getId() == skillId) && (e.getEffectType() == type)) {
-                return e;
-            }
-        }
-
-        return null;
-    }
-
     public Effect getEffectByStackType(String type) {
         if (isEmpty()) {
             return null;

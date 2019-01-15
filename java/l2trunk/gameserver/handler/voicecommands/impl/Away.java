@@ -11,8 +11,8 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import java.util.Arrays;
 import java.util.List;
 
-public class Away implements IVoicedCommandHandler {
-    private final List<String> VOICED_COMMANDS = Arrays.asList("away", "back");
+public final class Away implements IVoicedCommandHandler {
+    private final List<String> VOICED_COMMANDS = List.of("away", "back");
 
     public boolean useVoicedCommand(String command, Player activeChar, String text) {
         if (command.startsWith("away"))

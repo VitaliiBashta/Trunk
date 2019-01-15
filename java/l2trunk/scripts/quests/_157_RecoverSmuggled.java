@@ -6,21 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _157_RecoverSmuggled extends Quest implements ScriptFile {
+public final class _157_RecoverSmuggled extends Quest {
     private final int ADAMANTITE_ORE_ID = 1024;
-    private final int BUCKLER = 20;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int BUCKLER = 20;
 
     public _157_RecoverSmuggled() {
         super(false);

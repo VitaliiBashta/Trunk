@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 public class DimensionalRift extends Reflection {
-    protected static final long seconds_5 = 5000L;
     private static final int MILLISECONDS_IN_MINUTE = 60000;
 
     final int roomType;
@@ -284,14 +283,9 @@ public class DimensionalRift extends Reflection {
     int getPlayersInside(boolean alive) {
         if (_playerCount == 0)
             return 0;
-
-        int sum = 0;
-
-        for (Player p : getPlayers())
-            if (!alive || !p.isDead())
-                sum++;
-
-        return sum;
+        return (int) getPlayers()
+                .filter(p -> (!alive || !p.isDead()))
+                .count();
     }
 
     @Override

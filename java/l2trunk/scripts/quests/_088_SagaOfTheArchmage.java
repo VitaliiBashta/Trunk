@@ -5,7 +5,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _088_SagaOfTheArchmage extends SagasSuperclass implements ScriptFile {
+public final class _088_SagaOfTheArchmage extends SagasSuperclass {
     public _088_SagaOfTheArchmage() {
         super(false);
 
@@ -39,17 +39,5 @@ public final class _088_SagaOfTheArchmage extends SagasSuperclass implements Scr
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _197_SevenSignsTheSacredBookofSeal extends Quest implements ScriptFile {
+public final class _197_SevenSignsTheSacredBookofSeal extends Quest {
     // NPCs
     private static final int Wood = 32593;
     private static final int Orven = 30857;
@@ -129,17 +129,5 @@ public class _197_SevenSignsTheSacredBookofSeal extends Quest implements ScriptF
             st.set("evilthought", 2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

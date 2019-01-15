@@ -3,12 +3,12 @@ package l2trunk.scripts.ai.dragonvalley;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
+import java.util.List;
 
 public final class DragonScout extends Patrollers {
     public DragonScout(NpcInstance actor) {
         super(actor);
-        points = Arrays.asList(new Location(116792, 116936, -3728),
+        points = List.of(new Location(116792, 116936, -3728),
                 new Location(116056, 118984, -3728),
                 new Location(114856, 120040, -3712),
                 new Location(114184, 121464, -3776),

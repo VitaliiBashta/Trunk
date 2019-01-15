@@ -1,11 +1,10 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _081_SagaOfTheGhostHunter extends SagasSuperclass implements ScriptFile {
+public final class _081_SagaOfTheGhostHunter extends SagasSuperclass {
     public _081_SagaOfTheGhostHunter() {
         super(false);
 
@@ -39,17 +38,5 @@ public final class _081_SagaOfTheGhostHunter extends SagasSuperclass implements 
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

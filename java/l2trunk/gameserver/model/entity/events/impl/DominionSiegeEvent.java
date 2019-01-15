@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     public static final int KILL_REWARD = 0;
@@ -326,7 +327,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     }
 
     @Override
-    public List<Player> itemObtainPlayers() {
+    public Stream<Player> itemObtainPlayers() {
         List<Player> playersInZone = getPlayersInZone();
 
         List<Player> list = new ArrayList<>(playersInZone.size());
@@ -334,7 +335,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
             if (player.getEvent(DominionSiegeEvent.class) != null)
                 list.add(player);
         }
-        return list;
+        return list.stream();
     }
 
     @Override

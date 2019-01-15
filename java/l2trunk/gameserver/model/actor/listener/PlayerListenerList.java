@@ -47,43 +47,37 @@ public final class PlayerListenerList extends CharListenerList {
     }
 
     private void onTeleport(ListenerList list, Location loc, Reflection reflection) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnTeleportListener)
+        list.getListeners().filter(l -> l instanceof OnTeleportListener)
                 .map(l -> (OnTeleportListener) l)
                 .forEach(l -> l.onTeleport(getActor(), loc, reflection));
     }
 
     private void onPartyInvite(ListenerList list) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnPlayerPartyInviteListener)
+        list.getListeners().filter(l -> l instanceof OnPlayerPartyInviteListener)
                 .map(l -> (OnPlayerPartyInviteListener) l)
                 .forEach(l -> l.onPartyInvite(getActor()));
     }
 
     private void onEnter(ListenerList list) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnPlayerEnterListener)
+        list.getListeners().filter(l -> l instanceof OnPlayerEnterListener)
                 .map(l -> (OnPlayerEnterListener) l)
                 .forEach(l -> l.onPlayerEnter(getActor()));
     }
 
     private void onPartyLeave(ListenerList list) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnPlayerPartyLeaveListener)
+        list.getListeners().filter(l -> l instanceof OnPlayerPartyLeaveListener)
                 .map(l -> (OnPlayerPartyLeaveListener) l)
                 .forEach(l -> l.onPartyLeave(getActor()));
     }
 
     private void onExit(ListenerList list) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnPlayerExitListener)
+        list.getListeners().filter(l -> l instanceof OnPlayerExitListener)
                 .map(l -> (OnPlayerExitListener) l)
                 .forEach(l -> l.onPlayerExit(getActor()));
     }
 
     private void onQuestionMarkClicked(ListenerList list, int questionMarkId) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnQuestionMarkListener)
+        list.getListeners().filter(l -> l instanceof OnQuestionMarkListener)
                 .map(l -> (OnQuestionMarkListener) l)
                 .forEach(l -> l.onQuestionMarkClicked(getActor(), questionMarkId));
     }

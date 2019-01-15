@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
@@ -9,11 +8,11 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _461_RumbleInTheBase extends Quest implements ScriptFile {
+public final class _461_RumbleInTheBase extends Quest{
     private static final int Stan = 30200;
     private static final int ShoesStringofSelMahum = 16382;
     private static final int ShinySalmon = 15503;
-    private static final List<Integer> SelMahums = Arrays.asList(22786, 22787, 22788);
+    private static final List<Integer> SelMahums = List.of(22786, 22787, 22788);
     private static final int SelChef = 18908;
 
     public _461_RumbleInTheBase() {
@@ -82,17 +81,5 @@ public final class _461_RumbleInTheBase extends Quest implements ScriptFile {
                 st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -6,10 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _105_SkirmishWithOrcs extends Quest implements ScriptFile {
+public final class _105_SkirmishWithOrcs extends Quest {
     //NPC
     private static final int Kendell = 30218;
     //QuestItem
@@ -36,18 +35,6 @@ public class _105_SkirmishWithOrcs extends Quest implements ScriptFile {
     private static final int KabooChiefKamut = 27067;
     private static final int KabooChiefMurtika = 27068;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _105_SkirmishWithOrcs() {
         super(false);
 
@@ -62,8 +49,7 @@ public class _105_SkirmishWithOrcs extends Quest implements ScriptFile {
         addKillId(KabooChiefKamut);
         addKillId(KabooChiefMurtika);
 
-        addQuestItem(new int[]{
-                Kendells1stOrder,
+        addQuestItem(Kendells1stOrder,
                 Kendells2stOrder,
                 Kendells3stOrder,
                 Kendells4stOrder,
@@ -72,8 +58,7 @@ public class _105_SkirmishWithOrcs extends Quest implements ScriptFile {
                 Kendells7stOrder,
                 Kendells8stOrder,
                 KabooChiefs1stTorque,
-                KabooChiefs2stTorque
-        });
+                KabooChiefs2stTorque);
     }
 
     @Override

@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _364_JovialAccordion extends Quest implements ScriptFile {
+public final class _364_JovialAccordion extends Quest {
     //NPCs
     private static final int BARBADO = 30959;
     private static final int SWAN = 30957;
@@ -97,17 +97,5 @@ public class _364_JovialAccordion extends Quest implements ScriptFile {
             htmltext = "30961-02.htm";
         }
         return htmltext;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

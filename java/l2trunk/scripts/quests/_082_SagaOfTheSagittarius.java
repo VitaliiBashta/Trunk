@@ -5,7 +5,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _082_SagaOfTheSagittarius extends SagasSuperclass implements ScriptFile {
+public final class _082_SagaOfTheSagittarius extends SagasSuperclass {
     public _082_SagaOfTheSagittarius() {
         super(false);
 
@@ -40,17 +40,5 @@ public final class _082_SagaOfTheSagittarius extends SagasSuperclass implements 
         );
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

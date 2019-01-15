@@ -4,11 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public final class _659_IdRatherBeCollectingFairyBreath extends Quest implements ScriptFile {
+public final class _659_IdRatherBeCollectingFairyBreath extends Quest {
     //NPC
     private final int GALATEA = 30634;
     //Mobs

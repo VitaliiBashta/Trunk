@@ -1,8 +1,6 @@
 package l2trunk.gameserver.utils;
 
-/**
- * @author BiggBoss
- */
+
 public class AutoHuntingPunish {
     // Kind of punish
     private final Punish _AutoHuntingPunishPunishment;
@@ -24,16 +22,6 @@ public class AutoHuntingPunish {
      */
     public Punish getBotPunishType() {
         return _AutoHuntingPunishPunishment;
-    }
-
-    /**
-     * Returns the time (in millis) when the player
-     * punish started
-     *
-     * @return long
-     */
-    public long getPunishStarterTime() {
-        return _punishTime;
     }
 
     /**

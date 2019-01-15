@@ -41,11 +41,10 @@ public final class EdwinFollower extends DefaultAI {
             // Ищем преследуемого не чаще, чем раз в 15 секунд, если по каким-то причинам его нету
             if (System.currentTimeMillis() > _wait_timeout) {
                 _wait_timeout = System.currentTimeMillis() + 15000;
-                for (NpcInstance npc : World.getAroundNpc(actor))
-                    if (npc.getNpcId() == EDWIN_ID) {
-                        _edwinRef = npc.getRef();
-                        return true;
-                    }
+                return World.getAroundNpc(actor)
+                        .filter(npc -> npc.getNpcId() == EDWIN_ID)
+                        .peek(npc -> _edwinRef = npc.getRef())
+                        .findFirst().isPresent();
             }
         } else if (!actor.isMoving) {
             int x = edwin.getX() + Rnd.get(2 * DRIFT_DISTANCE) - DRIFT_DISTANCE;

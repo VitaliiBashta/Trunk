@@ -35,17 +35,17 @@ import java.util.concurrent.ScheduledFuture;
 public class OlympiadGame {
     public static final int MAX_POINTS_LOOSE = 10;
     private static final Logger _log = LoggerFactory.getLogger(OlympiadGame.class);
-    private static final int[] STADIUMS_INSTANCE_ID = {147, 148, 149, 150};
+    private static final List<Integer> STADIUMS_INSTANCE_ID = List.of(147, 148, 149, 150);
     private final int _id;
     private final Reflection _reflection;
     private final CompType _type;
-    private final OlympiadTeam _team1;
-    private final OlympiadTeam _team2;
-    private final List<Player> _spectators = new CopyOnWriteArrayList<>();
+    private final OlympiadTeam team1;
+    private final OlympiadTeam team2;
+    private final List<Player> spectators = new CopyOnWriteArrayList<>();
     public boolean validated = false;
     private OlympiadGameTask _task;
     private ScheduledFuture<?> _shedule;
-    private int _winner = 0;
+    private int winner = 0;
     private int _state = 0;
     private long _startTime;
     private boolean _buffersSpawned = false;
@@ -57,18 +57,18 @@ public class OlympiadGame {
         InstantZone instantZone = InstantZoneHolder.getInstantZone(Rnd.get(STADIUMS_INSTANCE_ID));
         _reflection.init(instantZone);
 
-        _team1 = new OlympiadTeam(this, 1);
-        _team2 = new OlympiadTeam(this, 2);
+        team1 = new OlympiadTeam(this, 1);
+        team2 = new OlympiadTeam(this, 2);
 
         for (int i = 0; i < opponents.size() / 2; i++) {
-            _team1.addMember(opponents.get(i));
+            team1.addMember(opponents.get(i));
         }
 
         for (int i = opponents.size() / 2; i < opponents.size(); i++) {
-            _team2.addMember(opponents.get(i));
+            team2.addMember(opponents.get(i));
         }
 
-        Log.add("Olympiad System: Game - " + id + ": " + _team1.getName() + " Vs " + _team2.getName(), "olympiad");
+        Log.add("Olympiad System: Game - " + id + ": " + team1.getName() + " Vs " + team2.getName(), "olympiad");
     }
 
     public void addBuffers() {
@@ -108,30 +108,30 @@ public class OlympiadGame {
     }
 
     public void portPlayersToArena() {
-        _team1.portPlayersToArena();
-        _team2.portPlayersToArena();
+        team1.portPlayersToArena();
+        team2.portPlayersToArena();
     }
 
     public void preparePlayers() {
         setState(1);
-        _team1.preparePlayers();
-        _team2.preparePlayers();
+        team1.preparePlayers();
+        team2.preparePlayers();
     }
 
     public void startComp() {
         setState(2);
-        _team1.startComp();
-        _team2.startComp();
+        team1.startComp();
+        team2.startComp();
     }
 
     private void portPlayersBack() {
-        _team1.portPlayersBack();
-        _team2.portPlayersBack();
+        team1.portPlayersBack();
+        team2.portPlayersBack();
     }
 
     public void heal() {
-        _team1.heal();
-        _team2.heal();
+        team1.heal();
+        team2.heal();
     }
 
     public void collapse() {
@@ -146,44 +146,44 @@ public class OlympiadGame {
         _state = 0;
 
         if (validated) {
-            Log.add("Olympiad Result: " + _team1.getName() + " vs " + _team2.getName() + " ... double validate check!!!", "olympiad");
+            Log.add("Olympiad Result: " + team1.getName() + " vs " + team2.getName() + " ... double validate check!!!", "olympiad");
             return;
         }
         validated = true;
 
         // Если игра закончилась до телепортации на стадион, то забираем очки у вышедших из игры, не засчитывая никому победу
         if (state < 1 && aborted) {
-            _team1.takePointsForCrash();
-            _team2.takePointsForCrash();
+            team1.takePointsForCrash();
+            team2.takePointsForCrash();
             broadcastPacket(Msg.THE_GAME_HAS_BEEN_CANCELLED_BECAUSE_THE_OTHER_PARTY_ENDS_THE_GAME, true, false);
             return;
         }
 
-        boolean teamOneCheck = _team1.checkPlayers();
-        boolean teamTwoCheck = _team2.checkPlayers();
+        boolean teamOneCheck = team1.checkPlayers();
+        boolean teamTwoCheck = team2.checkPlayers();
 
-        if (_winner <= 0) {
+        if (winner <= 0) {
             if (!teamOneCheck && !teamTwoCheck)
-                _winner = 0;
+                winner = 0;
             else if (!teamTwoCheck)
-                _winner = 1; // Выиграла первая команда
+                winner = 1; // Выиграла первая команда
             else if (!teamOneCheck)
-                _winner = 2; // Выиграла вторая команда
-            else if (_team1.getDamage() < _team2.getDamage()) // Вторая команда нанесла вреда меньше, чем первая
-                _winner = 1; // Выиграла первая команда
-            else if (_team1.getDamage() > _team2.getDamage()) // Вторая команда нанесла вреда больше, чем первая
-                _winner = 2; // Выиграла вторая команда
+                winner = 2; // Выиграла вторая команда
+            else if (team1.getDamage() < team2.getDamage()) // Вторая команда нанесла вреда меньше, чем первая
+                winner = 1; // Выиграла первая команда
+            else if (team1.getDamage() > team2.getDamage()) // Вторая команда нанесла вреда больше, чем первая
+                winner = 2; // Выиграла вторая команда
         }
 
-        if (_winner == 1) // Выиграла первая команда
-            winGame(_team1, _team2);
-        else if (_winner == 2) // Выиграла вторая команда
-            winGame(_team2, _team1);
+        if (winner == 1) // Выиграла первая команда
+            winGame(team1, team2);
+        else if (winner == 2) // Выиграла вторая команда
+            winGame(team2, team1);
         else
             tie();
 
-        _team1.saveNobleData();
-        _team2.saveNobleData();
+        team1.saveNobleData();
+        team2.saveNobleData();
 
         broadcastRelation();
         broadcastPacket(new SystemMessage2(SystemMsg.YOU_WILL_BE_MOVED_BACK_TO_TOWN_IN_S1_SECONDS).addInteger(20), true, true);
@@ -206,8 +206,8 @@ public class OlympiadGame {
 
                 int gamePoints = transferPoints(looserMember.getStat(), winnerMember.getStat());
 
-                packet.addPlayer(winnerTeam == _team1 ? TeamType.BLUE : TeamType.RED, winnerMember, gamePoints);
-                packet.addPlayer(looseTeam == _team1 ? TeamType.BLUE : TeamType.RED, looserMember, -gamePoints);
+                packet.addPlayer(winnerTeam == team1 ? TeamType.BLUE : TeamType.RED, winnerMember, gamePoints);
+                packet.addPlayer(looseTeam == team1 ? TeamType.BLUE : TeamType.RED, looserMember, -gamePoints);
 
                 pointDiff += gamePoints;
                 if (winnerMember.getPlayer() != null) {
@@ -223,10 +223,10 @@ public class OlympiadGame {
         }
 
         if (_type != CompType.TEAM) {
-            int team = _team1 == winnerTeam ? 1 : 2;
+            int team = team1 == winnerTeam ? 1 : 2;
 
-            TeamMember member1 = ArrayUtils.valid(_team1 == winnerTeam ? winnerMembers : looserMembers, 0);
-            TeamMember member2 = ArrayUtils.valid(_team2 == winnerTeam ? winnerMembers : looserMembers, 0);
+            TeamMember member1 = ArrayUtils.valid(team1 == winnerTeam ? winnerMembers : looserMembers, 0);
+            TeamMember member2 = ArrayUtils.valid(team2 == winnerTeam ? winnerMembers : looserMembers, 0);
             if (member1 != null && member2 != null) {
                 int diff = (int) ((System.currentTimeMillis() - _startTime) / 1000L);
                 OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member2.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, team, _type.ordinal());
@@ -235,8 +235,8 @@ public class OlympiadGame {
             }
         }
 
-        _team1.removeBuffs(false);
-        _team2.removeBuffs(false);
+        team1.removeBuffs(false);
+        team2.removeBuffs(false);
 
         broadcastPacket(new SystemMessage(SystemMsg.CONGRATULATIONS_C1_YOU_WIN_THE_MATCH).addString(winnerTeam.getName()), true, true);
         winnerTeam.broadcast(new SystemMessage(SystemMsg.C1_HAS_EARNED_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addString(winnerTeam.getName()).addNumber(pointDiff));
@@ -263,7 +263,7 @@ public class OlympiadGame {
         broadcastPacket(new SystemMessage2(SystemMsg.CONGRATULATIONS_C1_YOU_WIN_THE_MATCH).addString(winnerTeam.getName()), false, true);
 
         // Alexander - Announce on critical to all players in the world, who won this match
-        IStaticPacket criticalAnn = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", "Olympiad: " + _team1.getName() + " VS " + _team2.getName() + ". Winner is: " + winnerTeam.getName() + "!");
+        IStaticPacket criticalAnn = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", "Olympiad: " + team1.getName() + " VS " + team2.getName() + ". Winner is: " + winnerTeam.getName() + "!");
         GameObjectsStorage.getAllPlayersStream().forEach(player -> player.sendPacket(criticalAnn));
 
 
@@ -271,8 +271,8 @@ public class OlympiadGame {
     }
 
     private void tie() {
-        Collection<TeamMember> teamMembers1 = _team1.getMembers();
-        Collection<TeamMember> teamMembers2 = _team2.getMembers();
+        Collection<TeamMember> teamMembers1 = team1.getMembers();
+        Collection<TeamMember> teamMembers2 = team2.getMembers();
 
         ExReceiveOlympiad.MatchResult packet = new ExReceiveOlympiad.MatchResult(true, "");
         for (TeamMember member1 : teamMembers1) {
@@ -305,14 +305,14 @@ public class OlympiadGame {
         }
 
         broadcastPacket(SystemMsg.THERE_IS_NO_VICTOR_THE_MATCH_ENDS_IN_A_TIE, true, true);
-        _team1.broadcast(new SystemMessage(SystemMsg.C1_HAS_LOST_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addString(_team1.getName()).addNumber(2));
-        _team2.broadcast(new SystemMessage(SystemMsg.C1_HAS_LOST_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addString(_team2.getName()).addNumber(2));
+        team1.broadcast(new SystemMessage(SystemMsg.C1_HAS_LOST_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addString(team1.getName()).addNumber(2));
+        team2.broadcast(new SystemMessage(SystemMsg.C1_HAS_LOST_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addString(team2.getName()).addNumber(2));
         broadcastPacket(packet, true, false);
 
-        _team1.removeBuffs(false);
-        _team2.removeBuffs(false);
+        team1.removeBuffs(false);
+        team2.removeBuffs(false);
 
-        Log.add("Olympiad Result: " + _team1.getName() + " vs " + _team2.getName() + " ... tie", "olympiad");
+        Log.add("Olympiad Result: " + team1.getName() + " vs " + team2.getName() + " ... tie", "olympiad");
     }
 
     private int transferPoints(StatsSet from, StatsSet to) {
@@ -352,26 +352,26 @@ public class OlympiadGame {
     }
 
     public boolean isRegistered(int objId) {
-        return _team1.contains(objId) || _team2.contains(objId);
+        return team1.contains(objId) || team2.contains(objId);
     }
 
     public List<Player> getSpectators() {
-        return _spectators;
+        return spectators;
     }
 
     public void addSpectator(Player spec) {
-        _spectators.add(spec);
+        spectators.add(spec);
     }
 
     public void removeSpectator(Player spec) {
-        _spectators.remove(spec);
+        spectators.remove(spec);
     }
 
     private void clearSpectators() {
-        for (Player pc : _spectators)
+        for (Player pc : spectators)
             if (pc != null && pc.isInObserverMode())
                 pc.leaveOlympiadObserverMode(false);
-        _spectators.clear();
+        spectators.clear();
     }
 
     public void broadcastInfo(Player sender, Player receiver, boolean onlyToSpectators) {
@@ -393,7 +393,7 @@ public class OlympiadGame {
                 broadcastPacket(new ExOlympiadUserInfo(sender, sender.getOlympiadSide()), !onlyToSpectators, true);
         } else {
             // Рассылаем информацию о первой команде
-            for (Player player : _team1.getPlayers()) {
+            for (Player player : team1.getPlayers()) {
                 if (receiver != null)
                     receiver.sendPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()));
                 else {
@@ -403,7 +403,7 @@ public class OlympiadGame {
             }
 
             // Рассылаем информацию о второй команде
-            for (Player player : _team2.getPlayers()) {
+            for (Player player : team2.getPlayers()) {
                 if (receiver != null)
                     receiver.sendPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()));
                 else {
@@ -415,23 +415,23 @@ public class OlympiadGame {
     }
 
     private void broadcastRelation() {
-        for (Player player : _team1.getPlayers()) {
+        for (Player player : team1.getPlayers()) {
             player.broadcastRelationChanged();
         }
 
-        for (Player player : _team2.getPlayers()) {
+        for (Player player : team2.getPlayers()) {
             player.broadcastRelationChanged();
         }
     }
 
     public void broadcastPacket(L2GameServerPacket packet, boolean toTeams, boolean toSpectators) {
         if (toTeams) {
-            _team1.broadcast(packet);
-            _team2.broadcast(packet);
+            team1.broadcast(packet);
+            team2.broadcast(packet);
         }
 
-        if (toSpectators && !_spectators.isEmpty()) {
-            for (Player spec : _spectators) {
+        if (toSpectators && !spectators.isEmpty()) {
+            for (Player spec : spectators) {
                 if (spec != null)
                     spec.sendPacket(packet);
             }
@@ -440,12 +440,12 @@ public class OlympiadGame {
 
     public void broadcastPacket(IStaticPacket packet, boolean toTeams, boolean toSpectators) {
         if (toTeams) {
-            _team1.broadcast(packet);
-            _team2.broadcast(packet);
+            team1.broadcast(packet);
+            team2.broadcast(packet);
         }
 
-        if (toSpectators && !_spectators.isEmpty()) {
-            for (Player spec : _spectators) {
+        if (toSpectators && !spectators.isEmpty()) {
+            for (Player spec : spectators) {
                 if (spec != null)
                     spec.sendPacket(packet);
             }
@@ -454,30 +454,21 @@ public class OlympiadGame {
 
     public List<Player> getAllPlayers() {
         List<Player> result = new ArrayList<>();
-        for (Player player : _team1.getPlayers()) {
-            result.add(player);
-        }
-        for (Player player : _team2.getPlayers()) {
-            result.add(player);
-        }
-        if (!_spectators.isEmpty()) {
-            for (Player spec : _spectators) {
-                if (spec != null)
-                    result.add(spec);
-            }
-        }
+        result.addAll(team1.getPlayers());
+        result.addAll(team2.getPlayers());
+        result.addAll(spectators);
         return result;
     }
 
-    public void setWinner(int val) {
-        _winner = val;
+    public void setWinner(int winner) {
+        this.winner = winner;
     }
 
     public OlympiadTeam getWinnerTeam() {
-        if (_winner == 1) // Выиграла первая команда
-            return _team1;
-        else if (_winner == 2) // Выиграла вторая команда
-            return _team2;
+        if (winner == 1) // Выиграла первая команда
+            return team1;
+        else if (winner == 2) // Выиграла вторая команда
+            return team2;
         return null;
     }
 
@@ -492,26 +483,26 @@ public class OlympiadGame {
     }
 
     public List<Player> getTeamMembers(Player player) {
-        return player.getOlympiadSide() == 1 ? _team1.getPlayers() : _team2.getPlayers();
+        return player.getOlympiadSide() == 1 ? team1.getPlayers() : team2.getPlayers();
     }
 
     public void addDamage(Player player, double damage) {
         if (player.getOlympiadSide() == 1)
-            _team1.addDamage(player, damage);
+            team1.addDamage(player, damage);
         else
-            _team2.addDamage(player, damage);
+            team2.addDamage(player, damage);
     }
 
     public boolean doDie(Player player) {
-        return player.getOlympiadSide() == 1 ? _team1.doDie(player) : _team2.doDie(player);
+        return player.getOlympiadSide() == 1 ? team1.doDie(player) : team2.doDie(player);
     }
 
     public boolean checkPlayersOnline() {
-        return _team1.checkPlayers() && _team2.checkPlayers();
+        return team1.checkPlayers() && team2.checkPlayers();
     }
 
     public boolean logoutPlayer(Player player) {
-        return player != null && (player.getOlympiadSide() == 1 ? _team1.logout(player) : _team2.logout(player));
+        return player != null && (player.getOlympiadSide() == 1 ? team1.logout(player) : team2.logout(player));
     }
 
     public synchronized void sheduleTask(OlympiadGameTask task) {
@@ -534,8 +525,8 @@ public class OlympiadGame {
     public void endGame(int time, boolean aborted) {
         try {
             validateWinner(aborted);
-            _team1.stopComp();
-            _team2.stopComp();
+            team1.stopComp();
+            team2.stopComp();
         } catch (Exception e) {
             _log.error("Error on Olympiad End Game!", e);
         }
@@ -548,10 +539,10 @@ public class OlympiadGame {
     }
 
     public String getTeamName1() {
-        return _team1.getName();
+        return team1.getName();
     }
 
     public String getTeamName2() {
-        return _team2.getName();
+        return team2.getName();
     }
 }

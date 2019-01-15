@@ -30,7 +30,7 @@ public final class ManorManagerInstance extends MerchantInstance {
             MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
             player.sendPacket(my);
             if (!isInRange(player, INTERACTION_DISTANCE)) {
-                player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
+                player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
                 player.sendActionFailed();
             } else {
                 if (CastleManorManager.INSTANCE.isDisabled()) {

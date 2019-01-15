@@ -6,12 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Certified Arbalester
- *
- * @author Sergey Ibryaev aka Artful
- */
-public class _066_CertifiedArbalester extends Quest implements ScriptFile {
+public final class _066_CertifiedArbalester extends Quest {
     //NPC
     private static final int Rindy = 32201;
     private static final int Clayton = 30464;
@@ -197,18 +192,6 @@ public class _066_CertifiedArbalester extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _066_CertifiedArbalester() {
         super(false);
 
@@ -223,15 +206,13 @@ public class _066_CertifiedArbalester extends Quest implements ScriptFile {
         addTalkId(Gauen);
         addTalkId(Kaiena);
 
-        addQuestItem(new int[]{
-                EnmityCrystalCore,
+        addQuestItem(EnmityCrystalCore,
                 KamaelInquisitorTraineeMark,
                 ResearchOnTheGiantsAndTheAncientRace,
                 EnmityCrystal,
                 ManuscriptPage,
                 FragmentofAttackOrders,
-                ManashenTalisman
-        });
+                ManashenTalisman);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 

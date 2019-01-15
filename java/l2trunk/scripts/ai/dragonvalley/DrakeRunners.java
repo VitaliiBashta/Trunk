@@ -4,11 +4,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.Arrays;
+import java.util.List;
 
 public final class DrakeRunners extends PatrollersNoWatch {
     public DrakeRunners(NpcInstance actor) {
         super(actor);
-        _points = Arrays.asList(new Location(148984, 112952, -3720),
+        _points = List.of(new Location(148984, 112952, -3720),
                 new Location(149160, 114312, -3720),
                 new Location(149096, 115480, -3720),
                 new Location(147720, 116216, -3720),

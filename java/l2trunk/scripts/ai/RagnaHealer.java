@@ -3,9 +3,8 @@ package l2trunk.scripts.ai;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Priest;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
-
-import java.util.List;
 
 public final class RagnaHealer extends Priest {
     private long lastFactionNotifyTime;
@@ -22,13 +21,13 @@ public final class RagnaHealer extends Priest {
 
         if (System.currentTimeMillis() - lastFactionNotifyTime > 10000) {
             lastFactionNotifyTime = System.currentTimeMillis();
-            List<NpcInstance> around = actor.getAroundNpc(500, 300);
-            if (around != null && !around.isEmpty())
-                for (NpcInstance npc : around)
-                    if (npc.isMonster() && npc.getNpcId() >= 22691 && npc.getNpcId() <= 22702)
-                        npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000);
+            actor.getAroundNpc(500, 300)
+                    .filter(GameObject::isMonster)
+                    .filter(npc -> npc.getNpcId() >= 22691)
+                    .filter(npc -> npc.getNpcId() <= 22702)
+                    .forEach(npc ->
+                            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000));
         }
-
         super.onEvtAttacked(attacker, damage);
     }
 }

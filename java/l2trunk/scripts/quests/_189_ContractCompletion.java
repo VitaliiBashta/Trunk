@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _189_ContractCompletion extends Quest implements ScriptFile {
+public final class _189_ContractCompletion extends Quest {
     private static final int Kusto = 30512;
     private static final int Lorain = 30673;
     private static final int Luka = 30621;
     private static final int Shegfield = 30068;
 
     private static final int Metal = 10370;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _189_ContractCompletion() {
         super(false);

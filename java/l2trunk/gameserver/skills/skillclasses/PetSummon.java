@@ -64,11 +64,12 @@ public final class PetSummon extends Skill {
         }
 
 
-        for (GameObject o : World.getAroundObjects(player, 120, 200))
-            if (o.isDoor()) {
-                player.sendPacket(SystemMsg.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION);
-                return false;
-            }
+        if (World.getAroundObjects(player, 120, 200)
+                .filter(GameObject::isDoor)
+                .peek(o -> player.sendPacket(SystemMsg.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION))
+                .findFirst().isPresent())
+            return false;
+
 
         return super.checkCondition(activeChar, target, forceUse, dontMove, first);
     }

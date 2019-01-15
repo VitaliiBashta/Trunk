@@ -4,40 +4,20 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _370_AnElderSowsSeeds extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _370_AnElderSowsSeeds extends Quest {
     //npc
     private static final int CASIAN = 30612;
     //mobs
-    private static final int[] MOBS = {
-            20082,
-            20084,
-            20086,
-            20089,
-            20090
-    };
+    private static final List<Integer> MOBS = List.of(
+            20082, 20084, 20086, 20089, 20090);
     //items
     private static final int SPB_PAGE = 5916;
     //Collection Kranvel's Spellbooks
-    private static final int[] CHAPTERS = {
-            5917,
-            5918,
-            5919,
-            5920
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final List<Integer> CHAPTERS = List.of(
+            5917, 5918, 5919, 5920);
 
     public _370_AnElderSowsSeeds() {
         super(false);
@@ -59,14 +39,9 @@ public class _370_AnElderSowsSeeds extends Quest implements ScriptFile {
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30612-6.htm")) {
-            if (st.getQuestItemsCount(CHAPTERS[0]) > 0 && st.getQuestItemsCount(CHAPTERS[1]) > 0 && st.getQuestItemsCount(CHAPTERS[2]) > 0 && st.getQuestItemsCount(CHAPTERS[3]) > 0) {
-                long mincount = st.getQuestItemsCount(CHAPTERS[0]);
-
-                for (int itemId : CHAPTERS)
-                    mincount = Math.min(mincount, st.getQuestItemsCount(itemId));
-
-                for (int itemId : CHAPTERS)
-                    st.takeItems(itemId, mincount);
+            long mincount = CHAPTERS.stream().min(Integer::compareTo).orElse(0);
+            if (mincount > 0) {
+                CHAPTERS.forEach(itemId -> st.takeItems(itemId, mincount));
 
                 st.giveItems(ADENA_ID, 3600 * mincount);
                 htmltext = "30612-8.htm";

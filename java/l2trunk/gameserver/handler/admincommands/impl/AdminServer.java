@@ -6,13 +6,15 @@ import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.instancemanager.ServerVariables;
 import l2trunk.gameserver.model.*;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.RaidBossInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 
 /**
@@ -83,51 +85,45 @@ public class AdminServer implements IAdminCommandHandler {
                     activeChar.sendMessage("Incorrect argument count!!!");
                     return false;
                 }
-                int interval = Integer.parseInt(wordList[1]);
-                int count = 0;
-                int count2 = 0;
-                for (final NpcInstance npc : GameObjectsStorage.getAllNpcsForIterate()) {
-                    if (npc == null || npc instanceof RaidBossInstance)
-                        continue;
-                    final CharacterAI char_ai = npc.getAI();
-                    if (char_ai instanceof DefaultAI)
-                        try {
-                            final java.lang.reflect.Field field = l2trunk.gameserver.ai.DefaultAI.class.getDeclaredField("AI_TASK_DELAY");
-                            field.setAccessible(true);
-                            field.set(char_ai, interval);
+                int interval = toInt(wordList[1]);
+                GameObjectsStorage.getAllNpcs()
+                        .filter(Objects::nonNull)
+                        .filter(npc -> !(npc instanceof RaidBossInstance))
 
-                            if (char_ai.isActive()) {
-                                char_ai.stopAITask();
-                                count++;
-                                WorldRegion region = npc.getCurrentRegion();
-                                if (region != null && region.isActive()) {
-                                    char_ai.startAITask();
-                                    count2++;
+                        .forEach(npc -> {
+                            final CharacterAI char_ai = npc.getAI();
+                            if (char_ai instanceof DefaultAI)
+                                try {
+                                    final java.lang.reflect.Field field = l2trunk.gameserver.ai.DefaultAI.class.getDeclaredField("AI_TASK_DELAY");
+                                    field.setAccessible(true);
+                                    field.set(char_ai, interval);
+
+                                    if (char_ai.isActive()) {
+                                        char_ai.stopAITask();
+                                        WorldRegion region = npc.getCurrentRegion();
+                                        if (region != null && region.isActive()) {
+                                            char_ai.startAITask();
+                                        }
+                                    }
+                                } catch (Exception ignored) {
+
                                 }
-                            }
-                        } catch (Exception e) {
-
-                        }
-                }
-                activeChar.sendMessage(count + " AI stopped, " + count2 + " AI started");
+                        });
+                activeChar.sendMessage(" AI stopped, AI started");
                 break;
             case admin_spawn2: // Игнорирует запрет на спавн рейдбоссов
                 StringTokenizer st = new StringTokenizer(fullString, " ");
-                try {
                     st.nextToken();
                     String id = st.nextToken();
                     int respawnTime = 30;
                     int mobCount = 1;
                     if (st.hasMoreTokens())
-                        mobCount = Integer.parseInt(st.nextToken());
+                        mobCount = toInt(st.nextToken());
                     if (st.hasMoreTokens())
-                        respawnTime = Integer.parseInt(st.nextToken());
+                        respawnTime = toInt(st.nextToken());
                     spawnMonster(activeChar, id, respawnTime, mobCount);
-                } catch (Exception e) {
-                }
                 break;
         }
-
         return true;
     }
 
@@ -150,7 +146,7 @@ public class AdminServer implements IAdminCommandHandler {
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            templateId = NpcHolder.getTemplateByName(monsterId).npcId;
+            templateId = NpcHolder.getTemplateByName(monsterId).get(0).npcId;
         }
 
 

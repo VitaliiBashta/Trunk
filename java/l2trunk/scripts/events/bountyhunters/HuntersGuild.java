@@ -28,7 +28,6 @@ import static l2trunk.commons.lang.NumberUtils.toInt;
 import static l2trunk.commons.lang.NumberUtils.toLong;
 
 public final class HuntersGuild extends Functions implements ScriptFile, IVoicedCommandHandler, OnDeathListener {
-    private static final List<String> COMMAND_LIST = List.of("gettask", "declinetask");
     private static final Logger LOG = LoggerFactory.getLogger(HuntersGuild.class);
 
     @Override
@@ -38,14 +37,6 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
             return;
         VoicedCommandHandler.INSTANCE.registerVoicedCommandHandler(this);
         LOG.info("Loaded Event: Bounty Hunters Guild");
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private static boolean checkTarget(NpcTemplate npc) {
@@ -177,7 +168,7 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
 
     @Override
     public List<String> getVoicedCommandList() {
-        return COMMAND_LIST;
+        return List.of("gettask", "declinetask");
     }
 
     @Override

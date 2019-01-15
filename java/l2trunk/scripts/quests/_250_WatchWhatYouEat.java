@@ -5,16 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _250_WatchWhatYouEat extends Quest implements ScriptFile {
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
+public final class _250_WatchWhatYouEat extends Quest {
     // NPCs
     private static final int SALLY = 32743;
     // Mobs - Items
@@ -38,7 +29,7 @@ public class _250_WatchWhatYouEat extends Quest implements ScriptFile {
 
         addStartNpc(SALLY);
         addTalkId(SALLY);
-        for (int i[] : MOBS)
+        for (int[] i : MOBS)
             addKillId(i[0]);
     }
 
@@ -79,7 +70,7 @@ public class _250_WatchWhatYouEat extends Quest implements ScriptFile {
                     } else if (cond == 2) {
                         if (st.getQuestItemsCount(MOBS[0][1]) > 0 && st.getQuestItemsCount(MOBS[1][1]) > 0 && st.getQuestItemsCount(MOBS[2][1]) > 0) {
                             htmltext = "32743-05.htm";
-                            for (int items[] : MOBS)
+                            for (int[] items : MOBS)
                                 st.takeItems(items[1], -1);
                         } else
                             htmltext = "32743-06.htm";
@@ -96,7 +87,7 @@ public class _250_WatchWhatYouEat extends Quest implements ScriptFile {
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
         if (st.getState() == STARTED && st.getCond() == 1) {
-            for (int mob[] : MOBS) {
+            for (int[] mob : MOBS) {
                 if (npc.getNpcId() == mob[0]) {
                     if (st.getQuestItemsCount(mob[1]) == 0) {
                         st.giveItems(mob[1], 1);

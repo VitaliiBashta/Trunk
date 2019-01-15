@@ -84,14 +84,14 @@ public final class KashaNegate implements ScriptFile {
             actor.setDisplayId(npcId);
             DeleteObject d = new DeleteObject(actor);
             L2GameServerPacket su = actor.makeStatusUpdate(StatusUpdate.CUR_HP, StatusUpdate.MAX_HP);
-            for (Player player : World.getAroundPlayers(actor)) {
-                player.sendPacket(d, new NpcInfo(actor, player));
-                if (player.getTarget() == actor) {
-                    player.setTarget(null);
-                    player.setTarget(actor);
-                    player.sendPacket(su);
-                }
-            }
+            World.getAroundPlayers(actor)
+                    .peek(p -> p.sendPacket(d, new NpcInfo(actor, p)))
+                    .filter(p -> p.getTarget() == actor)
+                    .forEach(p -> {
+                        p.setTarget(null);
+                        p.setTarget(actor);
+                        p.sendPacket(su);
+                    });
         }
     }
 
@@ -103,10 +103,10 @@ public final class KashaNegate implements ScriptFile {
                     if (m == getRealNpcId((NpcInstance) c)) {
                         if (m == mobs.get(0) && !c.isDead()) {
                             if (!_debuffed)
-                                for (Creature p : zone.getInsidePlayables()) {
-                                    addEffect((NpcInstance) c, p, _debuff,1, false);
-                                    _debuffed = true;
-                                }
+                                _debuffed = zone.getInsidePlayables()
+                                        .peek(p ->
+                                                addEffect((NpcInstance) c, p, _debuff, 1, false))
+                                        .findFirst().isPresent();
                             c.doDie(null);
                         }
                         ThreadPoolManager.INSTANCE.schedule(new KashaRespawn((NpcInstance) c), 10000L);
@@ -122,11 +122,12 @@ public final class KashaNegate implements ScriptFile {
 
     private NpcInstance getKasha(Zone zone) {
         List<NpcInstance> mobs = new ArrayList<>();
-        for (Creature c : zone.getObjects())
-            if (c.isMonster() && !c.isDead())
-                for (int k : KashaNegate.mobs)
-                    if (k == getRealNpcId((NpcInstance) c))
-                        mobs.add((NpcInstance) c);
+        zone.getObjects().stream()
+                .filter(GameObject::isMonster)
+                .filter(c -> !c.isDead())
+                .forEach(c -> KashaNegate.mobs.stream()
+                        .filter(k -> k == getRealNpcId((NpcInstance) c))
+                        .forEach(k -> mobs.add((NpcInstance) c)));
         return mobs.isEmpty() ? null : Rnd.get(mobs);
     }
 
@@ -217,7 +218,7 @@ public final class KashaNegate implements ScriptFile {
     private class BuffTask extends RunnableImpl {
         @Override
         public void runImpl() {
-            for (String ZONE : ZONES) {
+            ZONES.forEach(ZONE -> {
                 Zone zone = ReflectionUtils.getZone(ZONE);
                 NpcInstance npc = getKasha(zone);
                 if (npc != null) {
@@ -232,25 +233,28 @@ public final class KashaNegate implements ScriptFile {
                                 yearningLvl++;
                             else if (getRealNpcId((NpcInstance) c) == mobs.get(2))
                                 despairLvl++;
-                    if (yearningLvl > 0 || curseLvl > 0 || despairLvl > 0)
-                        for (Creature cha : zone.getInsidePlayables()) {
-                            if (curseLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), BUFFS.get(0), curseLvl, true);
-                            } else
-                                cha.getEffectList().stopEffect(BUFFS.get(0));
-                            if (yearningLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), BUFFS.get(1), yearningLvl, true);
-                            } else
-                                cha.getEffectList().stopEffect(BUFFS.get(1));
-                            if (despairLvl > 0) {
-                                addEffect(npc, cha.getPlayer(), BUFFS.get(2), despairLvl, true);
-                            } else
-                                cha.getEffectList().stopEffect(BUFFS.get(2));
-                            if (Rnd.chance(10))
-                                cha.sendPacket(Msg.THE_KASHA_S_EYE_GIVES_YOU_A_STRANGE_FEELING);
-                        }
+                    if (yearningLvl > 0 || curseLvl > 0 || despairLvl > 0) {
+                        int c = curseLvl, y = yearningLvl, d = despairLvl;
+                        zone.getInsidePlayables()
+                                .forEach(cha -> {
+                                    if (c > 0) {
+                                        addEffect(npc, cha.getPlayer(), BUFFS.get(0), c, true);
+                                    } else
+                                        cha.getEffectList().stopEffect(BUFFS.get(0));
+                                    if (y > 0) {
+                                        addEffect(npc, cha.getPlayer(), BUFFS.get(1), y, true);
+                                    } else
+                                        cha.getEffectList().stopEffect(BUFFS.get(1));
+                                    if (d > 0) {
+                                        addEffect(npc, cha.getPlayer(), BUFFS.get(2), d, true);
+                                    } else
+                                        cha.getEffectList().stopEffect(BUFFS.get(2));
+                                    if (Rnd.chance(10))
+                                        cha.sendPacket(Msg.THE_KASHA_S_EYE_GIVES_YOU_A_STRANGE_FEELING);
+                                });
+                    }
                 }
-            }
+            });
         }
     }
 }

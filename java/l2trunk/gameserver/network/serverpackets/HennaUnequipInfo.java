@@ -3,7 +3,7 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.templates.Henna;
 
-public class HennaUnequipInfo extends L2GameServerPacket {
+public final class HennaUnequipInfo extends L2GameServerPacket {
     private final int _str;
     private final int _con;
     private final int _dex;

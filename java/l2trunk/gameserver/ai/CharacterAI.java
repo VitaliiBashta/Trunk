@@ -18,13 +18,13 @@ public class CharacterAI extends AbstractAI {
     @Override
     public void onIntentionIdle() {
         clientStopMoving();
-        changeIntention(CtrlIntention.AI_INTENTION_IDLE, null, null);
+        changeIntention(CtrlIntention.AI_INTENTION_IDLE);
     }
 
     @Override
     public void onIntentionActive() {
         clientStopMoving();
-        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE);
         onEvtThink();
     }
 
@@ -32,20 +32,20 @@ public class CharacterAI extends AbstractAI {
     public void onIntentionAttack(Creature target) {
         setAttackTarget(target);
         clientStopMoving();
-        changeIntention(CtrlIntention.AI_INTENTION_ATTACK, target, null);
+        changeIntention(CtrlIntention.AI_INTENTION_ATTACK);
         onEvtThink();
     }
 
     @Override
     public void onIntentionCast(Skill skill, Creature target) {
         setAttackTarget(target);
-        changeIntention(CtrlIntention.AI_INTENTION_CAST, skill, target);
+        changeIntention(CtrlIntention.AI_INTENTION_CAST);
         onEvtThink();
     }
 
     @Override
     public void onIntentionFollow(Creature target, Integer offset) {
-        changeIntention(CtrlIntention.AI_INTENTION_FOLLOW, target, offset);
+        changeIntention(CtrlIntention.AI_INTENTION_FOLLOW);
         onEvtThink();
     }
 
@@ -138,8 +138,8 @@ public class CharacterAI extends AbstractAI {
     public void onEvtClanAttacked(Creature attacked_member, Creature attacker, int damage) {
     }
 
-    public void Attack(GameObject target, boolean forceUse, boolean dontMove) {
-        setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+    public void Attack(Creature target, boolean forceUse, boolean dontMove) {
+        setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
     }
 
     public void Cast(Skill skill, Creature target) {
@@ -147,7 +147,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
-        setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+        setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
     }
 
     @Override
@@ -203,7 +203,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     @Override
-    public void onEvtTimer(int timerId, Object arg1, Object arg2) {
+    public void onEvtTimer(int timerId) {
     }
 
     protected void addTimer(int timerId, long delay) {
@@ -215,23 +215,19 @@ public class CharacterAI extends AbstractAI {
     }
 
     protected void addTimer(int timerId, Object arg1, Object arg2, long delay) {
-        ThreadPoolManager.INSTANCE.schedule(new Timer(timerId, arg1, arg2), delay);
+        ThreadPoolManager.INSTANCE.schedule(new Timer(timerId), delay);
     }
 
     protected class Timer extends RunnableImpl {
-        private final int _timerId;
-        private final Object _arg1;
-        private final Object _arg2;
+        private final int timerId;
 
-        Timer(int timerId, Object arg1, Object arg2) {
-            _timerId = timerId;
-            _arg1 = arg1;
-            _arg2 = arg2;
+        Timer(int timerId) {
+            this.timerId = timerId;
         }
 
         @Override
         public void runImpl() {
-            notifyEvent(CtrlEvent.EVT_TIMER, _timerId, _arg1, _arg2);
+            notifyEvent(CtrlEvent.EVT_TIMER, timerId);
         }
     }
 }

@@ -2,7 +2,6 @@ package l2trunk.gameserver.handler.voicecommands.impl;
 
 import l2trunk.commons.lang.NumberUtils;
 import l2trunk.gameserver.Config;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.SimpleSpawner;
@@ -12,17 +11,16 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.tables.SpawnTable;
-import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class NpcSpawn extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Arrays.asList("npcspawn", "spawnnpc");
+    private static final List<String> COMMANDS = List.of("npcspawn", "spawnnpc");
 
-    private static final int[] NPCS = {37031, 37032, 37033, 37034, 37035, 37036, 37037, 37038, 37039, 37040, 32323, 30120, 37041};
+    private static final List<Integer> NPCS = List.of(
+            37031, 37032, 37033, 37034, 37035, 37036, 37037, 37038, 37039, 37040, 32323, 30120, 37041);
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String target) {
@@ -41,8 +39,7 @@ public final class NpcSpawn extends Functions implements IVoicedCommandHandler {
 
         }
 
-        if (target.isEmpty()) // No variables, then display main html
-        {
+        if (target.isEmpty()) {// No variables, then display main html
             NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
             html.setFile("custom/npcspawn.htm");// i think thats a what to set there?
             activeChar.sendPacket(html);
@@ -51,13 +48,12 @@ public final class NpcSpawn extends Functions implements IVoicedCommandHandler {
 
         // Fill the NPCs table. Spawned will lead to an active NpcInstance, unspawned will lead to null.
         Map<Integer, NpcInstance> npcs = new HashMap<>();
-        for (int npcId : NPCS)
-            npcs.put(npcId, null);
+        NPCS.forEach(npcId -> npcs.put(npcId, null));
 
-        for (NpcInstance npc : zone.getInsideNpcs()) {
-            if (Arrays.binarySearch(NPCS, npc.getNpcId()) >= 0)
-                npcs.put(npc.getNpcId(), npc);
-        }
+        zone.getInsideNpcs()
+                .filter(npc -> NPCS.contains(npc.getNpcId()))
+                .forEach(npc -> npcs.put(npc.getNpcId(), npc));
+
 
         String[] vars = target.split(" ");
         if (vars.length < 2)
@@ -83,7 +79,7 @@ public final class NpcSpawn extends Functions implements IVoicedCommandHandler {
 
             if (!Config.LOAD_CUSTOM_SPAWN)
                 activeChar.sendMessage("Apparently the npc cannot be saved and will be deleted upon server restart.");
-        } else if (unspawnNpc) {
+        } else {
             NpcInstance npc = npcs.get(npcId);
             if (npc == null) {
                 activeChar.sendMessage("The npc is already unspawned.");

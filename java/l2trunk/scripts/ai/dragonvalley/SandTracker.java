@@ -4,11 +4,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.Arrays;
+import java.util.List;
 
 public final class SandTracker extends Patrollers {
     public SandTracker(NpcInstance actor) {
         super(actor);
-        points = Arrays.asList(new Location(122360, 114312, -3792),
+        points = List.of(new Location(122360, 114312, -3792),
                 new Location(125032, 114872, -3728),
                 new Location(127304, 114040, -3520),
                 new Location(128216, 113480, -3696),

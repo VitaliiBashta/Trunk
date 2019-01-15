@@ -10,9 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class _426_QuestforFishingShot extends Quest implements ScriptFile {
+public final class _426_QuestforFishingShot extends Quest  {
     private static final int SWEET_FLUID = 7586;
-    private static final List<Integer> MOBS = Arrays.asList(
+    private static final List<Integer> MOBS = List.of(
             20005, 20013, 20016, 20017, 20024, 20025, 20043, 20044, 20046, 20047, 20050, 20058, 20063,
             20066, 20070, 20074, 20077, 20078, 20079, 20080, 20081, 20082, 20083, 20084, 20085, 20088,
             20089, 20100, 20106, 20115, 20120, 20131, 20132, 20135, 20157, 20162, 20176, 20225, 20227,
@@ -31,7 +31,7 @@ public class _426_QuestforFishingShot extends Quest implements ScriptFile {
             21269, 21271, 21272, 21273, 21314, 21316, 21318, 21320, 21322, 22634, 22636, 22638, 22640,
             22641, 22644, 22646, 22649, 21508, 21510, 21511, 21514, 21516, 21518, 21520, 21523, 21526,
             21529, 21530, 21531, 21536, 21532, 21542, 21543, 21544);
-    private static final List<Integer> HMOBS = Arrays.asList(
+    private static final List<Integer> HMOBS = List.of(
             20651, 20652, 20655, 20656, 20657, 20658, 20772, 20809, 20810, 20811, 20812, 20814, 20815,
             20816, 20819, 20822, 20824, 20825, 20828, 20829, 20830, 20978, 20979, 20983, 20985, 21058,
             21061, 21066, 21067, 21070, 21072, 21075, 21078, 21081, 21314, 21316, 21318, 21320, 21322,
@@ -51,18 +51,6 @@ public class _426_QuestforFishingShot extends Quest implements ScriptFile {
         addStartNpc(32348);
 
         addKillId(MOBS);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

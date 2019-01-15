@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
-class GetIP {
+public final class GetIP {
     private static final Logger LOG = LoggerFactory.getLogger(GetIP.class);
     private static String IpAddress;
 

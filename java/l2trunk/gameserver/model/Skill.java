@@ -2,6 +2,7 @@ package l2trunk.gameserver.model;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.geometry.Polygon;
+import l2trunk.commons.lang.NumberUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.BalancerConfig;
 import l2trunk.gameserver.Config;
@@ -26,8 +27,8 @@ import l2trunk.gameserver.network.serverpackets.FlyToLocation.FlyType;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.skills.effects.EffectTemplate;
-import l2trunk.gameserver.skills.skillclasses.*;
 import l2trunk.gameserver.skills.skillclasses.DeathPenalty;
+import l2trunk.gameserver.skills.skillclasses.*;
 import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.stats.StatTemplate;
@@ -43,6 +44,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -75,7 +78,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private static final int SKILL_DETECTION = 933;
     private static final Logger _log = LoggerFactory.getLogger(Skill.class);
     private static final String OLYMPIAD_KEYS_START_WORD = "Olympiad";
-    protected final int[] _itemConsumeId;
+    protected final List<Integer> itemConsumeId;
     protected final boolean _isItemHandler;
     protected final SkillType skillType;
     protected final SkillTargetType targetType;
@@ -85,7 +88,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     protected final int _npcId;
     protected final int skillRadius;
     protected final double _absorbPart;
-    private final int[] _itemConsume;
+    private final List<Integer> itemConsume;
     private final int referenceItemId;
     private final int _referenceItemMpConsume;
     private final Map<String, String> olympiadValues;
@@ -121,7 +124,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     private final boolean _isIgnoreResists;
     private final boolean _isIgnoreInvul;
     private final boolean _isTrigger;
-    private final boolean _isNotAffectedByMute;
+    private final boolean isNotAffectedByMute;
     private final boolean _basedOnTargetDebuff;
     private final boolean deathlink;
     private final boolean _hideStartMessage;
@@ -222,26 +225,19 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         String s2 = set.getString("itemConsumeId", "");
 
         if (s1.length() == 0) {
-            _itemConsume = new int[]
-                    {
-                            0
-                    };
+            itemConsume = List.of(0);
         } else {
-            String[] s = s1.split(" ");
-            _itemConsume = new int[s.length];
-            for (int i = 0; i < s.length; i++) {
-                _itemConsume[i] = toInt(s[i]);
-            }
+            itemConsume = Stream.of(s1.split(" "))
+                    .map(NumberUtils::toInt)
+                    .collect(Collectors.toList());
         }
 
         if (s2.length() == 0) {
-            _itemConsumeId = new int[]{0};
+            itemConsumeId = List.of(0);
         } else {
-            String[] s = s2.split(" ");
-            _itemConsumeId = new int[s.length];
-            for (int i = 0; i < s.length; i++) {
-                _itemConsumeId[i] = toInt(s[i]);
-            }
+            itemConsumeId = Stream.of(s2.split(" "))
+                    .map(NumberUtils::toInt)
+                    .collect(Collectors.toList());
         }
 
         referenceItemId = set.getInteger("referenceItemId", 0);
@@ -278,7 +274,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _isIgnoreResists = set.getBool("isIgnoreResists", false);
         _isIgnoreInvul = set.getBool("isIgnoreInvul", false);
         _isTrigger = set.getBool("isTrigger", false);
-        _isNotAffectedByMute = set.getBool("isNotAffectedByMute", false);
+        isNotAffectedByMute = set.getBool("isNotAffectedByMute", false);
         _flyingTransformUsage = set.getBool("flyingTransformUsage", false);
         _canUseTeleport = set.getBool("canUseTeleport", true);
 
@@ -315,7 +311,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _condCharges = set.getInteger("cond_charges", 0);
         delayedEffect = set.getInteger("delayedEffect", 0);
         _cancelTarget = set.getInteger("cancelTarget", 0);
-        boolean _skillInterrupt = set.getBool("skillInterrupt", false);
         _lethal1 = set.getDouble("lethal1", 0.);
         _lethal2 = set.getDouble("lethal2", 0.);
         _absorbPart = set.getDouble("absorbPart", 0.);
@@ -471,7 +466,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 
         if (player != null) {
             if (player.isInFlyingTransform() && _isItemHandler && !flyingTransformUsage()) {
-                player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(getItemConsumeId()[0]));
+                player.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(getItemConsumeId().get(0)));
                 return false;
             }
 
@@ -492,14 +487,14 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                 return false;
             }
 
-            if (first && (_itemConsume[0] > 0)) {
-                for (int i = 0; i < _itemConsume.length; i++) {
+            if (first && (itemConsume.get(0) > 0)) {
+                for (int item : itemConsume) {
                     Inventory inv = ((Playable) activeChar).getInventory();
                     if (inv == null) {
                         inv = player.getInventory();
                     }
-                    ItemInstance requiredItems = inv.getItemByItemId(_itemConsumeId[i]);
-                    if ((requiredItems == null) || (requiredItems.getCount() < _itemConsume[i])) {
+                    ItemInstance requiredItems = inv.getItemByItemId(item);
+                    if ((requiredItems == null) || (requiredItems.getCount() < item)) {
                         if (activeChar == player) {
                             player.sendPacket(isHandler() ? SystemMsg.INCORRECT_ITEM_COUNT : SystemMsg.THERE_ARE_NOT_ENOUGH_NECESSARY_ITEMS_TO_USE_THE_SKILL);
                         }
@@ -880,12 +875,13 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                         ArenaParticipantsHolder holder = HandysBlockCheckerManager.INSTANCE.getHolder(playerArena);
                         int team = holder.getPlayerTeam(player);
                         // Aura attack
-                        for (Player actor : World.getAroundPlayers(activeChar, 250, 100)) {
-                            if (holder.getAllPlayers().contains(actor) && (holder.getPlayerTeam(actor) != team)) {
-                                targets.add(actor);
-                            }
-                        }
+                        World.getAroundPlayers(activeChar, 250, 100)
+                                .filter(actor -> holder.getAllPlayers().contains(actor))
+                                .filter(actor -> holder.getPlayerTeam(actor) != team)
+                                .forEach(targets::add);
                     }
+
+
                 }
                 break;
             }
@@ -941,18 +937,17 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_ALLY: {
                 if (activeChar.isMonster() || activeChar.isSiegeGuard()) {
                     targets.add(activeChar);
-                    for (Creature c : World.getAroundCharacters(activeChar, skillRadius, 600)) {
-                        if (!c.isDead() && (c.isMonster() || c.isSiegeGuard()) /* && ((L2MonsterInstance) c).getFactionId().equals(mob.getFactionId()) */) {
-                            targets.add(c);
-                        }
-                    }
+                    targets.addAll(World.getAroundCharacters(activeChar, skillRadius, 600)
+                            .filter(c -> !c.isDead())
+                            .filter(c -> c.isMonster() || c.isSiegeGuard())
+                            .collect(Collectors.toList()));
                     break;
                 }
                 Player player = activeChar.getPlayer();
                 if (player == null) {
                     break;
                 }
-                for (Player target : World.getAroundPlayers(player, skillRadius, 600)) {
+                for (Player target : World.getAroundPlayers(player, skillRadius, 600).collect(Collectors.toList())) {
                     boolean check = false;
                     switch (targetType) {
                         case TARGET_PARTY:
@@ -997,20 +992,16 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             case TARGET_FRIEND: {
                 if (activeChar.isMonster() || activeChar.isSiegeGuard()) {
                     targets.add(activeChar);
-                    for (Creature c : World.getAroundCharacters(activeChar, skillRadius, 900)) {
-                        if (!c.isDead() && (c.isMonster() || c.isSiegeGuard())) {
-                            targets.add(c);
-                        }
-                    }
+                    targets.addAll(World.getAroundCharacters(activeChar, skillRadius, 900)
+                            .filter(c -> !c.isDead())
+                            .filter(c -> c.isMonster() || c.isSiegeGuard())
+                            .collect(Collectors.toList()));
                     break;
                 }
                 Player player = activeChar.getPlayer();
-                for (Player target : World.getAroundPlayers(player, skillRadius, 350)) {
-                    if (checkTarget(player, target, aimingTarget, forceUse, false) != null) {
-                        continue;
-                    }
-                    addTargetAndPetToList(targets, player, target);
-                }
+                World.getAroundPlayers(player, skillRadius, 350)
+                        .filter(target -> checkTarget(player, target, aimingTarget, forceUse, false) == null)
+                        .forEach(target -> addTargetAndPetToList(targets, player, target));
                 addTargetAndPetToList(targets, player, player);
                 break;
             }
@@ -1053,7 +1044,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         }
 
         final int affectLimit = this.affectLimit.get(0) <= 0 ? Integer.MAX_VALUE : Rnd.get(this.affectLimit.get(0), this.affectLimit.get(this.affectLimit.size() - 1));
-        List<Creature> list = aimingTarget.getAroundCharacters(skillRadius, 300);
+        List<Creature> list = aimingTarget.getAroundCharacters(skillRadius, 300).collect(Collectors.toList());
         if (skillType == SkillType.AGGRESSION) {
             list.sort((c1, c2) -> Boolean.compare(c1.getAI().getAttackTarget() == activeChar, c2.getAI().getAttackTarget() == activeChar));
         } else if (skillType == SkillType.SPOIL) {
@@ -1061,7 +1052,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         }
 
         for (Creature target : list) {
-            if ((terr != null) && !terr.isInside(target.getX(), target.getY(), target.getZ()))
+            if ((terr != null) && !terr.isInside(target.getLoc()))
                 continue;
             if ((target == null) || (activeChar == target) || ((activeChar.getPlayer() != null) && (activeChar.getPlayer() == target.getPlayer())))
                 continue;
@@ -1520,15 +1511,12 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         this.id = id;
     }
 
-    /**
-     * @return Returns the itemConsume.
-     */
-    public final int[] getItemConsume() {
-        return _itemConsume;
+    public final List<Integer> getItemConsume() {
+        return itemConsume;
     }
 
-    public final int[] getItemConsumeId() {
-        return _itemConsumeId;
+    public final List<Integer> getItemConsumeId() {
+        return itemConsumeId;
     }
 
     public final int getReferenceItemId() {
@@ -2041,7 +2029,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
     }
 
     public boolean isNotAffectedByMute() {
-        return _isNotAffectedByMute;
+        return isNotAffectedByMute;
     }
 
     private boolean flyingTransformUsage() {
@@ -2064,16 +2052,11 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         _enchantLevelCount = count;
     }
 
-    public boolean isClanSkill() {
-        return ((id >= 370) && (id <= 391)) || ((id >= 611) && (id <= 616));
-    }
-
     public boolean isBaseTransformation() {// Inquisitor, Vanguard, Final Form...
         return ((id >= 810) && (id <= 813)) || ((id >= 1520) && (id <= 1522)) || (id == 538);
     }
 
-    protected boolean isSummonerTransformation() // Spirit of the Cat etc
-    {
+    protected boolean isSummonerTransformation() {// Spirit of the Cat etc
         return (id >= 929) && (id <= 931);
     }
 

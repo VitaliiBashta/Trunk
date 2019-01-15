@@ -19,13 +19,12 @@ public enum StringHolder {
     private static final Logger LOG = LoggerFactory.getLogger(StringHolder.class);
     private final Map<Language, Map<String, String>> strings = new HashMap<>();
 
-    public String getNullable(Player player, String name) {
-        Language lang = player == null ? Language.ENGLISH : player.getLanguage();
-        return get(lang, name);
+    public String getNullable(String name) {
+        return get(Language.ENGLISH, name);
     }
 
     public String getNotNull(Player player, String name) {
-        Language lang = player == null ? Language.ENGLISH : player.getLanguage();
+        Language lang =  Language.ENGLISH;
 
         String text = get(lang, name);
         if (text == null && player != null) {

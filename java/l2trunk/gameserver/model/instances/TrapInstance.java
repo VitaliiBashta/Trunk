@@ -12,14 +12,15 @@ import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.MyTargetSelected;
 import l2trunk.gameserver.network.serverpackets.NpcInfo;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
+import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.taskmanager.EffectTaskManager;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
 
 public final class TrapInstance extends NpcInstance {
     private final HardReference<? extends Creature> _ownerRef;
@@ -28,14 +29,14 @@ public final class TrapInstance extends NpcInstance {
     private ScheduledFuture<?> _destroyTask;
     private boolean _detected;
 
-    public TrapInstance(int objectId, NpcTemplate template, Creature owner, Skill skill) {
-        this(objectId, template, owner, skill, owner.getLoc());
+    public TrapInstance(int objectId, NpcTemplate template, Creature owner, int skillId) {
+        this(objectId, template, owner, skillId, owner.getLoc());
     }
 
-    public TrapInstance(int objectId, NpcTemplate template, Creature owner, Skill skill, Location loc) {
+    public TrapInstance(int objectId, NpcTemplate template, Creature owner, int skillId, Location loc) {
         super(objectId, template);
         _ownerRef = owner.getRef();
-        this.skill = skill;
+        this.skill = SkillTable.INSTANCE.getInfo(skillId);
 
         setReflection(owner.getReflection());
         setLevel(owner.getLevel());
@@ -186,23 +187,24 @@ public final class TrapInstance extends NpcInstance {
             if (owner == null)
                 return;
 
-            for (Creature target : trap.getAroundCharacters(200, 200))
-                if (target != owner)
-                    if (trap.skill.checkTarget(owner, target, null, false, false) == null) {
-                        List<Creature> targets = new ArrayList<>();
-                        if (trap.skill.getTargetType() != SkillTargetType.TARGET_AREA)
-                            targets.add(target);
-                        else
-                            for (Creature t : trap.getAroundCharacters(trap.skill.getSkillRadius(), 128))
-                                if (trap.skill.checkTarget(owner, t, null, false, false) == null)
-                                    targets.add(target);
+            trap.getAroundCharacters(200, 200)
+                    .filter(target -> target != owner)
+                    .findFirst().ifPresent(target -> {
+                if (trap.skill.checkTarget(owner, target, null, false, false) == null) {
+                    List<Creature> targets;
+                    if (trap.skill.getTargetType() != SkillTargetType.TARGET_AREA)
+                        targets = List.of(target);
+                    else
+                        targets = trap.getAroundCharacters(trap.skill.getSkillRadius(), 128)
+                                .filter(t -> trap.skill.checkTarget(owner, t, null, false, false) == null)
+                                .collect(Collectors.toList());
 
-                        trap.skill.useSkill(trap, targets);
-                        if (target.isPlayer())
-                            target.sendMessage(new CustomMessage("common.Trap", target.getPlayer()));
-                        trap.deleteMe();
-                        break;
-                    }
+                    trap.skill.useSkill(trap, targets);
+                    if (target.isPlayer())
+                        target.sendMessage(new CustomMessage("common.Trap", target.getPlayer()));
+                    trap.deleteMe();
+                }
+            });
         }
     }
 }

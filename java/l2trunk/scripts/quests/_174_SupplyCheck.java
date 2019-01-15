@@ -5,22 +5,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _174_SupplyCheck extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _174_SupplyCheck extends Quest {
     private final int Marcela = 32173;
     private final int Benis = 32170; // warehouse keeper
     private final int Nika = 32167; // grocerer
@@ -32,13 +19,13 @@ public class _174_SupplyCheck extends Quest implements ScriptFile {
     //int WeaponShopManifest = 9794;
     //int SupplyReport = 9795;
 
-    private final int WoodenBreastplate = 23;
-    private final int WoodenGaiters = 2386;
-    private final int LeatherTunic = 429;
-    private final int LeatherStockings = 464;
-    private final int WoodenHelmet = 43;
-    private final int LeatherShoes = 37;
-    private final int Gloves = 49;
+    private static final int WoodenBreastplate = 23;
+    private static final int WoodenGaiters = 2386;
+    private static final int LeatherTunic = 429;
+    private static final int LeatherStockings = 464;
+    private static final int WoodenHelmet = 43;
+    private static final int LeatherShoes = 37;
+    private static final int Gloves = 49;
 
     public _174_SupplyCheck() {
         super(false);

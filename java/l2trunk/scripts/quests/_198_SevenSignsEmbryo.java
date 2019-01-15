@@ -12,7 +12,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public class _198_SevenSignsEmbryo extends Quest implements ScriptFile {
+public final class _198_SevenSignsEmbryo extends Quest {
     // NPCs
     private static final int Wood = 32593;
     private static final int Franz = 32597;
@@ -136,17 +136,5 @@ public class _198_SevenSignsEmbryo extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(izId)) {
             ReflectionUtils.enterReflection(player, izId);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

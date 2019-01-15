@@ -304,14 +304,6 @@ public class FourSepulchersManager extends Functions implements ScriptFile, OnDe
         init();
     }
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     private static class ManagerSay extends RunnableImpl {
         @Override
         public void runImpl() {

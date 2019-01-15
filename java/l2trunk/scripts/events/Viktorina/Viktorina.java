@@ -392,7 +392,6 @@ public final class Viktorina extends Functions implements ScriptFile, IVoicedCom
     @Override
     public void onShutdown() {
         stop();
-
     }
 
     @Override

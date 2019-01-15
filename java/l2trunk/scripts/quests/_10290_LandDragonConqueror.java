@@ -5,11 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _10290_LandDragonConqueror extends Quest implements ScriptFile {
+public final class _10290_LandDragonConqueror extends Quest {
     private static final int Theodric = 30755;
     private static final int ShabbyNecklace = 15522;
     private static final int MiracleNecklace = 15523;
@@ -76,17 +72,5 @@ public class _10290_LandDragonConqueror extends Quest implements ScriptFile {
             st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

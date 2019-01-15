@@ -3,36 +3,16 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _614_SlayTheEnemyCommander extends Quest implements ScriptFile {
+public final class _614_SlayTheEnemyCommander extends Quest {
     // NPC
     private static final int DURAI = 31377;
     private static final int KETRAS_COMMANDER_TAYR = 25302;
 
-    // etc
-    @SuppressWarnings("unused")
-    private static final int MARK_OF_VARKA_ALLIANCE1 = 7221;
-    @SuppressWarnings("unused")
-    private static final int MARK_OF_VARKA_ALLIANCE2 = 7222;
-    @SuppressWarnings("unused")
-    private static final int MARK_OF_VARKA_ALLIANCE3 = 7223;
     private static final int MARK_OF_VARKA_ALLIANCE4 = 7224;
     private static final int MARK_OF_VARKA_ALLIANCE5 = 7225;
     private static final int HEAD_OF_TAYR = 7241;
     private static final int FEATHER_OF_WISDOM = 7230;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _614_SlayTheEnemyCommander() {
         super(true);

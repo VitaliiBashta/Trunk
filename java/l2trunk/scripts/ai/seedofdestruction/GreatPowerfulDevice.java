@@ -5,13 +5,14 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class GreatPowerfulDevice extends DefaultAI {
-    private static final int[] MOBS = {22540, // White Dragon Leader
+    private static final List<Integer> MOBS = List.of(22540, // White Dragon Leader
             22546, // Warrior of Light
             22542, // Dragon Steed Troop Magic Leader
             22547, // Dragon Steed Troop Healer
-            22538 // Dragon Steed Troop Commander
-    };
+            22538); // Dragon Steed Troop Commander
     private static final Location OBELISK_LOC = new Location(-245825, 217075, -12208);
 
     public GreatPowerfulDevice(NpcInstance actor) {
@@ -26,25 +27,19 @@ public final class GreatPowerfulDevice extends DefaultAI {
         if (checkAllDestroyed(actor.getNpcId())) {
             // Спаун мобов вокруг обелиска
             for (int i = 0; i < 6; i++)
-                for (int mobId : MOBS)
-                    actor.getReflection().addSpawnWithoutRespawn(mobId, Location.findPointToStay(OBELISK_LOC.clone().setZ(-12224), 600, 1200, actor.getGeoIndex()), 0);
+                MOBS.forEach(mobId ->
+                        actor.getReflection().addSpawnWithoutRespawn(mobId, Location.findPointToStay(OBELISK_LOC.clone().setZ(-12224), 600, 1200, actor.getGeoIndex()), 0));
             actor.getReflection().openDoor(12240027);
-            for (NpcInstance n : actor.getReflection().getNpcs())
-                if (n.getNpcId() == 18778)
-                    n.stopDamageBlocked();
+            actor.getReflection().getNpcs()
+                    .filter(n -> n.getNpcId() == 18778)
+                    .forEach(Creature::stopDamageBlocked);
         }
         super.onEvtDead(killer);
     }
 
-    /**
-     * Проверяет, уничтожены ли все GreatPowerfulDevice в текущем измерении
-     *
-     * @return true если все уничтожены
-     */
     private boolean checkAllDestroyed(int mobId) {
-        for (NpcInstance n : getActor().getReflection().getNpcs())
-            if (n.getNpcId() == mobId && !n.isDead())
-                return false;
-        return true;
+        return getActor().getReflection().getNpcs()
+                .filter(n -> (n.getNpcId() == mobId))
+                .allMatch(Creature::isDead);
     }
 }

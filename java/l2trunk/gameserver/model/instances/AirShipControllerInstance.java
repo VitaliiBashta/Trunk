@@ -1,6 +1,6 @@
 package l2trunk.gameserver.model.instances;
 
-import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.boat.Boat;
@@ -70,10 +70,10 @@ public class AirShipControllerInstance extends NpcInstance {
     }
 
     Boat getDockedAirShip() {
-        for (Creature cha : World.getAroundCharacters(this, 1000, 500))
-            if (cha.isAirShip() && ((Boat) cha).isDocked())
-                return (Boat) cha;
-
-        return null;
+        return World.getAroundCharacters(this, 1000, 500)
+                .filter(GameObject::isAirShip)
+                .map(cha -> (Boat) cha)
+                .filter(Boat::isDocked)
+                .findFirst().orElse(null);
     }
 }

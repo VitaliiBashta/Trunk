@@ -3,25 +3,12 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _154_SacrificeToSea extends Quest implements ScriptFile {
+public final class _154_SacrificeToSea extends Quest {
     private static final int FOX_FUR_ID = 1032;
     private static final int FOX_FUR_YARN_ID = 1033;
     private static final int MAIDEN_DOLL_ID = 1034;
     private static final int MYSTICS_EARRING_ID = 113;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _154_SacrificeToSea() {
         super(false);
@@ -31,15 +18,8 @@ public class _154_SacrificeToSea extends Quest implements ScriptFile {
         addTalkId(30051);
         addTalkId(30055);
 
-        addKillId(20481);
-        addKillId(20544);
-        addKillId(20545);
-
-        addQuestItem(new int[]{
-                FOX_FUR_ID,
-                FOX_FUR_YARN_ID,
-                MAIDEN_DOLL_ID
-        });
+        addKillId(20481, 20544, 20545);
+        addQuestItem(FOX_FUR_ID, FOX_FUR_YARN_ID, MAIDEN_DOLL_ID);
     }
 
     @Override

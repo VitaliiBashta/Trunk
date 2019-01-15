@@ -17,12 +17,64 @@ import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
     private static final Logger _log = LoggerFactory.getLogger(CareerManager.class);
+
+    private static void changeClass(Player player, int classId) {
+        if (player.getClassId().getLevel() == 3)
+            player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_YOUR_THIRDCLASS_TRANSFER_QUEST); // ??? 3 ?????
+        else
+            player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_A_CLASS_TRANSFER); // ??? 1 ? 2 ?????
+
+        player.setClassId(classId, false, false);
+        player.broadcastUserInfo(true);
+    }
+
+    private static boolean checkCondition(Player player) {
+        if (player == null)
+            return false;
+
+        if (!Config.USE_BBS_PROF_IS_COMBAT && (player.getPvpFlag() != 0 || player.isInDuel() || player.isInCombat() || player.isAttackingNow())) {
+            player.sendMessage("During combat, you can not use this feature.");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return Returns true if the player can transfer to the selected class
+     */
+    private static boolean checkIfCanTransferToClass(Player player, int newClassId) {
+        if (player == null)
+            return false;
+
+        final ClassId currentClassId = player.getClassId();
+        final int jobLevel = player.getLevel();
+        final int level = player.getLevel();
+
+        if (Config.ALLOW_CLASS_MASTERS_LIST.isEmpty() || !Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevel))
+            return false;
+
+        if (level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevel)) {
+            for (ClassId cid : ClassId.values()) {
+                if (cid.getId() != newClassId)
+                    continue;
+
+                if (cid == ClassId.inspector)
+                    return false;
+
+                if (cid.childOf(currentClassId) && cid.level() == currentClassId.level() + 1)
+                    return true;
+
+            }
+        }
+
+        return false;
+    }
 
     @Override
     public void onLoad() {
@@ -40,7 +92,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
 
     @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_bbscareer;", "_bbscareer;sub;", "_bbscareer;classmaster;change_class;");
+        return List.of("_bbscareer;", "_bbscareer;sub;", "_bbscareer;classmaster;change_class;");
     }
 
     @SuppressWarnings("incomplete-switch")
@@ -109,62 +161,7 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
         }
     }
 
-    private static void changeClass(Player player, int classId) {
-        if (player.getClassId().getLevel() == 3)
-            player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_YOUR_THIRDCLASS_TRANSFER_QUEST); // ??? 3 ?????
-        else
-            player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_A_CLASS_TRANSFER); // ??? 1 ? 2 ?????
-
-        player.setClassId(classId, false, false);
-        player.broadcastUserInfo(true);
-    }
-
     @Override
     public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
-
-    private static boolean checkCondition(Player player) {
-        if (player == null)
-            return false;
-
-        if (!Config.USE_BBS_PROF_IS_COMBAT && (player.getPvpFlag() != 0 || player.isInDuel() || player.isInCombat() || player.isAttackingNow())) {
-            player.sendMessage("During combat, you can not use this feature.");
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param player
-     * @param newClassId
-     * @return Returns true if the player can transfer to the selected class
-     */
-    private static boolean checkIfCanTransferToClass(Player player, int newClassId) {
-        if (player == null)
-            return false;
-
-        final ClassId currentClassId = player.getClassId();
-        final int jobLevel = player.getLevel();
-        final int level = player.getLevel();
-
-        if (Config.ALLOW_CLASS_MASTERS_LIST.isEmpty() || !Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevel))
-            return false;
-
-        if ((level >= 20 && jobLevel == 1 || level >= 40 && jobLevel == 2 || level >= 76 && jobLevel == 3) && Config.ALLOW_CLASS_MASTERS_LIST.contains(jobLevel)) {
-            for (ClassId cid : ClassId.values()) {
-                if (cid.getId() != newClassId)
-                    continue;
-
-                if (cid == ClassId.inspector)
-                    return false;
-
-                if (cid.childOf(currentClassId) && cid.level() == currentClassId.level() + 1)
-                    return true;
-
-            }
-        }
-
-        return false;
     }
 }

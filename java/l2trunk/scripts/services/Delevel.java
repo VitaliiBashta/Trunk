@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Util;
 
-public final class Delevel extends Functions implements ScriptFile {
+public final class Delevel extends Functions {
     public void delevel_page() {
         Player player = getSelf();
         if (player == null) {
@@ -46,15 +46,4 @@ public final class Delevel extends Functions implements ScriptFile {
         }
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

@@ -12,9 +12,8 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.Future;
 
 public final class DarknessFestival extends Reflection {
@@ -22,11 +21,8 @@ public final class DarknessFestival extends Reflection {
     private static final int FESTIVAL_FIRST_SPAWN = 60000; // 1 min
     private static final int FESTIVAL_SECOND_SPAWN = 540000; // 9 mins
     private static final int FESTIVAL_CHEST_SPAWN = 900000; // 15 mins
-    private static final Logger _log = LoggerFactory.getLogger(DarknessFestival.class);
     private final int _levelRange;
     private final int _cabal;
-    private final FestivalSpawn _witchSpawn;
-    private final FestivalSpawn _startLocation;
     private int currentState = 0;
     private boolean _challengeIncreased = false;
     private Future<?> _spawnTimerTask;
@@ -40,12 +36,14 @@ public final class DarknessFestival extends Reflection {
         _cabal = cabal;
         startCollapseTimer(FESTIVAL_LENGTH + FESTIVAL_FIRST_SPAWN);
 
+        FestivalSpawn _witchSpawn;
+        FestivalSpawn _startLocation;
         if (cabal == SevenSigns.CABAL_DAWN) {
-            _witchSpawn = new FestivalSpawn(FestivalSpawn.FESTIVAL_DAWN_WITCH_SPAWNS[_levelRange]);
-            _startLocation = new FestivalSpawn(FestivalSpawn.FESTIVAL_DAWN_PLAYER_SPAWNS[_levelRange]);
+            _witchSpawn = new FestivalSpawn(FestivalSpawn.FESTIVAL_DAWN_WITCH_SPAWNS.get(_levelRange));
+            _startLocation = new FestivalSpawn(FestivalSpawn.FESTIVAL_DAWN_PLAYER_SPAWNS.get(_levelRange));
         } else {
-            _witchSpawn = new FestivalSpawn(FestivalSpawn.FESTIVAL_DUSK_WITCH_SPAWNS[_levelRange]);
-            _startLocation = new FestivalSpawn(FestivalSpawn.FESTIVAL_DUSK_PLAYER_SPAWNS[_levelRange]);
+            _witchSpawn = new FestivalSpawn(FestivalSpawn.FESTIVAL_DUSK_WITCH_SPAWNS.get(_levelRange));
+            _startLocation = new FestivalSpawn(FestivalSpawn.FESTIVAL_DUSK_PLAYER_SPAWNS.get(_levelRange));
         }
 
         party.setReflection(this);
@@ -74,7 +72,7 @@ public final class DarknessFestival extends Reflection {
                 _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
-                        spawnFestivalMonsters(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN, 0);
+                        spawnFestivalMonsters(0);
                         sendMessageToParticipants("Go!");
                         scheduleNext();
                     }
@@ -86,7 +84,7 @@ public final class DarknessFestival extends Reflection {
                 _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
-                        spawnFestivalMonsters(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN, 2);
+                        spawnFestivalMonsters(2);
                         sendMessageToParticipants("Next wave arrived!");
                         scheduleNext();
                     }
@@ -98,7 +96,7 @@ public final class DarknessFestival extends Reflection {
                 _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
                     @Override
                     public void runImpl() {
-                        spawnFestivalMonsters(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN, 3);
+                        spawnFestivalMonsters(3);
                         sendMessageToParticipants("The chests have spawned! Be quick, the festival will end soon.");
                     }
                 }, FESTIVAL_CHEST_SPAWN - FESTIVAL_SECOND_SPAWN);
@@ -106,30 +104,30 @@ public final class DarknessFestival extends Reflection {
         }
     }
 
-    private void spawnFestivalMonsters(int respawnDelay, int spawnType) {
-        int[][] spawns = null;
+    private void spawnFestivalMonsters(int spawnType) {
+        List<FestivalSpawn.NpcLocation> spawns = null;
         switch (spawnType) {
             case 0:
             case 1:
-                spawns = _cabal == SevenSigns.CABAL_DAWN ? FestivalSpawn.FESTIVAL_DAWN_PRIMARY_SPAWNS[_levelRange] : FestivalSpawn.FESTIVAL_DUSK_PRIMARY_SPAWNS[_levelRange];
+                spawns = _cabal == SevenSigns.CABAL_DAWN ? FestivalSpawn.FESTIVAL_DAWN_PRIMARY_SPAWNS.get(_levelRange) : FestivalSpawn.FESTIVAL_DUSK_PRIMARY_SPAWNS.get(_levelRange);
                 break;
             case 2:
-                spawns = _cabal == SevenSigns.CABAL_DAWN ? FestivalSpawn.FESTIVAL_DAWN_SECONDARY_SPAWNS[_levelRange] : FestivalSpawn.FESTIVAL_DUSK_SECONDARY_SPAWNS[_levelRange];
+                spawns = _cabal == SevenSigns.CABAL_DAWN ? FestivalSpawn.FESTIVAL_DAWN_SECONDARY_SPAWNS.get(_levelRange) : FestivalSpawn.FESTIVAL_DUSK_SECONDARY_SPAWNS.get(_levelRange);
                 break;
             case 3:
-                spawns = _cabal == SevenSigns.CABAL_DAWN ? FestivalSpawn.FESTIVAL_DAWN_CHEST_SPAWNS[_levelRange] : FestivalSpawn.FESTIVAL_DUSK_CHEST_SPAWNS[_levelRange];
+                spawns = _cabal == SevenSigns.CABAL_DAWN ? FestivalSpawn.FESTIVAL_DAWN_CHEST_SPAWNS.get(_levelRange) : FestivalSpawn.FESTIVAL_DUSK_CHEST_SPAWNS.get(_levelRange);
                 break;
         }
 
         if (spawns != null)
-            for (int[] element : spawns) {
+            for (FestivalSpawn.NpcLocation element : spawns) {
                 FestivalSpawn currSpawn = new FestivalSpawn(element);
 
                 SimpleSpawner npcSpawn = new SimpleSpawner(currSpawn.npcId);
                 npcSpawn.setReflection(this);
                 npcSpawn.setLoc(currSpawn.loc)
                         .setAmount(1)
-                        .setRespawnDelay(respawnDelay)
+                        .setRespawnDelay(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN)
                         .startRespawn();
                 FestivalMonsterInstance festivalMob = (FestivalMonsterInstance) npcSpawn.doSpawn(true);
                 // Set the offering bonus to 2x or 5x the amount per kill, if this spawn is part of an increased challenge or is a festival chest.
@@ -147,7 +145,7 @@ public final class DarknessFestival extends Reflection {
         // Set this flag to true to make sure that this can only be done once.
         _challengeIncreased = true;
         // Spawn more festival monsters, but this time with a twist.
-        spawnFestivalMonsters(FestivalSpawn.FESTIVAL_DEFAULT_RESPAWN, 1);
+        spawnFestivalMonsters(1);
         return true;
     }
 
@@ -172,7 +170,7 @@ public final class DarknessFestival extends Reflection {
                 // Send message that the contribution score has increased.
                 player.sendPacket(new SystemMessage(SystemMessage.YOUR_CONTRIBUTION_SCORE_IS_INCREASED_BY_S1).addNumber(offeringScore));
 
-                sendCustomMessageToParticipants("l2trunk.gameserver.model.entity.SevenSignsFestival.Ended");
+                sendCustomMessageToParticipants();
                 if (isHighestScore)
                     sendMessageToParticipants("Your score is highest!");
             } else
@@ -183,13 +181,11 @@ public final class DarknessFestival extends Reflection {
     }
 
     private void sendMessageToParticipants(String s) {
-        for (Player p : getPlayers())
-            p.sendMessage(s);
+        getPlayers().forEach(p -> p.sendMessage(s));
     }
 
-    private void sendCustomMessageToParticipants(String s) {
-        for (Player p : getPlayers())
-            p.sendMessage(new CustomMessage(s, p));
+    private void sendCustomMessageToParticipants() {
+        getPlayers().forEach(p -> p.sendMessage(new CustomMessage("l2trunk.gameserver.model.entity.SevenSignsFestival.Ended", p)));
     }
 
     public void partyMemberExited() {

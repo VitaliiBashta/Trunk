@@ -3,15 +3,15 @@ package l2trunk.gameserver.network.clientpackets;
 import l2trunk.gameserver.handler.admincommands.AdminCommandHandler;
 import l2trunk.gameserver.model.Player;
 
-public class SendBypassBuildCmd extends L2GameClientPacket {
-    private String _command;
+public final class SendBypassBuildCmd extends L2GameClientPacket {
+    private String command;
 
     @Override
     protected void readImpl() {
-        _command = readS();
+        command = readS();
 
-        if (_command != null)
-            _command = _command.trim();
+        if (command != null)
+            command = command.trim();
     }
 
     @Override
@@ -21,7 +21,7 @@ public class SendBypassBuildCmd extends L2GameClientPacket {
         if (activeChar == null || activeChar.isBlocked())
             return;
 
-        String cmd = _command;
+        String cmd = command;
 
         if (!cmd.contains("admin_"))
             cmd = "admin_" + cmd;

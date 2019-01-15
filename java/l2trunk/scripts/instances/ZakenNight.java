@@ -6,13 +6,12 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ZakenNight extends Reflection {
     private static final int Zaken = 29022;
     private static final long initdelay = 480 * 1000L;
-    private final List<Location> zakenspawn = Arrays.asList(
+    private final List<Location> zakenspawn = List.of(
             new Location(55272, 219080, -2952),
             new Location(55272, 219080, -3224),
             new Location(55272, 219080, -3496));

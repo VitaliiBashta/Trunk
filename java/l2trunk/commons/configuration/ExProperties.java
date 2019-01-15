@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 import static l2trunk.commons.lang.NumberUtils.toDouble;
 
-public class ExProperties extends Properties {
+public final class ExProperties extends Properties {
     public static final String defaultDelimiter = "[\\s,;]+";
     private static final long serialVersionUID = 1L;
-    private static final List<String> True = Arrays.asList("y", "yes", "true", "1");
-    private static final List<String> False = Arrays.asList("n", "no", "false", "0");
+    private static final List<String> True = List.of("y", "yes", "true", "1");
+    private static final List<String> False = List.of("n", "no", "false", "0");
 
     public static boolean parseBoolean(String s) {
         if (True.contains(s.toLowerCase())) return true;
@@ -93,7 +93,7 @@ public class ExProperties extends Properties {
         String value;
 
         if ((value = super.getProperty(name, null)) != null) {
-            List<String> values = Arrays.asList(value.split(defaultDelimiter));
+            List<String> values = List.of(value.split(defaultDelimiter));
             return values.stream()
                     .map(NumberUtils::toInt)
                     .collect(Collectors.toList());

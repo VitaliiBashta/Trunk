@@ -7,10 +7,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-
 public final class KamalokaGuardInstance extends NpcInstance {
     public KamalokaGuardInstance(int objectId, NpcTemplate template) {
         super(objectId, template);

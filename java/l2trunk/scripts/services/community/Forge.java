@@ -50,10 +50,6 @@ public final class Forge implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public List<String> getBypassCommands() {
         return Collections.singletonList("_bbsforge");
     }

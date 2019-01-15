@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _627_HeartInSearchOfPower extends Quest implements ScriptFile {
+public class _627_HeartInSearchOfPower extends Quest {
     //NPC
     private static final int M_NECROMANCER = 31518;
     private static final int ENFEUX = 31519;
@@ -20,18 +19,6 @@ public class _627_HeartInSearchOfPower extends Quest implements ScriptFile {
     private static final int ENRIA = 4042;
     private static final int ASOFE = 4043;
     private static final int THONS = 4044;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _627_HeartInSearchOfPower() {
         super(true);
@@ -50,43 +37,55 @@ public class _627_HeartInSearchOfPower extends Quest implements ScriptFile {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("dark_necromancer_q0627_0104.htm")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("dark_necromancer_q0627_0201.htm")) {
-            st.takeItems(GEM_OF_SUBMISSION, 300);
-            st.giveItems(SEAL_OF_LIGHT, 1, false);
-            st.setCond(3);
-        } else if (event.equals("enfeux_q0627_0301.htm")) {
-            st.takeItems(SEAL_OF_LIGHT, 1);
-            st.giveItems(GEM_OF_SAINTS, 1, false);
-            st.setCond(4);
-        } else if (event.equals("dark_necromancer_q0627_0401.htm"))
-            st.takeItems(GEM_OF_SAINTS, 1);
-        else {
-            if (event.equals("627_11")) {
-                htmltext = "dark_necromancer_q0627_0402.htm";
-                st.giveItems(ADENA_ID, 100000, true);
-            } else if (event.equals("627_12")) {
-                htmltext = "dark_necromancer_q0627_0402.htm";
-                st.giveItems(ASOFE, 13, true);
-                st.giveItems(ADENA_ID, 6400, true);
-            } else if (event.equals("627_13")) {
-                htmltext = "dark_necromancer_q0627_0402.htm";
-                st.giveItems(THONS, 13, true);
-                st.giveItems(ADENA_ID, 6400, true);
-            } else if (event.equals("627_14")) {
-                htmltext = "dark_necromancer_q0627_0402.htm";
-                st.giveItems(ENRIA, 6, true);
-                st.giveItems(ADENA_ID, 13600, true);
-            } else if (event.equals("627_15")) {
-                htmltext = "dark_necromancer_q0627_0402.htm";
-                st.giveItems(MOLD_HARDENER, 3, true);
-                st.giveItems(ADENA_ID, 17200, true);
-            }
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+        switch (event) {
+            case "dark_necromancer_q0627_0104.htm":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "dark_necromancer_q0627_0201.htm":
+                st.takeItems(GEM_OF_SUBMISSION, 300);
+                st.giveItems(SEAL_OF_LIGHT, 1, false);
+                st.setCond(3);
+                break;
+            case "enfeux_q0627_0301.htm":
+                st.takeItems(SEAL_OF_LIGHT, 1);
+                st.giveItems(GEM_OF_SAINTS, 1, false);
+                st.setCond(4);
+                break;
+            case "dark_necromancer_q0627_0401.htm":
+                st.takeItems(GEM_OF_SAINTS, 1);
+                break;
+            default:
+                switch (event) {
+                    case "627_11":
+                        htmltext = "dark_necromancer_q0627_0402.htm";
+                        st.giveItems(ADENA_ID, 100000, true);
+                        break;
+                    case "627_12":
+                        htmltext = "dark_necromancer_q0627_0402.htm";
+                        st.giveItems(ASOFE, 13, true);
+                        st.giveItems(ADENA_ID, 6400, true);
+                        break;
+                    case "627_13":
+                        htmltext = "dark_necromancer_q0627_0402.htm";
+                        st.giveItems(THONS, 13, true);
+                        st.giveItems(ADENA_ID, 6400, true);
+                        break;
+                    case "627_14":
+                        htmltext = "dark_necromancer_q0627_0402.htm";
+                        st.giveItems(ENRIA, 6, true);
+                        st.giveItems(ADENA_ID, 13600, true);
+                        break;
+                    case "627_15":
+                        htmltext = "dark_necromancer_q0627_0402.htm";
+                        st.giveItems(MOLD_HARDENER, 3, true);
+                        st.giveItems(ADENA_ID, 17200, true);
+                        break;
+                }
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return htmltext;
     }

@@ -106,30 +106,22 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
     }
 
     private double getCoefficient(int count) {
-        double cf;
         switch (count) {
             case 4:
-                cf = 0.7;
-                break;
+                return  0.7;
             case 5:
-                cf = 0.75;
-                break;
+                return 0.75;
             case 6:
-                cf = 0.8;
-                break;
+                return 0.8;
             case 7:
-                cf = 0.85;
-                break;
+                return 0.85;
             case 8:
-                cf = 0.9;
-                break;
+                return 0.9;
             case 9:
-                cf = 0.95;
-                break;
+                return 0.95;
             default:
-                cf = 1;
+                return 1;
         }
-        return cf;
     }
 
     @Override
@@ -145,11 +137,6 @@ public final class DragonValley implements ScriptFile, OnPlayerExitListener {
     public void onReload() {
         buffTask.cancel(false);
         zone.removeListener(_zoneListener);
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 
     public class ZoneListener implements OnZoneEnterLeaveListener {

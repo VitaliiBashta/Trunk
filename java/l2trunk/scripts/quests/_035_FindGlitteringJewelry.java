@@ -5,24 +5,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _035_FindGlitteringJewelry extends Quest implements ScriptFile {
+public final class _035_FindGlitteringJewelry extends Quest {
     private final int ROUGH_JEWEL = 7162;
     private final int ORIHARUKON = 1893;
     private final int SILVER_NUGGET = 1873;
     private final int THONS = 4044;
     private final int JEWEL_BOX = 7077;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _035_FindGlitteringJewelry() {
         super(false);

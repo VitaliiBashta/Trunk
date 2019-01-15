@@ -33,9 +33,4 @@ public final class SiegeUtils {
             character.removeSkill(OutpostDemolition, false);
         }
     }
-
-//    public static boolean getCanRide() {
-//        return ResidenceHolder.INSTANCE.getResidences().stream()
-//        .noneMatch(residence -> residence.getSiegeEvent().isInProgress());
-//    }
 }

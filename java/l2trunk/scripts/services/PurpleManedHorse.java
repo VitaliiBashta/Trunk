@@ -42,14 +42,6 @@ public final class PurpleManedHorse extends Functions implements ScriptFile {
         loadMultiSell();
     }
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     private static void loadMultiSell() {
         MultiSellHolder.INSTANCE.addMultiSellListContainer(MultiSellID, list);
     }

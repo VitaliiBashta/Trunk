@@ -24,7 +24,7 @@ public final class EffectRemoveTarget extends Effect {
         }
         getEffected().abortAttack(true, true);
         getEffected().abortCast(true, true);
-        getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, getEffector());
+        getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
     }
 
     @Override

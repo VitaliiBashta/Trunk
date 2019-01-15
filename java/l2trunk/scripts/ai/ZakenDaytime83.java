@@ -9,7 +9,7 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 
 public final class ZakenDaytime83 extends Fighter {
     private final static int zakenTele = 4222;
-    private final long _teleportSelfReuse = 120000L; // 120 secs
+    private static final long _teleportSelfReuse = 120000L; // 120 secs
     private final NpcInstance actor = getActor();
     private long _teleportSelfTimer = 0L;
 

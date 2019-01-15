@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _384_WarehouseKeepersPastime extends Quest implements ScriptFile {
+public final class _384_WarehouseKeepersPastime extends Quest {
     // NPCs
     private final static int Cliff = 30182;
     private final static int Baxt = 30685;
@@ -197,8 +197,7 @@ public class _384_WarehouseKeepersPastime extends Quest implements ScriptFile {
                 return event.replaceFirst("-big", "").replaceFirst("game", "09.htm");
             st.takeItems(Warehouse_Keepers_Medal, need_medals);
             int char_obj_id = st.getPlayer().getObjectId();
-            if (bingos.containsKey(char_obj_id))
-                bingos.remove(char_obj_id);
+            bingos.remove(char_obj_id);
             Bingo bingo = new Bingo(big_game, st);
             bingos.put(char_obj_id, bingo);
             return bingo.getDialog("");
@@ -233,10 +232,10 @@ public class _384_WarehouseKeepersPastime extends Quest implements ScriptFile {
         long medals = st.getQuestItemsCount(Warehouse_Keepers_Medal);
 
         if (medals >= 100)
-            return String.valueOf(npcId) + "-06.htm";
+            return npcId + "-06.htm";
         if (medals >= 10)
-            return String.valueOf(npcId) + "-06a.htm";
-        return String.valueOf(npcId) + "-06b.htm";
+            return npcId + "-06a.htm";
+        return npcId + "-06b.htm";
     }
 
     @Override
@@ -250,18 +249,6 @@ public class _384_WarehouseKeepersPastime extends Quest implements ScriptFile {
         }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     protected static class Bingo extends l2trunk.scripts.quests.Bingo {

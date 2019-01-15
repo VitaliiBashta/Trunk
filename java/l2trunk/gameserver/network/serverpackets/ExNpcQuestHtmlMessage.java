@@ -25,7 +25,7 @@ public final class ExNpcQuestHtmlMessage extends NpcHtmlMessage {
             if (player.isGM())
                 Functions.sendDebugMessage(player, "HTML: " + file);
             String content = HtmCache.INSTANCE.getNotNull(file, player);
-            String content2 = HtmCache.INSTANCE.getNullable(file, player);
+            String content2 = HtmCache.INSTANCE.getNullable(file);
             if (content2 == null)
                 setHtml(have_appends && file.endsWith(".htm") ? "" : content);
             else

@@ -8,8 +8,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Tate extends DefaultAI {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             new Location(115824, -181564, -1352),
             new Location(116048, -181575, -1352),
             new Location(116521, -181476, -1400),
@@ -26,7 +28,7 @@ public final class Tate extends DefaultAI {
             new Location(116322, -179602, -1096),
             new Location(116792, -180386, -1240),
             new Location(116319, -181573, -1376),
-            new Location(115824, -181564, -1352)};
+            new Location(115824, -181564, -1352));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -47,7 +49,7 @@ public final class Tate extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -76,10 +78,10 @@ public final class Tate extends DefaultAI {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

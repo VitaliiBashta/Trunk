@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _629_CleanUpTheSwampOfScreams extends Quest implements ScriptFile {
+public final class _629_CleanUpTheSwampOfScreams extends Quest {
     //NPC
     private static final int CAPTAIN = 31553;
     private static final int CLAWS = 7250;
@@ -54,18 +54,6 @@ public class _629_CleanUpTheSwampOfScreams extends Quest implements ScriptFile {
                     56
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _629_CleanUpTheSwampOfScreams() {
         super(false);

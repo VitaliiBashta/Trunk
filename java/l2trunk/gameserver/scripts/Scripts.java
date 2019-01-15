@@ -1,43 +1,9 @@
 package l2trunk.gameserver.scripts;
 
-import l2trunk.gameserver.ai.*;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.model.instances.PetBabyInstance;
-import l2trunk.gameserver.model.instances.PetInstance;
-import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.Quests;
 import l2trunk.scripts.actions.OnActionShift;
-import l2trunk.scripts.ai.*;
-import l2trunk.scripts.ai.DrakosWarrior;
-import l2trunk.scripts.ai.PaganTemplete.AndreasVanHalter;
-import l2trunk.scripts.ai.SkyshadowMeadow.Fire;
-import l2trunk.scripts.ai.SkyshadowMeadow.FireFeed;
-import l2trunk.scripts.ai.Zone.DragonValley.DV_RB.*;
-import l2trunk.scripts.ai.Zone.LairOfAntharas.BloodyKarik;
-import l2trunk.scripts.ai.adept.AdeptAden;
-import l2trunk.scripts.ai.custom.*;
-import l2trunk.scripts.ai.den_of_evil.HestuiGuard;
-import l2trunk.scripts.ai.dragonvalley.*;
-import l2trunk.scripts.ai.events.SpecialTree;
-import l2trunk.scripts.ai.fog.GroupAI;
-import l2trunk.scripts.ai.fog.TarBeetle;
-import l2trunk.scripts.ai.freya.*;
-import l2trunk.scripts.ai.primeval_isle.SprigantPoison;
-import l2trunk.scripts.ai.residences.castle.Venom;
-import l2trunk.scripts.ai.residences.fortress.siege.General;
-import l2trunk.scripts.ai.residences.fortress.siege.GuardCaption;
-import l2trunk.scripts.ai.seedofdestruction.DimensionMovingDevice;
-import l2trunk.scripts.ai.seedofdestruction.Obelisk;
-import l2trunk.scripts.ai.seedofinfinity.Ekimus;
-import l2trunk.scripts.ai.seedofinfinity.EkimusFood;
-import l2trunk.scripts.ai.seedofinfinity.FeralHound;
-import l2trunk.scripts.ai.seedofinfinity.SoulCoffin;
-import l2trunk.scripts.ai.selmahum.DrillSergeant;
-import l2trunk.scripts.ai.selmahum.Fireplace;
-import l2trunk.scripts.ai.selmahum.SelChef;
-import l2trunk.scripts.ai.selmahum.SelSquadLeader;
+import l2trunk.scripts.ai.Zone.HeineFields.HeineFieldsHerbs;
 import l2trunk.scripts.bosses.*;
 import l2trunk.scripts.events.AprilFoolsDay.AprilFoolsDay;
 import l2trunk.scripts.events.BossRandom.BossRandom;
@@ -70,12 +36,6 @@ import l2trunk.scripts.handler.admincommands.AdminBosses;
 import l2trunk.scripts.handler.items.BeastShot;
 import l2trunk.scripts.handler.items.Extractable;
 import l2trunk.scripts.handler.items.FishItem;
-import l2trunk.scripts.npc.model.residences.fortress.peace.SupportUnitCaptionInstance;
-import l2trunk.scripts.npc.model.residences.fortress.peace.SuspiciousMerchantInstance;
-import l2trunk.scripts.npc.model.residences.fortress.siege.BackupPowerUnitInstance;
-import l2trunk.scripts.npc.model.residences.fortress.siege.BallistaInstance;
-import l2trunk.scripts.npc.model.residences.fortress.siege.ControlUnitInstance;
-import l2trunk.scripts.quests.*;
 import l2trunk.scripts.scriptconfig.ScriptConfig;
 import l2trunk.scripts.services.*;
 import l2trunk.scripts.services.community.*;
@@ -98,43 +58,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public enum Scripts {
     INSTANCE;
     public static final Map<Integer, List<ScriptClassAndMethod>> dialogAppends = new HashMap<>();
     public static final Map<String, ScriptClassAndMethod> onAction = new HashMap<>();
     //    public static final Map<String, ScriptClassAndMethod> onActionShift = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(Scripts.class);
-    private Map<String, Functions> functions = new HashMap<>();
-    private Map<String, Class<? extends CharacterAI>> AIs = new HashMap<>();
-//    private Map<String, Class<? extends NpcInstance>> npcInstances = new HashMap<>();
     private Map<String, ScriptFile> scripts = new HashMap<>();
-
-//    public Class<? extends NpcInstance> getNpcInstance(String npcName) {
-//        if (!npcInstances.containsKey(npcName)) {
-//            if (npcName.equalsIgnoreCase("PetInstance"))
-//                return NpcInstance.class;
-////                        PetInstance.class;
-//
-//            LOG.error("not found npcInstance: " + npcName);
-//            System.exit(1);
-//        }
-//        return npcInstances.get(npcName);
-//    }
-
-    public Class<? extends CharacterAI> getAI(String aiName) {
-        if (!AIs.containsKey(aiName)) {
-            LOG.error("not found AI: " + aiName);
-            System.exit(1);
-        }
-        return AIs.get(aiName);
-    }
+    private Map<String, Functions> functions = new HashMap<>();
 
 
     private void addHandlers(Class<?> clazz) {
         try {
             for (Method method : clazz.getMethods())
                 if (method.getName().contains("DialogAppend_")) {
-                    Integer id = Integer.parseInt(method.getName().substring(13));
+                    Integer id = toInt(method.getName().substring(13));
                     List<ScriptClassAndMethod> handlers = dialogAppends.computeIfAbsent(id, k -> new ArrayList<>());
                     handlers.add(new ScriptClassAndMethod(clazz.getName(), method.getName()));
 //                } else if (method.getName().contains("OnAction_")) {
@@ -156,41 +96,29 @@ public enum Scripts {
     }
 
     public Object callScripts(Player caller, String className, String methodName, Object[] args, Map<String, Object> variables) {
-        Object o = scripts.get(className);
+        String shortClassName = className.replace("l2trunk.scripts.", "");
+        Object o = scripts.get(shortClassName);
         if (o == null)
-            o = functions.get(className);
-        Class<?> clazz;
+            o = functions.get(shortClassName);
+        if (o == null)
+            throw new IllegalArgumentException("not found script " + className);
 
-        clazz = o.getClass();
-        if (clazz == null) {
-            LOG.error("Script class " + className + " not found!");
-            return null;
-        }
-
-        try {
-            o = clazz.getDeclaredConstructor().newInstance();
-        } catch (IllegalAccessException | InstantiationException e) {
-            LOG.error("Scripts: Failed creating instance of " + clazz.getName(), e);
-            return null;
-        } catch (NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
 
         if (variables != null && !variables.isEmpty())
             for (Map.Entry<String, Object> param : variables.entrySet())
                 try {
                     FieldUtils.writeField(o, param.getKey(), param.getValue());
                 } catch (IllegalAccessException e) {
-                    LOG.error("Scripts: Failed setting fields for " + clazz.getName(), e);
+                    LOG.error("Scripts: Failed setting fields for " + o.getClass().getName(), e);
                 }
 
         if (caller != null)
             try {
                 Field field;
-                if ((field = FieldUtils.getField(clazz, "self")) != null)
+                if ((field = FieldUtils.getField(o.getClass(), "self")) != null)
                     FieldUtils.writeField(field, o, caller.getRef());
             } catch (IllegalAccessException e) {
-                LOG.error("Scripts: Failed setting field for " + clazz.getName(), e);
+                LOG.error("Scripts: Failed setting field for " + o.getClass().getName(), e);
             }
 
         Object ret = null;
@@ -201,11 +129,11 @@ public enum Scripts {
 
             ret = MethodUtils.invokeMethod(o, methodName, args, parameterTypes);
         } catch (NoSuchMethodException nsme) {
-            LOG.error("Scripts: No such method " + clazz.getName() + "." + methodName + "()!", nsme);
+            LOG.error("Scripts: No such method " + o.getClass().getName() + "." + methodName + "()!", nsme);
         } catch (InvocationTargetException ite) {
-            LOG.error("Scripts: Error while calling " + clazz.getName() + "." + methodName + "()", ite.getTargetException());
+            LOG.error("Scripts: Error while calling " + o.getClass().getName() + "." + methodName + "()", ite.getTargetException());
         } catch (IllegalAccessException e) {
-            LOG.error("Scripts: Failed calling " + clazz.getName() + "." + methodName + "()", e);
+            LOG.error("Scripts: Failed calling " + o.getClass().getName() + "." + methodName + "()", e);
         }
 
         return ret;
@@ -217,15 +145,13 @@ public enum Scripts {
         Quests.init();
         scripts.forEach((k, v) -> v.onLoad());
 
-//        scripts.forEach((k, s) -> addHandlers(s.getClass()));
 
-        functions.forEach((k,v) -> addHandlers(v.getClass()));
+        functions.forEach((k, v) -> addHandlers(v.getClass()));
         LOG.info("Loaded :" + dialogAppends.size() + " dialog handlers");
     }
 
     private void loadFunctions() {
         functions.put("actions.OnActionShift", new OnActionShift());
-//        functions.put("actions.RewardListInfo", new RewardListInfo() );
         functions.put("bosses.AntharasManager", new AntharasManager());
         functions.put("bosses.BaiumManager", new BaiumManager());
         functions.put("bosses.BaylorManager", new BaylorManager());
@@ -322,627 +248,8 @@ public enum Scripts {
     }
 
     public void load() {
-        loadAIs();
 //        loadNpcInstances();
     }
-
-    private void loadAIs() {
-        AIs.put("ai.BoatAI", BoatAI.class);
-        AIs.put("ai.CharacterAI", CharacterAI.class);
-        AIs.put("ai.DefaultAI", DefaultAI.class);
-//        AIs.put("ai.DoorAI", DoorAI.class);
-        AIs.put("ai.Fighter", Fighter.class);
-//        AIs.put("ai.Guard", l2trunk.gameserver.ai.Guard.class);
-        AIs.put("ai.Mystic", Mystic.class);
-//        AIs.put("ai.PlayableAI", l2trunk.gameserver.ai.PlayableAI.class);
-//        AIs.put("ai.PlayerAI", l2trunk.gameserver.ai.PlayerAI.class);
-        AIs.put("ai.Priest", Priest.class);
-//        AIs.put("ai.RaceManager",l2trunk.gameserver.ai.RaceManager.class);
-        AIs.put("ai.Ranger", Ranger.class);
-//        AIs.put("ai.SummonAI", l2trunk.gameserver.ai.SummonAI.class);
-
-
-        AIs.put("ai.adept.Adept", l2trunk.scripts.ai.adept.Adept.class);
-
-        AIs.put("ai.adept.AdeptAden", AdeptAden.class);
-        AIs.put("ai.adept.AdeptGiran", l2trunk.scripts.ai.adept.AdeptGiran.class);
-        AIs.put("ai.adept.AdeptGiran1", l2trunk.scripts.ai.adept.AdeptGiran1.class);
-        AIs.put("ai.adept.AdeptGiran2", l2trunk.scripts.ai.adept.AdeptGiran2.class);
-        AIs.put("ai.adept.AdeptGiran3", l2trunk.scripts.ai.adept.AdeptGiran3.class);
-        AIs.put("ai.adept.AdeptGiran4", l2trunk.scripts.ai.adept.AdeptGiran4.class);
-        AIs.put("ai.adept.AdeptGludio", l2trunk.scripts.ai.adept.AdeptGludio.class);
-        AIs.put("ai.adept.AdeptRune", l2trunk.scripts.ai.adept.AdeptRune.class);
-        AIs.put("ai.Aenkinel", l2trunk.scripts.ai.Aenkinel.class);
-        AIs.put("ai.AirshipGuard1", l2trunk.scripts.ai.AirshipGuard1.class);
-        AIs.put("ai.AirshipGuard2", l2trunk.scripts.ai.AirshipGuard2.class);
-        AIs.put("ai.Alhena", Alhena.class);
-        AIs.put("ai.Anais", Anais.class);
-        AIs.put("ai.AngerOfSplendor", AngerOfSplendor.class);
-        AIs.put("ai.Antharas", Antharas.class);
-        AIs.put("ai.Archangel", Archangel.class);
-        AIs.put("ai.AttackMobNotPlayerFighter", l2trunk.scripts.ai.AttackMobNotPlayerFighter.class);
-        AIs.put("ai.AwakenedMucrokian", l2trunk.scripts.ai.AwakenedMucrokian.class);
-        AIs.put("ai.Baium", Baium.class);
-        AIs.put("ai.BaiumNpc", BaiumNpc.class);
-        AIs.put("ai.Baylor", l2trunk.scripts.ai.Baylor.class);
-        AIs.put("ai.BlacksmithMammon", BlacksmithMammon.class);
-        AIs.put("ai.BladeOfSplendor", BladeOfSplendor.class);
-        AIs.put("ai.CabaleBuffer", l2trunk.scripts.ai.CabaleBuffer.class);
-        AIs.put("ai.CaughtFighter", l2trunk.scripts.ai.CaughtFighter.class);
-        AIs.put("ai.CaughtMystic", l2trunk.scripts.ai.CaughtMystic.class);
-        AIs.put("ai.ClawsOfSplendor", l2trunk.scripts.ai.ClawsOfSplendor.class);
-        AIs.put("ai.ContaminatedMucrokian", l2trunk.scripts.ai.ContaminatedMucrokian.class);
-        AIs.put("ai.Core", Core.class);
-        AIs.put("ai.crypts_of_disgrace.ContaminatedBaturCommander", l2trunk.scripts.ai.crypts_of_disgrace.ContaminatedBaturCommander.class);
-        AIs.put("ai.crypts_of_disgrace.TurkaCommanderChief", l2trunk.scripts.ai.crypts_of_disgrace.TurkaCommanderChief.class);
-        AIs.put("ai.CrystallineGolem", l2trunk.scripts.ai.CrystallineGolem.class);
-        AIs.put("ai.custom.FreyaEventAI", l2trunk.scripts.ai.custom.FreyaEventAI.class);
-        AIs.put("ai.custom.GvGBoss", l2trunk.scripts.ai.custom.GvGBoss.class);
-        AIs.put("ai.custom.LabyrinthLostBeholder", l2trunk.scripts.ai.custom.LabyrinthLostBeholder.class);
-        AIs.put("ai.custom.LabyrinthLostWarden", LabyrinthLostWarden.class);
-        AIs.put("ai.custom.LabyrinthLostWatcher", LabyrinthLostWatcher.class);
-        AIs.put("ai.custom.MutantChest", l2trunk.scripts.ai.custom.MutantChest.class);
-        AIs.put("ai.custom.Scrubwoman", Scrubwoman.class);
-        AIs.put("ai.custom.SSQAnakim", SSQAnakim.class);
-        AIs.put("ai.custom.SSQAnakimMinion", SSQAnakimMinion.class);
-        AIs.put("ai.custom.SSQLilimServantFighter", SSQLilimServantFighter.class);
-        AIs.put("ai.custom.SSQLilimServantMage", SSQLilimServantMage.class);
-        AIs.put("ai.custom.SSQLilith", SSQLilith.class);
-        AIs.put("ai.custom.SSQLilithMinion", SSQLilithMinion.class);
-        AIs.put("ai.DaimonTheWhiteEyed", DaimonTheWhiteEyed.class);
-        AIs.put("ai.DeluLizardmanSpecialAgent", DeluLizardmanSpecialAgent.class);
-        AIs.put("ai.DeluLizardmanSpecialCommander", l2trunk.scripts.ai.DeluLizardmanSpecialCommander.class);
-        AIs.put("ai.den_of_evil.HestuiGuard", HestuiGuard.class);
-//        AIs.put("ai.ResidenceDoor", l2trunk.scripts.ai.door.ResidenceDoor.class);
-//        AIs.put("ai.SiegeDoor", l2trunk.scripts.ai.door.SiegeDoor.class);
-//        AIs.put("ai.SSQDoor", l2trunk.scripts.ai.door.SSQDoor.class);
-        AIs.put("ai.dragonvalley.BatwingDrake", l2trunk.scripts.ai.dragonvalley.BatwingDrake.class);
-        AIs.put("ai.dragonvalley.DragonKnight", l2trunk.scripts.ai.dragonvalley.DragonKnight.class);
-        AIs.put("ai.dragonvalley.DragonRaid", l2trunk.scripts.ai.dragonvalley.DragonRaid.class);
-        AIs.put("ai.dragonvalley.DragonScout", l2trunk.scripts.ai.dragonvalley.DragonScout.class);
-        AIs.put("ai.dragonvalley.DragonTracker", l2trunk.scripts.ai.dragonvalley.DragonTracker.class);
-        AIs.put("ai.dragonvalley.DrakeBosses", DrakeBosses.class);
-        AIs.put("ai.dragonvalley.DrakeMagma", DrakeMagma.class);
-        AIs.put("ai.dragonvalley.DrakeRunners", DrakeRunners.class);
-        AIs.put("ai.dragonvalley.DrakosHunter", DrakosHunter.class);
-        AIs.put("ai.dragonvalley.DrakosWarrior", DrakosWarrior.class);
-        AIs.put("ai.dragonvalley.DustTracker", DustTracker.class);
-        AIs.put("ai.dragonvalley.EmeraldDrake", EmeraldDrake.class);
-        AIs.put("ai.dragonvalley.ExplodingOrcGhost", ExplodingOrcGhost.class);
-        AIs.put("ai.dragonvalley.Howl", Howl.class);
-        AIs.put("ai.dragonvalley.Knoriks", Knoriks.class);
-        AIs.put("ai.dragonvalley.Knoriks1", Knoriks1.class);
-        AIs.put("ai.dragonvalley.Knoriks2", Knoriks2.class);
-        AIs.put("ai.dragonvalley.Knoriks3", Knoriks3.class);
-        AIs.put("ai.dragonvalley.Knoriks4", Knoriks4.class);
-        AIs.put("ai.dragonvalley.Knoriks5", Knoriks5.class);
-        AIs.put("ai.dragonvalley.Necromancer", Necromancer.class);
-        AIs.put("ai.dragonvalley.Patrollers", Patrollers.class);
-        AIs.put("ai.dragonvalley.PatrollersNoWatch", PatrollersNoWatch.class);
-        AIs.put("ai.dragonvalley.SandTracker", SandTracker.class);
-        AIs.put("ai.DrakosWarrior", DrakosWarrior.class);
-        AIs.put("ai.Edwin", Edwin.class);
-        AIs.put("ai.EdwinFollower", EdwinFollower.class);
-        AIs.put("ai.ElcardiaAssistant", ElcardiaAssistant.class);
-        AIs.put("ai.Elpy", Elpy.class);
-        AIs.put("ai.EtisEtina", EtisEtina.class);
-        AIs.put("ai.EvasGiftBox", EvasGiftBox.class);
-        AIs.put("ai.events.SpecialTree", SpecialTree.class);
-        AIs.put("ai.EvilNpc", l2trunk.scripts.ai.EvilNpc.class);
-        AIs.put("ai.EvilSpiritsMagicForce", l2trunk.scripts.ai.EvilSpiritsMagicForce.class);
-        AIs.put("ai.FangOfSplendor", l2trunk.scripts.ai.FangOfSplendor.class);
-        AIs.put("ai.FantasyIslePaddies", l2trunk.scripts.ai.FantasyIslePaddies.class);
-        AIs.put("ai.FieldMachine", l2trunk.scripts.ai.FieldMachine.class);
-        AIs.put("ai.fog.GroupAI", GroupAI.class);
-        AIs.put("ai.fog.TarBeetle", TarBeetle.class);
-        AIs.put("ai.FollowNpc", FollowNpc.class);
-        AIs.put("ai.FortuneBug", l2trunk.scripts.ai.FortuneBug.class);
-        AIs.put("ai.freya.AnnihilationFighter", l2trunk.scripts.ai.freya.AnnihilationFighter.class);
-        AIs.put("ai.freya.AntharasMinion", l2trunk.scripts.ai.freya.AntharasMinion.class);
-        AIs.put("ai.freya.FreyaQuest", l2trunk.scripts.ai.freya.FreyaQuest.class);
-        AIs.put("ai.freya.FreyaStandHard", l2trunk.scripts.ai.freya.FreyaStandHard.class);
-        AIs.put("ai.freya.FreyaStandNormal", l2trunk.scripts.ai.freya.FreyaStandNormal.class);
-        AIs.put("ai.freya.FreyaThrone", FreyaThrone.class);
-        AIs.put("ai.freya.Glacier", Glacier.class);
-        AIs.put("ai.freya.IceCaptainKnight", IceCaptainKnight.class);
-        AIs.put("ai.freya.IceCastleBreath", IceCastleBreath.class);
-        AIs.put("ai.freya.IceKnightNormal", IceKnightNormal.class);
-        AIs.put("ai.freya.JiniaGuild", l2trunk.scripts.ai.freya.JiniaGuild.class);
-        AIs.put("ai.freya.JiniaKnight", l2trunk.scripts.ai.freya.JiniaKnight.class);
-        AIs.put("ai.freya.Maguen", l2trunk.scripts.ai.freya.Maguen.class);
-        AIs.put("ai.freya.SeerUgoros", l2trunk.scripts.ai.freya.SeerUgoros.class);
-        AIs.put("ai.freya.SolinaKnight", l2trunk.scripts.ai.freya.SolinaKnight.class);
-        AIs.put("ai.freya.ValakasMinion", l2trunk.scripts.ai.freya.ValakasMinion.class);
-        AIs.put("ai.FrightenedOrc", l2trunk.scripts.ai.FrightenedOrc.class);
-        AIs.put("ai.FrostBuffalo", l2trunk.scripts.ai.FrostBuffalo.class);
-        AIs.put("ai.Furance", l2trunk.scripts.ai.Furance.class);
-        AIs.put("ai.Furnace", l2trunk.scripts.ai.Furnace.class);
-        AIs.put("ai.Gargos", l2trunk.scripts.ai.Gargos.class);
-        AIs.put("ai.GatekeeperZombie", l2trunk.scripts.ai.GatekeeperZombie.class);
-        AIs.put("ai.GeneralDilios", l2trunk.scripts.ai.GeneralDilios.class);
-        AIs.put("ai.GhostOfVonHellmannsPage", l2trunk.scripts.ai.GhostOfVonHellmannsPage.class);
-        AIs.put("ai.Gordon", l2trunk.scripts.ai.Gordon.class);
-        AIs.put("ai.GraveRobberSummoner", l2trunk.scripts.ai.GraveRobberSummoner.class);
-//        AIs.put("ai.groups.FlyingGracia",l2trunk.scripts.ai.groups.FlyingGracia.class);
-        AIs.put("ai.groups.ForgeoftheGods", l2trunk.scripts.ai.groups.ForgeoftheGods.class);
-        AIs.put("ai.groups.PavelRuins", l2trunk.scripts.ai.groups.PavelRuins.class);
-        AIs.put("ai.groups.StakatoNest", l2trunk.scripts.ai.groups.StakatoNest.class);
-        AIs.put("ai.GuardianAltar", l2trunk.scripts.ai.GuardianAltar.class);
-        AIs.put("ai.GuardianAngel", l2trunk.scripts.ai.GuardianAngel.class);
-        AIs.put("ai.GuardianWaterspirit", l2trunk.scripts.ai.GuardianWaterspirit.class);
-        AIs.put("ai.GuardofDawn", l2trunk.scripts.ai.GuardofDawn.class);
-        AIs.put("ai.GuardofDawnFemale", l2trunk.scripts.ai.GuardofDawnFemale.class);
-        AIs.put("ai.GuardofDawnStat", l2trunk.scripts.ai.GuardofDawnStat.class);
-        AIs.put("ai.GuardoftheGrave", l2trunk.scripts.ai.GuardoftheGrave.class);
-        AIs.put("ai.GuardRndWalkAndAnim", l2trunk.scripts.ai.GuardRndWalkAndAnim.class);
-        AIs.put("ai.HandysBlock", l2trunk.scripts.ai.HandysBlock.class);
-        AIs.put("ai.HekatonPrime", l2trunk.scripts.ai.HekatonPrime.class);
-        AIs.put("ai.hellbound.Beleth", l2trunk.scripts.ai.hellbound.Beleth.class);
-        AIs.put("ai.hellbound.BelethClone", l2trunk.scripts.ai.hellbound.BelethClone.class);
-        AIs.put("ai.hellbound.Chimera", l2trunk.scripts.ai.hellbound.Chimera.class);
-        AIs.put("ai.hellbound.CoralGardenGolem", l2trunk.scripts.ai.hellbound.CoralGardenGolem.class);
-        AIs.put("ai.hellbound.Darion", l2trunk.scripts.ai.hellbound.Darion.class);
-        AIs.put("ai.hellbound.DarionChallenger", l2trunk.scripts.ai.hellbound.DarionChallenger.class);
-        AIs.put("ai.hellbound.DarionFaithfulServant", l2trunk.scripts.ai.hellbound.DarionFaithfulServant.class);
-        AIs.put("ai.hellbound.DarionFaithfulServant6Floor", l2trunk.scripts.ai.hellbound.DarionFaithfulServant6Floor.class);
-        AIs.put("ai.hellbound.DarionFaithfulServant8Floor", l2trunk.scripts.ai.hellbound.DarionFaithfulServant8Floor.class);
-        AIs.put("ai.hellbound.Darnel", l2trunk.scripts.ai.hellbound.Darnel.class);
-        AIs.put("ai.hellbound.DemonPrince", l2trunk.scripts.ai.hellbound.DemonPrince.class);
-        AIs.put("ai.hellbound.Epidos", l2trunk.scripts.ai.hellbound.Epidos.class);
-        AIs.put("ai.hellbound.FloatingGhost", l2trunk.scripts.ai.hellbound.FloatingGhost.class);
-        AIs.put("ai.hellbound.FoundryWorker", l2trunk.scripts.ai.hellbound.FoundryWorker.class);
-        AIs.put("ai.hellbound.GreaterEvil", l2trunk.scripts.ai.hellbound.GreaterEvil.class);
-        AIs.put("ai.hellbound.Leodas", l2trunk.scripts.ai.hellbound.Leodas.class);
-        AIs.put("ai.hellbound.MasterFestina", l2trunk.scripts.ai.hellbound.MasterFestina.class);
-        AIs.put("ai.hellbound.MasterZelos", l2trunk.scripts.ai.hellbound.MasterZelos.class);
-        AIs.put("ai.hellbound.MutatedElpy", l2trunk.scripts.ai.hellbound.MutatedElpy.class);
-        AIs.put("ai.hellbound.NaiaCube", l2trunk.scripts.ai.hellbound.NaiaCube.class);
-        AIs.put("ai.hellbound.NaiaLock", l2trunk.scripts.ai.hellbound.NaiaLock.class);
-        AIs.put("ai.hellbound.NaiaRoomController", l2trunk.scripts.ai.hellbound.NaiaRoomController.class);
-        AIs.put("ai.hellbound.NaiaSpore", l2trunk.scripts.ai.hellbound.NaiaSpore.class);
-        AIs.put("ai.hellbound.OriginalSinWarden", l2trunk.scripts.ai.hellbound.OriginalSinWarden.class);
-        AIs.put("ai.hellbound.OriginalSinWarden6Floor", l2trunk.scripts.ai.hellbound.OriginalSinWarden6Floor.class);
-        AIs.put("ai.hellbound.OriginalSinWarden8Floor", l2trunk.scripts.ai.hellbound.OriginalSinWarden8Floor.class);
-        AIs.put("ai.hellbound.OutpostCaptain", l2trunk.scripts.ai.hellbound.OutpostCaptain.class);
-        AIs.put("ai.hellbound.OutpostGuards", l2trunk.scripts.ai.hellbound.OutpostGuards.class);
-        AIs.put("ai.hellbound.Pylon", l2trunk.scripts.ai.hellbound.Pylon.class);
-        AIs.put("ai.hellbound.Ranku", l2trunk.scripts.ai.hellbound.Ranku.class);
-        AIs.put("ai.hellbound.RankuScapegoat", l2trunk.scripts.ai.hellbound.RankuScapegoat.class);
-        AIs.put("ai.hellbound.Sandstorm", l2trunk.scripts.ai.hellbound.Sandstorm.class);
-        AIs.put("ai.hellbound.SteelCitadelKeymaster", l2trunk.scripts.ai.hellbound.SteelCitadelKeymaster.class);
-        AIs.put("ai.hellbound.TorturedNative", l2trunk.scripts.ai.hellbound.TorturedNative.class);
-        AIs.put("ai.hellbound.TownGuard", l2trunk.scripts.ai.hellbound.TownGuard.class);
-        AIs.put("ai.hellbound.Tully", l2trunk.scripts.ai.hellbound.Tully.class);
-        AIs.put("ai.hellbound.Typhoon", l2trunk.scripts.ai.hellbound.Typhoon.class);
-        AIs.put("ai.HotSpringsMob", l2trunk.scripts.ai.HotSpringsMob.class);
-        AIs.put("ai.isle_of_prayer.DarkWaterDragon", l2trunk.scripts.ai.isle_of_prayer.DarkWaterDragon.class);
-        AIs.put("ai.isle_of_prayer.EmeraldDoorController", l2trunk.scripts.ai.isle_of_prayer.EmeraldDoorController.class);
-        AIs.put("ai.isle_of_prayer.EvasProtector", l2trunk.scripts.ai.isle_of_prayer.EvasProtector.class);
-        AIs.put("ai.isle_of_prayer.FafurionKindred", l2trunk.scripts.ai.isle_of_prayer.FafurionKindred.class);
-        AIs.put("ai.isle_of_prayer.IsleOfPrayerFighter", l2trunk.scripts.ai.isle_of_prayer.IsleOfPrayerFighter.class);
-        AIs.put("ai.isle_of_prayer.IsleOfPrayerMystic", l2trunk.scripts.ai.isle_of_prayer.IsleOfPrayerMystic.class);
-        AIs.put("ai.isle_of_prayer.Kechi", l2trunk.scripts.ai.isle_of_prayer.Kechi.class);
-        AIs.put("ai.isle_of_prayer.Shade", l2trunk.scripts.ai.isle_of_prayer.Shade.class);
-        AIs.put("ai.isle_of_prayer.WaterDragonDetractor", l2trunk.scripts.ai.isle_of_prayer.WaterDragonDetractor.class);
-        AIs.put("ai.Jaradine", l2trunk.scripts.ai.Jaradine.class);
-        AIs.put("ai.Kama56Boss", l2trunk.scripts.ai.Kama56Boss.class);
-        AIs.put("ai.Kama56Minion", l2trunk.scripts.ai.Kama56Minion.class);
-        AIs.put("ai.Kama63Minion", l2trunk.scripts.ai.Kama63Minion.class);
-        AIs.put("ai.Kanabion", l2trunk.scripts.ai.Kanabion.class);
-        AIs.put("ai.KanadisFollower", l2trunk.scripts.ai.KanadisFollower.class);
-        AIs.put("ai.KanadisGuide", l2trunk.scripts.ai.KanadisGuide.class);
-        AIs.put("ai.KarulBugbear", l2trunk.scripts.ai.KarulBugbear.class);
-        AIs.put("ai.KashasEye", l2trunk.scripts.ai.KashasEye.class);
-        AIs.put("ai.Kasiel", l2trunk.scripts.ai.Kasiel.class);
-        AIs.put("ai.KrateisCubeWatcherBlue", l2trunk.scripts.ai.KrateisCubeWatcherBlue.class);
-        AIs.put("ai.KrateisCubeWatcherRed", l2trunk.scripts.ai.KrateisCubeWatcherRed.class);
-        AIs.put("ai.KrateisFighter", l2trunk.scripts.ai.KrateisFighter.class);
-        AIs.put("ai.Kreed", l2trunk.scripts.ai.Kreed.class);
-        AIs.put("ai.LafiLakfi", l2trunk.scripts.ai.LafiLakfi.class);
-        AIs.put("ai.Leandro", l2trunk.scripts.ai.Leandro.class);
-        AIs.put("ai.Leogul", l2trunk.scripts.ai.Leogul.class);
-        AIs.put("ai.LeylaDancer", l2trunk.scripts.ai.LeylaDancer.class);
-        AIs.put("ai.LeylaMira", l2trunk.scripts.ai.LeylaMira.class);
-        AIs.put("ai.LizardmanSummoner", l2trunk.scripts.ai.LizardmanSummoner.class);
-        AIs.put("ai.MasterYogi", l2trunk.scripts.ai.MasterYogi.class);
-        AIs.put("ai.MCIndividual", l2trunk.scripts.ai.MCIndividual.class);
-        AIs.put("ai.MCManager", l2trunk.scripts.ai.MCManager.class);
-        AIs.put("ai.monas.FurnaceSpawnRoom.DivinityMonster", l2trunk.scripts.ai.monas.FurnaceSpawnRoom.DivinityMonster.class);
-        AIs.put("ai.monas.FurnaceSpawnRoom.FurnaceBalance", l2trunk.scripts.ai.monas.FurnaceSpawnRoom.FurnaceBalance.class);
-        AIs.put("ai.monas.FurnaceSpawnRoom.FurnaceMagic", l2trunk.scripts.ai.monas.FurnaceSpawnRoom.FurnaceMagic.class);
-        AIs.put("ai.monas.FurnaceSpawnRoom.FurnaceProtection", l2trunk.scripts.ai.monas.FurnaceSpawnRoom.FurnaceProtection.class);
-        AIs.put("ai.monas.FurnaceSpawnRoom.FurnaceWill", l2trunk.scripts.ai.monas.FurnaceSpawnRoom.FurnaceWill.class);
-        AIs.put("ai.monas.Furnface", l2trunk.scripts.ai.monas.Furnface.class);
-        AIs.put("ai.monastery_of_silence.DivinityMonster", l2trunk.scripts.ai.monastery_of_silence.DivinityMonster.class);
-        AIs.put("ai.MoSMonk", l2trunk.scripts.ai.MoSMonk.class);
-        AIs.put("ai.Mucrokian", l2trunk.scripts.ai.Mucrokian.class);
-        AIs.put("ai.MusicBox", l2trunk.scripts.ai.MusicBox.class);
-        AIs.put("ai.NightAgressionMystic", l2trunk.scripts.ai.NightAgressionMystic.class);
-        AIs.put("ai.NihilInvaderChest", l2trunk.scripts.ai.NihilInvaderChest.class);
-        AIs.put("ai.OiAriosh", l2trunk.scripts.ai.OiAriosh.class);
-        AIs.put("ai.OlMahumGeneral", l2trunk.scripts.ai.OlMahumGeneral.class);
-        AIs.put("ai.Orfen", l2trunk.scripts.ai.Orfen.class);
-        AIs.put("ai.Orfen_RibaIren", l2trunk.scripts.ai.Orfen_RibaIren.class);
-        AIs.put("ai.other.PailakaDevilsLegacy.FollowersLematan", l2trunk.scripts.ai.other.PailakaDevilsLegacy.FollowersLematan.class);
-        AIs.put("ai.other.PailakaDevilsLegacy.Lematan", l2trunk.scripts.ai.other.PailakaDevilsLegacy.Lematan.class);
-        AIs.put("ai.other.PailakaDevilsLegacy.PowderKeg", l2trunk.scripts.ai.other.PailakaDevilsLegacy.PowderKeg.class);
-        AIs.put("ai.PaganGuard", l2trunk.scripts.ai.PaganGuard.class);
-        AIs.put("ai.PaganTemplete.AltarGatekeeper", l2trunk.scripts.ai.PaganTemplete.AltarGatekeeper.class);
-        AIs.put("ai.PaganTemplete.AndreasCaptainRoyalGuard", l2trunk.scripts.ai.PaganTemplete.AndreasCaptainRoyalGuard.class);
-        AIs.put("ai.PaganTemplete.AndreasVanHalter", AndreasVanHalter.class);
-        AIs.put("ai.PaganTemplete.TriolsBeliever", l2trunk.scripts.ai.PaganTemplete.TriolsBeliever.class);
-        AIs.put("ai.PaganTemplete.TriolsLayperson", l2trunk.scripts.ai.PaganTemplete.TriolsLayperson.class);
-        AIs.put("ai.PiratesKing", l2trunk.scripts.ai.PiratesKing.class);
-        AIs.put("ai.primeval_isle.SprigantPoison", SprigantPoison.class);
-        AIs.put("ai.primeval_isle.SprigantStun", l2trunk.scripts.ai.primeval_isle.SprigantStun.class);
-        AIs.put("ai.PrisonGuard", l2trunk.scripts.ai.PrisonGuard.class);
-        AIs.put("ai.Pronghorn", Pronghorn.class);
-        AIs.put("ai.Pterosaur", Pterosaur.class);
-        AIs.put("ai.QueenAntNurse", l2trunk.scripts.ai.QueenAntNurse.class);
-        AIs.put("ai.Quest024Fighter", l2trunk.scripts.ai.Quest024Fighter.class);
-        AIs.put("ai.Quest024Mystic", l2trunk.scripts.ai.Quest024Mystic.class);
-        AIs.put("ai.Quest421FairyTree", Quest421FairyTree.class);
-        AIs.put("ai.QuestNotAggroMob", l2trunk.scripts.ai.QuestNotAggroMob.class);
-        AIs.put("ai.RagnaHealer", l2trunk.scripts.ai.RagnaHealer.class);
-        AIs.put("ai.Remy", l2trunk.scripts.ai.Remy.class);
-        AIs.put("ai.residences.castle.ArtefactAI", l2trunk.scripts.ai.residences.castle.ArtefactAI.class);
-        AIs.put("ai.residences.castle.Venom", Venom.class);
-        AIs.put("ai.residences.clanhall.AlfredVonHellmann", l2trunk.scripts.ai.residences.clanhall.AlfredVonHellmann.class);
-        AIs.put("ai.residences.clanhall.GiselleVonHellmann", l2trunk.scripts.ai.residences.clanhall.GiselleVonHellmann.class);
-        AIs.put("ai.residences.clanhall.LidiaVonHellmann", l2trunk.scripts.ai.residences.clanhall.LidiaVonHellmann.class);
-        AIs.put("ai.residences.clanhall.MatchBerserker", l2trunk.scripts.ai.residences.clanhall.MatchBerserker.class);
-        AIs.put("ai.residences.clanhall.MatchCleric", l2trunk.scripts.ai.residences.clanhall.MatchCleric.class);
-        AIs.put("ai.residences.clanhall.MatchFighter", l2trunk.scripts.ai.residences.clanhall.MatchFighter.class);
-        AIs.put("ai.residences.clanhall.MatchLeader", l2trunk.scripts.ai.residences.clanhall.MatchLeader.class);
-        AIs.put("ai.residences.clanhall.MatchScout", l2trunk.scripts.ai.residences.clanhall.MatchScout.class);
-        AIs.put("ai.residences.clanhall.MatchTrief", l2trunk.scripts.ai.residences.clanhall.MatchTrief.class);
-        AIs.put("ai.residences.clanhall.RainbowEnragedYeti", l2trunk.scripts.ai.residences.clanhall.RainbowEnragedYeti.class);
-        AIs.put("ai.residences.clanhall.RainbowYeti", l2trunk.scripts.ai.residences.clanhall.RainbowYeti.class);
-        AIs.put("ai.residences.dominion.Catapult", l2trunk.scripts.ai.residences.dominion.Catapult.class);
-        AIs.put("ai.residences.dominion.EconomicAssociationLeader", l2trunk.scripts.ai.residences.dominion.EconomicAssociationLeader.class);
-        AIs.put("ai.residences.dominion.MercenaryCaptain", l2trunk.scripts.ai.residences.dominion.MercenaryCaptain.class);
-        AIs.put("ai.residences.dominion.MilitaryAssociationLeader", l2trunk.scripts.ai.residences.dominion.MilitaryAssociationLeader.class);
-        AIs.put("ai.residences.dominion.ReligiousAssociationLeader", l2trunk.scripts.ai.residences.dominion.ReligiousAssociationLeader.class);
-        AIs.put("ai.residences.dominion.SuppliesSafe", l2trunk.scripts.ai.residences.dominion.SuppliesSafe.class);
-        AIs.put("ai.residences.fortress.siege.ArcherCaption", l2trunk.scripts.ai.residences.fortress.siege.ArcherCaption.class);
-        AIs.put("ai.residences.fortress.siege.Ballista", l2trunk.scripts.ai.residences.fortress.siege.Ballista.class);
-        AIs.put("ai.residences.fortress.siege.General", General.class);
-        AIs.put("ai.residences.fortress.siege.GuardCaption", GuardCaption.class);
-        AIs.put("ai.residences.fortress.siege.MercenaryCaption", l2trunk.scripts.ai.residences.fortress.siege.MercenaryCaption.class);
-        AIs.put("ai.residences.fortress.siege.Minister", l2trunk.scripts.ai.residences.fortress.siege.Minister.class);
-        AIs.put("ai.residences.fortress.siege.RebelCommander", l2trunk.scripts.ai.residences.fortress.siege.RebelCommander.class);
-        AIs.put("ai.residences.fortress.siege.SupportUnitCaption", l2trunk.scripts.ai.residences.fortress.siege.SupportUnitCaption.class);
-        AIs.put("ai.residences.SiegeGuard", l2trunk.scripts.ai.residences.SiegeGuard.class);
-        AIs.put("ai.residences.SiegeGuardFighter", l2trunk.scripts.ai.residences.SiegeGuardFighter.class);
-        AIs.put("ai.residences.SiegeGuardMystic", l2trunk.scripts.ai.residences.SiegeGuardMystic.class);
-        AIs.put("ai.residences.SiegeGuardPriest", l2trunk.scripts.ai.residences.SiegeGuardPriest.class);
-        AIs.put("ai.residences.SiegeGuardRanger", l2trunk.scripts.ai.residences.SiegeGuardRanger.class);
-        AIs.put("ai.RndTeleportFighter", l2trunk.scripts.ai.RndTeleportFighter.class);
-        AIs.put("ai.RndWalkAndAnim", l2trunk.scripts.ai.RndWalkAndAnim.class);
-        AIs.put("ai.Rogin", Rogin.class);
-        AIs.put("ai.Rokar", Rokar.class);
-        AIs.put("ai.Rooney", Rooney.class);
-        AIs.put("ai.Scarecrow", l2trunk.scripts.ai.Scarecrow.class);
-        AIs.put("ai.SealDevice", l2trunk.scripts.ai.SealDevice.class);
-        AIs.put("ai.SeducedInvestigator", l2trunk.scripts.ai.SeducedInvestigator.class);
-        AIs.put("ai.seedofdestruction.DimensionMovingDevice", DimensionMovingDevice.class);
-        AIs.put("ai.seedofdestruction.GreatPowerfulDevice", l2trunk.scripts.ai.seedofdestruction.GreatPowerfulDevice.class);
-        AIs.put("ai.seedofdestruction.Obelisk", Obelisk.class);
-        AIs.put("ai.seedofdestruction.ThroneofDestruction", l2trunk.scripts.ai.seedofdestruction.ThroneofDestruction.class);
-        AIs.put("ai.seedofdestruction.Tiat", l2trunk.scripts.ai.seedofdestruction.Tiat.class);
-        AIs.put("ai.seedofdestruction.TiatCamera", l2trunk.scripts.ai.seedofdestruction.TiatCamera.class);
-        AIs.put("ai.seedofdestruction.TiatsTrap", l2trunk.scripts.ai.seedofdestruction.TiatsTrap.class);
-        AIs.put("ai.seedofinfinity.AliveTumor", l2trunk.scripts.ai.seedofinfinity.AliveTumor.class);
-        AIs.put("ai.seedofinfinity.Ekimus", Ekimus.class);
-        AIs.put("ai.seedofinfinity.EkimusFood", EkimusFood.class);
-        AIs.put("ai.seedofinfinity.FeralHound", FeralHound.class);
-        AIs.put("ai.seedofinfinity.SoulCoffin", SoulCoffin.class);
-        AIs.put("ai.seedofinfinity.SymbolofCohemenes", l2trunk.scripts.ai.seedofinfinity.SymbolofCohemenes.class);
-        AIs.put("ai.seedofinfinity.WardofDeath", l2trunk.scripts.ai.seedofinfinity.WardofDeath.class);
-        AIs.put("ai.seedofinfinity.YehanBrother", l2trunk.scripts.ai.seedofinfinity.YehanBrother.class);
-        AIs.put("ai.SeerFlouros", l2trunk.scripts.ai.SeerFlouros.class);
-        AIs.put("ai.selmahum.DrillSergeant", DrillSergeant.class);
-        AIs.put("ai.selmahum.Fireplace", Fireplace.class);
-        AIs.put("ai.selmahum.SelChef", SelChef.class);
-        AIs.put("ai.selmahum.SelSquadLeader", SelSquadLeader.class);
-        AIs.put("ai.SkyshadowMeadow.DrillSergeant", l2trunk.scripts.ai.SkyshadowMeadow.DrillSergeant.class);
-        AIs.put("ai.SkyshadowMeadow.Fire", Fire.class);
-        AIs.put("ai.SkyshadowMeadow.FireFeed", FireFeed.class);
-        AIs.put("ai.SkyshadowMeadow.SelMahumRecruit", l2trunk.scripts.ai.SkyshadowMeadow.SelMahumRecruit.class);
-        AIs.put("ai.SkyshadowMeadow.SelMahumShef", l2trunk.scripts.ai.SkyshadowMeadow.SelMahumShef.class);
-        AIs.put("ai.SkyshadowMeadow.SelMahumSquadLeader", l2trunk.scripts.ai.SkyshadowMeadow.SelMahumSquadLeader.class);
-        AIs.put("ai.SkyshadowMeadow.SelMahumTrainer", l2trunk.scripts.ai.SkyshadowMeadow.SelMahumTrainer.class);
-        AIs.put("ai.SolinaGuardian", l2trunk.scripts.ai.SolinaGuardian.class);
-        AIs.put("ai.Suppressor", l2trunk.scripts.ai.Suppressor.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantAaru", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantAaru.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantAntharas", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantAntharas.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantArchaic", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantArchaic.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantBayou", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantBayou.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantBorderland", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantBorderland.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantCloud", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantCloud.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantDemon", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantDemon.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantDragonspine", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantDragonspine.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantFloran", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantFloran.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantHive", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantHive.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantHunters", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantHunters.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantIvoryTower", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantIvoryTower.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantMarshland", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantMarshland.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantMonastic", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantMonastic.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantNarsell", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantNarsell.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantSGludio", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantSGludio.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantShanty", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantShanty.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantTanor", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantTanor.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantValley", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantValley.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantWestern", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantWestern.class);
-        AIs.put("ai.suspiciousmerchant.SuspiciousMerchantWhiteSands", l2trunk.scripts.ai.suspiciousmerchant.SuspiciousMerchantWhiteSands.class);
-        AIs.put("ai.TalkingGuard", l2trunk.scripts.ai.TalkingGuard.class);
-        AIs.put("ai.Tate", Tate.class);
-        AIs.put("ai.Taurin", Taurin.class);
-        AIs.put("ai.Tears", Tears.class);
-        AIs.put("ai.Thomas", Thomas.class);
-        AIs.put("ai.Tiberias", l2trunk.scripts.ai.Tiberias.class);
-        AIs.put("ai.TimakOrcTroopLeader", TimakOrcTroopLeader.class);
-        AIs.put("ai.Toma", l2trunk.scripts.ai.Toma.class);
-        AIs.put("ai.TotemSummon", l2trunk.scripts.ai.TotemSummon.class);
-        AIs.put("ai.Valakas", l2trunk.scripts.ai.Valakas.class);
-        AIs.put("ai.WatchmanMonster", WatchmanMonster.class);
-        AIs.put("ai.WitchWarder", WitchWarder.class);
-        AIs.put("ai.Yakand", Yakand.class);
-        AIs.put("ai.ZakenAnchor", ZakenAnchor.class);
-        AIs.put("ai.ZakenDaytime", l2trunk.scripts.ai.ZakenDaytime.class);
-        AIs.put("ai.ZakenDaytime83", l2trunk.scripts.ai.ZakenDaytime83.class);
-        AIs.put("ai.ZakenNightly", l2trunk.scripts.ai.ZakenNightly.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.BlackdaggerWing", BlackdaggerWing.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.BleedingFly", BleedingFly.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.BleedingFlyMinion", BleedingFlyMinion.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.DustRider", DustRider.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.EmeraldHorn", EmeraldHorn.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.MuscleBomber", MuscleBomber.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.ShadowSummoner", ShadowSummoner.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.SpikeSlasher", SpikeSlasher.class);
-        AIs.put("ai.Zone.DragonValley.DV_RB.SpikeSlasherMinion", SpikeSlasherMinion.class);
-//        AIs.put("ai.Zone.HeineFields.HeineFieldsHerbs",l2trunk.scripts.ai.Zone.HeineFields.HeineFieldsHerbs.class);
-        AIs.put("ai.Zone.LairOfAntharas.BloodyKarik", BloodyKarik.class);
-
-
-    }
-
-//    private void loadNpcInstances() {
-//
-//        npcInstances.put("PetBabyInstance", PetBabyInstance.class);
-//        npcInstances.put("PetInstance", PetInstance.class);
-//
-//        npcInstances.put("AdventurerInstance", l2trunk.gameserver.model.instances.AdventurerInstance.class);
-//        npcInstances.put("AirShipControllerInstance", l2trunk.gameserver.model.instances.AirShipControllerInstance.class);
-//        npcInstances.put("ArtefactInstance", l2trunk.gameserver.model.instances.ArtefactInstance.class);
-//        npcInstances.put("BetaNPCInstance", l2trunk.gameserver.model.instances.BetaNPCInstance.class);
-//        npcInstances.put("BlockInstance", l2trunk.gameserver.model.instances.BlockInstance.class);
-//        npcInstances.put("BossInstance", l2trunk.gameserver.model.instances.BossInstance.class);
-//        npcInstances.put("ChestInstance", l2trunk.gameserver.model.instances.ChestInstance.class);
-//        npcInstances.put("ClanAirShipControllerInstance", l2trunk.gameserver.model.instances.ClanAirShipControllerInstance.class);
-//        npcInstances.put("ClanRewardInstance", l2trunk.gameserver.model.instances.ClanRewardInstance.class);
-//        npcInstances.put("ClanTraderInstance", l2trunk.gameserver.model.instances.ClanTraderInstance.class);
-//        npcInstances.put("ControlKeyInstance", l2trunk.gameserver.model.instances.ControlKeyInstance.class);
-//        npcInstances.put("DeadManInstance", l2trunk.gameserver.model.instances.DeadManInstance.class);
-//        npcInstances.put("DecoyInstance", l2trunk.gameserver.model.instances.DecoyInstance.class);
-//        npcInstances.put("DonateNPCInstance", l2trunk.gameserver.model.instances.DonateNPCInstance.class);
-//        npcInstances.put("DoorInstance", l2trunk.gameserver.model.instances.DoorInstance.class);
-//        npcInstances.put("FameManagerInstance", l2trunk.gameserver.model.instances.FameManagerInstance.class);
-//        npcInstances.put("FeedableBeastInstance", l2trunk.gameserver.model.instances.FeedableBeastInstance.class);
-//        npcInstances.put("FestivalGuideInstance", l2trunk.gameserver.model.instances.FestivalGuideInstance.class);
-//        npcInstances.put("FestivalMonsterInstance", l2trunk.gameserver.model.instances.FestivalMonsterInstance.class);
-//        npcInstances.put("FishermanInstance", l2trunk.gameserver.model.instances.FishermanInstance.class);
-//        npcInstances.put("FurnaceInstance", l2trunk.gameserver.model.instances.FurnaceInstance.class);
-//        npcInstances.put("GuardInstance", l2trunk.gameserver.model.instances.GuardInstance.class);
-//        npcInstances.put("ItemAuctionBrokerInstance", l2trunk.gameserver.model.instances.ItemAuctionBrokerInstance.class);
-//        npcInstances.put("LotteryManagerInstance", l2trunk.gameserver.model.instances.LotteryManagerInstance.class);
-//        npcInstances.put("ManorManagerInstance", l2trunk.gameserver.model.instances.ManorManagerInstance.class);
-//        npcInstances.put("MerchantInstance", l2trunk.gameserver.model.instances.MerchantInstance.class);
-//        npcInstances.put("MercManagerInstance", l2trunk.gameserver.model.instances.MercManagerInstance.class);
-//        npcInstances.put("MinionInstance", l2trunk.gameserver.model.instances.MinionInstance.class);
-//        npcInstances.put("MonsterInstance", l2trunk.gameserver.model.instances.MonsterInstance.class);
-//        npcInstances.put("NoActionNpcInstance", l2trunk.gameserver.model.instances.NoActionNpcInstance.class);
-//        npcInstances.put("NpcFriendInstance", l2trunk.gameserver.model.instances.NpcFriendInstance.class);
-//        npcInstances.put("NpcInstance", NpcInstance.class);
-//        npcInstances.put("NpcNotSayInstance", l2trunk.gameserver.model.instances.NpcNotSayInstance.class);
-//        npcInstances.put("ObservationInstance", l2trunk.gameserver.model.instances.ObservationInstance.class);
-//        npcInstances.put("OlympiadBufferInstance", l2trunk.gameserver.model.instances.OlympiadBufferInstance.class);
-//        npcInstances.put("OlympiadManagerInstance", l2trunk.gameserver.model.instances.OlympiadManagerInstance.class);
-//        npcInstances.put("RaidBossInstance", l2trunk.gameserver.model.instances.RaidBossInstance.class);
-//        npcInstances.put("ReflectionBossInstance", l2trunk.gameserver.model.instances.ReflectionBossInstance.class);
-//        npcInstances.put("SchemeBufferInstance", l2trunk.gameserver.model.instances.SchemeBufferInstance.class);
-//        npcInstances.put("SiegeInformerInstance", l2trunk.gameserver.model.instances.SiegeInformerInstance.class);
-//        npcInstances.put("SignsPriestInstance", l2trunk.gameserver.model.instances.SignsPriestInstance.class);
-//        npcInstances.put("SpecialMonsterInstance", l2trunk.gameserver.model.instances.SpecialMonsterInstance.class);
-//        npcInstances.put("StaticObjectInstance", l2trunk.gameserver.model.instances.StaticObjectInstance.class);
-//        npcInstances.put("SummonInstance", l2trunk.gameserver.model.instances.SummonInstance.class);
-//        npcInstances.put("SymbolInstance", l2trunk.gameserver.model.instances.SymbolInstance.class);
-//        npcInstances.put("SymbolMakerInstance", l2trunk.gameserver.model.instances.SymbolMakerInstance.class);
-//        npcInstances.put("TamedBeastInstance", l2trunk.gameserver.model.instances.TamedBeastInstance.class);
-//        npcInstances.put("TerritoryWardInstance", l2trunk.gameserver.model.instances.TerritoryWardInstance.class);
-//        npcInstances.put("TrainerInstance", l2trunk.gameserver.model.instances.TrainerInstance.class);
-//        npcInstances.put("TrapInstance", l2trunk.gameserver.model.instances.TrapInstance.class);
-//        npcInstances.put("VillageMasterInstance", l2trunk.gameserver.model.instances.VillageMasterInstance.class);
-//        npcInstances.put("WarehouseInstance", l2trunk.gameserver.model.instances.WarehouseInstance.class);
-//        npcInstances.put("WeaverInstance", l2trunk.gameserver.model.instances.WeaverInstance.class);
-//        npcInstances.put("WyvernManagerInstance", l2trunk.gameserver.model.instances.WyvernManagerInstance.class);
-//        npcInstances.put("XmassTreeInstance", l2trunk.gameserver.model.instances.XmassTreeInstance.class);
-//        npcInstances.put("AbyssGazeInstance", l2trunk.scripts.npc.model.AbyssGazeInstance.class);
-//        npcInstances.put("AllenosInstance", l2trunk.scripts.npc.model.AllenosInstance.class);
-//        npcInstances.put("ArenaManagerInstance", l2trunk.scripts.npc.model.ArenaManagerInstance.class);
-//        npcInstances.put("AsamahInstance", l2trunk.scripts.npc.model.AsamahInstance.class);
-//        npcInstances.put("BaiumGatekeeperInstance", l2trunk.scripts.npc.model.BaiumGatekeeperInstance.class);
-//        npcInstances.put("BatracosInstance", l2trunk.scripts.npc.model.BatracosInstance.class);
-//        npcInstances.put("BelethCoffinInstance", l2trunk.scripts.npc.model.BelethCoffinInstance.class);
-//        npcInstances.put("birthday.AlegriaInstance", l2trunk.scripts.npc.model.birthday.AlegriaInstance.class);
-//        npcInstances.put("birthday.BirthDayCakeInstance", l2trunk.scripts.npc.model.birthday.BirthDayCakeInstance.class);
-//        npcInstances.put("BlackJudeInstance", l2trunk.scripts.npc.model.BlackJudeInstance.class);
-//        npcInstances.put("BorderOutpostDoormanInstance", l2trunk.scripts.npc.model.BorderOutpostDoormanInstance.class);
-//        npcInstances.put("CabaleBufferInstance", l2trunk.scripts.npc.model.CabaleBufferInstance.class);
-//        npcInstances.put("CannibalisticStakatoChiefInstance", l2trunk.scripts.npc.model.CannibalisticStakatoChiefInstance.class);
-//        npcInstances.put("CaravanTraderInstance", l2trunk.scripts.npc.model.CaravanTraderInstance.class);
-//        npcInstances.put("ClassMasterInstance", l2trunk.scripts.npc.model.ClassMasterInstance.class);
-//        npcInstances.put("CoralGardenGateInstance", l2trunk.scripts.npc.model.CoralGardenGateInstance.class);
-//        npcInstances.put("CrystalCavernControllerInstance", l2trunk.scripts.npc.model.CrystalCavernControllerInstance.class);
-//        npcInstances.put("DeadTumorInstance", l2trunk.scripts.npc.model.DeadTumorInstance.class);
-//        npcInstances.put("DelustionGatekeeperInstance", l2trunk.scripts.npc.model.DelustionGatekeeperInstance.class);
-//        npcInstances.put("DragonVortexInstance", l2trunk.scripts.npc.model.DragonVortexInstance.class);
-//        npcInstances.put("EkimusMouthInstance", l2trunk.scripts.npc.model.EkimusMouthInstance.class);
-//        npcInstances.put("ElcardiaAssistantInstance", l2trunk.scripts.npc.model.ElcardiaAssistantInstance.class);
-//        npcInstances.put("EmeraldSquareTrapInstance", l2trunk.scripts.npc.model.EmeraldSquareTrapInstance.class);
-//        npcInstances.put("EnergySeedInstance", l2trunk.scripts.npc.model.EnergySeedInstance.class);
-//        npcInstances.put("events.CleftVortexGateInstance", l2trunk.scripts.npc.model.events.CleftVortexGateInstance.class);
-//        npcInstances.put("events.ColiseumHelperInstance", l2trunk.scripts.npc.model.events.ColiseumHelperInstance.class);
-//        npcInstances.put("events.ColiseumManagerInstance", l2trunk.scripts.npc.model.events.ColiseumManagerInstance.class);
-//        npcInstances.put("events.FurnfaceInstance", l2trunk.scripts.npc.model.events.FurnfaceInstance.class);
-//        npcInstances.put("events.HitmanInstance", l2trunk.scripts.npc.model.events.HitmanInstance.class);
-//        npcInstances.put("events.KrateisCubeManagerInstance", l2trunk.scripts.npc.model.events.KrateisCubeManagerInstance.class);
-//        npcInstances.put("events.KrateisCubeMatchManagerInstance", l2trunk.scripts.npc.model.events.KrateisCubeMatchManagerInstance.class);
-//        npcInstances.put("events.SumielInstance", l2trunk.scripts.npc.model.events.SumielInstance.class);
-//        npcInstances.put("events.UndergroundColiseumInstance", l2trunk.scripts.npc.model.events.UndergroundColiseumInstance.class);
-//        npcInstances.put("FakeObeliskInstance", l2trunk.scripts.npc.model.FakeObeliskInstance.class);
-//        npcInstances.put("FreightSenderInstance", l2trunk.scripts.npc.model.FreightSenderInstance.class);
-//        npcInstances.put("FrintezzaGatekeeperInstance", l2trunk.scripts.npc.model.FrintezzaGatekeeperInstance.class);
-//        npcInstances.put("FrintezzaInstance", l2trunk.scripts.npc.model.FrintezzaInstance.class);
-//        npcInstances.put("GruffManInstance", l2trunk.scripts.npc.model.GruffManInstance.class);
-//        npcInstances.put("GuradsOfDawnInstance", l2trunk.scripts.npc.model.GuradsOfDawnInstance.class);
-//        npcInstances.put("GvGBossInstance", l2trunk.scripts.npc.model.GvGBossInstance.class);
-//        npcInstances.put("HandysBlockCheckerInstance", l2trunk.scripts.npc.model.HandysBlockCheckerInstance.class);
-//        npcInstances.put("HeartOfWardingInstance", l2trunk.scripts.npc.model.HeartOfWardingInstance.class);
-//        npcInstances.put("HellboundRemnantInstance", l2trunk.scripts.npc.model.HellboundRemnantInstance.class);
-//        npcInstances.put("ImmuneMonsterInstance", l2trunk.scripts.npc.model.ImmuneMonsterInstance.class);
-//        npcInstances.put("JiniaNpcInstance", l2trunk.scripts.npc.model.JiniaNpcInstance.class);
-//        npcInstances.put("Kama26BossInstance", l2trunk.scripts.npc.model.Kama26BossInstance.class);
-//        npcInstances.put("KamalokaBossInstance", l2trunk.scripts.npc.model.KamalokaBossInstance.class);
-//        npcInstances.put("KamalokaGuardInstance", l2trunk.scripts.npc.model.KamalokaGuardInstance.class);
-//        npcInstances.put("KegorNpcInstance", l2trunk.scripts.npc.model.KegorNpcInstance.class);
-//        npcInstances.put("KeplonInstance", l2trunk.scripts.npc.model.KeplonInstance.class);
-//        npcInstances.put("LekonInstance", l2trunk.scripts.npc.model.LekonInstance.class);
-//        npcInstances.put("LostCaptainInstance", l2trunk.scripts.npc.model.LostCaptainInstance.class);
-//        npcInstances.put("MaguenInstance", l2trunk.scripts.npc.model.MaguenInstance.class);
-//        npcInstances.put("MaguenTraderInstance", l2trunk.scripts.npc.model.MaguenTraderInstance.class);
-//        npcInstances.put("MeleonInstance", l2trunk.scripts.npc.model.MeleonInstance.class);
-//        npcInstances.put("MobInvulInstance", l2trunk.scripts.npc.model.MobInvulInstance.class);
-//        npcInstances.put("MoonlightTombstoneInstance", l2trunk.scripts.npc.model.MoonlightTombstoneInstance.class);
-//        npcInstances.put("MushroomInstance", l2trunk.scripts.npc.model.MushroomInstance.class);
-//        npcInstances.put("NaiaControllerInstance", l2trunk.scripts.npc.model.NaiaControllerInstance.class);
-//        npcInstances.put("NaiaRoomControllerInstance", l2trunk.scripts.npc.model.NaiaRoomControllerInstance.class);
-//        npcInstances.put("NativeCorpseInstance", l2trunk.scripts.npc.model.NativeCorpseInstance.class);
-//        npcInstances.put("NativePrisonerInstance", l2trunk.scripts.npc.model.NativePrisonerInstance.class);
-//        npcInstances.put("NevitHeraldInstance", l2trunk.scripts.npc.model.NevitHeraldInstance.class);
-//        npcInstances.put("NewbieGuideInstance", l2trunk.scripts.npc.model.NewbieGuideInstance.class);
-//        npcInstances.put("NihilInvaderChestInstance", l2trunk.scripts.npc.model.NihilInvaderChestInstance.class);
-//        npcInstances.put("OddGlobeInstance", l2trunk.scripts.npc.model.OddGlobeInstance.class);
-//        npcInstances.put("OrfenInstance", l2trunk.scripts.npc.model.OrfenInstance.class);
-//        npcInstances.put("PailakaGatekeeperInstance", l2trunk.scripts.npc.model.PailakaGatekeeperInstance.class);
-//        npcInstances.put("PassagewayMobWithHerbInstance", l2trunk.scripts.npc.model.PassagewayMobWithHerbInstance.class);
-//        npcInstances.put("PathfinderInstance", l2trunk.scripts.npc.model.PathfinderInstance.class);
-//        npcInstances.put("PriestAquilaniInstance", l2trunk.scripts.npc.model.PriestAquilaniInstance.class);
-//        npcInstances.put("PriestOfBlessingInstance", l2trunk.scripts.npc.model.PriestOfBlessingInstance.class);
-//        npcInstances.put("QuarrySlaveInstance", l2trunk.scripts.npc.model.QuarrySlaveInstance.class);
-//        npcInstances.put("QueenAntInstance", l2trunk.scripts.npc.model.QueenAntInstance.class);
-//        npcInstances.put("QueenAntLarvaInstance", l2trunk.scripts.npc.model.QueenAntLarvaInstance.class);
-//        npcInstances.put("RafortyInstance", l2trunk.scripts.npc.model.RafortyInstance.class);
-//
-//
-//        npcInstances.put("residences.SiegeFlagInstance", l2trunk.gameserver.model.instances.residences.SiegeFlagInstance.class);
-//        npcInstances.put("residences.dominion.OutpostInstance", l2trunk.gameserver.model.instances.residences.dominion.OutpostInstance.class);
-//
-//        npcInstances.put("residences.castle.BlacksmithInstance", l2trunk.scripts.npc.model.residences.castle.BlacksmithInstance.class);
-//        npcInstances.put("residences.castle.CastleControlTowerInstance", l2trunk.scripts.npc.model.residences.castle.CastleControlTowerInstance.class);
-//        npcInstances.put("residences.castle.CastleFakeTowerInstance", l2trunk.scripts.npc.model.residences.castle.CastleFakeTowerInstance.class);
-//        npcInstances.put("residences.castle.CastleFlameTowerInstance", l2trunk.scripts.npc.model.residences.castle.CastleFlameTowerInstance.class);
-//        npcInstances.put("residences.castle.CastleMassTeleporterInstance", l2trunk.scripts.npc.model.residences.castle.CastleMassTeleporterInstance.class);
-//        npcInstances.put("residences.castle.CastleMessengerInstance", l2trunk.scripts.npc.model.residences.castle.CastleMessengerInstance.class);
-//        npcInstances.put("residences.castle.ChamberlainInstance", l2trunk.scripts.npc.model.residences.castle.ChamberlainInstance.class);
-//        npcInstances.put("residences.castle.CourtInstance", l2trunk.scripts.npc.model.residences.castle.CourtInstance.class);
-//        npcInstances.put("residences.castle.DoormanInstance", l2trunk.scripts.npc.model.residences.castle.DoormanInstance.class);
-//        npcInstances.put("residences.castle.MercenaryManagerInstance", l2trunk.scripts.npc.model.residences.castle.MercenaryManagerInstance.class);
-//        npcInstances.put("residences.castle.VenomTeleportCubicInstance", l2trunk.scripts.npc.model.residences.castle.VenomTeleportCubicInstance.class);
-//        npcInstances.put("residences.castle.VenomTeleporterInstance", l2trunk.scripts.npc.model.residences.castle.VenomTeleporterInstance.class);
-//        npcInstances.put("residences.castle.WarehouseInstance", l2trunk.scripts.npc.model.residences.castle.WarehouseInstance.class);
-//        npcInstances.put("residences.clanhall.AuctionedDoormanInstance", l2trunk.scripts.npc.model.residences.clanhall.AuctionedDoormanInstance.class);
-//        npcInstances.put("residences.clanhall.AuctionedManagerInstance", l2trunk.scripts.npc.model.residences.clanhall.AuctionedManagerInstance.class);
-//        npcInstances.put("residences.clanhall.AuctioneerInstance", l2trunk.scripts.npc.model.residences.clanhall.AuctioneerInstance.class);
-//        npcInstances.put("residences.clanhall.BanditMessagerInstance", l2trunk.scripts.npc.model.residences.clanhall.BanditMessagerInstance.class);
-//        npcInstances.put("residences.clanhall.BrakelInstance", l2trunk.scripts.npc.model.residences.clanhall.BrakelInstance.class);
-//        npcInstances.put("residences.clanhall.DietrichInstance", l2trunk.scripts.npc.model.residences.clanhall.DietrichInstance.class);
-//        npcInstances.put("residences.clanhall.DoormanInstance", l2trunk.scripts.npc.model.residences.clanhall.DoormanInstance.class);
-//        npcInstances.put("residences.clanhall.FarmMessengerInstance", l2trunk.scripts.npc.model.residences.clanhall.FarmMessengerInstance.class);
-//        npcInstances.put("residences.clanhall.GustavInstance", l2trunk.scripts.npc.model.residences.clanhall.GustavInstance.class);
-//        npcInstances.put("residences.clanhall.LidiaVonHellmannInstance", l2trunk.scripts.npc.model.residences.clanhall.LidiaVonHellmannInstance.class);
-//        npcInstances.put("residences.clanhall.ManagerInstance", l2trunk.scripts.npc.model.residences.clanhall.ManagerInstance.class);
-//        npcInstances.put("residences.clanhall.MatchBerserkerInstance", l2trunk.scripts.npc.model.residences.clanhall.MatchBerserkerInstance.class);
-//        npcInstances.put("residences.clanhall.MatchClericInstance", l2trunk.scripts.npc.model.residences.clanhall.MatchClericInstance.class);
-//        npcInstances.put("residences.clanhall.MatchLeaderInstance", l2trunk.scripts.npc.model.residences.clanhall.MatchLeaderInstance.class);
-//        npcInstances.put("residences.clanhall.MatchMassTeleporterInstance", l2trunk.scripts.npc.model.residences.clanhall.MatchMassTeleporterInstance.class);
-//        npcInstances.put("residences.clanhall.MatchScoutInstance", l2trunk.scripts.npc.model.residences.clanhall.MatchScoutInstance.class);
-//        npcInstances.put("residences.clanhall.MatchTriefInstance", l2trunk.scripts.npc.model.residences.clanhall.MatchTriefInstance.class);
-//        npcInstances.put("residences.clanhall.MessengerInstance", l2trunk.scripts.npc.model.residences.clanhall.MessengerInstance.class);
-//        npcInstances.put("residences.clanhall.MikhailInstance", l2trunk.scripts.npc.model.residences.clanhall.MikhailInstance.class);
-//        npcInstances.put("residences.clanhall.NurkaInstance", l2trunk.scripts.npc.model.residences.clanhall.NurkaInstance.class);
-//        npcInstances.put("residences.clanhall.RainbowChestInstance", l2trunk.scripts.npc.model.residences.clanhall.RainbowChestInstance.class);
-//        npcInstances.put("residences.clanhall.RainbowCoordinatorInstance", l2trunk.scripts.npc.model.residences.clanhall.RainbowCoordinatorInstance.class);
-//        npcInstances.put("residences.clanhall.RainbowGourdInstance", l2trunk.scripts.npc.model.residences.clanhall.RainbowGourdInstance.class);
-//        npcInstances.put("residences.clanhall.RainbowMessengerInstance", l2trunk.scripts.npc.model.residences.clanhall.RainbowMessengerInstance.class);
-//        npcInstances.put("residences.clanhall.RainbowYetiInstance", l2trunk.scripts.npc.model.residences.clanhall.RainbowYetiInstance.class);
-//        npcInstances.put("residences.clanhall._34BossMinionInstance", l2trunk.scripts.npc.model.residences.clanhall._34BossMinionInstance.class);
-//        npcInstances.put("residences.dominion.CatapultInstance", l2trunk.scripts.npc.model.residences.dominion.CatapultInstance.class);
-//        npcInstances.put("residences.dominion.MercenaryCaptainInstance", l2trunk.scripts.npc.model.residences.dominion.MercenaryCaptainInstance.class);
-//        npcInstances.put("residences.dominion.TerritoryManagerInstance", l2trunk.scripts.npc.model.residences.dominion.TerritoryManagerInstance.class);
-//        npcInstances.put("residences.DoormanInstance", l2trunk.scripts.npc.model.residences.DoormanInstance.class);
-//        npcInstances.put("residences.fortress.DoormanInstance", l2trunk.scripts.npc.model.residences.fortress.DoormanInstance.class);
-//        npcInstances.put("residences.fortress.EnvoyInstance", l2trunk.scripts.npc.model.residences.fortress.EnvoyInstance.class);
-//        npcInstances.put("residences.fortress.FacilityManagerInstance", l2trunk.scripts.npc.model.residences.fortress.FacilityManagerInstance.class);
-//        npcInstances.put("residences.fortress.LogisticsOfficerInstance", l2trunk.scripts.npc.model.residences.fortress.LogisticsOfficerInstance.class);
-//        npcInstances.put("residences.fortress.ManagerInstance", l2trunk.scripts.npc.model.residences.fortress.ManagerInstance.class);
-//        npcInstances.put("residences.fortress.peace.ArcherCaptionInstance", l2trunk.scripts.npc.model.residences.fortress.peace.ArcherCaptionInstance.class);
-//        npcInstances.put("residences.fortress.peace.GuardCaptionInstance", l2trunk.scripts.npc.model.residences.fortress.peace.GuardCaptionInstance.class);
-//        npcInstances.put("residences.fortress.peace.SupportUnitCaptionInstance", SupportUnitCaptionInstance.class);
-//        npcInstances.put("residences.fortress.peace.SuspiciousMerchantInstance", SuspiciousMerchantInstance.class);
-//        npcInstances.put("residences.fortress.siege.BackupPowerUnitInstance", BackupPowerUnitInstance.class);
-//        npcInstances.put("residences.fortress.siege.BallistaInstance", BallistaInstance.class);
-//        npcInstances.put("residences.fortress.siege.ControlUnitInstance", ControlUnitInstance.class);
-//        npcInstances.put("residences.fortress.siege.MainMachineInstance", l2trunk.scripts.npc.model.residences.fortress.siege.MainMachineInstance.class);
-//        npcInstances.put("residences.fortress.siege.MercenaryCaptionInstance", l2trunk.scripts.npc.model.residences.fortress.siege.MercenaryCaptionInstance.class);
-//        npcInstances.put("residences.fortress.siege.PowerControlUnitInstance", l2trunk.scripts.npc.model.residences.fortress.siege.PowerControlUnitInstance.class);
-//        npcInstances.put("residences.QuestSiegeGuardInstance", l2trunk.scripts.npc.model.residences.QuestSiegeGuardInstance.class);
-//        npcInstances.put("residences.ResidenceManager", l2trunk.scripts.npc.model.residences.ResidenceManager.class);
-//        npcInstances.put("residences.SiegeGuardInstance", l2trunk.scripts.npc.model.residences.SiegeGuardInstance.class);
-//        npcInstances.put("residences.TeleportSiegeGuardInstance", l2trunk.scripts.npc.model.residences.TeleportSiegeGuardInstance.class);
-//        npcInstances.put("RiganInstance", l2trunk.scripts.npc.model.RiganInstance.class);
-//        npcInstances.put("RignosInstance", l2trunk.scripts.npc.model.RignosInstance.class);
-//        npcInstances.put("SairlenGatekeeperInstance", l2trunk.scripts.npc.model.SairlenGatekeeperInstance.class);
-//        npcInstances.put("SallyInstance", l2trunk.scripts.npc.model.SallyInstance.class);
-//        npcInstances.put("SandstormInstance", l2trunk.scripts.npc.model.SandstormInstance.class);
-//        npcInstances.put("SealDeviceInstance", l2trunk.scripts.npc.model.SealDeviceInstance.class);
-//        npcInstances.put("SeducedInvestigatorInstance", l2trunk.scripts.npc.model.SeducedInvestigatorInstance.class);
-//        npcInstances.put("SeedOfAnnihilationInstance", l2trunk.scripts.npc.model.SeedOfAnnihilationInstance.class);
-//        npcInstances.put("SepulcherMonsterInstance", l2trunk.scripts.npc.model.SepulcherMonsterInstance.class);
-//        npcInstances.put("SepulcherNpcInstance", l2trunk.scripts.npc.model.SepulcherNpcInstance.class);
-//        npcInstances.put("SepulcherRaidInstance", l2trunk.scripts.npc.model.SepulcherRaidInstance.class);
-//        npcInstances.put("SirraInstance", l2trunk.scripts.npc.model.SirraInstance.class);
-//        npcInstances.put("SnowmanInstance", l2trunk.scripts.npc.model.SnowmanInstance.class);
-//        npcInstances.put("SpecialMinionInstance", l2trunk.scripts.npc.model.SpecialMinionInstance.class);
-//        npcInstances.put("SquashInstance", l2trunk.scripts.npc.model.SquashInstance.class);
-//        npcInstances.put("StarStoneInstance", l2trunk.scripts.npc.model.StarStoneInstance.class);
-//        npcInstances.put("SteamCorridorControllerInstance", l2trunk.scripts.npc.model.SteamCorridorControllerInstance.class);
-//        npcInstances.put("SteelCitadelTeleporterInstance", l2trunk.scripts.npc.model.SteelCitadelTeleporterInstance.class);
-//        npcInstances.put("TepiosRewardInstance", l2trunk.scripts.npc.model.TepiosRewardInstance.class);
-//        npcInstances.put("ThomasInstance", l2trunk.scripts.npc.model.ThomasInstance.class);
-//        npcInstances.put("TreasureChestInstance", l2trunk.scripts.npc.model.TreasureChestInstance.class);
-//        npcInstances.put("TriolsMirrorInstance", l2trunk.scripts.npc.model.TriolsMirrorInstance.class);
-//        npcInstances.put("TullyWorkShopTeleporterInstance", l2trunk.scripts.npc.model.TullyWorkShopTeleporterInstance.class);
-//        npcInstances.put("ValakasGatekeeperInstance", l2trunk.scripts.npc.model.ValakasGatekeeperInstance.class);
-//        npcInstances.put("WarpgateInstance", l2trunk.scripts.npc.model.WarpgateInstance.class);
-//        npcInstances.put("WorkshopGatekeeperInstance", l2trunk.scripts.npc.model.WorkshopGatekeeperInstance.class);
-//        npcInstances.put("WorkshopServantInstance", l2trunk.scripts.npc.model.WorkshopServantInstance.class);
-//        npcInstances.put("YehanBrotherInstance", l2trunk.scripts.npc.model.YehanBrotherInstance.class);
-//        npcInstances.put("ZakenCandleInstance", l2trunk.scripts.npc.model.ZakenCandleInstance.class);
-//        npcInstances.put("ZakenGatekeeperInstance", l2trunk.scripts.npc.model.ZakenGatekeeperInstance.class);
-//
-//
-//    }
 
     private void loadScripts() {
 //        scripts.put("actions.OnActionShift",l2trunk.scripts.actions.OnActionShift.class);
@@ -952,7 +259,6 @@ public enum Scripts {
         scripts.put("bosses.BaylorManager", new BaylorManager());
         scripts.put("bosses.BelethManager", new BelethManager());
         scripts.put("bosses.FourSepulchersManager", new FourSepulchersManager());
-        scripts.put("bosses.FourSepulchersSpawn", new FourSepulchersSpawn());
         scripts.put("bosses.SailrenManager", new SailrenManager());
         scripts.put("bosses.ValakasManager", new ValakasManager());
         scripts.put("events.AprilFoolsDay.AprilFoolsDay", new AprilFoolsDay());
@@ -972,7 +278,6 @@ public enum Scripts {
         scripts.put("events.Hitman.Hitman", new l2trunk.scripts.events.Hitman.Hitman());
         scripts.put("events.l2day.LettersCollection", new l2trunk.scripts.events.l2day.LettersCollection());
         scripts.put("events.March8.March8", new l2trunk.scripts.events.March8.March8());
-        scripts.put("events.MasterOfEnchanting.EnchantingReward", new l2trunk.scripts.events.MasterOfEnchanting.EnchantingReward());
         scripts.put("events.MasterOfEnchanting.MasterOfEnchanting", new l2trunk.scripts.events.MasterOfEnchanting.MasterOfEnchanting());
         scripts.put("events.PcCafePointsExchange.PcCafePointsExchange", new l2trunk.scripts.events.PcCafePointsExchange.PcCafePointsExchange());
         scripts.put("events.PiratesTreasure.PiratesTreasure", new l2trunk.scripts.events.PiratesTreasure.PiratesTreasure());
@@ -1044,9 +349,7 @@ public enum Scripts {
         scripts.put("services.community.Forge", new l2trunk.scripts.services.community.Forge());
         scripts.put("services.community.RankingCommunity", new l2trunk.scripts.services.community.RankingCommunity());
         scripts.put("services.community.ServicesCommunity", new l2trunk.scripts.services.community.ServicesCommunity());
-        scripts.put("services.community.ShowInfo", new l2trunk.scripts.services.community.ShowInfo());
         scripts.put("services.community.StatManager", new l2trunk.scripts.services.community.StatManager());
-        scripts.put("services.Delevel", new l2trunk.scripts.services.Delevel());
         scripts.put("services.FantasyIsle", new l2trunk.scripts.services.FantasyIsle());
         scripts.put("services.LindviorMovie", new l2trunk.scripts.services.LindviorMovie());
         scripts.put("services.PurpleManedHorse", new PurpleManedHorse());
@@ -1059,6 +362,7 @@ public enum Scripts {
         scripts.put("zones.MonsterTrap", new l2trunk.scripts.zones.MonsterTrap());
         scripts.put("zones.SeedOfAnnihilation", new l2trunk.scripts.zones.SeedOfAnnihilation());
         scripts.put("zones.TullyWorkshopZone", new TullyWorkshopZone());
+        scripts.put("ai.Zone.HeineFields.HeineFieldsHerbs", new HeineFieldsHerbs());
 
     }
 

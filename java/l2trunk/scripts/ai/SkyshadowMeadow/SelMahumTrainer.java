@@ -12,6 +12,7 @@ import l2trunk.gameserver.scripts.Functions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Grivesky
@@ -21,8 +22,8 @@ import java.util.List;
  * - AI is tested and works.
  */
 public final class SelMahumTrainer extends Fighter {
-    private static final NpcString[] _text = {NpcString.SCHOOL7, NpcString.SCHOOL8};
-    private final List<NpcInstance> _arm = new ArrayList<>();
+    private static final List<NpcString> TEXT = List.of(NpcString.SCHOOL7, NpcString.SCHOOL8);
+    private List<NpcInstance> _arm = new ArrayList<>();
     private long _wait_timeout = System.currentTimeMillis() + 20000;
     private boolean _firstTimeAttacked = true;
 
@@ -39,8 +40,7 @@ public final class SelMahumTrainer extends Fighter {
 
         if (_wait_timeout < System.currentTimeMillis()) {
             if (_arm == null || _arm.isEmpty()) {
-                for (NpcInstance npc : getActor().getAroundNpc(750, 750))
-                    _arm.add(npc);
+                _arm = getActor().getAroundNpc(750, 750).collect(Collectors.toList());
             }
 
             _wait_timeout = (System.currentTimeMillis() + Rnd.get(20, 30) * 1000);
@@ -51,10 +51,10 @@ public final class SelMahumTrainer extends Fighter {
             int time = 2000;
             for (int i = 0; i <= 2; i++) {
                 ThreadPoolManager.INSTANCE.schedule(() -> {
-                    for (NpcInstance voin : _arm) {
+                    _arm.forEach(voin -> {
                         voin.setHeading(voin.getSpawnedLoc().h);
                         voin.broadcastPacket(new SocialAction(voin.getObjectId(), social));
-                    }
+                    });
                 }, time);
                 time += 2000;
             }
@@ -76,7 +76,7 @@ public final class SelMahumTrainer extends Fighter {
 
         if (_firstTimeAttacked) {
             _firstTimeAttacked = false;
-            Functions.npcSay(actor, _text[Rnd.get(_text.length)]);
+            Functions.npcSay(actor, Rnd.get(TEXT));
         }
 
         super.onEvtAttacked(attacker, damage);

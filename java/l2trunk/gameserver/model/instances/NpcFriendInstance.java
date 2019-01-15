@@ -8,7 +8,6 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.StatusUpdate;
 import l2trunk.gameserver.network.serverpackets.ValidateLocation;
 import l2trunk.gameserver.scripts.Events;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.WarehouseFunctions;
 
@@ -19,11 +18,7 @@ public final class NpcFriendInstance extends MerchantInstance {
         super(objectId, template);
     }
 
-    /**
-     * this is called when a player interacts with this NPC
-     *
-     * @param player
-     */
+
     @Override
     public void onAction(Player player, boolean shift) {
         if (this != player.getTarget()) {
@@ -47,7 +42,7 @@ public final class NpcFriendInstance extends MerchantInstance {
 
         if (!isInRange(player, INTERACTION_DISTANCE)) {
             if (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT)
-                player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
+                player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
             return;
         }
 

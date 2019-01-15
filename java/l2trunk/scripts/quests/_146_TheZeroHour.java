@@ -3,13 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: n0nam3
- * @date: 30.05.2010
- */
-public class _146_TheZeroHour extends Quest implements ScriptFile {
+public final class _146_TheZeroHour extends Quest {
     // NPC's
     private static final int KAHMAN = 31554;
     // ITEMS
@@ -18,17 +13,6 @@ public class _146_TheZeroHour extends Quest implements ScriptFile {
     // MOB's
     private static final int QUEEN_SHYEED_ID = 25671;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _146_TheZeroHour() {
         super(true);

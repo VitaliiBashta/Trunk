@@ -6,12 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Testimony Of Prosperity
- *
- * @author Sergey Ibryaev aka Artful
- */
-public class _221_TestimonyOfProsperity extends Quest implements ScriptFile {
+public final class _221_TestimonyOfProsperity extends Quest {
     //NPC
     private static final int Parman = 30104;
     private static final int Bright = 30466;
@@ -205,15 +200,6 @@ public class _221_TestimonyOfProsperity extends Quest implements ScriptFile {
             }
     };
 
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
     public _221_TestimonyOfProsperity() {
         super(false);
 
@@ -241,8 +227,7 @@ public class _221_TestimonyOfProsperity extends Quest implements ScriptFile {
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(new int[]{
-                RingOfTestimony1st,
+        addQuestItem(RingOfTestimony1st,
                 BrightsList,
                 MandragoraBouquet,
                 BlessedSeed,
@@ -278,8 +263,7 @@ public class _221_TestimonyOfProsperity extends Quest implements ScriptFile {
                 CrimsonMoss,
                 StakatoShell,
                 ToadLordSac,
-                SpiderThorn
-        });
+                SpiderThorn);
     }
 
     @Override

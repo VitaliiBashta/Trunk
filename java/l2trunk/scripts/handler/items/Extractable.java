@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class Extractable extends SimpleItemHandler implements ScriptFile {
-
     private static final List<Integer> ITEM_IDS = List.of(
             53, 54, 55, 56, 136, 137, 138, 139, 140, 141, 163, 170, 5906, 5907, 5909,
             5910, 5912, 5913, 5916, 5944, 5955, 5966, 5967, 5968, 5969, 6007, 6008,
@@ -140,7 +139,9 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             10577 // Forgotten Scroll - Excessive Loyalty
     };
 
-    private static Map<Integer,Integer> singleRewardItem = new HashMap<>();
+    private static Map<Integer, Integer> singleRewardItem = new HashMap<>();
+
+
 
     private static void extract_item(int[] list, int[] counts, Player player) {
         int index = Rnd.get(list.length);
@@ -295,12 +296,859 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     }
 
     private static boolean addItem(Player player, int itemId) {
-        addItem(player, itemId, 1, "use"+itemId);
+        addItem(player, itemId, 1, "use" + itemId);
         return true;
     }
 
     private static void addItem(Player player, int itemId, long count, String log) {
         Functions.addItem(player, itemId, count, log);
+    }
+
+    // Small fortuna box
+    private void use22000(Player player, boolean ctrl) {
+        int[][] list = new int[][]{{22006, 3}, {22007, 2}, {22008, 1}, {22014, 1}, {22022, 3}, {22023, 3}, {22024, 1}, {8743, 1}, {8744, 1}, {8745, 1}, {8753, 1}, {8754, 1}, {8755, 1}, {22025, 5}};
+        double[] chances = new double[]{20.55555, 14.01515, 6.16666, 0.86999, 3.19444, 6.38888, 5.75, 10, 8.33333, 6.94444, 2, 1.6666, 1.38888, 12.77777};
+        extractRandomOneItem(player, list, chances);
+    }
+
+    // Middle fortuna box
+    private void use22001(Player player, boolean ctrl) {
+        int[][] list = new int[][]{{22007, 3}, {22008, 2}, {22009, 1}, {22014, 1}, {22015, 1}, {22022, 5}, {22023, 5}, {22024, 2}, {8746, 1}, {8747, 1}, {8748, 1}, {8756, 1}, {8757, 1}, {8758, 1}, {22025, 10}};
+        double[] chances = new double[]{27.27272, 9, 5, 0.93959, 0.32467, 3.75, 7.5, 5.625, 9.11458, 7.875, 6.5625, 1.82291, 1.575, 1.3125, 12.5};
+        extractRandomOneItem(player, list, chances);
+    }
+
+    // Large fortuna box
+    private void use22002(Player player, boolean ctrl) {
+        int[][] list = new int[][]{{22008, 2}, {22009, 1}, {22014, 1}, {22015, 1}, {22018, 1}, {22019, 1}, {22022, 10}, {22023, 10}, {22024, 5}, {8749, 1}, {8750, 1}, {8751, 1}, {8759, 1}, {8760, 1}, {8761, 1}, {22025, 20}};
+        double[] chances = new double[]{27, 15, 0.78299, 0.27056, 0.00775, 0.0027, 3.75, 7.5, 4.5, 9.75, 8.125, 6.77083, 1.95, 1.625, 1.35416, 12.5};
+        extractRandomOneItem(player, list, chances);
+    }
+
+    // Small fortuna cube
+    private void use22003(Player player, boolean ctrl) {
+        int[][] list = new int[][]{{22010, 3}, {22011, 2}, {22012, 1}, {22016, 1}, {22022, 3}, {22023, 3}, {22024, 1}, {8743, 1}, {8744, 1}, {8745, 1}, {8753, 1}, {8754, 1}, {8755, 1}, {22025, 5}};
+        double[] chances = new double[]{20.22222, 13.78787, 6.06666, 0.69599, 3.47222, 6.94444, 6.25, 9.5, 7.91666, 6.59722, 1.9, 1.58333, 1.31944, 13.88888};
+        extractRandomOneItem(player, list, chances);
+    }
+
+    // Middle fortuna cube
+    private void use22004(Player player, boolean ctrl) {
+        int[][] list = new int[][]{{22011, 3}, {22012, 2}, {22013, 1}, {22016, 1}, {22017, 1}, {22022, 5}, {22023, 5}, {22024, 2}, {8746, 1}, {8747, 1}, {8748, 1}, {8756, 1}, {8757, 1}, {8758, 1}, {22025, 10}};
+        double[] chances = new double[]{26.51515, 8.75, 4.86111, 0.91349, 0.31565, 3.75, 7.5, 5.625, 9.54861, 8.25, 6.875, 1.90972, 1.65, 1.375, 12.5};
+        extractRandomOneItem(player, list, chances);
+    }
+
+    // Large fortuna cube
+    private void use22005(Player player, boolean ctrl) {
+        int[][] list = new int[][]{{22012, 2}, {22013, 1}, {22016, 1}, {22017, 1}, {22020, 1}, {22021, 1}, {22022, 10}, {22023, 10}, {22024, 5}, {8749, 1}, {8750, 1}, {8751, 1}, {8759, 1}, {8760, 1}, {8761, 1}, {22025, 20}};
+        double[] chances = new double[]{26.25, 14.58333, 0.69599, 0.24049, 0.00638, 0.0022, 3.95833, 7.91666, 4.75, 9.58333, 7.98611, 6.65509, 1.91666, 1.59722, 1.33101, 13.19444};
+        extractRandomOneItem(player, list, chances);
+    }
+
+    // Beast Soulshot Pack
+    private void use20326(Player player, boolean ctrl) {
+        addItem(player, 20332, 5000);
+    }
+
+    // Beast Spiritshot Pack
+    private void use20327(Player player, boolean ctrl) {
+        addItem(player, 20333, 5000);
+    }
+
+    // Beast Soulshot Large Pack
+    private void use20329(Player player, boolean ctrl) {
+        addItem(player, 20332, 10000);
+    }
+
+    // Beast Spiritshot Large Pack
+    private void use20330(Player player, boolean ctrl) {
+        addItem(player, 20333, 10000);
+    }
+
+    // A Scroll Bundle of Fighter
+    private void use22087(Player player, boolean ctrl) {
+        addItem(player, 22039, 1);
+        addItem(player, 22040, 1);
+        addItem(player, 22041, 1);
+        addItem(player, 22042, 1);
+        addItem(player, 22043, 1);
+        addItem(player, 22044, 1);
+        addItem(player, 22047, 1);
+        addItem(player, 22048, 1);
+    }
+
+    // A Scroll Bundle of Mage
+    private void use22088(Player player, boolean ctrl) {
+        addItem(player, 22045, 1);
+        addItem(player, 22046, 1);
+        addItem(player, 22048, 1);
+        addItem(player, 22049, 1);
+        addItem(player, 22050, 1);
+        addItem(player, 22051, 1);
+        addItem(player, 22052, 1);
+        addItem(player, 22053, 1);
+    }
+
+    // ****** Belts ******
+    // Gludio Supply Box - Belt: Grade B, C
+    private void use13713(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Belt: Grade B, C
+    private void use13714(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Belt: Grade B, C
+    private void use13715(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Belt: Grade B, C
+    private void use13716(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Belt: Grade B, C
+    private void use13717(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Belt: Grade B, C
+    private void use13718(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Belt: Grade B, C
+    private void use13719(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Belt: Grade B, C
+    private void use13720(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Belt: Grade B, C
+    private void use13721(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13894, 1); // Cloth Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13895, 1); // Leather Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Gludio Supply Box - Belt: Grade S, A
+    private void use14549(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Belt: Grade S, A
+    private void use14550(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Belt: Grade S, A
+    private void use14551(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Belt: Grade S, A
+    private void use14552(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Belt: Grade S, A
+    private void use14553(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Belt: Grade S, A
+    private void use14554(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Belt: Grade S, A
+    private void use14555(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Belt: Grade S, A
+    private void use14556(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Belt: Grade S, A
+    private void use14557(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13896, 1); // Iron Belt
+        else if (Rnd.chance(50))
+            addItem(player, 13897, 1); // Mithril Belt
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // ****** Magic Pins ******
+    // Gludio Supply Box - Magic Pin: Grade B, C
+    private void use13695(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Magic Pin: Grade B, C
+    private void use13696(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Magic Pin: Grade B, C
+    private void use13697(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Magic Pin: Grade B, C
+    private void use13698(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Magic Pin: Grade B, C
+    private void use13699(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Magic Pin: Grade B, C
+    private void use13700(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Magic Pin: Grade B, C
+    private void use13701(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Magic Pin: Grade B, C
+    private void use13702(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Magic Pin: Grade B, C
+    private void use13703(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Gludio Supply Box - Magic Pin: Grade S, A
+    private void use14531(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Magic Pin: Grade S, A
+    private void use14532(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Magic Pin: Grade S, A
+    private void use14533(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Magic Pin: Grade S, A
+    private void use14534(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Magic Pin: Grade S, A
+    private void use14535(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Magic Pin: Grade S, A
+    private void use14536(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Magic Pin: Grade S, A
+    private void use14537(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Magic Pin: Grade S, A
+    private void use14538(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Magic Pin: Grade S, A
+    private void use14539(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // ****** Magic Pouchs ******
+    // Gludio Supply Box - Magic Pouch: Grade B, C
+    private void use13704(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Magic Pouch: Grade B, C
+    private void use13705(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Magic Pouch: Grade B, C
+    private void use13706(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Magic Pouch: Grade B, C
+    private void use13707(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Magic Pouch: Grade B, C
+    private void use13708(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Magic Pouch: Grade B, C
+    private void use13709(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Magic Pouch: Grade B, C
+    private void use13710(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Magic Pouch: Grade B, C
+    private void use13711(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Magic Pouch: Grade B, C
+    private void use13712(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Gludio Supply Box - Magic Pouch: Grade S, A
+    private void use14540(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Magic Pouch: Grade S, A
+    private void use14541(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Magic Pouch: Grade S, A
+    private void use14542(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Magic Pouch: Grade S, A
+    private void use14543(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Magic Pouch: Grade S, A
+    private void use14544(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Magic Pouch: Grade S, A
+    private void use14545(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Magic Pouch: Grade S, A
+    private void use14546(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Magic Pouch: Grade S, A
+    private void use14547(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Magic Pouch: Grade S, A
+    private void use14548(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // ****** Magic Rune Clip ******
+    // Gludio Supply Box - Magic Rune Clip: Grade S, A
+    private void use14884(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Magic Rune Clip: Grade S, A
+    private void use14885(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Magic Rune Clip: Grade S, A
+    private void use14886(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Magic Rune Clip: Grade S, A
+    private void use14887(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Magic Rune Clip: Grade S, A
+    private void use14888(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Magic Rune Clip: Grade S, A
+    private void use14889(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Magic Rune Clip: Grade S, A
+    private void use14890(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Magic Rune Clip: Grade S, A
+    private void use14891(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Magic Rune Clip: Grade S, A
+    private void use14892(Player player, boolean ctrl) {
+        if (Rnd.chance(50))
+            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
+        else if (Rnd.chance(50))
+            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // ****** Magic Ornament ******
+    // Gludio Supply Box - Magic Ornament: Grade S, A
+    private void use14893(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Dion Supply Box - Magic Ornament: Grade S, A
+    private void use14894(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Giran Supply Box - Magic Ornament: Grade S, A
+    private void use14895(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Oren Supply Box - Magic Ornament: Grade S, A
+    private void use14896(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Aden Supply Box - Magic Ornament: Grade S, A
+    private void use14897(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Innadril Supply Box - Magic Ornament: Grade S, A
+    private void use14898(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Goddard Supply Box - Magic Ornament: Grade S, A
+    private void use14899(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Rune Supply Box - Magic Ornament: Grade S, A
+    private void use14900(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Schuttgart Supply Box - Magic Ornament: Grade S, A
+    private void use14901(Player player, boolean ctrl) {
+        if (Rnd.chance(20))
+            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
+        else if (Rnd.chance(20))
+            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
+        else
+            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
+    }
+
+    // Gift from Santa Claus
+    private void use14616(Player player, boolean ctrl) {
+        // Santa Claus' Weapon Exchange Ticket - 12 Hour Expiration Period
+        addItem(player, 20107, 1);
+
+        // Christmas Red Sock
+        addItem(player, 14612, 1);
+
+        // Special Christmas Tree
+        if (Rnd.chance(30))
+            addItem(player, 5561, 1);
+
+        // Christmas Tree
+        if (Rnd.chance(50))
+            addItem(player, 5560, 1);
+
+        // Agathion Seal Bracelet - Rudolph (постоянный предмет)
+        if (Functions.getItemCount(player, 10606) == 0 && Rnd.chance(5))
+            addItem(player, 10606, 1);
+
+        // Agathion Seal Bracelet: Rudolph - 30 дней со скилом на виталити
+        if (Functions.getItemCount(player, 20094) == 0 && Rnd.chance(3))
+            addItem(player, 20094, 1);
+
+        // Chest of Experience (Event)
+        if (Rnd.chance(30))
+            addItem(player, 20575, 1);
+    }
+
+    // Chest of Experience (Event)
+    private void use20575(Player player, boolean ctrl) {
+        addItem(player, 20335, 1); // Rune of Experience: 30% - 5 hour limited time
+        addItem(player, 20341, 1); // Rune of SP 30% - 5 Hour Expiration Period
     }
 
     @Override
@@ -317,7 +1165,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     public List<Integer> getItemIds() {
         return ITEM_IDS;
     }
-
 
     // Simple Valentine Cake
     private void use20195(Player player, boolean ctrl) {
@@ -847,19 +1694,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     //(Not In Use)
     private void use53(Player player, boolean ctrl) {
-        int items[][] = new int[][]
-                {
-                        // itemId, min, max
-                        {13024, 1, 1}
-                };
-
-        double chances[] = new double[]
-                {
-                        // chance
-                        100.0
-                };
-
-        capsulate(player, items, chances);
+        addItem(player, 13024);
     }
 
     // (Not In Use)
@@ -2692,7 +3527,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
         if (!useItem(player, item, 1))
             return false;
-        if (extractSingleItem(itemId,player))
+        if (extractSingleItem(itemId, player))
             return true;
 
         switch (itemId) {
@@ -4418,216 +5253,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 21004:
                 use21004(player, ctrl);
                 break;
-            case 21003:
-                use21003(player, ctrl);
-                break;
-            case 21002:
-                use21002(player, ctrl);
-                break;
-            case 21001:
-                use21001(player, ctrl);
-                break;
-            case 21686:
-                use21686(player, ctrl);
-                break;
-            case 21685:
-                use21685(player, ctrl);
-                break;
-            case 21684:
-                use21684(player, ctrl);
-                break;
-            case 21683:
-                use21683(player, ctrl);
-                break;
-            case 21682:
-                use21682(player, ctrl);
-                break;
-            case 21681:
-                use21681(player, ctrl);
-                break;
-            case 21680:
-                use21680(player, ctrl);
-                break;
-            case 21679:
-                use21679(player, ctrl);
-                break;
-            case 21678:
-                use21678(player, ctrl);
-                break;
-            case 21677:
-                use21677(player, ctrl);
-                break;
-            case 21676:
-                use21676(player, ctrl);
-                break;
-            case 21675:
-                use21675(player, ctrl);
-                break;
-            case 21674:
-                use21674(player, ctrl);
-                break;
-            case 21673:
-                use21673(player, ctrl);
-                break;
-            case 21672:
-                use21672(player, ctrl);
-                break;
-            case 21671:
-                use21671(player, ctrl);
-                break;
-            case 21670:
-                use21670(player, ctrl);
-                break;
-            case 21669:
-                use21669(player, ctrl);
-                break;
-            case 21668:
-                use21668(player, ctrl);
-                break;
-            case 21667:
-                use21667(player, ctrl);
-                break;
-            case 21666:
-                use21666(player, ctrl);
-                break;
-            case 21665:
-                use21665(player, ctrl);
-                break;
-            case 21664:
-                use21664(player, ctrl);
-                break;
-            case 21663:
-                use21663(player, ctrl);
-                break;
-            case 21662:
-                use21662(player, ctrl);
-                break;
-            case 21661:
-                use21661(player, ctrl);
-                break;
-            case 21660:
-                use21660(player, ctrl);
-                break;
-            case 21659:
-                use21659(player, ctrl);
-                break;
-            case 21658:
-                use21658(player, ctrl);
-                break;
-            case 21657:
-                use21657(player, ctrl);
-                break;
-            case 21656:
-                use21656(player, ctrl);
-                break;
-            case 21655:
-                use21655(player, ctrl);
-                break;
-            case 21654:
-                use21654(player, ctrl);
-                break;
-            case 21653:
-                use21653(player, ctrl);
-                break;
-            case 21652:
-                use21652(player, ctrl);
-                break;
-            case 21651:
-                use21651(player, ctrl);
-                break;
-            case 21650:
-                use21650(player, ctrl);
-                break;
-            case 21649:
-                use21649(player, ctrl);
-                break;
-            case 21648:
-                use21648(player, ctrl);
-                break;
-            case 21647:
-                use21647(player, ctrl);
-                break;
-            case 21646:
-                use21646(player, ctrl);
-                break;
-            case 21645:
-                use21645(player, ctrl);
-                break;
-            case 21644:
-                use21644(player, ctrl);
-                break;
-            case 21643:
-                use21643(player, ctrl);
-                break;
-            case 21642:
-                use21642(player, ctrl);
-                break;
-            case 21641:
-                use21641(player, ctrl);
-                break;
-            case 21640:
-                use21640(player, ctrl);
-                break;
-            case 21639:
-                use21639(player, ctrl);
-                break;
-            case 21638:
-                use21638(player, ctrl);
-                break;
-            case 21637:
-                use21637(player, ctrl);
-                break;
-            case 21636:
-                use21636(player, ctrl);
-                break;
-            case 21635:
-                use21635(player, ctrl);
-                break;
-            case 21634:
-                use21634(player, ctrl);
-                break;
-            case 21633:
-                use21633(player, ctrl);
-                break;
-            case 21632:
-                use21632(player, ctrl);
-                break;
-            case 21631:
-                use21631(player, ctrl);
-                break;
-            case 21630:
-                use21630(player, ctrl);
-                break;
-            case 21629:
-                use21629(player, ctrl);
-                break;
-            case 21628:
-                use21628(player, ctrl);
-                break;
-            case 21627:
-                use21627(player, ctrl);
-                break;
-            case 21626:
-                use21626(player, ctrl);
-                break;
-            case 21625:
-                use21625(player, ctrl);
-                break;
-            case 21624:
-                use21624(player, ctrl);
-                break;
-            case 21623:
-                use21623(player, ctrl);
-                break;
-            case 21622:
-                use21622(player, ctrl);
-                break;
-            case 21621:
-                use21621(player, ctrl);
-                break;
-            case 21620:
-                use21620(player, ctrl);
-                break;
             case 13292:
                 use13292(player, ctrl);
                 break;
@@ -4682,56 +5307,20 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 13125:
                 use13125(player, ctrl);
                 break;
-            case 13124:
-                use13124(player, ctrl);
-                break;
+
             case 13122:
                 use13122(player, ctrl);
                 break;
-            case 13121:
-                use13121(player, ctrl);
-                break;
+
             case 13120:
                 use13120(player, ctrl);
                 break;
             case 13119:
                 use13119(player, ctrl);
                 break;
-            case 13118:
-                use13118(player, ctrl);
-                break;
-            case 13117:
-                use13117(player, ctrl);
-                break;
-            case 13116:
-                use13116(player, ctrl);
-                break;
-            case 13115:
-                use13115(player, ctrl);
-                break;
-            case 13114:
-                use13114(player, ctrl);
-                break;
-            case 13113:
-                use13113(player, ctrl);
-                break;
-            case 13112:
-                use13112(player, ctrl);
-                break;
-            case 13111:
-                use13111(player, ctrl);
-                break;
-            case 13110:
-                use13110(player, ctrl);
-                break;
+
             case 13109:
                 use13109(player, ctrl);
-                break;
-            case 13108:
-                use13108(player, ctrl);
-                break;
-            case 13107:
-                use13107(player, ctrl);
                 break;
             case 13106:
                 use13106(player, ctrl);
@@ -4817,96 +5406,15 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 20101:
                 use20101(player, ctrl);
                 break;
-            case 15378:
-                use15378(player, ctrl);
-                break;
-            case 15377:
-                use15377(player, ctrl);
-                break;
+
             case 15376:
                 use15376(player, ctrl);
                 break;
-            case 15375:
-                use15375(player, ctrl);
-                break;
-            case 15374:
-                use15374(player, ctrl);
-                break;
-            case 15373:
-                use15373(player, ctrl);
-                break;
+
             case 15372:
                 use15372(player, ctrl);
                 break;
-            case 15371:
-                use15371(player, ctrl);
-                break;
-            case 15370:
-                use15370(player, ctrl);
-                break;
-            case 15345:
-                use15345(player, ctrl);
-                break;
-            case 15343:
-                use15343(player, ctrl);
-                break;
-            case 21619:
-                use21619(player, ctrl);
-                break;
-            case 21618:
-                use21618(player, ctrl);
-                break;
-            case 21617:
-                use21617(player, ctrl);
-                break;
-            case 21616:
-                use21616(player, ctrl);
-                break;
-            case 21615:
-                use21615(player, ctrl);
-                break;
-            case 21614:
-                use21614(player, ctrl);
-                break;
-            case 21613:
-                use21613(player, ctrl);
-                break;
-            case 21612:
-                use21612(player, ctrl);
-                break;
-            case 21611:
-                use21611(player, ctrl);
-                break;
-            case 21610:
-                use21610(player, ctrl);
-                break;
-            case 21609:
-                use21609(player, ctrl);
-                break;
-            case 21608:
-                use21608(player, ctrl);
-                break;
-            case 21607:
-                use21607(player, ctrl);
-                break;
-            case 21606:
-                use21606(player, ctrl);
-                break;
-            case 21605:
-                use21605(player, ctrl);
-                break;
-            case 21604:
-                use21604(player, ctrl);
-                break;
-            case 21603:
-                use21603(player, ctrl);
-                break;
-            case 21602:
-                use21602(player, ctrl);
-                break;
-            case 21601:
-                use21601(player, ctrl);
-                break;
+
             case 22187:
                 use22187(player, ctrl);
                 break;
@@ -5029,132 +5537,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 9599:
                 use9599(player, ctrl);
                 break;
-            case 20069:
-                use20069(player, ctrl);
-                break;
-            case 20070:
-                use20070(player, ctrl);
-                break;
-            case 20071:
-                use20071(player, ctrl);
-                break;
-            case 20072:
-                use20072(player, ctrl);
-                break;
-            case 20073:
-                use20073(player, ctrl);
-                break;
-            case 20074:
-                use20074(player, ctrl);
-                break;
-            case 20210:
-                use20210(player, ctrl);
-                break;
-            case 20211:
-                use20211(player, ctrl);
-                break;
-            case 20215:
-                use20215(player, ctrl);
-                break;
-            case 20216:
-                use20216(player, ctrl);
-                break;
-            case 20217:
-                use20217(player, ctrl);
-                break;
-            case 20218:
-                use20218(player, ctrl);
-                break;
-            case 20219:
-                use20219(player, ctrl);
-                break;
-            case 20220:
-                use20220(player, ctrl);
-                break;
-            case 20227:
-                use20227(player, ctrl);
-                break;
-            case 20228:
-                use20228(player, ctrl);
-                break;
-            case 20229:
-                use20229(player, ctrl);
-                break;
-            case 20233:
-                use20233(player, ctrl);
-                break;
-            case 20234:
-                use20234(player, ctrl);
-                break;
-            case 20235:
-                use20235(player, ctrl);
-                break;
-            case 20239:
-                use20239(player, ctrl);
-                break;
-            case 20240:
-                use20240(player, ctrl);
-                break;
-            case 20241:
-                use20241(player, ctrl);
-                break;
-            case 20242:
-                use20242(player, ctrl);
-                break;
-            case 20243:
-                use20243(player, ctrl);
-                break;
-            case 20244:
-                use20244(player, ctrl);
-                break;
-            case 20251:
-                use20251(player, ctrl);
-                break;
-            case 20254:
-                use20254(player, ctrl);
-                break;
-            case 20278:
-                use20278(player, ctrl);
-                break;
-            case 20279:
-                use20279(player, ctrl);
-                break;
-            case 20041:
-                use20041(player, ctrl);
-                break;
-            case 20042:
-                use20042(player, ctrl);
-                break;
-            case 20043:
-                use20043(player, ctrl);
-                break;
-            case 20044:
-                use20044(player, ctrl);
-                break;
-            case 20035:
-                use20035(player, ctrl);
-                break;
-            case 20036:
-                use20036(player, ctrl);
-                break;
-            case 20037:
-                use20037(player, ctrl);
-                break;
-            case 20038:
-                use20038(player, ctrl);
-                break;
-            case 20039:
-                use20039(player, ctrl);
-                break;
-            case 20040:
-                use20040(player, ctrl);
-                break;
-            case 20060:
-                use20060(player, ctrl);
-                break;
-            case 20061:
-                use20061(player, ctrl);
-                break;
             case 22000:
                 use22000(player, ctrl);
                 break;
@@ -5184,63 +5566,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                 break;
             case 20330:
                 use20330(player, ctrl);
-                break;
-            case 20059:
-                use20059(player, ctrl);
-                break;
-            case 20494:
-                use20494(player, ctrl);
-                break;
-            case 20493:
-                use20493(player, ctrl);
-                break;
-            case 20395:
-                use20395(player, ctrl);
-                break;
-            case 21000:
-                use21000(player, ctrl);
-                break;
-            case 13281:
-                use13281(player, ctrl);
-                break;
-            case 13282:
-                use13282(player, ctrl);
-                break;
-            case 13283:
-                use13283(player, ctrl);
-                break;
-            case 13284:
-                use13284(player, ctrl);
-                break;
-            case 13285:
-                use13285(player, ctrl);
-                break;
-            case 13286:
-                use13286(player, ctrl);
-                break;
-            case 13287:
-                use13287(player, ctrl);
-                break;
-            case 13288:
-                use13288(player, ctrl);
-                break;
-            case 13289:
-                use13289(player, ctrl);
-                break;
-            case 13290:
-                use13290(player, ctrl);
-                break;
-            case 14267:
-                use14267(player, ctrl);
-                break;
-            case 14268:
-                use14268(player, ctrl);
-                break;
-            case 14269:
-                use14269(player, ctrl);
-                break;
-            case 13280:
-                use13280(player, ctrl);
                 break;
             case 22087:
                 use22087(player, ctrl);
@@ -5470,24 +5795,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
             case 20575:
                 use20575(player, ctrl);
                 break;
-            case 20804:
-                use20804(player, ctrl);
-                break;
-            case 20807:
-                use20807(player, ctrl);
-                break;
-            case 20805:
-                use20805(player, ctrl);
-                break;
-            case 20808:
-                use20808(player, ctrl);
-                break;
-            case 20806:
-                use20806(player, ctrl);
-                break;
-            case 20809:
-                use20809(player, ctrl);
-                break;
             case 20195:
                 use20195(player, ctrl);
                 break;
@@ -5646,12 +5953,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                 break;
             case 20638:
                 use20638(player, ctrl);
-                break;
-            case 21092:
-                use21092(player, ctrl);
-                break;
-            case 21091:
-                use21091(player, ctrl);
                 break;
             case 53:
                 use53(player, ctrl);
@@ -5987,7 +6288,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         return true;
     }
 
-
     // Transformation Scroll Box by (CosMOsiS)
     private void use15437(Player player, boolean ctrl) { /* by CosMOsiS*/
         int items[][] = new int[][]
@@ -6167,7 +6467,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{2, 2, 2, 2, 15, 15, 15, 1, 1, 9, 9, 15, 15};
         extract_item_r(list, counts, chances, player);
     }
-
 
     private void use17084(Player player, boolean ctrl) {
         addItem(player, 9187, 1, "use17084");
@@ -10180,354 +10479,245 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 20987, 1);
     }
 
-    private void use21003(Player player, boolean ctrl) {
-
-        addItem(player, 20986, 1);
-    }
-
-    private void use21002(Player player, boolean ctrl) {
-
-        addItem(player, 20985, 1);
-    }
-
-    private void use21001(Player player, boolean ctrl) {
-
-        addItem(player, 20984, 1);
-    }
-
-    private void use21686(Player player, boolean ctrl) {
-
-        addItem(player, 22172, 1);
-    }
-
-    private void use21685(Player player, boolean ctrl) {
-
-        addItem(player, 20447, 1);
-    }
-
-    private void use21684(Player player, boolean ctrl) {
-
-        addItem(player, 22171, 1);
-    }
-
-    private void use21683(Player player, boolean ctrl) {
-
-        addItem(player, 20446, 1);
-    }
-
-    private void use21682(Player player, boolean ctrl) {
-
-        addItem(player, 22170, 1);
-    }
-
-    private void use21681(Player player, boolean ctrl) {
-
-        addItem(player, 20445, 1);
-    }
-
-    private void use21680(Player player, boolean ctrl) {
-
-        addItem(player, 22169, 1);
-    }
-
-    private void use21679(Player player, boolean ctrl) {
-
-        addItem(player, 20444, 1);
-    }
-
-    private void use21678(Player player, boolean ctrl) {
-
-        addItem(player, 22168, 1);
-    }
-
-    private void use21677(Player player, boolean ctrl) {
-
-        addItem(player, 20443, 1);
-    }
-
-    private void use21676(Player player, boolean ctrl) {
-
-        addItem(player, 22167, 1);
-    }
-
-    private void use21675(Player player, boolean ctrl) {
-
-        addItem(player, 20442, 1);
-    }
-
-    private void use21674(Player player, boolean ctrl) {
-
-        addItem(player, 22166, 1);
-    }
-
-    private void use21673(Player player, boolean ctrl) {
-
-        addItem(player, 20441, 1);
-    }
-
-    private void use21672(Player player, boolean ctrl) {
-
-        addItem(player, 22165, 1);
-    }
-
-    private void use21671(Player player, boolean ctrl) {
-
-        addItem(player, 20440, 1);
-    }
-
-    private void use21670(Player player, boolean ctrl) {
-
-        addItem(player, 22164, 1);
-    }
-
-    private void use21669(Player player, boolean ctrl) {
-
-        addItem(player, 20439, 1);
-    }
-
-    private void use21668(Player player, boolean ctrl) {
-
-        addItem(player, 22163, 1);
-    }
-
-    private void use21667(Player player, boolean ctrl) {
-
-        addItem(player, 20438, 1);
-    }
-
-    private void use21666(Player player, boolean ctrl) {
-
-        addItem(player, 22162, 1);
-    }
-
-    private void use21665(Player player, boolean ctrl) {
-
-        addItem(player, 20437, 1);
-    }
-
-    private void use21664(Player player, boolean ctrl) {
-
-        addItem(player, 22161, 1);
-    }
-
-    private void use21663(Player player, boolean ctrl) {
-
-        addItem(player, 20436, 1);
-    }
-
-    private void use21662(Player player, boolean ctrl) {
-
-        addItem(player, 22160, 1);
-    }
-
-    private void use21661(Player player, boolean ctrl) {
-
-        addItem(player, 20435, 1);
-    }
-
-    private void use21660(Player player, boolean ctrl) {
-
-        addItem(player, 22159, 1);
-    }
-
-    private void use21659(Player player, boolean ctrl) {
-
-        addItem(player, 20434, 1);
-    }
-
-    private void use21658(Player player, boolean ctrl) {
-
-        addItem(player, 22158, 1);
-    }
-
-    private void use21657(Player player, boolean ctrl) {
-
-        addItem(player, 20433, 1);
-    }
-
-    private void use21656(Player player, boolean ctrl) {
-
-        addItem(player, 22157, 1);
-    }
-
-    private void use21655(Player player, boolean ctrl) {
-
-        addItem(player, 20432, 1);
-    }
-
-    private void use21654(Player player, boolean ctrl) {
-
-        addItem(player, 22156, 1);
-    }
-
-    private void use21653(Player player, boolean ctrl) {
-
-        addItem(player, 20431, 1);
-    }
-
-    private void use21652(Player player, boolean ctrl) {
-
-        addItem(player, 20325, 1);
-    }
-
-    private void use21651(Player player, boolean ctrl) {
-
-        addItem(player, 20430, 1);
-    }
-
-    private void use21650(Player player, boolean ctrl) {
-
-        addItem(player, 20324, 1);
-    }
-
-    private void use21649(Player player, boolean ctrl) {
-
-        addItem(player, 20429, 1);
-    }
-
-    private void use21648(Player player, boolean ctrl) {
-
-        addItem(player, 20323, 1);
-    }
-
-    private void use21647(Player player, boolean ctrl) {
-
-        addItem(player, 20428, 1);
-    }
-
-    private void use21646(Player player, boolean ctrl) {
-
-        addItem(player, 20322, 1);
-    }
-
-    private void use21645(Player player, boolean ctrl) {
-
-        addItem(player, 20427, 1);
-    }
-
-    private void use21644(Player player, boolean ctrl) {
-
-        addItem(player, 21088, 1);
-    }
-
-    private void use21643(Player player, boolean ctrl) {
-
-        addItem(player, 20939, 1);
-    }
-
-    private void use21642(Player player, boolean ctrl) {
-
-        addItem(player, 20938, 1);
-    }
-
-    private void use21641(Player player, boolean ctrl) {
-
-        addItem(player, 20502, 1);
-    }
-
-    private void use21640(Player player, boolean ctrl) {
-
-        addItem(player, 20503, 1);
-    }
-
-    private void use21639(Player player, boolean ctrl) {
-
-        addItem(player, 20396, 1);
-    }
-
-    private void use21638(Player player, boolean ctrl) {
-
-        addItem(player, 20504, 1);
-    }
-
-    private void use21637(Player player, boolean ctrl) {
-
-        addItem(player, 20449, 1);
-    }
-
-    private void use21636(Player player, boolean ctrl) {
-
-        addItem(player, 20029, 1);
-    }
-
-    private void use21635(Player player, boolean ctrl) {
-
-        addItem(player, 20030, 1);
-    }
-
-    private void use21634(Player player, boolean ctrl) {
-
-        addItem(player, 20448, 1);
-    }
-
-    private void use21633(Player player, boolean ctrl) {
-
-        addItem(player, 20394, 1);
-    }
-
-    private void use21632(Player player, boolean ctrl) {
-
-        addItem(player, 20393, 1);
-    }
-
-    private void use21631(Player player, boolean ctrl) {
-
-        addItem(player, 20392, 1);
-    }
-
-    private void use21630(Player player, boolean ctrl) {
-
-        addItem(player, 20391, 1);
-    }
-
-    private void use21629(Player player, boolean ctrl) {
-
-        addItem(player, 12371, 1);
-    }
-
-    private void use21628(Player player, boolean ctrl) {
-
-        addItem(player, 12370, 1);
-    }
-
-    private void use21627(Player player, boolean ctrl) {
-
-        addItem(player, 12369, 1);
-    }
-
-    private void use21626(Player player, boolean ctrl) {
-
-        addItem(player, 12368, 1);
-    }
-
-    private void use21625(Player player, boolean ctrl) {
-
-        addItem(player, 12367, 1);
-    }
-
-    private void use21624(Player player, boolean ctrl) {
-
-        addItem(player, 12366, 1);
-    }
-
-    private void use21623(Player player, boolean ctrl) {
-
-        addItem(player, 12365, 1);
-    }
-
-    private void use21622(Player player, boolean ctrl) {
-
-        addItem(player, 12364, 1);
-    }
-
-    private void use21621(Player player, boolean ctrl) {
-
-        addItem(player, 12363, 1);
-    }
-
-    private void use21620(Player player, boolean ctrl) {
-
-        addItem(player, 12362, 1);
+    public Extractable() {
+//        singleRewardItem.put();
+        singleRewardItem.put(21003,20986);
+        singleRewardItem.put(21002,20985);
+        singleRewardItem.put(21001,20984);
+        singleRewardItem.put(21686,22172);
+        singleRewardItem.put(21685,20447);
+        singleRewardItem.put(21684,22171);
+        singleRewardItem.put(21683,20446);
+        singleRewardItem.put(21682,22170);
+        singleRewardItem.put(21681,20445);
+        singleRewardItem.put(21680,22169);
+        singleRewardItem.put(21679,20444);
+        singleRewardItem.put(21678,22168);
+        singleRewardItem.put(21677,20443);
+        singleRewardItem.put(21676,22167);
+        singleRewardItem.put(21675,20442);
+        singleRewardItem.put(21674,22166);
+        singleRewardItem.put(21673,20441);
+        singleRewardItem.put(21672,22165);
+        singleRewardItem.put(21671,20440);
+        singleRewardItem.put(21670,22164);
+        singleRewardItem.put(21669,20439);
+        singleRewardItem.put(21668,22163);
+        singleRewardItem.put(21667,20438);
+        singleRewardItem.put(21666,22162);
+        singleRewardItem.put(21665,20437);
+        singleRewardItem.put(21664,22161);
+        singleRewardItem.put(21663,20436);
+        singleRewardItem.put(21662,22160);
+        singleRewardItem.put(21661,20435);
+        singleRewardItem.put(21660,22159);
+        singleRewardItem.put(21659,20434);
+        singleRewardItem.put(21658,22158);
+        singleRewardItem.put(21657,20433);
+        singleRewardItem.put(21656,22157);
+        singleRewardItem.put(21655,20432);
+        singleRewardItem.put(21654,22156);
+        singleRewardItem.put(21653,20431);
+        singleRewardItem.put(21652,20325);
+        singleRewardItem.put(21651,20430);
+        singleRewardItem.put(21650,20324);
+        singleRewardItem.put(21649,20429);
+        singleRewardItem.put(21648,20323);
+        singleRewardItem.put(21647,20428);
+        singleRewardItem.put(21646,20322);
+        singleRewardItem.put(21645,20427);
+        singleRewardItem.put(21644,21088);
+        singleRewardItem.put(21643,20939);
+        singleRewardItem.put(21642,20938);
+        singleRewardItem.put(21641,20502);
+        singleRewardItem.put(21640,20503);
+        singleRewardItem.put(21639,20396);
+        singleRewardItem.put(21638,20504);
+        singleRewardItem.put(21637,20449);
+        singleRewardItem.put(21636,20029);
+        singleRewardItem.put(21635,20030);
+        singleRewardItem.put(21634,20448);
+        singleRewardItem.put(21633,20394);
+        singleRewardItem.put(21632,20393);
+        singleRewardItem.put(21631,20392);
+        singleRewardItem.put(21630,20391);
+        singleRewardItem.put(21629,12371);
+        singleRewardItem.put(21628,12370);
+        singleRewardItem.put(21627,12369);
+        singleRewardItem.put(21626,12368);
+        singleRewardItem.put(21625,12367);
+        singleRewardItem.put(21624,12366);
+        singleRewardItem.put(21623,12365);
+        singleRewardItem.put(21622,12364);
+        singleRewardItem.put(21621,12363);
+        singleRewardItem.put(21620,12362);
+        singleRewardItem.put(13124,13021);
+        singleRewardItem.put(13121,13022);
+        singleRewardItem.put(13118,12792);
+        singleRewardItem.put(13117,12791);
+        singleRewardItem.put(13116,12790);
+        singleRewardItem.put(13115,12789);
+        singleRewardItem.put(13114,12788);
+        singleRewardItem.put(13113,12787);
+        singleRewardItem.put(13112,12786);
+        singleRewardItem.put(13111,12783);
+        singleRewardItem.put(13110,12782);
+        singleRewardItem.put(13108,12800);
+        singleRewardItem.put(13107,13023);
+        singleRewardItem.put(15378,15383);
+        singleRewardItem.put(15377,15380);
+        singleRewardItem.put(15375,15377);
+        singleRewardItem.put(15374,15376);
+        singleRewardItem.put(15373,15379);
+        singleRewardItem.put(15371,15373);
+        singleRewardItem.put(15370,15372);
+        singleRewardItem.put(15345,15344);
+        singleRewardItem.put(15343,15342);
+        singleRewardItem.put(21619,22066);
+        singleRewardItem.put(21618,21618);
+        singleRewardItem.put(21617,20351);
+        singleRewardItem.put(21616,20350);
+        singleRewardItem.put(21615,20349);
+        singleRewardItem.put(21614,20348);
+        singleRewardItem.put(21613,20347);
+        singleRewardItem.put(21612,20346);
+        singleRewardItem.put(21611,20345);
+        singleRewardItem.put(21610,20344);
+        singleRewardItem.put(21609,20343);
+        singleRewardItem.put(21608,20342);
+        singleRewardItem.put(21607,20341);
+        singleRewardItem.put(21606,20340);
+        singleRewardItem.put(21605,20339);
+        singleRewardItem.put(21604,20338);
+        singleRewardItem.put(21603,20337);
+        singleRewardItem.put(21602,20336);
+        singleRewardItem.put(21601,20335);
+        singleRewardItem.put(21091,20340);// RUNE OF EXPERIENCE POINTS 50% 7-DAY PACK
+        singleRewardItem.put(21092,20346);// RUNE OF EXPERIENCE POINTS 50% 7-DAY PACK
+        singleRewardItem.put(20069, 20063);// Baby Panda Agathion Pack
+        singleRewardItem.put(20070, 20064);// Bamboo Panda Agathion Pack
+        singleRewardItem.put(20071, 20065);// Sexy Panda Agathion Pack
+        singleRewardItem.put(20072, 20066);// Agathion of Baby Panda 15 Day Pack
+        singleRewardItem.put(20073, 20067);// Bamboo Panda Agathion 15 Day Pack
+        singleRewardItem.put(20074, 20068);// Agathion of Sexy Panda 15 Day Pack
+        singleRewardItem.put(20210, 20212);// Charming Valentine Gift Set
+        singleRewardItem.put(20211, 20213);// Naughty Valentine Gift Set
+        singleRewardItem.put(20215, 20221);// White Maneki Neko Agathion Pack
+        singleRewardItem.put(20216, 20222);// Black Maneki Neko Agathion Pack
+        singleRewardItem.put(20217, 20223);// Brown Maneki Neko Agathion Pack
+        singleRewardItem.put(20218, 20224);// White Maneki Neko Agathion 7-Day Pack
+        singleRewardItem.put(20219, 20225);// Black Maneki Neko Agathion 7-Day Pack
+        singleRewardItem.put(20220, 20226);// Brown Maneki Neko Agathion 7-Day Pack
+        singleRewardItem.put(20227, 20230);// One-Eyed Bat Drove Agathion Pack
+        singleRewardItem.put(20228, 20231); // One-Eyed Bat Drove Agathion 7-Day Pack
+        singleRewardItem.put(20229, 20232);// One-Eyed Bat Drove Agathion 7-Day Pack
+        singleRewardItem.put(20233, 20236);// Pegasus Agathion Pack
+        singleRewardItem.put(20234, 20237);// Pegasus Agathion 7-Day Pack
+        singleRewardItem.put(20235, 20238);// Pegasus Agathion 7-Day Pack
+        singleRewardItem.put(20239, 20245);// Yellow-Robed Tojigong Pack
+        singleRewardItem.put(20240, 20246);// Blue-Robed Tojigong Pack
+        singleRewardItem.put(20241, 20247);// Green-Robed Tojigong Pack
+        singleRewardItem.put(20242, 20248);// Yellow-Robed Tojigong 7-Day Pack
+        singleRewardItem.put(20243, 20249);// Blue-Robed Tojigong 7-Day Pack
+        singleRewardItem.put(20244, 20250);// Green-Robed Tojigong 7-Day Pack
+        singleRewardItem.put(20251, 20252);// Bugbear Agathion Pack
+        singleRewardItem.put(20254, 20253);// Agathion of Love Pack (Event)
+        singleRewardItem.put(20278, 20275);// Gold Afro Hair Pack
+        singleRewardItem.put(20279, 20276); // Pink Afro Hair Pack
+        singleRewardItem.put(20041, 20012); // Plaipitak Agathion Pack
+        singleRewardItem.put(20042, 20013);// Plaipitak Agathion 30-Day Pack
+        singleRewardItem.put(20043, 20014);// Plaipitak Agathion 30-Day Pack
+        singleRewardItem.put(20044, 20015);// Plaipitak Agathion 30-Day Pack
+        singleRewardItem.put(20035, 20006);// Majo Agathion Pack
+        singleRewardItem.put(20036, 20007);// Gold Crown Majo Agathion Pack
+        singleRewardItem.put(20037, 20008);// Black Crown Majo Agathion Pack
+        singleRewardItem.put(20038, 20009);// Majo Agathion 30-Day Pack
+        singleRewardItem.put(20039, 20010); // Gold Crown Majo Agathion 30-Day Pack
+        singleRewardItem.put(20040, 20011); // Black Crown Majo Agathion 30-Day Pack
+        singleRewardItem.put(20060, 20031); // Kat the Cat Hat Pack
+        singleRewardItem.put(20061, 20032);// Skull Hat Pack
+        singleRewardItem.put(20059, 20030);// Light Purple Maned Horse Bracelet 30-Day Pack
+        singleRewardItem.put(20494, 20449);// Steam Beatle Mounting Bracelet 7 Day Pack
+        singleRewardItem.put(20493, 20448);// Light Purple Maned Horse Mounting Bracelet 7 Day Pack
+        singleRewardItem.put(20395, 20396);// Steam Beatle Mounting Bracelet Pack
+        singleRewardItem.put(21000, 20986); // Ball Trapping Gnosian Agathion Pack Fix CosMOsiS
+        singleRewardItem.put(13281, 13253);// Pumpkin Transformation Stick 7 Day Pack
+        singleRewardItem.put(13282, 13239);// Kat the Cat Hat 7-Day Pack
+        singleRewardItem.put(13283, 13240); // Feline Queen Hat 7-Day Pack
+        singleRewardItem.put(13284, 13241);// Monster Eye Hat 7-Day Pack
+        singleRewardItem.put(13285, 13242); // Brown Bear Hat 7-Day Pack
+        singleRewardItem.put(13286, 13243);// Fungus Hat 7-Day Pack
+        singleRewardItem.put(13287, 13244);// Skull Hat 7-Day Pack
+        singleRewardItem.put(13288, 13245);// Ornithomimus Hat 7-Day Pack
+        singleRewardItem.put(13289, 13246);// Feline King Hat 7-Day Pack
+        singleRewardItem.put(13290, 13247); // Kai the Cat Hat 7-Day Pack
+        singleRewardItem.put(14267, 14093);// Sudden Agathion 7 Day Pack
+        singleRewardItem.put(14268, 14094);// Shiny Agathion 7 Day Pack
+        singleRewardItem.put(14269, 14095);// Sobbing Agathion 7 Day Pack
+        singleRewardItem.put(13280, 20201); // Agathion of Love 7-Day Pack
+        singleRewardItem.put(20804, 20782);// Nepal Snow Agathion Pack
+        singleRewardItem.put(20807, 20785);// Nepal Snow Agathion 7-Day Pack - Snow's Haste
+        singleRewardItem.put(20805, 20783);// Round Ball Snow Agathion Pack
+        singleRewardItem.put(20808, 20786);// Round Ball Snow Agathion 7-Day Pack - Snow's Acumen
+        singleRewardItem.put(20806, 20784);// Ladder Snow Agathion Pack
+        singleRewardItem.put(20809, 20787);// Ladder Snow Agathion 7-Day Pack - Snow's Wind Walk
+        singleRewardItem.put(20842, 20818);// Iken Agathion Pack
+        singleRewardItem.put(20843, 20819); // Iken Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20844, 20820); // Lana Agathion Pack
+        singleRewardItem.put(20845, 20821); // Lana Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20846, 20822);// Gnocian Agathion Pack
+        singleRewardItem.put(20847, 20823);// Gnocian Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20848, 20824); // Orodriel Agathion Pack
+        singleRewardItem.put(20849, 20825); // Orodriel Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20850, 20826); // Lakinos Agathion Pack
+        singleRewardItem.put(20851, 20827); // Lakinos Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20852, 20828); // Mortia Agathion Pack
+        singleRewardItem.put(20853, 20829); // Mortia Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20854, 20830); // Hayance Agathion Pack
+        singleRewardItem.put(20855, 20831); // Hayance Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20856, 20832); // Meruril Agathion Pack
+        singleRewardItem.put(20857, 20833); // Meruril Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20858, 20834); // Taman ze Lapatui Agathion Pack
+        singleRewardItem.put(20859, 20835); // Taman ze Lapatui Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20860, 20836); // Kaurin Agathion Pack
+        singleRewardItem.put(20861, 20837); // Kaurin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20862, 20838); // Ahertbein Agathion Pack
+        singleRewardItem.put(20863, 20839); // Ahertbein Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20864, 20840); // Naonin Agathion Pack
+        singleRewardItem.put(20811, 20789); // Rocket Gun Hat Pack Continuous Fireworks
+        singleRewardItem.put(20812, 20790); // Yellow Paper Hat 7-Day Pack Bless the Body
+        singleRewardItem.put(20813, 20791); // Pink Paper Mask Set 7-Day Pack Bless the Soul
+        singleRewardItem.put(20814, 20792); // Flavorful Cheese Hat Pack
+        singleRewardItem.put(20815, 20793); // Sweet Cheese Hat Pack
+        singleRewardItem.put(20816, 20794); // Flavorful Cheese Hat 7-Day Pack Scent of Flavorful Cheese
+        singleRewardItem.put(20817, 20795); // Sweet Cheese Hat 7-Day Pack Scent of Sweet Cheese
+        singleRewardItem.put(20810, 20725); // Flame Box Pack
+        singleRewardItem.put(20865, 20841); // Naonin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
+        singleRewardItem.put(20748, 20743); // Shiny Mask of Giant Hercules 7 day Pack
+        singleRewardItem.put(20749, 20744); // Shiny Mask of Silent Scream 7 day Pack
+        singleRewardItem.put(20750, 20745); // Shiny Spirit of Wrath Mask 7 day Pack
+        singleRewardItem.put(20751, 20746); // Shiny Undecaying Corpse Mask 7 Day Pack
+        singleRewardItem.put(20752, 20747);// Shiny Planet X235 Alien Mask 7 day Pack
+        singleRewardItem.put(15404, 15418); // 6th Anniversary Party Gift Box (2003) by (CosMOsiS)
+        singleRewardItem.put(15405, 15419);// 6th Anniversary Party Gift Box (2004) by (CosMOsiS)
+        singleRewardItem.put(15406, 15420); // 6th Anniversary Party Gift Box (2005) by (CosMOsiS)
+        singleRewardItem.put(17086, 9201);
+        singleRewardItem.put(17085, 9194);
+        singleRewardItem.put(15460, 15462);// Halloween King Pumpkin Pack by (CosMOsiS)
+        singleRewardItem.put(15455, 15450);// Shiny Super Strong Giant's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(21421, 13021);// Color Title - event by (CosMOsiS)
+        singleRewardItem.put(21422, 13307);// Color title - event by (CosMOsiS)
+        singleRewardItem.put(15466, 15462);// Halloween King Pumpkin Pack - event by (CosMOsiS)
+        singleRewardItem.put(15465, 15461);// Halloween Nectar Pumpkin Pack - event by (CosMOsiS)
+        singleRewardItem.put(15459, 15461); // Halloween Nectar Pumpkin Pack by (CosMOsiS)
+        singleRewardItem.put(15458, 15453); // Shiny Unrotten Corpse's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15457, 15452);// Shiny Wrathful Spirit's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15456, 15451);// Shiny Silent Scream's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15454, 15449);// Shiny Planet X235 Alien's Mask Pack by (CosMOsiS)
+        singleRewardItem.put(15410, 15424);// 6th Anniversary Party Gift Box (2009) by (CosMOsiS)
+        singleRewardItem.put(15409, 15423); // 6th Anniversary Party Gift Box (2008) by (CosMOsiS)
+        singleRewardItem.put(15408, 15422); // 6th Anniversary Party Gift Box (2007) by (CosMOsiS)
+        singleRewardItem.put(15407, 15421); // 6th Anniversary Party Gift Box (2006) by (CosMOsiS)
     }
 
     private void use13292(Player player, boolean ctrl) {
@@ -10625,22 +10815,14 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 13016, 10);
     }
 
-    private void use13124(Player player, boolean ctrl) {
 
-        addItem(player, 13021, 1);
-    }
 
     private void use13122(Player player, boolean ctrl) {
-        /**
-         * @Author: 4ipolino Fix by CosMOsiS
-         */
         addItem(player, 13021, 3);
     }
 
-    private void use13121(Player player, boolean ctrl) {
 
-        addItem(player, 13022, 1);
-    }
+
 
     private void use13120(Player player, boolean ctrl) {
 
@@ -10655,50 +10837,7 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 12794, 1);
     }
 
-    private void use13118(Player player, boolean ctrl) {
 
-        addItem(player, 12792, 1);
-    }
-
-    private void use13117(Player player, boolean ctrl) {
-
-        addItem(player, 12791, 1);
-    }
-
-    private void use13116(Player player, boolean ctrl) {
-
-        addItem(player, 12790, 1);
-    }
-
-    private void use13115(Player player, boolean ctrl) {
-
-        addItem(player, 12789, 1);
-    }
-
-    private void use13114(Player player, boolean ctrl) {
-
-        addItem(player, 12788, 1);
-    }
-
-    private void use13113(Player player, boolean ctrl) {
-
-        addItem(player, 12787, 1);
-    }
-
-    private void use13112(Player player, boolean ctrl) {
-
-        addItem(player, 12786, 1);
-    }
-
-    private void use13111(Player player, boolean ctrl) {
-
-        addItem(player, 12783, 1);
-    }
-
-    private void use13110(Player player, boolean ctrl) {
-
-        addItem(player, 12782, 1);
-    }
 
     private void use13109(Player player, boolean ctrl) {
 
@@ -10707,15 +10846,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 13012, 5);
     }
 
-    private void use13108(Player player, boolean ctrl) {
-
-        addItem(player, 12800, 1);
-    }
-
-    private void use13107(Player player, boolean ctrl) {
-
-        addItem(player, 13023, 1);
-    }
 
     private void use13106(Player player, boolean ctrl) {
 
@@ -11046,15 +11176,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         addItem(player, 20077, 1);
     }
 
-    private void use15378(Player player, boolean ctrl) {
-
-        addItem(player, 15383, 1);
-    }
-
-    private void use15377(Player player, boolean ctrl) {
-
-        addItem(player, 15380, 1);
-    }
 
     private void use15376(Player player, boolean ctrl) {
 
@@ -11064,20 +11185,8 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         extract_item_r(list, counts, chances, player);
     }
 
-    private void use15375(Player player, boolean ctrl) {
 
-        addItem(player, 15377, 1);
-    }
 
-    private void use15374(Player player, boolean ctrl) {
-
-        addItem(player, 15376, 1);
-    }
-
-    private void use15373(Player player, boolean ctrl) {
-
-        addItem(player, 15379, 1);
-    }
 
     private void use15372(Player player, boolean ctrl) {
 
@@ -11089,124 +11198,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     }
 
-    private void use15371(Player player, boolean ctrl) {
-
-        addItem(player, 15373, 1);
-    }
-
-    private void use15370(Player player, boolean ctrl) {
-
-        addItem(player, 15372, 1);
-    }
-
-    private void use15345(Player player, boolean ctrl) {
-
-        addItem(player, 15344, 1);
-    }
-
-    private void use15343(Player player, boolean ctrl) {
-
-        addItem(player, 15342, 1);
-    }
-
-    private void use21619(Player player, boolean ctrl) {
-
-        addItem(player, 22066, 1);
-    }
-
-    private void use21618(Player player, boolean ctrl) {
-
-        addItem(player, 20352, 1);
-    }
-
-    private void use21617(Player player, boolean ctrl) {
-
-        addItem(player, 20351, 1);
-    }
-
-    private void use21616(Player player, boolean ctrl) {
-
-        addItem(player, 20350, 1);
-    }
-
-    private void use21615(Player player, boolean ctrl) {
-
-        addItem(player, 20349, 1);
-    }
-
-    private void use21614(Player player, boolean ctrl) {
-
-        addItem(player, 20348, 1);
-    }
-
-    private void use21613(Player player, boolean ctrl) {
-
-        addItem(player, 20347, 1);
-    }
-
-    private void use21612(Player player, boolean ctrl) {
-
-        addItem(player, 20346, 1);
-    }
-
-    // ------ AGNOLIC © 2012 ---------
-
-    private void use21611(Player player, boolean ctrl) {
-
-        addItem(player, 20345, 1);
-    }
-
-    private void use21610(Player player, boolean ctrl) {
-
-        addItem(player, 20344, 1);
-    }
-
-    private void use21609(Player player, boolean ctrl) {
-
-        addItem(player, 20343, 1);
-    }
-
-    private void use21608(Player player, boolean ctrl) {
-
-        addItem(player, 20342, 1);
-    }
-
-    private void use21607(Player player, boolean ctrl) {
-
-        addItem(player, 20341, 1);
-    }
-
-    private void use21606(Player player, boolean ctrl) {
-
-        addItem(player, 20340, 1);
-    }
-
-    // ------ Adventurer's Boxes ------
-
-    private void use21605(Player player, boolean ctrl) {
-
-        addItem(player, 20339, 1);
-    }
-
-    private void use21604(Player player, boolean ctrl) {
-
-        addItem(player, 20338, 1);
-    }
-
-    private void use21603(Player player, boolean ctrl) {
-
-        addItem(player, 20337, 1);
-    }
-
-    private void use21602(Player player, boolean ctrl) {
-
-        addItem(player, 20336, 1);
-    }
-
-    private void use21601(Player player, boolean ctrl) {
-
-        addItem(player, 20335, 1);
-    }
 
     private void use22187(Player player, boolean ctrl) {
 
@@ -11287,16 +11278,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int[] chances = new int[]{1, 1, 1};
 
         extract_item_r(list, counts, chances, player);
-    }
-
-    // RUNE OF EXPERIENCE POINTS 50% 7-DAY PACK
-    private void use21091(Player player, boolean ctrl) {
-        addItem(player, 20340, 1);
-    }
-
-    // RUNE OF EXPERIENCE POINTS 50% 7-DAY PACK
-    private void use21092(Player player, boolean ctrl) {
-        addItem(player, 20346, 1);
     }
 
     // Adventurer's Box: C-Grade Accessory (Low Grade)
@@ -11651,1252 +11632,6 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
                 addItem(player, res[0], res[1]);
         } else
             extract_item_r(list, count_min, count_max, chances, player);
-    }
-
-    // Baby Panda Agathion Pack
-    private void use20069(Player player, boolean ctrl) {
-        addItem(player, 20063, 1);
-    }
-
-    // Bamboo Panda Agathion Pack
-    private void use20070(Player player, boolean ctrl) {
-        addItem(player, 20064, 1);
-    }
-
-    // Sexy Panda Agathion Pack
-    private void use20071(Player player, boolean ctrl) {
-        addItem(player, 20065, 1);
-    }
-
-    // Agathion of Baby Panda 15 Day Pack
-    private void use20072(Player player, boolean ctrl) {
-        addItem(player, 20066, 1);
-    }
-
-    // Bamboo Panda Agathion 15 Day Pack
-    private void use20073(Player player, boolean ctrl) {
-        addItem(player, 20067, 1);
-    }
-
-    // Agathion of Sexy Panda 15 Day Pack
-    private void use20074(Player player, boolean ctrl) {
-        addItem(player, 20068, 1);
-    }
-
-    // Charming Valentine Gift Set
-    private void use20210(Player player, boolean ctrl) {
-        addItem(player, 20212, 1);
-    }
-
-    // Naughty Valentine Gift Set
-    private void use20211(Player player, boolean ctrl) {
-        addItem(player, 20213, 1);
-    }
-
-    // White Maneki Neko Agathion Pack
-    private void use20215(Player player, boolean ctrl) {
-        addItem(player, 20221, 1);
-    }
-
-    // Black Maneki Neko Agathion Pack
-    private void use20216(Player player, boolean ctrl) {
-        addItem(player, 20222, 1);
-    }
-
-    // Brown Maneki Neko Agathion Pack
-    private void use20217(Player player, boolean ctrl) {
-        addItem(player, 20223, 1);
-    }
-
-    // White Maneki Neko Agathion 7-Day Pack
-    private void use20218(Player player, boolean ctrl) {
-        addItem(player, 20224, 1);
-    }
-
-    // Black Maneki Neko Agathion 7-Day Pack
-    private void use20219(Player player, boolean ctrl) {
-        addItem(player, 20225, 1);
-    }
-
-    // Brown Maneki Neko Agathion 7-Day Pack
-    private void use20220(Player player, boolean ctrl) {
-        addItem(player, 20226, 1);
-    }
-
-    // One-Eyed Bat Drove Agathion Pack
-    private void use20227(Player player, boolean ctrl) {
-        addItem(player, 20230, 1);
-    }
-
-    // One-Eyed Bat Drove Agathion 7-Day Pack
-    private void use20228(Player player, boolean ctrl) {
-        addItem(player, 20231, 1);
-    }
-
-    // One-Eyed Bat Drove Agathion 7-Day Pack
-    private void use20229(Player player, boolean ctrl) {
-        addItem(player, 20232, 1);
-    }
-
-    // Pegasus Agathion Pack
-    private void use20233(Player player, boolean ctrl) {
-        addItem(player, 20236, 1);
-    }
-
-    // Pegasus Agathion 7-Day Pack
-    private void use20234(Player player, boolean ctrl) {
-        addItem(player, 20237, 1);
-    }
-
-    // Pegasus Agathion 7-Day Pack
-    private void use20235(Player player, boolean ctrl) {
-        addItem(player, 20238, 1);
-    }
-
-    // Yellow-Robed Tojigong Pack
-    private void use20239(Player player, boolean ctrl) {
-        addItem(player, 20245, 1);
-    }
-
-    // Blue-Robed Tojigong Pack
-    private void use20240(Player player, boolean ctrl) {
-        addItem(player, 20246, 1);
-    }
-
-    // Green-Robed Tojigong Pack
-    private void use20241(Player player, boolean ctrl) {
-        addItem(player, 20247, 1);
-    }
-
-    // Yellow-Robed Tojigong 7-Day Pack
-    private void use20242(Player player, boolean ctrl) {
-        addItem(player, 20248, 1);
-    }
-
-    // Blue-Robed Tojigong 7-Day Pack
-    private void use20243(Player player, boolean ctrl) {
-        addItem(player, 20249, 1);
-    }
-
-    // Green-Robed Tojigong 7-Day Pack
-    private void use20244(Player player, boolean ctrl) {
-        addItem(player, 20250, 1);
-    }
-
-    // Bugbear Agathion Pack
-    private void use20251(Player player, boolean ctrl) {
-        addItem(player, 20252, 1);
-    }
-
-    // Agathion of Love Pack (Event)
-    private void use20254(Player player, boolean ctrl) {
-        addItem(player, 20253, 1);
-    }
-
-    // Gold Afro Hair Pack
-    private void use20278(Player player, boolean ctrl) {
-        addItem(player, 20275, 1);
-    }
-
-    // Pink Afro Hair Pack
-    private void use20279(Player player, boolean ctrl) {
-        addItem(player, 20276, 1);
-    }
-
-    // Plaipitak Agathion Pack
-    private void use20041(Player player, boolean ctrl) {
-        addItem(player, 20012, 1);
-    }
-
-    // Plaipitak Agathion 30-Day Pack
-    private void use20042(Player player, boolean ctrl) {
-        addItem(player, 20013, 1);
-    }
-
-    // Plaipitak Agathion 30-Day Pack
-    private void use20043(Player player, boolean ctrl) {
-        addItem(player, 20014, 1);
-    }
-
-    // Plaipitak Agathion 30-Day Pack
-    private void use20044(Player player, boolean ctrl) {
-        addItem(player, 20015, 1);
-    }
-
-    // Majo Agathion Pack
-    private void use20035(Player player, boolean ctrl) {
-        addItem(player, 20006, 1);
-    }
-
-    // Gold Crown Majo Agathion Pack
-    private void use20036(Player player, boolean ctrl) {
-        addItem(player, 20007, 1);
-    }
-
-    // Black Crown Majo Agathion Pack
-    private void use20037(Player player, boolean ctrl) {
-        addItem(player, 20008, 1);
-    }
-
-    // Majo Agathion 30-Day Pack
-    private void use20038(Player player, boolean ctrl) {
-        addItem(player, 20009, 1);
-    }
-
-    // Gold Crown Majo Agathion 30-Day Pack
-    private void use20039(Player player, boolean ctrl) {
-        addItem(player, 20010, 1);
-    }
-
-    // Black Crown Majo Agathion 30-Day Pack
-    private void use20040(Player player, boolean ctrl) {
-        addItem(player, 20011, 1);
-    }
-
-    // Kat the Cat Hat Pack
-    private void use20060(Player player, boolean ctrl) {
-        addItem(player, 20031, 1);
-    }
-
-    // Skull Hat Pack
-    private void use20061(Player player, boolean ctrl) {
-        addItem(player, 20032, 1);
-    }
-
-    // ****** Start Item Mall ******
-    // Small fortuna box
-    private void use22000(Player player, boolean ctrl) {
-        int[][] list = new int[][]{{22006, 3}, {22007, 2}, {22008, 1}, {22014, 1}, {22022, 3}, {22023, 3}, {22024, 1}, {8743, 1}, {8744, 1}, {8745, 1}, {8753, 1}, {8754, 1}, {8755, 1}, {22025, 5}};
-        double[] chances = new double[]{20.55555, 14.01515, 6.16666, 0.86999, 3.19444, 6.38888, 5.75, 10, 8.33333, 6.94444, 2, 1.6666, 1.38888, 12.77777};
-        extractRandomOneItem(player, list, chances);
-    }
-
-    // Middle fortuna box
-    private void use22001(Player player, boolean ctrl) {
-        int[][] list = new int[][]{{22007, 3}, {22008, 2}, {22009, 1}, {22014, 1}, {22015, 1}, {22022, 5}, {22023, 5}, {22024, 2}, {8746, 1}, {8747, 1}, {8748, 1}, {8756, 1}, {8757, 1}, {8758, 1}, {22025, 10}};
-        double[] chances = new double[]{27.27272, 9, 5, 0.93959, 0.32467, 3.75, 7.5, 5.625, 9.11458, 7.875, 6.5625, 1.82291, 1.575, 1.3125, 12.5};
-        extractRandomOneItem(player, list, chances);
-    }
-
-    // Large fortuna box
-    private void use22002(Player player, boolean ctrl) {
-        int[][] list = new int[][]{{22008, 2}, {22009, 1}, {22014, 1}, {22015, 1}, {22018, 1}, {22019, 1}, {22022, 10}, {22023, 10}, {22024, 5}, {8749, 1}, {8750, 1}, {8751, 1}, {8759, 1}, {8760, 1}, {8761, 1}, {22025, 20}};
-        double[] chances = new double[]{27, 15, 0.78299, 0.27056, 0.00775, 0.0027, 3.75, 7.5, 4.5, 9.75, 8.125, 6.77083, 1.95, 1.625, 1.35416, 12.5};
-        extractRandomOneItem(player, list, chances);
-    }
-
-    // Small fortuna cube
-    private void use22003(Player player, boolean ctrl) {
-        int[][] list = new int[][]{{22010, 3}, {22011, 2}, {22012, 1}, {22016, 1}, {22022, 3}, {22023, 3}, {22024, 1}, {8743, 1}, {8744, 1}, {8745, 1}, {8753, 1}, {8754, 1}, {8755, 1}, {22025, 5}};
-        double[] chances = new double[]{20.22222, 13.78787, 6.06666, 0.69599, 3.47222, 6.94444, 6.25, 9.5, 7.91666, 6.59722, 1.9, 1.58333, 1.31944, 13.88888};
-        extractRandomOneItem(player, list, chances);
-    }
-
-    // Middle fortuna cube
-    private void use22004(Player player, boolean ctrl) {
-        int[][] list = new int[][]{{22011, 3}, {22012, 2}, {22013, 1}, {22016, 1}, {22017, 1}, {22022, 5}, {22023, 5}, {22024, 2}, {8746, 1}, {8747, 1}, {8748, 1}, {8756, 1}, {8757, 1}, {8758, 1}, {22025, 10}};
-        double[] chances = new double[]{26.51515, 8.75, 4.86111, 0.91349, 0.31565, 3.75, 7.5, 5.625, 9.54861, 8.25, 6.875, 1.90972, 1.65, 1.375, 12.5};
-        extractRandomOneItem(player, list, chances);
-    }
-
-    // Large fortuna cube
-    private void use22005(Player player, boolean ctrl) {
-        int[][] list = new int[][]{{22012, 2}, {22013, 1}, {22016, 1}, {22017, 1}, {22020, 1}, {22021, 1}, {22022, 10}, {22023, 10}, {22024, 5}, {8749, 1}, {8750, 1}, {8751, 1}, {8759, 1}, {8760, 1}, {8761, 1}, {22025, 20}};
-        double[] chances = new double[]{26.25, 14.58333, 0.69599, 0.24049, 0.00638, 0.0022, 3.95833, 7.91666, 4.75, 9.58333, 7.98611, 6.65509, 1.91666, 1.59722, 1.33101, 13.19444};
-        extractRandomOneItem(player, list, chances);
-    }
-
-    // Beast Soulshot Pack
-    private void use20326(Player player, boolean ctrl) {
-        addItem(player, 20332, 5000);
-    }
-
-    // Beast Spiritshot Pack
-    private void use20327(Player player, boolean ctrl) {
-        addItem(player, 20333, 5000);
-    }
-
-    // Beast Soulshot Large Pack
-    private void use20329(Player player, boolean ctrl) {
-        addItem(player, 20332, 10000);
-    }
-
-    // Beast Spiritshot Large Pack
-    private void use20330(Player player, boolean ctrl) {
-        addItem(player, 20333, 10000);
-    }
-
-    // Light Purple Maned Horse Bracelet 30-Day Pack
-    private void use20059(Player player, boolean ctrl) {
-        addItem(player, 20030, 1);
-    }
-
-    // Steam Beatle Mounting Bracelet 7 Day Pack
-    private void use20494(Player player, boolean ctrl) {
-        addItem(player, 20449, 1);
-    }
-
-    // Light Purple Maned Horse Mounting Bracelet 7 Day Pack
-    private void use20493(Player player, boolean ctrl) {
-        addItem(player, 20448, 1);
-    }
-
-    // Steam Beatle Mounting Bracelet Pack
-    private void use20395(Player player, boolean ctrl) {
-        addItem(player, 20396, 1);
-    }
-
-    // Ball Trapping Gnosian Agathion Pack Fix CosMOsiS
-    private void use21000(Player player, boolean ctrl) {
-        addItem(player, 20986, 1);
-    }
-
-    // Pumpkin Transformation Stick 7 Day Pack
-    private void use13281(Player player, boolean ctrl) {
-        addItem(player, 13253, 1);
-    }
-
-    // Kat the Cat Hat 7-Day Pack
-    private void use13282(Player player, boolean ctrl) {
-        addItem(player, 13239, 1);
-    }
-
-    // Feline Queen Hat 7-Day Pack
-    private void use13283(Player player, boolean ctrl) {
-        addItem(player, 13240, 1);
-    }
-
-    // Monster Eye Hat 7-Day Pack
-    private void use13284(Player player, boolean ctrl) {
-        addItem(player, 13241, 1);
-    }
-
-    // ****** End Item Mall ******
-
-    // Brown Bear Hat 7-Day Pack
-    private void use13285(Player player, boolean ctrl) {
-        addItem(player, 13242, 1);
-    }
-
-    // Fungus Hat 7-Day Pack
-    private void use13286(Player player, boolean ctrl) {
-        addItem(player, 13243, 1);
-    }
-
-    // Skull Hat 7-Day Pack
-    private void use13287(Player player, boolean ctrl) {
-        addItem(player, 13244, 1);
-    }
-
-    // Ornithomimus Hat 7-Day Pack
-    private void use13288(Player player, boolean ctrl) {
-        addItem(player, 13245, 1);
-    }
-
-    // Feline King Hat 7-Day Pack
-    private void use13289(Player player, boolean ctrl) {
-        addItem(player, 13246, 1);
-    }
-
-    // Kai the Cat Hat 7-Day Pack
-    private void use13290(Player player, boolean ctrl) {
-        addItem(player, 13247, 1);
-    }
-
-    // Sudden Agathion 7 Day Pack
-    private void use14267(Player player, boolean ctrl) {
-        addItem(player, 14093, 1);
-    }
-
-    // Shiny Agathion 7 Day Pack
-    private void use14268(Player player, boolean ctrl) {
-        addItem(player, 14094, 1);
-    }
-
-    // Sobbing Agathion 7 Day Pack
-    private void use14269(Player player, boolean ctrl) {
-        addItem(player, 14095, 1);
-    }
-
-    // Agathion of Love 7-Day Pack
-    private void use13280(Player player, boolean ctrl) {
-        addItem(player, 20201, 1);
-    }
-
-    // A Scroll Bundle of Fighter
-    private void use22087(Player player, boolean ctrl) {
-        addItem(player, 22039, 1);
-        addItem(player, 22040, 1);
-        addItem(player, 22041, 1);
-        addItem(player, 22042, 1);
-        addItem(player, 22043, 1);
-        addItem(player, 22044, 1);
-        addItem(player, 22047, 1);
-        addItem(player, 22048, 1);
-    }
-
-    // A Scroll Bundle of Mage
-    private void use22088(Player player, boolean ctrl) {
-        addItem(player, 22045, 1);
-        addItem(player, 22046, 1);
-        addItem(player, 22048, 1);
-        addItem(player, 22049, 1);
-        addItem(player, 22050, 1);
-        addItem(player, 22051, 1);
-        addItem(player, 22052, 1);
-        addItem(player, 22053, 1);
-    }
-
-    // ****** Belts ******
-    // Gludio Supply Box - Belt: Grade B, C
-    private void use13713(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Belt: Grade B, C
-    private void use13714(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Belt: Grade B, C
-    private void use13715(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Belt: Grade B, C
-    private void use13716(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Belt: Grade B, C
-    private void use13717(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Belt: Grade B, C
-    private void use13718(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Belt: Grade B, C
-    private void use13719(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Belt: Grade B, C
-    private void use13720(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Belt: Grade B, C
-    private void use13721(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13894, 1); // Cloth Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13895, 1); // Leather Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Gludio Supply Box - Belt: Grade S, A
-    private void use14549(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Belt: Grade S, A
-    private void use14550(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Belt: Grade S, A
-    private void use14551(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Belt: Grade S, A
-    private void use14552(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Belt: Grade S, A
-    private void use14553(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Belt: Grade S, A
-    private void use14554(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Belt: Grade S, A
-    private void use14555(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Belt: Grade S, A
-    private void use14556(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Belt: Grade S, A
-    private void use14557(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13896, 1); // Iron Belt
-        else if (Rnd.chance(50))
-            addItem(player, 13897, 1); // Mithril Belt
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // ****** Magic Pins ******
-    // Gludio Supply Box - Magic Pin: Grade B, C
-    private void use13695(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Magic Pin: Grade B, C
-    private void use13696(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Magic Pin: Grade B, C
-    private void use13697(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Magic Pin: Grade B, C
-    private void use13698(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Magic Pin: Grade B, C
-    private void use13699(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Magic Pin: Grade B, C
-    private void use13700(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Magic Pin: Grade B, C
-    private void use13701(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Magic Pin: Grade B, C
-    private void use13702(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Magic Pin: Grade B, C
-    private void use13703(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13898, 1); // Sealed Magic Pin (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13899, 1); // Sealed Magic Pin (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Gludio Supply Box - Magic Pin: Grade S, A
-    private void use14531(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Magic Pin: Grade S, A
-    private void use14532(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Magic Pin: Grade S, A
-    private void use14533(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Magic Pin: Grade S, A
-    private void use14534(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Magic Pin: Grade S, A
-    private void use14535(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Magic Pin: Grade S, A
-    private void use14536(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Magic Pin: Grade S, A
-    private void use14537(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Magic Pin: Grade S, A
-    private void use14538(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Magic Pin: Grade S, A
-    private void use14539(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13900, 1); // Sealed Magic Pin (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13901, 1); // Sealed Magic Pin (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // ****** Magic Pouchs ******
-    // Gludio Supply Box - Magic Pouch: Grade B, C
-    private void use13704(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Magic Pouch: Grade B, C
-    private void use13705(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Magic Pouch: Grade B, C
-    private void use13706(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Magic Pouch: Grade B, C
-    private void use13707(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Magic Pouch: Grade B, C
-    private void use13708(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Magic Pouch: Grade B, C
-    private void use13709(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Magic Pouch: Grade B, C
-    private void use13710(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Magic Pouch: Grade B, C
-    private void use13711(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Magic Pouch: Grade B, C
-    private void use13712(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13918, 1); // Sealed Magic Pouch (C-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13919, 1); // Sealed Magic Pouch (B-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Gludio Supply Box - Magic Pouch: Grade S, A
-    private void use14540(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Magic Pouch: Grade S, A
-    private void use14541(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Magic Pouch: Grade S, A
-    private void use14542(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Magic Pouch: Grade S, A
-    private void use14543(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Magic Pouch: Grade S, A
-    private void use14544(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Magic Pouch: Grade S, A
-    private void use14545(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Magic Pouch: Grade S, A
-    private void use14546(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Magic Pouch: Grade S, A
-    private void use14547(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Magic Pouch: Grade S, A
-    private void use14548(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 13920, 1); // Sealed Magic Pouch (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 13921, 1); // Sealed Magic Pouch (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // ****** Magic Rune Clip ******
-    // Gludio Supply Box - Magic Rune Clip: Grade S, A
-    private void use14884(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Magic Rune Clip: Grade S, A
-    private void use14885(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Magic Rune Clip: Grade S, A
-    private void use14886(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Magic Rune Clip: Grade S, A
-    private void use14887(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Magic Rune Clip: Grade S, A
-    private void use14888(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Magic Rune Clip: Grade S, A
-    private void use14889(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Magic Rune Clip: Grade S, A
-    private void use14890(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Magic Rune Clip: Grade S, A
-    private void use14891(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Magic Rune Clip: Grade S, A
-    private void use14892(Player player, boolean ctrl) {
-        if (Rnd.chance(50))
-            addItem(player, 14902, 1); // Sealed Magic Rune Clip (A-Grade)
-        else if (Rnd.chance(50))
-            addItem(player, 14903, 1); // Sealed Magic Rune Clip (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // ****** Magic Ornament ******
-    // Gludio Supply Box - Magic Ornament: Grade S, A
-    private void use14893(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Dion Supply Box - Magic Ornament: Grade S, A
-    private void use14894(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Giran Supply Box - Magic Ornament: Grade S, A
-    private void use14895(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Oren Supply Box - Magic Ornament: Grade S, A
-    private void use14896(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Aden Supply Box - Magic Ornament: Grade S, A
-    private void use14897(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Innadril Supply Box - Magic Ornament: Grade S, A
-    private void use14898(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Goddard Supply Box - Magic Ornament: Grade S, A
-    private void use14899(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Rune Supply Box - Magic Ornament: Grade S, A
-    private void use14900(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Schuttgart Supply Box - Magic Ornament: Grade S, A
-    private void use14901(Player player, boolean ctrl) {
-        if (Rnd.chance(20))
-            addItem(player, 14904, 1); // Sealed Magic Ornament (A-Grade)
-        else if (Rnd.chance(20))
-            addItem(player, 14905, 1); // Sealed Magic Ornament (S-Grade)
-        else
-            player.sendPacket(Msg.THERE_WAS_NOTHING_FOUND_INSIDE_OF_THAT);
-    }
-
-    // Gift from Santa Claus
-    private void use14616(Player player, boolean ctrl) {
-        // Santa Claus' Weapon Exchange Ticket - 12 Hour Expiration Period
-        addItem(player, 20107, 1);
-
-        // Christmas Red Sock
-        addItem(player, 14612, 1);
-
-        // Special Christmas Tree
-        if (Rnd.chance(30))
-            addItem(player, 5561, 1);
-
-        // Christmas Tree
-        if (Rnd.chance(50))
-            addItem(player, 5560, 1);
-
-        // Agathion Seal Bracelet - Rudolph (постоянный предмет)
-        if (Functions.getItemCount(player, 10606) == 0 && Rnd.chance(5))
-            addItem(player, 10606, 1);
-
-        // Agathion Seal Bracelet: Rudolph - 30 дней со скилом на виталити
-        if (Functions.getItemCount(player, 20094) == 0 && Rnd.chance(3))
-            addItem(player, 20094, 1);
-
-        // Chest of Experience (Event)
-        if (Rnd.chance(30))
-            addItem(player, 20575, 1);
-    }
-
-    // Chest of Experience (Event)
-    private void use20575(Player player, boolean ctrl) {
-        addItem(player, 20335, 1); // Rune of Experience: 30% - 5 hour limited time
-        addItem(player, 20341, 1); // Rune of SP 30% - 5 Hour Expiration Period
-    }
-
-    // Nepal Snow Agathion Pack
-    private void use20804(Player player, boolean ctrl) {
-        addItem(player, 20782, 1);
-    }
-
-    // Nepal Snow Agathion 7-Day Pack - Snow's Haste
-    private void use20807(Player player, boolean ctrl) {
-        addItem(player, 20785, 1);
-    }
-
-    // Round Ball Snow Agathion Pack
-    private void use20805(Player player, boolean ctrl) {
-        addItem(player, 20783, 1);
-    }
-
-    // Round Ball Snow Agathion 7-Day Pack - Snow's Acumen
-    private void use20808(Player player, boolean ctrl) {
-        addItem(player, 20786, 1);
-    }
-
-    // Ladder Snow Agathion Pack
-    private void use20806(Player player, boolean ctrl) {
-        addItem(player, 20784, 1);
-    }
-
-    // Ladder Snow Agathion 7-Day Pack - Snow's Wind Walk
-    private void use20809(Player player, boolean ctrl) {
-        addItem(player, 20787, 1);
-    }
-
-    public Extractable() {
-//        singleRewardItem.put();
-        singleRewardItem.put(20842, 20818);// Iken Agathion Pack
-        singleRewardItem.put(20843, 20819); // Iken Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20844,20820); // Lana Agathion Pack
-        singleRewardItem.put(20845, 20821); // Lana Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20846, 20822);// Gnocian Agathion Pack
-        singleRewardItem.put(20847,20823);// Gnocian Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20848, 20824); // Orodriel Agathion Pack
-        singleRewardItem.put( 20849,20825); // Orodriel Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put( 20850,20826); // Lakinos Agathion Pack
-        singleRewardItem.put( 20851,20827); // Lakinos Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put( 20852,20828); // Mortia Agathion Pack
-        singleRewardItem.put(20853,20829 ); // Mortia Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20854, 20830); // Hayance Agathion Pack
-        singleRewardItem.put(20855, 20831); // Hayance Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20856, 20832); // Meruril Agathion Pack
-        singleRewardItem.put( 20857, 20833); // Meruril Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20858,20834 ); // Taman ze Lapatui Agathion Pack
-        singleRewardItem.put(20859, 20835); // Taman ze Lapatui Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20860, 20836 ); // Kaurin Agathion Pack
-        singleRewardItem.put( 20861, 20837 ); // Kaurin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20862, 20838); // Ahertbein Agathion Pack
-        singleRewardItem.put(20863, 20839); // Ahertbein Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20864, 20840); // Naonin Agathion Pack
-        singleRewardItem.put(20811, 20789); // Rocket Gun Hat Pack Continuous Fireworks
-        singleRewardItem.put(20812, 20790); // Yellow Paper Hat 7-Day Pack Bless the Body
-        singleRewardItem.put(20813,20791); // Pink Paper Mask Set 7-Day Pack Bless the Soul
-        singleRewardItem.put(20814, 20792); // Flavorful Cheese Hat Pack
-        singleRewardItem.put(20815, 20793); // Sweet Cheese Hat Pack
-        singleRewardItem.put(20816, 20794); // Flavorful Cheese Hat 7-Day Pack Scent of Flavorful Cheese
-        singleRewardItem.put(20817, 20795); // Sweet Cheese Hat 7-Day Pack Scent of Sweet Cheese
-        singleRewardItem.put(20810, 20725); // Flame Box Pack
-        singleRewardItem.put(20865, 20841); // Naonin Agathion 7-Day Pack Prominent Outsider Adventurer's Ability
-        singleRewardItem.put(20748, 20743); // Shiny Mask of Giant Hercules 7 day Pack
-        singleRewardItem.put(20749, 20744); // Shiny Mask of Silent Scream 7 day Pack
-        singleRewardItem.put(20750, 20745); // Shiny Spirit of Wrath Mask 7 day Pack
-        singleRewardItem.put(20751,20746); // Shiny Undecaying Corpse Mask 7 Day Pack
-        singleRewardItem.put(20752,20747 );// Shiny Planet X235 Alien Mask 7 day Pack
-        singleRewardItem.put(15404, 15418); // 6th Anniversary Party Gift Box (2003) by (CosMOsiS)
-        singleRewardItem.put(15405, 15419);// 6th Anniversary Party Gift Box (2004) by (CosMOsiS)
-        singleRewardItem.put(15406,15420); // 6th Anniversary Party Gift Box (2005) by (CosMOsiS)
-        singleRewardItem.put(17086,9201);
-        singleRewardItem.put(17085,9194);
-        singleRewardItem.put(15460,15462);// Halloween King Pumpkin Pack by (CosMOsiS)
-        singleRewardItem.put(15455,15450);// Shiny Super Strong Giant's Mask Pack by (CosMOsiS)
-        singleRewardItem.put(21421, 13021);// Color Title - event by (CosMOsiS)
-        singleRewardItem.put(21422,13307 );// Color title - event by (CosMOsiS)
-        singleRewardItem.put(15466, 15462);// Halloween King Pumpkin Pack - event by (CosMOsiS)
-        singleRewardItem.put(15465, 15461);// Halloween Nectar Pumpkin Pack - event by (CosMOsiS)
-        singleRewardItem.put(15459, 15461 ); // Halloween Nectar Pumpkin Pack by (CosMOsiS)
-        singleRewardItem.put(15458, 15453); // Shiny Unrotten Corpse's Mask Pack by (CosMOsiS)
-        singleRewardItem.put(15457,15452);// Shiny Wrathful Spirit's Mask Pack by (CosMOsiS)
-        singleRewardItem.put(15456, 15451);// Shiny Silent Scream's Mask Pack by (CosMOsiS)
-        singleRewardItem.put(15454, 15449);// Shiny Planet X235 Alien's Mask Pack by (CosMOsiS)
-        singleRewardItem.put(15410, 15424);// 6th Anniversary Party Gift Box (2009) by (CosMOsiS)
-        singleRewardItem.put(15409, 15423); // 6th Anniversary Party Gift Box (2008) by (CosMOsiS)
-        singleRewardItem.put(15408, 15422); // 6th Anniversary Party Gift Box (2007) by (CosMOsiS)
-        singleRewardItem.put(15407, 15421); // 6th Anniversary Party Gift Box (2006) by (CosMOsiS)
     }
 
     private boolean extractSingleItem(int usedItemId, Player player) {

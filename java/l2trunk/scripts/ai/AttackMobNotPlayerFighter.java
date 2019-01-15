@@ -6,9 +6,6 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.QuestEventType;
-import l2trunk.gameserver.model.quest.QuestState;
-
-import java.util.List;
 
 public final class AttackMobNotPlayerFighter extends Fighter {
     public AttackMobNotPlayerFighter(NpcInstance actor) {
@@ -23,10 +20,8 @@ public final class AttackMobNotPlayerFighter extends Fighter {
 
         Player player = attacker.getPlayer();
         if (player != null) {
-            List<QuestState> quests = player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST);
-            if (quests != null)
-                for (QuestState qs : quests)
-                    qs.getQuest().notifyAttack(actor, qs);
+            player.getQuestsForEvent(actor, QuestEventType.ATTACKED_WITH_QUEST)
+                    .forEach(qs -> qs.getQuest().notifyAttack(actor, qs));
         }
 
         onEvtAggression(attacker, damage);
@@ -42,6 +37,6 @@ public final class AttackMobNotPlayerFighter extends Fighter {
             startRunningTask(AI_TASK_ATTACK_DELAY);
 
         if (getIntention() != CtrlIntention.AI_INTENTION_ATTACK)
-            setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
     }
 }

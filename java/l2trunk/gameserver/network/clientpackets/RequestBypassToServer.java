@@ -94,7 +94,7 @@ public final class RequestBypassToServer extends L2GameClientPacket {
                 }
 
                 if (word.length == 1)
-                    Scripts.INSTANCE.callScripts(activeChar, path[0], path[1], new Object[0],variables);
+                    Scripts.INSTANCE.callScripts(activeChar, path[0], path[1], new Object[0], variables);
                 else
                     Scripts.INSTANCE.callScripts(activeChar, path[0], path[1], new Object[]{args}, variables);
             } else if (bp.bypass.startsWith("user_")) {

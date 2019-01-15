@@ -4,6 +4,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.Arrays;
+import java.util.List;
 
 public final class DrakeMagma extends Patrollers {
     public DrakeMagma(NpcInstance actor) {
@@ -11,7 +12,7 @@ public final class DrakeMagma extends Patrollers {
 
         if (equals(actor.getLoc(), 122888, 110664, -3728)) {
 
-            points = Arrays.asList(
+            points = List.of(
                     new Location(122888, 110664, -3728),
                     new Location(121320, 112440, -3792),
                     new Location(120024, 112712, -3744),
@@ -50,7 +51,7 @@ public final class DrakeMagma extends Patrollers {
                     new Location(112568, 113064, -2784),
                     new Location(111688, 112360, -2784));
         } else {
-            points = Arrays.asList(
+            points = List.of(
                     new Location(80232, 110248, -3040),
                     new Location(81864, 109368, -3120),
                     new Location(83736, 108312, -3072),

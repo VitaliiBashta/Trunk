@@ -8,24 +8,12 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public final class _10273_GoodDayToFly extends Quest implements ScriptFile {
+public final class _10273_GoodDayToFly extends Quest {
     private final static int Lekon = 32557;
     private final static int VultureRider1 = 22614;
     private final static int VultureRider2 = 22615;
 
     private final static int Mark = 13856;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10273_GoodDayToFly() {
         super(false);
@@ -64,7 +52,7 @@ public final class _10273_GoodDayToFly extends Quest implements ScriptFile {
                 return null;
             }
             if (st.getInt("transform") == 1)
-                SkillTable.INSTANCE.getInfo(5982).getEffects(player)  ;
+                SkillTable.INSTANCE.getInfo(5982).getEffects(player);
             else if (st.getInt("transform") == 2)
                 SkillTable.INSTANCE.getInfo(5983).getEffects(player);
         }

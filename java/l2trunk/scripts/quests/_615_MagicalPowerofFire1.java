@@ -3,41 +3,28 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 
-public final class _615_MagicalPowerofFire1 extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _615_MagicalPowerofFire1 extends Quest {
+    private static final int DIVINE_STONE_OF_WISDOM = 7081;
+    private static final int RED_TOTEM = 7243;
+    // etc
+    private static final int MARK_OF_VARKA_ALLIANCE1 = 7221;
+    private static final int MARK_OF_VARKA_ALLIANCE2 = 7222;
+    private static final int MARK_OF_VARKA_ALLIANCE3 = 7223;
+    private static final int MARK_OF_VARKA_ALLIANCE4 = 7224;
+    private static final int MARK_OF_VARKA_ALLIANCE5 = 7225;
+    private static final int THIEF_KEY = 1661;
     // NPC
     private final int NARAN = 31378;
     private final int UDAN = 31379;
     private final int BOX_OF_ASEFA = 31559;
-
     // Quest items
     private final int STOLEN_RED_TOTEM = 7242;
-    private final int DIVINE_STONE_OF_WISDOM = 7081;
-    private final int RED_TOTEM = 7243;
-
-    // etc
-    private final int MARK_OF_VARKA_ALLIANCE1 = 7221;
-    private final int MARK_OF_VARKA_ALLIANCE2 = 7222;
-    private final int MARK_OF_VARKA_ALLIANCE3 = 7223;
-    private final int MARK_OF_VARKA_ALLIANCE4 = 7224;
-    private final int MARK_OF_VARKA_ALLIANCE5 = 7225;
-    private final int THIEF_KEY = 1661;
-
-    private final int[] KETRA_NPC_LIST = new int[19];
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    static final List<Integer> KETRA_NPC_LIST = List.of(
+            21324, 21325, 21327, 21328, 21329, 21331, 21332, 21334, 21335, 21336,
+            21338, 21339, 21340, 21342, 21343, 21344, 21345, 21346, 21347);
 
     public _615_MagicalPowerofFire1() {
         super(false);
@@ -48,25 +35,6 @@ public final class _615_MagicalPowerofFire1 extends Quest implements ScriptFile 
         addTalkId(UDAN);
         addTalkId(BOX_OF_ASEFA);
 
-        KETRA_NPC_LIST[0] = 21324;
-        KETRA_NPC_LIST[1] = 21325;
-        KETRA_NPC_LIST[2] = 21327;
-        KETRA_NPC_LIST[3] = 21328;
-        KETRA_NPC_LIST[4] = 21329;
-        KETRA_NPC_LIST[5] = 21331;
-        KETRA_NPC_LIST[6] = 21332;
-        KETRA_NPC_LIST[7] = 21334;
-        KETRA_NPC_LIST[8] = 21335;
-        KETRA_NPC_LIST[9] = 21336;
-        KETRA_NPC_LIST[10] = 21338;
-        KETRA_NPC_LIST[11] = 21339;
-        KETRA_NPC_LIST[12] = 21340;
-        KETRA_NPC_LIST[13] = 21342;
-        KETRA_NPC_LIST[14] = 21343;
-        KETRA_NPC_LIST[15] = 21344;
-        KETRA_NPC_LIST[16] = 21345;
-        KETRA_NPC_LIST[17] = 21346;
-        KETRA_NPC_LIST[18] = 21347;
 
         for (int npcId : KETRA_NPC_LIST)
             addAttackId(npcId);

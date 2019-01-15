@@ -6,8 +6,10 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Pterosaur extends DefaultAI {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             new Location(3964, -7496, -3488),
             new Location(7093, -6207, -3447),
             new Location(7838, -7407, -3616),
@@ -67,7 +69,7 @@ public final class Pterosaur extends DefaultAI {
             new Location(11039, -24780, -3669),
             new Location(8234, -13204, -3986),
             new Location(9316, -12869, -3989),
-            new Location(6935, -7852, -3685)};
+            new Location(6935, -7852, -3685));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -96,7 +98,7 @@ public final class Pterosaur extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             if (doTask())
                 clearTasks();
             return true;
@@ -117,18 +119,16 @@ public final class Pterosaur extends DefaultAI {
             wait = true;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(points[current_point], false);
+            addTaskMove(points.get(current_point), false);
             doTask();
             return true;
         }
 
-        if (randomAnimation())
-            return true;
+        return randomAnimation();
 
-        return false;
     }
 
     @Override

@@ -5,11 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: pchayka
- * @date: 22.06.2010
- */
-public class _701_ProofofExistence extends Quest implements ScriptFile {
+public final class _701_ProofofExistence extends Quest {
     // NPC's
     private static final int Artius = 32559;
 
@@ -23,18 +19,6 @@ public class _701_ProofofExistence extends Quest implements ScriptFile {
     private static final int FloatingSkull2 = 22607;
     private static final int FloatingZombie1 = 22608;
     private static final int FloatingZombie2 = 22609;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _701_ProofofExistence() {
         super(false);
@@ -101,7 +85,7 @@ public class _701_ProofofExistence extends Quest implements ScriptFile {
         if (cond == 1 && npcId != Enira) {
             st.giveItems(DeadmansRemains, 1);
             st.playSound(SOUND_ITEMGET);
-        } else if (cond == 1 && npcId == Enira) {
+        } else if (cond == 1) {
             st.giveItems(BansheeQueensEye, 1);
             st.playSound(SOUND_ITEMGET);
         }

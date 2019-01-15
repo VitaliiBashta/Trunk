@@ -10,28 +10,28 @@ import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncMul;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class GilmoreAI extends Fighter {
-    private static final Location[] points_stage1 = {
+    private static final List<Location> points_stage1 = List.of(
             new Location(73195, 118483, -3722),
             new Location(73535, 117945, -3754),
             new Location(73446, 117334, -3752),
             new Location(72847, 117311, -3711),
             new Location(72296, 117720, -3694),
             new Location(72463, 118401, -3694),
-            new Location(72912, 117895, -3723)};
+            new Location(72912, 117895, -3723));
 
     private static final Location points_stage2 = new Location(73615, 117629, -3765);
 
-    private static final String[] text_stage1 = {"Text1", "Text2", "Text3", "Text4", "Text5", "Text6", "Text7"};
+    private static final List<String> text_stage1 = List.of("Text1", "Text2", "Text3", "Text4", "Text5", "Text6", "Text7");
 
-    private static final String[] text_stage2 = {"Are you ready? ", " Let's begin, there is not a moment to lose!"};
+    private static final List<String> text_stage2 = List.of("Are you ready? ", " Let's begin, there is not a moment to lose!");
 
     private long wait_timeout = 0;
     private boolean wait = false;
-    private int index;
     private int step_stage2 = 1;
 
     public GilmoreAI(NpcInstance actor) {
@@ -50,7 +50,7 @@ public final class GilmoreAI extends Fighter {
         if (actor == null || actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -60,8 +60,7 @@ public final class GilmoreAI extends Fighter {
                 switch (TheFlowOfTheHorror.getStage()) {
                     case 1:
                         if (Rnd.chance(30)) {
-                            index = Rnd.get(text_stage1.length);
-                            Functions.npcSay(actor, text_stage1[index]);
+                            Functions.npcSay(actor, Rnd.get(text_stage1));
                             wait_timeout = System.currentTimeMillis() + 10000;
                             wait = true;
                             return true;
@@ -70,7 +69,7 @@ public final class GilmoreAI extends Fighter {
                     case 2:
                         switch (step_stage2) {
                             case 1:
-                                Functions.npcSay(actor, text_stage2[0]);
+                                Functions.npcSay(actor, text_stage2.get(0));
                                 wait_timeout = System.currentTimeMillis() + 10000;
                                 wait = true;
                                 return true;
@@ -87,14 +86,13 @@ public final class GilmoreAI extends Fighter {
 
             switch (TheFlowOfTheHorror.getStage()) {
                 case 1:
-                    index = Rnd.get(points_stage1.length);
-                    addTaskMove(points_stage1[index], true);
+                    addTaskMove(Rnd.get(points_stage1), true);
                     doTask();
                     return true;
                 case 2:
                     switch (step_stage2) {
                         case 1:
-                            Functions.npcSay(actor, text_stage2[1]);
+                            Functions.npcSay(actor, text_stage2.get(1));
                             addTaskMove(points_stage2, true);
                             doTask();
                             step_stage2 = 2;
@@ -115,7 +113,7 @@ public final class GilmoreAI extends Fighter {
                             step_stage2 = 4;
                             return true;
                         case 4:
-                            setIntention(CtrlIntention.AI_INTENTION_ATTACK, null);
+                            setIntention(CtrlIntention.AI_INTENTION_ATTACK);
                             return true;
                         case 10:
                             actor.removeStatsOwner(this);
@@ -135,15 +133,16 @@ public final class GilmoreAI extends Fighter {
         if (actor == null)
             return true;
 
-        for (NpcInstance npc : World.getAroundNpc(actor, 1000, 200))
-            if (Rnd.chance(10) && npc != null && npc.getNpcId() == 20235) {
-                MonsterInstance monster = (MonsterInstance) npc;
-                if (Rnd.chance(20))
-                    addTaskCast(monster, actor.getKnownSkill(1467));
-                else
-                    addTaskAttack(monster);
-                return true;
-            }
+        World.getAroundNpc(actor, 1000, 200)
+                .filter(npc -> npc.getNpcId() == 20235)
+                .filter(npc -> Rnd.chance(10))
+                .map(npc -> (MonsterInstance) npc)
+                .findFirst().ifPresent(monster -> {
+            if (Rnd.chance(20))
+                addTaskCast(monster, 1467);
+            else
+                addTaskAttack(monster);
+        });
         return true;
     }
 }

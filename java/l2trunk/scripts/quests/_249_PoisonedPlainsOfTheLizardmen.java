@@ -5,16 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _249_PoisonedPlainsOfTheLizardmen extends Quest implements ScriptFile {
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
+public final class _249_PoisonedPlainsOfTheLizardmen extends Quest {
     private static final int MOUEN = 30196;
     private static final int JOHNNY = 32744;
 

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public final class UnitMember {
     private static final Logger _log = LoggerFactory.getLogger(UnitMember.class);
-    private final int _objectId;
+    private final int objectId;
     private Player player;
     private Clan _clan;
     private String _name;
@@ -24,11 +24,11 @@ public final class UnitMember {
     private int _powerGrade;
     private int _apprentice;
 
-    private int _leaderOf = Clan.SUBUNIT_NONE;
+    private int leaderOf = Clan.SUBUNIT_NONE;
 
     public UnitMember(Clan clan, String name, String title, int level, int classId, int objectId, int pledgeType, int powerGrade, int apprentice, int sex, int leaderOf) {
         _clan = clan;
-        _objectId = objectId;
+        this.objectId = objectId;
         _name = name;
         _title = title;
         _level = level;
@@ -37,7 +37,7 @@ public final class UnitMember {
         _powerGrade = powerGrade;
         _apprentice = apprentice;
         _sex = sex;
-        _leaderOf = leaderOf;
+        this.leaderOf = leaderOf;
 
         if (powerGrade != 0) {
             RankPrivs r = clan.getRankPrivs(powerGrade);
@@ -46,7 +46,7 @@ public final class UnitMember {
     }
 
     public UnitMember(Player player) {
-        _objectId = player.getObjectId();
+        objectId = player.getObjectId();
         this.player = player;
     }
 
@@ -100,7 +100,7 @@ public final class UnitMember {
     }
 
     public int getObjectId() {
-        return _objectId;
+        return objectId;
     }
 
     public String getTitle() {
@@ -260,21 +260,21 @@ public final class UnitMember {
 
     public boolean isClanLeader() {
         Player player = getPlayer();
-        return player == null ? (_leaderOf == Clan.SUBUNIT_MAIN_CLAN) : player.isClanLeader();
+        return player == null ? (leaderOf == Clan.SUBUNIT_MAIN_CLAN) : player.isClanLeader();
     }
 
     public int isSubLeader() {
-        for (SubUnit pledge : getClan().getAllSubUnits())
-            if (pledge.getLeaderObjectId() == getObjectId())
-                return pledge.getType();
-        return 0;
+        return getClan().getAllSubUnits().stream()
+                .filter(pledge -> pledge.getLeaderObjectId() == getObjectId())
+                .map(SubUnit::getType)
+                .findFirst().orElse(0);
     }
 
     public int getLeaderOf() {
-        return _leaderOf;
+        return leaderOf;
     }
 
     public void setLeaderOf(int leaderOf) {
-        _leaderOf = leaderOf;
+        this.leaderOf = leaderOf;
     }
 }

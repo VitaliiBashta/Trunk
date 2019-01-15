@@ -496,7 +496,7 @@ public final class SignsPriestInstance extends NpcInstance {
                         showChatWindow(player, 20, null, false);
                         return;
                     }
-                    if (player.getVarInt("bmarketadena", 0) >= 500000) {
+                    if (player.getVarInt("bmarketadena") >= 500000) {
                         showChatWindow(player, 21, null, false);
                         return;
                     }
@@ -525,7 +525,7 @@ public final class SignsPriestInstance extends NpcInstance {
                         return;
                     }
                     long adenaAmount = ItemFunctions.getItemCount(player, 57);
-                    int amountLimit = player.getVarInt("bmarketadena", 0);
+                    int amountLimit = player.getVarInt("bmarketadena");
                     long result = adenaConvert / tradeMult;
                     if ((adenaAmount < adenaConvert) || (adenaConvert < tradeMult)) // adenaConvert < tradeMult i.e. can't exchange if no AA will be given
                     {

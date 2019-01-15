@@ -4,26 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Передел до Freya. By Bonux.
- * Квест проверен и работает.
- * Рейты прописаны путем повышения шанса получения квестовых вещей.
- */
-public class _647_InfluxOfMachines extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _647_InfluxOfMachines extends Quest {
     // Settings: drop chance in %
     private static final int DROP_CHANCE = 60;
 
@@ -31,18 +15,8 @@ public class _647_InfluxOfMachines extends Quest implements ScriptFile {
     private static final int BROKEN_GOLEM_FRAGMENT = 15521;
 
     // REWARDS
-    private static final int[] RECIPES = {
-            6887,
-            6881,
-            6897,
-            7580,
-            6883,
-            6899,
-            6891,
-            6885,
-            6893,
-            6895
-    };
+    private static final List<Integer> RECIPES = List.of(
+            6887, 6881, 6897, 7580, 6883, 6899, 6891, 6885, 6893, 6895);
 
     public _647_InfluxOfMachines() {
         super(true);
@@ -66,7 +40,7 @@ public class _647_InfluxOfMachines extends Quest implements ScriptFile {
         } else if (event.equalsIgnoreCase("647_3"))
             if (st.getQuestItemsCount(BROKEN_GOLEM_FRAGMENT) >= 500) {
                 st.takeItems(BROKEN_GOLEM_FRAGMENT, -1);
-                st.giveItems(RECIPES[Rnd.get(RECIPES.length)], 1);
+                st.giveItems(Rnd.get(RECIPES));
                 htmltext = "collecter_gutenhagen_q0647_0201.htm";
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);

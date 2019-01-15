@@ -4,13 +4,11 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class _633_InTheForgottenVillage extends Quest implements ScriptFile {
+public final class _633_InTheForgottenVillage extends Quest {
     // NPC
     private static final int MINA = 31388;
     // ITEMS
@@ -20,18 +18,6 @@ public class _633_InTheForgottenVillage extends Quest implements ScriptFile {
     // Mobid : DROP CHANCES
     private static final Map<Integer, Double> DAMOBS = new HashMap<>();
     private static final Map<Integer, Double> UNDEADS = new HashMap<>();
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _633_InTheForgottenVillage() {
         super(true);
@@ -66,12 +52,8 @@ public class _633_InTheForgottenVillage extends Quest implements ScriptFile {
 
         addStartNpc(MINA);
         addQuestItem(RIB_BONE);
-
-        for (int i : UNDEADS.keySet())
-            addKillId(i);
-
-        for (int i : DAMOBS.keySet())
-            addKillId(i);
+        addKillId(UNDEADS.keySet());
+        addKillId(DAMOBS.keySet());
     }
 
     @Override

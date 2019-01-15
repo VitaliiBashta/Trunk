@@ -5,15 +5,8 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Proof Of Valor
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _271_ProofOfValor extends Quest implements ScriptFile {
+public final class _271_ProofOfValor extends Quest {
     //NPC
     private static final int RUKAIN = 30577;
     //Quest Item
@@ -34,18 +27,6 @@ public class _271_ProofOfValor extends Quest implements ScriptFile {
                     2
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _271_ProofOfValor() {
         super(false);

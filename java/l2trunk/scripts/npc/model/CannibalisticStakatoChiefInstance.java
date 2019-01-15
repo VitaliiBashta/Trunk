@@ -10,8 +10,10 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class CannibalisticStakatoChiefInstance extends RaidBossInstance {
-    private static final int ITEMS[] = {14833, 14834};
+import java.util.List;
+
+public final class CannibalisticStakatoChiefInstance extends RaidBossInstance {
+    private static final List<Integer> ITEMS = List.of(14833, 14834);
 
     public CannibalisticStakatoChiefInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -32,15 +34,15 @@ public class CannibalisticStakatoChiefInstance extends RaidBossInstance {
         int itemId;
         if (party != null) {
             for (Player partyMember : party.getMembers())
-                if (partyMember != null && pc.isInRange(partyMember, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
-                    itemId = ITEMS[Rnd.get(ITEMS.length)];
+                if (pc.isInRange(partyMember, Config.ALT_PARTY_DISTRIBUTION_RANGE)) {
+                    itemId = Rnd.get(ITEMS);
                     partyMember.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_OBTAINED_S1).addItemName(itemId));
-                    ItemInstance createdItem = partyMember.getInventory().addItem(itemId, 1, "CannibalisticStakatoChiefInstance");
+                    partyMember.getInventory().addItem(itemId, 1, "CannibalisticStakatoChiefInstance");
                 }
         } else {
-            itemId = ITEMS[Rnd.get(ITEMS.length)];
+            itemId = Rnd.get(ITEMS);
             pc.sendPacket(new SystemMessage(SystemMessage.YOU_HAVE_OBTAINED_S1).addItemName(itemId));
-            ItemInstance createdItem = pc.getInventory().addItem(itemId, 1, "CannibalisticStakatoChiefInstance");
+            pc.getInventory().addItem(itemId, 1, "CannibalisticStakatoChiefInstance");
         }
     }
 }

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TeleToParnassus extends Functions implements ScriptFile {
+public final class TeleToParnassus extends Functions implements ScriptFile {
     private static final Logger _log = LoggerFactory.getLogger(TeleToParnassus.class);
     private static final List<SimpleSpawner> _spawns = new ArrayList<>();
     private final Zone _zone = ReflectionUtils.getZone("[parnassus_offshore]");
@@ -112,10 +112,6 @@ public class TeleToParnassus extends Functions implements ScriptFile {
         _spawns.clear();
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     public void toParnassus() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
@@ -138,7 +134,7 @@ public class TeleToParnassus extends Functions implements ScriptFile {
     public void fromParnassus() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
-        if (player == null || npc == null || !npc.isInRange(player, 1000L))
+        if (npc == null || !npc.isInRange(player, 1000L))
             return;
 
         if (!NpcInstance.canBypassCheck(player, npc))
@@ -155,9 +151,9 @@ public class TeleToParnassus extends Functions implements ScriptFile {
     private void teleOut() {
         Player player = getSelf();
         NpcInstance npc = getNpc();
-        if (player == null || npc == null || !npc.isInRange(player, 1000L))
+        if (npc == null || !npc.isInRange(player, 1000L))
             return;
-        player.teleToLocation(46776, 185784, -3528, 0);
+        player.teleToLocation(new Location(46776, 185784, -3528), 0);
         show("I don't know from where you came here, but I can teleport you the another border side.", player, npc);
     }
 

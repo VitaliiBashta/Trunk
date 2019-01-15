@@ -11,10 +11,9 @@ import l2trunk.scripts.instances.SufferingHallDefence;
 import l2trunk.scripts.quests._694_BreakThroughTheHallOfSuffering;
 import l2trunk.scripts.quests._695_DefendtheHallofSuffering;
 
-/**
- * @author pchayka
- */
-public class TepiosRewardInstance extends NpcInstance {
+import java.util.List;
+
+public final class TepiosRewardInstance extends NpcInstance {
     private static final int MARK_OF_KEUCEREUS_STAGE_1 = 13691;
     private static final int MARK_OF_KEUCEREUS_STAGE_2 = 13692;
     private static final int SOE = 736; // Scroll of Escape
@@ -23,12 +22,12 @@ public class TepiosRewardInstance extends NpcInstance {
     private static final int SUPPLIES3 = 13779; // Gold-Ornamented Duel Supplies
     private static final int SUPPLIES4 = 13780; // Silver-Ornamented Duel Supplies
     private static final int SUPPLIES5 = 13781; // Bronze-Ornamented Duel Supplies
-    private static final int[] SUPPLIES6_10 = {13782, // Non-Ornamented Duel Supplies
+    private static final List<Integer> SUPPLIES6_10 = List.of(13782, // Non-Ornamented Duel Supplies
             13783, // Weak-Looking Duel Supplies
             13784, // Sad-Looking Duel Supplies
             13785, // Poor-Looking Duel Supplies
             13786 // Worthless Duel Supplies
-    };
+    );
     private boolean _gotReward = false;
 
 
@@ -50,43 +49,43 @@ public class TepiosRewardInstance extends NpcInstance {
                 return;
             }
 
-            int time = 0;
+            int time1 = 0;
             if (getReflection().getInstancedZoneId() == 115)
-                time = ((SufferingHallAttack) getReflection()).timeSpent;
+                time1 = ((SufferingHallAttack) getReflection()).timeSpent;
             else if (getReflection().getInstancedZoneId() == 116)
-                time = ((SufferingHallDefence) getReflection()).timeSpent;
+                time1 = ((SufferingHallDefence) getReflection()).timeSpent;
+            int time = time1;
+            getReflection().getPlayers()
+                    .filter(p -> ItemFunctions.getItemCount(p, MARK_OF_KEUCEREUS_STAGE_1) < 1 && ItemFunctions.getItemCount(p, MARK_OF_KEUCEREUS_STAGE_2) < 1)
+                    .forEach(p -> {
+                        ItemFunctions.addItem(p, MARK_OF_KEUCEREUS_STAGE_1, 1, true, "TepiosRewardInstance");
+                        ItemFunctions.addItem(p, SOE, 1, true, "TepiosRewardInstance");
 
-            for (Player p : getReflection().getPlayers()) {
-                if (ItemFunctions.getItemCount(p, MARK_OF_KEUCEREUS_STAGE_1) < 1 && ItemFunctions.getItemCount(p, MARK_OF_KEUCEREUS_STAGE_2) < 1)
-                    ItemFunctions.addItem(p, MARK_OF_KEUCEREUS_STAGE_1, 1, true, "TepiosRewardInstance");
-                ItemFunctions.addItem(p, SOE, 1, true, "TepiosRewardInstance");
-
-                if (time > 0) {
-                    if (time <= 20 * 60 + 59)
-                        ItemFunctions.addItem(p, SUPPLIES1, 1, true, "TepiosRewardInstance");
-                        // 21 мин - 22 мин 59 сек
-                    else if (time > 20 * 60 + 59 && time <= 22 * 60 + 59)
-                        ItemFunctions.addItem(p, SUPPLIES2, 1, true, "TepiosRewardInstance");
-                        // 23 мин - 24 мин 59 сек
-                    else if (time > 22 * 60 + 59 && time <= 24 * 60 + 59)
-                        ItemFunctions.addItem(p, SUPPLIES3, 1, true, "TepiosRewardInstance");
-                        // 25 мин - 26 мин 59 сек
-                    else if (time > 24 * 60 + 59 && time <= 26 * 60 + 59)
-                        ItemFunctions.addItem(p, SUPPLIES4, 1, true, "TepiosRewardInstance");
-                        // 27 мин - 28 мин 59 сек
-                    else if (time > 26 * 60 + 59 && time <= 28 * 60 + 59)
-                        ItemFunctions.addItem(p, SUPPLIES5, 1, true, "TepiosRewardInstance");
-                        // 29 мин - 60 мин
-                    else if (time > 26 * 60 + 59)
-                        ItemFunctions.addItem(p, SUPPLIES6_10[Rnd.get(SUPPLIES6_10.length)], 1, true, "TepiosRewardInstance");
-                }
-                QuestState qs = p.getQuestState(_694_BreakThroughTheHallOfSuffering.class);
-                QuestState qs2 = p.getQuestState(_695_DefendtheHallofSuffering.class);
-                if (qs != null && getReflection().getInstancedZoneId() == 115)
-                    qs.exitCurrentQuest(true);
-                if (qs2 != null && getReflection().getInstancedZoneId() == 116)
-                    qs2.exitCurrentQuest(true);
-            }
+                        if (time > 0) {
+                            if (time <= 20 * 60 + 59)
+                                ItemFunctions.addItem(p, SUPPLIES1, 1, true, "TepiosRewardInstance");
+                                // 21 мин - 22 мин 59 сек
+                            else if (time <= 22 * 60 + 59)
+                                ItemFunctions.addItem(p, SUPPLIES2, 1, true, "TepiosRewardInstance");
+                                // 23 мин - 24 мин 59 сек
+                            else if (time <= 24 * 60 + 59)
+                                ItemFunctions.addItem(p, SUPPLIES3, 1, true, "TepiosRewardInstance");
+                                // 25 мин - 26 мин 59 сек
+                            else if (time <= 26 * 60 + 59)
+                                ItemFunctions.addItem(p, SUPPLIES4, 1, true, "TepiosRewardInstance");
+                                // 27 мин - 28 мин 59 сек
+                            else if (time <= 28 * 60 + 59)
+                                ItemFunctions.addItem(p, SUPPLIES5, 1, true, "TepiosRewardInstance");
+                                // 29 мин - 60 мин
+                            else ItemFunctions.addItem(p, Rnd.get(SUPPLIES6_10), 1, true, "TepiosRewardInstance");
+                        }
+                        QuestState qs = p.getQuestState(_694_BreakThroughTheHallOfSuffering.class);
+                        QuestState qs2 = p.getQuestState(_695_DefendtheHallofSuffering.class);
+                        if (qs != null && getReflection().getInstancedZoneId() == 115)
+                            qs.exitCurrentQuest(true);
+                        if (qs2 != null && getReflection().getInstancedZoneId() == 116)
+                            qs2.exitCurrentQuest(true);
+                    });
             _gotReward = true;
             showChatWindow(player, 2);
         } else

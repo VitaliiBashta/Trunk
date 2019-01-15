@@ -4,40 +4,23 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _645_GhostsOfBatur extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _645_GhostsOfBatur extends Quest {
     //Npc
     private static final int Karuda = 32017;
     //Items
     private static final int CursedBurialItems = 14861;
     //Mobs
-    private static final int[] MOBS = {
-            22703,
-            22704,
-            22705,
-            22706,
-            22707
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final List<Integer> MOBS = List.of(
+            22703, 22704, 22705, 22706, 22707);
 
     public _645_GhostsOfBatur() {
         super(true);
 
         addStartNpc(Karuda);
-        for (int i : MOBS)
-            addKillId(i);
+        addKillId(MOBS);
         addQuestItem(CursedBurialItems);
     }
 
@@ -53,7 +36,7 @@ public class _645_GhostsOfBatur extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
         if (cond == 0) {
             if (st.getPlayer().getLevel() < 61) {

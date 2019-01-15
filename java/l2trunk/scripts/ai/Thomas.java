@@ -6,23 +6,25 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.List;
+
 public final class Thomas extends Fighter {
     private long _lastSay;
 
-    private static final String[] _stay = {
+    private static final List<String> _stay = List.of(
             "Ha ... Ha ... You came to save the snowman?",
             "So I just do not give it to you!",
             "In order to save your snowman, you'll have to kill me!",
-            "Ha ... Ha ... You think it's that simple?"};
+            "Ha ... Ha ... You think it's that simple?");
 
-    private static final String[] _attacked = {
+    private static final List<String> _attacked = List.of(
             "You must all die!",
             "My Snowman and will not have any New Year!",
             "I'll kill you all!",
             "With so little beat? Not eating porridge? Ha ... Ha ...",
             "And it's called heroes?",
             "Do not you seen a snowman!",
-            "Only the ancient weapon capable of defeating me!"};
+            "Only the ancient weapon capable of defeating me!");
 
     public Thomas(NpcInstance actor) {
         super(actor);
@@ -36,7 +38,7 @@ public final class Thomas extends Fighter {
 
         // Ругаемся не чаще, чем раз в 10 секунд
         if (!actor.isInCombat() && System.currentTimeMillis() - _lastSay > 10000) {
-            Functions.npcSay(actor, _stay[Rnd.get(_stay.length)]);
+            Functions.npcSay(actor, Rnd.get(_stay));
             _lastSay = System.currentTimeMillis();
         }
         return super.thinkActive();
@@ -50,7 +52,7 @@ public final class Thomas extends Fighter {
 
         // Ругаемся не чаще, чем раз в 5 секунд
         if (System.currentTimeMillis() - _lastSay > 5000) {
-            Functions.npcSay(actor, _attacked[Rnd.get(_attacked.length)]);
+            Functions.npcSay(actor, Rnd.get(_attacked));
             _lastSay = System.currentTimeMillis();
         }
         super.onEvtAttacked(attacker, damage);

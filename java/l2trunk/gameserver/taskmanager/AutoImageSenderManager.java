@@ -13,7 +13,7 @@ import java.util.List;
  * Class containing Thread which sends most important images to the server with {@value #DELAY_BETWEEN_PICTURE} delay between each image
  */
 public final class AutoImageSenderManager {
-    private static final List<Integer> IMAGES_SENT_ORDER = Arrays.asList(10000, 10001, 10002);
+    private static final List<Integer> IMAGES_SENT_ORDER = List.of(10000, 10001, 10002);
 
     private static final long DELAY_BETWEEN_PICTURE = 1000L;
 

@@ -7,19 +7,22 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-
-/**
- * @author pchayka
- */
-
-public class _454_CompletelyLost extends Quest implements ScriptFile {
+public final class _454_CompletelyLost extends Quest {
     private static final int WoundedSoldier = 32738;
     private static final int Ermian = 32736;
-    private static final int[][] rewards = {{15792, 1}, {15798, 1}, {15795, 1}, {15801, 1}, {15808, 1}, {15804, 1}, {15809, 1}, {15810, 1}, {15811, 1}, {15660, 3}, {15666, 3}, {15663, 3}, {15667, 3}, {15669, 3}, {15668, 3}, {15769, 3}, {15770, 3}, {15771, 3}, {15805, 1}, {15796, 1}, {15793, 1}, {15799, 1}, {15802, 1}, {15809, 1}, {15810, 1}, {15811, 1}, {15672, 3}, {15664, 3}, {15661, 3}, {15670, 3}, {15671, 3}, {15769, 3}, {15770, 3}, {15771, 3}, {15800, 1}, {15803, 1}, {15806, 1}, {15807, 1}, {15797, 1}, {15794, 1}, {15809, 1}, {15810, 1}, {15811, 1}, {15673, 3}, {15674, 3}, {15675, 3}, {15691, 3}, {15665, 3}, {15662, 3}, {15769, 3}, {15770, 3}, {15771, 3}};
+    private static final List<Integer> rewardIDs = List.of(
+            15792, 15798, 15795, 15801, 15808, 15804, 15809, 15810, 15811, 15660, 15666, 15663, 15667,
+            15669, 15668, 15769, 15770, 15771, 15805, 15796, 15793, 15799, 15802, 15809, 15810, 15811,
+            15672, 15664, 15661, 15670, 15671, 15769, 15770, 15771, 15800, 15803, 15806, 15807, 15797,
+            15794, 15809, 15810, 15811, 15673, 15674, 15675, 15691, 15665, 15662, 15769, 15770, 15771);
+    private static final List<Integer> rewardCounts = List.of(
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3,
+            3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1,
+            3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3);
 
     public _454_CompletelyLost() {
         super(PARTY_ALL);
@@ -88,32 +91,18 @@ public class _454_CompletelyLost extends Quest implements ScriptFile {
     }
 
     private NpcInstance seeSoldier(NpcInstance npc, Player player) {
-        List<NpcInstance> around = npc.getAroundNpc(Config.FOLLOW_RANGE * 2, 300);
-        if (around != null && !around.isEmpty())
-            for (NpcInstance n : around)
-                if (n.getNpcId() == WoundedSoldier && n.getFollowTarget() != null)
-                    if (n.getFollowTarget().getObjectId() == player.getObjectId())
-                        return n;
-
-        return null;
+        return npc.getAroundNpc(Config.FOLLOW_RANGE * 2, 300)
+                .filter(n -> n.getNpcId() == WoundedSoldier)
+                .filter(n -> n.getFollowTarget() != null)
+                .filter(n -> n.getFollowTarget().getObjectId() == player.getObjectId())
+                .findFirst().orElse(null);
     }
 
     private void giveReward(QuestState st) {
-        int row = Rnd.get(0, rewards.length - 1);
-        int id = rewards[row][0];
-        int count = rewards[row][1];
+        int row = Rnd.get(0, rewardIDs.size() - 1);
+        int id = rewardIDs.get(row);
+        int count = rewardCounts.get(row);
         st.giveItems(id, count);
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

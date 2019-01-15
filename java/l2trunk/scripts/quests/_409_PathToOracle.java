@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _409_PathToOracle extends Quest implements ScriptFile {
+public final class _409_PathToOracle extends Quest {
     //npc
     private final int MANUEL = 30293;
     private final int ALLANA = 30424;
@@ -24,18 +23,6 @@ public class _409_PathToOracle extends Quest implements ScriptFile {
     private final int HALF_OF_DAIRY_ID = 1236;
     private final int TAMATOS_NECKLACE_ID = 1275;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _409_PathToOracle() {
         super(false);
 
@@ -49,14 +36,12 @@ public class _409_PathToOracle extends Quest implements ScriptFile {
         addKillId(LIZARDMAN);
         addKillId(TAMIL);
 
-        addQuestItem(new int[]{
-                MONEY_OF_SWINDLER_ID,
+        addQuestItem(MONEY_OF_SWINDLER_ID,
                 DAIRY_OF_ALLANA_ID,
                 LIZARD_CAPTAIN_ORDER_ID,
                 CRYSTAL_MEDALLION_ID,
                 HALF_OF_DAIRY_ID,
-                TAMATOS_NECKLACE_ID
-        });
+                TAMATOS_NECKLACE_ID);
     }
 
     @Override

@@ -21,8 +21,8 @@ public final class EffectFakeDeath extends Effect {
 
         Player player = (Player) getEffected();
         player.setFakeDeath(true);
-        player.getAI().notifyEvent(CtrlEvent.EVT_FAKE_DEATH, null, null);
-        player.broadcastPacket(new L2GameServerPacket[]{new ChangeWaitType(player, 2)});
+        player.getAI().notifyEvent(CtrlEvent.EVT_FAKE_DEATH);
+        player.broadcastPacket(new ChangeWaitType(player, 2));
         player.abortCast(true, false);
         player.abortAttack(true, false);
         player.broadcastCharInfo();
@@ -35,8 +35,8 @@ public final class EffectFakeDeath extends Effect {
         Player player = (Player) getEffected();
         player.setNonAggroTime(System.currentTimeMillis() + 5000L);
         player.setFakeDeath(false);
-        player.broadcastPacket(new L2GameServerPacket[]{new ChangeWaitType(player, 3)});
-        player.broadcastPacket(new L2GameServerPacket[]{new Revive(player)});
+        player.broadcastPacket(new ChangeWaitType(player, 3));
+        player.broadcastPacket(new Revive(player));
         player.broadcastCharInfo();
     }
 

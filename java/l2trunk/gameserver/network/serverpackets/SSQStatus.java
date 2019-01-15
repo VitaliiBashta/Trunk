@@ -118,7 +118,7 @@ public final class SSQStatus extends L2GameServerPacket {
 
                 for (int i = 0; i < 5; i++) {
                     writeC(i + 1); // Current client-side festival ID
-                    writeD(SevenSignsFestival.FESTIVAL_LEVEL_SCORES[i]);
+                    writeD(SevenSignsFestival.FESTIVAL_LEVEL_SCORES.get(i));
 
                     long duskScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DUSK, i);
                     long dawnScore = SevenSignsFestival.INSTANCE.getHighestScore(SevenSigns.CABAL_DAWN, i);

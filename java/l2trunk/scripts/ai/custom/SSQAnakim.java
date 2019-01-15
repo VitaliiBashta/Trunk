@@ -14,19 +14,17 @@ import java.util.List;
 public final class SSQAnakim extends Mystic {
     private static final String PLAYER_NAME = "%playerName%";
 
-    private static final String[] chat = {
+    private static final List<String> chat = List.of(
             "For the eternity of Einhasad!!!",
             "Dear Shillien's offspring! You are not capable of confronting us!",
             "I'll show you the real power of Einhasad!",
-            "Dear Military Force of Light! Go destroy the offspring of Shillien!!!"
-    };
+            "Dear Military Force of Light! Go destroy the offspring of Shillien!!!");
 
-    private static final String[] pms = {
+    private static final List<String> pms = List.of(
             "My power's weakening.. Hurry and turn on the sealing device!!!",
             "All 4 sealing devices must be turned on!!!",
             "Lilith's attack is getting stronger! Go ahead and turn it on!",
-            PLAYER_NAME + ", hold on. We're almost done!"
-    };
+            PLAYER_NAME + ", hold on. We're almost done!");
 
     private long _lastChatTime = 0;
     private long _lastPMTime = 0;
@@ -34,7 +32,7 @@ public final class SSQAnakim extends Mystic {
 
     public SSQAnakim(NpcInstance actor) {
         super(actor);
-        ((NpcInstance) actor).setHasChatWindow(false);
+        actor.setHasChatWindow(false);
     }
 
     @Override
@@ -45,13 +43,13 @@ public final class SSQAnakim extends Mystic {
     @Override
     public boolean thinkActive() {
         if (_lastChatTime < System.currentTimeMillis()) {
-            Functions.npcSay(getActor(), chat[Rnd.get(chat.length)]);
+            Functions.npcSay(getActor(), Rnd.get(chat));
             _lastChatTime = System.currentTimeMillis() + 12 * 1000;
         }
         if (_lastPMTime < System.currentTimeMillis()) {
             Player player = getPlayer();
             if (player != null) {
-                String text = pms[Rnd.get(pms.length)];
+                String text = Rnd.get(pms);
                 if (text.contains(PLAYER_NAME))
                     text = text.replace(PLAYER_NAME, player.getName());
                 Functions.npcSayToPlayer(getActor(), player, text);
@@ -60,29 +58,24 @@ public final class SSQAnakim extends Mystic {
         }
         if (_lastSkillTime < System.currentTimeMillis()) {
             if (getLilith() != null)
-                getActor().broadcastPacket(new MagicSkillUse(getActor(), getLilith(), 6191,  1,5000, 10));
+                getActor().broadcastPacket(new MagicSkillUse(getActor(), getLilith(), 6191, 1, 5000, 10));
             _lastSkillTime = System.currentTimeMillis() + 6500;
         }
         return true;
     }
 
     private NpcInstance getLilith() {
-        List<NpcInstance> around = getActor().getAroundNpc(1000, 300);
-        if (around != null && !around.isEmpty())
-            for (NpcInstance npc : around)
-                if (npc.getNpcId() == 32715)
-                    return npc;
-        return null;
+        return getActor().getAroundNpc(1000, 300)
+                .filter(npc -> npc.getNpcId() == 32715)
+                .findFirst().orElse(null);
     }
 
     private Player getPlayer() {
         Reflection reflection = getActor().getReflection();
         if (reflection == null)
             return null;
-        List<Player> pl = reflection.getPlayers();
-        if (pl.isEmpty())
-            return null;
-        return pl.get(0);
+        return reflection.getPlayers()
+                .findFirst().orElse(null);
     }
 
     @Override

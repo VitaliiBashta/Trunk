@@ -8,8 +8,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Leandro extends DefaultAI {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             new Location(-82428, 245204, -3720),
             new Location(-82422, 245448, -3704),
             new Location(-82080, 245401, -3720),
@@ -27,7 +29,7 @@ public final class Leandro extends DefaultAI {
             new Location(-85966, 241371, -3728),
             new Location(-83898, 242776, -3728),
             new Location(-83595, 244051, -3728),
-            new Location(-82108, 244974, -3720)};
+            new Location(-82108, 244974, -3720));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -48,7 +50,7 @@ public final class Leandro extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -72,10 +74,10 @@ public final class Leandro extends DefaultAI {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

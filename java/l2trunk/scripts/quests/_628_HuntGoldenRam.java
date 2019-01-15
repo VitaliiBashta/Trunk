@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _628_HuntGoldenRam extends Quest implements ScriptFile {
+public final class _628_HuntGoldenRam extends Quest {
     //Npcs
     private static final int KAHMAN = 31554;
 
@@ -17,18 +17,6 @@ public class _628_HuntGoldenRam extends Quest implements ScriptFile {
     private static final int SOLDIER = 7247; //Golden Ram Badge - Soldier
 
     private static final int CHANCE = 49; //Base dropchance of the Badges
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _628_HuntGoldenRam() {
         super(true);

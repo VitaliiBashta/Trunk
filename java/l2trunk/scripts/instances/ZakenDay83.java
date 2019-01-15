@@ -11,7 +11,6 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ZakenDay83 extends Reflection {
@@ -20,7 +19,7 @@ public final class ZakenDay83 extends Reflection {
     private static final int sealedVorpalRing = 15763;
     private static final int sealedVorpalEarring = 15764;
     private static final int sealedVorpalNeckace = 15765;
-    private static final List<Location> zakenTp = Arrays.asList(
+    private static final List<Location> zakenTp = List.of(
             new Location(55272, 219080, -2952),
             new Location(55272, 219080, -3224),
             new Location(55272, 219080, -3496));

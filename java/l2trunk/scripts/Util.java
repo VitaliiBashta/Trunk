@@ -92,9 +92,7 @@ public final class Util extends Functions {
             return;
         }
 
-        int x = toInt(param[0]);
-        int y = toInt(param[1]);
-        int z = toInt(param[2]);
+        Location loc = new Location(param);
         int castleId = param.length > 4 ? toInt(param[3]) : 0;
 
         if (player.getReflection().isDefault()) {
@@ -109,7 +107,7 @@ public final class Util extends Functions {
         //	if (npcId == 32376)
         //		BelethManager._allowedPlayers.add(player.getObjectId());
 
-        Location pos = Location.findPointToStay(x, y, z, 50, 100, player.getGeoIndex());
+        Location pos = Location.findPointToStay(loc, 50, 100, player.getGeoIndex());
 
         if (price > 0)
             player.reduceAdena(price, true, "Gatekeeper");
@@ -151,12 +149,7 @@ public final class Util extends Functions {
             player.sendMessage("You cannot teleport in this state!");
             return;
         }
-
-        int x = toInt(param[0]);
-        int y = toInt(param[1]);
-        int z = toInt(param[2]);
-
-        Location pos = Location.findPointToStay(x, y, z, 50, 100, player.getGeoIndex());
+        Location pos = Location.findPointToStay(new Location(param), 50, 100, player.getGeoIndex());
 
         player.sendPacket(new HideBoard());
         if (price > 0)
@@ -199,10 +192,6 @@ public final class Util extends Functions {
             player.sendMessage("You cannot teleport in this state!");
             return;
         }
-
-        int x = toInt(param[0]);
-        int y = toInt(param[1]);
-        int z = toInt(param[2]);
         int castleId = param.length > 4 ? toInt(param[3]) : 0;
         final boolean closeTutorial = param.length > 5;
 
@@ -214,7 +203,7 @@ public final class Util extends Functions {
             }
         }
 
-        Location pos = Location.findPointToStay(x, y, z, 50, 100, player.getGeoIndex());
+        Location pos = Location.findPointToStay(new Location(param), 50, 100, player.getGeoIndex());
 
         // Synerge - Extra parameter to close tutorial
         if (closeTutorial) {
@@ -266,7 +255,7 @@ public final class Util extends Functions {
             }
         }
 
-        player.teleToLocation(toInt(param[0]), toInt(param[1]), toInt(param[2]));
+        player.teleToLocation(new Location(param));
     }
 
     private void QuestGatekeeper(String[] param) {
@@ -296,11 +285,7 @@ public final class Util extends Functions {
             player.sendPacket(SystemMessage2.removeItems(item, count));
         }
 
-        int x = toInt(param[0]);
-        int y = toInt(param[1]);
-        int z = toInt(param[2]);
-
-        Location pos = Location.findPointToStay(x, y, z, 20, 70, player.getGeoIndex());
+        Location pos = Location.findPointToStay(new Location(param), 20, 70, player.getGeoIndex());
 
         player.teleToLocation(pos);
     }

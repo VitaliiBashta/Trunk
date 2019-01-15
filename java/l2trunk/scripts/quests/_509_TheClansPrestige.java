@@ -6,10 +6,12 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Util;
 
-public class _509_TheClansPrestige extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _509_TheClansPrestige extends Quest {
     // Quest NPC
     private static final int GRAND_MAGISTER_VALDIS = 31331;
 
@@ -53,45 +55,12 @@ public class _509_TheClansPrestige extends Quest implements ScriptFile {
             }
     };
 
-    private static final int[][] RADAR = {
-            {
-                    0,
-                    0,
-                    0
-            },
-            {
-                    186304,
-                    -43744,
-                    -3193
-            },
-            {
-                    134672,
-                    -115600,
-                    -1216
-            },
-            {
-                    168641,
-                    -60417,
-                    -3888
-            },
-            {
-                    93296,
-                    -75104,
-                    -1824
-            }
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final List<Location> RADAR = List.of(
+            new Location(0, 0, 0),
+            new Location(186304, -43744, -3193),
+            new Location(134672, -115600, -1216),
+            new Location(168641, -60417, -3888),
+            new Location(93296, -75104, -1824));
 
     public _509_TheClansPrestige() {
         super(PARTY_ALL);
@@ -117,11 +86,8 @@ public class _509_TheClansPrestige extends Quest implements ScriptFile {
             int evt = Integer.parseInt(event);
             st.set("raid", event);
             htmltext = "31331-" + event + ".htm";
-            int x = RADAR[evt][0];
-            int y = RADAR[evt][1];
-            int z = RADAR[evt][2];
-            if (x + y + z > 0)
-                st.addRadar(x, y, z);
+            if (evt > 0)
+                st.addRadar(RADAR.get(evt));
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("31331-6.htm")) {
             st.playSound(SOUND_FINISH);

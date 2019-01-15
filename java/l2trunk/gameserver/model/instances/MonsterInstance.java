@@ -125,7 +125,7 @@ public class MonsterInstance extends NpcInstance {
 
     public void setChampion() {
         if (getReflection().canChampions() && canChampion()) {
-            double random = Rnd.nextDouble();
+            float random = Rnd.nextFloat();
             if (Config.ALT_CHAMPION_CHANCE2 / 100. >= random)
                 setChampion(2);
             else if ((Config.ALT_CHAMPION_CHANCE1 + Config.ALT_CHAMPION_CHANCE2) / 100. >= random)

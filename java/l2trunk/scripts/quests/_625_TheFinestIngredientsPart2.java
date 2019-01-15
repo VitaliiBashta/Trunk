@@ -15,7 +15,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public final class _625_TheFinestIngredientsPart2 extends Quest implements ScriptFile {
+public final class _625_TheFinestIngredientsPart2 extends Quest {
     // NPCs
     private static final int Jeremy = 31521;
     private static final int Yetis_Table = 31542;
@@ -137,18 +137,6 @@ public final class _625_TheFinestIngredientsPart2 extends Quest implements Scrip
         }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private static class DeathListener implements OnDeathListener {

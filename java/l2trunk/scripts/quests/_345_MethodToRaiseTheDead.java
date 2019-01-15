@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _345_MethodToRaiseTheDead extends Quest implements ScriptFile {
+public final class _345_MethodToRaiseTheDead extends Quest {
 
     private final int VICTIMS_ARM_BONE = 4274;
     private final int VICTIMS_THIGH_BONE = 4275;
@@ -15,21 +15,9 @@ public class _345_MethodToRaiseTheDead extends Quest implements ScriptFile {
     private final int VICTIMS_SPINE = 4278;
     private final int USELESS_BONE_PIECES = 4280;
     private final int POWDER_TO_SUMMON_DEAD_SOULS = 4281;
-    private final int BILL_OF_IASON_HEINE = 4310;
-    private final int CHANCE = 15;
-    private final int CHANCE2 = 50;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int BILL_OF_IASON_HEINE = 4310;
+    private static final int CHANCE = 15;
+    private static final int CHANCE2 = 50;
 
     public _345_MethodToRaiseTheDead() {
         super(false);
@@ -41,14 +29,12 @@ public class _345_MethodToRaiseTheDead extends Quest implements ScriptFile {
         addTalkId(30912);
         addTalkId(30973);
 
-        addQuestItem(new int[]{
-                VICTIMS_ARM_BONE,
+        addQuestItem(VICTIMS_ARM_BONE,
                 VICTIMS_THIGH_BONE,
                 VICTIMS_SKULL,
                 VICTIMS_RIB_BONE,
                 VICTIMS_SPINE,
-                POWDER_TO_SUMMON_DEAD_SOULS
-        });
+                POWDER_TO_SUMMON_DEAD_SOULS);
 
         addKillId(20789);
         addKillId(20791);

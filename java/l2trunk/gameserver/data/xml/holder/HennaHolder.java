@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 public final class HennaHolder {
     private static final Map<Integer, Henna> hennas = new HashMap<>();
 
-
     private HennaHolder() {
     }
 

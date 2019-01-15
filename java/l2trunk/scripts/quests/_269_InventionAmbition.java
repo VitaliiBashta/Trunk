@@ -4,44 +4,24 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _269_InventionAmbition extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _269_InventionAmbition extends Quest {
     //NPC
-    private final int INVENTOR_MARU = 32486;
+    private static final int INVENTOR_MARU = 32486;
     //MOBS
-    private final int[] MOBS = {
-            21124,
-            // Red Eye Barbed Bat
-            21125,
-            // Northern Trimden
-            21126,
-            // Kerope Werewolf
-            21127,
-            // Northern Goblin
-            21128,
-            // Spine Golem
-            21129,
-            // Kerope Werewolf Chief
-            21130,
-            // Northern Goblin Leader
-            21131,
-            // Enchanted Spine Golem
-    };
+    private static final List<Integer> MOBS = List.of(
+            21124,            // Red Eye Barbed Bat
+            21125,            // Northern Trimden
+            21126,            // Kerope Werewolf
+            21127,            // Northern Goblin
+            21128,            // Spine Golem
+            21129,            // Kerope Werewolf Chief
+            21130,            // Northern Goblin Leader
+            21131);            // Enchanted Spine Golem
     //ITEMS
     private final int ENERGY_ORES = 10866;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _269_InventionAmbition() {
         super(false);
@@ -65,7 +45,7 @@ public class _269_InventionAmbition extends Quest implements ScriptFile {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         long count = st.getQuestItemsCount(ENERGY_ORES);
         if (st.getState() == CREATED)
             if (st.getPlayer().getLevel() < 18) {

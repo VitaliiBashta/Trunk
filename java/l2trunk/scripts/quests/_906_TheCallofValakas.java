@@ -4,13 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- * Daily quest
- */
-public class _906_TheCallofValakas extends Quest implements ScriptFile {
+public final class _906_TheCallofValakas extends Quest {
     private static final int Klein = 31540;
     private static final int LavasaurusAlphaFragment = 21993;
     private static final int ValakasMinion = 29029;
@@ -80,17 +75,5 @@ public class _906_TheCallofValakas extends Quest implements ScriptFile {
             }
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

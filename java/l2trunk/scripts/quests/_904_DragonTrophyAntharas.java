@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _904_DragonTrophyAntharas extends Quest implements ScriptFile {
+public final class _904_DragonTrophyAntharas extends Quest {
     private static final int Theodric = 30755;
     private static final int AntharasMax = 29068;
     private static final int MedalofGlory = 21874;

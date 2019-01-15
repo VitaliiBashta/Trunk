@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Test Of Magus
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _228_TestOfMagus extends Quest implements ScriptFile {
+public final class _228_TestOfMagus extends Quest {
     //NPC
     private static final int Rukal = 30629;
     private static final int Parina = 30391;
@@ -218,18 +212,6 @@ public class _228_TestOfMagus extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _228_TestOfMagus() {
         super(false);
 
@@ -244,8 +226,7 @@ public class _228_TestOfMagus extends Quest implements ScriptFile {
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(new int[]{
-                RukalsLetter,
+        addQuestItem(RukalsLetter,
                 ParinasLetter,
                 LilacCharm,
                 ToneOfWind,
@@ -267,8 +248,7 @@ public class _228_TestOfMagus extends Quest implements ScriptFile {
                 EnchantedStoneGolemPowder,
                 EnchantedIronGolemScrap,
                 FlameCrystal,
-                DazzlingDrop
-        });
+                DazzlingDrop);
     }
 
     private void checkBooks(QuestState st) {

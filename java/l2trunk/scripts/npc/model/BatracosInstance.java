@@ -7,10 +7,6 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-
 public final class BatracosInstance extends NpcInstance {
     private static final int urogosIzId = 505;
 
@@ -21,7 +17,7 @@ public final class BatracosInstance extends NpcInstance {
     @Override
     public void showChatWindow(Player player, int val, Object... arg) {
         if (val == 0) {
-            String htmlpath = null;
+            String htmlpath;
             if (getReflection().isDefault())
                 htmlpath = "default/32740.htm";
             else
@@ -36,7 +32,7 @@ public final class BatracosInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("request_seer")) {
+        if ("request_seer".equalsIgnoreCase(command)) {
             Reflection r = player.getActiveReflection();
             if (r != null) {
                 if (player.canReenterInstance(urogosIzId))
@@ -44,7 +40,7 @@ public final class BatracosInstance extends NpcInstance {
             } else if (player.canEnterInstance(urogosIzId)) {
                 ReflectionUtils.enterReflection(player, urogosIzId);
             }
-        } else if (command.equalsIgnoreCase("leave")) {
+        } else if ("leave".equalsIgnoreCase(command)) {
             if (!getReflection().isDefault())
                 getReflection().collapse();
         } else

@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class NumberUtils {
-    private static final List<String> True = Arrays.asList("y", "yes", "true", "1");
-    private static final List<String> False = Arrays.asList("n", "no", "false", "0");
+    private static final List<String> True = List.of("y", "yes", "true", "1");
+    private static final List<String> False = List.of("n", "no", "false", "0");
 
     private static final Logger LOG = LoggerFactory.getLogger(NumberUtils.class);
 

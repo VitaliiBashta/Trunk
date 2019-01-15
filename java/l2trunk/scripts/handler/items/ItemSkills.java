@@ -31,16 +31,6 @@ public final class ItemSkills extends ScriptItemHandler implements ScriptFile {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
     public ItemSkills() {
         Set<Integer> set = new HashSet<>();
         for (ItemTemplate template : ItemHolder.getAllTemplates()) {

@@ -22,7 +22,7 @@ public final class PlayerAI extends PlayableAI {
 
     @Override
     public void onIntentionRest() {
-        changeIntention(CtrlIntention.AI_INTENTION_REST, null, null);
+        changeIntention(CtrlIntention.AI_INTENTION_REST);
         setAttackTarget(null);
         clientStopMoving();
     }
@@ -30,7 +30,7 @@ public final class PlayerAI extends PlayableAI {
     @Override
     public void onIntentionActive() {
         clearNextAction();
-        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE);
     }
 
     @Override
@@ -132,7 +132,7 @@ public final class PlayerAI extends PlayableAI {
     }
 
     @Override
-    public void Attack(GameObject target, boolean forceUse, boolean dontMove) {
+    public void Attack(Creature target, boolean forceUse, boolean dontMove) {
         Player actor = getActor();
 
         if (actor.isInFlyingTransform()) {

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _408_PathToElvenwizard extends Quest implements ScriptFile {
+public final class _408_PathToElvenwizard extends Quest {
     //npc
     private final int GREENIS = 30157;
     private final int THALIA = 30371;
@@ -32,18 +32,6 @@ public class _408_PathToElvenwizard extends Quest implements ScriptFile {
     private final int SAP_OF_WORLD_TREE_ID = 1273;
     private final int LUCKY_POTPOURI_ID = 1274;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _408_PathToElvenwizard() {
         super(false);
 
@@ -57,8 +45,7 @@ public class _408_PathToElvenwizard extends Quest implements ScriptFile {
         addKillId(PINCER_SPIDER);
         addKillId(SUKAR_WERERAT_LEADER);
 
-        addQuestItem(new int[]{
-                ROGELLIAS_LETTER_ID,
+        addQuestItem(ROGELLIAS_LETTER_ID,
                 FERTILITY_PERIDOT_ID,
                 IMMORTAL_LOVE_ID,
                 APPETIZING_APPLE_ID,
@@ -70,8 +57,7 @@ public class _408_PathToElvenwizard extends Quest implements ScriptFile {
                 NOBILITY_AMETHYST_ID,
                 GOLD_LEAVES_ID,
                 RED_DOWN_ID,
-                AMETHYST_ID
-        });
+                AMETHYST_ID);
     }
 
     @Override
@@ -172,7 +158,6 @@ public class _408_PathToElvenwizard extends Quest implements ScriptFile {
                         if (!st.getPlayer().getVarB("prof1")) {
                             st.getPlayer().setVar("prof1", "1", -1);
                             st.addExpAndSp(295862, 17964);
-                            //FIXME [G1ta0] дать адены, только если первый чар на акке
                             st.giveItems(ADENA_ID, 81900);
                         }
                     }

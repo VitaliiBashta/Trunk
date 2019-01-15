@@ -9,20 +9,15 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.List;
-
 public final class SelSquadLeader extends Fighter {
+    private static final NpcString[] phrase = {NpcString.SCHOOL4, NpcString.SCHOOL5, NpcString.SCHOOL6};
+    private static final int NPC_ID_FIRE = 18927;
+    private static final int NPC_ID_FIRE_FEED = 18933;
     private boolean isBusy;
     private boolean isImmobilized;
-
     private long busyTimeout = 0;
     private long idleTimeout = 0;
     private long _lookTimeout = 0;
-
-    private static final NpcString[] phrase = {NpcString.SCHOOL4, NpcString.SCHOOL5, NpcString.SCHOOL6};
-
-    private static final int NPC_ID_FIRE = 18927;
-    private static final int NPC_ID_FIRE_FEED = 18933;
 
     public SelSquadLeader(NpcInstance actor) {
         super(actor);
@@ -38,13 +33,9 @@ public final class SelSquadLeader extends Fighter {
         final long currentTime = System.currentTimeMillis();
         if (!isBusy) {
             if (currentTime > idleTimeout && currentTime > _lookTimeout) {
-                final List<NpcInstance> npcs = actor.getAroundNpc(600, 300);
-                for (NpcInstance npc : npcs) {
-                    if (npc == null)
-                        continue;
-
-                    if (npc.getNpcId() == NPC_ID_FIRE_FEED && GeoEngine.canSeeTarget(actor, npc, false)) // Cauldron
-                    {
+                actor.getAroundNpc(600, 300)
+                        .findFirst().ifPresent(npc -> {
+                    if (npc.getNpcId() == NPC_ID_FIRE_FEED && GeoEngine.canSeeTarget(actor, npc, false)) {// Cauldron
                         isBusy = true;
                         actor.setRunning();
                         actor.setNpcState(1); // Yummi State
@@ -52,15 +43,13 @@ public final class SelSquadLeader extends Fighter {
                         addTaskMove(Location.findPointToStay(npc, 50, 150), true);
                         if (Rnd.chance(40))
                             Functions.npcSay(actor, phrase[Rnd.get(2)]);
-                        break;
                     } else if (npc.getNpcId() == NPC_ID_FIRE && npc.getNpcState() == 1 && GeoEngine.canSeeTarget(actor, npc, false)) {
                         isBusy = true;
                         actor.setNpcState(2); // Sleepy State
                         busyTimeout = currentTime + (60 + Rnd.get(60)) * 1000L;
                         addTaskMove(Location.findPointToStay(npc, 50, 150), true);
-                        break;
                     }
-                }
+                });
             } else
                 _lookTimeout = currentTime + 2 * 1000;
         } else {

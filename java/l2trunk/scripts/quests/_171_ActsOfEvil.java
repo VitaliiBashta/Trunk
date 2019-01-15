@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class _171_ActsOfEvil extends Quest implements ScriptFile {
+public final class _171_ActsOfEvil extends Quest {
     //NPC
     private static final int Alvah = 30381;
     private static final int Tyra = 30420;
@@ -109,18 +109,6 @@ public class _171_ActsOfEvil extends Quest implements ScriptFile {
     private static final int CHANCE24 = 10;
     private static final int CHANCE25 = 10;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     private NpcInstance OlMahumSupportTroop_Spawn;
 
     private void Despawn_OlMahumSupportTroop() {
@@ -147,8 +135,7 @@ public class _171_ActsOfEvil extends Quest implements ScriptFile {
         addKillId(OlMahumGeneral);
         addKillId(OlMahumSupportTroop);
 
-        addQuestItem(new int[]{
-                RolentoCargobox,
+        addQuestItem(RolentoCargobox,
                 TyrasBill,
                 CertificateOfTheSilverScaleGuild,
                 RangerReportPart1,
@@ -158,8 +145,7 @@ public class _171_ActsOfEvil extends Quest implements ScriptFile {
                 WeaponsTradeContract,
                 AttackDirectives,
                 BladeMold,
-                OlMahumCaptainHead
-        });
+                OlMahumCaptainHead);
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
     }

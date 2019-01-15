@@ -5,19 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10279_MutatedKaneusOren extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _10279_MutatedKaneusOren extends Quest {
     // NPCs
     private static final int Mouen = 30196;
     private static final int Rovia = 30189;

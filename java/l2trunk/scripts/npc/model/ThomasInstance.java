@@ -11,7 +11,7 @@ import l2trunk.scripts.events.SavingSnowman.SavingSnowman;
  *
  * @author SYS
  */
-public class ThomasInstance extends MonsterInstance {
+public final class ThomasInstance extends MonsterInstance {
     public ThomasInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

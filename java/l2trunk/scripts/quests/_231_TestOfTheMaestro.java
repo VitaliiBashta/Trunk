@@ -3,12 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Test Of The Maestro
- */
-public class _231_TestOfTheMaestro extends Quest implements ScriptFile {
+public final class _231_TestOfTheMaestro extends Quest {
     //NPC
     private static final int Lockirin = 30531;
     private static final int Balanki = 30533;
@@ -93,18 +89,6 @@ public class _231_TestOfTheMaestro extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _231_TestOfTheMaestro() {
         super(false);
 
@@ -125,8 +109,7 @@ public class _231_TestOfTheMaestro extends Quest implements ScriptFile {
             addQuestItem(aDROPLIST_COND[4]);
         }
 
-        addQuestItem(new int[]{
-                PaintOfKamuru,
+        addQuestItem(PaintOfKamuru,
                 LetterOfSolderDetachment,
                 PaintOfTeleportDevice,
                 BrokenTeleportDevice,
@@ -136,8 +119,7 @@ public class _231_TestOfTheMaestro extends Quest implements ScriptFile {
                 RecommendationOfBalanki,
                 RecommendationOfFilaur,
                 RecommendationOfArin,
-                ReportOfCruma
-        });
+                ReportOfCruma);
     }
 
     private void recommendationCount(QuestState st) {

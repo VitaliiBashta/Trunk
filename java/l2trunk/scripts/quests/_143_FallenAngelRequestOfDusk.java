@@ -6,19 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _143_FallenAngelRequestOfDusk extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _143_FallenAngelRequestOfDusk extends Quest {
     // NPCs
     private final static int NATOOLS = 30894;
     private final static int TOBIAS = 30297;

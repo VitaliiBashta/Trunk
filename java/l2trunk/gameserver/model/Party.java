@@ -320,68 +320,65 @@ public final class Party implements PlayerGroup {
     }
 
     public void distributeItem(Player player, ItemInstance item, NpcInstance fromNpc) {
-        switch (item.getItemId()) {
-            case ItemTemplate.ITEM_ID_ADENA:
-                distributeAdena(player, item, fromNpc);
-                break;
-            default:
-                Player target = null;
+        if (item.getItemId() == ItemTemplate.ITEM_ID_ADENA) {
+            distributeAdena(player, item, fromNpc);
+        } else {
+            Player target = null;
 
-                List<Player> ret;
-                switch (itemDistribution) {
-                    case ITEM_RANDOM:
-                    case ITEM_RANDOM_SPOIL:
-                        ret = new ArrayList<>(members.size());
-                        for (Player member : members)
-                            if (member.isInRangeZ(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) && !member.isDead() && member.getInventory().validateCapacity(item) && member.getInventory().validateWeight(item))
-                                ret.add(member);
+            List<Player> ret;
+            switch (itemDistribution) {
+                case ITEM_RANDOM:
+                case ITEM_RANDOM_SPOIL:
+                    ret = new ArrayList<>(members.size());
+                    for (Player member : members)
+                        if (member.isInRangeZ(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) && !member.isDead() && member.getInventory().validateCapacity(item) && member.getInventory().validateWeight(item))
+                            ret.add(member);
 
-                        target = ret.isEmpty() ? null : ret.get(Rnd.get(ret.size()));
-                        break;
-                    case ITEM_ORDER:
-                    case ITEM_ORDER_SPOIL:
-                        synchronized (members) {
-                            ret = new CopyOnWriteArrayList<>(members);
-                            while (target == null && !ret.isEmpty()) {
-                                int looter = _itemOrder;
-                                _itemOrder++;
-                                if (_itemOrder > ret.size() - 1)
-                                    _itemOrder = 0;
+                    target = ret.isEmpty() ? null : ret.get(Rnd.get(ret.size()));
+                    break;
+                case ITEM_ORDER:
+                case ITEM_ORDER_SPOIL:
+                    synchronized (members) {
+                        ret = new CopyOnWriteArrayList<>(members);
+                        while (target == null && !ret.isEmpty()) {
+                            int looter = _itemOrder;
+                            _itemOrder++;
+                            if (_itemOrder > ret.size() - 1)
+                                _itemOrder = 0;
 
-                                Player looterPlayer = looter < ret.size() ? ret.get(looter) : null;
+                            Player looterPlayer = looter < ret.size() ? ret.get(looter) : null;
 
-                                if (looterPlayer != null) {
-                                    if (!looterPlayer.isDead() && looterPlayer.isInRangeZ(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) && ItemFunctions.canAddItem(looterPlayer, item))
-                                        target = looterPlayer;
-                                    else
-                                        ret.remove(looterPlayer);
-                                }
+                            if (looterPlayer != null) {
+                                if (!looterPlayer.isDead() && looterPlayer.isInRangeZ(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) && ItemFunctions.canAddItem(looterPlayer, item))
+                                    target = looterPlayer;
+                                else
+                                    ret.remove(looterPlayer);
                             }
                         }
+                    }
 
-                        if (target == null)
-                            return;
-                        break;
-                    case ITEM_LOOTER:
-                    default:
-                        target = player;
-                        break;
-                }
-
-                if (target == null)
+                    if (target == null)
+                        return;
+                    break;
+                case ITEM_LOOTER:
+                default:
                     target = player;
+                    break;
+            }
 
-                if (target.pickupItem(item, fromNpc == null ? "NULL NPC" : fromNpc.toString())) {
-                    if (fromNpc == null)
-                        player.broadcastPacket(new GetItem(item, player.getObjectId()));
+            if (target == null)
+                target = player;
 
-                    player.broadcastPickUpMsg(item);
-                    item.pickupMe();
+            if (target.pickupItem(item, fromNpc == null ? "NULL NPC" : fromNpc.toString())) {
+                if (fromNpc == null)
+                    player.broadcastPacket(new GetItem(item, player.getObjectId()));
 
-                    sendPacket(target, SystemMessage2.obtainItemsBy(item, target));
-                } else
-                    item.dropToTheGround(player, fromNpc);
-                break;
+                player.broadcastPickUpMsg(item);
+                item.pickupMe();
+
+                sendPacket(target, SystemMessage2.obtainItemsBy(item, target));
+            } else
+                item.dropToTheGround(player, fromNpc);
         }
 
     }
@@ -509,9 +506,6 @@ public final class Party implements PlayerGroup {
         this.rateSpoil = Config.RATE_PARTY_MIN ? minRateSpoil : rateSpoil / count;
     }
 
-    /**
-     * @return Maximum level of all party members
-     */
     @Override
     public int getLevel() {
         return partyLvl;

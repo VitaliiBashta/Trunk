@@ -25,16 +25,6 @@ public final class WorldMap extends ScriptItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {
         if (playable == null || !playable.isPlayer())
             return false;

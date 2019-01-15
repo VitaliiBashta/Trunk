@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
@@ -10,12 +9,12 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _289_DeliciousFoodsAreMine extends Quest implements ScriptFile {
+public final class _289_DeliciousFoodsAreMine extends Quest {
     private static final int GuardStan = 30200;
     private static final int FoulFruit = 15507;
     private static final int FullBarrelofSoup = 15712;
     private static final int EmptySoupBarrel = 15713;
-    private static final List<Integer> SelMahums = Arrays.asList(22786, 22787, 22788);
+    private static final List<Integer> SelMahums =List.of(22786, 22787, 22788);
     private static final int SelChef = 18908;
 
     public _289_DeliciousFoodsAreMine() {
@@ -170,17 +169,5 @@ public final class _289_DeliciousFoodsAreMine extends Quest implements ScriptFil
                     st.rollAndGive(EmptySoupBarrel, 1, 100);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

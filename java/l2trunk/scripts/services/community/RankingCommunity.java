@@ -23,7 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
 
     @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_bbsloc", "_bbsranking");
+        return List.of("_bbsloc", "_bbsranking");
     }
 
     @Override
@@ -219,7 +218,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
         }
 
         html = html.replace("<?update?>", String.valueOf(time_update));
-        html = html.replace("<?last_update?>", String.valueOf(time(update)));
+        html = html.replace("<?last_update?>", time(update));
         html = html.replace("<?ranking_menu?>", HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "ranking/menu.htm", player));
         ShowBoard.separateAndSend(html, player);
     }

@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.EventTrigger;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.Arrays;
@@ -21,7 +20,7 @@ import java.util.List;
  * TODO: спавн минионов
  * TODO: включение и отключение свечения у Контроллеров Границ
  */
-public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptFile {
+public final class _10295_SevenSignsSolinasTomb extends Quest {
     private static final int ErisEvilThoughts = 32792;
     private static final int ElcardiaInzone1 = 32787;
     private static final int TeleportControlDevice = 32820;
@@ -45,8 +44,8 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
 
     private static final int Solina = 32793;
 
-    private static final List<Integer> SolinaGuardians = Arrays.asList(18952, 18953, 18954, 18955);
-    private static final List<Integer> TombGuardians = Arrays.asList(18956, 18957, 18958, 18959);
+    private static final List<Integer> SolinaGuardians = List.of(18952, 18953, 18954, 18955);
+    private static final List<Integer> TombGuardians = List.of(18956, 18957, 18958, 18959);
 
     static {
         Location[] minions1 = {new Location(55672, -252120, -6760), new Location(55752, -252120, -6760), new Location(55656, -252216, -6760), new Location(55736, -252216, -6760)};
@@ -70,19 +69,19 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         Player player = st.getPlayer();
         String htmltext = event;
-        if (event.equalsIgnoreCase("eris_q10295_5.htm")) {
+        if ("eris_q10295_5.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("teleport_in")) {
+        } else if ("teleport_in".equalsIgnoreCase(event)) {
             player.teleToLocation(new Location(45512, -249832, -6760));
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("teleport_out")) {
+        } else if ("teleport_out".equalsIgnoreCase(event)) {
             player.teleToLocation(new Location(120664, -86968, -3392));
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("use_staff")) {
+        } else if ("use_staff".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(StaffofBlessing) > 0) {
                 st.takeAllItems(StaffofBlessing);
                 // TODO: remove glow from NPC
@@ -90,7 +89,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("use_book")) {
+        } else if ("use_book".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ScrollofAbstinence) > 0) {
                 st.takeAllItems(ScrollofAbstinence);
                 // TODO: remove glow from NPC
@@ -98,7 +97,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("use_sword")) {
+        } else if ("use_sword".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SwordofHolySpirit) > 0) {
                 st.takeAllItems(SwordofHolySpirit);
                 // TODO: remove glow from NPC
@@ -106,7 +105,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("use_shield")) {
+        } else if ("use_shield".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ShieldofSacrifice) > 0) {
                 st.takeAllItems(ShieldofSacrifice);
                 // TODO: remove glow from NPC
@@ -114,12 +113,12 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
                 return null;
             } else
                 htmltext = "powerful_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("altarstaff_q10295_2.htm")) {
+        } else if ("altarstaff_q10295_2.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(StaffofBlessing) == 0)
                 st.giveItems(StaffofBlessing, 1);
             else
                 htmltext = "atlar_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("altarbook_q10295_2.htm")) {
+        } else if ("altarbook_q10295_2.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ScrollofAbstinence) == 0)
                 st.giveItems(ScrollofAbstinence, 1);
             else
@@ -134,24 +133,24 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
                 st.giveItems(ShieldofSacrifice, 1);
             else
                 htmltext = "atlar_q10295_0.htm";
-        } else if (event.equalsIgnoreCase("teleport_solina")) {
+        } else if ("teleport_solina".equalsIgnoreCase(event)) {
             player.teleToLocation(new Location(56033, -252944, -6760));
             teleportElcardia(player);
             return null;
-        } else if (event.equalsIgnoreCase("tombsaintess_q10295_2.htm")) {
+        } else if ("tombsaintess_q10295_2.htm".equalsIgnoreCase(event)) {
             if (!player.getReflection().getDoor(21100101).isOpen())
                 activateTombGuards(player);
             else
                 htmltext = "tombsaintess_q10295_3.htm";
-        } else if (event.equalsIgnoreCase("teleport_realtomb")) {
+        } else if ("teleport_realtomb".equalsIgnoreCase(event)) {
             player.teleToLocation(new Location(56081, -250391, -6760));
             teleportElcardia(player);
             player.showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_ELYSS_NARRATION);
             return null;
-        } else if (event.equalsIgnoreCase("solina_q10295_4.htm")) {
+        } else if ("solina_q10295_4.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("solina_q10295_8.htm")) {
+        } else if ("solina_q10295_8.htm".equalsIgnoreCase(event)) {
             st.setCond(3);
             st.playSound(SOUND_MIDDLE);
         }
@@ -261,21 +260,21 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
     }
 
     private void teleportElcardia(Player player) {
-        for (NpcInstance n : player.getReflection().getNpcs())
-            if (n.getNpcId() == ElcardiaInzone1)
-                n.teleToLocation(Location.findPointToStay(player, 100));
+        player.getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == ElcardiaInzone1)
+                .forEach(n -> n.teleToLocation(Location.findPointToStay(player, 100)));
     }
 
     private void removeInvincibility(Player player, int mobId) {
-        for (NpcInstance n : player.getReflection().getNpcs())
-            if (n.getNpcId() == mobId)
-                for (Effect e : n.getEffectList().getAllEffects())
-                    if (e.getSkill().getId() == 6371)
-                        e.exit();
+        player.getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == mobId)
+                .forEach(n -> n.getEffectList().getAllEffects().stream()
+                        .filter(e -> e.getSkill().getId() == 6371)
+                        .forEach(Effect::exit));
     }
 
     private boolean checkGuardians(Player player, List<Integer> npcIds) {
-        return player.getReflection().getNpcs().stream()
+        return player.getReflection().getNpcs()
                 .filter(n -> npcIds.contains(n.getNpcId()))
                 .allMatch(Creature::isDead);
     }
@@ -293,18 +292,5 @@ public final class _10295_SevenSignsSolinasTomb extends Quest implements ScriptF
         r.spawnByGroup("tombguards2");
         r.spawnByGroup("tombguards3");
         r.spawnByGroup("tombguards4");
-    }
-
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

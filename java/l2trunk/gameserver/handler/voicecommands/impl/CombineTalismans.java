@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.CCPHelpers.CCPSmallCommands;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class CombineTalismans extends Functions implements IVoicedCommandHandler {
@@ -17,6 +16,6 @@ public class CombineTalismans extends Functions implements IVoicedCommandHandler
 
     @Override
     public List<String> getVoicedCommandList() {
-        return Arrays.asList("combine", "combinetalisman", "combinetalismans", "talismancombine", "talismanscombine", "talisman");
+        return List.of("combine", "combinetalisman", "combinetalismans", "talismancombine", "talismanscombine", "talisman");
     }
 }

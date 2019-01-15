@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _025_HidingBehindTheTruth extends Quest implements ScriptFile {
+public final class _025_HidingBehindTheTruth extends Quest {
     // Список NPC
     private final int AGRIPEL = 31348;
     private final int BENEDICT = 31349;
@@ -18,12 +18,12 @@ public final class _025_HidingBehindTheTruth extends Quest implements ScriptFile
 
     // Список итемов
     private final int CONTRACT = 7066;
-    private final int EARRING_OF_BLESSING = 874;
-    private final int GEMSTONE_KEY = 7157;
-    private final int LIDIAS_DRESS = 7155;
-    private final int MAP_FOREST_OF_DEADMAN = 7063;
-    private final int NECKLACE_OF_BLESSING = 936;
-    private final int RING_OF_BLESSING = 905;
+    private static final int EARRING_OF_BLESSING = 874;
+    private static final int GEMSTONE_KEY = 7157;
+    private static final int LIDIAS_DRESS = 7155;
+    private static final int MAP_FOREST_OF_DEADMAN = 7063;
+    private static final int NECKLACE_OF_BLESSING = 936;
+    private static final int RING_OF_BLESSING = 905;
     private final int SUSPICIOUS_TOTEM_DOLL_1 = 7151;
     private final int SUSPICIOUS_TOTEM_DOLL_2 = 7156;
     private final int SUSPICIOUS_TOTEM_DOLL_3 = 7158;
@@ -271,16 +271,4 @@ public final class _025_HidingBehindTheTruth extends Quest implements ScriptFile
 
         return null;
     }
-
-    @Override
-    public void onLoad() {
     }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-}

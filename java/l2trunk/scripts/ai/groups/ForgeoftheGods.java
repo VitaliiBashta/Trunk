@@ -14,12 +14,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class ForgeoftheGods extends Fighter {
-    private static final Logger LOG = LoggerFactory.getLogger(ForgeoftheGods.class);
-
-    private static final List<Integer> RANDOM_SPAWN_MOBS = Arrays.asList(18799, 18800, 18801, 18802, 18803);
-    private static final List<Integer> FOG_MOBS = Arrays.asList(
+    private static final List<Integer> RANDOM_SPAWN_MOBS = List.of(18799, 18800, 18801, 18802, 18803);
+    private static final List<Integer> FOG_MOBS = List.of(
             22634, 22635, 22636, 22637, 22638, 22639, 22640, 22641,
             22642, 22643, 22644, 22645, 22646, 22647, 22648, 22649);
     private static final int TAR_BEETLE = 18804;
@@ -27,7 +26,7 @@ public final class ForgeoftheGods extends Fighter {
     private static final int TAR_BEETLE_ACTIVATE_SKILL_CHANGE = 2; // chance for activate skill
     private static final int TAR_BEETLE_SEARCH_RADIUS = 500; // search around players
 
-    private ForgeoftheGods(NpcInstance actor) {
+    public ForgeoftheGods(NpcInstance actor) {
         super(actor);
 
         if (actor.getNpcId() == TAR_BEETLE) {
@@ -48,10 +47,10 @@ public final class ForgeoftheGods extends Fighter {
         if (actor.isDead() || !Rnd.chance(TAR_BEETLE_ACTIVATE_SKILL_CHANGE))
             return false;
 
-        List<Player> players = World.getAroundPlayers(actor, TAR_BEETLE_SEARCH_RADIUS, 200);
-        if (players == null || players.size() < 1)
+        List<Player> players = World.getAroundPlayers(actor, TAR_BEETLE_SEARCH_RADIUS, 200).collect(Collectors.toList());
+        if (players.size() < 1)
             return false;
-        actor.doCast(6142, Rnd.get(1, 3), players.get(Rnd.get(players.size())), false);
+        actor.doCast(6142, Rnd.get(1, 3), Rnd.get(players), false);
         return true;
     }
 

@@ -38,7 +38,6 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestEventType;
-import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.model.reference.L2Reference;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
@@ -72,6 +71,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
@@ -113,7 +113,7 @@ public abstract class Creature extends GameObject {
      */
     private final Location movingDestTempPos = new Location();
     private final List<List<Location>> _targetRecorder = new ArrayList<>();
-    private final List<Calculator> _calculators;
+    private final List<Calculator> calculators;
     private final Lock regenLock = new ReentrantLock();
     private final List<Zone> zones = new ArrayList<>();
     /**
@@ -129,7 +129,7 @@ public abstract class Creature extends GameObject {
     private final AtomicBoolean isTeleporting = new AtomicBoolean();
     private final HardReference<? extends Creature> reference;
     public Future<?> _skillTask;
-    public Future<?> _skillGeoCheckTask;
+    Future<?> skillGeoCheckTask;
     public boolean isMoving;
     public boolean isFollow;
     protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
@@ -148,7 +148,7 @@ public abstract class Creature extends GameObject {
     private long reuseDelay = 0L;
     private double currentCp = 0;
     private double _currentHp = 1;
-    private boolean _isAttackAborted;
+    private boolean isAttackAborted;
     private long _attackEndTime;
     private long _attackReuseEndTime;
     private Map<TriggerType, Set<TriggerInfo>> _triggers;
@@ -168,7 +168,7 @@ public abstract class Creature extends GameObject {
     /**
      * Map 32 bits (0x00000000) containing all abnormal effect in progress
      */
-    private int _abnormalEffects;
+    private int abnormalEffects;
     private int _abnormalEffects2;
     private int _abnormalEffects3;
     private Map<Integer, Integer> _skillMastery;
@@ -210,7 +210,7 @@ public abstract class Creature extends GameObject {
         this.template = template;
         baseTemplate = template;
 
-        _calculators = new ArrayList<>();
+        calculators = new ArrayList<>();
 
         StatFunctions.addPredefinedFuncs(this);
 
@@ -230,15 +230,15 @@ public abstract class Creature extends GameObject {
         return reference;
     }
 
-    public boolean isAttackAborted() {
-        return _isAttackAborted;
+    boolean isAttackAborted() {
+        return isAttackAborted;
     }
 
     public final void abortAttack(boolean force, boolean message) {
         if (isAttackingNow()) {
             _attackEndTime = 0;
             if (force)
-                _isAttackAborted = true;
+                isAttackAborted = true;
 
             getAI().setIntention(AI_INTENTION_ACTIVE);
 
@@ -254,7 +254,7 @@ public abstract class Creature extends GameObject {
             final Skill castingSkill = _castingSkill;
             final Future<?> skillTask = _skillTask;
             final Future<?> skillLaunchedTask = _skillLaunchedTask;
-            final Future<?> skillGeoCheckTask = _skillGeoCheckTask;
+            final Future<?> skillGeoCheckTask = this.skillGeoCheckTask;
 
             finishFly(); // Броадкаст пакета FlyToLoc уже выполнен, устанавливаем координаты чтобы не было визуальных глюков
             clearCastVars();
@@ -435,7 +435,7 @@ public abstract class Creature extends GameObject {
     }
 
     public Skill addSkill(int newSkillId) {
-        return addSkill(SkillTable.INSTANCE.getInfo(newSkillId, 1));
+        return addSkill(SkillTable.INSTANCE.getInfo(newSkillId));
     }
 
     public Skill addSkill(int newSkillId, int lvl) {
@@ -476,17 +476,17 @@ public abstract class Creature extends GameObject {
     }
 
     public List<Calculator> getCalculators() {
-        return _calculators;
+        return calculators;
     }
 
     public final void addStatFunc(Func f) {
         if (f == null)
             return;
-        synchronized (_calculators) {
+        synchronized (calculators) {
             Calculator calculator = new Calculator(f.stat, this);
             calculator.addFunc(f);
-            if (!_calculators.contains(calculator))
-                _calculators.add(calculator);
+            if (!calculators.contains(calculator))
+                calculators.add(calculator);
         }
     }
 
@@ -498,21 +498,21 @@ public abstract class Creature extends GameObject {
         if (f == null)
             return;
         int stat = f.stat.ordinal();
-        synchronized (_calculators) {
-            if (_calculators.get(stat) != null)
-                _calculators.get(stat).removeFunc(f);
+        synchronized (calculators) {
+            if (calculators.get(stat) != null)
+                calculators.get(stat).removeFunc(f);
         }
     }
 
-    public final void removeStatFuncs(List<Func> funcs) {
+    final void removeStatFuncs(List<Func> funcs) {
         funcs.forEach(this::removeStatFunc);
     }
 
     public final void removeStatsOwner(Object owner) {
-        synchronized (_calculators) {
-            for (Calculator _calculator : _calculators)
-                if (_calculator != null)
-                    _calculator.removeOwner(owner);
+        synchronized (calculators) {
+            calculators.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(c -> c.removeOwner(owner));
         }
     }
 
@@ -521,7 +521,7 @@ public abstract class Creature extends GameObject {
     }
 
     public void altOnMagicUseTimer(Creature aimingTarget, int skillId) {
-        altOnMagicUseTimer(aimingTarget, SkillTable.INSTANCE.getInfo(skillId));
+        altOnMagicUseTimer(aimingTarget, skillId, 1);
     }
 
     private void altOnMagicUseTimer(Creature aimingTarget, Skill skill) {
@@ -573,11 +573,11 @@ public abstract class Creature extends GameObject {
 
         getListeners().onMagicUse(skill, target, true);
 
-        int itemConsume[] = skill.getItemConsume();
+        List<Integer> itemConsume = skill.getItemConsume();
 
-        if (itemConsume[0] > 0)
-            for (int i = 0; i < itemConsume.length; i++)
-                if (!consumeItem(skill.getItemConsumeId()[i], itemConsume[i])) {
+        if (itemConsume.get(0) > 0)
+            for (int i = 0; i < itemConsume.size(); i++)
+                if (!consumeItem(skill.getItemConsumeId().get(i), itemConsume.get(i))) {
                     sendPacket(skill.isHandler() ? SystemMsg.INCORRECT_ITEM_COUNT : SystemMsg.THERE_ARE_NOT_ENOUGH_NECESSARY_ITEMS_TO_USE_THE_SKILL);
                     return;
                 }
@@ -613,7 +613,7 @@ public abstract class Creature extends GameObject {
             else if (!skill.isHandler())
                 sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addSkillName(magicId, level));
             else
-                sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addItemName(skill.getItemConsumeId()[0]));
+                sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addItemName(skill.getItemConsumeId().get(0)));
 
         if (!skill.isHandler())
             disableSkill(skill, reuseDelay);
@@ -637,25 +637,16 @@ public abstract class Creature extends GameObject {
     public void broadcastPacketToOthers(L2GameServerPacket... packets) {
         if (!isVisible() || packets.length == 0)
             return;
+        World.getAroundPlayers(this)
+                .forEach(p -> p.sendPacket(packets));
 
-        List<Player> players = World.getAroundPlayers(this);
-        Player target;
-        for (Player player : players) {
-            target = player;
-            target.sendPacket(packets);
-        }
     }
 
     void broadcastPacketToOthers(List<L2GameServerPacket> packets) {
         if (!isVisible() || packets.isEmpty())
             return;
-
-        List<Player> players = World.getAroundPlayers(this);
-        Player target;
-        for (Player player : players) {
-            target = player;
-            target.sendPacket(packets);
-        }
+        World.getAroundPlayers(this)
+                .forEach(p -> p.sendPacket(packets));
     }
 
     void broadcastToStatusListeners(L2GameServerPacket... packets) {
@@ -765,7 +756,7 @@ public abstract class Creature extends GameObject {
     public final double calcStat(Stats stat, double init, Creature target, Skill skill) {
 
         Calculator c = new Calculator(stat, target);
-        if (_calculators.contains(c))
+        if (calculators.contains(c))
             return init;
         Env env = new Env();
         env.character = this;
@@ -792,7 +783,7 @@ public abstract class Creature extends GameObject {
         }
         env.value = stat.getInit();
         int id = stat.ordinal();
-        Calculator c = _calculators.get(id);
+        Calculator c = calculators.get(id);
         if (c != null)
             c.calc(env);
         return env.value;
@@ -800,8 +791,6 @@ public abstract class Creature extends GameObject {
 
     /**
      * Return the Attack Speed of the L2Character (delay (in milliseconds) before next attack).
-     *
-     * @return
      */
     public int calculateAttackDelay() {
         return Formulas.calcPAtkSpd(getPAtkSpd());
@@ -847,7 +836,7 @@ public abstract class Creature extends GameObject {
                 // Рассчитываем игрорируемые скилы из спец.эффекта
                 Effect ie = target.getEffectList().getEffectByType(EffectType.IgnoreSkill);
                 if (ie != null)
-                    if (Arrays.asList(ie.getTemplate().getParam().getIntegerList("skillId")).contains(skill.getId())) {
+                    if (ie.getTemplate().getParam().getIntegerList("skillId").contains(skill.getId())) {
                         itr.remove();
                         continue;
                     }
@@ -857,10 +846,8 @@ public abstract class Creature extends GameObject {
                 if (pl != null)
                     if (target.isNpc()) {
                         NpcInstance npc = (NpcInstance) target;
-                        List<QuestState> ql = pl.getQuestsForEvent(npc, QuestEventType.MOB_TARGETED_BY_SKILL);
-                        if (ql != null)
-                            for (QuestState qs : ql)
-                                qs.getQuest().notifySkillUse(npc, skill, qs);
+                        pl.getQuestsForEvent(npc, QuestEventType.MOB_TARGETED_BY_SKILL)
+                                .forEach(qs ->qs.getQuest().notifySkillUse(npc, skill, qs));
                     }
 
                 if (skill.getNegateSkill() > 0)
@@ -886,7 +873,7 @@ public abstract class Creature extends GameObject {
             // Особое условие для атакующих аура-скиллов (Vengeance 368):
             // если ни одна цель не задета то селфэффекты не накладываются
             if (!(skill.isNotTargetAoE() && skill.isOffensive() && targets.size() == 0))
-                skill.getEffects(this,  false, true);
+                skill.getEffects(this, false, true);
 
             skill.useSkill(this, targets);
         } catch (Exception e) {
@@ -1025,12 +1012,12 @@ public abstract class Creature extends GameObject {
         _attackReuseEndTime = System.currentTimeMillis() + sAtk + reuse - 10;
 
         // Ready to act
-        ThreadPoolManager.INSTANCE.schedule(new NotifyAITask(this, CtrlEvent.EVT_READY_TO_ACT, null, null), sAtk + reuse);
+        ThreadPoolManager.INSTANCE.schedule(new NotifyAITask(this, CtrlEvent.EVT_READY_TO_ACT), sAtk + reuse);
 
         // DS: adjusted by 1/100 of a second since the AI task is called with a small error
         // Especially on slower machines and is broken by autoattacks isAttackingNow () == true
         _attackEndTime = sAtk + System.currentTimeMillis() - 10;
-        _isAttackAborted = false;
+        isAttackAborted = false;
 
         Attack attack = new Attack(this, target, getChargedSoulShot(), ssGrade);
 
@@ -1199,7 +1186,7 @@ public abstract class Creature extends GameObject {
         _poleAttackCount = 1;
 
         if (!isInZonePeace())// Guard with a lance will attack only the single target in
-            for (Creature t : getAroundCharacters(range, 200))
+            for (Creature t : getAroundCharacters(range, 200).collect(Collectors.toList()))
                 if (_poleAttackCount <= attackcountmax) {
                     if (t == target || t.isDead() || !PositionUtils.isFacing(this, t, angle))
                         continue;
@@ -1239,11 +1226,11 @@ public abstract class Creature extends GameObject {
             }
         }
 
-        int itemConsume[] = skill.getItemConsume();
+        List<Integer> itemConsume = skill.getItemConsume();
 
-        if (itemConsume[0] > 0)
-            for (int i = 0; i < itemConsume.length; i++)
-                if (!consumeItem(skill.getItemConsumeId()[i], itemConsume[i])) {
+        if (itemConsume.get(0) > 0)
+            for (int i = 0; i < itemConsume.size(); i++)
+                if (!consumeItem(skill.getItemConsumeId().get(i), itemConsume.get(i))) {
                     sendPacket(skill.isHandler() ? SystemMsg.INCORRECT_ITEM_COUNT : SystemMsg.THERE_ARE_NOT_ENOUGH_NECESSARY_ITEMS_TO_USE_THE_SKILL);
                     return;
                 }
@@ -1296,7 +1283,7 @@ public abstract class Creature extends GameObject {
             else if (!skill.isHandler())
                 sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addSkillName(magicId, level));
             else
-                sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addItemName(skill.getItemConsumeId()[0]));
+                sendPacket(new SystemMessage2(SystemMsg.YOU_USE_S1).addItemName(skill.getItemConsumeId().get(0)));
 
         if (skill.getTargetType() == SkillTargetType.TARGET_HOLY)
             target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this, 1);
@@ -1348,9 +1335,9 @@ public abstract class Creature extends GameObject {
         _skillLaunchedTask = ThreadPoolManager.INSTANCE.schedule(new MagicLaunchedTask(this, forceUse), skillInterruptTime);
         _skillTask = ThreadPoolManager.INSTANCE.schedule(new MagicUseTask(this, forceUse), skill.getCastCount() > 0 ? skillTime / skill.getCastCount() : skillTime);
 
-        _skillGeoCheckTask = null;
+        skillGeoCheckTask = null;
         if ((skill.getCastRange() < 32767) && (skill.getSkillType() != SkillType.TAKECASTLE) && (skill.getSkillType() != SkillType.TAKEFORTRESS) && (_scheduledCastInterval > 600)) {
-            _skillGeoCheckTask = ThreadPoolManager.INSTANCE.schedule(new MagicGeoCheckTask(this), (long) (_scheduledCastInterval * 0.5));
+            skillGeoCheckTask = ThreadPoolManager.INSTANCE.schedule(new MagicGeoCheckTask(this), (long) (_scheduledCastInterval * 0.5));
         }
     }
 
@@ -1490,7 +1477,7 @@ public abstract class Creature extends GameObject {
             }
         }
 
-        ThreadPoolManager.INSTANCE.execute(new NotifyAITask(this, CtrlEvent.EVT_DEAD, killer, null));
+        ThreadPoolManager.INSTANCE.execute(new NotifyAITask(this, CtrlEvent.EVT_DEAD, killer));
 
         getListeners().onDeath(killer);
 
@@ -1509,17 +1496,13 @@ public abstract class Creature extends GameObject {
 
     /**
      * Return a map of 32 bits (0x00000000) containing all abnormal effects
-     *
-     * @return
      */
     public int getAbnormalEffect() {
-        return _abnormalEffects;
+        return abnormalEffects;
     }
 
     /**
      * Return a map of 32 bits (0x00000000) containing all special effects
-     *
-     * @return
      */
     public int getAbnormalEffect2() {
         return _abnormalEffects2;
@@ -1527,8 +1510,6 @@ public abstract class Creature extends GameObject {
 
     /**
      * Return a map of 32 bits (0x00000000) containing all event effects
-     *
-     * @return
      */
     public int getAbnormalEffect3() {
         return _abnormalEffects3;
@@ -1652,15 +1633,15 @@ public abstract class Creature extends GameObject {
         return (int) calcStat(Stats.STAT_INT, template.baseINT, null, null);
     }
 
-    public List<Creature> getAroundCharacters(int radius, int height) {
+    public Stream<Creature> getAroundCharacters(int radius, int height) {
         if (!isVisible())
-            return Collections.emptyList();
+            return Stream.empty();
         return World.getAroundCharacters(this, radius, height);
     }
 
-    public List<NpcInstance> getAroundNpc(int range, int height) {
+    public Stream<NpcInstance> getAroundNpc(int range, int height) {
         if (!isVisible())
-            return Collections.emptyList();
+            return Stream.empty();
         return World.getAroundNpc(this, range, height);
     }
 
@@ -1958,18 +1939,13 @@ public abstract class Creature extends GameObject {
         return isTeleporting.get();
     }
 
-    /**
-     * Возвращает позицию цели, в которой она будет через пол секунды.
-     *
-     * @param target
-     * @return
-     */
+
     private Location getIntersectionPoint(Creature target) {
         if (!PositionUtils.isFacing(this, target, 90))
             return new Location(target.getX(), target.getY(), target.getZ());
         double angle = PositionUtils.convertHeadingToDegree(target.getHeading()); // угол в градусах
         double radian = Math.toRadians(angle - 90); // угол в радианах
-        double range = target.getMoveSpeed() / 2; // расстояние, пройденное за 1 секунду, равно скорости. Берем половину.
+        double range = target.getMoveSpeed() / 2.; // расстояние, пройденное за 1 секунду, равно скорости. Берем половину.
         return new Location((int) (target.getX() - range * Math.sin(radian)), (int) (target.getY() + range * Math.cos(radian)), target.getZ());
     }
 
@@ -2227,7 +2203,7 @@ public abstract class Creature extends GameObject {
             getAI().clearNextAction();
 
             if (isPlayer())
-                getAI().changeIntention(AI_INTENTION_ACTIVE, null, null);
+                getAI().changeIntention(AI_INTENTION_ACTIVE);
 
             stopMove(false, false);
 
@@ -2405,7 +2381,7 @@ public abstract class Creature extends GameObject {
                 for (Zone _zone : this.zones) {
                     zone = _zone;
                     // зоны больше нет в регионе, либо вышли за территорию зоны
-                    if (!zones.contains(zone) || !zone.checkIfInZone(getX(), getY(), getZ(), getReflection()))
+                    if (!zones.contains(zone) || !zone.checkIfInZone(getLoc(), getReflection()))
                         leaving.add(zone);
                 }
 
@@ -2422,7 +2398,7 @@ public abstract class Creature extends GameObject {
                 entering = zones.stream()
                         // в зону еще не заходили и зашли на территорию зоны
                         .filter(z -> !this.zones.contains(z))
-                        .filter(z -> z.checkIfInZone(getX(), getY(), getZ(), getReflection()))
+                        .filter(z -> z.checkIfInZone(getLoc(), getReflection()))
                         .collect(Collectors.toList());
 
                 // Вошли в зоны, добавим в список зон персонажа
@@ -2524,7 +2500,7 @@ public abstract class Creature extends GameObject {
     }
 
     public synchronized Zone getZone(ZoneType type) {
-        return zones.stream().filter(z -> z.getType() == type).findFirst().orElse(null);
+        return zones.stream().filter(z -> z.getType() == type).findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
     public Location getRestartPoint() {
@@ -2698,7 +2674,7 @@ public abstract class Creature extends GameObject {
             return;
         }
 
-        if ((_skillGeoCheckTask != null) && !GeoEngine.canSeeTarget(this, aimingTarget, isFlying())) {
+        if ((skillGeoCheckTask != null) && !GeoEngine.canSeeTarget(this, aimingTarget, isFlying())) {
             sendPacket(SystemMsg.CANNOT_SEE_TARGET);
             broadcastPacket(new MagicSkillCanceled(getObjectId()));
             onCastEndTime();
@@ -2780,7 +2756,7 @@ public abstract class Creature extends GameObject {
     public void onCastEndTime() {
         finishFly();
         clearCastVars();
-        getAI().notifyEvent(CtrlEvent.EVT_FINISH_CASTING, null, null);
+        getAI().notifyEvent(CtrlEvent.EVT_FINISH_CASTING);
     }
 
     public void clearCastVars() {
@@ -2790,7 +2766,7 @@ public abstract class Creature extends GameObject {
         _castingSkill = null;
         _skillTask = null;
         _skillLaunchedTask = null;
-        _skillGeoCheckTask = null;
+        skillGeoCheckTask = null;
         _flyLoc = null;
     }
 
@@ -3208,7 +3184,7 @@ public abstract class Creature extends GameObject {
 
     public void startAbnormalEffect(AbnormalEffect ae) {
         if (ae == AbnormalEffect.NULL) {
-            _abnormalEffects = AbnormalEffect.NULL.getMask();
+            abnormalEffects = AbnormalEffect.NULL.getMask();
             _abnormalEffects2 = AbnormalEffect.NULL.getMask();
             _abnormalEffects3 = AbnormalEffect.NULL.getMask();
         } else if (ae.isSpecial())
@@ -3216,7 +3192,7 @@ public abstract class Creature extends GameObject {
         else if (ae.isEvent())
             _abnormalEffects3 |= ae.getMask();
         else
-            _abnormalEffects |= ae.getMask();
+            abnormalEffects |= ae.getMask();
         sendChanges();
     }
 
@@ -3313,7 +3289,7 @@ public abstract class Creature extends GameObject {
         if (ae.isEvent())
             _abnormalEffects3 &= ~ae.getMask();
         else
-            _abnormalEffects &= ~ae.getMask();
+            abnormalEffects &= ~ae.getMask();
         sendChanges();
     }
 
@@ -3398,12 +3374,14 @@ public abstract class Creature extends GameObject {
     }
 
     public void startImmobilized() {
-        /*return*/ immobilized.getAndSet(true);
+        /*return*/
+        immobilized.getAndSet(true);
     }
 
     public void stopImmobilized() {
         immobilized.setAndGet(false);
     }
+
     public void startHealBlocked() {
         healBlocked.getAndSet(true);
     }
@@ -3590,7 +3568,7 @@ public abstract class Creature extends GameObject {
         teleToLocation(x, y, z, r);
     }
 
-    public void teleToLocation(int x, int y, int z, Reflection r) {
+    private void teleToLocation(int x, int y, int z, Reflection r) {
         if (!isTeleporting.compareAndSet(false, true))
             return;
 

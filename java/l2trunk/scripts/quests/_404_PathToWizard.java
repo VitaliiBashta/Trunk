@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _404_PathToWizard extends Quest implements ScriptFile {
+public final class _404_PathToWizard extends Quest {
     //npc
     private final int PARINA = 30391;
     private final int EARTH_SNAKE = 30409;

@@ -34,7 +34,7 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     private static final int Tyrannosaurus = 22217;
     private static final int TeleportCubeId = 31759;
     private static final Location _enter = new Location(27734, -6938, -1982);
-    private static final boolean FWS_ENABLESINGLEPLAYER = Boolean.TRUE;
+    private static final boolean FWS_ENABLESINGLEPLAYER = true;
     private static final int FWS_ACTIVITYTIMEOFMOBS = 120 * 60000;
     private static final int FWS_FIXINTERVALOFSAILRENSPAWN = Config.FIXINTERVALOFSAILRENSPAWN_HOUR * 60 * 60000;
     private static final int FWS_RANDOMINTERVALOFSAILRENSPAWN = Config.RANDOMINTERVALOFSAILRENSPAWN * 60 * 60000;
@@ -246,10 +246,6 @@ public final class SailrenManager extends Functions implements ScriptFile, OnDea
     @Override
     public void onReload() {
         sleep();
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private static class ActivityTimeEnd extends RunnableImpl {

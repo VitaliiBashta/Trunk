@@ -2,13 +2,12 @@ package l2trunk.scripts.ai;
 
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.instancemanager.QuestManager;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
-import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.scripts.quests._024_InhabitantsOfTheForestOfTheDead;
 
+import java.util.Objects;
 
 public final class Quest024Fighter extends Fighter {
     public Quest024Fighter(NpcInstance actor) {
@@ -19,11 +18,13 @@ public final class Quest024Fighter extends Fighter {
     public boolean thinkActive() {
         Quest q = QuestManager.getQuest(_024_InhabitantsOfTheForestOfTheDead.class);
         if (q != null)
-            for (Player player : World.getAroundPlayers(getActor(), 300, 200)) {
-                QuestState questState = player.getQuestState(_024_InhabitantsOfTheForestOfTheDead.class);
-                if (questState != null && questState.getCond() == 3)
-                    q.notifyEvent("seePlayer", questState, getActor());
-            }
+            World.getAroundPlayers(getActor(), 300, 200)
+                    .map(player -> player.getQuestState(_024_InhabitantsOfTheForestOfTheDead.class))
+                    .filter(Objects::nonNull)
+                    .filter(questState -> questState.getCond() == 3)
+                    .forEach(questState ->
+                            q.notifyEvent("seePlayer", questState, getActor()));
+
 
         return super.thinkActive();
     }

@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Path To Artisan
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _418_PathToArtisan extends Quest implements ScriptFile {
+public final class _418_PathToArtisan extends Quest {
     //NPC
     private static final int Silvera = 30527;
     private static final int Kluto = 30317;
@@ -66,18 +60,6 @@ public class _418_PathToArtisan extends Quest implements ScriptFile {
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _418_PathToArtisan() {
         super(false);

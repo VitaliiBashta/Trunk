@@ -11,11 +11,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-
-public class _10284_AcquisionOfDivineSword extends Quest implements ScriptFile {
+public final class _10284_AcquisionOfDivineSword extends Quest {
     private static final int Rafforty = 32020;
     private static final int Jinia = 32760;
     private static final int Krun = 32653;
@@ -134,17 +130,5 @@ public class _10284_AcquisionOfDivineSword extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(izId)) {
             ReflectionUtils.enterReflection(player, izId);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

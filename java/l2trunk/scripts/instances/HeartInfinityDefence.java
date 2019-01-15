@@ -24,9 +24,9 @@ public final class HeartInfinityDefence extends Reflection {
     private static final int SoulWagon = 22523;
     private static final int EchmusCoffin = 18713;
     private static final int maxCoffins = 20;
+    private final DeathListener deathListener = new DeathListener();
     private ScheduledFuture<?> timerTask = null, wagonSpawnTask = null, coffinSpawnTask = null, aliveTumorSpawnTask = null;
     private boolean conquestEnded = false;
-    private final DeathListener deathListener = new DeathListener();
     private long startTime = 0;
     private long tumorRespawnTime = 0;
     private long wagonRespawnTime = 0;
@@ -44,7 +44,7 @@ public final class HeartInfinityDefence extends Reflection {
 
     private void conquestBegins() {
         getPlayers().forEach(p ->
-            p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_HEAR_THE_UNDEAD_OF_EKIMUS_RUSHING_TOWARD_YOU, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.DEFEND.getId())));
+                p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_HEAR_THE_UNDEAD_OF_EKIMUS_RUSHING_TOWARD_YOU, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.DEFEND.getId())));
         spawnByGroup("soi_hoi_defence_mob_1");
         spawnByGroup("soi_hoi_defence_mob_2");
         spawnByGroup("soi_hoi_defence_mob_3");
@@ -59,8 +59,7 @@ public final class HeartInfinityDefence extends Reflection {
             @Override
             public void runImpl() {
                 if (!conquestEnded)
-                    for (NpcInstance npc : getAllByNpcId(DeadTumor, true))
-                        spawnCoffin(npc);
+                    getAllByNpcId(DeadTumor, true).forEach(npc -> spawnCoffin(npc));
             }
         }, 1000L, 60000L);
         aliveTumorSpawnTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
@@ -70,8 +69,8 @@ public final class HeartInfinityDefence extends Reflection {
                     despawnByGroup("soi_hoi_defence_tumors");
                     spawnByGroup("soi_hoi_defence_alivetumors");
                     handleTumorHp(0.5);
-                    for (Player p : getPlayers())
-                        p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED__, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId()));
+                    getPlayers().forEach(p ->
+                            p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED__, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId())));
                     invokeDeathListener();
                 }
             }
@@ -91,56 +90,12 @@ public final class HeartInfinityDefence extends Reflection {
     }
 
     private void handleTumorHp(double percent) {
-        for (NpcInstance npc : getAllByNpcId(AliveTumor, true))
-            npc.setCurrentHp(npc.getMaxHp() * percent, false);
+        getAllByNpcId(AliveTumor, true).forEach(npc ->
+                npc.setCurrentHp(npc.getMaxHp() * percent, false));
     }
 
     private void invokeDeathListener() {
-        for (NpcInstance npc : getNpcs())
-            npc.addListener(deathListener);
-    }
-
-    private class DeathListener implements OnDeathListener {
-        @Override
-        public void onDeath(Creature self, Creature killer) {
-            if (!self.isNpc())
-                return;
-            if (self.getNpcId() == AliveTumor) {
-                ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
-                final NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self.getLoc(), 0);
-                wagonRespawnTime += 10000L;
-                self.deleteMe();
-                for (Player p : getPlayers())
-                    p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_SPEED_THAT_EKIMUS_CALLS_OUT_HIS_PREY_HAS_SLOWED_DOWN, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId()));
-                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        deadTumor.deleteMe();
-                        addSpawnWithoutRespawn(AliveTumor, deadTumor.getLoc(), 0);
-                        wagonRespawnTime -= 10000L;
-                        handleTumorHp(0.25);
-                        invokeDeathListener();
-                        for (Player p : getPlayers())
-                            p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED_, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId()));
-                    }
-                }, tumorRespawnTime);
-            }
-        }
-    }
-
-    private class TimerTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            long time = (startTime + 25 * 60 * 1000L - System.currentTimeMillis()) / 60000;
-            if (time == 0)
-                conquestConclusion(true);
-            else {
-                if (time == 15)
-                    spawnByGroup("soi_hoi_defence_bosses");
-                for (Player p : getPlayers())
-                    p.sendPacket(new ExShowScreenMessage(NpcString.S1_MINUTES_ARE_REMAINING, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, String.valueOf((startTime + 25 * 60 * 1000L - System.currentTimeMillis()) / 60000)));
-            }
-        }
+        getNpcs().forEach(npc -> npc.addListener(deathListener));
     }
 
     public void notifyWagonArrived() {
@@ -149,8 +104,8 @@ public final class HeartInfinityDefence extends Reflection {
             conquestConclusion(false);
         else {
             Functions.npcShout(preawakenedEchmus, NpcString.BRING_MORE_MORE_SOULS);
-            for (Player p : getPlayers())
-                p.sendPacket(new ExShowScreenMessage(NpcString.THE_SOUL_COFFIN_HAS_AWAKENED_EKIMUS, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, String.valueOf(maxCoffins - coffinsCreated)));
+            getPlayers().forEach(p ->
+                    p.sendPacket(new ExShowScreenMessage(NpcString.THE_SOUL_COFFIN_HAS_AWAKENED_EKIMUS, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, String.valueOf(maxCoffins - coffinsCreated))));
             addSpawnWithoutRespawn(EchmusCoffin, getZone("[soi_hoi_attack_echmusroom]").getTerritory().getRandomLoc(getGeoIndex()), 0);
         }
     }
@@ -163,14 +118,14 @@ public final class HeartInfinityDefence extends Reflection {
         clearReflection(15, true);
         if (win)
             setReenterTime(System.currentTimeMillis());
-        for (Player p : getPlayers()) {
+        getPlayers().forEach(p -> {
             if (win) {
                 QuestState qs = p.getQuestState(_698_BlocktheLordsEscape.class);
                 if (qs != null && qs.getCond() == 1)
                     qs.set("defenceDone", 1);
             }
             p.sendPacket(new ExShowScreenMessage(win ? NpcString.CONGRATULATIONS_YOU_HAVE_SUCCEEDED_AT_S1_S2_THE_INSTANCE_WILL_SHORTLY_EXPIRE : NpcString.YOU_HAVE_FAILED_AT_S1_S2, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.DEFEND.getId()));
-        }
+        });
     }
 
     public void notifyCoffinDeath() {
@@ -192,5 +147,48 @@ public final class HeartInfinityDefence extends Reflection {
     protected void onCollapse() {
         cancelTimers();
         super.onCollapse();
+    }
+
+    private class DeathListener implements OnDeathListener {
+        @Override
+        public void onDeath(Creature self, Creature killer) {
+            if (!self.isNpc())
+                return;
+            if (self.getNpcId() == AliveTumor) {
+                ((NpcInstance) self).dropItem(killer.getPlayer(), 13797, Rnd.get(2, 5));
+                final NpcInstance deadTumor = addSpawnWithoutRespawn(DeadTumor, self.getLoc(), 0);
+                wagonRespawnTime += 10000L;
+                self.deleteMe();
+                getPlayers().forEach(p ->
+                        p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_BEEN_DESTROYED_NTHE_SPEED_THAT_EKIMUS_CALLS_OUT_HIS_PREY_HAS_SLOWED_DOWN, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HEART_OF_IMMORTALITY.getId())));
+                ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
+                    @Override
+                    public void runImpl() {
+                        deadTumor.deleteMe();
+                        addSpawnWithoutRespawn(AliveTumor, deadTumor.getLoc(), 0);
+                        wagonRespawnTime -= 10000L;
+                        handleTumorHp(0.25);
+                        invokeDeathListener();
+                        getPlayers().forEach(p ->
+                            p.sendPacket(new ExShowScreenMessage(NpcString.THE_TUMOR_INSIDE_S1_HAS_COMPLETELY_REVIVED_, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, "#" + NpcString.HALL_OF_EROSION.getId())));
+                    }
+                }, tumorRespawnTime);
+            }
+        }
+    }
+
+    private class TimerTask extends RunnableImpl {
+        @Override
+        public void runImpl() {
+            long time = (startTime + 25 * 60 * 1000L - System.currentTimeMillis()) / 60000;
+            if (time == 0)
+                conquestConclusion(true);
+            else {
+                if (time == 15)
+                    spawnByGroup("soi_hoi_defence_bosses");
+                getPlayers().forEach(p ->
+                        p.sendPacket(new ExShowScreenMessage(NpcString.S1_MINUTES_ARE_REMAINING, 8000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false, String.valueOf((startTime + 25 * 60 * 1000L - System.currentTimeMillis()) / 60000))));
+            }
+        }
     }
 }

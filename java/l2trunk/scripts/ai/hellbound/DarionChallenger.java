@@ -30,11 +30,11 @@ public final class DarionChallenger extends Fighter {
     }
 
     private boolean checkAllDestroyed() {
-        if (!GameObjectsStorage.getAllByNpcId(25600, true).isEmpty())
+        if (GameObjectsStorage.getAllByNpcId(25600, true).count() > 0)
             return false;
-        if (!GameObjectsStorage.getAllByNpcId(25601, true).isEmpty())
+        if (GameObjectsStorage.getAllByNpcId(25601, true).count() >0)
             return false;
-        return GameObjectsStorage.getAllByNpcId(25602, true).isEmpty();
+        return GameObjectsStorage.getAllByNpcId(25602, true).count() ==0;
     }
 
 }

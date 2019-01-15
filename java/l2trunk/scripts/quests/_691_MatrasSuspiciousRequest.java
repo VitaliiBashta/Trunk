@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _691_MatrasSuspiciousRequest extends Quest implements ScriptFile {
+public final class _691_MatrasSuspiciousRequest extends Quest {
     // NPC
     private final static int MATRAS = 32245;
     private final static int LABYRINTH_CAPTAIN = 22368;
@@ -15,25 +15,12 @@ public class _691_MatrasSuspiciousRequest extends Quest implements ScriptFile {
     private final static int RED_STONES_COUNT = 744;
     private final static int DYNASTIC_ESSENCE_II = 10413;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _691_MatrasSuspiciousRequest() {
         super(true);
 
         addStartNpc(MATRAS);
         addQuestItem(RED_STONE);
-        addKillId(new int[]{
-                22363,
+        addKillId(22363,
                 22364,
                 22365,
                 22366,
@@ -42,8 +29,7 @@ public class _691_MatrasSuspiciousRequest extends Quest implements ScriptFile {
                 22369,
                 22370,
                 22371,
-                22372
-        });
+                22372);
     }
 
     @Override

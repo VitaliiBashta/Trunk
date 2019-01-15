@@ -10,12 +10,10 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 public abstract class MatchingRoom implements PlayerGroup {
     public static final int PARTY_MATCHING = 0;
@@ -50,9 +48,6 @@ public abstract class MatchingRoom implements PlayerGroup {
         addMember0(leader, null);
     }
 
-    //===============================================================================================================================================
-    //                                                            Add/Remove Member
-    //===============================================================================================================================================
     public boolean addMember(Player player) {
         if (members.contains(player))
             return true;

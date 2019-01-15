@@ -5,21 +5,13 @@ import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _063_PathToWarder extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _063_PathToWarder extends Quest {
+    private static final int GobiesOrders = 9764;
+    private static final int HumansReply = 9766;
+    private static final int LettertotheDarkElves = 9767;
+    private static final int DarkElvesReply = 9768;
+    private static final int SteelrazorEvaluation = 9772;
     private final int Sione = 32195;
     private final int Gobie = 32198;
     private final int Patrol = 20053;
@@ -30,18 +22,12 @@ public class _063_PathToWarder extends Quest implements ScriptFile {
     private final int Maille = 20919;
     private final int Maille_scout = 20920;
     private final int Maille_guard = 20921;
-
     private final int OlMahumOrders = 9762;
     private final int OlMahumOrganizationChart = 9763;
-    private final int GobiesOrders = 9764;
     private final int LettertotheHumans = 9765;
-    private final int HumansReply = 9766;
-    private final int LettertotheDarkElves = 9767;
-    private final int DarkElvesReply = 9768;
     private final int ReporttoSione = 9769;
     private final int EmptySoulCrystal = 9770; //empty
     private final int TaksCapturedSoul = 9771;
-    private final int SteelrazorEvaluation = 9772;
 
     public _063_PathToWarder() {
         super(false);
@@ -57,12 +43,10 @@ public class _063_PathToWarder extends Quest implements ScriptFile {
         addKillId(Maille);
         addKillId(Maille_scout);
         addKillId(Maille_guard);
-        addQuestItem(new int[]{
-                OlMahumOrganizationChart,
+        addQuestItem(OlMahumOrganizationChart,
                 OlMahumOrders,
                 TaksCapturedSoul,
-                EmptySoulCrystal
-        });
+                EmptySoulCrystal);
     }
 
     @Override
@@ -72,27 +56,34 @@ public class _063_PathToWarder extends Quest implements ScriptFile {
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
         }
-        if (event.equals("master_sione_q0063_08.htm"))
-            st.setCond(2);
-        else if (event.equals("captain_bathia_q0063_04.htm")) {
-            st.takeItems(LettertotheHumans, 1);
-            st.giveItems(HumansReply, 1);
-            st.setCond(6);
-        } else if (event.equals("master_gobie_q0063_08.htm")) {
-            st.takeItems(HumansReply, 1);
-            st.giveItems(LettertotheDarkElves, 1);
-            st.setCond(7);
-        } else if (event.equals("master_tobias_q0063_05.htm")) {
-            st.takeItems(LettertotheDarkElves, 1);
-            st.giveItems(DarkElvesReply, 1);
-            st.setCond(8);
-        } else if (event.equals("master_gobie_q0063_11.htm")) {
-            st.takeItems(DarkElvesReply, 1);
-            st.giveItems(ReporttoSione, 1);
-            st.setCond(9);
-        } else if (event.equals("master_gobie_q0063_16.htm")) {
-            st.takeItems(EmptySoulCrystal, 1);
-            st.setCond(11);
+        switch (event) {
+            case "master_sione_q0063_08.htm":
+                st.setCond(2);
+                break;
+            case "captain_bathia_q0063_04.htm":
+                st.takeItems(LettertotheHumans, 1);
+                st.giveItems(HumansReply, 1);
+                st.setCond(6);
+                break;
+            case "master_gobie_q0063_08.htm":
+                st.takeItems(HumansReply, 1);
+                st.giveItems(LettertotheDarkElves, 1);
+                st.setCond(7);
+                break;
+            case "master_tobias_q0063_05.htm":
+                st.takeItems(LettertotheDarkElves, 1);
+                st.giveItems(DarkElvesReply, 1);
+                st.setCond(8);
+                break;
+            case "master_gobie_q0063_11.htm":
+                st.takeItems(DarkElvesReply, 1);
+                st.giveItems(ReporttoSione, 1);
+                st.setCond(9);
+                break;
+            case "master_gobie_q0063_16.htm":
+                st.takeItems(EmptySoulCrystal, 1);
+                st.setCond(11);
+                break;
         }
         return event;
     }

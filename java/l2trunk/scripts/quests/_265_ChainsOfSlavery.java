@@ -6,13 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест проверен и работает. Рейты применены путем увеличения награды за квестовые предметы.
- */
-public class _265_ChainsOfSlavery extends Quest implements ScriptFile {
+public final class _265_ChainsOfSlavery extends Quest {
     // NPC
     private static final int KRISTIN = 30357;
 
@@ -22,18 +18,6 @@ public class _265_ChainsOfSlavery extends Quest implements ScriptFile {
 
     // ITEMS
     private static final int IMP_SHACKLES = 1368;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _265_ChainsOfSlavery() {
         super(false);

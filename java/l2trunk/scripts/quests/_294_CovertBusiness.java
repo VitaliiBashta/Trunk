@@ -4,9 +4,8 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _294_CovertBusiness extends Quest implements ScriptFile {
+public final class _294_CovertBusiness extends Quest {
     private static final int BatFang = 1491;
     private static final int RingOfRaccoon = 1508;
 

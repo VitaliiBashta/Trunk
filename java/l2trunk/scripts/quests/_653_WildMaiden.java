@@ -13,25 +13,13 @@ import l2trunk.gameserver.templates.spawn.PeriodOfDay;
 import java.util.ArrayList;
 import java.util.List;
 
-public class _653_WildMaiden extends Quest implements ScriptFile {
+public final class _653_WildMaiden extends Quest {
     // Npc
     private final int SUKI = 32013;
     private final int GALIBREDO = 30181;
 
     // Items
-    private final int SOE = 736;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int SOE = 736;
 
     public _653_WildMaiden() {
         super(false);
@@ -70,7 +58,7 @@ public class _653_WildMaiden extends Quest implements ScriptFile {
                 st.takeItems(SOE, 1);
                 htmltext = "spring_girl_sooki_q0653_04a.htm";
                 NpcInstance n = findNpc(player);
-                n.broadcastPacket(new MagicSkillUse(n,  2013,  20000));
+                n.broadcastPacket(new MagicSkillUse(n, 2013, 20000));
                 st.startQuestTimer("suki_timer", 20000);
             }
         } else if (event.equalsIgnoreCase("spring_girl_sooki_q0653_03.htm")) {

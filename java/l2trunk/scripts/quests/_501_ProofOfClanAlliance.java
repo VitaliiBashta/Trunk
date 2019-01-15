@@ -3,6 +3,7 @@ package l2trunk.scripts.quests;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -10,18 +11,14 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
-import l2trunk.gameserver.tables.SkillTable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-
-public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile {
+public final class _501_ProofOfClanAlliance extends Quest {
     // Quest Npcs
     private static final int SIR_KRISTOF_RODEMAI = 30756;
     private static final int STATUE_OF_OFFERING = 30757;
@@ -190,13 +187,12 @@ public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile 
 
         // STATUE_OF_OFFERING
         else if (event.equalsIgnoreCase("30757-04.htm")) {
-            List<String> deadlist = new ArrayList<>();
-            deadlist.addAll(Arrays.asList(leader.get("dead_list").split(" ")));
+            List<String> deadlist = new ArrayList<>(List.of(leader.get("dead_list").split(" ")));
             deadlist.add(st.getPlayer().getName());
-            String deadstr = "";
+            StringBuilder deadstr = new StringBuilder();
             for (String s : deadlist)
-                deadstr += s + " ";
-            leader.set("dead_list", deadstr);
+                deadstr.append(s).append(" ");
+            leader.set("dead_list", deadstr.toString());
             st.addNotifyOfDeath(leader.getPlayer(), false);
             if (Rnd.chance(50))
                 st.getPlayer().reduceCurrentHp(st.getPlayer().getCurrentHp() * 8, st.getPlayer(), null, true, true, false, false, false, false, false);
@@ -331,10 +327,9 @@ public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile 
                 return "Who are you?";
             }
             boolean flag = false;
-            if (dlist != null)
-                for (String str : dlist)
-                    if (st.getPlayer().getName().equalsIgnoreCase(str))
-                        flag = true;
+            for (String str : dlist)
+                if (st.getPlayer().getName().equalsIgnoreCase(str))
+                    flag = true;
             if (!flag) {
                 st.exitCurrentQuest(true);
                 return "Who are you?";
@@ -434,8 +429,7 @@ public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile 
         int attempts = leader.getInt("chest_try");
         leader.set("chest_try", String.valueOf(attempts + 1));
 
-        for (NpcInstance npc : GameObjectsStorage.getAllByNpcId(CHESTS, false))
-            npc.deleteMe();
+        GameObjectsStorage.getAllByNpcId(CHESTS, false).forEach(GameObject::deleteMe);
 
         for (int n = 1; n <= 5; n++)
             for (int i : CHESTS)
@@ -450,8 +444,7 @@ public final class _501_ProofOfClanAlliance extends Quest implements ScriptFile 
             return;
         }
 
-        for (NpcInstance npc : GameObjectsStorage.getAllByNpcId(CHESTS, false))
-            npc.deleteMe();
+        GameObjectsStorage.getAllByNpcId(CHESTS, false).forEach(GameObject::deleteMe);
 
         leader.set("chest_game", "0");
     }

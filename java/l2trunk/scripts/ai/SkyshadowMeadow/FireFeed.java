@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public final class FireFeed extends DefaultAI {
     private final long _wait_timeout = System.currentTimeMillis() + Rnd.get(10, 30) * 1000;
 
-    private FireFeed(NpcInstance actor) {
+    public FireFeed(NpcInstance actor) {
         super(actor);
     }
 

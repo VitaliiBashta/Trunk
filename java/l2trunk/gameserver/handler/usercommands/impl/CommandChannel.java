@@ -23,7 +23,7 @@ import java.util.List;
  * @author SYS
  */
 public final class CommandChannel implements IUserCommandHandler {
-    private static final List<Integer> COMMAND_IDS = Arrays.asList(92, 93, 96, 97);
+    private static final List<Integer> COMMAND_IDS = List.of(92, 93, 96, 97);
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {

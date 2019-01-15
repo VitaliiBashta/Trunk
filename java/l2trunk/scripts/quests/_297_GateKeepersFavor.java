@@ -5,19 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _297_GateKeepersFavor extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _297_GateKeepersFavor extends Quest {
     private static final int STARSTONE = 1573;
     private static final int GATEKEEPER_TOKEN = 1659;
 

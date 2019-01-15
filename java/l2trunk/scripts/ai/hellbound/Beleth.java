@@ -30,7 +30,7 @@ public final class Beleth extends Mystic {
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
 
-            World.getAroundNpc(actor).stream()
+            World.getAroundNpc(actor)
                     .filter(npc -> npc.getNpcId() == CLONE)
                     .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 100)));
         }

@@ -5,21 +5,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _122_OminousNews extends Quest implements ScriptFile {
+public final class _122_OminousNews extends Quest {
     private final int MOIRA = 31979;
     private final int KARUDA = 32017;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _122_OminousNews() {
         super(false);
@@ -29,7 +17,7 @@ public class _122_OminousNews extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        String htmltext = event;
+        String htmltext;
         int cond = st.getCond();
         htmltext = event;
         if (htmltext.equalsIgnoreCase("seer_moirase_q0122_0104.htm") && cond == 0) {

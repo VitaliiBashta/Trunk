@@ -2,7 +2,6 @@ package l2trunk.gameserver.dao;
 
 import l2trunk.commons.dao.JdbcDAO;
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.dao.JdbcEntityStats;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
@@ -31,50 +30,20 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     private final static String STORE_ITEM = "INSERT INTO items (object_id, owner_id, item_id, count, enchant_level, loc, loc_data, custom_type1, custom_type2, life_time, custom_flags, augmentation_id, attribute_fire, attribute_water, attribute_wind, attribute_earth, attribute_holy, attribute_unholy, agathion_energy, visual_item_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private final static String UPDATE_ITEM = "UPDATE items SET owner_id = ?, item_id = ?, count = ?, enchant_level = ?, loc = ?, loc_data = ?, custom_type1 = ?, custom_type2 = ?, life_time = ?, custom_flags = ?, augmentation_id = ?, attribute_fire = ?, attribute_water = ?, attribute_wind = ?, attribute_earth = ?, attribute_holy = ?, attribute_unholy = ?, agathion_energy=?, visual_item_id=? WHERE object_id = ?";
     private final static String REMOVE_ITEM = "DELETE FROM items WHERE object_id = ?";
-
-    //    private final static ItemsDAO instance = new ItemsDAO();
-    private Cache cache;
     private final AtomicLong load = new AtomicLong();
     private final AtomicLong insert = new AtomicLong();
     private final AtomicLong update = new AtomicLong();
     private final AtomicLong delete = new AtomicLong();
-    private final JdbcEntityStats stats = new JdbcEntityStats() {
-        @Override
-        public long getLoadCount() {
-            return load.get();
-        }
-
-        @Override
-        public long getInsertCount() {
-            return insert.get();
-        }
-
-        @Override
-        public long getUpdateCount() {
-            return update.get();
-        }
-
-        @Override
-        public long getDeleteCount() {
-            return delete.get();
-        }
-    };
+    //    private final static ItemsDAO instance = new ItemsDAO();
+    private Cache cache;
 
     public void init() {
         cache = CacheManager.getInstance().getCache(ItemInstance.class.getName());
     }
 
-//    public static ItemsDAO INSTANCE() {
-//        return instance;
-//    }
 
     public Cache getCache() {
         return cache;
-    }
-
-    @Override
-    public JdbcEntityStats getStats() {
-        return stats;
     }
 
     private ItemInstance load0(int objectId) throws SQLException {

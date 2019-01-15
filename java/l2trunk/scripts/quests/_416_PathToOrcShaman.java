@@ -1,20 +1,15 @@
 package l2trunk.scripts.quests;
 
 import l2trunk.commons.util.Rnd;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.GameObjectsStorage;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Path To Orc Shaman
- *
- * @author Sergey Ibryaev aka Artful
- */
-public class _416_PathToOrcShaman extends Quest implements ScriptFile {
+public final class _416_PathToOrcShaman extends Quest {
     //NPC
     private static final int Hestui = 30585;
     private static final int HestuiTotemSpirit = 30592;
@@ -96,18 +91,6 @@ public class _416_PathToOrcShaman extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _416_PathToOrcShaman() {
         super(false);
 
@@ -127,17 +110,17 @@ public class _416_PathToOrcShaman extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equalsIgnoreCase("tataru_zu_hestui_q0416_06.htm")) {
+        if ("tataru_zu_hestui_q0416_06.htm".equalsIgnoreCase(event)) {
             st.giveItems(FireCharm, 1);
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("hestui_totem_spirit_q0416_03.htm")) {
+        } else if ("hestui_totem_spirit_q0416_03.htm".equalsIgnoreCase(event)) {
             st.takeItems(HestuiMask, -1);
             st.takeItems(FieryEgg2nd, -1);
             st.giveItems(TotemSpiritClaw, 1);
             st.setCond(4);
-        } else if (event.equalsIgnoreCase("tataru_zu_hestui_q0416_11.htm")) {
+        } else if ("tataru_zu_hestui_q0416_11.htm".equalsIgnoreCase(event)) {
             st.takeItems(TotemSpiritClaw, -1);
             st.giveItems(TatarusLetterOfRecommendation, 1);
             st.setCond(5);
@@ -161,15 +144,15 @@ public class _416_PathToOrcShaman extends Quest implements ScriptFile {
             }
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("totem_spirit_gandi_q0416_02.htm"))
+        } else if ("totem_spirit_gandi_q0416_02.htm".equalsIgnoreCase(event))
             st.setCond(14);
-        else if (event.equalsIgnoreCase("dead_leopard_q0416_04.htm"))
+        else if ("dead_leopard_q0416_04.htm".equalsIgnoreCase(event))
             st.setCond(18);
-        else if (event.equalsIgnoreCase("totem_spirit_gandi_q0416_05.htm"))
+        else if ("totem_spirit_gandi_q0416_05.htm".equalsIgnoreCase(event))
             st.setCond(21);
-        if (event.equalsIgnoreCase("QuestMonsterDurkaSpirit_Fail"))
-            for (NpcInstance n : GameObjectsStorage.getAllByNpcId(QuestMonsterDurkaSpirit, false))
-                n.deleteMe();
+        if ("QuestMonsterDurkaSpirit_Fail".equalsIgnoreCase(event))
+            GameObjectsStorage.getAllByNpcId(QuestMonsterDurkaSpirit, false)
+                    .forEach(GameObject::deleteMe);
         return event;
     }
 
@@ -218,84 +201,89 @@ public class _416_PathToOrcShaman extends Quest implements ScriptFile {
                 htmltext = "hestui_totem_spirit_q0416_01.htm";
             else if (cond == 4)
                 htmltext = "hestui_totem_spirit_q0416_04.htm";
-        } else if (npcId == HestuiTotemSpirit && st.getCond() > 0 && (st.getQuestItemsCount(GrizzlyBlood) > 0 || st.getQuestItemsCount(FlameCharm) > 0 || st.getQuestItemsCount(BloodCauldron) > 0 || st.getQuestItemsCount(SpiritNet) > 0 || st.getQuestItemsCount(BoundDurkaSpirit) > 0 || st.getQuestItemsCount(TotemSpiritBlood) > 0 || st.getQuestItemsCount(TatarusLetterOfRecommendation) > 0))
-            htmltext = "hestui_totem_spirit_q0416_05.htm";
-        else if (npcId == SeerUmos) {
-            if (cond == 5) {
-                st.takeItems(TatarusLetterOfRecommendation, -1);
-                st.giveItems(FlameCharm, 1);
-                htmltext = "seer_umos_q0416_01.htm";
-                st.setCond(6);
-            } else if (cond == 6)
-                htmltext = "seer_umos_q0416_02.htm";
-            else if (cond == 7) {
-                st.takeItems(GrizzlyBlood, -1);
-                st.takeItems(FlameCharm, -1);
-                st.giveItems(BloodCauldron, 1);
-                htmltext = "seer_umos_q0416_03.htm";
-                st.setCond(8);
-            } else if (cond == 8)
-                htmltext = "seer_umos_q0416_04.htm";
-            else if (cond == 9 || cond == 10)
-                htmltext = "seer_umos_q0416_05.htm";
-            else if (cond == 11)
-                htmltext = "seer_umos_q0416_06.htm";
-        } else if (npcId == SeerMoira) {
-            if (cond == 12) {
-                htmltext = "seer_moirase_q0416_01.htm";
-                st.setCond(13);
-            } else if (cond > 12 && cond < 21)
-                htmltext = "seer_moirase_q0416_02.htm";
-            else if (cond == 21) {
-                htmltext = "seer_moirase_q0416_03.htm";
-                if (st.getPlayer().getClassId().getLevel() == 1) {
-                    st.giveItems(MaskOfMedium, 1);
-                    if (!st.getPlayer().getVarB("prof1")) {
-                        st.getPlayer().setVar("prof1", "1", -1);
-                        st.addExpAndSp(295862, 18194);
-                        //TODO [G1ta0] дать адены, если первый чар на акке 81900 х Config.RATE_QUESTS_OCCUPATION_CHANGE
-                        //st.giveItems(ADENA_ID, 81900);
-                    }
+        } else {
+            if (npcId == HestuiTotemSpirit && st.getCond() > 0) {
+                if (st.getQuestItemsCount(GrizzlyBlood) <= 0 && st.getQuestItemsCount(FlameCharm) <= 0 && st.getQuestItemsCount(BloodCauldron) <= 0 && st.getQuestItemsCount(SpiritNet) <= 0 && st.getQuestItemsCount(BoundDurkaSpirit) <= 0 && st.getQuestItemsCount(TotemSpiritBlood) <= 0) {
+                    st.getQuestItemsCount(TatarusLetterOfRecommendation);
                 }
-                st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(true);
             }
-        } else if (npcId == GandiTotemSpirit) {
-            if (cond == 13)
-                htmltext = "totem_spirit_gandi_q0416_01.htm";
-            else if (cond > 13 && cond < 20)
-                htmltext = "totem_spirit_gandi_q0416_03.htm";
-            else if (cond == 20)
-                htmltext = "totem_spirit_gandi_q0416_04.htm";
-        } else if (npcId == LeopardCarcass) {
-            if (cond <= 14)
-                htmltext = "dead_leopard_q0416_01a.htm";
-            else if (cond == 15) {
-                htmltext = "dead_leopard_q0416_01.htm";
-                st.setCond(16);
-            } else if (cond == 16)
-                htmltext = "dead_leopard_q0416_01.htm";
-            else if (cond == 17)
-                htmltext = "dead_leopard_q0416_02.htm";
-            else if (cond == 18)
-                htmltext = "dead_leopard_q0416_05.htm";
-            else if (cond == 19) {
-                htmltext = "dead_leopard_q0416_06.htm";
-                st.setCond(20);
-            } else
-                htmltext = "dead_leopard_q0416_06.htm";
-        } else if (npcId == DudaMaraTotemSpirit)
-            if (cond == 8)
-                htmltext = "dudamara_totem_spirit_q0416_01.htm";
-            else if (cond == 9)
-                htmltext = "dudamara_totem_spirit_q0416_04.htm";
-            else if (cond == 10) {
-                st.takeItems(BoundDurkaSpirit, -1);
-                st.giveItems(TotemSpiritBlood, 1);
-                htmltext = "dudamara_totem_spirit_q0416_05.htm";
-                st.setCond(11);
-            } else if (cond == 11)
-                htmltext = "dudamara_totem_spirit_q0416_06.htm";
+            if (npcId == SeerUmos) {
+                if (cond == 5) {
+                    st.takeItems(TatarusLetterOfRecommendation, -1);
+                    st.giveItems(FlameCharm, 1);
+                    htmltext = "seer_umos_q0416_01.htm";
+                    st.setCond(6);
+                } else if (cond == 6)
+                    htmltext = "seer_umos_q0416_02.htm";
+                else if (cond == 7) {
+                    st.takeItems(GrizzlyBlood, -1);
+                    st.takeItems(FlameCharm, -1);
+                    st.giveItems(BloodCauldron, 1);
+                    htmltext = "seer_umos_q0416_03.htm";
+                    st.setCond(8);
+                } else if (cond == 8)
+                    htmltext = "seer_umos_q0416_04.htm";
+                else if (cond == 9 || cond == 10)
+                    htmltext = "seer_umos_q0416_05.htm";
+                else if (cond == 11)
+                    htmltext = "seer_umos_q0416_06.htm";
+            } else if (npcId == SeerMoira) {
+                if (cond == 12) {
+                    htmltext = "seer_moirase_q0416_01.htm";
+                    st.setCond(13);
+                } else if (cond > 12 && cond < 21)
+                    htmltext = "seer_moirase_q0416_02.htm";
+                else if (cond == 21) {
+                    htmltext = "seer_moirase_q0416_03.htm";
+                    if (st.getPlayer().getClassId().getLevel() == 1) {
+                        st.giveItems(MaskOfMedium, 1);
+                        if (!st.getPlayer().getVarB("prof1")) {
+                            st.getPlayer().setVar("prof1", "1", -1);
+                            st.addExpAndSp(295862, 18194);
+                            //TODO [G1ta0] дать адены, если первый чар на акке 81900 х Config.RATE_QUESTS_OCCUPATION_CHANGE
+                            //st.giveItems(ADENA_ID, 81900);
+                        }
+                    }
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(true);
+                }
+            } else if (npcId == GandiTotemSpirit) {
+                if (cond == 13)
+                    htmltext = "totem_spirit_gandi_q0416_01.htm";
+                else if (cond > 13 && cond < 20)
+                    htmltext = "totem_spirit_gandi_q0416_03.htm";
+                else if (cond == 20)
+                    htmltext = "totem_spirit_gandi_q0416_04.htm";
+            } else if (npcId == LeopardCarcass) {
+                if (cond <= 14)
+                    htmltext = "dead_leopard_q0416_01a.htm";
+                else if (cond == 15) {
+                    htmltext = "dead_leopard_q0416_01.htm";
+                    st.setCond(16);
+                } else if (cond == 16)
+                    htmltext = "dead_leopard_q0416_01.htm";
+                else if (cond == 17)
+                    htmltext = "dead_leopard_q0416_02.htm";
+                else if (cond == 18)
+                    htmltext = "dead_leopard_q0416_05.htm";
+                else if (cond == 19) {
+                    htmltext = "dead_leopard_q0416_06.htm";
+                    st.setCond(20);
+                } else
+                    htmltext = "dead_leopard_q0416_06.htm";
+            } else if (npcId == DudaMaraTotemSpirit)
+                if (cond == 8)
+                    htmltext = "dudamara_totem_spirit_q0416_01.htm";
+                else if (cond == 9)
+                    htmltext = "dudamara_totem_spirit_q0416_04.htm";
+                else if (cond == 10) {
+                    st.takeItems(BoundDurkaSpirit, -1);
+                    st.giveItems(TotemSpiritBlood, 1);
+                    htmltext = "dudamara_totem_spirit_q0416_05.htm";
+                    st.setCond(11);
+                } else if (cond == 11)
+                    htmltext = "dudamara_totem_spirit_q0416_06.htm";
+        }
         return htmltext;
     }
 
@@ -327,8 +315,8 @@ public class _416_PathToOrcShaman extends Quest implements ScriptFile {
         } else if (npcId == QuestMonsterDurkaSpirit) {
             st.cancelQuestTimer("QuestMonsterDurkaSpirit_Fail");
 
-            for (NpcInstance qnpc : GameObjectsStorage.getAllByNpcId(QuestMonsterDurkaSpirit, false))
-                qnpc.deleteMe();
+            GameObjectsStorage.getAllByNpcId(QuestMonsterDurkaSpirit, false)
+                    .forEach(GameObject::deleteMe);
             if (cond == 9) {
                 st.takeItems(SpiritNet, -1);
                 st.takeItems(DurkaParasite, -1);

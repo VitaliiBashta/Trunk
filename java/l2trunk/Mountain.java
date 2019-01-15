@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 public class Mountain {
 
     public static void main(String[] args) {
-        List<String>  list = new ArrayList<>(Arrays.asList("Arnie","Chuck", "Slay"));
+        List<String>  list = new ArrayList<>(List.of("Arnie","Chuck", "Slay"));
         list.forEach(x -> {
             if (x.equals("Chuck")) {
                 list.remove(x);

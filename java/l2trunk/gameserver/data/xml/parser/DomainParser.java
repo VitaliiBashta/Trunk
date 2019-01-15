@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.Iterator;
 
-public enum DomainParser /*extends AbstractFileParser<MapRegionHolder>*/ {
+public enum DomainParser {
     INSTANCE;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
     Path xml = Config.DATAPACK_ROOT.resolve("data/mapregion/domains.xml");

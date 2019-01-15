@@ -86,10 +86,6 @@ public final class EventsConfig extends Functions implements ScriptFile {
         onLoad();
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
     private static void LoadConfig() {
         File files = new File(dir);
         if (!files.exists())

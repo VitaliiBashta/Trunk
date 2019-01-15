@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _191_VainConclusion extends Quest implements ScriptFile {
+public final class _191_VainConclusion extends Quest {
     private static final int Kusto = 30512;
     private static final int Lorain = 30673;
     private static final int Dorothy = 30970;
     private static final int Shegfield = 30068;
 
     private static final int Metal = 10371;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _191_VainConclusion() {
         super(false);

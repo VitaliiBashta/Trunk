@@ -15,7 +15,4 @@ public final class CollectionUtils {
         return hashCode;
     }
 
-    public static <E> E safeGet(List<E> list, int index) {
-        return list.size() > index ? list.get(index) : null;
-    }
 }

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class CustomDropItems extends Functions implements ScriptFile, OnDeathListener {
+public final class CustomDropItems extends Functions implements ScriptFile, OnDeathListener {
     private static final Logger _log = LoggerFactory.getLogger(CustomDropItems.class);
 
     private static final List<Integer> DROP = Config.CDItemsId;
@@ -41,16 +41,6 @@ public class CustomDropItems extends Functions implements ScriptFile, OnDeathLis
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public void onDeath(Creature cha, Creature killer) {
         if (!ALLOW_ONLY_RB_DROPS) {
             if ((ALLOW_MIN_MAX_PLAYER_LVL && checkValidate(killer, cha, true, false)) && (ALLOW_MIN_MAX_MOB_LVL && checkValidate(killer, cha, false, true))) {
@@ -61,8 +51,7 @@ public class CustomDropItems extends Functions implements ScriptFile, OnDeathLis
                 dropItemMob(cha, killer);
             } else if (!ALLOW_MIN_MAX_PLAYER_LVL && !ALLOW_MIN_MAX_MOB_LVL) {
                 dropItemMob(cha, killer);
-            } else
-                return;
+            }
         } else if (cha.isRaid() || cha.isBoss()) {
             if ((ALLOW_MIN_MAX_PLAYER_LVL && checkValidate(killer, cha, true, false)) && (ALLOW_MIN_MAX_MOB_LVL && checkValidate(killer, cha, false, true))) {
                 dropItemRb(cha, killer);

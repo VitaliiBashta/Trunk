@@ -3,9 +3,6 @@ package l2trunk.scripts.npc.model;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * @author pchayka
- */
 public final class SpecialMinionInstance extends MonsterInstance {
     public SpecialMinionInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -33,7 +30,6 @@ public final class SpecialMinionInstance extends MonsterInstance {
 
     @Override
     public void onRandomAnimation() {
-        return;
     }
 
 }

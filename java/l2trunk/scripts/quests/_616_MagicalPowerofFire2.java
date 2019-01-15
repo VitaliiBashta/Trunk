@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _616_MagicalPowerofFire2 extends Quest implements ScriptFile {
+public final class _616_MagicalPowerofFire2 extends Quest {
     // NPC
     private static final int KETRAS_HOLY_ALTAR = 31558;
     private static final int UDAN = 31379;
@@ -22,55 +22,14 @@ public class _616_MagicalPowerofFire2 extends Quest implements ScriptFile {
     private static final int Reward_First = 4589;
     private static final int Reward_Last = 4594;
 
-    //private final int[] VARKA_NPC_LIST = new int[20];
-
     private static final int SoulOfFireNastron = 25306;
     private NpcInstance SoulOfFireNastronSpawn = null;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _616_MagicalPowerofFire2() {
         super(true);
 
         addStartNpc(UDAN);
-
         addTalkId(KETRAS_HOLY_ALTAR);
-
-		/*
-		VARKA_NPC_LIST[0] = 21350;
-		VARKA_NPC_LIST[1] = 21351;
-		VARKA_NPC_LIST[2] = 21353;
-		VARKA_NPC_LIST[3] = 21354;
-		VARKA_NPC_LIST[4] = 21355;
-		VARKA_NPC_LIST[5] = 21357;
-		VARKA_NPC_LIST[6] = 21358;
-		VARKA_NPC_LIST[7] = 21360;
-		VARKA_NPC_LIST[8] = 21361;
-		VARKA_NPC_LIST[9] = 21362;
-		VARKA_NPC_LIST[10] = 21364;
-		VARKA_NPC_LIST[11] = 21365;
-		VARKA_NPC_LIST[12] = 21366;
-		VARKA_NPC_LIST[13] = 21368;
-		VARKA_NPC_LIST[14] = 21369;
-		VARKA_NPC_LIST[15] = 21370;
-		VARKA_NPC_LIST[16] = 21371;
-		VARKA_NPC_LIST[17] = 21372;
-		VARKA_NPC_LIST[18] = 21373;
-		VARKA_NPC_LIST[19] = 21374;
-
-		for (int npcId : VARKA_NPC_LIST)
-			addKillId(npcId);
-		 */
 
         addKillId(SoulOfFireNastron);
         addQuestItem(FIRE_HEART_OF_NASTRON);

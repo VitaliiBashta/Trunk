@@ -29,15 +29,14 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class ElcardiaAssistant extends DefaultAI {
     private static final Logger LOG = LoggerFactory.getLogger(ElcardiaAssistant.class);
-
-    private boolean _thinking = false;
-    private ScheduledFuture<?> _followTask;
-    private long _chatTimer;
     private final Skill vampRage = SkillTable.INSTANCE.getInfo(6727);
     private final Skill holyResist = SkillTable.INSTANCE.getInfo(6729);
     private final Skill blessBlood = SkillTable.INSTANCE.getInfo(6725);
     private final Skill recharge = SkillTable.INSTANCE.getInfo(6728);
     private final Skill heal = SkillTable.INSTANCE.getInfo(6724);
+    private boolean _thinking = false;
+    private ScheduledFuture<?> _followTask;
+    private long _chatTimer;
 
     public ElcardiaAssistant(NpcInstance actor) {
         super(actor);
@@ -50,9 +49,7 @@ public final class ElcardiaAssistant extends DefaultAI {
     }
 
     private Player getMaster() {
-        if (!getActor().getReflection().getPlayers().isEmpty())
-            return getActor().getReflection().getPlayers().get(0);
-        return null;
+        return getActor().getReflection().getPlayers().findFirst().orElse(null);
     }
 
     @Override
@@ -166,7 +163,7 @@ public final class ElcardiaAssistant extends DefaultAI {
                             addDesiredSkill(d_skill, target, distance, vampRage);
                             addDesiredSkill(d_skill, target, distance, holyResist);
 
-                            Skill r_skill = selectTopSkill(d_skill);
+                            int r_skill = selectTopSkill(d_skill);
                             chooseTaskAndTargets(r_skill, target, distance);
                             doTask();
                         } else if (qs2.getCond() == 3)
@@ -195,7 +192,7 @@ public final class ElcardiaAssistant extends DefaultAI {
                             addDesiredSkill(d_skill, target, distance, vampRage);
                             addDesiredSkill(d_skill, target, distance, holyResist);
 
-                            Skill r_skill = selectTopSkill(d_skill);
+                            int r_skill = selectTopSkill(d_skill);
                             chooseTaskAndTargets(r_skill, target, distance);
                             doTask();
                         }
@@ -214,7 +211,7 @@ public final class ElcardiaAssistant extends DefaultAI {
                             addDesiredSkill(d_skill, target, distance, vampRage);
                             addDesiredSkill(d_skill, target, distance, holyResist);
 
-                            Skill r_skill = selectTopSkill(d_skill);
+                            int r_skill = selectTopSkill(d_skill);
                             chooseTaskAndTargets(r_skill, target, distance);
                             doTask();
                         }
@@ -225,6 +222,11 @@ public final class ElcardiaAssistant extends DefaultAI {
             }
         }
         // -----------------
+
+    }
+
+    @Override
+    public void addTaskAttack(Creature target) {
 
     }
 
@@ -249,10 +251,5 @@ public final class ElcardiaAssistant extends DefaultAI {
             }
             _followTask = ThreadPoolManager.INSTANCE.schedule(this, 250L);
         }
-    }
-
-    @Override
-    public void addTaskAttack(Creature target) {
-
     }
 }

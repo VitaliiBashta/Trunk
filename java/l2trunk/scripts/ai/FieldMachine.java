@@ -3,13 +3,12 @@ package l2trunk.scripts.ai;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.List;
-
 public final class FieldMachine extends DefaultAI {
-    private long _lastAction;
+    private long lastaction;
 
     public FieldMachine(NpcInstance actor) {
         super(actor);
@@ -22,14 +21,14 @@ public final class FieldMachine extends DefaultAI {
             return;
 
         // Ругаемся не чаще, чем раз в 15 секунд
-        if (System.currentTimeMillis() - _lastAction > 15000) {
-            _lastAction = System.currentTimeMillis();
+        if (System.currentTimeMillis() - lastaction > 15000) {
+            lastaction = System.currentTimeMillis();
             Functions.npcSayCustomMessage(actor, "scripts.ai.FieldMachine." + actor.getNpcId());
-            List<NpcInstance> around = actor.getAroundNpc(1500, 300);
-            if (around != null && !around.isEmpty())
-                for (NpcInstance npc : around)
-                    if (npc.isMonster() && npc.getNpcId() >= 22656 && npc.getNpcId() <= 22659)
-                        npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000);
+            actor.getAroundNpc(1500, 300)
+                    .filter(GameObject::isMonster)
+                    .filter(npc -> npc.getNpcId() >= 22656)
+                    .filter(npc -> npc.getNpcId() <= 22659)
+                    .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000));
         }
     }
 }

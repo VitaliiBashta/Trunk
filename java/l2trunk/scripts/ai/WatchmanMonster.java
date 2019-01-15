@@ -9,17 +9,14 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-/**
- * AI для ищущих помощи при HP < 50%
- *
- * @author Diamond
- */
-public class WatchmanMonster extends Fighter {
+import java.util.List;
+
+public final class WatchmanMonster extends Fighter {
+    private static final List<String> flood = List.of("I'll be back", "You are stronger than expected");
+    private static final List<String> flood2 = List.of("Help me!", "Alarm! We are under attack!");
     private long _lastSearch = 0;
     private boolean isSearching = false;
     private HardReference<? extends Creature> _attackerRef = HardReferences.emptyRef();
-    private static final String[] flood = {"I'll be back", "You are stronger than expected"};
-    private static final String[] flood2 = {"Help me!", "Alarm! We are under attack!"};
 
     public WatchmanMonster(NpcInstance actor) {
         super(actor);
@@ -45,16 +42,17 @@ public class WatchmanMonster extends Fighter {
         Creature attacker = _attackerRef.get();
         if (attacker == null)
             return false;
-
-        for (final NpcInstance npc : actor.getAroundNpc(1000, 150))
-            if (!actor.isDead() && npc.isInFaction(actor) && !npc.isInCombat()) {
+        if (!actor.isDead())
+            actor.getAroundNpc(1000, 150)
+                    .filter(npc -> npc.isInFaction(actor))
+                    .filter(npc -> !npc.isInCombat())
+                    .findFirst().ifPresent(npc -> {
                 clearTasks();
                 isSearching = true;
                 addTaskMove(npc.getLoc(), true);
-                Functions.npcSay(actor, flood[Rnd.get(flood.length)]);
-                return true;
-            }
-        return false;
+                Functions.npcSay(actor, Rnd.get(flood));
+            });
+        return isSearching;
     }
 
     @Override
@@ -71,7 +69,7 @@ public class WatchmanMonster extends Fighter {
         if (isSearching) {
             Creature attacker = _attackerRef.get();
             if (attacker != null) {
-                Functions.npcSay(actor, flood2[Rnd.get(flood2.length)]);
+                Functions.npcSay(actor, Rnd.get(flood2));
                 notifyFriends(attacker, 100);
             }
             isSearching = false;

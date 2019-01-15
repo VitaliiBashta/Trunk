@@ -5,24 +5,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _011_SecretMeetingWithKetraOrcs extends Quest implements ScriptFile {
+public final class _011_SecretMeetingWithKetraOrcs extends Quest {
     private final int CADMON = 31296;
     private final int LEON = 31256;
     private final int WAHKAN = 31371;
 
     private final int MUNITIONS_BOX = 7231;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _011_SecretMeetingWithKetraOrcs() {
         super(false);

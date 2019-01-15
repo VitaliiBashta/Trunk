@@ -9,12 +9,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Test Of Witchcraft
- *
- * @author Sergey Ibryaev aka Artful
- */
-public class _229_TestOfWitchcraft extends Quest implements ScriptFile {
+public final class _229_TestOfWitchcraft extends Quest {
     //NPC
     private static final int Orim = 30630;
     private static final int Alexandria = 30098;
@@ -188,18 +183,6 @@ public class _229_TestOfWitchcraft extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _229_TestOfWitchcraft() {
         super(false);
 
@@ -223,8 +206,7 @@ public class _229_TestOfWitchcraft extends Quest implements ScriptFile {
         addKillId(SkeletalMercenary);
         addKillId(DrevanulPrinceZeruel);
 
-        addQuestItem(new int[]{
-                OrimsDiagram,
+        addQuestItem(OrimsDiagram,
                 OrimsInstructions,
                 Orims1stLetter,
                 Orims2stLetter,
@@ -252,8 +234,7 @@ public class _229_TestOfWitchcraft extends Quest implements ScriptFile {
                 EnchantedGolemHeartstone,
                 LetoLizardmanCharm,
                 Aklantoth_3stGem,
-                TamlinOrcAmulet
-        });
+                TamlinOrcAmulet);
     }
 
     @Override

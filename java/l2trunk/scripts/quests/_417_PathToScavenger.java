@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _417_PathToScavenger extends Quest implements ScriptFile {
+public final class _417_PathToScavenger extends Quest {
     // ITEMS
     private final int RING_OF_RAVEN = 1642;
     private final int PIPIS_LETTER = 1643;
@@ -41,15 +41,6 @@ public class _417_PathToScavenger extends Quest implements ScriptFile {
     private final int HoneyBear = 27058;
     private final int PlunderTarantula = 20508;
     private final int HunterBear = 20777;
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
 
     public _417_PathToScavenger() {
         super(false);

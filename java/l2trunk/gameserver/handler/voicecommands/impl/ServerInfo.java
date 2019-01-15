@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class ServerInfo extends Functions implements IVoicedCommandHandler {
-    private static final List<String> _commandList = Arrays.asList("ver", "rev");
+public final class ServerInfo extends Functions implements IVoicedCommandHandler {
+    private static final List<String> _commandList = List.of("ver", "rev");
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 

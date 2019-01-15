@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _061_LawEnforcement extends Quest implements ScriptFile {
+public final class _061_LawEnforcement extends Quest {
     /**
      * The one who knows everything
      * Visit Kekropus in Kamael Village to learn more about the Inspector and Judicator.
@@ -24,18 +24,6 @@ public class _061_LawEnforcement extends Quest implements ScriptFile {
     private static final int Kekropus = 32138;
     private static final int Eindburgh = 32469;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _061_LawEnforcement() {
         super(false);
         addStartNpc(Liane);
@@ -45,29 +33,35 @@ public class _061_LawEnforcement extends Quest implements ScriptFile {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("ask")) {
-            if (st.getPlayer().getRace() != Race.kamael) {
-                htmltext = "grandmaste_piane_q0061_03.htm";
+        switch (event) {
+            case "ask":
+                if (st.getPlayer().getRace() != Race.kamael) {
+                    htmltext = "grandmaste_piane_q0061_03.htm";
+                    st.exitCurrentQuest(true);
+                } else if (st.getPlayer().getClassId() != ClassId.inspector || st.getPlayer().getLevel() < 76) {
+                    htmltext = "grandmaste_piane_q0061_02.htm";
+                    st.exitCurrentQuest(true);
+                } else
+                    htmltext = "grandmaste_piane_q0061_04.htm";
+                break;
+            case "accept":
+                st.setState(STARTED);
+                st.setCond(COND1);
+                st.playSound(SOUND_ACCEPT);
+                htmltext = "grandmaste_piane_q0061_05.htm";
+                break;
+            case "kekrops_q0061_09.htm":
+                st.setCond(COND2);
+                break;
+            case "subelder_aientburg_q0061_08.htm":
+            case "subelder_aientburg_q0061_09.htm":
+                st.giveItems(ADENA_ID, 26000);
+                st.getPlayer().setClassId(ClassId.judicator.ordinal(), false, true);
+                st.getPlayer().broadcastCharInfo();
+                st.getPlayer().broadcastPacket(new MagicSkillUse(st.getPlayer(), 4339, 1, 6000));
+                st.getPlayer().broadcastPacket(new MagicSkillUse(npc, 4339, 1, 6000));
                 st.exitCurrentQuest(true);
-            } else if (st.getPlayer().getClassId() != ClassId.inspector || st.getPlayer().getLevel() < 76) {
-                htmltext = "grandmaste_piane_q0061_02.htm";
-                st.exitCurrentQuest(true);
-            } else
-                htmltext = "grandmaste_piane_q0061_04.htm";
-        } else if (event.equals("accept")) {
-            st.setState(STARTED);
-            st.setCond(COND1);
-            st.playSound(SOUND_ACCEPT);
-            htmltext = "grandmaste_piane_q0061_05.htm";
-        } else if (event.equals("kekrops_q0061_09.htm"))
-            st.setCond(COND2);
-        else if (event.equals("subelder_aientburg_q0061_08.htm") || event.equals("subelder_aientburg_q0061_09.htm")) {
-            st.giveItems(ADENA_ID, 26000);
-            st.getPlayer().setClassId(ClassId.judicator.ordinal(), false, true);
-            st.getPlayer().broadcastCharInfo();
-            st.getPlayer().broadcastPacket(new MagicSkillUse(st.getPlayer(), 4339, 1, 6000));
-            st.getPlayer().broadcastPacket(new MagicSkillUse(npc, 4339, 1, 6000));
-            st.exitCurrentQuest(true);
+                break;
         }
         return htmltext;
     }

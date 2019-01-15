@@ -10,20 +10,19 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class FreyaEventAI extends DefaultAI {
-    private static final List<Integer> GIFT_SKILLS = Arrays.asList(9150, 9151, 9152, 9153, 9154, 9155, 9156);
+    private static final List<Integer> GIFT_SKILLS = List.of(9150, 9151, 9152, 9153, 9154, 9155, 9156);
     private static final int GIFT_CHANCE = 5;
     private static final int FREYA_GIFT = 17138;
-    private static final NpcString[] SAY_TEXT = new NpcString[]{
+    private static final List<NpcString> SAY_TEXT = List.of(
             NpcString.DEAR_S1,
             NpcString.BUT_I_KIND_OF_MISS_IT,
             NpcString.I_JUST_DONT_KNOW_WHAT_EXPRESSION_I_SHOULD_HAVE_IT_APPEARED_ON_ME,
             NpcString.EVEN_THOUGH_YOU_BRING_SOMETHING_CALLED_A_GIFT_AMONG_YOUR_HUMANS_IT_WOULD_JUST_BE_PROBLEMATIC_FOR_ME,
             NpcString.THE_FEELING_OF_THANKS_IS_JUST_TOO_MUCH_DISTANT_MEMORY_FOR_ME,
-            NpcString.I_AM_ICE_QUEEN_FREYA};
+            NpcString.I_AM_ICE_QUEEN_FREYA);
 
     public FreyaEventAI(NpcInstance actor) {
         super(actor);
@@ -54,10 +53,10 @@ public final class FreyaEventAI extends DefaultAI {
 
         if (GIFT_SKILLS.contains(skill.getId())) {
             if (Rnd.chance(GIFT_CHANCE)) {
-                Functions.npcSay(actor, SAY_TEXT[0], player.getName());
+                Functions.npcSay(actor, SAY_TEXT.get(0), player.getName());
                 Functions.addItem(player, FREYA_GIFT, 1, "FreyaEventAI");
             } else if (Rnd.chance(70))
-                Functions.npcSay(actor, SAY_TEXT[Rnd.get(1, SAY_TEXT.length - 1)]);
+                Functions.npcSay(actor, Rnd.get(SAY_TEXT));
         }
     }
 

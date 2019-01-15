@@ -4,11 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public final class _376_GiantsExploration1 extends Quest implements ScriptFile {
+public final class _376_GiantsExploration1 extends Quest {
 
     // Ancient parchment drop rate in %
     private static final int DROP_RATE = 3;

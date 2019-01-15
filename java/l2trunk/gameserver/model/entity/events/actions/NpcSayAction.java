@@ -46,9 +46,9 @@ public final class NpcSayAction implements EventAction {
                             packet(npc, player);
                     });
         } else {
-            for (Player player : World.getAroundPlayers(npc, _range, Math.max(_range / 2, 200)))
-                if (npc.getReflection() == player.getReflection())
-                    packet(npc, player);
+            World.getAroundPlayers(npc, _range, Math.max(_range / 2, 200))
+                    .filter(player -> npc.getReflection() == player.getReflection())
+                    .forEach(player -> packet(npc, player));
         }
     }
 

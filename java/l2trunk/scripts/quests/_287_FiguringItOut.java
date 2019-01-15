@@ -9,9 +9,9 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _287_FiguringItOut extends Quest implements ScriptFile {
+public final class _287_FiguringItOut extends Quest {
     private static final int Laki = 32742;
-    private static final List<Integer> TantaClan = Arrays.asList(
+    private static final List<Integer> TantaClan = List.of(
             22768, 22769, 22770, 22771, 22772, 22773, 22774);
     private static final int VialofTantaBlood = 15499;
 
@@ -148,17 +148,5 @@ public final class _287_FiguringItOut extends Quest implements ScriptFile {
                 st.giveItems(VialofTantaBlood, 1, true);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

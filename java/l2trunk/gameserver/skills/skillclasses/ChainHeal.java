@@ -10,7 +10,6 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.conditions.ConditionTargetRelation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,7 @@ public final class ChainHeal extends Skill {
     public ChainHeal(StatsSet set) {
         super(set);
         _healRadius = set.getInteger("healRadius", 350);
-        List<String> params = Arrays.asList(set.getString("healPercents", "").split(";"));
+        List<String> params = List.of(set.getString("healPercents", "").split(";"));
         _maxTargets = params.size();
         _healPercents = params.stream()
                 .map(NumberUtils::toInt)
@@ -76,9 +75,9 @@ public final class ChainHeal extends Skill {
     @Override
     public List<Creature> getTargets(Creature activeChar, Creature aimingTarget, boolean forceUse) {
         List<Creature> result = new ArrayList<>();
-        List<Creature> targets = aimingTarget.getAroundCharacters(_healRadius, _healRadius);
-        if (targets == null) {
-            return result;
+        List<Creature> targets = aimingTarget.getAroundCharacters(_healRadius, _healRadius).collect(Collectors.toList());
+        if (targets.isEmpty()) {
+            return targets;
         }
 
         List<HealTarget> healTargets = new ArrayList<>();
@@ -86,7 +85,7 @@ public final class ChainHeal extends Skill {
         for (Creature target : targets) {
             if ((target == null) || target.isHealBlocked() || target.isCursedWeaponEquipped()
                     || (ConditionTargetRelation.getRelation(activeChar, target) != ConditionTargetRelation.Relation.Friend)
-                /*|| target.isAutoAttackable(activeChar)*/) // there are now at anthars let's go to see?okay i will play a bit
+                )
             {
                 continue;
             }

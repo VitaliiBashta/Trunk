@@ -46,7 +46,6 @@ public final class Log {
     public static final String ClanWarehouseDeposit = "ClanWarehouseDeposit";
     public static final String ClanWarehouseWithdraw = "ClanWarehouseWithdraw";
     private static final Logger _logChat = LoggerFactory.getLogger("chat");
-    private static final Logger _logEvents = LoggerFactory.getLogger("events");
     private static final Logger _logGm = LoggerFactory.getLogger("gmactions");
     private static final Logger _logGame = LoggerFactory.getLogger("game");
     private static final Logger _logService = LoggerFactory.getLogger("service");
@@ -115,25 +114,6 @@ public final class Log {
         }
         String output = cat + ": " + text;
         _logService.info(output);
-    }
-
-    public static void LogEvents(String name, String action, String player, String target, String text) {
-        StringBuilder output = new StringBuilder();
-        output.append(name);
-        output.append(": ");
-        output.append(action);
-        output.append(' ');
-        output.append('[');
-        output.append(player);
-        if (target != null) {
-            output.append(" -> ");
-            output.append(target);
-        }
-        output.append(']');
-        output.append(' ');
-        output.append(text);
-
-        _logEvents.info(output.toString());
     }
 
     public static void LogCommand(Player player, GameObject target, String command, boolean success) {

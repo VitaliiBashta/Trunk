@@ -1,7 +1,6 @@
 package l2trunk.gameserver.model.items;
 
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.listener.inventory.OnEquipListener;
@@ -983,13 +982,15 @@ public abstract class Inventory extends ItemContainer {
 
     protected class InventoryListenerList extends ListenerList {
         void onEquip(int slot, ItemInstance item) {
-            for (Listener listener : getListeners())
-                ((OnEquipListener) listener).onEquip(slot, item, getActor());
+            getListeners().filter(l -> l instanceof OnEquipListener)
+                    .map(l -> (OnEquipListener) l)
+                    .forEach(l -> l.onEquip(slot, item, getActor()));
         }
 
         void onUnequip(int slot, ItemInstance item) {
-            for (Listener listener : getListeners())
-                ((OnEquipListener) listener).onUnequip(slot, item, getActor());
+            getListeners().filter(l -> l instanceof OnEquipListener)
+                    .map(l -> (OnEquipListener) l)
+                    .forEach(l -> l.onUnequip(slot, item, getActor()));
         }
     }
 }

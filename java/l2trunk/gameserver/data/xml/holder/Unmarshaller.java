@@ -11,7 +11,7 @@ public final class Unmarshaller {
     private Unmarshaller() {
     }
 
-    @SuppressWarnings("unchecked")
+//    @SuppressWarnings("unchecked")
     public static <T> T unMarshall(Path path, Class<T> clazz) {
         T result = null;
         try {

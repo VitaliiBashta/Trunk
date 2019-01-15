@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Даные параметры актуальны для С6(Interlude), 04/10/2007, протокол 746
  */
-public class StatusUpdate extends L2GameServerPacket {
+public final class StatusUpdate extends L2GameServerPacket {
     /**
      * Даный параметр отсылается оффом в паре с MAX_HP
      * Сначала CUR_HP, потом MAX_HP

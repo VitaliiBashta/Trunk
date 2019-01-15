@@ -6,21 +6,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _320_BonesTellFuture extends Quest implements ScriptFile {
+public final class _320_BonesTellFuture extends Quest {
     //item
     private final int BONE_FRAGMENT = 809;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _320_BonesTellFuture() {
         super(false);

@@ -6,26 +6,14 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _258_BringWolfPelts extends Quest implements ScriptFile {
+public final class _258_BringWolfPelts extends Quest {
     private final int WOLF_PELT = 702;
 
-    private final int Cotton_Shirt = 390;
-    private final int Leather_Pants = 29;
-    private final int Leather_Shirt = 22;
-    private final int Short_Leather_Gloves = 1119;
-    private final int Tunic = 426;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int Cotton_Shirt = 390;
+    private static final int Leather_Pants = 29;
+    private static final int Leather_Shirt = 22;
+    private static final int Short_Leather_Gloves = 1119;
+    private static final int Tunic = 426;
 
     public _258_BringWolfPelts() {
         super(false);

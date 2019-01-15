@@ -2,7 +2,6 @@ package l2trunk.gameserver.model.entity.olympiad;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.lang.StringUtils;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Player;
@@ -19,7 +18,6 @@ import l2trunk.gameserver.skills.EffectType;
 import l2trunk.gameserver.skills.TimeStamp;
 import l2trunk.gameserver.taskmanager.CancelTaskManager;
 import l2trunk.gameserver.templates.InstantZone;
-import l2trunk.gameserver.utils.FixEnchantOlympiad;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Log;
 
@@ -203,10 +201,6 @@ public final class TeamMember {
         player._stablePoint = null;
         player.teleToLocation(_returnLoc, ReflectionManager.DEFAULT);
 
-        // Восстанавливаем точку итемов
-        if (Config.OLY_ENCH_LIMIT_ENABLE && player.getVar("EnItemOlyRec") != null) {
-            FixEnchantOlympiad.restoreEnchantItemsOly(player);
-        }
     }
 
     public void preparePlayer() {
@@ -273,11 +267,6 @@ public final class TeamMember {
         if (weapon != null) {
             weapon.setChargedSpiritshot(ItemInstance.CHARGED_NONE);
             weapon.setChargedSoulshot(ItemInstance.CHARGED_NONE);
-        }
-
-        // Проверяем точку итемов
-        if (Config.OLY_ENCH_LIMIT_ENABLE) {
-            FixEnchantOlympiad.storeEnchantItemsOly(player);
         }
 
         heal();

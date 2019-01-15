@@ -12,10 +12,7 @@
  */
 package l2trunk.gameserver.utils;
 
-/**
- * @author FBIagent
- */
-final class LinePointIterator3D {
+public final class LinePointIterator3D {
     private final int _dstX;
     private final int _dstY;
     private final int _dstZ;

@@ -7,14 +7,12 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class _999_T1Tutorial extends Quest implements ScriptFile {
+public final class _999_T1Tutorial extends Quest {
     private static final int RECOMMENDATION_01 = 1067;
     private static final int RECOMMENDATION_02 = 1068;
     private static final int LEAF_OF_MOTHERTREE = 1069;
@@ -192,21 +190,11 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
 
     public _999_T1Tutorial() {
         super(false);
-        List<Integer> startNPCs = Arrays.asList(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
-        addStartNpc(startNPCs);
+        addStartNpc(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
         addTalkId(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
         addFirstTalkId(30008, 30009, 30017, 30019, 30129, 30131, 30573, 30575, 30370, 30528, 30530, 30400, 30401, 30402, 30403, 30404, 32133, 32134);
 
         addKillId(18342, 20001);
-    }
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
     }
 
     @Override
@@ -243,7 +231,7 @@ public class _999_T1Tutorial extends Quest implements ScriptFile {
             }
             return null;
         } else if (event.equalsIgnoreCase("isle")) {
-            st.addRadar(-119692, 44504, 380);
+            st.addRadar(new Location(-119692, 44504, 380));
             player.teleToLocation(-120050, 44500, 360);
             String title = npc == null ? "" : npc.getTitle() + " " + npc.getName();
             htmltext = "<html><body>" + title + "<br>Go to the <font color=\"LEVEL\">Isle of Souls</font> and meet the <font color=\"LEVEL\">Newbie Guide</font> there to learn a number of important tips. He will also give you an item to assist your development.<br>Follow the direction arrow above your head and it will lead you to the Newbie Guide. Good luck!</body></html>";

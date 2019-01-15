@@ -43,15 +43,15 @@ public class MerchantInstance extends NpcInstance {
             return getTemplate().getHtmRoot() + pom + ".htm";
 
         String temp = "merchant/" + pom + ".htm";
-        if (HtmCache.INSTANCE.getNullable(temp, player) != null)
+        if (HtmCache.INSTANCE.getNullable(temp) != null)
             return temp;
 
         temp = "teleporter/" + pom + ".htm";
-        if (HtmCache.INSTANCE.getNullable(temp, player) != null)
+        if (HtmCache.INSTANCE.getNullable(temp) != null)
             return temp;
 
         temp = "petmanager/" + pom + ".htm";
-        if (HtmCache.INSTANCE.getNullable(temp, player) != null)
+        if (HtmCache.INSTANCE.getNullable(temp) != null)
             return temp;
 
         return "default/" + pom + ".htm";

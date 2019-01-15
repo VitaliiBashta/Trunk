@@ -133,9 +133,6 @@ public class Christmas extends Functions implements ScriptFile, OnDeathListener,
         unSpawnEventManagers();
     }
 
-    /**
-     * Обработчик смерти мобов, управляющий эвентовым дропом
-     */
     @Override
     public void onDeath(Creature cha, Creature killer) {
         if (active && SimpleCheckDrop(cha, killer)) {

@@ -5,7 +5,6 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
@@ -35,9 +34,8 @@ public final class IceKnightNormal extends Fighter {
     private void aggroPlayers() {
         Reflection r = getActor().getReflection();
         if (r != null && r.getPlayers() != null) {
-            for (Player p : r.getPlayers()) {
-                notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 300);
-            }
+            r.getPlayers().forEach(p ->
+                    notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 300));
         }
     }
 
@@ -55,6 +53,10 @@ public final class IceKnightNormal extends Fighter {
         super.onEvtAttacked(attacker, damage);
     }
 
+    @Override
+    public void teleportHome() {
+    }
+
     private class ReleaseFromIce extends RunnableImpl {
         @Override
         public void runImpl() {
@@ -65,9 +67,5 @@ public final class IceKnightNormal extends Fighter {
                 aggroPlayers(); // Additional aggro
             }
         }
-    }
-
-    @Override
-    public void teleportHome() {
     }
 }

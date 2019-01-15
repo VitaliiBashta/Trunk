@@ -12,24 +12,12 @@ import l2trunk.gameserver.scripts.ScriptFile;
  * Info: Один из 2х квестов для прохода на остров Hellbound.
  * Info: Пройдя его ведьма Galate открывает ТП до локации (xyz = -11095, 236440, -3232)
  */
-public class _130_PathToHellbound extends Quest implements ScriptFile {
+public final class _130_PathToHellbound extends Quest {
     // NPC's
     private static final int CASIAN = 30612;
     private static final int GALATE = 32292;
     // ITEMS
     private static final int CASIAN_BLUE_CRY = 12823;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _130_PathToHellbound() {
         super(false);

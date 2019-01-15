@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _347_GoGetTheCalculator extends Quest implements ScriptFile {
+public final class _347_GoGetTheCalculator extends Quest {
     //npc
     private final int BRUNON = 30526;
     private final int SILVERA = 30527;
@@ -17,19 +17,7 @@ public class _347_GoGetTheCalculator extends Quest implements ScriptFile {
     //quest items
     private final int GEMSTONE_BEAST_CRYSTAL = 4286;
     private final int CALCULATOR_Q = 4285;
-    private final int CALCULATOR = 4393;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int CALCULATOR = 4393;
 
     public _347_GoGetTheCalculator() {
         super(false);

@@ -7,22 +7,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _159_ProtectHeadsprings extends Quest implements ScriptFile {
+public final class _159_ProtectHeadsprings extends Quest {
     private final int PLAGUE_DUST_ID = 1035;
     private final int HYACINTH_CHARM1_ID = 1071;
     private final int HYACINTH_CHARM2_ID = 1072;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _159_ProtectHeadsprings() {
         super(false);
@@ -31,11 +19,9 @@ public class _159_ProtectHeadsprings extends Quest implements ScriptFile {
 
         addKillId(27017);
 
-        addQuestItem(new int[]{
-                PLAGUE_DUST_ID,
+        addQuestItem(PLAGUE_DUST_ID,
                 HYACINTH_CHARM1_ID,
-                HYACINTH_CHARM2_ID
-        });
+                HYACINTH_CHARM2_ID);
     }
 
     @Override

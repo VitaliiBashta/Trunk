@@ -19,6 +19,7 @@ import l2trunk.gameserver.utils.ItemFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 public final class RainbowYetiInstance extends NpcInstance {
@@ -42,22 +43,18 @@ public final class RainbowYetiInstance extends NpcInstance {
     private static final int ItemU = 8053;
     private static final int ItemW = 8054;
     private static final int ItemY = 8055;
-    private static final Word[] WORLD_LIST = new Word[8];
-
-    static {
-        WORLD_LIST[0] = new Word("BABYDUCK", new int[]{ItemB, 2}, new int[]{ItemA, 1}, new int[]{ItemY, 1}, new int[]{ItemD, 1}, new int[]{ItemU, 1}, new int[]{ItemC, 1}, new int[]{ItemK, 1});
-        WORLD_LIST[1] = new Word("ALBATROS", new int[]{ItemA, 2}, new int[]{ItemL, 1}, new int[]{ItemB, 1}, new int[]{ItemT, 1}, new int[]{ItemR, 1}, new int[]{ItemO, 1}, new int[]{ItemS, 1});
-        WORLD_LIST[2] = new Word("PELICAN", new int[]{ItemP, 1}, new int[]{ItemE, 1}, new int[]{ItemL, 1}, new int[]{ItemI, 1}, new int[]{ItemC, 1}, new int[]{ItemA, 1}, new int[]{ItemN, 1});
-        WORLD_LIST[3] = new Word("KINGFISHER", new int[]{ItemK, 1}, new int[]{ItemI, 1}, new int[]{ItemN, 1}, new int[]{ItemG, 1}, new int[]{ItemF, 1}, new int[]{ItemI, 1}, new int[]{ItemS, 1}, new int[]{ItemH, 1}, new int[]{ItemE, 1}, new int[]{ItemR, 1});
-        WORLD_LIST[4] = new Word("CYGNUS", new int[]{ItemC, 1}, new int[]{ItemY, 1}, new int[]{ItemG, 1}, new int[]{ItemN, 1}, new int[]{ItemU, 1}, new int[]{ItemS, 1});
-        WORLD_LIST[5] = new Word("TRITON", new int[]{ItemT, 2}, new int[]{ItemR, 1}, new int[]{ItemI, 1}, new int[]{ItemN, 1});
-        WORLD_LIST[6] = new Word("RAINBOW", new int[]{ItemR, 1}, new int[]{ItemA, 1}, new int[]{ItemI, 1}, new int[]{ItemN, 1}, new int[]{ItemB, 1}, new int[]{ItemO, 1}, new int[]{ItemW, 1});
-        WORLD_LIST[7] = new Word("SPRING", new int[]{ItemS, 1}, new int[]{ItemP, 1}, new int[]{ItemR, 1}, new int[]{ItemI, 1}, new int[]{ItemN, 1}, new int[]{ItemG, 1});
-    }
+    private static final List<Word> WORLD_LIST = List.of(
+            new Word("BABYDUCK", Map.of(ItemB, 2, ItemA, 1, ItemY, 1, ItemD, 1, ItemU, 1, ItemC, 1, ItemK, 1)),
+            new Word("ALBATROS", Map.of(ItemA, 2, ItemL, 1, ItemB, 1, ItemT, 1, ItemR, 1, ItemO, 1, ItemS, 1)),
+            new Word("PELICAN", Map.of(ItemP, 1, ItemE, 1, ItemL, 1, ItemI, 1, ItemC, 1, ItemA, 1, ItemN, 1)),
+            new Word("KINGFISHER", Map.of(ItemK, 1, ItemN, 1, ItemG, 1, ItemF, 1, ItemI, 1, ItemS, 1, ItemH, 1, ItemE, 1, ItemR, 1)),
+            new Word("CYGNUS", Map.of(ItemC, 1, ItemY, 1, ItemG, 1, ItemN, 1, ItemU, 1, ItemS, 1)),
+            new Word("TRITON", Map.of(ItemT, 2, ItemR, 1, ItemI, 1, ItemN, 1)),
+            new Word("RAINBOW", Map.of(ItemR, 1, ItemA, 1, ItemI, 1, ItemN, 1, ItemB, 1, ItemO, 1, ItemW, 1)),
+            new Word("SPRING", Map.of(ItemS, 1, ItemP, 1, ItemR, 1, ItemI, 1, ItemN, 1, ItemG, 1)));
 
     private final List<GameObject> _mobs = new ArrayList<>();
-    private int _generated = -1;
-    private Future<?> _task = null;
+    private Future<?> task = null;
 
     public RainbowYetiInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -71,23 +68,22 @@ public final class RainbowYetiInstance extends NpcInstance {
         if (event == null)
             return;
 
-        List<Player> around = World.getAroundPlayers(this, 750, 100);
-        for (Player player : around) {
-            CMGSiegeClanObject siegeClanObject = event.getSiegeClan(ClanHallMiniGameEvent.ATTACKERS, player.getClan());
-
-            if (siegeClanObject == null || !siegeClanObject.getPlayers().contains(player.getObjectId()))
-                player.teleToLocation(event.getResidence().getOtherRestartPoint());
-        }
-
-        _task = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GenerateTask(), 10000L, 300000L);
+        World.getAroundPlayers(this, 750, 100)
+                .filter(player -> {
+                    CMGSiegeClanObject siegeClanObject = event.getSiegeClan(ClanHallMiniGameEvent.ATTACKERS, player.getClan());
+                    return (siegeClanObject == null || !siegeClanObject.getPlayers().contains(player.getObjectId()));
+                })
+                .forEach(player ->
+                        player.teleToLocation(event.getResidence().getOtherRestartPoint()));
+        task = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new GenerateTask(), 10000L, 300000L);
     }
 
     @Override
     public void onDelete() {
         super.onDelete();
-        if (_task != null) {
-            _task.cancel(false);
-            _task = null;
+        if (task != null) {
+            task.cancel(false);
+            task = null;
         }
 
         for (GameObject object : _mobs)
@@ -96,13 +92,12 @@ public final class RainbowYetiInstance extends NpcInstance {
         _mobs.clear();
     }
 
-    public void teleportFromArena() {
+    void teleportFromArena() {
         ClanHallMiniGameEvent event = getEvent(ClanHallMiniGameEvent.class);
         if (event == null)
             return;
-        List<Player> around = World.getAroundPlayers(this, 750, 100);
-        for (Player player : around)
-            player.teleToLocation(event.getResidence().getOtherRestartPoint());
+        World.getAroundPlayers(this, 750, 100)
+                .forEach(p -> p.teleToLocation(event.getResidence().getOtherRestartPoint()));
     }
 
     @Override
@@ -110,46 +105,11 @@ public final class RainbowYetiInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("get")) {
+        int generated = -1;
+        if ("get".equalsIgnoreCase(command)) {
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
-            boolean has = true;
-            if (_generated == -1)
-                has = false;
-            else {
-                Word word = WORLD_LIST[_generated];
-
-                for (int[] itemInfo : word.getItems()) {
-                    if (player.getInventory().getCountOf(itemInfo[0]) < itemInfo[1])
-                        has = false;
-                }
-
-                if (has) {
-                    for (int[] itemInfo : word.getItems())
-                        if (!player.consumeItem(itemInfo[0], itemInfo[1]))
-                            return;
-
-                    int rnd = Rnd.get(100);
-                    if (_generated >= 0 && _generated <= 5) {
-                        if (rnd < 70)
-                            addItem(player, 8030);
-                        else if (rnd < 80)
-                            addItem(player, 8031);
-                        else if (rnd < 90)
-                            addItem(player, 8032);
-                        else
-                            addItem(player, 8033);
-                    } else {
-                        if (rnd < 10)
-                            addItem(player, 8030);
-                        else if (rnd < 40)
-                            addItem(player, 8031);
-                        else if (rnd < 70)
-                            addItem(player, 8032);
-                        else
-                            addItem(player, 8033);
-                    }
-                }
-            }
+            boolean has;
+            has = false;
             if (!has)
                 msg.setFile("residence2/clanhall/watering_manager002.htm");
             else
@@ -159,10 +119,7 @@ public final class RainbowYetiInstance extends NpcInstance {
         } else if (command.equalsIgnoreCase("see")) {
             NpcHtmlMessage msg = new NpcHtmlMessage(player, this);
             msg.setFile("residence2/clanhall/watering_manager005.htm");
-            if (_generated == -1)
-                msg.replaceNpcString("%word%", NpcString.UNDECIDED);
-            else
-                msg.replace("%word%", WORLD_LIST[_generated].getName());
+            msg.replaceNpcString("%word%", NpcString.UNDECIDED);
             player.sendPacket(msg);
         } else
             super.onBypassFeedback(player, command);
@@ -190,30 +147,29 @@ public final class RainbowYetiInstance extends NpcInstance {
     }
 
     private static class Word {
-        private final String _name;
-        private final int[][] _items;
+        private final String name;
+        private final Map<Integer, Integer> items;
 
-        Word(String name, int[]... items) {
-            _name = name;
-            _items = items;
+        Word(String name, Map<Integer, Integer> items) {
+            this.name = name;
+            this.items = items;
         }
 
         String getName() {
-            return _name;
+            return name;
         }
 
-        int[][] getItems() {
-            return _items;
+        Map<Integer, Integer> getItems() {
+            return items;
         }
     }
 
     private class GenerateTask extends RunnableImpl {
         @Override
         public void runImpl() {
-            _generated = Rnd.get(WORLD_LIST.length);
-            Word word = WORLD_LIST[_generated];
+            Word word = Rnd.get(WORLD_LIST);
 
-            ExShowScreenMessage msg = new ExShowScreenMessage(NpcString.NONE,  word.getName());
+            ExShowScreenMessage msg = new ExShowScreenMessage(NpcString.NONE, word.getName());
             World.getAroundPlayers(RainbowYetiInstance.this, 750, 100).forEach(player -> player.sendPacket(msg));
         }
     }

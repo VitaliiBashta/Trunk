@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _403_PathToRogue extends Quest implements ScriptFile {
+public final class _403_PathToRogue extends Quest {
     //npc
     private final int BEZIQUE = 30379;
     private final int NETI = 30425;
@@ -66,18 +66,6 @@ public class _403_PathToRogue extends Quest implements ScriptFile {
             STOLEN_RING_ID,
             STOLEN_NECKLACE_ID
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _403_PathToRogue() {
         super(false);

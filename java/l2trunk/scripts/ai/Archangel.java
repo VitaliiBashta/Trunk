@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Archangel extends Fighter {
-    private long _new_target = System.currentTimeMillis() + 20000;
     private final Zone _zone = ReflectionUtils.getZone("[baium_epic]");
+    private long _new_target = System.currentTimeMillis() + 20000;
 
     public Archangel(NpcInstance actor) {
         super(actor);
@@ -35,19 +35,20 @@ public final class Archangel extends Fighter {
 
         if (_new_target < System.currentTimeMillis()) {
             List<Creature> alive = new ArrayList<>();
-            for (Creature target : actor.getAroundCharacters(2000, 200)) {
-                if (!target.isDead()) {
-                    if (target.getNpcId() == 29020) {
-                        if (Rnd.chance(5))
+            actor.getAroundCharacters(2000, 200)
+                    .filter(target -> !target.isDead())
+                    .forEach(target -> {
+                        if (target.getNpcId() == 29020) {
+                            if (Rnd.chance(5))
+                                alive.add(target);
+                        } else
                             alive.add(target);
-                    } else
-                        alive.add(target);
-                }
-            }
+
+                    });
             if (!alive.isEmpty()) {
                 Creature rndTarget = alive.get(Rnd.get(alive.size()));
                 if (rndTarget != null && (rndTarget.getNpcId() == 29020 || rndTarget.isPlayer())) {
-                    setIntention(CtrlIntention.AI_INTENTION_ATTACK, rndTarget);
+                    setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, rndTarget);
                     actor.getAggroList().addDamageHate(rndTarget, 100, 10);
                 }
             }
@@ -64,7 +65,7 @@ public final class Archangel extends Fighter {
             if (attacker != null) {
                 if (attacker.getNpcId() == 29020) {
                     actor.getAggroList().addDamageHate(attacker, damage, 10);
-                    setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+                    setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
                 }
             }
         }
@@ -92,9 +93,9 @@ public final class Archangel extends Fighter {
         setAttackTimeout(Long.MAX_VALUE);
         setAttackTarget(null);
 
-        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+        changeIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 
-        actor.broadcastPacketToOthers(new MagicSkillUse(actor,  2036,  500));
+        actor.broadcastPacketToOthers(new MagicSkillUse(actor, 2036, 500));
         actor.teleToLocation(sloc.x, sloc.y, GeoEngine.getHeight(sloc, actor.getGeoIndex()));
     }
 }

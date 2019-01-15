@@ -1,16 +1,12 @@
 package l2trunk.scripts.ai.selmahum;
 
-import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.geodata.GeoEngine;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class SelChef extends Fighter {
-    private Location targetLoc;
     private long wait_timeout = 0;
 
     public SelChef(NpcInstance actor) {
@@ -30,14 +26,14 @@ public final class SelChef extends Fighter {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
         if (System.currentTimeMillis() > wait_timeout) {
             wait_timeout = System.currentTimeMillis() + 2000;
             actor.setWalking();
-            targetLoc = findFirePlace(actor);
+            Location targetLoc = findFirePlace(actor);
             addTaskMove(targetLoc, true);
             doTask();
             return true;
@@ -46,18 +42,11 @@ public final class SelChef extends Fighter {
     }
 
     private Location findFirePlace(NpcInstance actor) {
-        Location loc;
-        List<NpcInstance> list = new ArrayList<>();
-        for (NpcInstance npc : actor.getAroundNpc(3000, 600)) {
-            if (npc.getNpcId() == 18927 && GeoEngine.canSeeTarget(actor, npc, false))
-                list.add(npc);
-        }
-
-        if (!list.isEmpty())
-            loc = list.get(Rnd.get(list.size())).getLoc();
-        else
-            loc = Location.findPointToStay(actor, 1000, 1500);
-        return loc;
+        return actor.getAroundNpc(3000, 600)
+                .filter(npc -> npc.getNpcId() == 18927)
+                .filter(npc -> GeoEngine.canSeeTarget(actor, npc, false))
+                .map(GameObject::getLoc)
+                .findAny().orElse(Location.findPointToStay(actor, 1000, 1500));
     }
 
     @Override

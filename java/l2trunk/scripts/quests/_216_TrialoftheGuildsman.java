@@ -7,13 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Trial Of The Guildsman
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _216_TrialoftheGuildsman extends Quest implements ScriptFile {
+public final class _216_TrialoftheGuildsman extends Quest {
     //NPC
     private static final int VALKON = 30103;
     private static final int NORMAN = 30210;
@@ -191,18 +185,6 @@ public class _216_TrialoftheGuildsman extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _216_TrialoftheGuildsman() {
         super(false);
 
@@ -219,8 +201,7 @@ public class _216_TrialoftheGuildsman extends Quest implements ScriptFile {
 
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
 
-        addQuestItem(new int[]{
-                ALLTRANS_INSTRUCTIONS,
+        addQuestItem(ALLTRANS_INSTRUCTIONS,
                 VALKONS_RECOMMEND,
                 ALLTRANS_RECOMMEND1,
                 NORMANS_INSTRUCTIONS,
@@ -239,8 +220,7 @@ public class _216_TrialoftheGuildsman extends Quest implements ScriptFile {
                 GRAY_BONE_POWDER,
                 RED_PIGMENT,
                 GRANITE_WHETSTONE,
-                BRAIDED_YARN
-        });
+                BRAIDED_YARN);
     }
 
     @Override

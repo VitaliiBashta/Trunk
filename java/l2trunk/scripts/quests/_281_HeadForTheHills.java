@@ -4,11 +4,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.Map;
 
-public final class _281_HeadForTheHills extends Quest implements ScriptFile {
+public final class _281_HeadForTheHills extends Quest {
     //Items
     private static final int ScrollOfEscape = 736;
     //NPC

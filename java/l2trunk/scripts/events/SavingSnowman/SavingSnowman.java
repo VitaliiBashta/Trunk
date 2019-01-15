@@ -71,9 +71,9 @@ public final class SavingSnowman extends Functions implements ScriptFile, OnDeat
 
     private static void spawnRewarder(Player rewarded) {
         // Два санты рядом не должно быть
-        for (NpcInstance npc : rewarded.getAroundNpc(1500, 300))
-            if (npc.getNpcId() == EVENT_REWARDER_ID)
-                return;
+        if (rewarded.getAroundNpc(1500, 300)
+                .anyMatch(npc -> (npc.getNpcId() == EVENT_REWARDER_ID)))
+            return;
 
         // Санта появляется в зоне прямой видимости
         Location spawnLoc = Location.findPointToStay(rewarded, 300, 400);

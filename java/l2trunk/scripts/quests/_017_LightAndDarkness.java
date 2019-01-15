@@ -3,20 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _017_LightAndDarkness extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+public final class _017_LightAndDarkness extends Quest {
 
     public _017_LightAndDarkness() {
         super(false);
@@ -33,27 +21,33 @@ public class _017_LightAndDarkness extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("dark_presbyter_q0017_04.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.giveItems(7168, 4);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("blessed_altar1_q0017_02.htm")) {
-            st.takeItems(7168, 1);
-            st.setCond(2);
-            st.playSound(SOUND_MIDDLE);
-        } else if (event.equals("blessed_altar2_q0017_02.htm")) {
-            st.takeItems(7168, 1);
-            st.setCond(3);
-            st.playSound(SOUND_MIDDLE);
-        } else if (event.equals("blessed_altar3_q0017_02.htm")) {
-            st.takeItems(7168, 1);
-            st.setCond(4);
-            st.playSound(SOUND_MIDDLE);
-        } else if (event.equals("blessed_altar4_q0017_02.htm")) {
-            st.takeItems(7168, 1);
-            st.setCond(5);
-            st.playSound(SOUND_MIDDLE);
+        switch (event) {
+            case "dark_presbyter_q0017_04.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.giveItems(7168, 4);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "blessed_altar1_q0017_02.htm":
+                st.takeItems(7168, 1);
+                st.setCond(2);
+                st.playSound(SOUND_MIDDLE);
+                break;
+            case "blessed_altar2_q0017_02.htm":
+                st.takeItems(7168, 1);
+                st.setCond(3);
+                st.playSound(SOUND_MIDDLE);
+                break;
+            case "blessed_altar3_q0017_02.htm":
+                st.takeItems(7168, 1);
+                st.setCond(4);
+                st.playSound(SOUND_MIDDLE);
+                break;
+            case "blessed_altar4_q0017_02.htm":
+                st.takeItems(7168, 1);
+                st.setCond(5);
+                st.playSound(SOUND_MIDDLE);
+                break;
         }
         return event;
     }

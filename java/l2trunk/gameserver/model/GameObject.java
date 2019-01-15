@@ -68,7 +68,7 @@ public abstract class GameObject extends EventOwner {
             reference.clear();
     }
 
-    public Reflection getReflection() {
+    public final Reflection getReflection() {
         return reflection;
     }
 

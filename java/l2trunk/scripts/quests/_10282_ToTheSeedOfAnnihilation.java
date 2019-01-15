@@ -5,23 +5,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10282_ToTheSeedOfAnnihilation extends Quest implements ScriptFile {
+public final class _10282_ToTheSeedOfAnnihilation extends Quest {
     private final static int KBALDIR = 32733;
     private final static int KLEMIS = 32734;
 
     private final static int SOA_ORDERS = 15512;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10282_ToTheSeedOfAnnihilation() {
         super(false);

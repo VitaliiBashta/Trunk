@@ -8,11 +8,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.StringTokenizer;
 
-/**
- * @author pchayka
- */
-
-public class _10289_FadeToBlack extends Quest implements ScriptFile {
+public final class _10289_FadeToBlack extends Quest {
     private static final int Greymore = 32757;
     private static final int Anays = 25701;
     private static final int MarkofSplendor = 15527;
@@ -169,15 +165,4 @@ public class _10289_FadeToBlack extends Quest implements ScriptFile {
         return null;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

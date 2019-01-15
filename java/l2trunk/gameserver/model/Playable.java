@@ -212,7 +212,7 @@ public abstract class Playable extends Creature {
         }
 
         if (!checkTarget(target)) {
-            getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+            getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
             player.sendActionFailed();
             return;
         }
@@ -235,7 +235,7 @@ public abstract class Playable extends Creature {
                 }
 
                 if (_currentMp < bowMpConsume) {
-                    getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+                    getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
                     player.sendPacket(Msg.NOT_ENOUGH_MP);
                     player.sendActionFailed();
                     return;
@@ -245,7 +245,7 @@ public abstract class Playable extends Creature {
             }
 
             if (!player.checkAndEquipArrows()) {
-                getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
+                getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
                 player.sendPacket(player.getActiveWeaponInstance().getItemType() == WeaponType.BOW ? Msg.YOU_HAVE_RUN_OUT_OF_ARROWS : Msg.NOT_ENOUGH_BOLTS);
                 player.sendActionFailed();
                 return;
@@ -255,11 +255,6 @@ public abstract class Playable extends Creature {
         super.doAttack(target);
     }
 
-    /**
-     * Author : Spy
-     *
-     * @return
-     */
     private boolean isBetray() {
         if (isSummon()) {
             for (Effect e : getEffectList().getAllEffects()) {
@@ -512,36 +507,23 @@ public abstract class Playable extends Creature {
                     if (target.isPlayable() && !target.equals(getPet()) && !((isSummon() || isPet()) && target.equals(player))) {
                         int aggro = skill.getEffectPoint() == 0 ? Math.max(1, (int) skill.getPower()) : skill.getEffectPoint();
 
-                        List<NpcInstance> npcs = World.getAroundNpc(target);
-                        for (NpcInstance npc : npcs) {
-                            if (npc.isDead() || !npc.isInRangeZ(this, 2000L)) {
-                                continue;
-                            }
-
-                            npc.getAI().notifyEvent(CtrlEvent.EVT_SEE_SPELL, skill, this);
-
-                            AggroInfo ai = npc.getAggroList().get(target);
-                            // Пропускаем, если цель отсутсвует в хейтлисте
-                            if (ai == null) {
-                                continue;
-                            }
-
+                        World.getAroundNpc(target)
+                        .filter(Creature::isDead)
+                                .filter(npc -> npc.isInRangeZ(this, 2000L))
+                            .peek(npc ->
+                            npc.getAI().notifyEvent(CtrlEvent.EVT_SEE_SPELL, skill, this))
+                        .filter(npc -> npc.getAggroList().get(target)!= null)
+                        .forEach(npc -> {
                             if (!skill.isHandler() && npc.paralizeOnAttack(player)) {
                                 if (Config.PARALIZE_ON_RAID_DIFF) {
                                     paralizeMe(npc);
                                 }
                                 return;
                             }
-
-                            // Если хейт меньше 100, пропускаем
-                            if (ai.hate < 100) {
-                                continue;
-                            }
-
                             if (GeoEngine.canSeeTarget(npc, target, false)) {
-                                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this, ai.damage == 0 ? aggro / 2 : aggro);
+                                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this, npc.getAggroList().get(target).damage == 0 ? aggro / 2 : aggro);
                             }
-                        }
+                        });
                     }
 
                 // Check for PvP Flagging / Drawing Aggro

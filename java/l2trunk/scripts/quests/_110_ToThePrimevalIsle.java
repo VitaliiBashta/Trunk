@@ -5,25 +5,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _110_ToThePrimevalIsle extends Quest implements ScriptFile {
+public final class _110_ToThePrimevalIsle extends Quest {
     // NPC
     private final int ANTON = 31338;
     private final int MARQUEZ = 32113;
 
     // QUEST ITEM and REWARD
     private final int ANCIENT_BOOK = 8777;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _110_ToThePrimevalIsle() {
         super(false);

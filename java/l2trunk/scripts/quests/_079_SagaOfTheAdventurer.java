@@ -5,7 +5,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _079_SagaOfTheAdventurer extends SagasSuperclass implements ScriptFile {
+public final class _079_SagaOfTheAdventurer extends SagasSuperclass {
     public _079_SagaOfTheAdventurer() {
         super(false);
 
@@ -40,17 +40,5 @@ public final class _079_SagaOfTheAdventurer extends SagasSuperclass implements S
         );
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

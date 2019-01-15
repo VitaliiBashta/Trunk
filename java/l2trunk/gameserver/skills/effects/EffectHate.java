@@ -14,12 +14,12 @@ public class EffectHate extends Effect {
     public void onStart() {
         super.onStart();
         if (effected.isMonster()) {
-            effected.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _effector, template._value);
+            effected.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _effector,(int) template._value);
         }
         // On players it makes attack the caster
         else if (effected.isPlayable() && effected.isMonster()) {
             getEffected().abortAttack(true, false);
-            getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, getEffector());
+            getEffected().getAI().setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, getEffector());
         }
     }
 

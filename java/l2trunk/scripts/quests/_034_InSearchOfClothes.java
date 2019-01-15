@@ -5,24 +5,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _034_InSearchOfClothes extends Quest implements ScriptFile {
+public final class _034_InSearchOfClothes extends Quest {
     private final int SPINNERET = 7528;
     private final int SUEDE = 1866;
     private final int THREAD = 1868;
     private final int SPIDERSILK = 1493;
     private final int MYSTERIOUS_CLOTH = 7076;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _034_InSearchOfClothes() {
         super(false);

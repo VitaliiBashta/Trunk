@@ -52,10 +52,8 @@ public final class ClanHallTeamBattleEvent extends SiegeEvent<ClanHall, CTBSiege
         SiegePlayerDAO.INSTANCE.delete(getResidence());
 
         List<CTBTeamObject> teams = getObjects(TRYOUT_PART);
-        for (int i = 0; i < 5; i++) {
-            CTBTeamObject team = teams.get(i);
-
-            team.setSiegeClan(CollectionUtils.safeGet(attackers, i));
+        for (int i = 0; i < teams.size(); i++) {
+            teams.get(i).setSiegeClan(attackers.get(i));
         }
 
         broadcastTo(new SystemMessage2(SystemMsg.THE_SIEGE_TO_CONQUER_S1_HAS_BEGUN).addResidenceName(getResidence()), ATTACKERS, DEFENDERS);

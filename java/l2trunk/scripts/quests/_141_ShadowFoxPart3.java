@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _141_ShadowFoxPart3 extends Quest implements ScriptFile {
+public final class _141_ShadowFoxPart3 extends Quest {
     // NPC
     private final static int NATOOLS = 30894;
 
@@ -18,18 +18,6 @@ public class _141_ShadowFoxPart3 extends Quest implements ScriptFile {
     private final static int CrokianWarrior = 20791;
     private final static int Farhite = 20792;
     private final static int Alligator = 20135;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _141_ShadowFoxPart3() {
         super(false);

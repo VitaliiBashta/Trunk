@@ -52,7 +52,6 @@ public final class LeylaDancer extends DefaultAI {
         public void run() {
             NpcInstance actor = getActor();
             if (actor != null) {
-                // actor.say(NPC_STRING.WE_LOVE_YOU, CHAT_TYPES.ALL);
                 addTaskMove(new Location(-56594, -56064, -1988), true);
                 doTask();
             }

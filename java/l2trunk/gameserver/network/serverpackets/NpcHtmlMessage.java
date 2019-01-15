@@ -142,7 +142,7 @@ public class NpcHtmlMessage extends L2GameServerPacket {
 
         if (file != null) {
             String content = HtmCache.INSTANCE.getNotNull(file, player);
-            String content2 = HtmCache.INSTANCE.getNullable(file, player);
+            String content2 = HtmCache.INSTANCE.getNullable(file);
             if (content2 == null) {
                 setHtml(have_appends && file.endsWith(".htm") ? "" : content);
             } else {

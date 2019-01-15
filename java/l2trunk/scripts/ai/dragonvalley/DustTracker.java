@@ -4,12 +4,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.Arrays;
+import java.util.List;
 
 public final class DustTracker extends Patrollers {
 
     public DustTracker(NpcInstance actor) {
         super(actor);
-        points = Arrays.asList(new Location(125176, 111896, -3168),
+        points = List.of(new Location(125176, 111896, -3168),
                 new Location(124872, 109736, -3104),
                 new Location(123608, 108712, -3024),
                 new Location(122632, 108008, -2992),

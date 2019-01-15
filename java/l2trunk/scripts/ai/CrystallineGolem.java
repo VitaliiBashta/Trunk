@@ -12,31 +12,24 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class CrystallineGolem extends Fighter {
     private static final int CORAL_GARDEN_SECRETGATE = 24220026; // Tears Door
 
     private static final int Crystal_Fragment = 9693;
-
-    private ItemInstance itemToConsume = null;
-    private Location lastPoint = null;
-
-    private static final String[] says = new String[]{"Yum, Yum !!!", "Give !!!", "I want to !!!", "moe !!!", "More !!!", "Food !!!"};
-
-    private static final String[] says2 = new String[]{
+    private static final List<String> says = List.of(
+            "Yum, Yum !!!", "Give !!!", "I want to !!!", "moe !!!", "More !!!", "Food !!!");
+    private static final List<String> says2 = List.of(
             "Give !!!",
             "Give !!!",
             "Greedy you, I'll leave up to you ...",
             "Where did it go?",
-            "Perhaps it seemed ..."};
-
-    private static final Map<Integer,Info> instanceInfo = new HashMap<>();
-
-    private static class Info {
-        boolean stage1 = false;
-        boolean stage2 = false;
-    }
+            "Perhaps it seemed ...");
+    private static final Map<Integer, Info> instanceInfo = new HashMap<>();
+    private ItemInstance itemToConsume = null;
+    private Location lastPoint = null;
 
     public CrystallineGolem(NpcInstance actor) {
         super(actor);
@@ -48,7 +41,7 @@ public final class CrystallineGolem extends Fighter {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -59,7 +52,7 @@ public final class CrystallineGolem extends Fighter {
                 itemToConsume = null;
             } else {
                 itemToConsume = null;
-                Functions.npcSay(actor, says2[Rnd.get(says2.length)]);
+                Functions.npcSay(actor, Rnd.get(says2));
                 actor.setWalking();
                 addTaskMove(lastPoint, true);
                 lastPoint = null;
@@ -78,7 +71,7 @@ public final class CrystallineGolem extends Fighter {
             int dx = actor.getX() - 142999;
             int dy = actor.getY() - 151671;
             if (dx * dx + dy * dy < 10000) {
-                actor.broadcastPacket(new MagicSkillUse(actor,  5441));
+                actor.broadcastPacket(new MagicSkillUse(actor, 5441));
                 info.stage1 = true;
             }
         }
@@ -87,7 +80,7 @@ public final class CrystallineGolem extends Fighter {
             int dx = actor.getX() - 139494;
             int dy = actor.getY() - 151668;
             if (dx * dx + dy * dy < 10000) {
-                actor.broadcastPacket(new MagicSkillUse(actor,  5441));
+                actor.broadcastPacket(new MagicSkillUse(actor, 5441));
                 info.stage2 = true;
             }
         }
@@ -96,22 +89,19 @@ public final class CrystallineGolem extends Fighter {
             actor.getReflection().openDoor(CORAL_GARDEN_SECRETGATE);
 
         if (Rnd.chance(10))
-            for (GameObject obj : World.getAroundObjects(actor, 300, 200))
-                if (obj.isItem()) {
-                    ItemInstance item = (ItemInstance) obj;
-                    if (item.getItemId() == Crystal_Fragment) {
-                        if (Rnd.chance(50))
-                            Functions.npcSay(actor, says[Rnd.get(says.length)]);
-                        itemToConsume = item;
-                        lastPoint = actor.getLoc();
-                        actor.setRunning();
-                        addTaskMove(item.getLoc(), false);
-                        return true;
-                    }
-                }
-
+            World.getAroundObjects(actor, 300, 200)
+                    .filter(GameObject::isItem)
+                    .map(obj -> (ItemInstance) obj)
+                    .filter(item -> item.getItemId() == Crystal_Fragment)
+                    .findFirst().ifPresent(item -> {
+                if (Rnd.chance(50))
+                    Functions.npcSay(actor, Rnd.get(says));
+                itemToConsume = item;
+                lastPoint = actor.getLoc();
+                actor.setRunning();
+                addTaskMove(item.getLoc(), false);
+            });
         return randomAnimation();
-
     }
 
     @Override
@@ -125,5 +115,10 @@ public final class CrystallineGolem extends Fighter {
     @Override
     public boolean randomWalk() {
         return false;
+    }
+
+    private static class Info {
+        boolean stage1 = false;
+        boolean stage2 = false;
     }
 }

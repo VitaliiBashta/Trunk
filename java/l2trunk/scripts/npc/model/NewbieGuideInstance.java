@@ -19,7 +19,7 @@ import java.util.List;
 
 public final class NewbieGuideInstance extends NpcInstance {
     private static final Logger _log = LoggerFactory.getLogger(NewbieGuideInstance.class);
-    private static final List<?> mainHelpers = Arrays.asList(30598, 30599, 30600, 30601, 30602, 32135);
+    private static final List<?> mainHelpers = List.of(30598, 30599, 30600, 30601, 30602, 32135);
 
     public NewbieGuideInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -238,12 +238,6 @@ public final class NewbieGuideInstance extends NpcInstance {
 
     @Override
     public String getHtmlPath(int npcId, int val, Player player) {
-        String pom;
-        if (val == 0)
-            pom = "" + npcId;
-        else
-            pom = npcId + "-" + val;
-
-        return "newbiehelper/" + pom + ".htm";
+        return "newbiehelper/" + npcId + (val == 0 ? "" : "-" + val) + ".htm";
     }
 }

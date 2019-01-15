@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _217_TestimonyOfTrust extends Quest implements ScriptFile {
+public final class _217_TestimonyOfTrust extends Quest {
     private static final int MARK_OF_TRUST_ID = 2734;
     private static final int LETTER_TO_ELF_ID = 1558;
     private static final int LETTER_TO_DARKELF_ID = 1556;
@@ -39,18 +39,6 @@ public class _217_TestimonyOfTrust extends Quest implements ScriptFile {
     private static final int RewardExp = 695149;
     private static final int RewardSP = 46391;
     private static final int RewardAdena = 126106;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _217_TestimonyOfTrust() {
         super(false);
@@ -86,8 +74,7 @@ public class _217_TestimonyOfTrust extends Quest implements ScriptFile {
         addKillId(20087);
         addKillId(20088);
 
-        addQuestItem(new int[]{
-                SCROLL_OF_DARKELF_TRUST_ID,
+        addQuestItem(SCROLL_OF_DARKELF_TRUST_ID,
                 SCROLL_OF_ELF_TRUST_ID,
                 SCROLL_OF_DWARF_TRUST_ID,
                 SCROLL_OF_ORC_TRUST_ID,
@@ -113,8 +100,7 @@ public class _217_TestimonyOfTrust extends Quest implements ScriptFile {
                 RECOMMENDATION_OF_HOLLIN_ID,
                 BLOOD_OF_GUARDIAN_BASILISK_ID,
                 STAKATOS_FLUIDS_ID,
-                GIANT_APHID_ID
-        });
+                GIANT_APHID_ID);
     }
 
     @Override

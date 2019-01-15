@@ -1,9 +1,11 @@
 package l2trunk.commons.geometry;
 
+import l2trunk.gameserver.utils.Location;
+
 public interface Shape {
     boolean isInside(int x, int y);
 
-    boolean isInside(int x, int y, int z);
+    boolean isInside(Location loc);
 
     int getXmax();
 

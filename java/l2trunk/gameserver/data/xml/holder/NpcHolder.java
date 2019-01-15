@@ -34,11 +34,10 @@ public final class NpcHolder {
                 .findFirst()
                 .orElse(null);
     }
-    public static NpcTemplate getTemplateByName(String NpcName) {
+    public static List<NpcTemplate> getTemplateByName(String NpcName) {
         return npcs.values().stream()
-                .filter(a -> a.name.equals(NpcName))
-                .findFirst()
-                .orElse(null);
+                .filter(n -> n.name.equals(NpcName))
+                .collect(Collectors.toList());
     }
 
     public static Collection<NpcTemplate> getAll() {

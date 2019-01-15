@@ -5,12 +5,10 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
+public final class _692_HowtoOpposeEvil extends Quest {
     //NPC
     private static final int Dilios = 32549;
     private static final int Kutran = 32550;
@@ -29,14 +27,14 @@ public final class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
     private static final int FleetSteedTroupsCharm = 13841;
     private static final int SpiritStoneFragment = 15486;
 
-    private static final List<Integer> SOD = Arrays.asList(
+    private static final List<Integer> SOD = List.of(
             22552, 22541, 22550, 22551, 22596, 22544, 22540, 22547,
             22542, 22543, 22539, 22546, 22548, 22536, 22538, 22537);
-    private static final List<Integer> SOI = Arrays.asList(
+    private static final List<Integer> SOI = List.of(
             22509, 22510, 22511, 22512, 22513, 22514, 22515, 22520, 22522, 22527, 22531,
             22535, 22516, 22517, 22518, 22519, 22521, 22524, 22528, 22532, 22530, 22535);
 
-    private static final List<Integer> SOA = Arrays.asList(
+    private static final List<Integer> SOA = List.of(
             22746, 22747, 22748, 22749, 22750, 22751, 22752, 22753, 22754, 22755,
             22756, 22757, 22758, 22759, 22760, 22761, 22762, 22763, 22764, 22765);
 
@@ -51,18 +49,6 @@ public final class _692_HowtoOpposeEvil extends Quest implements ScriptFile {
 
         addQuestItem(NucleusofanIncompleteSoul, FleetSteedTroupsTotem, PortionofaSoul);
         addQuestItem(BreathofTiat, ConcentratedSpiritEnergy, SpiritStoneDust);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

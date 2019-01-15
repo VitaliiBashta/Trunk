@@ -71,7 +71,7 @@ public final class WarehouseFunctions {
         if (!player.getPlayerAccess().UseWarehouse)
             return false;
 
-        Warehouse warehouse = null;
+        Warehouse warehouse;
         switch (type) {
             case PRIVATE:
                 warehouse = player.getWarehouse();
@@ -88,9 +88,8 @@ public final class WarehouseFunctions {
                 }
 
                 boolean canWithdrawCWH = false;
-                if (player.getClan() != null)
-                    if ((player.getClanPrivileges() & Clan.CP_CL_WAREHOUSE_SEARCH) == Clan.CP_CL_WAREHOUSE_SEARCH)
-                        canWithdrawCWH = true;
+                if ((player.getClanPrivileges() & Clan.CP_CL_WAREHOUSE_SEARCH) == Clan.CP_CL_WAREHOUSE_SEARCH)
+                    canWithdrawCWH = true;
                 if (!canWithdrawCWH) {
                     player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_THE_RIGHT_TO_USE_THE_CLAN_WAREHOUSE);
                     return false;
@@ -125,9 +124,8 @@ public final class WarehouseFunctions {
                 }
 
                 boolean canWithdrawCWH = false;
-                if (player.getClan() != null)
-                    if ((player.getClanPrivileges() & Clan.CP_CL_WAREHOUSE_SEARCH) == Clan.CP_CL_WAREHOUSE_SEARCH)
-                        canWithdrawCWH = true;
+                if ((player.getClanPrivileges() & Clan.CP_CL_WAREHOUSE_SEARCH) == Clan.CP_CL_WAREHOUSE_SEARCH)
+                    canWithdrawCWH = true;
                 if (!canWithdrawCWH) {
                     player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_THE_RIGHT_TO_USE_THE_CLAN_WAREHOUSE);
                     return false;

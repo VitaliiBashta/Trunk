@@ -35,16 +35,6 @@ public final class MercTicket extends ScriptItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public void dropItem(Player player, ItemInstance item, long count, Location loc) {
         if (!player.hasPrivilege(Privilege.CS_FS_MERCENARIES) || player.getClan().getCastle() == 0) {
             player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_POSITION_MERCENARIES, ActionFail.STATIC);

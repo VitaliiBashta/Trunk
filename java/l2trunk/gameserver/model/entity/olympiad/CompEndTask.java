@@ -9,8 +9,8 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CompEndTask extends RunnableImpl {
-    private static final Logger _log = LoggerFactory.getLogger(CompEndTask.class);
+public final class CompEndTask extends RunnableImpl {
+    private static final Logger LOG = LoggerFactory.getLogger(CompEndTask.class);
 
     @Override
     public void runImpl() {
@@ -27,7 +27,7 @@ public class CompEndTask extends RunnableImpl {
         }
 
         Announcements.INSTANCE.announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
-        _log.info("Olympiad System: Olympiad Game Ended");
+        LOG.info("Olympiad System: Olympiad Game Ended");
         OlympiadDatabase.save();
         Olympiad.init();
     }

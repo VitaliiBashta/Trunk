@@ -69,7 +69,7 @@ public final class SchemeBufferInstance extends NpcInstance {
     private static final String SET_ALL = "All";
     private static final String SET_NONE = "None";
 
-    private static final List<String> SCHEME_ICONS = Arrays.asList(
+    private static final List<String> SCHEME_ICONS = List.of(
             "Icon.skill1331", "Icon.skill1332", "Icon.skill1316", "Icon.skill1264", "Icon.skill1254",
             "Icon.skill1178", "Icon.skill1085", "Icon.skill957", "Icon.skill0928", "Icon.skill0793",
             "Icon.skill0787", "Icon.skill0490", "Icon.skill0487", "Icon.skill0452", "Icon.skill0453",
@@ -1696,7 +1696,7 @@ public final class SchemeBufferInstance extends NpcInstance {
                 return;
             }
 
-            int iconId = 0;
+            int iconId;
             try {
                 iconId = toInt(eventParam2);
                 if (iconId < 0 || iconId > SCHEME_ICONS.size() - 1)

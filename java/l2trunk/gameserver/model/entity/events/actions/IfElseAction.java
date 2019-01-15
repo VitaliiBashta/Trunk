@@ -6,29 +6,28 @@ import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import java.util.Collections;
 import java.util.List;
 
-public class IfElseAction implements EventAction {
-    private final String _name;
-    private final boolean _reverse;
-    private List<EventAction> _ifList = Collections.emptyList();
-    private List<EventAction> _elseList = Collections.emptyList();
+public final class IfElseAction implements EventAction {
+    private final String name;
+    private final boolean reverse;
+    private List<EventAction> ifList = Collections.emptyList();
+    private List<EventAction> elseList = Collections.emptyList();
 
     public IfElseAction(String name, boolean reverse) {
-        _name = name;
-        _reverse = reverse;
+        this.name = name;
+        this.reverse = reverse;
     }
 
     @Override
     public void call(GlobalEvent event) {
-        List<EventAction> list = (_reverse ? !event.ifVar(_name) : event.ifVar(_name)) ? _ifList : _elseList;
-        for (EventAction action : list)
-            action.call(event);
+        List<EventAction> list = (reverse != event.ifVar(name)) ? ifList : elseList;
+        list.forEach(action -> action.call(event));
     }
 
     public void setIfList(List<EventAction> ifList) {
-        _ifList = ifList;
+        this.ifList = ifList;
     }
 
     public void setElseList(List<EventAction> elseList) {
-        _elseList = elseList;
+        this.elseList = elseList;
     }
 }

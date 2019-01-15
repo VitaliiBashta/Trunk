@@ -8,8 +8,9 @@ import l2trunk.gameserver.model.instances.ReflectionBossInstance;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncSet;
 
-public final class LabyrinthLostWatcher extends Fighter {
+import java.util.Optional;
 
+public final class LabyrinthLostWatcher extends Fighter {
     public LabyrinthLostWatcher(NpcInstance actor) {
         super(actor);
     }
@@ -20,22 +21,19 @@ public final class LabyrinthLostWatcher extends Fighter {
         Reflection r = actor.getReflection();
         if (!r.isDefault())
             if (checkMates(actor.getNpcId()))
-                if (findLostCaptain() != null)
-                    findLostCaptain().addStatFunc(new FuncSet(Stats.POWER_DEFENCE, 0x30, this, findLostCaptain().getTemplate().basePDef * 0.66));
+                findLostCaptain().ifPresent(cap -> cap.addStatFunc(new FuncSet(Stats.POWER_DEFENCE, 0x30, this, cap.getTemplate().basePDef * 0.66)));
         super.onEvtDead(killer);
     }
 
     private boolean checkMates(int id) {
-        for (NpcInstance n : getActor().getReflection().getNpcs())
-            if (n.getNpcId() == id && !n.isDead())
-                return false;
-        return true;
+        return getActor().getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == id)
+                .allMatch(Creature::isDead);
     }
 
-    private NpcInstance findLostCaptain() {
-        for (NpcInstance n : getActor().getReflection().getNpcs())
-            if (n instanceof ReflectionBossInstance)
-                return n;
-        return null;
+    private Optional<NpcInstance> findLostCaptain() {
+        return getActor().getReflection().getNpcs()
+                .filter(n -> n instanceof ReflectionBossInstance)
+                .findFirst();
     }
 }

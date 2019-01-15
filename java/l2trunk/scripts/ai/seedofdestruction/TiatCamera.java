@@ -8,9 +8,10 @@ import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class TiatCamera extends DefaultAI {
-    private final List<Player> _players = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
 
     public TiatCamera(NpcInstance actor) {
         super(actor);
@@ -21,11 +22,10 @@ public final class TiatCamera extends DefaultAI {
     @Override
     public boolean thinkActive() {
         NpcInstance actor = getActor();
-        for (Player p : World.getAroundPlayers(actor, 300, 300))
-            if (!_players.contains(p)) {
-                p.showQuestMovie(ExStartScenePlayer.SCENE_TIAT_OPENING);
-                _players.add(p);
-            }
+        players = World.getAroundPlayers(actor, 300, 300)
+                .filter(p -> !players.contains(p))
+                .peek(p -> p.showQuestMovie(ExStartScenePlayer.SCENE_TIAT_OPENING))
+                .collect(Collectors.toList());
         return true;
     }
 }

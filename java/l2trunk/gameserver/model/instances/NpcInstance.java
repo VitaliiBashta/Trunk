@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Collectors;
 
 public class NpcInstance extends Creature {
     private static final String NO_CHAT_WINDOW = "noChatWindow";
@@ -704,9 +705,8 @@ public class NpcInstance extends Creature {
     }
 
     public void broadcastCharInfoImpl() {
-        for (Player player : World.getAroundPlayers(this)) {
-            player.sendPacket(new NpcInfo(this, player).update(1));
-        }
+        World.getAroundPlayers(this)
+                .forEach(p -> p.sendPacket(new NpcInfo(this, p).update(1)));
     }
 
     // I always NPC 2
@@ -822,9 +822,9 @@ public class NpcInstance extends Creature {
             return;
         }
 
-        if (!isInRangeZ(player, INTERACTION_DISTANCE)){ // Nik: Changed to isInRangeZ because players can exploit it like waking Baium from TOI 13
+        if (!isInRangeZ(player, INTERACTION_DISTANCE)) { // Nik: Changed to isInRangeZ because players can exploit it like waking Baium from TOI 13
             if (player.getAI().getIntention() != CtrlIntention.AI_INTENTION_INTERACT) {
-                player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this, null);
+                player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
             }
             return;
         }
@@ -931,7 +931,7 @@ public class NpcInstance extends Creature {
         }
 
         try {
-            if (command.equalsIgnoreCase("TerritoryStatus")) {
+            if ("TerritoryStatus".equalsIgnoreCase(command)) {
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                 html.setFile("merchant/territorystatus.htm");
                 html.replace("%npcname%", getName());
@@ -1044,7 +1044,7 @@ public class NpcInstance extends Creature {
                 }
             } else if (command.startsWith("Link")) {
                 showChatWindow(player, command.substring(5));
-            } else if (command.startsWith("teleport")) {
+            } else if (command.startsWith("Teleport")) {
                 int cmdChoice = Integer.parseInt(command.substring(9, 10).trim());
                 TeleportLocation[] list = getTemplate().getTeleportList(cmdChoice);
                 if (list != null) {
@@ -1187,21 +1187,13 @@ public class NpcInstance extends Creature {
 
     private void showQuestWindow(Player player) {
         // collect awaiting quests and start points
-        List<Quest> options = new ArrayList<>();
+        List<Quest> options = player.getQuestsForEvent(this, QuestEventType.QUEST_TALK)
+                .filter(x -> x.getQuest().getQuestIntId() > 0)
+                .map(QuestState::getQuest)
+                .collect(Collectors.toList());
 
-        List<QuestState> awaits = player.getQuestsForEvent(this, QuestEventType.QUEST_TALK);
+
         List<Quest> starts = getTemplate().getEventQuests(QuestEventType.QUEST_START);
-
-        if (awaits != null) {
-            for (QuestState x : awaits) {
-                if (!options.contains(x.getQuest())) {
-                    if (x.getQuest().getQuestIntId() > 0) {
-                        options.add(x.getQuest());
-                    }
-                }
-            }
-        }
-
         starts.stream()
                 .filter(x -> !options.contains(x))
                 .filter(x -> x.getQuestIntId() > 0)
@@ -1324,12 +1316,12 @@ public class NpcInstance extends Creature {
         }
 
         String temp = "default/" + pom + ".htm";
-        if (HtmCache.INSTANCE.getNullable(temp, player) != null) {
+        if (HtmCache.INSTANCE.getNullable(temp) != null) {
             return temp;
         }
 
         temp = "trainer/" + pom + ".htm";
-        if (HtmCache.INSTANCE.getNullable(temp, player) != null) {
+        if (HtmCache.INSTANCE.getNullable(temp) != null) {
             return temp;
         }
 

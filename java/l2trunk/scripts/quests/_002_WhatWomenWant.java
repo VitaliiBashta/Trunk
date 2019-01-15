@@ -6,10 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _002_WhatWomenWant extends Quest implements ScriptFile {
+public final class _002_WhatWomenWant extends Quest {
     private final int ARUJIEN = 30223;
     private final int MIRABEL = 30146;
     private final int HERBIEL = 30150;
@@ -20,18 +19,6 @@ public final class _002_WhatWomenWant extends Quest implements ScriptFile {
     private final int ARUJIENS_LETTER3 = 1094;
     private final int POETRY_BOOK = 689;
     private final int GREENIS_LETTER = 693;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _002_WhatWomenWant() {
         super(false);

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _360_PlunderTheirSupplies extends Quest implements ScriptFile {
+public final class _360_PlunderTheirSupplies extends Quest {
     //NPC
     private static final int COLEMAN = 30873;
 
@@ -23,18 +23,6 @@ public class _360_PlunderTheirSupplies extends Quest implements ScriptFile {
     private static final int ITEM_DROP_SEEKER = 50;
     private static final int ITEM_DROP_LEADER = 65;
     private static final int DOCUMENT_DROP = 5;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _360_PlunderTheirSupplies() {
         super(false);

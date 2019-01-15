@@ -16,7 +16,7 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class HeineFieldsHerbs implements ScriptFile {
 
-    private static final int[] HERBS = {14824, 14825, 14826, 14827};
+    private static final List<Integer> HERBS = List.of(14824, 14825, 14826, 14827);
     private static ScheduledFuture<?> DropAncientHerbTask;
     private static ScheduledFuture<?> DeleteAncientHerbTask;
     private final List<ItemInstance> herbs = new CopyOnWriteArrayList<>();

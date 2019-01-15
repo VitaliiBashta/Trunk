@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _115_TheOtherSideOfTruth extends Quest implements ScriptFile {
+public final class _115_TheOtherSideOfTruth extends Quest {
     // NPCs
     private static final int Rafforty = 32020;
     private static final int Misa = 32018;
@@ -196,17 +196,5 @@ public final class _115_TheOtherSideOfTruth extends Quest implements ScriptFile 
                 return "Sculpture-08.htm";
 
         return "noquest";
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

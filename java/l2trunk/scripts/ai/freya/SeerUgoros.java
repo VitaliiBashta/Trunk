@@ -3,8 +3,6 @@ package l2trunk.scripts.ai.freya;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Mystic;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.tables.SkillTable;
@@ -12,8 +10,8 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.quests._288_HandleWithCare;
 
 public final class SeerUgoros extends Mystic {
-    private int _weeds = 0;
     private final static int priestsIre = 6426;
+    private int _weeds = 0;
 
     public SeerUgoros(NpcInstance actor) {
         super(actor);
@@ -22,9 +20,8 @@ public final class SeerUgoros extends Mystic {
     @Override
     public boolean thinkActive() {
         super.thinkActive();
-        if (!getActor().getReflection().isDefault() && !getActor().getReflection().getPlayers().isEmpty())
-            for (Player p : getActor().getReflection().getPlayers())
-                notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 5000);
+        getActor().getReflection().getPlayers().forEach(p ->
+                notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 5000));
         return true;
     }
 
@@ -32,14 +29,15 @@ public final class SeerUgoros extends Mystic {
     public void thinkAttack() {
         NpcInstance actor = getActor();
         if (!actor.isMuted(SkillTable.INSTANCE.getInfo(priestsIre)) && actor.getCurrentHpPercents() < 80) {
-            for (NpcInstance n : actor.getAroundNpc(2000, 300))
-                if (n.getNpcId() == 18867 && !n.isDead()) {
-                    actor.doCast(priestsIre, n, true);
-                    actor.setCurrentHp(actor.getMaxHp(), false);
-                    actor.broadcastCharInfo();
-                    _weeds++;
-                    return;
-                }
+            actor.getAroundNpc(2000, 300)
+                    .filter(n -> n.getNpcId() == 18867)
+                    .filter(n -> !n.isDead())
+                    .findFirst().ifPresent(n -> {
+                actor.doCast(priestsIre, n, true);
+                actor.setCurrentHp(actor.getMaxHp(), false);
+                actor.broadcastCharInfo();
+                _weeds++;
+            });
         }
         super.thinkAttack();
     }

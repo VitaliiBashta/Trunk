@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _419_GetaPet extends Quest {
     //NPC
@@ -275,9 +274,9 @@ public final class _419_GetaPet extends Quest {
         int answers = st.getInt("answers");
         int question = st.getInt("question");
         if (question > 0)
-            htmltext = "419_q" + String.valueOf(question) + ".htm";
+            htmltext = "419_q" + question + ".htm";
         else if (answers < 10) {
-            String[] ANS = st.get("quiz").toString().split(" ");
+            String[] ANS = st.get("quiz").split(" ");
             int GetQuestion = Rnd.get(ANS.length);
             String index = ANS[GetQuestion];
             st.set("question", index);

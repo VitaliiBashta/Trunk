@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 
-public final class _254_LegendaryTales extends Quest implements ScriptFile {
+public final class _254_LegendaryTales extends Quest {
     private static final int Gilmore = 30754;
     private static final int LargeBone = 17249;
     private static final List<Integer> raids = List.of(
@@ -114,17 +114,5 @@ public final class _254_LegendaryTales extends Quest implements ScriptFile {
             checkKilledRaids(st.getPlayer(), var);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

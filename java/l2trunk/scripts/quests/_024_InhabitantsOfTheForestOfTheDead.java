@@ -4,12 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class _024_InhabitantsOfTheForestOfTheDead extends Quest implements ScriptFile {
+public final class _024_InhabitantsOfTheForestOfTheDead extends Quest {
     // Список NPC
     private final int DORIAN = 31389;
     private final int TOMBSTONE = 31531;
@@ -27,7 +25,7 @@ public class _024_InhabitantsOfTheForestOfTheDead extends Quest implements Scrip
 
     // Список мобов
     // Bone Snatchers, Bone Shapers, Bone Collectors, Bone Animators, Bone Slayers, Skull Collectors, Skull Animators
-    private final List<Integer> MOBS = Arrays.asList(
+    private final List<Integer> MOBS = List.of(
             21557, 21558, 21560, 21561, 21562, 21563, 21564, 21565, 21566, 21567);
 
     public _024_InhabitantsOfTheForestOfTheDead() {
@@ -171,18 +169,6 @@ public class _024_InhabitantsOfTheForestOfTheDead extends Quest implements Scrip
             }
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

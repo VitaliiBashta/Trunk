@@ -9,7 +9,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _359_ForSleeplessDeadmen extends Quest implements ScriptFile {
+public final class _359_ForSleeplessDeadmen extends Quest {
 
     //Variables
     private static final int DROP_RATE = 10;
@@ -38,18 +38,6 @@ public class _359_ForSleeplessDeadmen extends Quest implements ScriptFile {
     private static final int DOOMGUARD = 21007;
     private static final int DOOMARCHER = 21008;
     private static final int DOOMTROOPER = 21009;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _359_ForSleeplessDeadmen() {
         super(false);

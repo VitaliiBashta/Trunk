@@ -7,9 +7,6 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
-/**
- * @author pchayka
- */
 public final class MaguenTraderInstance extends NpcInstance {
     public MaguenTraderInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -20,12 +17,12 @@ public final class MaguenTraderInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("request_collector")) {
+        if ("request_collector".equalsIgnoreCase(command)) {
             if (Functions.getItemCount(player, 15487) > 0)
                 showChatWindow(player, "default/32735-2.htm");
             else
                 Functions.addItem(player, 15487, 1, "MaguenTraderInstance");
-        } else if (command.equalsIgnoreCase("request_maguen")) {
+        } else if ("request_maguen".equalsIgnoreCase(command)) {
             NpcUtils.spawnSingle(18839, Location.findPointToStay(getSpawnedLoc(), 40, 100, getGeoIndex()), getReflection()); // wild maguen
             showChatWindow(player, "default/32735-3.htm");
         } else

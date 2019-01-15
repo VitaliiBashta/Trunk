@@ -5,24 +5,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _012_SecretMeetingWithVarkaSilenos extends Quest implements ScriptFile {
+public final class _012_SecretMeetingWithVarkaSilenos extends Quest {
     private final int CADMON = 31296;
     private final int HELMUT = 31258;
     private final int NARAN_ASHANUK = 31378;
 
     private final int MUNITIONS_BOX = 7232;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _012_SecretMeetingWithVarkaSilenos() {
         super(false);

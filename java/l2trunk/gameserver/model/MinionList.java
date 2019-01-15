@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 
 public final class MinionList {
     private final Set<MinionData> minionData = new CopyOnWriteArraySet<>();
-    private final Set<MinionInstance> _minions;
+    private final Set<MinionInstance> minions;
     private final Lock lock;
     private final MonsterInstance master;
 
     public MinionList(MonsterInstance master) {
         this.master = master;
-        _minions = new HashSet<>();
+        minions = new HashSet<>();
         minionData.addAll(this.master.getTemplate().getMinionData());
         lock = new ReentrantLock();
     }
@@ -33,7 +33,7 @@ public final class MinionList {
     }
 
     public boolean hasAliveMinions() {
-        return _minions.stream()
+        return minions.stream()
                 .filter(GameObject::isVisible)
                 .anyMatch(m -> !m.isDead());
     }
@@ -43,7 +43,7 @@ public final class MinionList {
     }
 
     public List<MinionInstance> getAliveMinions() {
-        return _minions.stream()
+        return minions.stream()
                 .filter(GameObject::isVisible)
                 .filter(m -> !m.isDead())
                 .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public final class MinionList {
                 minionId = minion.getMinionId();
                 minionCount = minion.getAmount();
 
-                for (MinionInstance m : _minions) {
+                for (MinionInstance m : minions) {
                     if (m.getNpcId() == minionId)
                         minionCount--;
                     if (m.isDead() || !m.isVisible()) {
@@ -73,7 +73,7 @@ public final class MinionList {
                     MinionInstance m = new MinionInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(minionId));
                     m.setLeader(master);
                     master.spawnMinion(m);
-                    _minions.add(m);
+                    minions.add(m);
                 }
             }
         } finally {
@@ -82,11 +82,11 @@ public final class MinionList {
     }
 
     public synchronized void unspawnMinions() {
-        _minions.forEach(GameObject::decayMe);
+        minions.forEach(GameObject::decayMe);
     }
 
     public void deleteMinions() {
         unspawnMinions();
-        _minions.clear();
+        minions.clear();
     }
 }

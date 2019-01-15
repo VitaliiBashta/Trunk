@@ -5,10 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @see http://www.linedia.ru/wiki/Matras'_Curiosity
- */
-public class _132_MatrasCuriosity extends Quest implements ScriptFile {
+public final class _132_MatrasCuriosity extends Quest {
     // npc
     private static final int Matras = 32245;
 
@@ -28,18 +25,6 @@ public class _132_MatrasCuriosity extends Quest implements ScriptFile {
     private static final int Rough_Ore_of_Darkness = 10525;
     private static final int Rough_Ore_of_Divinity = 10526;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _132_MatrasCuriosity() {
         super(PARTY_ALL);
 
@@ -48,10 +33,8 @@ public class _132_MatrasCuriosity extends Quest implements ScriptFile {
         addKillId(Ranku);
         addKillId(Demon_Prince);
 
-        addQuestItem(new int[]{
-                Rankus_Blueprint,
-                Demon_Princes_Blueprint
-        });
+        addQuestItem(Rankus_Blueprint,
+                Demon_Princes_Blueprint);
     }
 
     @Override

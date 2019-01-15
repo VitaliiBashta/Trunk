@@ -6,11 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _279_TargetOfOpportunity extends Quest implements ScriptFile {
+public final class _279_TargetOfOpportunity extends Quest{
     private static final int Jerian = 32302;
     private static final int CosmicScout = 22373;
     private static final int CosmicWatcher = 22374;
@@ -84,17 +80,5 @@ public class _279_TargetOfOpportunity extends Quest implements ScriptFile {
                 st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

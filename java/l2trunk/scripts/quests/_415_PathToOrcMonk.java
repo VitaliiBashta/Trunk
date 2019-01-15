@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Path To Orc Monk
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _415_PathToOrcMonk extends Quest implements ScriptFile {
+public final class _415_PathToOrcMonk extends Quest {
     //NPC
     private static final int Urutu = 30587;
     private static final int Rosheek = 30590;
@@ -125,18 +119,6 @@ public class _415_PathToOrcMonk extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _415_PathToOrcMonk() {
         super(false);
 
@@ -151,8 +133,7 @@ public class _415_PathToOrcMonk extends Quest implements ScriptFile {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
         }
-        addQuestItem(new int[]{
-                Pomegranate,
+        addQuestItem(Pomegranate,
                 LeatherPouch1st,
                 LeatherPouchFull1st,
                 LeatherPouch2st,
@@ -166,8 +147,7 @@ public class _415_PathToOrcMonk extends Quest implements ScriptFile {
                 LeatherPouch4st,
                 LeatherPouchFull4st,
                 IronWillScroll,
-                TorukusLetter
-        });
+                TorukusLetter);
     }
 
     @Override

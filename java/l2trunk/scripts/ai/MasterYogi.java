@@ -5,8 +5,6 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.List;
-
 
 public final class MasterYogi extends DefaultAI {
     private long wait_timeout1 = 0;
@@ -28,18 +26,15 @@ public final class MasterYogi extends DefaultAI {
 
         //Calculate the radius at which NPCs will talk
         if (range <= 0) {
-            List<NpcInstance> around = actor.getAroundNpc(6000, 300);
-            if (around != null && !around.isEmpty()) {
-                double distance;
-                for (NpcInstance npc : around)
-                    if (npc.getNpcId() == 32599) {
-                        distance = actor.getDistance(npc) * 0.50;
-                        if (range > 0 && distance < range || range == 0)
-                            range = (int) distance;
-                    }
-            } else
-                range = 3000;
-        }
+            actor.getAroundNpc(6000, 300)
+                    .filter(npc -> npc.getNpcId() == 32599)
+                    .forEach(npc -> {
+                        if (range > 0 && actor.getDistance(npc) * 0.50 < range || range == 0)
+                            range = (int) (actor.getDistance(npc) * 0.5);
+                    });
+        } else
+            range = 3000;
+
 
         if (System.currentTimeMillis() > wait_timeout1) {
             wait_timeout1 = System.currentTimeMillis() + 998988;

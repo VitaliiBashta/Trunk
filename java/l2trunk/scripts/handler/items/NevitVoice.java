@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class NevitVoice extends SimpleItemHandler implements ScriptFile {
@@ -28,26 +27,10 @@ public final class NevitVoice extends SimpleItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     protected boolean useItemImpl(Player player, ItemInstance item, boolean ctrl) {
-        if (!useItem(player, item, 1))
+        if (!useItem(player, item, 1) || item.getItemId() != ITEM_IDS)
             return false;
-
-        if (item.getItemId() != ITEM_IDS) {
-            return false;
-        } else {
-            player.addRecomHave(10);
-        }
-
+        player.addRecomHave(10);
         return true;
     }
 }

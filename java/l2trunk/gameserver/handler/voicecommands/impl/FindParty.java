@@ -27,7 +27,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
 
 public final class FindParty extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Arrays.asList("party", "invite", "partylist");
+    private static final List<String> COMMANDS = List.of("party", "invite", "partylist");
     private static final int PARTY_REQUEST_DURATION = 600_000; // 10 minutes delay until the request is rendered invalid.
     private static final int PARTY_REQUEST_DELAY = 60_000; // 1 minute delay until you can send a party request to the whole server again.
 

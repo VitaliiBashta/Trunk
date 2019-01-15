@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.CollectionUtils;
 import l2trunk.commons.collections.JoinedIterator;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.ai.CtrlEvent;
@@ -48,7 +47,7 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
                 List<DuelSnapshotObject> winners = getObjects(_winner.name());
                 List<DuelSnapshotObject> lossers = getObjects(_winner.revert().name());
 
-                DuelSnapshotObject winner = CollectionUtils.safeGet(winners, 0);
+                DuelSnapshotObject winner = winners.get(0);
                 if (winner != null) {
                     sendPacket(new SystemMessage2(SystemMsg.C1S_PARTY_HAS_WON_THE_DUEL).addName(winners.get(0).getPlayer()));
 
@@ -188,11 +187,11 @@ public final class PartyVsPartyDuelEvent extends DuelEvent {
         player.startFrozen();
         player.setTeam(TeamType.NONE);
 
-        for (Player $player : World.getAroundPlayers(player)) {
-            $player.getAI().notifyEvent(CtrlEvent.EVT_FORGET_OBJECT, player);
+        World.getAroundPlayers(player).forEach(p -> {
+            p.getAI().notifyEvent(CtrlEvent.EVT_FORGET_OBJECT, player);
             if (player.getPet() != null)
-                $player.getAI().notifyEvent(CtrlEvent.EVT_FORGET_OBJECT, player.getPet());
-        }
+                p.getAI().notifyEvent(CtrlEvent.EVT_FORGET_OBJECT, player.getPet());
+        });
         player.sendChanges();
 
         boolean allDead = true;

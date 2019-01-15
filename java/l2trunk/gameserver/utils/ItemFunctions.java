@@ -21,8 +21,10 @@ import l2trunk.gameserver.templates.item.ArmorTemplate.ArmorType;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
+import java.util.stream.Stream;
+
 public final class ItemFunctions {
-    private static final int[][] catalyst = {
+    private static final Integer[][] catalyst = {
             // enchant catalyst list
             {12362, 14078, 14702}, // 0 - W D
             {12363, 14079, 14703}, // 1 - W C
@@ -45,6 +47,10 @@ public final class ItemFunctions {
         item.setCount(1L);
 
         return item;
+    }
+
+    public static void addItem(Playable playable, int itemId, long count, String log) {
+        addItem(playable, itemId, count, true, log);
     }
 
     public static void addItem(Playable playable, int itemId, long count, boolean notify, String log) {
@@ -91,10 +97,6 @@ public final class ItemFunctions {
             player.sendPacket(SystemMessage2.removeItems(itemId, removed));
 
         return removed;
-    }
-
-    private static boolean isClanApellaItem(int itemId) {
-        return itemId >= 7860 && itemId <= 7879 || itemId >= 9830 && itemId <= 9839;
     }
 
     public static SystemMessage2 checkIfCanEquip(PetInstance pet, ItemInstance item) {
@@ -205,10 +207,7 @@ public final class ItemFunctions {
             return false;
 
         PickableAttachment attachment = item.getAttachment() instanceof PickableAttachment ? (PickableAttachment) item.getAttachment() : null;
-        if (attachment != null && !attachment.canPickUp(player))
-            return false;
-
-        return true;
+        return attachment == null || attachment.canPickUp(player);
     }
 
     public static boolean checkIfCanDiscard(Player player, ItemInstance item) {
@@ -343,22 +342,17 @@ public final class ItemFunctions {
     }
 
     public static int getEnchantCrystalId(ItemInstance item, ItemInstance scroll, ItemInstance catalyst) {
-        boolean scrollValid = false, catalystValid = false;
+        boolean scrollValid, catalystValid = false;
 
-        for (int scrollId : getEnchantScrollId(item))
-            if (scroll.getItemId() == scrollId) {
-                scrollValid = true;
-                break;
-            }
+        scrollValid = getEnchantScrollId(item)
+                .anyMatch(scrollId -> scroll.getItemId() == scrollId);
+
 
         if (catalyst == null)
             catalystValid = true;
         else
-            for (int catalystId : getEnchantCatalystId(item))
-                if (catalystId == catalyst.getItemId()) {
-                    catalystValid = true;
-                    break;
-                }
+            catalystValid = getEnchantCatalystId(item)
+                    .anyMatch(catalystId -> catalystId == catalyst.getItemId());
 
         if (scrollValid && catalystValid)
             switch (item.getCrystalType().cry) {
@@ -379,68 +373,68 @@ public final class ItemFunctions {
         return -1;
     }
 
-    private static int[] getEnchantScrollId(ItemInstance item) {
+    private static Stream<Integer> getEnchantScrollId(ItemInstance item) {
         if (item.getTemplate().getType2() == ItemTemplate.TYPE2_WEAPON)
             switch (item.getCrystalType().cry) {
                 case ItemTemplate.CRYSTAL_NONE:
-                    return new int[]{13540};
+                    return Stream.of(13540);
                 case ItemTemplate.CRYSTAL_D:
-                    return new int[]{955, 6575, 957, 22006, 22229};
+                    return Stream.of(955, 6575, 957, 22006, 22229);
                 case ItemTemplate.CRYSTAL_C:
-                    return new int[]{951, 6573, 953, 22007, 22227};
+                    return Stream.of(951, 6573, 953, 22007, 22227);
                 case ItemTemplate.CRYSTAL_B:
-                    return new int[]{947, 6571, 949, 22008, 22014, 22018, 22225};
+                    return Stream.of(947, 6571, 949, 22008, 22014, 22018, 22225);
                 case ItemTemplate.CRYSTAL_A:
-                    return new int[]{729, 6569, 731, 22009, 22015, 22019, 22223};
+                    return Stream.of(729, 6569, 731, 22009, 22015, 22019, 22223);
                 case ItemTemplate.CRYSTAL_S:
-                    return new int[]{959, 6577, 961, 20517, 20519, 20521, 22221};
+                    return Stream.of(959, 6577, 961, 20517, 20519, 20521, 22221);
             }
         else if (item.getTemplate().getType2() == ItemTemplate.TYPE2_SHIELD_ARMOR || item.getTemplate().getType2() == ItemTemplate.TYPE2_ACCESSORY)
             switch (item.getCrystalType().cry) {
                 case ItemTemplate.CRYSTAL_NONE:
-                    return new int[]{21581, 21582};
+                    return Stream.of(21581, 21582);
                 case ItemTemplate.CRYSTAL_D:
-                    return new int[]{956, 6576, 958, 22010, 22230};
+                    return Stream.of(956, 6576, 958, 22010, 22230);
                 case ItemTemplate.CRYSTAL_C:
-                    return new int[]{952, 6574, 954, 22011, 22228};
+                    return Stream.of(952, 6574, 954, 22011, 22228);
                 case ItemTemplate.CRYSTAL_B:
-                    return new int[]{948, 6572, 950, 22012, 22016, 22020, 22226};
+                    return Stream.of(948, 6572, 950, 22012, 22016, 22020, 22226);
                 case ItemTemplate.CRYSTAL_A:
-                    return new int[]{730, 6570, 732, 22013, 22017, 22021, 22224};
+                    return Stream.of(730, 6570, 732, 22013, 22017, 22021, 22224);
                 case ItemTemplate.CRYSTAL_S:
-                    return new int[]{960, 6578, 962, 20518, 20520, 20522, 22222};
+                    return Stream.of(960, 6578, 962, 20518, 20520, 20522, 22222);
             }
-        return new int[0];
+        return Stream.of();
     }
 
-    private static int[] getEnchantCatalystId(ItemInstance item) {
+    private static Stream<Integer> getEnchantCatalystId(ItemInstance item) {
         if (item.getTemplate().getType2() == ItemTemplate.TYPE2_WEAPON)
             switch (item.getCrystalType().cry) {
                 case ItemTemplate.CRYSTAL_A:
-                    return catalyst[3];
+                    return Stream.of(catalyst[3]);
                 case ItemTemplate.CRYSTAL_B:
-                    return catalyst[2];
+                    return Stream.of(catalyst[2]);
                 case ItemTemplate.CRYSTAL_C:
-                    return catalyst[1];
+                    return Stream.of(catalyst[1]);
                 case ItemTemplate.CRYSTAL_D:
-                    return catalyst[0];
+                    return Stream.of(catalyst[0]);
                 case ItemTemplate.CRYSTAL_S:
-                    return catalyst[4];
+                    return Stream.of(catalyst[4]);
             }
         else if (item.getTemplate().getType2() == ItemTemplate.TYPE2_SHIELD_ARMOR || item.getTemplate().getType2() == ItemTemplate.TYPE2_ACCESSORY)
             switch (item.getCrystalType().cry) {
                 case ItemTemplate.CRYSTAL_A:
-                    return catalyst[8];
+                    return Stream.of(catalyst[8]);
                 case ItemTemplate.CRYSTAL_B:
-                    return catalyst[7];
+                    return Stream.of(catalyst[7]);
                 case ItemTemplate.CRYSTAL_C:
-                    return catalyst[6];
+                    return Stream.of(catalyst[6]);
                 case ItemTemplate.CRYSTAL_D:
-                    return catalyst[5];
+                    return Stream.of(catalyst[5]);
                 case ItemTemplate.CRYSTAL_S:
-                    return catalyst[9];
+                    return Stream.of(catalyst[9]);
             }
-        return new int[]{0, 0, 0};
+        return Stream.of(0, 0, 0);
     }
 
     public static int getCatalystPower(int itemId) {
@@ -481,11 +475,8 @@ public final class ItemFunctions {
         if (current < (item.getTemplate().getBodyPart() == ItemTemplate.SLOT_FULL_ARMOR ? 4 : 3) || current > 8)
             return false;
 
-        for (int catalystRequired : getEnchantCatalystId(item))
-            if (catalystRequired == catalyst.getItemId())
-                return true;
-
-        return false;
+        return getEnchantCatalystId(item)
+                .anyMatch(id -> id == catalyst.getItemId());
     }
 
     public static boolean isLifeStone(int itemId) {

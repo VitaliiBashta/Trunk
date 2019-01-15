@@ -5,25 +5,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _026_TiredOfWaiting extends Quest implements ScriptFile {
+public final class _026_TiredOfWaiting extends Quest {
     private final static int ISAEL = 30655;
     private final static int KITZKA = 31045;
 
     private final static int LARGE_DRAGON_BONE = 17248;
     private final static int WILL_OF_ANTHARAS = 17266;
     private final static int SEALED_BLOOD_CRYSTAL = 17267;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _026_TiredOfWaiting() {
         super(false);

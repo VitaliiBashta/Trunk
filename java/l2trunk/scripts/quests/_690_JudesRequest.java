@@ -8,14 +8,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * User: Keiichi
- * Date: 08.10.2008
- * Time: 16:00:35
- * Hellbound Isle Quest 690
- * 22399	Greater Evil
- */
-public class _690_JudesRequest extends Quest implements ScriptFile {
+public final class _690_JudesRequest extends Quest {
     // NPC's
     private static final int JUDE = 32356;
     // ITEM's
@@ -44,18 +37,6 @@ public class _690_JudesRequest extends Quest implements ScriptFile {
     private static final int IHandP = 10403;
     private static final int IHallP = 10404;
     private static final int ISpitterP = 10405;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _690_JudesRequest() {
         super(true);

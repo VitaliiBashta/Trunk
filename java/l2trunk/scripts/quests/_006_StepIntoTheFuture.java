@@ -4,12 +4,8 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Рейты не учитываются, награда специфичная
- */
-public class _006_StepIntoTheFuture extends Quest implements ScriptFile {
+public final class _006_StepIntoTheFuture extends Quest {
     //NPC
     private static final int Roxxy = 30006;
     private static final int Baulro = 30033;
@@ -19,18 +15,6 @@ public class _006_StepIntoTheFuture extends Quest implements ScriptFile {
     //Items
     private static final int ScrollOfEscapeGiran = 7126;
     private static final int MarkOfTraveler = 7570;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _006_StepIntoTheFuture() {
         super(false);

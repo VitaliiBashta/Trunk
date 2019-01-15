@@ -5,38 +5,22 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: Grivesky
- * @date: 20.01.2012
- */
-public class _640_TheZeroHour extends Quest implements ScriptFile {
+public final class _640_TheZeroHour extends Quest  {
     // NPC's
     private static final int KAHMAN = 31554;
     // ITEMS
     private static final int STAKATO_QUEENS_FANG = 14859;
     private static final int KAHMANS_SUPPLY_BOX = 14849;
     // MOB's
-    private static int QUEEN_SHYEED_ID = 25671;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int QUEEN_SHYEED_ID = 25671;
 
     public _640_TheZeroHour() {
         super(true);
 
-        //addStartNpc(KAHMAN);
-        //addTalkId(KAHMAN);
-        //addKillId(QUEEN_SHYEED_ID);
-        //addQuestItem(STAKATO_QUEENS_FANG);
+        addStartNpc(KAHMAN);
+        addTalkId(KAHMAN);
+        addKillId(QUEEN_SHYEED_ID);
+        addQuestItem(STAKATO_QUEENS_FANG);
     }
 
     @Override

@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
 
-public final class EnchantingReward extends Functions implements ScriptFile {
+public final class EnchantingReward extends Functions {
     private static final int MASTER_YOGI_STAFF = 13539;
     private static final int MASTER_YOGI_SCROLL = 13540;
 
@@ -165,17 +165,5 @@ public final class EnchantingReward extends Functions implements ScriptFile {
         } else {
             show("scripts/events/MasterOfEnchanting/32599-rewardnostaff.htm", player);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

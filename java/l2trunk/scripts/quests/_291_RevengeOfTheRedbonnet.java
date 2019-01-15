@@ -6,31 +6,19 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _291_RevengeOfTheRedbonnet extends Quest implements ScriptFile {
+public final class _291_RevengeOfTheRedbonnet extends Quest {
     //NPC
-    private final int MaryseRedbonnet = 30553;
+    private static final int MaryseRedbonnet = 30553;
     //Quest Items
     private final int BlackWolfPelt = 1482;
     //Item
-    private final int ScrollOfEscape = 736;
-    private final int GrandmasPearl = 1502;
-    private final int GrandmasMirror = 1503;
-    private final int GrandmasNecklace = 1504;
-    private final int GrandmasHairpin = 1505;
+    private static final int ScrollOfEscape = 736;
+    private static final int GrandmasPearl = 1502;
+    private static final int GrandmasMirror = 1503;
+    private static final int GrandmasNecklace = 1504;
+    private static final int GrandmasHairpin = 1505;
     //Mobs
-    private final int BlackWolf = 20317;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int BlackWolf = 20317;
 
     public _291_RevengeOfTheRedbonnet() {
         super(false);

@@ -40,18 +40,17 @@ public final class Yakand extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
 
         if (System.currentTimeMillis() > wait_timeout && (current_point > -1 || Rnd.chance(5))) {
             if (!wait)
-                switch (current_point) {
-                    case 10:
-                        wait_timeout = System.currentTimeMillis() + 60000;
-                        wait = true;
-                        return true;
+                if (current_point == 10) {
+                    wait_timeout = System.currentTimeMillis() + 60000;
+                    wait = true;
+                    return true;
                 }
 
             wait_timeout = 0;

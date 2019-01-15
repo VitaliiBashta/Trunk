@@ -48,7 +48,7 @@ public final class ArtefactAI extends CharacterAI {
             if (attacker == null || (actor = (NpcInstance) getActor()) == null)
                 return;
 
-            actor.getAroundNpc(1500, 200).stream()
+            actor.getAroundNpc(1500, 200)
                     .filter(GameObject::isSiegeGuard)
                     .filter(npc -> Rnd.chance(20))
                     .forEach(npc -> npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 5000));

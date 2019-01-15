@@ -4,28 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class QuestNpcLogInfo {
-    private final List<Integer> _npcIds;
-    private final String _varName;
-    private final int _maxCount;
+    private final List<Integer> npcIds;
+    private final String varName;
+    private final int maxCount;
 
-    QuestNpcLogInfo(int[] npcIds, String varName, int maxCount) {
-        _npcIds = new ArrayList<>();
-        for (int id : npcIds) {
-            _npcIds.add(id);
-        }
-        _varName = varName;
-        _maxCount = maxCount;
+    QuestNpcLogInfo(List<Integer> npcIds, String varName, int maxCount) {
+        this.npcIds = new ArrayList<>(npcIds);
+        this.varName = varName;
+        this.maxCount = maxCount;
     }
 
     public List<Integer> getNpcIds() {
-        return _npcIds;
+        return npcIds;
     }
 
     public String getVarName() {
-        return _varName;
+        return varName;
     }
 
-    public int getMaxCount() {
-        return _maxCount;
+    int getMaxCount() {
+        return maxCount;
     }
 }

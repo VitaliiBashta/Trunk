@@ -113,7 +113,7 @@ public final class Tears extends DefaultAI {
 
         // Спавним 9 копий
         for (int i = 0; i < 9; i++) {
-            pos = Location.findPointToStay(144298, 154420, -11854, 300, 320, actor.getGeoIndex());
+            pos = Location.findPointToStay(new Location(144298, 154420, -11854), 300, 320, actor.getGeoIndex());
             SimpleSpawner sp = (SimpleSpawner) new SimpleSpawner(Tears_Copy)
                     .setLoc(pos)
                     .setReflection(actor.getReflection());
@@ -127,7 +127,7 @@ public final class Tears extends DefaultAI {
         }
 
         // Прячемся среди них
-        pos = Location.findPointToStay(144298, 154420, -11854, 300, 320, actor.getReflectionId());
+        pos = Location.findPointToStay(new Location(144298, 154420, -11854), 300, 320, actor.getReflectionId());
         actor.teleToLocation(pos);
 
         // Атакуем случайную цель

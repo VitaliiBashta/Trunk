@@ -6,11 +6,6 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * Данный инстанс используется мобами, которых нельзя убить, но нужно, чтобы на них действовали дебафы в onEvtSeeSpell
- *
- * @author n0nam3
- */
 public final class MobInvulInstance extends MonsterInstance {
     public MobInvulInstance(int objectId, NpcTemplate template) {
         super(objectId, template);

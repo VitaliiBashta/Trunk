@@ -85,13 +85,6 @@ public enum AdminCommandHandler {
             datatable.put(e.toString().toLowerCase(), handler);
     }
 
-    public IAdminCommandHandler getAdminCommandHandler(String adminCommand) {
-        String command = adminCommand;
-        if (adminCommand.contains(" "))
-            command = adminCommand.substring(0, adminCommand.indexOf(" "));
-        return datatable.get(command);
-    }
-
     public void useAdminCommandHandler(Player activeChar, String adminCommand) {
         if (!(activeChar.isGM() || activeChar.getPlayerAccess().CanUseGMCommand)) {
             activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.SendBypassBuildCmd.NoCommandOrAccess", activeChar).addString(adminCommand));
@@ -102,12 +95,12 @@ public enum AdminCommandHandler {
         IAdminCommandHandler handler = datatable.get(wordList[0]);
         if (handler != null) {
             boolean success = false;
-            try {
-                for (Enum<?> e : handler.getAdminCommandEnum())
-                    if (e.toString().equalsIgnoreCase(wordList[0])) {
-                        success = handler.useAdminCommand(e, wordList, adminCommand, activeChar);
-                        break;
-                    }
+                try {
+                    for (Enum<?> e : handler.getAdminCommandEnum())
+                        if (e.toString().equalsIgnoreCase(wordList[0])) {
+                            success = handler.useAdminCommand(e, wordList, adminCommand, activeChar);
+                            break;
+                        }
             } catch (RuntimeException e) {
                 LOG.error("Error while using Admin Command! ", e);
             }
@@ -128,7 +121,4 @@ public enum AdminCommandHandler {
         datatable.clear();
     }
 
-    public Set<String> getAllCommands() {
-        return datatable.keySet();
-    }
 }

@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _172_NewHorizons extends Quest implements ScriptFile {
+public final class _172_NewHorizons extends Quest {
     //NPC
     private static final int Zenya = 32140;
     private static final int Ragara = 32163;
     //Items
     private static final int ScrollOfEscapeGiran = 7126;
     private static final int MarkOfTraveler = 7570;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _172_NewHorizons() {
         super(false);

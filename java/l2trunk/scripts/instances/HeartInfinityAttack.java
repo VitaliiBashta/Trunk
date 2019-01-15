@@ -136,7 +136,7 @@ public final class HeartInfinityAttack extends Reflection {
     }
 
     private int getAliveTumorCount() {
-        return getAllByNpcId(AliveTumor, true).size();
+        return (int) getAllByNpcId(AliveTumor, true).count();
     }
 
     public void notifyCoffinDeath() {
@@ -219,8 +219,7 @@ public final class HeartInfinityAttack extends Reflection {
             p.showQuestMovie(win ? ExStartScenePlayer.SCENE_ECHMUS_SUCCESS : ExStartScenePlayer.SCENE_ECHMUS_FAIL);
         });
         showScreenMessage(win ? NpcString.CONGRATULATIONS_YOU_HAVE_SUCCEEDED_AT_S1_S2_THE_INSTANCE_WILL_SHORTLY_EXPIRE : NpcString.YOU_HAVE_FAILED_AT_S1_S2, "#" + NpcString.HEART_OF_IMMORTALITY.getId(), "#" + NpcString.ATTACK.getId());
-        getNpcs().stream()
-                .filter(npc -> List.of(AliveTumor, DeadTumor, RegenerationCoffin).contains(npc.getNpcId()))
+        getNpcs().filter(npc -> List.of(AliveTumor, DeadTumor, RegenerationCoffin).contains(npc.getNpcId()))
                 .forEach(GameObject::deleteMe);
     }
 

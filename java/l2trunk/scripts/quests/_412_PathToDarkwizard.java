@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _412_PathToDarkwizard extends Quest implements ScriptFile {
+public final class _412_PathToDarkwizard extends Quest {
     //npc
     private final int CHARKEREN = 30415;
     private final int ANNIKA = 30418;
@@ -70,18 +70,6 @@ public class _412_PathToDarkwizard extends Quest implements ScriptFile {
                     3
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _412_PathToDarkwizard() {
         super(false);

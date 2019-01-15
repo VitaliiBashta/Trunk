@@ -4,29 +4,15 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _052_WilliesSpecialBait extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _052_WilliesSpecialBait extends Quest {
     private final static int Willie = 31574;
-    private final static int[] TarlkBasilisks = {
-            20573,
-            20574
-    };
+    private final static List<Integer> TarlkBasilisks = List.of(20573, 20574);
     private final static int EyeOfTarlkBasilisk = 7623;
     private final static int EarthFishingLure = 7612;
     private final static Integer FishSkill = 1315;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _052_WilliesSpecialBait() {
         super(false);
@@ -86,8 +72,7 @@ public class _052_WilliesSpecialBait extends Quest implements ScriptFile {
 
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
-        int npcId = npc.getNpcId();
-        if (npcId == TarlkBasilisks[0] || npcId == TarlkBasilisks[1] && st.getCond() == 1)
+        if (TarlkBasilisks.contains(npc.getNpcId()) && st.getCond() == 1)
             if (st.getQuestItemsCount(EyeOfTarlkBasilisk) < 100 && Rnd.chance(30)) {
                 st.giveItems(EyeOfTarlkBasilisk, 1);
                 if (st.getQuestItemsCount(EyeOfTarlkBasilisk) == 100) {

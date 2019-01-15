@@ -4,12 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * Данный инстанс используется NPC Snowman в эвенте Saving Snowman
- *
- * @author SYS
- */
-public class SnowmanInstance extends NpcInstance {
+public final class SnowmanInstance extends NpcInstance {
     public SnowmanInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

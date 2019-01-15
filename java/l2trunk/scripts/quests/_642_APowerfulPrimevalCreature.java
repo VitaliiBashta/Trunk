@@ -3,13 +3,12 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public final class _642_APowerfulPrimevalCreature extends Quest implements ScriptFile {
+public final class _642_APowerfulPrimevalCreature extends Quest {
     // NPCs
     private static final int Dinn = 32105;
     // Mobs

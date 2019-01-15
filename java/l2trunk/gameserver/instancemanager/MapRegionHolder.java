@@ -33,7 +33,7 @@ public final class MapRegionHolder  {
     }
 
     public <T extends RegionData> T getRegionData(Class<T> clazz, GameObject o) {
-        return getRegionData(clazz, o.getX(), o.getY(), o.getZ());
+        return getRegionData(clazz, o.getLoc());
     }
 
     public <T extends RegionData> T getRegionData(Class<T> clazz, Location loc) {
@@ -44,10 +44,9 @@ public final class MapRegionHolder  {
         for (RegionData rd : map[regionX(x)][regionY(y)]) {
             if (rd.getClass() != clazz)
                 continue;
-            if (rd.getTerritory().isInside(x, y, z))
+            if (rd.getTerritory().isInside(new Location(x, y, z)))
                 return (T) rd;
         }
-
         return null;
     }
 

@@ -1,27 +1,26 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
+import java.util.List;
 
-public final class _067_SagaOfTheDoombringer extends SagasSuperclass implements ScriptFile {
+public final class _067_SagaOfTheDoombringer extends SagasSuperclass {
     public _067_SagaOfTheDoombringer() {
         super(false);
 
-        NPC = Arrays.asList(
+        NPC = List.of(
                 32138, 31627, 32223, 32227, 32254, 31646, 31647, 31650, 31654, 31655, 31656, 32227);
-        Items = Arrays.asList(
+        Items = List.of(
                 7080, 9721, 7081, 9740, 9722, 9725, 9728, 9731, 9734, 9737, 9717, 0);
-        Mob = Arrays.asList(27324, 27325, 27326);
+        Mob = List.of(27324, 27325, 27326);
         classid = 131;
         prevclass = 0x7F;
-        locs = Arrays.asList(
+        locs = List.of(
                 new Location(191046, -40640, -3042),
                 new Location(47429, -56923, -2383),
                 new Location(47391, -56929, -2370)
         );
-        Text = Arrays.asList(
+        Text = List.of(
                 "PLAYERNAME! Pursued to here! However, I jumped out of the Banshouren boundaries! You look at the giant as the sign of power!",
                 "... Oh ... good! So it was ... let's begin!",
                 "I do not have the patience ..! I have been a giant force ...! Cough chatter ah ah ah!",
@@ -42,17 +41,5 @@ public final class _067_SagaOfTheDoombringer extends SagasSuperclass implements 
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

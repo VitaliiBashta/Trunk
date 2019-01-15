@@ -11,9 +11,9 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.DeleteObject;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 public final class CharacterControlPanel {
     private static CharacterControlPanel _instance;
@@ -66,21 +66,17 @@ public final class CharacterControlPanel {
             }
         }
         // Item logs
-        else if (param[0].equalsIgnoreCase("itemLogs")) {
+        else if ("itemLogs".equalsIgnoreCase(param[0])) {
             CCPItemLogs.showPage(activeChar);
             return null;
         }
         // Show private stores Hide private stores / Fixed
-        else if (param[0].equalsIgnoreCase(Player.NO_TRADERS_VAR)) {
+        else if (Player.NO_TRADERS_VAR.equalsIgnoreCase(param[0])) {
             if (activeChar.getVar(Player.NO_TRADERS_VAR) == null) {
-                ArrayList<L2GameServerPacket> pls = new ArrayList<>();
-                List<Player> list = World.getAroundPlayers(activeChar);
-                for (Player player : list) {
-                    if (player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
-                        pls.add(new DeleteObject(player));
-                }
-
-                list.clear();
+                List<L2GameServerPacket> pls = World.getAroundPlayers(activeChar)
+                        .filter(p -> p.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
+                        .map(DeleteObject::new)
+                        .collect(Collectors.toList());
 
                 activeChar.sendPacket(pls);
                 activeChar.setNotShowTraders(true);
@@ -89,16 +85,14 @@ public final class CharacterControlPanel {
                 activeChar.setNotShowTraders(false);
                 activeChar.unsetVar(Player.NO_TRADERS_VAR);
 
-                List<Player> list = World.getAroundPlayers(activeChar);
-                for (Player player : list) {
-                    if (player.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
-                        player.broadcastUserInfo(true);
-                }
+                World.getAroundPlayers(activeChar)
+                        .filter(p -> p.getPrivateStoreType() != Player.STORE_PRIVATE_NONE)
+                        .forEach(p -> p.broadcastUserInfo(true));
             }
         }
 
         // Show skill animations
-        else if (param[0].equalsIgnoreCase(Player.NO_ANIMATION_OF_CAST_VAR)) {
+        else if (Player.NO_ANIMATION_OF_CAST_VAR.equalsIgnoreCase(param[0])) {
             if (activeChar.getVar(Player.NO_ANIMATION_OF_CAST_VAR) == null) {
                 activeChar.setNotShowBuffAnim(true);
                 activeChar.setVar(Player.NO_ANIMATION_OF_CAST_VAR, "true", -1);
@@ -106,13 +100,13 @@ public final class CharacterControlPanel {
                 activeChar.setNotShowBuffAnim(false);
                 activeChar.unsetVar(Player.NO_ANIMATION_OF_CAST_VAR);
             }
-        } else if (param[0].equalsIgnoreCase("blocktrade")) {
+        } else if ("blocktrade".equalsIgnoreCase(param[0])) {
             activeChar.setTradeRefusal(!activeChar.getTradeRefusal());
-        } else if (param[0].equalsIgnoreCase("blockpartyinvite")) {
+        } else if ("blockpartyinvite".equalsIgnoreCase(param[0])) {
             activeChar.setPartyInviteRefusal(!activeChar.getPartyInviteRefusal());
-        } else if (param[0].equalsIgnoreCase("blockfriendinvite")) {
+        } else if ("blockfriendinvite".equalsIgnoreCase(param[0])) {
             activeChar.setFriendInviteRefusal(!activeChar.getFriendInviteRefusal());
-        } else if (param[0].equalsIgnoreCase("repairCharacter")) {
+        } else if ("repairCharacter".equalsIgnoreCase(param[0])) {
             if (param.length > 1)
                 CCPRepair.repairChar(activeChar, param[1]);
             else
@@ -120,20 +114,20 @@ public final class CharacterControlPanel {
         } else if (param[0].startsWith("poll") || param[0].startsWith("Poll")) {
             CCPPoll.bypass(activeChar, param);
             return null;
-        } else if (param[0].equals("combine")) {
+        } else if ("combine".equals(param[0])) {
             CCPSmallCommands.combineTalismans(activeChar);
             return null;
-        } else if (param[0].equals("otoad")) {
+        } else if ("otoad".equals(param[0])) {
             CCPSmallCommands.openToad(activeChar, -1);
             return null;
-        } else if (param[0].equals("hwidPage")) {
+        } else if ("hwidPage".equals(param[0])) {
             return "cfgLockHwid.htm";
         } else if (param[0].startsWith("secondaryPass")) {
             CCPSecondaryPassword.startSecondaryPasswordSetup(activeChar, text);
             return null;
-        } else if (param[0].equalsIgnoreCase("showPassword")) {
+        } else if ("showPassword".equalsIgnoreCase(param[0])) {
             return "cfgPassword.htm";
-        } else if (param[0].equals("changePassword")) {
+        } else if ("changePassword".equals(param[0])) {
             StringTokenizer st = new StringTokenizer(text, " |");
             String[] passes = new String[st.countTokens() - 1];
             st.nextToken();
@@ -145,12 +139,12 @@ public final class CharacterControlPanel {
                 return null;
             else
                 return "cfgPassword.htm";
-        } else if (param[0].equalsIgnoreCase("showRepair")) {
+        } else if ("showRepair".equalsIgnoreCase(param[0])) {
             return "cfgRepair.htm";
-        } else if (param[0].equalsIgnoreCase("ping")) {
+        } else if ("ping".equalsIgnoreCase(param[0])) {
             CCPSmallCommands.getPing(activeChar);
             return null;
-        } else if (param[0].equalsIgnoreCase("cwhPrivs")) {
+        } else if ("cwhPrivs".equalsIgnoreCase(param[0])) {
             if (param.length > 1) {
                 String args = param[1] + (param.length > 2 ? " " + param[2] : "");
                 return CCPCWHPrivilages.clanMain(activeChar, args);

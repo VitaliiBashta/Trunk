@@ -29,9 +29,10 @@ public final class RankuScapegoat extends DefaultAI {
     private NpcInstance getBoss() {
         Reflection r = getActor().getReflection();
         if (!r.isDefault())
-            for (NpcInstance n : r.getNpcs())
-                if (n.getNpcId() == 25542 && !n.isDead())
-                    return n;
+            return r.getNpcs()
+                    .filter(n -> n.getNpcId() == 25542)
+                    .filter(n -> !n.isDead())
+                    .findFirst().orElse(null);
         return null;
     }
 }

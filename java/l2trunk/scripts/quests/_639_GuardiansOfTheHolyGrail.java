@@ -4,9 +4,8 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _639_GuardiansOfTheHolyGrail extends Quest implements ScriptFile {
+public final class _639_GuardiansOfTheHolyGrail extends Quest {
 
     private static final int DROP_CHANCE = 10; // Для х1 мобов
 

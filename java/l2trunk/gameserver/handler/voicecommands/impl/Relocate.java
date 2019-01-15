@@ -12,10 +12,10 @@ import l2trunk.gameserver.utils.Location;
 import java.util.Collections;
 import java.util.List;
 
-public class Relocate extends Functions implements IVoicedCommandHandler {
+public final class Relocate extends Functions implements IVoicedCommandHandler {
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.singletonList("km-all-to-me");
+        return List.of("km-all-to-me");
     }
 
     @Override

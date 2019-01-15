@@ -1,55 +1,26 @@
 package l2trunk.scripts.quests;
 
-// version = Unknown
-
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Рейты учтены
- */
-public class _003_WilltheSealbeBroken extends Quest implements ScriptFile {
-    private final int StartNpc = 30141;
-    private final int[] Monster = {
-            20031,
-            20041,
-            20046,
-            20048,
-            20052,
-            20057
-    };
+import java.util.List;
+
+public final class _003_WilltheSealbeBroken extends Quest {
+    private static final int StartNpc = 30141;
+    private final List<Integer> Monster = List.of(
+            20031, 20041, 20046, 20048, 20052, 20057);
 
     private final int OnyxBeastEye = 1081;
     private final int TaintStone = 1082;
     private final int SuccubusBlood = 1083;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _003_WilltheSealbeBroken() {
         super(false);
         addStartNpc(StartNpc);
-
-        for (int npcId : Monster)
-            addKillId(npcId);
-
-        addQuestItem(new int[]{
-                OnyxBeastEye,
-                TaintStone,
-                SuccubusBlood
-        });
+        addKillId(Monster);
+        addQuestItem(OnyxBeastEye, TaintStone, SuccubusBlood);
     }
 
     @Override
@@ -98,13 +69,13 @@ public class _003_WilltheSealbeBroken extends Quest implements ScriptFile {
         int npcId = npc.getNpcId();
         int id = st.getState();
         if (id == STARTED) {
-            if (npcId == Monster[0] && st.getQuestItemsCount(OnyxBeastEye) == 0) {
+            if (npcId == Monster.get(0) && st.getQuestItemsCount(OnyxBeastEye) == 0) {
                 st.giveItems(OnyxBeastEye, 1, false);
                 st.playSound(SOUND_ITEMGET);
-            } else if ((npcId == Monster[1] || npcId == Monster[2]) && st.getQuestItemsCount(TaintStone) == 0) {
+            } else if ((npcId == Monster.get(1) || npcId == Monster.get(2)) && st.getQuestItemsCount(TaintStone) == 0) {
                 st.giveItems(TaintStone, 1, false);
                 st.playSound(SOUND_ITEMGET);
-            } else if ((npcId == Monster[3] || npcId == Monster[4] || npcId == Monster[5]) && st.getQuestItemsCount(SuccubusBlood) == 0) {
+            } else if ((npcId == Monster.get(3) || npcId == Monster.get(4) || npcId == Monster.get(5) && st.getQuestItemsCount(SuccubusBlood) == 0)) {
                 st.giveItems(SuccubusBlood, 1, false);
                 st.playSound(SOUND_ITEMGET);
             }

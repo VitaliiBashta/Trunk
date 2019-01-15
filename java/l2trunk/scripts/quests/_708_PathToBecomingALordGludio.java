@@ -10,19 +10,17 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _708_PathToBecomingALordGludio extends Quest implements ScriptFile {
+public final class _708_PathToBecomingALordGludio extends Quest {
     private static final int Sayres = 35100;
     private static final int Pinter = 30298;
     private static final int Bathis = 30332;
 
     private static final int HeadlessKnightsArmor = 13848;
 
-    private static final List<Integer> MOBS = Arrays.asList(20045, 20051, 20099);
+    private static final List<Integer> MOBS = List.of(20045, 20051, 20099);
 
     private static final int GludioCastle = 1;
 
@@ -95,7 +93,6 @@ public final class _708_PathToBecomingALordGludio extends Quest implements Scrip
     public String onTalk(NpcInstance npc, QuestState st) {
         String htmltext = "noquest";
         int npcId = npc.getNpcId();
-        int id = st.getState();
         int cond = st.getCond();
         Castle castle = ResidenceHolder.getResidence(GludioCastle);
         if (castle.getOwner() == null)
@@ -180,17 +177,5 @@ public final class _708_PathToBecomingALordGludio extends Quest implements Scrip
         if (owner != null)
             return castleOwner != null && castleOwner != st.getPlayer() && owner == st.getPlayer().getClan() && castleOwner.getQuestState(getClass()) != null && castleOwner.getQuestState(getClass()).getCond() == cond;
         return false;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

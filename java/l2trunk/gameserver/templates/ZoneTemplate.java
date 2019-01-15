@@ -14,7 +14,7 @@ import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
-public class ZoneTemplate {
+public final class ZoneTemplate {
     private final String _name;
     private final ZoneType _type;
 
@@ -62,7 +62,7 @@ public class ZoneTemplate {
     /**
      * Бонус/штраф к скорости движения
      */
-    private final double _moveBonus;
+    private final double moveBonus;
 
     /**
      * Бонус регенерации хп
@@ -111,7 +111,7 @@ public class ZoneTemplate {
         _randomTick = set.getInteger("random_time", 0);
 
         //Зона с бонусами
-        _moveBonus = set.getDouble("move_bonus", 0.);
+        moveBonus = set.getDouble("move_bonus", 0.);
         _regenBonusHP = set.getDouble("hp_regen_bonus", 0.);
         _regenBonusMP = set.getDouble("mp_regen_bonus", 0.);
 
@@ -225,27 +225,14 @@ public class ZoneTemplate {
         return _damageOnMP;
     }
 
-    /**
-     * @return Бонус к скорости движения в зоне
-     */
     public double getMoveBonus() {
-        return _moveBonus;
+        return moveBonus;
     }
 
-    /**
-     * Возвращает бонус регенерации хп в этой зоне
-     *
-     * @return Бонус регенарации хп в этой зоне
-     */
     public double getRegenBonusHP() {
         return _regenBonusHP;
     }
 
-    /**
-     * Возвращает бонус регенерации мп в этой зоне
-     *
-     * @return Бонус регенарации мп в этой зоне
-     */
     public double getRegenBonusMP() {
         return _regenBonusMP;
     }

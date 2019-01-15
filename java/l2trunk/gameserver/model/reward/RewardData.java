@@ -36,7 +36,7 @@ public final class RewardData implements Cloneable {
         this.chance = chance;
     }
 
-    public boolean notRate() {
+    boolean notRate() {
         return notRate;
     }
 

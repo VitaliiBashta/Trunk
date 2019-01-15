@@ -4,9 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _601_WatchingEyes extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _601_WatchingEyes extends Quest {
     //NPC
     private static final int EYE_OF_ARGOS = 31683;
     //ITEMS
@@ -14,13 +15,8 @@ public class _601_WatchingEyes extends Quest implements ScriptFile {
     //CHANCE
     private static final int DROP_CHANCE = 50;
     //MOBS
-    private static final int[] MOBS = {
-            21306,
-            21308,
-            21309,
-            21310,
-            21311
-    };
+    private static final List<Integer> MOBS = List.of(
+            21306, 21308, 21309, 21310, 21311);
     private static final int[][] REWARDS = {
             {
                     6699,
@@ -47,18 +43,6 @@ public class _601_WatchingEyes extends Quest implements ScriptFile {
                     100
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _601_WatchingEyes() {
         super(true);

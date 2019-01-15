@@ -268,36 +268,32 @@ public enum DimensionalRiftManager {
     }
 
     public class DimensionalRiftRoom {
-        private final Territory _territory;
-        private final Location _teleportCoords;
-        private final boolean _isBossRoom;
-        private final List<SimpleSpawner> _roomSpawns;
+        private final Territory territory;
+        private final Location teleportCoords;
+        private final boolean isBossRoom;
+        private final List<SimpleSpawner> roomSpawns;
 
         DimensionalRiftRoom(Territory territory, Location tele, boolean isBossRoom) {
-            _territory = territory;
-            _teleportCoords = tele;
-            _isBossRoom = isBossRoom;
-            _roomSpawns = new ArrayList<>();
+            this.territory = territory;
+            teleportCoords = tele;
+            this.isBossRoom = isBossRoom;
+            roomSpawns = new ArrayList<>();
         }
 
         public Location getTeleportCoords() {
-            return _teleportCoords;
+            return teleportCoords;
         }
 
-        boolean checkIfInZone(Location loc) {
-            return checkIfInZone(loc.x, loc.y, loc.z);
-        }
-
-        public boolean checkIfInZone(int x, int y, int z) {
-            return _territory.isInside(x, y, z);
+        public boolean checkIfInZone(Location loc) {
+            return territory.isInside(loc);
         }
 
         public boolean isBossRoom() {
-            return _isBossRoom;
+            return isBossRoom;
         }
 
         public List<SimpleSpawner> getSpawns() {
-            return _roomSpawns;
+            return roomSpawns;
         }
     }
 }

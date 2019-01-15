@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _608_SlayTheEnemyCommander extends Quest implements ScriptFile {
+public final class _608_SlayTheEnemyCommander extends Quest {
     // npc
     private static final int KADUN_ZU_KETRA = 31370;
     private static final int VARKAS_COMMANDER_MOS = 25312;
@@ -21,18 +21,6 @@ public class _608_SlayTheEnemyCommander extends Quest implements ScriptFile {
     private static final int MARK_OF_KETRA_ALLIANCE3 = 7213;
     private static final int MARK_OF_KETRA_ALLIANCE4 = 7214;
     private static final int MARK_OF_KETRA_ALLIANCE5 = 7215;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _608_SlayTheEnemyCommander() {
         super(true);

@@ -5,13 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Catch The Wind
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _317_CatchTheWind extends Quest implements ScriptFile {
+public final class _317_CatchTheWind extends Quest {
     //NPCs
     private static final int Rizraell = 30361;
     //Quest Items
@@ -43,18 +37,6 @@ public class _317_CatchTheWind extends Quest implements ScriptFile {
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _317_CatchTheWind() {
         super(false);

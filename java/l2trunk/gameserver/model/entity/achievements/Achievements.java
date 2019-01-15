@@ -73,7 +73,6 @@ public enum Achievements {
         long playerPoints;
         int all = 0;
         int clansvisual = 0;
-        boolean pagereached = false;
         int totalpages = (int) (Math.round(player.getAchievements(category).size()) / 5.0 + 1);
 
         FULL_PAGE = FULL_PAGE.replaceAll("%back%", page == 1 ? "&nbsp;" : "<button value=\"\" action=\"bypass _bbs_achievements_cat " + category + " " + (page - 1) + "\" width=40 height=20 back=\"L2UI_CT1.Inventory_DF_Btn_RotateRight\" fore=\"L2UI_CT1.Inventory_DF_Btn_RotateRight\">");
@@ -110,7 +109,7 @@ public enum Achievements {
             if (!a.isDone(playerPoints)) {
                 done = false;
 
-                String notDoneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm", null);
+                String notDoneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm");
 
                 long needpoints = a.getPointsToComplete();
                 long diff = Math.max(0, needpoints - playerPoints);
@@ -138,7 +137,7 @@ public enum Achievements {
             } else {
                 done = true;
 
-                String doneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm", null);
+                String doneAchievement = HtmCache.INSTANCE.getNullable("achievements/oneAchievement.htm");
 
                 doneAchievement = doneAchievement.replaceFirst("%fame%", "" + a.getFame());
                 doneAchievement = doneAchievement.replaceAll("%bar1%", "24");

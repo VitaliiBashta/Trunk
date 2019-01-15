@@ -34,7 +34,6 @@ public final class Maguen extends Fighter {
         ExShowScreenMessage sm = new ExShowScreenMessage(NpcString.MAGUEN_APPEARANCE, 5000, ScreenMessageAlign.TOP_CENTER, true, 1, -1, true);
         if (!getActor().isInZone(ZoneType.dummy)) {
             getActor().getAroundCharacters(800, 300)
-                    .stream()
                     .filter(GameObject::isPlayer)
                     .forEach(a -> a.sendPacket(sm));
         }

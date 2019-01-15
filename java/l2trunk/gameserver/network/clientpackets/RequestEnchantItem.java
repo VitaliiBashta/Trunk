@@ -5,7 +5,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.EnchantItemHolder;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.WarehouseInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.items.PcInventory;
@@ -19,15 +18,13 @@ import l2trunk.gameserver.templates.item.support.EnchantScroll;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.gameserver.utils.Log;
 
-import java.util.List;
-
-public class RequestEnchantItem extends L2GameClientPacket {
+public final class RequestEnchantItem extends L2GameClientPacket {
     private int _objectId, _catalystObjId;
 
     private static void showEnchantAnimation(Player player, int enchantLevel) {
         enchantLevel = Math.min(enchantLevel, 20);
         final int skillId = 23096 + enchantLevel;
-        final MagicSkillUse msu = new MagicSkillUse(player,  skillId);
+        final MagicSkillUse msu = new MagicSkillUse(player, skillId);
         player.broadcastPacket(msu);
     }
 
@@ -94,10 +91,7 @@ public class RequestEnchantItem extends L2GameClientPacket {
                     fail = true;
                 break;
             case 21580:
-                if (item.getEnchantLevel() < 9)
-                    fail = false;
-                else
-                    fail = true;
+                fail = item.getEnchantLevel() >= 9;
                 break;
             default: {
                 if (itemType == ItemTemplate.TYPE2_WEAPON) {
@@ -127,14 +121,9 @@ public class RequestEnchantItem extends L2GameClientPacket {
             return;
         }
 
-        int safeEnchantLevel = item.getTemplate().getBodyPart() == ItemTemplate.SLOT_FULL_ARMOR ? Config.SAFE_ENCHANT_FULL_BODY : Config.SAFE_ENCHANT_COMMON;
-
         double chance = 100;
 
-        if (ItemFunctions.isDivineEnchantScroll(scrollId)) // Item Mall divine
-            chance = 100;
-
-        else if (ItemFunctions.isItemMallEnchantScroll(scrollId)) // Item Mall normal/ancient
+        if (ItemFunctions.isItemMallEnchantScroll(scrollId)) // Item Mall normal/ancient
             chance += 10;
 
         if (catalyst != null)
@@ -142,13 +131,6 @@ public class RequestEnchantItem extends L2GameClientPacket {
 
         if (scrollId == 13540)
             chance = item.getEnchantLevel() < Config.SAFE_ENCHANT_MASTER_YOGI_STAFF ? 100 : Config.ENCHANT_CHANCE_MASTER_YOGI_STAFF;
-
-        else if (scrollId == 21581 || scrollId == 21582) {
-            if (item.getEnchantLevel() < 9)
-                chance = item.getEnchantLevel() < 3 ? 100 : Config.ENCHANT_CHANCE_CRYSTAL_ARMOR_OLF;
-            else
-                chance = 0;
-        }
 
         boolean equipped;
 
@@ -266,13 +248,10 @@ public class RequestEnchantItem extends L2GameClientPacket {
             return;
         }
 
-        final List<NpcInstance> wh = player.getAroundNpc(200, 200);
-
-        for (NpcInstance warehouse : wh) {
-            if (warehouse instanceof WarehouseInstance) {
-                player.sendMessage("You can't enchant near warehouse.");
-                return;
-            }
+        if (player.getAroundNpc(200, 200)
+                .anyMatch(wh -> wh instanceof WarehouseInstance)) {
+            player.sendMessage("You can't enchant near warehouse.");
+            return;
         }
 
         PcInventory inventory = player.getInventory();
@@ -329,7 +308,7 @@ public class RequestEnchantItem extends L2GameClientPacket {
                 return;
             }
 
-            boolean equipped = false;
+            boolean equipped;
 
             if (equipped = item.isEquipped())
                 inventory.unEquipItem(item);
@@ -370,10 +349,6 @@ public class RequestEnchantItem extends L2GameClientPacket {
                 if (enchantScroll.isHasVisualEffect() && item.getEnchantLevel() > 3) {
                     showEnchantAnimation(player, item.getEnchantLevel());
                 }
-
-                // Alexander - Add a enchant succesful to the stats
-//				if (chance < 100)
-//					player.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_SUCCEED);
             } else {
                 switch (enchantScroll.getResultType()) {
                     case CRYSTALS:

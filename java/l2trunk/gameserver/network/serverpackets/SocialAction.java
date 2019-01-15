@@ -20,7 +20,6 @@ public final class SocialAction extends L2GameServerPacket {
     public static final int COUPLE_HIGH_FIVE = 17;
     public static final int COUPLE_DANCE = 18;
     public static final int GIVE_HERO = 20016;
-    public static final int CURSED_WEAPON_LEVEL_UP = 20017;
     public static final int LEVEL_UP = 2122;
     private final int playerId;
     private final int actionId;

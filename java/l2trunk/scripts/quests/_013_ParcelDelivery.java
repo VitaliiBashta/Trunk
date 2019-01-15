@@ -5,20 +5,8 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _013_ParcelDelivery extends Quest implements ScriptFile {
+public final class _013_ParcelDelivery extends Quest {
     private static final int PACKAGE = 7263;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _013_ParcelDelivery() {
         super(false);

@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _040_ASpecialOrder extends Quest implements ScriptFile {
+public final class _040_ASpecialOrder extends Quest {
     // NPC
     private static final int Helvetia = 30081;
     private static final int OFulle = 31572;

@@ -7,11 +7,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public final class _10296_SevenSignsPoweroftheSeal extends Quest implements ScriptFile {
+public final class _10296_SevenSignsPoweroftheSeal extends Quest {
     private static final int Eris = 32792;
     private static final int ElcardiaInzone1 = 32787;
     private static final int EtisEtina = 18949;
@@ -131,9 +130,9 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest implements Scri
         int npcId = npc.getNpcId();
         if (npcId == EtisEtina) {
             st.set("EtisKilled", 1);
-            for (NpcInstance n : st.getPlayer().getReflection().getNpcs())
-                if (n.getNpcId() == ElcardiaInzone1)
-                    n.teleToLocation(new Location(120664, -86968, -3392));
+            st.getPlayer().getReflection().getNpcs()
+                    .filter(n -> n.getNpcId() == ElcardiaInzone1)
+                    .forEach(n -> n.teleToLocation(new Location(120664, -86968, -3392)));
             ThreadPoolManager.INSTANCE.schedule(() -> teleportElcardia(st.getPlayer()), 60500L);
             st.getPlayer().showQuestMovie(ExStartScenePlayer.SCENE_SSQ2_BOSS_CLOSING);
 
@@ -142,16 +141,17 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest implements Scri
     }
 
     private void teleportElcardia(Player player) {
-        for (NpcInstance n : player.getReflection().getNpcs())
-            if (n.getNpcId() == ElcardiaInzone1) {
-                n.teleToLocation(Location.findPointToStay(player, 60));
-                if (n.isBlocked())
-                    n.setBlock();
-            }
+        player.getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == ElcardiaInzone1)
+                .forEach(n -> {
+                    n.teleToLocation(Location.findPointToStay(player, 60));
+                    if (n.isBlocked())
+                        n.setBlock();
+                });
     }
 
     private void teleportElcardia(Player player, Location loc) {
-        player.getReflection().getNpcs().stream()
+        player.getReflection().getNpcs()
                 .filter(n -> n.getNpcId() == ElcardiaInzone1)
                 .forEach(n -> {
                     n.teleToLocation(loc);
@@ -168,17 +168,4 @@ public final class _10296_SevenSignsPoweroftheSeal extends Quest implements Scri
             ReflectionUtils.enterReflection(player, 146);
         }
     }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
 }

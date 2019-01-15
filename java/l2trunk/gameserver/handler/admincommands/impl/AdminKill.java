@@ -1,6 +1,5 @@
 package l2trunk.gameserver.handler.admincommands.impl;
 
-import l2trunk.commons.lang.NumberUtils;
 import l2trunk.gameserver.handler.admincommands.IAdminCommandHandler;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
@@ -8,7 +7,9 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class AdminKill implements IAdminCommandHandler {
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
+public final class AdminKill implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         Commands command = (Commands) comm;
@@ -24,7 +25,7 @@ public class AdminKill implements IAdminCommandHandler {
                     handleKill(activeChar, wordList[1]);
                 break;
             case admin_damage:
-                handleDamage(activeChar, NumberUtils.toInt(wordList[1], 1));
+                handleDamage(activeChar, toInt(wordList[1], 1));
                 break;
         }
 
@@ -47,10 +48,10 @@ public class AdminKill implements IAdminCommandHandler {
             if (plyr != null)
                 obj = plyr;
             else {
-                int radius = Math.max(Integer.parseInt(player), 100);
-                for (Creature character : activeChar.getAroundCharacters(radius, 200))
-                    if (!character.isDoor())
-                        character.doDie(activeChar);
+                int radius = Math.max(toInt(player), 100);
+                activeChar.getAroundCharacters(radius, 200)
+                        .filter(c -> !c.isDoor())
+                        .forEach(c -> c.doDie(activeChar));
                 activeChar.sendMessage("Killed within " + radius + " unit radius.");
                 return;
             }

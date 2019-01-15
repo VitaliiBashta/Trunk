@@ -4,9 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _280_TheFoodChain extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _280_TheFoodChain extends Quest {
     // NPCs
     private static final int BIXON = 32175;
     // Mobs
@@ -16,11 +17,7 @@ public class _280_TheFoodChain extends Quest implements ScriptFile {
     private static final int Black_Wolf = 22232;
     private static final int Dominant_Black_Wolf = 22233;
     // Items
-    private static final int[] REWARDS = {
-            28,
-            35,
-            116
-    };
+    private static final List<Integer> REWARDS = List.of(28, 35, 116);
     // Quest Items
     private static final int Grey_Keltir_Tooth = 9809;
     private static final int Black_Wolf_Tooth = 9810;
@@ -83,7 +80,7 @@ public class _280_TheFoodChain extends Quest implements ScriptFile {
                 int rew_count = (int) st.getRateQuestsReward();
                 while (rew_count > 0) {
                     rew_count--;
-                    st.giveItems(REWARDS[Rnd.get(REWARDS.length)], 1);
+                    st.giveItems(Rnd.get(REWARDS));
                 }
                 st.playSound(SOUND_MIDDLE);
                 return "jager_bixon_q0280_06.htm";
@@ -124,17 +121,5 @@ public class _280_TheFoodChain extends Quest implements ScriptFile {
             qs.playSound(SOUND_ITEMGET);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

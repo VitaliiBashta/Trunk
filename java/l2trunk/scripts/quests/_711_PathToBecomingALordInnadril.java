@@ -9,17 +9,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _711_PathToBecomingALordInnadril extends Quest implements ScriptFile {
+public final class _711_PathToBecomingALordInnadril extends Quest {
     private static final int Neurath = 35316;
     private static final int IasonHeine = 30969;
 
     private static final int InnadrilCastle = 6;
-    private static final List<Integer> mobs = Arrays.asList(
+    private static final List<Integer> mobs = List.of(
             20789, 20790, 20791, 20792, 20793, 20804, 20805, 20806, 20807, 20808);
 
     public _711_PathToBecomingALordInnadril() {
@@ -151,15 +149,4 @@ public final class _711_PathToBecomingALordInnadril extends Quest implements Scr
         return false;
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

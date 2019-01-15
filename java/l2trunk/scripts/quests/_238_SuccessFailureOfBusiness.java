@@ -5,19 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _238_SuccessFailureOfBusiness extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _238_SuccessFailureOfBusiness extends Quest {
     private static final int Helvetica = 32641;
 
     private static final int BrazierOfPurity = 18806;

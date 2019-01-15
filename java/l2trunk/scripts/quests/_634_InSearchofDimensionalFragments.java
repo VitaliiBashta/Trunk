@@ -4,7 +4,6 @@ import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _634_InSearchofDimensionalFragments extends Quest {
     private static final int DIMENSION_FRAGMENT_ID = 7079;

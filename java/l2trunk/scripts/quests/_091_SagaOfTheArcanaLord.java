@@ -5,7 +5,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _091_SagaOfTheArcanaLord extends SagasSuperclass implements ScriptFile {
+public final class _091_SagaOfTheArcanaLord extends SagasSuperclass {
     public _091_SagaOfTheArcanaLord() {
         super(false);
 
@@ -39,17 +39,5 @@ public final class _091_SagaOfTheArcanaLord extends SagasSuperclass implements S
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -202,7 +202,7 @@ public final class GameObjectTasks {
     public static class EndSitDownTask extends RunnableImpl {
         private final HardReference<Player> _playerRef;
 
-        public EndSitDownTask(Player player) {
+        EndSitDownTask(Player player) {
             _playerRef = player.getRef();
         }
 
@@ -222,7 +222,7 @@ public final class GameObjectTasks {
     public static class EndStandUpTask extends RunnableImpl {
         private final HardReference<Player> _playerRef;
 
-        public EndStandUpTask(Player player) {
+        EndStandUpTask(Player player) {
             _playerRef = player.getRef();
         }
 
@@ -310,39 +310,39 @@ public final class GameObjectTasks {
      * HitTask
      */
     public static class HitTask extends RunnableImpl {
-        final boolean _crit;
-        final boolean _miss;
-        final boolean _shld;
-        final boolean _soulshot;
-        final boolean _unchargeSS;
-        final boolean _notify;
-        final int _damage;
-        private final HardReference<? extends Creature> _charRef, _targetRef;
+        final boolean crit;
+        final boolean miss;
+        final boolean shld;
+        final boolean soulshot;
+        final boolean unchargeSS;
+        final boolean notify;
+        final int damage;
+        private final HardReference<? extends Creature> charRef, targetRef;
 
         public HitTask(Creature cha, Creature target, int damage, boolean crit, boolean miss, boolean soulshot, boolean shld, boolean unchargeSS, boolean notify) {
-            _charRef = cha.getRef();
-            _targetRef = target.getRef();
-            _damage = damage;
-            _crit = crit;
-            _shld = shld;
-            _miss = miss;
-            _soulshot = soulshot;
-            _unchargeSS = unchargeSS;
-            _notify = notify;
+            charRef = cha.getRef();
+            targetRef = target.getRef();
+            this.damage = damage;
+            this.crit = crit;
+            this.shld = shld;
+            this.miss = miss;
+            this.soulshot = soulshot;
+            this.unchargeSS = unchargeSS;
+            this.notify = notify;
         }
 
         @Override
         public void runImpl() {
             Creature character, target;
-            if ((character = _charRef.get()) == null || (target = _targetRef.get()) == null)
+            if ((character = charRef.get()) == null || (target = targetRef.get()) == null)
                 return;
 
             if (character.isAttackAborted())
                 return;
             // if (GeoEngine.canSeeTarget(character, target, false))
-            character.onHitTimer(target, _damage, _crit, _miss, _soulshot, _shld, _unchargeSS);
+            character.onHitTimer(target, damage, crit, miss, soulshot, shld, unchargeSS);
 
-            if (_notify)
+            if (notify)
                 character.getAI().notifyEvent(CtrlEvent.EVT_READY_TO_ACT);
         }
     }
@@ -374,21 +374,18 @@ public final class GameObjectTasks {
         }
     }
 
-    /**
-     * MagicLaunchedTask
-     */
     public static class MagicLaunchedTask extends RunnableImpl {
-        final boolean _forceUse;
-        private final HardReference<? extends Creature> _charRef;
+        final boolean forceUse;
+        private final HardReference<? extends Creature> charRef;
 
         public MagicLaunchedTask(Creature cha, boolean forceUse) {
-            _charRef = cha.getRef();
-            _forceUse = forceUse;
+            charRef = cha.getRef();
+            this.forceUse = forceUse;
         }
 
         @Override
         public void runImpl() {
-            Creature character = _charRef.get();
+            Creature character = charRef.get();
             if (character == null)
                 return;
             Skill castingSkill = character.getCastingSkill();
@@ -397,25 +394,26 @@ public final class GameObjectTasks {
                 character.clearCastVars();
                 return;
             }
-            List<Creature> targets = castingSkill.getTargets(character, castingTarget, _forceUse);
+            List<Creature> targets = castingSkill.getTargets(character, castingTarget, forceUse);
             character.broadcastPacket(new MagicSkillLaunched(character.getObjectId(), castingSkill.getDisplayId(), castingSkill.getDisplayLevel(), Collections.unmodifiableList(targets)));
         }
     }
 
-    /**
-     * Task of AI notification
-     */
     public static class NotifyAITask extends RunnableImpl {
-        private final CtrlEvent _evt;
-        private final Object _agr0;
-        private final Object _agr1;
-        private final HardReference<? extends Creature> _charRef;
+        private final CtrlEvent evt;
+        private final Creature creature;
+        private final Integer damage;
+        private final HardReference<? extends Creature> charRef;
 
-        public NotifyAITask(Creature cha, CtrlEvent evt, Object agr0, Object agr1) {
-            _charRef = cha.getRef();
-            _evt = evt;
-            _agr0 = agr0;
-            _agr1 = agr1;
+        public NotifyAITask(Creature cha, CtrlEvent evt, Creature creature) {
+            this(cha, evt, creature, null);
+        }
+
+        public NotifyAITask(Creature cha, CtrlEvent evt, Creature creature, Integer damage) {
+            charRef = cha.getRef();
+            this.evt = evt;
+            this.creature = creature;
+            this.damage = damage;
         }
 
         public NotifyAITask(Creature cha, CtrlEvent evt) {
@@ -424,11 +422,18 @@ public final class GameObjectTasks {
 
         @Override
         public void runImpl() {
-            Creature character = _charRef.get();
+            Creature character = charRef.get();
             if (character == null || !character.hasAI() || !Config.ALLOW_NPC_AIS)
                 return;
 
-            character.getAI().notifyEvent(_evt, _agr0, _agr1);
+            if (creature != null)
+                if (damage != null)
+                    character.getAI().notifyEvent(evt, creature, damage);
+                else
+                    character.getAI().notifyEvent(evt, creature);
+            else character.getAI().notifyEvent(evt);
+
+
         }
     }
 
@@ -436,15 +441,15 @@ public final class GameObjectTasks {
      * Task of Checking Skill Cast Landing
      **/
     public static class MagicGeoCheckTask extends RunnableImpl {
-        private final HardReference<? extends Creature> _charRef;
+        private final HardReference<? extends Creature> charRef;
 
         public MagicGeoCheckTask(Creature cha) {
-            _charRef = cha.getRef();
+            charRef = cha.getRef();
         }
 
         @Override
         public void runImpl() {
-            Creature character = _charRef.get();
+            Creature character = charRef.get();
             if (character == null) {
                 return;
             }
@@ -456,7 +461,7 @@ public final class GameObjectTasks {
                 return;
             }
 
-            character._skillGeoCheckTask = null;
+            character.skillGeoCheckTask = null;
         }
     }
 }

@@ -88,11 +88,11 @@ public final class Summon extends Skill {
                 activeChar.setAgathion(getNpcId());
                 break;
             case TRAP:
-                Skill trapSkill = getFirstAddedSkill();
+                int trapSkillId = getFirstAddedSkill().getId();
 
                 if (activeChar.getTrapsCount() >= 5)
                     activeChar.destroyFirstTrap();
-                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(getNpcId()), activeChar, trapSkill);
+                TrapInstance trap = new TrapInstance(IdFactory.getInstance().getNextId(), NpcHolder.getTemplate(getNpcId()), activeChar, trapSkillId);
                 activeChar.addTrap(trap);
                 trap.spawnMe();
                 break;

@@ -13,7 +13,6 @@ import l2trunk.gameserver.scripts.Functions;
 import java.util.List;
 
 public final class TimakOrcTroopLeader extends Fighter {
-
     private static final List<Integer> BROTHERS = List.of(20768, // Timak Orc Troop Shaman
             20769, // Timak Orc Troop Warrior
             20770); // Timak Orc Troop Archer

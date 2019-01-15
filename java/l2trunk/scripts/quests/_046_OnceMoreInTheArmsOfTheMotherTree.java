@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest implements ScriptFile {
+public final class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest {
     private static final int GALLADUCCIS_ORDER_DOCUMENT_ID_1 = 7563;
     private static final int GALLADUCCIS_ORDER_DOCUMENT_ID_2 = 7564;
     private static final int GALLADUCCIS_ORDER_DOCUMENT_ID_3 = 7565;
@@ -15,18 +15,6 @@ public class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest implements Scri
     private static final int PURIFIED_MAGIC_NECKLACE_ID = 7566;
     private static final int MARK_OF_TRAVELER_ID = 7570;
     private static final int SCROLL_OF_ESCAPE_ELVEN_VILLAGE = 7118;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _046_OnceMoreInTheArmsOfTheMotherTree() {
         super(false);
@@ -40,57 +28,63 @@ public class _046_OnceMoreInTheArmsOfTheMotherTree extends Quest implements Scri
         addTalkId(30090);
         addTalkId(30116);
 
-        addQuestItem(new int[]{
-                GALLADUCCIS_ORDER_DOCUMENT_ID_1,
+        addQuestItem(GALLADUCCIS_ORDER_DOCUMENT_ID_1,
                 GALLADUCCIS_ORDER_DOCUMENT_ID_2,
                 GALLADUCCIS_ORDER_DOCUMENT_ID_3,
                 MAGIC_SWORD_HILT_ID,
                 GEMSTONE_POWDER_ID,
-                PURIFIED_MAGIC_NECKLACE_ID
-        });
+                PURIFIED_MAGIC_NECKLACE_ID);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("1")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-            st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
-            htmltext = "galladuchi_q0046_0104.htm";
-        } else if (event.equals("2")) {
-            st.setCond(2);
-            st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
-            st.giveItems(MAGIC_SWORD_HILT_ID, 1);
-            htmltext = "gentler_q0046_0201.htm";
-        } else if (event.equals("3")) {
-            st.setCond(3);
-            st.takeItems(MAGIC_SWORD_HILT_ID, 1);
-            st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2, 1);
-            htmltext = "galladuchi_q0046_0301.htm";
-        } else if (event.equals("4")) {
-            st.setCond(4);
-            st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2, 1);
-            st.giveItems(GEMSTONE_POWDER_ID, 1);
-            htmltext = "sandra_q0046_0401.htm";
-        } else if (event.equals("5")) {
-            st.setCond(5);
-            st.takeItems(GEMSTONE_POWDER_ID, 1);
-            st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3, 1);
-            htmltext = "galladuchi_q0046_0501.htm";
-        } else if (event.equals("6")) {
-            st.setCond(6);
-            st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3, 1);
-            st.giveItems(PURIFIED_MAGIC_NECKLACE_ID, 1);
-            htmltext = "dustin_q0046_0601.htm";
-        } else if (event.equals("7")) {
-            st.giveItems(SCROLL_OF_ESCAPE_ELVEN_VILLAGE, 1);
-            st.takeItems(PURIFIED_MAGIC_NECKLACE_ID, 1);
-            htmltext = "galladuchi_q0046_0701.htm";
-            st.setCond(0);
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(false);
+        switch (event) {
+            case "1":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
+                htmltext = "galladuchi_q0046_0104.htm";
+                break;
+            case "2":
+                st.setCond(2);
+                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_1, 1);
+                st.giveItems(MAGIC_SWORD_HILT_ID, 1);
+                htmltext = "gentler_q0046_0201.htm";
+                break;
+            case "3":
+                st.setCond(3);
+                st.takeItems(MAGIC_SWORD_HILT_ID, 1);
+                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2, 1);
+                htmltext = "galladuchi_q0046_0301.htm";
+                break;
+            case "4":
+                st.setCond(4);
+                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_2, 1);
+                st.giveItems(GEMSTONE_POWDER_ID, 1);
+                htmltext = "sandra_q0046_0401.htm";
+                break;
+            case "5":
+                st.setCond(5);
+                st.takeItems(GEMSTONE_POWDER_ID, 1);
+                st.giveItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3, 1);
+                htmltext = "galladuchi_q0046_0501.htm";
+                break;
+            case "6":
+                st.setCond(6);
+                st.takeItems(GALLADUCCIS_ORDER_DOCUMENT_ID_3, 1);
+                st.giveItems(PURIFIED_MAGIC_NECKLACE_ID, 1);
+                htmltext = "dustin_q0046_0601.htm";
+                break;
+            case "7":
+                st.giveItems(SCROLL_OF_ESCAPE_ELVEN_VILLAGE, 1);
+                st.takeItems(PURIFIED_MAGIC_NECKLACE_ID, 1);
+                htmltext = "galladuchi_q0046_0701.htm";
+                st.setCond(0);
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(false);
+                break;
         }
         return htmltext;
     }

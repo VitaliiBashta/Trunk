@@ -10,7 +10,6 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
 import java.sql.Connection;
@@ -18,26 +17,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-public final class _503_PursuitClanAmbition extends Quest implements ScriptFile {
+public final class _503_PursuitClanAmbition extends Quest {
     // Items
 
     // first part
-    private final int G_Let_Martien = 3866;
+    private static final int G_Let_Martien = 3866;
+    private static final int Bl_Anvil_Coin = 3871;
+    // second Part
+    private static final int G_Let_Balthazar = 3867;
+    // third part
+    private static final int G_Let_Rodemai = 3868;
     private final int Th_Wyrm_Eggs = 3842;
     private final int Drake_Eggs = 3841;
     private final int Bl_Wyrm_Eggs = 3840;
     private final int Mi_Drake_Eggs = 3839;
     private final int Brooch = 3843;
-    private final int Bl_Anvil_Coin = 3871;
-
-    // second Part
-    private final int G_Let_Balthazar = 3867;
     private final int Recipe_Spiteful_Soul_Energy = 14854;
     private final int Spiteful_Soul_Energy = 14855;
     private final int Spiteful_Soul_Vengeance = 14856;
-
-    // third part
-    private final int G_Let_Rodemai = 3868;
     private final int Imp_Keys = 3847;
     private final int Scepter_Judgement = 3869;
 
@@ -104,15 +101,6 @@ public final class _503_PursuitClanAmbition extends Quest implements ScriptFile 
             addQuestItem(i);
 
         addQuestItem(Recipe_Spiteful_Soul_Energy, Spiteful_Soul_Energy, Spiteful_Soul_Vengeance);
-    }
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
     }
 
     private void suscribe_members(QuestState st) {
@@ -614,12 +602,8 @@ public final class _503_PursuitClanAmbition extends Quest implements ScriptFile 
                         st.addSpawn(27180, 120000);
                     setLeaderVar(st, "2");
                 } else {
-                    List<Player> players = World.getAroundPlayers(npc, 900, 200);
-                    if (players.size() > 0) {
-                        Player player = players.get(Rnd.get(players.size()));
-                        if (player != null)
-                            player.teleToLocation(185462, 20342, -3250);
-                    }
+                    World.getAroundPlayers(npc, 900, 200)
+                            .findAny().ifPresent(p -> p.teleToLocation(185462, 20342, -3250));
                 }
             }
         return null;

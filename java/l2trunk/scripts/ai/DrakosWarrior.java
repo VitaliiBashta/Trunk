@@ -8,11 +8,10 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
-//import l2trunk.gameserver.scripts.Functions;
-
+import l2trunk.gameserver.scripts.Functions;
 
 public final class DrakosWarrior extends Fighter {
-    private static final int[] CLONES = {22823};
+    private static final int CLONE = 22823;
 
     private boolean _firstTimeAttacked = true;
 
@@ -29,15 +28,15 @@ public final class DrakosWarrior extends Fighter {
             return;
         if ((!actor.isDead()) && (this._firstTimeAttacked)) {
             this._firstTimeAttacked = false;
-            //Functions.npcSay(actor, "Now I Know Why You Wanna Hate Me");
-            for (int bro : CLONES) {
-                MonsterInstance npc = (MonsterInstance) NpcHolder.getTemplate(bro).getNewInstance();
-                npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
-                npc.setReflection(actor.getReflection());
-                npc.setFullHpMp();
-                npc.spawnMe(npc.getSpawnedLoc());
-                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 1000));
-            }
+            Functions.npcSay(actor, "Now I Know Why You Wanna Hate Me");
+
+            MonsterInstance npc = (MonsterInstance) NpcHolder.getTemplate(CLONE).getNewInstance();
+            npc.setSpawnedLoc(((MonsterInstance) actor).getMinionPosition());
+            npc.setReflection(actor.getReflection());
+            npc.setFullHpMp();
+            npc.spawnMe(npc.getSpawnedLoc());
+            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, Rnd.get(1, 1000));
+
         }
         super.onEvtAttacked(attacker, damage);
     }

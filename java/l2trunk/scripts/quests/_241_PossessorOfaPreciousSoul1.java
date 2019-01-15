@@ -6,20 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _241_PossessorOfaPreciousSoul1 extends Quest implements ScriptFile {
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _241_PossessorOfaPreciousSoul1 extends Quest {
     private static final int LEGENG_OF_SEVENTEEN = 7587;
     private static final int MALRUK_SUCCUBUS_CLAW = 7597;
     private static final int ECHO_CRYSTAL = 7589;

@@ -98,8 +98,4 @@ public final class CommunityWarehouse implements ScriptFile, ICommunityBoardHand
         if (Config.COMMUNITYBOARD_ENABLED) CommunityBoardManager.removeHandler(this);
     }
 
-    @Override
-    public void onShutdown() {
-    }
-
 }

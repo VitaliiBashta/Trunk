@@ -29,7 +29,7 @@ import l2trunk.gameserver.templates.manor.CropProcure;
  * d  count
  * ]
  */
-public class RequestProcureCropList extends L2GameClientPacket {
+public final class RequestProcureCropList extends L2GameClientPacket {
     private int _count;
     private int[] _items;
     private int[] _crop;
@@ -87,8 +87,8 @@ public class RequestProcureCropList extends L2GameClientPacket {
 
         GameObject target = activeChar.getTarget();
 
-        ManorManagerInstance manor = target != null && target instanceof ManorManagerInstance ? (ManorManagerInstance) target : null;
-        if (!activeChar.isGM() && (manor == null || !activeChar.isInRange(manor, Creature.INTERACTION_DISTANCE))) {
+        ManorManagerInstance manor = target instanceof ManorManagerInstance ? (ManorManagerInstance) target : null;
+        if (!activeChar.isGM() && (!activeChar.isInRange(manor, Creature.INTERACTION_DISTANCE))) {
             activeChar.sendActionFailed();
             return;
         }
@@ -190,8 +190,8 @@ public class RequestProcureCropList extends L2GameClientPacket {
                 if (rewardPrice == 0)
                     continue;
 
-                double reward = (double) sellPrice / rewardPrice;
-                long rewardItemCount = (long) reward + (Rnd.nextDouble() <= reward % 1 ? 1 : 0); // дробную часть округляем с шансом пропорционально размеру дробной части
+                double reward = 1.0 * sellPrice / rewardPrice;
+                long rewardItemCount = (long) reward + (Rnd.nextFloat() <= reward % 1 ? 1 : 0); // дробную часть округляем с шансом пропорционально размеру дробной части
 
                 if (rewardItemCount < 1) {
                     SystemMessage2 sm = new SystemMessage2(SystemMsg.FAILED_IN_TRADING_S2_OF_S1_CROPS);

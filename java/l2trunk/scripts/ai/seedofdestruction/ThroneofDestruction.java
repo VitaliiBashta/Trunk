@@ -6,14 +6,13 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ThroneofDestruction extends DefaultAI {
     private static final int DOOR = 12240031;
     private static final int TIAT_NPC_ID = 29163;
     private static final Location TIAT_LOC = new Location(-250403, 207273, -11952, 16384);
-    private static final List<Integer> checkNpcs = Arrays.asList(18778, 18777);
+    private static final List<Integer> checkNpcs = List.of(18778, 18777);
 
     public ThroneofDestruction(NpcInstance actor) {
         super(actor);
@@ -33,7 +32,7 @@ public final class ThroneofDestruction extends DefaultAI {
     }
 
     private boolean checkAllDestroyed() {
-        return getActor().getReflection().getNpcs().stream()
+        return getActor().getReflection().getNpcs()
                 .filter(npc -> checkNpcs.contains(npc.getNpcId()))
                 .allMatch(Creature::isDead);
     }

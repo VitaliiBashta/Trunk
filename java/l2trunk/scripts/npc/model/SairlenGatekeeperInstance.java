@@ -6,10 +6,6 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.bosses.SailrenManager;
 
-/**
- * @author pchayka
- */
-
 public final class SairlenGatekeeperInstance extends NpcInstance {
     private static final int GAZKH = 8784;
 

@@ -4,23 +4,17 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _134_TempleMissionary extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _134_TempleMissionary extends Quest {
     // NPCs
     private final static int Glyvka = 30067;
     private final static int Rouke = 31418;
     // Mobs
     private final static int Cruma_Marshlands_Traitor = 27339;
-    private final static int[] mobs = {
-            20157,
-            20229,
-            20230,
-            20231,
-            20232,
-            20233,
-            20234
-    };
+    private final static List<Integer> mobs = List.of(
+            20157, 20229, 20230, 20231, 20232, 20233, 20234);
     // Quest Items
     private final static int Giants_Experimental_Tool_Fragment = 10335;
     private final static int Giants_Experimental_Tool = 10336;
@@ -159,17 +153,5 @@ public class _134_TempleMissionary extends Quest implements ScriptFile {
                     qs.addSpawn(Cruma_Marshlands_Traitor, qs.getPlayer().getX(), qs.getPlayer().getY(), qs.getPlayer().getZ(), 0, 100, 900000);
             }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

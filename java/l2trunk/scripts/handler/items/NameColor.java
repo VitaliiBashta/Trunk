@@ -29,16 +29,6 @@ public final class NameColor extends SimpleItemHandler implements ScriptFile {
     }
 
     @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     protected boolean useItemImpl(Player player, ItemInstance item, boolean ctrl) {
         player.sendPacket(new ExChangeNicknameNColor(item.getObjectId()));
         return true;

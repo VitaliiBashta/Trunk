@@ -7,8 +7,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import java.util.List;
 
 public final class SolinaKnight extends Fighter {
-    private NpcInstance scarecrow = null;
-
     public SolinaKnight(NpcInstance actor) {
         super(actor);
     }
@@ -20,20 +18,14 @@ public final class SolinaKnight extends Fighter {
 
     @Override
     public boolean thinkActive() {
-        if (scarecrow == null) {
-            List<NpcInstance> around = getActor().getAroundNpc(300, 100);
-            if (around != null && !around.isEmpty())
-                for (NpcInstance npc : around)
-                    if (npc.getNpcId() == 18912)
-                        if (scarecrow == null || getActor().getDistance3D(npc) < getActor().getDistance3D(scarecrow))
-                            scarecrow = npc;
-        }
+        NpcInstance scarecrow = getActor().getAroundNpc(300, 100)
+                .filter(npc -> npc.getNpcId() == 18912)
+                .min((o1, o2) -> (int) (getActor().getDistance3D(o1) - getActor().getDistance3D(o2))).orElse(null);
 
         if (scarecrow != null) {
             getActor().getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, scarecrow, 1);
             return true;
         }
-
         return false;
     }
 }

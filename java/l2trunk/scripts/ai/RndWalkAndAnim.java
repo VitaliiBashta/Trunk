@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class RndWalkAndAnim extends DefaultAI {
+public final class RndWalkAndAnim extends DefaultAI {
     private static final int PET_WALK_RANGE = 100;
 
     public RndWalkAndAnim(NpcInstance actor) {

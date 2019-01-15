@@ -10,8 +10,9 @@ import l2trunk.gameserver.network.serverpackets.ChangeWaitType;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
+
+import java.util.List;
 
 /**
  * @author Grivesky
@@ -23,13 +24,13 @@ import l2trunk.gameserver.utils.Location;
  * - AI is tested and works.
  */
 public final class SelMahumSquadLeader extends Fighter {
+    private static final List<NpcString> TEXT = List.of(NpcString.SCHOOL5, NpcString.SCHOOL6);
     private boolean _firstTime1 = true;
     private boolean _firstTime2 = true;
     private boolean _firstTime3 = true;
     private boolean _firstTime4 = true;
     private boolean _firstTime5 = true;
     private boolean statsIsChanged = false;
-    private static final NpcString[] _text = {NpcString.SCHOOL5, NpcString.SCHOOL6};
 
     public SelMahumSquadLeader(NpcInstance actor) {
         super(actor);
@@ -41,7 +42,7 @@ public final class SelMahumSquadLeader extends Fighter {
         if (actor == null)
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -75,46 +76,55 @@ public final class SelMahumSquadLeader extends Fighter {
             _firstTime4 = true;
         }
 
-        for (NpcInstance npc : getActor().getAroundNpc(600, 600)) {
-            Location loc = Location.findPointToStay(npc, 100, 200);
-            if (npc != null && npc.getNpcId() == 18933) {
-                if (_firstTime1) {
-                    _firstTime1 = false;
-                    actor.setRunning();
-                    addTaskMove(loc, true);
-                    if (_firstTime5) {
-                        _firstTime5 = false;
-                        Functions.npcSay(actor, _text[Rnd.get(_text.length)]);
-                    }
-                    if (_firstTime2) {
-                        _firstTime2 = false;
-                        ThreadPoolManager.INSTANCE.schedule(new Go(), Rnd.get(20, 30) * 1000);
-                    }
-                }
-            }
-        }
-
-        for (NpcInstance npc : getActor().getAroundNpc(600, 600)) {
-            Location loc = Location.findPointToStay(npc, 100, 200);
-            if (npc != null && npc.getNpcId() == 18927 && npc.getNpcState() == 1) {
-                if (Rnd.chance(30)) {
-                    if (_firstTime3) {
-                        _firstTime3 = false;
+        getActor().getAroundNpc(600, 600)
+                .filter(npc -> npc.getNpcId() == 18933)
+                .forEach(npc -> {
+                    if (_firstTime1) {
+                        _firstTime1 = false;
                         actor.setRunning();
-                        addTaskMove(loc, true);
-                        if (_firstTime4) {
-                            _firstTime4 = false;
+                        addTaskMove(Location.findPointToStay(npc, 100, 200), true);
+                        if (_firstTime5) {
+                            _firstTime5 = false;
+                            Functions.npcSay(actor, Rnd.get(TEXT));
+                        }
+                        if (_firstTime2) {
+                            _firstTime2 = false;
                             ThreadPoolManager.INSTANCE.schedule(new Go(), Rnd.get(20, 30) * 1000);
                         }
                     }
-                } else if (Rnd.chance(20)) {
-                    actor.setNpcState((byte) 2);
-                    ThreadPoolManager.INSTANCE.schedule(() -> getActor().setNpcState((byte) 3), Rnd.get(20, 30) * 1000);
-                }
-            }
-        }
+                });
 
+
+        getActor().getAroundNpc(600, 600)
+                .filter(npc -> npc.getNpcId() == 18927)
+                .filter(npc -> npc.getNpcState() == 1)
+                .forEach(npc -> {
+                    if (Rnd.chance(30)) {
+                        if (_firstTime3) {
+                            _firstTime3 = false;
+                            actor.setRunning();
+                            addTaskMove(Location.findPointToStay(npc, 100, 200), true);
+                            if (_firstTime4) {
+                                _firstTime4 = false;
+                                ThreadPoolManager.INSTANCE.schedule(new Go(), Rnd.get(20, 30) * 1000);
+                            }
+                        }
+                    } else if (Rnd.chance(20)) {
+                        actor.setNpcState((byte) 2);
+                        ThreadPoolManager.INSTANCE.schedule(() -> getActor().setNpcState((byte) 3), Rnd.get(20, 30) * 1000);
+                    }
+                });
         return true;
+    }
+
+    @Override
+    public void onEvtDead(Creature killer) {
+        _firstTime1 = true;
+        _firstTime2 = true;
+        _firstTime3 = true;
+        _firstTime4 = true;
+        _firstTime5 = true;
+        super.onEvtDead(killer);
     }
 
     private class Go extends RunnableImpl {
@@ -129,15 +139,5 @@ public final class SelMahumSquadLeader extends Fighter {
             _firstTime1 = true;
             _firstTime3 = true;
         }
-    }
-
-    @Override
-    public void onEvtDead(Creature killer) {
-        _firstTime1 = true;
-        _firstTime2 = true;
-        _firstTime3 = true;
-        _firstTime4 = true;
-        _firstTime5 = true;
-        super.onEvtDead(killer);
     }
 }

@@ -528,7 +528,7 @@ abstract class DocumentBase {
         return cond;
     }
 
-    Object[] parseTable(Node n) {
+    String[] parseTable(Node n) {
         NamedNodeMap attrs = n.getAttributes();
         String name = attrs.getNamedItem("name").getNodeValue();
         if (name.charAt(0) != '#')
@@ -537,7 +537,7 @@ abstract class DocumentBase {
         List<String> array = new ArrayList<>();
         while (data.hasMoreTokens())
             array.add(data.nextToken());
-        Object[] res = array.toArray(new Object[array.size()]);
+        String[] res = array.toArray(new String[0]);
         setTable(name, array);
         return res;
     }

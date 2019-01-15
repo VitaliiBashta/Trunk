@@ -3,13 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- * Repeatable
- */
-public class _907_DragonTrophyValakas extends Quest implements ScriptFile {
+public final class _907_DragonTrophyValakas extends Quest {
     private static final int Klein = 31540;
     private static final int Valakas = 29028;
     private static final int MedalofGlory = 21874;
@@ -73,17 +68,5 @@ public class _907_DragonTrophyValakas extends Quest implements ScriptFile {
                 st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

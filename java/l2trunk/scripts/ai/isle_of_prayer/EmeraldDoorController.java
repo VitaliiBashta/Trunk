@@ -2,11 +2,14 @@ package l2trunk.scripts.ai.isle_of_prayer;
 
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.ItemFunctions;
 import l2trunk.scripts.instances.CrystalCaverns;
+
+import java.util.stream.Collectors;
 
 public final class EmeraldDoorController extends DefaultAI {
     private boolean openedDoor = false;
@@ -28,9 +31,8 @@ public final class EmeraldDoorController extends DefaultAI {
         if (refl != null)
             active = refl.areDoorsActivated();
         if (door != null && active) {
-            for (Creature c : getActor().getAroundCharacters(250, 150))
-                if (!openedDoor && c.isPlayer() && ItemFunctions.getItemCount(c.getPlayer(), 9694) > 0) // Secret Key
-                {
+            for (Creature c : getActor().getAroundCharacters(250, 150).collect(Collectors.toList()))
+                if (!openedDoor && c.isPlayer() && ItemFunctions.getItemCount(c.getPlayer(), 9694) > 0) {// Secret Key
                     openedDoor = true;
                     ItemFunctions.removeItem(c.getPlayer(), 9694, 1, true, "EmeraldDoorController");
                     door.openMe();
@@ -39,9 +41,10 @@ public final class EmeraldDoorController extends DefaultAI {
 
             boolean found = false;
             if (opener != null)
-                for (Creature c : getActor().getAroundCharacters(250, 150))
-                    if (openedDoor && c.isPlayer() && c.getPlayer() == opener)
-                        found = true;
+                found = getActor().getAroundCharacters(250, 150)
+                        .filter(c -> openedDoor)
+                        .filter(GameObject::isPlayer)
+                        .anyMatch(c -> c.getPlayer() == opener);
 
             if (!found)
                 door.closeMe();
@@ -50,11 +53,10 @@ public final class EmeraldDoorController extends DefaultAI {
     }
 
     private DoorInstance getClosestDoor() {
-        NpcInstance actor = getActor();
-        for (Creature c : actor.getAroundCharacters(200, 200))
-            if (c.isDoor())
-                return (DoorInstance) c;
-        return null;
+        return getActor().getAroundCharacters(200, 200)
+                .filter(GameObject::isDoor)
+                .map(c -> (DoorInstance) c)
+                .findFirst().orElse(null);
     }
 
     @Override

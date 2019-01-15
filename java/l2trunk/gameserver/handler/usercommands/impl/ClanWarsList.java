@@ -15,7 +15,7 @@ import java.util.List;
  * Support for /attacklist /underattacklist /warlist commands
  */
 public final class ClanWarsList implements IUserCommandHandler {
-    private static final List<Integer> COMMAND_IDS = Arrays.asList(88, 89, 90);
+    private static final List<Integer> COMMAND_IDS = List.of(88, 89, 90);
 
     @Override
     public boolean useUserCommand(int id, Player activeChar) {

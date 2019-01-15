@@ -3,21 +3,10 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _606_WarwithVarkaSilenos extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+import java.util.List;
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _606_WarwithVarkaSilenos extends Quest {
     // NPC
     private static final int KADUN_ZU_KETRA = 31370;
 
@@ -26,33 +15,13 @@ public class _606_WarwithVarkaSilenos extends Quest implements ScriptFile {
     private static final int VARKAS_MANE_DROP_CHANCE = 80;
     private static final int HORN_OF_BUFFALO = 7186;
 
-    private static final int[] VARKA_NPC_LIST = new int[20];
+    private static final List<Integer> VARKA_NPC_LIST = List.of(
+            21350, 21351, 21353, 21354, 21355, 21357, 21358, 21360, 21361, 21362,
+            21364, 21365, 21366, 21368, 21369, 21370, 21371, 21372, 21373, 21374);
 
     public _606_WarwithVarkaSilenos() {
         super(true);
-
         addStartNpc(KADUN_ZU_KETRA);
-
-        VARKA_NPC_LIST[0] = 21350;
-        VARKA_NPC_LIST[1] = 21351;
-        VARKA_NPC_LIST[2] = 21353;
-        VARKA_NPC_LIST[3] = 21354;
-        VARKA_NPC_LIST[4] = 21355;
-        VARKA_NPC_LIST[5] = 21357;
-        VARKA_NPC_LIST[6] = 21358;
-        VARKA_NPC_LIST[7] = 21360;
-        VARKA_NPC_LIST[8] = 21361;
-        VARKA_NPC_LIST[9] = 21362;
-        VARKA_NPC_LIST[10] = 21364;
-        VARKA_NPC_LIST[11] = 21365;
-        VARKA_NPC_LIST[12] = 21366;
-        VARKA_NPC_LIST[13] = 21368;
-        VARKA_NPC_LIST[14] = 21369;
-        VARKA_NPC_LIST[15] = 21370;
-        VARKA_NPC_LIST[16] = 21371;
-        VARKA_NPC_LIST[17] = 21372;
-        VARKA_NPC_LIST[18] = 21373;
-        VARKA_NPC_LIST[19] = 21374;
         addKillId(VARKA_NPC_LIST);
 
         addQuestItem(VARKAS_MANE);
@@ -61,24 +30,28 @@ public class _606_WarwithVarkaSilenos extends Quest implements ScriptFile {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("quest_accept")) {
-            htmltext = "elder_kadun_zu_ketra_q0606_0104.htm";
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("606_3")) {
-            long ec = st.getQuestItemsCount(VARKAS_MANE) / 5;
-            if (ec > 0) {
-                htmltext = "elder_kadun_zu_ketra_q0606_0202.htm";
-                st.takeItems(VARKAS_MANE, ec * 5);
-                st.giveItems(HORN_OF_BUFFALO, ec);
-            } else
-                htmltext = "elder_kadun_zu_ketra_q0606_0203.htm";
-        } else if (event.equals("606_4")) {
-            htmltext = "elder_kadun_zu_ketra_q0606_0204.htm";
-            st.takeItems(VARKAS_MANE, -1);
-            st.playSound(SOUND_FINISH);
-            st.exitCurrentQuest(true);
+        switch (event) {
+            case "quest_accept":
+                htmltext = "elder_kadun_zu_ketra_q0606_0104.htm";
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "606_3":
+                long ec = st.getQuestItemsCount(VARKAS_MANE) / 5;
+                if (ec > 0) {
+                    htmltext = "elder_kadun_zu_ketra_q0606_0202.htm";
+                    st.takeItems(VARKAS_MANE, ec * 5);
+                    st.giveItems(HORN_OF_BUFFALO, ec);
+                } else
+                    htmltext = "elder_kadun_zu_ketra_q0606_0203.htm";
+                break;
+            case "606_4":
+                htmltext = "elder_kadun_zu_ketra_q0606_0204.htm";
+                st.takeItems(VARKAS_MANE, -1);
+                st.playSound(SOUND_FINISH);
+                st.exitCurrentQuest(true);
+                break;
         }
         return htmltext;
     }

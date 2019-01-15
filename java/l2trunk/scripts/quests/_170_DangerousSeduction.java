@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _170_DangerousSeduction extends Quest implements ScriptFile {
+public final class _170_DangerousSeduction extends Quest {
     //NPC
     private static final int Vellior = 30305;
     //Quest Items
     private static final int NightmareCrystal = 1046;
     //MOB
     private static final int Merkenis = 27022;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _170_DangerousSeduction() {
         super(false);

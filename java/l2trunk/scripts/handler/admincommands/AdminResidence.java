@@ -349,16 +349,6 @@ public final class AdminResidence implements IAdminCommandHandler, ScriptFile {
         AdminCommandHandler.INSTANCE.registerAdminCommandHandler(this);
     }
 
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
-    }
-
     private enum Commands {
         admin_residence_list,
         admin_residence,

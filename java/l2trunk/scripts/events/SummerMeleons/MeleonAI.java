@@ -29,10 +29,10 @@ public final class MeleonAI extends Fighter {
     private final static int Large_Rain_Honey_Watermelon = 13278;
     private final static int Squash_Level_up = 4513;
     private final static int Squash_Poisoned = 4514;
-    private static final String[] textOnSpawn = new String[]{
+    private static final List<String> textOnSpawn = List.of(
             "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.0",
             "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.1",
-            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.2"};
+            "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.2");
     private static final String[] textOnAttack = new String[]{
             "Who me bites? Ah! Ouch! Hey you, now I'm going to ask you!",
             "Ha-ha-ha, I grew all the envy, look!",
@@ -192,7 +192,7 @@ public final class MeleonAI extends Fighter {
     public MeleonAI(NpcInstance actor) {
         super(actor);
         _npcId = getActor().getNpcId();
-        Functions.npcSayCustomMessage(getActor(), textOnSpawn[Rnd.get(textOnSpawn.length)]);
+        Functions.npcSayCustomMessage(getActor(), Rnd.get(textOnSpawn));
         _timeToUnspawn = System.currentTimeMillis() + 120000;
     }
 

@@ -1,20 +1,17 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public final class _905_RefinedDragonBlood extends Quest implements ScriptFile {
-    private static final List<Integer> SeparatedSoul = Arrays.asList(32864, 32865, 32866, 32867, 32868, 32869, 32870);
-    private static final List<Integer> AntharasDragonsBlue = Arrays.asList(22852, 22853, 22844, 22845);
-    private static final List<Integer> AntharasDragonsRed = Arrays.asList(22848, 22849, 22850, 22851);
+public final class _905_RefinedDragonBlood extends Quest {
+    private static final List<Integer> SeparatedSoul = List.of(32864, 32865, 32866, 32867, 32868, 32869, 32870);
+    private static final List<Integer> AntharasDragonsBlue = List.of(22852, 22853, 22844, 22845);
+    private static final List<Integer> AntharasDragonsRed = List.of(22848, 22849, 22850, 22851);
 
     private static final int UnrefinedRedDragonBlood = 21913;
     private static final int UnrefinedBlueDragonBlood = 21914;
@@ -40,11 +37,11 @@ public final class _905_RefinedDragonBlood extends Quest implements ScriptFile {
 
             StringTokenizer tokenizer = new StringTokenizer(event);
             tokenizer.nextToken();
-            switch (Integer.parseInt(tokenizer.nextToken())) {
-                case 1:
+            switch (tokenizer.nextToken()) {
+                case "1":
                     st.giveItems(21903, 1);
                     break;
-                case 2:
+                case "2":
                     st.giveItems(21904, 1);
                     break;
                 default:
@@ -103,17 +100,5 @@ public final class _905_RefinedDragonBlood extends Quest implements ScriptFile {
                 st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

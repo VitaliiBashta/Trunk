@@ -3,35 +3,15 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author VAVAN
- * @corrected n0nam3
- */
+import java.util.List;
 
-public class _310_OnlyWhatRemains extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _310_OnlyWhatRemains extends Quest {
     // NPC's
     private static final int KINTAIJIN = 32640;
     // MOBS's
-    private static final int[] MOBS = {
-            22617,
-            22624,
-            22625,
-            22626
-    };
+    private static final List<Integer> MOBS = List.of(
+            22617, 22624, 22625, 22626);
     // ITEMS's
     private static final int DIRTYBEAD = 14880;
     private static final int ACCELERATOR = 14832;

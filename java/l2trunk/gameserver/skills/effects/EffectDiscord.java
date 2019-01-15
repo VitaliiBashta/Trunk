@@ -4,16 +4,17 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.instances.SummonInstance;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.stats.Env;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class EffectDiscord extends Effect {
+public final class EffectDiscord extends Effect {
     public EffectDiscord(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -83,18 +84,17 @@ public class EffectDiscord extends Effect {
 
     @Override
     protected boolean onActionTime() {
-        List<Creature> targetList = new ArrayList<>();
-
-        for (Creature character : effected.getAroundCharacters(900, 200))
-            if (character.isNpc() && character != getEffected())
-                targetList.add(character);
+        List<Creature> targetList = effected.getAroundCharacters(900, 200)
+                .filter(GameObject::isNpc)
+                .filter(c -> c != getEffected())
+                .collect(Collectors.toList());
 
         // if there is no target, exit function
         if (targetList.isEmpty())
             return true;
 
         // Choosing randomly a new target
-        Creature target = targetList.get(Rnd.get(targetList.size()));
+        Creature target = Rnd.get(targetList);
 
         // Attacking the target
         effected.setRunning();

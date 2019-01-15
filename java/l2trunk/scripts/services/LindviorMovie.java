@@ -9,7 +9,6 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 /**
  * Раз в 3 часа на всей территории базы альянса на Грации всем внутри зоны показывается мувик
  */
-
 public final class LindviorMovie implements ScriptFile {
     private static final long movieDelay = 3 * 60 * 60 * 1000L; // показывать мувик раз в n часов
 
@@ -23,13 +22,4 @@ public final class LindviorMovie implements ScriptFile {
                 .filter(player -> !player.isInFlyingTransform())
                 .forEach(player -> player.showQuestMovie(ExStartScenePlayer.SCENE_LINDVIOR)), movieDelay, movieDelay);
     }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
 }

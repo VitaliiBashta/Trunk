@@ -165,11 +165,6 @@ public final class glitmedal extends Functions implements ScriptFile, OnDeathLis
     }
 
     @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public void onDeath(Creature cha, Creature killer) {
         if (_active && SimpleCheckDrop(cha, killer)) {
             long count = Util.rollDrop(1, 1, Config.EVENT_GLITTMEDAL_NORMAL_CHANCE * killer.getPlayer().getRateItems() * ((MonsterInstance) cha).getTemplate().rateHp * 10000L, true);

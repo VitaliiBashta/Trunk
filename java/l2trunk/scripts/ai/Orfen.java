@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Orfen extends Fighter {
-    private static final List<PrintfFormat> MsgOnRecall = Arrays.asList(
+    private static final List<PrintfFormat> MsgOnRecall = List.of(
             new PrintfFormat("%s. Stop kidding yourself about your own powerlessness!"),
             new PrintfFormat("%s. I'll make you feel what true fear is!"),
             new PrintfFormat("You're really stupid to have challenged me. %s! Get ready!"),
@@ -61,11 +61,11 @@ public final class Orfen extends Fighter {
             teleToLocation(attacker, Location.findFrontPosition(actor, attacker, 0, 50));
             Skill r_skill = _damSkills.get(Rnd.get(_damSkills.size()));
             if (canUseSkill(r_skill, attacker, -1))
-                addTaskAttack(attacker, r_skill);
+                addTaskAttack(attacker, r_skill.getId(), r_skill.getLevel());
         } else if (_paralyze.size() > 0 && Rnd.chance(20)) {
             Skill r_skill = _paralyze.get(Rnd.get(_paralyze.size()));
             if (canUseSkill(r_skill, attacker, -1))
-                addTaskAttack(attacker, r_skill);
+                addTaskAttack(attacker, r_skill.getId(), r_skill.getLevel());
         }
     }
 
@@ -82,7 +82,7 @@ public final class Orfen extends Fighter {
             teleToLocation(caster, Location.findFrontPosition(actor, caster, 0, 50));
             Skill r_skill = Rnd.get(_damSkills);
             if (canUseSkill(r_skill, caster, -1))
-                addTaskAttack(caster, r_skill);
+                addTaskAttack(caster, r_skill.getId(), r_skill.getLevel());
         }
     }
 

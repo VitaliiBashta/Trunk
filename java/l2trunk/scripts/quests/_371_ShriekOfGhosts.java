@@ -6,12 +6,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class _371_ShriekOfGhosts extends Quest implements ScriptFile {
+public final class _371_ShriekOfGhosts extends Quest {
     // NPCs
     private static final int REVA = 30867;
     private static final int PATRIN = 30929;

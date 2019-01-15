@@ -9,7 +9,6 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.NpcInfo;
@@ -100,7 +99,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
 
         for (int skillId : type.getValue()) {
             int sk = skillId;
-                _skills.add(sk);
+            _skills.add(sk);
         }
     }
 
@@ -159,8 +158,8 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
             setTitle(owner.getName());
             owner.addTrainedBeast(this);
 
-            for (Player player : World.getAroundPlayers(this))
-                player.sendPacket(new NpcInfo(this, player));
+            World.getAroundPlayers(this)
+                    .forEach(p -> p.sendPacket(new NpcInfo(this, p)));
 
             // always and automatically follow the owner.
             setFollowTarget(getPlayer());

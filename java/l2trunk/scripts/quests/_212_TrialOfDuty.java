@@ -6,19 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _212_TrialOfDuty extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _212_TrialOfDuty extends Quest {
     private static final int MARK_OF_DUTY_ID = 2633;
     private static final int LETTER_OF_DUSTIN_ID = 2634;
     private static final int KNIGHTS_TEAR_ID = 2635;
@@ -62,8 +50,7 @@ public class _212_TrialOfDuty extends Quest implements ScriptFile {
         for (int j = 20577; j < 20583; j++)
             addKillId(j);
 
-        addQuestItem(new int[]{
-                LETTER_OF_DUSTIN_ID,
+        addQuestItem(LETTER_OF_DUSTIN_ID,
                 KNIGHTS_TEAR_ID,
                 OLD_KNIGHT_SWORD_ID,
                 TEAR_OF_CONFESSION_ID,
@@ -76,8 +63,7 @@ public class _212_TrialOfDuty extends Quest implements ScriptFile {
                 LETTER_OF_WINDAWOOD_ID,
                 TEAR_OF_LOYALTY_ID,
                 SAINTS_ASHES_URN_ID,
-                REPORT_PIECE_ID
-        });
+                REPORT_PIECE_ID);
     }
 
     @Override

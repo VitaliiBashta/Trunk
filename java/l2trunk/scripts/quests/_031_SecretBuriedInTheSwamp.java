@@ -3,29 +3,15 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _031_SecretBuriedInTheSwamp extends Quest implements ScriptFile {
+public final class _031_SecretBuriedInTheSwamp extends Quest {
+    private static final int FORGOTTEN_MONUMENT_1 = 31661;
+    private static final int FORGOTTEN_MONUMENT_2 = 31662;
+    private static final int FORGOTTEN_MONUMENT_3 = 31663;
+    private static final int FORGOTTEN_MONUMENT_4 = 31664;
+    private static final int CORPSE_OF_DWARF = 31665;
     private final int ABERCROMBIE = 31555;
-    private final int FORGOTTEN_MONUMENT_1 = 31661;
-    private final int FORGOTTEN_MONUMENT_2 = 31662;
-    private final int FORGOTTEN_MONUMENT_3 = 31663;
-    private final int FORGOTTEN_MONUMENT_4 = 31664;
-    private final int CORPSE_OF_DWARF = 31665;
-
     private final int KRORINS_JOURNAL = 7252;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _031_SecretBuriedInTheSwamp() {
         super(false);

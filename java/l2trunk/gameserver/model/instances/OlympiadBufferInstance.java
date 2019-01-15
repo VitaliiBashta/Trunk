@@ -3,12 +3,10 @@ package l2trunk.gameserver.model.instances;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.MyTargetSelected;
 import l2trunk.gameserver.network.serverpackets.ValidateLocation;
 import l2trunk.gameserver.scripts.Events;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.*;
@@ -36,7 +34,7 @@ public final class OlympiadBufferInstance extends NpcInstance {
             MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
             player.sendPacket(my);
             if (!isInRange(player, INTERACTION_DISTANCE))
-                player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
+                player.getAI().setIntentionInteract(CtrlIntention.AI_INTENTION_INTERACT, this);
             else if (buffs.size() > 4)
                 showChatWindow(player, 1);
             else

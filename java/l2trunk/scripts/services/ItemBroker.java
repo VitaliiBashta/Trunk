@@ -1,6 +1,5 @@
 package l2trunk.scripts.services;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
 import l2trunk.gameserver.data.xml.holder.RecipeHolder;
@@ -29,7 +28,7 @@ public final class ItemBroker extends Functions {
 
     private static final Map<Integer, NpcInfo> _npcInfos = new ConcurrentHashMap<>();
 
-    private final List<Integer> RARE_ITEMS = Arrays.asList(
+    private final List<Integer> RARE_ITEMS = List.of(
             16255, 16256, 16257, 16258, 16259, 16260, 16261, 16262, 16263, 16264, 16265, 16266, 16267, 16268, 16269,
             16270, 16271, 16272, 16273, 16274, 16275, 16276, 16277, 16278, 16279, 16280, 16281, 16282, 16283, 16284,
             16285, 16286, 16287, 16288, 16357, 16358, 16359, 16360, 16361, 16362, 10119, 10120, 10121, 11349, 11350,
@@ -82,7 +81,7 @@ public final class ItemBroker extends Functions {
             11201, 11202, 11203, 11204, 11205, 11206, 11207, 11208, 11209, 11210, 11211, 11212, 11213, 11214, 11215,
             11216, 11217, 11218, 11219, 11220, 11221, 11222, 11223, 11224, 11225, 11226, 11227, 11228, 11229, 11230, 11231, 11232, 11233, 11234, 11235, 11236, 11237, 11238, 11239, 11240, 11241, 11242, 11243, 11244, 11245, 11246, 11247, 11248, 11249, 11250, 11251, 11252, 11253, 11254, 11255, 11256, 11257, 11258, 11259, 11260, 11261, 11262, 11263, 11264, 11265, 11266, 11267, 11268, 11269, 11270, 11271, 11272, 11273, 11274, 11275, 11276, 11277, 11278, 11279, 11280, 11281, 11282, 11283, 11284, 11285, 11286, 11287, 11288, 11289, 11290, 11291, 11292, 11293, 11294, 11295, 11296, 11297, 11298, 11299, 11300, 11301, 11302, 11303, 11304, 11305, 11306, 11307, 11308, 11309, 11310, 11311, 11312, 11313, 11314, 11315, 11316, 11317, 11318, 11319, 11320, 11321, 11322, 11323, 11324, 11325, 11326, 11327, 11328, 11329, 11330, 11331, 11332, 11333, 11334, 11335, 11336, 11337, 11338, 11339, 11340, 11341, 11342, 11343, 11344, 11345, 11346, 11347, 11348, 11362, 11374, 11385, 11416, 11425, 11469, 11480, 11502, 11508, 11532, 11569, 12852, 12853, 12854, 12855, 12856, 12857, 12858, 12859, 12860, 12861, 12862, 12863, 12864, 12865, 12866, 12867, 12868, 12869, 12870, 12871, 12872, 12873, 12874, 12875, 12876, 12877, 12878, 12879, 12880, 12881, 12882, 12883, 12884, 12885, 12886, 12887, 12888, 12889, 12890, 12891, 12892, 12893, 12894, 12895, 12896, 12897, 12898, 12899, 12900, 12901, 12902, 12903, 12904, 12905, 12906, 12907, 12908, 12909, 12910, 12911, 12912, 12913, 12914, 12915, 12916, 12917, 12918, 12919, 12920, 12921, 12922, 12923, 12924, 12925, 12926, 12927, 12928, 12929, 12930, 12931, 12932, 12933, 12934, 12935, 12936, 12937, 12938, 12939, 12940, 12941, 12942, 12943, 12944, 12945, 12946, 12947, 12948, 12949, 12950, 12951, 12952, 12953, 12954, 12955, 12956, 12957, 12958, 12959, 12960, 12961, 12962, 12963, 12964, 12965, 12966, 12967, 12968, 12969, 12970, 12971, 12972, 12973, 12974, 12975, 12976, 12977, 14412, 14413, 14414, 14415, 14416, 14417, 14418, 14419, 14420, 14421, 14422, 14423, 14424, 14425, 14426, 14427, 14428, 14429, 14430, 14431, 14432, 14433, 14434, 14435, 14436, 14437, 14438, 14439, 14440, 14441, 14442, 14443, 14444, 14445, 14446, 14447, 14448, 14449, 14450, 14451, 14452, 14453, 14454, 14455, 14456, 14457, 14458, 14459, 14460, 14526, 14527, 14528, 14529, 14560, 14561, 14562, 14563, 14564, 14565, 14566, 14567, 14568, 14569, 14570, 14571, 14572, 14573, 14574, 14575, 14576, 14577, 14578, 14579, 14580, 14581, 16042, 16043, 16044, 16045, 16046, 16047, 16048, 16049, 16050, 16051, 16052, 16053, 16054, 16055, 16056, 16057, 16058, 16059, 16060, 16061, 16062, 16063, 16064, 16065, 16066, 16067, 16068, 16069, 16070, 16071, 16072, 16073, 16074, 16075, 16076, 16077, 16078, 16079, 16080, 16081, 16082, 16083, 16084, 16085, 16086, 16087, 16088, 16089, 16090, 16091, 16092, 16093, 16094, 16095, 16096, 16097, 16134, 16135, 16136, 16137, 16138, 16139, 16140, 16141, 16142, 16143, 16144, 16145, 16146, 16147, 16148, 16149, 16150, 16151, 16179, 16180, 16181, 16182, 16183, 16184, 16185, 16186, 16187, 16188, 16189, 16190, 16191, 16192, 16193, 16194, 16195, 16196, 16197, 16198, 16199, 16200, 16201, 16202, 16203, 16204, 16205, 16206, 16207, 16208, 16209, 16210, 16211, 16212, 16213, 16214, 16215, 16216, 16217, 16218, 16219, 16220, 16304, 16321, 16338, 16355);
 
-    private TreeMap<String, TreeMap<Long, Item>> getItems(int type) {
+    private Map<String, Map<Long, Item>> getItems(int type) {
         Player player = getSelf();
         NpcInstance npc = getNpc();
         if (player == null || npc == null)
@@ -228,14 +227,14 @@ public final class ItemBroker extends Functions {
 
         ItemClass itemClass = itemType >= ItemClass.values().length ? null : ItemClass.values()[itemType];
 
-        TreeMap<String, TreeMap<Long, Item>> allItems = getItems(type);
+        Map<String, Map<Long, Item>> allItems = getItems(type);
         if (allItems == null) {
             show("Error - this type of objects found", player, npc);
             return;
         }
 
         List<Item> items = new ArrayList<>(allItems.size() * 10);
-        for (TreeMap<Long, Item> tempItems : allItems.values()) {
+        for (Map<Long, Item> tempItems : allItems.values()) {
             TreeMap<Long, Item> tempItems2 = new TreeMap<>();
             for (Entry<Long, Item> entry : tempItems.entrySet()) {
                 Item tempItem = entry.getValue();
@@ -555,13 +554,13 @@ public final class ItemBroker extends Functions {
             return;
         }
 
-        TreeMap<String, TreeMap<Long, Item>> allItems = getItems(type);
+        Map<String, Map<Long, Item>> allItems = getItems(type);
         if (allItems == null) {
             show("Error - this type of objects found.", player, npc);
             return;
         }
 
-        TreeMap<Long, Item> items = allItems.get(temp.getName());
+        Map<Long, Item> items = allItems.get(temp.getName());
         if (items == null) {
             show("Error - items with the same name found.", player, npc);
             return;
@@ -659,14 +658,15 @@ public final class ItemBroker extends Functions {
 
             int itemObjId = 0;
 
-            for (Player pl : World.getAroundPlayers(npc)) {
-                TreeMap<String, TreeMap<Long, Item>> items = null;
-                List<TradeItem> tradeList = null;
+            NpcInfo inf = info;
+            World.getAroundPlayers(npc).forEach(pl -> {
+                Map<String, Map<Long, Item>> items;
+                List<TradeItem> tradeList;
 
                 int type = pl.getPrivateStoreType();
                 switch (type) {
                     case Player.STORE_PRIVATE_SELL:
-                        items = info.bestSellItems;
+                        items = inf.bestSellItems;
                         tradeList = pl.getSellList();
 
                         for (TradeItem item : tradeList) {
@@ -683,7 +683,7 @@ public final class ItemBroker extends Functions {
 
                         break;
                     case Player.STORE_PRIVATE_SELL_PACKAGE:
-                        items = info.bestSellItems;
+                        items = inf.bestSellItems;
                         tradeList = pl.getSellList();
 
                         long packagePrice = 0;
@@ -694,11 +694,7 @@ public final class ItemBroker extends Functions {
                             ItemTemplate temp = item.getItem();
                             if (temp == null)
                                 continue;
-                            TreeMap<Long, Item> oldItems = items.get(temp.getName());
-                            if (oldItems == null) {
-                                oldItems = new TreeMap<>();
-                                items.put(temp.getName(), oldItems);
-                            }
+                            Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
                             Item newItem = new Item(item.getItemId(), type, packagePrice, item.getCount(), item.getEnchantLevel(), temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), item.getObjectId(), item, true);
                             long key = newItem.price * 100;
                             while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
@@ -708,19 +704,15 @@ public final class ItemBroker extends Functions {
 
                         break;
                     case Player.STORE_PRIVATE_BUY:
-                        items = info.bestBuyItems;
+                        items = inf.bestBuyItems;
                         tradeList = pl.getBuyList();
 
                         for (TradeItem item : tradeList) {
                             ItemTemplate temp = item.getItem();
                             if (temp == null)
                                 continue;
-                            TreeMap<Long, Item> oldItems = items.get(temp.getName());
-                            if (oldItems == null) {
-                                oldItems = new TreeMap<>();
-                                items.put(temp.getName(), oldItems);
-                            }
-                            Item newItem = new Item(item.getItemId(), type, item.getOwnersPrice(), item.getCount(), item.getEnchantLevel(), temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), itemObjId++, item, false);
+                            Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
+                            Item newItem = new Item(item.getItemId(), type, item.getOwnersPrice(), item.getCount(), item.getEnchantLevel(), temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), itemObjId, item, false);
                             long key = newItem.price * 100;
                             while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
                                 key++;
@@ -729,174 +721,31 @@ public final class ItemBroker extends Functions {
 
                         break;
                     case Player.STORE_PRIVATE_MANUFACTURE:
-                        items = info.bestCraftItems;
+                        items = inf.bestCraftItems;
                         List<ManufactureItem> createList = pl.getCreateList();
-                        if (createList == null)
-                            continue;
+                        if (createList != null)
+                            for (ManufactureItem mitem : createList) {
+                                int recipeId = mitem.getRecipeId();
+                                Recipe recipe = RecipeHolder.getInstance().getRecipeByRecipeId(recipeId);
+                                if (recipe == null)
+                                    continue;
 
-                        for (ManufactureItem mitem : createList) {
-                            int recipeId = mitem.getRecipeId();
-                            Recipe recipe = RecipeHolder.getInstance().getRecipeByRecipeId(recipeId);
-                            if (recipe == null)
-                                continue;
-
-                            ItemTemplate temp = ItemHolder.getTemplate(recipe.getItemId());
-                            if (temp == null)
-                                continue;
-                            Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
-                            Item newItem = new Item(recipe.getItemId(), type, mitem.getCost(), recipe.getCount(), 0, temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), itemObjId++, null, false);
-                            long key = newItem.price * 100;
-                            while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
-                                key++;
-                            oldItems.put(key, newItem);
-                        }
-
+                                ItemTemplate temp = ItemHolder.getTemplate(recipe.getItemId());
+                                if (temp == null)
+                                    continue;
+                                Map<Long, Item> oldItems = items.computeIfAbsent(temp.getName(), k -> new TreeMap<>());
+                                Item newItem = new Item(recipe.getItemId(), type, mitem.getCost(), recipe.getCount(), 0, temp.getName(), pl.getObjectId(), pl.getName(), pl.getLoc(), itemObjId, null, false);
+                                long key = newItem.price * 100;
+                                while (key < newItem.price * 100 + 100 && oldItems.containsKey(key))
+                                    key++;
+                                oldItems.put(key, newItem);
+                            }
                         break;
-                    default:
                 }
-            }
+            });
             _npcInfos.put(npc.getObjectId(), info);
         }
     }
-
-//    public void find(String[] var) {
-//        Player player = getSelf();
-//        NpcInstance npc = getNpc();
-//        if (player == null || npc == null)
-//            return;
-//
-//        if (var.length < 3 || var.length > 7) {
-//            show("Please enter from 1 up to 16 symbols.<br>[npc_%objectId%_Chat 0|<font color=\"FF9900\">Back</font>]", player, npc);
-//            return;
-//        }
-//
-//        int type;
-//        int currentPage;
-//        int minEnchant = 0;
-//        List<String> search;
-//
-//        try {
-//            type = toInt(var[0]);
-//            currentPage = toInt(var[1]);
-//            search = new String[var.length - 2];
-//            String line;
-//            for (int i = 0; i < search.length; i++) {
-//                line = var[i + 2].trim().toLowerCase();
-//                search[i] = line;
-//                if (line.length() > 1 && line.startsWith("+"))
-//                    minEnchant = Integer.valueOf(line.substring(1));
-//            }
-//        } catch (Exception e) {
-//            show("incorrect data", player, npc);
-//            return;
-//        }
-//
-//        TreeMap<String, TreeMap<Long, Item>> allItems = getItems(type);
-//        if (allItems == null) {
-//            show("Error - with this type of objects found.", player, npc);
-//            return;
-//        }
-//
-//        List<Item> items = new ArrayList<>();
-//        String line;
-//        TreeMap<Long, Item> itemMap;
-//        Item item;
-//        mainLoop:
-//        for (Entry<String, TreeMap<Long, Item>> entry : allItems.entrySet()) {
-//            for (String aSearch : search) {
-//                line = aSearch;
-//                if (line.startsWith("+"))
-//                    continue;
-//                if (!entry.getKey().toLowerCase().contains(line))
-//                    continue mainLoop;
-//            }
-//
-//            itemMap = entry.getValue();
-//            item = null;
-//            for (Item itm : itemMap.values())
-//                if (itm != null && itm.enchant >= minEnchant) {
-//                    item = itm;
-//                    break;
-//                }
-//
-//            if (item != null)
-//                items.add(item);
-//        }
-//
-//        StringBuilder out = new StringBuilder(200);
-//        out.append("[npc_%objectId%_Chat 1");
-//        out.append(type);
-//        out.append("|Back]&nbsp;&nbsp;");
-//
-//        int totalPages = items.size();
-//        totalPages = totalPages / MAX_ITEMS_PER_PAGE + (totalPages % MAX_ITEMS_PER_PAGE > 0 ? 1 : 0);
-//        totalPages = Math.max(1, totalPages);
-//        currentPage = Math.min(totalPages, Math.max(1, currentPage));
-//
-//        if (totalPages > 1) {
-//            int page = Math.max(1, Math.min(totalPages - MAX_PAGES_PER_LIST + 1, currentPage - MAX_PAGES_PER_LIST / 2));
-//
-//            if (page > 1)
-//                findPageNum(out, type, 1, search, "1");
-//            if (currentPage > 11)
-//                findPageNum(out, type, currentPage - 10, search, String.valueOf(currentPage - 10));
-//            if (currentPage > 1)
-//                findPageNum(out, type, currentPage - 1, search, "<");
-//
-//            for (int count = 0; count < MAX_PAGES_PER_LIST && page <= totalPages; count++, page++) {
-//                if (page == currentPage)
-//                    out.append(page).append("&nbsp;");
-//                else
-//                    findPageNum(out, type, page, search, String.valueOf(page));
-//            }
-//
-//            if (currentPage < totalPages)
-//                findPageNum(out, type, currentPage + 1, search, ">");
-//            if (currentPage < totalPages - 10)
-//                findPageNum(out, type, currentPage + 10, search, String.valueOf(currentPage + 10));
-//            if (page <= totalPages)
-//                findPageNum(out, type, totalPages, search, String.valueOf(totalPages));
-//        }
-//
-//        out.append("<table width=100%>");
-//
-//        if (items.size() > 0) {
-//            int count = 0;
-//            ListIterator<Item> iter = items.listIterator((currentPage - 1) * MAX_ITEMS_PER_PAGE);
-//            while (iter.hasNext() && count < MAX_ITEMS_PER_PAGE) {
-//                item = iter.next();
-//                ItemTemplate temp = item.item != null ? item.item.getItem() : ItemHolder.getTemplate(item.itemId);
-//                if (temp == null)
-//                    continue;
-//
-//                out.append("<tr><td>");
-//                out.append(temp.getIcon32());
-//                out.append("</td><td><table width=100%><tr><td>[scripts_services.ItemBroker:listForItem ");
-//                out.append(type);
-//                out.append(" ");
-//                out.append(item.itemId);
-//                out.append(" ");
-//                out.append(minEnchant);
-//                out.append(" 0 0 1 ");
-//                out.append(currentPage);
-//                for (String aSearch : search) {
-//                    out.append(" ");
-//                    out.append(aSearch);
-//                }
-//                out.append("|");
-//                out.append("<font color=\"LEVEL\">");
-//                out.append(temp.getName());
-//                out.append("</font>]");
-//                out.append("</td></tr>");
-//                out.append("</table></td></tr>");
-//                count++;
-//            }
-//        } else
-//            out.append("<tr><td colspan=2>Nothing found.</td></tr>");
-//        out.append("</table><br>&nbsp;");
-//
-//        show(out.toString(), player, npc);
-//    }
 
     private void findPageNum(StringBuilder out, int type, int page, List<String> search, String letter) {
         out.append("[scripts_services.ItemBroker:find ");
@@ -915,9 +764,9 @@ public final class ItemBroker extends Functions {
 
     class NpcInfo {
         long lastUpdate;
-        TreeMap<String, TreeMap<Long, Item>> bestSellItems;
-        TreeMap<String, TreeMap<Long, Item>> bestBuyItems;
-        TreeMap<String, TreeMap<Long, Item>> bestCraftItems;
+        Map<String, Map<Long, Item>> bestSellItems;
+        Map<String, Map<Long, Item>> bestBuyItems;
+        Map<String, Map<Long, Item>> bestCraftItems;
     }
 
     class Item {

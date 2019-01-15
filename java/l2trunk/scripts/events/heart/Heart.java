@@ -32,12 +32,12 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     private static final String[][] variants = {{"Rock", "Камень"}, {"Scissors", "Ножницы"}, {"Paper", "Бумага"}};
     private static final int EVENT_MANAGER_ID = 31227; //Buzz the Cat
     private static final List<Integer> hearts = List.of(4209, 4210, 4211, 4212, 4213, 4214, 4215, 4216, 4217);
-    private static final int[] potions = {1374, // Greater Haste Potion
+    private static final List<Integer> potions = List.of(1374, // Greater Haste Potion
             1375, // Greater Swift Attack Potion
             6036, // Greater Magic Haste Potion
             1539 // Greater Healing Potion
-    };
-    private static final int[] scrolls = {3926, //	L2Day - Scroll of Guidance
+    );
+    private static final List<Integer> scrolls = List.of(3926, //	L2Day - Scroll of Guidance
             3927, //	L2Day - Scroll of Death Whisper
             3928, //	L2Day - Scroll of Focus
             3929, //	L2Day - Scroll of Greater Acumen
@@ -47,7 +47,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
             3933, //	L2Day - Scroll of Might
             3934, //	L2Day - Scroll of Windwalk
             3935 //	L2Day - Scroll of Shield
-    };
+    );
     private static boolean active = false;
     private static String links_en = "";
     private static String links_ru = "";

@@ -5,7 +5,6 @@ import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExSendUIEvent;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
@@ -27,8 +26,7 @@ public final class SufferingHallAttack extends Reflection {
     }
 
     private void invokeDeathListener() {
-        for (NpcInstance npc : getNpcs())
-            npc.addListener(_deathListener);
+        getNpcs().forEach(npc -> npc.addListener(_deathListener));
     }
 
     private void spawnRoom(int id) {
@@ -125,7 +123,7 @@ public final class SufferingHallAttack extends Reflection {
                 ThreadPoolManager.INSTANCE.schedule(() -> {
                     spawnRoom(7);
                     setReenterTime(System.currentTimeMillis());
-                    getPlayers().forEach( p-> {
+                    getPlayers().forEach(p -> {
                         p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0));
                         p.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
                     });

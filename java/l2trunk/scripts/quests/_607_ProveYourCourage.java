@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _607_ProveYourCourage extends Quest implements ScriptFile {
+public final class _607_ProveYourCourage extends Quest {
     private final static int KADUN_ZU_KETRA = 31370;
     private final static int VARKAS_HERO_SHADITH = 25309;
 

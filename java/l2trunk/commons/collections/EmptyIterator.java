@@ -2,14 +2,12 @@ package l2trunk.commons.collections;
 
 import java.util.Iterator;
 
-@SuppressWarnings("rawtypes")
 public class EmptyIterator<E> implements Iterator<E> {
     private static final Iterator INSTANCE = new EmptyIterator();
 
     private EmptyIterator() {
     }
 
-    @SuppressWarnings("unchecked")
     public static <E> Iterator<E> getInstance() {
         return INSTANCE;
     }

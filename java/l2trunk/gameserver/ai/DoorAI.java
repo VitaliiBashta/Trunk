@@ -2,10 +2,10 @@ package l2trunk.gameserver.ai;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.events.impl.SiegeEvent;
 import l2trunk.gameserver.model.instances.DoorInstance;
-import l2trunk.gameserver.model.instances.NpcInstance;
 
 public class DoorAI extends CharacterAI {
     public DoorAI(DoorInstance actor) {
@@ -44,14 +44,13 @@ public class DoorAI extends CharacterAI {
         SiegeEvent<?, ?> siegeEvent2 = actor.getEvent(SiegeEvent.class);
 
         if (siegeEvent1 == null || siegeEvent1 == siegeEvent2 && siegeEvent1.getSiegeClan(SiegeEvent.ATTACKERS, player.getClan()) != null)
-            for (NpcInstance npc : actor.getAroundNpc(900, 200)) {
-                if (!npc.isSiegeGuard())
-                    continue;
-
-                if (Rnd.chance(20))
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 10000);
-                else
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2000);
-            }
+            actor.getAroundNpc(900, 200)
+                    .filter(GameObject::isSiegeGuard)
+                    .forEach(npc -> {
+                        if (Rnd.chance(20))
+                            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 10000);
+                        else
+                            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 2000);
+                    });
     }
 }

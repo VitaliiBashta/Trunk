@@ -5,9 +5,8 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _120_PavelsResearch extends Quest implements ScriptFile {
+public final class _120_PavelsResearch extends Quest {
     //NPC
     private static final int Yumi = 32041;
     private static final int Weather1 = 32042;
@@ -24,15 +23,6 @@ public class _120_PavelsResearch extends Quest implements ScriptFile {
     private static final int Flower = 8290;
     private static final int Heart = 8291;
     private static final int Necklace = 8292;
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
 
     public _120_PavelsResearch() {
         super(false);

@@ -4,15 +4,13 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
-import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
-import l2trunk.gameserver.tables.SkillTable;
 
 public final class FreyaStandHard extends Fighter {
     private static final int Skill_EternalBlizzard = 6275; // Мощнейшая атака ледяного урагана с силой 45к по площади в 3000 радиуса
@@ -50,8 +48,8 @@ public final class FreyaStandHard extends Fighter {
         if (!actor.isCastingNow() && _eternalblizzardReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_EternalBlizzard, actor, true);
             Reflection r = getActor().getReflection();
-            for (Player p : r.getPlayers())
-                p.sendPacket(new ExShowScreenMessage(NpcString.I_FEEL_STRONG_MAGIC_FLOW, 3000, ScreenMessageAlign.MIDDLE_CENTER, true));
+            r.getPlayers().forEach(p ->
+                    p.sendPacket(new ExShowScreenMessage(NpcString.I_FEEL_STRONG_MAGIC_FLOW, 3000, ScreenMessageAlign.MIDDLE_CENTER, true)));
             // Откат умения в секундах
             int _eternalblizzardReuseDelay = 50;
             _eternalblizzardReuseTimer = System.currentTimeMillis() + _eternalblizzardReuseDelay * 1000L;
@@ -69,8 +67,8 @@ public final class FreyaStandHard extends Fighter {
         // Summon Buff Cast
         if (!actor.isCastingNow() && _summonReuseTimer < System.currentTimeMillis()) {
             actor.doCast(Skill_SummonElemental, actor, true);
-            for (NpcInstance guard : getActor().getAroundNpc(800, 100))
-                guard.altOnMagicUseTimer(guard, Skill_SummonElemental);
+            getActor().getAroundNpc(800, 100)
+                    .forEach(n -> n.altOnMagicUseTimer(n, Skill_SummonElemental));
             int _summonReuseDelay = 40;
             _summonReuseTimer = System.currentTimeMillis() + _summonReuseDelay * 1000L;
         }
@@ -125,9 +123,11 @@ public final class FreyaStandHard extends Fighter {
         // Оповещение минионов
         if (System.currentTimeMillis() - _lastFactionNotifyTime > _minFactionNotifyInterval) {
             _lastFactionNotifyTime = System.currentTimeMillis();
-            for (NpcInstance npc : actor.getReflection().getNpcs())
-                if (npc.isMonster() && npc != actor)
-                    npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggroList().getMostHated(), 5);
+            actor.getReflection().getNpcs()
+                    .filter(GameObject::isMonster)
+                    .filter(npc -> npc != actor)
+                    .forEach(npc ->
+                            npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggroList().getMostHated(), 5));
         }
         super.thinkAttack();
     }

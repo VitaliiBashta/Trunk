@@ -3,29 +3,16 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _268_TracesOfEvil extends Quest implements ScriptFile {
+public final class _268_TracesOfEvil extends Quest {
     //NPC
-    private final int KUNAI = 30559;
+    private static final int KUNAI = 30559;
     //MOBS
-    private final int SPIDER = 20474;
-    private final int FANG_SPIDER = 20476;
-    private final int BLADE_SPIDER = 20478;
+    private static final int SPIDER = 20474;
+    private static final int FANG_SPIDER = 20476;
+    private static final int BLADE_SPIDER = 20478;
     //ITEMS
     private final int CONTAMINATED = 10869;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _268_TracesOfEvil() {
         super(false);

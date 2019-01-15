@@ -19,8 +19,8 @@ import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
@@ -105,27 +105,14 @@ public final class Zone {
         return getTemplate().getDamageMessageId();
     }
 
-    /**
-     * Сколько урона зона нанесет по хп
-     *
-     * @return количество урона
-     */
     private int getDamageOnHP() {
         return getTemplate().getDamageOnHP();
     }
 
-    /**
-     * Сколько урона зона нанесет по мп
-     *
-     * @return количество урона
-     */
     private int getDamageOnMP() {
         return getTemplate().getDamageOnMP();
     }
 
-    /**
-     * @return Бонус к скорости движения в зоне
-     */
     private double getMoveBonus() {
         return getTemplate().getMoveBonus();
     }
@@ -174,28 +161,20 @@ public final class Zone {
         return loc.clone();
     }
 
-    /**
-     * Проверяет находятся ли даные координаты в зоне.
-     * _loc - стандартная территория для зоны
-     *
-     * @param x координата
-     * @param y координата
-     * @return находятся ли координаты в локации
-     */
     public boolean checkIfInZone(int x, int y) {
         return getTerritory().isInside(x, y);
     }
 
     public boolean checkIfInZone(Location loc, Reflection reflection) {
-        return checkIfInZone(loc.x, loc.y, loc.z, reflection);
+        return isActive() && _reflection == reflection && getTerritory().isInside(loc);
     }
 
     public boolean checkIfInZone(int x, int y, int z) {
         return checkIfInZone(x, y, z, getReflection());
     }
 
-    public boolean checkIfInZone(int x, int y, int z, Reflection reflection) {
-        return isActive() && _reflection == reflection && getTerritory().isInside(x, y, z);
+    private boolean checkIfInZone(int x, int y, int z, Reflection reflection) {
+        return isActive() && _reflection == reflection && getTerritory().isInside(new Location(x, y, z));
     }
 
     public boolean checkIfInZone(Creature cha) {
@@ -423,28 +402,19 @@ public final class Zone {
                 .map(o -> (Player) o);
     }
 
-    public List<Playable> getInsidePlayables() {
-        final List<Playable> result = new ArrayList<>();
-
-        Creature cha;
-        for (Creature _object : objects) {
-            if ((cha = _object) != null && cha.isPlayable())
-                result.add((Playable) cha);
-        }
-
-        return result;
+    public Stream<Playable> getInsidePlayables() {
+        return objects.stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isPlayable)
+                .map(o -> (Playable) o);
     }
 
-    public List<NpcInstance> getInsideNpcs() {
-        List<NpcInstance> result = new ArrayList<>();
+    public Stream<NpcInstance> getInsideNpcs() {
+        return objects.stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isNpc)
+                .map(o -> (NpcInstance) o);
 
-        Creature cha;
-        for (Creature _object : objects) {
-            if ((cha = _object) != null && cha.isNpc())
-                result.add((NpcInstance) cha);
-        }
-
-        return result;
     }
 
     public boolean isActive() {
@@ -643,9 +613,7 @@ public final class Zone {
                 }
             }
 
-            // Ady - Soporte para efectos de daño que se activan y desactivan segun tiempo online, como los de Den of Evil, que duran algo asi como 10 minutos activos y 1 minuto inactivos
             // TODO: This is not the same as in l2j, as we dont have on, off times, only unit ticks, so we use the same for both
-            // Si el efecto posee un tiempo de online, entonces debemos calcular cuando termina para desactivar la zona
             if (_activateTime == 0) {
                 _activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
             }
@@ -666,15 +634,15 @@ public final class Zone {
         }
     }
 
-    class ZoneListenerList extends ListenerList {
+    private class ZoneListenerList extends ListenerList {
         void onEnter(Creature actor) {
-            getListeners().stream()
+            getListeners().filter(l -> l instanceof OnZoneEnterLeaveListener)
                     .map(l -> (OnZoneEnterLeaveListener) l)
                     .forEach(l -> l.onZoneEnter(Zone.this, actor));
         }
 
         void onLeave(Creature actor) {
-            getListeners().stream()
+            getListeners().filter(l -> l instanceof OnZoneEnterLeaveListener)
                     .map(l -> (OnZoneEnterLeaveListener) l)
                     .forEach(l -> l.onZoneLeave(Zone.this, actor));
         }

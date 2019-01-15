@@ -4,26 +4,13 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _053_LinnaeusSpecialBait extends Quest implements ScriptFile {
+public final class _053_LinnaeusSpecialBait extends Quest {
+    private static final int FlameFishingLure = 7613;
+    private static final int FishSkill = 1315;
     private final int Linnaeu = 31577;
     private final int CrimsonDrake = 20670;
     private final int HeartOfCrimsonDrake = 7624;
-    private final int FlameFishingLure = 7613;
-    private final Integer FishSkill = 1315;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _053_LinnaeusSpecialBait() {
         super(false);

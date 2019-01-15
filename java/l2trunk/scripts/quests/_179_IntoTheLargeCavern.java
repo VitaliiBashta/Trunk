@@ -15,13 +15,13 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class _179_IntoTheLargeCavern extends Quest implements ScriptFile, OnDeathListener {
+public final class _179_IntoTheLargeCavern extends Quest implements OnDeathListener {
     class World {
         int instanceId;
         int status;
     }
 
-    private static final Map<Integer,World> worlds = new HashMap<>();
+    private static final Map<Integer, World> worlds = new HashMap<>();
 
     private final static int KEKROPUS = 32138;
     private final static int GardenGuard = 25529;
@@ -52,18 +52,6 @@ public final class _179_IntoTheLargeCavern extends Quest implements ScriptFile, 
     private final static int Gate_Key_Prediction = 9711;
     private final static int Gate_Key_Massive_Cavern = 9712;
     private static final int izId = 11;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _179_IntoTheLargeCavern() {
         super(true);

@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _654_JourneytoaSettlement extends Quest implements ScriptFile {
+public final class _654_JourneytoaSettlement extends Quest {
     // NPC
     private static final int NamelessSpirit = 31453;
 
@@ -19,18 +19,6 @@ public class _654_JourneytoaSettlement extends Quest implements ScriptFile {
 
     // Rewards
     private static final int FrintezzasMagicForceFieldRemovalScroll = 8073;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _654_JourneytoaSettlement() {
         super(true);

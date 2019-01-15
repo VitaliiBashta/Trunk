@@ -11,20 +11,19 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public abstract class Dominion_KillSpecialUnitQuest extends Quest implements ScriptFile {
-    private final List<ClassId> _classIds;
+public abstract class Dominion_KillSpecialUnitQuest extends Quest {
+    private final List<ClassId> classIds;
 
     public Dominion_KillSpecialUnitQuest() {
         super(PARTY_ALL);
 
-        _classIds = getTargetClassIds();
+        classIds = getTargetClassIds();
         DominionSiegeRunnerEvent runnerEvent = EventHolder.getEvent(EventType.MAIN_EVENT, 1);
-        for (ClassId c : _classIds)
-            runnerEvent.addClassQuest(c, this);
+        classIds.forEach(c ->
+                runnerEvent.addClassQuest(c, this));
     }
 
     protected abstract NpcString startNpcString();
@@ -52,7 +51,7 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
         if (event2 == null || event2 == event1)
             return null;
 
-        if (!_classIds.contains(killed.getClassId()))
+        if (!classIds.contains(killed.getClassId()))
             return null;
 
         int max_kills = qs.getInt("max_kills");
@@ -102,20 +101,5 @@ public abstract class Dominion_KillSpecialUnitQuest extends Quest implements Scr
     @Override
     public boolean canAbortByPacket() {
         return false;
-    }
-
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

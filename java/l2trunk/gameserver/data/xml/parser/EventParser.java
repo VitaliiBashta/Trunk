@@ -210,63 +210,63 @@ public enum EventParser {
                 String name = actionElement.attributeValue("name");
                 StartStopAction startStopAction = new StartStopAction(name, true);
                 actions.add(startStopAction);
-            } else if (actionElement.getName().equalsIgnoreCase("stop")) {
+            } else if ("stop".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 StartStopAction startStopAction = new StartStopAction(name, false);
                 actions.add(startStopAction);
-            } else if (actionElement.getName().equalsIgnoreCase("spawn")) {
+            } else if ("spawn".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 SpawnDespawnAction spawnDespawnAction = new SpawnDespawnAction(name, true);
                 actions.add(spawnDespawnAction);
-            } else if (actionElement.getName().equalsIgnoreCase("despawn")) {
+            } else if ("despawn".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 SpawnDespawnAction spawnDespawnAction = new SpawnDespawnAction(name, false);
                 actions.add(spawnDespawnAction);
-            } else if (actionElement.getName().equalsIgnoreCase("open")) {
+            } else if ("open".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 OpenCloseAction a = new OpenCloseAction(true, name);
                 actions.add(a);
-            } else if (actionElement.getName().equalsIgnoreCase("close")) {
+            } else if ("close".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 OpenCloseAction a = new OpenCloseAction(false, name);
                 actions.add(a);
-            } else if (actionElement.getName().equalsIgnoreCase("active")) {
+            } else if ("active".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 ActiveDeactiveAction a = new ActiveDeactiveAction(true, name);
                 actions.add(a);
-            } else if (actionElement.getName().equalsIgnoreCase("deactive")) {
+            } else if ("deactive".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 ActiveDeactiveAction a = new ActiveDeactiveAction(false, name);
                 actions.add(a);
-            } else if (actionElement.getName().equalsIgnoreCase("refresh")) {
+            } else if ("refresh".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 RefreshAction a = new RefreshAction(name);
                 actions.add(a);
-            } else if (actionElement.getName().equalsIgnoreCase("init")) {
+            } else if ("init".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 InitAction a = new InitAction(name);
                 actions.add(a);
-            } else if (actionElement.getName().equalsIgnoreCase("npc_say")) {
+            } else if ("npc_say".equalsIgnoreCase(actionElement.getName())) {
                 int npc = toInt(actionElement.attributeValue("npc"));
                 ChatType chat = ChatType.valueOf(actionElement.attributeValue("chat"));
                 int range = toInt(actionElement.attributeValue("range"));
                 NpcString string = NpcString.valueOf(actionElement.attributeValue("text"));
                 NpcSayAction action = new NpcSayAction(npc, range, chat, string);
                 actions.add(action);
-            } else if (actionElement.getName().equalsIgnoreCase("play_sound")) {
+            } else if ("play_sound".equalsIgnoreCase(actionElement.getName())) {
                 int range = toInt(actionElement.attributeValue("range"));
                 String sound = actionElement.attributeValue("sound");
                 PlaySound.Type type = PlaySound.Type.valueOf(actionElement.attributeValue("type"));
 
                 PlaySoundAction action = new PlaySoundAction(range, sound, type);
                 actions.add(action);
-            } else if (actionElement.getName().equalsIgnoreCase("give_item")) {
+            } else if ("give_item".equalsIgnoreCase(actionElement.getName())) {
                 int itemId = toInt(actionElement.attributeValue("id"));
                 long count = toInt(actionElement.attributeValue("count"));
 
                 GiveItemAction action = new GiveItemAction(itemId, count);
                 actions.add(action);
-            } else if (actionElement.getName().equalsIgnoreCase("announce")) {
+            } else if ("announce".equalsIgnoreCase(actionElement.getName())) {
                 String val = actionElement.attributeValue("val");
                 if (val == null && time == Integer.MAX_VALUE) {
                     LOG.info("Can't get announce time." + element);
@@ -276,7 +276,7 @@ public enum EventParser {
                 int val2 = val == null ? time : toInt(val);
                 EventAction action = new AnnounceAction(val2);
                 actions.add(action);
-            } else if (actionElement.getName().equalsIgnoreCase("if")) {
+            } else if ("if".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 IfElseAction action = new IfElseAction(name, false);
 
@@ -284,7 +284,7 @@ public enum EventParser {
                 actions.add(action);
 
                 lastIf = action;
-            } else if (actionElement.getName().equalsIgnoreCase("ifnot")) {
+            } else if ("ifnot".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("name");
                 IfElseAction action = new IfElseAction(name, true);
 
@@ -292,12 +292,12 @@ public enum EventParser {
                 actions.add(action);
 
                 lastIf = action;
-            } else if (actionElement.getName().equalsIgnoreCase("else")) {
+            } else if ("else".equalsIgnoreCase(actionElement.getName())) {
                 if (lastIf == null)
                     LOG.info("Not find <if> for <else> tag");
                 else
                     lastIf.setElseList(parseActions(actionElement, time));
-            } else if (actionElement.getName().equalsIgnoreCase("say")) {
+            } else if ("say".equalsIgnoreCase(actionElement.getName())) {
                 ChatType chat = ChatType.valueOf(actionElement.attributeValue("chat"));
                 int range = toInt(actionElement.attributeValue("range"));
 
@@ -313,7 +313,7 @@ public enum EventParser {
                     sayAction = new SayAction(range, chat, how, NpcString.valueOf(text));
 
                 actions.add(sayAction);
-            } else if (actionElement.getName().equalsIgnoreCase("teleport_players")) {
+            } else if ("teleport_players".equalsIgnoreCase(actionElement.getName())) {
                 String name = actionElement.attributeValue("id");
                 TeleportPlayersAction a = new TeleportPlayersAction(name);
                 actions.add(a);

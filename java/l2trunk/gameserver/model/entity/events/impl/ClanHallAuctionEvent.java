@@ -29,7 +29,7 @@ public final class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSieg
     @Override
     public void reCalcNextTime(boolean onStart) {
         clearActions();
-        _onTimeActions.clear();
+        onTimeActions.clear();
 
         Clan owner = getResidence().getOwner();
 
@@ -48,7 +48,7 @@ public final class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSieg
             getResidence().setJdbcState(JdbcEntityState.UPDATED);
             getResidence().update();
 
-            _onTimeActions.clear();
+            onTimeActions.clear();
             addOnTimeAction(0, new StartStopAction(EVENT, true));
             addOnTimeAction(getResidence().getAuctionLength() * 86400, new StartStopAction(EVENT, false));
 
@@ -64,14 +64,14 @@ public final class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSieg
             if (endDate <= System.currentTimeMillis()) {
                 getResidence().getSiegeDate().setTimeInMillis(System.currentTimeMillis() + 60000);
                 endSiegeDate.setTimeInMillis(System.currentTimeMillis() + 60000);
-                _onTimeActions.clear();
+                onTimeActions.clear();
                 addOnTimeAction(0, new StartStopAction(EVENT, true));
                 addOnTimeAction(60, new StartStopAction(EVENT, false));
 
                 registerActions();
             } else {
                 endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
-                _onTimeActions.clear();
+                onTimeActions.clear();
                 addOnTimeAction(0, new StartStopAction(EVENT, true));
                 addOnTimeAction((int) getEndSiegeForCH(), new StartStopAction(EVENT, false));
 
@@ -152,7 +152,7 @@ public final class ClanHallAuctionEvent extends SiegeEvent<ClanHall, AuctionSieg
         getResidence().setJdbcState(JdbcEntityState.UPDATED);
         getResidence().update();
         endSiegeDate.setTimeInMillis(getResidence().getSiegeDate().getTimeInMillis() + (getResidence().getAuctionLength() * 86400000L));
-        _onTimeActions.clear();
+        onTimeActions.clear();
         addOnTimeAction(0, new StartStopAction(EVENT, true));
         addOnTimeAction(getResidence().getAuctionLength() * 86400, new StartStopAction(EVENT, false));
         registerActions();

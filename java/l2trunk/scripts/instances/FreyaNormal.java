@@ -17,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.quests._10286_ReunionWithSirra;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +34,7 @@ public final class FreyaNormal extends Reflection {
     private static final int Kegor = 18851;
 
     private static final List<Integer> _eventTriggers =
-            Arrays.asList(23140202, 23140204, 23140206, 23140208, 23140212, 23140214, 23140216);
+            List.of(23140202, 23140204, 23140206, 23140208, 23140212, 23140214, 23140216);
     private static final Territory centralRoom = new Territory().add(new Polygon().add(114264, -113672).add(113640, -114344).add(113640, -115240).add(114264, -115912).add(115176, -115912).add(115800, -115272).add(115800, -114328).add(115192, -113672).setZmax(-11225).setZmin(-11225));
     private final ZoneListener _epicZoneListener = new ZoneListener();
     private final ZoneListenerL _landingZoneListener = new ZoneListenerL();
@@ -125,8 +124,7 @@ public final class FreyaNormal extends Reflection {
 
     private void manageCastleController(int state) {
         // 1-7 enabled, 8 - disabled
-        getNpcs().stream()
-                .filter(n -> n.getNpcId() == IceCastleController)
+        getNpcs().filter(n -> n.getNpcId() == IceCastleController)
                 .forEach(n -> n.setNpcState(state));
     }
 
@@ -169,11 +167,11 @@ public final class FreyaNormal extends Reflection {
         public void runImpl() {
             _entryLocked = true;
             closeDoor(23140101);
-            for (Player player : getPlayers()) {
-                QuestState qs = player.getQuestState(_10286_ReunionWithSirra.class);
+            getPlayers().forEach( p ->{
+                QuestState qs = p.getQuestState(_10286_ReunionWithSirra.class);
                 if (qs != null && qs.getCond() == 5)
                     qs.setCond(6);
-            }
+            });
             showMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_OPENING);
             ThreadPoolManager.INSTANCE.schedule(new PreStage(), 55000L); // 53.5sec for movie
         }
@@ -259,9 +257,9 @@ public final class FreyaNormal extends Reflection {
         @Override
         public void runImpl() {
             firstStageGuardSpawn.cancel(true);
-            for (NpcInstance n : getNpcs())
-                if (n.getNpcId() != Sirra && n.getNpcId() != IceCastleController)
-                    n.deleteMe();
+            getNpcs().filter(n -> n.getNpcId() != Sirra)
+                    .filter(n -> n.getNpcId() != IceCastleController)
+                    .forEach(GameObject::deleteMe);
 
             showMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_A);
             ThreadPoolManager.INSTANCE.schedule(new TimerToSecondStage(), 22000L); // 22.1 secs for movie
@@ -312,8 +310,7 @@ public final class FreyaNormal extends Reflection {
             getPlayers().forEach(p ->
                     p.sendPacket(new ExSendUIEvent(p, false, false, 60, 0, NpcString.TIME_REMAINING_UNTIL_NEXT_BATTLE)));
             secondStageGuardSpawn.cancel(true);
-            getNpcs().stream()
-                    .filter(n -> n.getNpcId() != Sirra)
+            getNpcs().filter(n -> n.getNpcId() != Sirra)
                     .filter(n -> n.getNpcId() != IceCastleController)
                     .forEach(GameObject::deleteMe);
             ThreadPoolManager.INSTANCE.schedule(new PreThirdStageM(), 60000L);

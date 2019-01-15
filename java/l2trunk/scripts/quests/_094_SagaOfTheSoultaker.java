@@ -5,11 +5,11 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _094_SagaOfTheSoultaker extends SagasSuperclass implements ScriptFile {
+public final class _094_SagaOfTheSoultaker extends SagasSuperclass {
     public _094_SagaOfTheSoultaker() {
         super(false);
 
-        NPC = List.of(30832, 31623, 31279,                31279, 31645, 31646, 31648, 31650, 31654, 31655, 31657, 31279);
+        NPC = List.of(30832, 31623, 31279, 31279, 31645, 31646, 31648, 31650, 31654, 31655, 31657, 31279);
         Items = List.of(7080, 7533, 7081, 7509, 7292, 7323, 7354, 7385, 7416, 7447, 7085, 0);
         Mob = List.of(27257, 27243, 27265);
         classid = 95;
@@ -39,17 +39,5 @@ public final class _094_SagaOfTheSoultaker extends SagasSuperclass implements Sc
                 "....! Fight...Defeat...It...Fight...Defeat...It...");
 
         registerNPCs();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

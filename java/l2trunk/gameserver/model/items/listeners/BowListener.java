@@ -8,10 +8,13 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 
 public final class BowListener implements OnEquipListener {
-    private static final BowListener _instance = new BowListener();
+    private static final BowListener INSTANCE = new BowListener();
+
+    private BowListener() {
+    }
 
     public static BowListener getInstance() {
-        return _instance;
+        return INSTANCE;
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class GameStats {
+public final class GameStats {
     private static final Logger LOG = LoggerFactory.getLogger(GameStats.class);
 
     /* database statistics */
@@ -48,16 +48,8 @@ public class GameStats {
         _updatePlayerBase.incrementAndGet();
     }
 
-    public static long getUpdatePlayerBase() {
-        return _updatePlayerBase.get();
-    }
-
     public static void incrementPlayerEnterGame() {
         _playerEnterGameCounter.incrementAndGet();
-    }
-
-    public static long getPlayerEnterGame() {
-        return _playerEnterGameCounter.get();
     }
 
     public static void addTax(long sum) {

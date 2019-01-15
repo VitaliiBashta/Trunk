@@ -6,13 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест Bring Out The Flavor Of Ingredients
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _380_BringOutTheFlavorOfIngredients extends Quest implements ScriptFile {
+public final class _380_BringOutTheFlavorOfIngredients extends Quest {
     //NPCs
     private static final int Rollant = 30069;
     //Quest Items
@@ -63,18 +57,6 @@ public class _380_BringOutTheFlavorOfIngredients extends Quest implements Script
                     1
             }
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _380_BringOutTheFlavorOfIngredients() {
         super(false);

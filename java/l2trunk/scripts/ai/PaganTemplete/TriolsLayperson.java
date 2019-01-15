@@ -8,17 +8,14 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author PaInKiLlEr
- * - AI for the monster Triols Layperson (22142).
- * - If you see a player in a range of 500 when its party composes more than 4 Membury.
- * - Then throw on a random coordinates of the first who saw the player.
- * - AI is tested and works.
- */
-public final class TriolsLayperson extends Fighter {
-    private boolean _tele = true;
+import java.util.List;
 
-    private static final Location[] locs = {new Location(-16128, -35888, -10726), new Location(-17029, -39617, -10724), new Location(-15729, -42001, -10724)};
+public final class TriolsLayperson extends Fighter {
+    private static final List<Location> locs = List.of(
+            new Location(-16128, -35888, -10726),
+            new Location(-17029, -39617, -10724),
+            new Location(-15729, -42001, -10724));
+    private boolean tele = true;
 
     public TriolsLayperson(NpcInstance actor) {
         super(actor);
@@ -30,22 +27,19 @@ public final class TriolsLayperson extends Fighter {
         if (actor == null)
             return true;
 
-        for (Player player : World.getAroundPlayers(actor, 500, 500)) {
-            if (player == null || !player.isInParty())
-                continue;
-
-            if (player.getParty().size() >= 5 && _tele) {
-                _tele = false;
-                player.teleToLocation(Rnd.get(locs));
-            }
-        }
-
+        World.getAroundPlayers(actor, 500, 500)
+                .filter(Player::isInParty)
+                .filter(p -> p.getParty().size() >= 5 && tele)
+                .forEach(p -> {
+                    tele = false;
+                    p.teleToLocation(Rnd.get(locs));
+                });
         return true;
     }
 
     @Override
     public void onEvtDead(Creature killer) {
-        _tele = true;
+        tele = true;
         super.onEvtDead(killer);
     }
 }

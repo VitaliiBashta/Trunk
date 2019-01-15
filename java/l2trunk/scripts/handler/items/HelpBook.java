@@ -30,13 +30,6 @@ public final class HelpBook extends ScriptItemHandler implements ScriptFile {
         ItemHandler.INSTANCE.registerItemHandler(this);
     }
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     @Override
     public boolean useItem(Playable playable, ItemInstance item, boolean ctrl) {

@@ -7,12 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Testimony Of Fate
- *
- * @author Sergey Ibryaev aka Artful
- */
-public class _219_TestimonyOfFate extends Quest implements ScriptFile {
+public final class _219_TestimonyOfFate extends Quest {
     //NPC
     private static final int Kaira = 30476;
     private static final int Metheus = 30614;
@@ -218,18 +213,6 @@ public class _219_TestimonyOfFate extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _219_TestimonyOfFate() {
         super(false);
 
@@ -249,8 +232,7 @@ public class _219_TestimonyOfFate extends Quest implements ScriptFile {
 
         addKillId(HangmanTree);
 
-        addQuestItem(new int[]{
-                KairasLetter,
+        addQuestItem(KairasLetter,
                 MetheussFuneralJar,
                 KasandrasRemains,
                 IxiasList,
@@ -278,8 +260,7 @@ public class _219_TestimonyOfFate extends Quest implements ScriptFile {
                 KarulBugbearSkull,
                 BrekaOverlordSkull,
                 LetoOverlordSkull,
-                BlackWillowLeaf
-        });
+                BlackWillowLeaf);
     }
 
     @Override

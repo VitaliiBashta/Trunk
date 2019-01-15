@@ -5,24 +5,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _112_WalkOfFate extends Quest implements ScriptFile {
+public final class _112_WalkOfFate extends Quest {
     //NPC
     private static final int Livina = 30572;
     private static final int Karuda = 32017;
     //Items
     private static final int EnchantD = 956;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _112_WalkOfFate() {
         super(false);

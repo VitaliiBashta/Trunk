@@ -7,8 +7,10 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.Util;
+
+import java.util.List;
 
 public final class _508_TheClansReputation extends Quest {
     // Quest NPC
@@ -68,43 +70,14 @@ public final class _508_TheClansReputation extends Quest {
             }
     };
 
-    private static final int[][] RADAR = {
-            {
-                    0,
-                    0,
-                    0
-            },
-            {
-                    192346,
-                    21528,
-                    -3648
-            },
-            {
-                    191979,
-                    54902,
-                    -7658
-            },
-            {
-                    170038,
-                    -26236,
-                    -3824
-            },
-            {
-                    171762,
-                    55028,
-                    -5992
-            },
-            {
-                    117232,
-                    -9476,
-                    -3320
-            },
-            {
-                    144218,
-                    -5816,
-                    -4722
-            },
-    };
+    private static final List<Location> RADAR = List.of(
+            new Location(0, 0, 0),
+            new Location(192346, 21528, -3648),
+            new Location(191979, 54902, -7658),
+            new Location(170038, -26236, -3824),
+            new Location(171762, 55028, -5992),
+            new Location(117232, -9476, -3320),
+            new Location(144218, -5816, -4722));
 
     public _508_TheClansReputation() {
         super(PARTY_ALL);
@@ -130,11 +103,8 @@ public final class _508_TheClansReputation extends Quest {
             int evt = Integer.parseInt(event);
             st.set("raid", event);
             htmltext = "30868-" + event + ".htm";
-            int x = RADAR[evt][0];
-            int y = RADAR[evt][1];
-            int z = RADAR[evt][2];
-            if (x + y + z > 0)
-                st.addRadar(x, y, z);
+            if (evt > 0)
+                st.addRadar(RADAR.get(evt));
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("30868-7.htm")) {
             st.playSound(SOUND_FINISH);

@@ -4,13 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
+import java.util.List;
 
-public class _458_PerfectForm extends Quest implements ScriptFile {
+public final class _458_PerfectForm extends Quest {
     private static final int Kelleyia = 32768;
 
     private static final String KOOKABURA_VAR = "kookaburacount";
@@ -21,22 +18,14 @@ public class _458_PerfectForm extends Quest implements ScriptFile {
     private static final int COUNT = 10;
 
     // client  4    "1018879|1018886|1018893|1018900"    4    "10|10|10|10"
-    private static final int[] GrownKookabura = {
-            18879,
-            18878
-    };
-    private static final int[] GrownCougar = {
-            18886,
-            18885
-    };
-    private static final int[] GrownBuffalo = {
-            18893,
-            18892
-    };
-    private static final int[] GrownGrendel = {
-            18900,
-            18899
-    };
+    private static final List<Integer> GrownKookabura = List.of(
+            18879, 18878);
+    private static final List<Integer> GrownCougar = List.of(
+            18886, 18885);
+    private static final List<Integer> GrownBuffalo = List.of(
+            18893, 18892);
+    private static final List<Integer> GrownGrendel = List.of(
+            18900, 18899);
 
     private static final int[][][] Rewards = {
             {
@@ -277,17 +266,5 @@ public class _458_PerfectForm extends Quest implements ScriptFile {
             st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

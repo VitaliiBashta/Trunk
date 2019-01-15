@@ -7,19 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _111_ElrokianHuntersProof extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _111_ElrokianHuntersProof extends Quest {
     private static final int Marquez = 32113;
     private static final int Asamah = 32115;
     private static final int Kirikachin = 32116;

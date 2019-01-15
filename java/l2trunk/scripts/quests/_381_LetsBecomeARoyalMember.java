@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _381_LetsBecomeARoyalMember extends Quest implements ScriptFile {
+public final class _381_LetsBecomeARoyalMember extends Quest {
     //Quest items
     private static final int KAILS_COIN = 5899;
     private static final int COIN_ALBUM = 5900;
@@ -22,18 +22,6 @@ public class _381_LetsBecomeARoyalMember extends Quest implements ScriptFile {
     //CHANCES (custom values, feel free to change them)
     private static final int GARGOYLE_CHANCE = 5;
     private static final int VEGUS_CHANCE = 100;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _381_LetsBecomeARoyalMember() {
         super(false);

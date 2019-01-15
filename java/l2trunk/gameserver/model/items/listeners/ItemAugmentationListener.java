@@ -13,6 +13,9 @@ import l2trunk.gameserver.templates.OptionDataTemplate;
 public final class ItemAugmentationListener implements OnEquipListener {
     private static final ItemAugmentationListener _instance = new ItemAugmentationListener();
 
+    private ItemAugmentationListener() {
+    }
+
     public static ItemAugmentationListener getInstance() {
         return _instance;
     }
@@ -26,7 +29,7 @@ public final class ItemAugmentationListener implements OnEquipListener {
 
         Player player = actor.getPlayer();
 
-        int stats[] = new int[2];
+        int[] stats = new int[2];
         stats[0] = 0x0000FFFF & item.getAugmentationId();
         stats[1] = item.getAugmentationId() >> 16;
 
@@ -65,7 +68,7 @@ public final class ItemAugmentationListener implements OnEquipListener {
         if (player.getExpertisePenalty(item) > 0)
             return;
 
-        int stats[] = new int[2];
+        int[] stats = new int[2];
         stats[0] = 0x0000FFFF & item.getAugmentationId();
         stats[1] = item.getAugmentationId() >> 16;
 

@@ -6,11 +6,10 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _104_SpiritOfMirror extends Quest implements ScriptFile {
+public final class _104_SpiritOfMirror extends Quest {
     private static final int GALLINS_OAK_WAND = 748;
     private static final int WAND_SPIRITBOUND1 = 1135;
     private static final int WAND_SPIRITBOUND2 = 1136;
@@ -18,18 +17,6 @@ public class _104_SpiritOfMirror extends Quest implements ScriptFile {
     private static final int WAND_OF_ADEPT = 747;
 
     private static final SystemMessage2 CACHE_SYSMSG_GALLINS_OAK_WAND = SystemMessage2.removeItems(GALLINS_OAK_WAND, 1);
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _104_SpiritOfMirror() {
         super(PARTY_NONE);

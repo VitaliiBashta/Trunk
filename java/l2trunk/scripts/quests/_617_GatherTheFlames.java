@@ -4,11 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.List;
 
-public final class _617_GatherTheFlames extends Quest implements ScriptFile {
+public final class _617_GatherTheFlames extends Quest {
     //npc
     private final static int VULCAN = 31539;
     private final static int HILDA = 31271;

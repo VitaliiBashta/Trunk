@@ -67,12 +67,4 @@ public final class BossRandom extends Functions implements ScriptFile {
             LOG.info("Loaded Event: Boss Random");
         }
     }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

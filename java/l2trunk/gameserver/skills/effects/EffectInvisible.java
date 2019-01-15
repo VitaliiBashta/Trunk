@@ -1,6 +1,5 @@
 package l2trunk.gameserver.skills.effects;
 
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
@@ -37,10 +36,9 @@ public final class EffectInvisible extends Effect {
 
         World.removeObjectFromPlayers(player);
 
-        for (Creature cr : World.getAroundNpc(player, 500, 100)) {
-            if (cr.getCastingTarget() != null && cr.getCastingTarget().equals(player))
-                cr.abortCast(true, true);
-        }
+        World.getAroundNpc(player, 500, 100)
+                .filter(cr -> player.equals(cr.getCastingTarget()))
+                .forEach(cr -> cr.abortCast(true, true));
     }
 
     @Override

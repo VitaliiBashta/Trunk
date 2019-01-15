@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _224_TestOfSagittarius extends Quest implements ScriptFile {
+public final class _224_TestOfSagittarius extends Quest {
     private static final int BERNARDS_INTRODUCTION_ID = 3294;
     private static final int LETTER_OF_HAMIL3_ID = 3297;
     private static final int HUNTERS_RUNE2_ID = 3299;
@@ -27,18 +27,6 @@ public class _224_TestOfSagittarius extends Quest implements ScriptFile {
     private static final int RewardExp = 447444;
     private static final int RewardSP = 30704;
     private static final int RewardAdena = 80903;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _224_TestOfSagittarius() {
         super(false);
@@ -73,8 +61,7 @@ public class _224_TestOfSagittarius extends Quest implements ScriptFile {
         addKillId(20089);
         addKillId(20090);
 
-        addQuestItem(new int[]{
-                HUNTERS_RUNE2_ID,
+        addQuestItem(HUNTERS_RUNE2_ID,
                 CRESCENT_MOON_BOW_ID,
                 TALISMAN_OF_KADESH_ID,
                 BLOOD_OF_LIZARDMAN_ID,
@@ -87,8 +74,7 @@ public class _224_TestOfSagittarius extends Quest implements ScriptFile {
                 MITHRIL_CLIP_ID,
                 STAKATO_CHITIN_ID,
                 ST_BOWSTRING_ID,
-                MANASHENS_HORN_ID
-        });
+                MANASHENS_HORN_ID);
     }
 
     @Override

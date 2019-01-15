@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _139_ShadowFoxPart1 extends Quest implements ScriptFile {
+public final class _139_ShadowFoxPart1 extends Quest {
     // NPC
     private final static int MIA = 30896;
 
@@ -20,18 +20,6 @@ public class _139_ShadowFoxPart1 extends Quest implements ScriptFile {
     private final static int TasabaLizardman2 = 21639;
     private final static int TasabaLizardmanShaman1 = 20785;
     private final static int TasabaLizardmanShaman2 = 21640;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _139_ShadowFoxPart1() {
         super(false);

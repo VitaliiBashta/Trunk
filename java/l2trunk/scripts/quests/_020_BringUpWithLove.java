@@ -3,26 +3,13 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _020_BringUpWithLove extends Quest implements ScriptFile {
+public final class _020_BringUpWithLove extends Quest {
     private static final int TUNATUN = 31537;
     // Item
     private static final int BEAST_WHIP = 15473;
     private static final int CRYSTAL = 9553;
     private static final int JEWEL = 7185;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _020_BringUpWithLove() {
         super(false);

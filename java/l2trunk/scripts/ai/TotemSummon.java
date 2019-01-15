@@ -33,7 +33,7 @@ public final class TotemSummon extends DefaultAI {
     public boolean thinkActive() {
         if (_timer < System.currentTimeMillis()) {
             _timer = System.currentTimeMillis() + 15000L;
-            getActor().getAroundCharacters(450, 200).stream()
+            getActor().getAroundCharacters(450, 200)
                     .filter(GameObject::isPlayable)
                     .filter(c -> !c.isDead())
                     .forEach(c -> c.altOnMagicUseTimer(c, getBuffId(getActor().getNpcId())));

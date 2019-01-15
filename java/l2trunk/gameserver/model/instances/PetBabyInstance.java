@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -50,21 +49,21 @@ public final class PetBabyInstance extends PetInstance {
     private static final Skill Armor_Maintenance = SkillTable.INSTANCE.getInfo(5988);
     private static final Skill Weapon_Maintenance = SkillTable.INSTANCE.getInfo(5987);
     private static final int WindShackle = 5196, Hex = 5197, Slow = 5198, CurseGloom = 5199;
-    private static final Skill[][] TOY_KNIGHT_BUFFS = {
-            {Pet_Focus, Pet_Death_Whisper},
-            {
+    private static final List<List<Skill>> TOY_KNIGHT_BUFFS = List.of(
+            List.of(Pet_Focus, Pet_Death_Whisper),
+            List.of(
                     Pet_Focus,
                     Pet_Death_Whisper,
                     Pet_Shield,
-                    Pet_Wind_Walk},
-            {
+                    Pet_Wind_Walk),
+            List.of(
                     Pet_Focus,
                     Pet_Death_Whisper,
                     Pet_Shield,
                     Pet_Wind_Walk,
                     Pet_Vampiric_Rage,
-                    Pet_Haste},
-            {
+                    Pet_Haste),
+            List.of(
                     Pet_Focus,
                     Pet_Death_Whisper,
                     Pet_Shield,
@@ -72,66 +71,66 @@ public final class PetBabyInstance extends PetInstance {
                     Pet_Vampiric_Rage,
                     Pet_Haste,
                     Pet_Might,
-                    Pet_Blessed_Body}};
-    private static final Skill[][] WHITE_WEASEL_BUFFS = {
-            {Pet_Blessed_Body, Pet_Wind_Walk},
-            {
+                    Pet_Blessed_Body));
+    private static final List<List<Skill>> WHITE_WEASEL_BUFFS = List.of(
+            List.of(Pet_Blessed_Body, Pet_Wind_Walk),
+            List.of(
                     Pet_Blessed_Body,
                     Pet_Wind_Walk,
                     Pet_Death_Whisper,
-                    Pet_Shield},
-            {
+                    Pet_Shield),
+            List.of(
                     Pet_Blessed_Body,
                     Pet_Wind_Walk,
                     Pet_Death_Whisper,
                     Pet_Shield,
                     Pet_Vampiric_Rage,
-                    Pet_Focus},
-            {
+                    Pet_Focus),
+            List.of(
                     Pet_Blessed_Body,
                     Pet_Wind_Walk,
                     Pet_Death_Whisper,
                     Pet_Shield,
                     Pet_Vampiric_Rage,
                     Pet_Focus,
-                    Pet_Haste}};
+                    Pet_Haste));
     //TODO: Array not offu. (Correct if there infa)
-    private static final Skill[][] TURTLE_ASCETIC_BUFFS = {
-            {Pet_Blessed_Body, Pet_Blessed_Soul},
-            {
+    private static final List<List<Skill>> TURTLE_ASCETIC_BUFFS = List.of(
+            List.of(Pet_Blessed_Body, Pet_Blessed_Soul),
+            List.of(
                     Pet_Blessed_Body,
                     Pet_Blessed_Soul,
                     Pet_Shield,
-                    Pet_Wind_Walk},
-            {
-                    Pet_Blessed_Body,
-                    Pet_Blessed_Soul,
-                    Pet_Shield,
-                    Pet_Wind_Walk,
-                    Pet_Armor_Maintenance,
-                    Pet_Weapon_Maintenance},
-            {
+                    Pet_Wind_Walk),
+            List.of(
                     Pet_Blessed_Body,
                     Pet_Blessed_Soul,
                     Pet_Shield,
                     Pet_Wind_Walk,
                     Pet_Armor_Maintenance,
-                    Pet_Weapon_Maintenance}};
-    private static final Skill[][] COUGAR_BUFFS = {
-            {Pet_Empower, Pet_Might},
-            {
+                    Pet_Weapon_Maintenance),
+            List.of(
+                    Pet_Blessed_Body,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Pet_Wind_Walk,
+                    Pet_Armor_Maintenance,
+                    Pet_Weapon_Maintenance));
+    private static final List<List<Skill>> COUGAR_BUFFS = List.of(
+            List.of(Pet_Empower, Pet_Might),
+        List.of(
                     Pet_Empower,
                     Pet_Might,
                     Pet_Shield,
-                    Pet_Blessed_Body},
-            {
+                    Pet_Blessed_Body),
+        List.of(
                     Pet_Empower,
                     Pet_Might,
                     Pet_Shield,
                     Pet_Blessed_Body,
                     Pet_Acumen,
-                    Pet_Haste},
-            {
+                    Pet_Haste),
+        List.of(
                     Pet_Empower,
                     Pet_Might,
                     Pet_Shield,
@@ -139,22 +138,22 @@ public final class PetBabyInstance extends PetInstance {
                     Pet_Acumen,
                     Pet_Haste,
                     Pet_Vampiric_Rage,
-                    Pet_Focus}};
-    private static final Skill[][] BUFFALO_BUFFS = {
-            {Pet_Might, Pet_Blessed_Body},
-            {
+                    Pet_Focus));
+    private static final List<List<Skill>> BUFFALO_BUFFS = List.of(
+            List.of(Pet_Might, Pet_Blessed_Body),
+        List.of(
                     Pet_Might,
                     Pet_Blessed_Body,
                     Pet_Shield,
-                    Pet_Guidance},
-            {
+                    Pet_Guidance),
+        List.of(
                     Pet_Might,
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Guidance,
                     Pet_Vampiric_Rage,
-                    Pet_Haste},
-            {
+                    Pet_Haste),
+        List.of(
                     Pet_Might,
                     Pet_Blessed_Body,
                     Pet_Shield,
@@ -162,71 +161,62 @@ public final class PetBabyInstance extends PetInstance {
                     Pet_Vampiric_Rage,
                     Pet_Haste,
                     Pet_Focus,
-                    Pet_Death_Whisper}};
-    private static final Skill[][] KOOKABURRA_BUFFS = {
-            {Pet_Empower, Pet_Blessed_Soul},
-            {
+                    Pet_Death_Whisper));
+    private static final List<List<Skill>> KOOKABURRA_BUFFS = List.of(
+            List.of(Pet_Empower, Pet_Blessed_Soul),
+            List.of(
                     Pet_Empower,
                     Pet_Blessed_Soul,
                     Pet_Blessed_Body,
-                    Pet_Shield},
-            {
-                    Pet_Empower,
-                    Pet_Blessed_Soul,
-                    Pet_Blessed_Body,
-                    Pet_Shield,
-                    Pet_Acumen,
-                    Pet_Concentration},
-            {
+                    Pet_Shield),
+            List.of(
                     Pet_Empower,
                     Pet_Blessed_Soul,
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Acumen,
-                    Pet_Concentration}};
-    private static final Skill[][] FAIRY_PRINCESS_BUFFS = {
-            {Pet_Empower, Pet_Blessed_Soul},
-            {
-                    Pet_Empower,
-                    Pet_Blessed_Soul,
-                    Pet_Blessed_Body,
-                    Pet_Shield},
-            {
+                    Pet_Concentration),
+            List.of(
                     Pet_Empower,
                     Pet_Blessed_Soul,
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Acumen,
-                    Pet_Concentration},
-            {
+                    Pet_Concentration));
+    private static final List<List<Skill>> FAIRY_PRINCESS_BUFFS = List.of(
+            List.of(Pet_Empower, Pet_Blessed_Soul),
+            List.of(
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield),
+            List.of(
                     Pet_Empower,
                     Pet_Blessed_Soul,
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Acumen,
-                    Pet_Concentration}};
-    private static final Skill[][] ROSE_DESELOPH_BUFFS = {
-            {
+                    Pet_Concentration),
+            List.of(
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Acumen,
+                    Pet_Concentration));
+    private static final List<List<Skill>> ROSE_DESELOPH_BUFFS = List.of(
+            List.of(
                     Pet_Might,
                     Pet_Haste,
-                    Pet_Focus},
-            {
-                    Pet_Might,
-                    Pet_Haste,
-                    Pet_Focus,
-                    Pet_Wind_Walk,
-                    Pet_Blessed_Body,
-                    Pet_Shield},
-            {
+                    Pet_Focus),
+            List.of(
                     Pet_Might,
                     Pet_Haste,
                     Pet_Focus,
                     Pet_Wind_Walk,
                     Pet_Blessed_Body,
-                    Pet_Shield,
-                    Pet_Death_Whisper,
-                    Pet_Vampiric_Rage},
-            {
+                    Pet_Shield),
+            List.of(
                     Pet_Might,
                     Pet_Haste,
                     Pet_Focus,
@@ -234,64 +224,8 @@ public final class PetBabyInstance extends PetInstance {
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Death_Whisper,
-                    Pet_Vampiric_Rage}};
-    private static final Skill[][] ROSE_HYUM_BUFFS = {
-            {Pet_Empower, Pet_Blessed_Soul},
-            {
-                    Pet_Empower,
-                    Pet_Blessed_Soul,
-                    Pet_Wind_Walk,
-                    Pet_Shield},
-            {
-                    Pet_Empower,
-                    Pet_Blessed_Soul,
-                    Pet_Wind_Walk,
-                    Pet_Shield,
-                    Pet_Acumen},
-            {
-                    Pet_Empower,
-                    Pet_Blessed_Soul,
-                    Pet_Wind_Walk,
-                    Pet_Shield,
-                    Pet_Acumen}};
-    private static final Skill[][] ROSE_REKANG_BUFFS = {
-            {Pet_Blessed_Body, Pet_Wind_Walk},
-            {
-                    Pet_Blessed_Body,
-                    Pet_Wind_Walk,
-                    Pet_Blessed_Soul,
-                    Pet_Shield},
-            {
-                    Pet_Blessed_Body,
-                    Pet_Wind_Walk,
-                    Pet_Blessed_Soul,
-                    Pet_Shield,
-                    Armor_Maintenance,
-                    Weapon_Maintenance},
-            {
-                    Pet_Blessed_Body,
-                    Pet_Wind_Walk,
-                    Pet_Blessed_Soul,
-                    Pet_Shield,
-                    Armor_Maintenance,
-                    Weapon_Maintenance}};
-    private static final Skill[][] ROSE_LILIAS_BUFFS = {
-            {
-                    Pet_Might,
-                    Pet_Haste,
-                    Pet_Focus},
-            {
-                    Pet_Might,
-                    Pet_Haste,
-                    Pet_Focus},
-            {
-                    Pet_Might,
-                    Pet_Haste,
-                    Pet_Focus,
-                    Pet_Wind_Walk,
-                    Pet_Blessed_Body,
-                    Pet_Shield},
-            {
+                    Pet_Vampiric_Rage),
+            List.of(
                     Pet_Might,
                     Pet_Haste,
                     Pet_Focus,
@@ -299,153 +233,218 @@ public final class PetBabyInstance extends PetInstance {
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Death_Whisper,
-                    Pet_Vampiric_Rage}};
-    private static final Skill[][] ROSE_LAPHAM_BUFFS = {
-            {Pet_Empower, Pet_Blessed_Soul},
-            {
+                    Pet_Vampiric_Rage));
+    private static final List<List<Skill>> ROSE_HYUM_BUFFS = List.of(
+            List.of(Pet_Empower, Pet_Blessed_Soul),
+            List.of(
                     Pet_Empower,
                     Pet_Blessed_Soul,
                     Pet_Wind_Walk,
-                    Pet_Shield},
-            {
-                    Pet_Empower,
-                    Pet_Blessed_Soul,
-                    Pet_Wind_Walk,
-                    Pet_Shield,
-                    Pet_Acumen},
-            {
+                    Pet_Shield),
+            List.of(
                     Pet_Empower,
                     Pet_Blessed_Soul,
                     Pet_Wind_Walk,
                     Pet_Shield,
-                    Pet_Acumen}};
-    private static final Skill[][] ROSE_MAPHUM_BUFFS = {
-            {Pet_Blessed_Body, Pet_Wind_Walk},
-            {
+                    Pet_Acumen),
+            List.of(
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield,
+                    Pet_Acumen));
+    private static final List<List<Skill>> ROSE_REKANG_BUFFS = List.of(
+            List.of(Pet_Blessed_Body, Pet_Wind_Walk),
+            List.of(
                     Pet_Blessed_Body,
                     Pet_Wind_Walk,
                     Pet_Blessed_Soul,
-                    Pet_Shield},
-            {
-                    Pet_Blessed_Body,
-                    Pet_Wind_Walk,
-                    Pet_Blessed_Soul,
-                    Pet_Shield,
-                    Armor_Maintenance,
-                    Weapon_Maintenance},
-            {
+                    Pet_Shield),
+            List.of(
                     Pet_Blessed_Body,
                     Pet_Wind_Walk,
                     Pet_Blessed_Soul,
                     Pet_Shield,
                     Armor_Maintenance,
-                    Weapon_Maintenance}};
-    private static final Skill[][] IMPROVED_ROSE_DESELOPH_BUFFS = {
-            {Improved_Condition, Improved_Movement},
-            {
+                    Weapon_Maintenance),
+            List.of(
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Armor_Maintenance,
+                    Weapon_Maintenance));
+    private static final List<List<Skill>> ROSE_LILIAS_BUFFS = List.of(
+            List.of(
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus),
+            List.of(
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus),
+            List.of(
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Body,
+                    Pet_Shield),
+            List.of(
+                    Pet_Might,
+                    Pet_Haste,
+                    Pet_Focus,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Body,
+                    Pet_Shield,
+                    Pet_Death_Whisper,
+                    Pet_Vampiric_Rage));
+    private static final List<List<Skill>> ROSE_LAPHAM_BUFFS = List.of(
+            List.of(Pet_Empower, Pet_Blessed_Soul),
+            List.of(
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield),
+            List.of(
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield,
+                    Pet_Acumen),
+            List.of(
+                    Pet_Empower,
+                    Pet_Blessed_Soul,
+                    Pet_Wind_Walk,
+                    Pet_Shield,
+                    Pet_Acumen));
+    private static final List<List<Skill>> ROSE_MAPHUM_BUFFS = List.of(
+            List.of(Pet_Blessed_Body, Pet_Wind_Walk),
+            List.of(
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield),
+            List.of(
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Armor_Maintenance,
+                    Weapon_Maintenance),
+            List.of(
+                    Pet_Blessed_Body,
+                    Pet_Wind_Walk,
+                    Pet_Blessed_Soul,
+                    Pet_Shield,
+                    Armor_Maintenance,
+                    Weapon_Maintenance));
+    private static final List<List<Skill>> IMPROVED_ROSE_DESELOPH_BUFFS = List.of(
+            List.of(Improved_Condition, Improved_Movement),
+            List.of(
                     Improved_Condition,
                     Improved_Movement,
                     Improved_Combat,
-                    Chant_of_Blood_Awakening},
-            {
+                    Chant_of_Blood_Awakening),
+            List.of(
                     Improved_Condition,
                     Improved_Movement,
                     Improved_Combat,
                     Chant_of_Blood_Awakening,
-                    Improved_Critical_Attack},
-            {
+                    Improved_Critical_Attack),
+            List.of(
                     Improved_Condition,
                     Improved_Movement,
                     Improved_Combat,
                     Chant_of_Blood_Awakening,
-                    Improved_Critical_Attack}};
-    private static final Skill[][] IMPROVED_ROSE_HYUM_BUFFS = {
-            {Pet_Acumen, Improved_Condition},
-            {
+                    Improved_Critical_Attack));
+    private static final List<List<Skill>> IMPROVED_ROSE_HYUM_BUFFS = List.of(
+            List.of(Pet_Acumen, Improved_Condition),
+            List.of(
                     Pet_Acumen,
                     Improved_Condition,
-                    Improved_Combat},
-            {
+                    Improved_Combat),
+            List.of(
                     Pet_Acumen,
                     Improved_Condition,
                     Improved_Combat,
-                    Improved_Movement,},
-            {
+                    Improved_Movement),
+            List.of(
                     Pet_Acumen,
                     Improved_Condition,
                     Improved_Combat,
                     Improved_Movement,
-                    Improved_Magic,}};
-    private static final Skill[][] IMPROVED_ROSE_REKANG_BUFFS = {
-            {Improved_Combat, Improved_Condition},
-            {
+                    Improved_Magic));
+    private static final List<List<Skill>> IMPROVED_ROSE_REKANG_BUFFS = List.of(
+            List.of(Improved_Combat, Improved_Condition),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
-                    Improved_Movement},
-            {
+                    Improved_Movement),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
                     Improved_Movement,
-                    Armor_Maintenance},
-            {
+                    Armor_Maintenance),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
                     Improved_Movement,
                     Armor_Maintenance,
-                    Weapon_Maintenance}};
-    private static final Skill[][] IMPROVED_ROSE_LILIAS_BUFFS = {
-            {Improved_Combat, Improved_Condition},
-            {
+                    Weapon_Maintenance));
+    private static final List<List<Skill>> IMPROVED_ROSE_LILIAS_BUFFS = List.of(
+            List.of(Improved_Combat, Improved_Condition),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
-                    Chant_of_Blood_Awakening},
-            {
+                    Chant_of_Blood_Awakening),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
                     Chant_of_Blood_Awakening,
-                    Improved_Movement},
-            {
+                    Improved_Movement),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
                     Chant_of_Blood_Awakening,
                     Improved_Movement,
-                    Improved_Critical_Attack}};
-    private static final Skill[][] IMPROVED_ROSE_LAPHAM_BUFFS = {
-            {Pet_Acumen, Improved_Condition},
-            {
+                    Improved_Critical_Attack));
+    private static final List<List<Skill>> IMPROVED_ROSE_LAPHAM_BUFFS = List.of(
+            List.of(Pet_Acumen, Improved_Condition),
+            List.of(
                     Pet_Acumen,
                     Improved_Condition,
-                    Improved_Combat},
-            {
+                    Improved_Combat),
+            List.of(
                     Pet_Acumen,
                     Improved_Condition,
                     Improved_Combat,
-                    Improved_Movement},
-            {
+                    Improved_Movement),
+            List.of(
                     Pet_Acumen,
                     Improved_Condition,
                     Improved_Combat,
                     Improved_Movement,
-                    Improved_Magic}};
-    private static final Skill[][] IMPROVED_ROSE_MAPHUM_BUFFS = {
-            {Improved_Combat, Improved_Condition},
-            {
+                    Improved_Magic));
+    private static final List<List<Skill>> IMPROVED_ROSE_MAPHUM_BUFFS = List.of(
+            List.of(Improved_Combat, Improved_Condition),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
-                    Improved_Movement},
-            {
+                    Improved_Movement),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
                     Improved_Movement,
                     Armor_Maintenance,
-                    Weapon_Maintenance},
-            {
+                    Weapon_Maintenance),
+            List.of(
                     Improved_Combat,
                     Improved_Condition,
                     Improved_Movement,
                     Armor_Maintenance,
-                    Weapon_Maintenance}};
-    private Future<?> _actionTask;
+                    Weapon_Maintenance));
+    private Future<?> actionTask;
     private boolean _buffEnabled = true;
 
     public PetBabyInstance(int objectId, NpcTemplate template, Player owner, ItemInstance control, int _currentLevel, long exp) {
@@ -459,52 +458,52 @@ public final class PetBabyInstance extends PetInstance {
     private List<Skill> getBuffs() {
         switch (getNpcId()) {
             case PetDataTable.IMPROVED_BABY_COUGAR_ID:
-                return Arrays.asList(COUGAR_BUFFS[getBuffLevel()]);
+                return COUGAR_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_BABY_BUFFALO_ID:
-                return Arrays.asList(BUFFALO_BUFFS[getBuffLevel()]);
+                return BUFFALO_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_BABY_KOOKABURRA_ID:
-                return Arrays.asList(KOOKABURRA_BUFFS[getBuffLevel()]);
+                return KOOKABURRA_BUFFS.get(getBuffLevel());
             case PetDataTable.FAIRY_PRINCESS_ID:
-                return Arrays.asList(FAIRY_PRINCESS_BUFFS[getBuffLevel()]);
+                return FAIRY_PRINCESS_BUFFS.get(getBuffLevel());
             case PetDataTable.SPIRIT_SHAMAN_ID:
-                return Arrays.asList(FAIRY_PRINCESS_BUFFS[getBuffLevel()]);
+                return FAIRY_PRINCESS_BUFFS.get(getBuffLevel());
             case PetDataTable.TOY_KNIGHT_ID:
-                return Arrays.asList(TOY_KNIGHT_BUFFS[getBuffLevel()]);
+                return TOY_KNIGHT_BUFFS.get(getBuffLevel());
             case PetDataTable.SUPER_KAT_THE_CAT_Z_ID:
-                return Arrays.asList(TOY_KNIGHT_BUFFS[getBuffLevel()]);
+                return TOY_KNIGHT_BUFFS.get(getBuffLevel());
             case PetDataTable.TURTLE_ASCETIC_ID:
-                return Arrays.asList(TURTLE_ASCETIC_BUFFS[getBuffLevel()]);
+                return TURTLE_ASCETIC_BUFFS.get(getBuffLevel());
             case PetDataTable.SUPER_MEW_THE_CAT_Z_ID:
-                return Arrays.asList(TURTLE_ASCETIC_BUFFS[getBuffLevel()]);
+                return TURTLE_ASCETIC_BUFFS.get(getBuffLevel());
             case PetDataTable.WHITE_WEASEL_ID:
-                return Arrays.asList(WHITE_WEASEL_BUFFS[getBuffLevel()]);
+                return WHITE_WEASEL_BUFFS.get(getBuffLevel());
             case PetDataTable.ROSE_DESELOPH_ID:
-                return Arrays.asList(ROSE_DESELOPH_BUFFS[getBuffLevel()]);
+                return ROSE_DESELOPH_BUFFS.get(getBuffLevel());
             case PetDataTable.ROSE_HYUM_ID:
-                return Arrays.asList(ROSE_HYUM_BUFFS[getBuffLevel()]);
+                return ROSE_HYUM_BUFFS.get(getBuffLevel());
             case PetDataTable.ROSE_REKANG_ID:
-                return Arrays.asList(ROSE_REKANG_BUFFS[getBuffLevel()]);
+                return ROSE_REKANG_BUFFS.get(getBuffLevel());
             case PetDataTable.ROSE_LILIAS_ID:
-                return Arrays.asList(ROSE_LILIAS_BUFFS[getBuffLevel()]);
+                return ROSE_LILIAS_BUFFS.get(getBuffLevel());
             case PetDataTable.ROSE_LAPHAM_ID:
-                return Arrays.asList(ROSE_LAPHAM_BUFFS[getBuffLevel()]);
+                return ROSE_LAPHAM_BUFFS.get(getBuffLevel());
             case PetDataTable.ROSE_MAPHUM_ID:
-                return Arrays.asList(ROSE_MAPHUM_BUFFS[getBuffLevel()]);
+                return ROSE_MAPHUM_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_ROSE_DESELOPH_ID:
-                return Arrays.asList(IMPROVED_ROSE_DESELOPH_BUFFS[getBuffLevel()]);
+                return IMPROVED_ROSE_DESELOPH_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_ROSE_HYUM_ID:
-                return Arrays.asList(IMPROVED_ROSE_HYUM_BUFFS[getBuffLevel()]);
+                return IMPROVED_ROSE_HYUM_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_ROSE_REKANG_ID:
-                return Arrays.asList(IMPROVED_ROSE_REKANG_BUFFS[getBuffLevel()]);
+                return IMPROVED_ROSE_REKANG_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_ROSE_LILIAS_ID:
-                return Arrays.asList(IMPROVED_ROSE_LILIAS_BUFFS[getBuffLevel()]);
+                return IMPROVED_ROSE_LILIAS_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_ROSE_LAPHAM_ID:
-                return Arrays.asList(IMPROVED_ROSE_LAPHAM_BUFFS[getBuffLevel()]);
+                return IMPROVED_ROSE_LAPHAM_BUFFS.get(getBuffLevel());
             case PetDataTable.IMPROVED_ROSE_MAPHUM_ID:
-                return Arrays.asList(IMPROVED_ROSE_MAPHUM_BUFFS[getBuffLevel()]);
+                return IMPROVED_ROSE_MAPHUM_BUFFS.get(getBuffLevel());
 
             default:
-                return Collections.emptyList();
+                return List.of();
         }
     }
 
@@ -588,18 +587,18 @@ public final class PetBabyInstance extends PetInstance {
     }
 
     private synchronized void stopBuffTask() {
-        if (_actionTask != null) {
-            _actionTask.cancel(false);
-            _actionTask = null;
+        if (actionTask != null) {
+            actionTask.cancel(false);
+            actionTask = null;
         }
     }
 
     public synchronized void startBuffTask() {
-        if (_actionTask != null)
+        if (actionTask != null)
             stopBuffTask();
 
-        if (_actionTask == null && !isDead())
-            _actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), 5000);
+        if (actionTask == null && !isDead())
+            actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), 5000);
     }
 
     public boolean isBuffEnabled() {
@@ -656,7 +655,7 @@ public final class PetBabyInstance extends PetInstance {
         @Override
         public void runImpl() {
             Skill skill = onActionTask();
-            _actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), skill == null ? 1000 : skill.getHitTime() * 333 / Math.max(getMAtkSpd(), 1) - 100);
+            actionTask = ThreadPoolManager.INSTANCE.schedule(new ActionTask(), skill == null ? 1000 : skill.getHitTime() * 333 / Math.max(getMAtkSpd(), 1) - 100);
         }
     }
 }

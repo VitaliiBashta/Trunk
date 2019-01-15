@@ -54,6 +54,6 @@ public class RequestPetGetItem extends L2GameClientPacket {
             return;
         }
 
-        summon.getAI().setIntention(CtrlIntention.AI_INTENTION_PICK_UP, item, null);
+        summon.getAI().setIntention(CtrlIntention.AI_INTENTION_PICK_UP, item);
     }
 }

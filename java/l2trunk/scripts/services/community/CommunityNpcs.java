@@ -378,10 +378,6 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
     }
 
     @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public List<String> getBypassCommands() {
         return List.of(
                 "_bbsgetfav",

@@ -5,23 +5,11 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _156_MillenniumLove extends Quest implements ScriptFile {
+public final class _156_MillenniumLove extends Quest {
     private final int LILITHS_LETTER = 1022;
     private final int THEONS_DIARY = 1023;
-    private final int GR_COMP_PACKAGE_SS = 5250;
-    private final int GR_COMP_PACKAGE_SPS = 5256;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int GR_COMP_PACKAGE_SS = 5250;
+    private static final int GR_COMP_PACKAGE_SPS = 5256;
 
     public _156_MillenniumLove() {
         super(false);
@@ -33,32 +21,34 @@ public class _156_MillenniumLove extends Quest implements ScriptFile {
         addTalkId(30368);
         addTalkId(30369);
 
-        addQuestItem(new int[]{
-                LILITHS_LETTER,
-                THEONS_DIARY
-        });
+        addQuestItem(LILITHS_LETTER,
+                THEONS_DIARY);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("30368-06.htm")) {
-            st.giveItems(LILITHS_LETTER, 1);
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("156_1")) {
-            st.takeItems(LILITHS_LETTER, -1);
-            if (st.getQuestItemsCount(THEONS_DIARY) == 0) {
-                st.giveItems(THEONS_DIARY, 1);
-                st.setCond(2);
-            }
-            htmltext = "30369-03.htm";
-        } else if (event.equals("156_2")) {
-            st.takeItems(LILITHS_LETTER, -1);
-            st.playSound(SOUND_FINISH);
-            htmltext = "30369-04.htm";
-            st.exitCurrentQuest(false);
+        switch (event) {
+            case "30368-06.htm":
+                st.giveItems(LILITHS_LETTER, 1);
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "156_1":
+                st.takeItems(LILITHS_LETTER, -1);
+                if (st.getQuestItemsCount(THEONS_DIARY) == 0) {
+                    st.giveItems(THEONS_DIARY, 1);
+                    st.setCond(2);
+                }
+                htmltext = "30369-03.htm";
+                break;
+            case "156_2":
+                st.takeItems(LILITHS_LETTER, -1);
+                st.playSound(SOUND_FINISH);
+                htmltext = "30369-04.htm";
+                st.exitCurrentQuest(false);
+                break;
         }
         return htmltext;
     }

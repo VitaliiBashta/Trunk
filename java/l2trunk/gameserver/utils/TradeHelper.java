@@ -59,14 +59,10 @@ public final class TradeHelper {
             return false;
 
         if (Config.SERVICES_TRADE_ONLY_FAR) {
-            boolean tradenear = false;
-            for (Player p : World.getAroundPlayers(player, Config.SERVICES_TRADE_RADIUS, 200))
-                if (p.isInStoreMode()) {
-                    tradenear = true;
-                    break;
-                }
+            boolean tradenear = World.getAroundPlayers(player, Config.SERVICES_TRADE_RADIUS, 200)
+                    .anyMatch(Player::isInStoreMode);
 
-            if (World.getAroundNpc(player, Config.SERVICES_TRADE_RADIUS + 100, 200).size() > 0)
+            if (World.getAroundNpc(player, Config.SERVICES_TRADE_RADIUS + 100, 200).count() > 0)
                 tradenear = true;
 
             if (tradenear) {

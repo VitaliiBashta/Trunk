@@ -2,7 +2,6 @@ package l2trunk.gameserver.model.entity;
 
 import l2trunk.commons.listener.Listener;
 import l2trunk.commons.listener.ListenerList;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.database.mysql;
@@ -24,8 +23,6 @@ import l2trunk.gameserver.templates.ZoneTemplate;
 import l2trunk.gameserver.templates.spawn.SpawnTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -33,17 +30,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Reflection {
-    private static final Logger _log = LoggerFactory.getLogger(Reflection.class);
     private final static AtomicInteger _nextId = new AtomicInteger();
     protected final Lock lock = new ReentrantLock();
     protected final List<GameObject> objects = new CopyOnWriteArrayList<>();
     private final int id;
     private final ReflectionListenerList listeners = new ReflectionListenerList();
-    private final List<Spawner> _spawns = new ArrayList<>();
-    private final Set<Integer> _visitors = new HashSet<>();
+    private final List<Spawner> spawns = new ArrayList<>();
+    private final Set<Integer> visitors = new HashSet<>();
     int _playerCount;
     // vars
     private Map<Integer, DoorInstance> doors = new HashMap<>();
@@ -159,7 +155,7 @@ public class Reflection {
     }
 
     public List<Spawner> getSpawns() {
-        return _spawns;
+        return spawns;
     }
 
     public Collection<DoorInstance> getDoors() {
@@ -172,8 +168,7 @@ public class Reflection {
 
     public Zone getZone(String name) {
         if (!zones.containsKey(name)) {
-            _log.warn("not found zone for name1: " + name);
-//            System.exit(1);
+            throw new IllegalArgumentException("not found zone for name1: " + name);
         }
         return zones.get(name);
     }
@@ -196,20 +191,10 @@ public class Reflection {
                 _collapse1minTask.cancel(false);
                 _collapse1minTask = null;
             }
-            _collapseTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                @Override
-                public void runImpl() {
-                    collapse();
-                }
-            }, timeInMillis);
+            _collapseTask = ThreadPoolManager.INSTANCE.schedule(this::collapse, timeInMillis);
 
             if (timeInMillis >= (60 * 1000L)) {
-                _collapse1minTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
-                        minuteBeforeCollapse();
-                    }
-                }, timeInMillis - (60 * 1000L));
+                _collapse1minTask = ThreadPoolManager.INSTANCE.schedule(this::minuteBeforeCollapse, timeInMillis - (60 * 1000L));
             }
         } finally {
             lock.unlock();
@@ -279,7 +264,7 @@ public class Reflection {
                 _hiddencollapseTask = null;
             }
 
-            for (Spawner s : _spawns) {
+            for (Spawner s : spawns) {
                 s.deleteAll();
             }
 
@@ -345,9 +330,9 @@ public class Reflection {
                 o.deleteMe();
             }
 
-            _spawns.clear();
+            spawns.clear();
             objects.clear();
-            _visitors.clear();
+            visitors.clear();
             doors.clear();
 
             _playerCount = 0;
@@ -372,7 +357,7 @@ public class Reflection {
             objects.add(o);
             if (o.isPlayer()) {
                 _playerCount++;
-                _visitors.add(o.getObjectId());
+                visitors.add(o.getObjectId());
                 onPlayerEnter(o.getPlayer());
             }
         } finally {
@@ -421,32 +406,24 @@ public class Reflection {
         player.getInventory().validateItems();
     }
 
-    public synchronized List<Player> getPlayers() {
+    public synchronized Stream<Player> getPlayers() {
         return objects.stream()
                 .filter(GameObject::isPlayer)
-                .map(o -> (Player) o)
-                .collect(Collectors.toList());
+                .map(o -> (Player) o);
     }
 
-    public synchronized List<NpcInstance> getNpcs() {
-        lock.lock();
-        try {
-            return objects.stream()
-                    .filter(GameObject::isNpc)
-                    .map(o -> (NpcInstance) o)
-                    .collect(Collectors.toList());
-        } finally {
-            lock.unlock();
-        }
+    public synchronized Stream<NpcInstance> getNpcs() {
+        return objects.stream()
+                .filter(GameObject::isNpc)
+                .map(o -> (NpcInstance) o);
     }
 
-    public List<NpcInstance> getAllByNpcId(int npcId, boolean onlyAlive) {
+    public Stream<NpcInstance> getAllByNpcId(int npcId, boolean onlyAlive) {
         return objects.stream()
                 .filter(GameObject::isNpc)
                 .map(o -> (NpcInstance) o)
                 .filter(npc -> npcId == npc.getNpcId())
-                .filter(npc -> (!onlyAlive || !npc.isDead()))
-                .collect(Collectors.toList());
+                .filter(npc -> (!onlyAlive || !npc.isDead()));
     }
 
     public boolean canChampions() {
@@ -463,7 +440,7 @@ public class Reflection {
 
     protected void addSpawn(SimpleSpawner spawn) {
         if (spawn != null) {
-            _spawns.add(spawn);
+            spawns.add(spawn);
         }
     }
 
@@ -620,18 +597,11 @@ public class Reflection {
     }
 
     private void initDoors() {
-        for (DoorInstance door : doors.values()) {
-            if (door.getTemplate().getMasterDoor() > 0) {
-                DoorInstance masterDoor = getDoor(door.getTemplate().getMasterDoor());
-
-                masterDoor.addListener(new MasterOnOpenCloseListenerImpl(door));
-            }
-        }
+        doors.values().stream()
+                .filter(door -> door.getTemplate().getMasterDoor() > 0)
+                .forEach(door -> getDoor(door.getTemplate().getMasterDoor()).addListener(new MasterOnOpenCloseListenerImpl(door)));
     }
 
-    /**
-     * Открывает дверь в отражении
-     */
     public void openDoor(int doorId) {
         DoorInstance door = doors.get(doorId);
         if (door != null) {
@@ -639,9 +609,6 @@ public class Reflection {
         }
     }
 
-    /**
-     * Закрывает дверь в отражении
-     */
     public void closeDoor(int doorId) {
         DoorInstance door = doors.get(doorId);
         if (door != null) {
@@ -656,19 +623,13 @@ public class Reflection {
         if (isDefault()) {
             return;
         }
-
-        for (NpcInstance n : getNpcs()) {
-            n.deleteMe();
-        }
-
+        getNpcs().forEach(GameObject::deleteMe);
         startCollapseTimer(timeInMinutes * 60 * 1000L);
 
         if (message) {
-            for (Player pl : getPlayers()) {
-                if (pl != null) {
-                    pl.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(timeInMinutes));
-                }
-            }
+            getPlayers().filter(Objects::nonNull)
+                    .forEach(pl ->
+                            pl.sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(timeInMinutes)));
         }
     }
 
@@ -699,37 +660,28 @@ public class Reflection {
     }
 
     public Set<Integer> getVisitors() {
-        return _visitors;
-    }
-
-    public void removeVisitor(int objectId) {
-        _visitors.remove(objectId);
+        return visitors;
     }
 
     public void setReenterTime(long time) {
         Set<Integer> players;
         lock.lock();
         try {
-            players = _visitors;
+            players = visitors;
         } finally {
             lock.unlock();
         }
 
-        if (players != null) {
-            Player player;
+        Player player;
 
-            for (int objectId : players) {
-                try {
-                    player = World.getPlayer(objectId);
-                    if (player != null) {
-                        player.setInstanceReuse(getInstancedZoneId(), time);
-                    } else {
-                        mysql.set("REPLACE INTO character_instances (obj_id, id, reuse) VALUES (?,?,?)", objectId, getInstancedZoneId(), time);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        for (int objectId : players) {
+            player = World.getPlayer(objectId);
+            if (player != null) {
+                player.setInstanceReuse(getInstancedZoneId(), time);
+            } else {
+                mysql.set("REPLACE INTO character_instances (obj_id, id, reuse) VALUES (?,?,?)", objectId, getInstancedZoneId(), time);
             }
+
         }
     }
 
@@ -786,10 +738,7 @@ public class Reflection {
         if (list == null) {
             throw new IllegalArgumentException();
         }
-
-        for (Spawner s : list) {
-            s.init();
-        }
+        list.forEach(Spawner::init);
     }
 
     public void despawnByGroup(String name) {
@@ -797,10 +746,7 @@ public class Reflection {
         if (list == null) {
             throw new IllegalArgumentException();
         }
-
-        for (Spawner s : list) {
-            s.deleteAll();
-        }
+        list.forEach(Spawner::deleteAll);
     }
 
     public Collection<Zone> getZones() {
@@ -815,13 +761,12 @@ public class Reflection {
         return listeners.remove(listener);
     }
 
-    class ReflectionListenerList extends ListenerList {
+    private class ReflectionListenerList extends ListenerList {
         void onCollapse() {
-            if (!getListeners().isEmpty()) {
-                for (Listener listener : getListeners()) {
-                    ((OnReflectionCollapseListener) listener).onReflectionCollapse(Reflection.this);
-                }
-            }
+            getListeners()
+                    .filter(l -> l instanceof OnReflectionCollapseListener)
+                    .map(l -> (OnReflectionCollapseListener) l)
+                    .forEach(l -> l.onReflectionCollapse(Reflection.this));
         }
     }
 }

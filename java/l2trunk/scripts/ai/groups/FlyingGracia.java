@@ -8,22 +8,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class FlyingGracia implements IVoicedCommandHandler, ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class FlyingGracia implements IVoicedCommandHandler {
     @Override
     public List<String> getVoicedCommandList() {
-        return Collections.emptyList();
+        return List.of("fly");
     }
 
     @Override

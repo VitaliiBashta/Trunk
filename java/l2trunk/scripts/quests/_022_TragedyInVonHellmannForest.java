@@ -5,13 +5,21 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class _022_TragedyInVonHellmannForest extends Quest implements ScriptFile {
+public final class _022_TragedyInVonHellmannForest extends Quest {
+    private static final int LostSkullOfElf = 7142;
+    private static final int CrossOfEinhasad = 7141;
+    private static final int SealedReportBox = 7146;
+    // ~~~~ Monster list: ~~~~
+    private static final List<Integer> Mobs = List.of(
+            21547, 21548, 21549, 21550, 21551, 21552, 21553, 21554, 21555, 21556, 21557, 21558,
+            21559, 21560, 21561, 21562, 21563, 21564, 21565, 21566, 21567, 21568, 21569, 21570,
+            21571, 21572, 21573, 21574, 21575, 21576, 21577, 21578);
+    private static NpcInstance GhostOfPriestInstance = null;
+    private static NpcInstance SoulOfWellInstance = null;
     // Npc list
     private final int Well = 31527;
     private final int Tifaren = 31334;
@@ -21,67 +29,9 @@ public class _022_TragedyInVonHellmannForest extends Quest implements ScriptFile
     private final int GhostOfAdventurer = 31529;
     // ~~~~~~~~ Item list ~~~~~~~~
     private final int ReportBox = 7147;
-    private final int LostSkullOfElf = 7142;
-    private final int CrossOfEinhasad = 7141;
-    private final int SealedReportBox = 7146;
     private final int LetterOfInnocentin = 7143;
     private final int JewelOfAdventurerRed = 7145;
     private final int JewelOfAdventurerGreen = 7144;
-    // ~~~~ Monster list: ~~~~
-    private static final List<Integer> Mobs = new ArrayList<>();
-
-    static {
-        for (int i : new int[]{
-                21547,
-                21548,
-                21549,
-                21550,
-                21551,
-                21552,
-                21553,
-                21554,
-                21555,
-                21556,
-                21557,
-                21558,
-                21559,
-                21560,
-                21561,
-                21562,
-                21563,
-                21564,
-                21565,
-                21566,
-                21567,
-                21568,
-                21569,
-                21570,
-                21571,
-                21572,
-                21573,
-                21574,
-                21575,
-                21576,
-                21577,
-                21578
-        })
-            Mobs.add(i);
-    }
-
-    private static NpcInstance GhostOfPriestInstance = null;
-    private static NpcInstance SoulOfWellInstance = null;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _022_TragedyInVonHellmannForest() {
         super(false);

@@ -6,12 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Test Of The Searcher
- *
- * @author Sergey Ibryaev aka Artful
- */
-public class _225_TestOfTheSearcher extends Quest implements ScriptFile {
+public final class _225_TestOfTheSearcher extends Quest {
     //NPC
     private static final int Luther = 30690;
     private static final int Alex = 30291;
@@ -91,18 +86,6 @@ public class _225_TestOfTheSearcher extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _225_TestOfTheSearcher() {
         super(false);
         addStartNpc(Luther);
@@ -118,8 +101,7 @@ public class _225_TestOfTheSearcher extends Quest implements ScriptFile {
         addKillId(RoadScavenger);
         addKillId(HangmanTree);
         for (int[] aDROPLIST_COND : DROPLIST_COND) addKillId(aDROPLIST_COND[2]);
-        addQuestItem(new int[]{
-                DeluTotem,
+        addQuestItem(DeluTotem,
                 RedSporeDust,
                 LuthersLetter,
                 AlexsWarrant,
@@ -141,8 +123,7 @@ public class _225_TestOfTheSearcher extends Quest implements ScriptFile {
                 SoltsMap,
                 MakelsMap,
                 RustedKey,
-                CombinedMap
-        });
+                CombinedMap);
     }
 
     @Override

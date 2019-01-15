@@ -35,9 +35,9 @@ public class PlayableAI extends CharacterAI {
         super(actor);
     }
 
-    @Override
+
     public void changeIntention(CtrlIntention intention, Object arg0, Object arg1) {
-        super.changeIntention(intention, arg0, arg1);
+        super.changeIntention(intention);
         _intention_arg0 = arg0;
         _intention_arg1 = arg1;
     }
@@ -89,7 +89,7 @@ public class PlayableAI extends CharacterAI {
                 _forceUse = nextAction_arg2;
                 _dontMove = nextAction_arg3;
                 clearNextAction();
-                setIntention(AI_INTENTION_ATTACK, target);
+                setIntentionAttack(AI_INTENTION_ATTACK, target);
                 break;
             case CAST:
                 if ((nextAction_arg0 == null) || (nextAction_arg1 == null)) {
@@ -190,7 +190,7 @@ public class PlayableAI extends CharacterAI {
             if ((getIntention() == AI_INTENTION_INTERACT) || (getIntention() == AI_INTENTION_PICK_UP)) {
                 onEvtThink();
             } else {
-                changeIntention(AI_INTENTION_ACTIVE, null, null);
+                changeIntention(AI_INTENTION_ACTIVE);
             }
         }
     }
@@ -222,6 +222,7 @@ public class PlayableAI extends CharacterAI {
 
         try {
             if (thinking++ > 1) {
+
                 return;
             }
 
@@ -351,7 +352,7 @@ public class PlayableAI extends CharacterAI {
         }
 
         clearNextAction();
-        changeIntention(AI_INTENTION_PICK_UP, object, null);
+        changeIntention(AI_INTENTION_PICK_UP, object,null);
         onEvtThink();
     }
 
@@ -599,7 +600,7 @@ public class PlayableAI extends CharacterAI {
     }
 
     @Override
-    public void Attack(GameObject target, boolean forceUse, boolean dontMove) {
+    public void Attack(Creature target, boolean forceUse, boolean dontMove) {
         Playable actor = getActor();
 
         if (target.isCreature() && (actor.isActionsDisabled() || actor.isAttackingDisabled())) {
@@ -612,7 +613,7 @@ public class PlayableAI extends CharacterAI {
         _dontMove = dontMove;
         _forceUse = forceUse;
         clearNextAction();
-        setIntention(AI_INTENTION_ATTACK, target);
+        setIntentionAttack(AI_INTENTION_ATTACK, target);
     }
 
     @Override

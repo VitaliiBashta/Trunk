@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
-public class _037_PleaseMakeMeFormalWear extends Quest implements ScriptFile {
+public final class _037_PleaseMakeMeFormalWear extends Quest {
     // NPC's
     private static final int trader_alexis = 30842;
     private static final int leikar = 31520;
@@ -22,18 +22,6 @@ public class _037_PleaseMakeMeFormalWear extends Quest implements ScriptFile {
     private static final int q_luxury_wine = 7160;
     private static final int q_box_of_cookies = 7159;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _037_PleaseMakeMeFormalWear() {
         super(false);
         addStartNpc(trader_alexis);
@@ -43,60 +31,69 @@ public class _037_PleaseMakeMeFormalWear extends Quest implements ScriptFile {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("quest_accept")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-            htmltext = "trader_alexis_q0037_0104.htm";
-        } else if (event.equals("reply_1")) {
-            st.setCond(2);
-            st.giveItems(q_seal_of_stock, 1);
-            st.playSound(SOUND_MIDDLE);
-            htmltext = "leikar_q0037_0201.htm";
-        } else if (event.equals("reply_1_1")) {
-            st.setCond(6);
-            st.takeItems(q_box_of_cookies, 1);
-            st.playSound(SOUND_MIDDLE);
-            htmltext = "leikar_q0037_0601.htm";
-        } else if (event.equals("reply_1_1_1")) {
-            if (st.getQuestItemsCount(q_mysterious_cloth) >= 1 && st.getQuestItemsCount(q_box_of_jewel) >= 1 && st.getQuestItemsCount(q_workbox) >= 1) {
-                st.setCond(7);
-                st.takeItems(q_mysterious_cloth, 1);
-                st.takeItems(q_box_of_jewel, 1);
-                st.takeItems(q_workbox, 1);
+        switch (event) {
+            case "quest_accept":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.playSound(SOUND_ACCEPT);
+                htmltext = "trader_alexis_q0037_0104.htm";
+                break;
+            case "reply_1":
+                st.setCond(2);
+                st.giveItems(q_seal_of_stock, 1);
                 st.playSound(SOUND_MIDDLE);
-                htmltext = "leikar_q0037_0701.htm";
-            } else
-                htmltext = "leikar_q0037_0702.htm";
-        } else if (event.equals("reply_3")) {
-            if (st.getQuestItemsCount(q_box_of_dress_shoes) >= 1 && st.getQuestItemsCount(q_seal_of_stock) >= 1) {
-                st.takeItems(q_box_of_dress_shoes, 1);
-                st.takeItems(q_seal_of_stock, 1);
-                st.giveItems(ItemTemplate.ITEM_ID_FORMAL_WEAR, 1);
-                st.unset("cond");
-                htmltext = "leikar_q0037_0801.htm";
-                st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
-            } else
-                htmltext = "leikar_q0037_0802.htm";
-        } else if (event.equals("reply_1a")) {
-            st.setCond(3);
-            st.giveItems(q_luxury_wine, 1);
-            st.playSound(SOUND_MIDDLE);
-            htmltext = "jeremy_q0037_0301.htm";
-        } else if (event.equals("reply_1b")) {
-            st.setCond(5);
-            st.giveItems(q_box_of_cookies, 1);
-            st.playSound(SOUND_MIDDLE);
-            htmltext = "jeremy_q0037_0301.htm";
-        } else if (event.equals("reply_1c")) {
-            if (st.getQuestItemsCount(q_luxury_wine) >= 1) {
-                st.setCond(4);
-                st.takeItems(q_luxury_wine, 1);
+                htmltext = "leikar_q0037_0201.htm";
+                break;
+            case "reply_1_1":
+                st.setCond(6);
+                st.takeItems(q_box_of_cookies, 1);
                 st.playSound(SOUND_MIDDLE);
-                htmltext = "mist_q0037_0401.htm";
-            } else
-                htmltext = "mist_q0037_0402.htm";
+                htmltext = "leikar_q0037_0601.htm";
+                break;
+            case "reply_1_1_1":
+                if (st.getQuestItemsCount(q_mysterious_cloth) >= 1 && st.getQuestItemsCount(q_box_of_jewel) >= 1 && st.getQuestItemsCount(q_workbox) >= 1) {
+                    st.setCond(7);
+                    st.takeItems(q_mysterious_cloth, 1);
+                    st.takeItems(q_box_of_jewel, 1);
+                    st.takeItems(q_workbox, 1);
+                    st.playSound(SOUND_MIDDLE);
+                    htmltext = "leikar_q0037_0701.htm";
+                } else
+                    htmltext = "leikar_q0037_0702.htm";
+                break;
+            case "reply_3":
+                if (st.getQuestItemsCount(q_box_of_dress_shoes) >= 1 && st.getQuestItemsCount(q_seal_of_stock) >= 1) {
+                    st.takeItems(q_box_of_dress_shoes, 1);
+                    st.takeItems(q_seal_of_stock, 1);
+                    st.giveItems(ItemTemplate.ITEM_ID_FORMAL_WEAR, 1);
+                    st.unset("cond");
+                    htmltext = "leikar_q0037_0801.htm";
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(false);
+                } else
+                    htmltext = "leikar_q0037_0802.htm";
+                break;
+            case "reply_1a":
+                st.setCond(3);
+                st.giveItems(q_luxury_wine, 1);
+                st.playSound(SOUND_MIDDLE);
+                htmltext = "jeremy_q0037_0301.htm";
+                break;
+            case "reply_1b":
+                st.setCond(5);
+                st.giveItems(q_box_of_cookies, 1);
+                st.playSound(SOUND_MIDDLE);
+                htmltext = "jeremy_q0037_0301.htm";
+                break;
+            case "reply_1c":
+                if (st.getQuestItemsCount(q_luxury_wine) >= 1) {
+                    st.setCond(4);
+                    st.takeItems(q_luxury_wine, 1);
+                    st.playSound(SOUND_MIDDLE);
+                    htmltext = "mist_q0037_0401.htm";
+                } else
+                    htmltext = "mist_q0037_0402.htm";
+                break;
         }
         return htmltext;
     }

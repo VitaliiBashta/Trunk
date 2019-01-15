@@ -37,7 +37,7 @@ public final class MercenaryCaption extends Fighter {
         if (actor.isActionsDisabled())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             if (doTask())
                 clearTasks();
             return true;

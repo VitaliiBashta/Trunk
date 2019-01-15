@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class SeducedInvestigatorInstance extends MonsterInstance {
+public final class SeducedInvestigatorInstance extends MonsterInstance {
     public SeducedInvestigatorInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
         setHasChatWindow(true);
@@ -22,9 +22,7 @@ public class SeducedInvestigatorInstance extends MonsterInstance {
         Player player = attacker.getPlayer();
         if (player == null)
             return false;
-        if (player.isPlayable())
-            return false;
-        return true;
+        return !player.isPlayable();
     }
 
     @Override

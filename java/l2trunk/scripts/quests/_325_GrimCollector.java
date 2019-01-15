@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _325_GrimCollector extends Quest implements ScriptFile {
+public final class _325_GrimCollector extends Quest {
     private final int ZOMBIE_HEAD = 1350;
     private final int ZOMBIE_HEART = 1351;
     private final int ZOMBIE_LIVER = 1352;
@@ -17,18 +16,6 @@ public class _325_GrimCollector extends Quest implements ScriptFile {
     private final int THIGH_BONE = 1357;
     private final int COMPLETE_SKELETON = 1358;
     private final int ANATOMY_DIAGRAM = 1349;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _325_GrimCollector() {
         super(false);
@@ -50,8 +37,7 @@ public class _325_GrimCollector extends Quest implements ScriptFile {
         addKillId(20514);
         addKillId(20515);
 
-        addQuestItem(new int[]{
-                ZOMBIE_HEAD,
+        addQuestItem(ZOMBIE_HEAD,
                 ZOMBIE_HEART,
                 ZOMBIE_LIVER,
                 SKULL,
@@ -60,8 +46,7 @@ public class _325_GrimCollector extends Quest implements ScriptFile {
                 ARM_BONE,
                 THIGH_BONE,
                 COMPLETE_SKELETON,
-                ANATOMY_DIAGRAM
-        });
+                ANATOMY_DIAGRAM);
     }
 
     private long pieces(QuestState st) {
@@ -80,30 +65,14 @@ public class _325_GrimCollector extends Quest implements ScriptFile {
         else if (event.equalsIgnoreCase("samed_q0325_06.htm")) {
             if (pieces(st) > 0) {
                 st.giveItems(ADENA_ID, 30 * st.getQuestItemsCount(ZOMBIE_HEAD) + 20 * st.getQuestItemsCount(ZOMBIE_HEART) + 20 * st.getQuestItemsCount(ZOMBIE_LIVER) + 50 * st.getQuestItemsCount(SKULL) + 15 * st.getQuestItemsCount(RIB_BONE) + 10 * st.getQuestItemsCount(SPINE) + 10 * st.getQuestItemsCount(ARM_BONE) + 10 * st.getQuestItemsCount(THIGH_BONE) + 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
-                st.takeItems(ZOMBIE_HEAD, -1);
-                st.takeItems(ZOMBIE_HEART, -1);
-                st.takeItems(ZOMBIE_LIVER, -1);
-                st.takeItems(SKULL, -1);
-                st.takeItems(RIB_BONE, -1);
-                st.takeItems(SPINE, -1);
-                st.takeItems(ARM_BONE, -1);
-                st.takeItems(THIGH_BONE, -1);
-                st.takeItems(COMPLETE_SKELETON, -1);
+                takeQuestItems(st);
             }
-            st.takeItems(ANATOMY_DIAGRAM, -1);
+            st.takeItems(ANATOMY_DIAGRAM);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         } else if (event.equalsIgnoreCase("samed_q0325_07.htm") && pieces(st) > 0) {
             st.giveItems(ADENA_ID, 30 * st.getQuestItemsCount(ZOMBIE_HEAD) + 20 * st.getQuestItemsCount(ZOMBIE_HEART) + 20 * st.getQuestItemsCount(ZOMBIE_LIVER) + 50 * st.getQuestItemsCount(SKULL) + 15 * st.getQuestItemsCount(RIB_BONE) + 10 * st.getQuestItemsCount(SPINE) + 10 * st.getQuestItemsCount(ARM_BONE) + 10 * st.getQuestItemsCount(THIGH_BONE) + 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
-            st.takeItems(ZOMBIE_HEAD, -1);
-            st.takeItems(ZOMBIE_HEART, -1);
-            st.takeItems(ZOMBIE_LIVER, -1);
-            st.takeItems(SKULL, -1);
-            st.takeItems(RIB_BONE, -1);
-            st.takeItems(SPINE, -1);
-            st.takeItems(ARM_BONE, -1);
-            st.takeItems(THIGH_BONE, -1);
-            st.takeItems(COMPLETE_SKELETON, -1);
+            takeQuestItems(st);
         } else if (event.equalsIgnoreCase("samed_q0325_09.htm")) {
             st.giveItems(ADENA_ID, 2000 * st.getQuestItemsCount(COMPLETE_SKELETON));
             st.takeItems(COMPLETE_SKELETON, -1);
@@ -121,6 +90,18 @@ public class _325_GrimCollector extends Quest implements ScriptFile {
             } else
                 htmltext = "varsak_q0325_02.htm";
         return htmltext;
+    }
+
+    private void takeQuestItems(QuestState st) {
+        st.takeItems(ZOMBIE_HEAD)
+                .takeItems(ZOMBIE_HEART)
+                .takeItems(ZOMBIE_LIVER)
+                .takeItems(SKULL)
+                .takeItems(RIB_BONE)
+                .takeItems(SPINE)
+                .takeItems(ARM_BONE)
+                .takeItems(THIGH_BONE)
+                .takeItems(COMPLETE_SKELETON);
     }
 
     @Override

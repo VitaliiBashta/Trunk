@@ -8,16 +8,14 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class _148_PathToBecomingAnExaltedMercenary extends Quest implements ScriptFile {
-    private final List<Integer> MERCENARY_CAPTAINS = Arrays.asList(
+public final class _148_PathToBecomingAnExaltedMercenary extends Quest {
+    private static final List<Integer> MERCENARY_CAPTAINS = List.of(
             36481, 36482, 36483, 36484, 36485, 36486, 36487, 36488, 36489);
 
-    private final List<Integer> CATAPULTAS = Arrays.asList(
+    private static final List<Integer> CATAPULTAS = List.of(
             36499, 36500, 36501, 36502, 36503, 36504, 36505, 36506, 36507);
 
     public _148_PathToBecomingAnExaltedMercenary() {
@@ -143,21 +141,5 @@ public class _148_PathToBecomingAnExaltedMercenary extends Quest implements Scri
     public void onAbort(QuestState qs) {
         qs.removePlayerOnKillListener();
         super.onAbort(qs);
-    }
-
-
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

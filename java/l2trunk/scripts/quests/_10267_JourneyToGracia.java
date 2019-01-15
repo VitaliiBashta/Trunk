@@ -5,24 +5,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10267_JourneyToGracia extends Quest implements ScriptFile {
+public final class _10267_JourneyToGracia extends Quest {
     private final static int Orven = 30857;
     private final static int Keucereus = 32548;
     private final static int Papiku = 32564;
 
     private final static int Letter = 13810;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10267_JourneyToGracia() {
         super(false);

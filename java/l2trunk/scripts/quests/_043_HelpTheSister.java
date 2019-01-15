@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _043_HelpTheSister extends Quest implements ScriptFile {
+public final class _043_HelpTheSister extends Quest {
     private static final int COOPER = 30829;
     private static final int GALLADUCCI = 30097;
 
@@ -18,18 +18,6 @@ public class _043_HelpTheSister extends Quest implements ScriptFile {
     private static final int SORROW_MAIDEN = 20197;
 
     private static final int MAX_COUNT = 30;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _043_HelpTheSister() {
         super(false);

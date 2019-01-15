@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class _064_CertifiedBerserker extends Quest implements ScriptFile {
+public final class _064_CertifiedBerserker extends Quest {
     // NPC
     private static final int ORKURUS = 32207;
     private static final int TENAIN = 32215;
@@ -36,18 +36,6 @@ public class _064_CertifiedBerserker extends Quest implements ScriptFile {
     private static final int H_LETTER = 9758;
     private static final int T_REC = 9759;
     private static final int OrkurusRecommendation = 9760;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     private NpcInstance HARKILGAMED_SPAWN;
 

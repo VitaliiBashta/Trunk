@@ -26,7 +26,7 @@ public final class WitchWarder extends Fighter {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             _wait = false;
             return true;

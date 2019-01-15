@@ -5,21 +5,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _155_FindSirWindawood extends Quest implements ScriptFile {
-    private final int OFFICIAL_LETTER = 1019;
-    private final int HASTE_POTION = 734;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+public final class _155_FindSirWindawood extends Quest {
+    private static final int OFFICIAL_LETTER = 1019;
+    private static final int HASTE_POTION = 734;
 
     public _155_FindSirWindawood() {
         super(false);

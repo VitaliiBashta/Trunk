@@ -12,7 +12,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _236_SeedsOfChaos extends Quest implements ScriptFile {
+public final class _236_SeedsOfChaos extends Quest {
     // NPCs
     private final static int KEKROPUS = 32138;
     private final static int WIZARD = 31522;
@@ -23,8 +23,8 @@ public final class _236_SeedsOfChaos extends Quest implements ScriptFile {
     private final static int RODENPICULA = 32237;
     private final static int NORNIL = 32239;
     // Mobs
-    private final static List<Integer> NEEDLE_STAKATO_DRONES = Arrays.asList(21516, 21517);
-    private final static List<Integer> SPLENDOR_MOBS = Arrays.asList(
+    private final static List<Integer> NEEDLE_STAKATO_DRONES = List.of(21516, 21517);
+    private final static List<Integer> SPLENDOR_MOBS = List.of(
             21520, 21521, 21522, 21523, 21524, 21525, 21526, 21527, 21528, 21529, 21530,
             21531, 21532, 21533, 21534, 21535, 21536, 21537, 21538, 21539, 21540, 21541);
     // Items
@@ -256,17 +256,4 @@ public final class _236_SeedsOfChaos extends Quest implements ScriptFile {
 
         return null;
     }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
 }

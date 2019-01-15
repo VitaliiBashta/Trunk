@@ -4,33 +4,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: pchayka
- * @date: 10.06.2010
- * @corrected by n0nam3
- */
-
-public class _10271_TheEnvelopingDarkness extends Quest implements ScriptFile {
+public final class _10271_TheEnvelopingDarkness extends Quest {
     // NPC's
     private static final int Orbyu = 32560;
     private static final int El = 32556;
     private static final int MedibalsCorpse = 32528;
     // ITEMS
     private static final int InspectorMedibalsDocument = 13852;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10271_TheEnvelopingDarkness() {
         super(false);

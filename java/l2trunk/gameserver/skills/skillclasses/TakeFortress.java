@@ -33,14 +33,13 @@ public final class TakeFortress extends Skill {
         }
 
         if (first) {
-            List<Creature> around = World.getAroundCharacters(flagPole, getSkillRadius() * 2, 100);
-            for (Creature ch : around) {
-                if (ch.isCastingNow() && ch.getCastingSkill() == this) // проверяел ли ктото возле нас кастует накойже скил
-                {
-                    activeChar.sendPacket(SystemMsg.A_FLAG_IS_ALREADY_BEING_DISPLAYED_ANOTHER_FLAG_CANNOT_BE_DISPLAYED);
-                    return false;
-                }
-            }
+            if (!World.getAroundCharacters(flagPole, getSkillRadius() * 2, 100)
+                    .filter(Creature::isCastingNow)
+                    .filter(ch -> ch.getCastingSkill() == this)
+                    .peek(ch ->
+                            activeChar.sendPacket(SystemMsg.A_FLAG_IS_ALREADY_BEING_DISPLAYED_ANOTHER_FLAG_CANNOT_BE_DISPLAYED))
+                    .findFirst().isPresent())
+                return false;
         }
 
         Player player = (Player) activeChar;

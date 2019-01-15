@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class OpenSealedBox {
-    public static final List<Integer> counts = Arrays.asList(1, 5, 10);
-    private static final List<RewardGroup> rewardgroups = Arrays.asList(
+    public static final List<Integer> counts = List.of(1, 5, 10);
+    private static final List<RewardGroup> rewardgroups = List.of(
             new RewardAdena(),
             new RewardRes1(),
             new RewardRes2(),
@@ -59,8 +59,8 @@ public final class OpenSealedBox {
             if (rewards.size() > 0 && !canGiveReward())
                 return "You haven't enougth free slots in your inventory.";
             st.takeItems(_620_FourGoblets.Sealed_Box, takecount);
-            rewards.keySet().forEach( itemId ->
-                st.giveItems(itemId, rewards.get(itemId), false)); //не применять рейты тут
+            rewards.keySet().forEach(itemId ->
+                    st.giveItems(itemId, rewards.get(itemId), false)); //не применять рейты тут
         }
 
         rewards.clear();

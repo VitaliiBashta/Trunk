@@ -22,6 +22,8 @@ import l2trunk.gameserver.utils.TradeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * packet type id 0x56
  * format:		cddc
@@ -217,11 +219,12 @@ public final class RequestActionUse extends L2GameClientPacket {
                     activeChar.setRunning();
                 break;
             case 7: // Next Target
-                Creature nearest_target = null;
-                for (Creature cha : World.getAroundCharacters(activeChar, 400, 200))
-                    if (cha != null && !cha.isAlikeDead())
-                        if ((nearest_target == null || activeChar.getDistance3D(cha) < activeChar.getDistance3D(nearest_target)) && cha.isAutoAttackable(activeChar))
-                            nearest_target = cha;
+                Creature nearest_target = World.getAroundCharacters(activeChar, 400, 200)
+                        .filter(Objects::nonNull)
+                        .filter(cha -> !cha.isAlikeDead())
+                        .filter(cha -> cha.isAutoAttackable(activeChar))
+                        .min((cha1, cha2) -> (int) (activeChar.getDistance3D(cha1) - activeChar.getDistance3D(cha2)))
+                        .orElse(null);
                 if (nearest_target != null && activeChar.getTarget() != nearest_target) {
                     activeChar.setTarget(nearest_target);
                     if (activeChar.getTarget() == nearest_target)
@@ -235,8 +238,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                 }
                 break;
             case 10: // Запрос на создание приватного магазина продажи
-            case 61: // Запрос на создание приватного магазина продажи (Package)
-            {
+            case 61: {// Запрос на создание приватного магазина продажи (Package)
                 if (activeChar.getSittingTask()) {
                     activeChar.sendActionFailed();
                     return;
@@ -367,7 +369,7 @@ public final class RequestActionUse extends L2GameClientPacket {
                 if (!Config.ALLOW_PET_ATTACK_MASTER && target == activeChar) {
                     return;
                 }
-                pet.getAI().Attack(target, _ctrlPressed, _shiftPressed);
+                pet.getAI().Attack((Creature)target, _ctrlPressed, _shiftPressed);
                 break;
             case 17:
             case 23: // Отмена действия у пета

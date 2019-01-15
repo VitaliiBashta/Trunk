@@ -28,6 +28,6 @@ public final class ResetName implements IUserCommandHandler {
 
     @Override
     public final List<Integer> getUserCommandList() {
-        return Collections.singletonList(COMMAND_ID);
+        return List.of(COMMAND_ID);
     }
 }

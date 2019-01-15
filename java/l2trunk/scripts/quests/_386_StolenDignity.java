@@ -9,7 +9,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class _386_StolenDignity extends Quest implements ScriptFile {
+public final class _386_StolenDignity extends Quest {
     // NPCs
     private final static int Romp = 30843;
     // Items
@@ -403,8 +403,7 @@ public final class _386_StolenDignity extends Quest implements ScriptFile {
                 return "warehouse_keeper_romp_q0386_11.htm";
             st.takeItems(Stolen_Infernium_Ore, Required_Stolen_Infernium_Ore);
             int char_obj_id = st.getPlayer().getObjectId();
-            if (bingos.containsKey(char_obj_id))
-                bingos.remove(char_obj_id);
+            bingos.remove(char_obj_id);
             Bingo bingo = new Bingo(st);
             bingos.put(char_obj_id, bingo);
             return bingo.getDialog("");
@@ -436,18 +435,6 @@ public final class _386_StolenDignity extends Quest implements ScriptFile {
         if (_chance != null)
             qs.rollAndGive(Stolen_Infernium_Ore, 1, _chance);
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     protected static class Bingo extends l2trunk.scripts.quests.Bingo {

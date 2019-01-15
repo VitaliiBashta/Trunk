@@ -5,29 +5,17 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _116_BeyondtheHillsofWinter extends Quest implements ScriptFile {
+public final class _116_BeyondtheHillsofWinter extends Quest {
     //NPC
     private final int FILAUR = 30535;
     private final int OBI = 32052;
     //Quest Item
     private final int Supplying_Goods_for_Railroad_Worker = 8098;
     //Item
-    private final int Bandage = 1833;
-    private final int Energy_Stone = 5589;
-    private final int Thief_Key = 1661;
-    private final int SSD = 1463;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private static final int Bandage = 1833;
+    private static final int Energy_Stone = 5589;
+    private static final int Thief_Key = 1661;
+    private static final int SSD = 1463;
 
     public _116_BeyondtheHillsofWinter() {
         super(false);

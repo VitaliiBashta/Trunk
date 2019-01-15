@@ -7,7 +7,6 @@ public final class ZakenAnchor extends DefaultAI {
     private static final int DayZaken = 29176;
     private static final int UltraDayZaken = 29181;
     private static final int Candle = 32705;
-    private int i = 0;
 
     public ZakenAnchor(NpcInstance actor) {
         super(actor);
@@ -16,11 +15,12 @@ public final class ZakenAnchor extends DefaultAI {
     @Override
     public boolean thinkActive() {
         NpcInstance actor = getActor();
-        for (NpcInstance npc : actor.getAroundNpc(1000, 100))
-            if (npc.getNpcId() == Candle && npc.getRightHandItem() == 15302)
-                i++;
+        int i1 = (int) actor.getAroundNpc(1000, 100)
+                .filter(npc -> npc.getNpcId() == Candle)
+                .filter(npc -> npc.getRightHandItem() == 15302)
+                .count();
 
-        if (i >= 4) {
+        if (i1 >= 4) {
             if (actor.getReflection().getInstancedZoneId() == 133) {
                 actor.getReflection().addSpawnWithoutRespawn(DayZaken, actor.getLoc(), 0);
                 for (int i = 0; i < 4; i++) {
@@ -30,11 +30,12 @@ public final class ZakenAnchor extends DefaultAI {
                 actor.deleteMe();
                 return true;
             } else if (actor.getReflection().getInstancedZoneId() == 135) {
-                for (NpcInstance npc : actor.getReflection().getNpcs())
-                    if (npc.getNpcId() == UltraDayZaken) {
-                        npc.setInvul(false);
-                        npc.teleToLocation(actor.getLoc());
-                    }
+                actor.getReflection().getNpcs()
+                        .filter(npc -> (npc.getNpcId() == UltraDayZaken))
+                        .forEach(npc -> {
+                            npc.setInvul(false);
+                            npc.teleToLocation(actor.getLoc());
+                        });
                 //actor.getReflection().addSpawnWithoutRespawn(UltraDayZaken, actor.getLoc(), 0);
                 for (int i = 0; i < 4; i++) {
                     actor.getReflection().addSpawnWithoutRespawn(29184, actor.getLoc(), 300);
@@ -44,7 +45,7 @@ public final class ZakenAnchor extends DefaultAI {
                 return true;
             }
         } else
-            i = 0;
+            i1 = 0;
 
         return false;
     }

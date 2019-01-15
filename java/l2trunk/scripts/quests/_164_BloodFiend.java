@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _164_BloodFiend extends Quest implements ScriptFile {
+public final class _164_BloodFiend extends Quest {
     //NPC
     private static final int Creamees = 30149;
     //Quest Items
     private static final int KirunakSkull = 1044;
     //MOB
     private static final int Kirunak = 27021;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _164_BloodFiend() {
         super(false);

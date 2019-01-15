@@ -46,12 +46,8 @@ public final class CommunityAuctionHouse implements ScriptFile, ICommunityBoardH
     }
 
     @Override
-    public void onShutdown() {
-    }
-
-    @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_maillist", "_bbsAuction_", "_bbsNewAuction");
+        return List.of("_maillist", "_bbsAuction_", "_bbsNewAuction");
     }
 
     @Override

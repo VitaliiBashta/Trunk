@@ -3,30 +3,15 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _039_RedEyedInvaders extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _039_RedEyedInvaders extends Quest {
     private final int BBN = 7178;
     private final int RBN = 7179;
     private final int IP = 7180;
     private final int GML = 7181;
-    private final int[] REW = {
-            6521,
-            6529,
-            6535
-    };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
+    private final List<Integer> REW = List.of(6521, 6529, 6535);
 
     public _039_RedEyedInvaders() {
         super(false);
@@ -40,45 +25,46 @@ public class _039_RedEyedInvaders extends Quest implements ScriptFile {
         addKillId(20921);
         addKillId(20925);
 
-        addQuestItem(new int[]{
-                BBN,
-                IP,
-                RBN,
-                GML
-        });
+        addQuestItem(BBN, IP, RBN, GML);
     }
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("guard_babenco_q0039_0104.htm")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("captain_bathia_q0039_0201.htm")) {
-            st.setCond(2);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("captain_bathia_q0039_0301.htm")) {
-            if (st.getQuestItemsCount(BBN) == 100 && st.getQuestItemsCount(RBN) == 100) {
-                st.setCond(4);
-                st.takeItems(BBN, -1);
-                st.takeItems(RBN, -1);
+        switch (event) {
+            case "guard_babenco_q0039_0104.htm":
+                st.setCond(1);
+                st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
-            } else
-                htmltext = "captain_bathia_q0039_0203.htm";
-        } else if (event.equals("captain_bathia_q0039_0401.htm"))
-            if (st.getQuestItemsCount(IP) == 30 && st.getQuestItemsCount(GML) == 30) {
-                st.takeItems(IP, -1);
-                st.takeItems(GML, -1);
-                st.giveItems(REW[0], 60);
-                st.giveItems(REW[1], 1);
-                st.giveItems(REW[2], 500);
-                st.addExpAndSp(62366, 2783);
-                st.setCond(0);
-                st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
-            } else
-                htmltext = "captain_bathia_q0039_0304.htm";
+                break;
+            case "captain_bathia_q0039_0201.htm":
+                st.setCond(2);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "captain_bathia_q0039_0301.htm":
+                if (st.getQuestItemsCount(BBN) == 100 && st.getQuestItemsCount(RBN) == 100) {
+                    st.setCond(4);
+                    st.takeItems(BBN, -1);
+                    st.takeItems(RBN, -1);
+                    st.playSound(SOUND_ACCEPT);
+                } else
+                    htmltext = "captain_bathia_q0039_0203.htm";
+                break;
+            case "captain_bathia_q0039_0401.htm":
+                if (st.getQuestItemsCount(IP) == 30 && st.getQuestItemsCount(GML) == 30) {
+                    st.takeItems(IP, -1);
+                    st.takeItems(GML, -1);
+                    st.giveItems(REW.get(0), 60);
+                    st.giveItems(REW.get(1), 1);
+                    st.giveItems(REW.get(2), 500);
+                    st.addExpAndSp(62366, 2783);
+                    st.setCond(0);
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(false);
+                } else
+                    htmltext = "captain_bathia_q0039_0304.htm";
+                break;
+        }
         return htmltext;
     }
 
@@ -92,8 +78,7 @@ public class _039_RedEyedInvaders extends Quest implements ScriptFile {
                 if (st.getPlayer().getLevel() < 20) {
                     htmltext = "guard_babenco_q0039_0102.htm";
                     st.exitCurrentQuest(true);
-                } else if (st.getPlayer().getLevel() >= 20)
-                    htmltext = "guard_babenco_q0039_0101.htm";
+                } else htmltext = "guard_babenco_q0039_0101.htm";
             } else if (cond == 1)
                 htmltext = "guard_babenco_q0039_0105.htm";
         } else if (npcId == 30332)

@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _410_PathToPalusKnight extends Quest implements ScriptFile {
+public final class _410_PathToPalusKnight extends Quest {
     //npc
     private final int VIRGIL = 30329;
     private final int KALINTA = 30422;
@@ -23,18 +22,6 @@ public class _410_PathToPalusKnight extends Quest implements ScriptFile {
     private final int COFFIN_ETERNAL_REST_ID = 1243;
     private final int GAZE_OF_ABYSS_ID = 1244;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _410_PathToPalusKnight() {
         super(false);
 
@@ -46,15 +33,13 @@ public class _410_PathToPalusKnight extends Quest implements ScriptFile {
         addKillId(ARACHNID_TRACKER);
         addKillId(LYCANTHROPE);
 
-        addQuestItem(new int[]{
-                PALLUS_TALISMAN_ID,
+        addQuestItem(PALLUS_TALISMAN_ID,
                 VIRGILS_LETTER_ID,
                 COFFIN_ETERNAL_REST_ID,
                 MORTE_TALISMAN_ID,
                 PREDATOR_CARAPACE_ID,
                 TRIMDEN_SILK_ID,
-                LYCANTHROPE_SKULL_ID
-        });
+                LYCANTHROPE_SKULL_ID);
     }
 
     @Override
@@ -74,9 +59,9 @@ public class _410_PathToPalusKnight extends Quest implements ScriptFile {
                     htmltext = "master_virgil_q0410_02a.htm";
                 else
                     htmltext = "master_virgil_q0410_03.htm";
-            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().getId() == 0x1f)
+            } else if (st.getPlayer().getLevel() < 18)
                 htmltext = "master_virgil_q0410_02.htm";
-            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x1f && st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 1)
+            else if (st.getQuestItemsCount(GAZE_OF_ABYSS_ID) == 1)
                 htmltext = "master_virgil_q0410_04.htm";
         } else if (event.equalsIgnoreCase("30329_2")) {
             htmltext = "master_virgil_q0410_10.htm";

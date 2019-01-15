@@ -10,7 +10,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _604_DaimontheWhiteEyedPart2 extends Quest implements ScriptFile {
+public final class _604_DaimontheWhiteEyedPart2 extends Quest {
     //NPC
     private static final int EYE = 31683;
     private static final int ALTAR = 31541;
@@ -29,19 +29,7 @@ public final class _604_DaimontheWhiteEyedPart2 extends Quest implements ScriptF
     private static final int WIT_INT = 4599;
     private static final int WIT_MEN = 4600;
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
-    public  _604_DaimontheWhiteEyedPart2() {
+    public _604_DaimontheWhiteEyedPart2() {
         super(true);
 
         addStartNpc(EYE);

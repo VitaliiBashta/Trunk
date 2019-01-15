@@ -4,26 +4,20 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _631_DeliciousTopChoiceMeat extends Quest implements ScriptFile {
+import java.util.List;
+
+public final class _631_DeliciousTopChoiceMeat extends Quest {
     //NPC
-    private final int TUNATUN = 31537;
+    private static final int TUNATUN = 31537;
     //MOBS
-    private final int MOB_LIST[] = {
-            18878,
-            18879,
-            18885,
-            18886,
-            18892,
-            18893,
-            18899,
-            18900
-    }; // Full Grown Kookabura/Cougar/Buffalo/Grendel
+    private static final List<Integer> MOB_LIST = List.of(
+            18878, 18879, 18885, 18886, 18892, 18893, 18899, 18900);
+    //CHANCE
+    private static final int MEAT_DROP_CHANCE = 100;
+    // Full Grown Kookabura/Cougar/Buffalo/Grendel
     //ITEMS
     private final int PRIME_MEAT = 15534;
-    //CHANCE
-    private final int MEAT_DROP_CHANCE = 100;
     //REWARDS
     private final int[][] REWARDS = {
             {
@@ -128,27 +122,13 @@ public class _631_DeliciousTopChoiceMeat extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _631_DeliciousTopChoiceMeat() {
         super(false);
 
         addStartNpc(TUNATUN);
 
         addTalkId(TUNATUN);
-
-        for (int i : MOB_LIST)
-            addKillId(i);
+        addKillId(MOB_LIST);
 
         addQuestItem(PRIME_MEAT);
     }

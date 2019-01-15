@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _178_IconicTrinity extends Quest implements ScriptFile {
+public final class _178_IconicTrinity extends Quest {
     //NPC
     private static final int Kekropus = 32138;
     private static final int IconOfThePast = 32255;
@@ -15,18 +15,6 @@ public final class _178_IconicTrinity extends Quest implements ScriptFile {
     private static final int IconOfTheFuture = 32257;
     //Items
     private static final int EnchantD = 956;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _178_IconicTrinity() {
         super(false);
@@ -69,11 +57,11 @@ public final class _178_IconicTrinity extends Quest implements ScriptFile {
                 len = st.get("id").length();
             }
             if (!event.equals("0") && len == 4 && (cond == 1 || cond == 2) || len == 5 && cond == 3) {
-                if (cond == 1 && st.get("id") != null && st.get("id").toString().equalsIgnoreCase("CRTR"))
+                if (cond == 1 && st.get("id") != null && st.get("id").equalsIgnoreCase("CRTR"))
                     htmltext = "32255-04.htm";
-                else if (cond == 2 && st.get("id") != null && st.get("id").toString().equalsIgnoreCase("CNCL"))
+                else if (cond == 2 && st.get("id") != null && st.get("id").equalsIgnoreCase("CNCL"))
                     htmltext = "32256-04.htm";
-                else if (cond == 3 && st.get("id") != null && st.get("id").toString().equalsIgnoreCase("CHAOS"))
+                else if (cond == 3 && st.get("id") != null && st.get("id").equalsIgnoreCase("CHAOS"))
                     htmltext = "32257-04.htm";
                 else {
                     htmltext = "<html><body>Quest Failed</body></html>";

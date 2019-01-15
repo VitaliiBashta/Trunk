@@ -23,7 +23,7 @@ public final class QueenAntNurse extends Priest {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             if (doTask())
                 clearTasks();
             return true;

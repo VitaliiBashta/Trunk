@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _413_PathToShillienOracle extends Quest implements ScriptFile {
+public final class _413_PathToShillienOracle extends Quest {
     //npc
     private final int SIDRA = 30330;
     private final int ADONIUS = 30375;
@@ -33,18 +33,6 @@ public class _413_PathToShillienOracle extends Quest implements ScriptFile {
             SHIELD_SKELETON,
             SKELETON_INFANTRYMAN
     };
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _413_PathToShillienOracle() {
         super(false);

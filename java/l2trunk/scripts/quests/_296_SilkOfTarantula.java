@@ -5,21 +5,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _296_SilkOfTarantula extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
+public final class _296_SilkOfTarantula extends Quest {
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     private static final int TARANTULA_SPIDER_SILK = 1493;
     private static final int TARANTULA_SPINNERETTE = 1494;

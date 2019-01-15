@@ -5,22 +5,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _121_PavelTheGiants extends Quest implements ScriptFile {
+public final class _121_PavelTheGiants extends Quest {
     //NPCs
     private static final int NEWYEAR = 31961;
     private static final int YUMI = 32041;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _121_PavelTheGiants() {
         super(false);

@@ -268,7 +268,8 @@ public final class Hitman extends Functions implements ScriptFile, OnDeathListen
 
     @Override
     public void onShutdown() {
-        onReload();
+        orderMap.clear();
+        allowedItems.clear();
     }
 
     private Order getOrderByTargetName(String name) {

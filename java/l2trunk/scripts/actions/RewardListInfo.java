@@ -16,7 +16,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class RewardListInfo {
+public class RewardListInfo {
     private static final NumberFormat pf = NumberFormat.getPercentInstance(Locale.ENGLISH);
     private static final NumberFormat df = NumberFormat.getInstance(Locale.ENGLISH);
 

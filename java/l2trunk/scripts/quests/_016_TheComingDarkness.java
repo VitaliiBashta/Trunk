@@ -3,45 +3,26 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _016_TheComingDarkness extends Quest implements ScriptFile {
+import java.util.Map;
+
+public final class _016_TheComingDarkness extends Quest {
     //npc
-    private final int HIERARCH = 31517;
+    private static final int HIERARCH = 31517;
     //ALTAR_LIST (MOB_ID, cond)
-    private final int[][] ALTAR_LIST = {
-            {
-                    31512,
-                    1
-            },
-            {
-                    31513,
-                    2
-            },
-            {
-                    31514,
-                    3
-            },
-            {
-                    31515,
-                    4
-            },
-            {
-                    31516,
-                    5
-            }
-    };
+    private final Map<Integer, Integer> ALTAR_LIST = Map.of(
+            31512, 1,
+            31513, 2,
+            31514, 3,
+            31515, 4,
+            31516, 5);
     //items
     private final int CRYSTAL_OF_SEAL = 7167;
 
     public _016_TheComingDarkness() {
         super(false);
-
         addStartNpc(HIERARCH);
-
-        for (int[] element : ALTAR_LIST)
-            addTalkId(element[0]);
-
+        addTalkId(ALTAR_LIST.keySet());
         addQuestItem(CRYSTAL_OF_SEAL);
     }
 
@@ -54,12 +35,14 @@ public final class _016_TheComingDarkness extends Quest implements ScriptFile {
             st.giveItems(CRYSTAL_OF_SEAL, 5);
             st.playSound(SOUND_ACCEPT);
         }
-        for (int[] element : ALTAR_LIST)
-            if (event.equalsIgnoreCase(String.valueOf(element[0]) + "-02.htm")) {
+        ALTAR_LIST.forEach((k, v) -> {
+            if (event.equalsIgnoreCase(k + "-02.htm")) {
                 st.takeItems(CRYSTAL_OF_SEAL, 1);
-                st.setCond(element[1] + 1);
+                st.setCond(v + 1);
                 st.playSound(SOUND_MIDDLE);
             }
+        });
+
         return event;
     }
 
@@ -86,15 +69,15 @@ public final class _016_TheComingDarkness extends Quest implements ScriptFile {
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
             }
-        for (int[] element : ALTAR_LIST)
-            if (npcId == element[0])
-                if (cond == element[1]) {
+        for (Map.Entry<Integer, Integer> element : ALTAR_LIST.entrySet())
+            if (npcId == element.getKey())
+                if (cond == element.getValue()) {
                     if (st.getQuestItemsCount(CRYSTAL_OF_SEAL) > 0)
-                        htmltext = String.valueOf(element[0]) + "-01.htm";
+                        htmltext = element.getKey() + "-01.htm";
                     else
-                        htmltext = String.valueOf(element[0]) + "-03.htm";
-                } else if (cond == element[1] + 1)
-                    htmltext = String.valueOf(element[0]) + "-04.htm";
+                        htmltext = element.getKey() + "-03.htm";
+                } else if (cond == element.getValue() + 1)
+                    htmltext = element.getKey() + "-04.htm";
         return htmltext;
     }
 }

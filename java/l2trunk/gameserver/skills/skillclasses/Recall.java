@@ -1,7 +1,6 @@
 package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
@@ -13,11 +12,46 @@ import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.HashMap;
 import java.util.List;
-
-import static l2trunk.commons.lang.NumberUtils.toInt;
+import java.util.Map;
 
 public final class Recall extends Skill {
+    private static final Map<Integer, Location> towns = new HashMap<>();
+    private static final Map<Integer, Location> specialScrolls = new HashMap<>();
+
+    static {
+        towns.put(1, new Location(-83990, 243336, -3700));// Talking Island
+        towns.put(2, new Location(45576, 49412, -2950));// Elven Village
+        towns.put(3, new Location(12501, 16768, -4500)); // Dark Elven Village
+        towns.put(4, new Location(-44884, -115063, -80));// Orc Village
+        towns.put(5, new Location(115790, -179146, -890));// Dwarven Village
+        towns.put(6, new Location(-14279, 124446, -3000)); // Town of Gludio
+        towns.put(7, new Location(-82909, 150357, -3000));// Gludin Village
+        towns.put(8, new Location(19025, 145245, -3107));// Town of Dion
+        towns.put(9, new Location(82272, 147801, -3350));// Town of Giran
+        towns.put(10, new Location(82323, 55466, -1480));// Town of Oren
+        towns.put(11, new Location(144526, 24661, -2100));// Town of Aden
+        towns.put(12, new Location(117189, 78952, -2210));// Hunters Village
+        towns.put(13, new Location(110768, 219824, -3624));// Heine
+        towns.put(14, new Location(43536, -50416, -800));// Rune Township
+        towns.put(15, new Location(148288, -58304, -2979));// Town of Goddard
+        towns.put(16, new Location(87776, -140384, -1536)); // Town of Schuttgart
+        towns.put(17, new Location(-117081, 44171, 507));// Kamael Village
+        towns.put(18, new Location(10568, -24600, -3648));// Primeval Isle
+        towns.put(19, new Location(19025, 145245, -3107));// Floran Village
+        towns.put(20, new Location(-16434, 208803, -3664));// Hellbound
+        towns.put(21, new Location(-184200, 243080, 1568)); // Keucereus Alliance Base
+        towns.put(22, new Location(8976, 252416, -1928));// Steel Citadel
+
+        specialScrolls.put(7125, new Location(17144, 170156, -3502));// floran
+        specialScrolls.put(7127, new Location(105918, 109759, -3207));// hardin's academy
+        specialScrolls.put(7130, new Location(85475, 16087, -3672));// ivory
+        specialScrolls.put(9716, new Location(-120000, 44500, 352));// Scroll of Escape: Kamael Village for starters
+        specialScrolls.put(7618, new Location(149864, -81062, -5618));
+        specialScrolls.put(7619, new Location(108275, -53785, -2524));
+    }
+
     private final int townId;
     private final boolean clanhall;
     private final boolean castle;
@@ -32,7 +66,7 @@ public final class Recall extends Skill {
         fortress = set.getBool("fortress", false);
         String[] cords = set.getString("loc", "").split(";");
         if (cords.length == 3)
-            loc = new Location(toInt(cords[0]), toInt(cords[1]), toInt(cords[2]));
+            loc = new Location(cords);
         else
             loc = null;
     }
@@ -44,17 +78,17 @@ public final class Recall extends Skill {
             Player player = activeChar.getPlayer();
             if (clanhall) {
                 if (player.getClan() == null || player.getClan().getHasHideout() == 0) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(_itemConsumeId[0]));
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
                     return false;
                 }
             } else if (castle) {
                 if (player.getClan() == null || player.getClan().getCastle() == 0) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(_itemConsumeId[0]));
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
                     return false;
                 }
             } else if (fortress)
                 if (player.getClan() == null || player.getClan().getHasFortress() == 0) {
-                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(_itemConsumeId[0]));
+                    activeChar.sendPacket(new SystemMessage2(SystemMsg.S1_CANNOT_BE_USED_DUE_TO_UNSUITABLE_TERMS).addItemName(itemConsumeId.get(0)));
                     return false;
                 }
         }
@@ -129,144 +163,36 @@ public final class Recall extends Skill {
                     return;
                 }
                 if (_isItemHandler) {
-                    if (Config.ALT_TELEPORTS_ONLY_FOR_GIRAN) {
-                        pcTarget.teleToLocation(82272, 147801, -3350, 0);
+                    if (specialScrolls.containsKey(itemConsumeId.get(0))) {
+                        pcTarget.teleToLocation(specialScrolls.get(itemConsumeId.get(0)));
                         return;
                     }
-                    if (_itemConsumeId[0] == 7125) // floran
-                    {
-                        pcTarget.teleToLocation(17144, 170156, -3502, 0);
-                        return;
-                    }
-                    if (_itemConsumeId[0] == 7127) // hardin's academy
-                    {
-                        pcTarget.teleToLocation(105918, 109759, -3207, 0);
-                        return;
-                    }
-                    if (_itemConsumeId[0] == 7130) // ivory
-                    {
-                        pcTarget.teleToLocation(85475, 16087, -3672, 0);
-                        return;
-                    }
-                    if (_itemConsumeId[0] == 9716) // Scroll of Escape: Kamael Village for starters
-                    {
-                        pcTarget.teleToLocation(-120000, 44500, 352, 0);
-                        return;
-                    }
-                    if (_itemConsumeId[0] == 7618) {
-                        pcTarget.teleToLocation(149864, -81062, -5618, 0);
-                        return;
-                    }
-                    if (_itemConsumeId[0] == 7619) {
-                        pcTarget.teleToLocation(108275, -53785, -2524, 0);
-                        return;
-                    }
+
                 }
                 if (loc != null) {
-                    if (Config.ALT_TELEPORTS_ONLY_FOR_GIRAN) {
-                        pcTarget.teleToLocation(82272, 147801, -3350, 0);
-                        return;
-                    }
                     pcTarget.teleToLocation(loc);
                     return;
                 }
-                if (townId > 0 && Config.ALT_TELEPORTS_ONLY_FOR_GIRAN) {
-                    pcTarget.teleToLocation(82272, 147801, -3350, 0);
+
+                if (towns.containsKey(townId)) {
+                    pcTarget.teleToLocation(towns.get(townId), 0);
                     return;
                 }
 
-                switch (townId) // To town by Id
-                {
-                    case 1: // Talking Island
-                        pcTarget.teleToLocation(-83990, 243336, -3700, 0);
-                        return;
-                    case 2: // Elven Village
-                        pcTarget.teleToLocation(45576, 49412, -2950, 0);
-                        return;
-                    case 3: // Dark Elven Village
-                        pcTarget.teleToLocation(12501, 16768, -4500, 0);
-                        return;
-                    case 4: // Orc Village
-                        pcTarget.teleToLocation(-44884, -115063, -80, 0);
-                        return;
-                    case 5: // Dwarven Village
-                        pcTarget.teleToLocation(115790, -179146, -890, 0);
-                        return;
-                    case 6: // Town of Gludio
-                        pcTarget.teleToLocation(-14279, 124446, -3000, 0);
-                        return;
-                    case 7: // Gludin Village
-                        pcTarget.teleToLocation(-82909, 150357, -3000, 0);
-                        return;
-                    case 8: // Town of Dion
-                        pcTarget.teleToLocation(19025, 145245, -3107, 0);
-                        return;
-                    case 9: // Town of Giran
-                        pcTarget.teleToLocation(82272, 147801, -3350, 0);
-                        return;
-                    case 10: // Town of Oren
-                        pcTarget.teleToLocation(82323, 55466, -1480, 0);
-                        return;
-                    case 11: // Town of Aden
-                        pcTarget.teleToLocation(144526, 24661, -2100, 0);
-                        return;
-                    case 12: // Hunters Village
-                        pcTarget.teleToLocation(117189, 78952, -2210, 0);
-                        return;
-                    case 13: // Heine
-                        pcTarget.teleToLocation(110768, 219824, -3624, 0);
-                        return;
-                    case 14: // Rune Township
-                        pcTarget.teleToLocation(43536, -50416, -800, 0);
-                        return;
-                    case 15: // Town of Goddard
-                        pcTarget.teleToLocation(148288, -58304, -2979, 0);
-                        return;
-                    case 16: // Town of Schuttgart
-                        pcTarget.teleToLocation(87776, -140384, -1536, 0);
-                        return;
-                    case 17: // Kamael Village
-                        pcTarget.teleToLocation(-117081, 44171, 507, 0);
-                        return;
-                    case 18: // Primeval Isle
-                        pcTarget.teleToLocation(10568, -24600, -3648, 0);
-                        return;
-                    case 19: // Floran Village
-                        pcTarget.teleToLocation(19025, 145245, -3107, 0);
-                        return;
-                    case 20: // Hellbound
-                        pcTarget.teleToLocation(-16434, 208803, -3664, 0);
-                        return;
-                    case 21: // Keucereus Alliance Base
-                        pcTarget.teleToLocation(-184200, 243080, 1568, 0);
-                        return;
-                    case 22: // Steel Citadel
-                        pcTarget.teleToLocation(8976, 252416, -1928, 0);
-                        return;
-                }
-                if (castle) // To castle
-                {
+                if (castle) {// To castle
                     pcTarget.teleToCastle();
                     return;
                 }
-                if (clanhall) // to clanhall
-                {
+                if (clanhall) { // to clanhall
                     pcTarget.teleToClanhall();
                     return;
                 }
-                if (fortress) // To fortress
-                {
+                if (fortress) { // To fortress
                     pcTarget.teleToFortress();
                     return;
                 }
-                if (Config.ALT_TELEPORTS_ONLY_FOR_GIRAN) {
-                    pcTarget.teleToLocation(82272, 147801, -3350, 0);
-                    return;
-                }
-
                 pcTarget.teleToClosestTown();
             }
-
         if (isSSPossible())
             activeChar.unChargeShots(isMagic());
     }

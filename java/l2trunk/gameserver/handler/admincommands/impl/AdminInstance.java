@@ -112,7 +112,7 @@ public class AdminInstance implements IAdminCommandHandler {
                 continue;
             int countPlayers = 0;
             if (reflection.getPlayers() != null)
-                countPlayers = reflection.getPlayers().size();
+                countPlayers = (int) reflection.getPlayers().count();
             replyMSG.append("<a action=\"bypass -h admin_instance_id ").append(reflection.getId()).append(" \">").append(reflection.getName()).append("(").append(countPlayers).append(" players). Id: ").append(reflection.getId()).append("</a><br>");
         }
 
@@ -135,8 +135,8 @@ public class AdminInstance implements IAdminCommandHandler {
             replyMSG.append("<td width=40><button value=\"Back\" action=\"bypass -h admin_instance\" width=40 height=20 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
             replyMSG.append("</tr></table><br><br>");
 
-            for (Player player : reflection.getPlayers())
-                replyMSG.append("<a action=\"bypass -h admin_teleportto ").append(player.getName()).append(" \">").append(player.getName()).append("</a><br>");
+            reflection.getPlayers().forEach(p ->
+                replyMSG.append("<a action=\"bypass -h admin_teleportto ").append(p.getName()).append(" \">").append(p.getName()).append("</a><br>"));
         } else {
             replyMSG.append("Instance not active.<br>");
             replyMSG.append("<a action=\"bypass -h admin_instance\">Back to list.</a><br>");

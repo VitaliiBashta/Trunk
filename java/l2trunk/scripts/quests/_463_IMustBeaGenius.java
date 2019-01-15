@@ -8,37 +8,15 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * * Автор: Gnacik
- * * Доделал: Bonux
- */
-public class _463_IMustBeaGenius extends Quest implements ScriptFile {
-    public void onLoad() {
-    }
+import java.util.List;
 
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
+public final class _463_IMustBeaGenius extends Quest {
     private static final int GUTENHAGEN = 32069;
     private static final int CORPSE_LOG = 15510;
     private static final int COLLECTION = 15511;
-    private static final int[] MOBS = {
-            22801,
-            22802,
-            22804,
-            22805,
-            22807,
-            22808,
-            22809,
-            22810,
-            22811,
-            22812
-    };
+    private static final List<Integer> MOBS = List.of(
+            22801, 22802, 22804, 22805, 22807, 22808, 22809, 22810, 22811, 22812);
 
     public _463_IMustBeaGenius() {
         super(false);
@@ -52,7 +30,6 @@ public class _463_IMustBeaGenius extends Quest implements ScriptFile {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        Player player = st.getPlayer();
         if (npc.getNpcId() == GUTENHAGEN) {
             if (event.equalsIgnoreCase("collecter_gutenhagen_q0463_05.htm")) {
                 st.playSound(SOUND_ACCEPT);
@@ -69,7 +46,7 @@ public class _463_IMustBeaGenius extends Quest implements ScriptFile {
                     st.set(String.valueOf(_mob), String.valueOf(_rand));
                 }
                 // One with higher chance
-                st.set(String.valueOf(MOBS[Rnd.get(0, MOBS.length - 1)]), String.valueOf(Rnd.get(1, 100)));
+                st.set(String.valueOf(Rnd.get(MOBS)), String.valueOf(Rnd.get(1, 100)));
                 htmltext = HtmCache.INSTANCE.getNotNull("quests/_463_IMustBeaGenius/" + event, st.getPlayer());
                 htmltext = htmltext.replace("%num%", String.valueOf(_number));
             } else if (event.equalsIgnoreCase("collecter_gutenhagen_q0463_07.htm")) {

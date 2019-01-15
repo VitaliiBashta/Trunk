@@ -3,27 +3,13 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _028_ChestCaughtWithABaitOfIcyAir extends Quest implements ScriptFile {
+public final class _028_ChestCaughtWithABaitOfIcyAir extends Quest {
+    private static final int ElvenRing = 881;
     private final int OFulle = 31572;
     private final int Kiki = 31442;
-
     private final int BigYellowTreasureChest = 6503;
     private final int KikisLetter = 7626;
-    private final int ElvenRing = 881;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _028_ChestCaughtWithABaitOfIcyAir() {
         super(false);
@@ -35,29 +21,34 @@ public class _028_ChestCaughtWithABaitOfIcyAir extends Quest implements ScriptFi
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("fisher_ofulle_q0028_0104.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("fisher_ofulle_q0028_0201.htm")) {
-            if (st.getQuestItemsCount(BigYellowTreasureChest) > 0) {
-                st.setCond(2);
-                st.takeItems(BigYellowTreasureChest, 1);
-                st.giveItems(KikisLetter, 1);
-                st.playSound(SOUND_MIDDLE);
-            } else
-                htmltext = "fisher_ofulle_q0028_0202.htm";
-        } else if (event.equals("mineral_trader_kiki_q0028_0301.htm"))
-            if (st.getQuestItemsCount(KikisLetter) == 1) {
-                htmltext = "mineral_trader_kiki_q0028_0301.htm";
-                st.takeItems(KikisLetter, -1);
-                st.giveItems(ElvenRing, 1);
-                st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
-            } else {
-                htmltext = "mineral_trader_kiki_q0028_0302.htm";
-                st.exitCurrentQuest(true);
-            }
+        switch (event) {
+            case "fisher_ofulle_q0028_0104.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "fisher_ofulle_q0028_0201.htm":
+                if (st.getQuestItemsCount(BigYellowTreasureChest) > 0) {
+                    st.setCond(2);
+                    st.takeItems(BigYellowTreasureChest, 1);
+                    st.giveItems(KikisLetter, 1);
+                    st.playSound(SOUND_MIDDLE);
+                } else
+                    htmltext = "fisher_ofulle_q0028_0202.htm";
+                break;
+            case "mineral_trader_kiki_q0028_0301.htm":
+                if (st.getQuestItemsCount(KikisLetter) == 1) {
+                    htmltext = "mineral_trader_kiki_q0028_0301.htm";
+                    st.takeItems(KikisLetter, -1);
+                    st.giveItems(ElvenRing, 1);
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(false);
+                } else {
+                    htmltext = "mineral_trader_kiki_q0028_0302.htm";
+                    st.exitCurrentQuest(true);
+                }
+                break;
+        }
         return htmltext;
     }
 

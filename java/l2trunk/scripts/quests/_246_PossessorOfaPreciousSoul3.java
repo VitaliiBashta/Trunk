@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _246_PossessorOfaPreciousSoul3 extends Quest implements ScriptFile {
+public final class _246_PossessorOfaPreciousSoul3 extends Quest {
     private static final int CARADINES_LETTER_2_PART = 7678;
     private static final int RING_OF_GODDESS_WATERBINDER = 7591;
     private static final int NECKLACE_OF_GODDESS_EVERGREEN = 7592;
@@ -14,18 +14,6 @@ public class _246_PossessorOfaPreciousSoul3 extends Quest implements ScriptFile 
     private static final int CARADINES_LETTER = 7679;
     private static final int RELIC_BOX = 7594;
     private static final int STAFF_OF_GODDES = 21725;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _246_PossessorOfaPreciousSoul3() {
         super(true);
@@ -41,13 +29,10 @@ public class _246_PossessorOfaPreciousSoul3 extends Quest implements ScriptFile 
         for (int i = 21535; i <= 21540; i++)
             addKillId(i);
 
-        addQuestItem(new int[]
-                {
-                        RING_OF_GODDESS_WATERBINDER,
-                        NECKLACE_OF_GODDESS_EVERGREEN,
-                        STAFF_OF_GODDESS_RAIN_SONG,
-                        STAFF_OF_GODDES
-                });
+        addQuestItem(RING_OF_GODDESS_WATERBINDER,
+                NECKLACE_OF_GODDESS_EVERGREEN,
+                STAFF_OF_GODDESS_RAIN_SONG,
+                STAFF_OF_GODDES);
     }
 
     @Override

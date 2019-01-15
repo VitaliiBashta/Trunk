@@ -19,10 +19,11 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
+public final class _511_AwlUnderFoot extends Quest {
     private final static int INSTANCE_ZONE_ID = 22; // Fortress Dungeon
 
     private final static int DungeonLeaderMark = 9797;
@@ -44,9 +45,9 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
     private static final int CommanderKoenig = 25592;
     private static final int GergTheHunter = 25593;
 
-    private static final int[] type1 = new int[]{HagerTheOutlaw, AllSeeingRango, Jakard};
-    private static final int[] type2 = new int[]{Helsing, Gillien, Medici, ImmortalMuus};
-    private static final int[] type3 = new int[]{BrandTheExile, CommanderKoenig, GergTheHunter};
+    private static final List<Integer> type1 = List.of(HagerTheOutlaw, AllSeeingRango, Jakard);
+    private static final List<Integer> type2 = List.of(Helsing, Gillien, Medici, ImmortalMuus);
+    private static final List<Integer>  type3 = List.of(BrandTheExile, CommanderKoenig, GergTheHunter);
 
     public _511_AwlUnderFoot() {
         super(false);
@@ -97,13 +98,13 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
                     case HagerTheOutlaw:
                     case AllSeeingRango:
                     case Jakard:
-                        prison.initSpawn(type2[Rnd.get(type2.length)], false);
+                        prison.initSpawn(Rnd.get(type2), false);
                         break;
                     case Helsing:
                     case Gillien:
                     case Medici:
                     case ImmortalMuus:
-                        prison.initSpawn(type3[Rnd.get(type3.length)], false);
+                        prison.initSpawn(Rnd.get(type3), false);
                         break;
                     case BrandTheExile:
                     case CommanderKoenig:
@@ -198,7 +199,7 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
             r.startCollapseTimer(iz.getTimelimit() * 60 * 1000L);
             player.getParty().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(iz.getTimelimit()));
 
-            prison.initSpawn(type1[Rnd.get(type1.length)], true);
+            prison.initSpawn(Rnd.get(type1), true);
         }
         return null;
     }
@@ -234,7 +235,7 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
         }
 
         void initSpawn(int npcId, boolean first) {
-            ThreadPoolManager.INSTANCE.schedule(()  -> addSpawnToInstance(npcId, new Location(53304, 245992, -6576, 25958), 0, _reflectionId), first ? 60000 : 180000);
+            ThreadPoolManager.INSTANCE.schedule(() -> addSpawnToInstance(npcId, new Location(53304, 245992, -6576, 25958), 0, _reflectionId), first ? 60000 : 180000);
         }
 
         int getReflectionId() {
@@ -257,17 +258,5 @@ public final class _511_AwlUnderFoot extends Quest implements ScriptFile {
             if (p.getClan() != player.getClan())
                 return false;
         return true;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-
 public final class PartyMatchingBBSManager extends Functions implements ICommunityBoardHandler {
-    @SuppressWarnings("unused")
-    private static final Logger _log = LoggerFactory.getLogger(PartyMatchingBBSManager.class);
     public final List<Player> partyMatchingPlayersList = new ArrayList<>();
     public final Map<Integer, String> partyMatchingDescriptionList = new HashMap<>();
 
@@ -23,7 +20,7 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
     }
 
     private void parsecmd(String command, Player activeChar) {
-        if (command.equals("_maillist_0_1_0_") || command.equals("_bbsPartyMatching")) {
+        if ("_maillist_0_1_0_".equals(command) || "_bbsPartyMatching".equals(command)) {
             ShowBoard.separateAndSend(partyMatchingList(activeChar, 1), activeChar);
         } else if (command.startsWith("_bbsPartyMatching;")) {
             StringTokenizer st = new StringTokenizer(command, ";");
@@ -329,12 +326,9 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
         }
     }
 
-    public void parsewrite(String ar1, String ar2, String ar3, String ar4, String ar5, Player activeChar) {
-    }
-
     @Override
     public List<String> getBypassCommands() {
-        return Arrays.asList("_bbsPartyMatching",
+        return List.of("_bbsPartyMatching",
                 "_bbsPartyMatching;",
                 "_bbsPartyMatchingEnter",
                 "_bbsPartyMatchingLeave");

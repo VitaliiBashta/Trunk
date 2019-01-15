@@ -4,27 +4,14 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _10288_SecretMission extends Quest implements ScriptFile {
+public final class _10288_SecretMission extends Quest {
     // NPC's
     private static final int _dominic = 31350;
     private static final int _aquilani = 32780;
     private static final int _greymore = 32757;
     // Items
     private static final int _letter = 15529;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _10288_SecretMission() {
         super(false);

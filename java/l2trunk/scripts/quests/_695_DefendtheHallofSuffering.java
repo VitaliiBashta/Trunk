@@ -5,13 +5,8 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-
-public class _695_DefendtheHallofSuffering extends Quest implements ScriptFile {
+public final class _695_DefendtheHallofSuffering extends Quest {
     private static final int TEPIOS = 32603;
 
     public _695_DefendtheHallofSuffering() {
@@ -54,17 +49,4 @@ public class _695_DefendtheHallofSuffering extends Quest implements ScriptFile {
 
         return htmltext;
     }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
 }

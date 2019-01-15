@@ -44,7 +44,7 @@ public final class EffectDispelEffects extends Effect {
         cancelRate = template.getParam().getInteger("cancelRate", 0);
         negateMin = template.getParam().getInteger("negateMin", 2);
         negateMax = template.getParam().getInteger("negateCount", 5);
-        stackTypes = Arrays.asList(STACK_TYPE_SEPARATOR.split(template.getParam().getString("negateStackTypes", "")));
+        stackTypes = List.of(STACK_TYPE_SEPARATOR.split(template.getParam().getString("negateStackTypes", "")));
     }
 
     public static boolean calcCancelSuccess(Creature activeChar, Creature target, Effect buff, Skill cancelSk, double dispelRate) {

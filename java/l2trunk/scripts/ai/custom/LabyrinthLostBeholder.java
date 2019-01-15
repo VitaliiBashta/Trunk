@@ -9,7 +9,6 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncSet;
 
 public final class LabyrinthLostBeholder extends Fighter {
-
     public LabyrinthLostBeholder(NpcInstance actor) {
         super(actor);
     }
@@ -26,16 +25,14 @@ public final class LabyrinthLostBeholder extends Fighter {
     }
 
     private boolean checkMates(int id) {
-        for (NpcInstance n : getActor().getReflection().getNpcs())
-            if (n.getNpcId() == id && !n.isDead())
-                return false;
-        return true;
+        return getActor().getReflection().getNpcs()
+                .filter(n -> n.getNpcId() == id)
+                .allMatch(Creature::isDead);
     }
 
     private NpcInstance findLostCaptain() {
-        for (NpcInstance n : getActor().getReflection().getNpcs())
-            if (n instanceof ReflectionBossInstance)
-                return n;
-        return null;
+        return getActor().getReflection().getNpcs()
+                .filter(n -> n instanceof ReflectionBossInstance)
+                .findFirst().orElse(null);
     }
 }

@@ -17,9 +17,7 @@ public final class IceCastleBreath extends Fighter {
         super.onEvtSpawn();
         Reflection r = getActor().getReflection();
         if (r != null && r.getPlayers() != null) {
-            for (Player p : r.getPlayers()) {
-                notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 300);
-            }
+            r.getPlayers().forEach(p -> notifyEvent(CtrlEvent.EVT_AGGRESSION, p, 300));
         }
     }
 

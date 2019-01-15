@@ -2,6 +2,7 @@ package l2trunk.scripts.quests;
 
 import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Spawner;
 import l2trunk.gameserver.model.entity.Reflection;
@@ -11,11 +12,10 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-public final class _10285_MeetingSirra extends Quest implements ScriptFile {
+public final class _10285_MeetingSirra extends Quest {
     private static final int Rafforty = 32020;
     private static final int Jinia = 32760;
     private static final int Jinia2 = 32781;
@@ -34,37 +34,38 @@ public final class _10285_MeetingSirra extends Quest implements ScriptFile {
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("enterinstance")) {
+        } else if ("enterinstance".equalsIgnoreCase(event)) {
             if (st.getCond() == 1)
                 st.setCond(2);
             enterInstance(st.getPlayer(), 141);
             return null;
-        } else if (event.equalsIgnoreCase("jinia_q10285_02.htm"))
+        } else if ("jinia_q10285_02.htm".equalsIgnoreCase(event))
             st.setCond(3);
-        else if (event.equalsIgnoreCase("kegor_q10285_02.htm"))
+        else if ("kegor_q10285_02.htm".equalsIgnoreCase(event))
             st.setCond(4);
-        else if (event.equalsIgnoreCase("sirraspawn")) {
+        else if ("sirraspawn".equalsIgnoreCase(event)) {
             st.setCond(5);
             st.getPlayer().getReflection().addSpawnWithoutRespawn(Sirra, new Location(-23848, -8744, -5413, 49152), 0);
-            for (NpcInstance sirra : st.getPlayer().getAroundNpc(1000, 100))
-                if (sirra.getNpcId() == Sirra)
-                    Functions.npcSay(sirra, "You listen to it that you know about everything. But I can no longer listen to your philosophising!");
+            st.getPlayer().getAroundNpc(1000, 100)
+                    .filter(sirra -> sirra.getNpcId() == Sirra)
+                    .forEach(sirra ->
+                            Functions.npcSay(sirra, "You listen to it that you know about everything. But I can no longer listen to your philosophising!"));
             return null;
-        } else if (event.equalsIgnoreCase("sirra_q10285_07.htm")) {
+        } else if ("sirra_q10285_07.htm".equalsIgnoreCase(event)) {
             st.setCond(6);
-            for (NpcInstance sirra : st.getPlayer().getAroundNpc(1000, 100))
-                if (sirra.getNpcId() == 32762)
-                    sirra.deleteMe();
-        } else if (event.equalsIgnoreCase("jinia_q10285_10.htm")) {
+            st.getPlayer().getAroundNpc(1000, 100)
+                    .filter(n -> n.getNpcId() == 32762)
+                    .forEach(GameObject::deleteMe);
+        } else if ("jinia_q10285_10.htm".equalsIgnoreCase(event)) {
             if (!st.getPlayer().getReflection().isDefault()) {
                 st.getPlayer().getReflection().startCollapseTimer(60 * 1000L);
                 st.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(1));
             }
             st.setCond(7);
-        } else if (event.equalsIgnoreCase("exitinstance")) {
+        } else if ("exitinstance".equalsIgnoreCase(event)) {
             st.getPlayer().getReflection().collapse();
             return null;
-        } else if (event.equalsIgnoreCase("enterfreya")) {
+        } else if ("enterfreya".equalsIgnoreCase(event)) {
             st.setCond(9);
             enterInstance(st.getPlayer(), 137);
             return null;
@@ -132,18 +133,6 @@ public final class _10285_MeetingSirra extends Quest implements ScriptFile {
             if (izId == 137)
                 ThreadPoolManager.INSTANCE.schedule(new FreyaSpawn(newInstance, player), 2 * 60 * 1000L);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     private class FreyaSpawn extends RunnableImpl {

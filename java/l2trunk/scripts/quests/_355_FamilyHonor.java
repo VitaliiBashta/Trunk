@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _355_FamilyHonor extends Quest implements ScriptFile {
+public final class _355_FamilyHonor extends Quest {
     //NPC
     private static final int GALIBREDO = 30181;
     private static final int PATRIN = 30929;

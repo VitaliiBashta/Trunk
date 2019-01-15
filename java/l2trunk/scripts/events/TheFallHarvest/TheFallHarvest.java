@@ -110,11 +110,6 @@ public final class TheFallHarvest extends Functions implements ScriptFile, OnDea
     }
 
     @Override
-    public void onShutdown() {
-
-    }
-
-    @Override
     public void onDeath(Creature cha, Creature killer) {
         if (_active && SimpleCheckDrop(cha, killer) && Rnd.chance(Config.EVENT_TFH_POLLEN_CHANCE * killer.getPlayer().getRateItems() * ((NpcInstance) cha).getTemplate().rateHp))
             ((NpcInstance) cha).dropItem(killer.getPlayer(), 6391, 1);

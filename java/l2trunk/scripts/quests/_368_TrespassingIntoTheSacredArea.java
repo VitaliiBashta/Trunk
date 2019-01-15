@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _368_TrespassingIntoTheSacredArea extends Quest implements ScriptFile {
+public final class _368_TrespassingIntoTheSacredArea extends Quest {
     //NPCs
     private static final int RESTINA = 30926;
     //Items
@@ -71,17 +71,5 @@ public class _368_TrespassingIntoTheSacredArea extends Quest implements ScriptFi
             qs.playSound(SOUND_ITEMGET);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

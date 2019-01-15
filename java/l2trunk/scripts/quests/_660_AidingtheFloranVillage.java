@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _660_AidingtheFloranVillage extends Quest implements ScriptFile {
+public final class _660_AidingtheFloranVillage extends Quest {
     // MOBS
     private static final int CARSED_SEER = 21106;
     private static final int PLAIN_WATCMAN = 21102;

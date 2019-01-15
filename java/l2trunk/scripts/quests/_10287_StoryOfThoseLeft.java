@@ -11,7 +11,7 @@ import l2trunk.gameserver.utils.ReflectionUtils;
 import java.util.StringTokenizer;
 
 
-public class _10287_StoryOfThoseLeft extends Quest implements ScriptFile {
+public final class _10287_StoryOfThoseLeft extends Quest {
     private static final int Rafforty = 32020;
     private static final int Jinia = 32760;
     private static final int Jinia2 = 32781;
@@ -118,17 +118,5 @@ public class _10287_StoryOfThoseLeft extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(izId)) {
             ReflectionUtils.enterReflection(player, izId);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ActionFail;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class Action extends L2GameClientPacket {
+public final class Action extends L2GameClientPacket {
     private int _objectId;
     private int _actionId;
 

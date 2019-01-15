@@ -7,12 +7,11 @@ import l2trunk.gameserver.network.serverpackets.ExSendUIEvent;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ZakenDay extends Reflection {
     private static final int Anchor = 32468;
-    private static final List<Location> zakenTp = Arrays.asList(
+    private static final List<Location> zakenTp = List.of(
             new Location(55272, 219080, -2952),
             new Location(55272, 219080, -3224),
             new Location(55272, 219080, -3496));

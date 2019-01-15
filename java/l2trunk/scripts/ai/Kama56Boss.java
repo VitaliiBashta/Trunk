@@ -12,8 +12,8 @@ import l2trunk.gameserver.model.instances.MinionInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public final class Kama56Boss extends Fighter {
@@ -49,16 +49,14 @@ public final class Kama56Boss extends Fighter {
 
         _nextOrderTime = now + 30000;
 
-        List<Player> pl = World.getAroundPlayers(actor);
-        if (pl.isEmpty()) {
+        if (World.getAroundPlayers(actor).count() == 0) {
             _lastMinionsTargetRef = HardReferences.emptyRef();
             return;
         }
 
-        List<Player> alive = new ArrayList<>();
-        for (Player p : pl)
-            if (!p.isAlikeDead())
-                alive.add(p);
+        List<Player> alive = World.getAroundPlayers(actor)
+                .filter(p -> !p.isAlikeDead())
+                .collect(Collectors.toList());
         if (alive.isEmpty()) {
             _lastMinionsTargetRef = HardReferences.emptyRef();
             return;

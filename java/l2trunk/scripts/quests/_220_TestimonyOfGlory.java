@@ -6,13 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Testimony Of Glory
- *
- * @author Sergey Ibryaev aka Artful
- */
-
-public class _220_TestimonyOfGlory extends Quest implements ScriptFile {
+public final class _220_TestimonyOfGlory extends Quest {
     //NPC
     private static final int Vokian = 30514;
     private static final int Chianta = 30642;
@@ -239,18 +233,6 @@ public class _220_TestimonyOfGlory extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _220_TestimonyOfGlory() {
         super(false);
         addStartNpc(Vokian);
@@ -273,8 +255,7 @@ public class _220_TestimonyOfGlory extends Quest implements ScriptFile {
         addKillId(RagnaOrcSeer);
         addKillId(RevenantOfTantosChief);
 
-        addQuestItem(new int[]{
-                VokiansOrder,
+        addQuestItem(VokiansOrder,
                 VokiansOrder2,
                 NecklaceOfAuthority,
                 ChiantaOrder1st,
@@ -306,8 +287,7 @@ public class _220_TestimonyOfGlory extends Quest implements ScriptFile {
                 EnkuOverlordHead,
                 MakumBugbearHead,
                 TimakOrcHead,
-                TamlinOrcSkull
-        });
+                TamlinOrcSkull);
     }
 
     @Override

@@ -5,24 +5,11 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _183_RelicExploration extends Quest implements ScriptFile {
+public final class _183_RelicExploration extends Quest {
     private static final int Kusto = 30512;
     private static final int Lorain = 30673;
     private static final int Nikola = 30621;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _183_RelicExploration() {
         super(false);

@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class _348_ArrogantSearch extends Quest implements ScriptFile {
+public final class _348_ArrogantSearch extends Quest {
     private final static int ARK_GUARDIAN_ELBEROTH = 27182;
     private final static int ARK_GUARDIAN_SHADOWFANG = 27183;
     private final static int ANGEL_KILLER = 27184;
@@ -192,18 +192,6 @@ public final class _348_ArrogantSearch extends Quest implements ScriptFile {
                 25,
                 WHITE_FABRIC_2
         });
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     public _348_ArrogantSearch() {

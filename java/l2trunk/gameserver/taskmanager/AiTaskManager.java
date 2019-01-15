@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class AiTaskManager extends SteppingRunnableQueueManager {
-    private final static long TICK = 250L;
+    private final static int TICK = 250;
 
     private final static List<AiTaskManager> _instances = new ArrayList<>(Config.AI_TASK_MANAGER_COUNT);
     private static int randomizer = 0;

@@ -11,12 +11,11 @@ import java.util.*;
  * <p>
  * Базовая версия.
  */
-public class GArray<E> implements Collection<E> {
+public final class GArray<E> implements Collection<E> {
     private transient E[] elementData;
     private transient int modCount = 0;
     private int size;
 
-    @SuppressWarnings("unchecked")
     private GArray(int initialCapacity) {
         if (initialCapacity < 0)
             throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
@@ -55,15 +54,10 @@ public class GArray<E> implements Collection<E> {
         return size == 0;
     }
 
-    public E[] toNativeArray() {
-        return Arrays.copyOf(elementData, size);
-    }
-
     public Object[] toArray() {
         return Arrays.copyOf(elementData, size);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
         if (a.length < size)
             return (T[]) Arrays.copyOf(elementData, size, a.getClass());
@@ -84,14 +78,6 @@ public class GArray<E> implements Collection<E> {
         return true;
     }
 
-    public E getRandomize() {
-        if (isEmpty())
-            return null;
-        int index = Rnd.get(size);
-        RangeCheck(index);
-        return elementData[index];
-    }
-
     public boolean remove(Object o) {
         if (o == null) {
             for (int index = 0; index < size; index++)
@@ -108,28 +94,13 @@ public class GArray<E> implements Collection<E> {
         return false;
     }
 
-    E remove(int index) {
+    private E remove(int index) {
         modCount++;
         RangeCheck(index);
         E old = elementData[index];
         elementData[index] = elementData[size - 1];
         elementData[--size] = null;
         return old;
-    }
-
-    public E removeFirst() {
-        return size > 0 ? remove(0) : null;
-    }
-
-    public E removeLast() {
-        if (size > 0) {
-            modCount++;
-            size--;
-            E old = elementData[size];
-            elementData[size] = null;
-            return old;
-        }
-        return null;
     }
 
     public E set(int index, E element) {
@@ -209,7 +180,6 @@ public class GArray<E> implements Collection<E> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
     }
 
-    @SuppressWarnings("unchecked")
     public void clear() {
         modCount++;
         int oldSize = size;
@@ -219,16 +189,6 @@ public class GArray<E> implements Collection<E> {
         else
             for (int i = 0; i < oldSize; i++)
                 elementData[i] = null;
-        size = 0;
-    }
-
-    /**
-     * Осторожно, при таком очищении в массиве могут оставаться ссылки на обьекты,
-     * удерживающие эти обьекты в памяти!
-     */
-    public void clearSize() {
-        modCount++;
-        size = 0;
     }
 
     public Iterator<E> iterator() {
@@ -244,19 +204,6 @@ public class GArray<E> implements Collection<E> {
             bufer.append(elementData[i]);
         }
         return "<" + bufer + ">";
-    }
-
-    @SuppressWarnings("unchecked")
-    public void sort() {
-        Object tmp[] = toArray();
-        Arrays.sort(tmp);
-        elementData = (E[]) tmp;
-    }
-
-    public boolean addIfNotContains(E e) {
-        if (contains(e))
-            return false;
-        return add(e);
     }
 
     private class Itr implements Iterator<E> {

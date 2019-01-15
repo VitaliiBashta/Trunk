@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _621_EggDelivery extends Quest implements ScriptFile {
+public final class _621_EggDelivery extends Quest {
     //NPC
     private static final int JEREMY = 31521;
     private static final int VALENTINE = 31584;

@@ -4,11 +4,8 @@ import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-// Рейты учтены
-public class _351_BlackSwan extends Quest implements ScriptFile {
-    //NPC
+public final class _351_BlackSwan extends Quest {
     private static final int Gosta = 30916;
     private static final int Heine = 30969;
     private static final int Ferris = 30847;
@@ -18,18 +15,6 @@ public class _351_BlackSwan extends Quest implements ScriptFile {
     private static final int BILL_OF_IASON_HEINE = 4310;
     private static final int CHANCE = 100;
     private static final int CHANCE2 = 5;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _351_BlackSwan() {
         super(false);

@@ -5,26 +5,13 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _166_DarkMass extends Quest implements ScriptFile {
+public final class _166_DarkMass extends Quest {
     private final int UNDRES_LETTER_ID = 1088;
     private final int CEREMONIAL_DAGGER_ID = 1089;
     private final int DREVIANT_WINE_ID = 1090;
     private final int GARMIELS_SCRIPTURE_ID = 1091;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _166_DarkMass() {
         super(false);

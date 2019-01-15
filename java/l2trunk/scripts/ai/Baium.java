@@ -5,6 +5,7 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.scripts.bosses.BaiumManager;
 
 import java.util.HashMap;
@@ -14,16 +15,14 @@ public final class Baium extends DefaultAI {
     private boolean _firstTimeAttacked = true;
 
     // Боевые скилы байума
-    private final Skill baium_normal_attack, energy_wave, earth_quake, thunderbolt, group_hold;
+    private static final int baium_normal_attack = 4127;
+    private static final int energy_wave = 4128;
+    private static final int earth_quake = 4129;
+    private static final int thunderbolt = 4130;
+    private static final int group_hold = 4131;
 
     public Baium(NpcInstance actor) {
         super(actor);
-        Map<Integer,Skill> skills = getActor().getTemplate().getSkills();
-        baium_normal_attack = skills.get(4127);
-        energy_wave = skills.get(4128);
-        earth_quake = skills.get(4129);
-        thunderbolt = skills.get(4130);
-        group_hold = skills.get(4131);
     }
 
     @Override
@@ -78,7 +77,7 @@ public final class Baium extends DefaultAI {
         int s_group_hold = actor.getCurrentHpPercents() > 50 ? 0 : 20;
         int s_thunderbolt = actor.getCurrentHpPercents() > 25 ? 0 : 20;
 
-        Skill r_skill = null;
+        int r_skill = 0;
 
         if (actor.isMovementDisabled()) // Если в руте, то использовать массовый скилл дальнего боя
             r_skill = thunderbolt;
@@ -97,14 +96,13 @@ public final class Baium extends DefaultAI {
         }
 
         // Использовать скилл если можно, иначе атаковать скилом baium_normal_attack
-        if (r_skill == null)
+        if (r_skill == 0)
             r_skill = baium_normal_attack;
-        else if (r_skill.getTargetType() == Skill.SkillTargetType.TARGET_SELF)
+        else if (SkillTable.INSTANCE.getInfo(r_skill).getTargetType() == Skill.SkillTargetType.TARGET_SELF)
             target = actor;
 
         // Добавить новое задание
         addTaskCast(target, r_skill);
-        r_skill = null;
         return true;
     }
 

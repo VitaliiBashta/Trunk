@@ -3,24 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Рейты применены путем увеличения шанса/количества квестовго дропа
- */
-public class _331_ArrowForVengeance extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _331_ArrowForVengeance extends Quest {
     private static final int HARPY_FEATHER = 1452;
     private static final int MEDUSA_VENOM = 1453;
     private static final int WYRMS_TOOTH = 1454;
@@ -29,17 +13,11 @@ public class _331_ArrowForVengeance extends Quest implements ScriptFile {
         super(false);
         addStartNpc(30125);
 
-        addKillId(new int[]{
-                20145,
-                20158,
-                20176
-        });
+        addKillId(20145, 20158, 20176);
 
-        addQuestItem(new int[]{
-                HARPY_FEATHER,
+        addQuestItem(HARPY_FEATHER,
                 MEDUSA_VENOM,
-                WYRMS_TOOTH
-        });
+                WYRMS_TOOTH);
     }
 
     @Override

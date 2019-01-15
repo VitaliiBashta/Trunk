@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _333_BlackLionHunt extends Quest implements ScriptFile {
+public final class _333_BlackLionHunt extends Quest {
     //Technical relatet Items
     private final int BLACK_LION_MARK = 1369;
 
@@ -282,15 +282,6 @@ public class _333_BlackLionHunt extends Quest implements ScriptFile {
             }
             //Marsh Stakato Marquess
     };
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
 
     public _333_BlackLionHunt() {
         super(false);

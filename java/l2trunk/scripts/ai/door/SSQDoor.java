@@ -1,15 +1,14 @@
 package l2trunk.scripts.ai.door;
 
 import l2trunk.commons.geometry.Rectangle;
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.gameserver.ai.DoorAI;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Territory;
 import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public final class SSQDoor extends DoorAI {
     private static final Territory room1 = new Territory().add(new Rectangle(-89696, 217741, -88858, 218085).setZmin(-7520).setZmax(-7320));
@@ -35,35 +34,24 @@ public final class SSQDoor extends DoorAI {
 
         if (!player.isInRange(door, 150))
             return;
-
+        Stream<NpcInstance> aliveNpcs = door.getReflection().getNpcs().filter(n -> !n.isDead());
         switch (door.getDoorId()) {
             case 17240102:
-                for (NpcInstance n : door.getReflection().getNpcs())
-                    if (room1.isInside(n.getX(), n.getY(), n.getZ()) && !n.isDead())
-                        return;
-                break;
+                if (aliveNpcs.anyMatch(n -> room1.isInside(n.getLoc())))
+                    return;
             case 17240104:
-                for (NpcInstance n : door.getReflection().getNpcs())
-                    if (room2.isInside(n.getX(), n.getY(), n.getZ()) && !n.isDead())
-                        return;
-                break;
+                if (aliveNpcs.anyMatch(n -> room2.isInside(n.getLoc())))
+                    return;
             case 17240106:
-                for (NpcInstance n : door.getReflection().getNpcs())
-                    if (room3.isInside(n.getX(), n.getY(), n.getZ()) && !n.isDead())
-                        return;
-                break;
+                if (aliveNpcs.anyMatch(n -> room3.isInside(n.getLoc())))
+                    return;
             case 17240108:
-                for (NpcInstance n : door.getReflection().getNpcs())
-                    if (room4.isInside(n.getX(), n.getY(), n.getZ()) && !n.isDead())
-                        return;
-                break;
+                if (aliveNpcs.anyMatch(n -> (room4.isInside(n.getLoc()))))
+                    return;
             case 17240110:
-                for (NpcInstance n : door.getReflection().getNpcs())
-                    if (room5.isInside(n.getX(), n.getY(), n.getZ()) && !n.isDead())
-                        return;
-                break;
+                if (aliveNpcs.anyMatch(n -> room5.isInside(n.getLoc())))
+                    return;
         }
-
         door.getReflection().openDoor(door.getDoorId());
     }
 }

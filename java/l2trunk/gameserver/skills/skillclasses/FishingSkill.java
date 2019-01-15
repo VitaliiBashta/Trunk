@@ -134,10 +134,6 @@ public final class FishingSkill extends Skill {
             player.sendPacket(SystemMsg.YOU_DO_NOT_HAVE_ENOUGH_BAIT);
             return;
         }
-
-        int check = Rnd.get(fishs.size());
-        FishTemplate fish = fishs.get(check);
-
-        player.startFishing(fish, lureId);
+        player.startFishing(Rnd.get(fishs), lureId);
     }
 }

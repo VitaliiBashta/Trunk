@@ -3,6 +3,7 @@ package l2trunk.scripts.instances;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.listener.actor.OnDeathListener;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -11,7 +12,6 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
@@ -20,7 +20,7 @@ public final class SufferingHallDefence extends Reflection {
     private static final int DeadTumor = 18705;
     private static final int Yehan = 25665;
     private static final int RegenerationCoffin = 18706;
-    private static final List<Integer> monsters = Arrays.asList(22509, 22510, 22511, 22512, 22513, 22514, 22515, AliveTumor);
+    private static final List<Integer> monsters = List.of(22509, 22510, 22511, 22512, 22513, 22514, 22515, AliveTumor);
     private static final Location roomCenter = new Location(-173704, 218092, -9562, 27768);
     private final DeathListener _deathListener = new DeathListener();
     public int timeSpent;
@@ -59,7 +59,7 @@ public final class SufferingHallDefence extends Reflection {
                     p.sendPacket(new ExShowScreenMessage(NpcString.THE_AREA_NEAR_THE_TUMOR_IS_FULL_OF_OMINOUS_ENERGY, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false)));
         else if (tumorIndex == 30)
             getPlayers().forEach(p ->
-                p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_FEEL_THE_SURGING_ENERGY_OF_DEATH_FROM_THE_TUMOR, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false)));
+                    p.sendPacket(new ExShowScreenMessage(NpcString.YOU_CAN_FEEL_THE_SURGING_ENERGY_OF_DEATH_FROM_THE_TUMOR, 8000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false)));
         if (tumorIndex <= 0) {
             if (getTumor() != null)
                 getTumor().deleteMe();
@@ -120,23 +120,22 @@ public final class SufferingHallDefence extends Reflection {
         stage++;
         if (group != null)
             spawnByGroup(group);
-        for (NpcInstance n : getNpcs())
-            if (n.isMonster() && (monsters.contains(n.getNpcId()))) {
-                n.setRunning();
-                n.moveToLocation(roomCenter, 200, false);
-            }
+        getNpcs().filter(GameObject::isMonster)
+                .filter(n -> (monsters.contains(n.getNpcId())))
+                .forEach(n -> {
+                    n.setRunning();
+                    n.moveToLocation(roomCenter, 200, false);
+                });
         invokeDeathListener();
     }
 
     private boolean checkAliveMonsters() {
-        return getNpcs().stream()
-                .filter(n -> monsters.contains(n.getNpcId()))
+        return getNpcs().filter(n -> monsters.contains(n.getNpcId()))
                 .allMatch(Creature::isDead);
     }
 
     private NpcInstance getTumor() {
-        return getNpcs().stream()
-                .filter(npc -> npc.getNpcId() == SufferingHallDefence.DeadTumor)
+        return getNpcs().filter(npc -> npc.getNpcId() == SufferingHallDefence.DeadTumor)
                 .filter(npc -> !npc.isDead())
                 .findFirst().orElse(null);
     }
@@ -187,8 +186,8 @@ public final class SufferingHallDefence extends Reflection {
                     spawnByGroup("soi_hos_defence_tepios");
 
                     setReenterTime(System.currentTimeMillis());
-                    getPlayers().forEach( p->
-                        p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0)));
+                    getPlayers().forEach(p ->
+                            p.sendPacket(new ExSendUIEvent(p, true, true, 0, 0)));
 
                     timeSpent = (int) (System.currentTimeMillis() - _savedTime) / 1000;
                 }, 10000L);

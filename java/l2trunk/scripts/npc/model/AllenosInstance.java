@@ -7,10 +7,6 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-
 public final class AllenosInstance extends NpcInstance {
     private static final int tiatIzId = 110;
 
@@ -23,7 +19,7 @@ public final class AllenosInstance extends NpcInstance {
         if (!canBypassCheck(player, this))
             return;
 
-        if (command.equalsIgnoreCase("enter_seed")) {
+        if ("enter_seed".equalsIgnoreCase(command)) {
             // Время открытого SoD прошло
             if (SoDManager.isAttackStage()) {
                 Reflection r = player.getActiveReflection();

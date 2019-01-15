@@ -7,10 +7,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-/**
- * @author pchayka
- */
-public class SteelCitadelTeleporterInstance extends NpcInstance {
+public final class SteelCitadelTeleporterInstance extends NpcInstance {
     public SteelCitadelTeleporterInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }
@@ -32,70 +29,70 @@ public class SteelCitadelTeleporterInstance extends NpcInstance {
             showChatWindow(player, "default/32745-2.htm");
             return;
         }
-
-        if (command.equalsIgnoreCase("01_up")) {
-            player.getParty().teleport(new Location(-22208, 277122, -13376));
-            return;
-        } else if (command.equalsIgnoreCase("02_up")) {
-            player.getParty().teleport(new Location(-22208, 277106, -11648));
-            return;
-        } else if (command.equalsIgnoreCase("02_down")) {
-            player.getParty().teleport(new Location(-22208, 277074, -15040));
-            return;
-        } else if (command.equalsIgnoreCase("03_up")) {
-            player.getParty().teleport(new Location(-22208, 277120, -9920));
-            return;
-        } else if (command.equalsIgnoreCase("03_down")) {
-            player.getParty().teleport(new Location(-22208, 277120, -13376));
-            return;
-        } else if (command.equalsIgnoreCase("04_up")) {
-            player.getParty().teleport(new Location(-19024, 277126, -8256));
-            return;
-        } else if (command.equalsIgnoreCase("04_down")) {
-            player.getParty().teleport(new Location(-22208, 277106, -11648));
-            return;
-        } else if (command.equalsIgnoreCase("06_up")) {
-            player.getParty().teleport(new Location(-19024, 277106, -9920));
-            return;
-        } else if (command.equalsIgnoreCase("06_down")) {
-            player.getParty().teleport(new Location(-22208, 277122, -9920));
-            return;
-        } else if (command.equalsIgnoreCase("07_up")) {
-            player.getParty().teleport(new Location(-19008, 277100, -11648));
-            return;
-        } else if (command.equalsIgnoreCase("07_down")) {
-            player.getParty().teleport(new Location(-19024, 277122, -8256));
-            return;
-        } else if (command.equalsIgnoreCase("08_up")) {
-            player.getParty().teleport(new Location(-19008, 277100, -13376));
-            return;
-        } else if (command.equalsIgnoreCase("08_down")) {
-            player.getParty().teleport(new Location(-19008, 277106, -9920));
-            return;
-        } else if (command.equalsIgnoreCase("09_up")) {
-            player.getParty().teleport(new Location(14602, 283179, -7500));
-            return;
-        } else if (command.equalsIgnoreCase("09_down")) {
-            player.getParty().teleport(new Location(-19008, 277100, -11648));
-            return;
-        } else if (command.equalsIgnoreCase("facedemon")) {
-            enterInstance(player, 5);
-            return;
-        } else if (command.equalsIgnoreCase("faceranku")) {
-            enterInstance(player, 6);
-            return;
-        } else if (command.equalsIgnoreCase("leave")) {
-            player.getReflection().collapse();
-            return;
-        } else
-            super.onBypassFeedback(player, command);
+        switch (command.toLowerCase()) {
+            case "01_up":
+                player.getParty().teleport(new Location(-22208, 277122, -13376));
+                break;
+            case "02_up":
+                player.getParty().teleport(new Location(-22208, 277106, -11648));
+                break;
+            case "02_down":
+                player.getParty().teleport(new Location(-22208, 277074, -15040));
+                break;
+            case "03_up":
+                player.getParty().teleport(new Location(-22208, 277120, -9920));
+                break;
+            case "03_down":
+                player.getParty().teleport(new Location(-22208, 277120, -13376));
+                break;
+            case "04_up":
+                player.getParty().teleport(new Location(-19024, 277126, -8256));
+                break;
+            case "04_down":
+                player.getParty().teleport(new Location(-22208, 277106, -11648));
+                break;
+            case "06_up":
+                player.getParty().teleport(new Location(-19024, 277106, -9920));
+                break;
+            case "06_down":
+                player.getParty().teleport(new Location(-22208, 277122, -9920));
+                break;
+            case "07_up":
+                player.getParty().teleport(new Location(-19008, 277100, -11648));
+                break;
+            case "07_down":
+                player.getParty().teleport(new Location(-19024, 277122, -8256));
+                break;
+            case "08_up":
+                player.getParty().teleport(new Location(-19008, 277100, -13376));
+                break;
+            case "08_down":
+                player.getParty().teleport(new Location(-19008, 277106, -9920));
+                break;
+            case "09_up":
+                player.getParty().teleport(new Location(14602, 283179, -7500));
+                break;
+            case "09_down":
+                player.getParty().teleport(new Location(-19008, 277100, -11648));
+                break;
+            case "facedemon":
+                enterInstance(player, 5);
+                break;
+            case "faceranku":
+                enterInstance(player, 6);
+                break;
+            case "leave":
+                player.getReflection().collapse();
+                break;
+            default:
+                super.onBypassFeedback(player, command);
+                break;
+        }
     }
 
     private boolean rangeCheck(Player pl) {
-        for (Player m : pl.getParty().getMembers())
-            if (!pl.isInRange(m, 400))
-                return false;
-        return true;
+        return pl.getParty().getMembers().stream()
+                .allMatch(m -> pl.isInRange(m, 400));
     }
 
     private int getIz(int floor) {

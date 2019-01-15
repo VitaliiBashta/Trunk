@@ -15,15 +15,14 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class _512_AwlUnderFoot extends Quest implements ScriptFile {
+public final class _512_AwlUnderFoot extends Quest {
     private final static int INSTANCE_ZONE_ID = 13; // Castles Dungeon
 
     private final static int FragmentOfTheDungeonLeaderMark = 9798;
@@ -45,15 +44,15 @@ public final class _512_AwlUnderFoot extends Quest implements ScriptFile {
     private static final int NagenTheTomboy = 25566;
     private static final int JaxTheDestroyer = 25569;
 
-    private static final int[] type1 = new int[]{RhiannaTheTraitor, TeslaTheDeceiver, SoulHunterChakundel};
-    private static final int[] type2 = new int[]{DurangoTheCrusher, BrutusTheObstinate, RangerKarankawa, SargonTheMad};
-    private static final int[] type3 = new int[]{BeautifulAtrielle, NagenTheTomboy, JaxTheDestroyer};
+    private static final List<Integer> type1 = List.of(RhiannaTheTraitor, TeslaTheDeceiver, SoulHunterChakundel);
+    private static final List<Integer> type2 = List.of(DurangoTheCrusher, BrutusTheObstinate, RangerKarankawa, SargonTheMad);
+    private static final List<Integer> type3 = List.of(BeautifulAtrielle, NagenTheTomboy, JaxTheDestroyer);
 
     public _512_AwlUnderFoot() {
         super(false);
 
         // Wardens
-        addStartNpc(Arrays.asList(36403, 36404, 36405, 36406, 36407, 36408, 36409, 36410, 36411));
+        addStartNpc(36403, 36404, 36405, 36406, 36407, 36408, 36409, 36410, 36411);
         addQuestItem(FragmentOfTheDungeonLeaderMark);
         addKillId(RhiannaTheTraitor, TeslaTheDeceiver, SoulHunterChakundel, DurangoTheCrusher, BrutusTheObstinate, RangerKarankawa, SargonTheMad, BeautifulAtrielle, NagenTheTomboy, JaxTheDestroyer);
     }
@@ -98,13 +97,13 @@ public final class _512_AwlUnderFoot extends Quest implements ScriptFile {
                     case RhiannaTheTraitor:
                     case TeslaTheDeceiver:
                     case SoulHunterChakundel:
-                        prison.initSpawn(type2[Rnd.get(type2.length)], false);
+                        prison.initSpawn(Rnd.get(type2), false);
                         break;
                     case DurangoTheCrusher:
                     case BrutusTheObstinate:
                     case RangerKarankawa:
                     case SargonTheMad:
-                        prison.initSpawn(type3[Rnd.get(type3.length)], false);
+                        prison.initSpawn(Rnd.get(type3), false);
                         break;
                     case BeautifulAtrielle:
                     case NagenTheTomboy:
@@ -198,28 +197,24 @@ public final class _512_AwlUnderFoot extends Quest implements ScriptFile {
             r.startCollapseTimer(iz.getTimelimit() * 60 * 1000L);
             player.getParty().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(iz.getTimelimit()));
 
-            prison.initSpawn(type1[Rnd.get(type1.length)], true);
+            prison.initSpawn(Rnd.get(type1), true);
         }
         return null;
+    }
+
+    private boolean areMembersSameClan(Player player) {
+        if (player.getParty() == null)
+            return true;
+        for (Player p : player.getParty().getMembers())
+            if (p.getClan() != player.getClan())
+                return false;
+        return true;
     }
 
     private class Prison {
         private int _castleId;
         private int _reflectionId;
         private long _lastEnter;
-
-        private class PrisonSpawnTask extends RunnableImpl {
-            final int _npcId;
-
-            PrisonSpawnTask(int npcId) {
-                _npcId = npcId;
-            }
-
-            @Override
-            public void runImpl() {
-                addSpawnToInstance(_npcId, new Location(12152, -49272, -3008, 25958), 0, _reflectionId);
-            }
-        }
 
         Prison(int id, InstantZone iz) {
             try {
@@ -248,26 +243,18 @@ public final class _512_AwlUnderFoot extends Quest implements ScriptFile {
         boolean isLocked() {
             return System.currentTimeMillis() - _lastEnter < 4 * 60 * 60 * 1000L;
         }
-    }
 
-    private boolean areMembersSameClan(Player player) {
-        if (player.getParty() == null)
-            return true;
-        for (Player p : player.getParty().getMembers())
-            if (p.getClan() != player.getClan())
-                return false;
-        return true;
-    }
+        private class PrisonSpawnTask extends RunnableImpl {
+            final int _npcId;
 
-    @Override
-    public void onLoad() {
-    }
+            PrisonSpawnTask(int npcId) {
+                _npcId = npcId;
+            }
 
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
+            @Override
+            public void runImpl() {
+                addSpawnToInstance(_npcId, new Location(12152, -49272, -3008, 25958), 0, _reflectionId);
+            }
+        }
     }
 }

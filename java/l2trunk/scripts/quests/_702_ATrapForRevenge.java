@@ -4,13 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author: pchayka
- * @date: 08.06.2010
- */
-public class _702_ATrapForRevenge extends Quest implements ScriptFile {
+public final class _702_ATrapForRevenge extends Quest {
     // NPC's
     private static final int PLENOS = 32563;
     private static final int TENIUS = 32555;
@@ -22,18 +17,6 @@ public class _702_ATrapForRevenge extends Quest implements ScriptFile {
     // MOB's
     private static final int DRAK = 22612;
     private static final int MUTATED_DRAKE_WING = 22611;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _702_ATrapForRevenge() {
         super(true);

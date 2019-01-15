@@ -63,10 +63,9 @@ public final class Kama63Minion extends Fighter {
         if (minion == null)
             return null;
 
-        for (NpcInstance npc : World.getAroundNpc(minion))
-            if (npc.getNpcId() == Kama63Minion.BOSS_ID)
-                return npc;
-        return null;
+        return World.getAroundNpc(minion)
+                .filter(npc -> npc.getNpcId() == Kama63Minion.BOSS_ID)
+                .findFirst().orElse(null);
     }
 
     @Override
@@ -80,20 +79,20 @@ public final class Kama63Minion extends Fighter {
     }
 
     public class DieScheduleTimerTask extends RunnableImpl {
-        NpcInstance _minion = null;
-        NpcInstance _master = null;
+        NpcInstance minion;
+        NpcInstance master;
 
         DieScheduleTimerTask(NpcInstance minion, NpcInstance master) {
-            _minion = minion;
-            _master = master;
+            this.minion = minion;
+            this.master = master;
         }
 
         @Override
         public void runImpl() {
-            if (_master != null && _minion != null && !_master.isDead() && !_minion.isDead())
-                _master.setCurrentHp(_master.getCurrentHp() + _minion.getCurrentHp() * 5, false);
-            Functions.npcSayCustomMessage(_minion, "Kama63Minion");
-            _minion.doDie(_minion);
+            if (master != null && minion != null && !master.isDead() && !minion.isDead())
+                master.setCurrentHp(master.getCurrentHp() + minion.getCurrentHp() * 5, false);
+            Functions.npcSayCustomMessage(minion, "Kama63Minion");
+            minion.doDie(minion);
         }
     }
 }

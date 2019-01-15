@@ -11,11 +11,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-/**
- * @author VISTALL
- * @date 15:13/27.04.2011
- */
-public class MatchMassTeleporterInstance extends NpcInstance {
+public final class MatchMassTeleporterInstance extends NpcInstance {
     private final int _flagId;
     private long _timeout;
 
@@ -41,8 +37,9 @@ public class MatchMassTeleporterInstance extends NpcInstance {
 
             CTBTeamObject object = locs.get(_flagId);
             if (object.getFlag() != null) {
-                for (Player $player : World.getAroundPlayers(this, 400, 100))
-                    $player.teleToLocation(Location.findPointToStay(object.getFlag(), 100, 125));
+                World.getAroundPlayers(this, 400, 100)
+                        .forEach(p ->
+                                p.teleToLocation(Location.findPointToStay(object.getFlag(), 100, 125)));
             }
         }
     }

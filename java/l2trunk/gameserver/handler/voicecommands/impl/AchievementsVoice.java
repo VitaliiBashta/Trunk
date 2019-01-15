@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class AchievementsVoice extends Functions implements IVoicedCommandHandler {
-    private static final List<String> COMMANDS = Arrays.asList("achievements", "ach");
+    private static final List<String> COMMANDS = List.of("achievements", "ach");
 
     @Override
     public boolean useVoicedCommand(String command, Player activeChar, String args) {

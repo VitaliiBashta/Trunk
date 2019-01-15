@@ -7,10 +7,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 
-public final class _194_SevenSignsMammonsContract extends Quest implements ScriptFile {
+public final class _194_SevenSignsMammonsContract extends Quest {
     // NPCs
     private static final int Colin = 32571;
     private static final int SirGustavAthebaldt = 30760;
@@ -114,7 +113,7 @@ public final class _194_SevenSignsMammonsContract extends Quest implements Scrip
                 return null;
             }
             negateSpeedBuffs(player);
-            SkillTable.INSTANCE.getInfo(6201).getEffects(player   );
+            SkillTable.INSTANCE.getInfo(6201).getEffects(player);
         } else if (event.equalsIgnoreCase("colin_q194_12a.htm")) {
             if (player.getTransformation() != 0 || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
@@ -223,17 +222,5 @@ public final class _194_SevenSignsMammonsContract extends Quest implements Scrip
 
     private void negateTransformations(Player p) {
         p.setTransformation(0);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -12,6 +12,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
+import l2trunk.gameserver.tables.SkillTable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -124,8 +125,8 @@ public final class Baylor extends DefaultAI {
         addDesiredSkill(skills, target, distance, Stun2);
         addDesiredSkill(skills, target, distance, Stun3);
 
-        Skill skill = selectTopSkill(skills);
-        if (skill != null && !skill.isOffensive())
+        int skill = selectTopSkill(skills);
+        if (skill != 0 && !SkillTable.INSTANCE.getInfo(skill).isOffensive())
             target = actor;
 
         return chooseTaskAndTargets(skill, target, distance);

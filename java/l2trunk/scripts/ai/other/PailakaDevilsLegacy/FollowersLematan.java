@@ -23,7 +23,7 @@ public final class FollowersLematan extends Fighter {
         NpcInstance minion = getActor();
         if (minion == null)
             return;
-        World.getAroundNpc(minion, 1000, 1000).stream()
+        World.getAroundNpc(minion, 1000, 1000)
                 .filter(target -> target.getNpcId() == LEMATAN && target.getCurrentHpPercents() < 65)
                 .forEach(target -> minion.doCast(5712 , target, true));
 

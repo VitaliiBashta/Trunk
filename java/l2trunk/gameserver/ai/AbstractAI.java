@@ -7,9 +7,13 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.model.instances.NpcInstance;
+import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public abstract class AbstractAI extends RunnableImpl {
     protected static final Logger _log = LoggerFactory.getLogger(AbstractAI.class);
@@ -24,21 +28,45 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     public void runImpl() {
-
     }
 
-    public void changeIntention(CtrlIntention intention, Object arg0, Object arg1) {
+    public void changeIntention(CtrlIntention intention) {
         this.intention = intention;
         if (intention != CtrlIntention.AI_INTENTION_CAST && intention != CtrlIntention.AI_INTENTION_ATTACK)
             setAttackTarget(null);
     }
 
-    public final void setIntention(CtrlIntention intention, Object arg0) {
-        setIntention(intention, arg0, null);
+    public final void setIntention(CtrlIntention intention, ItemInstance gameObject) {
+        setAttackTarget(null);
+        Creature actor = getActor();
+        if (!actor.isVisible()) {
+            if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
+                return;
+            intention = CtrlIntention.AI_INTENTION_IDLE;
+        }
+        actor.getListeners().onAiIntention(intention, gameObject, null);
+        if (intention == CtrlIntention.AI_INTENTION_PICK_UP) {
+            onIntentionPickUp(gameObject);
+        }
     }
 
-    public void setIntention(CtrlIntention intention, Object arg0, Object arg1) {
-        if (intention != CtrlIntention.AI_INTENTION_CAST && intention != CtrlIntention.AI_INTENTION_ATTACK)
+    public final void setIntentionAttack(CtrlIntention intention, Creature gameObject) {
+        Creature actor = getActor();
+
+        if (!actor.isVisible()) {
+            if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
+                return;
+            intention = CtrlIntention.AI_INTENTION_IDLE;
+        }
+
+        actor.getListeners().onAiIntention(CtrlIntention.AI_INTENTION_ATTACK, gameObject, null);
+
+        onIntentionAttack((Creature) gameObject);
+
+    }
+
+    public final void setIntentionInteract(CtrlIntention intention, GameObject gameObject) {
+        if (intention != CtrlIntention.AI_INTENTION_ATTACK)
             setAttackTarget(null);
 
         Creature actor = getActor();
@@ -46,78 +74,74 @@ public abstract class AbstractAI extends RunnableImpl {
         if (!actor.isVisible()) {
             if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
                 return;
+            intention = CtrlIntention.AI_INTENTION_IDLE;
+        }
 
+        actor.getListeners().onAiIntention(intention, gameObject, null);
+
+        if (intention == CtrlIntention.AI_INTENTION_ATTACK) {
+            onIntentionAttack((Creature) gameObject);
+        } else if (intention == CtrlIntention.AI_INTENTION_INTERACT) {
+            onIntentionInteract(gameObject);
+        }
+    }
+
+    public final void setIntention(CtrlIntention intention, Creature follower, Integer arg1) {
+        setAttackTarget(null);
+        Creature actor = getActor();
+        if (!actor.isVisible()) {
+            if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
+                return;
+            intention = CtrlIntention.AI_INTENTION_IDLE;
+        }
+        actor.getListeners().onAiIntention(intention, follower, arg1);
+        onIntentionFollow(follower, arg1);
+    }
+
+    public final void setIntention(CtrlIntention intention, Player player, Integer offset) {
+        setAttackTarget(null);
+
+        Creature actor = getActor();
+
+        if (!actor.isVisible()) {
+            if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
+                return;
+            intention = CtrlIntention.AI_INTENTION_IDLE;
+        }
+
+        actor.getListeners().onAiIntention(intention, player, offset);
+
+        if (intention == CtrlIntention.AI_INTENTION_FOLLOW) {
+            onIntentionFollow(player, offset);
+        } else if (intention == CtrlIntention.AI_INTENTION_COUPLE_ACTION) {
+            onIntentionCoupleAction(player, offset);
+        }
+    }
+
+    public void setIntention(CtrlIntention intention, Object arg0, Object arg1) {
+        Creature actor = getActor();
+
+        if (!actor.isVisible()) {
+            if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
+                return;
             intention = CtrlIntention.AI_INTENTION_IDLE;
         }
 
         actor.getListeners().onAiIntention(intention, arg0, arg1);
 
-        switch (intention) {
-            case AI_INTENTION_IDLE:
-                onIntentionIdle();
-                break;
-            case AI_INTENTION_ACTIVE:
-                onIntentionActive();
-                break;
-            case AI_INTENTION_REST:
-                onIntentionRest();
-                break;
-            case AI_INTENTION_ATTACK:
-                onIntentionAttack((Creature) arg0);
-                break;
-            case AI_INTENTION_CAST:
-                onIntentionCast((Skill) arg0, (Creature) arg1);
-                break;
-            case AI_INTENTION_PICK_UP:
-                onIntentionPickUp((GameObject) arg0);
-                break;
-            case AI_INTENTION_INTERACT:
-                onIntentionInteract((GameObject) arg0);
-                break;
-            case AI_INTENTION_FOLLOW:
-                onIntentionFollow((Creature) arg0, (Integer) arg1);
-                break;
-            case AI_INTENTION_COUPLE_ACTION:
-                onIntentionCoupleAction((Player) arg0, (Integer) arg1);
-                break;
+        if (intention == CtrlIntention.AI_INTENTION_CAST) {
+            onIntentionCast((Skill) arg0, (Creature) arg1);
         }
     }
 
     public final void notifyEvent(CtrlEvent evt) {
-        notifyEvent(evt, new Object[]{});
-    }
-
-    public final void notifyEvent(CtrlEvent evt, Object arg0) {
-        notifyEvent(evt, new Object[]{arg0});
-    }
-
-    public final void notifyEvent(CtrlEvent evt, Object arg0, Object arg1) {
-        notifyEvent(evt, new Object[]{arg0, arg1});
-    }
-
-    final void notifyEvent(CtrlEvent evt, Object arg0, Object arg1, Object arg2) {
-        notifyEvent(evt, new Object[]{arg0, arg1, arg2});
-    }
-
-    public void notifyEvent(CtrlEvent evt, Object[] args) {
         Creature actor = getActor();
         if (actor == null || !actor.isVisible())
             return;
 
-        actor.getListeners().onAiEvent(evt, args);
-
         switch (evt) {
             case EVT_THINK:
                 onEvtThink();
-                break;
-            case EVT_ATTACKED:
-                onEvtAttacked((Creature) args[0], ((Number) args[1]).intValue());
-                break;
-            case EVT_CLAN_ATTACKED:
-                onEvtClanAttacked((Creature) args[0], (Creature) args[1], ((Number) args[2]).intValue());
-                break;
-            case EVT_AGGRESSION:
-                onEvtAggression((Creature) args[0], ((Number) args[1]).intValue());
                 break;
             case EVT_READY_TO_ACT:
                 onEvtReadyToAct();
@@ -128,23 +152,11 @@ public abstract class AbstractAI extends RunnableImpl {
             case EVT_ARRIVED_TARGET:
                 onEvtArrivedTarget();
                 break;
-            case EVT_ARRIVED_BLOCKED:
-                onEvtArrivedBlocked((Location) args[0]);
-                break;
-            case EVT_FORGET_OBJECT:
-                onEvtForgetObject((GameObject) args[0]);
-                break;
-            case EVT_DEAD:
-                onEvtDead((Creature) args[0]);
-                break;
             case EVT_FAKE_DEATH:
                 onEvtFakeDeath();
                 break;
             case EVT_FINISH_CASTING:
                 onEvtFinishCasting();
-                break;
-            case EVT_SEE_SPELL:
-                onEvtSeeSpell((Skill) args[0], (Creature) args[1]);
                 break;
             case EVT_SPAWN:
                 onEvtSpawn();
@@ -152,10 +164,66 @@ public abstract class AbstractAI extends RunnableImpl {
             case EVT_DESPAWN:
                 onEvtDeSpawn();
                 break;
+        }
+    }
+
+
+    public final void notifyEvent(CtrlEvent evt, Object arg0) {
+        Creature actor = getActor();
+        if (actor == null || !actor.isVisible())
+            return;
+
+//        actor.getListeners().onAiEvent(evt, List.of(arg0));
+        switch (evt) {
+            case EVT_ARRIVED_BLOCKED:
+                onEvtArrivedBlocked((Location) arg0);
+                break;
+            case EVT_FORGET_OBJECT:
+                onEvtForgetObject((GameObject) arg0);
+                break;
+            case EVT_DEAD:
+                onEvtDead((Creature) arg0);
+                break;
             case EVT_TIMER:
-                onEvtTimer(((Number) args[0]).intValue(), args[1], args[2]);
+                onEvtTimer(((Number) arg0).intValue());
                 break;
         }
+    }
+
+    public final void notifyEvent(CtrlEvent evt, Skill skill, Creature creature) {
+        Creature actor = getActor();
+        if (actor == null || !actor.isVisible())
+            return;
+
+//        actor.getListeners().onAiEvent(evt, List.of(skill, creature));
+
+        if (evt == CtrlEvent.EVT_SEE_SPELL) {
+            onEvtSeeSpell(skill, creature);
+        }
+    }
+
+    public final void notifyEvent(CtrlEvent evt, Creature creature, int dmg) {
+        Creature actor = getActor();
+        if (actor == null || !actor.isVisible())
+            return;
+        if (creature != null)
+            actor.getListeners().onAiEvent(evt, List.of(creature, dmg));
+
+        if (evt == CtrlEvent.EVT_ATTACKED) {
+            onEvtAttacked(creature, dmg);
+        } else if (evt == CtrlEvent.EVT_AGGRESSION) {
+            onEvtAggression(creature, dmg);
+        }
+    }
+
+    void notifyEventClanAttack(NpcInstance act, Creature attacker, int damage) {
+        Creature actor = getActor();
+        if (actor == null || !actor.isVisible())
+            return;
+
+        actor.getListeners().onAiEvent(CtrlEvent.EVT_CLAN_ATTACKED, List.of(act, attacker, damage));
+
+        onEvtClanAttacked(act, attacker, damage);
     }
 
     protected void clientActionFailed() {
@@ -181,7 +249,25 @@ public abstract class AbstractAI extends RunnableImpl {
     }
 
     public final void setIntention(CtrlIntention intention) {
-        setIntention(intention, null, null);
+        setAttackTarget(null);
+        Creature actor = getActor();
+        if (!actor.isVisible()) {
+            if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
+                return;
+            intention = CtrlIntention.AI_INTENTION_IDLE;
+        }
+        actor.getListeners().onAiIntention(intention, null, null);
+        switch (intention) {
+            case AI_INTENTION_IDLE:
+                onIntentionIdle();
+                break;
+            case AI_INTENTION_ACTIVE:
+                onIntentionActive();
+                break;
+            case AI_INTENTION_REST:
+                onIntentionRest();
+                break;
+        }
     }
 
     public Creature getAttackTarget() {
@@ -192,9 +278,6 @@ public abstract class AbstractAI extends RunnableImpl {
         _attackTarget = target == null ? HardReferences.emptyRef() : target.getRef();
     }
 
-    /**
-     * Означает, что AI всегда включен, независимо от состояния региона
-     */
     public boolean isGlobalAI() {
         return false;
     }
@@ -252,5 +335,5 @@ public abstract class AbstractAI extends RunnableImpl {
 
     public abstract void onIntentionFollow(Creature target, Integer offset);
 
-    public abstract void onEvtTimer(int timerId, Object arg1, Object arg2);
+    public abstract void onEvtTimer(int timerId);
 }

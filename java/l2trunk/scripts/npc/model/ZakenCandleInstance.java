@@ -24,14 +24,13 @@ public final class ZakenCandleInstance extends NpcInstance {
         if (r.isDefault() || used)
             return;
 
-        for (NpcInstance npc : getAroundNpc(1000, 100))
-            if (npc.getNpcId() == Anchor) {
-                setRHandId(BOW_Weapon);
-                broadcastCharInfo();
-                used = true;
-                return;
-            }
-
+        getAroundNpc(1000, 100)
+                .filter(npc -> npc.getNpcId() == Anchor)
+                .findFirst().ifPresent(npc -> {
+            setRHandId(BOW_Weapon);
+            broadcastCharInfo();
+            used = true;
+        });
         setRHandId(THS_Weapon);
         broadcastCharInfo();
         used = true;

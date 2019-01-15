@@ -6,12 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * Квест на вторую профессию Test Of The Reformer
- *
- * @author Sergey Ibryaev aka Artful
- */
-public class _227_TestOfTheReformer extends Quest implements ScriptFile {
+public final class _227_TestOfTheReformer extends Quest {
     //NPC
     private static final int Pupina = 30118;
     private static final int Sla = 30666;
@@ -110,18 +105,6 @@ public class _227_TestOfTheReformer extends Quest implements ScriptFile {
             }
     };
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
     public _227_TestOfTheReformer() {
         super(false);
         addStartNpc(Pupina);
@@ -142,8 +125,7 @@ public class _227_TestOfTheReformer extends Quest implements ScriptFile {
             addKillId(aDROPLIST_COND[2]);
             addQuestItem(aDROPLIST_COND[4]);
         }
-        addQuestItem(new int[]{
-                BookOfReform,
+        addQuestItem(BookOfReform,
                 HugeNail,
                 LetterOfIntroduction,
                 SlasLetter,
@@ -155,8 +137,7 @@ public class _227_TestOfTheReformer extends Quest implements ScriptFile {
                 Greetings,
                 KakansLetter,
                 RamussLetter,
-                RippedDiary
-        });
+                RippedDiary);
     }
 
     @Override

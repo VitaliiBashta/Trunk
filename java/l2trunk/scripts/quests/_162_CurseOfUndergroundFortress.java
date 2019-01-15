@@ -7,22 +7,10 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _162_CurseOfUndergroundFortress extends Quest implements ScriptFile {
+public final class _162_CurseOfUndergroundFortress extends Quest {
     private final int BONE_FRAGMENT3 = 1158;
     private final int ELF_SKULL = 1159;
     private final int BONE_SHIELD = 625;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _162_CurseOfUndergroundFortress() {
         super(false);
@@ -38,10 +26,8 @@ public class _162_CurseOfUndergroundFortress extends Quest implements ScriptFile
         addKillId(20464);
         addKillId(20504);
 
-        addQuestItem(new int[]{
-                ELF_SKULL,
-                BONE_FRAGMENT3
-        });
+        addQuestItem(ELF_SKULL,
+                BONE_FRAGMENT3);
     }
 
     @Override

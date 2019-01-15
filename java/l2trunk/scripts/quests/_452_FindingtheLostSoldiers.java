@@ -3,15 +3,13 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
-public final class _452_FindingtheLostSoldiers extends Quest implements ScriptFile {
+public final class _452_FindingtheLostSoldiers extends Quest {
     private static final int JAKAN = 32773;
     private static final int TAG_ID = 15513;
-    private static final List<Integer> SOLDIER_CORPSES = Arrays.asList(32769, 32770, 32771, 32772);
+    private static final List<Integer> SOLDIER_CORPSES = List.of(32769, 32770, 32771, 32772);
 
     public _452_FindingtheLostSoldiers() {
         super(false);
@@ -20,15 +18,6 @@ public final class _452_FindingtheLostSoldiers extends Quest implements ScriptFi
         addTalkId(JAKAN);
         addTalkId(SOLDIER_CORPSES);
         addQuestItem(TAG_ID);
-    }
-
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
     }
 
     @Override

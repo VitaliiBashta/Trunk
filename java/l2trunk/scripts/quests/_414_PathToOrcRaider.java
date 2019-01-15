@@ -4,9 +4,10 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
-public class _414_PathToOrcRaider extends Quest implements ScriptFile {
+public final class _414_PathToOrcRaider extends Quest {
+    private static final int MARK_OF_RAIDER = 1592;
     //npc
     private final int KARUKIA = 30570;
     private final int KASMAN = 30501;
@@ -23,19 +24,6 @@ public class _414_PathToOrcRaider extends Quest implements ScriptFile {
     private final int BETRAYER_UMBAR_REPORT = 1589;
     private final int HEAD_OF_BETRAYER = 1591;
     private final int TIMORA_ORCS_HEAD = 8544;
-    private final int MARK_OF_RAIDER = 1592;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _414_PathToOrcRaider() {
         super(false);
@@ -72,17 +60,17 @@ public class _414_PathToOrcRaider extends Quest implements ScriptFile {
             st.takeItems(GOBLIN_DWELLING_MAP, -1);
             st.playSound(SOUND_MIDDLE);
             st.giveItems(BETRAYER_UMBAR_REPORT, 1);
-            st.addRadar(-74490, 83275, -3374);
+            st.addRadar(new Location(-74490, 83275, -3374));
             st.setCond(3);
         } else if (event.equalsIgnoreCase("to_Schuttgart")) {
             htmltext = "prefect_karukia_q0414_07b.htm";
             st.takeItems(KURUKA_RATMAN_TOOTH, -1);
             st.takeItems(GOBLIN_DWELLING_MAP, -1);
-            st.addRadar(90000, -143286, -1520);
+            st.addRadar(new Location(90000, -143286, -1520));
             st.playSound(SOUND_MIDDLE);
             st.setCond(5);
         } else if (event.equalsIgnoreCase("prefect_tazar_q0414_02.htm")) {
-            st.addRadar(57502, -117576, -3700);
+            st.addRadar(new Location(57502, -117576, -3700));
             st.setCond(6);
             st.playSound(SOUND_MIDDLE);
         }
@@ -196,7 +184,7 @@ public class _414_PathToOrcRaider extends Quest implements ScriptFile {
                 st.giveItems(HEAD_OF_BETRAYER, 1);
                 if (st.getQuestItemsCount(HEAD_OF_BETRAYER) > 1) {
                     st.setCond(4);
-                    st.addRadar(-80450, 153410, -3175);
+                    st.addRadar(new Location(-80450, 153410, -3175));
                     st.playSound(SOUND_MIDDLE);
                 } else
                     st.playSound(SOUND_ITEMGET);
@@ -204,7 +192,7 @@ public class _414_PathToOrcRaider extends Quest implements ScriptFile {
         } else if (npcId == TIMORA_ORC && cond == 6)
             if (st.getQuestItemsCount(TIMORA_ORCS_HEAD) < 1 && Rnd.chance(50)) {
                 st.giveItems(TIMORA_ORCS_HEAD, 1);
-                st.addRadar(90000, -143286, -1520);
+                st.addRadar(new Location(90000, -143286, -1520));
                 st.setCond(7);
                 st.playSound(SOUND_MIDDLE);
             }

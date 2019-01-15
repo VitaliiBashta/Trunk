@@ -3,7 +3,6 @@ package l2trunk.gameserver.model.entity;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.utils.Language;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
@@ -94,7 +93,7 @@ public enum ChangeLogManager {
 
         pagesBuilder.append("</tr></table>");
 
-        String html = HtmCache.INSTANCE.getNotNull("command/changeLog.htm", Language.ENGLISH);
+        String html = HtmCache.INSTANCE.getNotNull("command/changeLog.htm");
         html = html.replace("%date%", change.getDate());
         html = html.replace("%fixes%", fixesBuilder.toString());
         html = html.replace("%leftPageBtn%", index > 0 ? "<button value=\"Previous\" action=\"bypass -h ShowChangeLogPage " + (index - 1) + "\" width=80 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_ct1.button_df\">" : "<br>");

@@ -12,8 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class World {
+public final class World {
     /**
      * Map dimensions
      */
@@ -258,10 +259,10 @@ public class World {
         return null;
     }
 
-    public static List<GameObject> getAroundObjects(GameObject object) {
+    public static Stream<GameObject> getAroundObjects(GameObject object) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -278,13 +279,13 @@ public class World {
                         result.add(obj);
                     }
 
-        return result;
+        return result.stream();
     }
 
-    public static List<GameObject> getAroundObjects(GameObject object, int radius, int height) {
+    public static Stream<GameObject> getAroundObjects(GameObject object, int radius, int height) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -315,13 +316,13 @@ public class World {
                         result.add(obj);
                     }
 
-        return result;
+        return result.stream();
     }
 
-    public static List<Creature> getAroundCharacters(GameObject object) {
+    public static Stream<Creature> getAroundCharacters(GameObject object) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -338,13 +339,13 @@ public class World {
                         result.add((Creature) obj);
                     }
 
-        return result;
+        return result.stream();
     }
 
-    public static List<Creature> getAroundCharacters(GameObject object, int radius, int height) {
+    public static Stream<Creature> getAroundCharacters(GameObject object, int radius, int height) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -374,13 +375,13 @@ public class World {
 
                         result.add((Creature) obj);
                     }
-        return result;
+        return result.stream();
     }
 
-    public static List<NpcInstance> getAroundNpc(GameObject object) {
+    public static Stream<NpcInstance> getAroundNpc(GameObject object) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -396,13 +397,13 @@ public class World {
 
                         result.add((NpcInstance) obj);
                     }
-        return result;
+        return result.stream();
     }
 
-    public static List<NpcInstance> getAroundNpc(GameObject object, int radius, int height) {
+    public static Stream<NpcInstance> getAroundNpc(GameObject object, int radius, int height) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -429,16 +430,15 @@ public class World {
                             continue;
                         if (dx * dx + dy * dy > sqrad)
                             continue;
-
                         result.add((NpcInstance) obj);
                     }
-        return result;
+        return result.stream();
     }
 
-    static List<Playable> getAroundPlayables(GameObject object) {
+    static Stream<Playable> getAroundPlayables(GameObject object) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -454,7 +454,7 @@ public class World {
 
                         result.add((Playable) obj);
                     }
-        return result;
+        return result.stream();
     }
 
     public static List<Playable> getAroundPlayables(GameObject object, int radius, int height) {
@@ -493,10 +493,10 @@ public class World {
         return result;
     }
 
-    public static List<Player> getAroundPlayers(GameObject object) {
+    public static Stream<Player> getAroundPlayers(GameObject object) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -512,13 +512,13 @@ public class World {
 
                         result.add((Player) obj);
                     }
-        return result;
+        return result.stream();
     }
 
-    public static List<Player> getAroundPlayers(GameObject object, int radius, int height) {
+    public static Stream<Player> getAroundPlayers(GameObject object, int radius, int height) {
         WorldRegion currentRegion = object.getCurrentRegion();
         if (currentRegion == null)
-            return Collections.emptyList();
+            return Stream.empty();
 
         int oid = object.getObjectId();
         int rid = object.getReflectionId();
@@ -548,14 +548,9 @@ public class World {
 
                         result.add((Player) obj);
                     }
-        return result;
+        return result.stream();
     }
 
-    /**
-     * Проверить, пустые ли соседние регионы от игроков, включая текущий
-     *
-     * @return
-     */
     private static boolean isNeighborsEmpty(WorldRegion region) {
         for (int x = validX(region.getX() - 1); x <= validX(region.getX() + 1); x++)
             for (int y = validY(region.getY() - 1); y <= validY(region.getY() + 1); y++)
@@ -572,7 +567,7 @@ public class World {
                     getRegion(x, y, z).setActive(true);
     }
 
-    public static void deactivate(WorldRegion currentRegion) {
+    static void deactivate(WorldRegion currentRegion) {
         for (int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
             for (int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
                 for (int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
@@ -605,7 +600,7 @@ public class World {
     /**
      * Убирает у игрока все видимые обьекты в текущем регионе и соседних
      */
-    public static void removeObjectsFromPlayer(Player player) {
+    static void removeObjectsFromPlayer(Player player) {
         WorldRegion currentRegion = player.isInObserverMode() ? player.getObserverRegion() : player.getCurrentRegion();
         if (currentRegion == null)
             return;
@@ -701,7 +696,7 @@ public class World {
         WorldRegion region = getRegion(loc);
         List<Zone> zones = region.getZones();
         for (Zone zone : zones)
-            if (zone.checkIfInZone(loc.x, loc.y, loc.z, reflection))
+            if (zone.checkIfInZone(loc, reflection))
                 inside.add(zone);
     }
 
@@ -715,7 +710,7 @@ public class World {
         if (zones.size() == 0)
             return null;
         for (Zone zone : zones)
-            if (zone != null && zone.getType() == ZoneType.water && zone.checkIfInZone(loc.x, loc.y, loc.z, reflection))
+            if (zone != null && zone.getType() == ZoneType.water && zone.checkIfInZone(loc, reflection))
                 return zone;
         return null;
     }

@@ -6,24 +6,12 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _168_DeliverSupplies extends Quest implements ScriptFile {
+public final class _168_DeliverSupplies extends Quest {
     private final int JENNIES_LETTER_ID = 1153;
     private final int SENTRY_BLADE1_ID = 1154;
     private final int SENTRY_BLADE2_ID = 1155;
     private final int SENTRY_BLADE3_ID = 1156;
     private final int OLD_BRONZE_SWORD_ID = 1157;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _168_DeliverSupplies() {
         super(false);
@@ -35,13 +23,11 @@ public class _168_DeliverSupplies extends Quest implements ScriptFile {
         addTalkId(30357);
         addTalkId(30360);
 
-        addQuestItem(new int[]{
-                SENTRY_BLADE1_ID,
+        addQuestItem(SENTRY_BLADE1_ID,
                 OLD_BRONZE_SWORD_ID,
                 JENNIES_LETTER_ID,
                 SENTRY_BLADE2_ID,
-                SENTRY_BLADE3_ID
-        });
+                SENTRY_BLADE3_ID);
     }
 
     @Override

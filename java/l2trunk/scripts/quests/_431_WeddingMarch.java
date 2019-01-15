@@ -3,9 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _431_WeddingMarch extends Quest implements ScriptFile {
+public final class _431_WeddingMarch extends Quest {
     private static final int MELODY_MAESTRO_KANTABILON = 31042;
     private static final int SILVER_CRYSTAL = 7540;
     private static final int WEDDING_ECHO_CRYSTAL = 7062;

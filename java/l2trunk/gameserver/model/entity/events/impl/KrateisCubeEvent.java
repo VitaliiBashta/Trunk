@@ -49,7 +49,6 @@ public final class KrateisCubeEvent extends GlobalEvent {
             1242, 3,
             1062, 2);
 
-    //    private static final List<Integer> SKILL_LEVEL = Arrays.asList(2, 2, 3, 3, 6, 3, 3, 3, 3, 2, 1);
     private final int _minLevel;
     private final int _maxLevel;
     private final Calendar _calendar = Calendar.getInstance();

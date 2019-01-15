@@ -33,7 +33,7 @@ public final class ClanHallMiniGameEvent extends SiegeEvent<ClanHall, CMGSiegeCl
 
         List<CMGSiegeClanObject> siegeClans = getObjects(ATTACKERS);
         if (siegeClans.size() < 2) {
-            CMGSiegeClanObject siegeClan = CollectionUtils.safeGet(siegeClans, 0);
+            CMGSiegeClanObject siegeClan = siegeClans.get(0);
             if (siegeClan != null) {
                 CMGSiegeClanObject oldSiegeClan = getSiegeClan(REFUND, siegeClan.getObjectId());
                 if (oldSiegeClan != null) {

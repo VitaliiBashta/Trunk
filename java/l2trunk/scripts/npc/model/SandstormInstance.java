@@ -4,12 +4,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-/**
- * Данный инстанс используется NPC Sandstorm в локации Hellbound
- *
- * @author SYS
- */
-public class SandstormInstance extends NpcInstance {
+public final class SandstormInstance extends NpcInstance {
     public SandstormInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

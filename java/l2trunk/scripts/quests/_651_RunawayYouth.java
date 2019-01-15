@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _651_RunawayYouth extends Quest implements ScriptFile {
+public final class _651_RunawayYouth extends Quest {
     //Npc
     private static final int IVAN = 32014;
     private static final int BATIDAE = 31989;
@@ -13,18 +13,6 @@ public class _651_RunawayYouth extends Quest implements ScriptFile {
 
     //Items
     private static final int SOE = 736;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _651_RunawayYouth() {
         super(false);

@@ -9,19 +9,17 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Collection;
-
 /**
  * Evil Spirits Magic Force (22658).
  * Срывается на защиту кристалла в радиусе. Атакует крокодилов в пределах радиуса.
  */
 public final class EvilSpiritsMagicForce extends Fighter {
 
-    private NpcInstance mob = null;
-    private boolean _firstTimeAttacked = true;
     private static final NpcString[] MsgText = {
             NpcString.AH_AH_FROM_THE_MAGIC_FORCE_NO_MORE_I_WILL_BE_FREED,
             NpcString.EVEN_THE_MAGIC_FORCE_BINDS_YOU_YOU_WILL_NEVER_BE_FORGIVEN};
+    private NpcInstance mob = null;
+    private boolean _firstTimeAttacked = true;
 
     public EvilSpiritsMagicForce(NpcInstance actor) {
         super(actor);
@@ -44,18 +42,11 @@ public final class EvilSpiritsMagicForce extends Fighter {
         }
 
         if (mob == null) {
-            Collection<NpcInstance> around = getActor().getAroundNpc(300, 300);
-            if (around != null && !around.isEmpty()) {
-                for (NpcInstance npc : around) {
-                    if (npc.getNpcId() >= 22650 && npc.getNpcId() <= 22655) {
-                        if (mob == null || getActor().getDistance3D(npc) < getActor().getDistance3D(mob)) {
-                            mob = npc;
-                        }
-                    }
-                }
-            }
-
+            mob = getActor().getAroundNpc(300, 300)
+                    .filter(npc -> npc.getNpcId() >= 22650)
+                    .filter(npc -> npc.getNpcId() <= 22655).min((o1, o2) -> (int) (getActor().getDistance3D(o1) - getActor().getDistance3D(o2))).orElse(null);
         }
+
         if (mob != null) {
             actor.stopMove();
             actor.setRunning();

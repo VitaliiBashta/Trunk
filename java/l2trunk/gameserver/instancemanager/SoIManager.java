@@ -2,7 +2,6 @@ package l2trunk.gameserver.instancemanager;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
-import l2trunk.gameserver.model.Playable;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.utils.Location;
@@ -11,10 +10,13 @@ import l2trunk.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SoIManager {
+import java.util.List;
+
+public final class SoIManager {
     private static final Logger _log = LoggerFactory.getLogger(SoIManager.class);
     private static final long SOI_OPEN_TIME = 24 * 60 * 60 * 1000L;
-    private static final Location[] openSeedTeleportLocs = {new Location(-179537, 209551, -15504),
+    private static final List<Location> openSeedTeleportLocs = List.of(
+            new Location(-179537, 209551, -15504),
             new Location(-179779, 212540, -15520),
             new Location(-177028, 211135, -15520),
             new Location(-176355, 208043, -15520),
@@ -31,7 +33,7 @@ public class SoIManager {
             new Location(-182811, 213871, -9504),
             new Location(-180921, 216789, -9536),
             new Location(-177264, 217760, -9536),
-            new Location(-173727, 218169, -9536)};
+            new Location(-173727, 218169, -9536));
     private static Zone _zone = null;
 
     public static void init() {
@@ -94,8 +96,8 @@ public class SoIManager {
         SpawnManager.INSTANCE.despawn("soi_hoi_middle_seeds");
         SpawnManager.INSTANCE.despawn("soi_all_middle_stable_tumor");
         ReflectionUtils.getDoor(14240102).closeMe();
-        for (Playable p : getZone().getInsidePlayables())
-            p.teleToLocation(getZone().getRestartPoints().get(0));
+        getZone().getInsidePlayables().forEach(p ->
+                p.teleToLocation(getZone().getRestartPoints().get(0)));
     }
 
     private static void checkStageAndSpawn() {
@@ -183,6 +185,6 @@ public class SoIManager {
     }
 
     public static void teleportInSeed(Player p) {
-        p.teleToLocation(openSeedTeleportLocs[Rnd.get(openSeedTeleportLocs.length)]);
+        p.teleToLocation(Rnd.get(openSeedTeleportLocs));
     }
 }

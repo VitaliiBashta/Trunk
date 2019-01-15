@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.lang.ArrayUtils;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Player;
@@ -8,14 +7,12 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class _128_PailakaSongofIceandFire extends Quest implements ScriptFile {
+public final class _128_PailakaSongofIceandFire extends Quest {
     // NPC
     private static final int ADLER = 32497;
     private static final int ADLER2 = 32510;
@@ -58,9 +55,9 @@ public class _128_PailakaSongofIceandFire extends Quest implements ScriptFile {
     private static final int PailakaEarring = 13293;
     private static final int ScrollofEscape = 736;
 
-    private static final List<Integer> MOBS = Arrays.asList(18611, 18612, 18613, 18614, 18615);
-    private static final int[] HPHERBS = new int[]{8600, 8601, 8602};
-    private static final int[] MPHERBS = new int[]{8603, 8604, 8605};
+    private static final List<Integer> MOBS = List.of(18611, 18612, 18613, 18614, 18615);
+    private static final List<Integer> HPHERBS = List.of(8600, 8601, 8602);
+    private static final List<Integer> MPHERBS = List.of(8603, 8604, 8605);
 
     private static final int izId = 43;
 
@@ -192,11 +189,10 @@ public class _128_PailakaSongofIceandFire extends Quest implements ScriptFile {
         int cond = st.getCond();
         int refId = player.getReflectionId();
         if (MOBS.contains(npcId)) {
-            int herbRnd = Rnd.get(2);
             if (Rnd.get(100) < 50)
-                st.dropItem(npc, HPHERBS[herbRnd], 1);
+                st.dropItem(npc, Rnd.get(HPHERBS), 1);
             if (Rnd.get(100) < 50)
-                st.dropItem(npc, MPHERBS[herbRnd], 1);
+                st.dropItem(npc, Rnd.get(MPHERBS), 1);
         } else if (npcId == HILLAS && cond == 2) {
             st.takeItems(TempleBookofSecrets1, -1);
             st.giveItems(EssenceofWater, 1);
@@ -257,17 +253,5 @@ public class _128_PailakaSongofIceandFire extends Quest implements ScriptFile {
         } else if (player.canEnterInstance(izId)) {
             ReflectionUtils.enterReflection(player, izId);
         }
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

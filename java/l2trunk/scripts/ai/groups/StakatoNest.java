@@ -12,13 +12,9 @@ import l2trunk.gameserver.model.instances.MinionInstance;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class StakatoNest extends Fighter {
@@ -65,9 +61,8 @@ public final class StakatoNest extends Fighter {
             _zone_mob_buff_pc_display.setActive(true);
             _zone_pc_buff.setActive(false);
         }
-        for (Player player : World.getAroundPlayers(actor))
-            if (player != null)
-                player.sendPacket(Msg.SHYEED_S_ROAR_FILLED_WITH_WRATH_RINGS_THROUGHOUT_THE_STAKATO_NEST);
+        World.getAroundPlayers(actor)
+                .forEach(p -> p.sendPacket(Msg.SHYEED_S_ROAR_FILLED_WITH_WRATH_RINGS_THROUGHOUT_THE_STAKATO_NEST));
         super.onEvtSpawn();
     }
 
@@ -103,9 +98,9 @@ public final class StakatoNest extends Fighter {
             case SPIKE_STAKATO_NURSE:
                 if (_minion == null)
                     break;
-                actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000 ));
+                actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000));
                 for (int i = 0; i < 3; i++)
-                    spawnMonster(SPIKED_STAKATO_CAPTAIN,_minion, killer);
+                    spawnMonster(SPIKED_STAKATO_CAPTAIN, _minion, killer);
                 break;
             case SPIKED_STAKATO_BABY:
                 _leader = ((MinionInstance) actor).getLeader();
@@ -117,7 +112,7 @@ public final class StakatoNest extends Fighter {
                     break;
                 actor.broadcastPacket(new MagicSkillUse(actor, 2046, 1, 1000));
                 for (int i = 0; i < 3; i++)
-                    spawnMonster(SPIKED_STAKATO_GUARD,_minion, killer );
+                    spawnMonster(SPIKED_STAKATO_GUARD, _minion, killer);
                 break;
             case FEMALE_SPIKED_STAKATO:
                 _leader = ((MinionInstance) actor).getLeader();
@@ -181,7 +176,7 @@ public final class StakatoNest extends Fighter {
         return null;
     }
 
-    private void spawnMonster( int mobId, NpcInstance actor, Creature killer) {
+    private void spawnMonster(int mobId, NpcInstance actor, Creature killer) {
         NpcInstance npc = (NpcInstance) NpcHolder.getTemplate(mobId).getNewInstance()
                 .setSpawnedLoc(actor.getSpawnedLoc())
                 .setFullHpMp()
@@ -224,7 +219,7 @@ public final class StakatoNest extends Fighter {
 
         @Override
         public void runImpl() {
-            spawnMonster(_monsterId,_npc, _killer);
+            spawnMonster(_monsterId, _npc, _killer);
         }
     }
 }

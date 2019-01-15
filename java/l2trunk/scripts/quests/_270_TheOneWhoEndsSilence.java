@@ -9,11 +9,11 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _270_TheOneWhoEndsSilence extends Quest implements ScriptFile {
+public final class _270_TheOneWhoEndsSilence extends Quest {
     private static final int Greymore = 32757;
     private static final int TatteredMonkClothes = 15526;
-    private static final List<Integer> LowMobs = Arrays.asList(22791, 22790, 22793);
-    private static final List<Integer> HighMobs = Arrays.asList(
+    private static final List<Integer> LowMobs = List.of(22791, 22790, 22793);
+    private static final List<Integer> HighMobs = List.of(
             22794, 22795, 22797, 22798, 22799, 22800);
 
     public _270_TheOneWhoEndsSilence() {
@@ -457,17 +457,5 @@ public final class _270_TheOneWhoEndsSilence extends Quest implements ScriptFile
                 st.giveItems(TatteredMonkClothes, 1, true);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

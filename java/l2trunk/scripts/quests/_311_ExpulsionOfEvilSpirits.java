@@ -5,15 +5,13 @@ import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 
-public final class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFile {
+public final class _311_ExpulsionOfEvilSpirits extends Quest {
     private static final int Chairen = 32655;
 
     private static final int SoulCoreContainingEvilSpirit = 14881;
@@ -24,7 +22,7 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFi
     private static final int DROP_CHANCE1 = 1;
     private static final int DROP_CHANCE2 = 40;
 
-    private static final List<Integer> MOBS = Arrays.asList(
+    private static final List<Integer> MOBS = List.of(
             22691, 22692, 22693, 22694, 22695, 22696, 22697, 22698, 22699, 22701, 22702);
 
     public _311_ExpulsionOfEvilSpirits() {
@@ -165,17 +163,5 @@ public final class _311_ExpulsionOfEvilSpirits extends Quest implements ScriptFi
             }
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

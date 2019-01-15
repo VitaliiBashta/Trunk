@@ -7,11 +7,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author: pchayka
- * @date: 09.06.2010
- */
-public class _182_NewRecruits extends Quest implements ScriptFile {
+public final class _182_NewRecruits extends Quest {
     // NPC's
     private static final int Kekropus = 32138;
     private static final int Mother_Nornil = 32239;
@@ -20,18 +16,6 @@ public class _182_NewRecruits extends Quest implements ScriptFile {
     private static final int Red_Crescent_Earring = 10122;
     // teleport to garden w/o instance initialize
     private static final Location TELEPORT_POSITION = new Location(-119544, 87176, -12619);
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _182_NewRecruits() {
         super(false);

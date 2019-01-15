@@ -3,27 +3,13 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _030_ChestCaughtWithABaitOfFire extends Quest implements ScriptFile {
+public final class _030_ChestCaughtWithABaitOfFire extends Quest {
+    private static final int NecklaceOfProtection = 916;
     private final int Linnaeus = 31577;
     private final int Rukal = 30629;
-
     private final int RedTreasureChest = 6511;
     private final int RukalsMusicalScore = 7628;
-    private final int NecklaceOfProtection = 916;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _030_ChestCaughtWithABaitOfFire() {
         super(false);
@@ -35,28 +21,33 @@ public class _030_ChestCaughtWithABaitOfFire extends Quest implements ScriptFile
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equals("fisher_linneaus_q0030_0104.htm")) {
-            st.setState(STARTED);
-            st.setCond(1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("fisher_linneaus_q0030_0201.htm")) {
-            if (st.getQuestItemsCount(RedTreasureChest) > 0) {
-                st.takeItems(RedTreasureChest, 1);
-                st.giveItems(RukalsMusicalScore, 1);
-                st.setCond(2);
-                st.playSound(SOUND_MIDDLE);
-            } else
-                htmltext = "fisher_linneaus_q0030_0202.htm";
-        } else if (event.equals("bard_rukal_q0030_0301.htm"))
-            if (st.getQuestItemsCount(RukalsMusicalScore) == 1) {
-                st.takeItems(RukalsMusicalScore, -1);
-                st.giveItems(NecklaceOfProtection, 1);
-                st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
-            } else {
-                htmltext = "bard_rukal_q0030_0302.htm";
-                st.exitCurrentQuest(true);
-            }
+        switch (event) {
+            case "fisher_linneaus_q0030_0104.htm":
+                st.setState(STARTED);
+                st.setCond(1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "fisher_linneaus_q0030_0201.htm":
+                if (st.getQuestItemsCount(RedTreasureChest) > 0) {
+                    st.takeItems(RedTreasureChest, 1);
+                    st.giveItems(RukalsMusicalScore, 1);
+                    st.setCond(2);
+                    st.playSound(SOUND_MIDDLE);
+                } else
+                    htmltext = "fisher_linneaus_q0030_0202.htm";
+                break;
+            case "bard_rukal_q0030_0301.htm":
+                if (st.getQuestItemsCount(RukalsMusicalScore) == 1) {
+                    st.takeItems(RukalsMusicalScore, -1);
+                    st.giveItems(NecklaceOfProtection, 1);
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(false);
+                } else {
+                    htmltext = "bard_rukal_q0030_0302.htm";
+                    st.exitCurrentQuest(true);
+                }
+                break;
+        }
         return htmltext;
     }
 
@@ -65,7 +56,6 @@ public class _030_ChestCaughtWithABaitOfFire extends Quest implements ScriptFile
         int npcId = npc.getNpcId();
         String htmltext = "noquest";
         int id = st.getState();
-        id = st.getState();
         int cond = st.getCond();
         if (npcId == Linnaeus) {
             if (id == CREATED) {

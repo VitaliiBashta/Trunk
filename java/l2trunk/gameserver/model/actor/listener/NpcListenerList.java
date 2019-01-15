@@ -26,15 +26,13 @@ public final class NpcListenerList extends CharListenerList {
     }
 
     private void onSpawn(ListenerList list) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnSpawnListener)
+        list.getListeners().filter(l -> l instanceof OnSpawnListener)
                 .map(l -> (OnSpawnListener) l)
                 .forEach(l -> l.onSpawn(getActor()));
     }
 
     private void onDecay(ListenerList list) {
-        list.getListeners().stream()
-                .filter(l -> l instanceof OnDecayListener)
+        list.getListeners().filter(l -> l instanceof OnDecayListener)
                 .map(l -> (OnDecayListener) l)
                 .forEach(l -> l.onDecay(getActor()));
     }

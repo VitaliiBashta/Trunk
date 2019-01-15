@@ -6,25 +6,13 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _652_AnAgedExAdventurer extends Quest implements ScriptFile {
+public final class _652_AnAgedExAdventurer extends Quest {
     //NPC
     private static final int Tantan = 32012;
     private static final int Sara = 30180;
     //Item
     private static final int SoulshotCgrade = 1464;
     private static final int ScrollEnchantArmorD = 956;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _652_AnAgedExAdventurer() {
         super(false);
@@ -35,7 +23,7 @@ public class _652_AnAgedExAdventurer extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        String htmltext = event;
+        String htmltext;
         if (event.equalsIgnoreCase("retired_oldman_tantan_q0652_03.htm") && st.getQuestItemsCount(SoulshotCgrade) >= 100) {
             st.setCond(1);
             st.setState(STARTED);

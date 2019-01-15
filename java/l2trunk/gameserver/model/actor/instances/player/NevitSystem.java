@@ -55,7 +55,7 @@ public class NevitSystem {
     public void onEnterWorld() {
         _player.sendPacket(new ExNavitAdventPointInfo(_points));
         _player.sendPacket(new ExNavitAdventTimeChange(_active, _time));
-        startNevitEffect(_player.getVarInt("nevit", 0));
+        startNevitEffect(_player.getVarInt("nevit"));
         if (_percent >= 45 && _percent < 50)
             _player.sendPacket(SystemMsg.YOU_ARE_STARTING_TO_FEEL_THE_EFFECTS_OF_NEVITS_BLESSING);
         else if (_percent >= 50 && _percent < 75)

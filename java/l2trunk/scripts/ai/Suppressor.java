@@ -9,19 +9,14 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
-import java.util.Collection;
+import java.util.List;
 
-/**
- * Suppressor(22656).
- * Срывается на защиту устройства в радиусе. Атакует крокодилов в пределах радиуса.
- */
 public final class Suppressor extends Fighter {
-
+    private static final List<NpcString> MsgText = List.of(
+            NpcString.DRIVE_DEVICE_ENTIRE_DESTRUCTION_MOVING_SUSPENSION,
+            NpcString.DRIVE_DEVICE_PARTIAL_DESTRUCTION_IMPULSE_RESULT);
     private NpcInstance mob = null;
     private boolean _firstTimeAttacked = true;
-    private static final NpcString[] MsgText = {
-            NpcString.DRIVE_DEVICE_ENTIRE_DESTRUCTION_MOVING_SUSPENSION,
-            NpcString.DRIVE_DEVICE_PARTIAL_DESTRUCTION_IMPULSE_RESULT};
 
     public Suppressor(NpcInstance actor) {
         super(actor);
@@ -44,17 +39,14 @@ public final class Suppressor extends Fighter {
         }
 
         if (mob == null) {
-            Collection<NpcInstance> around = getActor().getAroundNpc(300, 300);
-            if (around != null && !around.isEmpty()) {
-                for (NpcInstance npc : around) {
-                    if (npc.getNpcId() >= 22650 && npc.getNpcId() <= 22655) {
+            getActor().getAroundNpc(300, 300)
+                    .filter(npc -> npc.getNpcId() >= 22650)
+                    .filter(npc -> npc.getNpcId() <= 22655)
+                    .forEach(npc -> {
                         if (mob == null || getActor().getDistance3D(npc) < getActor().getDistance3D(mob)) {
                             mob = npc;
                         }
-                    }
-                }
-            }
-
+                    });
         }
         if (mob != null) {
             actor.stopMove();

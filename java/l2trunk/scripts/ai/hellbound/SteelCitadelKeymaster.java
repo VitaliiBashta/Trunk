@@ -8,8 +8,8 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
 public final class SteelCitadelKeymaster extends Fighter {
-    private boolean _firstTimeAttacked = true;
     private static final int AMASKARI_ID = 22449;
+    private boolean _firstTimeAttacked = true;
 
     public SteelCitadelKeymaster(NpcInstance actor) {
         super(actor);
@@ -24,13 +24,13 @@ public final class SteelCitadelKeymaster extends Fighter {
         if (_firstTimeAttacked) {
             _firstTimeAttacked = false;
             Functions.npcSay(actor, "You have done well in finding me, but I cannot just hand you the key!");
-            for (NpcInstance npc : World.getAroundNpc(actor))
-                if (npc.getNpcId() == AMASKARI_ID && npc.getReflectionId() == actor.getReflectionId() && !npc.isDead()) {
-                    npc.teleToLocation(Location.findPointToStay(actor, 150, 200));
-                    break;
-                }
+            World.getAroundNpc(actor)
+                    .filter(npc -> npc.getNpcId() == AMASKARI_ID)
+                    .filter(npc -> npc.getReflectionId() == actor.getReflectionId())
+                    .filter(npc -> !npc.isDead())
+                    .findFirst().ifPresent(npc ->
+                    npc.teleToLocation(Location.findPointToStay(actor, 150, 200)));
         }
-
         super.onEvtAttacked(attacker, damage);
     }
 

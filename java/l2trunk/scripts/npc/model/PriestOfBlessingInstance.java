@@ -13,35 +13,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PriestOfBlessingInstance extends NpcInstance {
-    private static class Hourglass {
-        final int minLevel;
-        final int maxLevel;
-        final int itemPrice;
-        final int[] itemId;
-
-        Hourglass(int min, int max, int price, int[] id) {
-            minLevel = min;
-            maxLevel = max;
-            itemPrice = price;
-            itemId = id;
-        }
-    }
-
+public final class PriestOfBlessingInstance extends NpcInstance {
     private static final List<Hourglass> hourglassList = new ArrayList<>();
 
     static {
-        hourglassList.add(new Hourglass(1, 19, 4000, new int[]{17095, 17096, 17097, 17098, 17099})); // 1-19
-        hourglassList.add(new Hourglass(20, 39, 30000, new int[]{17100, 17101, 17102, 17103, 17104})); // 20-39
-        hourglassList.add(new Hourglass(40, 51, 110000, new int[]{17105, 17106, 17107, 17108, 17109})); // 40-51
-        hourglassList.add(new Hourglass(52, 60, 310000, new int[]{17110, 17111, 17112, 17113, 17114})); // 52-60
-        hourglassList.add(new Hourglass(61, 75, 970000, new int[]{17115, 17116, 17117, 17118, 17119})); // 61-75
-        hourglassList.add(new Hourglass(76, 79, 2160000, new int[]{17120, 17121, 17122, 17123, 17124})); // 76-79
-        hourglassList.add(new Hourglass(80, 85, 5000000, new int[]{17125, 17126, 17127, 17128, 17129})); // 80-85
+        hourglassList.add(new Hourglass(1, 19, 4000, List.of(17095, 17096, 17097, 17098, 17099))); // 1-19
+        hourglassList.add(new Hourglass(20, 39, 30000, List.of(17100, 17101, 17102, 17103, 17104))); // 20-39
+        hourglassList.add(new Hourglass(40, 51, 110000, List.of(17105, 17106, 17107, 17108, 17109))); // 40-51
+        hourglassList.add(new Hourglass(52, 60, 310000, List.of(17110, 17111, 17112, 17113, 17114))); // 52-60
+        hourglassList.add(new Hourglass(61, 75, 970000, List.of(17115, 17116, 17117, 17118, 17119))); // 61-75
+        hourglassList.add(new Hourglass(76, 79, 2160000, List.of(17120, 17121, 17122, 17123, 17124))); // 76-79
+        hourglassList.add(new Hourglass(80, 85, 5000000, List.of(17125, 17126, 17127, 17128, 17129))); // 80-85
     }
 
     public PriestOfBlessingInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
+    }
+
+    private static Hourglass getHourglass(Player player) {
+        return hourglassList.stream()
+                .filter(hg -> player.getLevel() >= hg.minLevel)
+                .filter(hg -> player.getLevel() <= hg.maxLevel)
+                .findFirst().orElseThrow(IllegalArgumentException::new);
+    }
+
+    private static int getHourglassId(Hourglass hg) {
+        return Rnd.get(hg.itemId);
     }
 
     @Override
@@ -74,18 +71,6 @@ public class PriestOfBlessingInstance extends NpcInstance {
             return;
         }
         super.showChatWindow(player, val);
-    }
-
-    private static Hourglass getHourglass(Player player) {
-        for (Hourglass hg : hourglassList)
-            if (player.getLevel() >= hg.minLevel && player.getLevel() <= hg.maxLevel)
-                return hg;
-
-        return null;
-    }
-
-    private static int getHourglassId(Hourglass hg) {
-        return hg.itemId[Rnd.get(hg.itemId.length)];
     }
 
     private void buyLimitedItem(Player player, String var, int itemId, int price, boolean isGlobalVar) {
@@ -132,6 +117,20 @@ public class PriestOfBlessingInstance extends NpcInstance {
                 player.setVar(var, String.valueOf(_curr_time), -1);
             } else
                 player.sendPacket(new SystemMessage(SystemMessage._2_UNITS_OF_THE_ITEM_S1_IS_REQUIRED).addItemName(57).addNumber(price));
+        }
+    }
+
+    private static class Hourglass {
+        final int minLevel;
+        final int maxLevel;
+        final int itemPrice;
+        final List<Integer> itemId;
+
+        Hourglass(int min, int max, int price, List<Integer> id) {
+            minLevel = min;
+            maxLevel = max;
+            itemPrice = price;
+            itemId = id;
         }
     }
 }

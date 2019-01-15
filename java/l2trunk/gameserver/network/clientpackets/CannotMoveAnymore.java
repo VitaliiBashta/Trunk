@@ -21,6 +21,6 @@ public class CannotMoveAnymore extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        activeChar.getAI().notifyEvent(CtrlEvent.EVT_ARRIVED_BLOCKED, _loc, null);
+        activeChar.getAI().notifyEvent(CtrlEvent.EVT_ARRIVED_BLOCKED, _loc);
     }
 }

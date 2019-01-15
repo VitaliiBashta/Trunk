@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _167_DwarvenKinship extends Quest implements ScriptFile {
+public final class _167_DwarvenKinship extends Quest {
     //NPC
     private static final int Carlon = 30350;
     private static final int Haprock = 30255;
@@ -13,18 +13,6 @@ public class _167_DwarvenKinship extends Quest implements ScriptFile {
     //Quest Items
     private static final int CarlonsLetter = 1076;
     private static final int NormansLetter = 1106;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _167_DwarvenKinship() {
         super(false);

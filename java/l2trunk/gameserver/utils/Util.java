@@ -1,6 +1,5 @@
 package l2trunk.gameserver.utils;
 
-import l2trunk.commons.annotations.Nullable;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.xml.holder.ItemHolder;
@@ -23,8 +22,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Stream;
 
-public class Util {
+public final class Util {
     private static final String PATTERN = "0.0000000000E00";
     private static final DecimalFormat df;
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
@@ -147,10 +147,10 @@ public class Util {
         return result;
     }
 
-    public static int[] unpackInt(int a, int bits) {
+    public static Integer[] unpackInt(int a, int bits) {
         int m = 32 / bits;
         int mval = (int) Math.pow(2, bits);
-        int[] result = new int[m];
+        Integer[] result = new Integer[m];
         int next;
         for (int i = m; i > 0; i--) {
             next = a;
@@ -386,53 +386,13 @@ public class Util {
     }
 
     public static String getFullClassName(ClassId classIndex) {
-        switch (classIndex) {
-            case phoenixKnight:
-                return "Phoenix Knight";
-            case hellKnight:
-                return "Hell Knight";
-            case arcanaLord:
-                return "Arcana Lord";
+        return classIndex.getName();
+    }
 
-            case evaTemplar:
-                return "Eva's Templar";
-            case swordMuse:
-                return "Sword Muse";
-            case windRider:
-                return "Wind Rider";
-            case moonlightSentinel:
-                return "Moonlight Sentinel";
-            case mysticMuse:
-                return "Mystic Muse";
-            case elementalMaster:
-                return "Elemental Master";
-            case evaSaint:
-                return "Eva's Saint";
-
-            case shillienTemplar:
-                return "ShillenTemplar";
-            case spectralDancer:
-                return "Spectral Dancer";
-            case ghostHunter:
-                return "Ghost Hunter";
-            case ghostSentinel:
-                return "Ghost Sentinel";
-            case stormScreamer:
-                return "Storm Screamer";
-            case spectralMaster:
-                return "Spectral Master";
-            case shillienSaint:
-                return "Shillien Saint";
-
-            case grandKhauatari:
-                return "Grand Khauatari";
-
-            case fortuneSeeker:
-                return "Fortune Seeker";
-
-            default:
-                return classIndex.name().substring(0, 1).toUpperCase() + classIndex.name().substring(1);
-        }
+    public static String getFullClassName(int classId) {
+        return Stream.of(ClassId.values()).filter(e -> e.getId() == classId)
+                .map(ClassId::getName)
+                .findFirst().orElse("Unknown");
     }
 
     public static String boolToString(boolean b) {
@@ -441,15 +401,6 @@ public class Util {
 
     public static boolean isInteger(char c) {
         return Character.isDigit(c);
-    }
-
-    public static boolean arrayContains(@Nullable Object[] array, @Nullable Object objectToLookFor) {
-        if (array == null || objectToLookFor == null)
-            return false;
-        for (Object objectInArray : array)
-            if (objectInArray != null && objectInArray.equals(objectToLookFor))
-                return true;
-        return false;
     }
 
     public static String toProperCaseAll(String name) {
@@ -474,13 +425,6 @@ public class Util {
         return name;
     }
 
-    /**
-     * Si pasa los 9999a pasan a ser 10k sin decimales, si pasa los 1000k pasa a ser 1kk, con 2 decimales
-     * si pasa los 1000kk pasa a ser 1kkk con 3 decimales
-     *
-     * @param price
-     * @return Esta funcion convierte el precio actual en un formato mas amigable
-     */
     public static String convertToLineagePriceFormat(double price) {
         if (price < 10000)
             return Math.round(price) + " Adena";
@@ -492,16 +436,6 @@ public class Util {
             return Util.reduceDecimals(price / 1000 / 1000 / 1000, 1) + " kkk";
     }
 
-    /**
-     * Funcion simple que devuelve el mismo numero solo que se asegura de que tenga maximo nDecim cantidad de decimales
-     * La idea esta en encontrar el . que separa el decimal y de ahi sumar tantos decimales como se quiera maximo
-     * 10.5912312, 2 = 10.59
-     * Ademas si por ejemplo termina en .0 o .00 se los quita
-     *
-     * @param original
-     * @param nDecim
-     * @return Devuelve el mismo numero solo que se asegura de que tenga maximo nDecim cantidad de decimales
-     */
     private static String reduceDecimals(double original, int nDecim) {
         return reduceDecimals(original, nDecim, false);
     }
@@ -518,12 +452,6 @@ public class Util {
         return df.format((round ? Math.round(original) : original)).replace(",", ".");
     }
 
-    /**
-     * @param obj1
-     * @param obj2
-     * @param includeZAxis - if true, includes also the Z axis in the calculation
-     * @return the distance between the two objects
-     */
     public static double calculateDistance(Creature obj1, Creature obj2, boolean includeZAxis) {
         if (obj1 == null || obj2 == null)
             return 1000000;
@@ -532,12 +460,6 @@ public class Util {
     }
 
     /**
-     * @param x1
-     * @param y1
-     * @param z1
-     * @param x2
-     * @param y2
-     * @param z2
      * @param includeZAxis - if true, includes also the Z axis in the calculation
      * @return the distance between the two coordinates
      */
@@ -552,342 +474,6 @@ public class Util {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    /**
-     * @param classId
-     * @return
-     */
-    public static String getFullClassName(int classId) {
-        String name = null;
-        switch (classId) {
-            case 0:
-                name = "Human Fighter";
-                break;
-            case 1:
-                name = "Warrior";
-                break;
-            case 2:
-                name = "Gladiator";
-                break;
-            case 3:
-                name = "Warlord";
-                break;
-            case 4:
-                name = "Human Knight";
-                break;
-            case 5:
-                name = "Paladin";
-                break;
-            case 6:
-                name = "Dark Avenger";
-                break;
-            case 7:
-                name = "Rogue";
-                break;
-            case 8:
-                name = "Treasure Hunter";
-                break;
-            case 9:
-                name = "Hawkeye";
-                break;
-            case 10:
-                name = "Human Mystic";
-                break;
-            case 11:
-                name = "Human Wizard";
-                break;
-            case 12:
-                name = "Sorcerer";
-                break;
-            case 13:
-                name = "Necromancer";
-                break;
-            case 14:
-                name = "Warlock";
-                break;
-            case 15:
-                name = "Cleric";
-                break;
-            case 16:
-                name = "Bishop";
-                break;
-            case 17:
-                name = "Prophet";
-                break;
-            case 18:
-                name = "Elven Fighter";
-                break;
-            case 19:
-                name = "Elven Knight";
-                break;
-            case 20:
-                name = "Temple Knight";
-                break;
-            case 21:
-                name = "Sword Singer";
-                break;
-            case 22:
-                name = "Elven Scout";
-                break;
-            case 23:
-                name = "Plains Walker";
-                break;
-            case 24:
-                name = "Silver Ranger";
-                break;
-            case 25:
-                name = "Elven Mystic";
-                break;
-            case 26:
-                name = "Elven Wizard";
-                break;
-            case 27:
-                name = "Spellsinger";
-                break;
-            case 28:
-                name = "Elemental Summoner";
-                break;
-            case 29:
-                name = "Elven Oracle";
-                break;
-            case 30:
-                name = "Elven Elder";
-                break;
-            case 31:
-                name = "Dark Fighter";
-                break;
-            case 32:
-                name = "Palus Knight";
-                break;
-            case 33:
-                name = "Shillien Knight";
-                break;
-            case 34:
-                name = "Bladedancer";
-                break;
-            case 35:
-                name = "Assassin";
-                break;
-            case 36:
-                name = "Abyss Walker";
-                break;
-            case 37:
-                name = "Phantom Ranger";
-                break;
-            case 38:
-                name = "Dark Mystic";
-                break;
-            case 39:
-                name = "Dark Wizard";
-                break;
-            case 40:
-                name = "Spellhowler";
-                break;
-            case 41:
-                name = "Phantom Summoner";
-                break;
-            case 42:
-                name = "Shillien Oracle";
-                break;
-            case 43:
-                name = "Shillien Elder";
-                break;
-            case 44:
-                name = "Orc Fighter";
-                break;
-            case 45:
-                name = "Orc Raider";
-                break;
-            case 46:
-                name = "Destroyer";
-                break;
-            case 47:
-                name = "Monk";
-                break;
-            case 48:
-                name = "Tyrant";
-                break;
-            case 49:
-                name = "Orc Mystic";
-                break;
-            case 50:
-                name = "Orc Shaman";
-                break;
-            case 51:
-                name = "Overlord";
-                break;
-            case 52:
-                name = "Warcryer";
-                break;
-            case 53:
-                name = "Dwarven Fighter";
-                break;
-            case 54:
-                name = "Scavenger";
-                break;
-            case 55:
-                name = "Bounty Hunter";
-                break;
-            case 56:
-                name = "Artisan";
-                break;
-            case 57:
-                name = "Warsmith";
-                break;
-            case 88:
-                name = "Duelist";
-                break;
-            case 89:
-                name = "Dreadnought";
-                break;
-            case 90:
-                name = "Phoenix Knight";
-                break;
-            case 91:
-                name = "Hell Knight";
-                break;
-            case 92:
-                name = "Sagittarius";
-                break;
-            case 93:
-                name = "Adventurer";
-                break;
-            case 94:
-                name = "Archmage";
-                break;
-            case 95:
-                name = "Soultaker";
-                break;
-            case 96:
-                name = "Arcana Lord";
-                break;
-            case 97:
-                name = "Cardinal";
-                break;
-            case 98:
-                name = "Hierophant";
-                break;
-            case 99:
-                name = "Eva's Templar";
-                break;
-            case 100:
-                name = "Sword Muse";
-                break;
-            case 101:
-                name = "Wind Rider";
-                break;
-            case 102:
-                name = "Moonlight Sentinel";
-                break;
-            case 103:
-                name = "Mystic Muse";
-                break;
-            case 104:
-                name = "Elemental Master";
-                break;
-            case 105:
-                name = "Eva's Saint";
-                break;
-            case 106:
-                name = "Shillien Templar";
-                break;
-            case 107:
-                name = "Spectral Dancer";
-                break;
-            case 108:
-                name = "Ghost Hunter";
-                break;
-            case 109:
-                name = "Ghost Sentinel";
-                break;
-            case 110:
-                name = "Storm Screamer";
-                break;
-            case 111:
-                name = "Spectral Master";
-                break;
-            case 112:
-                name = "Shillien Saint";
-                break;
-            case 113:
-                name = "Titan";
-                break;
-            case 114:
-                name = "Grand Khavatari";
-                break;
-            case 115:
-                name = "Dominator";
-                break;
-            case 116:
-                name = "Doom Cryer";
-                break;
-            case 117:
-                name = "Fortune Seeker";
-                break;
-            case 118:
-                name = "Maestro";
-                break;
-            case 123:
-                name = "Kamael Soldier";
-                break;
-            case 124:
-                name = "Kamael Soldier";
-                break;
-            case 125:
-                name = "Trooper";
-                break;
-            case 126:
-                name = "Warder";
-                break;
-            case 127:
-                name = "Berserker";
-                break;
-            case 128:
-                name = "Soul Breaker";
-                break;
-            case 129:
-                name = "Soul Breaker";
-                break;
-            case 130:
-                name = "Arbalester";
-                break;
-            case 131:
-                name = "Doombringer";
-                break;
-            case 132:
-                name = "Soul Hound";
-                break;
-            case 133:
-                name = "Soul Hound";
-                break;
-            case 134:
-                name = "Trickster";
-                break;
-            case 135:
-                name = "Inspector";
-                break;
-            case 136:
-                name = "Judicator";
-                break;
-            default:
-                name = "Unknown";
-        }
-        return name;
-    }
-
-//    public static String ArrayToString(String[] array, int start) {
-//        String text = "";
-//
-//        if (array.length > 1) {
-//            int count = 1;
-//            for (int i = start; i < array.length; i++) {
-//                text += (count > 1 ? " " : "") + array[i];
-//                count++;
-//            }
-//        } else
-//            text = array[start];
-//
-//        return text;
-//    }
 
     public static String time(long time) {
         return TIME_FORMAT.format(new Date(time));
@@ -937,19 +523,19 @@ public class Util {
                 five = "Hours";
                 break;
             case MINUTES:
-                one = new String("Minute");
-                two = new String("Minutes");
-                five = new String("Minutes");
+                one = "Minute";
+                two = "Minutes";
+                five = "Minutes";
                 break;
             case PIECE:
-                one = new String("Piece");
-                two = new String("Pieces");
-                five = new String("Pieces");
+                one = "Piece";
+                two = "Pieces";
+                five = "Pieces";
                 break;
             case POINT:
-                one = new String("Point");
-                two = new String("Points");
-                five = new String("Points");
+                one = "Point";
+                two = "Points";
+                five = "Points";
         }
         if (count > 100L) {
             count %= 100L;
@@ -958,12 +544,12 @@ public class Util {
             count %= 10L;
         }
         if (count == 1L) {
-            return one.toString();
+            return one;
         }
         if ((count == 2L) || (count == 3L) || (count == 4L)) {
-            return two.toString();
+            return two;
         }
-        return five.toString();
+        return five;
     }
 
     public static long addDay(long count) {
@@ -1024,14 +610,4 @@ public class Util {
         player.sendMessage("You do not have " + formatPay(player, count, itemid) + ".");
     }
 
-    public static int getInteger(String args, int defaultValue) {
-        if (args == null || args.isEmpty())
-            return defaultValue;
-
-        try {
-            return Integer.parseInt(args);
-        } catch (NumberFormatException e) {
-        }
-        return defaultValue;
-    }
 }

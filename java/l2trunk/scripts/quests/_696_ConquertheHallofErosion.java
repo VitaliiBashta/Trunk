@@ -6,10 +6,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author pchayka
- */
-public class _696_ConquertheHallofErosion extends Quest implements ScriptFile {
+public final class _696_ConquertheHallofErosion extends Quest {
     // NPC
     private static final int TEPIOS = 32603;
     private static final int Cohemenes = 25634;
@@ -74,17 +71,5 @@ public class _696_ConquertheHallofErosion extends Quest implements ScriptFile {
         if (npc.getNpcId() == Cohemenes)
             st.set("cohemenesDone", 1);
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

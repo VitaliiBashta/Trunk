@@ -17,7 +17,7 @@ import l2trunk.scripts.ai.GuardofDawn;
 import l2trunk.scripts.ai.GuardofDawnFemale;
 import l2trunk.scripts.ai.GuardofDawnStat;
 
-public final class _195_SevenSignsSecretRitualofthePriests extends Quest implements ScriptFile {
+public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
     // NPCs
     private static final int ClaudiaAthebaldt = 31001;
     private static final int John = 32576;
@@ -289,23 +289,23 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest impleme
 
             // adding walkers spawn
             synchronized (guardsOfDawn1) {
-                for (Location spawn[] : guardsOfDawn1) {
+                for (Location[] spawn : guardsOfDawn1) {
                     NpcInstance guard = newInstance.addSpawnWithoutRespawn(18835, spawn[0], 0);
                     guard.setAI(new GuardofDawn(guard, spawn[1], spawn[2]));
                 }
-                for (Location spawn[] : guardsOfDawn1stationary) {
+                for (Location[] spawn : guardsOfDawn1stationary) {
                     NpcInstance guard = newInstance.addSpawnWithoutRespawn(18835, spawn[0], 0);
                     guard.setAI(new GuardofDawnStat(guard, spawn[1]));
                 }
-                for (Location spawn[] : guardsOfDawnFemale) {
+                for (Location[] spawn : guardsOfDawnFemale) {
                     NpcInstance guard = newInstance.addSpawnWithoutRespawn(27352, spawn[0], 0);
                     guard.setAI(new GuardofDawnFemale(guard, spawn[1]));
                 }
-                for (Location spawn[] : guardsOfDawn2) {
+                for (Location[] spawn : guardsOfDawn2) {
                     NpcInstance guard = newInstance.addSpawnWithoutRespawn(18834, spawn[0], 0);
                     guard.setAI(new GuardofDawn(guard, spawn[1], spawn[2]));
                 }
-                for (Location spawn[] : guardsOfDawn2stationary) {
+                for (Location[] spawn : guardsOfDawn2stationary) {
                     NpcInstance guard = newInstance.addSpawnWithoutRespawn(18834, spawn[0], 0);
                     guard.setAI(new GuardofDawnStat(guard, spawn[1]));
                 }
@@ -317,17 +317,5 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest impleme
         for (Effect e : p.getEffectList().getAllEffects())
             if (e.getStackType().equals("SpeedUp") && !e.isOffensive())
                 e.exit();
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

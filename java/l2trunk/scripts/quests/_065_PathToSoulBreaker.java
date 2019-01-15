@@ -2,29 +2,15 @@ package l2trunk.scripts.quests;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.CtrlEvent;
-import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Location;
 
-public class _065_PathToSoulBreaker extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _065_PathToSoulBreaker extends Quest {
     private static final int Vitus = 32213;
     private static final int Kekropus = 32138;
     private static final int Casca = 32139;
@@ -48,6 +34,8 @@ public class _065_PathToSoulBreaker extends Quest implements ScriptFile {
     private static final int Wyrm_Heart = 9804;
     private static final int Kekropus_Rec = 9805;
     private static final int SB_Certificate = 9806;
+    private NpcInstance Katenar_Spawn;
+    private NpcInstance Guardian_Angel_Spawn;
 
     public _065_PathToSoulBreaker() {
         super(false);
@@ -72,9 +60,6 @@ public class _065_PathToSoulBreaker extends Quest implements ScriptFile {
         addKillId(Guardian_Angel);
         addKillId(Wyrm);
     }
-
-    private NpcInstance Katenar_Spawn;
-    private NpcInstance Guardian_Angel_Spawn;
 
     private void Despawn_Katenar() {
         if (Katenar_Spawn != null)
@@ -259,11 +244,9 @@ public class _065_PathToSoulBreaker extends Quest implements ScriptFile {
         } else if (npcId == Box) {
             if (cond == 12) {
                 htmltext = "32243-01.htm";
-                for (Player cha : World.getAroundPlayers(st.getPlayer()))
-                    if (cha.getRace() == Race.kamael) {
-                        htmltext = "32243-02.htm";
-                        break;
-                    }
+                if (World.getAroundPlayers(st.getPlayer()).anyMatch(cha -> cha.getRace() == Race.kamael))
+                    htmltext = "32243-02.htm";
+
                 if (!htmltext.equals("32243-02.htm")) {
                     Despawn_Guardian_Angel();
 
@@ -298,9 +281,9 @@ public class _065_PathToSoulBreaker extends Quest implements ScriptFile {
             Despawn_Guardian_Angel();
 
             if (cond == 12) {
-                for (Player cha : World.getAroundPlayers(st.getPlayer()))
-                    if (cha.getRace() == Race.kamael)
-                        return null;
+                if (World.getAroundPlayers(st.getPlayer())
+                        .anyMatch(cha -> cha.getRace() == Race.kamael))
+                    return null;
                 Despawn_Katenar();
 
                 st.set("id", "1");

@@ -12,17 +12,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class _230_TestOfSummoner extends Quest implements ScriptFile {
-    public void onLoad() {
-    }
-
-    public void onReload() {
-    }
-
-    public void onShutdown() {
-    }
-
+public final class _230_TestOfSummoner extends Quest {
     private static final int MARK_OF_SUMMONER_ID = 3336;
     private static final int LETOLIZARDMAN_AMULET_ID = 3337;
     private static final int SAC_OF_REDSPORES_ID = 3338;

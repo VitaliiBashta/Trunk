@@ -3,13 +3,8 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-/**
- * @author Bonux
- * http://l2wiki.info/Драгоценный_камень_дракона_земли
- */
-public class _10504_JewelOfAntharas extends Quest implements ScriptFile {
+public final class _10504_JewelOfAntharas extends Quest {
     //NPC's
     private static final int THEODRIC = 30755;
     private static final int ULTIMATE_ANTHARAS = 29068;
@@ -84,17 +79,5 @@ public class _10504_JewelOfAntharas extends Quest implements ScriptFile {
             st.setCond(2);
         }
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
-public class HellboundRemnantInstance extends MonsterInstance {
+public final class HellboundRemnantInstance extends MonsterInstance {
     public HellboundRemnantInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
     }

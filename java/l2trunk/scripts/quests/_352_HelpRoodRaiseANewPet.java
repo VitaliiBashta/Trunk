@@ -4,9 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _352_HelpRoodRaiseANewPet extends Quest implements ScriptFile {
+public final class _352_HelpRoodRaiseANewPet extends Quest {
     //NPCs
     private static final int Rood = 31067;
     //Mobs

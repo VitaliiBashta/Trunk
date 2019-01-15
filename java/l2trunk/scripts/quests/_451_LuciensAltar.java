@@ -10,7 +10,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.Arrays;
 import java.util.List;
 
-public final class _451_LuciensAltar extends Quest implements ScriptFile {
+public final class _451_LuciensAltar extends Quest {
     private static final int DAICHIR = 30537;
     private static final int REPLENISHED_BEAD = 14877;
     private static final int DISCHARGED_BEAD = 14878;
@@ -19,25 +19,13 @@ public final class _451_LuciensAltar extends Quest implements ScriptFile {
     private static final int ALTAR_3 = 32708;
     private static final int ALTAR_4 = 32709;
     private static final int ALTAR_5 = 32710;
-    private static final List<Integer> ALTARS = Arrays.asList(ALTAR_1, ALTAR_2, ALTAR_3, ALTAR_4, ALTAR_5);
+    private static final List<Integer> ALTARS = List.of(ALTAR_1, ALTAR_2, ALTAR_3, ALTAR_4, ALTAR_5);
 
     public _451_LuciensAltar() {
         super(false);
 
         addStartNpc(DAICHIR);
         addTalkId(ALTARS);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

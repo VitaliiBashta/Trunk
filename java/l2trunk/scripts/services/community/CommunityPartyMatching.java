@@ -274,11 +274,6 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
         CommunityBoardManager.removeHandler(this);
     }
 
-    @Override
-    public void onShutdown() {
-
-    }
-
     public static class InviteAnswer implements OnAnswerListener {
         private final Player _invited;
         private final Player _inviter;

@@ -6,10 +6,9 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
-import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _108_JumbleTumbleDiamondFuss extends Quest implements ScriptFile {
+public final class _108_JumbleTumbleDiamondFuss extends Quest {
+    private static final int SILVERSMITH_HAMMER = 1511;
     private final int GOUPHS_CONTRACT = 1559;
     private final int REEPS_CONTRACT = 1560;
     private final int ELVEN_WINE = 1561;
@@ -23,19 +22,6 @@ public class _108_JumbleTumbleDiamondFuss extends Quest implements ScriptFile {
     private final int BERRY_TART = 1569;
     private final int BAT_DIAGRAM = 1570;
     private final int STAR_DIAMOND = 1571;
-    private final int SILVERSMITH_HAMMER = 1511;
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 
     public _108_JumbleTumbleDiamondFuss() {
         super(false);
@@ -58,19 +44,23 @@ public class _108_JumbleTumbleDiamondFuss extends Quest implements ScriptFile {
 
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
-        if (event.equals("collector_gouph_q0108_03.htm")) {
-            st.setCond(1);
-            st.setState(STARTED);
-            st.giveItems(GOUPHS_CONTRACT, 1);
-            st.playSound(SOUND_ACCEPT);
-        } else if (event.equals("carrier_torocco_q0108_02.htm")) {
-            st.takeItems(REEPS_CONTRACT, 1);
-            st.giveItems(ELVEN_WINE, 1);
-            st.setCond(3);
-        } else if (event.equals("blacksmith_bronp_q0108_02.htm")) {
-            st.takeItems(BRONPS_DICE, 1);
-            st.giveItems(BRONPS_CONTRACT, 1);
-            st.setCond(5);
+        switch (event) {
+            case "collector_gouph_q0108_03.htm":
+                st.setCond(1);
+                st.setState(STARTED);
+                st.giveItems(GOUPHS_CONTRACT, 1);
+                st.playSound(SOUND_ACCEPT);
+                break;
+            case "carrier_torocco_q0108_02.htm":
+                st.takeItems(REEPS_CONTRACT, 1);
+                st.giveItems(ELVEN_WINE, 1);
+                st.setCond(3);
+                break;
+            case "blacksmith_bronp_q0108_02.htm":
+                st.takeItems(BRONPS_DICE, 1);
+                st.giveItems(BRONPS_CONTRACT, 1);
+                st.setCond(5);
+                break;
         }
         return event;
     }
@@ -91,37 +81,37 @@ public class _108_JumbleTumbleDiamondFuss extends Quest implements ScriptFile {
                     htmltext = "collector_gouph_q0108_01.htm";
                     st.exitCurrentQuest(true);
                 }
-            } else if (cond == 0 && st.getQuestItemsCount(GOUPHS_CONTRACT) > 0)
-                htmltext = "collector_gouph_q0108_04.htm";
-            else if (cond > 1 && cond < 7 && (st.getQuestItemsCount(REEPS_CONTRACT) > 0 || st.getQuestItemsCount(ELVEN_WINE) > 0 || st.getQuestItemsCount(BRONPS_DICE) > 0 || st.getQuestItemsCount(BRONPS_CONTRACT) > 0))
-                htmltext = "collector_gouph_q0108_05.htm";
-            else if (cond == 7 && st.getQuestItemsCount(GEM_BOX1) > 0) {
-                htmltext = "collector_gouph_q0108_06.htm";
-                st.takeItems(GEM_BOX1, 1);
-                st.giveItems(COAL_PIECE, 1);
-                st.setCond(8);
-            } else if (cond > 7 && cond < 12 && (st.getQuestItemsCount(BRONPS_LETTER) > 0 || st.getQuestItemsCount(COAL_PIECE) > 0 || st.getQuestItemsCount(BERRY_TART) > 0 || st.getQuestItemsCount(BAT_DIAGRAM) > 0))
-                htmltext = "collector_gouph_q0108_07.htm";
-            else if (cond == 12 && st.getQuestItemsCount(STAR_DIAMOND) > 0) {
-                htmltext = "collector_gouph_q0108_08.htm";
-                st.takeItems(STAR_DIAMOND, 1);
+            } else {
+                if (cond > 1 && cond < 7 && (st.getQuestItemsCount(REEPS_CONTRACT) > 0 || st.getQuestItemsCount(ELVEN_WINE) > 0 || st.getQuestItemsCount(BRONPS_DICE) > 0 || st.getQuestItemsCount(BRONPS_CONTRACT) > 0))
+                    htmltext = "collector_gouph_q0108_05.htm";
+                else if (cond == 7 && st.getQuestItemsCount(GEM_BOX1) > 0) {
+                    htmltext = "collector_gouph_q0108_06.htm";
+                    st.takeItems(GEM_BOX1, 1);
+                    st.giveItems(COAL_PIECE, 1);
+                    st.setCond(8);
+                } else if (cond > 7 && cond < 12 && (st.getQuestItemsCount(BRONPS_LETTER) > 0 || st.getQuestItemsCount(COAL_PIECE) > 0 || st.getQuestItemsCount(BERRY_TART) > 0 || st.getQuestItemsCount(BAT_DIAGRAM) > 0))
+                    htmltext = "collector_gouph_q0108_07.htm";
+                else if (cond == 12 && st.getQuestItemsCount(STAR_DIAMOND) > 0) {
+                    htmltext = "collector_gouph_q0108_08.htm";
+                    st.takeItems(STAR_DIAMOND, 1);
 
-                st.giveItems(SILVERSMITH_HAMMER, 1);
-                st.getPlayer().addExpAndSp(34565, 2962);
-                st.giveItems(ADENA_ID, 14666, false);
+                    st.giveItems(SILVERSMITH_HAMMER, 1);
+                    st.getPlayer().addExpAndSp(34565, 2962);
+                    st.giveItems(ADENA_ID, 14666, false);
 
-                if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
-                    st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
-                    st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
-                    st.giveItems(1060, 100); // healing potion
-                    for (int item = 4412; item <= 4417; item++)
-                        st.giveItems(item, 10); // echo cry
-                    st.playTutorialVoice("tutorial_voice_026");
-                    st.giveItems(5789, 6000); // newbie ss
+                    if (st.getPlayer().getClassId().getLevel() == 1 && !st.getPlayer().getVarB("p1q3")) {
+                        st.getPlayer().setVar("p1q3", "1", -1); // flag for helper
+                        st.getPlayer().sendPacket(new ExShowScreenMessage("Now go find the Newbie Guide."));
+                        st.giveItems(1060, 100); // healing potion
+                        for (int item = 4412; item <= 4417; item++)
+                            st.giveItems(item, 10); // echo cry
+                        st.playTutorialVoice("tutorial_voice_026");
+                        st.giveItems(5789, 6000); // newbie ss
+                    }
+
+                    st.playSound(SOUND_FINISH);
+                    st.exitCurrentQuest(false);
                 }
-
-                st.playSound(SOUND_FINISH);
-                st.exitCurrentQuest(false);
             }
         } else if (npcId == 30516) {
             if (cond == 1 && st.getQuestItemsCount(GOUPHS_CONTRACT) > 0) {

@@ -8,7 +8,7 @@ import l2trunk.gameserver.scripts.ScriptFile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class _369_CollectorOfJewels extends Quest implements ScriptFile {
+public final class _369_CollectorOfJewels extends Quest {
     // NPCs
     private static final int NELL = 30376;
     // Mobs
@@ -140,17 +140,5 @@ public class _369_CollectorOfJewels extends Quest implements ScriptFile {
             qs.setCond(cond == 1 ? 2 : 4);
 
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 }

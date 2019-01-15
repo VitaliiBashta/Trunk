@@ -9,11 +9,13 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public class Adept extends DefaultAI {
-    Location[] _points;
+    List<Location> points;
     private int _lastPoint = 0;
 
-    Adept(NpcInstance actor) {
+    public Adept(NpcInstance actor) {
         super(actor);
     }
 
@@ -24,7 +26,7 @@ public class Adept extends DefaultAI {
 
     @Override
     public boolean thinkActive() {
-        if (!_def_think)
+        if (!defThink)
             startMoveTask();
         return true;
     }
@@ -39,9 +41,9 @@ public class Adept extends DefaultAI {
 
     private void startMoveTask() {
         _lastPoint++;
-        if (_lastPoint >= _points.length)
+        if (_lastPoint >= points.size())
             _lastPoint = 0;
-        addTaskMove(_points[_lastPoint], false);
+        addTaskMove(points.get(_lastPoint), false);
         doTask();
     }
 

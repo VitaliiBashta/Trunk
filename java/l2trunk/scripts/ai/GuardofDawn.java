@@ -5,11 +5,9 @@ import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Playable;
-import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 /**
@@ -44,7 +42,7 @@ public final class GuardofDawn extends DefaultAI {
             checkAroundPlayers(actor);
 
         // если есть задания - делаем их
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }

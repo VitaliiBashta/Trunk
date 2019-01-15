@@ -5,7 +5,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
-public final class _099_SagaOfTheFortuneSeeker extends SagasSuperclass implements ScriptFile {
+public final class _099_SagaOfTheFortuneSeeker extends SagasSuperclass {
     public _099_SagaOfTheFortuneSeeker() {
         super(false);
 
@@ -41,15 +41,4 @@ public final class _099_SagaOfTheFortuneSeeker extends SagasSuperclass implement
         registerNPCs();
     }
 
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
 }

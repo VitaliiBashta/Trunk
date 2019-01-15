@@ -1,32 +1,8 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.gameserver.scripts.ScriptFile;
-
-/**
- * @author pchayka
- */
-public class _725_ForTheSakeOfTheTerritoryShuttdart extends Dominion_ForTheSakeOfTerritory implements ScriptFile {
-    public _725_ForTheSakeOfTheTerritoryShuttdart() {
-        super();
-    }
-
+public final class _725_ForTheSakeOfTheTerritoryShuttdart extends Dominion_ForTheSakeOfTerritory {
     @Override
     public int getDominionId() {
         return 89;
-    }
-
-    @Override
-    public void onLoad() {
-
-    }
-
-    @Override
-    public void onReload() {
-
-    }
-
-    @Override
-    public void onShutdown() {
-
     }
 }

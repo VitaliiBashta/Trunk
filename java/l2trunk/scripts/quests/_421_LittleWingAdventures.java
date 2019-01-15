@@ -5,7 +5,6 @@ import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
-import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -21,7 +20,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class _421_LittleWingAdventures extends Quest implements ScriptFile {
+public final class _421_LittleWingAdventures extends Quest {
     // NPCs
     private static final int Cronos = 30610;
     private static final int Mimyu = 30747;
@@ -256,18 +255,6 @@ public final class _421_LittleWingAdventures extends Quest implements ScriptFile
     public String onKill(NpcInstance npc, QuestState st) {
         ThreadPoolManager.INSTANCE.schedule(new GuardiansSpawner(npc, st, Rnd.get(15, 20)), 1000);
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     public class GuardiansSpawner extends RunnableImpl {

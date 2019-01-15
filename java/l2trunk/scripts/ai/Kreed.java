@@ -8,8 +8,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Kreed extends DefaultAI {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             new Location(23436, 11164, -3728),
             new Location(20256, 11104, -3728),
             new Location(17330, 13579, -3720),
@@ -18,7 +20,7 @@ public final class Kreed extends DefaultAI {
             new Location(21621, 13349, -3648),
             new Location(20686, 10432, -3720),
             new Location(22426, 10260, -3648),
-            new Location(23436, 11164, -3728)};
+            new Location(23436, 11164, -3728));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -39,7 +41,7 @@ public final class Kreed extends DefaultAI {
         if (actor.isDead())
             return true;
 
-        if (_def_think) {
+        if (defThink) {
             doTask();
             return true;
         }
@@ -62,10 +64,10 @@ public final class Kreed extends DefaultAI {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

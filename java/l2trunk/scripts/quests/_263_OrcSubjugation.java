@@ -7,9 +7,9 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public final class _263_OrcSubjugation extends Quest implements ScriptFile {
+public final class _263_OrcSubjugation extends Quest {
     // NPC
-    private final int KAYLEEN = 30346;
+    private static final int KAYLEEN = 30346;
 
     // MOBS
     private final int BALOR_ORC_ARCHER = 20385;
@@ -30,18 +30,6 @@ public final class _263_OrcSubjugation extends Quest implements ScriptFile {
                 BALOR_ORC_LIEUTENANT
         );
         addQuestItem(ORC_AMULET, ORC_NECKLACE);
-    }
-
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
     }
 
     @Override

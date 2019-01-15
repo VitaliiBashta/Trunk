@@ -10,34 +10,22 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * 3 Служебных НПЦ на 5, 6м этаже Tully Workshop
- *
- * @author pchayka
- */
-public class WorkshopServantInstance extends NpcInstance {
+import java.util.List;
 
-    private static final int[] medals = {
-            10427,
-            //Tully's Platinum Medal
-            10428,
-            //Tully's Tin Medal
-            10429,
-            //Tully's Lead Medal
-            10430,
-            //Tully's Zinc Medal
-            10431,
-            //Tully's Copper Medal
-    };
-    private static final String[] phrases = {
+public final class WorkshopServantInstance extends NpcInstance {
+    private static final List<Integer> medals = List.of(
+            10427,            //Tully's Platinum Medal
+            10428,            //Tully's Tin Medal
+            10429,            //Tully's Lead Medal
+            10430,            //Tully's Zinc Medal
+            10431);            //Tully's Copper Medal
+    private static final List<String> phrases = List.of(
             "We won't let you go with this knowledge! Die!",
             "Mysterious Agent has failed! Kill him!",
-            "Mates! Attack those fools!",
-    };
+            "Mates! Attack those fools!");
 
     public WorkshopServantInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -55,7 +43,7 @@ public class WorkshopServantInstance extends NpcInstance {
                     return;
                 }
 
-            Functions.addItem(player, medals[Rnd.get(0, 4)], 1, "WorkshopServantInstance");
+            Functions.addItem(player, Rnd.get(medals), 1, "WorkshopServantInstance");
             player.sendPacket(new NpcHtmlMessage(player, this).setHtml("Ingenious Contraption:<br><br>The medal for access to Anomic Founrdy has been given."));
 
         } else if (command.startsWith("requestteleport"))
@@ -73,22 +61,22 @@ public class WorkshopServantInstance extends NpcInstance {
             player.altOnMagicUseTimer(player, 5526);
             player.teleToLocation(22616, 244888, 11062);
         } else if (command.startsWith("rejectjob")) {
-            for (NpcInstance challenger : World.getAroundNpc(this, 600, 300)) {
+            World.getAroundNpc(this, 600, 300).forEach(challenger -> {
                 challenger.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, player, 5000);
                 switch (challenger.getNpcId()) {
                     case 25600:
-                        Functions.npcSay(challenger, phrases[0]);
+                        Functions.npcSay(challenger, phrases.get(0));
                         break;
                     case 25601:
-                        Functions.npcSay(challenger, phrases[1]);
+                        Functions.npcSay(challenger, phrases.get(1));
                         break;
                     case 25602:
-                        Functions.npcSay(challenger, phrases[2]);
+                        Functions.npcSay(challenger, phrases.get(2));
                         break;
                     default:
                         break;
                 }
-            }
+            });
             Functions.npcSay(this, "Oh...");
             doDie(null);
         } else if (command.startsWith("tryanomicentry")) {
@@ -106,11 +94,11 @@ public class WorkshopServantInstance extends NpcInstance {
                     player.sendPacket(Msg.ITS_TOO_FAR_FROM_THE_NPC_TO_WORK);
                     return;
                 }
-            for (int medal : medals)
-                if (!hasItem(party, medal)) {
-                    player.sendMessage("In order to enter the Anomic Foundry your party should be carrying all 5 medals of Tully");
-                    return;
-                }
+            if (medals.stream()
+                    .filter(medal -> !hasItem(party, medal))
+                    .peek(medal -> player.sendMessage("In order to enter the Anomic Foundry your party should be carrying all 5 medals of Tully"))
+                    .findFirst().isPresent())
+                return;
             party.teleport(new Location(25512, 247240, -2656));
         } else
             super.onBypassFeedback(player, command);
@@ -136,9 +124,7 @@ public class WorkshopServantInstance extends NpcInstance {
     }
 
     private boolean hasItem(Party party, int itemId) {
-        for (Player p : party.getMembers())
-            if (p.getInventory().getItemByItemId(itemId) != null)
-                return true;
-        return false;
+        return party.getMembers().stream()
+                .anyMatch(p -> p.getInventory().getItemByItemId(itemId) != null);
     }
 }

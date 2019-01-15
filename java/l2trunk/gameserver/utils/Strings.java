@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.regex.Pattern;
 
-public class Strings {
+public final class Strings {
     private static final Logger _log = LoggerFactory.getLogger(Strings.class);
     private static String[] tr;
     private static String[] trb;
@@ -64,13 +64,6 @@ public class Strings {
             trcode[i * 2 + 1] = ss[1];
         }
         _log.info("Loaded " + (tr.length + tr.length + trcode.length) + " translit entries.");
-    }
-
-    public static String translit(String s) {
-        for (int i = 0; i < tr.length; i += 2)
-            s = s.replace(tr[i], tr[i + 1]);
-
-        return s;
     }
 
     public static String fromTranslit(String s, int type) {
@@ -131,25 +124,6 @@ public class Strings {
         return result;
     }
 
-    /***
-     * Склеивалка для строк
-     * @param glueStr - строка разделитель, может быть пустой строкой или null
-     * @param strings - массив из строк которые надо склеить
-     * @param startIdx - начальный индекс, если указать отрицательный то он отнимется от количества строк
-     */
-    private static String joinStrings(String glueStr, String[] strings, int startIdx) {
-        return joinStrings(glueStr, strings, startIdx, -1);
-    }
-
-    /***
-     * Склеивалка для строк
-     * @param glueStr - строка разделитель, может быть пустой строкой или null
-     * @param strings - массив из строк которые надо склеить
-     */
-    public static String joinStrings(String glueStr, String[] strings) {
-        return joinStrings(glueStr, strings, 0);
-    }
-
     public static String stripToSingleLine(String s) {
         if (s.isEmpty())
             return s;
@@ -158,14 +132,6 @@ public class Strings {
         if (i > -1)
             s = s.substring(0, i);
         return s;
-    }
-
-    public static String htmlButton(String value, String action, int width) {
-        return htmlButton(value, action, width, 22);
-    }
-
-    private static String htmlButton(String value, String action, int width, int height) {
-        return String.format("<button value=\"%s\" action=\"%s\" back=\"L2UI_CT1.Button_DF_Small_Down\" width=%d height=%d fore=\"L2UI_CT1.Button_DF_Small\">", value, action, width, height);
     }
 
 }

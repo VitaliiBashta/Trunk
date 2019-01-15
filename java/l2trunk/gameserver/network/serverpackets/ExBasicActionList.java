@@ -5,8 +5,8 @@ import l2trunk.gameserver.model.Player;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExBasicActionList extends L2GameServerPacket {
-    private static final List<Integer> BasicActions = Arrays.asList(
+public final class ExBasicActionList extends L2GameServerPacket {
+    private static final List<Integer> BasicActions = List.of(
             0, // ​​switch / exit . (/ sit, / stand)
             1, // switch Run / Walk . (/ walk, / run)
             2, // Attack the selected goal (s) . Click while holding the key Ctrl, to force attack . (/ attack, / attackforce)
@@ -198,7 +198,7 @@ public class ExBasicActionList extends L2GameServerPacket {
             5016 // Instantly restores the master's HP by 10%. Increases the master's resistnace debuff attacks by 80%, resistance to buff-canceling attacks by 40% speed by 10, p. def by 20%, and m. def by 20% and decreases MP comsmption for all skills by 50% for 1 minute?
     );
 
-    private static final List<Integer> TransformationActions = Arrays.asList(
+    private static final List<Integer> TransformationActions = List.of(
             1, // switch Run / Walk . (/ walk, / run)
             2, // Attack the selected goal (s) . Click while holding the key Ctrl, to force attack . (/ attack, / attackforce)
             3, // Request for trade with the selected player. (/ trade)

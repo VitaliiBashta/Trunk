@@ -5,19 +5,7 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.ScriptFile;
 
-public class _259_RanchersPlea extends Quest implements ScriptFile {
-    @Override
-    public void onLoad() {
-    }
-
-    @Override
-    public void onReload() {
-    }
-
-    @Override
-    public void onShutdown() {
-    }
-
+public final class _259_RanchersPlea extends Quest {
     private static final int GIANT_SPIDER_SKIN_ID = 1495;
     private static final int HEALING_POTION_ID = 1061;
     private static final int WOODEN_ARROW_ID = 17;
@@ -28,11 +16,9 @@ public class _259_RanchersPlea extends Quest implements ScriptFile {
         super(false);
         addStartNpc(30497);
 
-        addKillId(new int[]{
-                20103,
+        addKillId(20103,
                 20106,
-                20108
-        });
+                20108);
 
         addQuestItem(GIANT_SPIDER_SKIN_ID);
     }
