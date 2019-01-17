@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.ProductItem;
 
 import java.util.Collection;
 
-public class ExBR_ProductList extends L2GameServerPacket {
+public final class ExBR_ProductList extends L2GameServerPacket {
     @Override
     protected void writeImpl() {
         writeEx(0xD6);

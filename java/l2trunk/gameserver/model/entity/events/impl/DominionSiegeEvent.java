@@ -300,13 +300,11 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
     @Override
     public void broadcastTo(L2GameServerPacket packet, String... types) {
         List<SiegeClanObject> siegeClans = getObjects(DEFENDERS);
-        for (SiegeClanObject siegeClan : siegeClans)
-            siegeClan.broadcast(packet);
+        siegeClans.forEach(clan -> clan.broadcast(packet));
 
-        List<Integer> players = getObjects(DEFENDER_PLAYERS);
-        for (int i : players) {
-            GameObjectsStorage.getPlayer(i).sendPacket(packet);
-        }
+        List<Integer> playerIdS = getObjects(DEFENDER_PLAYERS);
+        playerIdS.forEach(id -> GameObjectsStorage.getPlayer(id).sendPacket(packet));
+
     }
 
     @Override

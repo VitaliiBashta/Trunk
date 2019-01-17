@@ -210,7 +210,7 @@ public final class AdminSpawn implements IAdminCommandHandler {
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            templateId = NpcHolder.getTemplateByName(monsterId).get(0).npcId;
+            templateId = NpcHolder.getTemplateByName(monsterId).map(npc ->npc.npcId).findFirst().orElse(0);
         }
 
         SimpleSpawner spawn = new SimpleSpawner(templateId);

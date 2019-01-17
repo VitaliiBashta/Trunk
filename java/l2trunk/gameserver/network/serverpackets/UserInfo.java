@@ -17,7 +17,9 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.skills.effects.EffectCubic;
 import l2trunk.gameserver.utils.Location;
 
-public class UserInfo extends L2GameServerPacket {
+import java.util.List;
+
+public final class UserInfo extends L2GameServerPacket {
     private final boolean partyRoom;
     private final int _runSpd, _walkSpd, _swimRunSpd, _swimWalkSpd, _flRunSpd, _flWalkSpd;
     private final double move_speed, attack_speed, col_radius, col_height;
@@ -37,7 +39,7 @@ public class UserInfo extends L2GameServerPacket {
     private final int pledge_type;
     private final int transformation;
     private final int defenceFire, defenceWater, defenceWind, defenceEarth, defenceHoly, defenceUnholy;
-    private final EffectCubic[] cubics;
+    private final List<EffectCubic> cubics;
     private final Element attackElement;
     private final int attackElementValue;
     private final boolean isFlying, _allowMap;
@@ -60,18 +62,18 @@ public class UserInfo extends L2GameServerPacket {
     private int ally_id;
     private int name_color;
     private int title_color;
-    private String _name, title;
+    private String name, title;
 
     public UserInfo(Player player) {
         if (player.getTransformationName() != null) {
-            _name = player.getTransformationName();
+            name = player.getTransformationName();
             title = "";
             clan_crest_id = 0;
             ally_crest_id = 0;
             large_clan_crest_id = 0;
             cw_level = CursedWeaponsManager.INSTANCE.getLevel(player.getCursedWeaponEquippedId());
         } else {
-            _name = player.getVisibleName();
+            name = player.getVisibleName();
 
             Clan clan = player.getClan();
             Alliance alliance = clan == null ? null : clan.getAlliance();
@@ -183,7 +185,7 @@ public class UserInfo extends L2GameServerPacket {
         can_crystalize = player.getSkillLevel(Skill.SKILL_CRYSTALLIZE) > 0 ? 1 : 0;
         pk_kills = player.getPkKills();
         pvp_kills = player.getPvpKills();
-        cubics = player.getCubics().toArray(new EffectCubic[player.getCubics().size()]);
+        cubics = player.getCubics();
         _abnormalEffect = player.getAbnormalEffect();
         _abnormalEffect2 = player.getAbnormalEffect2();
         ClanPrivs = player.getClanPrivileges();
@@ -237,7 +239,7 @@ public class UserInfo extends L2GameServerPacket {
         writeD(_loc.z + Config.CLIENT_Z_SHIFT);
         writeD(vehicle_obj_id);
         writeD(obj_id);
-        writeS(_name);
+        writeS(name);
         writeD(_race);
         writeD(sex);
         writeD(base_class);
@@ -259,14 +261,9 @@ public class UserInfo extends L2GameServerPacket {
         writeD(maxLoad);
         writeD(_weaponFlag);
 
-        for (int PAPERDOLL_ID : Inventory.PAPERDOLL_ORDER)
-            writeD(_inv[PAPERDOLL_ID][0]);
-
-        for (int PAPERDOLL_ID : Inventory.PAPERDOLL_ORDER)
-            writeD(_inv[PAPERDOLL_ID][1]);
-
-        for (int PAPERDOLL_ID : Inventory.PAPERDOLL_ORDER)
-            writeD(_inv[PAPERDOLL_ID][2]);
+        Inventory.PAPERDOLL_ORDER.forEach(id -> writeD(_inv[id][0]));
+        Inventory.PAPERDOLL_ORDER.forEach(id -> writeD(_inv[id][1]));
+        Inventory.PAPERDOLL_ORDER.forEach(id -> writeD(_inv[id][2]));
 
         writeD(talismans);
         writeD(openCloak ? 0x01 : 0x00);
@@ -312,9 +309,9 @@ public class UserInfo extends L2GameServerPacket {
         writeC(can_crystalize);
         writeD(pk_kills);
         writeD(pvp_kills);
-        writeH(cubics.length);
-        for (EffectCubic cubic : cubics)
-            writeH(cubic == null ? 0 : cubic.getId());
+        writeH(cubics.size());
+        cubics.forEach(cubic ->
+            writeH(cubic == null ? 0 : cubic.getId()));
         writeC(partyRoom ? 0x01 : 0x00); //1-find party members
         writeD(_abnormalEffect);
         writeC(isFlying ? 0x02 : 0x00);

@@ -868,17 +868,18 @@ public class NpcInstance extends Creature {
         }
     }
 
-    private void showQuestWindow(Player player, String questId) {
+    private void showQuestWindow(Player player, String questName) {
         if (!player.isQuestContinuationPossible(true)) {
             return;
         }
 
-        int count = 0;
-        for (QuestState quest : player.getAllQuestsStates()) {
-            if ((quest != null) && quest.getQuest().isVisible() && quest.isStarted() && (quest.getCond() > 0)) {
-                count++;
-            }
-        }
+        int count = (int) player.getAllQuestsStates()
+                .filter(Objects::nonNull)
+                .filter(quest -> quest.getQuest().isVisible())
+                .filter(QuestState::isStarted)
+                .filter(quest -> quest.getCond() > 0)
+                .count();
+
 
         if (count > 40) {
             showChatWindow(player, "quest-limit.htm");
@@ -887,7 +888,7 @@ public class NpcInstance extends Creature {
 
         try {
             // Get the state of the selected quest
-            QuestState qs = player.getQuestState(questId);
+            QuestState qs = player.getQuestState(questName);
             if (qs != null) {
                 if (qs.isCompleted()) {
                     showChatWindow(player, "completed-quest.htm");
@@ -897,7 +898,7 @@ public class NpcInstance extends Creature {
                     return;
                 }
             } else {
-                Quest q = QuestManager.getQuest(questId);
+                Quest q = QuestManager.getQuest(questName);
                 if (q != null) {
                     // check for start point
                     List<Quest> qlst = getTemplate().getEventQuests(QuestEventType.QUEST_START);
@@ -915,7 +916,7 @@ public class NpcInstance extends Creature {
 
             showChatWindow(player, "no-quest.htm");
         } catch (RuntimeException e) {
-            _log.warn("problem with npc text(questId: " + questId + ')', e);
+            _log.warn("problem with npc text(questName: " + questName + ')', e);
         }
 
         player.sendActionFailed();
@@ -1046,7 +1047,7 @@ public class NpcInstance extends Creature {
                 showChatWindow(player, command.substring(5));
             } else if (command.startsWith("Teleport")) {
                 int cmdChoice = Integer.parseInt(command.substring(9, 10).trim());
-                TeleportLocation[] list = getTemplate().getTeleportList(cmdChoice);
+                List<TeleportLocation> list = getTemplate().getTeleportList(cmdChoice);
                 if (list != null) {
                     showTeleportList(player, list);
                 } else {
@@ -1054,7 +1055,7 @@ public class NpcInstance extends Creature {
                 }
             } else if (command.startsWith("Tele20Lvl")) {
                 int cmdChoice = Integer.parseInt(command.substring(10, 11).trim());
-                TeleportLocation[] list = getTemplate().getTeleportList(cmdChoice);
+                List<TeleportLocation> list = getTemplate().getTeleportList(cmdChoice);
                 if (player.getLevel() > 20) {
                     showChatWindow(player, "teleporter/" + getNpcId() + "-no.htm");
                 } else if (list != null) {
@@ -1128,7 +1129,7 @@ public class NpcInstance extends Creature {
         }
     }
 
-    private void showTeleportList(Player player, TeleportLocation[] list) {
+    private void showTeleportList(Player player, List<TeleportLocation> list) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("&$556;").append("<br><br>");
@@ -1187,30 +1188,26 @@ public class NpcInstance extends Creature {
 
     private void showQuestWindow(Player player) {
         // collect awaiting quests and start points
-        List<Quest> options = player.getQuestsForEvent(this, QuestEventType.QUEST_TALK)
+        Set<Quest> options = player.getQuestsForEvent(this, QuestEventType.QUEST_TALK)
                 .filter(x -> x.getQuest().getQuestIntId() > 0)
                 .map(QuestState::getQuest)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
 
-        List<Quest> starts = getTemplate().getEventQuests(QuestEventType.QUEST_START);
-        starts.stream()
-                .filter(x -> !options.contains(x))
+        options.addAll(getTemplate().getEventQuests(QuestEventType.QUEST_START).stream()
                 .filter(x -> x.getQuestIntId() > 0)
-                .forEach(options::add);
+                .collect(Collectors.toSet()));
 
 
         // Display a QuestChooseWindow (if several quests are available) or QuestWindow
         if (options.size() > 1) {
             showQuestChooseWindow(player, options);
-        } else if (options.size() == 1) {
-            showQuestWindow(player, options.get(0).getName());
         } else {
             showQuestWindow(player, "");
         }
     }
 
-    private void showQuestChooseWindow(Player player, List<Quest> quests) {
+    private void showQuestChooseWindow(Player player, Set<Quest> quests) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<html><body><title>Talk about:</title><br>");

@@ -14,16 +14,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class ChainHeal extends Skill {
-    private final List<Integer> _healPercents;
-    private final int _healRadius;
-    private final int _maxTargets;
+    private final List<Integer> healPercents;
+    private final int healRadius;
+    private final int maxTargets;
 
     public ChainHeal(StatsSet set) {
         super(set);
-        _healRadius = set.getInteger("healRadius", 350);
+        healRadius = set.getInteger("healRadius", 350);
         List<String> params = List.of(set.getString("healPercents", "").split(";"));
-        _maxTargets = params.size();
-        _healPercents = params.stream()
+        maxTargets = params.size();
+        healPercents = params.stream()
                 .map(NumberUtils::toInt)
                 .collect(Collectors.toList());
     }
@@ -49,20 +49,17 @@ public final class ChainHeal extends Skill {
 
             getEffects(activeChar, target, getActivateRate() > 0, false);
 
-            double hp = (_healPercents.get(curTarget) * target.getMaxHp()) / 100.;
-            double addToHp = Math.max(0, Math.min(hp, ((target.calcStat(Stats.HP_LIMIT, null, null) * target.getMaxHp()) / 100.) - target.getCurrentHp()));
+            double hp = (healPercents.get(curTarget) * target.getMaxHp()) / 100.;
+            int addToHp = (int) Math.max(0, Math.min(hp, ((target.calcStat(Stats.HP_LIMIT, null, null) * target.getMaxHp()) / 100) - target.getCurrentHp()));
 
-            if (addToHp > 0) {
-                target.setCurrentHp(addToHp + target.getCurrentHp(), false);
-            }
+            if (addToHp > 0) target.setCurrentHp(addToHp + target.getCurrentHp(), false);
 
-            if (target.isPlayer()) {
+            if (target.isPlayer())
                 if (activeChar != target) {
                     target.sendPacket(new SystemMessage(SystemMessage.XS2S_HP_HAS_BEEN_RESTORED_BY_S1).addString(activeChar.getName()).addNumber(Math.round(addToHp)));
                 } else {
                     activeChar.sendPacket(new SystemMessage(SystemMessage.S1_HPS_HAVE_BEEN_RESTORED).addNumber(Math.round(addToHp)));
                 }
-            }
 
             curTarget++;
         }
@@ -75,7 +72,7 @@ public final class ChainHeal extends Skill {
     @Override
     public List<Creature> getTargets(Creature activeChar, Creature aimingTarget, boolean forceUse) {
         List<Creature> result = new ArrayList<>();
-        List<Creature> targets = aimingTarget.getAroundCharacters(_healRadius, _healRadius).collect(Collectors.toList());
+        List<Creature> targets = aimingTarget.getAroundCharacters(healRadius, healRadius).collect(Collectors.toList());
         if (targets.isEmpty()) {
             return targets;
         }
@@ -85,8 +82,7 @@ public final class ChainHeal extends Skill {
         for (Creature target : targets) {
             if ((target == null) || target.isHealBlocked() || target.isCursedWeaponEquipped()
                     || (ConditionTargetRelation.getRelation(activeChar, target) != ConditionTargetRelation.Relation.Friend)
-                )
-            {
+            ) {
                 continue;
             }
 
@@ -106,7 +102,7 @@ public final class ChainHeal extends Skill {
         for (HealTarget ht : sortedTargets) {
             result.add(ht.getTarget());
             targetsCount++;
-            if (targetsCount >= _maxTargets) {
+            if (targetsCount >= maxTargets) {
                 break;
             }
         }

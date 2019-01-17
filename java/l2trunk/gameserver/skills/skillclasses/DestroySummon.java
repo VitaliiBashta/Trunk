@@ -10,7 +10,7 @@ import l2trunk.gameserver.stats.Formulas;
 
 import java.util.List;
 
-public class DestroySummon extends Skill {
+public final class DestroySummon extends Skill {
     public DestroySummon(StatsSet set) {
         super(set);
     }

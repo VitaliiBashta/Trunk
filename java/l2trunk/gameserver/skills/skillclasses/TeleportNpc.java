@@ -3,6 +3,7 @@ package l2trunk.gameserver.skills.skillclasses;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public final class TeleportNpc extends Skill {
                     x += hyp;
                     y -= hyp;
                 }
-                target.setXYZ(x, y, z);
+                target.setLoc(new Location(x, y, z));
                 target.validateLocation(1);
             }
     }

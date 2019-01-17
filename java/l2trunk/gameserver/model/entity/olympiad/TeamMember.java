@@ -306,16 +306,12 @@ public final class TeamMember {
         if (player.isCastingNow())
             player.abortCast(true, true);
 
-        for (Effect e : player.getEffectList().getAllEffects()) {
-            if (e == null)
-                continue;
-            if (e.getEffectType() == EffectType.Cubic && player.getSkillLevel(e.getSkill().getId()) > 0)
-                continue;
-            if (e.getSkill().isToggle())
-                continue;
-            player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getLevel()));
-            e.exit();
-        }
+        player.getEffectList().getAllEffects()
+                .filter(e -> e.getEffectType() != EffectType.Cubic)
+                .filter(e -> !e.getSkill().isToggle())
+                .peek(e -> player.sendPacket(new SystemMessage(SystemMsg.THE_EFFECT_OF_S1_HAS_BEEN_REMOVED).addSkillName(e.getSkill().getId(), e.getSkill().getLevel())))
+                .forEach(Effect::exit);
+
 
         if (player.isFrozen())
             player.stopFrozen();

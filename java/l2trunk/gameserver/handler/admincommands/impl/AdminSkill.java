@@ -86,14 +86,13 @@ public final class AdminSkill implements IAdminCommandHandler {
                 break;
             case admin_people_having_effect:
                 int skillId = toInt(wordList[1]);
-                GameObjectsStorage.getAllPlayersStream().forEach(player -> {
-                    player.getEffectList().getAllEffects().stream()
-                            .filter(e -> e.getSkill().getId() == skillId)
-                            .forEach(e -> {
-                                activeChar.sendMessage("Player: " + player.getName() + " Level:" + e.getSkill().getLevel());
-                                activeChar.sendMessage("Finished!");
-                            });
-                });
+                GameObjectsStorage.getAllPlayersStream().forEach(player ->
+                        player.getEffectList().getAllEffects()
+                                .filter(e -> e.getSkill().getId() == skillId)
+                                .forEach(e -> {
+                                    activeChar.sendMessage("Player: " + player.getName() + " Level:" + e.getSkill().getLevel());
+                                    activeChar.sendMessage("Finished!");
+                                }));
                 break;
         }
 
@@ -149,7 +148,7 @@ public final class AdminSkill implements IAdminCommandHandler {
                 continue;
             Env env = new Env(target, activeChar, null);
             env.value = calculator.getBase();
-            log_str.append("Stat: ").append(calculator._stat.getValue()).append("\r\n");
+            log_str.append("Stat: ").append(calculator.stat.getValue()).append("\r\n");
             List<Func> funcs = calculator.getFunctions();
             for (int i = 0; i < funcs.size(); i++) {
                 String order = Integer.toHexString(funcs.get(i).order).toUpperCase();
@@ -323,10 +322,8 @@ public final class AdminSkill implements IAdminCommandHandler {
         replyMSG.append("\" action=\"bypass -h admin_show_effects\" width=100 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\" /></center>");
         replyMSG.append("<br>");
 
-        List<Effect> list = player.getEffectList().getAllEffects();
-        if (list != null && !list.isEmpty())
-            for (Effect e : list)
-                replyMSG.append(e.getSkill().getName()).append(" ").append(e.getSkill().getLevel()).append(" - ").append(e.getSkill().isToggle() ? "Infinity" : (e.getTimeLeft() + " seconds")).append("<br1>");
+        player.getEffectList().getAllEffects().forEach(e ->
+                replyMSG.append(e.getSkill().getName()).append(" ").append(e.getSkill().getLevel()).append(" - ").append(e.getSkill().isToggle() ? "Infinity" : (e.getTimeLeft() + " seconds")).append("<br1>"));
         replyMSG.append("<br></body></html>");
 
         adminReply.setHtml(replyMSG.toString());

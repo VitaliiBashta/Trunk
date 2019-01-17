@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
@@ -142,15 +141,15 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
         Player player = st.getPlayer();
         String htmltext = event;
         Reflection ref = player.getReflection();
-        if (event.equalsIgnoreCase("claudiaathebaldt_q195_2.htm")) {
+        if ("claudiaathebaldt_q195_2.htm".equalsIgnoreCase(event)) {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("john_q195_2.htm")) {
+        } else if ("john_q195_2.htm".equalsIgnoreCase(event)) {
             st.setCond(2);
             st.giveItems(GuardsoftheDawnIdentityCard, 1);
             st.playSound(SOUND_MIDDLE);
-        } else if (event.equalsIgnoreCase("raymond_q195_3.htm")) {
+        } else if ("raymond_q195_3.htm".equalsIgnoreCase(event)) {
             if (player.getTransformation() != 0 || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
@@ -159,7 +158,7 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             negateSpeedBuffs(player);
             SkillTable.INSTANCE.getInfo(6204).getEffects(player);
             st.setCond(3);
-        } else if (event.equalsIgnoreCase("transformagain")) {
+        } else if ("transformagain".equalsIgnoreCase(event)) {
             if (player.getTransformation() != 0 || player.isMounted()) {
                 player.sendPacket(Msg.YOU_ALREADY_POLYMORPHED_AND_CANNOT_POLYMORPH_AGAIN);
                 return null;
@@ -167,22 +166,22 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
             negateSpeedBuffs(player);
             SkillTable.INSTANCE.getInfo(6204).getEffects(player);
             htmltext = "raymond_q195_4c.htm";
-        } else if (event.equalsIgnoreCase("dispel")) {
+        } else if ("dispel".equalsIgnoreCase(event)) {
             if (player.getTransformation() == 113) {
                 player.setTransformation(0);
                 htmltext = "raymond_q195_4d.htm";
             } else
                 htmltext = "raymond_q195_4b.htm";
-        } else if (event.equalsIgnoreCase("teleout")) {
+        } else if ("teleout".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(GuardsoftheDawnIdentityCard) > 0)
                 htmltext = "darknessofdawn_q195_1.htm";
             else
                 htmltext = "darknessofdawn_q195_2.htm";
             if (ref != null)
                 ref.collapse();
-        } else if (event.equalsIgnoreCase("telelater"))
+        } else if ("telelater".equalsIgnoreCase(event)) {
             return null;
-        else if (event.equalsIgnoreCase("open_door")) {
+        } else if ("open_door".equalsIgnoreCase(event)) {
             if (ref != null && player.getTransformation() == 113 && st.getQuestItemsCount(GuardsoftheDawnIdentityCard) >= 1) {
                 if (npc.getLoc().equals(new Location(-75695, 213537, -7128, 0))) {
                     ref.openDoor(door1);
@@ -200,21 +199,20 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
                 }
             } else
                 return "identityconfirmdevice_q195_2.htm";
-        } else if (event.equalsIgnoreCase("false_code"))
-            htmltext = "passwordentrydevice_q195_2.htm";
+        } else if ("false_code".equalsIgnoreCase(event)) htmltext = "passwordentrydevice_q195_2.htm";
         else if (event.equalsIgnoreCase("correct_code")) {
             if (ref != null) {
                 ref.openDoor(door5);
                 ref.openDoor(door6);
             }
             htmltext = "passwordentrydevice_q195_1.htm";
-        } else if (event.equalsIgnoreCase("bookshelf_q195_2.htm")) {
+        } else if ("bookshelf_q195_2.htm".equalsIgnoreCase(event)) {
             st.giveItems(EmperorShunaimansContract, 1);
             st.playSound(SOUND_ITEMGET);
-        } else if (event.equalsIgnoreCase("bookshelf_q195_3.htm")) {
+        } else if ("bookshelf_q195_3.htm".equalsIgnoreCase(event)) {
             if (ref != null && !ref.isDefault())
                 ref.collapse();
-        } else if (event.equalsIgnoreCase("raymond_q195_5.htm")) {
+        } else if ("raymond_q195_5.htm".equalsIgnoreCase(event)) {
             player.setTransformation(0);
             st.takeItems(GuardsoftheDawnIdentityCard, -1);
             st.playSound(SOUND_ITEMGET);
@@ -314,8 +312,9 @@ public final class _195_SevenSignsSecretRitualofthePriests extends Quest {
     }
 
     private void negateSpeedBuffs(Player p) {
-        for (Effect e : p.getEffectList().getAllEffects())
-            if (e.getStackType().equals("SpeedUp") && !e.isOffensive())
-                e.exit();
+        p.getEffectList().getAllEffects()
+                .filter(e -> e.getStackType().equals("SpeedUp"))
+                .filter(e -> !e.isOffensive())
+                .forEach(Effect::exit);
     }
 }

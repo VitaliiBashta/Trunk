@@ -132,9 +132,8 @@ public final class KashaNegate implements ScriptFile {
     }
 
     private void addEffect(NpcInstance actor, Creature player, int skillId, int skillLvl, boolean animation) {
-        List<Effect> effect = player.getEffectList().getEffectsBySkillId(skillId);
-        if (effect != null)
-            effect.get(0).exit();
+        player.getEffectList().getEffectsBySkillId(skillId)
+                .findFirst().ifPresent(Effect::exit);
         if (skillLvl > 0) {
             SkillTable.INSTANCE.getInfo(skillId, skillLvl).getEffects(actor, player);
             if (animation)

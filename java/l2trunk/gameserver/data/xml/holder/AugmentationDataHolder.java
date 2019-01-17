@@ -27,7 +27,4 @@ public final class AugmentationDataHolder {
         lifestones.add(item);
     }
 
-    public static boolean isStone(int item) {
-        return lifestones.contains(item);
-    }
 }

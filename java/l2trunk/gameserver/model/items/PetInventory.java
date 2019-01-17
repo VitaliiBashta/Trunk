@@ -6,8 +6,6 @@ import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
 import l2trunk.gameserver.network.serverpackets.PetInventoryUpdate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-import java.util.Collection;
-
 public class PetInventory extends Inventory {
     private final PetInstance _actor;
 
@@ -61,21 +59,18 @@ public class PetInventory extends Inventory {
 
         writeLock();
         try {
-            Collection<ItemInstance> items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getBaseLocation());
 
-            for (ItemInstance item : items) {
+            ITEMS_DAO.getItemsByOwnerIdAndLoc(ownerId, getBaseLocation()).forEach(item -> {
                 this.items.add(item);
                 onRestoreItem(item);
-            }
+            });
 
-            items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getEquipLocation());
-
-            for (ItemInstance item : items) {
+            ITEMS_DAO.getItemsByOwnerIdAndLoc(ownerId, getEquipLocation()).forEach(item -> {
                 this.items.add(item);
                 onRestoreItem(item);
                 if (ItemFunctions.checkIfCanEquip(getActor(), item) == null)
                     setPaperdollItem(item.getEquipSlot(), item);
-            }
+            });
         } finally {
             writeUnlock();
         }
@@ -87,14 +82,14 @@ public class PetInventory extends Inventory {
     public void store() {
         writeLock();
         try {
-            _itemsDAO.update(items);
+            ITEMS_DAO.update(items);
         } finally {
             writeUnlock();
         }
     }
 
     public void validateItems() {
-        for (ItemInstance item : _paperdoll)
+        for (ItemInstance item : paperdoll)
             if (item != null && (ItemFunctions.checkIfCanEquip(getActor(), item) != null || !item.getTemplate().testCondition(getActor(), item)))
                 unEquipItem(item);
     }

@@ -12,6 +12,7 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcLocation;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -105,7 +106,7 @@ public final class DarknessFestival extends Reflection {
     }
 
     private void spawnFestivalMonsters(int spawnType) {
-        List<FestivalSpawn.NpcLocation> spawns = null;
+        List<NpcLocation> spawns = null;
         switch (spawnType) {
             case 0:
             case 1:
@@ -120,7 +121,7 @@ public final class DarknessFestival extends Reflection {
         }
 
         if (spawns != null)
-            for (FestivalSpawn.NpcLocation element : spawns) {
+            spawns.forEach(element -> {
                 FestivalSpawn currSpawn = new FestivalSpawn(element);
 
                 SimpleSpawner npcSpawn = new SimpleSpawner(currSpawn.npcId);
@@ -136,7 +137,7 @@ public final class DarknessFestival extends Reflection {
                 else if (spawnType == 3)
                     festivalMob.setOfferingBonus(5);
                 addSpawn(npcSpawn);
-            }
+            });
     }
 
     public boolean increaseChallenge() {

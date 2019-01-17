@@ -40,27 +40,10 @@ public final class HuntersGuild extends Functions implements ScriptFile, IVoiced
     }
 
     private static boolean checkTarget(NpcTemplate npc) {
-        if (!npc.isInstanceOf(MonsterInstance.class))
+
+        if (!npc.type.equalsIgnoreCase("monster"))
             return false;
         if (npc.rewardExp == 0)
-            return false;
-        if (npc.isInstanceOf(RaidBossInstance.class))
-            return false;
-        if (npc.isInstanceOf(QueenAntLarvaInstance.class))
-            return false;
-        if (npc.isInstanceOf(SquashInstance.class))
-            return false;
-        if (npc.isInstanceOf(MinionInstance.class))
-            return false;
-        if (npc.isInstanceOf(FestivalMonsterInstance.class))
-            return false;
-        if (npc.isInstanceOf(TamedBeastInstance.class))
-            return false;
-        if (npc.isInstanceOf(DeadManInstance.class))
-            return false;
-        if (npc.isInstanceOf(ChestInstance.class))
-            return false;
-        if (npc.title.contains("Quest Monster"))
             return false;
         return GameObjectsStorage.getByNpcId(npc.getNpcId()) != null;
     }

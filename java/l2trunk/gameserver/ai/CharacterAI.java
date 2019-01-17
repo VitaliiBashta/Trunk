@@ -139,7 +139,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     public void Attack(Creature target, boolean forceUse, boolean dontMove) {
-        setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+        setIntentionAttack(target);
     }
 
     public void Cast(Skill skill, Creature target) {
@@ -147,7 +147,7 @@ public class CharacterAI extends AbstractAI {
     }
 
     void Cast(Skill skill, Creature target, boolean forceUse, boolean dontMove) {
-        setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+        setIntentionAttack(target);
     }
 
     @Override

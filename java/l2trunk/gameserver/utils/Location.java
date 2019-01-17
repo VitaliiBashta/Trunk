@@ -62,9 +62,9 @@ public class Location extends Point3D implements SpawnRange {
     }
 
     public static Location parse(Element element) {
-        int x = Integer.parseInt(element.attributeValue("x"));
-        int y = Integer.parseInt(element.attributeValue("y"));
-        int z = Integer.parseInt(element.attributeValue("z"));
+        int x = toInt(element.attributeValue("x"));
+        int y = toInt(element.attributeValue("y"));
+        int z = toInt(element.attributeValue("z"));
         int h = element.attributeValue("h") == null ? 0 : Integer.parseInt(element.attributeValue("h"));
         return new Location(x, y, z, h);
     }

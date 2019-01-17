@@ -67,7 +67,7 @@ public final class InstantJump extends Skill {
         activeChar.abortCast(true, true);
         activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
         activeChar.broadcastPacket(new FlyToLocation(activeChar, loc, FlyToLocation.FlyType.DUMMY));
-        activeChar.setXYZ(loc.x, loc.y, loc.z);
+        activeChar.setLoc(loc);
         activeChar.setHeading(target.getHeading());
         activeChar.broadcastPacket(new ValidateLocation(activeChar));
     }

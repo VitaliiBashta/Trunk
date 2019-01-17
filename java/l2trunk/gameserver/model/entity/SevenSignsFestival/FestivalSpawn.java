@@ -2,6 +2,7 @@ package l2trunk.gameserver.model.entity.SevenSignsFestival;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcLocation;
 
 import java.util.List;
 
@@ -491,7 +492,7 @@ public final class FestivalSpawn {
     public final int npcId;
 
     FestivalSpawn(NpcLocation npcLocation) {
-        this.loc = npcLocation.getLoc();
+        this.loc = npcLocation;
         npcId = npcLocation.npcId;
     }
 
@@ -502,24 +503,24 @@ public final class FestivalSpawn {
         npcId = -1;
     }
 
-    public static class NpcLocation {
-        int x;
-        int y;
-        int z;
-        int heading;
-        int npcId;
-
-        NpcLocation(int x, int y, int z, int heading, int npcId) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.heading = heading < 0 ? Rnd.get(65536) : heading;
-            this.npcId = npcId;
-        }
-
-        public Location getLoc() {
-            return new Location(x, y, z, heading);
-        }
-    }
+//    public static class NpcLocation {
+//        int x;
+//        int y;
+//        int z;
+//        int heading;
+//        int npcId;
+//
+//        NpcLocation(int x, int y, int z, int heading, int npcId) {
+//            this.x = x;
+//            this.y = y;
+//            this.z = z;
+//            this.heading = heading < 0 ? Rnd.get(65536) : heading;
+//            this.npcId = npcId;
+//        }
+//
+//        public Location getLoc() {
+//            return new Location(x, y, z, heading);
+//        }
+//    }
 
 }

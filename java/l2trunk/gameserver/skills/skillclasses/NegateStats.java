@@ -43,9 +43,8 @@ public class NegateStats extends Skill {
                 }
 
                 int count = 0;
-                List<Effect> effects = target.getEffectList().getAllEffects();
                 for (Stats stat : negateStats)
-                    for (Effect e : effects) {
+                    for (Effect e : target.getEffectList().getAllEffects().collect(Collectors.toList())) {
                         Skill skill = e.getSkill();
                         // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
                         if (!skill.isOffensive() && skill.getMagicLevel() > getMagicLevel() && Rnd.chance(skill.getMagicLevel() - getMagicLevel())) {

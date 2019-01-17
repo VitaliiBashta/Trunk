@@ -7,7 +7,7 @@ import l2trunk.gameserver.network.serverpackets.ExGetBookMarkInfo;
 /**
  * dSdS
  */
-public class RequestModifyBookMarkSlot extends L2GameClientPacket {
+public final class RequestModifyBookMarkSlot extends L2GameClientPacket {
     private String name, acronym;
     private int icon, slot;
 
@@ -25,9 +25,9 @@ public class RequestModifyBookMarkSlot extends L2GameClientPacket {
         if (activeChar != null) {
             final BookMark mark = activeChar.bookmarks.get(slot);
             if (mark != null) {
-                mark.setName(name);
-                mark.setIcon(icon);
-                mark.setAcronym(acronym);
+                mark.setName(name)
+                        .setIcon(icon)
+                        .setAcronym(acronym);
                 activeChar.sendPacket(new ExGetBookMarkInfo(activeChar));
             }
         }

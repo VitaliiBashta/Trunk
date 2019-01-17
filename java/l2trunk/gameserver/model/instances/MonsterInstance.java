@@ -710,9 +710,8 @@ public class MonsterInstance extends NpcInstance {
 
         double distance = getDistance(attacker);
         if (distance <= MIN_DISTANCE_FOR_CANCEL_UD) {
-            if (getEffectList() != null && getEffectList().getEffectsBySkillId(skillId) != null)
-                for (Effect e : getEffectList().getEffectsBySkillId(skillId))
-                    e.exit();
+            getEffectList().getEffectsBySkillId(skillId)
+                    .forEach(Effect::exit);
         } else if (distance >= MIN_DISTANCE_FOR_USE_UD) {
             double chance = UD_USE_CHANCE / (getMaxHp() / damage);
             if (Rnd.chance(chance)) {

@@ -10,8 +10,9 @@ import l2trunk.gameserver.stats.funcs.Func;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class EffectServitorShare extends Effect {
+public final class EffectServitorShare extends Effect {
     public EffectServitorShare(Env paramEnv, EffectTemplate paramEffectTemplate) {
         super(paramEnv, paramEffectTemplate);
     }
@@ -25,8 +26,8 @@ public class EffectServitorShare extends Effect {
         super.onExit();
     }
 
-    public List<Func> getStatFuncs() {
-        return Arrays.asList((new Func(Stats.POWER_ATTACK, 64, this) {
+    public Stream<Func> getStatFuncs() {
+        return Stream.of((new Func(Stats.POWER_ATTACK, 64, this) {
                     public void calc(Env env) {
                         Player pc = env.character.getPlayer();
                         if (pc != null) {
@@ -105,13 +106,4 @@ public class EffectServitorShare extends Effect {
         return false;
     }
 
-    public class FuncShare extends Func {
-        public FuncShare(Stats stat, int order, Object owner, double value) {
-            super(stat, order, owner, value);
-        }
-
-        public void calc(Env paramEnv) {
-            paramEnv.value += paramEnv.character.getPlayer().calcStat(this.stat, this.stat.getInit()) * this.value;
-        }
-    }
 }

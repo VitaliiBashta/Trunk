@@ -128,24 +128,7 @@ public class RequestRecipeItemMakeSelf extends L2GameClientPacket {
 
         if (success == 0) {
             activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_FAILED_TO_MANUFACTURE_S1).addItemName(recipeList.getItemId()));
-
-            // Alexander - Add a new craft failed only for recipes with less than 100% rate
-//			if (recipeList.getSuccessRate() < 100)
-//			{
-//				activeChar.addPlayerStats(Ranking.STAT_TOP_CRAFTS_FAILED);
-//				activeChar.getCounters().recipesFailed++;
-//			}
         }
-//		else
-//		{
-//			// Alexander - Add a new craft succeed only for recipes with less than 100% rate
-//			if (recipeList.getSuccessRate() < 100)
-//			{
-//				activeChar.addPlayerStats(Ranking.STAT_TOP_CRAFTS_SUCCEED);
-//				activeChar.getCounters().recipesSucceeded++;
-//			}
-//		}
-//		
         activeChar.sendPacket(new RecipeItemMakeInfo(activeChar, recipeList, success));
     }
 }

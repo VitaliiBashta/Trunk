@@ -221,8 +221,8 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
             writeD(0x00);
             writeD(0x00);
 
-            for (int paperdollId : Inventory.PAPERDOLL_ORDER)
-                writeD(charInfoPackage.getPaperdollItemId(paperdollId));
+            Inventory.PAPERDOLL_ORDER.forEach(id ->
+                writeD(charInfoPackage.getPaperdollItemId(id)));
 
             writeD(charInfoPackage.getHairStyle());
             writeD(charInfoPackage.getHairColor());

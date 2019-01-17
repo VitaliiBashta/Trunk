@@ -89,7 +89,7 @@ public class PlayableAI extends CharacterAI {
                 _forceUse = nextAction_arg2;
                 _dontMove = nextAction_arg3;
                 clearNextAction();
-                setIntentionAttack(AI_INTENTION_ATTACK, target);
+                setIntentionAttack(target);
                 break;
             case CAST:
                 if ((nextAction_arg0 == null) || (nextAction_arg1 == null)) {
@@ -221,8 +221,8 @@ public class PlayableAI extends CharacterAI {
         }
 
         try {
-            if (thinking++ > 1) {
-
+            if (thinking > 1) {
+                thinking++;
                 return;
             }
 
@@ -613,7 +613,7 @@ public class PlayableAI extends CharacterAI {
         _dontMove = dontMove;
         _forceUse = forceUse;
         clearNextAction();
-        setIntentionAttack(AI_INTENTION_ATTACK, target);
+        setIntentionAttack(target);
     }
 
     @Override

@@ -17,7 +17,6 @@ import l2trunk.gameserver.templates.item.EtcItemTemplate.EtcItemType;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -103,7 +102,7 @@ public final class PcInventory extends Inventory {
     }
 
     public int getPaperdollAugmentationId(int slot) {
-        ItemInstance item = _paperdoll[slot];
+        ItemInstance item = paperdoll.get(slot);
         if ((item != null) && item.isAugmented()) {
             return item.getAugmentationId();
         }
@@ -160,7 +159,7 @@ public final class PcInventory extends Inventory {
 
             return item.getItemId();
         } else if (slot == PAPERDOLL_HAIR) {
-            item = _paperdoll[PAPERDOLL_DHAIR];
+            item = paperdoll.get(PAPERDOLL_DHAIR);
             if (item != null)
                 return item.getItemId();
         }
@@ -178,7 +177,7 @@ public final class PcInventory extends Inventory {
      * Функция для валидации вещей в инвентаре. Снимает все вещи, которые нельзя носить. Применяется при входе в игру, смене саба, захвате замка, выходе из клана.
      */
     public void validateItems() {
-        for (ItemInstance item : _paperdoll) {
+        for (ItemInstance item : paperdoll) {
             if ((item != null) && ((ItemFunctions.checkIfCanEquip(getActor(), item) != null) || !item.getTemplate().testCondition(getActor(), item))) {
                 unEquipItem(item);
                 getActor().sendDisarmMessage(item);
@@ -190,7 +189,7 @@ public final class PcInventory extends Inventory {
      * FIXME [VISTALL] for skills is critical to always delete them and add, for no triggers
      */
     public void validateItemsSkills() {
-        for (ItemInstance item : _paperdoll) {
+        for (ItemInstance item : paperdoll) {
             if ((item == null) || (item.getTemplate().getType2() != ItemTemplate.TYPE2_WEAPON)) {
                 continue;
             }
@@ -226,11 +225,11 @@ public final class PcInventory extends Inventory {
         for (ItemInstance item : getItems()) {
             if (item.isEquipped()) {
                 int slot = item.getEquipSlot();
-                _listeners.onUnequip(slot, item);
-                _listeners.onEquip(slot, item);
+                listeners.onUnequip(slot, item);
+                listeners.onEquip(slot, item);
             } else if (item.getItemType() == EtcItemType.RUNE) {
-                _listeners.onUnequip(-1, item);
-                _listeners.onEquip(-1, item);
+                listeners.onUnequip(-1, item);
+                listeners.onEquip(-1, item);
             }
         }
         isRefresh = false;
@@ -349,7 +348,7 @@ public final class PcInventory extends Inventory {
         super.onRestoreItem(item);
 
         if (item.getItemType() == EtcItemType.RUNE) {
-            _listeners.onEquip(-1, item);
+            listeners.onEquip(-1, item);
         }
 
         if (item.isTemporalItem()) {
@@ -366,7 +365,7 @@ public final class PcInventory extends Inventory {
         super.onAddItem(item);
 
         if (item.getItemType() == EtcItemType.RUNE) {
-            _listeners.onEquip(-1, item);
+            listeners.onEquip(-1, item);
         }
 
         if (item.isTemporalItem()) {
@@ -385,7 +384,7 @@ public final class PcInventory extends Inventory {
         getActor().removeItemFromShortCut(item.getObjectId());
 
         if (item.getItemType() == EtcItemType.RUNE) {
-            _listeners.onUnequip(-1, item);
+            listeners.onUnequip(-1, item);
         }
 
         if (item.isTemporalItem()) {
@@ -417,17 +416,14 @@ public final class PcInventory extends Inventory {
 
         writeLock();
         try {
-            Collection<ItemInstance> items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getBaseLocation());
 
-            for (ItemInstance item : items) {
+            ITEMS_DAO.getItemsByOwnerIdAndLoc(ownerId, getBaseLocation()).forEach(item -> {
                 this.items.add(item);
                 onRestoreItem(item);
-            }
+            });
             this.items.sort(ItemOrderComparator.getInstance());
 
-            items = _itemsDAO.getItemsByOwnerIdAndLoc(ownerId, getEquipLocation());
-
-            for (ItemInstance item : items) {
+            ITEMS_DAO.getItemsByOwnerIdAndLoc(ownerId, getEquipLocation()).forEach(item -> {
                 this.items.add(item);
                 onRestoreItem(item);
                 if (item.getEquipSlot() >= PAPERDOLL_MAX) {
@@ -435,10 +431,9 @@ public final class PcInventory extends Inventory {
                     item.setLocation(getBaseLocation());
                     item.setLocData(0); // A bit ugly, but all the equipment is not loaded and can not find a free slot
                     item.setEquipped(false);
-                    continue;
-                }
-                setPaperdollItem(item.getEquipSlot(), item);
-            }
+                } else
+                    setPaperdollItem(item.getEquipSlot(), item);
+            });
         } finally {
             writeUnlock();
         }
@@ -450,7 +445,7 @@ public final class PcInventory extends Inventory {
     public void store() {
         writeLock();
         try {
-            _itemsDAO.update(items);
+            ITEMS_DAO.update(items);
         } finally {
             writeUnlock();
         }

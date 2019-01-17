@@ -48,7 +48,7 @@ public final class Archangel extends Fighter {
             if (!alive.isEmpty()) {
                 Creature rndTarget = alive.get(Rnd.get(alive.size()));
                 if (rndTarget != null && (rndTarget.getNpcId() == 29020 || rndTarget.isPlayer())) {
-                    setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, rndTarget);
+                    setIntentionAttack(rndTarget);
                     actor.getAggroList().addDamageHate(rndTarget, 100, 10);
                 }
             }
@@ -65,7 +65,7 @@ public final class Archangel extends Fighter {
             if (attacker != null) {
                 if (attacker.getNpcId() == 29020) {
                     actor.getAggroList().addDamageHate(attacker, damage, 10);
-                    setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+                    setIntentionAttack(attacker);
                 }
             }
         }

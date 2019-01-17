@@ -1090,19 +1090,6 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         getEffects(effector, effected, calcChance, applyOnCaster, false);
     }
 
-    private void getEffects(Creature effector, Creature effected, boolean calcChance, boolean applyOnCaster, boolean skillReflected, boolean inNewThread) {
-        double timeMult = 1.0;
-
-        if (isMusic()) {
-            timeMult = Config.SONGDANCETIME_MODIFIER;
-        } else if ((getId() >= 4342) && (getId() <= 4360)) {
-            timeMult = Config.CLANHALL_BUFFTIME_MODIFIER;
-        } else if (Config.ENABLE_MODIFY_SKILL_DURATION && Config.SKILL_DURATION_LIST.containsKey(getId())) {
-            timeMult = Config.SKILL_DURATION_LIST.get(getId());
-        }
-        getEffects(effector, effected, calcChance, applyOnCaster, 0, timeMult, skillReflected, false);
-    }
-
     protected final void getEffects(Creature effector, Creature effected, boolean calcChance, boolean applyOnCaster, boolean skillReflected) {
         double timeMult = 1.0;
 
@@ -1156,11 +1143,11 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
             }
 
             for (EffectTemplate et : getEffectTemplates()) {
-                if ((applyOnCaster != et._applyOnCaster) || (et._count == 0)) {
+                if ((applyOnCaster != et.applyOnCaster) || (et._count == 0)) {
                     continue;
                 }
 
-                Creature character = et._applyOnCaster || (et._isReflectable && skillReflected) ? effector : effected;
+                Creature character = et.applyOnCaster || (et._isReflectable && skillReflected) ? effector : effected;
                 List<Creature> targets = new ArrayList<>(1);
                 targets.add(character);
 
@@ -1191,7 +1178,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 
                     if (et._stackOrder == -1) {
                         if (!et._stackType.equals(EffectTemplate.NO_STACK)) {
-                            for (Effect e : target.getEffectList().getAllEffects()) {
+                            for (Effect e : target.getEffectList().getAllEffects().collect(Collectors.toList())) {
                                 if (e.getStackType().equalsIgnoreCase(et._stackType)) {
                                     continue loop;
                                 }
@@ -1212,7 +1199,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                     Env env = new Env(effector, target, Skill.this);
 
                     int chance = et.chance(getActivateRate());
-                    if ((calcChance || (chance >= 0)) && !et._applyOnCaster) {
+                    if ((calcChance || (chance >= 0)) && !et.applyOnCaster) {
                         env.value = chance;
                         if (!Formulas.calcSkillSuccess(env, et, sps)) {
                             continue;
@@ -1256,7 +1243,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                                 }
                             }
 
-                            if (!et._applyOnCaster && isOffensive() && !isIgnoreResists() && !effector.isRaid()) {
+                            if (!et.applyOnCaster && isOffensive() && !isIgnoreResists() && !effector.isRaid()) {
                                 double res = 0;
                                 if (et.getEffectType().getResistType() != null) {
                                     res += effected.calcStat(et.getEffectType().getResistType(), effector, Skill.this);
@@ -1322,7 +1309,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
 
     public final void attach(EffectTemplate effect) {
         _effectTemplates.add(effect);
-        if (!effect._applyOnCaster)
+        if (!effect.applyOnCaster)
             _hasNotSelfEffects = true;
     }
 
@@ -1341,7 +1328,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         return _hasNotSelfEffects;
     }
 
-    final List<Func> getStatFuncs() {
+    final Stream<Func> getStatFuncs() {
         return getStatFuncs(this);
     }
 
@@ -1432,7 +1419,7 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
         return _effectPoint;
     }
 
-    private Effect getSameByStackType(List<Effect> list) {
+    private Effect getSameByStackType(Stream<Effect> list) {
         Effect ret;
         for (EffectTemplate et : getEffectTemplates()) {
             if ((et != null) && ((ret = et.getSameByStackType(list)) != null)) {

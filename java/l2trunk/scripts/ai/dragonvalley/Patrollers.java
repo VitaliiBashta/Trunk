@@ -42,7 +42,7 @@ public class Patrollers extends Fighter {
 
         if (!avoidAttack && getIntention() != CtrlIntention.AI_INTENTION_ATTACK) {
             actor.getAggroList().addDamageHate(target, 0, 1);
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(target);
         }
 
         return true;

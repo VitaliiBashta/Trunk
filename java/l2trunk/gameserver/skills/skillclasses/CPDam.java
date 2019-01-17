@@ -13,12 +13,8 @@ public final class CPDam extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        boolean ss = activeChar.getChargedSoulShot() && isSSPossible();
-        if (ss)
+        if (activeChar.getChargedSoulShot() && isSSPossible())
             activeChar.unChargeShots(false);
-
-        Creature realTarget;
-        boolean reflected;
 
         for (Creature target : targets)
             if (target != null) {
@@ -27,8 +23,8 @@ public final class CPDam extends Skill {
 
                 target.doCounterAttack(this, activeChar, false);
 
-                reflected = target.checkReflectSkill(activeChar, this);
-                realTarget = reflected ? activeChar : target;
+                boolean reflected = target.checkReflectSkill(activeChar, this);
+                Creature realTarget = reflected ? activeChar : target;
 
                 if (realTarget.isCurrentCpZero())
                     continue;

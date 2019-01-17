@@ -7,38 +7,36 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcLocation;
 import l2trunk.scripts.instances.CrystalCaverns;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class Kechi extends DefaultAI {
-    private final Skill KechiDoubleCutter; // Attack by crossing the sword. Power 2957.
-    private final Skill KechiAirBlade; // Strikes the enemy a blow in a distance using sword energy. Critical enabled. Power 1812
-
-    private final Skill Invincible; // Invincible against general attack and skill, buff/de-buff.
-
     private static final int GUARD1 = 22309;
     private static final int GUARD2 = 22310;
     private static final int GUARD3 = 22417;
-
     private static final Location guard_spawn_loc = new Location(153384, 149528, -12136);
-
-    private static final int[][] guard_run = new int[][]{{GUARD1, 153384, 149528, -12136},
-            {GUARD1, 153975, 149823, -12152},
-            {GUARD1, 154364, 149665, -12151},
-            {GUARD1, 153786, 149367, -12151},
-            {GUARD2, 154188, 149825, -12152},
-            {GUARD2, 153945, 149224, -12151},
-            {GUARD3, 154374, 149399, -12152},
-            {GUARD3, 153796, 149646, -12159}};
-
+    private static final List<NpcLocation> guard_run = List.of(
+            new NpcLocation(GUARD1, 153384, 149528, -12136),
+            new NpcLocation(GUARD1, 153975, 149823, -12152),
+            new NpcLocation(GUARD1, 154364, 149665, -12151),
+            new NpcLocation(GUARD1, 153786, 149367, -12151),
+            new NpcLocation(GUARD2, 154188, 149825, -12152),
+            new NpcLocation(GUARD2, 153945, 149224, -12151),
+            new NpcLocation(GUARD3, 154374, 149399, -12152),
+            new NpcLocation(GUARD3, 153796, 149646, -12159));
+    private final Skill KechiDoubleCutter; // Attack by crossing the sword. Power 2957.
+    private final Skill KechiAirBlade; // Strikes the enemy a blow in a distance using sword energy. Critical enabled. Power 1812
+    private final Skill Invincible; // Invincible against general attack and skill, buff/de-buff.
     private int stage = 0;
 
     public Kechi(NpcInstance actor) {
         super(actor);
 
-        Map<Integer,Skill> skills = getActor().getTemplate().getSkills();
+        Map<Integer, Skill> skills = getActor().getTemplate().getSkills();
 
         KechiDoubleCutter = skills.get(733);
         KechiAirBlade = skills.get(734);
@@ -140,19 +138,18 @@ public final class Kechi extends DefaultAI {
         stage++;
 
         NpcInstance actor = getActor();
-        for (int[] run : guard_run) {
-            NpcInstance guard = actor.getReflection().addSpawnWithoutRespawn(run[0], guard_spawn_loc, 0);
-            Location runLoc = new Location(run[1], run[2], run[3]);
+        guard_run.forEach(npcLoc -> {
+            NpcInstance guard = actor.getReflection().addSpawnWithoutRespawn(npcLoc.npcId, guard_spawn_loc, 0);
 
             guard.setRunning();
             DefaultAI ai = (DefaultAI) guard.getAI();
 
-            ai.addTaskMove(runLoc, true);
+            ai.addTaskMove(npcLoc, true);
             // Выбираем случайную цель
             Creature hated = actor.getAggroList().getRandomHated();
             if (hated != null)
                 ai.notifyEvent(CtrlEvent.EVT_AGGRESSION, hated, 5000);
-        }
+        });
     }
 
     @Override

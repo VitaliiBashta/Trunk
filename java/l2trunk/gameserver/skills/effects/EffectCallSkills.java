@@ -1,6 +1,5 @@
 package l2trunk.gameserver.skills.effects;
 
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
@@ -22,9 +21,9 @@ public final class EffectCallSkills extends Effect {
 
         for (int i = 0; i < skillIds.size(); i++) {
             Skill skill = SkillTable.INSTANCE.getInfo(skillIds.get(i), skillLevels.get(i));
-            for (Creature cha : skill.getTargets(getEffector(), getEffected(), false))
-                getEffector().broadcastPacket(new MagicSkillUse(getEffector(), cha, skillIds.get(i), skillLevels.get(i)));
-            getEffector().callSkill(skillIds.get(i),skillLevels.get(i), skill.getTargets(getEffector(), getEffected(), false), false);
+            skill.getTargets(getEffector(), getEffected(), false).forEach(cha ->
+                    getEffector().broadcastPacket(new MagicSkillUse(getEffector(), cha, skill)));
+            getEffector().callSkill(skill, skill.getTargets(getEffector(), getEffected(), false), false);
         }
     }
 

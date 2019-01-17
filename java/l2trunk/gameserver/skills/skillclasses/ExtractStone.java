@@ -13,6 +13,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringTokenizer;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
@@ -120,22 +121,24 @@ public final class ExtractStone extends Skill {
         if (player == null)
             return;
 
-        for (Creature target : targets)
-            if (target != null && getItemId(target.getNpcId()) != 0) {
-                double rate = Config.RATE_QUESTS_DROP;
-                long count = id == ExtractScrollSkill ? 1 : Math.min(10, Rnd.get((int) (getLevel() * rate + 1)));
-                int itemId = getItemId(target.getNpcId());
+        targets.stream()
+                .filter(Objects::nonNull)
+                .filter(t -> getItemId(t.getNpcId()) != 0)
+                .forEach(t -> {
+                    double rate = Config.RATE_QUESTS_DROP;
+                    long count = id == ExtractScrollSkill ? 1 : Math.min(10, Rnd.get((int) (getLevel() * rate + 1)));
+                    int itemId = getItemId(t.getNpcId());
 
-                if (count > 0) {
-                    player.getInventory().addItem(itemId, count, "ExtractStone");
-                    player.sendPacket(new PlaySound(Quest.SOUND_ITEMGET));
-                    player.sendPacket(SystemMessage2.obtainItems(itemId, count, 0));
-                    player.sendChanges();
-                } else
-                    player.sendPacket(SystemMsg.THE_COLLECTION_HAS_FAILED);
+                    if (count > 0) {
+                        player.getInventory().addItem(itemId, count, "ExtractStone");
+                        player.sendPacket(new PlaySound(Quest.SOUND_ITEMGET));
+                        player.sendPacket(SystemMessage2.obtainItems(itemId, count, 0));
+                        player.sendChanges();
+                    } else
+                        player.sendPacket(SystemMsg.THE_COLLECTION_HAS_FAILED);
 
-                target.doDie(player);
-            }
+                    t.doDie(player);
+                });
 
         if (isSSPossible())
             activeChar.unChargeShots(isMagic());

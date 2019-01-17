@@ -2,8 +2,8 @@ package l2trunk.gameserver.model.entity.events.objects;
 
 import l2trunk.gameserver.model.pledge.Clan;
 
-public class AuctionSiegeClanObject extends SiegeClanObject {
-    private long _bid;
+public final class AuctionSiegeClanObject extends SiegeClanObject {
+    private long bid;
 
     public AuctionSiegeClanObject(String type, Clan clan, long param) {
         this(type, clan, param, System.currentTimeMillis());
@@ -11,15 +11,15 @@ public class AuctionSiegeClanObject extends SiegeClanObject {
 
     public AuctionSiegeClanObject(String type, Clan clan, long param, long date) {
         super(type, clan, param, date);
-        _bid = param;
+        bid = param;
     }
 
     @Override
     public long getParam() {
-        return _bid;
+        return bid;
     }
 
     public void setParam(long param) {
-        _bid = param;
+        bid = param;
     }
 }

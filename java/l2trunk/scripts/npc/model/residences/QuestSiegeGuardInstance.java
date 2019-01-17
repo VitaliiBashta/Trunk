@@ -14,6 +14,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
     public QuestSiegeGuardInstance(int objectId, NpcTemplate template) {
@@ -32,16 +33,12 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
 
         List<Quest> quests = getTemplate().getEventQuests(QuestEventType.MOB_KILLED_WITH_QUEST);
         if (!quests.isEmpty()) {
-            List<Player> players = null; // массив с игроками, которые могут быть заинтересованы в квестах
-            if (isRaid() && Config.ALT_NO_LASTHIT) // Для альта на ластхит берем всех игроков вокруг
-            {
-                players = new ArrayList<>();
+            final List<Player> players = new ArrayList<>(); // массив с игроками, которые могут быть заинтересованы в квестах
+            if (isRaid() && Config.ALT_NO_LASTHIT) {// Для альта на ластхит берем всех игроков вокруг
                 for (Playable pl : aggroMap.keySet())
                     if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
                         players.add(pl.getPlayer());
-            } else if (killer.getParty() != null) // если пати то собираем всех кто подходит
-            {
-                players = new ArrayList<>(killer.getParty().size());
+            } else if (killer.getParty() != null) {// если пати то собираем всех кто подходит
                 for (Player pl : killer.getParty().getMembers())
                     if (!pl.isDead() && (isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE) || killer.isInRangeZ(pl, Config.ALT_PARTY_DISTRIBUTION_RANGE)))
                         players.add(pl);
@@ -49,9 +46,8 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
 
             for (Quest quest : quests) {
                 Player toReward = killer;
-                if (quest.getParty() != Quest.PARTY_NONE && players != null)
-                    if (isRaid() || quest.getParty() == Quest.PARTY_ALL) // если цель рейд или квест для всей пати награждаем всех участников
-                    {
+                if (quest.getParty() != Quest.PARTY_NONE)
+                    if (isRaid() || quest.getParty() == Quest.PARTY_ALL) {// если цель рейд или квест для всей пати награждаем всех участников
                         for (Player pl : players) {
                             QuestState qs = pl.getQuestState(quest.getName());
                             if (qs != null && !qs.isCompleted())
@@ -59,17 +55,14 @@ public final class QuestSiegeGuardInstance extends SiegeGuardInstance {
                         }
                         toReward = null;
                     } else { // иначе выбираем одного
-                        List<Player> interested = new ArrayList<>(players.size());
-                        for (Player pl : players) {
-                            QuestState qs = pl.getQuestState(quest.getName());
-                            if (qs != null && !qs.isCompleted()) // из тех, у кого взят квест
-                                interested.add(pl);
-                        }
-
+                        List<Player> interested = players.stream()
+                                .filter(pl -> pl.getQuestState(quest.getName()) != null)
+                                .filter(pl -> !pl.getQuestState(quest.getName()).isCompleted())
+                                .collect(Collectors.toList());// из тех, у кого взят квест
                         if (interested.isEmpty())
                             continue;
 
-                        toReward = interested.get(Rnd.get(interested.size()));
+                        toReward = Rnd.get(interested);
                         if (toReward == null)
                             toReward = killer;
                     }

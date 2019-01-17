@@ -94,7 +94,7 @@ public final class BoatWayEvent extends GlobalEvent {
         _boat.setRunState(_boat.getRunState() + 1);
 
         if (bp.isTeleport())
-            _boat.teleportShip(bp.getX(), bp.getY(), bp.getZ());
+            _boat.teleportShip(bp);
         else
             _boat.moveToLocation(bp.getX(), bp.getY(), bp.getZ(), 0, false);
     }

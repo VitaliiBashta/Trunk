@@ -9,11 +9,11 @@ import l2trunk.gameserver.stats.Formulas.AttackInfo;
 import java.util.List;
 
 public final class ChargeSoul extends Skill {
-    private final int _numSouls;
+    private final int numSouls;
 
     public ChargeSoul(StatsSet set) {
         super(set);
-        _numSouls = set.getInteger("numSouls", getLevel());
+        numSouls = set.getInteger("numSouls", getLevel());
     }
 
     @Override
@@ -36,8 +36,7 @@ public final class ChargeSoul extends Skill {
                 reflected = target != activeChar && target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
 
-                if (getPower() > 0) // Если == 0 значит скилл "отключен"
-                {
+                if (getPower() > 0) {// Если == 0 значит скилл "отключен"
                     AttackInfo info = Formulas.calcPhysDam(activeChar, realTarget, this, false, false, ss, false);
 
                     if (info.lethal_dmg > 0)
@@ -49,7 +48,7 @@ public final class ChargeSoul extends Skill {
                 }
 
                 if (realTarget.isPlayable() || realTarget.isMonster())
-                    activeChar.setConsumedSouls(activeChar.getConsumedSouls() + _numSouls, null);
+                    activeChar.setConsumedSouls(activeChar.getConsumedSouls() + numSouls, null);
 
                 getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
             }

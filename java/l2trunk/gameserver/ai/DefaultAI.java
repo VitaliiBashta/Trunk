@@ -396,7 +396,7 @@ public class DefaultAI extends CharacterAI {
             }
 
             startRunningTask(AI_TASK_ATTACK_DELAY);
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(target);
         }
 
         return true;
@@ -963,7 +963,7 @@ public class DefaultAI extends CharacterAI {
             if (!actor.isRunning()) {
                 startRunningTask(AI_TASK_ATTACK_DELAY);
             }
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(attacker);
         }
 
         notifyFriends(attacker, damage);
@@ -987,7 +987,7 @@ public class DefaultAI extends CharacterAI {
             if (!actor.isRunning()) {
                 startRunningTask(AI_TASK_ATTACK_DELAY);
             }
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(attacker);
         }
     }
 

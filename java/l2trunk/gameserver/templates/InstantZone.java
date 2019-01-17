@@ -31,7 +31,7 @@ public final class InstantZone {
     private final Map<String, SpawnInfo2> spawns;
     private final List<SpawnInfo> _spawnsInfo;
     private final int _collapseIfEmpty;
-    private final int _maxChannels;
+    private final int maxChannels;
     private final int _removedItemId;
     private final int _removedItemCount;
     private final boolean _removedItemNecessity;
@@ -74,7 +74,7 @@ public final class InstantZone {
         _spawnsInfo = spawnsInfo;
         this.spawns = spawns;
         _collapseIfEmpty = collapseIfEmpty;
-        _maxChannels = maxChannels;
+        this.maxChannels = maxChannels;
         _removedItemId = removedItemId;
         _removedItemCount = removedItemCount;
         _removedItemNecessity = removedItemNecessity;
@@ -199,7 +199,7 @@ public final class InstantZone {
     }
 
     public int getMaxChannels() {
-        return _maxChannels;
+        return maxChannels;
     }
 
     public InstantZoneEntryType getEntryType() {

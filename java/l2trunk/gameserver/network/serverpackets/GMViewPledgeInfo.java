@@ -87,15 +87,15 @@ public class GMViewPledgeInfo extends L2GameServerPacket {
         writeD(0); // Territory castle ID
 
         writeD(infos.size());
-        for (PledgeMemberInfo _info : infos) {
-            writeS(_info._name);
-            writeD(_info.level);
-            writeD(_info.class_id);
-            writeD(_info.sex);
-            writeD(_info.race);
-            writeD(_info.online);
-            writeD(_info.sponsor);
-        }
+        infos.forEach(i -> {
+            writeS(i._name);
+            writeD(i.level);
+            writeD(i.class_id);
+            writeD(i.sex);
+            writeD(i.race);
+            writeD(i.online);
+            writeD(i.sponsor);
+        });
         infos.clear();
     }
 

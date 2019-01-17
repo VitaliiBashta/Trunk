@@ -75,7 +75,7 @@ public class MatchFighter extends Fighter {
                 actor.getAggroList().addDamageHate(target.getPlayer(), 0, 1);
 
             startRunningTask(AI_TASK_ATTACK_DELAY);
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(target);
         }
 
         return true;

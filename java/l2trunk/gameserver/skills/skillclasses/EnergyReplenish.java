@@ -12,11 +12,11 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import java.util.List;
 
 public final class EnergyReplenish extends Skill {
-    private final int _addEnergy;
+    private final int addEnergy;
 
     public EnergyReplenish(StatsSet set) {
         super(set);
-        _addEnergy = set.getInteger("addEnergy");
+        addEnergy = set.getInteger("addEnergy");
     }
 
     @Override
@@ -29,7 +29,7 @@ public final class EnergyReplenish extends Skill {
 
         Player player = (Player) activeChar;
         ItemInstance item = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LBRACELET);
-        if (item == null || (item.getTemplate().getAgathionEnergy() - item.getAgathionEnergy()) < _addEnergy) {
+        if (item == null || (item.getTemplate().getAgathionEnergy() - item.getAgathionEnergy()) < addEnergy) {
             player.sendPacket(SystemMsg.YOUR_ENERGY_CANNOT_BE_REPLENISHED_BECAUSE_CONDITIONS_ARE_NOT_MET);
             return false;
         }
@@ -39,9 +39,9 @@ public final class EnergyReplenish extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature cha : targets) {
-            cha.setAgathionEnergy(cha.getAgathionEnergy() + _addEnergy);
-            cha.sendPacket(new SystemMessage2(SystemMsg.ENERGY_S1_REPLENISHED).addInteger(_addEnergy));
-        }
+        targets.forEach(cha -> {
+            cha.setAgathionEnergy(cha.getAgathionEnergy() + addEnergy);
+            cha.sendPacket(new SystemMessage2(SystemMsg.ENERGY_S1_REPLENISHED).addInteger(addEnergy));
+        });
     }
 }

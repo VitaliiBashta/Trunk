@@ -42,12 +42,12 @@ public abstract class GlobalEvent {
     private final List<EventAction> onStopActions = new ArrayList<>(0);
     private final List<EventAction> onInitActions = new ArrayList<>(0);
     // objects
-    private final Map<String, List<Object>> _objects = new HashMap<>(0);
+    private final Map<String, List<Object>> objects = new HashMap<>(0);
     private final int id;
-    private final String _name;
-    private final String _timerName;
-    private final ListenerListImpl _listenerList = new ListenerListImpl();
-    private Map<Integer, ItemInstance> _banishedItems = new HashMap<>();//Containers.emptyIntObjectMap();
+    private final String name;
+    private final String timerName;
+    private final ListenerListImpl listenerlist = new ListenerListImpl();
+    private Map<Integer, ItemInstance> banishedItems = new HashMap<>();//Containers.emptyIntObjectMap();
 
     protected GlobalEvent(StatsSet set) {
         this(set.getInteger("id"), set.getString("name"));
@@ -55,8 +55,8 @@ public abstract class GlobalEvent {
 
     protected GlobalEvent(int id, String name) {
         this.id = id;
-        _name = name;
-        _timerName = id + "_" + name.toLowerCase().replace(" ", "_");
+        this.name = name;
+        timerName = id + "_" + name.toLowerCase().replace(" ", "_");
     }
 
     protected static void broadcastToWorld(L2GameServerPacket packet) {
@@ -74,13 +74,13 @@ public abstract class GlobalEvent {
     public void startEvent() {
         callActions(onStartActions);
 
-        _listenerList.onStart();
+        listenerlist.onStart();
     }
 
     public void stopEvent() {
         callActions(onStopActions);
 
-        _listenerList.onStop();
+        listenerlist.onStop();
     }
 
     protected void printInfo() {
@@ -159,11 +159,11 @@ public abstract class GlobalEvent {
             return;
 
         for (int key : onTimeActions.keySet())
-            ActionRunner.INSTANCE.register(t + key * 1000L, new EventWrapper(_timerName, this, key));
+            ActionRunner.INSTANCE.register(t + key * 1000L, new EventWrapper(timerName, this, key));
     }
 
     public void clearActions() {
-        ActionRunner.INSTANCE.clear(_timerName);
+        ActionRunner.INSTANCE.clear(timerName);
     }
 
     // ===============================================================================================================
@@ -172,8 +172,8 @@ public abstract class GlobalEvent {
 
     @SuppressWarnings("unchecked")
     public <O> List<O> getObjects(String name) {
-        List<Object> objects = _objects.get(name);
-        return objects == null ? Collections.emptyList() : (List<O>) objects;
+        List<Object> objects = this.objects.get(name);
+        return objects == null ? List.of() : (List<O>) objects;
     }
 
     public <O extends Serializable> O getFirstObject(String name) {
@@ -185,13 +185,13 @@ public abstract class GlobalEvent {
         if (object == null)
             return;
 
-        List<Object> list = _objects.get(name);
+        List<Object> list = objects.get(name);
         if (list != null) {
             list.add(object);
         } else {
             list = new CopyOnWriteArrayList<>();
             list.add(object);
-            _objects.put(name, list);
+            objects.put(name, list);
         }
     }
 
@@ -199,14 +199,14 @@ public abstract class GlobalEvent {
         if (o == null)
             return;
 
-        List<Object> list = _objects.get(name);
+        List<Object> list = objects.get(name);
         if (list != null)
             list.remove(o);
     }
 
     @SuppressWarnings("unchecked")
     public <O> List<O> removeObjects(String name) {
-        List<Object> objects = _objects.remove(name);
+        List<Object> objects = this.objects.remove(name);
         return objects == null ? Collections.emptyList() : (List<O>) objects;
     }
 
@@ -215,15 +215,15 @@ public abstract class GlobalEvent {
         if (objects.isEmpty())
             return;
 
-        List<Object> list = _objects.get(name);
+        List<Object> list = this.objects.get(name);
         if (list != null)
             list.addAll(objects);
         else
-            _objects.put(name, objects);
+            this.objects.put(name, objects);
     }
 
     public Map<String, List<Object>> getObjects() {
-        return _objects;
+        return objects;
     }
 
     public void spawnAction(String name, boolean spawn) {
@@ -233,13 +233,15 @@ public abstract class GlobalEvent {
             return;
         }
 
-        for (Object object : objects)
-            if (object instanceof SpawnableObject) {
-                if (spawn)
-                    ((SpawnableObject) object).spawnObject(this);
-                else
-                    ((SpawnableObject) object).despawnObject(this);
-            }
+        objects.stream()
+                .filter(object -> object instanceof SpawnableObject)
+                .map(object -> (SpawnableObject) object)
+                .forEach(s -> {
+                    if (spawn)
+                        s.spawnObject(this);
+                    else
+                        s.despawnObject(this);
+                });
     }
 
     public void doorAction(String name, boolean open) {
@@ -249,13 +251,15 @@ public abstract class GlobalEvent {
             return;
         }
 
-        for (Object object : objects)
-            if (object instanceof DoorObject) {
-                if (open)
-                    ((DoorObject) object).open(this);
-                else
-                    ((DoorObject) object).close(this);
-            }
+        objects.stream()
+                .filter(object -> object instanceof DoorObject)
+                .map(object -> (DoorObject) object)
+                .forEach(door -> {
+                    if (open)
+                        door.open(this);
+                    else
+                        door.close(this);
+                });
     }
 
     public void zoneAction(String name, boolean active) {
@@ -265,9 +269,9 @@ public abstract class GlobalEvent {
             return;
         }
 
-        for (Object object : objects)
-            if (object instanceof ZoneObject)
-                ((ZoneObject) object).setActive(active, this);
+        objects.stream().filter(object -> object instanceof ZoneObject)
+                .map(object -> (ZoneObject) object)
+                .forEach(z -> z.setActive(active, this));
     }
 
     public void initAction(String name) {
@@ -277,13 +281,14 @@ public abstract class GlobalEvent {
             return;
         }
 
-        for (Object object : objects)
-            if (object instanceof InitableObject)
-                ((InitableObject) object).initObject(this);
+        objects.stream()
+                .filter(object -> object instanceof InitableObject)
+                .map(object -> (InitableObject) object)
+                .forEach(i -> i.initObject(this));
     }
 
     public void action(String name, boolean start) {
-        if (name.equalsIgnoreCase(EVENT)) {
+        if (EVENT.equalsIgnoreCase(name)) {
             if (start)
                 startEvent();
             else
@@ -298,9 +303,10 @@ public abstract class GlobalEvent {
             return;
         }
 
-        for (Object object : objects)
-            if (object instanceof SpawnableObject)
-                ((SpawnableObject) object).refreshObject(this);
+        objects.stream()
+                .filter(object -> object instanceof SpawnableObject)
+                .map(object -> (SpawnableObject) object)
+                .forEach(o -> o.refreshObject(this));
     }
 
     // ===============================================================================================================
@@ -323,7 +329,7 @@ public abstract class GlobalEvent {
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public GameObject getCenterObject() {
@@ -423,14 +429,14 @@ public abstract class GlobalEvent {
     // Banish items
     // ===============================================================================================================
     protected void addBanishItem(ItemInstance item) {
-        if (_banishedItems.isEmpty())
-            _banishedItems = new HashMap<>();//CHashIntObjectMap<ItemInstance>();
+        if (banishedItems.isEmpty())
+            banishedItems = new HashMap<>();//CHashIntObjectMap<ItemInstance>();
 
-        _banishedItems.put(item.getObjectId(), item);
+        banishedItems.put(item.getObjectId(), item);
     }
 
     public void removeBanishItems() {
-        Iterator<Map.Entry<Integer, ItemInstance>> iterator = _banishedItems.entrySet().iterator();
+        Iterator<Map.Entry<Integer, ItemInstance>> iterator = banishedItems.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Integer, ItemInstance> entry = iterator.next();
             iterator.remove();
@@ -459,11 +465,11 @@ public abstract class GlobalEvent {
     // Listeners
     // ===============================================================================================================
     public void addListener(Listener l) {
-        _listenerList.add(l);
+        listenerlist.add(l);
     }
 
     public void removeListener(Listener l) {
-        _listenerList.remove(l);
+        listenerlist.remove(l);
     }
 
     // ===============================================================================================================
@@ -478,16 +484,18 @@ public abstract class GlobalEvent {
     }
 
     private class ListenerListImpl extends ListenerList {
+
+        private synchronized Stream<OnStartStopListener> getStartStopListeners() {
+            return getListeners().filter(l -> l instanceof OnStartStopListener)
+                    .map(l -> (OnStartStopListener) l);
+        }
+
         void onStart() {
-            getListeners().filter(l -> l instanceof OnStartStopListener)
-                    .map(l -> (OnStartStopListener) l)
-                    .forEach(l -> l.onStart(GlobalEvent.this));
+            getStartStopListeners().forEach(l -> l.onStart(GlobalEvent.this));
         }
 
         void onStop() {
-            getListeners().filter(l -> l instanceof OnStartStopListener)
-                    .map(l -> (OnStartStopListener) l)
-                    .forEach(l -> l.onStop(GlobalEvent.this));
+            getStartStopListeners().forEach(l -> l.onStop(GlobalEvent.this));
         }
     }
 }

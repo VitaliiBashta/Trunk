@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.items.ItemInstance.ItemLocation;
 
 import java.util.Collection;
 
-public class CharSelectInfoPackage {
+public final class CharSelectInfoPackage {
     private final ItemInstance[] _paperdoll;
     private String _name;
     private int _objectId = 0;
@@ -37,11 +37,11 @@ public class CharSelectInfoPackage {
     public CharSelectInfoPackage(int objectId, String name) {
         setObjectId(objectId);
         _name = name;
-        Collection<ItemInstance> items = ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objectId, ItemLocation.PAPERDOLL);
         _paperdoll = new ItemInstance[Inventory.PAPERDOLL_MAX];
-        for (ItemInstance item : items)
-            if (item.getEquipSlot() < Inventory.PAPERDOLL_MAX) //FIXME [G1ta0] временный фикс отображения одетых вещей при входе на персонажа в NO CARRIER
-                _paperdoll[item.getEquipSlot()] = item;
+        ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objectId, ItemLocation.PAPERDOLL)
+        .filter(item -> item.getEquipSlot() < Inventory.PAPERDOLL_MAX)
+        .forEach(item -> //FIXME [G1ta0] временный фикс отображения одетых вещей при входе на персонажа в NO CARRIER
+                _paperdoll[item.getEquipSlot()] = item);
     }
 
     public int getObjectId() {

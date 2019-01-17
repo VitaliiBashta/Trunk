@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PrivateStoreManageListSell extends L2GameServerPacket {
+public final class PrivateStoreManageListSell extends L2GameServerPacket {
     private final int _sellerId;
     private final long _adena;
     private final boolean _package;
@@ -18,8 +18,6 @@ public class PrivateStoreManageListSell extends L2GameServerPacket {
 
     /**
      * Окно управления личным магазином продажи
-     *
-     * @param seller
      */
     public PrivateStoreManageListSell(Player seller, boolean pkg) {
         _sellerId = seller.getObjectId();

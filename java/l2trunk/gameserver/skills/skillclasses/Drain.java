@@ -22,17 +22,14 @@ public final class Drain extends Skill {
     public void useSkill(Creature activeChar, List<Creature> targets) {
         int sps = isSSPossible() ? activeChar.getChargedSpiritShot() : 0;
         boolean ss = isSSPossible() && activeChar.getChargedSoulShot();
-        Creature realTarget;
-        boolean reflected;
         final boolean corpseSkill = targetType == SkillTargetType.TARGET_CORPSE;
 
         for (Creature target : targets)
             if (target != null) {
-                reflected = !corpseSkill && target.checkReflectSkill(activeChar, this);
-                realTarget = reflected ? activeChar : target;
+                boolean reflected = !corpseSkill && target.checkReflectSkill(activeChar, this);
+                Creature realTarget = reflected ? activeChar : target;
 
-                if (getPower() > 0 || absorbAbs > 0) // Если == 0 значит скилл "отключен"
-                {
+                if (getPower() > 0 || absorbAbs > 0) {// Если == 0 значит скилл "отключен"
                     if (realTarget.isDead() && !corpseSkill)
                         continue;
 

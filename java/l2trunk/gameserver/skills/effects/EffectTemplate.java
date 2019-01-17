@@ -12,7 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public final class EffectTemplate extends StatTemplate {
     public static final String NO_STACK = "none";
@@ -26,7 +27,7 @@ public final class EffectTemplate extends StatTemplate {
     public final int _stackOrder;
     public final int _displayId;
     public final int _displayLevel;
-    public final boolean _applyOnCaster;
+    public final boolean applyOnCaster;
     public final boolean _applyOnSummon;
     public final boolean _cancelOnAction;
     public final boolean _isReflectable;
@@ -51,7 +52,7 @@ public final class EffectTemplate extends StatTemplate {
         _stackType = set.getString("stackType", NO_STACK);
         _stackType2 = set.getString("stackType2", NO_STACK);
         _stackOrder = set.getInteger("stackOrder", _stackType.equals(NO_STACK) && _stackType2.equals(NO_STACK) ? 1 : 0);
-        _applyOnCaster = set.getBool("applyOnCaster", false);
+        applyOnCaster = set.getBool("applyOnCaster", false);
         _applyOnSummon = set.getBool("applyOnSummon", true);
         _cancelOnAction = set.getBool("cancelOnAction", false);
         _isReflectable = set.getBool("isReflectable", true);
@@ -93,11 +94,10 @@ public final class EffectTemplate extends StatTemplate {
         return _effectType;
     }
 
-    public Effect getSameByStackType(List<Effect> list) {
-        for (Effect ef : list)
-            if (ef != null && EffectList.checkStackType(ef.getTemplate(), this))
-                return ef;
-        return null;
+    public Effect getSameByStackType(Stream<Effect> stream) {
+        return stream.filter(Objects::nonNull)
+                .filter(ef -> EffectList.checkStackType(ef.getTemplate(), this))
+                .findFirst().orElse(null);
     }
 
     public StatsSet getParam() {

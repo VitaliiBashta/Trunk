@@ -3,10 +3,12 @@ package l2trunk.gameserver.skills.skillclasses;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
+import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class DeathPenalty extends Skill {
     public DeathPenalty(StatsSet set) {
@@ -26,11 +28,10 @@ public final class DeathPenalty extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        for (Creature target : targets)
-            if (target != null) {
-                if (!target.isPlayer())
-                    continue;
-                ((Player) target).getDeathPenalty().reduceLevel();
-            }
+        targets.stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isPlayer)
+                .map(t -> (Player) t)
+                .forEach(p -> p.getDeathPenalty().reduceLevel());
     }
 }

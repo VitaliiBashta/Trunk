@@ -20,7 +20,7 @@ public final class Recipes extends ScriptItemHandler implements ScriptFile {
     private final List<Integer> ITEM_IDS;
 
     public Recipes() {
-        ITEM_IDS = RecipeHolder.getInstance().getRecipes().stream()
+        ITEM_IDS = RecipeHolder.getInstance().getRecipes()
                 .map(Recipe::getRecipeId)
                 .collect(Collectors.toList());
     }

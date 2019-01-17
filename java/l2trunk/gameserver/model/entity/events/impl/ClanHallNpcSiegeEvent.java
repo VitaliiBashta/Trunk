@@ -8,7 +8,7 @@ import l2trunk.gameserver.network.serverpackets.PlaySound;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
+public final class ClanHallNpcSiegeEvent extends SiegeEvent<ClanHall, SiegeClanObject> {
     public ClanHallNpcSiegeEvent(StatsSet set) {
         super(set);
     }

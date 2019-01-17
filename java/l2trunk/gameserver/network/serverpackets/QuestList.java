@@ -3,9 +3,8 @@ package l2trunk.gameserver.network.serverpackets;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.quest.QuestState;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -14,7 +13,6 @@ import java.util.List;
 public final class QuestList extends L2GameServerPacket {
     private static final byte[] unk = new byte[128];
     /**
-     * This text was wrote by XaKa
      * QuestList packet structure:
      * {
      * 1 byte - 0x80
@@ -44,23 +42,22 @@ public final class QuestList extends L2GameServerPacket {
      * the 10th but the 6th and 9th are not to be shown at all (not completed, either).
      */
 
-    private final List<int[]> questlist;
+    private final Map<Integer, Integer> questlist;
 
     public QuestList(Player player) {
-        Collection<QuestState> allQuestStates = player.getAllQuestsStates();
-        questlist = new ArrayList<>(allQuestStates.size());
-        for (QuestState quest : allQuestStates)
-            if (quest.getQuest().isVisible() && quest.isStarted())
-                questlist.add(new int[]{quest.getQuest().getQuestIntId(), quest.getInt(QuestState.VAR_COND)});
+        questlist = player.getAllQuestsStates()
+                .filter(quest -> quest.getQuest().isVisible())
+                .filter(QuestState::isStarted)
+                .collect(Collectors.toMap(k -> k.getQuest().getQuestIntId(), v -> v.getInt(QuestState.VAR_COND)));
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0x86);
         writeH(questlist.size());
-        questlist.forEach(q -> {
-            writeD(q[0]);
-            writeD(q[1]);
+        questlist.forEach( (k,v) -> {
+            writeD(k);
+            writeD(v);
         });
         writeB(unk);
     }

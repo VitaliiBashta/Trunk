@@ -5,7 +5,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.RadarControl;
-import l2trunk.gameserver.scripts.ScriptFile;
+import l2trunk.gameserver.utils.Location;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -201,14 +201,11 @@ public final class _348_ArrogantSearch extends Quest {
 
         addTalkId(ARK_GUARDIANS_CORPSE);
 
-        for (int i : ARK_OWNERS.keySet())
-            addTalkId(i);
+        ARK_OWNERS.keySet().forEach(this::addTalkId);
 
-        for (int i : ARKS.keySet())
-            addTalkId(i);
+        ARKS.keySet().forEach(this::addTalkId);
 
-        for (int i : DROPS.keySet())
-            addKillId(i);
+        DROPS.keySet().forEach(this::addKillId);
 
         addQuestItem(HANELLINS_FIRST_LETTER,
                 HANELLINS_SECOND_LETTER,
@@ -250,7 +247,6 @@ public final class _348_ArrogantSearch extends Quest {
                 st.set("companions", "1");
                 st.takeItems(SHELL_OF_MONSTERS, -1);
                 htmltext = "not yet implemented";
-                //todo: give flowers & handle the multiperson quest...
                 break;
         }
         if (event.equals("30864-09a.htm")) {
@@ -360,12 +356,12 @@ public final class _348_ArrogantSearch extends Quest {
                 if (st.getQuestItemsCount(ARK_OWNERS.get(npcId)[0]) == 1) {
                     st.takeItems(ARK_OWNERS.get(npcId)[0], 1);
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[0];
-                    st.getPlayer().sendPacket(new RadarControl(0, 1, ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4]));
+                    st.getPlayer().sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
                 }
                 // do not have letter and do not have the item
                 else if (st.getQuestItemsCount(ARK_OWNERS.get(npcId)[1]) < 1) {
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[1];
-                    st.getPlayer().sendPacket(new RadarControl(0, 1, ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4]));
+                    st.getPlayer().sendPacket(new RadarControl(0, 1, new Location(ARK_OWNERS.get(npcId)[2], ARK_OWNERS.get(npcId)[3], ARK_OWNERS.get(npcId)[4])));
                 } else
                     //have the item (done)
                     htmltext = ARK_OWNERS_TEXT.get(npcId)[2];

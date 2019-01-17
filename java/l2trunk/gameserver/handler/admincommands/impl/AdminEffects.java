@@ -55,8 +55,7 @@ public final class AdminEffects implements IAdminCommandHandler {
                 break;
             case admin_gmspeed:
                 val = toInt(wordList[1], 0);
-                List<Effect> superhaste = activeChar.getEffectList().getEffectsBySkillId(7029);
-                int sh_level = superhaste == null ? 0 : superhaste.isEmpty() ? 0 : superhaste.get(0).getSkill().getLevel();
+                int sh_level = activeChar.getEffectList().getEffectsBySkillId(7029).map(e -> e.getSkill().getLevel()).findFirst().orElse(0);
 
                 if (val == 0) {
                     if (sh_level != 0) {
@@ -290,14 +289,8 @@ public final class AdminEffects implements IAdminCommandHandler {
                 activeChar.setTransformation(val);
                 break;
             case admin_callskill:
-                try {
-                    id = toInt(wordList[1]);
-                    lvl = toInt(wordList[2]);
-                    List<Effect> trasform = activeChar.getEffectList().getEffectsBySkillId(id);
-                } catch (Exception e) {
-                    activeChar.sendMessage("USAGE: //transform transform_id");
-                    return false;
-                }
+                id = toInt(wordList[1]);
+                lvl = toInt(wordList[2]);
                 activeChar.doCast(id, lvl, activeChar, true);
                 break;
             case admin_showmovie:

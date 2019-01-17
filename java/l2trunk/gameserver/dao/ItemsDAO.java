@@ -17,12 +17,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     INSTANCE;
-    private static final Logger _log = LoggerFactory.getLogger(ItemsDAO.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ItemsDAO.class);
 
     private final static String RESTORE_ITEM = "SELECT object_id, owner_id, item_id, count, enchant_level, loc, loc_data, custom_type1, custom_type2, life_time, custom_flags, augmentation_id, attribute_fire, attribute_water, attribute_wind, attribute_earth, attribute_holy, attribute_unholy, agathion_energy, visual_item_id FROM items WHERE object_id = ?";
     private final static String RESTORE_ITEMS = "SELECT object_id FROM items WHERE loc = ?";
@@ -117,7 +120,6 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             save0(item, statement);
             statement.execute();
         }
-
         insert.incrementAndGet();
     }
 
@@ -183,7 +185,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
 
             item.setJdbcState(JdbcEntityState.STORED);
         } catch (SQLException e) {
-            _log.error("Error while restoring item : " + objectId, e);
+            LOG.error("Error while restoring item : " + objectId, e);
             return null;
         }
 
@@ -192,22 +194,14 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
         return item;
     }
 
-    private Collection<ItemInstance> load(Collection<Integer> objectIds) {
-        Collection<ItemInstance> list = Collections.emptyList();
-
+    private Stream<ItemInstance> load(Collection<Integer> objectIds) {
         if (objectIds.isEmpty())
-            return list;
+            return Stream.empty();
 
-        list = new ArrayList<>(objectIds.size());
+        return objectIds.stream()
+                .map(this::load)
+                .filter(Objects::nonNull);
 
-        ItemInstance item;
-        for (Integer objectId : objectIds) {
-            item = load(objectId);
-            if (item != null)
-                list.add(item);
-        }
-
-        return list;
     }
 
     @Override
@@ -219,7 +213,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             save0(item);
             item.setJdbcState(JdbcEntityState.STORED);
         } catch (SQLException e) {
-            _log.error("Error while saving item : " + item, e);
+            LOG.error("Error while saving item : " + item, e);
             return;
         }
 
@@ -227,11 +221,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     }
 
     public void save(Collection<ItemInstance> items) {
-        if (items.isEmpty())
-            return;
-
-        for (ItemInstance item : items)
-            save(item);
+        items.forEach(this::save);
     }
 
     @Override
@@ -243,7 +233,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             update0(item);
             item.setJdbcState(JdbcEntityState.STORED);
         } catch (SQLException e) {
-            _log.error("Error while updating item : " + item, e);
+            LOG.error("Error while updating item : " + item, e);
             return;
         }
 
@@ -251,11 +241,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     }
 
     public void update(Collection<ItemInstance> items) {
-        if (items.isEmpty())
-            return;
-
-        for (ItemInstance item : items)
-            update(item);
+        items.forEach(this::update);
     }
 
     @Override
@@ -267,11 +253,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     }
 
     public void saveOrUpdate(Collection<ItemInstance> items) {
-        if (items.isEmpty())
-            return;
-
-        for (ItemInstance item : items)
-            saveOrUpdate(item);
+        items.forEach(this::saveOrUpdate);
     }
 
     @Override
@@ -283,7 +265,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             delete0(item);
             item.setJdbcState(JdbcEntityState.DELETED);
         } catch (SQLException e) {
-            _log.error("Error while deleting item : " + item, e);
+            LOG.error("Error while deleting item : " + item, e);
             return;
         }
 
@@ -291,14 +273,10 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
     }
 
     public void delete(Collection<ItemInstance> items) {
-        if (items.isEmpty())
-            return;
-
-        for (ItemInstance item : items)
-            delete(item);
+        items.forEach(this::delete);
     }
 
-    public Collection<ItemInstance> getItemsByOwnerIdAndLoc(int ownerId, ItemLocation loc) {
+    public Stream<ItemInstance> getItemsByOwnerIdAndLoc(int ownerId, ItemLocation loc) {
         Collection<Integer> objectIds = new ArrayList<>();
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(RESTORE_OWNER_ITEMS)) {
@@ -308,14 +286,14 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
             while (rset.next())
                 objectIds.add(rset.getInt(1));
         } catch (SQLException e) {
-            _log.error("Error while restore items of owner : " + ownerId, e);
+            LOG.error("Error while restore items of owner : " + ownerId, e);
             objectIds.clear();
         }
 
         return load(objectIds);
     }
 
-    public Collection<ItemInstance> getItemsByLocation(ItemLocation loc) {
+    public Stream<ItemInstance> getItemsByLocation(ItemLocation loc) {
         Collection<Integer> objectIds = new ArrayList<>();
 
         try (Connection con = DatabaseFactory.getInstance().getConnection();
@@ -327,7 +305,7 @@ public enum ItemsDAO implements JdbcDAO<Integer, ItemInstance> {
                     objectIds.add(rset.getInt(1));
             }
         } catch (SQLException e) {
-            _log.error("Error while restore items from loc:" + loc.toString(), e);
+            LOG.error("Error while restore items from loc:" + loc.toString(), e);
             objectIds.clear();
         }
 

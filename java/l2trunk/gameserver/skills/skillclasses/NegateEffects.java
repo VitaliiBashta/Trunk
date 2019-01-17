@@ -13,10 +13,11 @@ import l2trunk.gameserver.stats.Formulas;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class NegateEffects extends Skill {
-    private final boolean _onlyPhysical;
-    private final boolean _negateDebuffs;
+    private final boolean onlyPhysical;
+    private final boolean negateDebuffs;
     private final Map<EffectType, Integer> _negateEffects = new HashMap<>();
     private final Map<String, Integer> _negateStackType = new HashMap<>();
 
@@ -37,15 +38,15 @@ public final class NegateEffects extends Skill {
                 _negateStackType.put(entry[0], entry.length > 1 ? Integer.decode(entry[1]) : Integer.MAX_VALUE);
             }
 
-        _onlyPhysical = set.getBool("onlyPhysical", false);
-        _negateDebuffs = set.getBool("negateDebuffs", true);
+        onlyPhysical = set.getBool("onlyPhysical", false);
+        negateDebuffs = set.getBool("negateDebuffs", true);
     }
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
         for (Creature target : targets)
             if (target != null) {
-                if (!_negateDebuffs && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
+                if (!negateDebuffs && !Formulas.calcSkillSuccess(activeChar, target, this, getActivateRate())) {
                     activeChar.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_RESISTED_YOUR_S2).addString(target.getName()).addSkillName(getId(), getLevel()));
                     continue;
                 }
@@ -66,12 +67,11 @@ public final class NegateEffects extends Skill {
     }
 
     private void negateEffectAtPower(Creature target, EffectType type, int power) {
-        for (Effect e : target.getEffectList().getAllEffects()) {
-            Skill skill = e.getSkill();
-            if (_onlyPhysical && skill.isMagic() || !skill.isCancelable() || skill.isOffensive() && !_negateDebuffs)
+        for (Effect e : target.getEffectList().getAllEffects().collect(Collectors.toList())) {
+            if (onlyPhysical && e.getSkill().isMagic() || !e.getSkill().isCancelable() || e.getSkill().isOffensive() && !negateDebuffs)
                 continue;
             // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
-            if (!skill.isOffensive() && skill.getMagicLevel() > getMagicLevel() && Rnd.chance(skill.getMagicLevel() - getMagicLevel()))
+            if (!e.getSkill().isOffensive() && e.getSkill().getMagicLevel() > getMagicLevel() && Rnd.chance(e.getSkill().getMagicLevel() - getMagicLevel()))
                 continue;
             if (e.getEffectType() == type && e.getStackOrder() <= power)
                 e.exit();
@@ -79,9 +79,9 @@ public final class NegateEffects extends Skill {
     }
 
     private void negateEffectAtPower(Creature target, String stackType, int power) {
-        for (Effect e : target.getEffectList().getAllEffects()) {
+        for (Effect e : target.getEffectList().getAllEffects().collect(Collectors.toList())) {
             Skill skill = e.getSkill();
-            if (_onlyPhysical && skill.isMagic() || !skill.isCancelable() || skill.isOffensive() && !_negateDebuffs)
+            if (onlyPhysical && e.getSkill().isMagic() || !skill.isCancelable() || skill.isOffensive() && !negateDebuffs)
                 continue;
             // Если у бафа выше уровень чем у скилла Cancel, то есть шанс, что этот баф не снимется
             if (!skill.isOffensive() && skill.getMagicLevel() > getMagicLevel() && Rnd.chance(skill.getMagicLevel() - getMagicLevel()))

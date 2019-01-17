@@ -1,7 +1,6 @@
 package l2trunk.scripts.ai;
 
 import l2trunk.gameserver.ai.CtrlEvent;
-import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -26,7 +25,7 @@ public final class KanadisFollower extends Fighter {
         if (attacker.getNpcId() == 36562) {
             actor.getAggroList().addDamageHate(attacker, 0, 100);
             startRunningTask(2000);
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(attacker);
         }
         super.onEvtAttacked(attacker, damage);
     }

@@ -6,31 +6,30 @@ import l2trunk.gameserver.model.Recipe;
 import java.util.Collection;
 
 
-public class RecipeBookItemList extends L2GameServerPacket {
-    private final boolean _isDwarvenCraft;
-    private final int _currentMp;
-    private final Collection<Recipe> _recipes;
+public final class RecipeBookItemList extends L2GameServerPacket {
+    private final boolean isDwarvenCraft;
+    private final int currentMp;
+    private final Collection<Recipe> recipes;
 
     public RecipeBookItemList(Player player, boolean isDwarvenCraft) {
-        _isDwarvenCraft = isDwarvenCraft;
-        _currentMp = (int) player.getCurrentMp();
+        this.isDwarvenCraft = isDwarvenCraft;
+        currentMp = (int) player.getCurrentMp();
         if (isDwarvenCraft)
-            _recipes = player.getDwarvenRecipeBook();
+            recipes = player.getDwarvenRecipeBook();
         else
-            _recipes = player.getCommonRecipeBook();
+            recipes = player.getCommonRecipeBook();
     }
 
     @Override
     protected final void writeImpl() {
         writeC(0xdc);
-        writeD(_isDwarvenCraft ? 0x00 : 0x01);
-        writeD(_currentMp);
+        writeD(isDwarvenCraft ? 0x00 : 0x01);
+        writeD(currentMp);
 
-        writeD(_recipes.size());
-
-        for (Recipe recipe : _recipes) {
+        writeD(recipes.size());
+        recipes.forEach(recipe -> {
             writeD(recipe.getId());
             writeD(1); //??
-        }
+        });
     }
 }

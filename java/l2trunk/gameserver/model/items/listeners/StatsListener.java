@@ -22,8 +22,7 @@ public final class StatsListener implements OnEquipListener {
 
     @Override
     public void onEquip(int slot, ItemInstance item, Playable actor) {
-        List<Func> funcs = item.getStatFuncs();
-        actor.addStatFuncs(funcs);
+        actor.addStatFuncs(item.getStatFuncs());
         actor.updateStats();
     }
 }

@@ -42,8 +42,7 @@ public final class ClanGate extends Skill {
             return;
 
         Player player = (Player) activeChar;
-        Clan clan = player.getClan();
-        clan.broadcastToOtherOnlineMembers(new SystemMessage2(SystemMsg.COURT_MAGICIAN__THE_PORTAL_HAS_BEEN_CREATED), player);
+        player.getClan().broadcastToOtherOnlineMembers(new SystemMessage2(SystemMsg.COURT_MAGICIAN__THE_PORTAL_HAS_BEEN_CREATED), player);
 
         getEffects(activeChar, activeChar, getActivateRate() > 0, true);
     }

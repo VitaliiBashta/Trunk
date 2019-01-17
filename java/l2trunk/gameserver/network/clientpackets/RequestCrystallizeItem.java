@@ -9,17 +9,15 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.utils.ItemFunctions;
 
-public class RequestCrystallizeItem extends L2GameClientPacket {
+public final class RequestCrystallizeItem extends L2GameClientPacket {
     //Format: cdd
 
     private int _objectId;
-    @SuppressWarnings("unused")
-    private long unk;
 
     @Override
     protected void readImpl() {
         _objectId = readD();
-        unk = readQ(); //FIXME: count??
+        readQ();
     }
 
     @Override

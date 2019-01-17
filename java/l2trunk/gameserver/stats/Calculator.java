@@ -21,52 +21,52 @@ import java.util.List;
  * Method addFunc and removeFunc permit to add and remove a Func object from a Calculator.<BR><BR>
  */
 public final class Calculator {
-    public final Stats _stat;
-    private final Creature _character;
-    private List<Func> _functions;
+    public final Stats stat;
+    private final Creature character;
+    private List<Func> functions;
     private double base;
     private double last;
 
     public Calculator(Stats stat, Creature character) {
-        _stat = stat;
-        _character = character;
-        _functions = new ArrayList<>();
+        this.stat = stat;
+        this.character = character;
+        functions = new ArrayList<>();
     }
 
     /**
      * Return the number of Funcs in the Calculator.<BR><BR>
      */
     public int size() {
-        return _functions.size();
+        return functions.size();
     }
 
     /**
      * Add a Func to the Calculator.<BR><BR>
      */
     public void addFunc(Func f) {
-        _functions.add(f);
-        Collections.sort(_functions);
+        functions.add(f);
+        Collections.sort(functions);
     }
 
     /**
      * Remove a Func from the Calculator.<BR><BR>
      */
     public void removeFunc(Func f) {
-        _functions.remove(f);
+        functions.remove(f);
     }
 
     /**
      * Remove each Func with the specified owner of the Calculator.<BR><BR>
      */
     public void removeOwner(Object owner) {
-        _functions.removeIf(a -> a.owner == owner);
+        functions.removeIf(a -> a.owner == owner);
     }
 
     /**
      * Run each Func of the Calculator.<BR><BR>
      */
     public void calc(Env env) {
-        List<Func> funcs = _functions;
+        List<Func> funcs = functions;
         base = env.value;
 
         boolean overrideLimits = false;
@@ -85,7 +85,7 @@ public final class Calculator {
         }
 
         if (!overrideLimits)
-            env.value = _stat.validate(env.value);
+            env.value = stat.validate(env.value);
 
         if (env.value != last) {
             double last = this.last; //TODO [G1ta0] найти приминение в StatsChangeRecorder
@@ -97,7 +97,7 @@ public final class Calculator {
      * for debugging
      */
     public List<Func> getFunctions() {
-        return _functions;
+        return functions;
     }
 
     public double getBase() {

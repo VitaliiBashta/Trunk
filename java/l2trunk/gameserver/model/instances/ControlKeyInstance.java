@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.reference.L2Reference;
 import l2trunk.gameserver.network.serverpackets.MyTargetSelected;
 
-public class ControlKeyInstance extends GameObject {
+public final class ControlKeyInstance extends GameObject {
     private final HardReference<ControlKeyInstance> reference;
 
     public ControlKeyInstance() {

@@ -17,22 +17,23 @@ import l2trunk.scripts.ai.residences.SiegeGuardFighter;
 import l2trunk.scripts.quests._732_ProtectTheReligiousAssociationLeader;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public final class ReligiousAssociationLeader extends SiegeGuardFighter {
-    private static final Map<Integer, NpcString[]> MESSAGES = new HashMap<>(9);
+    private static final Map<Integer, List<NpcString>> MESSAGES = new HashMap<>(9);
 
     static {
-        MESSAGES.put(81, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GLUDIO, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GLUDIO_IS_DEAD});
-        MESSAGES.put(82, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_DION, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_DION_IS_DEAD});
-        MESSAGES.put(83, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GIRAN, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GIRAN_IS_DEAD});
-        MESSAGES.put(84, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_OREN, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_OREN_IS_DEAD});
-        MESSAGES.put(85, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_ADEN, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_ADEN_IS_DEAD});
-        MESSAGES.put(86, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_INNADRIL, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_INNADRIL_IS_DEAD});
-        MESSAGES.put(87, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GODDARD, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GODDARD_IS_DEAD});
-        MESSAGES.put(88, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_RUNE, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_RUNE_IS_DEAD});
-        MESSAGES.put(89, new NpcString[]{NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_SCHUTTGART, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_SCHUTTGART_IS_DEAD});
+        MESSAGES.put(81, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GLUDIO, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GLUDIO_IS_DEAD));
+        MESSAGES.put(82, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_DION, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_DION_IS_DEAD));
+        MESSAGES.put(83, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GIRAN, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GIRAN_IS_DEAD));
+        MESSAGES.put(84, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_OREN, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_OREN_IS_DEAD));
+        MESSAGES.put(85, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_ADEN, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_ADEN_IS_DEAD));
+        MESSAGES.put(86, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_INNADRIL, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_INNADRIL_IS_DEAD));
+        MESSAGES.put(87, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GODDARD, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_GODDARD_IS_DEAD));
+        MESSAGES.put(88, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_RUNE, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_RUNE_IS_DEAD));
+        MESSAGES.put(89, List.of(NpcString.PROTECT_THE_RELIGIOUS_ASSOCIATION_LEADER_OF_SCHUTTGART, NpcString.THE_RELIGIOUS_ASSOCIATION_LEADER_OF_SCHUTTGART_IS_DEAD));
     }
 
     private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
@@ -54,7 +55,7 @@ public final class ReligiousAssociationLeader extends SiegeGuardFighter {
         boolean first = actor.getParameter("dominion_first_attack", true);
         if (first) {
             actor.setParameter("dominion_first_attack", false);
-            NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
+            NpcString msg = MESSAGES.get(siegeEvent.getId()).get(0);
             Quest q = QuestManager.getQuest(_732_ProtectTheReligiousAssociationLeader.class);
             GameObjectsStorage.getAllPlayersStream()
                     .filter(player -> player.getEvent(DominionSiegeEvent.class) == siegeEvent)
@@ -78,7 +79,7 @@ public final class ReligiousAssociationLeader extends SiegeGuardFighter {
         if (siegeEvent == null)
             return;
 
-        NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
+        NpcString msg = MESSAGES.get(siegeEvent.getId()).get(1);
         GameObjectsStorage.getAllPlayersStream()
                 .filter(player -> player.getEvent(DominionSiegeEvent.class) == siegeEvent)
                 .forEach(player -> {

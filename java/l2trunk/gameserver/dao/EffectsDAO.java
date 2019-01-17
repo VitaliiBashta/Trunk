@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public enum EffectsDAO {
     INSTANCE;
@@ -130,50 +131,48 @@ public enum EffectsDAO {
         if (id == 0) return;
         int objectId = playable.isPlayer() ? playable.getObjectId() : playable.getPlayer().getObjectId();
 
-        List<Effect> effects = playable.getEffectList().getAllEffects();
-        if (effects.isEmpty())
-            return;
 
-        Statement statement = null;
         try (Connection con = DatabaseFactory.getInstance().getConnection()) {
-            statement = con.createStatement();
+            Statement statement = con.createStatement();
 
             int order = 0;
             SqlBatch b = new SqlBatch("INSERT IGNORE INTO `character_effects_save` (`object_id`,`skill_id`,`skill_level`,`effect_count`,`effect_cur_time`,`duration`,`order`,`id`) VALUES");
 
             StringBuilder sb;
-            for (Effect effect : effects) {
-                if (effect != null && effect.isInUse() && !effect.getSkill().isToggle() && effect.getEffectType() != EffectType.HealOverTime && effect.getEffectType() != EffectType.CombatPointHealOverTime) {
-                    // Alexander - Summons should not store debuffs, only buffs
-                    if (playable.isSummon() && effect.getSkill().isOffensive())
-                        continue;
+            List<Effect> allSavableEffects = playable.getEffectList().getAllEffects()
+                    .filter(Effect::isInUse)
+                    .filter(e -> !e.getSkill().isToggle())
+                    .filter(e -> e.getEffectType() != EffectType.HealOverTime)
+                    .filter(e -> e.getEffectType() != EffectType.CombatPointHealOverTime)
+                    .filter(e -> !(playable.isSummon() && e.getSkill().isOffensive()))// Summons should not store debuffs, only buffs
+                    .collect(Collectors.toList());
+            for (Effect effect : allSavableEffects) {
 
-                    if (effect.isSaveable()) {
-                        sb = new StringBuilder("(");
-                        sb.append(objectId).append(",");
-                        sb.append(effect.getSkill().getId()).append(",");
-                        sb.append(effect.getSkill().getLevel()).append(",");
-                        sb.append(effect.getCount()).append(",");
-                        sb.append(effect.getTime()).append(",");
-                        sb.append(effect.getPeriod()).append(",");
-                        sb.append(order).append(",");
-                        sb.append(id).append(")");
-                        b.write(sb.toString());
-                    }
-                    while ((effect = effect.getNext()) != null && effect.isSaveable()) {
-                        sb = new StringBuilder("(");
-                        sb.append(objectId).append(",");
-                        sb.append(effect.getSkill().getId()).append(",");
-                        sb.append(effect.getSkill().getLevel()).append(",");
-                        sb.append(effect.getCount()).append(",");
-                        sb.append(effect.getTime()).append(",");
-                        sb.append(effect.getPeriod()).append(",");
-                        sb.append(order).append(",");
-                        sb.append(id).append(")");
-                        b.write(sb.toString());
-                    }
-                    order++;
+                if (effect.isSaveable()) {
+                    sb = new StringBuilder("(");
+                    sb.append(objectId).append(",");
+                    sb.append(effect.getSkill().getId()).append(",");
+                    sb.append(effect.getSkill().getLevel()).append(",");
+                    sb.append(effect.getCount()).append(",");
+                    sb.append(effect.getTime()).append(",");
+                    sb.append(effect.getPeriod()).append(",");
+                    sb.append(order).append(",");
+                    sb.append(id).append(")");
+                    b.write(sb.toString());
                 }
+                while ((effect = effect.getNext()) != null && effect.isSaveable()) {
+                    sb = new StringBuilder("(");
+                    sb.append(objectId).append(",");
+                    sb.append(effect.getSkill().getId()).append(",");
+                    sb.append(effect.getSkill().getLevel()).append(",");
+                    sb.append(effect.getCount()).append(",");
+                    sb.append(effect.getTime()).append(",");
+                    sb.append(effect.getPeriod()).append(",");
+                    sb.append(order).append(",");
+                    sb.append(id).append(")");
+                    b.write(sb.toString());
+                }
+                order++;
             }
 
             if (!b.isEmpty())

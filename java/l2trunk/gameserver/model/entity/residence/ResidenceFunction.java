@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -217,7 +218,7 @@ public final class ResidenceFunction {
     private final int type;
     private final Calendar endDate;
     private final Map<Integer, Integer> _leases = new ConcurrentSkipListMap<>();
-    private final Map<Integer, TeleportLocation[]> _teleports = new ConcurrentSkipListMap<>();
+    private final Map<Integer, List<TeleportLocation>> teleports = new ConcurrentSkipListMap<>();
     private final Map<Integer, int[]> _buylists = new ConcurrentSkipListMap<>();
     private final Map<Integer, Object[][]> buffs = new ConcurrentSkipListMap<>();
     private int level;
@@ -285,16 +286,12 @@ public final class ResidenceFunction {
         }
     }
 
-    public TeleportLocation[] getTeleports() {
-        return getTeleports(level);
+    public List<TeleportLocation> getTeleports() {
+        return teleports.get(level);
     }
 
-    private TeleportLocation[] getTeleports(int level) {
-        return _teleports.get(level);
-    }
-
-    public void addTeleports(int level, TeleportLocation[] teleports) {
-        _teleports.put(level, teleports);
+    public void addTeleports(int level, List<TeleportLocation> teleports) {
+        this.teleports.put(level, teleports);
     }
 
     public int getLease() {

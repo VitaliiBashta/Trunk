@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Player;
 
-public class ExBR_ExtraUserInfo extends L2GameServerPacket {
+public final class ExBR_ExtraUserInfo extends L2GameServerPacket {
     private final int _objectId;
     private final int _effect3;
     private final int _lectureMark;

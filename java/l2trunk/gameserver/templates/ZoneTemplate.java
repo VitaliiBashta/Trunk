@@ -10,13 +10,14 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class ZoneTemplate {
-    private final String _name;
-    private final ZoneType _type;
+    private final String name;
+    private final ZoneType type;
 
     private final Territory _territory;
 
@@ -56,7 +57,7 @@ public final class ZoneTemplate {
     /**
      * Урон от зоны по мп
      */
-    private final int _damageOnMP;
+    private final int damageOnMP;
 
 
     /**
@@ -76,19 +77,18 @@ public final class ZoneTemplate {
 
     private final int _eventId;
 
-    private final String[] _blockedActions;
+    private final List<String> blockedActions;
 
     private final int _index;
-    private final int _taxById;
 
     private final StatsSet params;
 
-    private final boolean _isEpicPvP;
+    private final boolean isEpicPvP;
 
     @SuppressWarnings("unchecked")
     public ZoneTemplate(StatsSet set) {
-        _name = set.getString("name");
-        _type = ZoneType.valueOf(set.getString("type"));
+        name = set.getString("name");
+        type = ZoneType.valueOf(set.getString("type"));
         _territory = (Territory) set.get("territory");
 
         _enteringMessageId = set.getInteger("entering_message_no", 0);
@@ -117,7 +117,7 @@ public final class ZoneTemplate {
 
         //Зона с дамагом
         _damageOnHP = set.getInteger("damage_on_hp", 0);
-        _damageOnMP = set.getInteger("damage_on_mp", 0);
+        damageOnMP = set.getInteger("damage_on_mp", 0);
         _damageMessageId = set.getInteger("message_no", 0);
 
         _eventId = set.getInteger("eventId", 0);
@@ -130,14 +130,14 @@ public final class ZoneTemplate {
 
         s = (String) set.get("blocked_actions");
         if (s != null)
-            _blockedActions = s.split(ExProperties.defaultDelimiter);
+            blockedActions = Arrays.asList(s.split(ExProperties.defaultDelimiter));
         else
-            _blockedActions = null;
+            blockedActions = List.of();
 
-        _isEpicPvP = set.getBool("epicPvP", false);
+        isEpicPvP = set.getBool("epicPvP", false);
 
         _index = set.getInteger("index", 0);
-        _taxById = set.getInteger("taxById", 0);
+        int _taxById = set.getInteger("taxById", 0);
 
         params = set;
     }
@@ -147,11 +147,11 @@ public final class ZoneTemplate {
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public ZoneType getType() {
-        return _type;
+        return type;
     }
 
     public Territory getTerritory() {
@@ -194,8 +194,8 @@ public final class ZoneTemplate {
         return _affectRace;
     }
 
-    public String[] getBlockedActions() {
-        return _blockedActions;
+    public List<String> getBlockedActions() {
+        return blockedActions;
     }
 
     /**
@@ -222,7 +222,7 @@ public final class ZoneTemplate {
      * @return количество урона
      */
     public int getDamageOnMP() {
-        return _damageOnMP;
+        return damageOnMP;
     }
 
     public double getMoveBonus() {
@@ -253,16 +253,12 @@ public final class ZoneTemplate {
         return _index;
     }
 
-    public int getTaxById() {
-        return _taxById;
-    }
-
     public int getEventId() {
         return _eventId;
     }
 
     public boolean isEpicPvP() {
-        return _isEpicPvP;
+        return isEpicPvP;
     }
 
     public StatsSet getParams() {

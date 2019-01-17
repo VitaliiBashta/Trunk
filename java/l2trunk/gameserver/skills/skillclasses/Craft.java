@@ -9,11 +9,11 @@ import l2trunk.gameserver.network.serverpackets.RecipeBookItemList;
 import java.util.List;
 
 public final class Craft extends Skill {
-    private final boolean _dwarven;
+    private final boolean dwarven;
 
     public Craft(StatsSet set) {
         super(set);
-        _dwarven = set.getBool("isDwarven");
+        dwarven = set.getBool("isDwarven");
     }
 
     @Override
@@ -27,6 +27,6 @@ public final class Craft extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        activeChar.sendPacket(new RecipeBookItemList((Player) activeChar, _dwarven));
+        activeChar.sendPacket(new RecipeBookItemList((Player) activeChar, dwarven));
     }
 }

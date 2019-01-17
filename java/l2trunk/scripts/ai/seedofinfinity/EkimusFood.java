@@ -7,8 +7,11 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.instances.HeartInfinityDefence;
 
+import java.util.List;
+
 public final class EkimusFood extends DefaultAI {
-    private static final Location[] _route1 = {new Location(-179544, 207400, -15496),
+    private static final List<Location> ROUTE_1 = List.of(
+            new Location(-179544, 207400, -15496),
             new Location(-178856, 207464, -15496),
             new Location(-178168, 207864, -15496),
             new Location(-177512, 208728, -15496),
@@ -18,9 +21,10 @@ public final class EkimusFood extends DefaultAI {
             new Location(-178584, 211608, -15496),
             new Location(-179304, 211848, -15496),
             new Location(-179512, 211864, -15496),
-            new Location(-179528, 211448, -15472)};
+            new Location(-179528, 211448, -15472));
 
-    private static final Location[] _route2 = {new Location(-179576, 207352, -15496),
+    private static final List<Location> ROUTE_2 = List.of(
+            new Location(-179576, 207352, -15496),
             new Location(-180440, 207544, -15496),
             new Location(-181256, 208152, -15496),
             new Location(-181752, 209112, -15496),
@@ -28,16 +32,16 @@ public final class EkimusFood extends DefaultAI {
             new Location(-181096, 211224, -15496),
             new Location(-180264, 211720, -15496),
             new Location(-179528, 211848, -15496),
-            new Location(-179528, 211400, -15472)};
+            new Location(-179528, 211400, -15472));
 
-    private final Location[] _points;
+    private final List<Location> points;
 
     private int _lastPoint = 0;
 
     public EkimusFood(NpcInstance actor) {
         super(actor);
         MAX_PURSUE_RANGE = Integer.MAX_VALUE - 10;
-        _points = Rnd.chance(50) ? _route1 : _route2;
+        points = Rnd.chance(50) ? ROUTE_1 : ROUTE_2;
         actor.startDebuffImmunity();
     }
 
@@ -62,14 +66,14 @@ public final class EkimusFood extends DefaultAI {
     private void startMoveTask() {
         NpcInstance npc = getActor();
         _lastPoint++;
-        if (_lastPoint >= _points.length) {
+        if (_lastPoint >= points.size()) {
             if (!npc.getReflection().isDefault()) {
                 ((HeartInfinityDefence) npc.getReflection()).notifyWagonArrived();
                 npc.deleteMe();
                 return;
             }
         }
-        addTaskMove(Location.findPointToStay(_points[_lastPoint], 250, npc.getGeoIndex()), true);
+        addTaskMove(Location.findPointToStay(points.get(_lastPoint), 250, npc.getGeoIndex()), true);
         doTask();
     }
 

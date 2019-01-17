@@ -10,6 +10,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcLocation;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.scripts.npc.model.SepulcherMonsterInstance;
 import l2trunk.scripts.npc.model.SepulcherNpcInstance;
@@ -36,7 +37,7 @@ public final class FourSepulchersSpawn extends Functions {
     private static final Map<Integer, NpcLocation> _shadowSpawns = new HashMap<>();
     private static final Map<Integer, NpcLocation> _mysteriousBoxSpawns = new HashMap<>();
     private static final Map<Integer, List<NpcLocation>> _dukeFinalMobs = new HashMap<>();
-    private static final Map<Integer, List<NpcLocation>> _emperorsGraveNpcs = new HashMap<>();
+    private static final Map<Integer, List<NpcLocation>> EMPERORS_GRAVE_NPCS = new HashMap<>();
     private static final Map<Integer, List<NpcLocation>> _magicalMonsters = new HashMap<>();
     private static final Map<Integer, List<NpcLocation>> _physicalMonsters = new HashMap<>();
     private static final Map<Integer, Integer> _keyBoxNpc = new HashMap<>();
@@ -182,8 +183,8 @@ public final class FourSepulchersSpawn extends Functions {
     }
 
     private static void loadEmperorsGraveMonsters() {
-        _emperorsGraveNpcs.clear();
-        int count = loadSpawn(_emperorsGraveNpcs, 6);
+        EMPERORS_GRAVE_NPCS.clear();
+        int count = loadSpawn(EMPERORS_GRAVE_NPCS, 6);
         LOG.info("FourSepulchersManager: loaded " + count + " Emperor's grave NPC spawns.");
     }
 
@@ -319,12 +320,12 @@ public final class FourSepulchersSpawn extends Functions {
     public static void spawnEmperorsGraveNpc(int npcId) {
         if (!FourSepulchersManager.isAttackTime())
             return;
-        List<NpcLocation> monsterList = _emperorsGraveNpcs.get(npcId);
+        List<NpcLocation> monsterList = EMPERORS_GRAVE_NPCS.get(npcId);
         if (monsterList != null)
             for (NpcLocation loc : monsterList) {
                 NpcTemplate template = NpcHolder.getTemplate(loc.npcId);
                 NpcInstance npc;
-                if (template.isInstanceOf(SepulcherMonsterInstance.class))
+                if (template.type.equalsIgnoreCase("sepulcherMonster"))
                     npc = new SepulcherMonsterInstance(IdFactory.getInstance().getNextId(), template);
                 else
                     npc = new SepulcherNpcInstance(IdFactory.getInstance().getNextId(), template);
@@ -492,17 +493,17 @@ public final class FourSepulchersSpawn extends Functions {
         return false;
     }
 
-    static class NpcLocation extends Location {
-        int npcId;
-
-        NpcLocation() {
-        }
-
-        NpcLocation(int x, int y, int z, int heading, int npcId) {
-            super(x, y, z, heading);
-            this.npcId = npcId;
-        }
-    }
+//    static class NpcLocation extends Location {
+//        int npcId;
+//
+//        NpcLocation() {
+//        }
+//
+//        NpcLocation(int x, int y, int z, int heading, int npcId) {
+//            super(x, y, z, heading);
+//            this.npcId = npcId;
+//        }
+//    }
 
     public static class GateKeeper extends Location {
         public final DoorInstance door;

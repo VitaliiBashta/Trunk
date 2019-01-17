@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class NpcHolder {
     private static final Logger LOG = LoggerFactory.getLogger(NpcHolder.class);
@@ -34,10 +35,9 @@ public final class NpcHolder {
                 .findFirst()
                 .orElse(null);
     }
-    public static List<NpcTemplate> getTemplateByName(String NpcName) {
+    public static Stream<NpcTemplate> getTemplateByName(String NpcName) {
         return npcs.values().stream()
-                .filter(n -> n.name.equals(NpcName))
-                .collect(Collectors.toList());
+                .filter(n -> n.name.equals(NpcName));
     }
 
     public static Collection<NpcTemplate> getAll() {

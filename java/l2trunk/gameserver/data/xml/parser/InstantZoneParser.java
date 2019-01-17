@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -59,9 +60,9 @@ public enum InstantZoneParser {
             StatsSet params = new StatsSet();
 
             List<InstantZone.SpawnInfo> spawns = new ArrayList<>();
-            Map<Integer, InstantZone.DoorInfo> doors = new HashMap<>();
-            Map<String, InstantZone.ZoneInfo> zones = Collections.emptyMap();
-            Map<String, InstantZone.SpawnInfo2> spawns2 = Collections.emptyMap();
+            Map<Integer, InstantZone.DoorInfo> doors =  new ConcurrentHashMap<>();
+            Map<String, InstantZone.ZoneInfo> zones =  new ConcurrentHashMap<>();
+            Map<String, InstantZone.SpawnInfo2> spawns2 = new ConcurrentHashMap<>();
             instanceId = Integer.parseInt(element.attributeValue("id"));
             name = element.attributeValue("name");
 
@@ -129,9 +130,6 @@ public enum InstantZoneParser {
                     mapy = Integer.parseInt(rxy[1]);
                 } else if ("doors".equalsIgnoreCase(subElement.getName())) {
                     for (Element e : subElement.elements()) {
-                        if (doors.isEmpty())
-                            doors = new HashMap<>();
-
                         boolean opened = e.attributeValue("opened") != null && Boolean.parseBoolean(e.attributeValue("opened"));
                         boolean invul = e.attributeValue("invul") == null || Boolean.parseBoolean(e.attributeValue("invul"));
                         DoorTemplate template = DoorHolder.getTemplate(toInt(e.attributeValue("id")));
@@ -139,8 +137,6 @@ public enum InstantZoneParser {
                     }
                 } else if ("zones".equalsIgnoreCase(subElement.getName())) {
                     for (Element e : subElement.elements()) {
-                        if (zones.isEmpty())
-                            zones = new HashMap<>();
 
                         boolean active = e.attributeValue("active") != null && Boolean.parseBoolean(e.attributeValue("active"));
                         ZoneTemplate template = ZoneHolder.getTemplate(e.attributeValue("name"));
@@ -160,14 +156,8 @@ public enum InstantZoneParser {
                             String group = e.attributeValue("name");
                             boolean spawned = e.attributeValue("spawned") != null && Boolean.parseBoolean(e.attributeValue("spawned"));
                             List<SpawnTemplate> templates = SpawnHolder.getSpawn(group);
-                            if (templates == null)
-                                LOG.info("not find spawn group: " + group + " in file: ");
-                            else {
-                                if (spawns2.isEmpty())
-                                    spawns2 = new Hashtable<>();
 
-                                spawns2.put(group, new InstantZone.SpawnInfo2(templates, spawned));
-                            }
+                            spawns2.put(group, new InstantZone.SpawnInfo2(templates, spawned));
                         } else if ("spawn".equalsIgnoreCase(e.getName())) {
                             String[] mobs = e.attributeValue("mobId").split(" ");
 
@@ -200,8 +190,8 @@ public enum InstantZoneParser {
                             Territory territory = null;
                             if (spawnType == 2) {
                                 Polygon poly = new Polygon();
-                                for (Location loc : coords)
-                                    poly.add(loc.x, loc.y).setZmin(loc.z).setZmax(loc.z);
+                                coords.forEach(loc ->
+                                    poly.add(loc.x, loc.y).setZmin(loc.z).setZmax(loc.z));
 
                                 if (!poly.validate())
                                     LOG.error("invalid spawn territory for instance id : " + instanceId + " - " + poly + "!");
@@ -210,7 +200,7 @@ public enum InstantZoneParser {
                             }
 
                             for (String mob : mobs) {
-                                mobId = Integer.parseInt(mob);
+                                mobId = toInt(mob);
                                 spawnDat = new InstantZone.SpawnInfo(spawnType, mobId, count, respawn, respawnRnd, coords, territory);
                                 spawns.add(spawnDat);
                             }

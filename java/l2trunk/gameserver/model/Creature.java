@@ -80,8 +80,8 @@ public abstract class Creature extends GameObject {
     public static final int INTERACTION_DISTANCE = 200;
     private final static int CLIENT_BAR_SIZE = 352; // 352 - размер полоски CP/HP/MP в клиенте, в пикселях
     private static final Logger _log = LoggerFactory.getLogger(Creature.class);
-    private static final double[] POLE_VAMPIRIC_MOD =
-            {1.0, 0.9, 0.8, 0.7, 0.2, 0.01};
+    private static final List<Double> POLE_VAMPIRIC_MOD = List.of(
+            1.0, 0.9, 0.8, 0.7, 0.2, 0.01);
     /**
      * HashMap(Integer, L2Skill) containing all skills of the L2Character
      */
@@ -129,7 +129,6 @@ public abstract class Creature extends GameObject {
     private final AtomicBoolean isTeleporting = new AtomicBoolean();
     private final HardReference<? extends Creature> reference;
     public Future<?> _skillTask;
-    Future<?> skillGeoCheckTask;
     public boolean isMoving;
     public boolean isFollow;
     protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
@@ -139,6 +138,7 @@ public abstract class Creature extends GameObject {
     protected volatile CharListenerList listeners;
     protected int storedId;
     protected volatile CharacterAI ai;
+    Future<?> skillGeoCheckTask;
     double _currentMp = 1;
     String title;
     private int _scheduledCastCount;
@@ -151,7 +151,7 @@ public abstract class Creature extends GameObject {
     private boolean isAttackAborted;
     private long _attackEndTime;
     private long _attackReuseEndTime;
-    private Map<TriggerType, Set<TriggerInfo>> _triggers;
+    private Map<TriggerType, Set<TriggerInfo>> triggers = new ConcurrentHashMap<>();
     private volatile EffectList _effectList;
     private TeamType _team = TeamType.NONE;
     private Skill _castingSkill;
@@ -169,7 +169,7 @@ public abstract class Creature extends GameObject {
      * Map 32 bits (0x00000000) containing all abnormal effect in progress
      */
     private int abnormalEffects;
-    private int _abnormalEffects2;
+    private int abnormalEffects2;
     private int _abnormalEffects3;
     private Map<Integer, Integer> _skillMastery;
     private boolean _fakeDeath;
@@ -201,6 +201,7 @@ public abstract class Creature extends GameObject {
      */
     private List<Player> _statusListeners;
     private Location _flyLoc;
+    private List<ZoneType> restart_zones = List.of(ZoneType.battle_zone, ZoneType.peace_zone, ZoneType.offshore, ZoneType.dummy);
 
     protected Creature(int objectId, CharTemplate template) {
         super(objectId);
@@ -342,7 +343,7 @@ public abstract class Creature extends GameObject {
         if (damage <= 0)
             return false;
 
-        final double poleMod = _poleAttackCount < POLE_VAMPIRIC_MOD.length ? POLE_VAMPIRIC_MOD[_poleAttackCount] : 0;
+        final double poleMod = _poleAttackCount < POLE_VAMPIRIC_MOD.size() ? POLE_VAMPIRIC_MOD.get(_poleAttackCount) : 0;
         double absorb = poleMod * calcStat(Stats.ABSORB_DAMAGE_PERCENT, 0, target, null);
         double limit;
         if (absorb > 0 && !target.isDamageBlocked()) {
@@ -490,7 +491,7 @@ public abstract class Creature extends GameObject {
         }
     }
 
-    public final void addStatFuncs(List<Func> funcs) {
+    public final void addStatFuncs(Stream<Func> funcs) {
         funcs.forEach(this::addStatFunc);
     }
 
@@ -504,7 +505,7 @@ public abstract class Creature extends GameObject {
         }
     }
 
-    final void removeStatFuncs(List<Func> funcs) {
+    final void removeStatFuncs(Stream<Func> funcs) {
         funcs.forEach(this::removeStatFunc);
     }
 
@@ -544,7 +545,6 @@ public abstract class Creature extends GameObject {
         }
         callSkill(skill, targets, false);
     }
-
 
     public void altUseSkill(int skillId, int skillLvl, Creature target) {
         altUseSkill(SkillTable.INSTANCE.getInfo(skillId, skillLvl), target);
@@ -801,12 +801,12 @@ public abstract class Creature extends GameObject {
     }
 
     public void callSkill(int skillId, List<Creature> targets, boolean useActionSkills) {
-        callSkill(SkillTable.INSTANCE.getInfo(skillId), targets, useActionSkills);
+        callSkill(skillId, 1, targets, useActionSkills);
     }
 
     public void callSkill(Skill skill, List<Creature> targets, boolean useActionSkills) {
         try {
-            if (useActionSkills && !skill.isUsingWhileCasting() && _triggers != null)
+            if (useActionSkills && !skill.isUsingWhileCasting())
                 if (skill.isOffensive()) {
                     if (skill.isMagic())
                         useTriggers(getTarget(), TriggerType.OFFENSIVE_MAGICAL_SKILL_USE, null, skill, 0);
@@ -819,16 +819,12 @@ public abstract class Creature extends GameObject {
                 }
 
             Player pl = getPlayer();
-            Creature target;
-            Iterator<Creature> itr = targets.iterator();
-            while (itr.hasNext()) {
-                target = itr.next();
+            for (Creature target: targets) {
 
                 // Фильтруем неуязвимые цели
                 if (skill.isOffensive() && target.isInvul()) {
                     Player pcTarget = target.getPlayer();
                     if ((!skill.isIgnoreInvul() || (pcTarget != null && pcTarget.isGM())) && !target.isArtefact()) {
-                        itr.remove();
                         continue;
                     }
                 }
@@ -837,7 +833,6 @@ public abstract class Creature extends GameObject {
                 Effect ie = target.getEffectList().getEffectByType(EffectType.IgnoreSkill);
                 if (ie != null)
                     if (ie.getTemplate().getParam().getIntegerList("skillId").contains(skill.getId())) {
-                        itr.remove();
                         continue;
                     }
 
@@ -847,15 +842,15 @@ public abstract class Creature extends GameObject {
                     if (target.isNpc()) {
                         NpcInstance npc = (NpcInstance) target;
                         pl.getQuestsForEvent(npc, QuestEventType.MOB_TARGETED_BY_SKILL)
-                                .forEach(qs ->qs.getQuest().notifySkillUse(npc, skill, qs));
+                                .forEach(qs -> qs.getQuest().notifySkillUse(npc, skill, qs));
                     }
 
                 if (skill.getNegateSkill() > 0)
-                    for (Effect e : target.getEffectList().getAllEffects()) {
-                        Skill efs = e.getSkill();
-                        if (efs.getId() == skill.getNegateSkill() && e.isCancelable() && (skill.getNegatePower() <= 0 || efs.getPower() <= skill.getNegatePower()))
-                            e.exit();
-                    }
+                    target.getEffectList().getAllEffects()
+                            .filter(e -> e.getSkill().getId() == skill.getNegateSkill())
+                            .filter(Effect::isCancelable)
+                            .filter(e -> (skill.getNegatePower() <= 0 || e.getSkill().getPower() <= skill.getNegatePower()))
+                            .forEach(Effect::exit);
 
                 if (skill.getCancelTarget() > 0)
                     if (Rnd.chance(skill.getCancelTarget()))
@@ -883,15 +878,13 @@ public abstract class Creature extends GameObject {
     }
 
     private void useTriggers(GameObject target, TriggerType type, Skill ex, Skill owner, double damage) {
-        if (_triggers == null)
-            return;
-
-        Set<TriggerInfo> SkillsOnSkillAttack = _triggers.get(type);
+        Set<TriggerInfo> SkillsOnSkillAttack = triggers.get(type);
         if (SkillsOnSkillAttack != null) {
-            for (TriggerInfo t : SkillsOnSkillAttack) {
-                if (t.getSkill() != ex)
-                    useTriggerSkill(target == null ? getTarget() : target, null, t, owner, damage);
-            }
+            SkillsOnSkillAttack.stream()
+                    .filter(t -> t.getSkill() != ex)
+                    .forEach(t ->
+                            useTriggerSkill(target == null ? getTarget() : target, null, t, owner, damage));
+
         }
     }
 
@@ -960,10 +953,9 @@ public abstract class Creature extends GameObject {
         if (skill == null || skill.hasEffects() || skill.isMagic() || !skill.isOffensive() || skill.getCastRange() > 200)
             return;
         if (Rnd.chance(calcStat(Stats.COUNTER_ATTACK, 0, attacker, skill))) {
-            double damage = 1189 * getPAtk(attacker) / Math.max(attacker.getPDef(this), 1);
+            double damage = 1189. * getPAtk(attacker) / Math.max(attacker.getPDef(this), 1);
             attacker.sendPacket(new SystemMessage2(SystemMsg.C1_IS_PERFORMING_A_COUNTERATTACK).addName(this));
-            if (blow) // урон х2 для отражения blow скиллов
-            {
+            if (blow) {// урон х2 для отражения blow скиллов
                 sendPacket(new SystemMessage2(SystemMsg.C1_IS_PERFORMING_A_COUNTERATTACK).addName(this));
                 sendPacket(new SystemMessage2(SystemMsg.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(attacker).addInteger((long) damage));
                 attacker.reduceCurrentHp(damage, this, skill, true, true, false, false, false, false, true);
@@ -977,7 +969,6 @@ public abstract class Creature extends GameObject {
     /**
      * Disable this skill id for the duration of the delay in milliseconds.
      *
-     * @param skill
      * @param delay (seconds * 1000)
      */
     public void disableSkill(Skill skill, long delay) {
@@ -1000,7 +991,7 @@ public abstract class Creature extends GameObject {
         final WeaponTemplate weaponItem = getActiveWeaponItem();
 
         // Get the Attack Speed of the L2Character (delay (in milliseconds) before next attack)
-        final int sAtk = calculateTimeBetweenAttacks(target, weaponItem);
+        final int sAtk = calculateTimeBetweenAttacks(weaponItem);
         final int timeToHit = sAtk / 2;
 
         // Get the Attack Reuse Delay of the L2Weapon
@@ -1051,7 +1042,7 @@ public abstract class Creature extends GameObject {
             broadcastPacket(attack);
     }
 
-    private int calculateTimeBetweenAttacks(Creature target, WeaponTemplate weapon) {
+    private int calculateTimeBetweenAttacks(WeaponTemplate weapon) {
         if (weapon != null) {
             switch (weapon.getItemType()) {
                 case BOW:
@@ -1456,25 +1447,22 @@ public abstract class Creature extends GameObject {
             if (isSalvation() && isPlayer() && !getPlayer().isInOlympiadMode()) {
                 getPlayer().reviveRequest(getPlayer(), 100, false);
             }
-            for (Effect e : getEffectList().getAllEffects()) {
-                // Noblesse Blessing Buff/debuff effects are retained after
-                // death. However, Noblesse Blessing and Lucky Charm are lost as normal.
-                if (e.getEffectType() == EffectType.BlessNoblesse || e.getSkill().getId() == 1325 || e.getSkill().getId() == Skill.SKILL_RAID_BLESSING)
-                    e.exit();
-                else if (e.getEffectType() == EffectType.AgathionResurrect && !isPlayable()) {
-                    if (isPlayer())
-                        getPlayer().setAgathionRes(true);
-                    e.exit();
-                }
-            }
-        } else
-            /* if (!isPlayable() || !getPlayer().isInFightClub()) */// Cancel all effects unless in event.
-        {
-            for (Effect e : getEffectList().getAllEffects()) {
-                // Some effects persist at death
-                if (e.getEffectType() != EffectType.Transformation && !e.getSkill().isPreservedOnDeath())
-                    e.exit();
-            }
+            getEffectList().getAllEffects()
+                    .forEach(e -> {
+                        if (e.getEffectType() == EffectType.BlessNoblesse
+                                || e.getSkill().getId() == 1325
+                                || e.getSkill().getId() == Skill.SKILL_RAID_BLESSING)
+                            e.exit();
+                        else if (e.getEffectType() == EffectType.AgathionResurrect && !isPlayable()) {
+                            if (isPlayer())
+                                getPlayer().setAgathionRes(true);
+                            e.exit();
+                        }
+                    });
+        } else {
+            getEffectList().getAllEffects()
+                    .filter(e -> e.getEffectType() != EffectType.Transformation && !e.getSkill().isPreservedOnDeath())
+                    .forEach(Effect::exit);
         }
 
         ThreadPoolManager.INSTANCE.execute(new NotifyAITask(this, CtrlEvent.EVT_DEAD, killer));
@@ -1505,7 +1493,7 @@ public abstract class Creature extends GameObject {
      * Return a map of 32 bits (0x00000000) containing all special effects
      */
     public int getAbnormalEffect2() {
-        return _abnormalEffects2;
+        return abnormalEffects2;
     }
 
     /**
@@ -1939,7 +1927,6 @@ public abstract class Creature extends GameObject {
         return isTeleporting.get();
     }
 
-
     private Location getIntersectionPoint(Creature target) {
         if (!PositionUtils.isFacing(this, target, 90))
             return new Location(target.getX(), target.getY(), target.getZ());
@@ -2363,52 +2350,35 @@ public abstract class Creature extends GameObject {
         return new CharMoveToLocation(this);
     }
 
-    public void updateZones() {
+    void updateZones() {
         if (isInObserverMode())
             return;
 
         List<Zone> zones = isVisible() ? getCurrentRegion().getZones() : new CopyOnWriteArrayList<>();
 
-        List<Zone> entering = null;
-        List<Zone> leaving = null;
-
-        Zone zone;
+        List<Zone> entering;
+        List<Zone> leaving = new ArrayList<>();
 
         zonesWrite.lock();
         try {
             if (!this.zones.isEmpty()) {
-                leaving = new ArrayList<>();
-                for (Zone _zone : this.zones) {
-                    zone = _zone;
-                    // зоны больше нет в регионе, либо вышли за территорию зоны
-                    if (!zones.contains(zone) || !zone.checkIfInZone(getLoc(), getReflection()))
-                        leaving.add(zone);
-                }
-
-                // Покинули зоны, убираем из списка зон персонажа
-                if (!leaving.isEmpty()) {
-                    for (Zone aLeaving : leaving) {
-                        zone = aLeaving;
-                        this.zones.remove(zone);
-                    }
-                }
-            }
-
-            if (zones.size() > 0) {
-                entering = zones.stream()
-                        // в зону еще не заходили и зашли на территорию зоны
-                        .filter(z -> !this.zones.contains(z))
-                        .filter(z -> z.checkIfInZone(getLoc(), getReflection()))
+                leaving = this.zones.stream()
+                        .filter(z ->
+                                // зоны больше нет в регионе, либо вышли за территорию зоны
+                                (!zones.contains(z) || !z.checkIfInZone(getLoc(), getReflection())))
                         .collect(Collectors.toList());
-
-                // Вошли в зоны, добавим в список зон персонажа
-                if (!entering.isEmpty()) {
-                    for (Zone anEntering : entering) {
-                        zone = anEntering;
-                        this.zones.add(zone);
-                    }
-                }
+                // Покинули зоны, убираем из списка зон персонажа
+                this.zones.removeAll(leaving);
             }
+
+            entering = zones.stream()
+                    // в зону еще не заходили и зашли на территорию зоны
+                    .filter(z -> !this.zones.contains(z))
+                    .filter(z -> z.checkIfInZone(getLoc(), getReflection()))
+                    .collect(Collectors.toList());
+
+            // Вошли в зоны, добавим в список зон персонажа
+            this.zones.addAll(entering);
         } finally {
             zonesWrite.unlock();
         }
@@ -2417,21 +2387,8 @@ public abstract class Creature extends GameObject {
     }
 
     void onUpdateZones(List<Zone> leaving, List<Zone> entering) {
-        Zone zone;
-
-        if (leaving != null && !leaving.isEmpty()) {
-            for (Zone aLeaving : leaving) {
-                zone = aLeaving;
-                zone.doLeave(this);
-            }
-        }
-
-        if (entering != null && !entering.isEmpty()) {
-            for (Zone anEntering : entering) {
-                zone = anEntering;
-                zone.doEnter(this);
-            }
-        }
+        leaving.forEach(z -> z.doLeave(this));
+        entering.forEach(z -> z.doEnter(this));
     }
 
     public boolean isInZonePeace() {
@@ -2448,10 +2405,8 @@ public abstract class Creature extends GameObject {
      * @return is Inside Valakas, Antharas or Baium zone
      */
     public boolean isInZonePvP() {
-        for (Zone zone : zones)
-            if (zone.getTemplate().isEpicPvP())
-                return true;
-        return false;
+        return zones.stream()
+                .anyMatch(zone -> zone.getTemplate().isEpicPvP());
     }
 
     public boolean isInWater() {
@@ -2461,33 +2416,19 @@ public abstract class Creature extends GameObject {
     public boolean isInZone(ZoneType type) {
         zonesRead.lock();
         try {
-            Zone zone;
-            for (Zone _zone : zones) {
-                zone = _zone;
-                if (zone.getType() == type)
-                    return true;
-            }
+            return zones.stream().anyMatch(z -> z.getType() == type);
         } finally {
             zonesRead.unlock();
         }
-
-        return false;
     }
 
     public boolean isInZone(String name) {
         zonesRead.lock();
         try {
-            Zone zone;
-            for (Zone _zone : zones) {
-                zone = _zone;
-                if (zone.getName().equals(name))
-                    return true;
-            }
+            return zones.stream().anyMatch(z -> z.getName().equals(name));
         } finally {
             zonesRead.unlock();
         }
-
-        return false;
     }
 
     public boolean isInZone(Zone zone) {
@@ -2506,39 +2447,27 @@ public abstract class Creature extends GameObject {
     public Location getRestartPoint() {
         zonesRead.lock();
         try {
-            Zone zone;
-            for (Zone _zone : zones) {
-                zone = _zone;
-                if (zone.getRestartPoints() != null) {
-                    ZoneType type = zone.getType();
-                    if (type == ZoneType.battle_zone || type == ZoneType.peace_zone || type == ZoneType.offshore || type == ZoneType.dummy)
-                        return zone.getSpawn();
-                }
-            }
+            return zones.stream()
+                    .filter(z -> z.getRestartPoints() != null)
+                    .filter(z -> restart_zones.contains(z.getType()))
+                    .map(Zone::getSpawn)
+                    .findFirst().orElse(null);
         } finally {
             zonesRead.unlock();
         }
-
-        return null;
     }
 
     public Location getPKRestartPoint() {
         zonesRead.lock();
         try {
-            Zone zone;
-            for (Zone _zone : zones) {
-                zone = _zone;
-                if (zone.getRestartPoints() != null) {
-                    ZoneType type = zone.getType();
-                    if (type == ZoneType.battle_zone || type == ZoneType.peace_zone || type == ZoneType.offshore || type == ZoneType.dummy)
-                        return zone.getPKSpawn();
-                }
-            }
+            return zones.stream()
+                    .filter(z -> z.getRestartPoints() != null)
+                    .filter(z -> restart_zones.contains(z.getType()))
+                    .map(Zone::getPKSpawn)
+                    .findFirst().orElse(null);
         } finally {
             zonesRead.unlock();
         }
-
-        return null;
     }
 
     @Override
@@ -2697,10 +2626,11 @@ public abstract class Creature extends GameObject {
         if (mpConsume2 > 0) {
             if (skill.isMusic()) {
                 double inc = mpConsume2 / 2;
-                double add = 0;
-                for (Effect e : getEffectList().getAllEffects())
-                    if (e.getSkill().getId() != skill.getId() && e.getSkill().isMusic() && e.getTimeLeft() > 30)
-                        add += inc;
+                double add = inc * getEffectList().getAllEffects()
+                        .filter(e -> e.getSkill().getId() != skill.getId())
+                        .filter(e -> e.getSkill().isMusic())
+                        .filter(e -> e.getTimeLeft() > 30)
+                        .count();
                 mpConsume2 += add;
                 mpConsume2 = calcStat(Stats.MP_DANCE_SKILL_CONSUME, mpConsume2, aimingTarget, skill);
             } else if (skill.isMagic())
@@ -2915,41 +2845,28 @@ public abstract class Creature extends GameObject {
             removeStatsOwner(oldSkill);
             if (Config.ALT_DELETE_SA_BUFFS && (oldSkill.isItemSkill() || oldSkill.isHandler() || oldSkill.getName().startsWith("Item Skill"))) {
                 // Завершаем все эффекты, принадлежащие старому скиллу
-                List<Effect> effects = getEffectList().getEffectsBySkill(oldSkill);
-                if (effects != null)
-                    for (Effect effect : effects)
-                        effect.exit();
+                getEffectList().getEffectsBySkill(oldSkill)
+                        .forEach(Effect::exit);
                 // И с петов тоже
                 Summon pet = getPet();
                 if (pet != null) {
-                    effects = pet.getEffectList().getEffectsBySkill(oldSkill);
-                    if (effects != null)
-                        for (Effect effect : effects)
-                            effect.exit();
+                    pet.getEffectList().getEffectsBySkill(oldSkill)
+                            .forEach(Effect::exit);
                 }
             }
         }
-
         return oldSkill;
     }
 
     public void addTriggers(StatTemplate f) {
-        if (f.getTriggerList().isEmpty())
-            return;
-
-        for (TriggerInfo t : f.getTriggerList()) {
-            addTrigger(t);
-        }
+        f.getTriggerList().forEach(this::addTrigger);
     }
 
     public void addTrigger(TriggerInfo t) {
-        if (_triggers == null)
-            _triggers = new ConcurrentHashMap<>();
-
-        Set<TriggerInfo> hs = _triggers.get(t.getType());
+        Set<TriggerInfo> hs = triggers.get(t.getType());
         if (hs == null) {
             hs = new CopyOnWriteArraySet<>();
-            _triggers.put(t.getType(), hs);
+            triggers.put(t.getType(), hs);
         }
 
         hs.add(t);
@@ -2959,17 +2876,11 @@ public abstract class Creature extends GameObject {
     }
 
     public void removeTriggers(StatTemplate f) {
-        if (_triggers == null || f.getTriggerList().isEmpty())
-            return;
-
-        for (TriggerInfo t : f.getTriggerList())
-            removeTrigger(t);
+        f.getTriggerList().forEach(this::removeTrigger);
     }
 
     public void removeTrigger(TriggerInfo t) {
-        if (_triggers == null)
-            return;
-        Set<TriggerInfo> hs = _triggers.get(t.getType());
+        Set<TriggerInfo> hs = triggers.get(t.getType());
         if (hs == null)
             return;
         hs.remove(t);
@@ -3185,10 +3096,10 @@ public abstract class Creature extends GameObject {
     public void startAbnormalEffect(AbnormalEffect ae) {
         if (ae == AbnormalEffect.NULL) {
             abnormalEffects = AbnormalEffect.NULL.getMask();
-            _abnormalEffects2 = AbnormalEffect.NULL.getMask();
+            abnormalEffects2 = AbnormalEffect.NULL.getMask();
             _abnormalEffects3 = AbnormalEffect.NULL.getMask();
         } else if (ae.isSpecial())
-            _abnormalEffects2 |= ae.getMask();
+            abnormalEffects2 |= ae.getMask();
         else if (ae.isEvent())
             _abnormalEffects3 |= ae.getMask();
         else
@@ -3285,7 +3196,7 @@ public abstract class Creature extends GameObject {
 
     public void stopAbnormalEffect(AbnormalEffect ae) {
         if (ae.isSpecial())
-            _abnormalEffects2 &= ~ae.getMask();
+            abnormalEffects2 &= ~ae.getMask();
         if (ae.isEvent())
             _abnormalEffects3 &= ~ae.getMask();
         else

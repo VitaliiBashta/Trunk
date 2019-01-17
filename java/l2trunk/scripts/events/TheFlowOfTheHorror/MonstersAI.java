@@ -1,7 +1,6 @@
 package l2trunk.scripts.events.TheFlowOfTheHorror;
 
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObjectsStorage;
@@ -53,7 +52,7 @@ public final class MonstersAI extends Fighter {
                 if (target != null && !target.isDead()) {
                     clearTasks();
                     // TODO actor.addDamageHate(target, 0, 1000);
-                    setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+                    setIntentionAttack(target);
                     return true;
                 }
                 return true;

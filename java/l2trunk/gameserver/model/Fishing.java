@@ -19,12 +19,12 @@ import l2trunk.gameserver.utils.Location;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Fishing {
+public final class Fishing {
     private final static int FISHING_NONE = 0;
     private final static int FISHING_STARTED = 1;
     private final static int FISHING_WAITING = 2;
     private final static int FISHING_COMBAT = 3;
-    private final Player _fisher;
+    private final Player fisher;
     private final AtomicInteger _state;
     private final Location _fishLoc = new Location();
     private int _time;
@@ -39,7 +39,7 @@ public class Fishing {
     private Future<?> _fishingTask;
 
     public Fishing(Player fisher) {
-        _fisher = fisher;
+        this.fisher = fisher;
         _state = new AtomicInteger(FISHING_NONE);
     }
 
@@ -237,10 +237,10 @@ public class Fishing {
     }
 
     public static int getRandomFishLvl(Player player) {
-        int skilllvl = 0;
+        int skilllvl;
 
         // Проверка на Fisherman's Potion
-        Effect effect = player.getEffectList().getEffectByStackType("fishPot");
+        Effect effect = player.getEffectList().getEffectOfFishPot();
         if (effect != null)
             skilllvl = (int) effect.getSkill().getPower();
         else
@@ -394,10 +394,10 @@ public class Fishing {
         if (!_state.compareAndSet(FISHING_NONE, FISHING_STARTED))
             return;
 
-        _fisher.setFishing(true);
-        _fisher.broadcastCharInfo();
-        _fisher.broadcastPacket(new ExFishingStart(_fisher, _fish.getType(), _fisher.getFishLoc(), isNightLure(_lureId)));
-        _fisher.sendPacket(SystemMsg.STARTS_FISHING);
+        fisher.setFishing(true);
+        fisher.broadcastCharInfo();
+        fisher.broadcastPacket(new ExFishingStart(fisher, _fish.getType(), fisher.getFishLoc(), isNightLure(_lureId)));
+        fisher.sendPacket(SystemMsg.STARTS_FISHING);
 
         startLookingForFishTask();
     }
@@ -411,10 +411,10 @@ public class Fishing {
 
         stopFishingTask();
 
-        _fisher.setFishing(false);
-        _fisher.broadcastPacket(new ExFishingEnd(_fisher, false));
-        _fisher.broadcastCharInfo();
-        _fisher.sendPacket(SystemMsg.CANCELS_FISHING);
+        fisher.setFishing(false);
+        fisher.broadcastPacket(new ExFishingEnd(fisher, false));
+        fisher.broadcastCharInfo();
+        fisher.sendPacket(SystemMsg.CANCELS_FISHING);
     }
 
     /**
@@ -426,17 +426,14 @@ public class Fishing {
 
         stopFishingTask();
 
-        _fisher.setFishing(false);
-        _fisher.broadcastPacket(new ExFishingEnd(_fisher, win));
-        _fisher.broadcastCharInfo();
-        _fisher.sendPacket(SystemMsg.ENDS_FISHING);
+        fisher.setFishing(false);
+        fisher.broadcastPacket(new ExFishingEnd(fisher, win));
+        fisher.broadcastCharInfo();
+        fisher.sendPacket(SystemMsg.ENDS_FISHING);
 
         if (win)
-            _fisher.getCounters().fishCaught++;
+            fisher.getCounters().fishCaught++;
 
-        // Alexander - Add one fish captured to the stats if succesful
-//		if (win)
-//			_fisher.addPlayerStats(Ranking.STAT_TOP_FISHES_CAPTURED);
     }
 
     private void stopFishingTask() {
@@ -492,9 +489,9 @@ public class Fishing {
                 break;
         }
 
-        ExFishingStartCombat efsc = new ExFishingStartCombat(_fisher, _time, _fish.getHP(), _combatMode, _fish.getGroup(), _deceptiveMode);
-        _fisher.broadcastPacket(efsc);
-        _fisher.sendPacket(SystemMsg.SUCCEEDED_IN_GETTING_A_BITE);
+        ExFishingStartCombat efsc = new ExFishingStartCombat(fisher, _time, _fish.getHP(), _combatMode, _fish.getGroup(), _deceptiveMode);
+        fisher.broadcastPacket(efsc);
+        fisher.sendPacket(SystemMsg.SUCCEEDED_IN_GETTING_A_BITE);
 
         _fishingTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new FishCombatTask(), 1000L, 1000L);
     }
@@ -504,7 +501,7 @@ public class Fishing {
         if (_fishCurHP < 0)
             _fishCurHP = 0;
 
-        _fisher.broadcastPacket(new ExFishingHpRegen(_fisher, _time, _fishCurHP, _combatMode, _gooduse, _anim, pen, _deceptiveMode));
+        fisher.broadcastPacket(new ExFishingHpRegen(fisher, _time, _fishCurHP, _combatMode, _gooduse, _anim, pen, _deceptiveMode));
 
         _gooduse = 0;
         _anim = 0;
@@ -519,15 +516,15 @@ public class Fishing {
         stopFishingTask();
 
         if (win)
-            if (!_fisher.isInPeaceZone() && Rnd.chance(5)) {
+            if (!fisher.isInPeaceZone() && Rnd.chance(5)) {
                 win = false;
-                _fisher.sendPacket(SystemMsg.YOU_HAVE_CAUGHT_A_MONSTER);
-                spawnPenaltyMonster(_fisher);
+                fisher.sendPacket(SystemMsg.YOU_HAVE_CAUGHT_A_MONSTER);
+                spawnPenaltyMonster(fisher);
             } else {
-                _fisher.sendPacket(SystemMsg.SUCCEEDED_IN_FISHING);
+                fisher.sendPacket(SystemMsg.SUCCEEDED_IN_FISHING);
                 //TODO [G1ta0] добавить проверку на перевес
-                ItemFunctions.addItem(_fisher, _fish.getId(), 1, true, "Fishing");
-                FishingChampionShipManager.INSTANCE.newFish(_fisher, _lureId);
+                ItemFunctions.addItem(fisher, _fish.getId(), 1, true, "Fishing");
+                FishingChampionShipManager.INSTANCE.newFish(fisher, _lureId);
             }
 
         endFishing(win);
@@ -547,7 +544,7 @@ public class Fishing {
 
         _anim = mode + 1;
         if (Rnd.chance(10)) {
-            _fisher.sendPacket(SystemMsg.FISH_HAS_RESISTED);
+            fisher.sendPacket(SystemMsg.FISH_HAS_RESISTED);
             _gooduse = 0;
             changeHp(0, pen);
             return;
@@ -555,20 +552,20 @@ public class Fishing {
 
         if (_combatMode == mode) {
             if (_deceptiveMode == 0) {
-                showMessage(_fisher, dmg, pen, skillType, 1);
+                showMessage(fisher, dmg, pen, skillType, 1);
                 _gooduse = 1;
                 changeHp(dmg, pen);
             } else {
-                showMessage(_fisher, dmg, pen, skillType, 2);
+                showMessage(fisher, dmg, pen, skillType, 2);
                 _gooduse = 2;
                 changeHp(-dmg, pen);
             }
         } else if (_deceptiveMode == 0) {
-            showMessage(_fisher, dmg, pen, skillType, 2);
+            showMessage(fisher, dmg, pen, skillType, 2);
             _gooduse = 2;
             changeHp(-dmg, pen);
         } else {
-            showMessage(_fisher, dmg, pen, skillType, 3);
+            showMessage(fisher, dmg, pen, skillType, 3);
             _gooduse = 1;
             changeHp(dmg, pen);
         }
@@ -587,14 +584,14 @@ public class Fishing {
         @Override
         public void runImpl() {
             if (System.currentTimeMillis() >= _endTaskTime) {
-                _fisher.sendPacket(SystemMsg.BAITS_HAVE_BEEN_LOST_BECAUSE_THE_FISH_GOT_AWAY);
+                fisher.sendPacket(SystemMsg.BAITS_HAVE_BEEN_LOST_BECAUSE_THE_FISH_GOT_AWAY);
                 stopFishingTask();
                 endFishing(false);
                 return;
             }
 
             if (!GameTimeController.INSTANCE.isNowNight() && isNightLure(_lureId)) {
-                _fisher.sendPacket(SystemMsg.BAITS_HAVE_BEEN_LOST_BECAUSE_THE_FISH_GOT_AWAY);
+                fisher.sendPacket(SystemMsg.BAITS_HAVE_BEEN_LOST_BECAUSE_THE_FISH_GOT_AWAY);
                 stopFishingTask();
                 endFishing(false);
                 return;
@@ -614,11 +611,11 @@ public class Fishing {
         public void runImpl() {
             if (_fishCurHP >= _fish.getHP() * 2) {
                 // The fish got away
-                _fisher.sendPacket(SystemMsg.THE_FISH_GOT_AWAY);
+                fisher.sendPacket(SystemMsg.THE_FISH_GOT_AWAY);
                 doDie(false);
             } else if (_time <= 0) {
                 // Time is up, so that fish got away
-                _fisher.sendPacket(SystemMsg.TIME_IS_UP_SO_THAT_FISH_GOT_AWAY);
+                fisher.sendPacket(SystemMsg.TIME_IS_UP_SO_THAT_FISH_GOT_AWAY);
                 doDie(false);
             } else {
                 _time--;
@@ -637,11 +634,11 @@ public class Fishing {
                 } else
                     _stop--;
 
-                ExFishingHpRegen efhr = new ExFishingHpRegen(_fisher, _time, _fishCurHP, _combatMode, 0, _anim, 0, _deceptiveMode);
+                ExFishingHpRegen efhr = new ExFishingHpRegen(fisher, _time, _fishCurHP, _combatMode, 0, _anim, 0, _deceptiveMode);
                 if (_anim != 0)
-                    _fisher.broadcastPacket(efhr);
+                    fisher.broadcastPacket(efhr);
                 else
-                    _fisher.sendPacket(efhr);
+                    fisher.sendPacket(efhr);
             }
         }
     }

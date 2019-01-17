@@ -71,14 +71,13 @@ public class CCPRepair {
                     statement.setInt(1, objId);
                     statement.execute();
 
-                    Collection<ItemInstance> items = ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objId, ItemLocation.PAPERDOLL);
-                    for (ItemInstance item : items) {
-                        if (item.isEquipped()) {
+                    ItemsDAO.INSTANCE.getItemsByOwnerIdAndLoc(objId, ItemLocation.PAPERDOLL)
+                    .filter(ItemInstance::isEquipped)
+                    .forEach(item ->{
                             item.setEquipped(false);
                             item.setJdbcState(JdbcEntityState.UPDATED);
                             item.update();
-                        }
-                    }
+                        });
                 }
 
                 statement = con.prepareStatement("DELETE FROM character_variables WHERE obj_id=? AND type='user-var' AND name='reflection'");

@@ -44,7 +44,7 @@ public class Reflection {
     // vars
     private Map<Integer, DoorInstance> doors = new HashMap<>();
     private Map<String, Zone> zones = Collections.emptyMap();
-    private Map<String, List<Spawner>> _spawners = Collections.emptyMap();
+    private Map<String, List<Spawner>> spawners = Collections.emptyMap();
     private Party party;
     private CommandChannel _commandChannel;
     private String name = "";
@@ -251,7 +251,6 @@ public class Reflection {
             if (_isCollapseStarted) {
                 return;
             }
-
             _isCollapseStarted = true;
         } finally {
             lock.unlock();
@@ -264,22 +263,14 @@ public class Reflection {
                 _hiddencollapseTask = null;
             }
 
-            for (Spawner s : spawns) {
-                s.deleteAll();
-            }
+            spawns.forEach(Spawner::deleteAll);
+            spawners.keySet().forEach(this::despawnByGroup);
 
-            for (String group : _spawners.keySet()) {
-                despawnByGroup(group);
-            }
-
-            for (DoorInstance d : doors.values()) {
-                d.deleteMe();
-            }
+            doors.values().forEach(GameObject::deleteMe);
             doors.clear();
 
-            for (Zone zone : zones.values()) {
-                zone.setActive(false);
-            }
+            zones.values().forEach(zone -> zone.setActive(false));
+
             zones.clear();
 
             List<Player> teleport = new ArrayList<>();
@@ -705,10 +696,10 @@ public class Reflection {
         fillSpawns(instantZone.getSpawnsInfo());
 
         if (instantZone.getSpawns().size() > 0) {
-            _spawners = new HashMap<>(instantZone.getSpawns().size());
+            spawners = new HashMap<>(instantZone.getSpawns().size());
             for (Map.Entry<String, InstantZone.SpawnInfo2> entry : instantZone.getSpawns().entrySet()) {
                 List<Spawner> spawnList = new ArrayList<>(entry.getValue().getTemplates().size());
-                _spawners.put(entry.getKey(), spawnList);
+                spawners.put(entry.getKey(), spawnList);
 
                 for (SpawnTemplate template : entry.getValue().getTemplates()) {
                     HardSpawner spawner = new HardSpawner(template);
@@ -734,7 +725,7 @@ public class Reflection {
     }
 
     public void spawnByGroup(String name) {
-        List<Spawner> list = _spawners.get(name);
+        List<Spawner> list = spawners.get(name);
         if (list == null) {
             throw new IllegalArgumentException();
         }
@@ -742,7 +733,7 @@ public class Reflection {
     }
 
     public void despawnByGroup(String name) {
-        List<Spawner> list = _spawners.get(name);
+        List<Spawner> list = spawners.get(name);
         if (list == null) {
             throw new IllegalArgumentException();
         }

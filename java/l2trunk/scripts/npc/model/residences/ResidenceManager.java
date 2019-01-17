@@ -186,8 +186,8 @@ public abstract class ResidenceManager extends MerchantInstance {
                 }
                 NpcHtmlMessage html = new NpcHtmlMessage(player, this);
                 html.setFile("residence/teleport.htm");
-                TeleportLocation[] locs = getResidence().getFunction(ResidenceFunction.TELEPORT).getTeleports();
-                StringBuilder teleport_list = new StringBuilder(100 * locs.length);
+                List<TeleportLocation> locs = getResidence().getFunction(ResidenceFunction.TELEPORT).getTeleports();
+                StringBuilder teleport_list = new StringBuilder(100 * locs.size());
                 String price;
                 final String delimiter = HtmlUtils.htmlNpcString(1000308);
                 for (TeleportLocation loc : locs) {

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public abstract class Effect extends RunnableImpl implements Comparable<Effect>, FuncOwner {
     protected static final Logger _log = LoggerFactory.getLogger(Effect.class);
@@ -478,7 +479,7 @@ public abstract class Effect extends RunnableImpl implements Comparable<Effect>,
         return true;
     }
 
-    protected List<Func> getStatFuncs() {
+    protected Stream<Func> getStatFuncs() {
         return getTemplate().getStatFuncs(this);
     }
 

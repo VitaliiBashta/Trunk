@@ -189,10 +189,10 @@ public enum Stats {
 
     public static final int NUM_STATS = values().length;
 
-    private final String _value;
-    private final double _min;
-    private final double _max;
-    private final double _init;
+    private final String value;
+    private final double min;
+    private final double max;
+    private final double init;
 
     Stats(String s) {
         this(s, 0., Double.POSITIVE_INFINITY, 0.);
@@ -203,38 +203,38 @@ public enum Stats {
     }
 
     Stats(String s, double min, double max, double init) {
-        _value = s;
-        _min = min;
-        _max = max;
-        _init = init;
+        value = s;
+        this.min = min;
+        this.max = max;
+        this.init = init;
     }
 
     public static Stats valueOfXml(String name) {
         for (Stats s : values())
-            if (s.getValue().equals(name))
+            if (s.value.equals(name))
                 return s;
 
         throw new NoSuchElementException("Unknown name '" + name + "' for enum BaseStats");
     }
 
     public String getValue() {
-        return _value;
+        return value;
     }
 
     public double getInit() {
-        return _init;
+        return init;
     }
 
     public double validate(double val) {
-        if (val < _min)
-            return _min;
-        if (val > _max)
-            return _max;
+        if (val < min)
+            return min;
+        if (val > max)
+            return max;
         return val;
     }
 
     @Override
     public String toString() {
-        return _value;
+        return value;
     }
 }

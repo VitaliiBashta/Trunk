@@ -11,6 +11,7 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
 import java.util.Map;
+import java.util.Objects;
 
 
 public class AdminQuests implements IAdminCommandHandler {
@@ -28,25 +29,22 @@ public class AdminQuests implements IAdminCommandHandler {
 
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
         StringBuilder replyMSG = new StringBuilder("<html><body>");
-        replyMSG.append(fmtHEAD.sprintf(new Object[]{qs.getQuest().getClass().getSimpleName(), id}));
+        replyMSG.append(fmtHEAD.sprintf(qs.getQuest().getClass().getSimpleName(), id));
         replyMSG.append("<table width=260>");
-        replyMSG.append(fmtRow.sprintf(new Object[]{"PLAYER: ", char_name, ""}));
-        replyMSG.append(fmtRow.sprintf(new Object[]{
-                "STATE: ",
+        replyMSG.append(fmtRow.sprintf("PLAYER: ", char_name, ""));
+        replyMSG.append(fmtRow.sprintf("STATE: ",
                 qs.getStateName(),
-                fmtSetButton.sprintf(new Object[]{id, "STATE", "$new_val", char_name, ""})}));
+                fmtSetButton.sprintf(id, "STATE", "$new_val", char_name, "")));
         for (String key : vars.keySet())
             if (!key.equalsIgnoreCase("<state>"))
-                replyMSG.append(fmtRow.sprintf(new Object[]{
-                        key + ": ",
+                replyMSG.append(fmtRow.sprintf(key + ": ",
                         vars.get(key),
-                        fmtSetButton.sprintf(new Object[]{id, "VAR", key, "$new_val", char_name})}));
-        replyMSG.append(fmtRow.sprintf(new Object[]{
-                "<edit var=\"new_name\" width=50 height=12>",
+                        fmtSetButton.sprintf(id, "VAR", key, "$new_val", char_name)));
+        replyMSG.append(fmtRow.sprintf("<edit var=\"new_name\" width=50 height=12>",
                 "~new var~",
-                fmtSetButton.sprintf(new Object[]{id, "VAR", "$new_name", "$new_val", char_name})}));
+                fmtSetButton.sprintf(id, "VAR", "$new_name", "$new_val", char_name)));
         replyMSG.append("</table>");
-        replyMSG.append(fmtFOOT.sprintf(new Object[]{id, char_name, char_name}));
+        replyMSG.append(fmtFOOT.sprintf(id, char_name, char_name));
         replyMSG.append("</body></html>");
 
         adminReply.setHtml(replyMSG.toString());
@@ -58,13 +56,13 @@ public class AdminQuests implements IAdminCommandHandler {
     private static boolean ShowQuestList(Player targetChar, Player activeChar) {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
         StringBuilder replyMSG = new StringBuilder("<html><body><table width=260>");
-        for (QuestState qs : targetChar.getAllQuestsStates())
-            if (qs != null && qs.getQuest().getQuestIntId() != 255)
-                replyMSG.append(fmtListRow.sprintf(new Object[]{
-                        qs.getQuest().getQuestIntId(),
+        targetChar.getAllQuestsStates()
+                .filter(Objects::nonNull)
+                .filter(qs -> qs.getQuest().getQuestIntId() != 255)
+                .forEach(qs -> replyMSG.append(fmtListRow.sprintf(qs.getQuest().getQuestIntId(),
                         targetChar.getName(),
                         qs.getQuest().getName(),
-                        qs.getStateName()}));
+                        qs.getStateName())));
         replyMSG.append(fmtListNew.sprintf(new Object[]{targetChar.getName()}));
         replyMSG.append("</table></body></html>");
 

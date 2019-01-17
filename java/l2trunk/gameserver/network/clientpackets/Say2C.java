@@ -26,10 +26,9 @@ import l2trunk.scripts.events.Viktorina.Viktorina;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class Say2C extends L2GameClientPacket {
     private static final Logger _log = LoggerFactory.getLogger(Say2C.class);
@@ -263,7 +262,7 @@ public final class Say2C extends L2GameClientPacket {
                     return;
                 }
 
-                if (!activeChar.isGM() && !activeChar.antiFlood.canShout(_text)) {
+                if (!activeChar.isGM() && !activeChar.antiFlood.canShout()) {
                     activeChar.sendMessage("Shout chat is allowed once per 5 seconds.");
                     return;
                 }
@@ -285,7 +284,7 @@ public final class Say2C extends L2GameClientPacket {
                     return;
                 }
 
-                if (!activeChar.isGM() && !activeChar.antiFlood.canTrade(_text)) {
+                if (!activeChar.isGM() && !activeChar.antiFlood.canTrade()) {
                     activeChar.sendMessage("Trade chat is allowed once per 5 seconds.");
                     return;
                 }
@@ -301,7 +300,7 @@ public final class Say2C extends L2GameClientPacket {
                 if (activeChar.isCursedWeaponEquipped()) {
                     Say2 cs3 = new Say2(activeChar.getObjectId(), _type, activeChar.getTransformationName(), _text);
 
-                    List<Player> list = List.of();
+                    Stream<Player> list = Stream.empty();
 
                     if (activeChar.isInObserverMode() && activeChar.getObserverRegion() != null && activeChar.getOlympiadObserveGame() != null) {
                         OlympiadGame game = activeChar.getOlympiadObserveGame();
@@ -311,10 +310,9 @@ public final class Say2C extends L2GameClientPacket {
                         if (game != null)
                             list = game.getAllPlayers();
                     } else
-                        list = World.getAroundPlayers(activeChar).collect(Collectors.toList());
+                        list = World.getAroundPlayers(activeChar);
 
-                    list.stream()
-                            .filter(p -> p != activeChar)
+                    list.filter(p -> p != activeChar)
                             .filter(p -> p.getReflection() == activeChar.getReflection())
                             .filter(p -> !p.isBlockAll())
                             .filter(p -> !p.isInBlockList(activeChar))
@@ -368,7 +366,7 @@ public final class Say2C extends L2GameClientPacket {
                 if (activeChar.isHero() || activeChar.FakeHeroChat() || activeChar.getPlayerAccess().CanAnnounce) {
                     // The only limitation for the characters, um, let us say.
                     if (!activeChar.getPlayerAccess().CanAnnounce)
-                        if (!activeChar.antiFlood.canHero(_text)) {
+                        if (!activeChar.antiFlood.canHero()) {
                             activeChar.sendMessage("Hero chat is allowed once per 10 seconds.");
                             return;
                         }

@@ -8,22 +8,20 @@ import l2trunk.gameserver.network.serverpackets.ExOlympiadUserInfo;
 import l2trunk.gameserver.network.serverpackets.L2GameServerPacket;
 import l2trunk.gameserver.network.serverpackets.components.IStaticPacket;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 public class OlympiadTeam {
-    private final OlympiadGame _game;
+    private final OlympiadGame game;
     private final Map<Integer, TeamMember> members;
-    private final int _side;
+    private final int side;
     private String _name = "";
     private double _damage;
 
     public OlympiadTeam(OlympiadGame game, int side) {
-        _game = game;
-        _side = side;
+        this.game = game;
+        this.side = side;
         members = new ConcurrentHashMap<>();
     }
 
@@ -38,7 +36,7 @@ public class OlympiadTeam {
                 player_name = noble.getString(Olympiad.CHAR_NAME, "");
         }
 
-        members.put(obj_id, new TeamMember(obj_id, player_name, player, _game, _side));
+        members.put(obj_id, new TeamMember(obj_id, player_name, player, game, side));
 
         _name = player_name;
     }
@@ -142,14 +140,10 @@ public class OlympiadTeam {
         return members.containsKey(objId);
     }
 
-    public List<Player> getPlayers() {
-        List<Player> players = new ArrayList<>(members.size());
-        for (TeamMember member : members.values()) {
-            Player player = member.getPlayer();
-            if (player != null)
-                players.add(player);
-        }
-        return players;
+    public Stream<Player> getPlayers() {
+        return members.values().stream()
+                .filter(Objects::nonNull)
+                .map(TeamMember::getPlayer);
     }
 
     public Collection<TeamMember> getMembers() {

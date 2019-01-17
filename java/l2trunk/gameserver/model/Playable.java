@@ -9,14 +9,12 @@ import l2trunk.gameserver.ai.CtrlEvent;
 import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.geodata.GeoEngine;
-import l2trunk.gameserver.model.AggroList.AggroInfo;
 import l2trunk.gameserver.model.Skill.SkillTargetType;
 import l2trunk.gameserver.model.Skill.SkillType;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.events.impl.DuelEvent;
-import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.instances.StaticObjectInstance;
 import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.items.ItemInstance;
@@ -256,14 +254,8 @@ public abstract class Playable extends Creature {
     }
 
     private boolean isBetray() {
-        if (isSummon()) {
-            for (Effect e : getEffectList().getAllEffects()) {
-                if (e.getEffectType() == EffectType.Betray) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        if (isSummon()) return getEffectList().getAllEffects()
+                .anyMatch(e -> e.getEffectType() == EffectType.Betray);
         return false;
     }
 
@@ -508,22 +500,22 @@ public abstract class Playable extends Creature {
                         int aggro = skill.getEffectPoint() == 0 ? Math.max(1, (int) skill.getPower()) : skill.getEffectPoint();
 
                         World.getAroundNpc(target)
-                        .filter(Creature::isDead)
+                                .filter(Creature::isDead)
                                 .filter(npc -> npc.isInRangeZ(this, 2000L))
-                            .peek(npc ->
-                            npc.getAI().notifyEvent(CtrlEvent.EVT_SEE_SPELL, skill, this))
-                        .filter(npc -> npc.getAggroList().get(target)!= null)
-                        .forEach(npc -> {
-                            if (!skill.isHandler() && npc.paralizeOnAttack(player)) {
-                                if (Config.PARALIZE_ON_RAID_DIFF) {
-                                    paralizeMe(npc);
-                                }
-                                return;
-                            }
-                            if (GeoEngine.canSeeTarget(npc, target, false)) {
-                                npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this, npc.getAggroList().get(target).damage == 0 ? aggro / 2 : aggro);
-                            }
-                        });
+                                .peek(npc ->
+                                        npc.getAI().notifyEvent(CtrlEvent.EVT_SEE_SPELL, skill, this))
+                                .filter(npc -> npc.getAggroList().get(target) != null)
+                                .forEach(npc -> {
+                                    if (!skill.isHandler() && npc.paralizeOnAttack(player)) {
+                                        if (Config.PARALIZE_ON_RAID_DIFF) {
+                                            paralizeMe(npc);
+                                        }
+                                        return;
+                                    }
+                                    if (GeoEngine.canSeeTarget(npc, target, false)) {
+                                        npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this, npc.getAggroList().get(target).damage == 0 ? aggro / 2 : aggro);
+                                    }
+                                });
                     }
 
                 // Check for PvP Flagging / Drawing Aggro
@@ -566,7 +558,7 @@ public abstract class Playable extends Creature {
     }
 
     public void paralizeMe(Creature effector) {
-        SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID).getEffects(effector, this );
+        SkillTable.INSTANCE.getInfo(Skill.SKILL_RAID_CURSE_ID).getEffects(effector, this);
     }
 
     boolean isPendingRevive() {
@@ -587,12 +579,9 @@ public abstract class Playable extends Creature {
             isPendingRevive = false;
 
             if (isSalvation() || isPlayer()) {
-                for (Effect e : getEffectList().getAllEffects()) {
-                    if (e.getEffectType() == EffectType.Salvation) {
-                        e.exit();
-                        break;
-                    }
-                }
+                getEffectList().getAllEffects()
+                        .filter(e -> e.getEffectType() == EffectType.Salvation)
+                        .findFirst().ifPresent(Effect::exit);
                 setCurrentHp(getMaxHp(), true);
                 setCurrentMp(getMaxMp());
                 setCurrentCp(getMaxCp());
@@ -630,11 +619,8 @@ public abstract class Playable extends Creature {
             nonAggroTime = 0L;
     }
 
-    /**
-     * @return предыдущее состояние
-     */
-    public boolean startSilentMoving() {
-        return isSilentMoving.getAndSet(true);
+    public void startSilentMoving() {
+        isSilentMoving.getAndSet(true);
     }
 
     public void stopSilentMoving() {

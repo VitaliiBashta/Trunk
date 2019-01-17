@@ -26,18 +26,19 @@ import l2trunk.gameserver.utils.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Stream;
 
 public class OlympiadGame {
     public static final int MAX_POINTS_LOOSE = 10;
     private static final Logger _log = LoggerFactory.getLogger(OlympiadGame.class);
     private static final List<Integer> STADIUMS_INSTANCE_ID = List.of(147, 148, 149, 150);
-    private final int _id;
-    private final Reflection _reflection;
+    private final int id;
+    private final Reflection reflection;
     private final CompType _type;
     private final OlympiadTeam team1;
     private final OlympiadTeam team2;
@@ -52,10 +53,10 @@ public class OlympiadGame {
 
     public OlympiadGame(int id, CompType type, List<Integer> opponents) {
         _type = type;
-        _id = id;
-        _reflection = new Reflection();
+        this.id = id;
+        reflection = new Reflection();
         InstantZone instantZone = InstantZoneHolder.getInstantZone(Rnd.get(STADIUMS_INSTANCE_ID));
-        _reflection.init(instantZone);
+        reflection.init(instantZone);
 
         team1 = new OlympiadTeam(this, 1);
         team2 = new OlympiadTeam(this, 2);
@@ -75,7 +76,7 @@ public class OlympiadGame {
         if (!_type.hasBuffer())
             return;
 
-        _reflection.spawnByGroup("olympiad_" + _reflection.getInstancedZoneId() + "_buffers");
+        reflection.spawnByGroup("olympiad_" + reflection.getInstancedZoneId() + "_buffers");
         _buffersSpawned = true;
     }
 
@@ -83,7 +84,7 @@ public class OlympiadGame {
         if (!_buffersSpawned)
             return;
 
-        _reflection.despawnByGroup("olympiad_" + _reflection.getInstancedZoneId() + "_buffers");
+        reflection.despawnByGroup("olympiad_" + reflection.getInstancedZoneId() + "_buffers");
         _buffersSpawned = false;
     }
 
@@ -103,7 +104,7 @@ public class OlympiadGame {
                 default:
                     continue;
             }
-            Functions.npcShout(npc, npcString, String.valueOf(_id + 1));
+            Functions.npcShout(npc, npcString, String.valueOf(id + 1));
         }
     }
 
@@ -138,7 +139,7 @@ public class OlympiadGame {
         portPlayersBack();
         clearSpectators();
         deleteBuffers();
-        _reflection.collapse();
+        reflection.collapse();
     }
 
     public void validateWinner(boolean aborted) {
@@ -242,21 +243,18 @@ public class OlympiadGame {
         winnerTeam.broadcast(new SystemMessage(SystemMsg.C1_HAS_EARNED_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addString(winnerTeam.getName()).addNumber(pointDiff));
         looseTeam.broadcast(new SystemMessage(SystemMsg.C1_HAS_LOST_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addString(looseTeam.getName()).addNumber(pointDiff));
 
-        for (Player player : winnerTeam.getPlayers()) {
+        winnerTeam.getPlayers().forEach(player -> {
             player.getInventory().addItem(Config.ALT_OLY_BATTLE_REWARD_ITEM, getType().getReward(), "Olympiad Match Reward");
             player.sendPacket(SystemMessage2.obtainItems(Config.ALT_OLY_BATTLE_REWARD_ITEM, getType().getReward(), 0));
             player.sendChanges();
-        }
+        });
 
-        List<Player> teamsPlayers = new ArrayList<>();
-        teamsPlayers.addAll(winnerTeam.getPlayers());
-        teamsPlayers.addAll(looseTeam.getPlayers());
-        for (Player player : teamsPlayers)
-            if (player != null) {
-                for (QuestState qs : player.getAllQuestsStates())
-                    if (qs.isStarted())
-                        qs.getQuest().onOlympiadEnd(this, qs);
-            }
+        Stream<Player> teamsPlayers = Stream.concat(winnerTeam.getPlayers(), looseTeam.getPlayers());
+        teamsPlayers.forEach(player ->
+                player.getAllQuestsStates()
+                        .filter(QuestState::isStarted)
+                        .forEach(qs -> qs.getQuest().onOlympiadEnd(this, qs)));
+
 
         broadcastPacket(packet, true, false);
 
@@ -339,16 +337,15 @@ public class OlympiadGame {
     }
 
     public void openDoors() {
-        for (DoorInstance door : _reflection.getDoors())
-            door.openMe();
+        reflection.getDoors().forEach(DoorInstance::openMe);
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public Reflection getReflection() {
-        return _reflection;
+        return reflection;
     }
 
     public boolean isRegistered(int objId) {
@@ -393,35 +390,30 @@ public class OlympiadGame {
                 broadcastPacket(new ExOlympiadUserInfo(sender, sender.getOlympiadSide()), !onlyToSpectators, true);
         } else {
             // Рассылаем информацию о первой команде
-            for (Player player : team1.getPlayers()) {
+            team1.getPlayers().forEach(player ->  {
                 if (receiver != null)
                     receiver.sendPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()));
                 else {
                     broadcastPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()), !onlyToSpectators, true);
                     player.broadcastRelationChanged();
                 }
-            }
+            });
 
             // Рассылаем информацию о второй команде
-            for (Player player : team2.getPlayers()) {
+            team2.getPlayers().forEach(player -> {
                 if (receiver != null)
                     receiver.sendPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()));
                 else {
                     broadcastPacket(new ExOlympiadUserInfo(player, player.getOlympiadSide()), !onlyToSpectators, true);
                     player.broadcastRelationChanged();
                 }
-            }
+            });
         }
     }
 
     private void broadcastRelation() {
-        for (Player player : team1.getPlayers()) {
-            player.broadcastRelationChanged();
-        }
-
-        for (Player player : team2.getPlayers()) {
-            player.broadcastRelationChanged();
-        }
+        team1.getPlayers().forEach(Player::broadcastRelationChanged);
+        team2.getPlayers().forEach(Player::broadcastRelationChanged);
     }
 
     public void broadcastPacket(L2GameServerPacket packet, boolean toTeams, boolean toSpectators) {
@@ -430,11 +422,10 @@ public class OlympiadGame {
             team2.broadcast(packet);
         }
 
-        if (toSpectators && !spectators.isEmpty()) {
-            for (Player spec : spectators) {
-                if (spec != null)
-                    spec.sendPacket(packet);
-            }
+        if (toSpectators) {
+            spectators.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(spec -> spec.sendPacket(packet));
         }
     }
 
@@ -444,20 +435,15 @@ public class OlympiadGame {
             team2.broadcast(packet);
         }
 
-        if (toSpectators && !spectators.isEmpty()) {
-            for (Player spec : spectators) {
-                if (spec != null)
-                    spec.sendPacket(packet);
-            }
+        if (toSpectators) {
+            spectators.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(spec -> spec.sendPacket(packet));
         }
     }
 
-    public List<Player> getAllPlayers() {
-        List<Player> result = new ArrayList<>();
-        result.addAll(team1.getPlayers());
-        result.addAll(team2.getPlayers());
-        result.addAll(spectators);
-        return result;
+    public Stream<Player> getAllPlayers() {
+        return Stream.of(team1.getPlayers(), team2.getPlayers(), spectators.stream()).flatMap(s -> s);
     }
 
     public void setWinner(int winner) {
@@ -482,7 +468,7 @@ public class OlympiadGame {
             _startTime = System.currentTimeMillis();
     }
 
-    public List<Player> getTeamMembers(Player player) {
+    public Stream<Player> getTeamMembers(Player player) {
         return player.getOlympiadSide() == 1 ? team1.getPlayers() : team2.getPlayers();
     }
 

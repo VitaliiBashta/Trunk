@@ -153,16 +153,15 @@ public final class EffectCubic extends Effect {
         if (!Rnd.chance(info.getChance()))
             return;
 
-        final Skill skill = info.getSkill();
-        boolean hasDebuff = false;
-        for (Effect e : player.getEffectList().getAllEffects())
-            if (e != null && e.isOffensive() && e.isCancelable() && !e.getTemplate()._applyOnCaster)
-                hasDebuff = true;
-
-        if (!hasDebuff)
+        if (player.getEffectList().getAllEffects()
+                .filter(Effect::isOffensive)
+                .filter(Effect::isCancelable)
+                .allMatch(e -> e.getTemplate().applyOnCaster))
             return;
 
-        player.broadcastPacket(new MagicSkillUse(player,  skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime()));
+        final Skill skill = info.getSkill();
+
+        player.broadcastPacket(new MagicSkillUse(player, skill.getDisplayId(), skill.getDisplayLevel(), skill.getHitTime()));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
             final List<Creature> targets = Collections.singletonList(player);

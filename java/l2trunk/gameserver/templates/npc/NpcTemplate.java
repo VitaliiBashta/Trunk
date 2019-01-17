@@ -4,7 +4,6 @@ import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.ai.AIs;
 import l2trunk.gameserver.ai.CharacterAI;
 import l2trunk.gameserver.idfactory.IdFactory;
-import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.TeleportLocation;
 import l2trunk.gameserver.model.base.ClassId;
@@ -21,7 +20,7 @@ import java.util.*;
 
 public final class NpcTemplate extends CharTemplate {
     public final String type;
-    private final Map<Integer, TeleportLocation[]> teleportList = new HashMap<>();
+    private final Map<Integer, List<TeleportLocation>> teleportList = new HashMap<>();
     private final Map<QuestEventType, List<Quest>> questEvents = new HashMap<>();
     private final Map<Integer, Skill> skills = new HashMap<>();
     public int npcId;
@@ -37,7 +36,6 @@ public final class NpcTemplate extends CharTemplate {
     public int lhand;
     public double rateHp;
     public int displayId;
-    public Class<? extends NpcInstance> classType;
     public boolean isRaid;
     private StatsSet AIParams;
     private int castleId;
@@ -83,12 +81,6 @@ public final class NpcTemplate extends CharTemplate {
         aiName = set.getString("ai_type", null);
     }
 
-    public boolean isInstanceOf(Class<? extends Creature> clazz) {
-        if (classType == null)
-            return false;
-        return clazz.isAssignableFrom(classType);
-    }
-
     public NpcInstance getNewInstance(int id) {
         return AllNpcInstances.getInstance(id, type, name);
     }
@@ -114,15 +106,15 @@ public final class NpcTemplate extends CharTemplate {
         return teachInfo.contains(classId);
     }
 
-    public void addTeleportList(int id, TeleportLocation[] list) {
+    public void addTeleportList(int id, List<TeleportLocation> list) {
         teleportList.put(id, list);
     }
 
-    public TeleportLocation[] getTeleportList(int id) {
+    public List<TeleportLocation> getTeleportList(int id) {
         return teleportList.get(id);
     }
 
-    public Map<Integer, TeleportLocation[]> getTeleportList() {
+    public Map<Integer, List<TeleportLocation>> getTeleportList() {
         return teleportList;
     }
 

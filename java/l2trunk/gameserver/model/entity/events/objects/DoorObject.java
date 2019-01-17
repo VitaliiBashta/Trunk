@@ -5,19 +5,19 @@ import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.instances.DoorInstance;
 
-public class DoorObject implements SpawnableObject, InitableObject {
-    private final int _id;
-    private DoorInstance _door;
+public final class DoorObject implements SpawnableObject, InitableObject {
+    private final int id;
+    private DoorInstance door;
 
     private boolean _weak;
 
     public DoorObject(int id) {
-        _id = id;
+        this.id = id;
     }
 
     @Override
     public void initObject(GlobalEvent e) {
-        _door = e.getReflection().getDoor(_id);
+        door = e.getReflection().getDoor(id);
     }
 
     @Override
@@ -36,43 +36,43 @@ public class DoorObject implements SpawnableObject, InitableObject {
     @Override
     public void refreshObject(GlobalEvent event) {
         if (!event.isInProgress()) {
-            _door.removeEvent(event);
+            door.removeEvent(event);
         } else {
-            _door.addEvent(event);
+            door.addEvent(event);
         }
 
-        if (_door.getCurrentHp() <= 0) {
-            _door.decayMe();
-            _door.spawnMe();
+        if (door.getCurrentHp() <= 0) {
+            door.decayMe();
+            door.spawnMe();
         }
 
-        _door.setCurrentHp(_door.getMaxHp() * (isWeak() ? 0.5 : 1.), true);
+        door.setCurrentHp(door.getMaxHp() * (isWeak() ? 0.5 : 1.), true);
         close(event);
     }
 
     public int getUId() {
-        return _door.getDoorId();
+        return door.getDoorId();
     }
 
     public int getUpgradeValue() {
-        return _door.getUpgradeHp();
+        return door.getUpgradeHp();
     }
 
     public void setUpgradeValue(GlobalEvent event, int val) {
-        _door.setUpgradeHp(val);
+        door.setUpgradeHp(val);
         refreshObject(event);
     }
 
     public void open(GlobalEvent e) {
-        _door.openMe(null, !e.isInProgress());
+        door.openMe(null, !e.isInProgress());
     }
 
     public void close(GlobalEvent e) {
-        _door.closeMe(null, !e.isInProgress());
+        door.closeMe(null, !e.isInProgress());
     }
 
     public DoorInstance getDoor() {
-        return _door;
+        return door;
     }
 
     private boolean isWeak() {

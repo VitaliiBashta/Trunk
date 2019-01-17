@@ -50,18 +50,17 @@ public abstract class AbstractAI extends RunnableImpl {
         }
     }
 
-    public final void setIntentionAttack(CtrlIntention intention, Creature gameObject) {
+    public final void setIntentionAttack(Creature gameObject) {
         Creature actor = getActor();
 
         if (!actor.isVisible()) {
             if (this.intention == CtrlIntention.AI_INTENTION_IDLE)
                 return;
-            intention = CtrlIntention.AI_INTENTION_IDLE;
         }
 
         actor.getListeners().onAiIntention(CtrlIntention.AI_INTENTION_ATTACK, gameObject, null);
 
-        onIntentionAttack((Creature) gameObject);
+        onIntentionAttack(gameObject);
 
     }
 

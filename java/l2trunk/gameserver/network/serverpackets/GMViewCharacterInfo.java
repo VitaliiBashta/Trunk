@@ -8,9 +8,12 @@ import l2trunk.gameserver.model.pledge.Alliance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.utils.Location;
 
-public class GMViewCharacterInfo extends L2GameServerPacket {
+import java.util.ArrayList;
+import java.util.List;
+
+public final class GMViewCharacterInfo extends L2GameServerPacket {
     private final Location _loc;
-    private final int[][] _inv;
+    private final List<List<Integer>> inv = new ArrayList<>();
     private final int obj_id, _race, _sex, class_id, pvp_flag, karma, level, mount_type;
     private final int _str, _con, _dex, _int, _wit, _men, _sp;
     private final int curHp, maxHp, curMp, maxMp, curCp, maxCp, curLoad, maxLoad, rec_left, rec_have;
@@ -113,12 +116,10 @@ public class GMViewCharacterInfo extends L2GameServerPacket {
         vitality = (int) cha.getVitality();
         talismans = cha.getTalismanCount();
         openCloak = cha.getOpenCloak();
-        _inv = new int[Inventory.PAPERDOLL_MAX][3];
-        for (int PAPERDOLL_ID : Inventory.PAPERDOLL_ORDER) {
-            _inv[PAPERDOLL_ID][0] = cha.getInventory().getPaperdollObjectId(PAPERDOLL_ID);
-            _inv[PAPERDOLL_ID][1] = cha.getInventory().getPaperdollItemId(PAPERDOLL_ID);
-            _inv[PAPERDOLL_ID][2] = cha.getInventory().getPaperdollAugmentationId(PAPERDOLL_ID);
-        }
+        Inventory.PAPERDOLL_ORDER.forEach(id -> inv.add(List.of(
+                cha.getInventory().getPaperdollObjectId(id),
+                cha.getInventory().getPaperdollItemId(id),
+                cha.getInventory().getPaperdollAugmentationId(id))));
     }
 
     @Override
@@ -152,14 +153,14 @@ public class GMViewCharacterInfo extends L2GameServerPacket {
         writeD(maxLoad);
         writeD(pk_kills);
 
-        for (int PAPERDOLL_ID : Inventory.PAPERDOLL_ORDER)
-            writeD(_inv[PAPERDOLL_ID][0]);
+        Inventory.PAPERDOLL_ORDER.forEach(id ->
+                writeD(inv.get(id).get(0)));
 
-        for (int PAPERDOLL_ID : Inventory.PAPERDOLL_ORDER)
-            writeD(_inv[PAPERDOLL_ID][1]);
+        Inventory.PAPERDOLL_ORDER.forEach(id ->
+                writeD(inv.get(id).get(1)));
 
-        for (int PAPERDOLL_ID : Inventory.PAPERDOLL_ORDER)
-            writeD(_inv[PAPERDOLL_ID][2]);
+        Inventory.PAPERDOLL_ORDER.forEach(id ->
+                writeD(inv.get(id).get(2)));
 
         writeD(talismans);
         writeD(openCloak ? 0x01 : 0x00);

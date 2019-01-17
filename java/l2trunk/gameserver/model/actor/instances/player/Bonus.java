@@ -1,9 +1,6 @@
 package l2trunk.gameserver.model.actor.instances.player;
 
-public class Bonus {
-    public static final int NO_BONUS = 0;
-    public static final int BONUS_GLOBAL_ON_AUTHSERVER = 1;
-    public static final int BONUS_GLOBAL_ON_GAMESERVER = 2;
+public final class Bonus {
     private double rateXp = 1.;
     private double rateSp = 1.;
     private double dropSiege = 1.;

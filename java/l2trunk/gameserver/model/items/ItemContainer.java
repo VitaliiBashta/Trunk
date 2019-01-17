@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public abstract class ItemContainer {
-    static final ItemsDAO _itemsDAO = ItemsDAO.INSTANCE;
+    static final ItemsDAO ITEMS_DAO = ItemsDAO.INSTANCE;
 
     final List<ItemInstance> items = new CopyOnWriteArrayList<>();
     /**
@@ -34,7 +34,7 @@ public abstract class ItemContainer {
     }
 
     public synchronized List<ItemInstance> getItems() {
-        return new ArrayList<>(items);
+        return items;
     }
 
     public synchronized void clear() {

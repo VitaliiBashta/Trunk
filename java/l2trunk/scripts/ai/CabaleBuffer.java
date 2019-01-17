@@ -2,7 +2,6 @@ package l2trunk.scripts.ai;
 
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ai.DefaultAI;
-import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.entity.SevenSigns;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -82,8 +81,7 @@ public final class CabaleBuffer extends DefaultAI {
                         int i1 = Rnd.get(10000);
                         if (playerCabal == winningCabal && actor.getNpcId() == SevenSigns.ORATOR_NPC_ID) {
                             if (player.isMageClass()) {
-                                List<Effect> effects = player.getEffectList().getEffectsBySkillId(ORATOR_MAGE_SKILL_ID);
-                                if (effects == null || effects.size() <= 0) {
+                                if (player.getEffectList().getEffectsBySkillId(ORATOR_MAGE_SKILL_ID).count() <= 0) {
                                     if (i1 < 1)
                                         Functions.npcSay(actor, NpcString.I_BESTOW_UPON_YOU_A_BLESSING);
                                     actor.altUseSkill(ORATOR_MAGE_SKILL_ID, player);
@@ -93,8 +91,7 @@ public final class CabaleBuffer extends DefaultAI {
                                     actor.altUseSkill(ORATOR_MAGE_SKILL_ID, 2, player);
                                 }
                             } else {
-                                List<Effect> effects = player.getEffectList().getEffectsBySkillId(ORATOR_FIGHTER_SKILL_ID);
-                                if (effects == null || effects.size() <= 0) {
+                                if (player.getEffectList().getEffectsBySkillId(ORATOR_FIGHTER_SKILL_ID).count() <= 0) {
                                     if (i1 < 1)
                                         Functions.npcSay(actor, NpcString.HERALD_OF_THE_NEW_ERA__OPEN_YOUR_EYES);
                                     actor.altUseSkill(ORATOR_FIGHTER_SKILL_ID, player);
@@ -106,8 +103,7 @@ public final class CabaleBuffer extends DefaultAI {
                             }
                         } else if (playerCabal == lostCabal && actor.getNpcId() == SevenSigns.PREACHER_NPC_ID) {
                             if (player.isMageClass()) {
-                                List<Effect> effects = player.getEffectList().getEffectsBySkillId(PREACHER_MAGE_SKILL_ID);
-                                if (effects == null || effects.size() <= 0) {
+                                if (player.getEffectList().getEffectsBySkillId(PREACHER_MAGE_SKILL_ID).count() <= 0) {
                                     if (i1 < 1)
                                         Functions.npcSay(actor, NpcString.YOU_DONT_HAVE_ANY_HOPE__YOUR_END_HAS_COME);
                                     actor.altUseSkill(PREACHER_MAGE_SKILL_ID, player);
@@ -118,8 +114,7 @@ public final class CabaleBuffer extends DefaultAI {
                                     actor.altUseSkill(PREACHER_MAGE_SKILL_ID, 2, player);
                                 }
                             } else {
-                                List<Effect> effects = player.getEffectList().getEffectsBySkillId(PREACHER_FIGHTER_SKILL_ID);
-                                if (effects == null || effects.size() <= 0) {
+                                if (player.getEffectList().getEffectsBySkillId(PREACHER_FIGHTER_SKILL_ID).count() <= 0) {
                                     if (i1 < 1)
                                         Functions.npcSay(actor, NpcString.S1__YOU_BRING_AN_ILL_WIND, player.getName());
 

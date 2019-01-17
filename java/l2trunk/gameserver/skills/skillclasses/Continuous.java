@@ -2,7 +2,6 @@ package l2trunk.gameserver.skills.skillclasses;
 
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.Config;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.Skill;
@@ -11,6 +10,7 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.conditions.ConditionTargetRelation;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class Continuous extends Skill {
     private final int _lethal1;
@@ -47,42 +47,39 @@ public final class Continuous extends Skill {
 
     @Override
     public void useSkill(Creature activeChar, List<Creature> targets) {
-        Creature realTarget;
-        boolean reflected;
+        targets.stream()
+                .filter(Objects::nonNull)
+                .forEach(t -> {
+                    boolean reflected = t.checkReflectSkill(activeChar, this);
+                    Creature realTarget = reflected ? activeChar : t;
 
-        for (Creature target : targets)
-            if (target != null) {
-                reflected = target.checkReflectSkill(activeChar, this);
-                realTarget = reflected ? activeChar : target;
+                    double mult = 0.01 * realTarget.calcStat(Stats.DEATH_VULNERABILITY, activeChar, this);
+                    double lethal1 = _lethal1 * mult;
+                    double lethal2 = _lethal2 * mult;
 
-                double mult = 0.01 * realTarget.calcStat(Stats.DEATH_VULNERABILITY, activeChar, this);
-                double lethal1 = _lethal1 * mult;
-                double lethal2 = _lethal2 * mult;
+                    if (lethal1 > 0 && Rnd.chance(lethal1)) {
+                        if (realTarget.isPlayer()) {
+                            realTarget.reduceCurrentHp(realTarget.getCurrentCp(), activeChar, this, true, true, false, true, false, false, true);
+                            realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
+                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+                        } else if (realTarget.isNpc() && !realTarget.isLethalImmune()) {
+                            realTarget.reduceCurrentHp(realTarget.getCurrentHp() / 2, activeChar, this, true, true, false, true, false, false, true);
+                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+                        }
+                    } else if (lethal2 > 0 && Rnd.chance(lethal2))
+                        if (realTarget.isPlayer()) {
+                            realTarget.reduceCurrentHp(realTarget.getCurrentHp() + realTarget.getCurrentCp() - 1, activeChar, this, true, true, false, true, false, false, true);
+                            realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
+                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+                        } else if (realTarget.isNpc() && !realTarget.isLethalImmune()) {
+                            realTarget.reduceCurrentHp(realTarget.getCurrentHp() - 1, activeChar, this, true, true, false, true, false, false, true);
+                            activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
+                        }
 
-                if (lethal1 > 0 && Rnd.chance(lethal1)) {
-                    if (realTarget.isPlayer()) {
-                        realTarget.reduceCurrentHp(realTarget.getCurrentCp(), activeChar, this, true, true, false, true, false, false, true);
-                        realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
-                        activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                    } else if (realTarget.isNpc() && !realTarget.isLethalImmune()) {
-                        realTarget.reduceCurrentHp(realTarget.getCurrentHp() / 2, activeChar, this, true, true, false, true, false, false, true);
-                        activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                    }
-                } else if (lethal2 > 0 && Rnd.chance(lethal2))
-                    if (realTarget.isPlayer()) {
-                        realTarget.reduceCurrentHp(realTarget.getCurrentHp() + realTarget.getCurrentCp() - 1, activeChar, this, true, true, false, true, false, false, true);
-                        realTarget.sendPacket(SystemMsg.LETHAL_STRIKE);
-                        activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                    } else if (realTarget.isNpc() && !realTarget.isLethalImmune()) {
-                        realTarget.reduceCurrentHp(realTarget.getCurrentHp() - 1, activeChar, this, true, true, false, true, false, false, true);
-                        activeChar.sendPacket(SystemMsg.YOUR_LETHAL_STRIKE_WAS_SUCCESSFUL);
-                    }
-
-                getEffects(activeChar, target, getActivateRate() > 0, false, reflected);
-            }
+                    getEffects(activeChar, t, getActivateRate() > 0, false, reflected);
+                });
 
         if (isSSPossible())
-            if (!(Config.SAVING_SPS && skillType == SkillType.BUFF))
-                activeChar.unChargeShots(isMagic());
+            activeChar.unChargeShots(isMagic());
     }
 }

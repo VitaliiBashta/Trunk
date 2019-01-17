@@ -15,6 +15,7 @@ import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessag
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
+import l2trunk.gameserver.utils.NpcLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,22 +154,22 @@ public final class Frintezza extends Reflection {
             musicTask.cancel(true);
     }
 
-    private static class NpcLocation extends Location {
-        int npcId;
-
-        NpcLocation(Location loc, int npcId) {
-            this.x = loc.x;
-            this.y = loc.y;
-            this.z = loc.z;
-            this.h = loc.h;
-            this.npcId = npcId;
-        }
-
-        NpcLocation(int x, int y, int z, int heading, int npcId) {
-            super(x, y, z, heading);
-            this.npcId = npcId;
-        }
-    }
+//    private static class NpcLocation extends Location {
+//        int npcId;
+//
+//        NpcLocation(Location loc, int npcId) {
+//            this.x = loc.x;
+//            this.y = loc.y;
+//            this.z = loc.z;
+//            this.h = loc.h;
+//            this.npcId = npcId;
+//        }
+//
+//        NpcLocation(int x, int y, int z, int heading, int npcId) {
+//            super(x, y, z, heading);
+//            this.npcId = npcId;
+//        }
+//    }
 
     private class FrintezzaStart extends RunnableImpl {
         @Override

@@ -32,7 +32,7 @@ public final class StealBuff extends Skill {
         final List<Effect> musicList = new ArrayList<>();
         final List<Effect> buffList = new ArrayList<>();
 
-        target.getEffectList().getAllEffects().stream()
+        target.getEffectList().getAllEffects()
                 .filter(StealBuff::canBeStolen)
                 .forEach(e -> {
                     if (e.getSkill().isMusic())
@@ -70,7 +70,7 @@ public final class StealBuff extends Skill {
             return false;
         if (e.getEffectType() == EffectType.Vitality || e.getEffectType() == EffectType.VitalityMaintenance)
             return false;
-        return !e.getTemplate()._applyOnCaster;
+        return !e.getTemplate().applyOnCaster;
     }
 
     private static Effect cloneEffect(Creature cha, Effect eff) {

@@ -20,10 +20,10 @@ public class AdminCancel implements IAdminCommandHandler {
                 break;
             case admin_cleanse:
                 Creature target = activeChar.getTarget() != null && activeChar.getTarget().isPlayable() ? (Creature) activeChar.getTarget() : activeChar;
-                for (Effect e : target.getEffectList().getAllEffects()) {
-                    if (e.isOffensive() && e.isCancelable())
-                        e.exit();
-                }
+                target.getEffectList().getAllEffects()
+                        .filter(Effect::isOffensive)
+                        .filter(Effect::isCancelable)
+                        .forEach(Effect::exit);
                 activeChar.sendMessage("Negative effects of " + target.getName() + " were removed!");
                 break;
         }
@@ -47,7 +47,7 @@ public class AdminCancel implements IAdminCommandHandler {
                 try {
                     int radius = Math.max(toInt(targetName), 100);
                     activeChar.getAroundCharacters(radius, 200)
-                    .forEach(c ->c.getEffectList().stopAllEffects());
+                            .forEach(c -> c.getEffectList().stopAllEffects());
                     activeChar.sendMessage("Apply Cancel within " + radius + " unit radius.");
                     return;
                 } catch (NumberFormatException e) {

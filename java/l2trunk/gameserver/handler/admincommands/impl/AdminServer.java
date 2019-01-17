@@ -142,11 +142,11 @@ public class AdminServer implements IAdminCommandHandler {
         int templateId;
         if (regexp.matches()) {
             // First parameter was an ID number
-            templateId = Integer.parseInt(monsterId);
+            templateId = toInt(monsterId);
         } else {
             // First parameter wasn't just numbers so go by name not ID
             monsterId = monsterId.replace('_', ' ');
-            templateId = NpcHolder.getTemplateByName(monsterId).get(0).npcId;
+            templateId = NpcHolder.getTemplateByName(monsterId).map(npc ->npc.npcId).findFirst().orElse(0);
         }
 
 

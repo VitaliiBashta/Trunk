@@ -39,7 +39,7 @@ public abstract class Summon extends Playable {
     protected int _sp = 0;
     private int _spawnAnimation = 2;
     private int _maxLoad, _spsCharged;
-    private boolean _follow = true, _depressed = false, _ssCharged = false;
+    private boolean _follow = true, depressed = false, _ssCharged = false;
     private Future<?> _updateEffectIconsTask;
     private ScheduledFuture<?> _broadcastCharInfoTask;
     private Future<?> _petInfoTask;
@@ -460,11 +460,11 @@ public abstract class Summon extends Playable {
     }
 
     public boolean isDepressed() {
-        return _depressed;
+        return depressed;
     }
 
     public void setDepressed(final boolean depressed) {
-        _depressed = depressed;
+        this.depressed = depressed;
     }
 
     public boolean isInRange() {

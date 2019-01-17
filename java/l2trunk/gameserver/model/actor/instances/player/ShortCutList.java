@@ -19,26 +19,18 @@ public final class ShortCutList {
     private static final Logger _log = LoggerFactory.getLogger(ShortCutList.class);
 
     private final Player player;
-    private final Map<Integer, ShortCut> _shortCuts = new ConcurrentHashMap<>();
+    private final Map<Integer, ShortCut> shortCuts = new ConcurrentHashMap<>();
 
     public ShortCutList(Player owner) {
         player = owner;
     }
 
     public Collection<ShortCut> getAllShortCuts() {
-        return _shortCuts.values();
+        return shortCuts.values();
     }
 
-//    public void validate() {
-//        // Проверка ярлыков
-//        _shortCuts.values().stream()
-//                .filter(sc -> sc.getType() == ShortCut.TYPE_ITEM)
-//                .filter(sc -> player.getInventory().getItemByObjectId(sc.getId()) == null)
-//                .forEach(sc -> deleteShortCut(sc.getSlot(), sc.getPage()));
-//    }
-
     public void registerShortCut(ShortCut shortcut) {
-        ShortCut oldShortCut = _shortCuts.put(shortcut.getSlot() + 12 * shortcut.getPage(), shortcut);
+        ShortCut oldShortCut = shortCuts.put(shortcut.getSlot() + 12 * shortcut.getPage(), shortcut);
         registerShortCutInDb(shortcut, oldShortCut);
     }
 
@@ -78,7 +70,7 @@ public final class ShortCutList {
      * Удаляет ярлык с пользовательской панели по номеру страницы и слота.
      */
     public void deleteShortCut(int slot, int page) {
-        ShortCut old = _shortCuts.remove(slot + page * 12);
+        ShortCut old = shortCuts.remove(slot + page * 12);
         if (old == null)
             return;
         deleteShortCutFromDb(old);
@@ -95,7 +87,7 @@ public final class ShortCutList {
      * Удаляет ярлык предмета с пользовательской панели.
      */
     public void deleteShortCutByObjectId(int objectId) {
-        for (ShortCut shortcut : _shortCuts.values())
+        for (ShortCut shortcut : shortCuts.values())
             if (shortcut != null && shortcut.getType() == ShortCut.TYPE_ITEM && shortcut.getId() == objectId)
                 deleteShortCut(shortcut.getSlot(), shortcut.getPage());
     }
@@ -104,13 +96,13 @@ public final class ShortCutList {
      * Удаляет ярлык скила с пользовательской панели.
      */
     public void deleteShortCutBySkillId(int skillId) {
-        for (ShortCut shortcut : _shortCuts.values())
+        for (ShortCut shortcut : shortCuts.values())
             if (shortcut != null && shortcut.getType() == ShortCut.TYPE_SKILL && shortcut.getId() == skillId)
                 deleteShortCut(shortcut.getSlot(), shortcut.getPage());
     }
 
     public void restore() {
-        _shortCuts.clear();
+        shortCuts.clear();
         try (Connection con = DatabaseFactory.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement("SELECT character_type, slot, page, type, shortcut_id, level FROM character_shortcuts WHERE object_id=? AND class_index=?")) {
             statement.setInt(1, player.getObjectId());
@@ -124,7 +116,7 @@ public final class ShortCutList {
                 int level = rset.getInt("level");
                 int character_type = rset.getInt("character_type");
 
-                _shortCuts.put(slot + page * 12, new ShortCut(slot, page, type, id, level, character_type));
+                shortCuts.put(slot + page * 12, new ShortCut(slot, page, type, id, level, character_type));
             }
         } catch (SQLException e) {
             _log.error("could not store shortcuts:", e);

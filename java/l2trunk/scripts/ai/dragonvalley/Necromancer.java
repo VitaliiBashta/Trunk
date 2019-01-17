@@ -32,7 +32,7 @@ public final class Necromancer extends Mystic {
             if (!actor.isRunning()) {
                 startRunningTask(AI_TASK_ATTACK_DELAY);
             }
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(attacker);
         }
         if (Rnd.chance(Config.NECROMANCER_MS_CHANCE)) {
             NpcInstance n = NpcUtils.spawnSingle(Rnd.chance(50) ? 22818 : 22819, getActor().getLoc());

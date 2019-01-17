@@ -2,22 +2,16 @@ package l2trunk.gameserver.model.actor.instances.player;
 
 import l2trunk.gameserver.utils.Location;
 
-public class BookMark {
-    public final int x, y, z;
+public final class BookMark {
+    public final Location loc;
     private int icon;
     private String name, acronym;
 
     public BookMark(Location loc, int aicon, String aname, String aacronym) {
-        this(loc.x, loc.y, loc.z, aicon, aname, aacronym);
-    }
-
-    public BookMark(int _x, int _y, int _z, int aicon, String aname, String aacronym) {
-        x = _x;
-        y = _y;
-        z = _z;
-        setIcon(aicon);
-        setName(aname);
-        setAcronym(aacronym);
+        this.loc = loc;
+        this.setIcon(aicon)
+                .setName(aname)
+                .setAcronym(aacronym);
     }
 
     public int getIcon() {
@@ -42,8 +36,7 @@ public class BookMark {
         return acronym;
     }
 
-    public BookMark setAcronym(String val) {
+    public void setAcronym(String val) {
         acronym = val.length() > 4 ? val.substring(0, 4) : val;
-        return this;
     }
 }

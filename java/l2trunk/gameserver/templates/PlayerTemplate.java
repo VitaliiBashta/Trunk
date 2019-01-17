@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.templates.item.CreateItem;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -51,8 +50,7 @@ public final class PlayerTemplate extends CharTemplate {
         lvlMpAdd = set.getDouble("lvlMpAdd");
         lvlMpMod = set.getDouble("lvlMpMod");
 
-        this.items = new ArrayList<>();
-        this.items.addAll(items);
+        this.items = items;
     }
 
     public List<CreateItem> getItems() {

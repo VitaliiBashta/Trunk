@@ -93,7 +93,7 @@ public class RequestPledgeReorganizeMember extends L2GameClientPacket {
                 activeChar.sendActionFailed();
                 return;
             }
-            if (replacement.isSubLeader() != 0) {
+            if (replacement.isSubLeader()) {
                 activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.CharacterLeaderAnotherCombatUnit", activeChar));
                 activeChar.sendActionFailed();
                 return;
@@ -108,7 +108,7 @@ public class RequestPledgeReorganizeMember extends L2GameClientPacket {
                 return;
             }
 
-            if (subject.isSubLeader() != 0) {
+            if (subject.isSubLeader()) {
                 activeChar.sendMessage(new CustomMessage("l2trunk.gameserver.clientpackets.RequestPledgeReorganizeMember.MemberLeaderAnotherUnit", activeChar));
                 activeChar.sendActionFailed();
                 return;
@@ -116,7 +116,7 @@ public class RequestPledgeReorganizeMember extends L2GameClientPacket {
 
         }
 
-        SubUnit oldUnit = null;
+        SubUnit oldUnit;
 
         if (replacement != null) {
             oldUnit = replacement.getSubUnit();

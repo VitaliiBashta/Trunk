@@ -106,7 +106,6 @@ public final class Transformation extends Skill {
                 .forEach(target -> getEffects(activeChar, target));
 
         if (isSSPossible())
-            if (!(Config.SAVING_SPS && skillType == SkillType.BUFF))
                 activeChar.unChargeShots(isMagic());
     }
 }

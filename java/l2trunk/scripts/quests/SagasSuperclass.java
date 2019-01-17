@@ -6,7 +6,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.CtrlEvent;
-import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.model.*;
 import l2trunk.gameserver.model.instances.NpcInstance;
@@ -480,9 +479,9 @@ public abstract class SagasSuperclass extends Quest {
             NpcInstance Mob_2 = FindMySpawn(player, Mob.get(2));
             if (NPC_4.knowsObject(Mob_2)) {
                 NPC_4.setRunning();
-                NPC_4.getAI().setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, Mob_2);
+                NPC_4.getAI().setIntentionAttack(Mob_2);
                 Mob_2.setRunning();
-                Mob_2.getAI().setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, NPC_4);
+                Mob_2.getAI().setIntentionAttack(NPC_4);
                 AutoChat(Mob_2, Text.get(14).replace("PLAYERNAME", player.getName()));
             } else
                 st.startQuestTimer("Mob_2 Timer", 1000, npc);

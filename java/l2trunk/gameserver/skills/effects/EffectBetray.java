@@ -6,7 +6,7 @@ import l2trunk.gameserver.stats.Env;
 
 import static l2trunk.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
-public class EffectBetray extends Effect {
+public final class EffectBetray extends Effect {
     public EffectBetray(Env env, EffectTemplate template) {
         super(env, template);
     }

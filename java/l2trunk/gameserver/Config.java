@@ -143,7 +143,6 @@ public final class Config {
     public static int CHATFILTER_MIN_LEVEL = 0;
     public static int SHOUT_REQUIRED_LEVEL;
     public static int ALT_MAIL_MIN_LVL;
-    public static boolean SAVING_SPS;
     public static boolean MANAHEAL_SPS_BONUS;
     public static int ALT_ADD_RECIPES;
     public static int ALT_MAX_ALLY_SIZE;
@@ -1713,7 +1712,6 @@ public final class Config {
         AUTO_LOOT_FROM_RAIDS = altSettings.getProperty("AutoLootFromRaids", false);
         AUTO_LOOT_PK = altSettings.getProperty("AutoLootPK", false);
         ALT_GAME_KARMA_PLAYER_CAN_SHOP = altSettings.getProperty("AltKarmaPlayerCanShop", false);
-        SAVING_SPS = altSettings.getProperty("SavingSpS", false);
         MANAHEAL_SPS_BONUS = altSettings.getProperty("ManahealSpSBonus", false);
         CRAFT_MASTERWORK_CHANCE = altSettings.getProperty("CraftMasterworkChance", 3.);
         CRAFT_DOUBLECRAFT_CHANCE = altSettings.getProperty("CraftDoubleCraftChance", 3.);

@@ -32,8 +32,7 @@ public final class CurseDivinity extends Skill {
                 reflected = target.checkReflectSkill(activeChar, this);
                 realTarget = reflected ? activeChar : target;
 
-                List<Effect> effectsList = target.getEffectList().getAllEffects();
-                int buffCount = effectsList.size();
+                int buffCount = (int) target.getEffectList().getAllEffects().count();
                 double damage = Formulas.calcMagicDam(activeChar, realTarget, this, sps);
                 if (damage >= 1) {
                     damage = damage + (power * 0.1 + power * 0.254 * buffCount);

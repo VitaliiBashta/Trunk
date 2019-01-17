@@ -16,10 +16,7 @@ import l2trunk.gameserver.templates.item.WeaponTemplate;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.PositionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public abstract class Boat extends Creature {
@@ -45,18 +42,18 @@ public abstract class Boat extends Creature {
     public void setXYZ(int x, int y, int z, boolean MoveTask) {
         super.setXYZ(x, y, z, MoveTask);
 
-        updatePeopleInTheBoat(x, y, z);
+        updatePeopleInTheBoat(new Location(x, y, z));
     }
 
     public void onEvtArrived() {
         getCurrentWay().moveNext();
     }
 
-    void updatePeopleInTheBoat(int x, int y, int z) {
-        for (Player player : players) {
-            if (player != null)
-                player.setXYZ(x, y, z, true);
-        }
+    void updatePeopleInTheBoat(Location loc) {
+        players.stream()
+                .filter(Objects::nonNull)
+                .forEach(p -> p.setLoc(loc, true));
+
     }
 
     public void addPlayer(Player player, Location boatLoc) {
@@ -108,16 +105,15 @@ public abstract class Boat extends Creature {
         }
     }
 
-    public void teleportShip(int x, int y, int z) {
+    public void teleportShip(Location loc) {
         if (isMoving)
             stopMove(false);
 
-        for (Player player : players)
-            player.teleToLocation(x, y, z);
+        players.forEach(p -> p.teleToLocation(loc));
 
-        setHeading(calcHeading(x, y));
+        setHeading(calcHeading(loc.x, loc.y));
 
-        setXYZ(x, y, z, true);
+        setLoc(loc, true);
 
         getCurrentWay().moveNext();
     }
@@ -144,8 +140,7 @@ public abstract class Boat extends Creature {
     }
 
     void broadcastPacketToPassengers(IStaticPacket packet) {
-        for (Player player : players)
-            player.sendPacket(packet);
+        players.forEach(p -> p.sendPacket(packet));
     }
 
     //=========================================================================================================

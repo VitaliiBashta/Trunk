@@ -11,22 +11,20 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
 
-public class EffectList {
-    public static final int DEBUFF_LIMIT = 8;
-    public static final int MUSIC_LIMIT = 12;
-    public static final int TRIGGER_LIMIT = 12;
+public final class EffectList {
     private static final int NONE_SLOT_TYPE = -1;
     private static final int BUFF_SLOT_TYPE = 0;
     private static final int MUSIC_SLOT_TYPE = 1;
     private static final int TRIGGER_SLOT_TYPE = 2;
     private static final int DEBUFF_SLOT_TYPE = 3;
-    private final Creature _actor;
+    private final Creature actor;
     private final Lock lock = new ReentrantLock();
-    private List<Effect> effects;
+    private List<Effect> effects = new CopyOnWriteArrayList<>();
 
     EffectList(Creature owner) {
-        _actor = owner;
+        actor = owner;
     }
 
     private static int getSlotType(Effect e) {
@@ -53,106 +51,56 @@ public class EffectList {
         if (!ef1._stackType2.equals(EffectTemplate.NO_STACK) && ef1._stackType2.equalsIgnoreCase(ef2._stackType)) {
             return true;
         }
-        if (!ef1._stackType2.equals(EffectTemplate.NO_STACK) && ef1._stackType2.equalsIgnoreCase(ef2._stackType2)) {
-            return true;
-        }
-        return false;
+        return !ef1._stackType2.equals(EffectTemplate.NO_STACK) && ef1._stackType2.equalsIgnoreCase(ef2._stackType2);
     }
 
     /**
      * Возвращает число эффектов соответствующее данному скиллу
      */
     public int getEffectsCountForSkill(int skill_id) {
-        if (isEmpty()) {
-            return 0;
-        }
-
-        int count = 0;
-
-        for (Effect e : effects) {
-            if (e.getSkill().getId() == skill_id) {
-                count++;
-            }
-        }
-
-        return count;
+        return (int) effects.stream()
+                .filter(e -> e.getSkill().getId() == skill_id)
+                .count();
     }
 
     public Effect getEffectByType(EffectType et) {
-        if (isEmpty()) {
-            return null;
-        }
-
-        for (Effect e : effects) {
-            if (e.getEffectType() == et) {
-                return e;
-            }
-        }
-
-        return null;
+        return effects.stream()
+                .filter(e -> e.getEffectType() == et)
+                .findFirst().orElse(null);
     }
 
-    public List<Effect> getEffectsBySkill(Skill skill) {
-        if (skill == null) {
-            return null;
-        }
+    public Stream<Effect> getEffectsBySkill(Skill skill) {
+        if (skill == null) return Stream.empty();
         return getEffectsBySkillId(skill.getId());
     }
 
-    public List<Effect> getEffectsBySkillId(Integer skillId) {
-        if (isEmpty()) {
-            return null;
-        }
-
-        List<Effect> list = new ArrayList<>(2);
-        for (Effect e : effects) {
-            if (e.getSkill().getId() == skillId) {
-                list.add(e);
-            }
-        }
-
-        return list.isEmpty() ? null : list;
+    public Stream<Effect> getEffectsBySkillId(Integer skillId) {
+        return effects.stream()
+                .filter(e -> e.getSkill().getId() == skillId);
     }
 
-    public Effect getEffectByStackType(String type) {
-        if (isEmpty()) {
-            return null;
-        }
-        for (Effect e : effects) {
-            if (e.getStackType().equals(type)) {
-                return e;
-            }
-        }
-
-        return null;
+    Effect getEffectOfFishPot() {
+        return effects.stream()
+                .filter(e -> e.getStackType().equals("fishPot"))
+                .findFirst().orElse(null);
     }
 
     public boolean containEffectFromSkills(List<Integer> skillIds) {
-        if (isEmpty()) {
-            return false;
-        }
         return effects.stream()
                 .map(e -> e.getSkill().getId())
                 .anyMatch(skillIds::contains);
     }
 
-    public List<Effect> getAllEffects() {
-        if (isEmpty()) {
-            return Collections.emptyList();
-        }
-        return new ArrayList<>(effects);
-    }
-
-    private boolean isEmpty() {
-        return (effects == null) || effects.isEmpty();
+    public Stream<Effect> getAllEffects() {
+        return effects.stream();
     }
 
     /**
      * Возвращает первые эффекты для всех скиллов. Нужно для отображения не более чем 1 иконки для каждого скилла.
      */
     public List<Effect> getAllFirstEffects() {
-        if (isEmpty())
-            return Collections.emptyList();
+        if (effects.isEmpty())
+            return List.of();
 
         Map<Integer, Effect> map = new LinkedHashMap<>();
 
@@ -162,10 +110,6 @@ public class EffectList {
     }
 
     private void checkSlotLimit(Effect newEffect) {
-        if (effects == null) {
-            return;
-        }
-
         int slotType = getSlotType(newEffect);
         if (slotType == NONE_SLOT_TYPE) {
             return;
@@ -192,7 +136,7 @@ public class EffectList {
         int limit = 0;
         switch (slotType) {
             case BUFF_SLOT_TYPE:
-                limit = _actor.getBuffLimit();
+                limit = actor.getBuffLimit();
                 break;
             case MUSIC_SLOT_TYPE:
                 limit = Config.ALT_MUSIC_LIMIT;
@@ -209,36 +153,24 @@ public class EffectList {
             return;
         }
 
-        int skillId = 0;
-        for (Effect e : effects) {
-            if (e.isInUse()) {
-                if (getSlotType(e) == slotType) {
-                    skillId = e.getSkill().getId();
-                    break;
-                }
-            }
-        }
-
-        if (skillId != 0) {
-            stopEffect(skillId);
-        }
+        effects.stream()
+                .filter(Effect::isInUse)
+                .filter(e -> getSlotType(e) == slotType)
+                .map(e -> e.getSkill().getId())
+                .findFirst().ifPresent(this::stopEffect);
     }
 
     public void addEffect(Effect effect) {
         // TODO [G1ta0] gag on the stat increase HP / MP / CP
-        double hp = _actor.getCurrentHp();
-        double mp = _actor.getCurrentMp();
-        double cp = _actor.getCurrentCp();
+        double hp = actor.getCurrentHp();
+        double mp = actor.getCurrentMp();
+        double cp = actor.getCurrentCp();
 
         String stackType = effect.getStackType();
         boolean add;
 
         lock.lock();
         try {
-            if (effects == null) {
-                effects = new CopyOnWriteArrayList<>();
-            }
-
             if (stackType.equals(EffectTemplate.NO_STACK)) {
                 // Delete the same effects
                 for (Effect e : effects) {
@@ -304,72 +236,49 @@ public class EffectList {
         // TODO [G1ta0] затычка на статы повышающие HP/MP/CP
         for (FuncTemplate ft : effect.getTemplate().getAttachedFuncs()) {
             if (ft.stat == Stats.MAX_HP) {
-                _actor.setCurrentHp(hp, false);
+                actor.setCurrentHp(hp, false);
             } else if (ft.stat == Stats.MAX_MP) {
-                _actor.setCurrentMp(mp);
+                actor.setCurrentMp(mp);
             } else if (ft.stat == Stats.MAX_CP) {
-                _actor.setCurrentCp(cp);
+                actor.setCurrentCp(cp);
             }
         }
 
         // Обновляем иконки
-        _actor.updateStats();
-        _actor.updateEffectIcons();
+        actor.updateStats();
+        actor.updateEffectIcons();
     }
 
-    /**
-     * Удаление эффекта из списка
-     */
     void removeEffect(Effect effect) {
-        if (effect == null) {
-            return;
-        }
-
         lock.lock();
         try {
-            if (effects == null) {
-                return;
-            }
-
-            if (!effects.remove(effect)) {
+            if(!effects.remove(effect)) {
                 return;
             }
         } finally {
             lock.unlock();
         }
 
-        _actor.updateStats();
-        _actor.updateEffectIcons();
+        actor.updateStats();
+        actor.updateEffectIcons();
     }
 
     public void stopAllEffects() {
-        if (isEmpty()) {
-            return;
-        }
-
         lock.lock();
         try {
-            for (Effect e : effects) {
-                e.exit();
-            }
+            effects.forEach(Effect::exit);
         } finally {
             lock.unlock();
         }
 
-        _actor.updateStats();
-        _actor.updateEffectIcons();
+        actor.updateStats();
+        actor.updateEffectIcons();
     }
 
     public void stopEffect(int skillId) {
-        if (isEmpty()) {
-            return;
-        }
-
-        for (Effect e : effects) {
-            if (e.getSkill().getId() == skillId) {
-                e.exit();
-            }
-        }
+        effects.stream()
+                .filter(e -> e.getSkill().getId() == skillId)
+                .forEach(Effect::exit);
     }
 
     public void stopEffect(Skill skill) {
@@ -379,34 +288,16 @@ public class EffectList {
     }
 
     public void stopEffects(EffectType type) {
-        if (isEmpty()) {
-            return;
-        }
-
-        for (Effect e : effects) {
-            if (e.getEffectType() == type) {
-                e.exit();
-            }
-        }
+        effects.stream()
+        .filter(e ->e.getEffectType() == type)
+        .forEach(Effect::exit);
     }
 
-    /**
-     * Находит скиллы с указанным эффектом, и останавливает у этих скиллов все эффекты (не только указанный).
-     */
-    public void stopAllSkillEffects(EffectType type) {
-        if (isEmpty()) {
-            return;
-        }
-
-        Set<Integer> skillIds = new HashSet<>();
-
-        for (Effect e : effects) {
-            if (e.getEffectType() == type) {
-                skillIds.add(e.getSkill().getId());
-            }
-        }
-
-        skillIds.forEach(this::stopEffect);
+    void stopAllSkillEffects(EffectType type) {
+        effects.stream()
+                .filter(e -> e.getEffectType() == type)
+                .map(e -> e.getSkill().getId())
+                .forEach(this::stopEffect);
 
     }
 }

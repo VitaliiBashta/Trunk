@@ -17,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.PetDataTable;
 import l2trunk.gameserver.tables.PetSkillsTable;
 import l2trunk.gameserver.tables.SkillTable;
-import l2trunk.gameserver.utils.AutoHuntingPunish;
 import l2trunk.gameserver.utils.TradeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +30,15 @@ import java.util.Objects;
 public final class RequestActionUse extends L2GameClientPacket {
     private static final Logger _log = LoggerFactory.getLogger(RequestActionUse.class);
 
-    private int _actionId;
-    private boolean _ctrlPressed;
-    private boolean _shiftPressed;
+    private int actionId;
+    private boolean ctrlPressed;
+    private boolean shiftPressed;
 
     @Override
     protected void readImpl() {
-        _actionId = readD();
-        _ctrlPressed = readD() == 1;
-        _shiftPressed = readC() == 1;
+        actionId = readD();
+        ctrlPressed = readD() == 1;
+        shiftPressed = readC() == 1;
     }
 
     @Override
@@ -48,32 +47,8 @@ public final class RequestActionUse extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        // Check if has any bot punishment
-        if (activeChar.isBeingPunished()) {
-            // Remove punishment if finished
-            if (activeChar.getPlayerPunish().canPerformAction() && activeChar.getBotPunishType() == AutoHuntingPunish.Punish.ACTIONBAN) {
-                activeChar.endPunishment();
-            }
-            // Else apply it
-            else {
-                SystemMsg msgId = null;
-                switch (activeChar.getPlayerPunish().getDuration()) {
-                    case 7200:
-                        msgId = SystemMsg.YOU_HAVE_BEEN_REPORTED_AS_AN_ILLEGAL_PROGRAM_USER_SO_YOUR_ACTIONS_WILL_BE_RESTRICTED_FOR_120_MINUTES;
-                        break;
-                    case 10800:
-                        msgId = SystemMsg.YOU_HAVE_BEEN_REPORTED_AS_AN_ILLEGAL_PROGRAM_USER_SO_YOUR_ACTIONS_WILL_BE_RESTRICTED_FOR_180_MINUTES;
-                        break;
-                    default:
-                }
-                activeChar.sendPacket(new SystemMessage2(msgId));
-                return;
-            }
-        }
-
-        Action action = Action.find(_actionId);
+        Action action = Action.find(actionId);
         if (action == null) {
-            //_log.warn("unhandled action type " + _actionId + " by player " + activeChar.getName());
             activeChar.sendActionFailed();
             return;
         }
@@ -84,7 +59,7 @@ public final class RequestActionUse extends L2GameClientPacket {
         boolean usePet = action.type == 1 || action.type == 2;
 
         // dont do anything if player is dead or confused
-        if (!usePet && (activeChar.isOutOfControl() || activeChar.isActionsDisabled()) && !(activeChar.isFakeDeath() && _actionId == 0)) {
+        if (!usePet && (activeChar.isOutOfControl() || activeChar.isActionsDisabled()) && !(activeChar.isFakeDeath() && actionId == 0)) {
             activeChar.sendActionFailed();
             return;
         }
@@ -251,11 +226,11 @@ public final class RequestActionUse extends L2GameClientPacket {
                     activeChar.setPrivateStoreType(Player.STORE_PRIVATE_NONE);
                     activeChar.standUp();
                     activeChar.broadcastCharInfo();
-                } else if (!TradeHelper.checksIfCanOpenStore(activeChar, _actionId == 61 ? Player.STORE_PRIVATE_SELL_PACKAGE : Player.STORE_PRIVATE_SELL)) {
+                } else if (!TradeHelper.checksIfCanOpenStore(activeChar, actionId == 61 ? Player.STORE_PRIVATE_SELL_PACKAGE : Player.STORE_PRIVATE_SELL)) {
                     activeChar.sendActionFailed();
                     return;
                 }
-                activeChar.sendPacket(new PrivateStoreManageListSell(activeChar, _actionId == 61));
+                activeChar.sendPacket(new PrivateStoreManageListSell(activeChar, actionId == 61));
                 break;
             }
             case 28: // Запрос на создание приватного магазина покупки
@@ -345,10 +320,10 @@ public final class RequestActionUse extends L2GameClientPacket {
                 if (pet.getTemplate().getNpcId() == PetDataTable.SIN_EATER_ID)
                     return;
 
-                if (!_ctrlPressed && target.isCreature() && !((Creature) target).isAutoAttackable(pet))
+                if (!ctrlPressed && target.isCreature() && !((Creature) target).isAutoAttackable(pet))
                     return;
 
-                if (_ctrlPressed && !target.isAttackable(pet)) {
+                if (ctrlPressed && !target.isAttackable(pet)) {
                     activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                     return;
                 }
@@ -363,13 +338,13 @@ public final class RequestActionUse extends L2GameClientPacket {
                     return;
                 }
 
-                if (!_ctrlPressed && target == activeChar) {
+                if (!ctrlPressed && target == activeChar) {
                     return;
                 }
                 if (!Config.ALLOW_PET_ATTACK_MASTER && target == activeChar) {
                     return;
                 }
-                pet.getAI().Attack((Creature)target, _ctrlPressed, _shiftPressed);
+                pet.getAI().Attack((Creature) target, ctrlPressed, shiftPressed);
                 break;
             case 17:
             case 23: // Отмена действия у пета
@@ -482,9 +457,6 @@ public final class RequestActionUse extends L2GameClientPacket {
                 break;
             case 1001:
                 break;
-
-//			default:
-            //_log.warn("unhandled action type " + _actionId + " by player " + activeChar.getName());
         }
         activeChar.sendActionFailed();
     }
@@ -515,8 +487,8 @@ public final class RequestActionUse extends L2GameClientPacket {
         }
 
         Creature aimingTarget = skill.getAimingTarget(pet, activeChar.getTarget());
-        if (skill.checkCondition(pet, aimingTarget, _ctrlPressed, _shiftPressed, true))
-            pet.getAI().Cast(skill, aimingTarget, _ctrlPressed, _shiftPressed);
+        if (skill.checkCondition(pet, aimingTarget, ctrlPressed, shiftPressed, true))
+            pet.getAI().Cast(skill, aimingTarget, ctrlPressed, shiftPressed);
         else
             activeChar.sendActionFailed();
     }

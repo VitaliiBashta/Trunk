@@ -263,11 +263,11 @@ public final class UnitMember {
         return player == null ? (leaderOf == Clan.SUBUNIT_MAIN_CLAN) : player.isClanLeader();
     }
 
-    public int isSubLeader() {
+    public boolean isSubLeader() {
         return getClan().getAllSubUnits().stream()
                 .filter(pledge -> pledge.getLeaderObjectId() == getObjectId())
                 .map(SubUnit::getType)
-                .findFirst().orElse(0);
+                .findFirst().isPresent();
     }
 
     public int getLeaderOf() {

@@ -3,7 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectNegateMusic extends Effect {
+public final class EffectNegateMusic extends Effect {
     public EffectNegateMusic(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -20,9 +20,9 @@ public class EffectNegateMusic extends Effect {
 
     @Override
     public boolean onActionTime() {
-        for (Effect e : effected.getEffectList().getAllEffects())
-            if (e.getSkill().isMusic())
-                e.exit();
+        effected.getEffectList().getAllEffects()
+                .filter(e -> e.getSkill().isMusic())
+                .forEach(Effect::exit);
         return false;
     }
 }

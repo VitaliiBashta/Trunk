@@ -31,7 +31,7 @@ public final class FreyaStandNormal extends Fighter {
     private long _icestormReuseTimer = 0;
     private long _angerReuseTimer = 0;
 
-    private long _dispelTimer = 0;
+    private long dispelTimer = 0;
 
     private long _idleDelay = 0;
     private long _lastFactionNotifyTime = 0;
@@ -126,12 +126,11 @@ public final class FreyaStandNormal extends Fighter {
         }
 
         //Dispel task
-        if (_dispelTimer < System.currentTimeMillis()) {
-            for (Effect e : actor.getEffectList().getAllEffects())
-                if (e != null && e.isOffensive())
-                    e.exit();
-            int _dispelReuseDelay = 7;
-            _dispelTimer = System.currentTimeMillis() + _dispelReuseDelay * 1000L;
+        if (dispelTimer < System.currentTimeMillis()) {
+            actor.getEffectList().getAllEffects()
+                    .filter(Effect::isOffensive)
+                    .forEach(Effect::exit);
+            dispelTimer = System.currentTimeMillis() + 7 * 1000L;
         }
 
         // Обновление таймера

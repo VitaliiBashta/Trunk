@@ -139,7 +139,7 @@ public final class TalkingGuard extends Guard {
                     _lastAggroSay = System.currentTimeMillis();
                 }
 
-                setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+                setIntentionAttack(target);
             }
             return true;
         } else {

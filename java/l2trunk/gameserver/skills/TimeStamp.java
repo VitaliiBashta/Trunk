@@ -2,17 +2,17 @@ package l2trunk.gameserver.skills;
 
 import l2trunk.gameserver.model.Skill;
 
-public class TimeStamp {
-    private final int _id;
+public final class TimeStamp {
+    private final int id;
     private final int level;
-    private final long _reuse;
-    private final long _endTime;
+    private final long reuse;
+    private final long endTime;
 
     public TimeStamp(int id, long endTime, long reuse) {
-        _id = id;
+        this.id = id;
         level = 0;
-        _reuse = reuse;
-        _endTime = endTime;
+        this.reuse = reuse;
+        this.endTime = endTime;
     }
 
     public TimeStamp(Skill skill, long reuse) {
@@ -20,32 +20,32 @@ public class TimeStamp {
     }
 
     public TimeStamp(Skill skill, long endTime, long reuse) {
-        _id = skill.getId();
+        id = skill.getId();
         level = skill.getLevel();
-        _reuse = reuse;
-        _endTime = endTime;
+        this.reuse = reuse;
+        this.endTime = endTime;
     }
 
     public long getReuseBasic() {
-        if (_reuse == 0)
+        if (reuse == 0)
             return getReuseCurrent();
-        return _reuse;
+        return reuse;
     }
 
     public long getReuseCurrent() {
-        return Math.max(_endTime - System.currentTimeMillis(), 0);
+        return Math.max(endTime - System.currentTimeMillis(), 0);
     }
 
     public long getEndTime() {
-        return _endTime;
+        return endTime;
     }
 
     public boolean hasNotPassed() {
-        return System.currentTimeMillis() < _endTime;
+        return System.currentTimeMillis() < endTime;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public int getLevel() {

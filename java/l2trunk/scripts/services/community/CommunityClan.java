@@ -98,316 +98,238 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
                     Inventory.PAPERDOLL_NECK,
                     Inventory.PAPERDOLL_LBRACELET
             };
-    private static final String[] NAMES =
-            {
-                    "Weapon",
-                    "Shield",
-                    "Helmet",
-                    "Chest",
-                    "Legs",
-                    "Gloves",
-                    "Boots",
-                    "Cloak",
-                    "Shirt",
-                    "Belt",
-                    "Ring",
-                    " Ring",
-                    "Earring",
-                    "Earring",
-                    "Necklace",
-                    "Bracelet"
-            };
-
-    private static final Map<Integer, String[]> _clanSkillDescriptions = new HashMap<>();
+    private static final List<String> NAMES = List.of(
+            "Weapon",
+            "Shield",
+            "Helmet",
+            "Chest",
+            "Legs",
+            "Gloves",
+            "Boots",
+            "Cloak",
+            "Shirt",
+            "Belt",
+            "Ring",
+            "Ring",
+            "Earring",
+            "Earring",
+            "Necklace",
+            "Bracelet");
+    private static final Map<Integer, List<String>> CLAN_SKILL_DESCRIPTIONS = new HashMap<>();
     private final Listener _listener = new Listener();
 
     {
-        _clanSkillDescriptions.put(370, new String[]
-                {
-                        "Increases clan members' Max HP by 3%. It only affects those who are of an Heir rank or higher.",
-                        "Increases clan members' Max HP by 5%. It only affects those who are of an Heir rank or higher.",
-                        "Increases clan members' Max HP by 6%. It only affects those who are of an Heir rank or higher."
-                });
-        _clanSkillDescriptions.put(371, new String[]
-                {
-                        "Increases clan members' Max CP by 6%. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Max CP by 10%. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Max CP by 12%. It only affects those who are of a Baron rank or higher."
-                });
-        _clanSkillDescriptions.put(372, new String[]
-                {
-                        "Increases clan members' Max MP by 3%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Max MP by 5%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Max MP by 6%. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(373, new String[]
-                {
-                        "Increases clan members' HP regeneration by 3%. It only affects those who are of an Heir rank or higher.",
-                        "Increases clan members' HP regeneration by 5%. It only affects those who are of an Heir rank or higher.",
-                        "Increases clan members' HP regeneration by 6%. It only affects those who are of an Heir rank or higher."
-                });
-        _clanSkillDescriptions.put(374, new String[]
-                {
-                        "Increases clan members' CP regeneration by 6%. It only affects those who are of an Elder rank or higher.",
-                        "Increases clan members' CP regeneration by 10%. It only affects those who are of an Elder rank or higher.",
-                        "Increases clan members' CP regeneration by 12%. It only affects those who are of an Elder rank or higher."
-                });
-        _clanSkillDescriptions.put(375, new String[]
-                {
-                        "Increases clan members' MP regeneration by 3%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' MP regeneration by 5%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' MP regeneration by 6%. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(376, new String[]
-                {
-                        "Increases clan members' P. Atk. by 3%. It only affects those who are of a Knight rank or higher.",
-                        "Increases clan members' P. Atk. by 5%. It only affects those who are of a Knight rank or higher.",
-                        "Increases clan members' P. Atk. by 6%. It only affects those who are of a Knight rank or higher."
-                });
-        _clanSkillDescriptions.put(377, new String[]
-                {
-                        "Increases clan members' P. Def. by 3%. It only affects those who are of a Knight rank or higher.",
-                        "Increases clan members' P. Def. by 5%. It only affects those who are of a Knight rank or higher.",
-                        "Increases clan members' P. Def. by 6%. It only affects those who are of a Knight rank or higher."
-                });
-        _clanSkillDescriptions.put(378, new String[]
-                {
-                        "Increases clan members' M. Atk by 6%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' M. Atk by 10%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' M. Atk by 12%. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(379, new String[]
-                {
-                        "Increases clan members' M. Def by 6%. It only affects those who are of an Heir rank or higher.",
-                        "Increases clan members' M. Def by 10%. It only affects those who are of an Heir rank or higher.",
-                        "Increases clan members' M. Def by 12%. It only affects those who are of an Heir rank or higher."
-                });
-        _clanSkillDescriptions.put(380, new String[]
-                {
-                        "Increases clan members' Accuracy by 1. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Accuracy by 2. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Accuracy by 3. It only affects those who are of a Baron rank or higher."
-                });
-        _clanSkillDescriptions.put(381, new String[]
-                {
-                        "Increases clan members' Evasion by 1. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Evasion by 2. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Evasion by 3. It only affects those who are of a Baron rank or higher."
-                });
-        _clanSkillDescriptions.put(382, new String[]
-                {
-                        "Increases clan members' Shield Defense by 12%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Shield Defense by 20%. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Shield Defense by 24%. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(383, new String[]
-                {
-                        "Increases clan members' Shield Defense by 24%. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Shield Defense by 40%. It only affects those who are of a Baron rank or higher.",
-                        "Increases clan members' Shield Defense by 48%. It only affects those who are of a Baron rank or higher."
-                });
-        _clanSkillDescriptions.put(384, new String[]
-                {
-                        "Increases clan members' Resistance to Water/Wind attacks by 3. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Water/Wind attacks by 5. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Water/Wind attacks by 6. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(385, new String[]
-                {
-                        "ncreases clan members' Resistance to Fire/Earth attacks by 3. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Fire/Earth attacks by 5. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Fire/Earth attacks by 6. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(386, new String[]
-                {
-                        "Increases clan members' Resistance to Stun attacks by 12. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Stun attacks by 20. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Stun attacks by 24. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(387, new String[]
-                {
-                        "Increases clan members' Resistance to Hold attacks by 12. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Hold attacks by 20. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Hold attacks by 24. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(388, new String[]
-                {
-                        "Increases clan members' Resistance to Sleep attacks by 12. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Sleep attacks by 20. It only affects those who are of a Viscount rank or higher.",
-                        "Increases clan members' Resistance to Sleep attacks by 24. It only affects those who are of a Viscount rank or higher."
-                });
-        _clanSkillDescriptions.put(389, new String[]
-                {
-                        "Increases clan members' Speed by 3. It only affects those who are of a Count rank or higher.",
-                        "Increases clan members' Speed by 5. It only affects those who are of a Count rank or higher.",
-                        "Increases clan members' Speed by 6. It only affects those who are of a Count rank or higher."
-                });
-        _clanSkillDescriptions.put(390, new String[]
-                {
-                        "Decreases clan members' experience loss and the chance of other death penalties when killed by a monster or player. It only affects those who are of an Heir rank or higher.",
-                        "Decreases clan members' experience loss and the chance of other death penalties when killed by a monster or player. It only affects those who are of an Heir rank or higher.",
-                        "Decreases clan members' experience loss and the chance of other death penalties when killed by a monster or player. It only affects those who are of an Heir rank or higher."
-                });
-        _clanSkillDescriptions.put(391, new String[]
-                {
-                        "Grants the privilege of Command Channel formation. It only effects Sage / Elder class and above."
-                });
-        _clanSkillDescriptions.put(590, new String[]
-                {
-                        "The Max HP of clan members in residence increases by 222."
-                });
-        _clanSkillDescriptions.put(591, new String[]
-                {
-                        "The Max CP of clan members in residence increases by 444."
-                });
-        _clanSkillDescriptions.put(592, new String[]
-                {
-                        "The Max MP of clan members in residence increases by 168."
-                });
-        _clanSkillDescriptions.put(593, new String[]
-                {
-                        "The HP Recovery Bonus of clan members in residence increases by 1.09."
-                });
-        _clanSkillDescriptions.put(594, new String[]
-                {
-                        "CP recovery bonus of clan members in residence increases by 1.09."
-                });
-        _clanSkillDescriptions.put(595, new String[]
-                {
-                        "The MP Recovery Bonus of clan members in residence increases by 0.47."
-                });
-        _clanSkillDescriptions.put(596, new String[]
-                {
-                        "P. Atk. of clan members in residence increases by 34.6."
-                });
-        _clanSkillDescriptions.put(597, new String[]
-                {
-                        "P. Def. of clan members in residence increases by 54.7."
-                });
-        _clanSkillDescriptions.put(598, new String[]
-                {
-                        "M. Atk. of clan members in residence increases by 40.4."
-                });
-        _clanSkillDescriptions.put(599, new String[]
-                {
-                        "The M. Def. of clan members in residence increases by 44."
-                });
-        _clanSkillDescriptions.put(600, new String[]
-                {
-                        "Accuracy of clan members in residence increases by 4."
-                });
-        _clanSkillDescriptions.put(601, new String[]
-                {
-                        "Evasion of clan members in residence increases by 4."
-                });
-        _clanSkillDescriptions.put(602, new String[]
-                {
-                        "Shield Defense of clan members in residence increases by 54.7."
-                });
-        _clanSkillDescriptions.put(603, new String[]
-                {
-                        "Shield Defense. of clan members in residence increases by 225."
-                });
-        _clanSkillDescriptions.put(604, new String[]
-                {
-                        "Resistance to Water and Wind attacks of clan members in residence increases by 10."
-                });
-        _clanSkillDescriptions.put(605, new String[]
-                {
-                        "Resistance to Fire and Earth attacks of clan members in residence increases by 10."
-                });
-        _clanSkillDescriptions.put(606, new String[]
-                {
-                        "Resistance to Stun attacks of clan members in residence increases by 10."
-                });
-        _clanSkillDescriptions.put(607, new String[]
-                {
-                        "Resistance to Hold attacks of clan members in residence increases by 10."
-                });
-        _clanSkillDescriptions.put(608, new String[]
-                {
-                        "Resistance to Sleep attacks of clan members in residence increases by 10."
-                });
-        _clanSkillDescriptions.put(609, new String[]
-                {
-                        "The Speed of clan members in residence increases by 6."
-                });
-        _clanSkillDescriptions.put(610, new String[]
-                {
-                        "When a clan member within the residence is killed by PK/ordinary monster, the Exp. points consumption rate and the probability of incurring a death after-effect are decreased."
-                });
-        _clanSkillDescriptions.put(611, new String[]
-                {
-                        "The corresponding troops' P. Atk. increase by 17.3.",
-                        "The corresponding troops' P. Atk. increase by 17.3 and Critical Rate increase by 15.",
-                        "The corresponding troops' P. Atk. increase by 17.3, Critical Rate increase by 15, and Critical Damage increase by 100."
-                });
-        _clanSkillDescriptions.put(612, new String[]
-                {
-                        "The corresponding troops' P. Def. increase by 27.3.",
-                        "The corresponding troops' P. Def. increase by 27.3 and M. Def. increase by 17.6.",
-                        "The corresponding troops' P. Def. increase by 27.3, M. Def. increase by 17.6, and Shield Defense. increase by 6%."
-                });
-        _clanSkillDescriptions.put(613, new String[]
-                {
-                        "The corresponding troops' Accuracy increase by 2.",
-                        "The corresponding troops' Accuracy increase by 2 and Evasion increase by 2.",
-                        "The corresponding troops' Accuracy increase by 2, Evasion increase by 2, and Speed increase by 3."
-                });
-        _clanSkillDescriptions.put(614, new String[]
-                {
-                        "The corresponding troops' M. Def. increase by 17.",
-                        "The corresponding troops' M. Def. increase by 31.1.",
-                        "The corresponding troops' M. Def. increase by 44."
-                });
-        _clanSkillDescriptions.put(615, new String[]
-                {
-                        "The corresponding troops' heal power increase by 20.",
-                        "The corresponding troops' heal power increase by 20 and Max MP increase by 30%.",
-                        "The corresponding troops' heal power increase by 20, Max MP increase by 30%, and MP consumption decreases by 5%."
-                });
-        _clanSkillDescriptions.put(616, new String[]
-                {
-                        "The corresponding troops' M. Atk. increase by 7.17.",
-                        "The corresponding troops' M. Atk. increase by 19.32.",
-                        "The corresponding troops' M. Atk. increase by 19.32 and magic Critical Damage rate increases by 1%."
-                });
-        _clanSkillDescriptions.put(848, new String[]
-                {
-                        "STR+1 / INT+1"
-                });
-        _clanSkillDescriptions.put(849, new String[]
-                {
-                        "DEX+1 / WIT+1"
-                });
-        _clanSkillDescriptions.put(850, new String[]
-                {
-                        "STR+1 / MEN+1"
-                });
-        _clanSkillDescriptions.put(851, new String[]
-                {
-                        "CON+1 / MEN+1"
-                });
-        _clanSkillDescriptions.put(852, new String[]
-                {
-                        "DEX+1 / MEN+1"
-                });
-        _clanSkillDescriptions.put(853, new String[]
-                {
-                        "CON+1 / INT+1"
-                });
-        _clanSkillDescriptions.put(854, new String[]
-                {
-                        "DEX+1 / INT+1"
-                });
-        _clanSkillDescriptions.put(855, new String[]
-                {
-                        "STR+1 / WIT+1"
-                });
-        _clanSkillDescriptions.put(856, new String[]
-                {
-                        "CON+1 / WIT+1"
-                });
+        CLAN_SKILL_DESCRIPTIONS.put(370, List.of(
+                "Increases clan members' Max HP by 3%. It only affects those who are of an Heir rank or higher.",
+                "Increases clan members' Max HP by 5%. It only affects those who are of an Heir rank or higher.",
+                "Increases clan members' Max HP by 6%. It only affects those who are of an Heir rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(371, List.of(
+                "Increases clan members' Max CP by 6%. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Max CP by 10%. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Max CP by 12%. It only affects those who are of a Baron rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(372, List.of(
+                "Increases clan members' Max MP by 3%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Max MP by 5%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Max MP by 6%. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(373, List.of(
+                "Increases clan members' HP regeneration by 3%. It only affects those who are of an Heir rank or higher.",
+                "Increases clan members' HP regeneration by 5%. It only affects those who are of an Heir rank or higher.",
+                "Increases clan members' HP regeneration by 6%. It only affects those who are of an Heir rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(374, List.of(
+                "Increases clan members' CP regeneration by 6%. It only affects those who are of an Elder rank or higher.",
+                "Increases clan members' CP regeneration by 10%. It only affects those who are of an Elder rank or higher.",
+                "Increases clan members' CP regeneration by 12%. It only affects those who are of an Elder rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(375, List.of(
+                "Increases clan members' MP regeneration by 3%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' MP regeneration by 5%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' MP regeneration by 6%. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(376, List.of(
+                "Increases clan members' P. Atk. by 3%. It only affects those who are of a Knight rank or higher.",
+                "Increases clan members' P. Atk. by 5%. It only affects those who are of a Knight rank or higher.",
+                "Increases clan members' P. Atk. by 6%. It only affects those who are of a Knight rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(377, List.of(
+                "Increases clan members' P. Def. by 3%. It only affects those who are of a Knight rank or higher.",
+                "Increases clan members' P. Def. by 5%. It only affects those who are of a Knight rank or higher.",
+                "Increases clan members' P. Def. by 6%. It only affects those who are of a Knight rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(378, List.of(
+                "Increases clan members' M. Atk by 6%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' M. Atk by 10%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' M. Atk by 12%. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(379, List.of(
+                "Increases clan members' M. Def by 6%. It only affects those who are of an Heir rank or higher.",
+                "Increases clan members' M. Def by 10%. It only affects those who are of an Heir rank or higher.",
+                "Increases clan members' M. Def by 12%. It only affects those who are of an Heir rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(380, List.of(
+                "Increases clan members' Accuracy by 1. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Accuracy by 2. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Accuracy by 3. It only affects those who are of a Baron rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(381, List.of(
+                "Increases clan members' Evasion by 1. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Evasion by 2. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Evasion by 3. It only affects those who are of a Baron rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(382, List.of(
+                "Increases clan members' Shield Defense by 12%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Shield Defense by 20%. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Shield Defense by 24%. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(383, List.of(
+                "Increases clan members' Shield Defense by 24%. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Shield Defense by 40%. It only affects those who are of a Baron rank or higher.",
+                "Increases clan members' Shield Defense by 48%. It only affects those who are of a Baron rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(384, List.of(
+                "Increases clan members' Resistance to Water/Wind attacks by 3. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Water/Wind attacks by 5. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Water/Wind attacks by 6. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(385, List.of(
+                "ncreases clan members' Resistance to Fire/Earth attacks by 3. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Fire/Earth attacks by 5. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Fire/Earth attacks by 6. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(386, List.of(
+                "Increases clan members' Resistance to Stun attacks by 12. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Stun attacks by 20. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Stun attacks by 24. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(387, List.of(
+                "Increases clan members' Resistance to Hold attacks by 12. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Hold attacks by 20. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Hold attacks by 24. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(388, List.of(
+                "Increases clan members' Resistance to Sleep attacks by 12. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Sleep attacks by 20. It only affects those who are of a Viscount rank or higher.",
+                "Increases clan members' Resistance to Sleep attacks by 24. It only affects those who are of a Viscount rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(389, List.of(
+                "Increases clan members' Speed by 3. It only affects those who are of a Count rank or higher.",
+                "Increases clan members' Speed by 5. It only affects those who are of a Count rank or higher.",
+                "Increases clan members' Speed by 6. It only affects those who are of a Count rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(390, List.of(
+                "Decreases clan members' experience loss and the chance of other death penalties when killed by a monster or player. It only affects those who are of an Heir rank or higher.",
+                "Decreases clan members' experience loss and the chance of other death penalties when killed by a monster or player. It only affects those who are of an Heir rank or higher.",
+                "Decreases clan members' experience loss and the chance of other death penalties when killed by a monster or player. It only affects those who are of an Heir rank or higher."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(391, List.of(
+                "Grants the privilege of Command Channel formation. It only effects Sage / Elder class and above."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(590, List.of(
+                "The Max HP of clan members in residence increases by 222."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(591, List.of(
+                "The Max CP of clan members in residence increases by 444."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(592, List.of(
+
+                "The Max MP of clan members in residence increases by 168."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(593, List.of(
+                "The HP Recovery Bonus of clan members in residence increases by 1.09."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(594, List.of(
+                "CP recovery bonus of clan members in residence increases by 1.09."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(595, List.of(
+                "The MP Recovery Bonus of clan members in residence increases by 0.47."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(596, List.of(
+                "P. Atk. of clan members in residence increases by 34.6."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(597, List.of(
+                "P. Def. of clan members in residence increases by 54.7."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(598, List.of(
+                "M. Atk. of clan members in residence increases by 40.4."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(599, List.of(
+                "The M. Def. of clan members in residence increases by 44."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(600, List.of(
+                "Accuracy of clan members in residence increases by 4."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(601, List.of(
+                "Evasion of clan members in residence increases by 4."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(602, List.of(
+                "Shield Defense of clan members in residence increases by 54.7."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(603, List.of(
+                "Shield Defense. of clan members in residence increases by 225."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(604, List.of(
+                "Resistance to Water and Wind attacks of clan members in residence increases by 10."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(605, List.of(
+                "Resistance to Fire and Earth attacks of clan members in residence increases by 10."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(606, List.of(
+                "Resistance to Stun attacks of clan members in residence increases by 10."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(607, List.of(
+                "Resistance to Hold attacks of clan members in residence increases by 10."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(608, List.of(
+                "Resistance to Sleep attacks of clan members in residence increases by 10."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(609, List.of(
+                "The Speed of clan members in residence increases by 6."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(610, List.of(
+                "When a clan member within the residence is killed by PK/ordinary monster, the Exp. points consumption rate and the probability of incurring a death after-effect are decreased."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(611, List.of(
+                "The corresponding troops' P. Atk. increase by 17.3.",
+                "The corresponding troops' P. Atk. increase by 17.3 and Critical Rate increase by 15.",
+                "The corresponding troops' P. Atk. increase by 17.3, Critical Rate increase by 15, and Critical Damage increase by 100."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(612, List.of(
+                "The corresponding troops' P. Def. increase by 27.3.",
+                "The corresponding troops' P. Def. increase by 27.3 and M. Def. increase by 17.6.",
+                "The corresponding troops' P. Def. increase by 27.3, M. Def. increase by 17.6, and Shield Defense. increase by 6%."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(613, List.of(
+                "The corresponding troops' Accuracy increase by 2.",
+                "The corresponding troops' Accuracy increase by 2 and Evasion increase by 2.",
+                "The corresponding troops' Accuracy increase by 2, Evasion increase by 2, and Speed increase by 3."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(614, List.of(
+                "The corresponding troops' M. Def. increase by 17.",
+                "The corresponding troops' M. Def. increase by 31.1.",
+                "The corresponding troops' M. Def. increase by 44."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(615, List.of(
+                "The corresponding troops' heal power increase by 20.",
+                "The corresponding troops' heal power increase by 20 and Max MP increase by 30%.",
+                "The corresponding troops' heal power increase by 20, Max MP increase by 30%, and MP consumption decreases by 5%."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(616, List.of(
+                "The corresponding troops' M. Atk. increase by 7.17.",
+                "The corresponding troops' M. Atk. increase by 19.32.",
+                "The corresponding troops' M. Atk. increase by 19.32 and magic Critical Damage rate increases by 1%."
+        ));
+        CLAN_SKILL_DESCRIPTIONS.put(848, List.of("STR+1 / INT+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(849, List.of("DEX+1 / WIT+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(850, List.of("STR+1 / MEN+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(851, List.of("CON+1 / MEN+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(852, List.of("DEX+1 / MEN+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(853, List.of("CON+1 / INT+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(854, List.of("DEX+1 / INT+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(855, List.of("STR+1 / WIT+1"));
+        CLAN_SKILL_DESCRIPTIONS.put(856, List.of("CON+1 / WIT+1"));
     }
 
     private static String getResidenceName(Residence r) {
@@ -864,7 +786,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             builder.append("<td width=150><font name=hs12 color=\"FFFFFF\">").append(member.getName()).append("</font></td>");
             //builder.append("<button action=\"bypass _clbbssinglemember_").append(member.getObjectId()).append("\" value=\"").append(member.getName()).append("\" width=150 height=25 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.button_df\">");
             builder.append("<td align=center width=100>").append(member.getPlayer() != null ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
-            builder.append("<td align=center width=100>").append(member.isSubLeader() != 0 || member.isClanLeader() ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
+            builder.append("<td align=center width=100>").append(member.isSubLeader() || member.isClanLeader() ? "<font name=hs12 color=6a9b54>True</font>" : "<font name=hs12 color=FF6666>False</font>").append("</td>");
             builder.append("<td align=center width=75><font name=hs12 color=\"BBFF44\">").append(getUnitName(member.getSubUnit().getType())).append("</font></td>");
             builder.append("<td align=center width=75></td>");
             builder.append("</tr>");
@@ -959,13 +881,13 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
         html = html.replace("%fame%", "" + data.fame);
         html = html.replace("%clanId%", "" + data.clanId);
 
-        String[] otherSubs = {"%firstSub%", "%secondSub%", "%thirdSub%"};
+        List<String> otherSubs = List.of("%firstSub%", "%secondSub%", "%thirdSub%");
         int index = 0;
         for (int[] sub : data.subClassIdLvlBase) {
             if (sub[2] == 1)
                 html = html.replace("%mainClass%", ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
             else
-                html = html.replace(otherSubs[index], ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
+                html = html.replace(otherSubs.get(index), ClassId.values()[sub[0]].getName() + "(" + sub[1] + ")");
         }
         // In case player doesn't have all subclasses
         for (String sub : otherSubs)
@@ -986,11 +908,11 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             skills += "</td><td width=660><br><table width=660><tr><td><font name=\"hs12\" color=\"00BBFF\">";
             skills += clanSkill.getName() + " - <font name=\"hs12\" color=\"FFFFFF\">Level " + clanSkill.getLevel() + " </font>";
             skills += "</font></td></tr><tr><td>";
-            String[] descriptions = _clanSkillDescriptions.get(clanSkill.getId());
-            if (descriptions == null || descriptions.length < clanSkill.getLevel() - 1) {
+            List<String> descriptions = CLAN_SKILL_DESCRIPTIONS.get(clanSkill.getId());
+            if (descriptions == null || descriptions.size() < clanSkill.getLevel() - 1) {
                 _log.warn("cannot find skill id:" + clanSkill.getId() + " in Clan Community Skills descriptions!");
             } else {
-                skills += "<font color=\"FFFF11\">" + descriptions[clanSkill.getLevel() - 1] + "</font>";
+                skills += "<font color=\"FFFF11\">" + descriptions.get(clanSkill.getLevel() - 1) + "</font>";
             }
             skills += "</td></tr></table></td></tr>";
         }
@@ -1230,7 +1152,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             inventory += "<td><table><tr><td height=40>";
             inventory += pcInv.getPaperdollItem(SLOTS[i]) != null ? "<img src=" + pcInv.getPaperdollItem(SLOTS[i]).getTemplate().getIcon() + " width=32 height=32>" : "<img src=\"Icon.low_tab\" width=32 height=32>";
             inventory += "</td><td width=150><font color=\"FFFFFF\">";
-            inventory += pcInv.getPaperdollItem(SLOTS[i]) != null ? pcInv.getPaperdollItem(SLOTS[i]).getTemplate().getName() + " +" + pcInv.getPaperdollItem(SLOTS[i]).getEnchantLevel() : "No " + NAMES[i];
+            inventory += pcInv.getPaperdollItem(SLOTS[i]) != null ? pcInv.getPaperdollItem(SLOTS[i]).getTemplate().getName() + " +" + pcInv.getPaperdollItem(SLOTS[i]).getEnchantLevel() : "No " + NAMES.get(i);
             inventory += "</font></td></tr></table></td>";
         }
         inventory += "</tr>";
@@ -1256,7 +1178,7 @@ public final class CommunityClan extends Functions implements ScriptFile, ICommu
             inventory += "<td><table><tr><td height=40>";
             inventory += template != null ? "<img src=" + template.getIcon() + " width=32 height=32>" : "<img src=\"Icon.low_tab\" width=32 height=32>";
             inventory += "</td><td width=150><font color=\"bc7420\">";
-            inventory += template != null ? template.getName() + " +" + item[1] : "No " + NAMES[i];
+            inventory += template != null ? template.getName() + " +" + item[1] : "No " + NAMES.get(i);
             inventory += "</font></td></tr></table></td>";
         }
         inventory += "</tr>";

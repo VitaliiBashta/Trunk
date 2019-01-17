@@ -17,21 +17,22 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.scripts.quests._729_ProtectTheTerritoryCatapult;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class Catapult extends DefaultAI {
-    private static final Map<Integer, NpcString[]> MESSAGES = new HashMap<>(9);
+    private static final Map<Integer, List<NpcString>> MESSAGES = new HashMap<>(9);
 
     static {
-        MESSAGES.put(81, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GLUDIO, NpcString.THE_CATAPULT_OF_GLUDIO_HAS_BEEN_DESTROYED});
-        MESSAGES.put(82, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_DION, NpcString.THE_CATAPULT_OF_DION_HAS_BEEN_DESTROYED});
-        MESSAGES.put(83, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GIRAN, NpcString.THE_CATAPULT_OF_GIRAN_HAS_BEEN_DESTROYED});
-        MESSAGES.put(84, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_OREN, NpcString.THE_CATAPULT_OF_OREN_HAS_BEEN_DESTROYED});
-        MESSAGES.put(85, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_ADEN, NpcString.THE_CATAPULT_OF_ADEN_HAS_BEEN_DESTROYED});
-        MESSAGES.put(86, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_INNADRIL, NpcString.THE_CATAPULT_OF_INNADRIL_HAS_BEEN_DESTROYED});
-        MESSAGES.put(87, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_GODDARD, NpcString.THE_CATAPULT_OF_GODDARD_HAS_BEEN_DESTROYED});
-        MESSAGES.put(88, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_RUNE, NpcString.THE_CATAPULT_OF_RUNE_HAS_BEEN_DESTROYED});
-        MESSAGES.put(89, new NpcString[]{NpcString.PROTECT_THE_CATAPULT_OF_SCHUTTGART, NpcString.THE_CATAPULT_OF_SCHUTTGART_HAS_BEEN_DESTROYED});
+        MESSAGES.put(81, List.of(NpcString.PROTECT_THE_CATAPULT_OF_GLUDIO, NpcString.THE_CATAPULT_OF_GLUDIO_HAS_BEEN_DESTROYED));
+        MESSAGES.put(82, List.of(NpcString.PROTECT_THE_CATAPULT_OF_DION, NpcString.THE_CATAPULT_OF_DION_HAS_BEEN_DESTROYED));
+        MESSAGES.put(83, List.of(NpcString.PROTECT_THE_CATAPULT_OF_GIRAN, NpcString.THE_CATAPULT_OF_GIRAN_HAS_BEEN_DESTROYED));
+        MESSAGES.put(84, List.of(NpcString.PROTECT_THE_CATAPULT_OF_OREN, NpcString.THE_CATAPULT_OF_OREN_HAS_BEEN_DESTROYED));
+        MESSAGES.put(85, List.of(NpcString.PROTECT_THE_CATAPULT_OF_ADEN, NpcString.THE_CATAPULT_OF_ADEN_HAS_BEEN_DESTROYED));
+        MESSAGES.put(86, List.of(NpcString.PROTECT_THE_CATAPULT_OF_INNADRIL, NpcString.THE_CATAPULT_OF_INNADRIL_HAS_BEEN_DESTROYED));
+        MESSAGES.put(87, List.of(NpcString.PROTECT_THE_CATAPULT_OF_GODDARD, NpcString.THE_CATAPULT_OF_GODDARD_HAS_BEEN_DESTROYED));
+        MESSAGES.put(88, List.of(NpcString.PROTECT_THE_CATAPULT_OF_RUNE, NpcString.THE_CATAPULT_OF_RUNE_HAS_BEEN_DESTROYED));
+        MESSAGES.put(89, List.of(NpcString.PROTECT_THE_CATAPULT_OF_SCHUTTGART, NpcString.THE_CATAPULT_OF_SCHUTTGART_HAS_BEEN_DESTROYED));
     }
 
     private final OnPlayerEnterListener _listener = new OnPlayerEnterListenerImpl();
@@ -56,7 +57,7 @@ public final class Catapult extends DefaultAI {
         boolean first = actor.getParameter("dominion_first_attack", true);
         if (first) {
             actor.setParameter("dominion_first_attack", false);
-            NpcString msg = MESSAGES.get(siegeEvent.getId())[0];
+            NpcString msg = MESSAGES.get(siegeEvent.getId()).get(0);
             Quest q = QuestManager.getQuest(_729_ProtectTheTerritoryCatapult.class);
             GameObjectsStorage.getAllPlayersStream()
                     .filter(p -> p.getEvent(DominionSiegeEvent.class) == siegeEvent)
@@ -84,7 +85,7 @@ public final class Catapult extends DefaultAI {
         if (siegeEvent == null)
             return;
 
-        NpcString msg = MESSAGES.get(siegeEvent.getId())[1];
+        NpcString msg = MESSAGES.get(siegeEvent.getId()).get(1);
         GameObjectsStorage.getAllPlayersStream()
                 .filter(player -> player.getEvent(DominionSiegeEvent.class) == siegeEvent)
                 .forEach(player -> {

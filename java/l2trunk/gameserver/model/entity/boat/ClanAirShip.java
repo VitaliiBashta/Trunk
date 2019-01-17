@@ -23,36 +23,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public class ClanAirShip extends AirShip {
+public final class ClanAirShip extends AirShip {
     public static final int MAX_FUEL = 600;
     private static final long MAINTENANCE_DELAY = 60 * 1000L;
-    private final GameObject _controlKey = new ControlKeyInstance();
-    private final Clan _clan;
+    private final GameObject controlKey = new ControlKeyInstance();
+    private final Clan clan;
     private int _currentFuel;
-    private AirshipDock _dock;
-    private AirshipDock.AirshipPlatform _platform;
+    private AirshipDock dock;
+    private AirshipDock.AirshipPlatform platform;
     private HardReference<Player> _driverRef = HardReferences.emptyRef();
-    private boolean _customMove;
+    private boolean customMove;
     private Future<?> _deleteTask = null;
 
     public ClanAirShip(Clan clan) {
         super(IdFactory.getInstance().getNextId(), BoatHolder.TEMPLATE);
 
         BoatHolder.getInstance().addBoat(this);
-        _clan = clan;
-        _clan.setAirship(this);
+        this.clan = clan;
+        this.clan.setAirship(this);
         _currentFuel = clan.getAirshipFuel();
     }
 
     @Override
     public void onSpawn() {
-        _controlKey.spawnMe(getLoc());
+        controlKey.spawnMe(getLoc());
     }
 
     @Override
-    protected void updatePeopleInTheBoat(int x, int y, int z) {
-        super.updatePeopleInTheBoat(x, y, z);
-        _controlKey.setXYZ(x, y, z);
+    protected void updatePeopleInTheBoat(Location loc) {
+        super.updatePeopleInTheBoat(loc);
+        controlKey.setLoc(loc);
     }
 
     @Override
@@ -67,13 +67,11 @@ public class ClanAirShip extends AirShip {
         BoatWayEvent arrivalWay = new BoatWayEvent(this);
         BoatWayEvent departWay = new BoatWayEvent(this);
 
-        for (BoatPoint p : _platform.getArrivalPoints()) {
-            arrivalWay.addObject(BoatWayEvent.BOAT_POINTS, p);
-        }
+        platform.getArrivalPoints().forEach(p ->
+            arrivalWay.addObject(BoatWayEvent.BOAT_POINTS, p));
 
-        for (BoatPoint p : _platform.getDepartPoints()) {
-            departWay.addObject(BoatWayEvent.BOAT_POINTS, p);
-        }
+        platform.getDepartPoints().forEach(p ->
+            departWay.addObject(BoatWayEvent.BOAT_POINTS, p));
 
         arrivalWay.addOnTimeAction(0, new StartStopAction(StartStopAction.EVENT, true));
         departWay.addOnTimeAction(300, new StartStopAction(StartStopAction.EVENT, true));
@@ -90,11 +88,10 @@ public class ClanAirShip extends AirShip {
             _deleteTask = null;
         }
 
-        for (Player player : players) {
-            player.showQuestMovie(_platform.getOustMovie());
-
+        players.forEach(player -> {
+            player.showQuestMovie(platform.getOustMovie());
             oustPlayer(player, getReturnLoc(), true);
-        }
+        });
 
         deleteMe();
     }
@@ -131,14 +128,14 @@ public class ClanAirShip extends AirShip {
             _fromHome = 1;
             getCurrentWay().reCalcNextTime(false);
         } else {
-            _customMove = true;
+            customMove = true;
             _deleteTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new FuelAndDeleteTask(), MAINTENANCE_DELAY, MAINTENANCE_DELAY);
         }
     }
 
     @Override
     public void onEvtArrived() {
-        if (!_customMove)
+        if (!customMove)
             getCurrentWay().moveNext();
     }
 
@@ -176,10 +173,10 @@ public class ClanAirShip extends AirShip {
 
     public void setDriver(Player player) {
         if (player != null) {
-            if (_clan != player.getClan())
+            if (clan != player.getClan())
                 return;
 
-            if (player.getTargetId() != _controlKey.getObjectId()) {
+            if (player.getTargetId() != controlKey.getObjectId()) {
                 player.sendPacket(SystemMsg.YOU_MUST_TARGET_THE_ONE_YOU_WISH_TO_CONTROL);
                 return;
             }
@@ -262,16 +259,16 @@ public class ClanAirShip extends AirShip {
     }
 
     public GameObject getControlKey() {
-        return _controlKey;
+        return controlKey;
     }
 
     @Override
     protected void onDelete() {
-        _clan.setAirship(null);
-        _clan.setAirshipFuel(_currentFuel);
-        _clan.updateClanInDB();
+        clan.setAirship(null);
+        clan.setAirshipFuel(_currentFuel);
+        clan.updateClanInDB();
 
-        IdFactory.getInstance().releaseId(_controlKey.getObjectId());
+        IdFactory.getInstance().releaseId(controlKey.getObjectId());
         BoatHolder.getInstance().removeBoat(this);
 
         super.onDelete();
@@ -279,33 +276,33 @@ public class ClanAirShip extends AirShip {
 
     @Override
     public Location getReturnLoc() {
-        return _platform == null ? null : _platform.getOustLoc();
+        return platform == null ? null : platform.getOustLoc();
     }
 
     @Override
     public Clan getClan() {
-        return _clan;
+        return clan;
     }
 
     public void setPlatform(AirshipDock.AirshipPlatform platformId) {
-        _platform = platformId;
+        platform = platformId;
     }
 
     public AirshipDock getDock() {
-        return _dock;
+        return dock;
     }
 
-    public void setDock(AirshipDock dockId) {
-        _dock = dockId;
+    public void setDock(AirshipDock dock) {
+        this.dock = dock;
     }
 
     public boolean isCustomMove() {
-        return _customMove;
+        return customMove;
     }
 
     @Override
     public boolean isDocked() {
-        return _dock != null && !isMoving;
+        return dock != null && !isMoving;
     }
 
     @Override
@@ -316,7 +313,7 @@ public class ClanAirShip extends AirShip {
     @Override
     public List<L2GameServerPacket> deletePacketList() {
         List<L2GameServerPacket> list = new ArrayList<>(2);
-        list.add(new DeleteObject(_controlKey));
+        list.add(new DeleteObject(controlKey));
         list.add(new DeleteObject(this));
         return list;
     }
@@ -324,12 +321,7 @@ public class ClanAirShip extends AirShip {
     private class FuelAndDeleteTask extends RunnableImpl {
         @Override
         public void runImpl() {
-            boolean empty = true;
-            for (Player player : players)
-                if (player.isOnline())
-                    empty = false;
-
-            if (empty)
+            if (players.stream().noneMatch(Player::isOnline))
                 deleteMe();
             else
                 setCurrentFuel(getCurrentFuel() - 10);

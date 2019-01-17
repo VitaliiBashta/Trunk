@@ -18,7 +18,11 @@ public final class SantaEvent extends Functions implements ScriptFile, OnDeathLi
             5556, 0.3,
             5558, 1.0,
             5559, 0.09);
-    private static final int[][] SANTA_REWARD_REQUIRED_ITEM_AMOUNT = {{5557, 4}, {5556, 4}, {5558, 10}, {5559, 1}};
+    private static final Map<Integer, Integer> SANTA_REWARD_REQUIRED_ITEM_AMOUNT = Map.of(
+            5557, 4,
+            5556, 4,
+            5558, 10,
+            5559, 1);
     private static final int SANTA_TREE = 5560;
     private static final int SANTA_HAT = 7836;
     private static final int MAX_LEVEL_DIFFERENCE = 5;
@@ -41,15 +45,14 @@ public final class SantaEvent extends Functions implements ScriptFile, OnDeathLi
         player.sendMessage("Hey! Santa needs it! Tell him what you have found!");
     }
 
-    private static boolean checkRequiredItems(Player player, boolean delete) {
-        for (int[] requiredItem : SANTA_REWARD_REQUIRED_ITEM_AMOUNT)
-            if (player.getInventory().getCountOf(requiredItem[0]) >= requiredItem[1]) {
-                if (delete)
-                    Functions.removeItem(player, requiredItem[0], requiredItem[1], "SantaEventReward");
-            } else {
-                return false;
-            }
-        return true;
+    private static boolean checkRequiredItems(Player player) {
+        return SANTA_REWARD_REQUIRED_ITEM_AMOUNT.entrySet().stream()
+                .allMatch(e -> player.getInventory().getCountOf(e.getKey()) >= e.getValue());
+    }
+
+    private static void removeRequiredItems(Player player) {
+        SANTA_REWARD_REQUIRED_ITEM_AMOUNT.forEach((k, v) ->
+                Functions.removeItem(player, k, v, "SantaEventReward"));
     }
 
     @Override
@@ -69,11 +72,11 @@ public final class SantaEvent extends Functions implements ScriptFile, OnDeathLi
 
     public void getRewardFromSanta() {//Method run from Santa Npc
         Player player = getSelf();
-        if (!checkRequiredItems(player, false)) {
+        if (!checkRequiredItems(player)) {
             player.sendMessage("Sorry but you don't have required Items!");
             return;
         }
-        checkRequiredItems(player, true);
+        removeRequiredItems(player);
         Functions.addItem(player, SANTA_TREE, 1L, "SantaEventReward");
         Functions.addItem(player, SANTA_HAT, 1L, "SantaEventReward");
         player.sendMessage("Santa is really grateful! You can still bring him more!");

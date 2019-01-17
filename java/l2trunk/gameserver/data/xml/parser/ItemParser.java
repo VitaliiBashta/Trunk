@@ -60,7 +60,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
 
             ItemTemplate template;
             try {
-                if (itemElement.getName().equalsIgnoreCase("weapon")) {
+                if ("weapon".equalsIgnoreCase(itemElement.getName())) {
                     if (!set.isSet("class")) {
                         if ((slot & ItemTemplate.SLOT_L_HAND) > 0) {
                             set.set("class", ItemTemplate.ItemClass.ARMOR);
@@ -69,7 +69,7 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                         }
                     }
                     template = new WeaponTemplate(set);
-                } else if (itemElement.getName().equalsIgnoreCase("armor")) {
+                } else if ("armor".equalsIgnoreCase(itemElement.getName())) {
                     if (!set.isSet("class")) {
                         if ((slot & ItemTemplate.SLOTS_ARMOR) > 0) {
                             set.set("class", ItemTemplate.ItemClass.ARMOR);
@@ -84,10 +84,6 @@ public enum ItemParser /*extends StatParser<ItemHolder>*/ {
                     template = new EtcItemTemplate(set);
                 }
             } catch (RuntimeException e) {
-                // for(Map.Entry<String, Object> entry : set.entrySet())
-                // {
-                // info("set " + entry.getKey() + ":" + entry.getValue());
-                // }
                 LOG.warn("Fail create item: " + set.get("item_id"), e);
                 continue;
             }

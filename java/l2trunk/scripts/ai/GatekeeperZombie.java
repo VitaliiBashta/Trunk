@@ -39,7 +39,7 @@ public final class GatekeeperZombie extends Mystic {
 
         if (!avoidAttack && getIntention() != CtrlIntention.AI_INTENTION_ATTACK) {
             actor.getAggroList().addDamageHate(target, 0, 1);
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(target);
         }
 
         return true;

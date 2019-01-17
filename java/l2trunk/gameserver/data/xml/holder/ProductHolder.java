@@ -19,14 +19,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static l2trunk.commons.lang.NumberUtils.toBoolean;
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public final class ProductHolder {
     private static final Logger _log = LoggerFactory.getLogger(ProductHolder.class.getName());
     private static ProductHolder _instance = new ProductHolder();
-    private final Map<Integer, ProductItem> _itemsList;
+    private final Map<Integer, ProductItem> _itemsList =new TreeMap<>();
 
     private ProductHolder() {
-        _itemsList = new TreeMap<>();
-
         try {
             Path file = Config.DATAPACK_ROOT.resolve("data/item-mall.xml");
             DocumentBuilderFactory factory1 = DocumentBuilderFactory.newInstance();
@@ -39,26 +40,26 @@ public final class ProductHolder {
                     for (Node d1 = n1.getFirstChild(); d1 != null; d1 = d1.getNextSibling())
                         if ("product".equalsIgnoreCase(d1.getNodeName())) {
                             Node onSaleNode = d1.getAttributes().getNamedItem("on_sale");
-                            boolean onSale = onSaleNode != null && Boolean.parseBoolean(onSaleNode.getNodeValue());
+                            boolean onSale = onSaleNode != null && toBoolean(onSaleNode.getNodeValue());
                             if (!onSale)
                                 continue;
 
-                            int productId = Integer.parseInt(d1.getAttributes().getNamedItem("id").getNodeValue());
+                            int productId = toInt(d1.getAttributes().getNamedItem("id").getNodeValue());
 
                             Node categoryNode = d1.getAttributes().getNamedItem("category");
-                            int category = categoryNode != null ? Integer.parseInt(categoryNode.getNodeValue()) : 5;
+                            int category = categoryNode != null ? toInt(categoryNode.getNodeValue()) : 5;
 
                             Node priceNode = d1.getAttributes().getNamedItem("price");
-                            int price = priceNode != null ? Integer.parseInt(priceNode.getNodeValue()) : 0;
+                            int price = priceNode != null ? toInt(priceNode.getNodeValue()) : 0;
 
                             Node isEventNode = d1.getAttributes().getNamedItem("is_event");
-                            Boolean isEvent = isEventNode != null && Boolean.parseBoolean(isEventNode.getNodeValue());
+                            Boolean isEvent = isEventNode != null && toBoolean(isEventNode.getNodeValue());
 
                             Node isBestNode = d1.getAttributes().getNamedItem("is_best");
-                            Boolean isBest = isBestNode != null && Boolean.parseBoolean(isBestNode.getNodeValue());
+                            Boolean isBest = isBestNode != null && toBoolean(isBestNode.getNodeValue());
 
                             Node isNewNode = d1.getAttributes().getNamedItem("is_new");
-                            Boolean isNew = isNewNode != null && Boolean.parseBoolean(isNewNode.getNodeValue());
+                            Boolean isNew = isNewNode != null && toBoolean(isNewNode.getNodeValue());
 
                             int tabId = getProductTabId(isEvent, isBest, isNew);
 
@@ -72,8 +73,8 @@ public final class ProductHolder {
                             ProductItem pr = new ProductItem(productId, category, price, tabId, startTimeSale, endTimeSale);
                             for (Node t1 = d1.getFirstChild(); t1 != null; t1 = t1.getNextSibling())
                                 if ("component".equalsIgnoreCase(t1.getNodeName())) {
-                                    int item_id = Integer.parseInt(t1.getAttributes().getNamedItem("item_id").getNodeValue());
-                                    int count = Integer.parseInt(t1.getAttributes().getNamedItem("count").getNodeValue());
+                                    int item_id = toInt(t1.getAttributes().getNamedItem("item_id").getNodeValue());
+                                    int count = toInt(t1.getAttributes().getNamedItem("count").getNodeValue());
                                     ProductItemComponent component = new ProductItemComponent(item_id, count);
                                     components.add(component);
                                 }

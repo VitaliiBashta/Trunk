@@ -84,7 +84,6 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
         } else if ("use_staff".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(StaffofBlessing) > 0) {
                 st.takeAllItems(StaffofBlessing);
-                // TODO: remove glow from NPC
                 removeInvincibility(player, 18953);
                 return null;
             } else
@@ -92,7 +91,6 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
         } else if ("use_book".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ScrollofAbstinence) > 0) {
                 st.takeAllItems(ScrollofAbstinence);
-                // TODO: remove glow from NPC
                 removeInvincibility(player, 18954);
                 return null;
             } else
@@ -100,7 +98,6 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
         } else if ("use_sword".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SwordofHolySpirit) > 0) {
                 st.takeAllItems(SwordofHolySpirit);
-                // TODO: remove glow from NPC
                 removeInvincibility(player, 18955);
                 return null;
             } else
@@ -108,7 +105,6 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
         } else if ("use_shield".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(ShieldofSacrifice) > 0) {
                 st.takeAllItems(ShieldofSacrifice);
-                // TODO: remove glow from NPC
                 removeInvincibility(player, 18952);
                 return null;
             } else
@@ -268,7 +264,7 @@ public final class _10295_SevenSignsSolinasTomb extends Quest {
     private void removeInvincibility(Player player, int mobId) {
         player.getReflection().getNpcs()
                 .filter(n -> n.getNpcId() == mobId)
-                .forEach(n -> n.getEffectList().getAllEffects().stream()
+                .forEach(n -> n.getEffectList().getAllEffects()
                         .filter(e -> e.getSkill().getId() == 6371)
                         .forEach(Effect::exit));
     }

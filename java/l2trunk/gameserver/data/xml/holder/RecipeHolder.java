@@ -13,46 +13,47 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import static l2trunk.commons.lang.NumberUtils.toBoolean;
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class RecipeHolder {
-    private static final Logger _log = LoggerFactory.getLogger(RecipeHolder.class);
-    private static RecipeHolder _instance;
+    private static final Logger LOG = LoggerFactory.getLogger(RecipeHolder.class);
+    private static RecipeHolder instance;
 
     private final ConcurrentHashMap<Integer, Recipe> listByRecipeId = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Integer, Recipe> _listByRecipeItem = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Recipe> listByRecipeItem = new ConcurrentHashMap<>();
 
     private RecipeHolder() {
         listByRecipeId.clear();
-        _listByRecipeItem.clear();
+        listByRecipeItem.clear();
         try {
             loadFromXML();
         } catch (IOException | ParserConfigurationException | SAXException e) {
-            _log.error("Error while loading Recipes From XML ", e);
+            LOG.error("Error while loading Recipes From XML ", e);
         }
     }
 
     public static RecipeHolder getInstance() {
-        if (_instance == null)
-            _instance = new RecipeHolder();
-        return _instance;
+        if (instance == null)
+            instance = new RecipeHolder();
+        return instance;
     }
 
     private void loadFromXML() throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(false);
         factory.setIgnoringComments(true);
-        File file = new File(Config.DATAPACK_ROOT + "/data/recipes.xml");
-        if (file.exists()) {
-            Document doc = factory.newDocumentBuilder().parse(file);
+        Path file = Config.DATAPACK_ROOT.resolve("data/recipes.xml");
+        if (Files.exists(file)) {
+            Document doc = factory.newDocumentBuilder().parse(file.toFile());
             List<RecipeComponent> recipePartList = new ArrayList<>();
             for (Node n = doc.getFirstChild(); n != null; n = n.getNextSibling()) {
                 if ("list".equalsIgnoreCase(n.getNodeName())) {
@@ -61,91 +62,89 @@ public final class RecipeHolder {
                             recipePartList.clear();
                             NamedNodeMap attrs = d.getAttributes();
                             Node att;
-                            int id = -1;
-                            boolean haveRare = false;
                             StatsSet set = new StatsSet();
 
                             att = attrs.getNamedItem("id");
                             if (att == null) {
-                                _log.error("Missing id for recipe item, skipping");
+                                LOG.error("Missing id for recipe item, skipping");
                                 continue;
                             }
-                            id = toInt(att.getNodeValue());
+                            int id = toInt(att.getNodeValue(), -1);
                             set.set("id", id);
 
                             att = attrs.getNamedItem("level");
                             if (att == null) {
-                                _log.error("Missing level for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing level for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("level", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("recid");
                             if (att == null) {
-                                _log.error("Missing recid for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing recid for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("recid", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("recipeName");
                             if (att == null) {
-                                _log.error("Missing recipeName for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing recipeName for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("recipeName", att.getNodeValue());
 
                             att = attrs.getNamedItem("successRate");
                             if (att == null) {
-                                _log.error("Missing successRate for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing successRate for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("successRate", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("mp");
                             if (att == null) {
-                                _log.error("Missing mp for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing mp for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("mp", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("itemId");
                             if (att == null) {
-                                _log.error("Missing itemId for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing itemId for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("itemId", Short.parseShort(att.getNodeValue()));
 
                             att = attrs.getNamedItem("foundation");
                             if (att == null) {
-                                _log.error("Missing foundation for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing foundation for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("foundation", Short.parseShort(att.getNodeValue()));
 
                             att = attrs.getNamedItem("count");
                             if (att == null) {
-                                _log.error("Missing count for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing count for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("count", Short.parseShort(att.getNodeValue()));
 
                             att = attrs.getNamedItem("exp");
                             if (att == null) {
-                                _log.error("Missing exp for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing exp for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("exp", Long.parseLong(att.getNodeValue()));
 
                             att = attrs.getNamedItem("sp");
                             if (att == null) {
-                                _log.error("Missing sp for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing sp for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("sp", toInt(att.getNodeValue()));
 
                             att = attrs.getNamedItem("dwarven");
                             if (att == null) {
-                                _log.error("Missing type for recipe item id: " + id + ", skipping");
+                                LOG.error("Missing type for recipe item id: " + id + ", skipping");
                                 continue;
                             }
                             set.set("isDvarvenCraft", toBoolean(att.getNodeValue()));
@@ -175,19 +174,19 @@ public final class RecipeHolder {
                                 recipeList.addRecipe(recipePart);
                             }
                             listByRecipeId.put(id, recipeList);
-                            _listByRecipeItem.put(recipeId, recipeList);
+                            listByRecipeItem.put(recipeId, recipeList);
                         }
                     }
                 }
             }
-            _log.info("RecipeController: Loaded " + listByRecipeId.size() + " Recipes.");
+            LOG.info("RecipeController: Loaded " + listByRecipeId.size() + " Recipes.");
         } else {
-            _log.error("Recipes file (" + file.getAbsolutePath() + ") doesnt exists.");
+            LOG.error("Recipes file (" + file.toAbsolutePath() + ") doesnt exists.");
         }
     }
 
-    public Collection<Recipe> getRecipes() {
-        return listByRecipeId.values();
+    public Stream<Recipe> getRecipes() {
+        return listByRecipeId.values().stream();
     }
 
     public Recipe getRecipeByRecipeId(int listId) {
@@ -195,6 +194,6 @@ public final class RecipeHolder {
     }
 
     public Recipe getRecipeByRecipeItem(int itemId) {
-        return _listByRecipeItem.get(itemId);
+        return listByRecipeItem.get(itemId);
     }
 }

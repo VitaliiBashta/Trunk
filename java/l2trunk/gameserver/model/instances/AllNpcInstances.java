@@ -4,6 +4,7 @@ import l2trunk.gameserver.data.xml.holder.NpcHolder;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class AllNpcInstances {
     private AllNpcInstances() {
@@ -12,7 +13,7 @@ public final class AllNpcInstances {
     public static NpcInstance getInstance(int id, String type, String name) {
         NpcTemplate template;
 
-        List<NpcTemplate> list = NpcHolder.getTemplateByName(name);
+        List<NpcTemplate> list = NpcHolder.getTemplateByName(name).collect(Collectors.toList());
         if (list.size() == 1)
             template = list.get(0);
         else

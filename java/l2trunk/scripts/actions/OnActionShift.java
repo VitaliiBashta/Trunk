@@ -6,7 +6,10 @@ import l2trunk.gameserver.data.htm.HtmCache;
 import l2trunk.gameserver.handler.admincommands.impl.AdminEditChar;
 import l2trunk.gameserver.model.AggroList.HateComparator;
 import l2trunk.gameserver.model.AggroList.HateInfo;
-import l2trunk.gameserver.model.*;
+import l2trunk.gameserver.model.GameObject;
+import l2trunk.gameserver.model.GameObjectsStorage;
+import l2trunk.gameserver.model.Player;
+import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.base.Element;
 import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.instances.DoorInstance;
@@ -21,7 +24,6 @@ import l2trunk.gameserver.utils.PositionUtils;
 import l2trunk.gameserver.utils.Util;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -237,10 +239,8 @@ public final class OnActionShift extends Functions {
         StringBuilder dialog = new StringBuilder("<html><body><center><font color=\"LEVEL\">");
         dialog.append(nameNpc(npc)).append("<br></font></center><br>");
 
-        List<Effect> list = npc.getEffectList().getAllEffects();
-        if (list != null && !list.isEmpty())
-            for (Effect e : list)
-                dialog.append(e.getSkill().getName()).append("<br1>");
+        npc.getEffectList().getAllEffects().forEach(e ->
+                dialog.append(e.getSkill().getName()).append("<br1>"));
 
         dialog.append("<br><center><button value=\"");
         dialog.append("Refresh");

@@ -12,7 +12,6 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -118,19 +117,19 @@ public final class PetBabyInstance extends PetInstance {
                     Pet_Weapon_Maintenance));
     private static final List<List<Skill>> COUGAR_BUFFS = List.of(
             List.of(Pet_Empower, Pet_Might),
-        List.of(
+            List.of(
                     Pet_Empower,
                     Pet_Might,
                     Pet_Shield,
                     Pet_Blessed_Body),
-        List.of(
+            List.of(
                     Pet_Empower,
                     Pet_Might,
                     Pet_Shield,
                     Pet_Blessed_Body,
                     Pet_Acumen,
                     Pet_Haste),
-        List.of(
+            List.of(
                     Pet_Empower,
                     Pet_Might,
                     Pet_Shield,
@@ -141,19 +140,19 @@ public final class PetBabyInstance extends PetInstance {
                     Pet_Focus));
     private static final List<List<Skill>> BUFFALO_BUFFS = List.of(
             List.of(Pet_Might, Pet_Blessed_Body),
-        List.of(
+            List.of(
                     Pet_Might,
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Guidance),
-        List.of(
+            List.of(
                     Pet_Might,
                     Pet_Blessed_Body,
                     Pet_Shield,
                     Pet_Guidance,
                     Pet_Vampiric_Rage,
                     Pet_Haste),
-        List.of(
+            List.of(
                     Pet_Might,
                     Pet_Blessed_Body,
                     Pet_Shield,
@@ -547,14 +546,12 @@ public final class PetBabyInstance extends PetInstance {
                 if (!improved || owner.getEffectList().getEffectsCountForSkill(5771) > 0)
                     return null;
 
-                outer:
                 for (Skill buff : getBuffs()) {
                     if (getCurrentMp() < buff.getMpConsume2())
                         continue;
 
-                    for (Effect ef : owner.getEffectList().getAllEffects())
-                        if (checkEffect(ef, buff))
-                            continue outer;
+                    if (owner.getEffectList().getAllEffects().anyMatch(ef -> checkEffect(ef, buff)))
+                        continue;
 
                     if (buff.checkCondition(PetBabyInstance.this, owner, false, !isFollowMode(), true)) {
                         setTarget(owner);

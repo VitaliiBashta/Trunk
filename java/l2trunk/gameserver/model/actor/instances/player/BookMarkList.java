@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookMarkList {
+public final class BookMarkList {
     private static final ZoneType[] FORBIDDEN_ZONES = new ZoneType[]
             {
                     ZoneType.RESIDENCE,
@@ -30,7 +30,7 @@ public class BookMarkList {
                     ZoneType.no_summon,
             };
 
-    private static final Logger _log = LoggerFactory.getLogger(BookMarkList.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BookMarkList.class);
 
     private final Player owner;
     private final List<BookMark> elementData;
@@ -133,8 +133,8 @@ public class BookMarkList {
         elementData.clear();
     }
 
-    public BookMark[] toArray() {
-        return elementData.toArray(new BookMark[elementData.size()]);
+    public List<BookMark> getBookMarks() {
+        return elementData;
     }
 
     public int incCapacity() {
@@ -169,7 +169,7 @@ public class BookMarkList {
         if (slot < 1 || slot > elementData.size())
             return false;
         BookMark bookmark = elementData.get(slot - 1);
-        if (!checkTeleportLocation(owner, bookmark.x, bookmark.y, bookmark.z))
+        if (!checkTeleportLocation(owner, bookmark.loc))
             return false;
 
         //TODO YOU_CANNOT_USE_MY_TELEPORTS_IN_THIS_AREA // Вы находитесь в локации, на которой возврат к флагу недоступен.
@@ -179,7 +179,7 @@ public class BookMarkList {
             return false;
         }
 
-        owner.teleToLocation(bookmark.x, bookmark.y, bookmark.z);
+        owner.teleToLocation(bookmark.loc);
         return true;
     }
 
@@ -225,13 +225,13 @@ public class BookMarkList {
                 statement.setString(3, bookmark.getName());
                 statement.setString(4, bookmark.getAcronym());
                 statement.setInt(5, bookmark.getIcon());
-                statement.setInt(6, bookmark.x);
-                statement.setInt(7, bookmark.y);
-                statement.setInt(8, bookmark.z);
+                statement.setInt(6, bookmark.loc.x);
+                statement.setInt(7, bookmark.loc.y);
+                statement.setInt(8, bookmark.loc.z);
                 statement.execute();
             }
         } catch (SQLException e) {
-            _log.error("Error while Inserting BookMarkList! ", e);
+            LOG.error("Error while Inserting BookMarkList! ", e);
         }
     }
 
@@ -244,10 +244,12 @@ public class BookMarkList {
         try (PreparedStatement statement = con.prepareStatement("SELECT * FROM `character_bookmarks` WHERE `char_Id`=" + owner.getObjectId() + " ORDER BY `idx` LIMIT " + capacity);
              ResultSet rs = statement.executeQuery()) {
             elementData.clear();
-            while (rs.next())
-                add(new BookMark(rs.getInt("x"), rs.getInt("y"), rs.getInt("z"), rs.getInt("icon"), rs.getString("name"), rs.getString("acronym")));
+            while (rs.next()) {
+                Location loc = new Location(rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
+                add(new BookMark(loc, rs.getInt("icon"), rs.getString("name"), rs.getString("acronym")));
+            }
         } catch (SQLException e) {
-            _log.error("Could not restore " + owner + " bookmarks!", e);
+            LOG.error("Could not restore " + owner + " bookmarks!", e);
         }
     }
 }

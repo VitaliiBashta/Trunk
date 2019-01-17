@@ -42,7 +42,7 @@ public class PcRefund extends ItemContainer {
     public void clear() {
         writeLock();
         try {
-            _itemsDAO.delete(items);
+            ITEMS_DAO.delete(items);
             items.clear();
         } finally {
             writeUnlock();

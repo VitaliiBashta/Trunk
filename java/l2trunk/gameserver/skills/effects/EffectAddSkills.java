@@ -3,7 +3,7 @@ package l2trunk.gameserver.skills.effects;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectAddSkills extends Effect {
+public final class EffectAddSkills extends Effect {
     public EffectAddSkills(Env env, EffectTemplate template) {
         super(env, template);
     }

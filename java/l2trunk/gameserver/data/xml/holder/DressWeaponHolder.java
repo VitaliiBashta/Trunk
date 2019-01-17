@@ -19,16 +19,6 @@ public final class DressWeaponHolder {
         return WEAPONS.size();
     }
 
-    public List<DressWeaponData> getAllWeapons() {
-        return WEAPONS;
-    }
-
-    public DressWeaponData getWeapon(int id) {
-        return WEAPONS.stream()
-                .filter(weapon -> weapon.getId() == id)
-                .findFirst().orElse(null);
-    }
-
     public void clear() {
         WEAPONS.clear();
     }

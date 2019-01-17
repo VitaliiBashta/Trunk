@@ -783,7 +783,7 @@ public class Quest {
     }
 
     public class DeSpawnScheduleTimerTask extends RunnableImpl {
-        NpcInstance _npc = null;
+        NpcInstance _npc;
 
         DeSpawnScheduleTimerTask(NpcInstance npc) {
             _npc = npc;

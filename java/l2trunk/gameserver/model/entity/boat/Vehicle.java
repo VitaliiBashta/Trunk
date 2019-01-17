@@ -5,7 +5,7 @@ import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.templates.CharTemplate;
 import l2trunk.gameserver.utils.Location;
 
-public class Vehicle extends Boat {
+public final class Vehicle extends Boat {
     public Vehicle(int objectId, CharTemplate template) {
         super(objectId, template);
     }

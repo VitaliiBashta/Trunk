@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class HennaHolder {
     private static final Map<Integer, Henna> hennas = new HashMap<>();
@@ -22,10 +23,9 @@ public final class HennaHolder {
         return hennas.get(symbolId);
     }
 
-    public static List<Henna> generateList(Player player) {
+    public static Stream<Henna> generateStream(Player player) {
         return hennas.values().stream()
-                .filter(henna -> henna.isForThisClass(player))
-                .collect(Collectors.toList());
+                .filter(henna -> henna.isForThisClass(player));
     }
 
     public static boolean isHenna(int itemId) {

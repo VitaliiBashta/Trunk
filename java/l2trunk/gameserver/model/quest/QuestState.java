@@ -115,10 +115,10 @@ public final class QuestState {
             player.addRadar(loc);
     }
 
-    public void addRadarWithMap(int x, int y, int z) {
+    public void addRadarWithMap(Location location) {
         Player player = getPlayer();
         if (player != null)
-            player.addRadarWithMap(x, y, z);
+            player.addRadarWithMap(location);
     }
 
     /**
@@ -134,23 +134,11 @@ public final class QuestState {
 
     /**
      * Destroy element used by quest when quest is exited
-     *
-     * @param repeatable
-     * @return QuestState
      */
     public QuestState exitCurrentQuest(boolean repeatable) {
         Player player = getPlayer();
         if (player == null)
             return this;
-
-        // Alexander - Add a new quest finished to the stats
-//		if (!repeatable && getQuest().getQuestIntId() > 0)
-//		{
-//			player.addPlayerStats(Ranking.STAT_TOP_QUESTS_FINISHED);
-//			player.getCounters().unrepeatableQuestsCompleted++;
-//		}
-//		else if (getQuest().getQuestIntId() > 0)
-//			player.getCounters().repeatableQuestsCompleted++;
 
         removePlayerOnKillListener();
         // Clean drops

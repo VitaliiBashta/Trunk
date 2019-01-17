@@ -443,7 +443,7 @@ public class Formulas {
         }
 
         if ((damage > 1) && skill.isBasedOnTargetDebuff()) {
-            damage *= 1 + (0.05 * target.getEffectList().getAllEffects().size());
+            damage *= 1 + (0.05 * target.getEffectList().getAllEffects().count());
         }
 
         damage += lethalDamage;

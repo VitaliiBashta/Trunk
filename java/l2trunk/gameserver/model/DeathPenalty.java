@@ -13,7 +13,7 @@ public class DeathPenalty {
 
     private final HardReference<Player> _playerRef;
     private int _level;
-    private boolean _hasCharmOfLuck;
+    private boolean hasCharmOfLuck;
 
     public DeathPenalty(Player player, int level) {
         _playerRef = player.getRef();
@@ -56,8 +56,8 @@ public class DeathPenalty {
         if (!Config.ALLOW_DEATH_PENALTY_C5)
             return;
 
-        if (_hasCharmOfLuck) {
-            _hasCharmOfLuck = false;
+        if (hasCharmOfLuck) {
+            hasCharmOfLuck = false;
             return;
         }
 
@@ -130,15 +130,12 @@ public class DeathPenalty {
         player.updateStats();
     }
 
-    public void checkCharmOfLuck() {
+    void checkCharmOfLuck() {
         Player player = getPlayer();
         if (player != null)
-            for (Effect e : player.getEffectList().getAllEffects())
-                if (e.getSkill().getId() == _charmOfLuckSkillId || e.getSkill().getId() == _fortuneOfNobleseSkillId) {
-                    _hasCharmOfLuck = true;
-                    return;
-                }
-
-        _hasCharmOfLuck = false;
+            hasCharmOfLuck = player.getEffectList().getAllEffects()
+                    .map(e -> e.getSkill().getId())
+                    .anyMatch(e -> e == _charmOfLuckSkillId || e == _fortuneOfNobleseSkillId);
+        hasCharmOfLuck = false;
     }
 }

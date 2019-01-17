@@ -35,6 +35,7 @@ import l2trunk.gameserver.utils.Location;
 
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
+import java.util.stream.Stream;
 
 public final class ItemInstance extends GameObject implements JdbcEntity {
     public static final int[] EMPTY_ENCHANT_OPTIONS = new int[3];
@@ -477,9 +478,8 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
      * functions, if this particular item instance is enhanched
      * for a particular player.
      *
-     * @return Func[]
      */
-    public List<Func> getStatFuncs() {
+    public Stream<Func> getStatFuncs() {
         List<Func> result = new ArrayList<>();
 
         List<Func> funcs = new ArrayList<>();
@@ -501,7 +501,7 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
         if (!funcs.isEmpty())
             result = funcs;
 
-        return result;
+        return result.stream();
     }
 
     /**
@@ -515,9 +515,6 @@ public final class ItemInstance extends GameObject implements JdbcEntity {
 
     /**
      * Return true if item can be destroyed
-     *
-     * @param player
-     * @return
      */
     public boolean canBeDestroyed(Player player) {
         if ((customFlags & FLAG_NO_DESTROY) == FLAG_NO_DESTROY)

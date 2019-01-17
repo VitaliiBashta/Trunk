@@ -14,7 +14,9 @@ import l2trunk.gameserver.templates.item.WeaponTemplate.WeaponType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class Inventory extends ItemContainer {
     public static final int PAPERDOLL_UNDER = 0;
@@ -44,42 +46,41 @@ public abstract class Inventory extends ItemContainer {
     public static final int PAPERDOLL_DECO6 = 24;
     public static final int PAPERDOLL_BELT = 25;
     public static final int PAPERDOLL_MAX = 26;
-    public static final int[] PAPERDOLL_ORDER =
-            {
-                    Inventory.PAPERDOLL_UNDER,
-                    Inventory.PAPERDOLL_REAR,
-                    Inventory.PAPERDOLL_LEAR,
-                    Inventory.PAPERDOLL_NECK,
-                    Inventory.PAPERDOLL_RFINGER,
-                    Inventory.PAPERDOLL_LFINGER,
-                    Inventory.PAPERDOLL_HEAD,
-                    Inventory.PAPERDOLL_RHAND,
-                    Inventory.PAPERDOLL_LHAND,
-                    Inventory.PAPERDOLL_GLOVES,
-                    Inventory.PAPERDOLL_CHEST,
-                    Inventory.PAPERDOLL_LEGS,
-                    Inventory.PAPERDOLL_FEET,
-                    Inventory.PAPERDOLL_BACK,
-                    Inventory.PAPERDOLL_LRHAND,
-                    Inventory.PAPERDOLL_HAIR,
-                    Inventory.PAPERDOLL_DHAIR,
-                    Inventory.PAPERDOLL_RBRACELET,
-                    Inventory.PAPERDOLL_LBRACELET,
-                    Inventory.PAPERDOLL_DECO1,
-                    Inventory.PAPERDOLL_DECO2,
-                    Inventory.PAPERDOLL_DECO3,
-                    Inventory.PAPERDOLL_DECO4,
-                    Inventory.PAPERDOLL_DECO5,
-                    Inventory.PAPERDOLL_DECO6,
-                    Inventory.PAPERDOLL_BELT // Пояс
-            };
+    public static final List<Integer> PAPERDOLL_ORDER = List.of(
+            Inventory.PAPERDOLL_UNDER,
+            Inventory.PAPERDOLL_REAR,
+            Inventory.PAPERDOLL_LEAR,
+            Inventory.PAPERDOLL_NECK,
+            Inventory.PAPERDOLL_RFINGER,
+            Inventory.PAPERDOLL_LFINGER,
+            Inventory.PAPERDOLL_HEAD,
+            Inventory.PAPERDOLL_RHAND,
+            Inventory.PAPERDOLL_LHAND,
+            Inventory.PAPERDOLL_GLOVES,
+            Inventory.PAPERDOLL_CHEST,
+            Inventory.PAPERDOLL_LEGS,
+            Inventory.PAPERDOLL_FEET,
+            Inventory.PAPERDOLL_BACK,
+            Inventory.PAPERDOLL_LRHAND,
+            Inventory.PAPERDOLL_HAIR,
+            Inventory.PAPERDOLL_DHAIR,
+            Inventory.PAPERDOLL_RBRACELET,
+            Inventory.PAPERDOLL_LBRACELET,
+            Inventory.PAPERDOLL_DECO1,
+            Inventory.PAPERDOLL_DECO2,
+            Inventory.PAPERDOLL_DECO3,
+            Inventory.PAPERDOLL_DECO4,
+            Inventory.PAPERDOLL_DECO5,
+            Inventory.PAPERDOLL_DECO6,
+            Inventory.PAPERDOLL_BELT // Пояс
+    );
     private static final Logger _log = LoggerFactory.getLogger(Inventory.class);
-    final ItemInstance[] _paperdoll = new ItemInstance[PAPERDOLL_MAX];
-    final InventoryListenerList _listeners = new InventoryListenerList();
+    final List<ItemInstance> paperdoll = Arrays.asList(new ItemInstance[PAPERDOLL_MAX]);
+    final InventoryListenerList listeners = new InventoryListenerList();
     private final int _ownerId;
     private int _totalWeight;
     // used to quickly check for using of items of special type
-    private long _wearedMask;
+    private long wearedMask;
 
     Inventory(int ownerId) {
         _ownerId = ownerId;
@@ -197,7 +198,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     void onEquip(int slot, ItemInstance item) {
-        _listeners.onEquip(slot, item);
+        listeners.onEquip(slot, item);
 
         item.setLocation(getEquipLocation());
         item.setLocData(slot);
@@ -206,7 +207,7 @@ public abstract class Inventory extends ItemContainer {
 
         sendModifyItem(item);
 
-        _wearedMask |= item.getTemplate().getItemMask();
+        wearedMask |= item.getTemplate().getItemMask();
     }
 
     void onUnequip(int slot, ItemInstance item) {
@@ -220,9 +221,9 @@ public abstract class Inventory extends ItemContainer {
 
         sendModifyItem(item);
 
-        _wearedMask &= ~item.getTemplate().getItemMask();
+        wearedMask &= ~item.getTemplate().getItemMask();
 
-        _listeners.onUnequip(slot, item);
+        listeners.onUnequip(slot, item);
     }
 
     /**
@@ -246,11 +247,11 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public ItemInstance getPaperdollItem(int slot) {
-        return _paperdoll[slot];
+        return paperdoll.get(slot);
     }
 
-    public ItemInstance[] getPaperdollItems() {
-        return _paperdoll;
+    public List<ItemInstance> getPaperdollItems() {
+        return paperdoll;
     }
 
     int getPaperdollItemId(int slot) {
@@ -258,7 +259,7 @@ public abstract class Inventory extends ItemContainer {
         if (item != null)
             return item.getItemId();
         else if (slot == PAPERDOLL_HAIR) {
-            item = _paperdoll[PAPERDOLL_DHAIR];
+            item = paperdoll.get(PAPERDOLL_DHAIR);
             if (item != null)
                 return item.getItemId();
         }
@@ -271,7 +272,7 @@ public abstract class Inventory extends ItemContainer {
         if (item != null) {
             return item.getItemId();
         } else if (slot == PAPERDOLL_HAIR) {
-            item = _paperdoll[PAPERDOLL_DHAIR];
+            item = paperdoll.get(PAPERDOLL_DHAIR);
             if (item != null)
                 return item.getItemId();
         }
@@ -280,11 +281,11 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public int getPaperdollObjectId(int slot) {
-        ItemInstance item = _paperdoll[slot];
+        ItemInstance item = paperdoll.get(slot);
         if (item != null)
             return item.getObjectId();
         else if (slot == PAPERDOLL_HAIR) {
-            item = _paperdoll[PAPERDOLL_DHAIR];
+            item = paperdoll.get(PAPERDOLL_DHAIR);
             if (item != null)
                 return item.getObjectId();
         }
@@ -292,25 +293,25 @@ public abstract class Inventory extends ItemContainer {
     }
 
     void addListener(OnEquipListener listener) {
-        _listeners.add(listener);
+        listeners.add(listener);
     }
 
     public void removeListener(OnEquipListener listener) {
-        _listeners.remove(listener);
+        listeners.remove(listener);
     }
 
     public ItemInstance setPaperdollItem(int slot, ItemInstance item) {
         ItemInstance old;
         writeLock();
         try {
-            old = _paperdoll[slot];
+            old = paperdoll.get(slot);
             if (old != item) {
                 if (old != null) {
-                    _paperdoll[slot] = null;
+                    paperdoll.set(slot, null);
                     onUnequip(slot, old);
                 }
                 if (item != null) {
-                    _paperdoll[slot] = item;
+                    paperdoll.set(slot, item);
                     onEquip(slot, item);
                 }
             }
@@ -321,7 +322,7 @@ public abstract class Inventory extends ItemContainer {
     }
 
     public long getWearedMask() {
-        return _wearedMask;
+        return wearedMask;
     }
 
     public void unEquipItem(ItemInstance item) {
@@ -515,9 +516,9 @@ public abstract class Inventory extends ItemContainer {
             case ItemTemplate.SLOT_L_EAR:
             case ItemTemplate.SLOT_R_EAR:
             case ItemTemplate.SLOT_L_EAR | ItemTemplate.SLOT_R_EAR: {
-                if (_paperdoll[PAPERDOLL_LEAR] == null)
+                if (paperdoll.get(PAPERDOLL_LEAR) == null)
                     setPaperdollItem(PAPERDOLL_LEAR, item);
-                else if (_paperdoll[PAPERDOLL_REAR] == null)
+                else if (paperdoll.get(PAPERDOLL_REAR) == null)
                     setPaperdollItem(PAPERDOLL_REAR, item);
                 else
                     setPaperdollItem(PAPERDOLL_LEAR, item);
@@ -526,9 +527,9 @@ public abstract class Inventory extends ItemContainer {
             case ItemTemplate.SLOT_L_FINGER:
             case ItemTemplate.SLOT_R_FINGER:
             case ItemTemplate.SLOT_L_FINGER | ItemTemplate.SLOT_R_FINGER: {
-                if (_paperdoll[PAPERDOLL_LFINGER] == null)
+                if (paperdoll.get(PAPERDOLL_LFINGER) == null)
                     setPaperdollItem(PAPERDOLL_LFINGER, item);
-                else if (_paperdoll[PAPERDOLL_RFINGER] == null)
+                else if (paperdoll.get(PAPERDOLL_RFINGER) == null)
                     setPaperdollItem(PAPERDOLL_RFINGER, item);
                 else
                     setPaperdollItem(PAPERDOLL_LFINGER, item);
@@ -711,17 +712,17 @@ public abstract class Inventory extends ItemContainer {
                 setPaperdollItem(PAPERDOLL_BELT, item);
                 break;
             case ItemTemplate.SLOT_DECO:
-                if (_paperdoll[PAPERDOLL_DECO1] == null)
+                if (paperdoll.get(PAPERDOLL_DECO1) == null)
                     setPaperdollItem(PAPERDOLL_DECO1, item);
-                else if (_paperdoll[PAPERDOLL_DECO2] == null)
+                else if (paperdoll.get(PAPERDOLL_DECO2) == null)
                     setPaperdollItem(PAPERDOLL_DECO2, item);
-                else if (_paperdoll[PAPERDOLL_DECO3] == null)
+                else if (paperdoll.get(PAPERDOLL_DECO3) == null)
                     setPaperdollItem(PAPERDOLL_DECO3, item);
-                else if (_paperdoll[PAPERDOLL_DECO4] == null)
+                else if (paperdoll.get(PAPERDOLL_DECO4) == null)
                     setPaperdollItem(PAPERDOLL_DECO4, item);
-                else if (_paperdoll[PAPERDOLL_DECO5] == null)
+                else if (paperdoll.get(PAPERDOLL_DECO5) == null)
                     setPaperdollItem(PAPERDOLL_DECO5, item);
-                else if (_paperdoll[PAPERDOLL_DECO6] == null)
+                else if (paperdoll.get(PAPERDOLL_DECO6) == null)
                     setPaperdollItem(PAPERDOLL_DECO6, item);
                 else
                     setPaperdollItem(PAPERDOLL_DECO1, item);

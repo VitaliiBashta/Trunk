@@ -27,19 +27,19 @@ public final class _999_T1Tutorial extends Quest {
     private static final Map<Integer, Talk> talks = new HashMap<>();
 
     static {
-        events.put("32133_02", new Event("32133-03.htm", -119692, 44504, 380, DIPLOMA, 0x7b, SOULSHOT_NOVICE, 200, 0x7c, SOULSHOT_NOVICE, 200));
-        events.put("30008_02", new Event("30008-03.htm", 0, 0, 0, RECOMMENDATION_01, 0x00, SOULSHOT_NOVICE, 200, 0x00, 0, 0));
-        events.put("30008_04", new Event("30008-04.htm", -84081, 243277, -3723, 0, 0x00, 0, 0, 0, 0, 0));
-        events.put("30017_02", new Event("30017-03.htm", 0, 0, 0, RECOMMENDATION_02, 0x0a, SPIRITSHOT_NOVICE, 100, 0x00, 0, 0));
-        events.put("30017_04", new Event("30017-04.htm", -84081, 243277, -3723, 0, 0x0a, 0, 0, 0x00, 0, 0));
-        events.put("30370_02", new Event("30370-03.htm", 0, 0, 0, LEAF_OF_MOTHERTREE, 0x19, SPIRITSHOT_NOVICE, 100, 0x12, SOULSHOT_NOVICE, 200));
-        events.put("30370_04", new Event("30370-04.htm", 45491, 48359, -3086, 0, 0x19, 0, 0, 0x12, 0, 0));
-        events.put("30129_02", new Event("30129-03.htm", 0, 0, 0, BLOOD_OF_JUNDIN, 0x26, SPIRITSHOT_NOVICE, 100, 0x1f, SOULSHOT_NOVICE, 200));
-        events.put("30129_04", new Event("30129-04.htm", 12116, 16666, -4610, 0, 0x26, 0, 0, 0x1f, 0, 0));
-        events.put("30528_02", new Event("30528-03.htm", 0, 0, 0, LICENSE_OF_MINER, 0x35, SOULSHOT_NOVICE, 200, 0x00, 0, 0));
-        events.put("30528_04", new Event("30528-04.htm", 115642, -178046, -941, 0, 0x35, 0, 0, 0x00, 0, 0));
-        events.put("30573_02", new Event("30573-03.htm", 0, 0, 0, VOUCHER_OF_FLAME, 0x31, SPIRITSHOT_NOVICE, 100, 0x2c, SOULSHOT_NOVICE, 200));
-        events.put("30573_04", new Event("30573-04.htm", -45067, -113549, -235, 0, 0x31, 0, 0, 0x2c, 0, 0));
+        events.put("32133_02", new Event("32133-03.htm", new Location(-119692, 44504, 380), DIPLOMA, 0x7b, SOULSHOT_NOVICE, 200, 0x7c, SOULSHOT_NOVICE, 200));
+        events.put("30008_02", new Event("30008-03.htm", null, RECOMMENDATION_01, 0x00, SOULSHOT_NOVICE, 200, 0x00, 0, 0));
+        events.put("30008_04", new Event("30008-04.htm", new Location(-84081, 243277, -3723), 0, 0x00, 0, 0, 0, 0, 0));
+        events.put("30017_02", new Event("30017-03.htm", null, RECOMMENDATION_02, 0x0a, SPIRITSHOT_NOVICE, 100, 0x00, 0, 0));
+        events.put("30017_04", new Event("30017-04.htm", new Location(-84081, 243277, -3723), 0, 0x0a, 0, 0, 0x00, 0, 0));
+        events.put("30370_02", new Event("30370-03.htm", null, LEAF_OF_MOTHERTREE, 0x19, SPIRITSHOT_NOVICE, 100, 0x12, SOULSHOT_NOVICE, 200));
+        events.put("30370_04", new Event("30370-04.htm", new Location(45491, 48359, -3086), 0, 0x19, 0, 0, 0x12, 0, 0));
+        events.put("30129_02", new Event("30129-03.htm", null, BLOOD_OF_JUNDIN, 0x26, SPIRITSHOT_NOVICE, 100, 0x1f, SOULSHOT_NOVICE, 200));
+        events.put("30129_04", new Event("30129-04.htm", new Location(12116, 16666, -4610), 0, 0x26, 0, 0, 0x1f, 0, 0));
+        events.put("30528_02", new Event("30528-03.htm", null, LICENSE_OF_MINER, 0x35, SOULSHOT_NOVICE, 200, 0x00, 0, 0));
+        events.put("30528_04", new Event("30528-04.htm", new Location(115642, -178046, -941), 0, 0x35, 0, 0, 0x00, 0, 0));
+        events.put("30573_02", new Event("30573-03.htm", null, VOUCHER_OF_FLAME, 0x31, SPIRITSHOT_NOVICE, 100, 0x2c, SOULSHOT_NOVICE, 200));
+        events.put("30573_04", new Event("30573-04.htm", new Location(-45067, -113549, -235), 0, 0x31, 0, 0, 0x2c, 0, 0));
     }
 
     static {
@@ -260,8 +260,8 @@ public final class _999_T1Tutorial extends Quest {
                 st.set("onlyone", "1");
             }
 
-            if (e.radarX != 0) {
-                ThreadPoolManager.INSTANCE.schedule(() -> st.addRadarWithMap(e.radarX, e.radarY, e.radarZ), 100L);
+            if (e.radarLoc != null) {
+                ThreadPoolManager.INSTANCE.schedule(() -> st.addRadarWithMap(e.radarLoc), 100L);
             }
         }
         return htmltext;
@@ -375,9 +375,7 @@ public final class _999_T1Tutorial extends Quest {
 
     private static class Event {
         final String htm;
-        final int radarX;
-        final int radarY;
-        final int radarZ;
+        final Location radarLoc;
         final int item;
         final int classId1;
         final int gift1;
@@ -386,11 +384,9 @@ public final class _999_T1Tutorial extends Quest {
         final int gift2;
         final int count2;
 
-        Event(String htm, int radarX, int radarY, int radarZ, int item, int classId1, int gift1, int count1, int classId2, int gift2, int count2) {
+        Event(String htm, Location radarLoc, int item, int classId1, int gift1, int count1, int classId2, int gift2, int count2) {
             this.htm = htm;
-            this.radarX = radarX;
-            this.radarY = radarY;
-            this.radarZ = radarZ;
+            this.radarLoc = radarLoc;
             this.item = item;
             this.classId1 = classId1;
             this.gift1 = gift1;

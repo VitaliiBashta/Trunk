@@ -4,7 +4,7 @@ import l2trunk.gameserver.ai.PlayerAI;
 import l2trunk.gameserver.model.Effect;
 import l2trunk.gameserver.stats.Env;
 
-public class EffectAggression extends Effect {
+public final class EffectAggression extends Effect {
     public EffectAggression(Env env, EffectTemplate template) {
         super(env, template);
     }

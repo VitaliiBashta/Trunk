@@ -220,7 +220,7 @@ public enum NpcParser {
                             loc.set(Location.parseLoc(targetElement.attributeValue("loc")));
                             list.add(loc);
                         }
-                        template.addTeleportList(id, list.toArray(new TeleportLocation[0]));
+                        template.addTeleportList(id, list);
                     }
                 }
             }

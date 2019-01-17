@@ -37,6 +37,6 @@ public final class AttackMobNotPlayerFighter extends Fighter {
             startRunningTask(AI_TASK_ATTACK_DELAY);
 
         if (getIntention() != CtrlIntention.AI_INTENTION_ATTACK)
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+            setIntentionAttack(attacker);
     }
 }

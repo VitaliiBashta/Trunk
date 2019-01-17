@@ -85,7 +85,7 @@ public enum ResidenceParser {
                         targets.add(loc);
                     }
                 }
-                function.addTeleports(level, targets.toArray(new TeleportLocation[0]));
+                function.addTeleports(level, targets);
             } else if (nodeName.equalsIgnoreCase("support")) {
                 if (level > 9 && !Config.ALT_CH_ALLOW_1H_BUFFS)
                     continue;

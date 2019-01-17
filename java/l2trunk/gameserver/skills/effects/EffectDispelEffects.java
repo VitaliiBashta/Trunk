@@ -123,7 +123,7 @@ public final class EffectDispelEffects extends Effect {
         final List<Effect> musicList = new ArrayList<>();
         final List<Effect> buffList = new ArrayList<>();
 
-        for (Effect e : effected.getEffectList().getAllEffects()) {
+        effected.getEffectList().getAllEffects().forEach(e -> {
             switch (dispelType) {
                 case "cancellation":
                     if (!e.isOffensive() && !e.getSkill().isToggle() && e.isCancelable()) {
@@ -144,7 +144,7 @@ public final class EffectDispelEffects extends Effect {
                     }
                     break;
             }
-        }
+        });
 
         Collections.reverse(musicList);
         List<Effect> effectList = new ArrayList<>(musicList);

@@ -11,6 +11,7 @@ import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
+import java.util.Optional;
 
 public final class TarBeetle extends DefaultAI {
     private static final List<Location> POSITIONS = List.of(
@@ -120,11 +121,11 @@ public final class TarBeetle extends DefaultAI {
     }
 
     private void addEffect(NpcInstance actor, Player player) {
-        List<Effect> effect = player.getEffectList().getEffectsBySkillId(6142);
-        if (effect != null) {
-            int level = effect.get(0).getSkill().getLevel();
+        Optional<Effect> effect = player.getEffectList().getEffectsBySkillId(6142).findFirst();
+        if (effect.isPresent()) {
+            int level = effect.get().getSkill().getLevel();
             if (level < 3) {
-                effect.get(0).exit();
+                effect.get().exit();
                 SkillTable.INSTANCE.getInfo(6142, level + 1).getEffects(actor, player);
                 actor.broadcastPacket(new MagicSkillUse(actor, player, 6142, level + 1));
             }

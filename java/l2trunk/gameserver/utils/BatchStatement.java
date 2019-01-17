@@ -10,7 +10,7 @@ import java.sql.SQLException;
  *
  * @author GipsyGrierosu Andrei
  */
-public class BatchStatement {
+public final class BatchStatement {
     public static PreparedStatement createPreparedStatement(Connection con, String query) throws SQLException {
         con.setAutoCommit(false);
         return con.prepareStatement(query);

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class AuctionStorage extends ItemContainer {
     private static final Logger _log = LoggerFactory.getLogger(AuctionStorage.class);
@@ -131,9 +132,8 @@ public class AuctionStorage extends ItemContainer {
         writeLock();
         try {
             items.clear();
-            Collection<ItemInstance> items = _itemsDAO.getItemsByLocation(ItemLocation.AUCTION);
+            this.items.addAll( _itemsDAO.getItemsByLocation(ItemLocation.AUCTION).collect(Collectors.toList()));
 
-            this.items.addAll(items);
         } finally {
             writeUnlock();
         }

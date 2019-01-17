@@ -1,7 +1,6 @@
 package l2trunk.scripts.ai.dragonvalley;
 
 import l2trunk.commons.util.Rnd;
-import l2trunk.gameserver.ai.CtrlIntention;
 import l2trunk.gameserver.ai.Fighter;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.Playable;
@@ -31,7 +30,7 @@ public class PatrollersNoWatch extends Fighter {
         NpcInstance actor = getActor();
         if (target.isPlayable() && !target.isDead() && !target.isInvisible() && !((Playable) target).isSilentMoving()) {
             actor.getAggroList().addDamageHate(target, 0, 1);
-            setIntentionAttack(CtrlIntention.AI_INTENTION_ATTACK, target);
+            setIntentionAttack(target);
         }
         return true;
     }

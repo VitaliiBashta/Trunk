@@ -194,7 +194,7 @@ public abstract class ItemTemplate extends StatTemplate {
             }
         }
 
-        _funcTemplates = Collections.emptyList();
+        funcTemplates = Collections.emptyList();
         _skills = new ArrayList<>();
     }
 

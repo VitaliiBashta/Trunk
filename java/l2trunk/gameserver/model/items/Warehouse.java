@@ -69,9 +69,8 @@ public abstract class Warehouse extends ItemContainer {
     public void restore() {
         writeLock();
         try {
-            Collection<ItemInstance> items = _itemsDAO.getItemsByOwnerIdAndLoc(getOwnerId(), getItemLocation());
 
-            this.items.addAll(items);
+            this.items.addAll(_itemsDAO.getItemsByOwnerIdAndLoc(getOwnerId(), getItemLocation()).collect(Collectors.toList()));
         } finally {
             writeUnlock();
         }

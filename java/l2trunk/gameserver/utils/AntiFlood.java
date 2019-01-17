@@ -14,7 +14,7 @@ public final class AntiFlood {
 
     private long _lastMailTime;
 
-    public boolean canTrade(String text) {
+    public boolean canTrade() {
         long currentMillis = System.currentTimeMillis();
 
         if (currentMillis - _lastTradeTime < 5000L)
@@ -24,7 +24,7 @@ public final class AntiFlood {
         return true;
     }
 
-    public boolean canShout(String text) {
+    public boolean canShout() {
         long currentMillis = System.currentTimeMillis();
 
         if (currentMillis - _lastShoutTime < 5000L)
@@ -34,7 +34,7 @@ public final class AntiFlood {
         return true;
     }
 
-    public boolean canHero(String text) {
+    public boolean canHero() {
         long currentMillis = System.currentTimeMillis();
 
         if (currentMillis - _lastHeroTime < 10000L)

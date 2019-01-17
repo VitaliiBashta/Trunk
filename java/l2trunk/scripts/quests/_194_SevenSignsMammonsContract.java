@@ -215,9 +215,10 @@ public final class _194_SevenSignsMammonsContract extends Quest {
     }
 
     private void negateSpeedBuffs(Player p) {
-        for (Effect e : p.getEffectList().getAllEffects())
-            if (e.getStackType().equalsIgnoreCase("SpeedUp") && !e.isOffensive())
-                e.exit();
+        p.getEffectList().getAllEffects()
+                .filter(e -> e.getStackType().equalsIgnoreCase("SpeedUp"))
+                .filter(e -> !e.isOffensive())
+                .forEach(Effect::exit);
     }
 
     private void negateTransformations(Player p) {

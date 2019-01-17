@@ -27,7 +27,6 @@ public final class GameObjectTasks {
         @Override
         public void runImpl() {
             Creature c = hardReference.get();
-
             if (c != null)
                 c.deleteMe();
         }
@@ -118,9 +117,6 @@ public final class GameObjectTasks {
         }
     }
 
-    /**
-     * WaterTask
-     */
     public static class WaterTask extends RunnableImpl {
         private final HardReference<Player> _playerRef;
 
@@ -138,7 +134,7 @@ public final class GameObjectTasks {
                 return;
             }
 
-            double reduceHp = player.getMaxHp() < 100 ? 1 : player.getMaxHp() / 100;
+            double reduceHp = player.getMaxHp() < 100 ? 1 : player.getMaxHp() / 100.;
             player.reduceCurrentHp(reduceHp, player, null, false, false, true, false, false, false, false);
             player.sendPacket(new SystemMessage2(SystemMsg.YOU_RECEIVED_S1_DAMAGE_BECAUSE_YOU_WERE_UNABLE_TO_BREATHE).addInteger((long) reduceHp));
         }
