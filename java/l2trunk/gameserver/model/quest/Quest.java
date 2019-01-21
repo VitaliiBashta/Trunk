@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static l2trunk.commons.lang.NumberUtils.toInt;
 
@@ -43,7 +44,6 @@ public class Quest {
     public final static int CREATED = 1;
     public final static int STARTED = 2;
     public final static int COMPLETED = 3;
-    final static int DELAYED = 4;
     protected static final String SOUND_ACCEPT = "ItemSound.quest_accept";
     protected static final String SOUND_FINISH = "ItemSound.quest_finish";
     protected static final String SOUND_GIVEUP = "ItemSound.quest_giveup";
@@ -62,6 +62,7 @@ public class Quest {
     protected static final String NO_QUEST_DIALOG = "no-quest";
     protected static final int ADENA_ID = 57;
     protected static final int PARTY_ONE = 1;
+    final static int DELAYED = 4;
     private static final Logger _log = LoggerFactory.getLogger(Quest.class);
     private final String name;
     private final int party;
@@ -263,8 +264,8 @@ public class Quest {
 
     }
 
-    protected void addQuestItem(int... ids) {
-        addQuestItem(Arrays.stream(ids).boxed().collect(Collectors.toList()));
+    protected void addQuestItem(Integer... ids) {
+        addQuestItem(List.of(ids));
     }
 
     protected void addQuestItem(List<Integer> ids) {
@@ -289,9 +290,13 @@ public class Quest {
         return _npcLogList.get(cond);
     }
 
-    protected void addAttackId(int... attackIds) {
-        for (int attackId : attackIds)
-            addEventId(attackId, QuestEventType.ATTACKED_WITH_QUEST);
+    protected void addAttackId(List<Integer> attackIds) {
+        attackIds.forEach(id -> addEventId(id, QuestEventType.ATTACKED_WITH_QUEST));
+    }
+
+    protected void addAttackId(Integer... attackIds) {
+        Stream.of(attackIds)
+                .forEach(id -> addEventId(id, QuestEventType.ATTACKED_WITH_QUEST));
     }
 
     /**

@@ -633,7 +633,7 @@ public final class Util extends Functions {
 //        if (!NpcInstance.canBypassCheck(player, npc))
 //            return;
 //
-//        player.setVar("DCBackCoords", player.getLoc().toXYZString(), -1);
+//        player.setVar("DCBackCoords", player.getTerritory().toXYZString(), -1);
 //        player.teleToLocation(-114582, -152635, -6742);
 //    }
 

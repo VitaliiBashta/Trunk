@@ -11,14 +11,12 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.taskmanager.AiTaskManager;
 
 import java.util.Calendar;
+import java.util.List;
 
 public final class MercenaryCaptain extends DefaultAI {
-    private static final NpcString[] MESSAGES = new NpcString[]
-            {
+    private static final List<NpcString> MESSAGES = List.of(
                     NpcString.COURAGE_AMBITION_PASSION_MERCENARIES_WHO_WANT_TO_REALIZE_THEIR_DREAM_OF_FIGHTING_IN_THE_TERRITORY_WAR_COME_TO_ME_FORTUNE_AND_GLORY_ARE_WAITING_FOR_YOU,
-                    NpcString.DO_YOU_WISH_TO_FIGHT_ARE_YOU_AFRAID_NO_MATTER_HOW_HARD_YOU_TRY_YOU_HAVE_NOWHERE_TO_RUN
-            };
-
+            NpcString.DO_YOU_WISH_TO_FIGHT_ARE_YOU_AFRAID_NO_MATTER_HOW_HARD_YOU_TRY_YOU_HAVE_NOWHERE_TO_RUN);
     public MercenaryCaptain(NpcInstance actor) {
         super(actor);
         AI_TASK_ACTIVE_DELAY = AI_TASK_ATTACK_DELAY = 1000L;

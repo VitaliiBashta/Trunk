@@ -189,16 +189,11 @@ public abstract class AbstractAI extends RunnableImpl {
         }
     }
 
-    public final void notifyEvent(CtrlEvent evt, Skill skill, Creature creature) {
+    public final void notifySeeSpell(Skill skill, Creature creature) {
         Creature actor = getActor();
         if (actor == null || !actor.isVisible())
             return;
-
-//        actor.getListeners().onAiEvent(evt, List.of(skill, creature));
-
-        if (evt == CtrlEvent.EVT_SEE_SPELL) {
-            onEvtSeeSpell(skill, creature);
-        }
+        onEvtSeeSpell(skill, creature);
     }
 
     public final void notifyEvent(CtrlEvent evt, Creature creature, int dmg) {

@@ -23,15 +23,15 @@ public final class _431_WeddingMarch extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         String htmltext = event;
-        if (event.equalsIgnoreCase("quest_accept")) {
+        if ("quest_accept".equalsIgnoreCase(event)) {
             htmltext = "muzyk_q0431_0104.htm";
             st.setState(STARTED);
             st.setCond(1);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("431_3"))
+        } else if ("431_3".equalsIgnoreCase(event))
             if (st.getQuestItemsCount(SILVER_CRYSTAL) == 50) {
                 htmltext = "muzyk_q0431_0201.htm";
-                st.takeItems(SILVER_CRYSTAL, -1);
+                st.takeItems(SILVER_CRYSTAL);
                 st.giveItems(WEDDING_ECHO_CRYSTAL, 25);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(true);
@@ -68,7 +68,7 @@ public final class _431_WeddingMarch extends Quest {
 
         if (npcId == 20786 || npcId == 20787)
             if (st.getCond() == 1 && st.getQuestItemsCount(SILVER_CRYSTAL) < 50) {
-                st.giveItems(SILVER_CRYSTAL, 1);
+                st.giveItems(SILVER_CRYSTAL);
 
                 if (st.getQuestItemsCount(SILVER_CRYSTAL) == 50) {
                     st.playSound(SOUND_MIDDLE);

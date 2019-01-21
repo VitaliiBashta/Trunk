@@ -7,6 +7,8 @@ import l2trunk.gameserver.model.entity.poll.PollAnswer;
 import l2trunk.gameserver.model.entity.poll.PollEngine;
 import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 
+import java.util.List;
+
 public final class CCPPoll {
     public static boolean bypass(Player activeChar, String[] vars) {
         String second = vars.length > 1 ? vars[1] : "";
@@ -48,12 +50,12 @@ public final class CCPPoll {
     }
 
     private static String fillAnswers(String html, Player activeChar) {
-        PollAnswer[] answers = PollEngine.INSTANCE.getPoll().getAnswers();
+        List<PollAnswer> answers = PollEngine.INSTANCE.getPoll().getAnswers();
         StringBuilder resultsBuilder = new StringBuilder("<table width=280><tr><td>");
 
 
-        for (int i = 0; i < answers.length; i++) {
-            PollAnswer answer = answers[i];
+        for (int i = 0; i < answers.size(); i++) {
+            PollAnswer answer = answers.get(i);
             resultsBuilder.append("<table width=280 bgcolor=").append(getColor(i)).append("><tr><td width=200>");
             resultsBuilder.append(answer.getAnswer());
             resultsBuilder.append("</td><td width=80>");
@@ -67,18 +69,13 @@ public final class CCPPoll {
     }
 
     private static String fillResults(String html, Player activeChar) {
-        Poll currentPoll = PollEngine.INSTANCE.getPoll();
-        int answersCount = currentPoll.getAnswers().length;
-        PollAnswer[] answersToSort = new PollAnswer[answersCount];
+        List<PollAnswer> answers = PollEngine.INSTANCE.getPoll().getAnswers();
 
-        for (int i = 0; i < answersCount; i++) {
-            answersToSort[i] = currentPoll.getAnswers()[i];
-        }
-        answersToSort = PollEngine.INSTANCE.sortAnswers(answersToSort);
+        PollEngine.INSTANCE.sortAnswers(answers);
 
         StringBuilder resultsBuilder = new StringBuilder("<table width=280><tr><td>");
 
-        for (PollAnswer answer : answersToSort) {
+        answers.forEach(answer -> {
             resultsBuilder.append("<table width=280 bgcolor=");
             resultsBuilder.append("7d805a");
             resultsBuilder.append("><tr><td width=200>");
@@ -86,7 +83,7 @@ public final class CCPPoll {
             resultsBuilder.append("</td><td width=80><center>");
             resultsBuilder.append(PollEngine.INSTANCE.getAnswerProcentage(answer)).append('%');
             resultsBuilder.append("</center></td></tr></table>");
-        }
+        });
 
         resultsBuilder.append("</td></tr></table>");
 

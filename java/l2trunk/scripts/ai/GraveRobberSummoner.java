@@ -10,9 +10,11 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.Func;
 import l2trunk.gameserver.templates.npc.MinionData;
 
+import java.util.List;
+
 
 public final class GraveRobberSummoner extends Mystic {
-    private static final int[] Servitors = {22683, 22684, 22685, 22686};
+    private static final List<Integer> Servitors = List.of(22683, 22684, 22685, 22686);
 
     private int _lastMinionCount = 1;
 
@@ -39,7 +41,7 @@ public final class GraveRobberSummoner extends Mystic {
         super.onEvtSpawn();
 
         NpcInstance actor = getActor();
-        actor.getMinionList().addMinion(new MinionData(Servitors[Rnd.get(Servitors.length)], Rnd.get(2)));
+        actor.getMinionList().addMinion(new MinionData(Rnd.get(Servitors), Rnd.get(2)));
         _lastMinionCount = Math.max(actor.getMinionList().getAliveMinions().size(), 1);
     }
 

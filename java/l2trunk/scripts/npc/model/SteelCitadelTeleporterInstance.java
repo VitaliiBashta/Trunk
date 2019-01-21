@@ -91,8 +91,7 @@ public final class SteelCitadelTeleporterInstance extends NpcInstance {
     }
 
     private boolean rangeCheck(Player pl) {
-        return pl.getParty().getMembers().stream()
-                .allMatch(m -> pl.isInRange(m, 400));
+        return pl.getParty().getMembers().stream().allMatch(m -> pl.isInRange(m, 400));
     }
 
     private int getIz(int floor) {

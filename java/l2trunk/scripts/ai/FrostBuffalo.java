@@ -8,13 +8,11 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.Skill;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class FrostBuffalo extends Fighter {
     private static final int MOBS = 22093;
     private static final int MOBS_COUNT = 4;
-    private boolean _mobsNotSpawned = true;
+    private boolean mobsNotSpawned = true;
 
     public FrostBuffalo(NpcInstance actor) {
         super(actor);
@@ -25,8 +23,8 @@ public final class FrostBuffalo extends Fighter {
         NpcInstance actor = getActor();
         if (skill.isMagic())
             return;
-        if (_mobsNotSpawned) {
-            _mobsNotSpawned = false;
+        if (mobsNotSpawned) {
+            mobsNotSpawned = false;
             for (int i = 0; i < MOBS_COUNT; i++) {
                 SimpleSpawner sp = new SimpleSpawner(MOBS);
                 sp.setLoc(Location.findPointToStay(actor, 100, 120));
@@ -40,12 +38,12 @@ public final class FrostBuffalo extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        _mobsNotSpawned = true;
+        mobsNotSpawned = true;
         super.onEvtDead(killer);
     }
 
     @Override
     public boolean randomWalk() {
-        return _mobsNotSpawned;
+        return mobsNotSpawned;
     }
 }

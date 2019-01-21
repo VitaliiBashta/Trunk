@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.model.Player;
 
-public class ExVoteSystemInfo extends L2GameServerPacket {
+public final class ExVoteSystemInfo extends L2GameServerPacket {
     private final int _receivedRec;
     private final int _givingRec;
     private final int _time;

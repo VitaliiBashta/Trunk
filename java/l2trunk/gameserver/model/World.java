@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public final class World {
@@ -42,7 +43,7 @@ public final class World {
     private static final int REGIONS_Y = (MAP_MAX_Y >> SHIFT_BY) + OFFSET_Y;
     private static final int REGIONS_Z = (MAP_MAX_Z >> SHIFT_BY_Z) + OFFSET_Z;
 
-    private static final WorldRegion[][][] _worldRegions = new WorldRegion[REGIONS_X + 1][REGIONS_Y + 1][REGIONS_Z + 1];
+    private static final WorldRegion[][][] worldRegions = new WorldRegion[REGIONS_X + 1][REGIONS_Y + 1][REGIONS_Z + 1];
 
     private static native void prepareWorld();
 
@@ -51,7 +52,7 @@ public final class World {
     }
 
     private static WorldRegion[][][] getRegions() {
-        return _worldRegions;
+        return worldRegions;
     }
 
     private static int validX(int x) {
@@ -122,7 +123,7 @@ public final class World {
      * @param loc локация для поиска региона
      * @return Регион, соответствующий локации
      */
-    public static WorldRegion getRegion(Location loc) {
+    static WorldRegion getRegion(Location loc) {
         return getRegion(validX(regionX(loc.x)), validY(regionY(loc.y)), validZ(regionZ(loc.z)));
     }
 
@@ -700,19 +701,11 @@ public final class World {
                 inside.add(zone);
     }
 
-    public static boolean isWater(Location loc, Reflection reflection) {
-        return getWater(loc, reflection) != null;
-    }
-
-    private static Zone getWater(Location loc, Reflection reflection) {
-        WorldRegion region = getRegion(loc);
-        List<Zone> zones = region.getZones();
-        if (zones.size() == 0)
-            return null;
-        for (Zone zone : zones)
-            if (zone != null && zone.getType() == ZoneType.water && zone.checkIfInZone(loc, reflection))
-                return zone;
-        return null;
+    static boolean isWater(Location loc, Reflection reflection) {
+        return getRegion(loc).getZones().stream()
+                .filter(Objects::nonNull)
+                .filter(zone -> zone.getType() == ZoneType.water)
+                .anyMatch(zone -> zone.checkIfInZone(loc, reflection));
     }
 
     /**
@@ -744,7 +737,7 @@ public final class World {
                 for (int z = 0; z <= REGIONS_Z; z++) {
                     ret[0]++;
 
-                    region = _worldRegions[x][y][z];
+                    region = worldRegions[x][y][z];
 
                     if (region != null) {
                         if (region.isActive())

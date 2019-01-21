@@ -13,7 +13,6 @@ public abstract class EventOwner {
             if (eventClass.isAssignableFrom(e.getClass()))    //FIXME [VISTALL]    какойто другой способ определить
                 return (E) e;
         }
-
         return null;
     }
 

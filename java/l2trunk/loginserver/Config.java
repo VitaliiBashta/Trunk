@@ -54,7 +54,7 @@ public class Config {
     private static PasswordHash DEFAULT_CRYPT;
     public static PasswordHash[] LEGACY_CRYPT;
     private static boolean LOGIN_LOG;
-    private static ScrambledKeyPair[] _keyPairs;
+    private static ScrambledKeyPair[] keyPairs;
     private static byte[][] _blowfishKeys;
 
     // it has no instancies
@@ -76,16 +76,16 @@ public class Config {
 
         _log.info("Loaded " + Config.DEFAULT_PASSWORD_HASH + " as default crypt.");
 
-        _keyPairs = new ScrambledKeyPair[Config.LOGIN_RSA_KEYPAIRS];
+        keyPairs = new ScrambledKeyPair[Config.LOGIN_RSA_KEYPAIRS];
 
         KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
         RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(1024, RSAKeyGenParameterSpec.F4);
         keygen.initialize(spec);
 
-        for (int i = 0; i < _keyPairs.length; i++)
-            _keyPairs[i] = new ScrambledKeyPair(keygen.generateKeyPair());
+        for (int i = 0; i < keyPairs.length; i++)
+            keyPairs[i] = new ScrambledKeyPair(keygen.generateKeyPair());
 
-        _log.info("Cached " + _keyPairs.length + " KeyPairs for RSA communication");
+        _log.info("Cached " + keyPairs.length + " KeyPairs for RSA communication");
 
         _blowfishKeys = new byte[Config.LOGIN_BLOWFISH_KEYS][16];
 
@@ -177,10 +177,10 @@ public class Config {
     }
 
     public static ScrambledKeyPair getScrambledRSAKeyPair() {
-        return _keyPairs[Rnd.get(_keyPairs.length)];
+        return Rnd.get(keyPairs);
     }
 
     public static byte[] getBlowfishKey() {
-        return _blowfishKeys[Rnd.get(_blowfishKeys.length)];
+        return Rnd.get(_blowfishKeys);
     }
 }

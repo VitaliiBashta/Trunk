@@ -8,7 +8,7 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Mail implements JdbcEntity, Comparable<Mail> {
+public final class Mail implements JdbcEntity, Comparable<Mail> {
     public static final int DELETED = 0;
     public static final int READED = 1;
     public static final int REJECTED = 2;

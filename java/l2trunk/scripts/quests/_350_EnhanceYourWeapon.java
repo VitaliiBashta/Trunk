@@ -13,7 +13,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage2;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.SoulCrystal;
 import l2trunk.gameserver.templates.npc.AbsorbInfo;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
@@ -134,18 +133,17 @@ public final class _350_EnhanceYourWeapon extends Quest {
         for (AbsorbInfo info : npc.getTemplate().getAbsorbInfo())
             calcAbsorb(list, (MonsterInstance) npc, info);
 
-        for (PlayerResult r : list)
-            r.send();
+        list.forEach(PlayerResult::send);
 
         return null;
     }
 
     private void calcAbsorb(List<PlayerResult> players, MonsterInstance npc, AbsorbInfo info) {
-        int memberSize = 0;
+        int memberSize;
         List<PlayerResult> targets;
         switch (info.getAbsorbType()) {
             case LAST_HIT:
-                targets = Collections.singletonList(players.get(0));
+                targets = List.of(players.get(0));
                 break;
             case PARTY_ALL:
                 targets = players;

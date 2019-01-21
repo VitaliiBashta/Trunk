@@ -4,38 +4,37 @@ import l2trunk.gameserver.model.entity.events.objects.BoatPoint;
 import l2trunk.gameserver.network.serverpackets.components.SceneMovie;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Collections;
 import java.util.List;
 
-public class AirshipDock {
-    private final int _id;
-    private List<BoatPoint> _teleportList = Collections.emptyList();
-    private List<AirshipPlatform> _platformList = Collections.emptyList();
+public final class AirshipDock {
+    private final int id;
+    private List<BoatPoint> teleportList;
+    private List<AirshipPlatform> platformList;
 
     public AirshipDock(int id, List<BoatPoint> teleport, List<AirshipPlatform> platformList) {
-        _id = id;
-        _teleportList = teleport;
-        _platformList = platformList;
+        this.id = id;
+        teleportList = teleport;
+        this.platformList = platformList;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public List<BoatPoint> getTeleportList() {
-        return _teleportList;
+        return teleportList;
     }
 
     public AirshipPlatform getPlatform(int id) {
-        return _platformList.get(id);
+        return platformList.get(id);
     }
 
     public static class AirshipPlatform {
         private final SceneMovie _oustMovie;
         private final Location _oustLoc;
         private final Location _spawnLoc;
-        private List<BoatPoint> _arrivalPoints = Collections.emptyList();
-        private List<BoatPoint> _departPoints = Collections.emptyList();
+        private List<BoatPoint> _arrivalPoints;
+        private List<BoatPoint> _departPoints;
 
         public AirshipPlatform(SceneMovie movie, Location oustLoc, Location spawnLoc, List<BoatPoint> arrival, List<BoatPoint> depart) {
             _oustMovie = movie;

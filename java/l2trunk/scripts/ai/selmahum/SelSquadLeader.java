@@ -9,8 +9,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class SelSquadLeader extends Fighter {
-    private static final NpcString[] phrase = {NpcString.SCHOOL4, NpcString.SCHOOL5, NpcString.SCHOOL6};
+    private static final List<NpcString> phrase = List.of(NpcString.SCHOOL4, NpcString.SCHOOL5, NpcString.SCHOOL6);
     private static final int NPC_ID_FIRE = 18927;
     private static final int NPC_ID_FIRE_FEED = 18933;
     private boolean isBusy;
@@ -42,7 +44,7 @@ public final class SelSquadLeader extends Fighter {
                         busyTimeout = currentTime + (60 + Rnd.get(15)) * 1000L;
                         addTaskMove(Location.findPointToStay(npc, 50, 150), true);
                         if (Rnd.chance(40))
-                            Functions.npcSay(actor, phrase[Rnd.get(2)]);
+                            Functions.npcSay(actor, Rnd.get(phrase));
                     } else if (npc.getNpcId() == NPC_ID_FIRE && npc.getNpcState() == 1 && GeoEngine.canSeeTarget(actor, npc, false)) {
                         isBusy = true;
                         actor.setNpcState(2); // Sleepy State

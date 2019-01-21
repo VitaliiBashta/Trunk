@@ -1,6 +1,5 @@
 package l2trunk.gameserver.model.entity.events.impl;
 
-import l2trunk.commons.collections.CollectionUtils;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.gameserver.dao.SiegeClanDAO;
 import l2trunk.gameserver.model.GameObject;

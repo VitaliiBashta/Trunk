@@ -82,16 +82,16 @@ public final class _371_ShriekOfGhosts extends Quest {
                 st.takeItems(Ancient_Porcelain, 1);
                 int chance = Rnd.get(100);
                 if (chance < Ancient_Porcelain__Excellent_Chance) {
-                    st.giveItems(Ancient_Porcelain__Excellent, 1);
+                    st.giveItems(Ancient_Porcelain__Excellent);
                     htmltext = "30929-03.htm";
                 } else if (chance < Ancient_Porcelain__High_Quality_Chance) {
-                    st.giveItems(Ancient_Porcelain__High_Quality, 1);
+                    st.giveItems(Ancient_Porcelain__High_Quality);
                     htmltext = "30929-04.htm";
                 } else if (chance < Ancient_Porcelain__Low_Quality_Chance) {
-                    st.giveItems(Ancient_Porcelain__Low_Quality, 1);
+                    st.giveItems(Ancient_Porcelain__Low_Quality);
                     htmltext = "30929-05.htm";
                 } else if (chance < Ancient_Porcelain__Lowest_Quality_Chance) {
-                    st.giveItems(Ancient_Porcelain__Lowest_Quality, 1);
+                    st.giveItems(Ancient_Porcelain__Lowest_Quality);
                     htmltext = "30929-06.htm";
                 } else
                     htmltext = "30929-07.htm";

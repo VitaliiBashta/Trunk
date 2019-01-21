@@ -19,11 +19,11 @@ public final class ZoneTemplate {
     private final String name;
     private final ZoneType type;
 
-    private final Territory _territory;
+    private final Territory territory;
 
     private final boolean _isEnabled;
 
-    private final List<Location> _restartPoints;
+    private final List<Location> restartPoints;
     private final List<Location> _PKrestartPoints;
     private final long _restartTime;
 
@@ -37,11 +37,11 @@ public final class ZoneTemplate {
 
     private final ZoneTarget _target;
 
-    private final Skill _skill;
-    private final int _skillProb;
-    private final int _initialDelay;
-    private final int _unitTick;
-    private final int _randomTick;
+    private final Skill skill;
+    private final int skillProb;
+    private final int initialDelay;
+    private final int unitTick;
+    private final int randomTick;
 
     /**
      * Сообщение которое шлется при уроне от зоны (не скилла)
@@ -89,7 +89,7 @@ public final class ZoneTemplate {
     public ZoneTemplate(StatsSet set) {
         name = set.getString("name");
         type = ZoneType.valueOf(set.getString("type"));
-        _territory = (Territory) set.get("territory");
+        territory = (Territory) set.get("territory");
 
         _enteringMessageId = set.getInteger("entering_message_no", 0);
         _leavingMessageId = set.getInteger("leaving_message_no", 0);
@@ -104,11 +104,11 @@ public final class ZoneTemplate {
             String[] sk = s.split("[\\s,;]+");
             skill = SkillTable.INSTANCE.getInfo(toInt(sk[0]), toInt(sk[1]));
         }
-        _skill = skill;
-        _skillProb = set.getInteger("skill_prob", 100);
-        _initialDelay = set.getInteger("initial_delay", 1);
-        _unitTick = set.getInteger("unit_tick", 1);
-        _randomTick = set.getInteger("random_time", 0);
+        this.skill = skill;
+        skillProb = set.getInteger("skill_prob", 100);
+        initialDelay = set.getInteger("initial_delay", 1);
+        unitTick = set.getInteger("unit_tick", 1);
+        randomTick = set.getInteger("random_time", 0);
 
         //Зона с бонусами
         moveBonus = set.getDouble("move_bonus", 0.);
@@ -124,7 +124,7 @@ public final class ZoneTemplate {
 
         _isEnabled = set.getBool("enabled", true);
 
-        _restartPoints = (List<Location>) set.get("restart_points");
+        restartPoints = (List<Location>) set.get("restart_points");
         _PKrestartPoints = (List<Location>) set.get("PKrestart_points");
         _restartTime = set.getLong("restart_time", 0L);
 
@@ -155,7 +155,7 @@ public final class ZoneTemplate {
     }
 
     public Territory getTerritory() {
-        return _territory;
+        return territory;
     }
 
     public int getEnteringMessageId() {
@@ -167,23 +167,23 @@ public final class ZoneTemplate {
     }
 
     public Skill getZoneSkill() {
-        return _skill;
+        return skill;
     }
 
     public int getSkillProb() {
-        return _skillProb;
+        return skillProb;
     }
 
     public int getInitialDelay() {
-        return _initialDelay;
+        return initialDelay;
     }
 
     public int getUnitTick() {
-        return _unitTick;
+        return unitTick;
     }
 
     public int getRandomTick() {
-        return _randomTick;
+        return randomTick;
     }
 
     public ZoneTarget getZoneTarget() {
@@ -242,7 +242,7 @@ public final class ZoneTemplate {
     }
 
     public List<Location> getRestartPoints() {
-        return _restartPoints;
+        return restartPoints;
     }
 
     public List<Location> getPKRestartPoints() {

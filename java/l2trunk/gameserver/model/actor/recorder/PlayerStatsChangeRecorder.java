@@ -74,27 +74,27 @@ public final class PlayerStatsChangeRecorder extends CharStatsChangeRecorder<Pla
     protected void onSendChanges() {
         super.onSendChanges();
 
-        if ((this._changes & 0x80) == 128) {
+        if ((this.changes & 0x80) == 128) {
             this.activeChar.broadcastCharInfo();
             if (this.activeChar.getPet() != null)
                 this.activeChar.getPet().broadcastCharInfo();
         }
         /* 100 */
-        if ((this._changes & 0x1) == 1)
+        if ((this.changes & 0x1) == 1)
             this.activeChar.broadcastCharInfo();
-        else if ((this._changes & 0x2) == 2) {
+        else if ((this.changes & 0x2) == 2) {
             this.activeChar.sendUserInfo();
         }
-        if ((this._changes & 0x40) == 64) {
+        if ((this.changes & 0x40) == 64) {
             this.activeChar.sendStatusUpdate(false, false, 14);
         }
-        if ((this._changes & 0x20) == 32) {
+        if ((this.changes & 0x20) == 32) {
             this.activeChar.sendStatusUpdate(false, false, 15);
         }
-        if ((this._changes & 0x8) == 8) {
+        if ((this.changes & 0x8) == 8) {
             this.activeChar.sendStatusUpdate(true, false, 27);
         }
-        if ((this._changes & 0x10) == 16)
+        if ((this.changes & 0x10) == 16)
             this.activeChar.sendPacket(new ExStorageMaxCount(this.activeChar));
     }
 }

@@ -116,7 +116,7 @@ public final class HardSpawner extends Spawner {
     public HardSpawner clone() {
         HardSpawner spawnDat = new HardSpawner(_template);
         spawnDat.setAmount(maximumCount);
-        spawnDat.setRespawnDelay(respawnDelay, _respawnDelayRandom);
+        spawnDat.setRespawnDelay(respawnDelay, respawnDelayRandom);
         spawnDat.setRespawnTime(0);
         return spawnDat;
     }

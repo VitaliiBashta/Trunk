@@ -6,8 +6,10 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class AirshipGuard2 extends Guard {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             new Location(-148162, 255173, -180),
             new Location(-148242, 254842, -184),
             new Location(-148395, 254647, -184),
@@ -19,7 +21,7 @@ public final class AirshipGuard2 extends Guard {
             new Location(-148461, 254688, -183),
             new Location(-148643, 254495, -183),
             new Location(-148828, 254275, -183),
-            new Location(-149093, 254183, -180)};
+            new Location(-149093, 254183, -180));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -56,10 +58,10 @@ public final class AirshipGuard2 extends Guard {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(Location.findPointToStay(actor, points[current_point], 0, 100), true);
+            addTaskMove(Location.findPointToStay(actor, points.get(current_point), 0, 100), true);
             doTask();
             return true;
         }

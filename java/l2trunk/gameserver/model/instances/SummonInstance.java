@@ -18,7 +18,7 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 
 import java.util.concurrent.Future;
 
-public class SummonInstance extends Summon {
+public final class SummonInstance extends Summon {
     private final int CYCLE = 5000; // in millis
     private final int _summonSkillId;
     private final int _itemConsumeIdInTime;
@@ -94,10 +94,6 @@ public class SummonInstance extends Summon {
 
     private int getItemConsumeCountInTime() {
         return _itemConsumeCountInTime;
-    }
-
-    public int getItemConsumeDelay() {
-        return _itemConsumeDelay;
     }
 
     private synchronized void stopDisappear() {

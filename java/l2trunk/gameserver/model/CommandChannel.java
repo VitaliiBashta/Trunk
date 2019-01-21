@@ -167,7 +167,7 @@ public final class CommandChannel implements PlayerGroup {
     @Override
     public List<Player> getMembers() {
         return commandChannelParties.stream()
-                .flatMap(party -> party.getMembers().stream())
+                .flatMap(players -> players.getMembers().stream())
                 .collect(Collectors.toList());
     }
 
@@ -176,14 +176,10 @@ public final class CommandChannel implements PlayerGroup {
         return commandChannelParties.stream().anyMatch(party -> party.containsMember(player));
     }
 
-    @Override
     public int getLevel() {
         return commandChannelLvl;
     }
 
-    /**
-     * @param newLeader the leader of the Command Channel
-     */
     void setChannelLeader(Player newLeader) {
         commandChannelLeader = newLeader;
         sendPacket(new SystemMessage2(SystemMsg.COMMAND_CHANNEL_AUTHORITY_HAS_BEEN_TRANSFERRED_TO_C1).addString(newLeader.getName()));

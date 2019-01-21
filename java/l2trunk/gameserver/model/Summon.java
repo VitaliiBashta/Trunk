@@ -573,15 +573,15 @@ public abstract class Summon extends Playable {
 
     @Override
     public SummonStatsChangeRecorder getStatsRecorder() {
-        if (_statsRecorder == null) {
+        if (statsRecorder == null) {
             synchronized (this) {
-                if (_statsRecorder == null) {
-                    _statsRecorder = new SummonStatsChangeRecorder(this);
+                if (statsRecorder == null) {
+                    statsRecorder = new SummonStatsChangeRecorder(this);
                 }
             }
         }
 
-        return (SummonStatsChangeRecorder) _statsRecorder;
+        return (SummonStatsChangeRecorder) statsRecorder;
     }
 
     @Override

@@ -24,7 +24,7 @@ public class FameManagerInstance extends NpcInstance {
         if (actualCommand.equalsIgnoreCase("PK_Count")) {
             if (player.getFame() >= 5000) {
                 if (player.getPkKills() > 0) {
-                    player.setFame(player.getFame() - 5000, "PK_Count");
+                    player.addFame(-5000, "PK_Count");
                     player.setPkKills(player.getPkKills() - 1);
                     html.setFile("default/" + getNpcId() + "-okpk.htm");
                 } else
@@ -39,7 +39,7 @@ public class FameManagerInstance extends NpcInstance {
             else if (player.getFame() < 1000)
                 html.setFile("default/" + getNpcId() + "-nofame.htm");
             else {
-                player.setFame(player.getFame() - 1000, "CRP");
+                player.addFame(-1000, "CRP");
                 player.getClan().incReputation(50, false, "FameManager from " + player.getName());
                 player.getClan().broadcastToOnlineMembers(new PledgeShowInfoUpdate(player.getClan()));
                 player.sendPacket(Msg.ACQUIRED_50_CLAN_FAME_POINTS);

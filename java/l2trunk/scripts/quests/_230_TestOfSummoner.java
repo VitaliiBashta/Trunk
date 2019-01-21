@@ -7,9 +7,9 @@ import l2trunk.gameserver.model.base.ClassId;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class _230_TestOfSummoner extends Quest {
@@ -67,26 +67,12 @@ public final class _230_TestOfSummoner extends Quest {
     private static final int CRYSTAL_OF_FOUL6_ID = 3387;
     private static final int CRYSTAL_OF_DEFEAT6_ID = 3388;
     private static final int CRYSTAL_OF_VICTORY6_ID = 3389;
-
-    private static final int[] npc = {
-            30063,
-            30634,
-            30635,
-            30636,
-            30637,
-            30638,
-            30639,
-            30640
-    };
-    private static final int Lara = npc[0];
-    private static final int Galatea = npc[1];
-    static int Almors = npc[2];
-    static int Camoniell = npc[3];
-    static int Belthus = npc[4];
-    static int Basilla = npc[5];
-    static int Celestiel = npc[6];
-    static int Brynthea = npc[7];
-
+    private static final List<String> VARS = List.of(
+            "Almors", "Camoniell", "Belthus", "Basilla", "Celestiel", "Brynthea");
+    private static final List<Integer> npc = List.of(
+            30063, 30634, 30635, 30636, 30637, 30638, 30639, 30640);
+    private static final int Lara = npc.get(0);
+    private static final int Galatea = npc.get(1);
     private static final int[][] SUMMONERS = {
             {
                     30635,
@@ -125,9 +111,55 @@ public final class _230_TestOfSummoner extends Quest {
             }
             // Brynthea
     };
-
     private static final Map<Integer, String> NAMES = new HashMap<>();
-
+    private static final Map<Integer, Integer[]> DROPLIST_LARA = new HashMap<>();
+    private static final String[] STATS = {
+            "cond",
+            "step",
+            "Lara_Part",
+            "Arcanas",
+            "Belthus",
+            "Brynthea",
+            "Celestiel",
+            "Camoniell",
+            "Basilla",
+            "Almors"
+    };
+    private static final int[][] LISTS = {
+            {},
+            // zero element filler
+            {
+                    LARS_LIST1_ID,
+                    SAC_OF_REDSPORES_ID,
+                    LETOLIZARDMAN_AMULET_ID
+            },
+            // List 1
+            {
+                    LARS_LIST2_ID,
+                    KARULBUGBEAR_TOTEM_ID,
+                    SHARDS_OF_MANASHEN_ID
+            },
+            // List 2
+            {
+                    LARS_LIST3_ID,
+                    CRIMSON_BLOODSTONE_ID,
+                    BREKAORC_TOTEM_ID
+            },
+            // List 3
+            {
+                    LARS_LIST4_ID,
+                    TUSK_OF_WINDSUS_ID,
+                    TALONS_OF_TYRANT_ID
+            },
+            // List 4
+            {
+                    LARS_LIST5_ID,
+                    WINGS_OF_DRONEANT_ID,
+                    FANGS_OF_WYRM_ID
+            }
+            // List 5
+    };
+    private static final Map<Integer, List<Integer>> DROPLIST_SUMMON = new HashMap<>();
     static {
         NAMES.put(30635, "Almors");
         NAMES.put(30636, "Camoniell");
@@ -136,8 +168,6 @@ public final class _230_TestOfSummoner extends Quest {
         NAMES.put(30639, "Celestiel");
         NAMES.put(30640, "Brynthea");
     }
-
-    private static final Map<Integer, Integer[]> DROPLIST_LARA = new HashMap<>();
 
     static {
         DROPLIST_LARA.put(20555, new Integer[]{
@@ -247,53 +277,53 @@ public final class _230_TestOfSummoner extends Quest {
         });
     }
 
-    private static final String[] STATS = {
-            "cond",
-            "step",
-            "Lara_Part",
-            "Arcanas",
-            "Belthus",
-            "Brynthea",
-            "Celestiel",
-            "Camoniell",
-            "Basilla",
-            "Almors"
-    };
+    static {
+        DROPLIST_SUMMON.put(27102, List.of(
+                CRYSTAL_OF_PROGRESS1_ID,
+                CRYSTAL_OF_INPROGRESS1_ID,
+                CRYSTAL_OF_FOUL1_ID,
+                CRYSTAL_OF_DEFEAT1_ID,
+                CRYSTAL_OF_VICTORY1_ID)); // Pako the Cat
+        DROPLIST_SUMMON.put(27103, List.of(
+                CRYSTAL_OF_PROGRESS2_ID,
+                CRYSTAL_OF_INPROGRESS2_ID,
+                CRYSTAL_OF_FOUL2_ID,
+                CRYSTAL_OF_DEFEAT2_ID,
+                CRYSTAL_OF_VICTORY2_ID)); // Mimi the Cat
+        DROPLIST_SUMMON.put(27104, List.of(
+                CRYSTAL_OF_PROGRESS3_ID,
+                CRYSTAL_OF_INPROGRESS3_ID,
+                CRYSTAL_OF_FOUL3_ID,
+                CRYSTAL_OF_DEFEAT3_ID,
+                CRYSTAL_OF_VICTORY3_ID)); // Shadow Turen
+        DROPLIST_SUMMON.put(27105, List.of(
+                CRYSTAL_OF_PROGRESS4_ID,
+                CRYSTAL_OF_INPROGRESS4_ID,
+                CRYSTAL_OF_FOUL4_ID,
+                CRYSTAL_OF_DEFEAT4_ID,
+                CRYSTAL_OF_VICTORY4_ID)); // Unicorn Racer
+        DROPLIST_SUMMON.put(27106, List.of(
+                CRYSTAL_OF_PROGRESS5_ID,
+                CRYSTAL_OF_INPROGRESS5_ID,
+                CRYSTAL_OF_FOUL5_ID,
+                CRYSTAL_OF_DEFEAT5_ID,
+                CRYSTAL_OF_VICTORY5_ID)); // Unicorn Phantasm
+        DROPLIST_SUMMON.put(27107, List.of(
+                CRYSTAL_OF_PROGRESS6_ID,
+                CRYSTAL_OF_INPROGRESS6_ID,
+                CRYSTAL_OF_FOUL6_ID,
+                CRYSTAL_OF_DEFEAT6_ID,
+                CRYSTAL_OF_VICTORY6_ID)); // Silhoutte Tilfo
+    }
 
-    private static final int[][] LISTS = {
-            {},
-            // zero element filler
-            {
-                    LARS_LIST1_ID,
-                    SAC_OF_REDSPORES_ID,
-                    LETOLIZARDMAN_AMULET_ID
-            },
-            // List 1
-            {
-                    LARS_LIST2_ID,
-                    KARULBUGBEAR_TOTEM_ID,
-                    SHARDS_OF_MANASHEN_ID
-            },
-            // List 2
-            {
-                    LARS_LIST3_ID,
-                    CRIMSON_BLOODSTONE_ID,
-                    BREKAORC_TOTEM_ID
-            },
-            // List 3
-            {
-                    LARS_LIST4_ID,
-                    TUSK_OF_WINDSUS_ID,
-                    TALONS_OF_TYRANT_ID
-            },
-            // List 4
-            {
-                    LARS_LIST5_ID,
-                    WINGS_OF_DRONEANT_ID,
-                    FANGS_OF_WYRM_ID
-            }
-            // List 5
-    };
+    static {
+        NAMES.put(27102, "Almors");
+        NAMES.put(27103, "Camoniell");
+        NAMES.put(27104, "Belthus");
+        NAMES.put(27105, "Basilla");
+        NAMES.put(27106, "Celestiel");
+        NAMES.put(27107, "Brynthea");
+    }
 
     public _230_TestOfSummoner() {
         super(false);
@@ -302,8 +332,7 @@ public final class _230_TestOfSummoner extends Quest {
 
         for (int npcId : npc)
             addTalkId(npcId);
-        for (int mobId : DROPLIST_LARA.keySet())
-            addKillId(mobId);
+        DROPLIST_LARA.keySet().forEach(this::addKillId);
         for (int mobId : DROPLIST_SUMMON.keySet()) {
             addKillId(mobId);
             addAttackId(mobId);
@@ -473,7 +502,7 @@ public final class _230_TestOfSummoner extends Quest {
                     long ItemCount2 = st.getQuestItemsCount(LISTS[LaraPart][2]);
                     if (ItemCount1 < 30 || ItemCount2 < 30) // if( you have not enough materials, List 1 - 5
                         htmltext = "30063-05.htm";
-                    else if (ItemCount1 > 29 && ItemCount2 > 29) {// if( you have enough materials, receive your Beginner Arcanas, List 1 - 5
+                    else {// if( you have enough materials, receive your Beginner Arcanas, List 1 - 5
                         htmltext = "30063-06.htm";
                         st.giveItems(BEGINNERS_ARCANA_ID, 2, false);
                         st.takeItems(LISTS[LaraPart][0], 1);
@@ -486,20 +515,20 @@ public final class _230_TestOfSummoner extends Quest {
             } else
                 for (int[] i : SUMMONERS)
                     if (i[0] == npcId) {
-                        Integer[] k = DROPLIST_SUMMON.get(npcId - 30635 + 27102);
+                        List<Integer> k = DROPLIST_SUMMON.get(npcId - 30635 + 27102);
                         int SummonerStat = st.getInt(NAMES.get(i[0]));
                         if (step > 1)
-                            if (st.getQuestItemsCount(k[0]) > 0) // ready to fight... already take the mission to kill his pet
+                            if (st.getQuestItemsCount(k.get(0)) > 0) // ready to fight... already take the mission to kill his pet
                                 htmltext = str(npcId) + "-08.htm";
-                            else if (st.getQuestItemsCount(k[1]) > 0) { // in battle...
+                            else if (st.getQuestItemsCount(k.get(1)) > 0) { // in battle...
                                 // this will add the player&&his pet to the list of notif(ied objects in onDeath Part
                                 st.addNotifyOfDeath(st.getPlayer(), true);
                                 htmltext = str(npcId) + "-09.htm";
-                            } else if (st.getQuestItemsCount(k[3]) > 0) // haha... your summon lose
+                            } else if (st.getQuestItemsCount(k.get(3)) > 0) // haha... your summon lose
                                 htmltext = str(npcId) + "-05.htm";
-                            else if (st.getQuestItemsCount(k[2]) > 0) // hey.. shit cheater.. dont help your pet
+                            else if (st.getQuestItemsCount(k.get(2)) > 0) // hey.. shit cheater.. dont help your pet
                                 htmltext = str(npcId) + "-06.htm";
-                            else if (st.getQuestItemsCount(k[4]) > 0) { // damn.. you won the batlle.. here are the arcanas
+                            else if (st.getQuestItemsCount(k.get(4)) > 0) { // damn.. you won the batlle.. here are the arcanas
                                 htmltext = str(npcId) + "-07.htm";
                                 st.takeItems(SUMMONERS[npcId - 30635][2], -1); // take crystal of victory
                                 st.giveItems(SUMMONERS[npcId - 30635][1], 1, false);// give arcana
@@ -517,64 +546,6 @@ public final class _230_TestOfSummoner extends Quest {
         return htmltext;
     }
 
-    private static final Map<Integer, Integer[]> DROPLIST_SUMMON = new HashMap<>();
-
-    static {
-        DROPLIST_SUMMON.put(27102, new Integer[]{
-                CRYSTAL_OF_PROGRESS1_ID,
-                CRYSTAL_OF_INPROGRESS1_ID,
-                CRYSTAL_OF_FOUL1_ID,
-                CRYSTAL_OF_DEFEAT1_ID,
-                CRYSTAL_OF_VICTORY1_ID
-        }); // Pako the Cat
-        DROPLIST_SUMMON.put(27103, new Integer[]{
-                CRYSTAL_OF_PROGRESS2_ID,
-                CRYSTAL_OF_INPROGRESS2_ID,
-                CRYSTAL_OF_FOUL2_ID,
-                CRYSTAL_OF_DEFEAT2_ID,
-                CRYSTAL_OF_VICTORY2_ID
-        }); // Mimi the Cat
-        DROPLIST_SUMMON.put(27104, new Integer[]{
-                CRYSTAL_OF_PROGRESS3_ID,
-                CRYSTAL_OF_INPROGRESS3_ID,
-                CRYSTAL_OF_FOUL3_ID,
-                CRYSTAL_OF_DEFEAT3_ID,
-                CRYSTAL_OF_VICTORY3_ID
-        }); // Shadow Turen
-        DROPLIST_SUMMON.put(27105, new Integer[]{
-                CRYSTAL_OF_PROGRESS4_ID,
-                CRYSTAL_OF_INPROGRESS4_ID,
-                CRYSTAL_OF_FOUL4_ID,
-                CRYSTAL_OF_DEFEAT4_ID,
-                CRYSTAL_OF_VICTORY4_ID
-        }); // Unicorn Racer
-        DROPLIST_SUMMON.put(27106, new Integer[]{
-                CRYSTAL_OF_PROGRESS5_ID,
-                CRYSTAL_OF_INPROGRESS5_ID,
-                CRYSTAL_OF_FOUL5_ID,
-                CRYSTAL_OF_DEFEAT5_ID,
-                CRYSTAL_OF_VICTORY5_ID
-        }); // Unicorn Phantasm
-        DROPLIST_SUMMON.put(27107, new Integer[]{
-                CRYSTAL_OF_PROGRESS6_ID,
-                CRYSTAL_OF_INPROGRESS6_ID,
-                CRYSTAL_OF_FOUL6_ID,
-                CRYSTAL_OF_DEFEAT6_ID,
-                CRYSTAL_OF_VICTORY6_ID
-        }); // Silhoutte Tilfo
-    }
-
-    static Map<Integer, String> DROPLIST_SUMMON_VARS = new HashMap<>();
-
-    static {
-        NAMES.put(27102, "Almors");
-        NAMES.put(27103, "Camoniell");
-        NAMES.put(27104, "Belthus");
-        NAMES.put(27105, "Basilla");
-        NAMES.put(27106, "Celestiel");
-        NAMES.put(27107, "Brynthea");
-    }
-
     @Override
     public String onDeath(Creature killer, Creature victim, QuestState st) {
         if (killer == null || victim == null)
@@ -585,17 +556,9 @@ public final class _230_TestOfSummoner extends Quest {
         if (victim == st.getPlayer() || victim == st.getPlayer().getPet())
             if (npcId >= 27102 && npcId <= 27107) {
                 // var means the variable of the SummonerManager, the rest are all Crystalls wich mark the status
-                String[] VARS = {
-                        "Almors",
-                        "Camoniell",
-                        "Belthus",
-                        "Basilla",
-                        "Celestiel",
-                        "Brynthea"
-                };
-                String var = VARS[npcId - 27102];
-                Integer[] i = DROPLIST_SUMMON.get(npcId);
-                int defeat = i[3];
+                String var = VARS.get(npcId - 27102);
+                List<Integer> i = DROPLIST_SUMMON.get(npcId);
+                int defeat = i.get(3);
                 if (st.getInt(var) == 3) {
                     st.set(var, "4");
                     st.giveItems(defeat, 1, false);
@@ -609,18 +572,10 @@ public final class _230_TestOfSummoner extends Quest {
         int npcId = npc.getNpcId();
         // var means the variable of the SummonerManager, the rest are all Crystalls wich mark the status
         if (npcId >= 27102 && npcId <= 27107) {
-            String[] VARS = {
-                    "Almors",
-                    "Camoniell",
-                    "Belthus",
-                    "Basilla",
-                    "Celestiel",
-                    "Brynthea"
-            };
-            String var = VARS[npcId - 27102];
-            Integer[] i = DROPLIST_SUMMON.get(npcId);
-            int start = i[0];
-            int progress = i[1];
+            String var = VARS.get(npcId - 27102);
+            List<Integer> i = DROPLIST_SUMMON.get(npcId);
+            int start = i.get(0);
+            int progress = i.get(1);
             if (st.getInt(var) == 2) {
                 st.set(var, "3");
                 st.giveItems(progress, 1, false);
@@ -628,12 +583,12 @@ public final class _230_TestOfSummoner extends Quest {
                 st.playSound(SOUND_ITEMGET);
             }
 
-            if (st.getQuestItemsCount(i[2]) != 0)
+            if (st.getQuestItemsCount(i.get(2)) != 0)
                 return null;
 
             Summon summon = st.getPlayer().getPet();
             if (summon == null || summon.isPet())
-                st.giveItems(i[2], 1, false);
+                st.giveItems(i.get(2), 1, false);
         }
         return null;
     }
@@ -657,19 +612,11 @@ public final class _230_TestOfSummoner extends Quest {
             }
         } else if (DROPLIST_SUMMON.containsKey(npcId)) { // if a summon dies
             // var means the variable of the SummonerManager, the rest are all Crystalls which mark the status
-            String[] VARS = {
-                    "Almors",
-                    "Camoniell",
-                    "Belthus",
-                    "Basilla",
-                    "Celestiel",
-                    "Brynthea"
-            };
-            String var = VARS[npcId - 27102];
-            Integer[] i = DROPLIST_SUMMON.get(npcId);
-            int progress = i[1];
-            int foul = i[2];
-            int victory = i[4];
+            String var = VARS.get(npcId - 27102);
+            List<Integer> i = DROPLIST_SUMMON.get(npcId);
+            int progress = i.get(1);
+            int foul = i.get(2);
+            int victory = i.get(4);
             if (st.getInt(var) == 3) {
                 boolean isFoul = st.getQuestItemsCount(foul) == 0;
                 int isName = 1; // first entry in the droplist is a name (string).  Skip it.

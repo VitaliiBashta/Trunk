@@ -142,7 +142,7 @@ public final class _129_PailakaDevilsLegacy extends Quest {
                     st.setState(COMPLETED);
                     st.playSound(SOUND_FINISH);
                     st.exitCurrentQuest(false);
-                    player.setVitality(Config.VITALITY_LEVELS[4]);
+                    player.setVitality(Config.VITALITY_LEVELS.get(4));
                     player.getReflection().startCollapseTimer(60000);
                     htmltext = "32511-01.htm";
                 }

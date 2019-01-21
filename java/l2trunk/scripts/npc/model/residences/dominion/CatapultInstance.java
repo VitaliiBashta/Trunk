@@ -74,7 +74,7 @@ public final class CatapultInstance extends SiegeToggleNpcInstance {
                         if (interested.isEmpty())
                             continue;
 
-                        toReward = interested.get(Rnd.get(interested.size()));
+                        toReward = Rnd.get(interested);
                         if (toReward == null)
                             toReward = killer;
                     }

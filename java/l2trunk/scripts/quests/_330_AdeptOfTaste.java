@@ -4,7 +4,8 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.List;
 
 public final class _330_AdeptOfTaste extends Quest {
     // NPCs
@@ -50,40 +51,21 @@ public final class _330_AdeptOfTaste extends Quest {
     private static final int Rollants_Creature_Book = 1439;
     private static final int Body_of_Monster_Eye = 1440;
     private static final int Meat_of_Monster_Eye = 1441;
-    private static final int[] Jonass_Steak_Dishes = {
-            1442,
-            1443,
-            1444,
-            1445,
-            1446
-    };
-    private static final int[] Miriens_Reviews = {
-            1447,
-            1448,
-            1449,
-            1450,
-            1451
-    };
+    private static final List<Integer> Jonass_Steak_Dishes = List.of(
+            1442, 1443, 1444, 1445, 1446);
+    private static final List<Integer> Miriens_Reviews = List.of(
+            1447, 1448, 1449, 1450, 1451);
 
-    private static final int[] ingredients = {
+    private static final List<Integer> ingredients = List.of(
             Red_Mandragora_Sap,
             Honey,
             Dionian_Potato,
             Green_Moss_Bundle,
-            Meat_of_Monster_Eye
-    };
-    private static final int[] spec_ingredients = {
-            White_Mandragora_Sap,
-            Golden_Honey,
-            Brown_Moss_Bundle
-    };
-    private static final int[] rewards = {
-            0,
-            0,
-            1455,
-            1456,
-            1457
-    };
+            Meat_of_Monster_Eye);
+    private static final List<Integer> spec_ingredients = List.of(
+            White_Mandragora_Sap, Golden_Honey, Brown_Moss_Bundle);
+    private static final List<Integer> rewards = List.of(
+            0, 0, 1455, 1456, 1457);
     private static final int[] adena_rewards = {
             10000,
             14870,
@@ -134,6 +116,54 @@ public final class _330_AdeptOfTaste extends Quest {
         addQuestItem(spec_ingredients);
         addQuestItem(Jonass_Steak_Dishes);
         addQuestItem(Miriens_Reviews);
+    }
+
+    private static void MandragoraDrop(QuestState st, int i1, int i2) {
+        int i = Rnd.get(100);
+        if (i < i1)
+            st.rollAndGive(Red_Mandragora_Root, 1, 1, 40, 100);
+        else if (i < i2)
+            st.rollAndGive(White_Mandragora_Root, 1, 1, 40, 100);
+    }
+
+    private static void BeeDrop(QuestState st, int i1, int i2) {
+        int i = Rnd.get(100);
+        if (i < i1)
+            st.rollAndGive(Nectar, 1, 1, 20, 100);
+        else if (i < i2)
+            st.rollAndGive(Royal_Jelly, 1, 1, 10, 100);
+    }
+
+    private static void AntDrop(QuestState st, int i1, int i2) {
+        int i = Rnd.get(100);
+        if (i < i1)
+            st.rollAndGive(Green_Marsh_Moss, 1, 1, 20, 100);
+        else if (i < i2)
+            st.rollAndGive(Brown_Marsh_Moss, 1, 1, 20, 100);
+    }
+
+    private static void Root2Sap(QuestState st, int sap_id) {
+        st.takeItems(Sonias_Botany_Book, -1);
+        st.takeItems(White_Mandragora_Root, -1);
+        st.takeItems(Red_Mandragora_Root, -1);
+        st.playSound(SOUND_MIDDLE);
+        st.giveItems(sap_id, 1);
+    }
+
+    private static void Moss2Bundle(QuestState st, int bundle_id) {
+        st.takeItems(Glyvkas_Botany_Book, -1);
+        st.takeItems(Brown_Marsh_Moss, -1);
+        st.takeItems(Green_Marsh_Moss, -1);
+        st.playSound(SOUND_MIDDLE);
+        st.giveItems(bundle_id, 1);
+    }
+
+    private static void Nectar2Honey(QuestState st, int honey_id) {
+        st.takeItems(Jacobs_Insect_Book, -1);
+        st.takeItems(Nectar, -1);
+        st.takeItems(Royal_Jelly, -1);
+        st.playSound(SOUND_MIDDLE);
+        st.giveItems(honey_id, 1);
     }
 
     @Override
@@ -199,7 +229,7 @@ public final class _330_AdeptOfTaste extends Quest {
 
                 spec_ingredients_count += Rnd.get(0, 1);
                 st.playSound(spec_ingredients_count == 4 ? SOUND_JACKPOT : SOUND_MIDDLE);
-                st.giveItems(Jonass_Steak_Dishes[(int) spec_ingredients_count], 1);
+                st.giveItems(Jonass_Steak_Dishes.get((int) spec_ingredients_count), 1);
                 spec_ingredients_count++;
                 return "30469_05t" + spec_ingredients_count + ".htm";
             }
@@ -210,12 +240,12 @@ public final class _330_AdeptOfTaste extends Quest {
                 if (Jonass_Steak_Dish_count > 0 && Miriens_Review_count == 0)
                     return "30469_06.htm";
                 if (Jonass_Steak_Dish_count == 0 && Miriens_Review_count > 0)
-                    for (int i = Miriens_Reviews.length; i > 0; i--)
-                        if (st.getQuestItemsCount(Miriens_Reviews[i - 1]) > 0) {
+                    for (int i = Miriens_Reviews.size(); i > 0; i--)
+                        if (st.getQuestItemsCount(Miriens_Reviews.get(i - 1)) > 0) {
                             st.takeAllItems(Miriens_Reviews);
                             st.giveItems(ADENA_ID, adena_rewards[i - 1]);
-                            if (rewards[i - 1] > 0)
-                                st.giveItems(rewards[i - 1], 1);
+                            if (rewards.get(i - 1) > 0)
+                                st.giveItems(rewards.get(i - 1), 1);
                             st.playSound(SOUND_FINISH);
                             st.exitCurrentQuest(true);
                             return "30469_06t" + i + ".htm";
@@ -229,11 +259,11 @@ public final class _330_AdeptOfTaste extends Quest {
             if (all_ingredients_count == 0) {
                 if (st.getQuestItemsCount(Miriens_Reviews) > 0)
                     return "30461_04.htm";
-                for (int i = Jonass_Steak_Dishes.length; i > 0; i--)
-                    if (st.getQuestItemsCount(Jonass_Steak_Dishes[i - 1]) > 0) {
+                for (int i = Jonass_Steak_Dishes.size(); i > 0; i--)
+                    if (st.getQuestItemsCount(Jonass_Steak_Dishes.get(i - 1)) > 0) {
                         st.takeAllItems(Jonass_Steak_Dishes);
                         st.playSound(SOUND_MIDDLE);
-                        st.giveItems(Miriens_Reviews[i - 1], 1);
+                        st.giveItems(Miriens_Reviews.get(i - 1));
                         return "30461_02t" + i + ".htm";
                     }
             }
@@ -327,16 +357,16 @@ public final class _330_AdeptOfTaste extends Quest {
                 if (!has_potato) {
                     if (st.getQuestItemsCount(Hobgoblin_Amulet) < 30)
                         return "30078_02.htm";
-                    st.takeItems(Panos_Contract, -1);
-                    st.takeItems(Hobgoblin_Amulet, -1);
+                    st.takeItems(Panos_Contract);
+                    st.takeItems(Hobgoblin_Amulet);
                     st.playSound(SOUND_MIDDLE);
-                    st.giveItems(Dionian_Potato, 1);
+                    st.giveItems(Dionian_Potato);
                     return "30078_03.htm";
                 }
             } else if (has_potato)
                 return "30078_04.htm";
             else {
-                st.giveItems(Panos_Contract, 1);
+                st.giveItems(Panos_Contract);
                 return "30078_01.htm";
             }
         }
@@ -380,53 +410,5 @@ public final class _330_AdeptOfTaste extends Quest {
             st.rollAndGive(Body_of_Monster_Eye, 1, 2, 30, 100);
 
         return null;
-    }
-
-    private static void MandragoraDrop(QuestState st, int i1, int i2) {
-        int i = Rnd.get(100);
-        if (i < i1)
-            st.rollAndGive(Red_Mandragora_Root, 1, 1, 40, 100);
-        else if (i < i2)
-            st.rollAndGive(White_Mandragora_Root, 1, 1, 40, 100);
-    }
-
-    private static void BeeDrop(QuestState st, int i1, int i2) {
-        int i = Rnd.get(100);
-        if (i < i1)
-            st.rollAndGive(Nectar, 1, 1, 20, 100);
-        else if (i < i2)
-            st.rollAndGive(Royal_Jelly, 1, 1, 10, 100);
-    }
-
-    private static void AntDrop(QuestState st, int i1, int i2) {
-        int i = Rnd.get(100);
-        if (i < i1)
-            st.rollAndGive(Green_Marsh_Moss, 1, 1, 20, 100);
-        else if (i < i2)
-            st.rollAndGive(Brown_Marsh_Moss, 1, 1, 20, 100);
-    }
-
-    private static void Root2Sap(QuestState st, int sap_id) {
-        st.takeItems(Sonias_Botany_Book, -1);
-        st.takeItems(White_Mandragora_Root, -1);
-        st.takeItems(Red_Mandragora_Root, -1);
-        st.playSound(SOUND_MIDDLE);
-        st.giveItems(sap_id, 1);
-    }
-
-    private static void Moss2Bundle(QuestState st, int bundle_id) {
-        st.takeItems(Glyvkas_Botany_Book, -1);
-        st.takeItems(Brown_Marsh_Moss, -1);
-        st.takeItems(Green_Marsh_Moss, -1);
-        st.playSound(SOUND_MIDDLE);
-        st.giveItems(bundle_id, 1);
-    }
-
-    private static void Nectar2Honey(QuestState st, int honey_id) {
-        st.takeItems(Jacobs_Insect_Book, -1);
-        st.takeItems(Nectar, -1);
-        st.takeItems(Royal_Jelly, -1);
-        st.playSound(SOUND_MIDDLE);
-        st.giveItems(honey_id, 1);
     }
 }

@@ -133,37 +133,31 @@ public final class EnchantSkillLearn {
     };
     // these two build the primary key
     private final int id;
-    private final int _level;
+    private final int level;
     // not needed, just for easier debug
     private final String _name;
     private final String _type;
     private final int _baseLvl;
-    private final int _maxLvl;
+    private final int maxLvl;
     private final int _minSkillLevel;
     private final int _costMul;
 
     public EnchantSkillLearn(int id, int lvl, String name, String type, int minSkillLvl, int baseLvl, int maxLvl) {
         this.id = id;
-        _level = lvl;
+        level = lvl;
         _baseLvl = baseLvl;
-        _maxLvl = maxLvl;
+        this.maxLvl = maxLvl;
         _minSkillLevel = minSkillLvl;
         _name = name.intern();
         _type = type.intern();
-        _costMul = _maxLvl == 15 ? 5 : 1;
+        _costMul = this.maxLvl == 15 ? 5 : 1;
     }
 
 
-    /**
-     * @return Returns the level.
-     */
     public int getLevel() {
-        return _level;
+        return level;
     }
 
-    /**
-     * @return Returns the minLevel.
-     */
     public int getBaseLevel() {
         return _baseLvl;
     }
@@ -191,20 +185,20 @@ public final class EnchantSkillLearn {
      * @return Returns the spCost.
      */
     public int[] getCost() {
-        return SkillTable.INSTANCE.getInfo(id, 1).isOffensive() ? _priceCombat[_level % 100] : _priceBuff[_level % 100];
+        return SkillTable.INSTANCE.getInfo(id, 1).isOffensive() ? _priceCombat[level % 100] : _priceBuff[level % 100];
     }
 
     /**
      * Шанс успешной заточки
      */
     public int getRate(Player ply) {
-        int level = _level % 100;
+        int level = this.level % 100;
         int chance = Math.min(_chance[level].length - 1, ply.getLevel() - 76);
-        return _maxLvl == 15 ? _chance15[level][chance] : _chance[level][chance];
+        return maxLvl == 15 ? _chance15[level][chance] : _chance[level][chance];
     }
 
     public int getMaxLevel() {
-        return _maxLvl;
+        return maxLvl;
     }
 
     public String getType() {
@@ -213,11 +207,7 @@ public final class EnchantSkillLearn {
 
     @Override
     public int hashCode() {
-        final int PRIME = 31;
-        int result = 1;
-        result = PRIME * result + id;
-        result = PRIME * result + _level;
-        return result;
+        return 31 * id + level;
     }
 
     @Override

@@ -292,18 +292,18 @@ public final class InstantZone {
         private final int _npcId;
         private final int _count;
         private final int _respawn;
-        private final int _respawnRnd;
-        private final List<Location> _coords;
-        private final Territory _territory;
+        private final int respawnRnd;
+        private final List<Location> coords;
+        private final Territory territory;
 
         public SpawnInfo(int spawnType, int npcId, int count, int respawn, int respawnRnd, List<Location> coords, Territory territory) {
             _spawnType = spawnType;
             _npcId = npcId;
             _count = count;
             _respawn = respawn;
-            _respawnRnd = respawnRnd;
-            _coords = coords;
-            _territory = territory;
+            this.respawnRnd = respawnRnd;
+            this.coords = coords;
+            this.territory = territory;
         }
 
         public int getSpawnType() {
@@ -323,15 +323,15 @@ public final class InstantZone {
         }
 
         public int getRespawnRnd() {
-            return _respawnRnd;
+            return respawnRnd;
         }
 
         public List<Location> getCoords() {
-            return _coords;
+            return coords;
         }
 
-        public Territory getLoc() {
-            return _territory;
+        public Territory getTerritory() {
+            return territory;
         }
     }
 }

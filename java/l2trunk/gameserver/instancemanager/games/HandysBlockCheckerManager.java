@@ -187,7 +187,7 @@ public enum HandysBlockCheckerManager {
         ArenaParticipantsHolder holder = arenaPlayers.get(arena);
 
         synchronized (arenaPlayers.get(arena)) {
-            boolean isFromRed = holder._redPlayers.contains(player);
+            boolean isFromRed = holder.redPlayers.contains(player);
 
             if (isFromRed && holder.getBlueTeamSize() == 6) {
                 player.sendMessage("The team is full");
@@ -245,75 +245,75 @@ public enum HandysBlockCheckerManager {
 
     public class ArenaParticipantsHolder {
         final int _arena;
-        final List<Player> _redPlayers;
-        final List<Player> _bluePlayers;
+        final List<Player> redPlayers;
+        final List<Player> bluePlayers;
         final BlockCheckerEngine _engine;
 
         ArenaParticipantsHolder(int arena) {
             _arena = arena;
-            _redPlayers = new ArrayList<>(6);
-            _bluePlayers = new ArrayList<>(6);
+            redPlayers = new ArrayList<>(6);
+            bluePlayers = new ArrayList<>(6);
             _engine = new BlockCheckerEngine(this, _arena);
         }
 
         public List<Player> getRedPlayers() {
-            return _redPlayers;
+            return redPlayers;
         }
 
         public List<Player> getBluePlayers() {
-            return _bluePlayers;
+            return bluePlayers;
         }
 
         public ArrayList<Player> getAllPlayers() {
             ArrayList<Player> all = new ArrayList<>(12);
-            all.addAll(_redPlayers);
-            all.addAll(_bluePlayers);
+            all.addAll(redPlayers);
+            all.addAll(bluePlayers);
             return all;
         }
 
         void addPlayer(Player player, int team) {
             if (team == 0)
-                _redPlayers.add(player);
+                redPlayers.add(player);
             else
-                _bluePlayers.add(player);
+                bluePlayers.add(player);
         }
 
         void removePlayer(Player player, int team) {
             if (team == 0)
-                _redPlayers.remove(player);
+                redPlayers.remove(player);
             else
-                _bluePlayers.remove(player);
+                bluePlayers.remove(player);
         }
 
         public int getPlayerTeam(Player player) {
-            if (_redPlayers.contains(player))
+            if (redPlayers.contains(player))
                 return 0;
-            else if (_bluePlayers.contains(player))
+            else if (bluePlayers.contains(player))
                 return 1;
             else
                 return -1;
         }
 
         public int getRedTeamSize() {
-            return _redPlayers.size();
+            return redPlayers.size();
         }
 
         public int getBlueTeamSize() {
-            return _bluePlayers.size();
+            return bluePlayers.size();
         }
 
         public void broadCastPacketToTeam(L2GameServerPacket packet) {
             ArrayList<Player> team = new ArrayList<>(12);
-            team.addAll(_redPlayers);
-            team.addAll(_bluePlayers);
+            team.addAll(redPlayers);
+            team.addAll(bluePlayers);
 
             for (Player p : team)
                 p.sendPacket(packet);
         }
 
         public void clearPlayers() {
-            _redPlayers.clear();
-            _bluePlayers.clear();
+            redPlayers.clear();
+            bluePlayers.clear();
         }
 
         public BlockCheckerEngine getEvent() {
@@ -325,13 +325,13 @@ public enum HandysBlockCheckerManager {
         }
 
         private void checkAndShuffle() {
-            int redSize = _redPlayers.size();
-            int blueSize = _bluePlayers.size();
+            int redSize = redPlayers.size();
+            int blueSize = bluePlayers.size();
             if (redSize > blueSize + 1) {
                 broadCastPacketToTeam(new SystemMessage2(SystemMsg.THE_TEAM_WAS_ADJUSTED_BECAUSE_THE_POPULATION_RATIO_WAS_NOT_CORRECT));
                 int needed = redSize - (blueSize + 1);
                 for (int i = 0; i < needed + 1; i++) {
-                    Player plr = _redPlayers.get(i);
+                    Player plr = redPlayers.get(i);
                     if (plr == null)
                         continue;
                     changePlayerToTeam(plr, _arena, 1);
@@ -340,7 +340,7 @@ public enum HandysBlockCheckerManager {
                 broadCastPacketToTeam(new SystemMessage2(SystemMsg.THE_TEAM_WAS_ADJUSTED_BECAUSE_THE_POPULATION_RATIO_WAS_NOT_CORRECT));
                 int needed = blueSize - (redSize + 1);
                 for (int i = 0; i < needed + 1; i++) {
-                    Player plr = _bluePlayers.get(i);
+                    Player plr = bluePlayers.get(i);
                     if (plr == null)
                         continue;
                     changePlayerToTeam(plr, _arena, 0);

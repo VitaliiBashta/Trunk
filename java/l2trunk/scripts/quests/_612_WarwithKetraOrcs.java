@@ -31,15 +31,15 @@ public final class _612_WarwithKetraOrcs extends Quest {
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("elder_ashas_barka_durai_q0612_0202.htm")) {
+        } else if ("elder_ashas_barka_durai_q0612_0202.htm".equalsIgnoreCase(event)) {
             long ec = st.getQuestItemsCount(MOLAR_OF_KETRA_ORC) / 5;
             if (ec > 0) {
                 st.takeItems(MOLAR_OF_KETRA_ORC, ec * 5);
                 st.giveItems(NEPENTHES_SEED, ec);
             } else
                 htmltext = "elder_ashas_barka_durai_q0612_0203.htm";
-        } else if (event.equalsIgnoreCase("elder_ashas_barka_durai_q0612_0204.htm")) {
-            st.takeItems(MOLAR_OF_KETRA_ORC, -1);
+        } else if ("elder_ashas_barka_durai_q0612_0204.htm".equalsIgnoreCase(event)) {
+            st.takeItems(MOLAR_OF_KETRA_ORC);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
         }
@@ -64,16 +64,9 @@ public final class _612_WarwithKetraOrcs extends Quest {
         return htmltext;
     }
 
-    private boolean isKetraNpc(int npc) {
-        for (int i : KETRA_NPC_LIST)
-            if (npc == i)
-                return true;
-        return false;
-    }
-
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
-        if (isKetraNpc(npc.getNpcId()) && st.getCond() == 1)
+        if (KETRA_NPC_LIST.contains(npc.getNpcId()) && st.getCond() == 1)
             st.rollAndGive(MOLAR_OF_KETRA_ORC, 1, MOLAR_OF_KETRA_ORC_DROP_CHANCE);
         return null;
     }

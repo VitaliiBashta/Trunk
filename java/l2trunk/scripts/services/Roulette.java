@@ -10,6 +10,8 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.GameStats;
 import l2trunk.gameserver.utils.Util;
 
+import static l2trunk.commons.lang.NumberUtils.toLong;
+
 public final class Roulette extends Functions {
     private static final String R = "red";
     private static final String B = "black";
@@ -88,21 +90,21 @@ public final class Roulette extends Functions {
 
     public void dialog() {
         Player player = getSelf();
-        show(HtmCache.INSTANCE().getNotNull("scripts/services/roulette.htm", player).replaceFirst("%min%", Util.formatAdena(Config.SERVICES_ROULETTE_MIN_BET)).replaceFirst("%max%", Util.formatAdena(Config.SERVICES_ROULETTE_MAX_BET)), player);
+        show(HtmCache.INSTANCE.getNotNull("scripts/services/roulette.htm", player).replaceFirst("%min%", Util.formatAdena(Config.SERVICES_ROULETTE_MIN_BET)).replaceFirst("%max%", Util.formatAdena(Config.SERVICES_ROULETTE_MAX_BET)), player);
     }
 
     public void play(String[] param) {
         Player player = getSelf();
         GameType type;
-        long bet = 0;
-        String betID = "";
+        long bet;
+        String betID;
         try {
             if (param.length != 3)
                 throw new NumberFormatException();
 
             type = GameType.valueOf(param[0]);
             betID = param[1].trim();
-            bet = Long.parseLong(param[2]);
+            bet = toLong(param[2]);
 
             if (type == GameType.StraightUp && (betID.length() > 2 || Integer.parseInt(betID) < 0 || Integer.parseInt(betID) > 36))
                 throw new NumberFormatException();
@@ -129,7 +131,7 @@ public final class Roulette extends Functions {
         String[] roll = Rnd.get(Numbers);
         int result = check(betID, roll, type);
 
-        String ret = HtmCache.INSTANCE().getNotNull("scripts/services/rouletteresult.htm", player);
+        String ret = HtmCache.INSTANCE.getNotNull("scripts/services/rouletteresult.htm", player);
 
         if (result == 0) {
             removeItem(player, 57, bet, "Roulette");

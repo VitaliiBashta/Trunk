@@ -563,42 +563,22 @@ public class AugmentationData {
     }
 
     class augmentationStat {
-        private final Stats _stat;
+        private final Stats stat;
         private final int _singleSize;
         private final int _combinedSize;
         private final double _singleValues[];
         private final double _combinedValues[];
 
         augmentationStat(Stats stat, double sValues[], double cValues[]) {
-            _stat = stat;
+            this.stat = stat;
             _singleSize = sValues.length;
             _singleValues = sValues;
             _combinedSize = cValues.length;
             _combinedValues = cValues;
         }
 
-        public int getSingleStatSize() {
-            return _singleSize;
-        }
-
-        public int getCombinedStatSize() {
-            return _combinedSize;
-        }
-
-        public double getSingleStatValue(int i) {
-            if (i >= _singleSize || i < 0)
-                return _singleValues[_singleSize - 1];
-            return _singleValues[i];
-        }
-
-        public double getCombinedStatValue(int i) {
-            if (i >= _combinedSize || i < 0)
-                return _combinedValues[_combinedSize - 1];
-            return _combinedValues[i];
-        }
-
         public Stats getStat() {
-            return _stat;
+            return stat;
         }
     }
 }

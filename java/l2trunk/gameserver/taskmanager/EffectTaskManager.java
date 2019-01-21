@@ -5,15 +5,18 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.ThreadPoolManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class EffectTaskManager extends SteppingRunnableQueueManager {
     private final static int TICK = 250;
 
-    private final static EffectTaskManager[] _instances = new EffectTaskManager[Config.EFFECT_TASK_MANAGER_COUNT];
+    private final static List<EffectTaskManager> MANAGERS = new ArrayList<>();
     private static int randomizer = 0;
 
     static {
-        for (int i = 0; i < _instances.length; i++)
-            _instances[i] = new EffectTaskManager();
+        for (int i = 0; i < Config.EFFECT_TASK_MANAGER_COUNT; i++)
+            MANAGERS.add(new EffectTaskManager());
     }
 
     private EffectTaskManager() {
@@ -25,10 +28,10 @@ public final class EffectTaskManager extends SteppingRunnableQueueManager {
     }
 
     public static EffectTaskManager getInstance() {
-        return _instances[randomizer++ & _instances.length - 1];
+        return MANAGERS.get(randomizer++ & MANAGERS.size() - 1);
     }
 
     public CharSequence getStats(int num) {
-        return _instances[num].getStats();
+        return MANAGERS.get(num).getStats();
     }
 }

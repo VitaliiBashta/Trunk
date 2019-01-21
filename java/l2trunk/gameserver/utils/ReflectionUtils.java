@@ -11,10 +11,9 @@ import l2trunk.gameserver.model.instances.DoorInstance;
 import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.templates.InstantZoneEntryType;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReflectionUtils {
     public static DoorInstance getDoor(int id) {
@@ -27,15 +26,9 @@ public class ReflectionUtils {
 
     public static List<Zone> getZonesByType(Zone.ZoneType zoneType) {
         Collection<Zone> zones = ReflectionManager.DEFAULT.getZones();
-        if (zones.isEmpty())
-            return Collections.emptyList();
-
-        List<Zone> zones2 = new ArrayList<>(5);
-        for (Zone z : zones)
-            if (z.getType() == zoneType)
-                zones2.add(z);
-
-        return zones2;
+        return zones.stream()
+                .filter(z -> z.getType() == zoneType)
+                .collect(Collectors.toList());
     }
 
     public static Reflection enterReflection(Player invoker, int instancedZoneId) {

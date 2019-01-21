@@ -568,7 +568,7 @@ public final class Util {
         switch (itemid) {
             case -300:
                 if (player.getFame() >= count) {
-                    player.setFame(player.getFame() - (int) count, "Disappeared: {0}.");
+                    player.addFame(-(int) count, "Disappeared: {0}.");
                     check = true;
                 }
                 break;

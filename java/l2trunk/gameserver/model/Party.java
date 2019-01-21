@@ -43,7 +43,7 @@ public final class Party implements PlayerGroup {
     private int partyLvl;
     private int itemDistribution;
     private int _itemOrder = 0;
-    private int _dimentionalRift;
+    private int dimentionalRift;
     private Reflection reflection;
     private CommandChannel commandChannel;
     private ScheduledFuture<?> positionTask;
@@ -334,7 +334,7 @@ public final class Party implements PlayerGroup {
                         if (member.isInRangeZ(player, Config.ALT_PARTY_DISTRIBUTION_RANGE) && !member.isDead() && member.getInventory().validateCapacity(item) && member.getInventory().validateWeight(item))
                             ret.add(member);
 
-                    target = ret.isEmpty() ? null : ret.get(Rnd.get(ret.size()));
+                    target = ret.isEmpty() ? null : Rnd.get(ret);
                     break;
                 case ITEM_ORDER:
                 case ITEM_ORDER_SPOIL:
@@ -506,7 +506,6 @@ public final class Party implements PlayerGroup {
         this.rateSpoil = Config.RATE_PARTY_MIN ? minRateSpoil : rateSpoil / count;
     }
 
-    @Override
     public int getLevel() {
         return partyLvl;
     }
@@ -526,15 +525,15 @@ public final class Party implements PlayerGroup {
     }
 
     public boolean isInDimensionalRift() {
-        return _dimentionalRift > 0 && getDimensionalRift() != null;
+        return dimentionalRift > 0 && getDimensionalRift() != null;
     }
 
     public DimensionalRift getDimensionalRift() {
-        return _dimentionalRift == 0 ? null : (DimensionalRift) ReflectionManager.INSTANCE.get(_dimentionalRift);
+        return dimentionalRift == 0 ? null : (DimensionalRift) ReflectionManager.INSTANCE.get(dimentionalRift);
     }
 
     public void setDimensionalRift(DimensionalRift dr) {
-        _dimentionalRift = dr == null ? 0 : dr.getId();
+        dimentionalRift = dr == null ? 0 : dr.getId();
     }
 
     public boolean isInReflection() {

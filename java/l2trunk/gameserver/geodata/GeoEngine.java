@@ -20,9 +20,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,28 +79,8 @@ public final class GeoEngine {
         return MoveCheck(x, y, z, tx, ty, false, false, false, geoIndex);
     }
 
-    public static Location moveCheck(int x, int y, int z, int tx, int ty, boolean returnPrev, int geoIndex) {
-        return MoveCheck(x, y, z, tx, ty, false, false, returnPrev, geoIndex);
-    }
-
-    public static Location moveCheckWithCollision(int x, int y, int z, int tx, int ty, int geoIndex) {
-        return MoveCheck(x, y, z, tx, ty, true, false, false, geoIndex);
-    }
-
     static Location moveCheckWithCollision(int x, int y, int z, int tx, int ty, boolean returnPrev, int geoIndex) {
         return MoveCheck(x, y, z, tx, ty, true, false, returnPrev, geoIndex);
-    }
-
-    public static Location moveCheckBackward(int x, int y, int z, int tx, int ty, int geoIndex) {
-        return MoveCheck(x, y, z, tx, ty, false, true, false, geoIndex);
-    }
-
-    public static Location moveCheckBackward(int x, int y, int z, int tx, int ty, boolean returnPrev, int geoIndex) {
-        return MoveCheck(x, y, z, tx, ty, false, true, returnPrev, geoIndex);
-    }
-
-    public static Location moveCheckBackwardWithCollision(int x, int y, int z, int tx, int ty, int geoIndex) {
-        return MoveCheck(x, y, z, tx, ty, true, true, false, geoIndex);
     }
 
     static Location moveCheckBackwardWithCollision(int x, int y, int z, int tx, int ty, boolean returnPrev, int geoIndex) {
@@ -181,23 +158,6 @@ public final class GeoEngine {
         } else if (ty < y)
             return (NSWE & NORTH) != 0;
         return true;
-    }
-
-    public static String geoXYZ2Str(int _x, int _y, int _z) {
-        return "(" + String.valueOf((_x << 4) + World.MAP_MIN_X + 8) + " " + String.valueOf((_y << 4) + World.MAP_MIN_Y + 8) + " " + _z + ")";
-    }
-
-    public static String NSWE2Str(byte nswe) {
-        String result = "";
-        if ((nswe & NORTH) == NORTH)
-            result += "N";
-        if ((nswe & SOUTH) == SOUTH)
-            result += "S";
-        if ((nswe & WEST) == WEST)
-            result += "W";
-        if ((nswe & EAST) == EAST)
-            result += "E";
-        return result.isEmpty() ? "X" : result;
     }
 
     private static boolean NLOS_WATER(int x, int y, int z, int next_x, int next_y, int next_z, int geoIndex) {
@@ -1275,24 +1235,6 @@ public final class GeoEngine {
             compact();
     }
 
-    public static void DumpGeodata(String dir) {
-        try {
-            Files.createDirectories(Paths.get(dir));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (int mapX = 0; mapX < World.WORLD_SIZE_X; mapX++)
-            for (int mapY = 0; mapY < World.WORLD_SIZE_Y; mapY++) {
-                if (geodata[mapX][mapY] == null)
-                    continue;
-                int rx = mapX + Config.GEO_X_FIRST;
-                int ry = mapY + Config.GEO_Y_FIRST;
-                String fName = dir + "/" + rx + "_" + ry + ".l2j";
-                _log.info("Dumping geo: " + fName);
-                DumpGeodataFile(fName, (byte) rx, (byte) ry);
-            }
-    }
-
     public static boolean DumpGeodataFile(int cx, int cy) {
         return DumpGeodataFileMap((byte) (Math.floor((float) cx / (float) 32768) + 20), (byte) (Math.floor((float) cy / (float) 32768) + 18));
     }
@@ -1527,31 +1469,6 @@ public final class GeoEngine {
         }
     }
 
-    /**
-     * Converts FLAT blocks COMPLEX <br>
-     *
-     * @ Param ix region x @ Param iy y region @ Param blockIndex setBlock index in
-     * the region
-     */
-
-    /*
-     * NOT USED private static void copyBlock(int ix, int iy, int blockIndex) {
-     * byte[][][] region = geodata[ix][iy];
-     *
-     * if (region == null) { Log.add("door at null region? [" + ix + "][" + iy +
-     * "]", "doors"); return; }
-     *
-     * byte[] setBlock = region[blockIndex][0]; byte blockType = setBlock[0];
-     *
-     * switch (blockType) { case BLOCKTYPE_FLAT: short height =
-     * makeShort(setBlock[2], setBlock[1]); height &= 0x0fff0; height <<= 1; height |=
-     * NORTH; height |= SOUTH; height |= WEST; height |= EAST; byte[] newblock =
-     * new byte[129]; newblock[0] = BLOCKTYPE_COMPLEX; for (int i = 1; i < 129;
-     * i += 2) { newblock[i + 1] = (byte) (height >> 8); newblock[i] = (byte)
-     * (height & 0x00ff); } region[blockIndex][0] = newblock; break; default: if
-     * (Config.COMPACT_GEO) region[blockIndex][0] =
-     * region[blockIndex][0].newInstance(); break; } }
-     */
     public static void removeGeoCollision(GeoCollision collision, int geoIndex) {
         Shape shape = collision.getShape();
 
@@ -1895,10 +1812,6 @@ public final class GeoEngine {
 
     /**
      * compare two byte arrays
-     *
-     * @param a1
-     * @param a2
-     * @return
      */
     private static boolean equalsData(byte[] a1, byte[] a2) {
         if (a1.length != a2.length)
@@ -1911,80 +1824,9 @@ public final class GeoEngine {
 
     /**
      * comparison of the two blocks geodata
-     *
-     * @param mapX1
-     * @param mapY1
-     * @param blockIndex1
-     * @param mapX2
-     * @param mapY2
-     * @param blockIndex2
-     * @return
      */
     public static boolean compareGeoBlocks(int mapX1, int mapY1, int blockIndex1, int mapX2, int mapY2, int blockIndex2) {
         return equalsData(geodata[mapX1][mapY1][blockIndex1][0], geodata[mapX2][mapY2][blockIndex2][0]);
-    }
-
-    private static void initChecksums() {
-        _log.info("GeoEngine: - Generating Checksums...");
-        try {
-            Files.createDirectories(Config.DATAPACK_ROOT.resolve("geodata/checksum"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        GeoOptimizer.checkSums = new int[World.WORLD_SIZE_X][World.WORLD_SIZE_Y][];
-        for (int mapX = 0; mapX < World.WORLD_SIZE_X; mapX++)
-            for (int mapY = 0; mapY < World.WORLD_SIZE_Y; mapY++)
-                if (geodata[mapX][mapY] != null)
-                    executor.execute(new GeoOptimizer.CheckSumLoader(mapX, mapY, geodata[mapX][mapY]));
-        try {
-            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            _log.error("Interrupted Exception on initChecksums ", e);
-        }
-    }
-
-    private static void initBlockMatches(int maxScanRegions) {
-        _log.info("GeoEngine: Generating Block Matches...");
-        try {
-            Files.createDirectories(Config.DATAPACK_ROOT.resolve("geodata/matches"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        for (int mapX = 0; mapX < World.WORLD_SIZE_X; mapX++)
-            for (int mapY = 0; mapY < World.WORLD_SIZE_Y; mapY++)
-                if (geodata[mapX][mapY] != null && GeoOptimizer.checkSums != null && GeoOptimizer.checkSums[mapX][mapY] != null)
-                    executor.execute(new GeoOptimizer.GeoBlocksMatchFinder(mapX, mapY, maxScanRegions));
-        try {
-            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            _log.error("Interrupted Exception on initBlockMatches ", e);
-        }
-    }
-
-    public static void deleteChecksumFiles() {
-        for (int mapX = 0; mapX < World.WORLD_SIZE_X; mapX++)
-            for (int mapY = 0; mapY < World.WORLD_SIZE_Y; mapY++) {
-                if (geodata[mapX][mapY] == null)
-                    continue;
-                try {
-                    Files.deleteIfExists(Config.DATAPACK_ROOT.resolve("geodata/checksum/" + (mapX + Config.GEO_X_FIRST) + "_" + (mapY + Config.GEO_Y_FIRST) + ".crc"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-    }
-
-    public static void genBlockMatches(int maxScanRegions) {
-        initChecksums();
-        initBlockMatches(maxScanRegions);
-    }
-
-    public static void unload() {
-        for (int mapX = 0; mapX < World.WORLD_SIZE_X; mapX++)
-            for (int mapY = 0; mapY < World.WORLD_SIZE_Y; mapY++)
-                geodata[mapX][mapY] = null;
     }
 
     public static int getGeoX(int worldX) {

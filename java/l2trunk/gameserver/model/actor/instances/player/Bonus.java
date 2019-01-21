@@ -1,112 +1,29 @@
 package l2trunk.gameserver.model.actor.instances.player;
 
 public final class Bonus {
-    private double rateXp = 1.;
-    private double rateSp = 1.;
-    private double dropSiege = 1.;
-    private double questRewardRate = 1.;
-    private double questDropRate = 1.;
-    private double dropAdena = 1.;
-    private double dropItems = 1.;
-    private double dropSpoil = 1.;
     private double weight;
-    private int craftChance;
-    private int masterWorkChance;
-    private int bonusExpire;
 
     public double getRateXp() {
-        return rateXp;
-    }
-
-    public void setRateXp(double rateXp) {
-        this.rateXp = rateXp;
+        return 1.;
     }
 
     public double getRateSp() {
-        return rateSp;
-    }
-
-    public void setRateSp(double rateSp) {
-        this.rateSp = rateSp;
-    }
-
-    public double getQuestRewardRate() {
-        return questRewardRate;
-    }
-
-    public void setQuestRewardRate(double questRewardRate) {
-        this.questRewardRate = questRewardRate;
-    }
-
-    public double getQuestDropRate() {
-        return questDropRate;
-    }
-
-    public void setQuestDropRate(double questDropRate) {
-        this.questDropRate = questDropRate;
+        return 1.;
     }
 
     public double getDropAdena() {
-        return dropAdena;
-    }
-
-    public void setDropAdena(double dropAdena) {
-        this.dropAdena = dropAdena;
+        return 1.;
     }
 
     public double getDropItems() {
+        double dropItems = 1.;
         return dropItems;
     }
 
-    public void setDropItems(double dropItems) {
-        this.dropItems = dropItems;
-    }
-
     public double getDropSpoil() {
+        double dropSpoil = 1.;
         return dropSpoil;
     }
 
-    public void setDropSpoil(double dropSpoil) {
-        this.dropSpoil = dropSpoil;
-    }
 
-    public int getBonusExpire() {
-        return bonusExpire;
-    }
-
-    public void setBonusExpire(int bonusExpire) {
-        this.bonusExpire = bonusExpire;
-    }
-
-    public double getDropSiege() {
-        return dropSiege;
-    }
-
-    public void setDropSiege(double dropSiege) {
-        this.dropSiege = dropSiege;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public double getCraftChance() {
-        return craftChance;
-    }
-
-    public void setCraftChance(int craftChance) {
-        this.craftChance = craftChance;
-    }
-
-    public double getMasterWorkChance() {
-        return masterWorkChance;
-    }
-
-    public void setMasterWorkChance(int masterWorkChance) {
-        this.masterWorkChance = masterWorkChance;
-    }
 }

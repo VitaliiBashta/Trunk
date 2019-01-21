@@ -20,7 +20,6 @@ import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.*;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 import l2trunk.gameserver.templates.item.ItemTemplate.Grade;
 import l2trunk.gameserver.templates.item.WeaponTemplate;
@@ -121,12 +120,12 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
         TCLc.put(50, "tutorial_22kb.htm");
     }
 
-    private static boolean checkCanSeeTutorial(Player player) {
-        return !player.containsQuickVar("watchingTutorial");
+    private static boolean cantSeeTutorial(Player player) {
+        return player.containsQuickVar("watchingTutorial");
     }
 
     private static void addToTutorialQueue(Player player, String pageToCheck) {
-        Collection<String> tutorialsToSee = (List<String>) player.getQuickVarO("tutorialsToSee", new ArrayList<String>());
+        Collection<String> tutorialsToSee = player.getQuickVarList("tutorialsToSee");
         tutorialsToSee.add(pageToCheck);
         if (!player.containsQuickVar("tutorialsToSee")) {
             player.addQuickVar("tutorialsToSee", tutorialsToSee);
@@ -136,7 +135,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
     private static void onTutorialClose(QuestState st) {
         Player player = st.getPlayer();
         if (player.containsQuickVar("tutorialsToSee")) {
-            List<String> tutorialsToSee = (List<String>) player.getQuickVarO("tutorialsToSee", new ArrayList<String>());
+            List<String> tutorialsToSee = player.getQuickVarList("tutorialsToSee");
             String tutorialToSee = tutorialsToSee.remove(0);
             if (tutorialsToSee.isEmpty())
                 player.deleteQuickVar("tutorialsToSee");
@@ -154,7 +153,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
 
     private static void checkChangeLog(QuestState st) {
         Player player = st.getPlayer();
-        if (!checkCanSeeTutorial(player)) {
+        if (cantSeeTutorial(player)) {
             addToTutorialQueue(player, "checkChangeLog");
         } else {
             int lastNotSeenChange = ChangeLogManager.INSTANCE.getNotSeenChangeLog(player);
@@ -168,7 +167,7 @@ public final class _255_Tutorial extends Quest implements OnPlayerEnterListener 
     private static void checkClassMaster(QuestState st) {
         Player player = st.getPlayer();
 
-        if (!checkCanSeeTutorial(player)) {
+        if (cantSeeTutorial(player)) {
             addToTutorialQueue(player, "OpenClassMaster");
             return;
         }

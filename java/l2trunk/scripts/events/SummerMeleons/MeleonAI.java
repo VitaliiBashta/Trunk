@@ -33,7 +33,7 @@ public final class MeleonAI extends Fighter {
             "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.0",
             "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.1",
             "scripts.events.SummerMeleons.MeleonAI.textOnSpawn.2");
-    private static final String[] textOnAttack = new String[]{
+    private static final List<String> textOnAttack = List.of(
             "Who me bites? Ah! Ouch! Hey you, now I'm going to ask you!",
             "Ha-ha-ha, I grew all the envy, look!",
             "You do muff? Get into the fruit can not!",
@@ -42,8 +42,8 @@ public final class MeleonAI extends Fighter {
             "Ha! True pleasant sound?",
             "As long as you attack me growth, and grow up, you'll be up to two times!",
             "You beat or tickle? Can not make it ... pathetic attempts!",
-            "Only musical weapon opens watermelon. Thy blunt weapon is not help!"};
-    private static final String[] textTooFast = new String[]{
+            "Only musical weapon opens watermelon. Thy blunt weapon is not help!");
+    private static final List<String> textTooFast = List.of(
             "This is a blow! That's technique!",
             "Hey you! Your skills are deplorable, my grandmother fights better! Ha-ha-ha!",
             "Come on strike once more, and again!",
@@ -51,47 +51,48 @@ public final class MeleonAI extends Fighter {
             "Hey, and Semyon is? A five adena? A call? Hahaha!",
             "What kind of obscenity! Come without these jokes!",
             "Show imagination, come back, what are you trample!",
-            "Wake as you leave, you are quite dull and boring ..."};
-    private static final String[] textSuccess0 = new String[]{
+            "Wake as you leave, you are quite dull and boring ...");
+    private static final List<String> textSuccess0 = List.of(
             "Watermelon grows well if the water it thoroughly, you know this secret, is not it?",
             "That's what I nectar, and there is always some slop!",
             "I see, I see, this is China, O my God, I'm a Chinese watermelon!",
             "Let's pour more, between the first and second pereryvchik small!",
-            "Refueling on the fly! quite dull and boring ... "};
-    private static final String[] textFail0 = new String[]{
+            "Refueling on the fly! quite dull and boring ... ");
+    private static final List<String> textFail0 = List.of(
             "Are you deaf? Nectar I need, not what you lesh!",
             "You're such a loser, and you look like a cheerful! I need nectar, pour quality, not to get shish!",
-            "Once again, fail, how long can? You want me to laugh?"};
-    private static final String[] textSuccess1 = new String[]{
+            "Once again, fail, how long can? You want me to laugh?");
+    private static final List<String> textSuccess1 = List.of(
             "Now sing! Arbuuuuuu-uh-uh!",
             "That's so good, so very good, do not stop!",
             "I rise quickly, have time to rebound? Ha!",
-            "You're a master of his craft! Go on, please!"};
-    private static final String[] textFail1 = new String[]{
+            "You're a master of his craft! Go on, please!");
+    private static final List<String> textFail1 = List.of(
             "Strike while the iron on the spot! Otherwise, no you gingerbread.",
             "Wally! Ignoramus! Boobies! Loser! Again you fed me slop!",
             "Let's activity changes hill, watering properly, what kind of pathetic attempts?",
-            "You want me to so he died? Come Grow Right!"};
-    private static final String[] textSuccess2 = new String[]{
+            "You want me to so he died? Come Grow Right!");
+    private static final List<String> textSuccess2 = List.of(
             "There! There! Come on, and soon I will love you forever!",
             "At this rate, I will be the emperor of watermelons!",
-            "Very good, I put you credit for the agricultural economy, you have the mind to grow!"};
-    private static final String[] textFail2 = new String[]{
+            "Very good, I put you credit for the agricultural economy, you have the mind to grow!");
+    private static final List<String> textFail2 = List.of(
             "And you do local? Watermelon you've seen in your eyes? It is a failure!",
             "I'll give you a sign Loser of the Year, only the loser may well fail in doing so easy!",
             "Well, Feed me, huh? Normally only, not here this dubious nectar ...",
-            "And you're not a terrorist event? Could you have hunger morish? What do you want?"};
-    private static final String[] textSuccess3 = new String[]{
+            "And you're not a terrorist event? Could you have hunger morish? What do you want?");
+    private static final List<String> textSuccess3 = List.of(
             "Life is getting better, do not be sorry lei!",
             "You taught this mom do you have a great work!",
-            "And why do you have of growth? Are you? I will be very juicy watermelon!"};
-    private static final String[] textFail3 = new String[]{
+            "And why do you have of growth? Are you? I will be very juicy watermelon!");
+    private static final List<String> textFail3 = List.of(
             "Is that water lapped the sewer? Do you understand what the nectar!",
-            "Gods, save me from this sad sack, he's all the spoils!"};
-    private static final String[] textSuccess4 = new String[]{
+            "Gods, save me from this sad sack, he's all the spoils!");
+    private static final List<String> textSuccess4 = List.of(
             "That's a charge! Have you slipped into nectar? There are exactly 40 degrees! Ahahaha, I get drunk!",
-            "You're risking not grow watermelon, and the whole rocket! Pours, come again!"};
-    private static final String[] textFail4 = new String[]{"Oh how I want to drink ... Nectar, please ... ", " Lay nectar here and see what happens!"};
+            "You're risking not grow watermelon, and the whole rocket! Pours, come again!");
+    private static final List<String> textFail4 = List.of(
+            "Oh how I want to drink ... Nectar, please ... ", " Lay nectar here and see what happens!");
     private static final int NECTAR_REUSE = 3000;
     private final RewardData[] _dropList = new RewardData[]{new RewardData(1539, 1, 5, 15000), // Greater Healing Potion
             new RewardData(1374, 1, 3, 15000), // Greater Haste Potion
@@ -226,16 +227,16 @@ public final class MeleonAI extends Fighter {
                 _lastNectarUse = System.currentTimeMillis();
                 if (Rnd.chance(50)) {
                     _nectar++;
-                    Functions.npcSay(actor, textSuccess0[Rnd.get(textSuccess0.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
+                    Functions.npcSay(actor, Rnd.get(textSuccess0));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
-                    Functions.npcSay(actor, textFail0[Rnd.get(textFail0.length)]);
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
+                    Functions.npcSay(actor, Rnd.get(textFail0));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 1:
                 if (System.currentTimeMillis() - _lastNectarUse < NECTAR_REUSE) {
-                    Functions.npcSay(actor, textTooFast[Rnd.get(textTooFast.length)]);
+                    Functions.npcSay(actor, Rnd.get(textTooFast));
                     return;
                 }
                 _tryCount++;
@@ -243,10 +244,10 @@ public final class MeleonAI extends Fighter {
                 if (Rnd.chance(50)) {
                     _nectar++;
                     Functions.npcSay(actor, Rnd.get(textSuccess1));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
                     Functions.npcSay(actor, Rnd.get(textFail1));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 2:
@@ -259,15 +260,15 @@ public final class MeleonAI extends Fighter {
                 if (Rnd.chance(50)) {
                     _nectar++;
                     Functions.npcSay(actor, Rnd.get(textSuccess2));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
                     Functions.npcSay(actor, Rnd.get(textFail2));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 3:
                 if (System.currentTimeMillis() - _lastNectarUse < NECTAR_REUSE) {
-                    Functions.npcSay(actor, textTooFast[Rnd.get(textTooFast.length)]);
+                    Functions.npcSay(actor, Rnd.get(textTooFast));
                     return;
                 }
                 _tryCount++;
@@ -275,15 +276,15 @@ public final class MeleonAI extends Fighter {
                 if (Rnd.chance(50)) {
                     _nectar++;
                     Functions.npcSay(actor, Rnd.get(textSuccess3));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
                     Functions.npcSay(actor, Rnd.get(textFail3));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 break;
             case 4:
                 if (System.currentTimeMillis() - _lastNectarUse < NECTAR_REUSE) {
-                    Functions.npcSay(actor, textTooFast[Rnd.get(textTooFast.length)]);
+                    Functions.npcSay(actor, Rnd.get(textTooFast));
                     return;
                 }
                 _tryCount++;
@@ -291,10 +292,10 @@ public final class MeleonAI extends Fighter {
                 if (Rnd.chance(50)) {
                     _nectar++;
                     Functions.npcSay(actor, Rnd.get(textSuccess4));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Level_up, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Level_up, 1, NECTAR_REUSE));
                 } else {
                     Functions.npcSay(actor, Rnd.get(textFail4));
-                    actor.broadcastPacket(new MagicSkillUse(actor,  Squash_Poisoned, 1, NECTAR_REUSE));
+                    actor.broadcastPacket(new MagicSkillUse(actor, Squash_Poisoned, 1, NECTAR_REUSE));
                 }
                 if (_npcId == Young_Watermelon) {
                     if (_nectar < 3)
@@ -382,8 +383,8 @@ public final class MeleonAI extends Fighter {
 
             for (RewardData d : _dropList) {
                 List<RewardItem> itd = d.roll(null, dropMod);
-                for (RewardItem i : itd)
-                    actor.dropItem(actor.getSpawner(), i.itemId, i.count);
+                itd.forEach(i ->
+                        actor.dropItem(actor.getSpawner(), i.itemId, i.count));
             }
         }
     }

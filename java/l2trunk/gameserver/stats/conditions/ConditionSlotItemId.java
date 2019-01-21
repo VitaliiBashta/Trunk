@@ -6,14 +6,14 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.stats.Env;
 
 public final class ConditionSlotItemId extends ConditionInventory {
-    private final int _itemId;
+    private final int itemId;
 
-    private final int _enchantLevel;
+    private final int enchantLevel;
 
     public ConditionSlotItemId(int slot, int itemId, int enchantLevel) {
         super(slot);
-        _itemId = itemId;
-        _enchantLevel = enchantLevel;
+        this.itemId = itemId;
+        this.enchantLevel = enchantLevel;
     }
 
     @Override
@@ -21,9 +21,9 @@ public final class ConditionSlotItemId extends ConditionInventory {
         if (!env.character.isPlayer())
             return false;
         Inventory inv = ((Player) env.character).getInventory();
-        ItemInstance item = inv.getPaperdollItem(_slot);
+        ItemInstance item = inv.getPaperdollItem(slot);
         if (item == null)
-            return _itemId == 0;
-        return item.getItemId() == _itemId && item.getEnchantLevel() >= _enchantLevel;
+            return itemId == 0;
+        return item.getItemId() == itemId && item.getEnchantLevel() >= enchantLevel;
     }
 }

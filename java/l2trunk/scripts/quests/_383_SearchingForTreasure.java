@@ -96,7 +96,7 @@ public final class _383_SearchingForTreasure extends Quest {
                         if (count < 2)
                             for (int i = 4481; i <= 4505; i++)
                                 if (Rnd.get(500) == 1 && count < 2) {
-                                    st.giveItems(i, 1);
+                                    st.giveItems(i);
                                     count += 1;
                                 }
                     }

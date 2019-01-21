@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,7 @@ public final class _648_AnIceMerchantsDream extends Quest {
             }
 
             if (Rnd.chance(Silver2Black_Chance)) {
-                st.giveItems(Black_Ice_Crystal, 1);
+                st.giveItems(Black_Ice_Crystal);
                 st.playSound(SOUND_ENCHANT_SUCESS);
             } else {
                 st.playSound(SOUND_ENCHANT_FAILED);

@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public enum CancelTaskManager {
     INSTANCE;
-    private final List<DispelClass> _taskTimes = new CopyOnWriteArrayList<>();
+    private final List<DispelClass> taskTimes = new CopyOnWriteArrayList<>();
 
     CancelTaskManager() {
         ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ManageTasks(), 0, 500);
@@ -23,13 +23,13 @@ public enum CancelTaskManager {
         int buffCancelTime = 45;
         playable.sendMessage("You will get your buffs back in " + buffCancelTime + " secs.");
 
-        _taskTimes.add(new DispelClass((System.currentTimeMillis() + (buffCancelTime * 1000)), playable, buffs));
+        taskTimes.add(new DispelClass((System.currentTimeMillis() + (buffCancelTime * 1000)), playable, buffs));
     }
 
     public void cancelPlayerTasks(Playable playable) {
-        for (DispelClass task : _taskTimes)
+        for (DispelClass task : taskTimes)
             if (task != null && task._cancelled.equals(playable)) {
-                _taskTimes.add(task);
+                taskTimes.add(task);
                 return;
             }
     }
@@ -52,7 +52,7 @@ public enum CancelTaskManager {
             long current = System.currentTimeMillis();
             List<DispelClass> toRemove = new ArrayList<>();
 
-            for (DispelClass task : _taskTimes) {
+            for (DispelClass task : taskTimes) {
                 if (task._time > current)
                     continue;
 
@@ -74,7 +74,7 @@ public enum CancelTaskManager {
                 task._cancelled.sendMessage("Cancelled buffs returned!");
             }
 
-            toRemove.forEach(_taskTimes::remove);
+            toRemove.forEach(taskTimes::remove);
         }
     }
 }

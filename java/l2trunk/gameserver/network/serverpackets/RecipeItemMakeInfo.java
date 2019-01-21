@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Recipe;
 /**
  * format ddddd
  */
-public class RecipeItemMakeInfo extends L2GameServerPacket {
+public final class RecipeItemMakeInfo extends L2GameServerPacket {
     private final int _id;
     private final boolean _isDwarvenRecipe;
     private final int _status;

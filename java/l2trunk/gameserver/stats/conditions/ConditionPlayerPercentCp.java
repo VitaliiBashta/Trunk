@@ -2,15 +2,15 @@ package l2trunk.gameserver.stats.conditions;
 
 import l2trunk.gameserver.stats.Env;
 
-public class ConditionPlayerPercentCp extends Condition {
-    private final double _cp;
+public final class ConditionPlayerPercentCp extends Condition {
+    private final double cp;
 
     public ConditionPlayerPercentCp(int cp) {
-        _cp = cp / 100.;
+        this.cp = cp / 100.;
     }
 
     @Override
     protected boolean testImpl(Env env) {
-        return env.character.getCurrentCpRatio() <= _cp;
+        return env.character.getCurrentCpRatio() <= cp;
     }
 }

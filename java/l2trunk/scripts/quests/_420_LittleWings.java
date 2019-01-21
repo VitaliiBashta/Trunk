@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _420_LittleWings extends Quest {
     // NPCs
@@ -196,25 +195,25 @@ public final class _420_LittleWings extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if ((event.equalsIgnoreCase("30610-05.htm") || event.equalsIgnoreCase("30610-12.htm")) && _state == STARTED && cond == 1) {
             st.setCond(2);
-            st.takeItems(Fairy_Stone, -1);
-            st.takeItems(Deluxe_Fairy_Stone, -1);
-            st.takeItems(Fairy_Stone_List, -1);
-            st.takeItems(Deluxe_Fairy_Stone_List, -1);
-            st.giveItems(Fairy_Stone_List, 1);
+            st.takeItems(Fairy_Stone);
+            st.takeItems(Deluxe_Fairy_Stone);
+            st.takeItems(Fairy_Stone_List);
+            st.takeItems(Deluxe_Fairy_Stone_List);
+            st.giveItems(Fairy_Stone_List);
             st.playSound(SOUND_MIDDLE);
         } else if ((event.equalsIgnoreCase("30610-06.htm") || event.equalsIgnoreCase("30610-13.htm")) && _state == STARTED && cond == 1) {
             st.setCond(2);
-            st.takeItems(Fairy_Stone, -1);
-            st.takeItems(Deluxe_Fairy_Stone, -1);
-            st.takeItems(Fairy_Stone_List, -1);
-            st.takeItems(Deluxe_Fairy_Stone_List, -1);
-            st.giveItems(Deluxe_Fairy_Stone_List, 1);
+            st.takeItems(Fairy_Stone);
+            st.takeItems(Deluxe_Fairy_Stone);
+            st.takeItems(Fairy_Stone_List);
+            st.takeItems(Deluxe_Fairy_Stone_List);
+            st.giveItems(Deluxe_Fairy_Stone_List);
             st.playSound(SOUND_MIDDLE);
         } else if (event.equalsIgnoreCase("30608-03.htm") && _state == STARTED && cond == 2 && st.getQuestItemsCount(Fairy_Stone_List) > 0) {
             if (CheckFairyStoneItems(st, Fairy_Stone_Items)) {
                 st.setCond(3);
                 TakeFairyStoneItems(st, Fairy_Stone_Items);
-                st.giveItems(Fairy_Stone, 1);
+                st.giveItems(Fairy_Stone);
                 st.playSound(SOUND_MIDDLE);
             } else
                 return "30608-01.htm";
@@ -222,7 +221,7 @@ public final class _420_LittleWings extends Quest {
             if (CheckFairyStoneItems(st, Delux_Fairy_Stone_Items)) {
                 st.setCond(3);
                 TakeFairyStoneItems(st, Delux_Fairy_Stone_Items);
-                st.giveItems(Deluxe_Fairy_Stone, 1);
+                st.giveItems(Deluxe_Fairy_Stone);
                 st.playSound(SOUND_MIDDLE);
             } else
                 return "30608-01a.htm";
@@ -234,44 +233,44 @@ public final class _420_LittleWings extends Quest {
             if (st.getInt("broken") == 1)
                 return "30711-04.htm";
         } else if (event.equalsIgnoreCase("30747-02.htm") && _state == STARTED && cond == 4 && st.getQuestItemsCount(Fairy_Stone) > 0) {
-            st.takeItems(Fairy_Stone, -1);
+            st.takeItems(Fairy_Stone);
             st.set("takedStone", "1");
         } else if (event.equalsIgnoreCase("30747-02a.htm") && _state == STARTED && cond == 4 && st.getQuestItemsCount(Deluxe_Fairy_Stone) > 0) {
-            st.takeItems(Deluxe_Fairy_Stone, -1);
+            st.takeItems(Deluxe_Fairy_Stone);
             st.set("takedStone", "2");
-            st.giveItems(Fairy_Dust, 1);
+            st.giveItems(Fairy_Dust);
             st.playSound(SOUND_ITEMGET);
         } else if (event.equalsIgnoreCase("30747-04.htm") && _state == STARTED && cond == 4 && st.getInt("takedStone") > 0) {
             st.setCond(5);
             st.unset("takedStone");
-            st.giveItems(Juice_of_Monkshood, 1);
+            st.giveItems(Juice_of_Monkshood);
             st.playSound(SOUND_ITEMGET);
         } else if (event.equalsIgnoreCase("30748-02.htm") && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
             st.setCond(6);
-            st.takeItems(Juice_of_Monkshood, -1);
-            st.giveItems(3822, 1);
+            st.takeItems(Juice_of_Monkshood);
+            st.giveItems(3822);
             st.playSound(SOUND_ITEMGET);
         } else if (event.equalsIgnoreCase("30749-02.htm") && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
             st.setCond(6);
-            st.takeItems(Juice_of_Monkshood, -1);
-            st.giveItems(3824, 1);
+            st.takeItems(Juice_of_Monkshood);
+            st.giveItems(3824);
             st.playSound(SOUND_ITEMGET);
-        } else if (event.equalsIgnoreCase("30750-02.htm") && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
+        } else if ("30750-02.htm".equalsIgnoreCase(event) && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
             st.setCond(6);
-            st.takeItems(Juice_of_Monkshood, -1);
-            st.giveItems(3826, 1);
+            st.takeItems(Juice_of_Monkshood);
+            st.giveItems(3826);
             st.playSound(SOUND_ITEMGET);
-        } else if (event.equalsIgnoreCase("30751-02.htm") && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
+        } else if ("30751-02.htm".equalsIgnoreCase(event) && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
             st.setCond(6);
-            st.takeItems(Juice_of_Monkshood, -1);
-            st.giveItems(3828, 1);
+            st.takeItems(Juice_of_Monkshood);
+            st.giveItems(3828);
             st.playSound(SOUND_ITEMGET);
-        } else if (event.equalsIgnoreCase("30752-02.htm") && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
+        } else if ("30752-02.htm".equalsIgnoreCase(event) && cond == 5 && _state == STARTED && st.getQuestItemsCount(Juice_of_Monkshood) > 0) {
             st.setCond(6);
-            st.takeItems(Juice_of_Monkshood, -1);
-            st.giveItems(3830, 1);
+            st.takeItems(Juice_of_Monkshood);
+            st.giveItems(3830);
             st.playSound(SOUND_ITEMGET);
-        } else if (event.equalsIgnoreCase("30747-09.htm") && _state == STARTED && cond == 7) {
+        } else if ("30747-09.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 7) {
             int egg_id = 0;
             for (int[] wyrm : wyrms)
                 if (st.getQuestItemsCount(wyrm[2]) == 0 && st.getQuestItemsCount(wyrm[3]) >= 1) {
@@ -288,20 +287,20 @@ public final class _420_LittleWings extends Quest {
             }
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("30747-10.htm") && _state == STARTED && cond == 7) {
+        } else if ("30747-10.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 7) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
-        } else if (event.equalsIgnoreCase("30747-11.htm") && _state == STARTED && cond == 7) {
+        } else if ("30747-11.htm".equalsIgnoreCase(event) && _state == STARTED && cond == 7) {
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(true);
             if (st.getQuestItemsCount(Fairy_Dust) == 0)
                 return "30747-10.htm";
-            st.takeItems(Fairy_Dust, -1);
+            st.takeItems(Fairy_Dust);
             if (Rnd.chance(Pet_Armor_Chance)) {
                 int armor_id = Hatchlings_Soft_Leather + Rnd.get((int) st.getRateQuestsReward());
                 if (armor_id > Hatchlings_Mithril_Coat)
                     armor_id = Hatchlings_Mithril_Coat;
-                st.giveItems(armor_id, 1);
+                st.giveItems(armor_id);
             } else
                 st.giveItems(Food_For_Hatchling, 20, true);
         }
@@ -396,8 +395,8 @@ public final class _420_LittleWings extends Quest {
                 int egg_id = getWyrmEgg(npcId);
                 if (st.getQuestItemsCount(egg_id) < 20)
                     return npcId + "-03.htm";
-                st.takeItems(getWyrmScale(npcId), -1);
-                st.takeItems(egg_id, -1);
+                st.takeItems(getWyrmScale(npcId));
+                st.takeItems(egg_id);
                 st.giveItems(egg_id, 1);
                 st.setCond(7);
                 return npcId + "-04.htm";

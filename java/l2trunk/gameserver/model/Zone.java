@@ -41,7 +41,7 @@ public final class Zone {
     private final List<Creature> objects = new CopyOnWriteArrayList<>();
     // Ady - Better implementation for zone effects and damage threads
     private Future<?> _effectThread = null;
-    private Future<?> _damageThread = null;
+    private Future<?> damageThread = null;
     private ZoneType type;
     private boolean active;
     private Reflection _reflection;
@@ -109,10 +109,6 @@ public final class Zone {
         return getTemplate().getDamageOnHP();
     }
 
-    private int getDamageOnMP() {
-        return getTemplate().getDamageOnMP();
-    }
-
     private double getMoveBonus() {
         return getTemplate().getMoveBonus();
     }
@@ -126,11 +122,6 @@ public final class Zone {
         return getTemplate().getRegenBonusHP();
     }
 
-    /**
-     * Возвращает бонус регенерации мп в этой зоне
-     *
-     * @return Бонус регенарации мп в этой зоне
-     */
     private double getRegenBonusMP() {
         return getTemplate().getRegenBonusMP();
     }
@@ -150,14 +141,14 @@ public final class Zone {
     public Location getSpawn() {
         if (getRestartPoints() == null)
             return null;
-        Location loc = getRestartPoints().get(Rnd.get(getRestartPoints().size()));
+        Location loc = Rnd.get(getRestartPoints());
         return loc.clone();
     }
 
     public Location getPKSpawn() {
         if (getPKRestartPoints() == null)
             return getSpawn();
-        Location loc = getPKRestartPoints().get(Rnd.get(getPKRestartPoints().size()));
+        Location loc = Rnd.get(getPKRestartPoints());
         return loc.clone();
     }
 
@@ -245,7 +236,7 @@ public final class Zone {
      * @param cha кто выходит
      */
     public void doLeave(Creature cha) {
-        boolean removed = false;
+        boolean removed;
 
         removed = objects.remove(cha);
 
@@ -341,11 +332,10 @@ public final class Zone {
                         }
                     }
                 } else if (getDamageOnHP() > 0 || getDamageOnHP() > 0) {
-                    if (_damageThread == null) {
+                    if (damageThread == null) {
                         synchronized (this) {
-                            if (_damageThread == null) {
-                                // TODO: Reuse 30 hardcoded
-                                _damageThread = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DamageTimer(), getTemplate().getInitialDelay(), 30000);
+                            if (damageThread == null) {
+                                damageThread = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new DamageTimer(), getTemplate().getInitialDelay(), 30000);
                             }
                         }
                     }
@@ -517,14 +507,14 @@ public final class Zone {
     }
 
     private final class SkillTimer implements Runnable {
-        private final Skill _skill;
-        private final int _zoneTime;
+        private final Skill skill;
+        private final int zoneTime;
         private final int _randomTime;
-        private long _activateTime = 0;
+        private long activateTime = 0;
 
         SkillTimer() {
-            _skill = getZoneSkill();
-            _zoneTime = getTemplate().getUnitTick() * 1000;
+            skill = getZoneSkill();
+            zoneTime = getTemplate().getUnitTick() * 1000;
             _randomTime = getTemplate().getRandomTick() * 1000;
         }
 
@@ -533,37 +523,29 @@ public final class Zone {
             if (!isActive())
                 return;
 
-            if (_skill == null)
+            if (skill == null)
                 return;
 
-            for (Creature target : getObjects()) {
-                if (target == null || target.isDead())
-                    continue;
+            getObjects().stream()
+                    .filter(Objects::nonNull)
+                    .filter(target -> !target.isDead())
+                    .filter(Zone.this::checkTarget)
+                    .filter(t -> Rnd.chance(getTemplate().getSkillProb()))
+                    .forEach(skill::getEffects);
 
-                if (!checkTarget(target))
-                    continue;
-
-                if (Rnd.chance(getTemplate().getSkillProb()) && !target.isDead()) {
-                    _skill.getEffects(target);
-                }
+            if (activateTime == 0) {
+                activateTime = System.currentTimeMillis() + (zoneTime + Rnd.get(-_randomTime, _randomTime));
             }
-
-            // TODO: This is not the same as in l2j, as we dont have on, off times, only unit ticks, so we use the same for both
-            if (_activateTime == 0) {
-                _activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
-            }
-            // Si la zona esta activada y el tiempo paso, desactivamos la zona y seteamos la proxima activacion
             else if (isActive()) {
-                if (_activateTime < System.currentTimeMillis()) {
+                if (activateTime < System.currentTimeMillis()) {
                     setActive(false);
-                    _activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
+                    activateTime = System.currentTimeMillis() + (zoneTime + Rnd.get(-_randomTime, _randomTime));
                 }
             }
-            // Si la zona esta desactivada y el tiempo ya paso, activamos la zona y seteamos la proxima desactivacion
             else {
-                if (_activateTime < System.currentTimeMillis()) {
+                if (activateTime < System.currentTimeMillis()) {
                     setActive(true);
-                    _activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
+                    activateTime = System.currentTimeMillis() + (zoneTime + Rnd.get(-_randomTime, _randomTime));
                 }
             }
         }
@@ -578,9 +560,9 @@ public final class Zone {
         private long _activateTime = 0;
 
         DamageTimer() {
-            _hp = getDamageOnHP();
-            _mp = getDamageOnMP();
-            _message = getDamageMessageId();
+            _hp = getTemplate().getDamageOnHP();
+            _mp = getTemplate().getDamageOnMP();
+            _message = getTemplate().getDamageMessageId();
             _zoneTime = getTemplate().getUnitTick() * 1000;
             _randomTime = getTemplate().getRandomTick() * 1000;
         }

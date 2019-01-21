@@ -3,20 +3,18 @@ package l2trunk.commons.threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public abstract class SteppingRunnableQueueManager implements Runnable {
-    /**
-     * Field _log.
-     */
     private static final Logger _log = LoggerFactory.getLogger(SteppingRunnableQueueManager.class);
     /**
      * Field tickPerStepInMillis.
@@ -31,11 +29,6 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
      */
     private final AtomicBoolean isRunning = new AtomicBoolean();
 
-    /**
-     * Constructor for SteppingRunnableQueueManager.
-     *
-     * @param tickPerStepInMillis long
-     */
     protected SteppingRunnableQueueManager(long tickPerStepInMillis) {
         this.tickPerStepInMillis = tickPerStepInMillis;
     }
@@ -89,11 +82,10 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
     }
 
     public void purge() {
-        final List<SteppingScheduledFuture<?>> purge = new ArrayList<>();
-        for (SteppingScheduledFuture<?> sr : queue) {
-            if (sr != null && sr.isDone())
-                purge.add(sr);
-        }
+        final List<SteppingScheduledFuture<?>> purge = queue.stream()
+                .filter(Objects::nonNull)
+                .filter(SteppingScheduledFuture::isDone)
+                .collect(Collectors.toList());
         queue.removeAll(purge);
     }
 
@@ -123,29 +115,12 @@ public abstract class SteppingRunnableQueueManager implements Runnable {
         return list;
     }
 
-    /**
-     * @author Mobius
-     */
     public class SteppingScheduledFuture<V> implements RunnableScheduledFuture<V> {
-        /**
-         * Field r.
-         */
         final Runnable r;
-        /**
-         * Field stepping.
-         */
+
         private final long stepping;
-        /**
-         * Field isPeriodic.
-         */
         private final boolean isPeriodic;
-        /**
-         * Field step.
-         */
         private long step;
-        /**
-         * Field isCancelled.
-         */
         private boolean isCancelled;
 
         /**

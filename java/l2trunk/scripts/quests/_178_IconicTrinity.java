@@ -5,7 +5,6 @@ import l2trunk.gameserver.model.base.Race;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _178_IconicTrinity extends Quest {
     //NPC
@@ -93,7 +92,7 @@ public final class _178_IconicTrinity extends Quest {
             st.exitCurrentQuest(false);
         }
         if (event.equalsIgnoreCase("32255-07.htm") || event.equalsIgnoreCase("32255-09.htm") || event.equalsIgnoreCase("32256-07.htm") || event.equalsIgnoreCase("32256-08.htm") || event.equalsIgnoreCase("32256-09.htm") || event.equalsIgnoreCase("32257-06.htm")) {
-            htmltext = HtmCache.INSTANCE().getNotNull("quests/_178_IconicTrinity/" + event, st.getPlayer());
+            htmltext = HtmCache.INSTANCE.getNotNull("quests/_178_IconicTrinity/" + event, st.getPlayer());
             htmltext = htmltext.replace("%player_name%", st.getPlayer().getName());
         }
 

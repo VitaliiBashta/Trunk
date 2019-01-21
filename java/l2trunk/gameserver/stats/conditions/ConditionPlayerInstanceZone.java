@@ -1,22 +1,16 @@
 package l2trunk.gameserver.stats.conditions;
 
-import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.stats.Env;
 
-/**
- * @author VISTALL
- */
-public class ConditionPlayerInstanceZone extends Condition {
-    private final int _id;
+public final class ConditionPlayerInstanceZone extends Condition {
+    private final int id;
 
     public ConditionPlayerInstanceZone(int id) {
-        _id = id;
+        this.id = id;
     }
 
     @Override
     protected boolean testImpl(Env env) {
-        Reflection ref = env.character.getReflection();
-
-        return ref.getInstancedZoneId() == _id;
+        return env.character.getReflection().getInstancedZoneId() == id;
     }
 }

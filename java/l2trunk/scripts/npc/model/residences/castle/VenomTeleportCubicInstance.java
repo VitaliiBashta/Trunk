@@ -6,17 +6,12 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author VISTALL
- * @date 21:53/23.05.2011
- * 29055
- */
-public class VenomTeleportCubicInstance extends NpcInstance {
-    private static final Location[] LOCS = new Location[]
-            {
+import java.util.List;
+
+public final class VenomTeleportCubicInstance extends NpcInstance {
+    private static final List<Location> LOCS = List.of(
                     new Location(11913, -48851, -1088),
-                    new Location(11918, -49447, -1088)
-            };
+            new Location(11918, -49447, -1088));
 
     public VenomTeleportCubicInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
@@ -26,8 +21,7 @@ public class VenomTeleportCubicInstance extends NpcInstance {
     public void onBypassFeedback(Player player, String command) {
         if (!canBypassCheck(player, this))
             return;
-
-        player.teleToLocation(LOCS[Rnd.get(LOCS.length)]);
+        player.teleToLocation(Rnd.get(LOCS));
     }
 
     @Override

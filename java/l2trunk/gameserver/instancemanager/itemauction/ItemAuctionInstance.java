@@ -35,7 +35,7 @@ public final class ItemAuctionInstance {
 
     private final int _instanceId;
     private final Map<Integer, ItemAuction> _auctions;
-    private final List<AuctionItem> _items;
+    private final List<AuctionItem> items;
     private final SchedulingPattern _dateTime;
 
     private ItemAuction currentAuction;
@@ -45,12 +45,12 @@ public final class ItemAuctionInstance {
     ItemAuctionInstance(int instanceId, SchedulingPattern dateTime, List<AuctionItem> items) {
         _instanceId = instanceId;
         _auctions = new HashMap<>();
-        _items = items;
+        this.items = items;
         _dateTime = dateTime;
 
         load();
 
-        _log.info("ItemAuction: Loaded " + _items.size() + " item(s) and registered " + _auctions.size() + " auction(s) for instance " + _instanceId + ".");
+        _log.info("ItemAuction: Loaded " + this.items.size() + " item(s) and registered " + _auctions.size() + " auction(s) for instance " + _instanceId + ".");
         checkAndSetCurrentAndNextAuction();
     }
 
@@ -94,9 +94,9 @@ public final class ItemAuctionInstance {
     }
 
     private AuctionItem getAuctionItem(int auctionItemId) {
-        for (int i = _items.size(); i-- > 0; ) {
+        for (int i = items.size(); i-- > 0; ) {
             try {
-                AuctionItem item = _items.get(i);
+                AuctionItem item = items.get(i);
                 if (item.getAuctionItemId() == auctionItemId) {
                     return item;
                 }
@@ -251,7 +251,7 @@ public final class ItemAuctionInstance {
     }
 
     private ItemAuction createAuction(long after) {
-        AuctionItem auctionItem = _items.get(Rnd.get(_items.size()));
+        AuctionItem auctionItem = Rnd.get(items);
         long startingTime = _dateTime.next(after);
         long endingTime = startingTime + TimeUnit.MILLISECONDS.convert(auctionItem.getAuctionLength(), TimeUnit.MINUTES);
         int auctionId = ItemAuctionManager.INSTANCE.getNextId();

@@ -11,20 +11,18 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
     private static final int PIRATES_TREASURE_MAP = 5915;
     private static final int CHANCE = 35;
     private static final int CHANCE2 = 10;
-    //npc
-    public final int KLUCK = 30895;
     //mobs
-    private final int CROKIAN_LAD = 20804;
-    private final int DAILAON_LAD = 20805;
-    private final int CROKIAN_LAD_WARRIOR = 20806;
-    private final int FARHITE_LAD = 20807;
-    private final int NOS_LAD = 20808;
-    private final int SWAMP_TRIBE = 20991;
+    private static final int CROKIAN_LAD = 20804;
+    private static final int DAILAON_LAD = 20805;
+    private static final int CROKIAN_LAD_WARRIOR = 20806;
+    private static final int FARHITE_LAD = 20807;
+    private static final int NOS_LAD = 20808;
+    private static final int SWAMP_TRIBE = 20991;
+    private static final List<Integer> MOBLIST = List.of(
+            CROKIAN_LAD, DAILAON_LAD, CROKIAN_LAD_WARRIOR, FARHITE_LAD, NOS_LAD, SWAMP_TRIBE);    //RANDOM_REWARDS [ITEM_ID, QTY]
     //items
     private final int ALLIGATOR_TOOTH = 5863;
     private final int TORN_MAP_FRAGMENT = 5864;
-    private final List<Integer> MOBLIST = List.of(
-            CROKIAN_LAD, DAILAON_LAD, CROKIAN_LAD_WARRIOR, FARHITE_LAD, NOS_LAD, SWAMP_TRIBE);    //RANDOM_REWARDS [ITEM_ID, QTY]
     private final List<Integer> RANDOM_REWARDS_IDS = List.of(
             736,             //SoE
             1061,            //Healing Potion
@@ -55,8 +53,7 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
 
         addKillId(MOBLIST);
 
-        addQuestItem(ALLIGATOR_TOOTH,
-                TORN_MAP_FRAGMENT);
+        addQuestItem(ALLIGATOR_TOOTH, TORN_MAP_FRAGMENT);
     }
 
     @Override
@@ -70,29 +67,29 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
             st.setCond(1);
             htmltext = "30895-02.htm";
             st.playSound(SOUND_ACCEPT);
-        } else if (event.equalsIgnoreCase("30895-06.htm")) {
+        } else if ("30895-06.htm".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(TORN_MAP_FRAGMENT) > 9)
                 htmltext = "30895-07.htm";
-        } else if (event.equalsIgnoreCase("30895-05.htm")) {
+        } else if ("30895-05.htm".equalsIgnoreCase(event)) {
             if (amount > 0)
                 if (amount > 99) {
                     st.giveItems(ADENA_ID, amount * 300);
-                    st.takeItems(ALLIGATOR_TOOTH, -1);
+                    st.takeItems(ALLIGATOR_TOOTH);
                     st.playSound(SOUND_ITEMGET);
                     int random = Rnd.get(RANDOM_REWARDS_IDS.size());
                     st.giveItems(RANDOM_REWARDS_IDS.get(random), RANDOM_REWARDS_COUNT.get(random));
                     htmltext = "30895-05b.htm";
                 } else {
                     st.giveItems(ADENA_ID, amount * 100);
-                    st.takeItems(ALLIGATOR_TOOTH, -1);
+                    st.takeItems(ALLIGATOR_TOOTH);
                     st.playSound(SOUND_ITEMGET);
                     htmltext = "30895-05a.htm";
                 }
-        } else if (event.equalsIgnoreCase("30895-08.htm")) {
+        } else if ("30895-08.htm".equalsIgnoreCase(event)) {
             st.giveItems(PIRATES_TREASURE_MAP, 1);
             st.takeItems(TORN_MAP_FRAGMENT, -1);
             st.playSound(SOUND_ITEMGET);
-        } else if (event.equalsIgnoreCase("30895-09.htm")) {
+        } else if ("30895-09.htm".equalsIgnoreCase(event)) {
             st.exitCurrentQuest(true);
             st.playSound(SOUND_FINISH);
         }
@@ -101,7 +98,7 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
 
     @Override
     public String onTalk(NpcInstance npc, QuestState st) {
-        String htmltext = "noquest";
+        String htmltext;
         int cond = st.getCond();
         if (cond < 1) {
             if (st.getPlayer().getLevel() < 38)
@@ -117,7 +114,7 @@ public final class _354_ConquestofAlligatorIsland extends Quest {
     @Override
     public String onKill(NpcInstance npc, QuestState st) {
         if (Rnd.chance(CHANCE)) {
-            st.giveItems(ALLIGATOR_TOOTH, 1);
+            st.giveItems(ALLIGATOR_TOOTH);
             st.playSound(SOUND_ITEMGET);
         }
         if (Rnd.chance(CHANCE2) && st.getQuestItemsCount(TORN_MAP_FRAGMENT) < 10) {

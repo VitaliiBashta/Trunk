@@ -10,7 +10,7 @@ public class CharStatsChangeRecorder<T extends Creature> {
 
     final T activeChar;
     TeamType _team;
-    int _changes;
+    int changes;
     private int _level;
     private int _accuracy;
     private int _attackSpeed;
@@ -34,25 +34,25 @@ public class CharStatsChangeRecorder<T extends Creature> {
 
     int set(int flag, int oldValue, int newValue) {
         if (oldValue != newValue)
-            _changes |= flag;
+            changes |= flag;
         return newValue;
     }
 
     long set(int flag, long oldValue, long newValue) {
         if (oldValue != newValue)
-            _changes |= flag;
+            changes |= flag;
         return newValue;
     }
 
     String set(int flag, String oldValue, String newValue) {
         if (!oldValue.equals(newValue))
-            _changes |= flag;
+            changes |= flag;
         return newValue;
     }
 
     <E extends Enum<E>> E set(int flag, E oldValue, E newValue) {
         if (oldValue != newValue)
-            _changes |= flag;
+            changes |= flag;
         return newValue;
     }
 
@@ -84,11 +84,11 @@ public class CharStatsChangeRecorder<T extends Creature> {
     public final void sendChanges() {
         refreshStats();
         onSendChanges();
-        _changes = 0;
+        changes = 0;
     }
 
     void onSendChanges() {
-        if ((_changes & SEND_STATUS_INFO) == SEND_STATUS_INFO)
+        if ((changes & SEND_STATUS_INFO) == SEND_STATUS_INFO)
             activeChar.broadcastStatusUpdate();
     }
 }

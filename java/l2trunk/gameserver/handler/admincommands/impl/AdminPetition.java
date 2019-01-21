@@ -7,7 +7,7 @@ import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 
-public class AdminPetition implements IAdminCommandHandler {
+public final class AdminPetition implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
         if (!activeChar.getPlayerAccess().CanEditChar)
@@ -66,7 +66,7 @@ public class AdminPetition implements IAdminCommandHandler {
                 }
                 try {
                     GameObject targetChar = activeChar.getTarget();
-                    if (targetChar == null || !(targetChar instanceof Player)) {
+                    if (!(targetChar instanceof Player)) {
                         activeChar.sendPacket(SystemMsg.INVALID_TARGET);
                         return false;
                     }

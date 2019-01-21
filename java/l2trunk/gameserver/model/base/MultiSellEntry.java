@@ -4,55 +4,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiSellEntry {
-    private final List<MultiSellIngredient> _ingredients = new ArrayList<>();
+    private final List<MultiSellIngredient> ingredients = new ArrayList<>();
     private final List<MultiSellIngredient> _production = new ArrayList<>();
-    private int _entryId;
-    private long _tax;
+    private int entryId;
+    private long tax;
 
     public MultiSellEntry() {
     }
 
     public MultiSellEntry(int id) {
-        _entryId = id;
+        entryId = id;
     }
 
     public MultiSellEntry(int id, int product, int prod_count, int enchant) {
-        _entryId = id;
+        entryId = id;
         addProduct(new MultiSellIngredient(product, prod_count, enchant));
     }
 
-    /**
-     * @return Returns the entryId.
-     */
     public int getEntryId() {
-        return _entryId;
+        return entryId;
     }
 
     /**
      * @param entryId The entryId to set.
      */
     public void setEntryId(int entryId) {
-        _entryId = entryId;
+        this.entryId = entryId;
     }
 
-    /**
-     * @param ingredients The ingredients to set.
-     */
     public void addIngredient(MultiSellIngredient ingredient) {
         if (ingredient.getItemCount() > 0)
-            _ingredients.add(ingredient);
+            ingredients.add(ingredient);
     }
 
-    /**
-     * @return Returns the ingredients.
-     */
     public List<MultiSellIngredient> getIngredients() {
-        return _ingredients;
+        return ingredients;
     }
 
-    /**
-     * @param ingredients The ingredients to set.
-     */
+
     public void addProduct(MultiSellIngredient ingredient) {
         _production.add(ingredient);
     }
@@ -65,22 +54,22 @@ public class MultiSellEntry {
     }
 
     public long getTax() {
-        return _tax;
+        return tax;
     }
 
     public void setTax(long tax) {
-        _tax = tax;
+        this.tax = tax;
     }
 
     @Override
     public int hashCode() {
-        return _entryId;
+        return entryId;
     }
 
     @Override
     public MultiSellEntry clone() {
-        MultiSellEntry ret = new MultiSellEntry(_entryId);
-        for (MultiSellIngredient i : _ingredients)
+        MultiSellEntry ret = new MultiSellEntry(entryId);
+        for (MultiSellIngredient i : ingredients)
             ret.addIngredient(i.clone());
         for (MultiSellIngredient i : _production)
             ret.addProduct(i.clone());

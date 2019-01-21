@@ -7,8 +7,10 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Gordon extends Fighter {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             // spawn: 147316,-64797,-3469
             new Location(146268, -64651, -3412),
             new Location(143678, -64045, -3434),
@@ -41,7 +43,7 @@ public final class Gordon extends Fighter {
             new Location(154649, -60214, -2701),
             new Location(153121, -63319, -2969),
             new Location(151511, -64366, -3174),
-            new Location(149161, -64576, -3316)};
+            new Location(149161, -64576, -3316));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -94,12 +96,12 @@ public final class Gordon extends Fighter {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
             actor.setWalking();
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

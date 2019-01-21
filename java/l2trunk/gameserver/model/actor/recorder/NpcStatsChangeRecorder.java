@@ -24,7 +24,7 @@ import l2trunk.gameserver.model.instances.NpcInstance;
         super.onSendChanges();
         /*	*/
         /* 17 */
-        if ((this._changes & 0x1) == 1)
+        if ((this.changes & 0x1) == 1)
             /* 18 */ ((NpcInstance) this.activeChar).broadcastCharInfo();
         /*	*/
     }

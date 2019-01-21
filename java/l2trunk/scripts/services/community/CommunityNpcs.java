@@ -579,10 +579,6 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler {
         sendFileToPlayer(player, "smallNpcs/exclusiveShop_select.htm", true, replacements);
     }
 
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
-
     private static class ActionAnswerListener implements OnAnswerListener {
         private final Player player;
         private final int action;

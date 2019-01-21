@@ -393,14 +393,6 @@ public final class AdminEditChar implements IAdminCommandHandler {
                 player.sendPacket(SystemMsg.CONGRATULATIONS__YOUVE_COMPLETED_A_CLASS_TRANSFER); // Transfer to new class.
             } else
                 setSubclass(activeChar, player);
-        } else if (fullString.startsWith("admin_setfame")) {
-            try {
-                String val = fullString.substring(14);
-                int fame = Integer.parseInt(val);
-                setTargetFame(activeChar, fame);
-            } catch (StringIndexOutOfBoundsException e) {
-                activeChar.sendMessage("Please specify new fame value.");
-            }
         } else if (fullString.startsWith("admin_addfame")) {
             try {
                 String val = fullString.substring(14);
@@ -583,29 +575,6 @@ public final class AdminEditChar implements IAdminCommandHandler {
             activeChar.sendMessage("You must enter a value for karma greater than or equal to 0.");
     }
 
-    private void setTargetFame(Player activeChar, int newFame) {
-        GameObject target = activeChar.getTarget();
-        if (target == null) {
-            activeChar.sendPacket(SystemMsg.INVALID_TARGET);
-            return;
-        }
-
-        Player player;
-        if (target.isPlayer())
-            player = (Player) target;
-        else
-            return;
-
-        if (newFame >= 0) {
-            int oldFame = player.getFame();
-            player.setFame(newFame, "Admin");
-
-            player.sendMessage("Admin has changed your fame from " + oldFame + " to " + newFame + ".");
-            activeChar.sendMessage("Successfully Changed fame for " + player.getName() + " from (" + oldFame + ") to (" + newFame + ").");
-        } else
-            activeChar.sendMessage("You must enter a value for fame greater than or equal to 0.");
-    }
-
     private void addTargetFame(Player activeChar, int addFame) {
         GameObject target = activeChar.getTarget();
         if (target == null) {
@@ -619,10 +588,9 @@ public final class AdminEditChar implements IAdminCommandHandler {
         else
             return;
 
-        int oldFame = player.getFame();
-        player.setFame(oldFame + addFame, "Admin");
+        player.addFame(addFame, "Admin");
         player.sendMessage("Admin has given you " + addFame + " fame.");
-        activeChar.sendMessage("Successfully Changed fame for " + player.getName() + " from (" + oldFame + ") to (" + oldFame + addFame + "). Fame added: " + addFame);
+        activeChar.sendMessage("Successfully Changed fame for " + player.getName() + ". Fame added: " + addFame);
     }
 
     private void adminModifyCharacter(Player activeChar, String modifications) {

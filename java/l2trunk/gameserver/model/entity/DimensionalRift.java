@@ -22,7 +22,7 @@ public class DimensionalRift extends Reflection {
     final int roomType;
     private List<Integer> _completedRooms = new ArrayList<>();
     private int jumps_current = 0;
-    private int _choosenRoom = -1;
+    private int choosenRoom = -1;
     private boolean _hasJumped = false;
     private boolean isBossRoom = false;
     private Future<?> teleporterTask;
@@ -44,10 +44,10 @@ public class DimensionalRift extends Reflection {
         if (!(this instanceof DelusionChamber))
             party.setDimensionalRift(this);
         party.setReflection(this);
-        _choosenRoom = room;
-        checkBossRoom(_choosenRoom);
+        choosenRoom = room;
+        checkBossRoom(choosenRoom);
 
-        Location coords = getRoomCoord(_choosenRoom);
+        Location coords = getRoomCoord(choosenRoom);
 
         setReturnLoc(party.getLeader().getLoc());
         setTeleportLoc(coords);
@@ -57,7 +57,7 @@ public class DimensionalRift extends Reflection {
             p.setReflection(this);
         }
 
-        createSpawnTimer(_choosenRoom);
+        createSpawnTimer(choosenRoom);
         createTeleporterTimer();
     }
 
@@ -66,7 +66,7 @@ public class DimensionalRift extends Reflection {
     }
 
     public int getCurrentRoom() {
-        return _choosenRoom;
+        return choosenRoom;
     }
 
     private void createTeleporterTimer() {
@@ -172,10 +172,9 @@ public class DimensionalRift extends Reflection {
     }
 
     private void teleportToNextRoom() {
-        _completedRooms.add(_choosenRoom);
+        _completedRooms.add(choosenRoom);
 
-        for (Spawner s : getSpawns())
-            s.deleteAll();
+        getSpawns().forEach(Spawner::deleteAll);
 
         int size = DimensionalRiftManager.INSTANCE.getRooms(roomType).size();
 		/*
@@ -184,23 +183,23 @@ public class DimensionalRift extends Reflection {
 		 */
 
         if (getType() >= 11 && jumps_current == getMaxJumps())
-            _choosenRoom = 9; // В DC последние 2 печати всегда кончаются рейдом
+            choosenRoom = 9; // В DC последние 2 печати всегда кончаются рейдом
         else { // выбираем комнату, где еще не были
             List<Integer> notCompletedRooms = new ArrayList<>();
             for (int i = 1; i <= size; i++)
                 if (!_completedRooms.contains(i))
                     notCompletedRooms.add(i);
-            _choosenRoom = notCompletedRooms.get(Rnd.get(notCompletedRooms.size()));
+            choosenRoom = Rnd.get(notCompletedRooms);
         }
 
-        checkBossRoom(_choosenRoom);
-        setTeleportLoc(getRoomCoord(_choosenRoom));
+        checkBossRoom(choosenRoom);
+        setTeleportLoc(getRoomCoord(choosenRoom));
 
         for (Player p : getParty().getMembers())
             if (p.getReflection() == this)
-                DimensionalRiftManager.teleToLocation(p, Location.findPointToStay(getRoomCoord(_choosenRoom), 50, 100, DimensionalRift.this.getGeoIndex()), this);
+                DimensionalRiftManager.teleToLocation(p, Location.findPointToStay(getRoomCoord(choosenRoom), 50, 100, DimensionalRift.this.getGeoIndex()), this);
 
-        createSpawnTimer(_choosenRoom);
+        createSpawnTimer(choosenRoom);
     }
 
     @Override
@@ -241,12 +240,12 @@ public class DimensionalRift extends Reflection {
         return Config.RIFT_AUTO_JUMPS_TIME * MILLISECONDS_IN_MINUTE + Rnd.get(Config.RIFT_AUTO_JUMPS_TIME_RAND);
     }
 
-    public void memberDead(Player player) {
+    public void memberDead() {
         if (getPlayersInside(true) == 0)
             createNewKillRiftTimer();
     }
 
-    public void usedTeleport(Player player) {
+    public void usedTeleport() {
         if (getPlayersInside(false) < Config.RIFT_MIN_PARTY_SIZE)
             createNewKillRiftTimer();
     }
@@ -259,9 +258,6 @@ public class DimensionalRift extends Reflection {
         return DimensionalRiftManager.INSTANCE.getRoom(roomType, room).getTeleportCoords();
     }
 
-    /**
-     * По умолчанию 4
-     */
     private int getMaxJumps() {
         return Math.max(Math.min(Config.RIFT_MAX_JUMPS, 8), 1);
     }

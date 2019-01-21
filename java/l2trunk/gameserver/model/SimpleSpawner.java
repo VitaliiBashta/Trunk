@@ -112,6 +112,6 @@ public final class SimpleSpawner extends Spawner {
                 .setTerritory(territory)
                 .setLoc(loc)
                 .setAmount(maximumCount)
-                .setRespawnDelay(respawnDelay, _respawnDelayRandom);
+                .setRespawnDelay(respawnDelay, respawnDelayRandom);
     }
 }

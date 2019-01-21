@@ -8,7 +8,10 @@ import l2trunk.gameserver.model.GameObjectTasks;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.instances.NpcInstance;
 
-public class NpcUtils {
+public final class NpcUtils {
+    private NpcUtils() {
+    }
+
     public static NpcInstance spawnSingle(int npcId, int x, int y, int z) {
         return spawnSingle(npcId, new Location(x, y, z, -1), ReflectionManager.DEFAULT, 0);
     }
@@ -17,9 +20,6 @@ public class NpcUtils {
         return spawnSingle(npcId, new Location(x, y, z, -1), ReflectionManager.DEFAULT, despawnTime);
     }
 
-    public static NpcInstance spawnSingle(int npcId, int x, int y, int z, int h, long despawnTime) {
-        return spawnSingle(npcId, new Location(x, y, z, h), ReflectionManager.DEFAULT, despawnTime);
-    }
 
     public static NpcInstance spawnSingle(int npcId, Location loc) {
         return spawnSingle(npcId, loc, ReflectionManager.DEFAULT, 0);

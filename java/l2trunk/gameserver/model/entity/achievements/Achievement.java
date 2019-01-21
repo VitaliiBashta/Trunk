@@ -22,7 +22,7 @@ public final class Achievement {
     private final String _icon;
     private final String _desc;
     private final long _pointsToComplete;
-    private final String _achievementType;
+    private final String achievementType;
     private final int _fame;
     private final List<RewardItemResult> _rewards;
 
@@ -34,7 +34,7 @@ public final class Achievement {
         _icon = icon;
         _desc = desc;
         _pointsToComplete = pointsToComplete;
-        _achievementType = achievementType;
+        this.achievementType = achievementType;
         _fame = fame;
         _rewards = new LinkedList<>();
     }
@@ -130,7 +130,7 @@ public final class Achievement {
     }
 
     public String getType() {
-        return _achievementType;
+        return achievementType;
     }
 
     public long getPointsToComplete() {

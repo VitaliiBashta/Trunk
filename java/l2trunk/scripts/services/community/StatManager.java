@@ -351,16 +351,9 @@ public final class StatManager implements ScriptFile, ICommunityBoardHandler {
     }
 
     /**
-     * Не используемый, но вызываемый метод имплемента
-     */
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
-
-    /**
      * Класс общих пер-х
      */
-    class CBStatMan {
+    private class CBStatMan {
         public Object id2;
         public int id;
         int PlayerId = 0; // obj_id Char

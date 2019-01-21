@@ -29,7 +29,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     private static final Logger LOG = LoggerFactory.getLogger(Heart.class);
     private static final List<SimpleSpawner> SPAWNS = new ArrayList<>();
     private static final Map<Integer, Integer> Guesses = new HashMap<>();
-    private static final String[][] variants = {{"Rock", "Камень"}, {"Scissors", "Ножницы"}, {"Paper", "Бумага"}};
+    private static final List<String> variants = List.of("Rock", "Scissors", "Paper");
     private static final int EVENT_MANAGER_ID = 31227; //Buzz the Cat
     private static final List<Integer> hearts = List.of(4209, 4210, 4211, 4212, 4213, 4214, 4215, 4216, 4217);
     private static final List<Integer> potions = List.of(1374, // Greater Haste Potion
@@ -50,13 +50,11 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     );
     private static boolean active = false;
     private static String links_en = "";
-    private static String links_ru = "";
 
     static {
         PrintfFormat fmt = new PrintfFormat("<br><a action=\"bypass -h scripts_events.Heart.Heart:play %d\">\"%s!\"</a>");
-        for (int i = 0; i < variants.length; i++) {
-            links_en += fmt.sprintf(i, variants[i][0]);
-            links_ru += fmt.sprintf(i, variants[i][1]);
+        for (int i = 0; i < variants.size(); i++) {
+            links_en += fmt.sprintf(i, variants.get(i));
         }
     }
 
@@ -104,7 +102,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
 
         zeroGuesses(player);
         if (haveAllHearts(player))
-            show(link(HtmCache.INSTANCE.getNotNull("scripts/events/Heart/hearts_01.htm", player), isRus(player)), player);
+            show(link(HtmCache.INSTANCE.getNotNull("scripts/events/Heart/hearts_01.htm", player)), player);
         else
             show("scripts/events/Heart/hearts_00.htm", player);
     }
@@ -123,7 +121,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
             return;
         }
 
-        if (var[0].equalsIgnoreCase("Quit")) {
+        if ("Quit".equalsIgnoreCase(var[0])) {
             int curr_guesses = getGuesses(player);
             takeHeartsSet(player);
             reward(player, curr_guesses);
@@ -132,8 +130,8 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
             return;
         }
 
-        int var_cat = Rnd.get(variants.length);
-        int var_player = 0;
+        int var_cat = Rnd.get(variants.size());
+        int var_player;
         try {
             var_player = Integer.parseInt(var[0]);
         } catch (Exception e) {
@@ -160,7 +158,7 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
 
         takeHeartsSet(player);
         reward(player, getGuesses(player) - 1);
-        show(fillvars(HtmCache.INSTANCE().getNotNull("scripts/events/Heart/hearts_loose.htm", player), var_player, var_cat, player), player);
+        show(fillvars(HtmCache.INSTANCE.getNotNull("scripts/events/Heart/hearts_loose.htm", player), var_player, var_cat, player), player);
         zeroGuesses(player);
     }
 
@@ -204,16 +202,11 @@ public final class Heart extends Functions implements ScriptFile, OnDeathListene
     }
 
     private String fillvars(String s, int var_player, int var_cat, Player player) {
-        boolean rus = isRus(player);
-        return link(s.replaceFirst("Player", player.getName()).replaceFirst("%var_payer%", variants[var_player][rus ? 1 : 0]).replaceFirst("%var_cat%", variants[var_cat][rus ? 1 : 0]), rus);
+        return link(s.replaceFirst("Player", player.getName()).replaceFirst("%var_payer%", variants.get(var_player)).replaceFirst("%var_cat%", variants.get(var_cat)));
     }
 
-    private boolean isRus(Player player) {
-        return player.isLangRus();
-    }
-
-    private String link(String s, boolean rus) {
-        return s.replaceFirst("%links%", rus ? links_ru : links_en);
+    private String link(String s) {
+        return s.replaceFirst("%links%", links_en);
     }
 
     private boolean playerWins(int var_player, int var_cat) {

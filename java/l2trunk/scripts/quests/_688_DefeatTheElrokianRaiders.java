@@ -38,7 +38,7 @@ public final class _688_DefeatTheElrokianRaiders extends Quest {
             htmltext = "dindin_q0688_04.htm";
         } else if (event.equalsIgnoreCase("reply_5")) {
             if (count >= 10) {
-                st.takeItems(q_necklace_of_storming_party, -1);
+                st.takeItems(q_necklace_of_storming_party);
                 st.giveItems(ADENA_ID, count * 3000);
                 htmltext = "dindin_q0688_07.htm";
             }

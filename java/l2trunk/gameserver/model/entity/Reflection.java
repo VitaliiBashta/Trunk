@@ -55,7 +55,7 @@ public class Reflection {
     private Location teleportLoc; // точка входа
     private int _collapseIfEmptyTime;
 
-    private boolean _isCollapseStarted;
+    private boolean isCollapseStarted;
     private Future<?> _collapseTask;
     private Future<?> _collapse1minTask;
     private Future<?> _hiddencollapseTask;
@@ -218,26 +218,18 @@ public class Reflection {
         }
     }
 
-    private void minuteBeforeCollapse() {
-        if (_isCollapseStarted) {
-            return;
-        }
-        lock.lock();
-        try {
-            for (GameObject o : objects) {
-                if (o.isPlayer()) {
-                    Player player = (Player) o;
+    private synchronized void minuteBeforeCollapse() {
+        if (isCollapseStarted) return;
+        objects.stream()
+                .filter(GameObject::isPlayer)
+                .map(o -> (Player) o)
+                .forEach(player -> {
                     if (player.isInParty())
                         player.updatePartyInstance();
                     else
                         player.updateSoloInstance();
-
                     player.sendPacket(new SystemMessage(SystemMessage.THIS_INSTANCE_ZONE_WILL_BE_TERMINATED_IN_S1_MINUTES_YOU_WILL_BE_FORCED_OUT_OF_THE_DANGEON_THEN_TIME_EXPIRES).addNumber(1));
-                }
-            }
-        } finally {
-            lock.unlock();
-        }
+                });
     }
 
     public void collapse() {
@@ -248,10 +240,10 @@ public class Reflection {
 
         lock.lock();
         try {
-            if (_isCollapseStarted) {
+            if (isCollapseStarted) {
                 return;
             }
-            _isCollapseStarted = true;
+            isCollapseStarted = true;
         } finally {
             lock.unlock();
         }
@@ -317,9 +309,7 @@ public class Reflection {
                 party = null;
             }
 
-            for (GameObject o : delete) {
-                o.deleteMe();
-            }
+            delete.forEach(GameObject::deleteMe);
 
             spawns.clear();
             objects.clear();
@@ -339,7 +329,7 @@ public class Reflection {
     }
 
     public void addObject(GameObject o) {
-        if (_isCollapseStarted) {
+        if (isCollapseStarted) {
             return;
         }
 
@@ -361,7 +351,7 @@ public class Reflection {
     }
 
     public void removeObject(GameObject o) {
-        if (_isCollapseStarted) {
+        if (isCollapseStarted) {
             return;
         }
 
@@ -426,7 +416,7 @@ public class Reflection {
     }
 
     public boolean isCollapseStarted() {
-        return _isCollapseStarted;
+        return isCollapseStarted;
     }
 
     protected void addSpawn(SimpleSpawner spawn) {
@@ -463,7 +453,7 @@ public class Reflection {
                     c.setReflection(this);
                     c.setRespawnDelay(s.getRespawnDelay(), s.getRespawnRnd());
                     c.setAmount(1);
-                    c.setLoc(s.getCoords().get(Rnd.get(s.getCoords().size())));
+                    c.setLoc(Rnd.get(s.getCoords()));
                     c.doSpawn(true);
                     if (s.getRespawnDelay() == 0) {
                         c.stopRespawn();
@@ -477,7 +467,7 @@ public class Reflection {
                     c.setReflection(this);
                     c.setRespawnDelay(s.getRespawnDelay(), s.getRespawnRnd());
                     c.setAmount(s.getCount());
-                    c.setTerritory(s.getLoc());
+                    c.setTerritory(s.getTerritory());
                     for (int j = 0; j < s.getCount(); j++) {
                         c.doSpawn(true);
                     }
@@ -635,7 +625,7 @@ public class Reflection {
         return NpcUtils.spawnSingle(npcId, newLoc, this);
     }
 
-    public NpcInstance addSpawnWithRespawn(int npcId, Location loc, int randomOffset, int respawnDelay) {
+    public void addSpawnWithRespawn(int npcId, Location loc, int randomOffset, int respawnDelay) {
         SimpleSpawner sp = new SimpleSpawner(npcId);
         sp.setLoc(randomOffset > 0 ? Location.findPointToStay(loc, 0, randomOffset, getGeoIndex()) : loc);
         sp.setReflection(this);
@@ -643,7 +633,6 @@ public class Reflection {
         sp.setRespawnDelay(respawnDelay);
         sp.doSpawn(true);
         sp.startRespawn();
-        return sp.getLastSpawn();
     }
 
     public boolean isDefault() {

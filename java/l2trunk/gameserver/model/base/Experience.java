@@ -4,7 +4,7 @@ import l2trunk.gameserver.Config;
 
 public final class Experience {
 
-    public final static long LEVEL[] = {-1L, // level 0 (unreachable)
+    public final static long[] LEVEL = {-1L, // level 0 (unreachable)
             /* Lvl:1 */        0L,
             /* Lvl:2 */        68L,
             /* Lvl:3 */        363L,
@@ -104,7 +104,7 @@ public final class Experience {
             /* Lvl:97 */    275478998038L,
             /* Lvl:98 */    336047081252L,
             /* Lvl:99 */    408728781109L,
-            /* Lvl:100 */    495946820937L};
+            /* Lvl:100 */   495946820937L};
 
     public static double penaltyModifier(long count, double percents) {
         return Math.max(1. - count * percents / 100, 0);

@@ -1,8 +1,8 @@
 package l2trunk.commons.lang;
 
 public class Pair<K, V> {
-    K first;
-    V second;
+    private K first;
+    private V second;
 
     public Pair(K first, V second) {
         this.first = first;

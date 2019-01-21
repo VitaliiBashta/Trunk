@@ -23,7 +23,6 @@ import l2trunk.gameserver.model.items.ItemInstance;
 import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.pledge.UnitMember;
 import l2trunk.gameserver.network.serverpackets.*;
-import l2trunk.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.templates.item.support.MerchantGuard;
@@ -210,18 +209,15 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
     @Override
     public void stopEvent(boolean step) {
         List<DoorObject> doorObjects = getObjects(DOORS);
-        for (DoorObject doorObject : doorObjects) {
-            doorObject.setWeak(false);
-        }
+        doorObjects.forEach(d -> d.setWeak(false));
 
         damageZoneAction(false);
 
         updateParticles(false, ATTACKERS, DEFENDERS);
 
         List<SiegeClanObject> attackers = removeObjects(ATTACKERS);
-        for (SiegeClanObject siegeClan : attackers) {
-            siegeClan.deleteFlag();
-        }
+        attackers.forEach(SiegeClanObject::deleteFlag);
+
 
         broadcastToWorld(new SystemMessage2(SystemMsg.THE_SIEGE_OF_S1_IS_FINISHED).addResidenceName(getResidence()));
 
@@ -252,9 +248,7 @@ public final class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject> 
                 for (UnitMember member : ownerClan) {
                     Player player = member.getPlayer();
                     if (player != null) {
-
                         player.getPlayer().getCounters().castleSiegesWon++;
-
                         player.sendPacket(PlaySound.SIEGE_VICTORY);
                         if (player.isOnline() && player.isNoble()) {
                             Hero.INSTANCE.addHeroDiary(player.getObjectId(), HeroDiary.ACTION_CASTLE_TAKEN, getResidence().getId());

@@ -36,8 +36,8 @@ public class DefaultAI extends CharacterAI {
     protected static final Logger _log = LoggerFactory.getLogger(DefaultAI.class);
     private static final int TaskDefaultWeight = 10000;
     public static String namechar;
-    protected final List<Skill> _damSkills;
-    protected final List<Skill> _healSkills;
+    protected final List<Skill> damSkills;
+    protected final List<Skill> healSkills;
     protected final Comparator<Creature> _nearestTargetComparator;
     /**
      * Список заданий
@@ -83,12 +83,12 @@ public class DefaultAI extends CharacterAI {
         setAttackTimeout(Long.MAX_VALUE);
 
         NpcInstance npc = getActor();
-        _damSkills = npc.getTemplate().getDamageSkills();
+        damSkills = npc.getTemplate().getDamageSkills();
         _dotSkills = npc.getTemplate().getDotSkills();
         _debuffSkills = npc.getTemplate().getDebuffSkills();
         _buffSkills = npc.getTemplate().getBuffSkills();
         _stunSkills = npc.getTemplate().getStunSkills();
-        _healSkills = npc.getTemplate().getHealSkills();
+        healSkills = npc.getTemplate().getHealSkills();
 
         _nearestTargetComparator = new NearestTargetComparator(actor);
 
@@ -1213,7 +1213,7 @@ public class DefaultAI extends CharacterAI {
                         targets.add(cha);
                     }
                     if (!targets.isEmpty()) {
-                        target = targets.get(Rnd.get(targets.size()));
+                        target = Rnd.get(targets);
                     }
                 }
             }
@@ -1363,19 +1363,19 @@ public class DefaultAI extends CharacterAI {
         if (Rnd.chance(rateSelf)) {
             double actorHp = actor.getCurrentHpPercents();
 
-            List<Skill> skills = actorHp < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills);
+            List<Skill> skills = actorHp < 50 ? selectUsableSkills(actor, 0, healSkills) : selectUsableSkills(actor, 0, _buffSkills);
             if ((skills == null) || (skills.size() == 0)) {
                 return false;
             }
 
-            Skill skill = skills.get(Rnd.get(skills.size()));
+            Skill skill = Rnd.get(skills);
             addTaskBuff(actor, skill);
             return true;
         }
 
         if (Rnd.chance(rateFriends)) {
             return activeFactionTargets()
-                    .map(npc -> npc.getCurrentHpPercents() < 50 ? selectUsableSkills(actor, 0, _healSkills) : selectUsableSkills(actor, 0, _buffSkills))
+                    .map(npc -> npc.getCurrentHpPercents() < 50 ? selectUsableSkills(actor, 0, healSkills) : selectUsableSkills(actor, 0, _buffSkills))
                     .filter(Objects::nonNull)
                     .peek(skills -> addTaskBuff(actor, Rnd.get(skills)))
                     .findFirst().isPresent();
@@ -1401,11 +1401,11 @@ public class DefaultAI extends CharacterAI {
         double targetHp = target.getCurrentHpPercents();
         double actorHp = actor.getCurrentHpPercents();
 
-        List<Skill> dam = Rnd.chance(getRateDAM()) ? selectUsableSkills(target, distance, _damSkills) : null;
+        List<Skill> dam = Rnd.chance(getRateDAM()) ? selectUsableSkills(target, distance, damSkills) : null;
         List<Skill> dot = Rnd.chance(getRateDOT()) ? selectUsableSkills(target, distance, _dotSkills) : null;
         List<Skill> debuff = targetHp > 10 ? Rnd.chance(getRateDEBUFF()) ? selectUsableSkills(target, distance, _debuffSkills) : null : null;
         List<Skill> stun = Rnd.chance(getRateSTUN()) ? selectUsableSkills(target, distance, _stunSkills) : null;
-        List<Skill> heal = actorHp < 50 ? Rnd.chance(getRateHEAL()) ? selectUsableSkills(actor, 0, _healSkills) : null : null;
+        List<Skill> heal = actorHp < 50 ? Rnd.chance(getRateHEAL()) ? selectUsableSkills(actor, 0, healSkills) : null : null;
         List<Skill> buff = Rnd.chance(getRateBUFF()) ? selectUsableSkills(actor, 0, _buffSkills) : null;
 
         RndSelector<List<Skill>> rnd = new RndSelector<>();

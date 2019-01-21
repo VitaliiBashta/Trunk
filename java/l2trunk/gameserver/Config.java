@@ -9,7 +9,6 @@ import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.model.base.PlayerAccess;
 import l2trunk.gameserver.network.loginservercon.ServerType;
 import l2trunk.gameserver.utils.AddonsConfig;
-import l2trunk.gameserver.utils.GArray;
 import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,21 +33,17 @@ public final class Config {
     /**
      * events
      */
-    public static final int[] VITALITY_LEVELS = {240, 2000, 13000, 17000, 20000};
+    public static final List<Integer> VITALITY_LEVELS = List.of(240, 2000, 13000, 17000, 20000);
     public static final List<AdvIP> GAMEIPS = new ArrayList<>();
     public static final int CHATFILTER_WORK_TYPE = 1;
     public static final List<Location> HEIN_FIELDS_LOCATIONS = new ArrayList<>();
-    public static final Map<Integer,Integer> NpcBuffer_BuffSetMage = new ConcurrentHashMap<>();
-    public static final Map<Integer,Integer> NpcBuffer_BuffSetFighter = new ConcurrentHashMap<>();
-    public static final Map<Integer,Integer> NpcBuffer_BuffSetDagger = new ConcurrentHashMap<>();
-    public static final Map<Integer,Integer> NpcBuffer_BuffSetSupport = new ConcurrentHashMap<>();
-    public static final Map<Integer,Integer> NpcBuffer_BuffSetTank = new ConcurrentHashMap<>();
-    public static final Map<Integer,Integer> NpcBuffer_BuffSetArcher = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> NpcBuffer_BuffSetMage = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> NpcBuffer_BuffSetFighter = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> NpcBuffer_BuffSetDagger = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> NpcBuffer_BuffSetSupport = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> NpcBuffer_BuffSetTank = new ConcurrentHashMap<>();
+    public static final Map<Integer, Integer> NpcBuffer_BuffSetArcher = new ConcurrentHashMap<>();
     public static final List<Integer> SERVICES_AUGMENTATION_DISABLED_LIST = new ArrayList<>();
-    /**
-     * Network settings
-     */
-    static final SelectorConfig SELECTOR_CONFIG = new SelectorConfig();
     public static final int CNAME_MAXLEN = 32;
     public static final List<Integer> ALT_OLY_DATE_END = new ArrayList<>();
     public static final Map<Integer, PlayerAccess> gmlist = new HashMap<>();
@@ -56,6 +51,11 @@ public final class Config {
     public static final int[] CLASS_MASTERS_PRICE_LIST = new int[4];
     public static final boolean GOODS_INVENTORY_ENABLED = false;
     public static final int[] RWHO_ARRAY = new int[13];
+    public final static List<String> TRADE_WORDS = new ArrayList<>();
+    /**
+     * Network settings
+     */
+    static final SelectorConfig SELECTOR_CONFIG = new SelectorConfig();
     private static final int NCPUS = Runtime.getRuntime().availableProcessors();
     private static final Path OTHER_CONFIG_FILE = CONFIG.resolve("mod/other.ini");
     private static final Path RESIDENCE_CONFIG_FILE = CONFIG.resolve("residence.ini");
@@ -109,7 +109,6 @@ public final class Config {
      * GameServer ports
      */
     public static List<Integer> PORTS_GAME;
-    static String GAMESERVER_HOSTNAME;
     public static String DATABASE_DRIVER;
     public static int DATABASE_MAX_CONNECTIONS;
     public static int DATABASE_MAX_IDLE_TIMEOUT;
@@ -269,12 +268,6 @@ public final class Config {
     public static boolean ALT_DEBUG_PVE_ENABLED;
     public static double CRAFT_MASTERWORK_CHANCE;
     public static double CRAFT_DOUBLECRAFT_CHANCE;
-    /**
-     * Thread pools size
-     */
-    static int SCHEDULED_THREAD_POOL_SIZE;
-    static int EXECUTOR_THREAD_POOL_SIZE;
-    static boolean ENABLE_RUNNABLE_STATS;
     public static boolean AUTO_LOOT;
     public static boolean AUTO_LOOT_FROM_RAIDS;
     /**
@@ -300,7 +293,6 @@ public final class Config {
     public static boolean GLOBAL_TRADE_CHAT;
     public static int CHAT_RANGE;
     public static int SHOUT_OFFSET;
-    public static GArray<String> TRADE_WORDS;
     public static boolean TRADE_CHATS_REPLACE;
     /**
      * For test servers - evrybody has admin rights
@@ -337,16 +329,12 @@ public final class Config {
     public static int ALT_SAVE_EFFECTS_REMAINING_TIME;
     public static boolean ALT_SHOW_REUSE_MSG;
     public static boolean ALT_DELETE_SA_BUFFS;
-
     public static List<Integer> ITEM_USE_LIST_ID;
     public static boolean ITEM_USE_IS_COMBAT_FLAG;
     public static boolean ITEM_USE_IS_ATTACK;
-
     public static boolean CHAR_TITLE;
     public static String ADD_CHAR_TITLE;
-
     public static boolean ALT_SOCIAL_ACTION_REUSE;
-
     public static boolean ALT_DISABLE_SPELLBOOKS;
     /**
      * Alternative gameing - loss of XP on death
@@ -493,21 +481,10 @@ public final class Config {
     public static int PVP_Y;
     public static int PVP_Z;
 
-    public static boolean SPAWN_CHAR;
-    public static int SPAWN_X;
-    public static int SPAWN_Y;
-    public static int SPAWN_Z;
-    /**
-     * Olympiad Compitition Starting time
-     */
     public static int ALT_OLY_START_TIME;
-    /**
-     * Olympiad Compition Min
-     */
+
     public static int ALT_OLY_MIN;
-    /**
-     * Olympaid Comptetition Period
-     */
+
     public static long ALT_OLY_CPERIOD;
     /**
      * Olympiad Manager Shout Just One Time CUSTOM MESSAGE
@@ -654,7 +631,6 @@ public final class Config {
      */
     public static int MIN_NPC_ANIMATION;
     public static int MAX_NPC_ANIMATION;
-    static String RESTART_AT_TIME;
     public static int GAME_SERVER_LOGIN_PORT;
     public static String GAME_SERVER_LOGIN_HOST;
     public static String INTERNAL_HOSTNAME;
@@ -740,10 +716,6 @@ public final class Config {
     public static int DEEPBLUE_DROP_MAXDIFF;
     public static int DEEPBLUE_DROP_RAID_MAXDIFF;
     public static boolean UNSTUCK_SKILL;
-    /**
-     * telnet enabled
-     */
-    static boolean IS_TELNET_ENABLED;
     /**
      * Percent CP is restore on respawn
      */
@@ -1097,7 +1069,6 @@ public final class Config {
     public static int CLAN_LEAVE_PENALTY;
     public static int ALLY_LEAVE_PENALTY;
     public static int DISSOLVED_ALLY_PENALTY;
-
     public static boolean ALLOW_MULTILANG_GATEKEEPER;
     public static boolean LOAD_CUSTOM_SPAWN;
     public static boolean SAVE_GM_SPAWN;
@@ -1138,6 +1109,18 @@ public final class Config {
     public static List<Integer> BBS_FORGE_ATRIBUTE_LVL_ARMOR;
     public static List<Integer> BBS_FORGE_ATRIBUTE_PRICE_ARMOR;
     public static List<Integer> BBS_FORGE_ATRIBUTE_PRICE_WEAPON;
+    static String GAMESERVER_HOSTNAME;
+    /**
+     * Thread pools size
+     */
+    static int SCHEDULED_THREAD_POOL_SIZE;
+    static int EXECUTOR_THREAD_POOL_SIZE;
+    static boolean ENABLE_RUNNABLE_STATS;
+    static String RESTART_AT_TIME;
+    /**
+     * telnet enabled
+     */
+    static boolean IS_TELNET_ENABLED;
     private static boolean ADVIPSYSTEM;
 
     private static String CLASS_MASTERS_PRICE;
@@ -1292,8 +1275,6 @@ public final class Config {
         GLOBAL_TRADE_CHAT = chatSettings.getProperty("GlobalTradeChat", false);
         CHAT_RANGE = chatSettings.getProperty("ChatRange", 1250);
         SHOUT_OFFSET = chatSettings.getProperty("ShoutOffset", 0);
-
-        TRADE_WORDS = new GArray<>();
 
         String T_WORLD = chatSettings.getProperty("TradeWords", "trade,sell,selling,buy,exchange,barter,Ð’Ð¢Ð¢,Ð’Ð¢S,WTB,WTB,WTT,WTS");
         String[] T_WORLDS = T_WORLD.split(",", -1);
@@ -1966,10 +1947,6 @@ public final class Config {
         NEW_CHAR_IS_NOBLE = PvPmodConfig.getProperty("NewCharIsNoble", false);
         NEW_CHAR_IS_HERO = PvPmodConfig.getProperty("NewCharIsHero", false);
 
-        SPAWN_CHAR = PvPmodConfig.getProperty("CustomSpawn", false);
-        SPAWN_X = PvPmodConfig.getProperty("SpawnX", 1);
-        SPAWN_Y = PvPmodConfig.getProperty("SpawnY", 1);
-        SPAWN_Z = PvPmodConfig.getProperty("SpawnZ", 1);
 
         ADEPT_ENABLE = PvPmodConfig.getProperty("ADEPT_ENABLE", true);
 

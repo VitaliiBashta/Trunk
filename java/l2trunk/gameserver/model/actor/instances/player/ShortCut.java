@@ -4,21 +4,7 @@ public final class ShortCut {
     public final static int TYPE_ITEM = 1;
     public final static int TYPE_SKILL = 2;
     public final static int TYPE_ACTION = 3;
-    public final static int TYPE_MACRO = 4;
-    public final static int TYPE_RECIPE = 5;
-    public final static int TYPE_TPBOOKMARK = 6;
 
-    // номера панельек для шарткатов
-    public final static int PAGE_NORMAL_0 = 0;
-    public final static int PAGE_NORMAL_1 = 1;
-    public final static int PAGE_NORMAL_2 = 2;
-    public final static int PAGE_NORMAL_3 = 3;
-    public final static int PAGE_NORMAL_4 = 4;
-    public final static int PAGE_NORMAL_5 = 5;
-    public final static int PAGE_NORMAL_6 = 6;
-    public final static int PAGE_NORMAL_7 = 7;
-    public final static int PAGE_NORMAL_8 = 8;
-    public final static int PAGE_NORMAL_9 = 9;
     public final static int PAGE_FLY_TRANSFORM = 10;
     public final static int PAGE_AIRSHIP = 11;
 

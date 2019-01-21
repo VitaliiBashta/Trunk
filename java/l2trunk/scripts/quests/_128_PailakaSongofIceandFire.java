@@ -125,7 +125,7 @@ public final class _128_PailakaSongofIceandFire extends Quest {
             st.addExpAndSp(810000, 50000);
             st.playSound(SOUND_FINISH);
             st.exitCurrentQuest(false);
-            player.setVitality(Config.VITALITY_LEVELS[4]);
+            player.setVitality(Config.VITALITY_LEVELS.get(4));
             player.getReflection().startCollapseTimer(60000);
         }
         return htmltext;

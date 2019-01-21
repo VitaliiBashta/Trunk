@@ -58,13 +58,13 @@ public final class _639_GuardiansOfTheHolyGrail extends Quest {
             case "holy_grail_q0639_02.htm":
                 st.setCond(3);
                 st.playSound(SOUND_MIDDLE);
-                st.takeItems(WATER_BOTTLE, -1);
-                st.giveItems(HOLY_WATER_BOTTLE, 1);
+                st.takeItems(WATER_BOTTLE);
+                st.giveItems(HOLY_WATER_BOTTLE);
                 break;
             case "falsepriest_gremory_q0639_09.htm":
                 st.setCond(4);
                 st.playSound(SOUND_MIDDLE);
-                st.takeItems(HOLY_WATER_BOTTLE, -1);
+                st.takeItems(HOLY_WATER_BOTTLE);
                 break;
             case "falsepriest_gremory_q0639_11.htm":
                 st.takeItems(SCRIPTURES, 4000);

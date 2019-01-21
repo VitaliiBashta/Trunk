@@ -82,10 +82,6 @@ public final class CommunityWarehouse implements ScriptFile, ICommunityBoardHand
     }
 
     @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
-
-    @Override
     public void onLoad() {
         if (Config.COMMUNITYBOARD_ENABLED) {
             _log.info("CommunityBoard: Warehouse loaded.");

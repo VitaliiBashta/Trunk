@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class OlympiadManager extends RunnableImpl {
+public final class OlympiadManager extends RunnableImpl {
     private static final Logger _log = LoggerFactory.getLogger(OlympiadManager.class);
 
-    private final Map<Integer, OlympiadGame> _olympiadInstances = new ConcurrentHashMap<>();
+    private final Map<Integer, OlympiadGame> olympiadInstances = new ConcurrentHashMap<>();
 
     private void sleep(long time) {
         try {
@@ -67,17 +67,17 @@ public class OlympiadManager extends RunnableImpl {
         while (!allGamesTerminated) {
             sleep(30000);
 
-            if (_olympiadInstances.isEmpty())
+            if (olympiadInstances.isEmpty())
                 break;
 
             allGamesTerminated = true;
-            for (OlympiadGame game : _olympiadInstances.values()) {
+            for (OlympiadGame game : olympiadInstances.values()) {
                 if (game.getTask() != null && !game.getTask().isTerminated())
                     allGamesTerminated = false;
             }
         }
 
-        _olympiadInstances.clear();
+        olympiadInstances.clear();
     }
 
     private void prepareBattles(CompType type, List<Integer> list) {
@@ -89,7 +89,7 @@ public class OlympiadManager extends RunnableImpl {
 
         for (int i = 0; i < Olympiad.STADIUMS.length; i++) {
             try {
-                if (!Olympiad.STADIUMS[i].isFreeToUse())
+                if (Olympiad.STADIUMS[i].isBusy())
                     continue;
                 if (selector.size() < type.getMinSize())
                     break;
@@ -100,7 +100,7 @@ public class OlympiadManager extends RunnableImpl {
                 if (Config.OLYMPIAD_SHOUT_ONCE_PER_START && firstGameLaunched)
                     gameTask.setShoutGameStart(false);
 
-                _olympiadInstances.put(i, game);
+                olympiadInstances.put(i, game);
 
                 Olympiad.STADIUMS[i].setStadiaBusy();
                 firstGameLaunched = true;
@@ -113,7 +113,7 @@ public class OlympiadManager extends RunnableImpl {
     private void prepareTeamBattles(CompType type, Collection<List<Integer>> list) {
         for (int i = 0; i < Olympiad.STADIUMS.length; i++) {
             try {
-                if (!Olympiad.STADIUMS[i].isFreeToUse())
+                if (Olympiad.STADIUMS[i].isBusy())
                     continue;
                 if (list.size() < type.getMinSize())
                     break;
@@ -125,7 +125,7 @@ public class OlympiadManager extends RunnableImpl {
                 OlympiadGame game = new OlympiadGame(i, type, nextOpponents);
                 game.sheduleTask(new OlympiadGameTask(game, BattleStatus.Begining, 0, 1));
 
-                _olympiadInstances.put(i, game);
+                olympiadInstances.put(i, game);
 
                 Olympiad.STADIUMS[i].setStadiaBusy();
             } catch (Exception e) {
@@ -135,16 +135,16 @@ public class OlympiadManager extends RunnableImpl {
     }
 
     public void freeOlympiadInstance(int index) {
-        _olympiadInstances.remove(index);
+        olympiadInstances.remove(index);
         Olympiad.STADIUMS[index].setStadiaFree();
     }
 
     public OlympiadGame getOlympiadInstance(int index) {
-        return _olympiadInstances.get(index);
+        return olympiadInstances.get(index);
     }
 
     public Map<Integer, OlympiadGame> getOlympiadGames() {
-        return _olympiadInstances;
+        return olympiadInstances;
     }
 
     private List<Integer> nextOpponents(NobleSelector<Integer> selector, CompType type) {

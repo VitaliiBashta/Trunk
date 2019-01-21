@@ -1,14 +1,13 @@
 package l2trunk.gameserver.model.entity;
 
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.utils.HtmlUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap;
-import java.util.Map;
 
-public class HeroDiary {
+public final class HeroDiary {
     public static final int ACTION_RAID_KILLED = 1;
     public static final int ACTION_HERO_GAINED = 2;
     public static final int ACTION_CASTLE_TAKEN = 3;
@@ -23,8 +22,8 @@ public class HeroDiary {
         _param = param;
     }
 
-    public Map.Entry<String, String> toString(Player player) {
-        CustomMessage message = null;
+    public Pair<String, String> toString(Player player) {
+        CustomMessage message;
         switch (_id) {
             case ACTION_RAID_KILLED:
                 message = new CustomMessage("l2trunk.gameserver.model.entity.Hero.RaidBossKilled", player).addString(HtmlUtils.htmlNpcName(_param));
@@ -39,6 +38,6 @@ public class HeroDiary {
                 return null;
         }
 
-        return new AbstractMap.SimpleEntry<>(SIMPLE_FORMAT.format(_time), message.toString());
+        return new Pair<>(SIMPLE_FORMAT.format(_time), message.toString());
     }
 }

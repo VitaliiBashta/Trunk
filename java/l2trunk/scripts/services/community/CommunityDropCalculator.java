@@ -27,7 +27,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.StringTokenizer;
 
 /**
  * Community Board page containing Drop Calculator
@@ -122,12 +125,6 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
     private static void showdropMonsterDetailsByItem(Player player, int monsterId) {
         String html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "bbs_dropMonsterDetailsByItem.htm", player);
         html = replaceMonsterDetails(player, html, monsterId);
-
-        // DO NOT ALLOW TO TELEPORT TO MOBS
-//		if (!canTeleToMonster(player, monsterId, false))
-//			html = html.replace("%goToNpc%", "<br>");
-//		else
-//			html = html.replace("%goToNpc%", "<button value=\"Go to Npc\" action=\"bypass _dropMonsterDetailsByItem_"+monsterId+"_3\" width=200 height=30 back=\"L2UI_CT1.OlympiadWnd_DF_Fight1None_Down\" fore=\"L2UI_ct1.OlympiadWnd_DF_Fight1None\">");
 
         ShowBoard.separateAndSend(html, player);
     }
@@ -232,7 +229,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
                 RewardListInfo.showInfo(player, NpcHolder.getTemplate(monsterId), false, false, 1.0);
                 break;
             case 3:// teleport To Monster
-                if (!canTeleToMonster(player, monsterId)) {
+                if (!canTeleToMonster(player)) {
                     return;
                 }
                 Optional<NpcInstance> aliveInstance = GameObjectsStorage.getAllByNpcId(monsterId, true)
@@ -247,7 +244,7 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         }
     }
 
-    private static boolean canTeleToMonster(Player player, int monsterId) {
+    private static boolean canTeleToMonster(Player player) {
         if (!player.isInZonePeace()) {
             player.sendMessage("You can do it only in safe zone!");
             return false;
@@ -388,12 +385,8 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
         }
     }
 
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
 
     private static class ItemComparator implements Comparator<ItemTemplate>, Serializable {
-        private static final long serialVersionUID = -6389059445439769861L;
         private final String search;
 
         private ItemComparator(String search) {
@@ -415,7 +408,6 @@ public final class CommunityDropCalculator implements ScriptFile, ICommunityBoar
 
     private static class ItemChanceComparator implements Comparator<CalculateRewardChances.NpcTemplateDrops>,
             Serializable {
-        private static final long serialVersionUID = 6323413829869254438L;
         private final int itemId;
         private final Player player;
 

@@ -9,7 +9,7 @@ import l2trunk.gameserver.stats.Env;
 
 import java.util.List;
 
-public class EffectRandomHate extends Effect {
+public final class EffectRandomHate extends Effect {
     public EffectRandomHate(Env env, EffectTemplate template) {
         super(env, template);
     }
@@ -31,7 +31,7 @@ public class EffectRandomHate extends Effect {
         hateList.remove(mostHated);
 
         if (!hateList.isEmpty()) {
-            AggroList.AggroInfo newAggroInfo = monster.getAggroList().get(hateList.get(Rnd.get(hateList.size())));
+            AggroList.AggroInfo newAggroInfo = monster.getAggroList().get(Rnd.get(hateList));
             final int oldHate = newAggroInfo.hate;
 
             newAggroInfo.hate = mostAggroInfo.hate;

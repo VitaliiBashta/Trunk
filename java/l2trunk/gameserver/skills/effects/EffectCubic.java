@@ -13,11 +13,12 @@ import l2trunk.gameserver.stats.Env;
 import l2trunk.gameserver.stats.Formulas;
 import l2trunk.gameserver.templates.CubicTemplate;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public final class EffectCubic extends Effect {
     private final CubicTemplate _template;
@@ -49,10 +50,8 @@ public final class EffectCubic extends Effect {
                 target = player;
         } else {
             double currentHp = Integer.MAX_VALUE;
-            for (Player member : player.getParty().getMembers()) {
-                if (member == null)
-                    continue;
-
+            List<Player> members = player.getParty().getMembers().stream().filter(Objects::nonNull).collect(Collectors.toList());
+            for (Player member : members) {
                 if (player.isInRange(member, info.getSkill().getCastRange()) && !member.isCurrentHpFull() && !member.isDead() && member.getCurrentHp() < currentHp) {
                     currentHp = member.getCurrentHp();
                     target = member;
@@ -72,9 +71,8 @@ public final class EffectCubic extends Effect {
         player.broadcastPacket(new MagicSkillUse(player, aimTarget, skill.getId()));
         player.disableSkill(skill, delay * 1000L);
         ThreadPoolManager.INSTANCE.schedule(() -> {
-            final List<Creature> targets = new ArrayList<>(1);
-            targets.add(aimTarget);
-            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), Collections.unmodifiableList(targets)));
+            final List<Creature> targets = List.of(aimTarget);
+            player.broadcastPacket(new MagicSkillLaunched(player.getObjectId(), skill.getDisplayId(), skill.getDisplayLevel(), targets));
             player.callSkill(skill, targets, false);
         }, skill.getHitTime());
     }

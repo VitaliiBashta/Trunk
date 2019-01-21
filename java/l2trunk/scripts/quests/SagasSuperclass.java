@@ -460,17 +460,17 @@ public abstract class SagasSuperclass extends Quest {
             Cast(st.findTemplate(NPC.get(10)), player, 4546);
             st.playSound(SOUND_MIDDLE);
             htmltext = "10-06.htm";
-        } else if (event.equalsIgnoreCase("11-9")) {
+        } else if ("11-9".equalsIgnoreCase(event)) {
             st.setCond(15);
             htmltext = "11-03.htm";
-        } else if (event.equalsIgnoreCase("Mob_0 Timer")) {
+        } else if ("Mob_0 Timer".equalsIgnoreCase(event)) {
             AutoChat(FindMySpawn(player, Mob.get(0)), Text.get(0).replace("PLAYERNAME", player.getName()));
             return null;
-        } else if (event.equalsIgnoreCase("Mob_1 has despawned")) {
+        } else if ("Mob_1 has despawned".equalsIgnoreCase(event)) {
             AutoChat(FindMySpawn(player, Mob.get(0)), Text.get(1).replace("PLAYERNAME", player.getName()));
             DeleteMySpawn(player, Mob.get(0));
             return null;
-        } else if (event.equalsIgnoreCase("Archon Hellisha has despawned")) {
+        } else if ("Archon Hellisha has despawned".equalsIgnoreCase(event)) {
             AutoChat(npc, Text.get(6).replace("PLAYERNAME", player.getName()));
             DeleteMySpawn(player, Mob.get(1));
             return null;
@@ -735,12 +735,13 @@ public abstract class SagasSuperclass extends Quest {
         if (isArchonMinions(npcId)) {
             Party party = player.getParty();
             if (party != null) {
-                for (Player player1 : party.getMembers())
-                    if (player1.getDistance(player) <= Config.ALT_PARTY_DISTRIBUTION_RANGE) {
-                        QuestState st1 = findQuest(player1);
-                        if (st1 != null && st1.getCond() == 15)
-                            ((SagasSuperclass) st1.getQuest()).giveHallishaMark(st1);
-                    }
+                party.getMembers().stream()
+                        .filter(p -> p.getDistance(player) <= Config.ALT_PARTY_DISTRIBUTION_RANGE)
+                        .map(SagasSuperclass::findQuest)
+                        .filter(Objects::nonNull)
+                        .filter(st1 -> st1.getCond() == 15)
+                        .forEach(st1 ->
+                                ((SagasSuperclass) st1.getQuest()).giveHallishaMark(st1));
             } else {
                 QuestState st1 = findQuest(player);
                 if (st1 != null && st1.getCond() == 15)
@@ -762,7 +763,7 @@ public abstract class SagasSuperclass extends Quest {
                         st1.set("kills", str(st1.getInt("kills") + 1));
                     else {
                         st1.playSound(SOUND_MIDDLE);
-                        st1.giveItems(((SagasSuperclass) st1.getQuest()).Items.get(5), 1);
+                        st1.giveItems(((SagasSuperclass) st1.getQuest()).Items.get(5));
                         st1.setCond(7);
                     }
         } else {

@@ -6,7 +6,8 @@ import l2trunk.gameserver.model.items.Inventory;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
+
+import java.util.List;
 
 public final class _403_PathToRogue extends Quest {
     //npc
@@ -60,12 +61,11 @@ public final class _403_PathToRogue extends Quest {
             }
     };
 
-    private final int[] STOLEN_ITEM = {
+    private final List<Integer> STOLEN_ITEM = List.of(
             STOLEN_JEWELRY_ID,
             STOLEN_TOMES_ID,
             STOLEN_RING_ID,
-            STOLEN_NECKLACE_ID
-    };
+            STOLEN_NECKLACE_ID);
 
     public _403_PathToRogue() {
         super(false);
@@ -201,8 +201,8 @@ public final class _403_PathToRogue extends Quest {
                     if (npcId == CATS_EYE_BANDIT)
                         if (st.getQuestItemsCount(WANTED_BILL_ID) > 0) {
                             int n = Rnd.get(4);
-                            if (st.getQuestItemsCount(STOLEN_ITEM[n]) == 0) {
-                                st.giveItems(STOLEN_ITEM[n], 1);
+                            if (st.getQuestItemsCount(STOLEN_ITEM.get(n)) == 0) {
+                                st.giveItems(STOLEN_ITEM.get(n));
                                 if (st.getQuestItemsCount(STOLEN_JEWELRY_ID) + st.getQuestItemsCount(STOLEN_TOMES_ID) + st.getQuestItemsCount(STOLEN_RING_ID) + st.getQuestItemsCount(STOLEN_NECKLACE_ID) < 4)
                                     st.playSound(SOUND_ITEMGET);
                                 else {

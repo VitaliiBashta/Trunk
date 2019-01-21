@@ -18,7 +18,7 @@ public final class MacroList {
     private static final Logger _log = LoggerFactory.getLogger(MacroList.class);
 
     private final Player player;
-    private final Map<Integer, Macro> _macroses = new HashMap<>();
+    private final Map<Integer, Macro> macroses = new HashMap<>();
     private int _revision;
     private int _macroId;
 
@@ -28,27 +28,19 @@ public final class MacroList {
         _macroId = 1000;
     }
 
-    public int getRevision() {
-        return _revision;
-    }
-
     public Collection<Macro> getAllMacroses() {
-        return _macroses.values();
-    }
-
-    public Macro getMacro(int id) {
-        return _macroses.get(id - 1);
+        return macroses.values();
     }
 
     public void registerMacro(Macro macro) {
         if (macro.id == 0) {
             macro.id = _macroId++;
-            while (_macroses.get(macro.id) != null)
+            while (macroses.get(macro.id) != null)
                 macro.id = _macroId++;
-            _macroses.put(macro.id, macro);
+            macroses.put(macro.id, macro);
             registerMacroInDb(macro);
         } else {
-            Macro old = _macroses.put(macro.id, macro);
+            Macro old = macroses.put(macro.id, macro);
             if (old != null)
                 deleteMacroFromDb(old);
             registerMacroInDb(macro);
@@ -57,15 +49,10 @@ public final class MacroList {
     }
 
     public void deleteMacro(int id) {
-        Macro toRemove = _macroses.get(id);
+        Macro toRemove = macroses.get(id);
         if (toRemove != null)
             deleteMacroFromDb(toRemove);
-        _macroses.remove(id);
-        //		L2ShortCut[] allShortCuts = _owner.getAllShortCuts();
-        //		for (L2ShortCut sc : allShortCuts) {
-        //			if (sc.getId() == id && sc.getType() == L2ShortCut.TYPE_MACRO)
-        //				_owner.sendPacket(new ShortCutRegister(sc.getSlot(), 0, 0, 0, sc.getPage()));
-        //		}
+        macroses.remove(id);
         sendUpdate();
     }
 
@@ -115,7 +102,7 @@ public final class MacroList {
     }
 
     public void restore(Connection con) {
-        _macroses.clear();
+        macroses.clear();
 
         List<L2MacroCmd> commands = new ArrayList<>();
         L2MacroCmd mcmd;
@@ -145,7 +132,7 @@ public final class MacroList {
                     }
 
                     Macro m = new Macro(id, icon, name, descr, acronym, commands);
-                    _macroses.put(m.id, m);
+                    macroses.put(id, m);
                 }
             }
         } catch (SQLException e) {

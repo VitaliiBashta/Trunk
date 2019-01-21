@@ -1555,41 +1555,40 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     // Beginner Adventurer's Treasure Sack
     private void use21747(Player player, boolean ctrl) {
         int group = Rnd.get(7);
-        int[] items = new int[0];
+        List<Integer> items;
         if (group < 4) //Low D-Grade rewards
-            items = new int[]{312, 167, 220, 258, 178, 221, 123, 156, 291, 166, 274};
-        else if (group >= 4) //Low C-Grade rewards
-            items = new int[]{160, 298, 72, 193, 192, 281, 7887, 226, 2524, 191, 71, 263};
+            items = List.of(312, 167, 220, 258, 178, 221, 123, 156, 291, 166, 274);
+        else items = List.of(160, 298, 72, 193, 192, 281, 7887, 226, 2524, 191, 71, 263);
 
-        addItem(player, items[Rnd.get(items.length)], 1);
+        addItem(player, Rnd.get(items));
     }
 
     // Experienced Adventurer's Treasure Sack
     private void use21748(Player player, boolean ctrl) {
         int group = Rnd.get(10);
-        int[] items = new int[0];
+        List<Integer> items;
         if (group < 4) //Low B-Grade rewards
-            items = new int[]{78, 2571, 300, 284, 142, 267, 229, 148, 243, 92, 7892, 91};
-        else if (group >= 7 && group < 9) //Low A-Grade rewards
-            items = new int[]{98, 5233, 80, 235, 269, 288, 7884, 2504, 150, 7899, 212};
-        else if (group == 9) //Low S-Grade rewards
-            items = new int[]{6365, 6371, 6364, 6366, 6580, 7575, 6579, 6372, 6370, 6369, 6367};
+            items = List.of(78, 2571, 300, 284, 142, 267, 229, 148, 243, 92, 7892, 91);
+        else if (group < 9) //Low A-Grade rewards
+            items = List.of(98, 5233, 80, 235, 269, 288, 7884, 2504, 150, 7899, 212);
+        else  //Low S-Grade rewards
+            items = List.of(6365, 6371, 6364, 6366, 6580, 7575, 6579, 6372, 6370, 6369, 6367);
 
-        addItem(player, items[Rnd.get(items.length)], 1);
+        addItem(player, Rnd.get(items));
     }
 
     // Great Adventurer's Treasure Sack
     private void use21749(Player player, boolean ctrl) {
         int group = Rnd.get(9);
-        int[] items = new int[0];
+        List<Integer> items;
         if (group < 5) //Top S-Grade rewards
-            items = new int[]{9447, 9384, 9449, 9380, 9448, 9443, 9450, 10253, 9445, 9442, 9446, 10004, 10252, 9376, 9444};
-        else if (group >= 5 && group < 8) //S80-Grade rewards
-            items = new int[]{10226, 10217, 10224, 10215, 10225, 10223, 10220, 10415, 10216, 10221, 10219, 10218, 10222};
-        else if (group == 8) //Low S84-Grade rewards
-            items = new int[]{13467, 13462, 13464, 13461, 13465, 13468, 13463, 13470, 13460, 52, 13466, 13459, 13457, 13469, 13458};
+            items = List.of(9447, 9384, 9449, 9380, 9448, 9443, 9450, 10253, 9445, 9442, 9446, 10004, 10252, 9376, 9444);
+        else if (group < 8) //S80-Grade rewards
+            items = List.of(10226, 10217, 10224, 10215, 10225, 10223, 10220, 10415, 10216, 10221, 10219, 10218, 10222);
+        else //Low S84-Grade rewards
+            items = List.of(13467, 13462, 13464, 13461, 13465, 13468, 13463, 13470, 13460, 52, 13466, 13459, 13457, 13469, 13458);
 
-        addItem(player, items[Rnd.get(items.length)], 1);
+        addItem(player, Rnd.get(items), 1);
     }
 
     // Golden Spice Crate
@@ -1618,12 +1617,12 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
 
     // Gold Maned Lion Mounting Bracelet 7 Day Pack
     private void use14231(Player player, boolean ctrl) {
-        addItem(player, 14053, 1);
+        addItem(player, 14053);
     }
 
     // Steam Beatle Mounting Bracelet 7 Day Pack
     private void use14232(Player player, boolean ctrl) {
-        addItem(player, 14054, 1);
+        addItem(player, 14054);
     }
 
     // Olympiad Treasure Chest
@@ -1639,8 +1638,8 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
     // Birthday Present Pack
     private void use21169(Player player, boolean ctrl) {
         addItem(player, 21170, 3);
-        addItem(player, 21595, 1);
-        addItem(player, 13488, 1);
+        addItem(player, 21595);
+        addItem(player, 13488);
     }
 
     // Pablo's Box
@@ -1648,25 +1647,25 @@ public final class Extractable extends SimpleItemHandler implements ScriptFile {
         int category = Rnd.get(7);
         switch (category) {
             case 0:
-                addItem(player, 21122, 1);
+                addItem(player, 21122);
                 break;
             case 1:
-                addItem(player, 21118, 1);
+                addItem(player, 21118);
                 break;
             case 2:
-                addItem(player, 21116, 1);
+                addItem(player, 21116);
                 break;
             case 3:
-                addItem(player, 21114, 1);
+                addItem(player, 21114);
                 break;
             case 4:
-                addItem(player, 21112, 1);
+                addItem(player, 21112);
                 break;
             case 5:
-                addItem(player, 21120, 1);
+                addItem(player, 21120);
                 break;
             case 6:
-                addItem(player, 21126, 1);
+                addItem(player, 21126);
                 break;
         }
     }

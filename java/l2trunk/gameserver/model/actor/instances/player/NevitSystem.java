@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class NevitSystem {
+public final class NevitSystem {
     private static final int ADVENT_TIME = 14400; // 240 last minute period of constant scoring.
     private static final int MAX_POINTS = 7200;
     private static final int BONUS_EFFECT_TIME = 180; // 180 the effect lasts seconds bonus Nevit.
@@ -25,7 +25,7 @@ public class NevitSystem {
     private ScheduledFuture<?> _adventTask;
     private ScheduledFuture<?> _nevitEffectTask;
     private int _percent;
-    private boolean _active;
+    private boolean active;
 
     public NevitSystem(Player player) {
         _player = player;
@@ -33,7 +33,7 @@ public class NevitSystem {
 
     public void setPoints(int points, int time) {
         _points = points;
-        _active = false;
+        active = false;
         _percent = getPercent(_points);
 
         Calendar temp = Calendar.getInstance();
@@ -49,12 +49,12 @@ public class NevitSystem {
 
     public void restartSystem() {
         _time = ADVENT_TIME;
-        _player.sendPacket(new ExNavitAdventTimeChange(_active, _time));
+        _player.sendPacket(new ExNavitAdventTimeChange(active, _time));
     }
 
     public void onEnterWorld() {
         _player.sendPacket(new ExNavitAdventPointInfo(_points));
-        _player.sendPacket(new ExNavitAdventTimeChange(_active, _time));
+        _player.sendPacket(new ExNavitAdventTimeChange(active, _time));
         startNevitEffect(_player.getVarInt("nevit"));
         if (_percent >= 45 && _percent < 50)
             _player.sendPacket(SystemMsg.YOU_ARE_STARTING_TO_FEEL_THE_EFFECTS_OF_NEVITS_BLESSING);
@@ -65,12 +65,12 @@ public class NevitSystem {
     }
 
     public void startAdventTask() {
-        if (!_active) {
-            _active = true;
+        if (!active) {
+            active = true;
             if (_time > 0 && _adventTask == null)
                 _adventTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new AdventTask(), 30000L, 30000L);
 
-            _player.sendPacket(new ExNavitAdventTimeChange(_active, _time));
+            _player.sendPacket(new ExNavitAdventTimeChange(active, _time));
         }
     }
 
@@ -99,9 +99,9 @@ public class NevitSystem {
             _adventTask.cancel(true);
             _adventTask = null;
         }
-        _active = false;
+        active = false;
         if (sendPacket)
-            _player.sendPacket(new ExNavitAdventTimeChange(_active, _time));
+            _player.sendPacket(new ExNavitAdventTimeChange(false, _time));
     }
 
     private void stopNevitEffectTask(boolean saveTime) {
@@ -119,7 +119,7 @@ public class NevitSystem {
     }
 
     public boolean isActive() {
-        return _active;
+        return active;
     }
 
     public int getTime() {

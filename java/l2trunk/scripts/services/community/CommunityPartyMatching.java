@@ -261,10 +261,6 @@ public final class CommunityPartyMatching extends Functions implements ScriptFil
     }
 
     @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
-
-    @Override
     public void onLoad() {
         CommunityBoardManager.registerHandler(this);
     }

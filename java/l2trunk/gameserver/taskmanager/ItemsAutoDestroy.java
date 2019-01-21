@@ -3,7 +3,6 @@ package l2trunk.gameserver.taskmanager;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.model.items.ItemInstance;
 
-import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -29,21 +28,17 @@ public enum ItemsAutoDestroy {
         itemsToDelete.add(herb);
     }
 
-    private Collection<ItemInstance> getItemsToDelete() {
-        return itemsToDelete;
-    }
-
 
     private static class CheckItemsForDestroy implements Runnable {
         @Override
         public void run() {
             long currentTime = System.currentTimeMillis();
-            for (ItemInstance item : INSTANCE.getItemsToDelete())
+            for (ItemInstance item : INSTANCE.itemsToDelete)
                 if (item == null || item.getTimeToDeleteAfterDrop() == 0 || item.getLocation() != ItemInstance.ItemLocation.VOID)
-                    INSTANCE.getItemsToDelete().remove(item);
+                    INSTANCE.itemsToDelete.remove(item);
                 else if (item.getTimeToDeleteAfterDrop() < currentTime) {
                     item.deleteMe();
-                    INSTANCE.getItemsToDelete().remove(item);
+                    INSTANCE.itemsToDelete.remove(item);
                 }
         }
     }

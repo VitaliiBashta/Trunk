@@ -7,7 +7,6 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class OriginalSinWarden extends Fighter {
@@ -37,9 +36,8 @@ public final class OriginalSinWarden extends Fighter {
 
     @Override
     public void onEvtDead(Creature killer) {
-        int rndId = Rnd.get(DarionsFaithfulServants.size() - 1);
         if (Rnd.chance(15)) {
-            new SimpleSpawner(DarionsFaithfulServants.get(rndId))
+            new SimpleSpawner(Rnd.get(DarionsFaithfulServants))
                     .setLoc(Location.findPointToStay(getActor(), 150, 350))
                     .stopRespawn()
                     .doSpawn(true);

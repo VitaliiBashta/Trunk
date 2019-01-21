@@ -7,70 +7,10 @@ import l2trunk.gameserver.network.serverpackets.ExServerPrimitive;
 import java.awt.*;
 
 public class GeodataUtils {
-    public static final byte NSWE_ALL = 15;
-    public static final byte NSWE_NONE = 0;
     private static final byte EAST = 1;
     private static final byte WEST = 2;
     private static final byte SOUTH = 4;
     private static final byte NORTH = 8;
-
-    public static void debug2DLine(Player player, int x, int y, int tx, int ty, int z) {
-        int gx = GeoEngine.getGeoX(x);
-        int gy = GeoEngine.getGeoY(y);
-
-        int tgx = GeoEngine.getGeoX(tx);
-        int tgy = GeoEngine.getGeoY(ty);
-
-        ExServerPrimitive prim = new ExServerPrimitive("Debug2DLine", x, y, z);
-        prim.addLine(Color.BLUE, GeoEngine.getWorldX(gx), GeoEngine.getWorldY(gy), z, GeoEngine.getWorldX(tgx), GeoEngine.getWorldY(tgy), z);
-
-        LinePointIterator iter = new LinePointIterator(gx, gy, tgx, tgy);
-
-        while (iter.next()) {
-            int wx = GeoEngine.getWorldX(iter.x());
-            int wy = GeoEngine.getWorldY(iter.y());
-
-            prim.addPoint(Color.RED, wx, wy, z);
-        }
-        player.sendPacket(prim);
-    }
-
-    public static void debug3DLine(Player player, int x, int y, int z, int tx, int ty, int tz) {
-        int gx = GeoEngine.getGeoX(x);
-        int gy = GeoEngine.getGeoY(y);
-
-        int tgx = GeoEngine.getGeoX(tx);
-        int tgy = GeoEngine.getGeoY(ty);
-
-        ExServerPrimitive prim = new ExServerPrimitive("Debug3DLine", x, y, z);
-        prim.addLine(Color.BLUE, GeoEngine.getWorldX(gx), GeoEngine.getWorldY(gy), z, GeoEngine.getWorldX(tgx), GeoEngine.getWorldY(tgy), tz);
-
-        LinePointIterator3D iter = new LinePointIterator3D(gx, gy, z, tgx, tgy, tz);
-        iter.next();
-        int prevX = iter.x();
-        int prevY = iter.y();
-        int wx = GeoEngine.getWorldX(prevX);
-        int wy = GeoEngine.getWorldY(prevY);
-        int wz = iter.z();
-        prim.addPoint(Color.RED, wx, wy, wz);
-
-        while (iter.next()) {
-            int curX = iter.x();
-            int curY = iter.y();
-
-            if ((curX != prevX) || (curY != prevY)) {
-                wx = GeoEngine.getWorldX(curX);
-                wy = GeoEngine.getWorldY(curY);
-                wz = iter.z();
-
-                prim.addPoint(Color.RED, wx, wy, wz);
-
-                prevX = curX;
-                prevY = curY;
-            }
-        }
-        player.sendPacket(prim);
-    }
 
     private static Color getDirectionColor(int x, int y, int z, int geoIndex, byte NSWE) {
         if ((GeoEngine.getNSWE(x, y, z, geoIndex) & NSWE) != 0) {
@@ -82,9 +22,6 @@ public class GeodataUtils {
     public static void debugGrid(Player player) {
         int geoRadius = 10;
         int blocksPerPacket = 10;
-        if (geoRadius < 0) {
-            throw new IllegalArgumentException("geoRadius < 0");
-        }
 
         int iBlock = blocksPerPacket;
         int iPacket = 0;
@@ -101,10 +38,6 @@ public class GeodataUtils {
                         player.sendPacket(exsp);
                     }
                     exsp = new ExServerPrimitive("DebugGrid_" + iPacket, player.getX(), player.getY(), -16000);
-                }
-
-                if (exsp == null) {
-                    throw new IllegalStateException();
                 }
 
                 int gx = playerGx + dx;

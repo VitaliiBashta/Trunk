@@ -7,7 +7,6 @@ import l2trunk.gameserver.geodata.GeoEngine;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.entity.Reflection;
 import l2trunk.gameserver.model.entity.events.EventOwner;
-import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.instances.MonsterInstance;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.taskmanager.SpawnTaskManager;
@@ -25,11 +24,11 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     private static final int MIN_RESPAWN_DELAY = 20;
     int maximumCount;
     int _referenceCount;
-    int _currentCount;
+    int currentCount;
     int _scheduledCount;
 
     int respawnDelay;
-    int _respawnDelayRandom;
+    int respawnDelayRandom;
     List<NpcInstance> spawned;
     Reflection reflection = ReflectionManager.DEFAULT;
     private int _respawnTime;
@@ -64,7 +63,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     }
 
     private int getRespawnDelayWithRnd() {
-        return _respawnDelayRandom == 0 ? respawnDelay : Rnd.get(respawnDelay - _respawnDelayRandom, respawnDelay);
+        return respawnDelayRandom == 0 ? respawnDelay : Rnd.get(respawnDelay - respawnDelayRandom, respawnDelay);
     }
 
     public int getRespawnTime() {
@@ -93,7 +92,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         spawned.clear();
         _respawnTime = 0;
         _scheduledCount = 0;
-        _currentCount = 0;
+        currentCount = 0;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------
@@ -111,17 +110,17 @@ public abstract class Spawner extends EventOwner implements Cloneable {
 
     //-----------------------------------------------------------------------------------------------------------------------------------
     public int init() {
-        while (_currentCount + _scheduledCount < maximumCount)
+        while (currentCount + _scheduledCount < maximumCount)
             doSpawn(false);
 
         doRespawn = true;
 
-        return _currentCount;
+        return currentCount;
     }
 
     public List<NpcInstance> initAndReturn() {
         List<NpcInstance> spawnedNpcs = new ArrayList<>();
-        while (_currentCount + _scheduledCount < maximumCount)
+        while (currentCount + _scheduledCount < maximumCount)
             spawnedNpcs.add(doSpawn(false));
 
         doRespawn = true;
@@ -156,15 +155,14 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         if (respawnDelay < 0)
             _log.warn("respawn delay is negative");
         this.respawnDelay = respawnDelay;
-        _respawnDelayRandom = respawnDelayRandom;
+        this.respawnDelayRandom = respawnDelayRandom;
         return this;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------
     NpcInstance doSpawn0(NpcTemplate template, boolean spawn, StatsSet set) {
-        if (template.type.equals("Minion") || template.type.equals("Pet")
-        ) {
-            _currentCount++;
+        if (template.type.equals("Minion") || template.type.equals("Pet")) {
+            currentCount++;
             return null;
         }
 
@@ -191,8 +189,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
         // Является ли моб "подземным" мобом?
         mob.setUnderground(GeoEngine.getHeight(newLoc, getReflection().getGeoIndex()) < GeoEngine.getHeight(newLoc.clone().changeZ(5000), getReflection().getGeoIndex()));
 
-        for (GlobalEvent e : getEvents())
-            mob.addEvent(e);
+        getEvents().forEach(mob::addEvent);
 
         if (spawn) {
             // Спавнится в указанном отражении
@@ -205,7 +202,7 @@ public abstract class Spawner extends EventOwner implements Cloneable {
             mob.spawnMe(newLoc);
 
             // Increase the current number of L2NpcInstance managed by this L2Spawn
-            _currentCount++;
+            currentCount++;
         } else {
             mob.setLoc(newLoc);
 
@@ -221,15 +218,15 @@ public abstract class Spawner extends EventOwner implements Cloneable {
     }
 
     void decreaseCount0(NpcTemplate template, NpcInstance spawnedNpc, long deadTime) {
-        _currentCount--;
+        currentCount--;
 
-        if (_currentCount < 0)
-            _currentCount = 0;
+        if (currentCount < 0)
+            currentCount = 0;
 
         if (respawnDelay == 0)
             return;
 
-        if (doRespawn && _scheduledCount + _currentCount < maximumCount) {
+        if (doRespawn && _scheduledCount + currentCount < maximumCount) {
             // Update the current number of SpawnTask in progress or stand by of this L2Spawn
             _scheduledCount++;
 

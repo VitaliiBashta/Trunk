@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public enum SevenSignsFestival {
     INSTANCE;
     public static final int FESTIVAL_COUNT = 5;
@@ -260,7 +262,7 @@ public enum SevenSignsFestival {
     }
 
     private void addReputationPointsForPartyMemberClan(String playerId) {
-        Player player = GameObjectsStorage.getPlayer(Integer.parseInt(playerId));
+        Player player = GameObjectsStorage.getPlayer(toInt(playerId));
         if (player != null) {
             if (player.getClan() != null) {
                 player.getClan().incReputation(100, true, "SevenSignsFestival");

@@ -26,7 +26,7 @@ public class RequestExGetOnAirShip extends L2GameClientPacket {
 		activeChar.stopMove();
 		activeChar.setBoat(boat);
 		activeChar.setInBoatPosition(loc);
-		activeChar.setLoc(boat.getLoc());
+		activeChar.setLoc(boat.getTerritory());
 		activeChar.broadcastPacket(new ExGetOnAirShip(activeChar, boat, loc)); */
     }
 }

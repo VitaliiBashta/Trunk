@@ -14,8 +14,6 @@ import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.npc.model.PathfinderInstance;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Future;
 
 public final class KamalokaNightmare extends Reflection {
@@ -28,7 +26,7 @@ public final class KamalokaNightmare extends Reflection {
     private static final int RANK_5_MIN_POINTS = 7000;
     private static final int RANK_6_MIN_POINTS = 9000;
 
-    private final int _playerId;
+    private final int playerId;
     private Future<?> _expireTask;
 
     private int killedKanabions = 0;
@@ -39,7 +37,7 @@ public final class KamalokaNightmare extends Reflection {
     private boolean is_spawn_possible = true;
 
     public KamalokaNightmare(Player player) {
-        _playerId = player.getObjectId();
+        playerId = player.getObjectId();
     }
 
     @Override
@@ -104,25 +102,21 @@ public final class KamalokaNightmare extends Reflection {
             public void runImpl() {
                 try {
                     is_spawn_possible = false;
-                    for (Spawner s : KamalokaNightmare.this.getSpawns().toArray(new Spawner[KamalokaNightmare.this.getSpawns().size()]))
-                        s.deleteAll();
+                    KamalokaNightmare.this.getSpawns().forEach(Spawner::deleteAll);
 
                     KamalokaNightmare.this.getSpawns().clear();
 
-                    List<GameObject> delete = new ArrayList<>();
                     lock.lock();
                     try {
-                        for (GameObject o : objects)
-                            if (!o.isPlayable())
-                                delete.add(o);
+                        objects.stream()
+                                .filter(o -> !o.isPlayable())
+                                .forEach(GameObject::deleteMe);
                     } finally {
                         lock.unlock();
                     }
 
-                    for (GameObject o : delete)
-                        o.deleteMe();
 
-                    Player p = (Player) GameObjectsStorage.findObject(getPlayerId());
+                    Player p = (Player) GameObjectsStorage.findObject(playerId);
                     if (p != null) {
                         p.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(delay_after_spawn / 60000));
 
@@ -150,10 +144,6 @@ public final class KamalokaNightmare extends Reflection {
             _expireTask.cancel(false);
             _expireTask = null;
         }
-    }
-
-    private int getPlayerId() {
-        return _playerId;
     }
 
     @Override

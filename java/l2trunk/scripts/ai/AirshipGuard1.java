@@ -6,7 +6,7 @@ import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-public class AirshipGuard1 extends Guard {
+public final class AirshipGuard1 extends Guard {
     private static final Location[] points = {
             new Location(-149633, 254016, -180),
             new Location(-149874, 254224, -184),

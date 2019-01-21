@@ -36,7 +36,7 @@ public final class ZakenAnchor extends DefaultAI {
                             npc.setInvul(false);
                             npc.teleToLocation(actor.getLoc());
                         });
-                //actor.getReflection().addSpawnWithoutRespawn(UltraDayZaken, actor.getLoc(), 0);
+                //actor.getReflection().addSpawnWithoutRespawn(UltraDayZaken, actor.getTerritory(), 0);
                 for (int i = 0; i < 4; i++) {
                     actor.getReflection().addSpawnWithoutRespawn(29184, actor.getLoc(), 300);
                     actor.getReflection().addSpawnWithoutRespawn(29183, actor.getLoc(), 300);

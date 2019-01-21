@@ -132,8 +132,6 @@ public final class GameServer {
         printSection("Augmentation Data");
         AugmentationData.getInstance();
         EnchantHPBonusTable.getInstance();
-        printSection("Level Up Table");
-        LevelUpTable.init();
         PetSkillsTable.INSTANCE.load();
         printSection("Auctioneer");
         ItemAuctionManager.INSTANCE.init();

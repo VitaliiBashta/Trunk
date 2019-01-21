@@ -1,6 +1,5 @@
 package l2trunk.scripts.npc.model;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.MultiSellHolder;
 import l2trunk.gameserver.instancemanager.HellboundManager;
@@ -15,7 +14,6 @@ import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.ReflectionUtils;
 import l2trunk.gameserver.utils.Util;
 
-import java.util.List;
 import java.util.StringTokenizer;
 
 public final class CaravanTraderInstance extends NpcInstance {
@@ -242,7 +240,10 @@ public final class CaravanTraderInstance extends NpcInstance {
                 Functions.removeItem(player, MarkOfBetrayal, 10, "CaravanTraderInstance");
                 ReflectionUtils.getDoor(19250003).openMe();
                 ReflectionUtils.getDoor(19250004).openMe();
-                ThreadPoolManager.INSTANCE.schedule(new CloseDoor(), 60 * 1000L);
+                ThreadPoolManager.INSTANCE.schedule(() -> {
+                    ReflectionUtils.getDoor(19250003).closeMe();
+                    ReflectionUtils.getDoor(19250004).closeMe();
+                }, 60 * 1000L);
             } else {
                 showDialog(player, getHtmlPath(getNpcId(), 4, player));
             }
@@ -269,28 +270,27 @@ public final class CaravanTraderInstance extends NpcInstance {
                 return;
             }
 
-            List<Player> members = player.getParty().getMembers();
-            for (Player member : members)
-                if (!isInRange(member, 500) || member.getEffectList().getEffectsBySkillId(FieryDemonBloodSkill) == null) {
-                    showDialog(player, getHtmlPath(getNpcId(), 2, player));
-                    return;
-                }
-            members.forEach(m -> m.teleToLocation(new Location(-22204, 277056, -15045)));
-        } else if (command.startsWith("tully_dorian_entrance")) // Dorian
-        {
+            if (player.getParty().getMembers().stream()
+                    .filter(member -> (!isInRange(member, 500) || member.getEffectList().getEffectsBySkillId(FieryDemonBloodSkill) == null))
+                    .peek(member -> showDialog(player, getHtmlPath(getNpcId(), 2, player)))
+                    .findFirst().isPresent()) {
+                return;
+            }
+            player.getParty().getMembers().forEach(m -> m.teleToLocation(new Location(-22204, 277056, -15045)));
+        } else if (command.startsWith("tully_dorian_entrance")) { // Dorian
             if (player.getParty() == null || !player.getParty().isLeader(player)) {
                 showDialog(player, getHtmlPath(getNpcId(), 2, player));
                 return;
             }
-            List<Player> members = player.getParty().getMembers();
 
-            for (Player member : members)
-                if (!isInRange(member, 500) || !member.isQuestCompleted("_132_MatrasCuriosity")) {
-                    showDialog(player, getHtmlPath(getNpcId(), 1, player));
-                    return;
-                }
+            if (player.getParty().getMembers().stream()
+                    .filter(member -> !isInRange(member, 500) || !member.isQuestCompleted("_132_MatrasCuriosity"))
+                    .peek(member -> showDialog(player, getHtmlPath(getNpcId(), 1, player)))
+                    .findFirst().isPresent())
+                return;
 
-            members.forEach(member -> member.teleToLocation(new Location(-13400, 272827, -15304)));
+
+            player.getParty().getMembers().forEach(member -> member.teleToLocation(new Location(-13400, 272827, -15304)));
         } else if (command.startsWith("enter_urban")) // Kanaf - urban area instance
         {
             Reflection r = player.getActiveReflection();
@@ -467,11 +467,4 @@ public final class CaravanTraderInstance extends NpcInstance {
         return false;
     }
 
-    private class CloseDoor extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            ReflectionUtils.getDoor(19250003).closeMe();
-            ReflectionUtils.getDoor(19250004).closeMe();
-        }
-    }
 }

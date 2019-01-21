@@ -4,7 +4,6 @@ import l2trunk.gameserver.cache.Msg;
 import l2trunk.gameserver.database.DatabaseFactory;
 import l2trunk.gameserver.instancemanager.ReflectionManager;
 import l2trunk.gameserver.model.Player;
-import l2trunk.gameserver.model.Zone;
 import l2trunk.gameserver.model.Zone.ZoneType;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
@@ -18,17 +17,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class BookMarkList {
-    private static final ZoneType[] FORBIDDEN_ZONES = new ZoneType[]
-            {
-                    ZoneType.RESIDENCE,
-                    ZoneType.ssq_zone,
-                    ZoneType.battle_zone,
-                    ZoneType.SIEGE,
-                    ZoneType.no_restart,
-                    ZoneType.no_summon,
-            };
+    private static final List<ZoneType> FORBIDDEN_ZONES = List.of(
+            ZoneType.RESIDENCE,
+            ZoneType.ssq_zone,
+            ZoneType.battle_zone,
+            ZoneType.SIEGE,
+            ZoneType.no_restart,
+            ZoneType.no_summon);
 
     private static final Logger LOG = LoggerFactory.getLogger(BookMarkList.class);
 
@@ -110,14 +108,12 @@ public final class BookMarkList {
         if (player == null)
             return false;
 
-        for (ZoneType zoneType : FORBIDDEN_ZONES) {
-            Zone zone = player.getZone(zoneType);
-            if (zone != null) {
-                player.sendPacket(Msg.YOU_CANNOT_USE_MY_TELEPORTS_TO_REACH_THIS_AREA);
-                return false;
-            }
+        if (FORBIDDEN_ZONES.stream()
+                .map(player::getZone)
+                .anyMatch(Objects::nonNull)) {
+            player.sendPacket(Msg.YOU_CANNOT_USE_MY_TELEPORTS_TO_REACH_THIS_AREA);
+            return false;
         }
-
         return true;
     }
 
@@ -137,17 +133,10 @@ public final class BookMarkList {
         return elementData;
     }
 
-    public int incCapacity() {
-        //TODO забирать какой-то итем?
-        capacity++;
-        owner.sendPacket(Msg.THE_NUMBER_OF_MY_TELEPORTS_SLOTS_HAS_BEEN_INCREASED);
-        return getCapacity();
-    }
-
-    private synchronized boolean add(BookMark e) {
+    private synchronized void add(BookMark e) {
         if (elementData.size() >= getCapacity())
-            return false;
-        return elementData.add(e);
+            return;
+        elementData.add(e);
     }
 
     public BookMark get(int slot) {
@@ -162,36 +151,31 @@ public final class BookMarkList {
         elementData.remove(slot - 1);
     }
 
-    public boolean tryTeleport(int slot) {
+    public void tryTeleport(int slot) {
         if (!checkFirstConditions(owner) || !checkTeleportConditions(owner))
-            return false;
+            return;
 
         if (slot < 1 || slot > elementData.size())
-            return false;
+            return;
         BookMark bookmark = elementData.get(slot - 1);
         if (!checkTeleportLocation(owner, bookmark.loc))
-            return false;
+            return;
 
         //TODO YOU_CANNOT_USE_MY_TELEPORTS_IN_THIS_AREA // Вы находитесь в локации, на которой возврат к флагу недоступен.
 
         if (Functions.removeItem(owner, 13016, 1, "BookMarkTeleport") != 1) {
             owner.sendPacket(SystemMsg.YOU_CANNOT_BOOKMARK_THIS_LOCATION_BECAUSE_YOU_DO_NOT_HAVE_A_MY_TELEPORT_FLAG);
-            return false;
+            return;
         }
 
         owner.teleToLocation(bookmark.loc);
-        return true;
     }
 
     public boolean add(String aname, String aacronym, int aiconId) {
-        return add(aname, aacronym, aiconId, true);
+        return owner != null && add(owner.getLoc(), aname, aacronym, aiconId);
     }
 
-    private boolean add(String aname, String aacronym, int aiconId, boolean takeFlag) {
-        return owner != null && add(owner.getLoc(), aname, aacronym, aiconId, takeFlag);
-    }
-
-    private boolean add(Location loc, String aname, String aacronym, int aiconId, boolean takeFlag) {
+    private boolean add(Location loc, String aname, String aacronym, int aiconId) {
         if (!checkFirstConditions(owner) || !checkTeleportLocation(owner, loc))
             return false;
 
@@ -200,11 +184,10 @@ public final class BookMarkList {
             return false;
         }
 
-        if (takeFlag)
-            if (Functions.removeItem(owner, 20033, 1, "BookMarkLocationAdd") != 1) {
-                owner.sendPacket(Msg.YOU_CANNOT_BOOKMARK_THIS_LOCATION_BECAUSE_YOU_DO_NOT_HAVE_A_MY_TELEPORT_FLAG);
-                return false;
-            }
+        if (Functions.removeItem(owner, 20033, 1, "BookMarkLocationAdd") != 1) {
+            owner.sendPacket(Msg.YOU_CANNOT_BOOKMARK_THIS_LOCATION_BECAUSE_YOU_DO_NOT_HAVE_A_MY_TELEPORT_FLAG);
+            return false;
+        }
 
         add(new BookMark(loc, aiconId, aname, aacronym));
 

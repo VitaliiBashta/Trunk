@@ -12,7 +12,6 @@ import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.HtmlUtils;
 import l2trunk.gameserver.utils.ReflectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class AuctionedDoormanInstance extends NpcInstance {
@@ -22,7 +21,7 @@ public final class AuctionedDoormanInstance extends NpcInstance {
     public AuctionedDoormanInstance(int objectId, NpcTemplate template) {
         super(objectId, template);
 
-        doors = template.getAIParams().getIntegerList("doors", Collections.emptyList());
+        doors = template.getAIParams().getIntegerList("doors", List.of());
         elite = template.getAIParams().getBool("elite", false);
     }
 
@@ -32,21 +31,21 @@ public final class AuctionedDoormanInstance extends NpcInstance {
             return;
 
         ClanHall clanHall = getClanHall();
-        if (command.equalsIgnoreCase("openDoors")) {
+        if ("openDoors".equalsIgnoreCase(command)) {
             if (player.hasPrivilege(Privilege.CH_ENTER_EXIT) && player.getClan().getHasHideout() == clanHall.getId()) {
-                for (int d : doors)
-                    ReflectionUtils.getDoor(d).openMe();
+                doors.forEach(d ->
+                        ReflectionUtils.getDoor(d).openMe());
                 showChatWindow(player, "residence2/clanhall/agitafterdooropen.htm");
             } else
                 showChatWindow(player, "residence2/clanhall/noAuthority.htm");
-        } else if (command.equalsIgnoreCase("closeDoors")) {
+        } else if ("closeDoors".equalsIgnoreCase(command)) {
             if (player.hasPrivilege(Privilege.CH_ENTER_EXIT) && player.getClan().getHasHideout() == clanHall.getId()) {
-                for (int d : doors)
-                    ReflectionUtils.getDoor(d).closeMe(player, true);
+                doors.forEach(d ->
+                        ReflectionUtils.getDoor(d).closeMe(player, true));
                 showChatWindow(player, "residence2/clanhall/agitafterdoorclose.htm");
             } else
                 showChatWindow(player, "residence2/clanhall/noAuthority.htm");
-        } else if (command.equalsIgnoreCase("banish")) {
+        } else if ("banish".equalsIgnoreCase(command)) {
             if (player.hasPrivilege(Privilege.CH_DISMISS)) {
                 clanHall.banishForeigner();
                 showChatWindow(player, "residence2/clanhall/agitafterbanish.htm");

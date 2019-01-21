@@ -10,7 +10,7 @@ import l2trunk.gameserver.utils.Location;
 import java.util.List;
 
 public final class YehanBrother extends Fighter {
-    private static final List<Integer> _minions = List.of(22509, 22510, 22511, 22512);
+    private static final List<Integer> MINIONS = List.of(22509, 22510, 22511, 22512);
     private long _spawnTimer = 0;
 
     public YehanBrother(NpcInstance actor) {
@@ -46,7 +46,7 @@ public final class YehanBrother extends Fighter {
             removeInvul(actor);
         if (_spawnTimer + 40000 < System.currentTimeMillis()) {
             _spawnTimer = System.currentTimeMillis();
-            NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(_minions.get(Rnd.get(_minions.size())), Location.findAroundPosition(actor, 300), 0);
+            NpcInstance mob = actor.getReflection().addSpawnWithoutRespawn(Rnd.get(MINIONS), Location.findAroundPosition(actor, 300), 0);
             mob.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, actor.getAggressionTarget(), 1000);
         }
         super.thinkAttack();

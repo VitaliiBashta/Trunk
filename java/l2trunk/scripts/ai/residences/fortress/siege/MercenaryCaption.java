@@ -8,11 +8,10 @@ import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.npc.model.residences.fortress.siege.MercenaryCaptionInstance;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class MercenaryCaption extends Fighter {
-    private List<Location> _points = Collections.emptyList();
+    private List<Location> _points = List.of();
     private int _tick = -1;
 
     public MercenaryCaption(NpcInstance actor) {

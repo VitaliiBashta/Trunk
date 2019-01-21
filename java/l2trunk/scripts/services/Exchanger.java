@@ -182,7 +182,7 @@ public final class Exchanger extends Functions {
         if ((arg[0].isEmpty()) || (!Util.isNumber(arg[0]))) {
             return;
         }
-        int obj_my = player.getQuickVarI("exchange_obj", -1);
+        int obj_my = player.getQuickVarI("exchange_obj");
         if (obj_my == -1) {
             return;
         }
@@ -190,12 +190,12 @@ public final class Exchanger extends Functions {
         if (item == null) {
             return;
         }
-        int id_new = player.getQuickVarI("exchange_number", -1);
+        int id_new = player.getQuickVarI("exchange_number");
         if (id_new == -1) {
             return;
         }
         int att_id = toInt(arg[0]);
-        boolean isUpgrade = arg[1].equalsIgnoreCase("1");
+        boolean isUpgrade = "1".equalsIgnoreCase(arg[1]);
         Element att = Element.getElementById(att_id);
         if (att != Element.NONE) {
             player.addQuickVar("ex_att_" + att_id, item.getAttributeElementValue());
@@ -225,7 +225,7 @@ public final class Exchanger extends Functions {
         if (player == null)
             return;
 
-        int id = player.getQuickVarI("exchange", -1);
+        int id = player.getQuickVarI("exchange");
         if ((id == -1) || (arg[0].isEmpty()) || (!Util.isNumber(arg[0]))) {
             return;
         }
@@ -272,7 +272,7 @@ public final class Exchanger extends Functions {
             html.replace("%att_info%", att_info);
         } else {
             String att_info = HtmCache.INSTANCE.getNotNull("scripts/services/Exchanger/att_change.htm", player);
-            if (player.getQuickVarI("ex_att", -1) == -1) {
+            if (player.getQuickVarI("ex_att") == -1) {
                 att_info = att_info.replace("%Earth%", String.valueOf(att.getEarth()));
                 att_info = att_info.replace("%Fire%", String.valueOf(att.getFire()));
                 att_info = att_info.replace("%Holy%", String.valueOf(att.getHoly()));
@@ -303,20 +303,20 @@ public final class Exchanger extends Functions {
         if (player == null)
             return;
 
-        int exchangeId = player.getQuickVarI("exchange", -1);
+        int exchangeId = player.getQuickVarI("exchange");
         if (exchangeId == -1) {
             return;
         }
-        int obj_my = player.getQuickVarI("exchange_obj", -1);
+        int obj_my = player.getQuickVarI("exchange_obj");
         if (obj_my == -1) {
             return;
         }
-        int id_new = player.getQuickVarI("exchange_new", -1);
+        int id_new = player.getQuickVarI("exchange_new");
         if (id_new == -1) {
             return;
         }
 
-        boolean isUpgrade = arg[0].equalsIgnoreCase("1");
+        boolean isUpgrade = "1".equalsIgnoreCase(arg[0]);
         boolean att_change = player.getQuickVarB("exchange_attribute", false);
 
         Change change = ExchangeItemHolder.getChanges(exchangeId, isUpgrade);
@@ -342,7 +342,7 @@ public final class Exchanger extends Functions {
         item.setEnchantLevel(item_my.getEnchantLevel());
         item.setAugmentation(item_my.getAugmentationMineralId(), item_my.getAugmentations());
 
-        int new_att = player.getQuickVarI("ex_att", -1);
+        int new_att = player.getQuickVarI("ex_att");
         if ((att_change) && (new_att != -1)) {
             Element element = Element.getElementById(new_att);
             int val = item_my.getAttributeElementValue();

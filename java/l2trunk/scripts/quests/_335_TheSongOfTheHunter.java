@@ -60,7 +60,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
             3708, 3698, 3699, 3700, 3701, 3702, 3703, 3704, 3705, 3706, 3707);
     private static final List<Integer> q_blood_crystal_lizardmen = List.of(
             20578, 20579, 20580, 20581, 20582, 20641, 20642, 20643, 20644, 20645);
-    private static final int[][][] Items_1st_Circle = {
+    private static final Integer[][][] Items_1st_Circle = {
             {
                     {Guardian_Basilisk_Scale},
                     {40},
@@ -114,7 +114,7 @@ public final class _335_TheSongOfTheHunter extends Quest {
                     }
             }
     };
-    private static final int[][][] Items_2nd_Circle = {
+    private static final Integer[][][] Items_2nd_Circle = {
             {
                     {Timak_Orc_Totem},
                     {20},
@@ -251,13 +251,13 @@ public final class _335_TheSongOfTheHunter extends Quest {
         addKillId(Tarlk_Raider_Kalath);
         addKillId(q_blood_crystal_lizardmen);
 
-        for (int[][] ItemsCond : Items_1st_Circle) {
+        for (Integer[][] ItemsCond : Items_1st_Circle) {
             addQuestItem(ItemsCond[0]);
             for (int i = 2; i < ItemsCond.length; i++)
                 addKillId(ItemsCond[i][0]);
         }
 
-        for (int[][] ItemsCond : Items_2nd_Circle) {
+        for (Integer[][] ItemsCond : Items_2nd_Circle) {
             addQuestItem(ItemsCond[0]);
             for (int i = 2; i < ItemsCond.length; i++)
                 addKillId(ItemsCond[i][0]);
@@ -291,16 +291,16 @@ public final class _335_TheSongOfTheHunter extends Quest {
         addQuestItem(q_blood_crystal);
     }
 
-    private static int CalcItemsConds(QuestState st, int[][][] ItemsConds) {
+    private static int CalcItemsConds(QuestState st, Integer[][][] ItemsConds) {
         int result = 0;
-        for (int[][] ItemsCond : ItemsConds)
+        for (Integer[][] ItemsCond : ItemsConds)
             if (st.getQuestItemsCount(ItemsCond[0]) >= ItemsCond[1][0])
                 result++;
         return result;
     }
 
-    private static void DelItemsConds(QuestState st, int[][][] ItemsConds) {
-        for (int[][] ItemsCond : ItemsConds)
+    private static void DelItemsConds(QuestState st, Integer[][][] ItemsConds) {
+        for (Integer[][] ItemsCond : ItemsConds)
             st.takeAllItems(ItemsCond[0]);
     }
 
@@ -577,13 +577,13 @@ public final class _335_TheSongOfTheHunter extends Quest {
             return null;
         int npcId = npc.getNpcId();
 
-        int[][][] Items_Circle = null;
+        Integer[][][] Items_Circle = null;
         if (st.getQuestItemsCount(_1st_Test_Instructions) > 0)
             Items_Circle = Items_1st_Circle;
         else if (st.getQuestItemsCount(_2nd_Test_Instructions) > 0)
             Items_Circle = Items_2nd_Circle;
         if (Items_Circle != null) {
-            for (int[][] ItemsCond : Items_Circle)
+            for (Integer[][] ItemsCond : Items_Circle)
                 for (int i = 2; i < ItemsCond.length; i++)
                     if (npcId == ItemsCond[i][0])
                         st.rollAndGive(ItemsCond[0][0], 1, 1, ItemsCond[1][0], ItemsCond[i][1]);

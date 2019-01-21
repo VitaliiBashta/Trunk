@@ -207,7 +207,7 @@ public abstract class GlobalEvent {
     @SuppressWarnings("unchecked")
     public <O> List<O> removeObjects(String name) {
         List<Object> objects = this.objects.remove(name);
-        return objects == null ? Collections.emptyList() : (List<O>) objects;
+        return objects == null ? List.of() : (List<O>) objects;
     }
 
     @SuppressWarnings("unchecked")
@@ -364,7 +364,7 @@ public abstract class GlobalEvent {
         return null;
     }
 
-    public boolean canUseSkill(Creature caster, Creature target, Skill skill) {
+    public boolean canUseSkill() {
         return true;
     }
 
@@ -400,7 +400,7 @@ public abstract class GlobalEvent {
                 else if ((this instanceof FortressSiegeEvent))
                     count = Config.ALT_FAME_FORTRESS;
             }
-            player.setFame(player.getFame() + (int) count, toString());
+            player.addFame((int) count, toString());
         } else {
             Functions.addItem(player, itemId, count, getName() + " Global Event");
         }

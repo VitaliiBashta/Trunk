@@ -112,8 +112,8 @@ public final class BoatWayEvent extends GlobalEvent {
     @Override
     public Stream<Player> broadcastPlayers(int range) {
         if (range <= 0) {
-            int rx = MapUtils.regionX(_boat.getX());
-            int ry = MapUtils.regionY(_boat.getY());
+            int rx = MapUtils.regionX(_boat);
+            int ry = MapUtils.regionY(_boat);
             int offset = Config.SHOUT_OFFSET;
 
             return GameObjectsStorage.getAllPlayersStream()

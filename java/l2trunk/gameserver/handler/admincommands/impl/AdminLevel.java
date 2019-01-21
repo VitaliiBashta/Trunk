@@ -10,6 +10,8 @@ import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.tables.PetDataTable;
 
+import static l2trunk.commons.lang.NumberUtils.toInt;
+
 public class AdminLevel implements IAdminCommandHandler {
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar) {
@@ -32,12 +34,8 @@ public class AdminLevel implements IAdminCommandHandler {
                     activeChar.sendMessage("USAGE: //addLevel level");
                     return false;
                 }
-                try {
-                    level = Integer.parseInt(wordList[1]);
-                } catch (NumberFormatException e) {
-                    activeChar.sendMessage("You must specify level");
-                    return false;
-                }
+                level = toInt(wordList[1], 1);
+
                 setLevel(activeChar, target, level + ((Creature) target).getLevel());
                 break;
             case admin_set_level:
@@ -46,12 +44,7 @@ public class AdminLevel implements IAdminCommandHandler {
                     activeChar.sendMessage("USAGE: //setLevel level");
                     return false;
                 }
-                try {
-                    level = Integer.parseInt(wordList[1]);
-                } catch (NumberFormatException e) {
-                    activeChar.sendMessage("You must specify level");
-                    return false;
-                }
+                level = toInt(wordList[1], 1);
                 setLevel(activeChar, target, level);
                 break;
         }

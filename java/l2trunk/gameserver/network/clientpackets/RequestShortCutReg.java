@@ -4,19 +4,19 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.actor.instances.player.ShortCut;
 import l2trunk.gameserver.network.serverpackets.ShortCutRegister;
 
-public class RequestShortCutReg extends L2GameClientPacket {
-    private int _type, _id, _slot, _page, _lvl, _characterType;
+public final class RequestShortCutReg extends L2GameClientPacket {
+    private int type, id, slot, page, lvl, characterType;
 
     @Override
     protected void readImpl() {
-        _type = readD();
+        type = readD();
         int slot = readD();
-        _id = readD();
-        _lvl = readD();
-        _characterType = readD();
+        id = readD();
+        lvl = readD();
+        characterType = readD();
 
-        _slot = slot % 12;
-        _page = slot / 12;
+        this.slot = slot % 12;
+        page = slot / 12;
     }
 
     @Override
@@ -25,12 +25,12 @@ public class RequestShortCutReg extends L2GameClientPacket {
         if (activeChar == null)
             return;
 
-        if (_page < 0 || _page > ShortCut.PAGE_MAX) {
+        if (page < 0 || page > ShortCut.PAGE_MAX) {
             activeChar.sendActionFailed();
             return;
         }
 
-        ShortCut shortCut = new ShortCut(_slot, _page, _type, _id, _lvl, _characterType);
+        ShortCut shortCut = new ShortCut(slot, page, type, id, lvl, characterType);
         activeChar.sendPacket(new ShortCutRegister(activeChar, shortCut));
         activeChar.registerShortCut(shortCut);
     }

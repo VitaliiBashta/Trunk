@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CharacterFriendDAO {
+public final class CharacterFriendDAO {
     private static final Logger _log = LoggerFactory.getLogger(CharacterFriendDAO.class);
 
     private static final CharacterFriendDAO _instance = new CharacterFriendDAO();

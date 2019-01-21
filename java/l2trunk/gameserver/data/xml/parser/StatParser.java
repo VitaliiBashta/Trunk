@@ -62,7 +62,7 @@ public final class StatParser {
             cond.add(parseCond(condElement));
         }
 
-        if (cond._conditions == null || cond._conditions.size() == 0)
+        if (cond.conditions == null || cond.conditions.size() == 0)
             LOG.error("Empty <and> condition in " + n);
         return cond;
     }

@@ -7,8 +7,10 @@ import l2trunk.gameserver.model.SimpleSpawner;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class OriginalSinWarden6Floor extends Fighter {
-    private static final int[] DarionsFaithfulServants = {22405, 22406, 22407};
+    private static final List<Integer> DarionsFaithfulServants = List.of(22405, 22406, 22407);
 
     public OriginalSinWarden6Floor(NpcInstance actor) {
         super(actor);
@@ -19,7 +21,7 @@ public final class OriginalSinWarden6Floor extends Fighter {
         NpcInstance actor = getActor();
 
         if (Rnd.chance(15)) {
-            new SimpleSpawner(DarionsFaithfulServants[Rnd.get(DarionsFaithfulServants.length - 1)])
+            new SimpleSpawner(Rnd.get(DarionsFaithfulServants))
                     .setLoc(Location.findPointToStay(actor, 150, 350))
                     .stopRespawn()
                     .doSpawn(true);

@@ -49,11 +49,11 @@ public final class DarknessFestival extends Reflection {
 
         party.setReflection(this);
         setReturnLoc(party.getLeader().getLoc());
-        for (Player p : party.getMembers()) {
+        party.getMembers().forEach(p -> {
             p.setVar("backCoords", p.getLoc().toXYZString(), -1);
             p.getEffectList().stopAllEffects();
             p.teleToLocation(Location.findPointToStay(_startLocation.loc, 20, 100, getGeoIndex()), this);
-        }
+        });
 
         scheduleNext();
         // Spawn the festival witch for this arena
@@ -70,13 +70,10 @@ public final class DarknessFestival extends Reflection {
             case 0:
                 currentState = FESTIVAL_FIRST_SPAWN;
 
-                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(new RunnableImpl() {
-                    @Override
-                    public void runImpl() {
+                _spawnTimerTask = ThreadPoolManager.INSTANCE.schedule(() -> {
                         spawnFestivalMonsters(0);
                         sendMessageToParticipants("Go!");
                         scheduleNext();
-                    }
                 }, FESTIVAL_FIRST_SPAWN);
                 break;
             case FESTIVAL_FIRST_SPAWN:

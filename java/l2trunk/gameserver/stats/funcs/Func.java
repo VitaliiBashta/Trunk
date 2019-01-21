@@ -5,12 +5,11 @@ import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.conditions.Condition;
 
 public abstract class Func implements Comparable<Func> {
-    public static final Func[] EMPTY_FUNC_ARRAY = new Func[0];
     public final Stats stat;
     public final int order;
     public final Object owner;
     public final double value;
-    Condition cond;
+    private Condition cond;
 
     public Func(Stats stat, int order, Object owner) {
         this(stat, order, owner, 0.);

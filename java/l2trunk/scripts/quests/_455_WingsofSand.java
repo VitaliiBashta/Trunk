@@ -28,7 +28,7 @@ public final class _455_WingsofSand extends Quest {
     private static final List<Integer> reward_mats_acc = List.of(15769, 15770, 15771);
 
     private static final List<Integer> reward_attr_crystal = List.of(9552, 9553, 9554, 9555, 9556, 9557);
-    private static final int[] reward_ench_scroll = {6577, 6578};
+    private static final List<Integer> reward_ench_scroll = List.of(6577, 6578);
 
     public _455_WingsofSand() {
         super(PARTY_ALL);
@@ -89,7 +89,7 @@ public final class _455_WingsofSand extends Quest {
                     break;
             }
             if (Rnd.chance(25))
-                st.giveItems(reward_ench_scroll[Rnd.get(reward_ench_scroll.length)], 1);
+                st.giveItems(Rnd.get(reward_ench_scroll));
 
             htmltext = "sepsoul_q455_11.htm";
             st.setState(COMPLETED);

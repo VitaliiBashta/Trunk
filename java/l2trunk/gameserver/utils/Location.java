@@ -219,11 +219,6 @@ public class Location extends Point3D implements SpawnRange {
         return this;
     }
 
-    public Location correctGeoZ(int refIndex) {
-        z = GeoEngine.getHeight(x, y, z, refIndex);
-        return this;
-    }
-
     public Location setX(int x) {
         this.x = x;
         return this;

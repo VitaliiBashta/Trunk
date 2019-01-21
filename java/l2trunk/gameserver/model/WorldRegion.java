@@ -23,10 +23,8 @@ public final class WorldRegion implements Iterable<GameObject> {
      * Координаты региона в мире
      */
     private final int tileX, tileY, tileZ;
-    /**
-     * Активен ли регион
-     */
-    private final AtomicBoolean _isActive = new AtomicBoolean();
+
+    private final AtomicBoolean isActive = new AtomicBoolean();
     /**
      * Все объекты в регионе
      */
@@ -186,7 +184,7 @@ public final class WorldRegion implements Iterable<GameObject> {
     }
 
     public boolean isActive() {
-        return _isActive.get();
+        return isActive.get();
     }
 
     /**
@@ -195,7 +193,7 @@ public final class WorldRegion implements Iterable<GameObject> {
      * @param activate - переключатель
      */
     void setActive(boolean activate) {
-        if (!_isActive.compareAndSet(!activate, activate))
+        if (!isActive.compareAndSet(!activate, activate))
             return;
 
         NpcInstance npc;
@@ -239,19 +237,17 @@ public final class WorldRegion implements Iterable<GameObject> {
         return new InternalIterator(_objects);
     }
 
-    /**
-     * Activation / deactivation of the neighboring regions
-     */
+
     public class ActivateTask extends RunnableImpl {
-        private final boolean _isActivating;
+        private final boolean isActivating;
 
         ActivateTask(boolean isActivating) {
-            _isActivating = isActivating;
+            this.isActivating = isActivating;
         }
 
         @Override
         public void runImpl() {
-            if (_isActivating)
+            if (isActivating)
                 World.activate(WorldRegion.this);
             else
                 World.deactivate(WorldRegion.this);

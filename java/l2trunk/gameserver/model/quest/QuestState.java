@@ -23,8 +23,15 @@ import l2trunk.gameserver.utils.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static l2trunk.commons.lang.NumberUtils.toInt;
 
 public final class QuestState {
     public static final String VAR_COND = "cond";
@@ -33,8 +40,8 @@ public final class QuestState {
     private static final Logger _log = LoggerFactory.getLogger(QuestState.class);
     private final Player player;
     private final Quest quest;
-    private final Map<String, String> _vars = new ConcurrentHashMap<>();
-    private final Map<String, QuestTimer> _timers = new ConcurrentHashMap<>();
+    private final Map<String, String> vars = new ConcurrentHashMap<>();
+    private final Map<String, QuestTimer> timers = new ConcurrentHashMap<>();
     private int _state;
     private Integer _cond = null;
     private OnKillListener _onKillListener = null;
@@ -157,11 +164,11 @@ public final class QuestState {
         if (repeatable) {
             player.removeQuestState(quest.getName());
             Quest.deleteQuestInDb(this);
-            _vars.clear();
+            vars.clear();
         } else { // Otherwise, delete variables for quest and update database (quest CANNOT be created again => not repeatable)
-            for (String var : _vars.keySet())
-                if (var != null)
-                    unset(var);
+            vars.keySet().stream()
+                    .filter(Objects::nonNull)
+                    .forEach(this::unset);
             setState(Quest.COMPLETED);
             Quest.updateQuestInDb(this); // FIXME: оно вроде не нужно?
         }
@@ -183,11 +190,11 @@ public final class QuestState {
      * @return Object
      */
     public String get(String var) {
-        return _vars.get(var);
+        return vars.get(var);
     }
 
     public Map<String, String> getVars() {
-        return _vars;
+        return vars;
     }
 
     /**
@@ -197,30 +204,16 @@ public final class QuestState {
      * @return int
      */
     public int getInt(String var) {
-        int varint = 0;
-        try {
-            String val = get(var);
-            if (val == null)
-                return 0;
-            varint = Integer.parseInt(val);
-        } catch (NumberFormatException e) {
-            _log.error(player.getName() + ": variable " + var + " isn't an integer: " + varint, e);
-        }
-        return varint;
+        String val = get(var);
+        if (val == null)
+            return 0;
+        return toInt(val);
     }
 
-    /**
-     * Return item number which is equipped in selected slot
-     *
-     * @return int
-     */
     public int getItemEquipped(int loc) {
         return getPlayer().getInventory().getPaperdollItemId(loc);
     }
 
-    /**
-     * @return L2Player
-     */
     public Player getPlayer() {
         return player;
     }
@@ -246,28 +239,23 @@ public final class QuestState {
                 .count();
     }
 
-    /**
-     * Return the quantity of one sort of item hold by the player
-     *
-     * @param itemId : ID of the item wanted to be count
-     * @return int
-     */
     public long getQuestItemsCount(int itemId) {
         Player player = getPlayer();
         return player == null ? 0 : player.getInventory().getCountOf(itemId);
     }
 
-    public long getQuestItemsCount(int... itemsIds) {
-        long result = 0;
-        for (int id : itemsIds)
-            result += getQuestItemsCount(id);
-        return result;
+    public long getQuestItemsCount(List<Integer> itemsIds) {
+        return itemsIds.stream().mapToLong(this::getQuestItemsCount).sum();
+    }
+
+    public long getQuestItemsCount(Integer... itemsIds) {
+        return Stream.of(itemsIds)
+                .mapToLong(this::getQuestItemsCount)
+                .sum();
     }
 
     public boolean haveQuestItem(int itemId, int count) {
-        if (getQuestItemsCount(itemId) >= count)
-            return true;
-        return false;
+        return getQuestItemsCount(itemId) >= count;
     }
 
     public int getState() {
@@ -289,13 +277,6 @@ public final class QuestState {
             giveItems(itemId, count, false);
     }
 
-    /**
-     * Добавить предмет игроку
-     *
-     * @param itemId
-     * @param count
-     * @param rate   - учет квестовых рейтов
-     */
     public void giveItems(int itemId, long count, boolean rate) {
         Player player = getPlayer();
         if (player == null)
@@ -399,14 +380,12 @@ public final class QuestState {
     }
 
     private double getRateQuestsDrop() {
-        Player player = getPlayer();
         if (Config.ALLOW_ADDONS_CONFIG)
             return Config.RATE_QUESTS_DROP * AddonsConfig.getQuestDropRates(getQuest());
         return Config.RATE_QUESTS_DROP;
     }
 
     public double getRateQuestsReward() {
-        Player player = getPlayer();
         double Bonus = 1.;
         if (Config.ALLOW_ADDONS_CONFIG)
             return Config.RATE_QUESTS_REWARD * Bonus * AddonsConfig.getQuestRewardRates(getQuest());
@@ -553,7 +532,7 @@ public final class QuestState {
         if (val == null)
             val = "";
 
-        _vars.put(var, val);
+        vars.put(var, val);
 
         if (store)
             Quest.updateQuestVarInDb(this, var, val);
@@ -602,11 +581,6 @@ public final class QuestState {
         return state;
     }
 
-    /**
-     * Send a packet in order to play sound at client terminal
-     *
-     * @param sound
-     */
     public void playSound(String sound) {
         Player player = getPlayer();
         if (player != null)
@@ -714,11 +688,11 @@ public final class QuestState {
     }
 
     public void stopQuestTimers() {
-        for (QuestTimer timer : getTimers().values()) {
+        getTimers().values().forEach(timer -> {
             timer.setQuestState(null);
             timer.stop();
-        }
-        _timers.clear();
+        });
+        timers.clear();
     }
 
     public void resumeQuestTimers() {
@@ -726,7 +700,7 @@ public final class QuestState {
     }
 
     Map<String, QuestTimer> getTimers() {
-        return _timers;
+        return timers;
     }
 
     public QuestState takeItems(int itemId) {
@@ -767,18 +741,13 @@ public final class QuestState {
         return takeItems(itemId, -1);
     }
 
-    public long takeAllItems(int... itemsIds) {
-        long result = 0;
-        for (int id : itemsIds)
-            result += takeAllItems(id);
-        return result;
+    public long takeAllItems(Integer... itemsIds) {
+        return takeAllItems(List.of(itemsIds));
     }
 
-    public long takeAllItems(Collection<Integer> itemsIds) {
-        long result = 0;
-        for (int id : itemsIds)
-            result += takeAllItems(id);
-        return result;
+    public long takeAllItems(List<Integer> itemsIds) {
+        return itemsIds.stream()
+                .mapToLong(this::takeAllItems).sum();
     }
 
     /**
@@ -792,7 +761,7 @@ public final class QuestState {
     public String unset(String var) {
         if (var == null)
             return null;
-        String old = _vars.remove(var);
+        String old = vars.remove(var);
         if (old != null)
             Quest.deleteQuestVarInDb(this, var);
         return old;
@@ -804,24 +773,21 @@ public final class QuestState {
         if (rangefrom != null && maxrange > 0 && !member.isInRange(rangefrom, maxrange))
             return false;
         QuestState qs = member.getQuestState(getQuest().getName());
-        if (qs == null || qs.getState() != state)
-            return false;
-        return true;
+        return qs != null && qs.getState() == state;
     }
 
     private List<Player> getPartyMembers(int state, int maxrange, GameObject rangefrom) {
-        List<Player> result = new ArrayList<>();
+        List<Player> result = List.of();
         Party party = getPlayer().getParty();
         if (party == null) {
             if (checkPartyMember(getPlayer(), state, maxrange, rangefrom))
-                result.add(getPlayer());
+                result = List.of(getPlayer());
             return result;
         }
 
-        for (Player _member : party.getMembers())
-            if (checkPartyMember(_member, state, maxrange, rangefrom))
-                result.add(getPlayer());
-
+        result = party.getMembers().stream().filter(m -> checkPartyMember(m, state, maxrange, rangefrom))
+                .map(m -> getPlayer())
+                .collect(Collectors.toList());
         return result;
     }
 
@@ -833,7 +799,7 @@ public final class QuestState {
         List<Player> list = getPartyMembers(state, maxrange, rangefrom);
         if (list.size() == 0)
             return null;
-        return list.get(Rnd.get(list.size()));
+        return Rnd.get(list);
     }
 
     /**
@@ -870,10 +836,11 @@ public final class QuestState {
     }
 
     public NpcInstance findTemplate(int npcId) {
-        for (Spawner spawn : SpawnManager.INSTANCE.getSpawners(PeriodOfDay.NONE.name()))
-            if (spawn != null && spawn.getCurrentNpcId() == npcId)
-                return spawn.getLastSpawn();
-        return null;
+        return SpawnManager.INSTANCE.getSpawners(PeriodOfDay.NONE.name()).stream()
+                .filter(Objects::nonNull)
+                .filter(spawn -> spawn.getCurrentNpcId() == npcId)
+                .map(Spawner::getLastSpawn)
+                .findFirst().orElse(null);
     }
 
     public int calculateLevelDiffForDrop(int mobLevel, int player) {
@@ -987,28 +954,26 @@ public final class QuestState {
                 return;
 
             Player actorPlayer = (Player) actor;
-            List<Player> players;
+            Stream<Player> players;
             switch (quest.getParty()) {
                 case Quest.PARTY_NONE:
-                    players = Collections.singletonList(actorPlayer);
+                    players = Stream.of(actorPlayer);
                     break;
                 case Quest.PARTY_ALL:
                     if (actorPlayer.getParty() == null)
-                        players = Collections.singletonList(actorPlayer);
+                        players = Stream.of(actorPlayer);
                     else {
-                        players = new ArrayList<>(actorPlayer.getParty().size());
-                        for (Player $member : actorPlayer.getParty().getMembers())
-                            if ($member.isInRange(actorPlayer, Creature.INTERACTION_DISTANCE))
-                                players.add($member);
+                        players = actorPlayer.getParty().getMembers().stream()
+                                .filter(m -> m.isInRange(actorPlayer, Creature.INTERACTION_DISTANCE));
+
                     }
                     break;
                 default:
-                    players = Collections.emptyList();
+                    players = Stream.empty();
                     break;
             }
 
-            players.stream()
-                    .map(player1 -> player.getQuestState(quest.getClass()))
+            players.map(player1 -> player.getQuestState(quest.getClass()))
                     .filter(Objects::nonNull)
                     .filter(questState -> !questState.isCompleted())
                     .forEach(questState ->

@@ -227,25 +227,29 @@ abstract class DocumentBase {
             n = n.getNextSibling();
         if (n == null)
             return null;
-        if ("and".equalsIgnoreCase(n.getNodeName()))
-            return parseLogicAnd(n);
-        if ("or".equalsIgnoreCase(n.getNodeName()))
-            return parseLogicOr(n);
-        if ("not".equalsIgnoreCase(n.getNodeName()))
-            return parseLogicNot(n);
-        if ("player".equalsIgnoreCase(n.getNodeName()))
-            return parsePlayerCondition(n);
-        if ("target".equalsIgnoreCase(n.getNodeName()))
-            return parseTargetCondition(n);
-        if ("has".equalsIgnoreCase(n.getNodeName()))
-            return parseHasCondition(n);
-        if ("using".equalsIgnoreCase(n.getNodeName()))
-            return parseUsingCondition(n);
-        if ("game".equalsIgnoreCase(n.getNodeName()))
-            return parseGameCondition(n);
-        if ("zone".equalsIgnoreCase(n.getNodeName()))
-            return parseZoneCondition(n);
-        return null;
+        String nodeName = n.getNodeName().toLowerCase();
+        switch (nodeName) {
+            case "and":
+                return parseLogicAnd(n);
+            case "or":
+                return parseLogicOr(n);
+            case "not":
+                return parseLogicNot(n);
+            case "player":
+                return parsePlayerCondition(n);
+            case "target":
+                return parseTargetCondition(n);
+            case "has":
+                return parseHasCondition(n);
+            case "using":
+                return parseUsingCondition(n);
+            case "game":
+                return parseGameCondition(n);
+            case "zone":
+                return parseZoneCondition(n);
+            default:
+                return null;
+        }
     }
 
     private Condition parseLogicAnd(Node n) {
@@ -253,7 +257,7 @@ abstract class DocumentBase {
         for (n = n.getFirstChild(); n != null; n = n.getNextSibling())
             if (n.getNodeType() == Node.ELEMENT_NODE)
                 cond.add(parseCondition(n));
-        if (cond._conditions == null || cond._conditions.size() == 0)
+        if (cond.conditions == null || cond.conditions.size() == 0)
             LOG.error("Empty <and> condition in " + file);
         return cond;
     }
@@ -281,89 +285,127 @@ abstract class DocumentBase {
         NamedNodeMap attrs = n.getAttributes();
         for (int i = 0; i < attrs.getLength(); i++) {
             Node a = attrs.item(i);
-            String nodeName = a.getNodeName();
-            if ("race".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionPlayerRace(a.getNodeValue()));
-            else if ("minLevel".equalsIgnoreCase(nodeName)) {
-                int lvl = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerMinLevel(lvl));
-            } else if ("summon_siege_golem".equalsIgnoreCase(nodeName)) {
-                cond = joinAnd(cond, new ConditionPlayerSummonSiegeGolem());
-            } else if ("maxLevel".equalsIgnoreCase(nodeName)) {
-                int lvl = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerMaxLevel(lvl));
-            } else if ("maxPK".equalsIgnoreCase(nodeName)) {
-                int pk = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerMaxPK(pk));
-            } else if ("resting".equalsIgnoreCase(nodeName)) {
-                boolean val = Boolean.valueOf(a.getNodeValue());
-                cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.RESTING, val));
-            } else if ("moving".equalsIgnoreCase(nodeName)) {
-                boolean val = Boolean.valueOf(a.getNodeValue());
-                cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.MOVING, val));
-            } else if ("running".equalsIgnoreCase(nodeName)) {
-                boolean val = Boolean.valueOf(a.getNodeValue());
-                cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.RUNNING, val));
-            } else if ("standing".equalsIgnoreCase(nodeName)) {
-                boolean val = Boolean.valueOf(a.getNodeValue());
-                cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.STANDING, val));
-            } else if ("flying".equalsIgnoreCase(a.getNodeName())) {
-                boolean val = Boolean.valueOf(a.getNodeValue());
-                cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.FLYING, val));
-            } else if ("flyingTransform".equalsIgnoreCase(a.getNodeName())) {
-                boolean val = Boolean.valueOf(a.getNodeValue());
-                cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.FLYING_TRANSFORM, val));
-            } else if ("olympiad".equalsIgnoreCase(a.getNodeName())) {
-                boolean val = Boolean.valueOf(a.getNodeValue());
-                cond = joinAnd(cond, new ConditionPlayerOlympiad(val));
-            } else if ("active_skill_id".equalsIgnoreCase(a.getNodeName())) {
-                int skill_id = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionTargetActiveSkillId(skill_id));
-            } else if ("percentHP".equalsIgnoreCase(nodeName)) {
-                int percentHP = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerPercentHp(percentHP));
-            } else if ("percentMP".equalsIgnoreCase(nodeName)) {
-                int percentMP = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerPercentMp(percentMP));
-            } else if ("percentCP".equalsIgnoreCase(nodeName)) {
-                int percentCP = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerPercentCp(percentCP));
-            } else if ("agathion".equalsIgnoreCase(nodeName)) {
-                int agathionId = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerAgathion(agathionId));
-            } else if ("cubic".equalsIgnoreCase(nodeName)) {
-                int cubicId = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerCubic(cubicId));
-            } else if ("instance_zone".equalsIgnoreCase(nodeName)) {
-                int id = parseNumber(a.getNodeValue()).intValue();
-                cond = joinAnd(cond, new ConditionPlayerInstanceZone(id));
-            } else if ("riding".equalsIgnoreCase(nodeName)) {
-                String riding = a.getNodeValue();
-                if ("strider".equalsIgnoreCase(riding))
-                    cond = joinAnd(cond, new ConditionPlayerRiding(CheckPlayerRiding.STRIDER));
-                else if ("wyvern".equalsIgnoreCase(riding))
-                    cond = joinAnd(cond, new ConditionPlayerRiding(CheckPlayerRiding.WYVERN));
-                else if ("none".equalsIgnoreCase(riding))
-                    cond = joinAnd(cond, new ConditionPlayerRiding(CheckPlayerRiding.NONE));
-            } else if ("classId".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionPlayerClassId(a.getNodeValue().split(",")));
-            else if ("hasBuffId".equalsIgnoreCase(nodeName)) {
-                StringTokenizer st = new StringTokenizer(a.getNodeValue(), ";");
-                int id = Integer.parseInt(st.nextToken().trim());
-                int level = -1;
-                if (st.hasMoreTokens())
-                    level = Integer.parseInt(st.nextToken().trim());
-                cond = joinAnd(cond, new ConditionPlayerHasBuffId(id, level));
-            } else if ("hasBuff".equalsIgnoreCase(nodeName)) {
-                StringTokenizer st = new StringTokenizer(a.getNodeValue(), ";");
-                EffectType et = Enum.valueOf(EffectType.class, st.nextToken().trim());
-                int level = -1;
-                if (st.hasMoreTokens())
-                    level = Integer.parseInt(st.nextToken().trim());
-                cond = joinAnd(cond, new ConditionPlayerHasBuff(et, level));
-            } else if ("damage".equalsIgnoreCase(nodeName)) {
-                String[] st = a.getNodeValue().split(";");
-                cond = joinAnd(cond, new ConditionPlayerMinMaxDamage(Double.parseDouble(st[0]), Double.parseDouble(st[1])));
+            String nodeName = a.getNodeName().toLowerCase();
+            switch (nodeName) {
+                case "race":
+                    cond = joinAnd(cond, new ConditionPlayerRace(a.getNodeValue()));
+                    break;
+                case "minlevel": {
+                    int lvl = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerMinLevel(lvl));
+                    break;
+                }
+                case "summon_siege_golem":
+                    cond = joinAnd(cond, new ConditionPlayerSummonSiegeGolem());
+                    break;
+                case "maxlevel": {
+                    int lvl = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerMaxLevel(lvl));
+                    break;
+                }
+                case "maxpk":
+                    int pk = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerMaxPK(pk));
+                    break;
+                case "resting": {
+                    boolean val = Boolean.valueOf(a.getNodeValue());
+                    cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.RESTING, val));
+                    break;
+                }
+                case "moving": {
+                    boolean val = Boolean.valueOf(a.getNodeValue());
+                    cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.MOVING, val));
+                    break;
+                }
+                case "running": {
+                    boolean val = Boolean.valueOf(a.getNodeValue());
+                    cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.RUNNING, val));
+                    break;
+                }
+                case "standing": {
+                    boolean val = Boolean.valueOf(a.getNodeValue());
+                    cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.STANDING, val));
+                    break;
+                }
+                case "flying": {
+                    boolean val = Boolean.valueOf(a.getNodeValue());
+                    cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.FLYING, val));
+                    break;
+                }
+                case "flyingtransform": {
+                    boolean val = Boolean.valueOf(a.getNodeValue());
+                    cond = joinAnd(cond, new ConditionPlayerState(CheckPlayerState.FLYING_TRANSFORM, val));
+                    break;
+                }
+                case "olympiad": {
+                    boolean val = Boolean.valueOf(a.getNodeValue());
+                    cond = joinAnd(cond, new ConditionPlayerOlympiad(val));
+                    break;
+                }
+                case "active_skill_id":
+                    int skill_id = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionTargetActiveSkillId(skill_id));
+                    break;
+                case "percenthp":
+                    int percentHP = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerPercentHp(percentHP));
+                    break;
+                case "percentmp":
+                    int percentMP = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerPercentMp(percentMP));
+                    break;
+                case "percentcp":
+                    int percentCP = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerPercentCp(percentCP));
+                    break;
+                case "agathion":
+                    int agathionId = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerAgathion(agathionId));
+                    break;
+                case "cubic":
+                    int cubicId = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerCubic(cubicId));
+                    break;
+                case "instance_zone": {
+                    int id = parseNumber(a.getNodeValue()).intValue();
+                    cond = joinAnd(cond, new ConditionPlayerInstanceZone(id));
+                    break;
+                }
+                case "riding":
+                    String riding = a.getNodeValue();
+                    if ("strider".equals(riding))
+                        cond = joinAnd(cond, new ConditionPlayerRiding(CheckPlayerRiding.STRIDER));
+                    else if ("wyvern".equals(riding))
+                        cond = joinAnd(cond, new ConditionPlayerRiding(CheckPlayerRiding.WYVERN));
+                    else if ("none".equals(riding))
+                        cond = joinAnd(cond, new ConditionPlayerRiding(CheckPlayerRiding.NONE));
+                    break;
+                case "classid":
+                    cond = joinAnd(cond, new ConditionPlayerClassId(a.getNodeValue().split(",")));
+                    break;
+                case "hasbuffid": {
+                    StringTokenizer st = new StringTokenizer(a.getNodeValue(), ";");
+                    int id = Integer.parseInt(st.nextToken().trim());
+                    int level = -1;
+                    if (st.hasMoreTokens())
+                        level = Integer.parseInt(st.nextToken().trim());
+                    cond = joinAnd(cond, new ConditionPlayerHasBuffId(id, level));
+                    break;
+                }
+                case "hasbuff": {
+                    StringTokenizer st = new StringTokenizer(a.getNodeValue(), ";");
+                    EffectType et = Enum.valueOf(EffectType.class, st.nextToken().trim());
+                    int level = -1;
+                    if (st.hasMoreTokens())
+                        level = Integer.parseInt(st.nextToken().trim());
+                    cond = joinAnd(cond, new ConditionPlayerHasBuff(et, level));
+                    break;
+                }
+                case "damage": {
+                    String[] st = a.getNodeValue().split(";");
+                    cond = joinAnd(cond, new ConditionPlayerMinMaxDamage(Double.parseDouble(st[0]), Double.parseDouble(st[1])));
+                    break;
+                }
             }
         }
 
@@ -377,56 +419,79 @@ abstract class DocumentBase {
         NamedNodeMap attrs = n.getAttributes();
         for (int i = 0; i < attrs.getLength(); i++) {
             Node a = attrs.item(i);
-            String nodeName = a.getNodeName();
+            String nodeName = a.getNodeName().toLowerCase();
             String nodeValue = a.getNodeValue();
-            if ("aggro".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetAggro(Boolean.valueOf(nodeValue)));
-            else if ("pvp".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetPlayable(Boolean.valueOf(nodeValue)));
-            else if ("player".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetPlayer(Boolean.valueOf(nodeValue)));
-            else if ("summon".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetSummon(Boolean.valueOf(nodeValue)));
-            else if ("mob".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetMob(Boolean.valueOf(nodeValue)));
-            else if ("mobId".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetMobId(Integer.parseInt(nodeValue)));
-            else if ("race".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetRace(nodeValue));
-            else if ("npc_class".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetNpcClass(nodeValue));
-            else if ("playerRace".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetPlayerRace(nodeValue));
-            else if ("forbiddenClassIds".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetForbiddenClassId(nodeValue.split(";")));
-            else if ("playerSameClan".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetClan(nodeValue));
-            else if ("castledoor".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetCastleDoor(Boolean.valueOf(nodeValue)));
-            else if ("direction".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetDirection(PositionUtils.TargetDirection.valueOf(nodeValue.toUpperCase())));
-            else if ("percentHP".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetPercentHp(parseNumber(a.getNodeValue()).intValue()));
-            else if ("percentMP".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetPercentMp(parseNumber(a.getNodeValue()).intValue()));
-            else if ("percentCP".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetPercentCp(parseNumber(a.getNodeValue()).intValue()));
-            else if ("hasBuffId".equalsIgnoreCase(nodeName)) {
-                StringTokenizer st = new StringTokenizer(nodeValue, ";");
-                int id = Integer.parseInt(st.nextToken().trim());
-                int level = -1;
-                if (st.hasMoreTokens())
-                    level = Integer.parseInt(st.nextToken().trim());
-                cond = joinAnd(cond, new ConditionTargetHasBuffId(id, level));
-            } else if ("hasBuff".equalsIgnoreCase(nodeName)) {
-                StringTokenizer st = new StringTokenizer(nodeValue, ";");
-                EffectType et = Enum.valueOf(EffectType.class, st.nextToken().trim());
-                int level = -1;
-                if (st.hasMoreTokens())
-                    level = Integer.parseInt(st.nextToken().trim());
-                cond = joinAnd(cond, new ConditionTargetHasBuff(et, level));
-            } else if ("hasForbiddenSkill".equalsIgnoreCase(nodeName))
-                cond = joinAnd(cond, new ConditionTargetHasForbiddenSkill(parseNumber(a.getNodeValue()).intValue()));
+            switch (nodeName) {
+                case "aggro":
+                    cond = joinAnd(cond, new ConditionTargetAggro(Boolean.valueOf(nodeValue)));
+                    break;
+                case "pvp":
+                    cond = joinAnd(cond, new ConditionTargetPlayable(Boolean.valueOf(nodeValue)));
+                    break;
+                case "player":
+                    cond = joinAnd(cond, new ConditionTargetPlayer(Boolean.valueOf(nodeValue)));
+                    break;
+                case "summon":
+                    cond = joinAnd(cond, new ConditionTargetSummon(Boolean.valueOf(nodeValue)));
+                    break;
+                case "mob":
+                    cond = joinAnd(cond, new ConditionTargetMob(Boolean.valueOf(nodeValue)));
+                    break;
+                case "mobid":
+                    cond = joinAnd(cond, new ConditionTargetMobId(Integer.parseInt(nodeValue)));
+                    break;
+                case "race":
+                    cond = joinAnd(cond, new ConditionTargetRace(nodeValue));
+                    break;
+                case "npc_class":
+                    cond = joinAnd(cond, new ConditionTargetNpcClass(nodeValue));
+                    break;
+                case "playerrace":
+                    cond = joinAnd(cond, new ConditionTargetPlayerRace(nodeValue));
+                    break;
+                case "forbiddenclassids":
+                    cond = joinAnd(cond, new ConditionTargetForbiddenClassId(nodeValue.split(";")));
+                    break;
+                case "playerSameClan":
+                    cond = joinAnd(cond, new ConditionTargetClan(nodeValue));
+                    break;
+                case "castledoor":
+                    cond = joinAnd(cond, new ConditionTargetCastleDoor(Boolean.valueOf(nodeValue)));
+                    break;
+                case "direction":
+                    cond = joinAnd(cond, new ConditionTargetDirection(PositionUtils.TargetDirection.valueOf(nodeValue.toUpperCase())));
+                    break;
+                case "percenthp":
+                    cond = joinAnd(cond, new ConditionTargetPercentHp(parseNumber(a.getNodeValue()).intValue()));
+                    break;
+                case "percentmp":
+                    cond = joinAnd(cond, new ConditionTargetPercentMp(parseNumber(a.getNodeValue()).intValue()));
+                    break;
+                case "percentcp":
+                    cond = joinAnd(cond, new ConditionTargetPercentCp(parseNumber(a.getNodeValue()).intValue()));
+                    break;
+                case "hasbuffid": {
+                    StringTokenizer st = new StringTokenizer(nodeValue, ";");
+                    int id = Integer.parseInt(st.nextToken().trim());
+                    int level = -1;
+                    if (st.hasMoreTokens())
+                        level = Integer.parseInt(st.nextToken().trim());
+                    cond = joinAnd(cond, new ConditionTargetHasBuffId(id, level));
+                    break;
+                }
+                case "hasbuff": {
+                    StringTokenizer st = new StringTokenizer(nodeValue, ";");
+                    EffectType et = Enum.valueOf(EffectType.class, st.nextToken().trim());
+                    int level = -1;
+                    if (st.hasMoreTokens())
+                        level = Integer.parseInt(st.nextToken().trim());
+                    cond = joinAnd(cond, new ConditionTargetHasBuff(et, level));
+                    break;
+                }
+                case "hasforbiddenskill":
+                    cond = joinAnd(cond, new ConditionTargetHasForbiddenSkill(parseNumber(a.getNodeValue()).intValue()));
+                    break;
+            }
         }
         if (cond == null)
             LOG.error("Unrecognized <target> condition in " + file);

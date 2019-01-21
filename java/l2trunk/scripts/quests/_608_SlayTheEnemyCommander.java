@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _608_SlayTheEnemyCommander extends Quest {
     // npc
@@ -40,8 +39,8 @@ public final class _608_SlayTheEnemyCommander extends Quest {
         } else if (event.equalsIgnoreCase("608_3"))
             if (st.getQuestItemsCount(HEAD_OF_MOS) >= 1) {
                 htmltext = "elder_kadun_zu_ketra_q0608_0201.htm";
-                st.takeItems(HEAD_OF_MOS, -1);
-                st.giveItems(TOTEM_OF_WISDOM, 1);
+                st.takeItems(HEAD_OF_MOS);
+                st.giveItems(TOTEM_OF_WISDOM);
                 st.addExpAndSp(0, 10000);
                 st.unset("cond");
                 st.playSound(SOUND_FINISH);

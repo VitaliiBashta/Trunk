@@ -2,7 +2,7 @@ package l2trunk.gameserver.network.serverpackets;
 
 import l2trunk.gameserver.GameTimeController;
 
-public class ClientSetTime extends L2GameServerPacket {
+public final class ClientSetTime extends L2GameServerPacket {
     public static final L2GameServerPacket STATIC = new ClientSetTime();
 
     @Override

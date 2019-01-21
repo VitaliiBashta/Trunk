@@ -219,7 +219,7 @@ public final class RankingCommunity implements ScriptFile, ICommunityBoardHandle
 
         html = html.replace("<?update?>", String.valueOf(time_update));
         html = html.replace("<?last_update?>", time(update));
-        html = html.replace("<?ranking_menu?>", HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "ranking/menu.htm", player));
+        html = html.replace("<?ranking_menu?>", HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "ranking/menu.htm", player));
         ShowBoard.separateAndSend(html, player);
     }
 

@@ -9,15 +9,17 @@ import l2trunk.gameserver.network.serverpackets.components.ChatType;
 import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 
+import java.util.List;
+
 /**
  * Evil Spirits Magic Force (22658).
  * Срывается на защиту кристалла в радиусе. Атакует крокодилов в пределах радиуса.
  */
 public final class EvilSpiritsMagicForce extends Fighter {
 
-    private static final NpcString[] MsgText = {
+    private static final List<NpcString> MsgText = List.of(
             NpcString.AH_AH_FROM_THE_MAGIC_FORCE_NO_MORE_I_WILL_BE_FREED,
-            NpcString.EVEN_THE_MAGIC_FORCE_BINDS_YOU_YOU_WILL_NEVER_BE_FORGIVEN};
+            NpcString.EVEN_THE_MAGIC_FORCE_BINDS_YOU_YOU_WILL_NEVER_BE_FORGIVEN);
     private NpcInstance mob = null;
     private boolean _firstTimeAttacked = true;
 

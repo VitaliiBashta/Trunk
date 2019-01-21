@@ -16,25 +16,16 @@ import l2trunk.gameserver.utils.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class GameObject extends EventOwner {
-    /**
-     * Основные состояния объекта
-     */
     private static final int CREATED = 0;
     private static final int VISIBLE = 1;
     private static final int DELETED = -1;
     private static final Logger _log = LoggerFactory.getLogger(GameObject.class);
-    /**
-     * Состояние объекта
-     */
-    private final AtomicInteger _state = new AtomicInteger(CREATED);
-    /**
-     * Идентификатор объекта
-     */
+
+    private final AtomicInteger state = new AtomicInteger(CREATED);
     protected int objectId;
     private Reflection reflection = ReflectionManager.DEFAULT;
     /**
@@ -46,14 +37,8 @@ public abstract class GameObject extends EventOwner {
     private WorldRegion currentRegion;
 
     protected GameObject() {
-
     }
 
-    /**
-     * Constructor<?> of L2Object.<BR><BR>
-     *
-     * @param objectId Идентификатор объекта
-     */
     protected GameObject(int objectId) {
         this.objectId = objectId;
     }
@@ -175,7 +160,7 @@ public abstract class GameObject extends EventOwner {
      * @return true if visible
      */
     public final boolean isVisible() {
-        return _state.get() == VISIBLE;
+        return state.get() == VISIBLE;
     }
 
     InvisibleType getInvisibleType() {
@@ -204,7 +189,7 @@ public abstract class GameObject extends EventOwner {
     }
 
     private void spawn0(Creature dropper) {
-        if (!_state.compareAndSet(CREATED, VISIBLE))
+        if (!state.compareAndSet(CREATED, VISIBLE))
             return;
 
         World.addVisibleObject(this, dropper);
@@ -229,7 +214,7 @@ public abstract class GameObject extends EventOwner {
      * Если перепутать будет утечка памяти.
      */
     public final void decayMe() {
-        if (!_state.compareAndSet(VISIBLE, CREATED))
+        if (!state.compareAndSet(VISIBLE, CREATED))
             return;
 
         World.removeVisibleObject(this);
@@ -246,14 +231,14 @@ public abstract class GameObject extends EventOwner {
     public final void deleteMe() {
         decayMe();
 
-        if (!_state.compareAndSet(CREATED, DELETED))
+        if (!state.compareAndSet(CREATED, DELETED))
             return;
 
         onDelete();
     }
 
     public final boolean isDeleted() {
-        return _state.get() == DELETED;
+        return state.get() == DELETED;
     }
 
     void onDelete() {
@@ -506,9 +491,7 @@ public abstract class GameObject extends EventOwner {
         return false;
     }
 
-    public boolean isArtefact() {
-        return false;
-    }
+
 
     public boolean isSiegeGuard() {
         return false;
@@ -539,11 +522,11 @@ public abstract class GameObject extends EventOwner {
     }
 
     protected List<L2GameServerPacket> addPacketList(Player forPlayer, Creature dropper) {
-        return Collections.emptyList();
+        return List.of();
     }
 
     public List<L2GameServerPacket> deletePacketList() {
-        return Collections.singletonList(new DeleteObject(this));
+        return List.of(new DeleteObject(this));
     }
 
     @Override

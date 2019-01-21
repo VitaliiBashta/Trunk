@@ -3,7 +3,6 @@ package l2trunk.gameserver.model.entity.residence;
 import l2trunk.commons.collections.StatsSet;
 import l2trunk.commons.dao.JdbcEntity;
 import l2trunk.commons.dao.JdbcEntityState;
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.EventHolder;
@@ -44,19 +43,19 @@ public abstract class Residence implements JdbcEntity {
     private final Calendar lastSiegeDate = Calendar.getInstance();
     private final Calendar ownDate = Calendar.getInstance();
     // points
-    private final List<Location> _banishPoints = new ArrayList<>();
-    private final List<Location> _ownerRestartPoints = new ArrayList<>();
-    private final List<Location> _otherRestartPoints = new ArrayList<>();
-    private final List<Location> _chaosRestartPoints = new ArrayList<>();
+    private final List<Location> banishPoints = new ArrayList<>();
+    private final List<Location> ownerRestartPoints = new ArrayList<>();
+    private final List<Location> otherRestartPoints = new ArrayList<>();
+    private final List<Location> chaosRestartPoints = new ArrayList<>();
     Clan _owner;
     private Zone zone;
     private SiegeEvent<?, ?> _siegeEvent;
     // rewards
-    private ScheduledFuture<?> _cycleTask;
+    private ScheduledFuture<?> cycleTask;
     private JdbcEntityState _jdbcEntityState = JdbcEntityState.CREATED;
-    private int _cycle;
-    private int _rewardCount;
-    private int _paidCycle;
+    private int cycle;
+    private int rewardCount;
+    private int paidCycle;
 
     Residence(StatsSet set) {
         id = set.getInteger("id");
@@ -277,16 +276,16 @@ public abstract class Residence implements JdbcEntity {
             return;
 
         if (function.getEndTimeInMillis() > System.currentTimeMillis())
-            ThreadPoolManager.INSTANCE.schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(() -> startAutoTaskForFunction(function), function.getEndTimeInMillis() - System.currentTimeMillis());
         else if (function.isInDebt() && clan.getAdenaCount() >= function.getLease()) // if player didn't pay before add extra fee
         {
             clan.getWarehouse().destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, function.getLease(), "Residence Functions Auto Task");
             function.updateRentTime(false);
-            ThreadPoolManager.INSTANCE.schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(() -> startAutoTaskForFunction(function), function.getEndTimeInMillis() - System.currentTimeMillis());
         } else if (!function.isInDebt()) {
             function.setInDebt(true);
             function.updateRentTime(true);
-            ThreadPoolManager.INSTANCE.schedule(new AutoTaskForFunctions(function), function.getEndTimeInMillis() - System.currentTimeMillis());
+            ThreadPoolManager.INSTANCE.schedule(() -> startAutoTaskForFunction(function), function.getEndTimeInMillis() - System.currentTimeMillis());
         } else {
             function.setLvl(0);
             function.setActive(false);
@@ -315,12 +314,12 @@ public abstract class Residence implements JdbcEntity {
     }
 
     void cancelCycleTask() {
-        _cycle = 0;
-        _paidCycle = 0;
-        _rewardCount = 0;
-        if (_cycleTask != null) {
-            _cycleTask.cancel(false);
-            _cycleTask = null;
+        cycle = 0;
+        paidCycle = 0;
+        rewardCount = 0;
+        if (cycleTask != null) {
+            cycleTask.cancel(false);
+            cycleTask = null;
         }
 
         setJdbcState(JdbcEntityState.UPDATED);
@@ -337,7 +336,10 @@ public abstract class Residence implements JdbcEntity {
         while (diff >= CYCLE_TIME)
             diff -= CYCLE_TIME;
 
-        _cycleTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(new ResidenceCycleTask(), diff, CYCLE_TIME);
+        cycleTask = ThreadPoolManager.INSTANCE.scheduleAtFixedRate(() -> {
+            chanceCycle();
+            update();
+        }, diff, CYCLE_TIME);
     }
 
     void chanceCycle() {
@@ -351,43 +353,43 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public void addBanishPoint(Location loc) {
-        _banishPoints.add(loc);
+        banishPoints.add(loc);
     }
 
     public void addOwnerRestartPoint(Location loc) {
-        _ownerRestartPoints.add(loc);
+        ownerRestartPoints.add(loc);
     }
 
     public void addOtherRestartPoint(Location loc) {
-        _otherRestartPoints.add(loc);
+        otherRestartPoints.add(loc);
     }
 
     public void addChaosRestartPoint(Location loc) {
-        _chaosRestartPoints.add(loc);
+        chaosRestartPoints.add(loc);
     }
 
     Location getBanishPoint() {
-        if (_banishPoints.isEmpty())
+        if (banishPoints.isEmpty())
             return null;
-        return _banishPoints.get(Rnd.get(_banishPoints.size()));
+        return Rnd.get(banishPoints);
     }
 
     public Location getOwnerRestartPoint() {
-        if (_ownerRestartPoints.isEmpty())
+        if (ownerRestartPoints.isEmpty())
             return null;
-        return _ownerRestartPoints.get(Rnd.get(_ownerRestartPoints.size()));
+        return Rnd.get(ownerRestartPoints);
     }
 
     public Location getOtherRestartPoint() {
-        if (_otherRestartPoints.isEmpty())
+        if (otherRestartPoints.isEmpty())
             return null;
-        return _otherRestartPoints.get(Rnd.get(_otherRestartPoints.size()));
+        return Rnd.get(otherRestartPoints);
     }
 
     private Location getChaosRestartPoint() {
-        if (_chaosRestartPoints.isEmpty())
+        if (chaosRestartPoints.isEmpty())
             return null;
-        return _chaosRestartPoints.get(Rnd.get(_chaosRestartPoints.size()));
+        return Rnd.get(chaosRestartPoints);
     }
 
     public Location getNotOwnerRestartPoint(Player player) {
@@ -395,53 +397,33 @@ public abstract class Residence implements JdbcEntity {
     }
 
     public int getCycle() {
-        return _cycle;
+        return cycle;
     }
 
     public void setCycle(int cycle) {
-        _cycle = cycle;
+        this.cycle = cycle;
     }
 
     public long getCycleDelay() {
-        if (_cycleTask == null)
+        if (cycleTask == null)
             return 0;
-        return _cycleTask.getDelay(TimeUnit.SECONDS);
+        return cycleTask.getDelay(TimeUnit.SECONDS);
     }
 
     public int getPaidCycle() {
-        return _paidCycle;
+        return paidCycle;
     }
 
     public void setPaidCycle(int paidCycle) {
-        _paidCycle = paidCycle;
+        this.paidCycle = paidCycle;
     }
 
     public int getRewardCount() {
-        return _rewardCount;
+        return rewardCount;
     }
 
     public void setRewardCount(int rewardCount) {
-        _rewardCount = rewardCount;
+        this.rewardCount = rewardCount;
     }
 
-    public class ResidenceCycleTask extends RunnableImpl {
-        @Override
-        public void runImpl() {
-            chanceCycle();
-            update();
-        }
-    }
-
-    private class AutoTaskForFunctions extends RunnableImpl {
-        final ResidenceFunction _function;
-
-        AutoTaskForFunctions(ResidenceFunction function) {
-            _function = function;
-        }
-
-        @Override
-        public void runImpl() {
-            startAutoTaskForFunction(_function);
-        }
-    }
 }

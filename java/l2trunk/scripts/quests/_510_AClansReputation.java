@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _510_AClansReputation extends Quest {
     private static final int VALDIS = 31331;
@@ -59,7 +58,7 @@ public final class _510_AClansReputation extends Quest {
                     htmltext = "31331-4.htm";
                 else if (count >= 1) {
                     htmltext = "31331-7.htm";// custom html
-                    st.takeItems(CLAW, -1);
+                    st.takeItems(CLAW);
                     int pointsCount = CLAN_POINTS_REWARD * (int) count;
                     if (count > 10)
                         pointsCount += count % 10 * 118;

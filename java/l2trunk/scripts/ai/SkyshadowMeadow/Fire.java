@@ -5,7 +5,6 @@ import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.ai.DefaultAI;
 import l2trunk.gameserver.model.GameObject;
 import l2trunk.gameserver.model.instances.NpcInstance;
-import l2trunk.gameserver.utils.Location;
 import l2trunk.gameserver.utils.NpcUtils;
 
 public final class Fire extends DefaultAI {
@@ -43,7 +42,7 @@ public final class Fire extends DefaultAI {
                         _firstTime = false;
                         if (actor.getNpcState() < 1)
                             actor.setNpcState((byte) 1); // Зажигаем кастер.
-                        NpcUtils.spawnSingle(FEED, new Location(actor.getX(), actor.getY(), actor.getZ()), 0);
+                        NpcUtils.spawnSingle(FEED, actor.getLoc());
                         ThreadPoolManager.INSTANCE.schedule(() -> {
                             if (getActor() == null) return;
                             _firstTime = true;

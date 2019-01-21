@@ -12,9 +12,6 @@ public final class MultiValueIntegerMap {
         map = new ConcurrentHashMap<>();
     }
 
-    public Set<Integer> keySet() {
-        return map.keySet();
-    }
 
     public Collection<List<Integer>> values() {
         return map.values();
@@ -28,13 +25,6 @@ public final class MultiValueIntegerMap {
         return map.remove(key);
     }
 
-    public List<Integer> get(Integer key) {
-        return map.get(key);
-    }
-
-    public boolean containsKey(Integer key) {
-        return map.containsKey(key);
-    }
 
     public void clear() {
         map.clear();
@@ -42,22 +32,6 @@ public final class MultiValueIntegerMap {
 
     public int size() {
         return map.size();
-    }
-
-    public boolean isEmpty() {
-        return map.isEmpty();
-    }
-
-    public Integer remove(Integer key, Integer value) {
-        List<Integer> valuesForKey = map.get(key);
-        if (valuesForKey == null)
-            return null;
-        boolean removed = valuesForKey.remove(value);
-        if (!removed)
-            return null;
-        if (valuesForKey.isEmpty())
-            remove(key);
-        return value;
     }
 
     public Integer removeValue(Integer value) {
@@ -89,13 +63,6 @@ public final class MultiValueIntegerMap {
         return false;
     }
 
-    public boolean containsValue(Integer key, Integer value) {
-        List<Integer> coll = map.get(key);
-        if (coll == null)
-            return false;
-        return coll.contains(value);
-    }
-
     public int size(Integer key) {
         List<Integer> coll = map.get(key);
         if (coll == null)
@@ -109,8 +76,7 @@ public final class MultiValueIntegerMap {
         boolean result = false;
         List<Integer> coll = map.get(key);
         if (coll == null) {
-            coll = new CopyOnWriteArrayList<>();
-            coll.addAll(values);
+            coll = new CopyOnWriteArrayList<>(values);
             if (coll.size() > 0) {
                 map.put(key, coll);
                 result = true;

@@ -5,9 +5,7 @@ import l2trunk.commons.lang.NumberUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static l2trunk.commons.lang.NumberUtils.toDouble;
-import static l2trunk.commons.lang.NumberUtils.toInt;
-import static l2trunk.commons.lang.NumberUtils.toLong;
+import static l2trunk.commons.lang.NumberUtils.*;
 
 public class StatsSet {
     public static final StatsSet EMPTY = new StatsSet();
@@ -121,7 +119,7 @@ public class StatsSet {
         if (val instanceof List<?>)
             return (List<Integer>) val;
         if (val instanceof Number)
-            return Collections.singletonList((Integer) val);
+            return List.of((Integer) val);
         if (val instanceof String) {
             List<String> vals = Arrays.asList(((String) val).split(";"));
             return vals.stream()

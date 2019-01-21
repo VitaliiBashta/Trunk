@@ -2,15 +2,15 @@ package l2trunk.gameserver.stats.conditions;
 
 import l2trunk.gameserver.stats.Env;
 
-public class ConditionPlayerPercentMp extends Condition {
-    private final double _mp;
+public final class ConditionPlayerPercentMp extends Condition {
+    private final double mp;
 
     public ConditionPlayerPercentMp(int mp) {
-        _mp = mp / 100.;
+        this.mp = mp / 100.;
     }
 
     @Override
     protected boolean testImpl(Env env) {
-        return env.character.getCurrentMpRatio() <= _mp;
+        return env.character.getCurrentMpRatio() <= mp;
     }
 }

@@ -1,45 +1,36 @@
 package l2trunk.gameserver.model.entity.poll;
 
-public class PollAnswer {
-    private final int _id;
-    private final String _answer;
-    private int _votes;
+public final class PollAnswer {
+    private final int id;
+    private final String answer;
+    private int votes;
 
     public PollAnswer(String answer) {
-        _id = PollEngine.INSTANCE.getPoll().getNewAnswerId();
-        _answer = answer;
-        _votes = 0;
+        id = PollEngine.INSTANCE.getPoll().getNewAnswerId();
+        this.answer = answer;
+        votes = 0;
     }
 
     PollAnswer(int id, String answer, int votes) {
-        _id = id;
-        _answer = answer;
-        _votes = votes;
+        this.id = id;
+        this.answer = answer;
+        this.votes = votes;
     }
 
     public int getId() {
-        return _id;
+        return id;
     }
 
     public String getAnswer() {
-        return _answer;
+        return answer;
     }
 
     public int getVotes() {
-        return _votes;
+        return votes;
     }
 
-    public void setVotes(int votes) {
-        _votes = votes;
+    void increaseVotes() {
+        votes++;
     }
 
-    public void increaseVotes() {
-        _votes++;
-    }
-
-    public void decreaseVotes() {
-        if (_votes > 0)
-            _votes--;
-
-    }
 }

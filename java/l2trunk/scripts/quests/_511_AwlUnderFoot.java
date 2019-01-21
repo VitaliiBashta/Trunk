@@ -1,6 +1,5 @@
 package l2trunk.scripts.quests;
 
-import l2trunk.commons.threading.RunnableImpl;
 import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.ThreadPoolManager;
 import l2trunk.gameserver.data.xml.holder.InstantZoneHolder;
@@ -15,12 +14,12 @@ import l2trunk.gameserver.model.pledge.Clan;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.templates.InstantZone;
 import l2trunk.gameserver.utils.Location;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class _511_AwlUnderFoot extends Quest {
@@ -47,7 +46,7 @@ public final class _511_AwlUnderFoot extends Quest {
 
     private static final List<Integer> type1 = List.of(HagerTheOutlaw, AllSeeingRango, Jakard);
     private static final List<Integer> type2 = List.of(Helsing, Gillien, Medici, ImmortalMuus);
-    private static final List<Integer>  type3 = List.of(BrandTheExile, CommanderKoenig, GergTheHunter);
+    private static final List<Integer> type3 = List.of(BrandTheExile, CommanderKoenig, GergTheHunter);
 
     public _511_AwlUnderFoot() {
         super(false);
@@ -111,14 +110,16 @@ public final class _511_AwlUnderFoot extends Quest {
                     case GergTheHunter:
                         Party party = st.getPlayer().getParty();
                         if (party != null)
-                            for (Player member : party.getMembers()) {
-                                QuestState qs = member.getQuestState(getClass());
-                                if (qs != null && qs.isStarted()) {
-                                    qs.giveItems(DungeonLeaderMark, RewardMarksCount / party.size());
-                                    qs.playSound(SOUND_ITEMGET);
-                                    qs.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
-                                }
-                            }
+                            party.getMembers().stream()
+                                    .map(member -> member.getQuestState(getClass()))
+                                    .filter(Objects::nonNull)
+                                    .filter(QuestState::isStarted)
+                                    .forEach(qs -> {
+                                        qs.giveItems(DungeonLeaderMark, RewardMarksCount / party.size());
+                                        qs.playSound(SOUND_ITEMGET);
+                                        qs.getPlayer().sendPacket(new SystemMessage(SystemMessage.THIS_DUNGEON_WILL_EXPIRE_IN_S1_MINUTES).addNumber(5));
+                                    });
+
                         else {
                             st.giveItems(DungeonLeaderMark, RewardMarksCount);
                             st.playSound(SOUND_ITEMGET);
@@ -185,14 +186,15 @@ public final class _511_AwlUnderFoot extends Quest {
 
             r.setReturnLoc(player.getLoc());
 
-            for (Player member : player.getParty().getMembers()) {
-                if (member != player)
-                    newQuestState(member, STARTED);
-                member.setReflection(r);
-                member.teleToLocation(iz.getTeleportCoord());
-                member.setVar("backCoords", r.getReturnLoc().toXYZString(), -1);
-                member.setInstanceReuse(iz.getId(), System.currentTimeMillis());
-            }
+            player.getParty().getMembers()
+                    .forEach(member -> {
+                        if (member != player)
+                            newQuestState(member, STARTED);
+                        member.setReflection(r);
+                        member.teleToLocation(iz.getTeleportCoord());
+                        member.setVar("backCoords", r.getReturnLoc().toXYZString(), -1);
+                        member.setInstanceReuse(iz.getId(), System.currentTimeMillis());
+                    });
 
             player.getParty().setReflection(r);
             r.setParty(player.getParty());
@@ -204,23 +206,17 @@ public final class _511_AwlUnderFoot extends Quest {
         return null;
     }
 
+    private boolean areMembersSameClan(Player player) {
+        if (player.getParty() == null)
+            return true;
+        return player.getParty().getMembers().stream()
+                .noneMatch(p -> p.getClan() != player.getClan());
+    }
+
     private class Prison {
         private int _fortId;
         private int _reflectionId;
         private long _lastEnter;
-
-        private class PrisonSpawnTask extends RunnableImpl {
-            final int _npcId;
-
-            PrisonSpawnTask(int npcId) {
-                _npcId = npcId;
-            }
-
-            @Override
-            public void runImpl() {
-                addSpawnToInstance(_npcId, new Location(53304, 245992, -6576, 25958), 0, _reflectionId);
-            }
-        }
 
         Prison(int id, InstantZone iz) {
             try {
@@ -249,14 +245,6 @@ public final class _511_AwlUnderFoot extends Quest {
         boolean isLocked() {
             return System.currentTimeMillis() - _lastEnter < 4 * 60 * 60 * 1000L;
         }
-    }
 
-    private boolean areMembersSameClan(Player player) {
-        if (player.getParty() == null)
-            return true;
-        for (Player p : player.getParty().getMembers())
-            if (p.getClan() != player.getClan())
-                return false;
-        return true;
     }
 }

@@ -42,7 +42,8 @@ public final class BlockCheckerEngine {
     private static final int _zCoord = -2405;
     // Default arena
     private static final byte DEFAULT_ARENA = -1;
-    private final String[] zoneNames = {"[block_checker_1]", "[block_checker_2]", "[block_checker_3]", "[block_checker_4]"};
+    private final List<String> zoneNames = List.of(
+            "[block_checker_1]", "[block_checker_2]", "[block_checker_3]", "[block_checker_4]");
     // Maps to hold player of each team and his points
     private final Map<Player, Integer> _redTeamPoints = new ConcurrentHashMap<>();
     private final Map<Player, Integer> _blueTeamPoints = new ConcurrentHashMap<>();
@@ -57,7 +58,7 @@ public final class BlockCheckerEngine {
     private int _redPoints = 15;
     private int _bluePoints = 15;
     // Current used arena
-    private int _arena = -1;
+    private int arena = -1;
     // Sets if the red team won the event at the end of this (used for packets)
     private boolean _isRedWinner;
     // Time when the event starts. Used on packet sending
@@ -74,7 +75,7 @@ public final class BlockCheckerEngine {
     public BlockCheckerEngine(HandysBlockCheckerManager.ArenaParticipantsHolder holder, int arena) {
         this.holder = holder;
         if (arena > -1 && arena < 4)
-            _arena = arena;
+            this.arena = arena;
 
         for (Player player : holder.getRedPlayers())
             _redTeamPoints.put(player, 0);
@@ -107,7 +108,7 @@ public final class BlockCheckerEngine {
      * @return false;
      */
     public int getArena() {
-        return _arena;
+        return arena;
     }
 
     /**
@@ -256,7 +257,7 @@ public final class BlockCheckerEngine {
          */
         private void setUpPlayers() {
             // Set current arena as being used
-            HandysBlockCheckerManager.INSTANCE.setArenaBeingUsed(_arena);
+            HandysBlockCheckerManager.INSTANCE.setArenaBeingUsed(arena);
             // Initialize packets avoiding create a new one per player
             _redPoints = _spawns.size() / 2;
             _bluePoints = _spawns.size() / 2;
@@ -282,8 +283,8 @@ public final class BlockCheckerEngine {
                 // Team 1 * 2 = 2; 2 = 2, 2 + 1 = 3
                 int tc = holder.getPlayerTeam(player) * 2;
                 // Get x and y coordinates
-                int x = _arenaCoordinates[_arena][tc];
-                int y = _arenaCoordinates[_arena][tc + 1];
+                int x = _arenaCoordinates[arena][tc];
+                int y = _arenaCoordinates[arena][tc + 1];
                 player.teleToLocation(x, y, _zCoord);
                 // Set the player team
                 if (isRed) {
@@ -307,7 +308,7 @@ public final class BlockCheckerEngine {
                 else
                     _transformationBlue.getEffects(player);
                 // Set the current player arena
-                player.setBlockCheckerArena((byte) _arena);
+                player.setBlockCheckerArena((byte) arena);
                 // Send needed packets
                 player.sendPacket(initialPoints);
                 player.sendPacket(_closeUserInterface);
@@ -321,13 +322,13 @@ public final class BlockCheckerEngine {
         @Override
         public void runImpl() {
             // Wrong arena passed, stop event
-            if (_arena == -1) {
+            if (arena == -1) {
                 _log.error("Couldnt set up the arena Id for the Block Checker event, cancelling event...");
                 return;
             }
             if (isStarted())
                 return;
-            clearArena(zoneNames[_arena]);
+            clearArena(zoneNames.get(arena));
             _isStarted = true;
             // Spawn the blocks
             ThreadPoolManager.INSTANCE.execute(new SpawnRound(16, 1));
@@ -342,13 +343,13 @@ public final class BlockCheckerEngine {
      * This class spawns the second round of boxes
      * and schedules the event end
      */
-    class SpawnRound extends RunnableImpl {
-        final int _numOfBoxes;
-        final int _round;
+    private class SpawnRound extends RunnableImpl {
+        final int numOfBoxes;
+        final int round;
 
-        SpawnRound(int numberOfBoxes, int round) {
-            _numOfBoxes = numberOfBoxes;
-            _round = round;
+        SpawnRound(int numOfBoxes, int round) {
+            this.numOfBoxes = numOfBoxes;
+            this.round = round;
         }
 
         @Override
@@ -356,7 +357,7 @@ public final class BlockCheckerEngine {
             if (!_isStarted)
                 return;
 
-            switch (_round) {
+            switch (round) {
                 case 1:
                     // Schedule second spawn round
                     _task = ThreadPoolManager.INSTANCE.schedule(new SpawnRound(20, 2), 60000);
@@ -376,10 +377,10 @@ public final class BlockCheckerEngine {
             // common template
             // Spawn blocks
             // Creates 50 new blocks
-            for (int i = 0; i < _numOfBoxes; i++) {
+            for (int i = 0; i < numOfBoxes; i++) {
                 SimpleSpawner spawn = new SimpleSpawner(18672);
-                spawn.setLoc(new Location(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400),
-                        _arenaCoordinates[_arena][5] + Rnd.get(-400, 400),
+                spawn.setLoc(new Location(_arenaCoordinates[arena][4] + Rnd.get(-400, 400),
+                        _arenaCoordinates[arena][5] + Rnd.get(-400, 400),
                         _zCoord, 1));
                 spawn.setAmount(1);
                 spawn.setRespawnDelay(1);
@@ -391,10 +392,10 @@ public final class BlockCheckerEngine {
             }
 
             // Spawn the setBlock carrying girl
-            if (_round == 1 || _round == 2) {
+            if (round == 1 || round == 2) {
                 final SimpleSpawner girlSpawn = new SimpleSpawner(18676);
-                girlSpawn.setLoc(new Location(_arenaCoordinates[_arena][4] + Rnd.get(-400, 400),
-                        _arenaCoordinates[_arena][5] + Rnd.get(-400, 400),
+                girlSpawn.setLoc(new Location(_arenaCoordinates[arena][4] + Rnd.get(-400, 400),
+                        _arenaCoordinates[arena][5] + Rnd.get(-400, 400),
                         _zCoord, 1))
                         .setAmount(1)
                         .setRespawnDelay(1)
@@ -409,8 +410,8 @@ public final class BlockCheckerEngine {
                 }, 9000);
             }
 
-            _redPoints += _numOfBoxes / 2;
-            _bluePoints += _numOfBoxes / 2;
+            _redPoints += numOfBoxes / 2;
+            _bluePoints += numOfBoxes / 2;
 
             int timeLeft = (int) ((getStarterTime() - System.currentTimeMillis()) / 1000);
             ExCubeGameChangePoints changePoints = new ExCubeGameChangePoints(timeLeft, getBluePoints(), getRedPoints());
@@ -457,7 +458,7 @@ public final class BlockCheckerEngine {
     class EndEvent extends RunnableImpl {
         // Garbage collector and arena free setter
         private void clearMe() {
-            HandysBlockCheckerManager.INSTANCE.clearPaticipantQueueByArenaId(_arena);
+            HandysBlockCheckerManager.INSTANCE.clearPaticipantQueueByArenaId(arena);
             for (Player player : holder.getAllPlayers()) {
                 if (player == null)
                     continue;
@@ -467,7 +468,7 @@ public final class BlockCheckerEngine {
             holder.clearPlayers();
             _blueTeamPoints.clear();
             _redTeamPoints.clear();
-            HandysBlockCheckerManager.INSTANCE.setArenaFree(_arena);
+            HandysBlockCheckerManager.INSTANCE.setArenaFree(arena);
 
             for (SimpleSpawner spawn : _spawns)
                 spawn.deleteAll();

@@ -11,13 +11,12 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OlympiadEndTask extends RunnableImpl {
+public final class OlympiadEndTask extends RunnableImpl {
     private static final Logger _log = LoggerFactory.getLogger(OlympiadEndTask.class);
 
     @Override
     public void runImpl() {
-        if (Olympiad._inCompPeriod) // Если бои еще не закончились, откладываем окончание олимпиады на минуту
-        {
+        if (Olympiad._inCompPeriod) { // Если бои еще не закончились, откладываем окончание олимпиады на минуту
             ThreadPoolManager.INSTANCE.schedule(new OlympiadEndTask(), 60000);
             return;
         }

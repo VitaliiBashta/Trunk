@@ -3,10 +3,10 @@ package l2trunk.gameserver.stats.conditions;
 import l2trunk.gameserver.stats.Env;
 
 public abstract class ConditionInventory extends Condition {
-    final int _slot;
+    final int slot;
 
     ConditionInventory(int slot) {
-        _slot = slot;
+        this.slot = slot;
     }
 
     @Override

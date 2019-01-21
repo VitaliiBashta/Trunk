@@ -912,11 +912,12 @@ public abstract class Skill extends StatTemplate implements Cloneable, Comparabl
                             addTargetAndPetToList(targets, activeChar.getPlayer(), activeChar.getPlayer());
                             break;
                         }
-                        for (Player p : activeChar.getPlayer().getParty().getMembers()) {
-                            if (!p.isDead() && p.isInRange(activeChar, skillRadius == 0 ? 600 : skillRadius)) {
-                                targets.add(p);
-                            }
-                        }
+                        activeChar.getPlayer().getParty().getMembers().stream()
+                                .filter(p -> !p.isDead())
+                                .filter(p -> p.isInRange(activeChar, skillRadius == 0 ? 600 : skillRadius))
+                                .forEach(targets::add);
+
+
                         addTargetAndPetToList(targets, activeChar.getPlayer(), activeChar.getPlayer());
                         break;
                     }

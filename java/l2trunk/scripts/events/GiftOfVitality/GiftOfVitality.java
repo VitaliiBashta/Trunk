@@ -149,7 +149,7 @@ public final class GiftOfVitality extends Functions implements ScriptFile {
                     npc.broadcastPacket(new MagicSkillUse(npc, player, blessingOfEnergy));
                     player.altOnMagicUseTimer(player, blessingOfEnergy);
                     player.setVar("govEventTime", String.valueOf(System.currentTimeMillis() + REUSE_HOURS * 60 * 60 * 1000L), -1);
-                    player.setVitality(Config.VITALITY_LEVELS[4]);
+                    player.setVitality(Config.VITALITY_LEVELS.get(4));
                     htmltext = "jack-okvitality.htm";
                 }
                 break;

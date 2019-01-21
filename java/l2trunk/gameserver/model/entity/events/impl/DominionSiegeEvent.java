@@ -538,7 +538,7 @@ public class DominionSiegeEvent extends SiegeEvent<Dominion, SiegeClanObject> {
             if (winner == null || !victim.isPlayer() || winner.getLevel() < 40 || winner == victim || victim.getEvent(DominionSiegeEvent.class) == DominionSiegeEvent.this || !actor.isInZone(Zone.ZoneType.SIEGE) || !victim.isInZone(Zone.ZoneType.SIEGE))
                 return;
 
-            winner.setFame(winner.getFame() + Rnd.get(10, 20), DominionSiegeEvent.this.toString());
+            winner.addFame(Rnd.get(10, 20), DominionSiegeEvent.this.toString());
 
             addReward(winner, KILL_REWARD, 1);
 

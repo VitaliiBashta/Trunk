@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _418_PathToArtisan extends Quest {
     //NPC
@@ -76,30 +75,30 @@ public final class _418_PathToArtisan extends Quest {
     @Override
     public String onEvent(String event, QuestState st, NpcInstance npc) {
         if (event.equalsIgnoreCase("blacksmith_silvery_q0418_06.htm")) {
-            st.giveItems(SilverasRing, 1);
+            st.giveItems(SilverasRing);
             st.setCond(1);
             st.setState(STARTED);
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("blacksmith_kluto_q0418_04.htm") || event.equalsIgnoreCase("blacksmith_kluto_q0418_07.htm")) {
-            st.giveItems(KlutosLetter, 1);
+            st.giveItems(KlutosLetter);
             st.setCond(4);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("blacksmith_pinter_q0418_03.htm")) {
-            st.takeItems(KlutosLetter, -1);
-            st.giveItems(FootprintOfThief, 1);
+            st.takeItems(KlutosLetter);
+            st.giveItems(FootprintOfThief);
             st.setCond(5);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("blacksmith_pinter_q0418_06.htm")) {
-            st.takeItems(StolenSecretBox, -1);
-            st.takeItems(FootprintOfThief, -1);
-            st.giveItems(SecretBox, 1);
-            st.giveItems(PassCertificate2nd, 1);
+            st.takeItems(StolenSecretBox);
+            st.takeItems(FootprintOfThief);
+            st.giveItems(SecretBox);
+            st.giveItems(PassCertificate2nd);
             st.setCond(7);
             st.setState(STARTED);
         } else if (event.equalsIgnoreCase("blacksmith_kluto_q0418_10.htm") || event.equalsIgnoreCase("blacksmith_kluto_q0418_12.htm")) {
-            st.takeItems(PassCertificate1st, -1);
-            st.takeItems(PassCertificate2nd, -1);
-            st.takeItems(SecretBox, -1);
+            st.takeItems(PassCertificate1st);
+            st.takeItems(PassCertificate2nd);
+            st.takeItems(SecretBox);
             if (st.getPlayer().getClassId().getLevel() == 1) {
                 st.giveItems(FinalPassCertificate, 1);
                 if (!st.getPlayer().getVarB("prof1")) {

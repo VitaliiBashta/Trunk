@@ -405,7 +405,7 @@ public enum CursedWeaponsManager {
             }
 
             if (cursedWeapons.size() > 0) {
-                CursedWeapon cw = cursedWeapons.get(Rnd.get(cursedWeapons.size()));
+                CursedWeapon cw = Rnd.get(cursedWeapons);
                 if (Rnd.get(100000000) <= cw.getDropRate())
                     cw.create(attackable, killer);
             }

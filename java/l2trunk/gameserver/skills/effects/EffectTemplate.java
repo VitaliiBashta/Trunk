@@ -74,7 +74,6 @@ public final class EffectTemplate extends StatTemplate {
         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException e) {
             _log.error("Error while getting Effect ", e);
         }
-
         return null;
     }
 

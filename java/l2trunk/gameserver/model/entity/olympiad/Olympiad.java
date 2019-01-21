@@ -66,8 +66,6 @@ public final class Olympiad {
     public static ScheduledFuture<?> _scheduledManagerTask;
     public static ScheduledFuture<?> _scheduledWeeklyTask;
     public static ScheduledFuture<?> _scheduledValdationTask;
-    public static List<String> _playersIp = new ArrayList<>();
-    public static List<String> _playersHWID = new ArrayList<>();
     public static OlympiadManager _manager;
     private static long _compEnd;
     private static Calendar _compStart;
@@ -263,10 +261,9 @@ public final class Olympiad {
                     return false;
                 }
 
-                for (Player member : party.getMembers()) {
-                    if (!validPlayer(noble, member, type)) {
-                        return false;
-                    }
+                if (party.getMembers().stream()
+                        .anyMatch(member -> !validPlayer(noble, member, type))) {
+                    return false;
                 }
 
                 _teamBasedRegisters.putAll(noble.getObjectId(), party.getMembersObjIds());
@@ -610,16 +607,6 @@ public final class Olympiad {
         return noble.getInteger(POINTS, 0);
     }
 
-    /**
-     * Возвращает олимпийские очки за прошлый период
-     */
-    public static synchronized int getNoblePointsPast(int objId) {
-        StatsSet noble = _nobles.get(objId);
-        if (noble == null)
-            return 0;
-        return noble.getInteger(POINTS_PAST, 0);
-    }
-
     public static synchronized int getCompetitionDone(int objId) {
         StatsSet noble = _nobles.get(objId);
         if (noble == null)
@@ -741,5 +728,21 @@ public final class Olympiad {
 
     public static int getCountOpponents() {
         return _nonClassBasedRegisters.size() + _classBasedRegisters.size() + _teamBasedRegisters.size();
+    }
+
+    public static class Stadia {
+        private boolean busy = false;
+
+        boolean isBusy() {
+            return busy;
+        }
+
+        void setStadiaBusy() {
+            busy = true;
+        }
+
+        void setStadiaFree() {
+            busy = false;
+        }
     }
 }

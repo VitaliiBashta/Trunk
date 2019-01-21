@@ -6,29 +6,25 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
-class NobleSelector<E> {
-    private final List<Node<E>> _nodes;
-    private Node<E> _current = null;
-    private int _totalWeight = 0;
-
-    public NobleSelector() {
-        _nodes = new ArrayList<>();
-    }
+public final class NobleSelector<E> {
+    private final List<Node<E>> nodes;
+    private Node<E> current = null;
+    private int totalWeight = 0;
 
     public NobleSelector(int initialCapacity) {
-        _nodes = new ArrayList<>(initialCapacity);
+        nodes = new ArrayList<>(initialCapacity);
     }
 
     public final void add(E value, int points) {
-        _nodes.add(new Node<>(value, points));
+        nodes.add(new Node<>(value, points));
     }
 
     public final int size() {
-        return _nodes.size();
+        return nodes.size();
     }
 
     public final void reset() {
-        _current = null;
+        current = null;
     }
 
     public final E select() {
@@ -42,16 +38,16 @@ class NobleSelector<E> {
     }
 
     private Node<E> selectImpl() {
-        if (_current == null)
+        if (current == null)
             return init();
 
         Node<E> n;
-        int random = Rnd.get(_totalWeight);
-        for (int i = _nodes.size(); --i >= 0; ) {
-            n = _nodes.get(i);
+        int random = Rnd.get(totalWeight);
+        for (int i = nodes.size(); --i >= 0; ) {
+            n = nodes.get(i);
             random -= n.weight;
             if (random < 0)
-                if (_nodes.remove(i) != n)
+                if (nodes.remove(i) != n)
                     throw new ConcurrentModificationException();
                 else
                     return n;
@@ -60,19 +56,19 @@ class NobleSelector<E> {
     }
 
     private Node<E> init() {
-        final int size = _nodes.size();
+        final int size = nodes.size();
         if (size < 2)
             return null;
 
-        _current = _nodes.remove(Rnd.get(size));
-        _totalWeight = 0;
-        for (Node<E> n : _nodes)
-            _totalWeight += getWeight(n, _current);
+        current = nodes.remove(Rnd.get(size));
+        totalWeight = 0;
+        for (Node<E> n : nodes)
+            totalWeight += getWeight(n, current);
 
-        if (size != _nodes.size() + 1)
+        if (size != nodes.size() + 1)
             throw new ConcurrentModificationException();
 
-        return _current;
+        return current;
     }
 
     private int getWeight(Node<E> n, Node<E> base) {
@@ -80,7 +76,7 @@ class NobleSelector<E> {
 
         if (delta < 20)
             n.weight = 8;
-        else if (delta < 40)
+        else if (delta < 30)
             n.weight = 6;
         else if (delta < 40)
             n.weight = 4;

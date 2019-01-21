@@ -155,13 +155,10 @@ public final class CareerManager implements ScriptFile, ICommunityBoardHandler {
                 html.append("</tr>");
                 html.append("</table>");
             }
-            String content = HtmCache.INSTANCE().getNotNull(Config.BBS_HOME_DIR + "pages/career.htm", activeChar);
+            String content = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/career.htm", activeChar);
             content = content.replace("%career%", html.toString());
             ShowBoard.separateAndSend(content, activeChar);
         }
     }
 
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
-    }
 }

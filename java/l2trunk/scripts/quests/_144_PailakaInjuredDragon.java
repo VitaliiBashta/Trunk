@@ -50,7 +50,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
     private static final int STAGE2 = 13057;
 
     private static final List<Integer> PAILAKA3DROP = List.of(8600, 8601, 8603, 8604);
-    private static final int[] ANTELOPDROP = {13032, 13033};
+    private static final List<Integer> ANTELOPDROP = List.of(13032, 13033);
 
     // REWARDS
     private static final int PSHIRT = 13296;
@@ -185,7 +185,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
             if (st.getQuestItemsCount(ENCHSPEAR) > 0 && st.getQuestItemsCount(STAGE2) > 0) {
                 st.takeItems(ENCHSPEAR, 1);
                 st.takeItems(STAGE2, 1);
-                st.giveItems(LASTSPEAR, 1);
+                st.giveItems(LASTSPEAR);
                 htmltext = "32509-03.htm";
             }
             if (st.getQuestItemsCount(LASTSPEAR) > 0)
@@ -199,7 +199,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 st.setState(COMPLETED);
                 st.playSound(SOUND_FINISH);
                 st.exitCurrentQuest(false);
-                player.setVitality(Config.VITALITY_LEVELS[4]);
+                player.setVitality(Config.VITALITY_LEVELS.get(4));
                 player.getReflection().startCollapseTimer(60000);
                 htmltext = "32512-01.htm";
             } else if (id == COMPLETED)
@@ -250,7 +250,7 @@ public final class _144_PailakaInjuredDragon extends Quest {
                 st.dropItem(npc, Rnd.get(PAILAKA3DROP), 1);
 
         if (Antelopes.contains(npcId))
-            st.dropItem(npc, ANTELOPDROP[Rnd.get(ANTELOPDROP.length)], Rnd.get(1, 10));
+            st.dropItem(npc, Rnd.get(ANTELOPDROP), Rnd.get(1, 10));
 
         return null;
     }

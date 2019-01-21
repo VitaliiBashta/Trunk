@@ -16,8 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
@@ -25,8 +23,8 @@ public enum PollEngine {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(PollEngine.class);
 
-    private Poll _poll;
-    private boolean _isActive = false;
+    private Poll poll;
+    private boolean active = false;
     private ScheduledFuture<?> _endPollThread = null;
 
     PollEngine() {
@@ -38,19 +36,19 @@ public enum PollEngine {
     }
 
     public void addNewPollQuestion(String question) {
-        _poll = new Poll(question);
+        poll = new Poll(question);
     }
 
     public Poll getPoll() {
-        return _poll;
+        return poll;
     }
 
     public Poll getActivePoll() {
-        if (_poll == null)
+        if (poll == null)
             return null;
         if (!isActive())
             return null;
-        return _poll;
+        return poll;
     }
 
     public void startPoll(boolean announce, boolean firstTime) {
@@ -60,27 +58,27 @@ public enum PollEngine {
             else
                 return;
 
-        _isActive = true;
+        active = true;
         if (announce)
             announcePoll(true);
         startThread();
     }
 
     public void deleteCurrentPoll() {
-        _poll = null;
+        poll = null;
         deleteAllPlayerVotes();
         savePoll();
     }
 
     public void stopPoll(boolean announce) {
-        _isActive = false;
+        active = false;
         if (announce)
             announcePoll(false);
         deleteAllPlayerVotes();
     }
 
     public boolean isActive() {
-        return _isActive;
+        return active;
     }
 
     private void announcePoll(boolean active) {
@@ -91,8 +89,8 @@ public enum PollEngine {
 
             sortAnswers(getPoll().getAnswers());
 
-            for (PollAnswer answer : getPoll().getAnswers())
-                Announcements.INSTANCE.announceToAll(getAnswerProcentage(answer) + "% players voted on \"" + answer.getAnswer() + "\"");
+            getPoll().getAnswers().forEach(answer ->
+                    Announcements.INSTANCE.announceToAll(getAnswerProcentage(answer) + "% players voted on \"" + answer.getAnswer() + "\""));
         }
     }
 
@@ -130,9 +128,8 @@ public enum PollEngine {
         return (int) (((double) choosenAnswer.getVotes() / totalVotes) * 100);
     }
 
-    public PollAnswer[] sortAnswers(PollAnswer[] answers) {
-        Arrays.sort(answers, new AnswersComparator());
-        return answers;
+    public void sortAnswers(List<PollAnswer> answers) {
+        answers.sort((o1, o2) -> Integer.compare(o2.getVotes(), o1.getVotes()));
     }
 
     private void loadPoll() {
@@ -146,7 +143,6 @@ public enum PollEngine {
                 ResultSet rset = statement.getResultSet();
 
                 while (rset.next()) {
-
                     question = rset.getString("question");
                     endTime = rset.getLong("end_time") * 1000;
 
@@ -156,11 +152,10 @@ public enum PollEngine {
 
                     PollAnswer answer = new PollAnswer(answerId, answerText, answerVotes);
                     answers.add(answer);
-
                 }
 
                 if (question != null) {
-                    _poll = new Poll(question, answers, endTime);
+                    poll = new Poll(question, answers, endTime);
                     startPoll(true, false);
                 }
 
@@ -202,17 +197,6 @@ public enum PollEngine {
             statement.execute();
         } catch (SQLException e) {
             _log.error("could not deleteAllPlayerVotes:", e);
-        }
-    }
-
-    private static class AnswersComparator implements Comparator<PollAnswer> {
-
-        @Override
-        public int compare(PollAnswer o1, PollAnswer o2) {
-            int votes1 = o1.getVotes();
-            int votes2 = o2.getVotes();
-
-            return Integer.compare(votes2, votes1);
         }
     }
 }

@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _366_SilverHairedShaman extends Quest {
     //NPC
@@ -68,7 +67,7 @@ public final class _366_SilverHairedShaman extends Quest {
                 htmltext = "30111-03.htm";
             else if (cond == 1 && st.getQuestItemsCount(SAIRONS_SILVER_HAIR) >= 1) {
                 st.giveItems(ADENA_ID, (st.getQuestItemsCount(SAIRONS_SILVER_HAIR) * ADENA_PER_ONE + START_ADENA));
-                st.takeItems(SAIRONS_SILVER_HAIR, -1);
+                st.takeItems(SAIRONS_SILVER_HAIR);
                 htmltext = "30111-have.htm";
             }
         return htmltext;
@@ -78,7 +77,7 @@ public final class _366_SilverHairedShaman extends Quest {
     public String onKill(NpcInstance npc, QuestState st) {
         int cond = st.getCond();
         if (cond == 1 && Rnd.chance(66)) {
-            st.giveItems(SAIRONS_SILVER_HAIR, 1);
+            st.giveItems(SAIRONS_SILVER_HAIR);
             st.playSound(SOUND_MIDDLE);
         }
         return null;

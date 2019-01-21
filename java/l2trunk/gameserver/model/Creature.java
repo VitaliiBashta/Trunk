@@ -29,7 +29,6 @@ import l2trunk.gameserver.model.actor.recorder.CharStatsChangeRecorder;
 import l2trunk.gameserver.model.base.InvisibleType;
 import l2trunk.gameserver.model.base.TeamType;
 import l2trunk.gameserver.model.entity.Reflection;
-import l2trunk.gameserver.model.entity.events.GlobalEvent;
 import l2trunk.gameserver.model.entity.olympiad.CompType;
 import l2trunk.gameserver.model.instances.MinionInstance;
 import l2trunk.gameserver.model.instances.MonsterInstance;
@@ -86,7 +85,7 @@ public abstract class Creature extends GameObject {
      * HashMap(Integer, L2Skill) containing all skills of the L2Character
      */
     protected final Map<Integer, Skill> skills = new ConcurrentSkipListMap<>();
-    final Map<Integer, TimeStamp> _skillReuses = new HashMap<>();
+    final Map<Integer, TimeStamp> skillReuses = new HashMap<>();
     final CharTemplate baseTemplate;
     private final Map<Integer, Long[]> receivedDebuffs;
     private final AtomicState afraid = new AtomicState();
@@ -131,7 +130,7 @@ public abstract class Creature extends GameObject {
     public Future<?> _skillTask;
     public boolean isMoving;
     public boolean isFollow;
-    protected volatile CharStatsChangeRecorder<? extends Creature> _statsRecorder;
+    protected volatile CharStatsChangeRecorder<? extends Creature> statsRecorder;
     protected boolean invul;
     protected CharTemplate template;
     protected String name;
@@ -229,6 +228,10 @@ public abstract class Creature extends GameObject {
     @Override
     public HardReference<? extends Creature> getRef() {
         return reference;
+    }
+
+    public boolean isArtefact() {
+        return false;
     }
 
     boolean isAttackAborted() {
@@ -457,9 +460,9 @@ public abstract class Creature extends GameObject {
 
         // FIX for /useskill re-use exploit
         if (oldSkill != null) {
-            TimeStamp sts = _skillReuses.get(oldSkill.hashCode());
+            TimeStamp sts = skillReuses.get(oldSkill.hashCode());
             if (sts != null && sts.hasNotPassed()) {
-                _skillReuses.put(newSkill.hashCode(), sts);
+                skillReuses.put(newSkill.hashCode(), sts);
             }
         }
 
@@ -819,7 +822,7 @@ public abstract class Creature extends GameObject {
                 }
 
             Player pl = getPlayer();
-            for (Creature target: targets) {
+            for (Creature target : targets) {
 
                 // Фильтруем неуязвимые цели
                 if (skill.isOffensive() && target.isInvul()) {
@@ -972,7 +975,7 @@ public abstract class Creature extends GameObject {
      * @param delay (seconds * 1000)
      */
     public void disableSkill(Skill skill, long delay) {
-        _skillReuses.put(skill.hashCode(), new TimeStamp(skill, delay));
+        skillReuses.put(skill.hashCode(), new TimeStamp(skill, delay));
     }
 
     public abstract boolean isAutoAttackable(Creature attacker);
@@ -1209,14 +1212,6 @@ public abstract class Creature extends GameObject {
     public void doCast(Skill skill, Creature target, boolean forceUse) {
         if (skill == null)
             return;
-
-        for (GlobalEvent e : getEvents()) {
-            if (!e.canUseSkill(this, target, skill)) {
-                sendMessage("The skill you are trying to cast is not allowed in your current state");
-                return;
-            }
-        }
-
         List<Integer> itemConsume = skill.getItemConsume();
 
         if (itemConsume.get(0) > 0)
@@ -1479,7 +1474,7 @@ public abstract class Creature extends GameObject {
     }
 
     public void enableSkill(Skill skill) {
-        _skillReuses.remove(skill.hashCode());
+        skillReuses.remove(skill.hashCode());
     }
 
     /**
@@ -1550,7 +1545,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final double getCurrentCpRatio() {
-        return getCurrentCp() / getMaxCp();
+        return currentCp / getMaxCp();
     }
 
     public final double getCurrentCpPercents() {
@@ -1558,7 +1553,7 @@ public abstract class Creature extends GameObject {
     }
 
     public final boolean isCurrentCpZero() {
-        return getCurrentCp() < 1;
+        return currentCp < 1;
     }
 
     public final double getCurrentHp() {
@@ -1577,10 +1572,6 @@ public abstract class Creature extends GameObject {
         return getCurrentHp() >= getMaxHp();
     }
 
-    public final boolean isCurrentHpZero() {
-        return getCurrentHp() < 1;
-    }
-
     public final double getCurrentMp() {
         return _currentMp;
     }
@@ -1595,14 +1586,6 @@ public abstract class Creature extends GameObject {
 
     public final double getCurrentMpPercents() {
         return getCurrentMpRatio() * 100.;
-    }
-
-    public final boolean isCurrentMpFull() {
-        return getCurrentMp() >= getMaxMp();
-    }
-
-    public final boolean isCurrentMpZero() {
-        return getCurrentMp() < 1;
     }
 
     public Location getDestination() {
@@ -1914,12 +1897,12 @@ public abstract class Creature extends GameObject {
     }
 
     public boolean isSkillDisabled(Skill skill) {
-        TimeStamp sts = _skillReuses.get(skill.hashCode());
+        TimeStamp sts = skillReuses.get(skill.hashCode());
         if (sts == null)
             return false;
         if (sts.hasNotPassed())
             return true;
-        _skillReuses.remove(skill.hashCode());
+        skillReuses.remove(skill.hashCode());
         return false;
     }
 
@@ -2053,7 +2036,7 @@ public abstract class Creature extends GameObject {
                     // catch (Exception e)
                     // {
                     // if (_moveExceptionsThrown < 3)
-                    // _log.error("Building path has failed for character: " + this + " at location " + getLoc() + ". Character will be teleported automatically nearby.", e);
+                    // _log.error("Building path has failed for character: " + this + " at location " + getTerritory() + ". Character will be teleported automatically nearby.", e);
                     //
                     // _moveExceptionsThrown++;
                     // teleToLocation(GeoEngine.moveCheck(getX(), getY(), getZ(), dest.x, dest.y, geoIndex));
@@ -2121,7 +2104,7 @@ public abstract class Creature extends GameObject {
     }
 
     public void setFollowTarget(Creature target) {
-        followTarget = target == null ? HardReferences.<Creature>emptyRef() : target.getRef();
+        followTarget = target == null ? HardReferences.emptyRef() : target.getRef();
     }
 
     public boolean followToCharacter(Creature target, int offset, boolean forestalling) {
@@ -2520,7 +2503,7 @@ public abstract class Creature extends GameObject {
         player.getAI().Attack(this, true, shift);
     }
 
-    public void onHitTimer(Creature target, int damage, boolean crit, boolean miss, boolean soulshot, boolean shld, boolean unchargeSS) {
+    void onHitTimer(Creature target, int damage, boolean crit, boolean miss, boolean soulshot, boolean shld, boolean unchargeSS) {
         if (isAlikeDead()) {
             sendActionFailed();
             return;
@@ -3502,7 +3485,7 @@ public abstract class Creature extends GameObject {
                 x = newCoords.x;
                 y = newCoords.y;
                 z = newCoords.z;
-                player.getParty().getDimensionalRift().usedTeleport(player);
+                player.getParty().getDimensionalRift().usedTeleport();
             }
         }
 
@@ -3836,8 +3819,6 @@ public abstract class Creature extends GameObject {
 
     @Override
     protected void onSpawn() {
-        super.onSpawn();
-
         updateStats();
         updateZones();
     }
@@ -3946,13 +3927,13 @@ public abstract class Creature extends GameObject {
     }
 
     protected CharStatsChangeRecorder<? extends Creature> getStatsRecorder() {
-        if (_statsRecorder == null)
+        if (statsRecorder == null)
             synchronized (this) {
-                if (_statsRecorder == null)
-                    _statsRecorder = new CharStatsChangeRecorder<>(this);
+                if (statsRecorder == null)
+                    statsRecorder = new CharStatsChangeRecorder<>(this);
             }
 
-        return _statsRecorder;
+        return statsRecorder;
     }
 
     @Override
@@ -3970,11 +3951,11 @@ public abstract class Creature extends GameObject {
     }
 
     public Collection<TimeStamp> getSkillReuses() {
-        return _skillReuses.values();
+        return skillReuses.values();
     }
 
     TimeStamp getSkillReuse(Skill skill) {
-        return _skillReuses.get(skill.hashCode());
+        return skillReuses.get(skill.hashCode());
     }
 
     String getVisibleName() {

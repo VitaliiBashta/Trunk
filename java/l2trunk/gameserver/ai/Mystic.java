@@ -19,7 +19,7 @@ public class Mystic extends DefaultAI {
 
     @Override
     public int getRatePHYS() {
-        return _damSkills.size() == 0 ? 25 : 0;
+        return damSkills.size() == 0 ? 25 : 0;
     }
 
     @Override

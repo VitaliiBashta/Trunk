@@ -34,13 +34,13 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MonsterInstance extends NpcInstance {
+    private static final double MIN_DISTANCE_FOR_USE_UD = 200.0;
+    private static final double MIN_DISTANCE_FOR_CANCEL_UD = 50.0;
+    private static final double UD_USE_CHANCE = 30.0;
     private final MinionList minionList;
     private final Lock harvestLock = new ReentrantLock();
     private final Lock absorbLock = new ReentrantLock();
     private final Lock sweepLock = new ReentrantLock();
-    private final double MIN_DISTANCE_FOR_USE_UD = 200.0;
-    private final double MIN_DISTANCE_FOR_CANCEL_UD = 50.0;
-    private final double UD_USE_CHANCE = 30.0;
     private ScheduledFuture<?> minionMaintainTask;
     /**
      * crops
@@ -61,7 +61,7 @@ public class MonsterInstance extends NpcInstance {
     /**
      * True if a Dwarf has used Spoil on this L2NpcInstance
      */
-    private boolean _isSpoiled;
+    private boolean isSpoiled;
     private int spoilerId;
     /**
      * Table containing all Items that a Dwarf can Sweep on this L2NpcInstance
@@ -321,7 +321,7 @@ public class MonsterInstance extends NpcInstance {
                         if (interested.isEmpty())
                             continue;
 
-                        toReward = interested.get(Rnd.get(interested.size()));
+                        toReward = Rnd.get(interested);
                         if (toReward == null)
                             toReward = killer;
                     }
@@ -528,7 +528,7 @@ public class MonsterInstance extends NpcInstance {
      * Return True if this L2NpcInstance has drops that can be sweeped.<BR><BR>
      */
     public boolean isSpoiled() {
-        return _isSpoiled;
+        return isSpoiled;
     }
 
     public boolean isSpoiled(Player player) {
@@ -550,7 +550,7 @@ public class MonsterInstance extends NpcInstance {
         try {
             if (isSpoiled())
                 return false;
-            _isSpoiled = true;
+            isSpoiled = true;
             spoilerId = player.getObjectId();
         } finally {
             sweepLock.unlock();
@@ -584,7 +584,7 @@ public class MonsterInstance extends NpcInstance {
     private void clearSweep() {
         sweepLock.lock();
         try {
-            _isSpoiled = false;
+            isSpoiled = false;
             spoilerId = 0;
             _sweepItems = null;
         } finally {
@@ -610,18 +610,13 @@ public class MonsterInstance extends NpcInstance {
         mod *= Experience.penaltyModifier(diff, 9);
 
         List<RewardItem> rewardItems = list.roll(activePlayer, mod, this instanceof RaidBossInstance, isChampion());
-        switch (type) {
-            case SWEEP:
-                _sweepItems = rewardItems;
-                break;
-            default:
-                for (RewardItem drop : rewardItems) {
+        if (type == RewardType.SWEEP) {
+            _sweepItems = rewardItems;
+        } else {
+            rewardItems.stream()
+                    .filter(drop -> !(isSeeded() && !_altSeed && !drop.isAdena))
                     // Если в моба посеяно семя, причем не альтернативное - не давать никакого дропа, кроме адены.
-                    if (isSeeded() && !_altSeed && !drop.isAdena)
-                        continue;
-                    dropItem(activePlayer, drop.itemId, drop.count);
-                }
-                break;
+                    .forEach(drop -> dropItem(activePlayer, drop.itemId, drop.count));
         }
     }
 

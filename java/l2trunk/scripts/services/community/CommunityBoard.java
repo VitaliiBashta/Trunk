@@ -132,7 +132,7 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
                 html = html.replaceFirst("%servhwid%", "<a action=\"bypass -h user_lock\">Lock</a>");
                 html = html.replaceFirst("%servip%", "<a action=\"bypass -h user_lock\">Lock</a>");
                 html = html.replaceFirst("%ip%", player.getIP());
-                html = html.replaceFirst("%mytime%", getTimeInServer(player));
+                html = html.replaceFirst("%mytime%", getTimeInServer());
                 html = html.replaceFirst("%online%", String.valueOf(GameObjectsStorage.getAllPlayersCount()));
             } else if (bypass.equals("_bbspage:HowToDonate")) {
                 html = HtmCache.INSTANCE.getNotNull(Config.BBS_HOME_DIR + "pages/HowToDonate.htm", player);
@@ -181,10 +181,6 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
                 player.sendMessage("Augmentation function disabled by an administrator.!");
             return;
         }
-//		else if (bypass.startsWith("_maillist_0_1_0_") || bypass.startsWith("_bbsPartyMatching"))
-//		{
-//			PartyMatchingBBSManager.INSTANCE().parsecmd(bypass, player);
-//		}
         else if (bypass.startsWith("_bbsdeaugment")) {
             if (Config.BBS_PVP_ALLOW_AUGMENT)
                 player.sendPacket(Msg.SELECT_THE_ITEM_FROM_WHICH_YOU_WISH_TO_REMOVE_AUGMENTATION, ExShowVariationCancelWindow.STATIC);
@@ -218,31 +214,10 @@ public final class CommunityBoard implements ScriptFile, ICommunityBoardHandler 
         return Util.formatAdena(GameObjectsStorage.getAllPlayersStream().count());
     }
 
-    @Override
-    public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5) {
 
-    }
-
-    private String getTimeInServer(Player player) {
+    private String getTimeInServer() {
         int h = GameTimeController.INSTANCE.getGameHour();
         int m = GameTimeController.INSTANCE.getGameMin();
-        if (GameTimeController.INSTANCE.isNowNight()) {
-            String nd = player.isLangRus() ? "Night." : "Night.";
-        } else {
-            String nd = player.isLangRus() ? "Day." : "Day.";
-        }
-        String strH;
-        if (h < 10) {
-            strH = "0" + h;
-        } else {
-            strH = "" + h;
-        }
-        String strM;
-        if (m < 10) {
-            strM = "0" + m;
-        } else {
-            strM = "" + m;
-        }
-        return strH + ":" + strM;
+        return (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m);
     }
 }

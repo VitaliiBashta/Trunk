@@ -104,7 +104,7 @@ public final class TerritoryManagerInstance extends NpcInstance {
             ItemFunctions.addItem(player, badgeId, rewards[0], true, "TerritoryManager");
             ItemFunctions.addItem(player, ItemTemplate.ITEM_ID_ADENA, rewards[1], true, "TerritoryManager");
             if (rewards[2] > 0)
-                player.setFame(player.getFame() + rewards[2], "CalcBadges:" + dominion.getId());
+                player.addFame(rewards[2], "CalcBadges:" + dominion.getId());
 
             siegeEvent.clearReward(player.getObjectId());
             showChatWindow(player, 7);

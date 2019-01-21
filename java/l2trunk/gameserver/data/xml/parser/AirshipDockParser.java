@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,11 +57,11 @@ public enum AirshipDockParser {
 
     private List<BoatPoint> parsePoints(Element listElement) {
         if (listElement == null)
-            return Collections.emptyList();
+            return List.of();
         List<BoatPoint> list = new ArrayList<>(5);
         for (Iterator<Element> iterator = listElement.elementIterator(); iterator.hasNext(); )
             list.add(BoatPoint.parse(iterator.next()));
 
-        return list.isEmpty() ? Collections.emptyList() : list;
+        return list.isEmpty() ? List.of() : list;
     }
 }

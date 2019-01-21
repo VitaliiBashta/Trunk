@@ -7,7 +7,7 @@ import java.util.List;
 
 public final class ConditionLogicAnd extends Condition {
 
-    public List<Condition> _conditions = new ArrayList<>();
+    public List<Condition> conditions = new ArrayList<>();
 
     public ConditionLogicAnd() {
         super();
@@ -16,14 +16,12 @@ public final class ConditionLogicAnd extends Condition {
     public void add(Condition condition) {
         if (condition == null)
             return;
-        _conditions.add(condition);
+        conditions.add(condition);
     }
 
     @Override
     protected boolean testImpl(Env env) {
-        for (Condition c : _conditions)
-            if (!c.test(env))
-                return false;
-        return true;
+        return conditions.stream()
+                .allMatch(c -> c.test(env));
     }
 }

@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _408_PathToElvenwizard extends Quest {
     //npc
@@ -89,21 +88,21 @@ public final class _408_PathToElvenwizard extends Quest {
             }
         } else if (event.equalsIgnoreCase("408_4")) {
             if (st.getQuestItemsCount(ROGELLIAS_LETTER_ID) > 0) {
-                st.takeItems(ROGELLIAS_LETTER_ID, -1);
-                st.giveItems(CHARM_OF_GRAIN_ID, 1);
+                st.takeItems(ROGELLIAS_LETTER_ID);
+                st.giveItems(CHARM_OF_GRAIN_ID);
                 htmltext = "grain_q0408_02.htm";
             }
         } else if (event.equalsIgnoreCase("408_2")) {
             if (st.getQuestItemsCount(PURE_AQUAMARINE_ID) > 0)
                 htmltext = "rogellia_q0408_13.htm";
             else if (st.getQuestItemsCount(PURE_AQUAMARINE_ID) < 1 && st.getQuestItemsCount(FERTILITY_PERIDOT_ID) > 0) {
-                st.giveItems(APPETIZING_APPLE_ID, 1);
+                st.giveItems(APPETIZING_APPLE_ID);
                 htmltext = "rogellia_q0408_14.htm";
             }
         } else if (event.equalsIgnoreCase("408_5")) {
             if (st.getQuestItemsCount(APPETIZING_APPLE_ID) > 0) {
-                st.takeItems(APPETIZING_APPLE_ID, -1);
-                st.giveItems(SAP_OF_WORLD_TREE_ID, 1);
+                st.takeItems(APPETIZING_APPLE_ID);
+                st.giveItems(SAP_OF_WORLD_TREE_ID);
                 htmltext = "thalya_q0408_02.htm";
             }
         } else if (event.equalsIgnoreCase("408_3"))
@@ -148,7 +147,7 @@ public final class _408_PathToElvenwizard extends Quest {
                 if (st.getQuestItemsCount(MAGICAL_POWERS_RUBY_ID) < 1 | st.getQuestItemsCount(NOBILITY_AMETHYST_ID) < 1 | st.getQuestItemsCount(PURE_AQUAMARINE_ID) < 1)
                     htmltext = "rogellia_q0408_11.htm";
                 else if (st.getQuestItemsCount(MAGICAL_POWERS_RUBY_ID) > 0 && st.getQuestItemsCount(NOBILITY_AMETHYST_ID) > 0 && st.getQuestItemsCount(PURE_AQUAMARINE_ID) > 0) {
-                    st.takeItems(MAGICAL_POWERS_RUBY_ID, -1);
+                    st.takeItems(MAGICAL_POWERS_RUBY_ID);
                     st.takeItems(PURE_AQUAMARINE_ID, st.getQuestItemsCount(PURE_AQUAMARINE_ID));
                     st.takeItems(NOBILITY_AMETHYST_ID, st.getQuestItemsCount(NOBILITY_AMETHYST_ID));
                     st.takeItems(FERTILITY_PERIDOT_ID, st.getQuestItemsCount(FERTILITY_PERIDOT_ID));
@@ -183,23 +182,23 @@ public final class _408_PathToElvenwizard extends Quest {
                 if (st.getQuestItemsCount(GOLD_LEAVES_ID) < 5)
                     htmltext = "thalya_q0408_03.htm";
                 else {
-                    st.takeItems(GOLD_LEAVES_ID, -1);
-                    st.takeItems(SAP_OF_WORLD_TREE_ID, -1);
-                    st.giveItems(PURE_AQUAMARINE_ID, 1);
+                    st.takeItems(GOLD_LEAVES_ID);
+                    st.takeItems(SAP_OF_WORLD_TREE_ID);
+                    st.giveItems(PURE_AQUAMARINE_ID);
                     htmltext = "thalya_q0408_04.htm";
                 }
         } else if (npcId == NORTHWIND && cond > 0)
             if (st.getQuestItemsCount(IMMORTAL_LOVE_ID) > 0) {
-                st.takeItems(IMMORTAL_LOVE_ID, -1);
-                st.giveItems(LUCKY_POTPOURI_ID, 1);
+                st.takeItems(IMMORTAL_LOVE_ID);
+                st.giveItems(LUCKY_POTPOURI_ID);
                 htmltext = "northwindel_q0408_01.htm";
             } else if (st.getQuestItemsCount(LUCKY_POTPOURI_ID) > 0)
                 if (st.getQuestItemsCount(AMETHYST_ID) < 2)
                     htmltext = "northwindel_q0408_02.htm";
                 else {
-                    st.takeItems(AMETHYST_ID, -1);
-                    st.takeItems(LUCKY_POTPOURI_ID, -1);
-                    st.giveItems(NOBILITY_AMETHYST_ID, 1);
+                    st.takeItems(AMETHYST_ID);
+                    st.takeItems(LUCKY_POTPOURI_ID);
+                    st.giveItems(NOBILITY_AMETHYST_ID);
                     htmltext = "northwindel_q0408_03.htm";
                 }
         return htmltext;

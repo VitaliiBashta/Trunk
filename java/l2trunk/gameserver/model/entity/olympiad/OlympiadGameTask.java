@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ScheduledFuture;
 
-public class OlympiadGameTask extends RunnableImpl {
+public final class OlympiadGameTask extends RunnableImpl {
     private static final Logger _log = LoggerFactory.getLogger(OlympiadGameTask.class);
 
     private final OlympiadGame _game;

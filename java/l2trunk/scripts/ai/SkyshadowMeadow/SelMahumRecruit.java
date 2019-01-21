@@ -24,7 +24,7 @@ public final class SelMahumRecruit extends Fighter {
     private long _wait_timeout = System.currentTimeMillis() + 180000;
     private List<NpcInstance> arm = new ArrayList<>();
     private boolean _firstTimeAttacked = true;
-    private static final NpcString[] _text = {NpcString.SCHOOL1, NpcString.SCHOOL2};
+    private static final List<NpcString> TEXT = List.of(NpcString.SCHOOL1, NpcString.SCHOOL2);
 
     public SelMahumRecruit(NpcInstance actor) {
         super(actor);
@@ -64,7 +64,7 @@ public final class SelMahumRecruit extends Fighter {
                 if (Rnd.chance(20)) {
                     if (_firstTimeAttacked) {
                         _firstTimeAttacked = false;
-                        Functions.npcSay(actor, _text[Rnd.get(_text.length)]);
+                        Functions.npcSay(actor, Rnd.get(TEXT));
                     }
                 }
                 actor.moveToLocation(actor.getSpawnedLoc(), 0, true);

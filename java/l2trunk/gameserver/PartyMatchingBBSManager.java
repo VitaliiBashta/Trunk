@@ -6,8 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.network.serverpackets.ShowBoard;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -74,7 +72,7 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
     }
 
     private String partyMatchingList(Player player, int currentPage) {
-        String content = HtmCache.INSTANCE().getNotNull("CommunityBoard/PartyMatching/Home.htm", player);
+        String content = HtmCache.INSTANCE.getNotNull("CommunityBoard/PartyMatching/Home.htm", player);
         if (content == null) {
             content = "<html><body><br><br><center>Error 404: File not found: 'CommunityBoard/PartyMatching/Home.htm'.<br>Report to an administrator.</center></body></html>";
         }
@@ -342,7 +340,6 @@ public final class PartyMatchingBBSManager extends Functions implements ICommuni
     @Override
     public void onWriteCommand(Player player, String bypass, String arg1,
                                String arg2, String arg3, String arg4, String arg5) {
-        // TODO Auto-generated method stub
 
     }
 

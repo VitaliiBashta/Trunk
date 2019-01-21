@@ -129,7 +129,7 @@ public final class _406_PathToElvenKnight extends Quest {
             st.playSound(SOUND_ACCEPT);
         } else if (event.equalsIgnoreCase("blacksmith_kluto_q0406_02.htm")) {
             st.takeItems(SoriussLetter, -1);
-            st.giveItems(KlutosMemo, 1);
+            st.giveItems(KlutosMemo);
             st.setCond(4);
             st.setState(STARTED);
         } else
@@ -152,15 +152,15 @@ public final class _406_PathToElvenKnight extends Quest {
                 else
                     htmltext = "master_sorius_q0406_08.htm";
             } else if (cond == 2) {
-                st.takeItems(TopazPiece, -1);
-                st.giveItems(SoriussLetter, 1);
+                st.takeItems(TopazPiece);
+                st.giveItems(SoriussLetter);
                 htmltext = "master_sorius_q0406_09.htm";
                 st.setCond(3);
                 st.setState(STARTED);
             } else if (cond == 3 || cond == 4 || cond == 5)
                 htmltext = "master_sorius_q0406_11.htm";
             else if (cond == 6) {
-                st.takeItems(KlutoBox, -1);
+                st.takeItems(KlutoBox);
                 if (st.getPlayer().getClassId().getLevel() == 1) {
                     st.giveItems(ElvenKnightBrooch, 1);
                     if (!st.getPlayer().getVarB("prof1")) {
@@ -183,9 +183,9 @@ public final class _406_PathToElvenKnight extends Quest {
                 else
                     htmltext = "blacksmith_kluto_q0406_04.htm";
             } else if (cond == 5) {
-                st.takeItems(EmeraldPiece, -1);
-                st.takeItems(KlutosMemo, -1);
-                st.giveItems(KlutoBox, 1);
+                st.takeItems(EmeraldPiece);
+                st.takeItems(KlutosMemo);
+                st.giveItems(KlutoBox);
                 htmltext = "blacksmith_kluto_q0406_05.htm";
                 st.setCond(6);
                 st.setState(STARTED);

@@ -10,7 +10,7 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 /**
  * Format SSSSSS
  */
-public class RequestBBSwrite extends L2GameClientPacket {
+public final class RequestBBSwrite extends L2GameClientPacket {
     private String _url;
     private String _arg1;
     private String _arg2;

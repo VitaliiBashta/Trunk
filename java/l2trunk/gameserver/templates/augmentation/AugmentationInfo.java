@@ -4,7 +4,6 @@ import l2trunk.commons.math.random.RndSelector;
 import l2trunk.gameserver.templates.item.ItemTemplate;
 
 public class AugmentationInfo {
-    public static final int MAX_AUGMENTATION_COUNT = 2;
     private final int _mineralId;
     private final int _feeItemId;
     private final long _feeItemCount;

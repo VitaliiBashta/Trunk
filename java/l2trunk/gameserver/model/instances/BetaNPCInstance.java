@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.entity.olympiad.Olympiad;
 import l2trunk.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import l2trunk.gameserver.network.serverpackets.SkillList;
 import l2trunk.gameserver.network.serverpackets.UserInfo;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.npc.NpcTemplate;
 import l2trunk.gameserver.utils.Log;
 
@@ -47,13 +46,13 @@ public final class BetaNPCInstance extends NpcInstance {
             } else {
                 player.sendMessage("You don't have clan to use this feature!");
             }
-        } else if (command.equalsIgnoreCase("add_exp_sp")) {
+        } else if ("add_exp_sp".equalsIgnoreCase(command)) {
             player.addExpAndSp(999999999L, 999999999L);
-        } else if (command.equalsIgnoreCase("add_fame")) {
-            player.setFame(player.getFame() + 10000, "BetaNpc");
+        } else if ("add_fame".equalsIgnoreCase(command)) {
+            player.addFame(10000, "BetaNpc");
             player.sendPacket(new UserInfo(player));
             player.sendMessage("You received 10.000 fame points !");
-        } else if (command.equalsIgnoreCase("give_noblesse")) {
+        } else if ("give_noblesse".equalsIgnoreCase(command)) {
             if (!player.isNoble()) {
                 Olympiad.addNoble(player.getPlayer());
                 player.getPlayer().setNoble(true);

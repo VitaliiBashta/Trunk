@@ -1555,15 +1555,15 @@ public class NpcInstance extends Creature {
 
     @Override
     public NpcStatsChangeRecorder getStatsRecorder() {
-        if (_statsRecorder == null) {
+        if (statsRecorder == null) {
             synchronized (this) {
-                if (_statsRecorder == null) {
-                    _statsRecorder = new NpcStatsChangeRecorder(this);
+                if (statsRecorder == null) {
+                    statsRecorder = new NpcStatsChangeRecorder(this);
                 }
             }
         }
 
-        return (NpcStatsChangeRecorder) _statsRecorder;
+        return (NpcStatsChangeRecorder) statsRecorder;
     }
 
     public int getNpcState() {

@@ -39,7 +39,7 @@ public class OlympiadGame {
     private static final List<Integer> STADIUMS_INSTANCE_ID = List.of(147, 148, 149, 150);
     private final int id;
     private final Reflection reflection;
-    private final CompType _type;
+    private final CompType type;
     private final OlympiadTeam team1;
     private final OlympiadTeam team2;
     private final List<Player> spectators = new CopyOnWriteArrayList<>();
@@ -52,7 +52,7 @@ public class OlympiadGame {
     private boolean _buffersSpawned = false;
 
     public OlympiadGame(int id, CompType type, List<Integer> opponents) {
-        _type = type;
+        this.type = type;
         this.id = id;
         reflection = new Reflection();
         InstantZone instantZone = InstantZoneHolder.getInstantZone(Rnd.get(STADIUMS_INSTANCE_ID));
@@ -72,15 +72,15 @@ public class OlympiadGame {
         Log.add("Olympiad System: Game - " + id + ": " + team1.getName() + " Vs " + team2.getName(), "olympiad");
     }
 
-    public void addBuffers() {
-        if (!_type.hasBuffer())
+    void addBuffers() {
+        if (!type.hasBuffer())
             return;
 
         reflection.spawnByGroup("olympiad_" + reflection.getInstancedZoneId() + "_buffers");
         _buffersSpawned = true;
     }
 
-    public void deleteBuffers() {
+    void deleteBuffers() {
         if (!_buffersSpawned)
             return;
 
@@ -91,7 +91,7 @@ public class OlympiadGame {
     public void managerShout() {
         for (NpcInstance npc : Olympiad.getNpcs()) {
             NpcString npcString;
-            switch (_type) {
+            switch (type) {
                 case TEAM:
                     npcString = NpcString.OLYMPIAD_CLASSFREE_TEAM_MATCH_IS_GOING_TO_BEGIN_IN_ARENA_S1_IN_A_MOMENT;
                     break;
@@ -223,14 +223,14 @@ public class OlympiadGame {
             }
         }
 
-        if (_type != CompType.TEAM) {
+        if (type != CompType.TEAM) {
             int team = team1 == winnerTeam ? 1 : 2;
 
             TeamMember member1 = ArrayUtils.valid(team1 == winnerTeam ? winnerMembers : looserMembers, 0);
             TeamMember member2 = ArrayUtils.valid(team2 == winnerTeam ? winnerMembers : looserMembers, 0);
             if (member1 != null && member2 != null) {
                 int diff = (int) ((System.currentTimeMillis() - _startTime) / 1000L);
-                OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member2.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, team, _type.ordinal());
+                OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member2.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, team, type.ordinal());
 
                 OlympiadHistoryManager.INSTANCE.saveHistory(h);
             }
@@ -291,12 +291,12 @@ public class OlympiadGame {
             }
         }
 
-        if (_type != CompType.TEAM) {
+        if (type != CompType.TEAM) {
             TeamMember member1 = teamMembers1.stream().findFirst().orElse(null);
             TeamMember member2 = teamMembers2.stream().findFirst().orElse(null);
             if (member1 != null && member2 != null) {
                 int diff = (int) ((System.currentTimeMillis() - _startTime) / 1000L);
-                OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member2.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, 0, _type.ordinal());
+                OlympiadHistory h = new OlympiadHistory(member1.getObjectId(), member2.getObjectId(), member1.getClassId(), member2.getClassId(), member1.getName(), member2.getName(), _startTime, diff, 0, type.ordinal());
 
                 OlympiadHistoryManager.INSTANCE.saveHistory(h);
             }
@@ -521,7 +521,7 @@ public class OlympiadGame {
     }
 
     public CompType getType() {
-        return _type;
+        return type;
     }
 
     public String getTeamName1() {

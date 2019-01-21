@@ -10,9 +10,6 @@ import java.util.List;
 
 
 public final class PlayerTemplate extends CharTemplate {
-    /**
-     * The Class<?> object of the L2Player
-     */
     public final ClassId classId;
 
     public final Race race;

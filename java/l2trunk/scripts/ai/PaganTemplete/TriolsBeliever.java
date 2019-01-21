@@ -8,14 +8,13 @@ import l2trunk.gameserver.model.World;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.utils.Location;
 
-/**
- * @author Grivesky
- * - AI for Rabe Boss Andreas Van Halter (29062).
- * - All the information about the AI ​​painted.
- * - AI is tested and works.
- */
+import java.util.List;
+
 public final class TriolsBeliever extends Mystic {
-    private static final Location[] locs = {new Location(-16128, -35888, -10726), new Location(-16397, -44970, -10724), new Location(-15729, -42001, -10724)};
+    private static final List<Location> locs = List.of(
+            new Location(-16128, -35888, -10726),
+            new Location(-16397, -44970, -10724),
+            new Location(-15729, -42001, -10724));
     private boolean tele = true;
 
     public TriolsBeliever(NpcInstance actor) {

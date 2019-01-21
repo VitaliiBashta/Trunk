@@ -18,8 +18,8 @@ public enum Achievements {
     INSTANCE;
     private static final Logger _log = LoggerFactory.getLogger(Achievements.class);
     // id-max
-    private final Map<Integer, Integer> _achievementMaxLevels = new HashMap<>();
-    private final List<AchievementCategory> _achievementCategories = new LinkedList<>();
+    private final Map<Integer, Integer> achievementMaxLevels = new HashMap<>();
+    private final List<AchievementCategory> achievementCategories = new LinkedList<>();
 
     Achievements() {
         load();
@@ -50,12 +50,11 @@ public enum Achievements {
         String achievements = HtmCache.INSTANCE.getNotNull("achievements/Achievements.htm", player);
 
         StringBuilder ac = new StringBuilder();
-        for (AchievementCategory cat : _achievementCategories)
-            ac.append(cat.getHtml(player));
+        achievementCategories.forEach(cat ->
+                ac.append(cat.getHtml(player)));
 
         achievements = achievements.replace("%categories%", ac.toString());
 
-        //player.sendPacket(html);
         player.sendPacket(new TutorialShowHtml(achievements));
     }
 
@@ -78,7 +77,7 @@ public enum Achievements {
         FULL_PAGE = FULL_PAGE.replaceAll("%back%", page == 1 ? "&nbsp;" : "<button value=\"\" action=\"bypass _bbs_achievements_cat " + category + " " + (page - 1) + "\" width=40 height=20 back=\"L2UI_CT1.Inventory_DF_Btn_RotateRight\" fore=\"L2UI_CT1.Inventory_DF_Btn_RotateRight\">");
         FULL_PAGE = FULL_PAGE.replaceAll("%more%", totalpages <= page ? "&nbsp;" : "<button value=\"\" action=\"bypass _bbs_achievements_cat " + category + " " + (page + 1) + "\" width=40 height=20 back=\"L2UI_CT1.Inventory_DF_Btn_RotateLeft\" fore=\"L2UI_CT1.Inventory_DF_Btn_RotateLeft\">");
 
-        AchievementCategory cat = _achievementCategories.stream().filter(ctg -> ctg.getCategoryId() == category).findAny().orElse(null);
+        AchievementCategory cat = achievementCategories.stream().filter(ctg -> ctg.getCategoryId() == category).findAny().orElse(null);
         if (cat == null) {
             _log.warn("Achievements: getCatById - cat - is null, return. for " + player.getName());
             return;
@@ -232,27 +231,27 @@ public enum Achievements {
     }
 
     public Achievement getAchievement(int achievementId, int achievementLevel) {
-        for (AchievementCategory cat : _achievementCategories) {
-            for (Achievement ach : cat.getAchievements()) {
-                if (ach.getId() == achievementId && ach.getLevel() == achievementLevel)
-                    return ach;
-            }
+        for (AchievementCategory cat : achievementCategories) {
+            Optional<Achievement> first = cat.getAchievements().stream()
+                    .filter(ach -> ach.getId() == achievementId)
+                    .filter(ach -> ach.getLevel() == achievementLevel)
+                    .findFirst();
+            if (first.isPresent()) return first.get();
         }
-
         return null;
     }
 
     public Collection<Integer> getAchievementIds() {
-        return _achievementMaxLevels.keySet();
+        return achievementMaxLevels.keySet();
     }
 
     public int getMaxLevel(int id) {
-        return _achievementMaxLevels.getOrDefault(id, 0);
+        return achievementMaxLevels.getOrDefault(id, 0);
     }
 
     private void load() {
-        _achievementMaxLevels.clear();
-        _achievementCategories.clear();
+        achievementMaxLevels.clear();
+        achievementCategories.clear();
         try {
             File file = new File("config/achievements.xml");
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -269,7 +268,7 @@ public enum Achievements {
                                 String categoryName = String.valueOf(i.getAttributes().getNamedItem("name").getNodeValue());
                                 String categoryIcon = String.valueOf(i.getAttributes().getNamedItem("icon").getNodeValue());
                                 String categoryDesc = String.valueOf(i.getAttributes().getNamedItem("desc").getNodeValue());
-                                _achievementCategories.add(new AchievementCategory(categoryId, categoryName, categoryIcon, categoryDesc));
+                                achievementCategories.add(new AchievementCategory(categoryId, categoryName, categoryIcon, categoryDesc));
                             }
                         }
                     } else if (z.getNodeName().equals("achievement")) {
@@ -299,7 +298,7 @@ public enum Achievements {
                                     }
                                 }
 
-                                _achievementCategories
+                                achievementCategories
                                         .stream()
                                         .filter(ctg -> ctg.getCategoryId() == achievementCategory)
                                         .findAny()
@@ -307,7 +306,7 @@ public enum Achievements {
                             }
                         }
 
-                        _achievementMaxLevels.put(achievementId, achievementMaxLevel);
+                        achievementMaxLevels.put(achievementId, achievementMaxLevel);
                     }
                 }
             }
@@ -318,7 +317,7 @@ public enum Achievements {
     }
 
     public void log() {
-        _log.info("Achievement System: Loaded " + _achievementCategories.size() + " achievement categories and " + _achievementMaxLevels.size() + " achievements.");
+        _log.info("Achievement System: Loaded " + achievementCategories.size() + " achievement categories and " + achievementMaxLevels.size() + " achievements.");
 
     }
 }

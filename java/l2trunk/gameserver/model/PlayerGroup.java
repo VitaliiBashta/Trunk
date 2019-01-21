@@ -22,15 +22,6 @@ public interface PlayerGroup extends Iterable<Player> {
 
     PlayerGroup setReflection(Reflection reflection);
 
-    /**
-     * Badly implemented. Iterates on every call. Useful only for singleton usage, else overriding is suggested.
-     *
-     * @return Maximum level of all members in the group.
-     */
-    default int getLevel() {
-        return stream().mapToInt(Player::getLevel).max().orElse(0);
-    }
-
     default void sendPacket(IStaticPacket... packets) {
         stream().forEach(p -> p.sendPacket(packets));
     }

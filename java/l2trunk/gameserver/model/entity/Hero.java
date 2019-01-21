@@ -1,6 +1,7 @@
 package l2trunk.gameserver.model.entity;
 
 import l2trunk.commons.collections.StatsSet;
+import l2trunk.commons.lang.Pair;
 import l2trunk.gameserver.Config;
 import l2trunk.gameserver.data.StringHolder;
 import l2trunk.gameserver.database.DatabaseFactory;
@@ -16,7 +17,6 @@ import l2trunk.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2trunk.gameserver.network.serverpackets.SocialAction;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.tables.ClanTable;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.utils.HtmlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -330,7 +330,7 @@ public enum Hero {
             for (int i = (page - 1) * perpage; i < list.size(); i++) {
                 breakat = i;
                 HeroDiary diary = list.get(i);
-                Map.Entry<String, String> entry = diary.toString(activeChar);
+                Pair<String, String> entry = diary.toString(activeChar);
 
                 fList.append("<tr><td>");
                 if (color)

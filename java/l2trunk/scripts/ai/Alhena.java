@@ -8,8 +8,10 @@ import l2trunk.gameserver.network.serverpackets.components.NpcString;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 
+import java.util.List;
+
 public final class Alhena extends DefaultAI {
-    private static final Location[] points = {
+    private static final List<Location> points = List.of(
             new Location(10968, 14620, -4248),
             new Location(11308, 15847, -4584),
             new Location(12119, 16441, -4584),
@@ -23,7 +25,7 @@ public final class Alhena extends DefaultAI {
             new Location(10551, 16775, -4584),
             new Location(11004, 15942, -4584),
             new Location(10827, 14757, -4248),
-            new Location(10968, 14620, -4248)};
+            new Location(10968, 14620, -4248));
 
     private int current_point = -1;
     private long wait_timeout = 0;
@@ -76,10 +78,10 @@ public final class Alhena extends DefaultAI {
             wait = false;
             current_point++;
 
-            if (current_point >= points.length)
+            if (current_point >= points.size())
                 current_point = 0;
 
-            addTaskMove(points[current_point], true);
+            addTaskMove(points.get(current_point), true);
             doTask();
             return true;
         }

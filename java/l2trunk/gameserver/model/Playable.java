@@ -494,7 +494,7 @@ public abstract class Playable extends Creature {
                             ai.notifyEvent(CtrlEvent.EVT_ATTACKED, this, damage);
                         }
                     }
-                    target.getAI().notifyEvent(CtrlEvent.EVT_SEE_SPELL, skill, this);
+                    target.getAI().notifySeeSpell(skill, this);
                 } else // исключать баффы питомца на владельца
                     if (target.isPlayable() && !target.equals(getPet()) && !((isSummon() || isPet()) && target.equals(player))) {
                         int aggro = skill.getEffectPoint() == 0 ? Math.max(1, (int) skill.getPower()) : skill.getEffectPoint();
@@ -503,7 +503,7 @@ public abstract class Playable extends Creature {
                                 .filter(Creature::isDead)
                                 .filter(npc -> npc.isInRangeZ(this, 2000L))
                                 .peek(npc ->
-                                        npc.getAI().notifyEvent(CtrlEvent.EVT_SEE_SPELL, skill, this))
+                                        npc.getAI().notifySeeSpell(skill, this))
                                 .filter(npc -> npc.getAggroList().get(target) != null)
                                 .forEach(npc -> {
                                     if (!skill.isHandler() && npc.paralizeOnAttack(player)) {

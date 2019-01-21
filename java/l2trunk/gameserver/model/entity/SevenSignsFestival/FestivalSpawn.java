@@ -502,25 +502,4 @@ public final class FestivalSpawn {
         this.loc.h = loc.h < 0 ? Rnd.get(65536) : loc.h;
         npcId = -1;
     }
-
-//    public static class NpcLocation {
-//        int x;
-//        int y;
-//        int z;
-//        int heading;
-//        int npcId;
-//
-//        NpcLocation(int x, int y, int z, int heading, int npcId) {
-//            this.x = x;
-//            this.y = y;
-//            this.z = z;
-//            this.heading = heading < 0 ? Rnd.get(65536) : heading;
-//            this.npcId = npcId;
-//        }
-//
-//        public Location getLoc() {
-//            return new Location(x, y, z, heading);
-//        }
-//    }
-
 }

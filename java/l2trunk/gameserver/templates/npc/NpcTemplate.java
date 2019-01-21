@@ -48,7 +48,7 @@ public final class NpcTemplate extends CharTemplate {
     private List<ClassId> teachInfo = new ArrayList<>();
     private List<Skill> _damageSkills = new ArrayList<>();
     private List<Skill> _dotSkills = new ArrayList<>();
-    private List<Skill> _debuffSkills = new ArrayList<>();
+    private List<Skill> debuffSkills = new ArrayList<>();
     private List<Skill> _buffSkills = new ArrayList<>();
     private List<Skill> _stunSkills = new ArrayList<>();
     private List<Skill> healSkills = new ArrayList<>();
@@ -204,7 +204,7 @@ public final class NpcTemplate extends CharTemplate {
             case MUTE:
             case TELEPORT_NPC:
             case AGGRESSION:
-                _debuffSkills.add(skill);
+                debuffSkills.add(skill);
                 break;
             case BUFF:
                 _buffSkills.add(skill);
@@ -231,7 +231,7 @@ public final class NpcTemplate extends CharTemplate {
     }
 
     public List<Skill> getDebuffSkills() {
-        return _debuffSkills;
+        return debuffSkills;
     }
 
     public List<Skill> getBuffSkills() {

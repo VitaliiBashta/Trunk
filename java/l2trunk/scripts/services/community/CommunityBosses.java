@@ -33,20 +33,6 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
     private static final Logger _log = LoggerFactory.getLogger(CommunityBosses.class);
 
     private static final int BOSSES_PER_PAGE = 10;
-    private static final int[] BOSSES_TO_NOT_SHOW = {29006,//Core
-            29001,//Queen Ant
-            29014,//Orfen
-            25692,//Aenkinel
-            25423,//Fairy Queen Timiniel
-            25010,//Furious Thieles
-            25532,//Kechi
-            25119,//Messenger of Fairy Queen Berun
-            25159,//Paniel the Unicorn
-            25163,//Roaring Skylancer
-            25070, //Enchanted Forest Watcher Ruell
-            25603, //Darion
-            25544 //Tully
-    };
 
     /**
      * Showing list of bosses in Community Board with their Name, Level, Status and Show Details button
@@ -385,15 +371,13 @@ public final class CommunityBosses implements ScriptFile, ICommunityBoardHandler
         String cmd = st.nextToken();
         player.setSessionVar("add_fav", null);
 
-        if ("bbsmemo".equals(cmd) || "bbsbosslist".equals(cmd))//_bbsbosslist_sort_page_search
-        {
+        if ("bbsmemo".equals(cmd) || "bbsbosslist".equals(cmd)) {//_bbsbosslist_sort_page_search
             int sort = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "1");
             int page = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
             String search = st.hasMoreTokens() ? st.nextToken().trim() : "";
 
             sendBossListPage(player, getSortByIndex(sort), page, search);
-        } else if ("bbsboss".equals(cmd))//_bbsboss_sort_page_search_rbId_btn
-        {
+        } else if ("bbsboss".equals(cmd)) {//_bbsboss_sort_page_search_rbId_btn
             int sort = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "3");
             int page = Integer.parseInt(st.hasMoreTokens() ? st.nextToken() : "0");
             String search = st.hasMoreTokens() ? st.nextToken().trim() : "";

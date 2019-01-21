@@ -115,9 +115,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
             charInfoPackage.setFace(charData.getInt("face"));
             charInfoPackage.setHairStyle(charData.getInt("hairstyle"));
             charInfoPackage.setHairColor(charData.getInt("haircolor"));
-            charInfoPackage.setSex(female
-                    ? 1
-                    : 0);
+            charInfoPackage.setSex(female ? 1 : 0);
 
             charInfoPackage.setExp(subclassesSet.getLong("activeExp"));
             charInfoPackage.setSp(subclassesSet.getInteger("activeSp"));
@@ -222,7 +220,7 @@ public final class CharacterSelectionInfo extends L2GameServerPacket {
             writeD(0x00);
 
             Inventory.PAPERDOLL_ORDER.forEach(id ->
-                writeD(charInfoPackage.getPaperdollItemId(id)));
+                    writeD(charInfoPackage.getPaperdollItemId(id)));
 
             writeD(charInfoPackage.getHairStyle());
             writeD(charInfoPackage.getHairColor());

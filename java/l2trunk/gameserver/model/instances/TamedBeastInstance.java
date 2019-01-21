@@ -92,7 +92,7 @@ public final class TamedBeastInstance extends FeedableBeastInstance {
     }
 
     public void setTameType() {
-        Map.Entry<NpcString, int[]> type = TAMED_DATA[Rnd.get(TAMED_DATA.length)];
+        Map.Entry<NpcString, int[]> type = Rnd.get(TAMED_DATA);
 
         setNameNpcString(type.getKey());
         setName("#" + getNameNpcStringByNpcId().getId());

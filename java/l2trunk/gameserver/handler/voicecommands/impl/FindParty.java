@@ -19,7 +19,6 @@ import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.scripts.Functions;
 import l2trunk.loginserver.ThreadPoolManager;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +169,7 @@ public final class FindParty extends Functions implements IVoicedCommandHandler 
                     } else// if (partyLeader.isInParty())
                     {
                         //requestParty(partyLeader, player);
-                        long delay = System.currentTimeMillis() - player.getQuickVarL("partyrequestsent", 0);
+                        long delay = System.currentTimeMillis() - player.getQuickVarL("partyrequestsent");
                         if (delay < PARTY_REQUEST_DELAY) {
                             player.sendMessage("You can send a request every " + PARTY_REQUEST_DELAY / 1000 + " seconds. " + (PARTY_REQUEST_DELAY - delay) / 1000 + " seconds remaining until you can try again.");
                             return;

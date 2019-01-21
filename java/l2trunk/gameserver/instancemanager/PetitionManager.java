@@ -14,10 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,13 +37,6 @@ public final class PetitionManager implements IPetitionHandler {
 
     private int getNextId() {
         return _nextId.incrementAndGet();
-    }
-
-    public void clearCompletedPetitions() {
-        int numPetitions = getPendingPetitionCount();
-
-        getCompletedPetitions().clear();
-        _log.info("PetitionManager: Completed petition data cleared. " + numPetitions + " petition(s) removed.");
     }
 
     public void clearPendingPetitions() {
@@ -109,10 +99,7 @@ public final class PetitionManager implements IPetitionHandler {
                 }
 
                 if (currPetition.getPetitionerObjId() == petitioner.getObjectId() || currPetition.getResponderObjId() == petitioner.getObjectId()) {
-                    for (Say2 logMessage : currPetition.getLogMessages()) {
-                        petitioner.sendPacket(logMessage);
-                    }
-
+                    currPetition.getLogMessages().forEach(petitioner::sendPacket);
                     return;
                 }
             }
@@ -180,17 +167,9 @@ public final class PetitionManager implements IPetitionHandler {
     }
 
     public boolean isPetitionInProcess() {
-        for (Petition currPetition : getPendingPetitions().values()) {
-            if (currPetition == null) {
-                continue;
-            }
-
-            if (currPetition.getState() == PetitionState.In_Process) {
-                return true;
-            }
-        }
-
-        return false;
+        return getPendingPetitions().values().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(petition -> petition.getState() == PetitionState.In_Process);
     }
 
     public boolean isPetitionInProcess(int petitionId) {

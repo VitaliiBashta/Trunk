@@ -63,7 +63,7 @@ public final class DonateNPCInstance extends NpcInstance {
             }
 
             if (player.getInventory().destroyItemByItemId(Config.DONATOR_NPC_ITEM, Config.DONATOR_NPC_FAME, command, "AddedFame")) {
-                player.setFame(player.getFame() + Config.DONATOR_NPC_COUNT_FAME, "DonateNPC");
+                player.addFame(Config.DONATOR_NPC_COUNT_FAME, "DonateNPC");
                 player.sendMessage(Config.DONATOR_NPC_FAME + " " + Config.DONATOR_NPC_ITEM_NAME + " have disappeared!");
                 player.sendPacket(new UserInfo(player));
                 System.out.println("Character " + player + "  received fame via donation");

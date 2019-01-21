@@ -7,29 +7,28 @@ import l2trunk.gameserver.network.serverpackets.RecipeShopMsg;
 import l2trunk.gameserver.network.serverpackets.components.SystemMsg;
 import l2trunk.gameserver.utils.TradeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class RequestRecipeShopListSet extends L2GameClientPacket {
-    private int[] _recipes;
-    private long[] _prices;
-    private int _count;
+public final class RequestRecipeShopListSet extends L2GameClientPacket {
+    private List<Integer> recipes = new ArrayList<>();
+    private List<Long> prices = new ArrayList<>();
+    private int count;
 
     @Override
     protected void readImpl() {
-        _count = readD();
-        if (_count * 12 > _buf.remaining() || _count > Short.MAX_VALUE || _count < 1) {
-            _count = 0;
+        count = readD();
+        if (count * 12 > _buf.remaining() || count > Short.MAX_VALUE || count < 1) {
+            count = 0;
             return;
         }
-        _recipes = new int[_count];
-        _prices = new long[_count];
-        for (int i = 0; i < _count; i++) {
-            _recipes[i] = readD();
-            _prices[i] = readQ();
-            if (_prices[i] < 0) {
-                _count = 0;
+        for (int i = 0; i < count; i++) {
+            recipes.add(readD());
+            prices.add(readQ());
+            if (prices.get(i) < 0) {
+                count = 0;
                 return;
             }
         }
@@ -38,7 +37,7 @@ public class RequestRecipeShopListSet extends L2GameClientPacket {
     @Override
     protected void runImpl() {
         Player manufacturer = getClient().getActiveChar();
-        if (manufacturer == null || _count == 0)
+        if (manufacturer == null || count == 0)
             return;
 
         if (!TradeHelper.checksIfCanOpenStore(manufacturer, Player.STORE_PRIVATE_MANUFACTURE)) {
@@ -46,15 +45,15 @@ public class RequestRecipeShopListSet extends L2GameClientPacket {
             return;
         }
 
-        if (_count > Config.MAX_PVTCRAFT_SLOTS) {
+        if (count > Config.MAX_PVTCRAFT_SLOTS) {
             manufacturer.sendPacket(SystemMsg.YOU_HAVE_EXCEEDED_THE_QUANTITY_THAT_CAN_BE_INPUTTED);
             return;
         }
 
         List<ManufactureItem> createList = new CopyOnWriteArrayList<>();
-        for (int i = 0; i < _count; i++) {
-            int recipeId = _recipes[i];
-            long price = _prices[i];
+        for (int i = 0; i < count; i++) {
+            int recipeId = recipes.get(i);
+            long price = prices.get(i);
             if (!manufacturer.findRecipe(recipeId))
                 continue;
 

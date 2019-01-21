@@ -1,34 +1,20 @@
 package l2trunk.gameserver.templates.npc;
 
-public class MinionData {
-
-    /**
-     * The Identifier of the L2Minion
-     */
-    private final int _minionId;
-
-    /**
-     * The number of this Minion Type to spawn
-     */
-    private final int _minionAmount;
+public final class MinionData {
+    private final int minionId;
+    private final int minionAmount;
 
     public MinionData(int minionId, int minionAmount) {
-        _minionId = minionId;
-        _minionAmount = minionAmount;
+        this.minionId = minionId;
+        this.minionAmount = minionAmount;
     }
 
-    /**
-     * Return the Identifier of the Minion to spawn.<BR><BR>
-     */
     public int getMinionId() {
-        return _minionId;
+        return minionId;
     }
 
-    /**
-     * Return the amount of this Minion type to spawn.<BR><BR>
-     */
     public int getAmount() {
-        return _minionAmount;
+        return minionAmount;
     }
 
     public boolean equals(Object o) {

@@ -138,7 +138,7 @@ public final class _232_TestOfLord extends Quest {
         int state = st.getState();
         if (state == CREATED) {
             if (event.equalsIgnoreCase("30565-05.htm")) {
-                st.giveItems(ORDEAL_NECKLACE, 1);
+                st.giveItems(ORDEAL_NECKLACE);
                 if (!st.getPlayer().getVarB("dd3")) {
                     st.giveItems(Dimensional_Diamond, 92);
                     st.getPlayer().setVar("dd3", "1", -1);
@@ -159,33 +159,33 @@ public final class _232_TestOfLord extends Quest {
                 st.playSound(SOUND_FINISH);
                 st.unset("cond");
                 st.exitCurrentQuest(true);
-            } else if (event.equalsIgnoreCase("30565-08.htm")) {
-                st.takeItems(SWORD_INTO_SKULL, -1);
-                st.takeItems(AXE_OF_CEREMONY, -1);
-                st.takeItems(MONSTEREYE_WOODCARVING, -1);
-                st.takeItems(HANDIWORK_SPIDER_BROOCH, -1);
-                st.takeItems(ORDEAL_NECKLACE, -1);
-                st.takeItems(HUGE_ORC_FANG, -1);
-                st.giveItems(BEAR_FANG_NECKLACE, 1);
+            } else if ("30565-08.htm".equalsIgnoreCase(event)) {
+                st.takeItems(SWORD_INTO_SKULL);
+                st.takeItems(AXE_OF_CEREMONY);
+                st.takeItems(MONSTEREYE_WOODCARVING);
+                st.takeItems(HANDIWORK_SPIDER_BROOCH);
+                st.takeItems(ORDEAL_NECKLACE);
+                st.takeItems(HUGE_ORC_FANG);
+                st.giveItems(BEAR_FANG_NECKLACE);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(3);
-            } else if (event.equalsIgnoreCase("30566-02.htm"))
+            } else if ("30566-02.htm".equalsIgnoreCase(event))
                 st.giveItems(VARKEES_CHARM, 1);
-            else if (event.equalsIgnoreCase("30567-02.htm"))
+            else if ("30567-02.htm".equalsIgnoreCase(event))
                 st.giveItems(TANTUS_CHARM, 1);
-            else if (event.equalsIgnoreCase("30558-02.htm") && st.getQuestItemsCount(ADENA_ID) >= 1000) {
+            else if ("30558-02.htm".equalsIgnoreCase(event) && st.getQuestItemsCount(ADENA_ID) >= 1000) {
                 st.takeItems(ADENA_ID, 1000);
                 st.giveItems(NERUGA_AXE_BLADE, 1);
                 st.playSound(SOUND_MIDDLE);
-            } else if (event.equalsIgnoreCase("30568-02.htm"))
+            } else if ("30568-02.htm".equalsIgnoreCase(event))
                 st.giveItems(HATOS_CHARM, 1);
-            else if (event.equalsIgnoreCase("30641-02.htm"))
+            else if ("30641-02.htm".equalsIgnoreCase(event))
                 st.giveItems(TAKUNA_CHARM, 1);
-            else if (event.equalsIgnoreCase("30642-02.htm"))
+            else if ("30642-02.htm".equalsIgnoreCase(event))
                 st.giveItems(CHIANTA_CHARM, 1);
-            else if (event.equalsIgnoreCase("30649-04.htm") && st.getQuestItemsCount(BEAR_FANG_NECKLACE) > 0) {
-                st.takeItems(BEAR_FANG_NECKLACE, -1);
-                st.giveItems(MARTANKUS_CHARM, 1);
+            else if ("30649-04.htm".equalsIgnoreCase(event) && st.getQuestItemsCount(BEAR_FANG_NECKLACE) > 0) {
+                st.takeItems(BEAR_FANG_NECKLACE);
+                st.giveItems(MARTANKUS_CHARM);
                 st.playSound(SOUND_MIDDLE);
                 st.setCond(4);
             } else if (event.equalsIgnoreCase("30649-07.htm")) {
@@ -302,10 +302,10 @@ public final class _232_TestOfLord extends Quest {
                     return "30567-01.htm";
                 if (NERUGA_AXE_BLADE_COUNT == 0 || st.getQuestItemsCount(BONE_ARROW) < 1000)
                     return "30567-03.htm";
-                st.takeItems(TANTUS_CHARM, -1);
-                st.takeItems(NERUGA_AXE_BLADE, -1);
+                st.takeItems(TANTUS_CHARM);
+                st.takeItems(NERUGA_AXE_BLADE);
                 st.takeItems(BONE_ARROW, 1000);
-                st.giveItems(AXE_OF_CEREMONY, 1);
+                st.giveItems(AXE_OF_CEREMONY);
                 if (cond1Complete(st)) {
                     st.playSound(SOUND_JACKPOT);
                     st.setCond(2);
@@ -333,10 +333,10 @@ public final class _232_TestOfLord extends Quest {
                     return "30568-01.htm";
                 if (URUTU_BLADE_COUNT == 0 || TIMAK_ORC_SKULL_COUNT < 10)
                     return "30568-03.htm";
-                st.takeItems(HATOS_CHARM, -1);
-                st.takeItems(URUTU_BLADE, -1);
-                st.takeItems(TIMAK_ORC_SKULL, -1);
-                st.giveItems(SWORD_INTO_SKULL, 1);
+                st.takeItems(HATOS_CHARM);
+                st.takeItems(URUTU_BLADE);
+                st.takeItems(TIMAK_ORC_SKULL);
+                st.giveItems(SWORD_INTO_SKULL);
                 if (cond1Complete(st)) {
                     st.playSound(SOUND_JACKPOT);
                     st.setCond(2);
@@ -353,7 +353,7 @@ public final class _232_TestOfLord extends Quest {
                 if (URUTU_BLADE_COUNT == 0) {
                     if (SUMARIS_LETTER_COUNT > 0)
                         return "30564-02.htm";
-                    st.giveItems(SUMARIS_LETTER, 1);
+                    st.giveItems(SUMARIS_LETTER);
                     st.playSound(SOUND_MIDDLE);
                     return "30564-01.htm";
                 } else if (SUMARIS_LETTER_COUNT == 0)
@@ -364,8 +364,8 @@ public final class _232_TestOfLord extends Quest {
         if (npcId == Somak)
             if (SWORD_INTO_SKULL_COUNT == 0) {
                 if (URUTU_BLADE_COUNT == 0 && HATOS_CHARM_COUNT > 0 && SUMARIS_LETTER_COUNT > 0) {
-                    st.takeItems(SUMARIS_LETTER, -1);
-                    st.giveItems(URUTU_BLADE, 1);
+                    st.takeItems(SUMARIS_LETTER);
+                    st.giveItems(URUTU_BLADE);
                     st.playSound(SOUND_MIDDLE);
                     return "30510-01.htm";
                 }
@@ -380,10 +380,10 @@ public final class _232_TestOfLord extends Quest {
                     return "30641-01.htm";
                 if (st.getQuestItemsCount(MARSH_SPIDER_FEELER) < 10 || st.getQuestItemsCount(MARSH_SPIDER_FEET) < 10)
                     return "30641-03.htm";
-                st.takeItems(MARSH_SPIDER_FEELER, -1);
-                st.takeItems(MARSH_SPIDER_FEET, -1);
-                st.takeItems(TAKUNA_CHARM, -1);
-                st.giveItems(HANDIWORK_SPIDER_BROOCH, 1);
+                st.takeItems(MARSH_SPIDER_FEELER);
+                st.takeItems(MARSH_SPIDER_FEET);
+                st.takeItems(TAKUNA_CHARM);
+                st.giveItems(HANDIWORK_SPIDER_BROOCH);
                 if (cond1Complete(st)) {
                     st.playSound(SOUND_JACKPOT);
                     st.setCond(2);
@@ -402,9 +402,9 @@ public final class _232_TestOfLord extends Quest {
                     return "30642-01.htm";
                 if (st.getQuestItemsCount(CORNEA_OF_EN_MONSTEREYE) < 20)
                     return "30642-03.htm";
-                st.takeItems(CORNEA_OF_EN_MONSTEREYE, -1);
-                st.takeItems(CHIANTA_CHARM, -1);
-                st.giveItems(MONSTEREYE_WOODCARVING, 1);
+                st.takeItems(CORNEA_OF_EN_MONSTEREYE);
+                st.takeItems(CHIANTA_CHARM);
+                st.giveItems(MONSTEREYE_WOODCARVING);
                 if (cond1Complete(st)) {
                     st.playSound(SOUND_JACKPOT);
                     st.setCond(2);

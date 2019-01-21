@@ -12,7 +12,6 @@ import l2trunk.gameserver.model.quest.QuestState;
 import l2trunk.gameserver.network.serverpackets.MagicSkillUse;
 import l2trunk.gameserver.network.serverpackets.SystemMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.stats.Stats;
 import l2trunk.gameserver.stats.funcs.FuncMul;
 import l2trunk.gameserver.utils.Location;
@@ -42,7 +41,8 @@ public final class _1201_DarkCloudMansion extends Quest {
     private static final int[] CCG = {18369, 18370}; // Chromatic Crystal Golem
     private static final int[] BM = {22272, 22273, 22274}; // Beleth's Minions
     private static final int[] HG = {22264, 22265}; // [22318,22319] // Hall Guards
-    private static final int[] BS = {18371, 18372, 18373, 18374, 18375, 18376, 18377}; // Beleth's Samples
+    private static final List<Integer> BS = List.of(
+            18371, 18372, 18373, 18374, 18375, 18376, 18377); // Beleth's Samples
 
     // Doors/Walls
     private static final int D1 = 24230001; // Starting Room
@@ -244,9 +244,9 @@ public final class _1201_DarkCloudMansion extends Quest {
             world.instanceId = newInstance.getId();
             worlds.put(newInstance.getId(), world);
             runStartRoom(world);
-            for (Player member : player.getParty().getMembers())
-                if (member != player)
-                    newQuestState(member, STARTED);
+            player.getParty().getMembers().stream()
+                    .filter(member -> member != player)
+                    .forEach(member -> newQuestState(member, STARTED));
         }
     }
 
@@ -403,12 +403,12 @@ public final class _1201_DarkCloudMansion extends Quest {
 
     private void spawnBelethSample(World world) {
         world.FifthRoom.npclist2 = new ArrayList<>();
-        int[] beleth = beleths[Rnd.get(beleths.length)];
+        int[] beleth = Rnd.get(beleths);
         world.FifthRoom.belethOrder = new ArrayList<>();
         world.FifthRoom.belethOrder.add(beleth);
         int idx = 0;
         for (int x = 148720; x <= 149110; x += 65) {
-            NpcInstance newNpc = addSpawnToInstance(BS[idx], new Location(x, 182145, -6117, 48810), 0, world.instanceId);
+            NpcInstance newNpc = addSpawnToInstance(BS.get(idx), new Location(x, 182145, -6117, 48810), 0, world.instanceId);
             world.FifthRoom.npclist2.add(new int[]{newNpc.getStoredId(), idx, beleth[idx]});
             idx += 1;
         }

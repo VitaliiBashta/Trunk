@@ -10,7 +10,6 @@ import l2trunk.gameserver.scripts.Functions;
 import l2trunk.gameserver.utils.Location;
 import l2trunk.scripts.npc.model.OrfenInstance;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class Orfen extends Fighter {
@@ -20,11 +19,11 @@ public final class Orfen extends Fighter {
             new PrintfFormat("You're really stupid to have challenged me. %s! Get ready!"),
             new PrintfFormat("%s. Do you think that's going to work?!"));
 
-    private final List<Skill> _paralyze;
+    private final List<Skill> paralyze;
 
     public Orfen(NpcInstance actor) {
         super(actor);
-        _paralyze = getActor().getTemplate().getDebuffSkills();
+        paralyze = getActor().getTemplate().getDebuffSkills();
     }
 
     @Override
@@ -56,14 +55,14 @@ public final class Orfen extends Fighter {
         double distance = actor.getDistance(attacker);
 
         // if(attacker.isMuted() &&)
-        if (distance > 300 && distance < 1000 && _damSkills.size() > 0 && Rnd.chance(10)) {
+        if (distance > 300 && distance < 1000 && damSkills.size() > 0 && Rnd.chance(10)) {
             Functions.npcSay(actor, Rnd.get(MsgOnRecall).sprintf(attacker.getName()));
             teleToLocation(attacker, Location.findFrontPosition(actor, attacker, 0, 50));
-            Skill r_skill = _damSkills.get(Rnd.get(_damSkills.size()));
+            Skill r_skill = Rnd.get(damSkills);
             if (canUseSkill(r_skill, attacker, -1))
                 addTaskAttack(attacker, r_skill.getId(), r_skill.getLevel());
-        } else if (_paralyze.size() > 0 && Rnd.chance(20)) {
-            Skill r_skill = _paralyze.get(Rnd.get(_paralyze.size()));
+        } else if (paralyze.size() > 0 && Rnd.chance(20)) {
+            Skill r_skill = paralyze.get(Rnd.get(paralyze.size()));
             if (canUseSkill(r_skill, attacker, -1))
                 addTaskAttack(attacker, r_skill.getId(), r_skill.getLevel());
         }
@@ -77,10 +76,10 @@ public final class Orfen extends Fighter {
             return;
 
         double distance = actor.getDistance(caster);
-        if (_damSkills.size() > 0 && skill.getEffectPoint() > 0 && distance < 1000 && Rnd.chance(20)) {
+        if (damSkills.size() > 0 && skill.getEffectPoint() > 0 && distance < 1000 && Rnd.chance(20)) {
             Functions.npcSay(actor, Rnd.get(MsgOnRecall).sprintf(caster.getName()));
             teleToLocation(caster, Location.findFrontPosition(actor, caster, 0, 50));
-            Skill r_skill = Rnd.get(_damSkills);
+            Skill r_skill = Rnd.get(damSkills);
             if (canUseSkill(r_skill, caster, -1))
                 addTaskAttack(caster, r_skill.getId(), r_skill.getLevel());
         }

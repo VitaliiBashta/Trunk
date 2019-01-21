@@ -53,7 +53,7 @@ public final class QueenAntNurse extends Priest {
             return false;
 
         if (!top_desire_target.isCurrentHpFull()) {
-            Skill skill = _healSkills.get(Rnd.get(_healSkills.size()));
+            Skill skill = Rnd.get(healSkills);
             if (skill.getAOECastRange() < actor.getDistance(top_desire_target))
                 moveOrTeleportToLocation(Location.findFrontPosition(top_desire_target, actor, skill.getAOECastRange() - 30, skill.getAOECastRange() - 10));
             addTaskBuff(top_desire_target, skill);

@@ -47,7 +47,7 @@ public final class ObtainTalisman extends Functions {
 
         removeItem(player, 9912, 200, "ObtainTalisman");
         for (int i = 0; i < 20; i++) {
-            addItem(player, talismans.get(Rnd.get(talismans.size())), 1, "ObtainTalisman");
+            addItem(player, Rnd.get(talismans), 1, "ObtainTalisman");
         }
         show("scripts/services/ObtainTalisman.htm", player, npc);
     }

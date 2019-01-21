@@ -44,10 +44,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
 
     private void loadSeedRegionData() {
         _zoneListener = new ZoneListener();
-        for (String s : TELEPORT_ZONES.keySet()) {
-            Zone zone = ReflectionUtils.getZone(s);
-            zone.addListener(_zoneListener);
-        }
+        TELEPORT_ZONES.keySet().forEach(s -> ReflectionUtils.getZone(s).addListener(_zoneListener));
 
         _regionsData[0] = new SeedRegion(new String[]{"[14_23_beastacon_for_melee_for_pc]", "[14_23_beastacon_for_archer_for_pc]", "[14_23_beastacon_for_mage_for_pc]"}, new String[]{"[14_23_beastacon_for_melee]", "[14_23_beastacon_for_archer]", "[14_23_beastacon_for_mage]"}, new int[][]{
                 {-180450, 185507, -10574, 11632},
@@ -59,7 +56,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
                 {-180971, 186361, -10557, 11632},
                 {-180758, 186739, -10556, 11632}}); // Cokrakon data
 
-        int buffsNow = 0;
+        int buffsNow;
         long nextStatusChange = ServerVariables.getLong("SeedNextStatusChange", 0);
         if (nextStatusChange < System.currentTimeMillis()) {
             buffsNow = Rnd.get(ZONE_BUFFS_LIST.length);
@@ -171,7 +168,7 @@ public final class SeedOfAnnihilation extends Functions implements ScriptFile {
         }
     }
 
-    public class ZoneListener implements OnZoneEnterLeaveListener {
+    private class ZoneListener implements OnZoneEnterLeaveListener {
         @Override
         public void onZoneEnter(Zone zone, Creature cha) {
             if (TELEPORT_ZONES.containsKey(zone.getName())) {

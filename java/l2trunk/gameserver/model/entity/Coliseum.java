@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public final class Coliseum {
     private static final Logger _log = LoggerFactory.getLogger(Coliseum.class);
-    private static Integer _event_cycle = 0;
+    private static Integer eventCycle = 0;
     private final int minlevel;
     private final int maxlevel;
     private final ArrayList<Party> party_waiting_list = new ArrayList<>();
@@ -29,7 +29,7 @@ public final class Coliseum {
     private int winCount = 0;
     private Party partyInRoom1 = null;
     private Party partyInRoom2 = null;
-    private Zone _zone;
+    private Zone zone;
     private int _id = 0;
 
     public Coliseum() {
@@ -41,7 +41,7 @@ public final class Coliseum {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (_event_cycle == 0) {
+        if (eventCycle == 0) {
             init();
         }
     }
@@ -78,11 +78,11 @@ public final class Coliseum {
     }
 
     private void load() {
-        _event_cycle = getColiseumMatchNumber();
-        if (_event_cycle == 2147483647) {
-            _event_cycle = 1;
+        eventCycle = getColiseumMatchNumber();
+        if (eventCycle == 2147483647) {
+            eventCycle = 1;
         } else {
-            Coliseum._event_cycle = _event_cycle.intValue() + 1;
+            Coliseum.eventCycle++;
         }
     }
 
@@ -127,20 +127,20 @@ public final class Coliseum {
 
     private Location getFreeWaitingRoom() {
         if (isWaitingRoom1Free()) {
-            return _zone.getRestartPoints().get(0);
+            return zone.getRestartPoints().get(0);
         }
         if (isWaitingRoom2Free()) {
-            return _zone.getRestartPoints().get(1);
+            return zone.getRestartPoints().get(1);
         }
         return null;
     }
 
     private int getColiseumMatchNumber() {
-        return _event_cycle;
+        return eventCycle;
     }
 
     private void setcoliseummatchnumber(int number) {
-        _event_cycle = number;
+        eventCycle = number;
     }
 
     public boolean checkIfInZone(int x, int y) {
@@ -148,10 +148,10 @@ public final class Coliseum {
     }
 
     private Zone getZone() {
-        if (_zone == null) {
-            _zone = ReflectionUtils.getZone("UnderGroundColiseum");
+        if (zone == null) {
+            zone = ReflectionUtils.getZone("UnderGroundColiseum");
         }
-        return _zone;
+        return zone;
     }
 
     private void StopBattle(Party party, Party party2, TeamType winner, long period) {
@@ -172,19 +172,19 @@ public final class Coliseum {
             party_inbattle_list.remove(party2);
         } else {
             if (party != null) {
-                for (Player member : party.getMembers()) {
+                party.getMembers().forEach(member -> {
                     member.setTeam(TeamType.BLUE);
 
-                    Location locOnBGToTP = _zone.getRestartPoints().get(3);
+                    Location locOnBGToTP = zone.getRestartPoints().get(3);
                     member.teleToLocation(locOnBGToTP);
-                }
+                });
             }
             if (party2 != null) {
-                for (Player member : party2.getMembers()) {
+                party2.getMembers().forEach(member -> {
                     member.setTeam(TeamType.RED);
-                    Location locOnBGToTP = _zone.getRestartPoints().get(4);
+                    Location locOnBGToTP = zone.getRestartPoints().get(4);
                     member.teleToLocation(locOnBGToTP);
-                }
+                });
             }
         }
     }
@@ -296,17 +296,17 @@ public final class Coliseum {
                         setPreviusWinner(_party1);
                         setWinCount(1);
                         for (Player member : _party1.getMembers()) {
-                            member.setFame(member.getFame() + 80, "Coliseum");
+                            member.addFame(80, "Coliseum");
                         }
                     } else {
                         incWinCount();
                         for (Player member : _party1.getMembers()) {
-                            member.setFame(member.getFame() + 80 + (getWinCount() * 5), "Coliseum");
+                            member.addFame(80 + (getWinCount() * 5), "Coliseum");
                         }
                     }
                     Location teleloc = getFreeWaitingRoom();
                     if (teleloc == null) {
-                        teleloc = _zone.getRestartPoints().get(4);
+                        teleloc = zone.getRestartPoints().get(4);
                     } else if (isWaitingRoom2Free() && isWaitingRoom1Free()) {
                         setPreviusWinner(null);
                         for (Player member : _party1.getMembers()) {
@@ -315,7 +315,7 @@ public final class Coliseum {
                             }
                         }
                     } else if (!isWaitingRoom1Free()) {
-                        teleloc = _zone.getRestartPoints().get(1);
+                        teleloc = zone.getRestartPoints().get(1);
                         startBattle(getPartyInRoom1(), _party1);
                     }
                 }
@@ -323,18 +323,18 @@ public final class Coliseum {
                     if (!getPreviusWinners().equals(_party2)) {
                         setPreviusWinner(_party2);
                         setWinCount(1);
-                        for (Player member : _party2.getMembers()) {
-                            member.setFame(member.getFame() + 80, "Coliseum");
+                        for (Player m : _party2.getMembers()) {
+                            m.addFame(80, "Coliseum");
                         }
                     } else {
                         incWinCount();
                         for (Player member : _party2.getMembers()) {
-                            member.setFame(member.getFame() + 80 + (getWinCount() * 5), "Coliseum");
+                            member.addFame(80 + (getWinCount() * 5), "Coliseum");
                         }
                     }
                     Location teleloc = getFreeWaitingRoom();
                     if (teleloc == null) {
-                        teleloc = _zone.getRestartPoints().get(4);
+                        teleloc = zone.getRestartPoints().get(4);
                     } else if (isWaitingRoom2Free() && isWaitingRoom1Free()) {
                         setPreviusWinner(null);
                         for (Player member : _party2.getMembers()) {
@@ -343,7 +343,7 @@ public final class Coliseum {
                             }
                         }
                     } else if (!isWaitingRoom1Free()) {
-                        teleloc = _zone.getRestartPoints().get(1);
+                        teleloc = zone.getRestartPoints().get(1);
                         startBattle(getPartyInRoom1(), _party2);
                     }
                 }
@@ -411,7 +411,7 @@ public final class Coliseum {
                 if (party_waiting_list.size() == 0) {
                     return;
                 }
-                next = party_waiting_list.get(Rnd.get(party_waiting_list.size() - 1));
+                next = Rnd.get(party_waiting_list);
                 for (Player member : next.getMembers()) {
                     if ((member.getLevel() > getMaxLevel()) || (member.getLevel() < getMinLevel())) {
                         next.sendPacket(member, new SystemMessage(2097).addName(member));
@@ -431,7 +431,7 @@ public final class Coliseum {
                 if (party_waiting_list.size() < 2) {
                     return;
                 }
-                Party next2 = party_waiting_list.get(Rnd.get(party_waiting_list.size() - 1));
+                Party next2 = Rnd.get(party_waiting_list);
                 while (next2 == next) {
                     next2 = party_waiting_list.get(Rnd.get(party_waiting_list.size() - 1));
                 }

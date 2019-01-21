@@ -28,7 +28,7 @@ class BlowFishKeygen {
 
     }
 
-    public static byte[] getRandomKey() {
-        return CRYPT_KEYS[Rnd.get(CRYPT_KEYS_SIZE)];
+    static byte[] getRandomKey() {
+        return Rnd.get(CRYPT_KEYS);
     }
 }

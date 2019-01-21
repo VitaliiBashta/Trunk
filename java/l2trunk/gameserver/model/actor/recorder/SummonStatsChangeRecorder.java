@@ -24,10 +24,10 @@ import l2trunk.gameserver.model.Summon;
         super.onSendChanges();
         /*	*/
         /* 17 */
-        if ((this._changes & 0x2) == 2)
+        if ((this.changes & 0x2) == 2)
             /* 18 */ ((Summon) this.activeChar).sendPetInfo();
             /* 19 */
-        else if ((this._changes & 0x1) == 1)
+        else if ((this.changes & 0x1) == 1)
             /* 20 */ ((Summon) this.activeChar).broadcastCharInfo();
         /*	*/
     }

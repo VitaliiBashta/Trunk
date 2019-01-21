@@ -6,7 +6,6 @@ import l2trunk.gameserver.model.Player;
 import l2trunk.gameserver.model.base.Experience;
 import l2trunk.gameserver.network.serverpackets.components.CustomMessage;
 import l2trunk.gameserver.scripts.Functions;
-import l2trunk.gameserver.scripts.ScriptFile;
 import l2trunk.gameserver.utils.Util;
 
 public final class Delevel extends Functions {
@@ -42,7 +41,7 @@ public final class Delevel extends Functions {
                 return;
             }
             removeItem(player, Config.SERVICES_DELEVEL_ITEM, Config.SERVICES_DELEVEL_COUNT, "delevel");
-            player.addExpAndSp(-(pXp - tXp), 0, 0, 0, false, false);
+            player.addExpAndSp(-(pXp - tXp), 0);
         }
     }
 

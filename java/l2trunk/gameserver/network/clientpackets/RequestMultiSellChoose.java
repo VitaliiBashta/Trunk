@@ -298,7 +298,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                     } else if (id.getId() == ItemTemplate.ITEM_ID_PC_BANG_POINTS) {
                         activeChar.reducePcBangPoints((int) count);
                     } else if (id.getId() == ItemTemplate.ITEM_ID_FAME) {
-                        activeChar.setFame(activeChar.getFame() - (int) count, "MultiSell");
+                        activeChar.addFame(-(int) count, "MultiSell");
                         activeChar.sendPacket(new SystemMessage2(SystemMsg.S2_S1_HAS_DISAPPEARED).addInteger(count).addString("Fame"));
                     } else {
                         if (inventory.destroyItem(id.getItem(), count, "Multisell")) {
@@ -344,7 +344,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket {
                     } else if (in.getItemId() == ItemTemplate.ITEM_ID_PC_BANG_POINTS) {
                         activeChar.addPcBangPoints((int) (in.getItemCount() * _amount), false);
                     } else if (in.getItemId() == ItemTemplate.ITEM_ID_FAME) {
-                        activeChar.setFame(activeChar.getFame() + (int) (in.getItemCount() * _amount), "MultiSell");
+                        activeChar.addFame((int) (in.getItemCount() * _amount), "MultiSell");
                     }
                 } else if (ItemHolder.getTemplate(in.getItemId()).isStackable()) {
                     long total = SafeMath.mulAndLimit(in.getItemCount(), _amount);

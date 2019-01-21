@@ -2,7 +2,7 @@ package l2trunk.gameserver.model.mail;
 
 import l2trunk.gameserver.model.items.ItemInstance;
 
-class Attachment {
+public final class Attachment {
     private int messageId;
 
     private ItemInstance item;

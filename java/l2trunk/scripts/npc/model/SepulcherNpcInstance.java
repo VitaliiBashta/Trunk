@@ -127,14 +127,13 @@ public final class SepulcherNpcInstance extends NpcInstance {
                 // Moved here from switch-default
                 openNextDoor(getNpcId());
                 if (player.getParty() != null)
-                    for (Player mem : player.getParty().getMembers()) {
-                        hallsKey = mem.getInventory().getItemByItemId(HALLS_KEY);
-                        if (hallsKey != null)
-                            Functions.removeItem(mem, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance");
-                    }
-                else
-                    Functions.removeItem(player, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance");
-            }
+                    player.getParty().getMembers().stream()
+                            .filter(mem -> mem.getInventory().getItemByItemId(HALLS_KEY) != null)
+                            .forEach(mem ->
+                                    Functions.removeItem(mem, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance"));
+            } else
+                Functions.removeItem(player, HALLS_KEY, hallsKey.getCount(), "SepulcherNpcInstance");
+
         } else
             super.onBypassFeedback(player, command);
     }
@@ -168,7 +167,7 @@ public final class SepulcherNpcInstance extends NpcInstance {
 
     private boolean hasPartyAKey(Player player) {
         return player.getParty().getMembers().stream()
-        .anyMatch(m -> (ItemFunctions.getItemCount(m, HALLS_KEY) > 0));
+                .anyMatch(m -> (ItemFunctions.getItemCount(m, HALLS_KEY) > 0));
     }
 
     private class CloseNextDoor extends RunnableImpl {

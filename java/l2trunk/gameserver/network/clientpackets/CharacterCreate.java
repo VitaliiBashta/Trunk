@@ -17,7 +17,6 @@ import l2trunk.gameserver.network.GameClient;
 import l2trunk.gameserver.network.serverpackets.CharacterCreateFail;
 import l2trunk.gameserver.network.serverpackets.CharacterCreateSuccess;
 import l2trunk.gameserver.network.serverpackets.CharacterSelectionInfo;
-import l2trunk.gameserver.tables.SkillTable;
 import l2trunk.gameserver.templates.PlayerTemplate;
 import l2trunk.gameserver.templates.item.CreateItem;
 import l2trunk.gameserver.templates.item.ItemTemplate;
@@ -126,11 +125,9 @@ public final class CharacterCreate extends L2GameClientPacket {
         }
 
         if (Config.STARTING_LVL != 0)
-            newChar.addExpAndSp(Experience.LEVEL[Config.STARTING_LVL] - newChar.getExp(), 0, 0, 0, false, false);
+            newChar.addExpAndSp(Experience.LEVEL[Config.STARTING_LVL] - newChar.getExp(), 0);
 
-        if (Config.SPAWN_CHAR)
-            newChar.teleToLocation(Config.SPAWN_X, Config.SPAWN_Y, Config.SPAWN_Z);
-        else
+
             newChar.setLoc(template.spawnLoc);
 
         if (Config.CHAR_TITLE)

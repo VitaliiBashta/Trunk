@@ -249,13 +249,12 @@ public class AggroList {
                 topDamagePlayer = null;
                 int topDamage = 0;
                 for (Player player : party.getMembers()) {
-                    final AggroInfo info = hateList.get(player.getObjectId());
-                    if (info == null)
+                    if (hateList.get(player.getObjectId()) == null)
                         continue;
 
-                    if (info.damage > topDamage) {
+                    if (hateList.get(player.getObjectId()).damage > topDamage) {
                         topDamagePlayer = player;
-                        topDamage = info.damage;
+                        topDamage = hateList.get(player.getObjectId()).damage;
                     }
                 }
 
@@ -274,8 +273,6 @@ public class AggroList {
             topDamager = World.getAroundCharacters(npc)
             .filter(cha -> cha.getObjectId() == ai.attackerId)
             .findFirst().orElse(null);
-
-
         }
 
         return topDamager;
@@ -283,7 +280,7 @@ public class AggroList {
 
     public Map<Creature, HateInfo> getCharMap() {
         if (isEmpty())
-            return Collections.emptyMap();
+            return Map.of();
 
         Map<Creature, HateInfo> aggroMap = new HashMap<>();
         readLock.lock();
@@ -361,16 +358,16 @@ public class AggroList {
         }
     }
 
-    class PartyDamageComparator implements Comparator<Integer> {
-        private final Map<Integer, Integer> _theMapToSort;
+    private class PartyDamageComparator implements Comparator<Integer> {
+        private final Map<Integer, Integer> map;
 
         PartyDamageComparator(Map<Integer, Integer> theMapToSort) {
-            _theMapToSort = theMapToSort;
+            map = theMapToSort;
         }
 
         @Override
         public int compare(Integer key1, Integer key2) {
-            return Integer.compare(_theMapToSort.get(key2), _theMapToSort.get(key1));
+            return Integer.compare(map.get(key2), map.get(key1));
         }
     }
 }

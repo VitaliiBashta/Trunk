@@ -4,7 +4,6 @@ import l2trunk.commons.util.Rnd;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _412_PathToDarkwizard extends Quest {
     //npc
@@ -12,13 +11,6 @@ public final class _412_PathToDarkwizard extends Quest {
     private final int ANNIKA = 30418;
     private final int ARKENIA = 30419;
     private final int VARIKA = 30421;
-    //mobs
-    public final int MARSH_ZOMBIE = 20015;
-    public final int MARSH_ZOMBIE_LORD = 20020;
-    public final int MISERY_SKELETON = 20022;
-    public final int SKELETON_SCOUT = 20045;
-    public final int SKELETON_HUNTER = 20517;
-    public final int SKELETON_HUNTER_ARCHER = 20518;
     //items
     private final int SEEDS_OF_DESPAIR_ID = 1254;
     private final int SEEDS_OF_ANGER_ID = 1253;
@@ -103,36 +95,36 @@ public final class _412_PathToDarkwizard extends Quest {
                 st.setCond(1);
                 st.setState(STARTED);
                 st.playSound(SOUND_ACCEPT);
-                st.giveItems(SEEDS_OF_DESPAIR_ID, 1);
+                st.giveItems(SEEDS_OF_DESPAIR_ID);
                 htmltext = "varika_q0412_05.htm";
             } else if (st.getPlayer().getClassId().getId() != 0x26) {
                 if (st.getPlayer().getClassId().getId() == 0x27)
                     htmltext = "varika_q0412_02a.htm";
                 else
                     htmltext = "varika_q0412_03.htm";
-            } else if (st.getPlayer().getLevel() < 18 && st.getPlayer().getClassId().getId() == 0x26)
+            } else if (st.getPlayer().getLevel() < 18)
                 htmltext = "varika_q0412_02.htm";
-            else if (st.getPlayer().getLevel() >= 18 && st.getPlayer().getClassId().getId() == 0x26 && st.getQuestItemsCount(JEWEL_OF_DARKNESS_ID) > 0)
+            else if (st.getQuestItemsCount(JEWEL_OF_DARKNESS_ID) > 0)
                 htmltext = "varika_q0412_04.htm";
         } else if (event.equalsIgnoreCase("412_1")) {
             if (st.getQuestItemsCount(SEEDS_OF_ANGER_ID) > 0)
                 htmltext = "varika_q0412_06.htm";
             else
                 htmltext = "varika_q0412_07.htm";
-        } else if (event.equalsIgnoreCase("412_2")) {
+        } else if ("412_2".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SEEDS_OF_HORROR_ID) > 0)
                 htmltext = "varika_q0412_09.htm";
             else
                 htmltext = "varika_q0412_10.htm";
-        } else if (event.equalsIgnoreCase("412_3")) {
+        } else if ("412_3".equalsIgnoreCase(event)) {
             if (st.getQuestItemsCount(SEEDS_OF_LUNACY_ID) > 0)
                 htmltext = "varika_q0412_12.htm";
             else if (st.getQuestItemsCount(SEEDS_OF_LUNACY_ID) < 1 && st.getQuestItemsCount(SEEDS_OF_DESPAIR_ID) > 0)
                 htmltext = "varika_q0412_13.htm";
-        } else if (event.equalsIgnoreCase("412_4")) {
+        } else if ("412_4".equalsIgnoreCase(event)) {
             htmltext = "charkeren_q0412_03.htm";
             st.giveItems(LUCKY_KEY_ID, 1);
-        } else if (event.equalsIgnoreCase("30418_1")) {
+        } else if ("30418_1".equalsIgnoreCase(event)) {
             htmltext = "annsery_q0412_02.htm";
             st.giveItems(CANDLE_ID, 1);
         }
@@ -175,14 +167,14 @@ public final class _412_PathToDarkwizard extends Quest {
         } else if (npcId == ARKENIA && cond > 0 && st.getQuestItemsCount(SEEDS_OF_LUNACY_ID) < 1) {
             if (st.getQuestItemsCount(HUB_SCENT_ID) < 1 && st.getQuestItemsCount(HEART_OF_LUNACY_ID) < 1) {
                 htmltext = "arkenia_q0412_01.htm";
-                st.giveItems(HUB_SCENT_ID, 1);
+                st.giveItems(HUB_SCENT_ID);
             } else if (st.getQuestItemsCount(HUB_SCENT_ID) > 0 && st.getQuestItemsCount(HEART_OF_LUNACY_ID) < 3)
                 htmltext = "arkenia_q0412_02.htm";
             else if (st.getQuestItemsCount(HUB_SCENT_ID) > 0 && st.getQuestItemsCount(HEART_OF_LUNACY_ID) >= 3) {
                 htmltext = "arkenia_q0412_03.htm";
-                st.giveItems(SEEDS_OF_LUNACY_ID, 1);
-                st.takeItems(HEART_OF_LUNACY_ID, -1);
-                st.takeItems(HUB_SCENT_ID, -1);
+                st.giveItems(SEEDS_OF_LUNACY_ID);
+                st.takeItems(HEART_OF_LUNACY_ID);
+                st.takeItems(HUB_SCENT_ID);
             }
         } else if (npcId == CHARKEREN && cond > 0) {
             if (st.getQuestItemsCount(SEEDS_OF_ANGER_ID) < 1) {
@@ -192,9 +184,9 @@ public final class _412_PathToDarkwizard extends Quest {
                     htmltext = "charkeren_q0412_04.htm";
                 else if (st.getQuestItemsCount(SEEDS_OF_DESPAIR_ID) > 0 && st.getQuestItemsCount(FAMILYS_ASHES_ID) >= 3 && st.getQuestItemsCount(LUCKY_KEY_ID) > 0) {
                     htmltext = "charkeren_q0412_05.htm";
-                    st.giveItems(SEEDS_OF_ANGER_ID, 1);
-                    st.takeItems(FAMILYS_ASHES_ID, -1);
-                    st.takeItems(LUCKY_KEY_ID, -1);
+                    st.giveItems(SEEDS_OF_ANGER_ID);
+                    st.takeItems(FAMILYS_ASHES_ID);
+                    st.takeItems(LUCKY_KEY_ID);
                 }
             } else
                 htmltext = "charkeren_q0412_06.htm";
@@ -205,9 +197,9 @@ public final class _412_PathToDarkwizard extends Quest {
                 htmltext = "annsery_q0412_03.htm";
             else if (st.getQuestItemsCount(SEEDS_OF_DESPAIR_ID) > 0 && st.getQuestItemsCount(CANDLE_ID) > 0 && st.getQuestItemsCount(KNEE_BONE_ID) >= 2) {
                 htmltext = "annsery_q0412_04.htm";
-                st.giveItems(SEEDS_OF_HORROR_ID, 1);
-                st.takeItems(CANDLE_ID, -1);
-                st.takeItems(KNEE_BONE_ID, -1);
+                st.giveItems(SEEDS_OF_HORROR_ID);
+                st.takeItems(CANDLE_ID);
+                st.takeItems(KNEE_BONE_ID);
             }
         return htmltext;
     }
@@ -218,7 +210,7 @@ public final class _412_PathToDarkwizard extends Quest {
         for (int[] element : DROPLIST)
             if (st.getCond() == 1 && npc.getNpcId() == element[0] && st.getQuestItemsCount(element[1]) > 0)
                 if (Rnd.chance(50) && st.getQuestItemsCount(element[2]) < element[3]) {
-                    st.giveItems(element[2], 1);
+                    st.giveItems(element[2]);
                     if (st.getQuestItemsCount(element[2]) == element[3])
                         st.playSound(SOUND_MIDDLE);
                     else

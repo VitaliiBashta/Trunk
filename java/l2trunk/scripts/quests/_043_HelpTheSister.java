@@ -3,7 +3,6 @@ package l2trunk.scripts.quests;
 import l2trunk.gameserver.model.instances.NpcInstance;
 import l2trunk.gameserver.model.quest.Quest;
 import l2trunk.gameserver.model.quest.QuestState;
-import l2trunk.gameserver.scripts.ScriptFile;
 
 public final class _043_HelpTheSister extends Quest {
     private static final int COOPER = 30829;
@@ -53,7 +52,7 @@ public final class _043_HelpTheSister extends Quest {
             st.setCond(5);
         } else if (event.equals("7")) {
             htmltext = "pet_manager_cooper_q0043_0501.htm";
-            st.giveItems(PET_TICKET, 1);
+            st.giveItems(PET_TICKET);
             st.setCond(0);
             st.exitCurrentQuest(false);
         }

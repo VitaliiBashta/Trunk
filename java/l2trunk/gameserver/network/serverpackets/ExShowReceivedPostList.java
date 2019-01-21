@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @see ExShowSentPostList аналогичный список отправленной почты
  */
-public class ExShowReceivedPostList extends L2GameServerPacket {
+public final class ExShowReceivedPostList extends L2GameServerPacket {
     private final List<Mail> mails;
 
     public ExShowReceivedPostList(Player cha) {

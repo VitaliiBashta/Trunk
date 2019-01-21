@@ -3,7 +3,7 @@ package l2trunk.gameserver.utils;
 import l2trunk.gameserver.model.Creature;
 import l2trunk.gameserver.model.GameObject;
 
-public class PositionUtils {
+public final class PositionUtils {
     private static final int MAX_ANGLE = 360;
     private static final double FRONT_MAX_ANGLE = 100;
     private static final double BACK_MAX_ANGLE = 40;
@@ -34,9 +34,7 @@ public class PositionUtils {
             angleDiff += MAX_ANGLE;
         if (angleDiff >= MAX_ANGLE - FRONT_MAX_ANGLE)
             angleDiff -= MAX_ANGLE;
-        if (Math.abs(angleDiff) <= FRONT_MAX_ANGLE)
-            return true;
-        return false;
+        return Math.abs(angleDiff) <= FRONT_MAX_ANGLE;
     }
 
     /**
@@ -55,9 +53,7 @@ public class PositionUtils {
             angleDiff += MAX_ANGLE;
         if (angleDiff >= MAX_ANGLE - BACK_MAX_ANGLE)
             angleDiff -= MAX_ANGLE;
-        if (Math.abs(angleDiff) <= BACK_MAX_ANGLE)
-            return true;
-        return false;
+        return Math.abs(angleDiff) <= BACK_MAX_ANGLE;
     }
 
     /**
@@ -73,9 +69,7 @@ public class PositionUtils {
         angleDiff = angleChar - angleTarget;
         if (angleDiff <= -360 + maxAngleDiff) angleDiff += 360;
         if (angleDiff >= 360 - maxAngleDiff) angleDiff -= 360;
-        if (Math.abs(angleDiff) <= maxAngleDiff)
-            return true;
-        return false;
+        return Math.abs(angleDiff) <= maxAngleDiff;
     }
 
     public static int calculateHeadingFrom(GameObject obj1, GameObject obj2) {
